@@ -1,0 +1,57 @@
+#$Source: /home/bbennett/pass/archive/Posda/psv/dicom_cmd.psv,v $
+#$Date: 2008/04/30 19:17:36 $
+#$Revision: 1.2 $
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0000,0000)|Group Length|UL|1
+(0000,0002)|Affected SOP Class UID|UI|1
+(0000,0003)|Requested SOP Class UID|UI|1
+(0000,0100)|Command Field| UI|1
+(0000,0110)|Message Id|US|1
+(0000,0120)|Message Id Being Responded To|US|1
+(0000,0600)|Move Destination|AE|1
+(0000,0700)|Priority|US|1
+(0000,0800)|Data Set Type|US|1
+(0000,0900)|Status|US|1
+(0000,0901)|Offending Element|AT|1-n
+(0000,0902)|Error Comment|LO|1
+(0000,0903)|Error ID|US|1
+(0000,1000)|Affected SOP Instance UID|UI|1
+(0000,1001)|Requested SOP Instance UID|UI|1
+(0000,1002)|Event Type ID|US|1
+(0000,1005)|Attribute Identifier List|AT|1-n
+(0000,1008)|Action Type ID|US|1
+(0000,1020)|Number of Remaining Sub_operations|US|1
+(0000,1021)|Number of Completed Sub_operations|US|1
+(0000,1022)|Number of Failed Sub_operations|US|1
+(0000,1023)|Number of Warning Sub_operations|US|1
+(0000,1030)|Move Originator Application Entity Title|AE|1
+(0000,1030)|Move Originator Message ID|US|1
+(0000,0001)|Length to End|UL|1|RET
+(0000,0010)|Recognition Code|CS|1|RET
+(0000,0200)|Initiator|AE|1|RET
+(0000,0300)|Receiver|AE|1|RET
+(0000,0400)|Find Location|AE|1|RET
+(0000,0850)|Number of Matches|US|1|RET
+(0000,0860)|Response Sequence Number|US|1|RET
+(0000,4000)|DIALOG Receiver|AT|1|RET
+(0000,4010)|Terminal Type|AT|1|RET
+(0000,5010)|Message Set ID|SH|1|RET
+(0000,5020)|End Message ID|SH|1|RET
+(0000,5110)|Display Format|AT|1|RET
+(0000,5120)|Page Position ID|AT|1|RET
+(0000,5130)|Text Format ID|CS|1|RET
+(0000,5140)|Nor/Rev|CS|1|RET
+(0000,5150)|Add Gray Scale|CS|1|RET
+(0000,5160)|Borders|CS|1|RET
+(0000,5170)|Copies|IS|1|RET
+(0000,5180)|Magnification Type|CS|1|RET
+(0000,5190)|Erase|CS|1|RET
+(0000,51A0)|Print|CS|1|RET
+(0000,51B0)|Overlays|US|1-n|RET

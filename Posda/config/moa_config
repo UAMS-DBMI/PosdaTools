@@ -1,0 +1,218 @@
+#########################################################################
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/moa_config,v $
+#$Date: 2008/06/27 17:14:40 $
+#$Revision: 1.11 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+#########################################################################
+#
+#base_uid specifies a UID root to be used for UID's to be generated
+#during rendering.  If not present, a new root will be obtained from
+#posda.com (if its up).
+#   !!!!!!!!!Either change, comment out, or delete this!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!Every time you render!!!!!!!!!!!!!!!!!!!!!!
+#
+#       | name
+#base_uid|1.3.6.1.4.1.22213.1.1554.4
+#########################################################################
+#
+#posda_arg specifies a property to be supplied to posda.com when obtaining
+#  a uid root.  Only used if no base_uid specified.  
+#    Note: you can add any property you like.  Just make up a key.
+#          The following keys are built in, and need not be configured:
+#          package => "Posda::PseudoPhantom"
+#          user => <whatever `whoami` returns>
+#          host => <whatever `hostname` returns>
+#          purpose => <whatever `hostname` returns>
+#
+#  posda.com will remember these parameters, but will not share them with
+#     anyone
+#
+#        |key |value
+posda_arg|name|<your name here>
+posda_arg|email|<your email addr here>
+posda_arg|reason|Generating a set of Pseudo Phantoms
+#posda_arg|address|<your address here>
+# etc
+# ...
+#########################################################################
+#
+#base_for creates a base frame of reference with a given name
+#       | name
+base_for|base
+#########################################################################
+#
+#base_dir creates a base directory for config files 
+#       if not present, assumes base_dir is directory containing this
+#       config file
+#       | name
+#base_dir|/Users/bbennett/Posda/config
+#########################################################################
+#
+#name_obj creates an obj with a name of a particular type
+#  params based on type
+#                    frame of ref
+#        |name   |type    \    / parms(based on type)
+#        |       |rect    |    | center  | height  | width | length
+#        |       |sphere  |    | center  | radius
+#        |       |cone    |    | point1  | point2   |slope
+#        |       |cylinder|    | point1  | point2   |radius
+named_obj|outer|cylinder|base|(0,0,200)|(0,0,-200)|250
+named_obj|arrow1_c|cylinder|base|(50,0,0)|(150,0,0)|20
+named_obj|arrow1_n|cone|base|(175,0,0)|(150,0,0)|1
+#########################################################################
+#
+#  objects can be combined using union, intersection, and complement
+#
+named_obj|arrow1|union|base|arrow1_c|arrow1_n
+#
+named_obj|arrow2_c|cylinder|base|(0,50,0)|(0,150,0)|15
+named_obj|arrow2_n|cone|base|(0,175,0)|(0,150,0)|1
+named_obj|arrow2|union|base|arrow2_c|arrow2_n
+#
+named_obj|arrow3_c|cylinder|base|(0,0,50)|(0,0,150)|10
+named_obj|arrow3_n|cone|base|(0,0,175)|(0,0,150)|1
+named_obj|arrow3|union|base|arrow3_c|arrow3_n
+#
+named_obj|sphere_outer|sphere|base|(0,0,-175)|70
+named_obj|sphere_inner|sphere|base|(0,0,-175)|65
+named_obj|hollow_sphere|complement|base|sphere_outer|sphere_inner
+named_obj|patient|union|base|sphere_outer|outer
+#########################################################################
+#
+#obj_list creates an ordered list of objects
+#       |name      |obj    | ...
+obj_list|water|outer
+obj_list|tumor|sphere_inner|arrow1|arrow2|arrow3
+obj_list|bone|hollow_sphere
+obj_list|full_list|outer|arrow1|arrow2|arrow3|sphere_outer|sphere_inner|hollow_sphere|patient
+#
+#contouring object lists
+obj_list|patient|patient
+obj_list|arrow1|arrow1
+obj_list|arrow2|arrow2
+obj_list|arrow3|arrow3
+obj_list|inner_sphere|sphere_inner
+obj_list|outer_sphere|sphere_outer
+#########################################################################
+#
+# obj_lists can be concatenated using combined_obj_list
+#
+#                |  name   |list| ...
+combined_obj_list|ct_list|tumor|bone|water
+#########################################################################
+#
+#set_obj_prop assigns prop with name and value to all objs in list and for
+#        frame of ref       value 
+#           \     /prop name \ / list_name
+set_obj_prop|base|ct_density|0|water
+set_obj_prop|base|ct_density|500|tumor
+set_obj_prop|base|ct_density|1000|bone
+set_obj_prop|base|pet_count_center|500000|tumor
+set_obj_prop|base|pet_count_inner_attenuation|10|tumor
+set_obj_prop|base|pet_count_inner_attenuation_type|square|tumor
+set_obj_prop|base|pet_count_outside|500|tumor
+set_obj_prop|base|pet_count_outer_attenuation|1|tumor
+set_obj_prop|base|pet_count_outer_attenuation_type|linear|tumor
+set_obj_prop|base|mr_density|75|water
+set_obj_prop|base|mr_density|100|tumor
+set_obj_prop|base|mr_density|50|bone
+#########################################################################
+#auto_contour_ct assigns contouring levels for various object lists
+# for contstruction roi's in structure_sets
+#           roi_num  inner_level
+#              \  \ /     /
+#               \  |     /
+#  |for | name   | |    / gen_alg| obj_list
+roi|base|external|1|.99|AUTOMATIC|patient
+roi|base|ptv1|2|499.9|AUTOMATIC|arrow1
+roi|base|ptv2|3|499.9|AUTOMATIC|arrow2
+roi|base|ptv3|4|499.9|AUTOMATIC|arrow3
+roi|base|ptv4|5|499.9|AUTOMATIC|inner_sphere
+#
+roi_color|base|1|0\128\128
+roi_color|base|2|0\128\255
+roi_color|base|3|128\128\0
+roi_color|base|4|128\0\128
+roi_color|base|5|255\0\128
+#
+# |for |roi_num|obs_num|   key   |value
+# \     \      |       |         |
+#  \     \     |      /          |
+#   \     \    |     /           |
+#    \     \   |    /            |
+#     \     |  /   /             |
+#      |    | |  /               |
+#      |    | | |                | 
+roi_obs|base|1|1|interpreted_type|EXTERNAL
+roi_obs|base|1|1|observation_label|Patient
+roi_obs|base|1|1|interpreter|
+#
+roi_obs|base|2|2|interpreted_type|PTV1
+roi_obs|base|2|2|observation_label|ptv1
+roi_obs|base|2|2|interpreter|
+roi_obs|base|3|3|interpreted_type|PTV2
+roi_obs|base|3|3|observation_label|ptv2
+roi_obs|base|3|3|interpreter|
+roi_obs|base|4|4|interpreted_type|PTV3
+roi_obs|base|4|4|observation_label|ptv3
+roi_obs|base|4|4|interpreter|
+roi_obs|base|5|5|interpreted_type|PTV4
+roi_obs|base|5|5|observation_label|ptv4
+roi_obs|base|5|5|interpreter|
+#
+transformed_for|trans1|base|shift=(0,0,175)|rz=5|shift=(0,0,-175)
+transformed_for|trans2|base|shift=(0,0,175)|ry=5|shift=(0,0,-175)
+transformed_for|trans3|base|shift=(0,0,175)|rx=5|shift=(0,0,-175)
+xform_obj_list|base=>trans1|full_list
+xform_obj_list|base=>trans2|full_list
+xform_obj_list|base=>trans3|full_list
+xform_roi_list|base=>trans1|1=>1|2=>2|3=>3|4=>4|5=>5
+xform_roi_list|base=>trans2|1=>1|2=>2|3=>3|4=>4|5=>5
+xform_roi_list|base=>trans3|1=>1|2=>2|3=>3|4=>4|5=>5
+#
+#########################################################################
+#
+# study defines a base study
+#
+#  study_id           study directory
+#    \ /for |config_file\       / study description
+study|1|base|Study_config|Study1|Original
+study|2|trans1|Study_config|Study2|Rotated 5 deg about z
+study|3|trans2|Study_config|Study3|Rotated 5 deg about y
+study|4|trans3|Study_config|Study4|Rotated 5 deg about x
+#########################################################################
+#
+# series defines a series to be generated
+#
+# study id
+#  \    /
+#   \   |series_num
+#    \  |  /                    series directory
+#     \ | /for |config_file_path  \       /type(parms)[|obj_list]
+series|1|1|base|CT_config|Series1|CT(2.0,250,[0,0,0])|ct_list
+series|1|2|base|PT_config|Series2|PT(5.0,100,[0,0,0])|tumor
+series|1|3|base|MR_config|Series3|MR(2.0,200,[0,0,0])|ct_list
+series|1|4|base|REG_config|Series4|REG(trans1=>base,base=>trans1)|full_list
+series|1|5|base|RTS_config|Series5|RTS(1,1,1,2,3,4,5)|full_list
+series|2|1|trans1|CT_config|Series1|CT(2.0,250,[0,0,0])|ct_list
+series|2|2|trans1|PT_config|Series2|PT(5.0,100,[0,0,0])|tumor
+series|2|3|trans1|MR_config|Series3|MR(2.0,200,[0,0,0])|ct_list
+series|2|4|trans1|REG_config|Series4|REG(trans1=>base,base=>trans1)|full_list
+series|2|5|trans1|RTS_config|Series5|RTS(2,1,1,2,3,4,5)|full_list
+series|3|1|trans2|CT_config|Series1|CT(2.0,250,[0,0,0])|ct_list
+series|3|2|trans2|PT_config|Series2|PT(5.0,100,[0,0,0])|tumor
+series|3|3|trans2|MR_config|Series3|MR(2.0,200,[0,0,0])|ct_list
+series|3|4|trans2|REG_config|Series4|REG(trans2=>base,base=>trans2)|full_list
+series|3|5|trans2|RTS_config|Series5|RTS(3,1,1,2,3,4,5)|full_list
+series|4|1|trans3|CT_config|Series1|CT(2.0,250,[0,0,0])|ct_list
+series|4|2|trans3|PT_config|Series2|PT(5.0,100,[0,0,0])|tumor
+series|4|3|trans3|MR_config|Series3|MR(2.0,200,[0,0,0])|ct_list
+series|4|4|trans3|REG_config|Series4|REG(trans3=>base,base=>trans3)|full_list
+series|4|5|trans3|RTS_config|Series5|RTS(4,1,1,2,3,4,5)|full_list

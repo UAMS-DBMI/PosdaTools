@@ -1,0 +1,14 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/FileDistConfig/Identity.json,v $
+//  $Date: 2014/09/22 18:48:19 $
+//  $Revision: 1.1 $
+// 
+{
+  "Greeting": { },
+  "HostName": "quasar's test machine",
+  "Title": "File Distribution Application - quasar's test machine",
+  "LoginTitle": "Login for File Distribution",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+}

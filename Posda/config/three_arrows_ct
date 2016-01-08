@@ -1,0 +1,106 @@
+#########################################################################
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/three_arrows_ct,v $
+#$Date: 2008/04/30 19:17:35 $
+#$Revision: 1.2 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+#########################################################################
+#
+#base_uid specifies a UID root to be used for UID's to be generated
+#during rendering.  If not present, a new root will be obtained from
+#posda.com (if its up).
+#   !!!!!!!!!Either change, comment out, or delete this!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!Every time you render!!!!!!!!!!!!!!!!!!!!!!
+#
+#       | name
+base_uid|1.3.6.1.4.1.22213.1.1554.3
+#########################################################################
+#
+#posda_arg specifies a property to be supplied to posda.com when obtaining
+#  a uid root.  Only used if no base_uid specified.  
+#    Note: you can add any property you like.  Just make up a key.
+#          The following keys are built in, and need not be configured:
+#          package => "Posda::PseudoPhantom"
+#          user => <whatever `whoami` returns>
+#          host => <whatever `hostname` returns>
+#          purpose => <whatever `hostname` returns>
+#
+#  posda.com will remember these parameters, but will not share them with
+#     anyone
+#
+#        |key |value
+posda_arg|name|<your name here>
+posda_arg|email|<your email addr here>
+posda_arg|reason|Generating a set of Pseudo Phantoms
+#posda_arg|address|<your address here>
+# etc
+# ...
+#########################################################################
+#
+#base_for creates a base frame of reference with a given name
+#       | name
+base_for|base
+#########################################################################
+#
+#base_dir creates a base directory for config files 
+#       | name
+base_dir|<insert base config directory>
+#########################################################################
+#
+#name_obj creates an obj with a name of a particular type
+#  params based on type
+#                    frame of ref
+#        |name   |type    \    / parms(based on type)
+#        |       |rect    |    | center  | height  | width | length
+#        |       |sphere  |    | center  | radius
+#        |       |cone    |    | point1  | point2   |slope
+#        |       |cylinder|    | point1  | point2   |radius
+named_obj|outer_0|cylinder|base|(0,0,200)|(0,0,-200)|250
+named_obj|arrow1_c|cylinder|base|(50,0,0)|(150,0,0)|20
+named_obj|arrow1_n|cone|base|(175,0,0)|(150,0,0)|1
+named_obj|arrow2_c|cylinder|base|(0,50,0)|(0,150,0)|15
+named_obj|arrow2_n|cone|base|(0,175,0)|(0,150,0)|1
+named_obj|arrow3_c|cylinder|base|(0,0,50)|(0,0,150)|10
+named_obj|arrow3_n|cone|base|(0,0,175)|(0,0,150)|1
+#########################################################################
+#
+#obj_list creates an ordered list of objects
+#       |name      |obj    | ...
+obj_list|water|outer_0
+obj_list|tumor|arrow1_n|arrow1_c|arrow2_n|arrow2_c|arrow3_n|arrow3_c
+#########################################################################
+#
+# obj_lists can be concatenated using combined_obj_list
+#
+#                |  name   |list| ...
+combined_obj_list|full_list|tumor|water
+#########################################################################
+#
+#set_obj_prop assigns prop with name and value to all objs in list and for
+#        frame of ref       value 
+#           \     /prop name \ / list_name
+set_obj_prop|base|ct_density|0|water
+set_obj_prop|base|ct_density|500|tumor
+#########################################################################
+#
+# study defines a base study
+#
+#  study_id                             study directory
+#    \ /for |     config_file              \      / study description
+study|1|base|Study_config|Study1|Original
+#########################################################################
+#
+# series defines a series to be generated
+#
+# study id
+#  \    /
+#   \   |series_num
+#    \  |  /                    series directory
+#     \ | /for |config_file_path  \       /type(parms)[|obj_list]
+series|1|1|base|CT_config|Series1|CT(2.0,251,[0,0,0])|full_list

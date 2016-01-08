@@ -1,0 +1,11 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/notifier.pc,v $
+#$Date: 2008/10/18 22:07:42 $
+#$Revision: 1.1 $
+my($this, $fh, $out, $args) = @_;
+my $name = shift @$args;
+my $foo = Dispatch::Select::Event->new(
+  Dispatch::Select::Background->new(
+    Dispatch::Test::CreateNotifier($out, $args))
+  );
+$this->{objects}->{$name} = $foo;
+print $out "Added notifier $name\n";

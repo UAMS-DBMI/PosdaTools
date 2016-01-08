@@ -1,0 +1,26 @@
+#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/acuson.tpl,v $
+#$Date: 2009/03/25 13:59:28 $
+#$Revision: 1.1 $
+#
+(0009,0000) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0001) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0002) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0003) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0004) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0005) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0006) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0007) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0008) VERS="ACU"  VR="LT"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0009) VERS="ACU"  VR="LT"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000a) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000b) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000c) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000d) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000e) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,000f) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
+(0009,0010) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"
+(0009,0011) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"
+(0009,0012) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"
+(0009,0013) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"
+(0009,0014) VERS="ACU"	VR="LT"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"
+(0009,0015) VERS="ACU"	VR="UN"   VM="1"	Owner="ACUSON"			Keyword="?"				Name="?"

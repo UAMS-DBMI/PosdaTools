@@ -1,0 +1,21 @@
+#$Source: /home/bbennett/pass/archive/Posda/config/examples/ASetOfPseudoPhantoms/RTS_config,v $
+#$Date: 2009/07/29 16:15:53 $
+#$Revision: 1.1 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.481.3
+(0008,0060)|Modality|RTSTRUCT
+(0008,0070)|Manufacturer|Posda.com
+(0008,103e)|Series Description|Vsim_RTStructureSetSeries_3
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,1020)|Software Version(s)|2.2.131
+(0018,1030)|Protocol Name|PseudoPhantoms - Head First Supine
+(3006,0002)|Structure Set Label|Pseudo Phantoms
+(3006,0004)|Structure Set Name|Posda Pseudo Phantoms
+(3006,0008)|Structure Set Date|20080330
+(3006,0009)|Structure Set Time|143156.078000

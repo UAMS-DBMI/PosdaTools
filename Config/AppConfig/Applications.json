@@ -1,0 +1,83 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/AppConfig/Applications.json,v $
+//  $Date: 2014/09/22 18:42:12 $
+//  $Revision: 1.3 $
+// 
+{
+  "SocketPool": [
+    64614, 64615, 64616, 64617, 64618, 64619, 64620,
+    64621, 64622, 64623, 64624, 64625, 64626, 64627, 64628, 64629, 64630,
+    64631, 64632, 64633, 64634, 64635, 64636, 64637, 64638, 64639, 64640,
+  ],
+  "Apps": {
+    "FileDist": {
+      "Directory": "/home/quasar/PosdaTools/Config/FileDistConfig",
+      "Application" : "AppController.pl <host> <port> <dir> <color>",
+      "Description" : "File Distribution Application",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 1,
+    },
+    "DicomLookup": {
+      "Directory": "/home/quasar/PosdaTools/Config/DicomLookup",
+      "Application" : "AppController.pl <host> <port> <dir> <color>",
+      "Description" : "Dicom Element Lookup",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 525,
+      "w" : 800,
+      "sort_order" : 2,
+    },
+    "PosdaCuration": {
+      "Directory": "/home/quasar/PosdaTools/Config/PosdaCuration",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "New Curation/Anonymization based on Posda DB",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 7,
+    },
+  },
+  "StaticObjs": {
+    "DicomReceiver": {
+       "ObjClass": "Posda::Receiver",
+       "CreationArgs": [
+         64611,
+         ["Config", "DicomReceiver"],
+         "/home/quasar/cache/DicomReceiver",
+       ],
+    },
+    "ExtractionManager": {
+       "ObjClass": "TciaCuration::ExtractionManager",
+       "CreationArgs": [
+         64612,
+         ["Config", "ExtractionManager"],
+         "/home/quasar/cache/Data/HierarchicalExtractions",
+       ],
+    },
+    "DbFileImport": {
+       "ObjClass": "TciaCuration::DbFileProcessor",
+       "CreationArgs": [
+         ["Config", "DbFileProcessor"]
+       ],
+    },
+  },
+  "BomDirs": {
+    "Posda": "/home/quasar/PosdaTools/Posda",
+    "FileDist": "/home/quasar/PosdaTools/FileDist",
+    "Config": "/home/quasar/PosdaTools/Config",
+    "HttpRoot": "/home/quasar/PosdaTools/HttpRoot",
+    "PosdaCuration": "/home/quasar/PosdaTools/PosdaCuration",
+  },
+}

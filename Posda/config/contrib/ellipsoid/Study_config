@@ -1,0 +1,25 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/contrib/ellipsoid/Study_config,v $
+#$Date: 2008/06/27 17:14:40 $
+#$Revision: 1.2 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0020)|Study Date|20080307
+(0008,0030)|Study Time|111839.781000
+(0008,0050)|Accession Number|200803070001
+(0008,0080)|Institution Name|None
+(0008,0081)|Institution Address|None
+(0008,0090)|Referring Physician's Name|Anonymous^Physician
+(0008,1048)|Physician of Record|None
+(0010,0010)|Patient's Name|Patient^Anonymous
+(0010,0020)|Patient's ID|234567
+(0010,0030)|Patient's Birth Date|19500803
+(0010,0040)|Patient's Sex|M
+(0010,1010)|Patient's Age|057Y
+(0010,1030)|Patient's Weight|63.106
+(0018,1030)|Protocol Name|Pseudo Phantoms

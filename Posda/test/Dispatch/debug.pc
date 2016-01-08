@@ -1,0 +1,6 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/debug.pc,v $
+#$Date: 2009/05/27 15:54:09 $
+#$Revision: 1.1 $
+my($this, $fh, $out, $args) = @_;
+my $state = $args->[0];
+$ENV{POSDA_DEBUG} = $state;

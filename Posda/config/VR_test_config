@@ -1,0 +1,100 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/VR_test_config,v $
+#$Date: 2008/10/16 16:11:17 $
+#$Revision: 1.2 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+ AE   | 1-n  |PL/PT| (0008,0054)|1|AE_TITLE_1
+ AE   | 1-n  |PL/PT| (0032,1021)|2|AE_TITLE_1|AE_TITLE_2
+ AE   | 1    |PL/PT| (0040,0001)|1|AE_TITLE_1
+ AS   | 1    |fixed| (0010,1010)|1|018M
+ AT   | 1-n  |fixed| (0020,5000)|1|(0010,0010)
+ AT   | 1-n  |fixed| (0020,9165)|1|(0008,0008)
+ AT   | 1-n  |fixed| (0028,0009)|2|(0008,0008)|(0010,0010)
+ CS   | 1-n  |PL/PT| (0008,0005)|1|ABC_123_445
+ CS   | 1-n  |PL/PT| (0008,0008)|3|ABC_123|xyz_987|this is a test
+ CS   | 1    |PL/PT| (0008,0042)|1|testing again
+ DA   | 1    |fixed| (0008,0012)|1|20070601
+ DA   | 1-n  |fixed| (0018,1200)|2|20070601|20070605
+ DS   | 1-n  |PL/PT| (0008,2130)|1|123.456
+ DS   | 1-n  |PL/PT| (0018,0033)|5|123.456|1.23456e+2|1.23456E+2|1.234560000|1.2345678901234567
+ DS   | 1    |PL/PT| (0018,0050)|1|1.2345678901234e+14
+ DT   | 1    |PT   | (0008,002a)|1|20070531075531.010000-0400
+ DT   | 1-n  |PT   | (0040,a13a)|9|20070531|200705310743|20070531074331|20070531074331.123456|200705|2007|200701011010-0400|20070101101010+0400|20070101-0400
+ FD   | 1    |fixed| (0018,6028)|1|1.2345678901234e+14
+ FD   | 1-2  |fixed| (0018,9052)|1|2.345678901234e-3
+ FD   | 1-n  |fixed| (0018,6054)|3|12|13|1.4567892345678e+1
+ FL   | 1    |fixed| (0008,9459)|1|1.234567e+7
+ FL   | 1-n  |fixed| (0018,605a)|1|87.6543224e-2
+ FL   | 1-n  |fixed| (0018,6060)|3|3.4567890|2.987654|4.6738019
+ IS   | 1-n  |PL/PT| (0008,1160)|1|-12345678
+ IS   | 1    |PL/PT| (0008,2122)|1|12345678
+ IS   | 1-n  |PL/PT| (0018,0086)|3|123|456|78912345
+ LO   | 1    |PL/PT| (0008,0070)|1|<<EOF
+This is a long string, intended to be a maximum of about a line.
+EOF
+ LO   | 1-n  |PL/PT| (0008,1080)|1|<<EOF
+This is another long string, intended to be a max of a line.
+EOF
+ LO   | 1-n  |PL/PT| (0008,2132)|2|<<EOF
+This is another long string, intended to be a max of a line.
+EOF
+And this is another
+EOF
+ LT   | 1    |PT   | (0018,7041)|1|<<EOF
+     This is some long text.  The leading blanks should not be lost
+It can have embedded new lines.
+They should show up.
+EOF
+ OB   | 1-n  |fixed| (0028,2000)|4|ab|cd|ef|ab
+ OF   | 1-n  |fixed| (5600,0010)|3|123.45|2.3334|1.55555
+ OW   | 1-n  |fixed| (0028,1211)|5|abcd|0123|4567|cdef|9876
+ PN   | 1    |PL/PT| (0008,0090)|1|Morrison-Jones^Susan^^^Ph.D., Chief Executive Officer
+ PN   | 1-n  |PL/PT| (0008,1048)|1|Morrison-Jones^Susan^^^Ph.D., Chief Executive Officer
+ PN   | 1-n  |PL/PT| (0008,1050)|2|Morrison-Jones^Susan^^^Ph.D., Chief Executive Officer|Doe^John
+ SH   | 1    |PL/PT| (0008,0050)|1|Short String
+ SH   | 1-n  |PL/PT| (0008,0094)|1|Short String
+ SH   | 1-n  |PL/PT| (0010,2154)|2|Short String|Another
+ SL   | 1    |fixed| (0018,6020)|1|4548489
+ SL   | 1-n  |fixed| (0072,007c)|4|4548489|-4548489|-23456|12345
+ SS   | 1    |fixed| (0018,9219)|1|32000|
+ SS   | 2    |fixed| (0018,9440)|2|-32000|32000
+ SS   | 1-n  |fixed| (0072,007e)|4|-100|100|200|-200
+ ST   | 1    |PT   | (0008,0081)|1|<<EOF
+   This is short text.  The leading blanks shouldn't be lost.
+The newlines should be preserved.
+EOF
+ TM   | 1    |PT   | (0008,0013)|1|012345.123
+ TM   | 1-n  |PT   | (0018,1201)|3|083000|0830|09
+ UI   | 1    |PTN  | (0008,0014)|1|1.2.3.456
+ UI   | 1-n  |PTN  | (0008,001a)|1|1.2.3.456
+ UI   | 1-n  |PTN  | (0008,0058)|2|1.2.3.456|2.1.3.456
+ UL   | 1    |fixed| (0018,6016)|1|4548489
+ UL   | 1-n  |fixed| (0018,6052)|1|4548489
+ UL   | 1-n  |fixed| (0018,6058)|2|4548489|123
+ UN   | 1    |fixed| (0018,9445)|1|This is some text.
+ US   | 1    |fixed| (0008,1197)|1|32000
+ US   | 2    |fixed| (0018,106c)|2|65000|32000
+ US   | 1-n  |fixed| (0028,0070)|1|65000
+ UT   | 1    |PT   | (0028,7fe0)|1|<<EOF
+   This is Unlimited text.  The leading blanks shouldn't be lost.
+The newlines should be preserved.
+We should be able to insert a lot of stuff here.
+But we don't have time.
+EOF
+ OF   | 1    |fixed| (5600,0020)|1|
+ OB   | 1    |fixed| (0400,0115)|1|
+ SH   | 1-n  |PL/PT| (0040,a730)[0](0008,0094)|1|This is
+ SQ   | 1-n  |PL/PT| (0040,a730)[0](0040,a730)|1|
+ SH   | 1-n  |PL/PT| (0040,a730)[1](0008,0094)|1|a test
+ SQ   | 1-n  |PL/PT| (0040,a730)[1](0040,a730)[0](0008,0094)|1|This is a test
+ SH   | 1-n  |PL/PT| (0040,a730)[2](0008,0094)|1|
+ SH   | 1-n  |PL/PT| (0040,a730)[3](0008,0094)|1|with null seq el
+PVT |0021|DICOM Test File|33|UN|
+PVT |0021|DICOM Test File|34|UN|This is some  data
+ SH   | 1    |PL/PT| (0008,1010)|1|

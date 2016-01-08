@@ -1,0 +1,18 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/http_app.pc,v $
+#$Date: 2008/10/27 14:09:51 $
+#$Revision: 1.1 $
+my($this, $fh, $out, $args) = @_;
+my $name = $args->[0];
+my $port = $args->[1];
+my $dir = $args->[2];
+my $app_dir = $args->[3];
+my $interval = $args->[4];
+unless(defined $interval && $interval > 0){ $interval = 10 }
+my $time_to_live = $args->[5];
+unless(defined $time_to_live && $time_to_live > 0){ $time_to_live = 100 }
+my $app_struct = Dispatch::Http::App->new($app_dir);
+my $App =
+  Dispatch::Http::App::Server->new(
+    $dir, $app_struct, $interval, $time_to_live );
+$App->Serve($port, $interval, $time_to_live);
+$this->{objects}->{$name} = $App;

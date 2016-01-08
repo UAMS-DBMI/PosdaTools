@@ -1,0 +1,26 @@
+/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/ColReorder/media/css/ColReorder.css,v $
+   $Date: 2013/01/16 19:10:54 $
+   $Revision: 1.1 $
+ */
+
+/*
+ * Namespace DTCR - "DataTables ColReorder" plug-in
+ */
+
+table.DTCR_clonedTable {
+	background-color: white;
+	z-index: 202;
+}
+
+div.DTCR_pointer {
+	width: 1px;
+	background-color: #0259C4;
+	z-index: 201;
+}
+
+body.alt div.DTCR_pointer {
+	margin-top: -15px;
+	margin-left: -9px;
+	width: 18px;
+	background: url('../images/insert.png') no-repeat top left;
+}

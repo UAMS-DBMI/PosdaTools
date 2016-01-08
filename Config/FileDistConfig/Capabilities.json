@@ -1,0 +1,28 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/FileDistConfig/Capabilities.json,v $
+//  $Date: 2014/09/22 18:47:48 $
+//  $Revision: 1.1 $
+// 
+{
+  "Default": {
+  },
+  "root": { 
+    "CanDebug": 1,
+    "IsExpert": 1,
+    "IsExpertCapable": 1,
+  },
+  "quasar": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+    "ParticipantAccess": {
+      "TV": 1,
+      "EL": 1,
+      "VA": 1,
+      "BR": 1,
+      "AC" : 1,
+      "PH" : 1,
+      "RA" : 1,
+      "Test_Manager": 1,
+    },
+  },
+}

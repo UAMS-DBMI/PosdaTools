@@ -1,0 +1,71 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/contrib/simple/RTP_config,v $
+#$Date: 2008/06/27 17:14:40 $
+#$Revision: 1.2 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.481.5
+(0008,0060)|Modality|RTPLAN
+(0008,0070)|Manufacturer|Posda.com
+(0008,103e)|Series Description|Pseudo Phantom Generated
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,1020)|Software Version(s)|0.5
+(300a,0002)|RT Plan Label|
+(300a,0003)|RT Plan Name|
+(300a,0004)|RT Plan Description|
+(300a,0006)|RT Plan Date|
+(300a,0007)|RT Plan Time|
+(300a,000a)|RT Plan Intent|
+(300a,000c)|RT Plan Geometry|PATIENT
+# setup
+#(300a,0180)[0](0018,5100)|Patient Position|HFS
+#(300a,0180)[0](300a,0182)|Patient Setup Number|1
+#(300a,0180)[0](300a,01b0)|Setup Technique|ISOCENTRIC
+#frac group seq
+#(300a,0070)[0](300a,0071)|Fraction Group Number|1
+#(300a,0070)[0](300a,0078)|Number of Fraction Groups Planned|1
+#(300a,0070)[0](300a,0080)|Number of Beams|1
+#(300a,0070)[0](300a,00a0)|Number of Brachy Application Setups|0
+#beam seq
+#(300a,00b0)[0](0008,1040)|Institutional Department Name|Bogus dept name
+#(300a,00b0)[0](300a,00b2)|Treatment Maching Name|Bogus
+#(300a,00b0)[0](300a,00b3)|Primary Dosimeter Unit|MU
+#(300a,00b0)[0](300a,00b4)|Source-Axis Distance|1000.0
+#               beam limiting device
+#(300a,00b0)[0](300a,00b6)[0]>(300a,00b8)|RT Beam Limiting Device Type|X
+#(300a,00b0)[0](300a,00b6)[0]>(300a,00bc)|Number of Leaf/Jaw Pairs|1
+#(300a,00b0)[0](300a,00c0)|Beam Number|1
+#(300a,00b0)[0](300a,00c2)|Beam Name|
+#(300a,00b0)[0](300a,00c3)|Beam Description|Bogus beam
+#(300a,00b0)[0](300a,00c4)|Beam Type|Static
+#(300a,00b0)[0](300a,00c6)|Radiation Type|Unknown
+#(300a,00b0)[0](300a,00ce)|Treatement Delivery Type|TREATMENT
+#(300a,00b0)[0](300a,00d0)|Number of Wedges|0
+#(300a,00b0)[0](300a,00e0)|Number of Compensators|0
+#(300a,00b0)[0](300a,00ed)|Number of Boli|0
+#(300a,00b0)[0](300a,00f0)|Number of Blocks|0
+#(300a,00b0)[0](300a,010e)|Final Cumulative Meterset Weight|1.0
+#(300a,00b0)[0](300a,0110)|Number of Control Points|2
+#               control point 0
+#(300a,00b0)[0](300a,0111)[0](300a,0112)|Control Point Index|0
+#(300a,00b0)[0](300a,0111)[0](300a,0114)|Nominal Beam Energy|0
+#(300a,00b0)[0](300a,0111)[0](300a,011a)[0](300a,00ba|Beam Limiting Device Type|X
+#(300a,00b0)[0](300a,0111)[0](300a,011a)[0](300a,011c)|Leaf/Jaw Positions|X
+#(300a,00b0)[0](300a,0111)[0](300a,011e)|Gantry Angle|0.0
+#(300a,00b0)[0](300a,0111)[0](300a,011f)|Gantry Rotation Direction|CW
+#(300a,00b0)[0](300a,0111)[0](300a,012c)|IsoCenter Position|[0.0, 0.0, 0.0]
+#(300a,00b0)[0](300a,0111)[0](300a,0134)|Cumulative Meterset Weight|0.0
+#               control point 1
+#(300a,00b0)[0](300a,0111)[1](300a,0112)|Control Point Index|1
+#(300a,00b0)[0](300a,0111)[1](300a,0114)|Nominal Beam Energy|0
+#(300a,00b0)[0](300a,0111)[0](300a,011a)[0](300a,00ba|Beam Limiting Device Type|X
+#(300a,00b0)[0](300a,0111)[0](300a,011a)[0](300a,011c)|Leaf/Jaw Positions|5.0\5.0
+#(300a,00b0)[0](300a,0111)[1](300a,011e)|Gantry Angle|0.0
+#(300a,00b0)[0](300a,0111)[1](300a,011f)|Gantry Rotation Direction|CW
+#(300a,00b0)[0](300a,0111)[0](300a,012c)|IsoCenter Position|[0.0, 0.0, 0.0]
+#(300a,00b0)[0](300a,0111)[0](300a,0134)|Cumulative Meterset Weight|1.0

@@ -1,0 +1,23 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/contrib/simple/RTS_config,v $
+#$Date: 2008/06/04 21:52:17 $
+#$Revision: 1.1 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.481.3
+(0008,0060)|Modality|RTSTRUCT
+(0008,0070)|Manufacturer|Siemens Oncology Care Solutions
+(0008,103e)|Series Description|Vsim_RTStructureSetSeries_3
+(0008,1090)|Manufacturer's Model Name|COHERENCE Dosimetrist Workspace
+(0018,1020)|Software Version(s)|2.2.131
+(0018,1030)|Protocol Name|01. BPL Prostata ueber 70
+(0018,5100)|Patient Position|HFS
+(3006,0002)|Structure Set Label|VSimStructureSet
+(3006,0004)|Structure Set Name|VSim V2.2 SL131
+(3006,0008)|Structure Set Date|20080330
+(3006,0009)|Structure Set Time|143156.078000

@@ -1,0 +1,2271 @@
+#$Source: /home/bbennett/pass/archive/Posda/psv/private_dd.psv,v $
+#$Date: 2015/01/28 22:24:19 $
+#$Revision: 1.12 $
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0019,"1.2.840.113681",10)|CR Image Params Common|ST|1
+(0019,"1.2.840.113681",11)|CR Image IP Params Single|ST|1
+(0019,"1.2.840.113681",12)|CR Image IP Params Left|ST|1
+(0019,"1.2.840.113681",13)|CR Image IP Params Right|ST|1
+(0087,"1.2.840.113708.794.1.1.2.0",10)|Media Type|CS|1
+(0087,"1.2.840.113708.794.1.1.2.0",20)|Media Location|CS|1
+(0087,"1.2.840.113708.794.1.1.2.0",50)|Estimated Retrieve Time|IS|1
+(0009,"ACUSON",00)|?|IS|1
+(0009,"ACUSON",01)|?|IS|1
+(0009,"ACUSON",02)|?|UN|1
+(0009,"ACUSON",03)|?|UN|1
+(0009,"ACUSON",04)|?|UN|1
+(0009,"ACUSON",05)|?|UN|1
+(0009,"ACUSON",06)|?|UN|1
+(0009,"ACUSON",07)|?|UN|1
+(0009,"ACUSON",08)|?|LT|1
+(0009,"ACUSON",09)|?|LT|1
+(0009,"ACUSON",0a)|?|IS|1
+(0009,"ACUSON",0b)|?|IS|1
+(0009,"ACUSON",0c)|?|IS|1
+(0009,"ACUSON",0d)|?|IS|1
+(0009,"ACUSON",0e)|?|IS|1
+(0009,"ACUSON",0f)|?|UN|1
+(0009,"ACUSON",10)|?|IS|1
+(0009,"ACUSON",11)|?|UN|1
+(0009,"ACUSON",12)|?|IS|1
+(0009,"ACUSON",13)|?|IS|1
+(0009,"ACUSON",14)|?|LT|1
+(0009,"ACUSON",15)|?|UN|1
+(0003,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(0005,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(0009,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(0019,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(0029,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(1369,"AEGIS_DICOM_2.00",00)|?|US|1-n
+(0009,"AGFA",10)|?|LO|1
+(0009,"AGFA",11)|?|LO|1
+(0009,"AGFA",13)|?|LO|1
+(0009,"AGFA",14)|?|LO|1
+(0009,"AGFA",15)|?|LO|1
+(0029,"CAMTRONICS",10)|Commentline|LT|1
+(0029,"CAMTRONICS",20)|Edge Enhancement Coefficient|DS|1
+(0029,"CAMTRONICS",50)|Scene Text|LT|1
+(0029,"CAMTRONICS",60)|Image Text|LT|1
+(0029,"CAMTRONICS",70)|Pixel Shift Horizontal|IS|1
+(0029,"CAMTRONICS",80)|Pixel Shift Vertical|IS|1
+(0029,"CAMTRONICS",90)|?|IS|1
+(0029,"CAMTRONICS IP",10)|?|LT|1
+(0029,"CAMTRONICS IP",20)|?|UN|1
+(0029,"CAMTRONICS IP",30)|?|UN|1
+(0029,"CAMTRONICS IP",40)|?|UN|1
+(0009,"CARDIO-D.R. 1.0",00)|File Location|UL|1
+(0009,"CARDIO-D.R. 1.0",01)|File Size|UL|1
+(0009,"CARDIO-D.R. 1.0",40)|Alternate Image Sequence|SQ|1
+(0019,"CARDIO-D.R. 1.0",00)|Image Blanking Shape|CS|1
+(0019,"CARDIO-D.R. 1.0",02)|Image Blanking Left Vertical Edge|IS|1
+(0019,"CARDIO-D.R. 1.0",04)|Image Blanking Right Vertical Edge|IS|1
+(0019,"CARDIO-D.R. 1.0",06)|Image Blanking Upper Horizontal Edge|IS|1
+(0019,"CARDIO-D.R. 1.0",08)|Image Blanking Lower Horizontal Edge|IS|1
+(0019,"CARDIO-D.R. 1.0",10)|Center of Circular Image Blanking|IS|1
+(0019,"CARDIO-D.R. 1.0",12)|Radius of Circular Image Blanking|IS|1
+(0019,"CARDIO-D.R. 1.0",30)|Maximum Image Frame Size|UL|1
+(0021,"CARDIO-D.R. 1.0",13)|Image Sequence Number|IS|1
+(0029,"CARDIO-D.R. 1.0",00)|Edge Enhancement Sequence|SQ|1
+(0029,"CARDIO-D.R. 1.0",01)|Convolution Kernel Size|US|2
+(0029,"CARDIO-D.R. 1.0",02)|Convolution Kernel Coefficients|DS|1-n
+(0029,"CARDIO-D.R. 1.0",03)|Edge Enhancement Gain|DS|1
+(0029,"DIGISCAN IMAGE",31)|?|US|1-n
+(0029,"DIGISCAN IMAGE",32)|?|US|1-n
+(0029,"DIGISCAN IMAGE",33)|?|LT|1
+(0029,"DIGISCAN IMAGE",34)|?|LT|1
+(7000,"DLX_ANNOT_01",04)|TextAnnotation|ST|1
+(7000,"DLX_ANNOT_01",05)|Box|IS|2
+(7000,"DLX_ANNOT_01",07)|ArrowEnd|IS|2
+(0015,"DLX_EXAMS_01",01)|Stenosis Calibration Ratio|DS|1
+(0015,"DLX_EXAMS_01",02)|Stenosis Magnification|DS|1
+(0015,"DLX_EXAMS_01",03)|Cardiac Calibration Ratio|DS|1
+(6000,"DLX_LKUP_01",01)|Gray Palette Color Lookup Table Descriptor|US|3
+(6000,"DLX_LKUP_01",02)|Gray Palette Color Lookup Table Data|US|1
+(0011,"DLX_PATNT_01",01)|Patient DOB|LT|1
+(0019,"DLX_SERIE_01",01)|Angle Value L Arm|DS|1
+(0019,"DLX_SERIE_01",02)|Angle Value P Arm|DS|1
+(0019,"DLX_SERIE_01",03)|Angle Value C Arm|DS|1
+(0019,"DLX_SERIE_01",04)|Angle Label L Arm|CS|1
+(0019,"DLX_SERIE_01",05)|Angle Label P Arm|CS|1
+(0019,"DLX_SERIE_01",06)|Angle Label C Arm|CS|1
+(0019,"DLX_SERIE_01",07)|Procedure Name|ST|1
+(0019,"DLX_SERIE_01",08)|Exam Name|ST|1
+(0019,"DLX_SERIE_01",09)|Patient Size|SH|1
+(0019,"DLX_SERIE_01",0a)|Record View|IS|1
+(0019,"DLX_SERIE_01",10)|Injector Delay|DS|1
+(0019,"DLX_SERIE_01",11)|Auto Inject|CS|1
+(0019,"DLX_SERIE_01",14)|Acquisition Mode|IS|1
+(0019,"DLX_SERIE_01",15)|Camera Rotation Enabled|CS|1
+(0019,"DLX_SERIE_01",16)|Reverse Sweep|CS|1
+(0019,"DLX_SERIE_01",17)|Spatial Filter Strength|IS|1
+(0019,"DLX_SERIE_01",18)|Zoom Factor|IS|1
+(0019,"DLX_SERIE_01",19)|X Zoom Center|IS|1
+(0019,"DLX_SERIE_01",1a)|Y Zoom Center|IS|1
+(0019,"DLX_SERIE_01",1b)|Focus|DS|1
+(0019,"DLX_SERIE_01",1c)|Dose|CS|1
+(0019,"DLX_SERIE_01",1d)|Side Mark|IS|1
+(0019,"DLX_SERIE_01",1e)|Percentage Landscape|IS|1
+(0019,"DLX_SERIE_01",1f)|Exposure Duration|DS|1
+(00e1,"ELSCINT1",01)|Data Dictionary Version|US|1
+(00e1,"ELSCINT1",14)|?|LT|1
+(00e1,"ELSCINT1",22)|?|DS|2
+(00e1,"ELSCINT1",23)|?|DS|2
+(00e1,"ELSCINT1",24)|?|LT|1
+(00e1,"ELSCINT1",25)|?|LT|1
+(00e1,"ELSCINT1",40)|Offset From CT MR Images|SH|1
+(0601,"ELSCINT1",00)|Implementation Version|SH|1
+(0601,"ELSCINT1",20)|Relative Table Position|DS|1
+(0601,"ELSCINT1",21)|Relative Table Height|DS|1
+(0601,"ELSCINT1",30)|Surview Direction|SH|1
+(0601,"ELSCINT1",31)|Surview Length|DS|1
+(0601,"ELSCINT1",50)|Image View Type|SH|1
+(0601,"ELSCINT1",70)|Batch Number|DS|1
+(0601,"ELSCINT1",71)|Batch Size|DS|1
+(0601,"ELSCINT1",72)|Batch Slice Number|DS|1
+(0009,"FFP DATA",01)|CR Header Information|UN|1
+(0019,"GE ??? From Adantage Review CS",30)|CR EDR Mode|LO|1
+(0019,"GE ??? From Adantage Review CS",40)|CR Latitude|LO|1
+(0019,"GE ??? From Adantage Review CS",50)|CR Group Number|LO|1
+(0019,"GE ??? From Adantage Review CS",70)|CR Image Serial Number|LO|1
+(0019,"GE ??? From Adantage Review CS",80)|CR Bar Code Number|LO|1
+(0019,"GE ??? From Adantage Review CS",90)|CR Film Output Exposures|LO|1
+(0009,"GEMS_ACQU_01",24)|?|DS|1
+(0009,"GEMS_ACQU_01",25)|?|US|1
+(0009,"GEMS_ACQU_01",3e)|?|US|1
+(0009,"GEMS_ACQU_01",3f)|?|US|1
+(0009,"GEMS_ACQU_01",42)|?|US|1
+(0009,"GEMS_ACQU_01",43)|?|US|1
+(0009,"GEMS_ACQU_01",f8)|?|US|1
+(0009,"GEMS_ACQU_01",fb)|?|IS|1
+(0019,"GEMS_ACQU_01",01)|?|LT|1
+(0019,"GEMS_ACQU_01",02)|Number Of Cells In Detector|SL|1
+(0019,"GEMS_ACQU_01",03)|Cell Number At Theta|DS|1
+(0019,"GEMS_ACQU_01",04)|Cell Spacing|DS|1
+(0019,"GEMS_ACQU_01",05)|?|LT|1
+(0019,"GEMS_ACQU_01",06)|?|UN|1
+(0019,"GEMS_ACQU_01",0e)|?|US|1
+(0019,"GEMS_ACQU_01",0f)|Horizontal Frame Of Reference|DS|1
+(0019,"GEMS_ACQU_01",11)|Series Contrast|SS|1
+(0019,"GEMS_ACQU_01",12)|Last Pseq|SS|1
+(0019,"GEMS_ACQU_01",13)|Start Number For Baseline|SS|1
+(0019,"GEMS_ACQU_01",14)|End Number For Baseline|SS|1
+(0019,"GEMS_ACQU_01",15)|Start Number For Enhanced Scans|SS|1
+(0019,"GEMS_ACQU_01",16)|End Number For Enhanced Scans|SS|1
+(0019,"GEMS_ACQU_01",17)|Series Plane|SS|1
+(0019,"GEMS_ACQU_01",18)|First Scan RAS|LO|1
+(0019,"GEMS_ACQU_01",19)|First Scan Location|DS|1
+(0019,"GEMS_ACQU_01",1a)|Last Scan RAS|LO|1
+(0019,"GEMS_ACQU_01",1b)|Last Scan Location|DS|1
+(0019,"GEMS_ACQU_01",1e)|Display Field Of View|DS|1
+(0019,"GEMS_ACQU_01",20)|?|DS|1
+(0019,"GEMS_ACQU_01",22)|?|DS|1
+(0019,"GEMS_ACQU_01",23)|Table Speed|DS|1
+(0019,"GEMS_ACQU_01",24)|Mid Scan Time|DS|1
+(0019,"GEMS_ACQU_01",25)|Mid Scan Flag|SS|1
+(0019,"GEMS_ACQU_01",26)|Degrees Of Azimuth|SL|1
+(0019,"GEMS_ACQU_01",27)|Gantry Period|DS|1
+(0019,"GEMS_ACQU_01",2a)|Xray On Position|DS|1
+(0019,"GEMS_ACQU_01",2b)|Xray Off Position|DS|1
+(0019,"GEMS_ACQU_01",2c)|Number Of Triggers|SL|1
+(0019,"GEMS_ACQU_01",2d)|?|US|1
+(0019,"GEMS_ACQU_01",2e)|Angle Of First View|DS|1
+(0019,"GEMS_ACQU_01",2f)|Trigger Frequency|DS|1
+(0019,"GEMS_ACQU_01",39)|Scan FOV Type|SS|1
+(0019,"GEMS_ACQU_01",3a)|?|IS|1
+(0019,"GEMS_ACQU_01",3b)|?|LT|1
+(0019,"GEMS_ACQU_01",3c)|?|UN|1
+(0019,"GEMS_ACQU_01",3e)|?|UN|1
+(0019,"GEMS_ACQU_01",3f)|?|UN|1
+(0019,"GEMS_ACQU_01",40)|Stat Recon Flag|SS|1
+(0019,"GEMS_ACQU_01",41)|Compute Type|SS|1
+(0019,"GEMS_ACQU_01",42)|Segment Number|SS|1
+(0019,"GEMS_ACQU_01",43)|Total Segments Requested|SS|1
+(0019,"GEMS_ACQU_01",44)|Interscan Delay|DS|1
+(0019,"GEMS_ACQU_01",47)|View Compression Factor|SS|1
+(0019,"GEMS_ACQU_01",48)|?|US|1
+(0019,"GEMS_ACQU_01",49)|?|US|1
+(0019,"GEMS_ACQU_01",4a)|Total Number Of Ref Channels|SS|1
+(0019,"GEMS_ACQU_01",4b)|Data Size For Scan Data|SL|1
+(0019,"GEMS_ACQU_01",52)|Recon Post Processing Flag|SS|1
+(0019,"GEMS_ACQU_01",54)|?|UN|1
+(0019,"GEMS_ACQU_01",57)|CT Water Number|SS|1
+(0019,"GEMS_ACQU_01",58)|CT Bone Number|SS|1
+(0019,"GEMS_ACQU_01",5a)|Acquisition Duration|FL|1
+(0019,"GEMS_ACQU_01",5d)|?|US|1
+(0019,"GEMS_ACQU_01",5e)|Number Of Channels 1 To 512|SL|1
+(0019,"GEMS_ACQU_01",5f)|Increment Between Channels|SL|1
+(0019,"GEMS_ACQU_01",60)|Starting View|SL|1
+(0019,"GEMS_ACQU_01",61)|Number Of Views|SL|1
+(0019,"GEMS_ACQU_01",62)|Increment Between Views|SL|1
+(0019,"GEMS_ACQU_01",6a)|Dependant On Number Of Views Processed|SS|1
+(0019,"GEMS_ACQU_01",6b)|Field Of View In Detector Cells|SS|1
+(0019,"GEMS_ACQU_01",70)|Value Of Back Projection Button|SS|1
+(0019,"GEMS_ACQU_01",71)|Set If Fatq Estimates Were Used|SS|1
+(0019,"GEMS_ACQU_01",72)|Z Channel Avg Over Views|DS|1
+(0019,"GEMS_ACQU_01",73)|Avg Of Left Ref Channels Over Views|DS|1
+(0019,"GEMS_ACQU_01",74)|Max Left Channel Over Views|DS|1
+(0019,"GEMS_ACQU_01",75)|Avg Of Right Ref Channels Over Views|DS|1
+(0019,"GEMS_ACQU_01",76)|Max Right Channel Over Views|DS|1
+(0019,"GEMS_ACQU_01",7d)|Second Echo|DS|1
+(0019,"GEMS_ACQU_01",7e)|Number Of Echos|SS|1
+(0019,"GEMS_ACQU_01",7f)|Table Delta|DS|1
+(0019,"GEMS_ACQU_01",81)|Contiguous|SS|1
+(0019,"GEMS_ACQU_01",82)|?|US|1
+(0019,"GEMS_ACQU_01",83)|?|DS|1
+(0019,"GEMS_ACQU_01",84)|Peak SAR|DS|1
+(0019,"GEMS_ACQU_01",85)|Monitor SAR|SS|1
+(0019,"GEMS_ACQU_01",86)|?|US|1
+(0019,"GEMS_ACQU_01",87)|Cardiac Repetition Time|DS|1
+(0019,"GEMS_ACQU_01",88)|Images Per Cardiac Cycle|SS|1
+(0019,"GEMS_ACQU_01",8a)|Actual Receive Gain Analog|SS|1
+(0019,"GEMS_ACQU_01",8b)|Actual Receive Gain Digital|SS|1
+(0019,"GEMS_ACQU_01",8d)|Delay After Trigger|DS|1
+(0019,"GEMS_ACQU_01",8f)|Swap Phase Frequency|SS|1
+(0019,"GEMS_ACQU_01",90)|Pause Interval|SS|1
+(0019,"GEMS_ACQU_01",91)|Pulse Time|DS|1
+(0019,"GEMS_ACQU_01",92)|Slice Offset On Frequency Axis|SL|1
+(0019,"GEMS_ACQU_01",93)|Center Frequency|DS|1
+(0019,"GEMS_ACQU_01",94)|Transmit Gain|SS|1
+(0019,"GEMS_ACQU_01",95)|Analog Receiver Gain|SS|1
+(0019,"GEMS_ACQU_01",96)|Digital Receiver Gain|SS|1
+(0019,"GEMS_ACQU_01",97)|Bitmap Defining CVs|SL|1
+(0019,"GEMS_ACQU_01",98)|Center Frequency Method|SS|1
+(0019,"GEMS_ACQU_01",99)|?|US|1
+(0019,"GEMS_ACQU_01",9b)|Pulse Sequence Mode|SS|1
+(0019,"GEMS_ACQU_01",9c)|Pulse Sequence Name|LO|1
+(0019,"GEMS_ACQU_01",9d)|Pulse Sequence Date|DT|1
+(0019,"GEMS_ACQU_01",9e)|Internal Pulse Sequence Name|LO|1
+(0019,"GEMS_ACQU_01",9f)|Transmitting Coil|SS|1
+(0019,"GEMS_ACQU_01",a0)|Surface Coil Type|SS|1
+(0019,"GEMS_ACQU_01",a1)|Extremity Coil Flag|SS|1
+(0019,"GEMS_ACQU_01",a2)|Raw Data Run Number|SL|1
+(0019,"GEMS_ACQU_01",a3)|Calibrated Field Strength|UL|1
+(0019,"GEMS_ACQU_01",a4)|SAT Fat Water Bone|SS|1
+(0019,"GEMS_ACQU_01",a5)|Receive Bandwidth|DS|1
+(0019,"GEMS_ACQU_01",a7)|User Data|DS|1
+(0019,"GEMS_ACQU_01",a8)|User Data|DS|1
+(0019,"GEMS_ACQU_01",a9)|User Data|DS|1
+(0019,"GEMS_ACQU_01",aa)|User Data|DS|1
+(0019,"GEMS_ACQU_01",ab)|User Data|DS|1
+(0019,"GEMS_ACQU_01",ac)|User Data|DS|1
+(0019,"GEMS_ACQU_01",ad)|User Data|DS|1
+(0019,"GEMS_ACQU_01",ae)|User Data|DS|1
+(0019,"GEMS_ACQU_01",af)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b0)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b1)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b2)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b3)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b4)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b5)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b6)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b7)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b8)|User Data|DS|1
+(0019,"GEMS_ACQU_01",b9)|User Data|DS|1
+(0019,"GEMS_ACQU_01",ba)|User Data|DS|1
+(0019,"GEMS_ACQU_01",bb)|User Data|DS|1
+(0019,"GEMS_ACQU_01",bc)|User Data|DS|1
+(0019,"GEMS_ACQU_01",bd)|User Data|DS|1
+(0019,"GEMS_ACQU_01",be)|Projection Angle|DS|1
+(0019,"GEMS_ACQU_01",c0)|Saturation Planes|SS|1
+(0019,"GEMS_ACQU_01",c1)|Surface Coil Intensity Correction Flag|SS|1
+(0019,"GEMS_ACQU_01",c2)|SAT Location R|SS|1
+(0019,"GEMS_ACQU_01",c3)|SAT Location L|SS|1
+(0019,"GEMS_ACQU_01",c4)|SAT Location A|SS|1
+(0019,"GEMS_ACQU_01",c5)|SAT Location P|SS|1
+(0019,"GEMS_ACQU_01",c6)|SAT Location H|SS|1
+(0019,"GEMS_ACQU_01",c7)|SAT Location F|SS|1
+(0019,"GEMS_ACQU_01",c8)|SAT Thickness R L|SS|1
+(0019,"GEMS_ACQU_01",c9)|SAT Thickness A P|SS|1
+(0019,"GEMS_ACQU_01",ca)|SAT Thickness H F|SS|1
+(0019,"GEMS_ACQU_01",cb)|Prescribed Flow Axis|SS|1
+(0019,"GEMS_ACQU_01",cc)|Velocity Encoding|SS|1
+(0019,"GEMS_ACQU_01",cd)|Thickness Disclaimer|SS|1
+(0019,"GEMS_ACQU_01",ce)|Prescan Type|SS|1
+(0019,"GEMS_ACQU_01",cf)|Prescan Status|SS|1
+(0019,"GEMS_ACQU_01",d0)|Raw Data Type|SH|1
+(0019,"GEMS_ACQU_01",d2)|Projection Algorithm|SS|1
+(0019,"GEMS_ACQU_01",d3)|Projection Algorithm|SH|1
+(0019,"GEMS_ACQU_01",d4)|?|US|1
+(0019,"GEMS_ACQU_01",d5)|Fractional Echo|SS|1
+(0019,"GEMS_ACQU_01",d6)|Prep Pulse|SS|1
+(0019,"GEMS_ACQU_01",d7)|Cardiac Phases|SS|1
+(0019,"GEMS_ACQU_01",d8)|Variable Echo Flag|SS|1
+(0019,"GEMS_ACQU_01",d9)|Concatenated SAT|DS|1
+(0019,"GEMS_ACQU_01",da)|Reference Channel Used|SS|1
+(0019,"GEMS_ACQU_01",db)|Back Projector Coefficient|DS|1
+(0019,"GEMS_ACQU_01",dc)|Primary Speed Correction Used|SS|1
+(0019,"GEMS_ACQU_01",dd)|Overrange Correction Used|SS|1
+(0019,"GEMS_ACQU_01",de)|Dynamic Z Alpha Value|DS|1
+(0019,"GEMS_ACQU_01",df)|User Data|DS|1
+(0019,"GEMS_ACQU_01",e0)|User Data|DS|1
+(0019,"GEMS_ACQU_01",e1)|?|DS|1
+(0019,"GEMS_ACQU_01",e2)|Velocity Encode Scale|DS|1
+(0019,"GEMS_ACQU_01",e3)|?|LT|1
+(0019,"GEMS_ACQU_01",e4)|?|LT|1
+(0019,"GEMS_ACQU_01",e5)|?|IS|1
+(0019,"GEMS_ACQU_01",e6)|?|US|1
+(0019,"GEMS_ACQU_01",e8)|?|DS|1
+(0019,"GEMS_ACQU_01",e9)|?|DS|1
+(0019,"GEMS_ACQU_01",eb)|?|DS|1
+(0019,"GEMS_ACQU_01",ec)|?|US|1
+(0019,"GEMS_ACQU_01",f0)|?|UN|1
+(0019,"GEMS_ACQU_01",f1)|?|LT|1
+(0019,"GEMS_ACQU_01",f2)|Fast Phases|SS|1
+(0019,"GEMS_ACQU_01",f3)|?|LT|1
+(0019,"GEMS_ACQU_01",f4)|?|LT|1
+(0019,"GEMS_ACQU_01",f9)|Transmission Gain|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",00)|CR Exposure Menu Code|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",10)|CR Exposure Menu String|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",20)|CR EDR Mode|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",30)|CR Latitude|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",40)|CR Group Number|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",50)|CR Image Serial Number|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",60)|CR Bar Code Number|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",70)|CR Film Output Exposure|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",80)|CR Film Format|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK1",90)|CR S Shift String|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",00)|CR S Shift|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",10)|CR C Shift|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",20)|CR GT|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",30)|CR GA|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",40)|CR GC|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",50)|CR GS|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",60)|CR RT|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",70)|CR RE|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",80)|CR RN|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK2",90)|CR DRT|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",00)|CR DRE|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",10)|CR DRN|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",20)|CR ORE|DS|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",30)|CR ORN|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",40)|CR ORD|US|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",50)|CR Cassette Size|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",60)|CR Machine ID|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",70)|CR Machine Type|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",80)|CR Technician Code|LO|1
+(0023,"GEMS_ACRQA_1.0 BLOCK3",90)|CR Energy Subtraction Parameters|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",00)|CR Exposure Menu Code|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",10)|CR Exposure Menu String|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",20)|CR EDR Mode|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",30)|CR Latitude|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",40)|CR Group Number|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",50)|CR Image Serial Number|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",60)|CR Bar Code Number|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",70)|CR Film Output Exposure|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",80)|CR Film Format|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK1",90)|CR S Shift String|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",00)|CR S Shift|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",10)|CR C Shift|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",20)|CR GT|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",30)|CR GA|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",40)|CR GC|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",50)|CR GS|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",60)|CR RT|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",70)|CR RE|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",80)|CR RN|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK2",90)|CR DRT|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",00)|CR DRE|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",10)|CR DRN|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",20)|CR ORE|DS|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",30)|CR ORN|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",40)|CR ORD|US|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",50)|CR Cassette Size|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",60)|CR Machine ID|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",70)|CR Machine Type|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",80)|CR Technician Code|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",90)|CR Energy Subtraction Parameters|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",f0)|CR Distribution Code|LO|1
+(0023,"GEMS_ACRQA_2.0 BLOCK3",ff)|CR Shutters Applied|US|1
+(0047,"GEMS_ADWSoft_3D1",01)|Reconstruction Parameters Sequence|SQ|1
+(0047,"GEMS_ADWSoft_3D1",50)|Volume Voxel Count|UL|1
+(0047,"GEMS_ADWSoft_3D1",51)|Volume Segment Count|UL|1
+(0047,"GEMS_ADWSoft_3D1",53)|Volume Slice Size|US|1
+(0047,"GEMS_ADWSoft_3D1",54)|Volume Slice Count|US|1
+(0047,"GEMS_ADWSoft_3D1",55)|Volume Threshold Value|SL|1
+(0047,"GEMS_ADWSoft_3D1",57)|Volume Voxel Ratio|DS|1
+(0047,"GEMS_ADWSoft_3D1",58)|Volume Voxel Size|DS|1
+(0047,"GEMS_ADWSoft_3D1",59)|Volume Z Position Size|US|1
+(0047,"GEMS_ADWSoft_3D1",60)|Volume Base Line|DS|9
+(0047,"GEMS_ADWSoft_3D1",61)|Volume Center Point|DS|3
+(0047,"GEMS_ADWSoft_3D1",63)|Volume Skew Base|SL|1
+(0047,"GEMS_ADWSoft_3D1",64)|Volume Registration Transform Rotation Matrix|DS|9
+(0047,"GEMS_ADWSoft_3D1",65)|Volume Registration Transform Translation Vector|DS|3
+(0047,"GEMS_ADWSoft_3D1",70)|KVP List|DS|1-n
+(0047,"GEMS_ADWSoft_3D1",71)|XRay Tube Current List|IS|1-n
+(0047,"GEMS_ADWSoft_3D1",72)|Exposure List|IS|1-n
+(0047,"GEMS_ADWSoft_3D1",80)|Acquisition DLX Identifier|LO|1
+(0047,"GEMS_ADWSoft_3D1",85)|Acquisition DLX 2D Series Sequence|SQ|1
+(0047,"GEMS_ADWSoft_3D1",89)|Contrast Agent Volume List|DS|1-n
+(0047,"GEMS_ADWSoft_3D1",8a)|Number Of Injections|US|1
+(0047,"GEMS_ADWSoft_3D1",8b)|Frame Count|US|1
+(0047,"GEMS_ADWSoft_3D1",91)|XA 3D Reconstruction Algorithm Name|LO|1
+(0047,"GEMS_ADWSoft_3D1",92)|XA 3D Reconstruction Algorithm Version|CS|1
+(0047,"GEMS_ADWSoft_3D1",93)|DLX Calibration Date|DA|1
+(0047,"GEMS_ADWSoft_3D1",94)|DLX Calibration Time|TM|1
+(0047,"GEMS_ADWSoft_3D1",95)|DLX Calibration Status|CS|1
+(0047,"GEMS_ADWSoft_3D1",96)|Used Frames|IS|1-n
+(0047,"GEMS_ADWSoft_3D1",98)|Transform Count|US|1
+(0047,"GEMS_ADWSoft_3D1",99)|Transform Sequence|SQ|1
+(0047,"GEMS_ADWSoft_3D1",9a)|Transform Rotation Matrix|DS|9
+(0047,"GEMS_ADWSoft_3D1",9b)|Transform Translation Vector|DS|3
+(0047,"GEMS_ADWSoft_3D1",9c)|Transform Label|LO|1
+(0047,"GEMS_ADWSoft_3D1",b0)|Wireframe List|SQ|1
+(0047,"GEMS_ADWSoft_3D1",b1)|Wireframe Count|US|1
+(0047,"GEMS_ADWSoft_3D1",b2)|Location System|US|1
+(0047,"GEMS_ADWSoft_3D1",b5)|Wireframe Name|LO|1
+(0047,"GEMS_ADWSoft_3D1",b6)|Wireframe Group Name|LO|1
+(0047,"GEMS_ADWSoft_3D1",b7)|Wireframe Color|LO|1
+(0047,"GEMS_ADWSoft_3D1",b8)|Wireframe Attributes|SL|1
+(0047,"GEMS_ADWSoft_3D1",b9)|Wireframe Point Count|SL|1
+(0047,"GEMS_ADWSoft_3D1",ba)|Wireframe Timestamp|SL|1
+(0047,"GEMS_ADWSoft_3D1",bb)|Wireframe Point List|SQ|1
+(0047,"GEMS_ADWSoft_3D1",bc)|Wireframe Points Coordinates|DS|3
+(0047,"GEMS_ADWSoft_3D1",c0)|Volume Upper Left High Corner RAS|DS|3
+(0047,"GEMS_ADWSoft_3D1",c1)|Volume Slice To RAS Rotation Matrix|DS|9
+(0047,"GEMS_ADWSoft_3D1",c2)|Volume Upper Left High Corner TLOC|DS|1
+(0047,"GEMS_ADWSoft_3D1",d1)|Volume Segment List|OB|1
+(0047,"GEMS_ADWSoft_3D1",d2)|Volume Gradient List|OB|1
+(0047,"GEMS_ADWSoft_3D1",d3)|Volume Density List|OB|1
+(0047,"GEMS_ADWSoft_3D1",d4)|Volume Z Position List|OB|1
+(0047,"GEMS_ADWSoft_3D1",d5)|Volume Original Index List|OB|1
+(0039,"GEMS_ADWSoft_DPO",80)|Private Entity Number|IS|1
+(0039,"GEMS_ADWSoft_DPO",85)|Private Entity Date|DA|1
+(0039,"GEMS_ADWSoft_DPO",90)|Private Entity Time|TM|1
+(0039,"GEMS_ADWSoft_DPO",95)|Private Entity Launch Command|LO|1
+(0039,"GEMS_ADWSoft_DPO",aa)|Private Entity Type|CS|1
+(0033,"GEMS_CTHD_01",02)|?|UN|1
+(0037,"GEMS_DRS_1",10)|ReferringDepartment|LO|1
+(0037,"GEMS_DRS_1",20)|ScreenNumber|US|1
+(0037,"GEMS_DRS_1",40)|LeftOrientation|SH|1
+(0037,"GEMS_DRS_1",42)|RightOrientation|SH|1
+(0037,"GEMS_DRS_1",50)|Inversion|CS|1
+(0037,"GEMS_DRS_1",60)|DSA|US|1
+(0009,"GEMS_GENIE_1",10)|?|LO|1
+(0009,"GEMS_GENIE_1",11)|Study Flags|SL|1
+(0009,"GEMS_GENIE_1",12)|Study Type|SL|1
+(0009,"GEMS_GENIE_1",1e)|?|UI|1
+(0009,"GEMS_GENIE_1",20)|?|LO|1
+(0009,"GEMS_GENIE_1",21)|Series Flags|SL|1
+(0009,"GEMS_GENIE_1",22)|User Orientation|SH|1
+(0009,"GEMS_GENIE_1",23)|Initiation Type|SL|1
+(0009,"GEMS_GENIE_1",24)|Initiation Delay|SL|1
+(0009,"GEMS_GENIE_1",25)|Initiation Count Rate|SL|1
+(0009,"GEMS_GENIE_1",26)|Number Energy Sets|SL|1
+(0009,"GEMS_GENIE_1",27)|Number Detectors|SL|1
+(0009,"GEMS_GENIE_1",29)|?|SL|1
+(0009,"GEMS_GENIE_1",2a)|?|SL|1
+(0009,"GEMS_GENIE_1",2c)|Series Comments|LO|1
+(0009,"GEMS_GENIE_1",2d)|Track Beat Average|SL|1
+(0009,"GEMS_GENIE_1",2e)|Distance Prescribed|FD|1
+(0009,"GEMS_GENIE_1",30)|?|LO|1
+(0009,"GEMS_GENIE_1",35)|Gantry Locus Type|SL|1
+(0009,"GEMS_GENIE_1",37)|Starting Heart Rate|SL|1
+(0009,"GEMS_GENIE_1",38)|RR Window Width|SL|1
+(0009,"GEMS_GENIE_1",39)|RR Window Offset|SL|1
+(0009,"GEMS_GENIE_1",3a)|Percent Cycle Imaged|SL|1
+(0009,"GEMS_GENIE_1",40)|?|LO|1
+(0009,"GEMS_GENIE_1",41)|Patient Flags|SL|1
+(0009,"GEMS_GENIE_1",42)|Patient Creation Date|DA|1
+(0009,"GEMS_GENIE_1",43)|Patient Creation Time|TM|1
+(0011,"GEMS_GENIE_1",0a)|Series Type|SL|1
+(0011,"GEMS_GENIE_1",0b)|Effective Series Duration|SL|1
+(0011,"GEMS_GENIE_1",0c)|Num Beats|SL|1
+(0011,"GEMS_GENIE_1",0d)|Radio Nuclide Name|LO|1
+(0011,"GEMS_GENIE_1",10)|?|LO|1
+(0011,"GEMS_GENIE_1",12)|Dataset Name|LO|1
+(0011,"GEMS_GENIE_1",13)|Dataset Type|SL|1
+(0011,"GEMS_GENIE_1",15)|Detector Number|SL|1
+(0011,"GEMS_GENIE_1",16)|Energy Number|SL|1
+(0011,"GEMS_GENIE_1",17)|RR Interval Window Number|SL|1
+(0011,"GEMS_GENIE_1",18)|MG Bin Number|SL|1
+(0011,"GEMS_GENIE_1",19)|Radius Of Rotation|FD|1
+(0011,"GEMS_GENIE_1",1a)|Detector Count Zone|SL|1
+(0011,"GEMS_GENIE_1",1b)|Num Energy Windows|SL|1
+(0011,"GEMS_GENIE_1",1c)|Energy Offset|SL|4
+(0011,"GEMS_GENIE_1",1d)|Energy Range|SL|1
+(0011,"GEMS_GENIE_1",1f)|Image Orientation|SL|1
+(0011,"GEMS_GENIE_1",23)|Use FOV Mask|SL|1
+(0011,"GEMS_GENIE_1",24)|FOV Mask Y Cutoff Angle|SL|1
+(0011,"GEMS_GENIE_1",25)|FOV Mask Cutoff Angle|SL|1
+(0011,"GEMS_GENIE_1",26)|Table Orientation|SL|1
+(0011,"GEMS_GENIE_1",27)|ROI Top Left|SL|2
+(0011,"GEMS_GENIE_1",28)|ROI Bottom Right|SL|2
+(0011,"GEMS_GENIE_1",30)|?|LO|1
+(0011,"GEMS_GENIE_1",33)|Energy Correct Name|LO|1
+(0011,"GEMS_GENIE_1",34)|Spatial Correct Name|LO|1
+(0011,"GEMS_GENIE_1",35)|Tuning Calib Name|LO|1
+(0011,"GEMS_GENIE_1",36)|Uniformity Correct Name|LO|1
+(0011,"GEMS_GENIE_1",37)|Acquisition Specific Correct Name|LO|1
+(0011,"GEMS_GENIE_1",38)|Byte Order|SL|1
+(0011,"GEMS_GENIE_1",3a)|Picture Format|SL|1
+(0011,"GEMS_GENIE_1",3b)|Pixel Scale|FD|1
+(0011,"GEMS_GENIE_1",3c)|Pixel Offset|FD|1
+(0011,"GEMS_GENIE_1",3e)|FOV Shape|SL|1
+(0011,"GEMS_GENIE_1",3f)|Dataset Flags|SL|1
+(0011,"GEMS_GENIE_1",44)|Threshold Center|FD|1
+(0011,"GEMS_GENIE_1",45)|Threshold Width|FD|1
+(0011,"GEMS_GENIE_1",46)|Interpolation Type|SL|1
+(0011,"GEMS_GENIE_1",55)|Period|FD|1
+(0011,"GEMS_GENIE_1",56)|ElapsedTime|FD|1
+(0013,"GEMS_GENIE_1",10)|Digital FOV|FD|2
+(0013,"GEMS_GENIE_1",11)|?|SL|1
+(0013,"GEMS_GENIE_1",12)|?|SL|1
+(0013,"GEMS_GENIE_1",16)|AutoTrack Peak|SL|1
+(0013,"GEMS_GENIE_1",17)|AutoTrack Width|SL|1
+(0013,"GEMS_GENIE_1",18)|Transmission Scan Time|FD|1
+(0013,"GEMS_GENIE_1",19)|Transmission Mask Width|FD|1
+(0013,"GEMS_GENIE_1",1a)|Copper Attenuator Thickness|FD|1
+(0013,"GEMS_GENIE_1",1c)|?|FD|1
+(0013,"GEMS_GENIE_1",1d)|?|FD|1
+(0013,"GEMS_GENIE_1",1e)|Tomo View Offset|FD|1-n
+(0013,"GEMS_GENIE_1",26)|Study Comments|LT|1
+(0033,"GEMS_GNHD_01",01)|?|UN|1
+(0033,"GEMS_GNHD_01",02)|?|UN|1
+(0009,"GEMS_IDEN_01",01)|Full Fidelity|LO|1
+(0009,"GEMS_IDEN_01",02)|Suite Id|SH|1
+(0009,"GEMS_IDEN_01",04)|Product Id|SH|1
+(0009,"GEMS_IDEN_01",17)|?|LT|1
+(0009,"GEMS_IDEN_01",1a)|?|US|1
+(0009,"GEMS_IDEN_01",20)|?|US|1
+(0009,"GEMS_IDEN_01",27)|Image Actual Date|SL|1
+(0009,"GEMS_IDEN_01",2f)|?|LT|1
+(0009,"GEMS_IDEN_01",30)|Service Id|SH|1
+(0009,"GEMS_IDEN_01",31)|Mobile Location Number|SH|1
+(0009,"GEMS_IDEN_01",e2)|?|LT|1
+(0009,"GEMS_IDEN_01",e3)|Equipment UID|UI|1
+(0009,"GEMS_IDEN_01",e6)|Genesis Version Now|SH|1
+(0009,"GEMS_IDEN_01",e7)|Exam Record Checksum|UL|1
+(0009,"GEMS_IDEN_01",e8)|?|UL|1
+(0009,"GEMS_IDEN_01",e9)|Actual Series Data Time Stamp|SL|1
+(0027,"GEMS_IMAG_01",06)|Image Archive Flag|SL|1
+(0027,"GEMS_IMAG_01",10)|Scout Type|SS|1
+(0027,"GEMS_IMAG_01",1c)|Vma Mamp|SL|1
+(0027,"GEMS_IMAG_01",1d)|Vma Phase|SS|1
+(0027,"GEMS_IMAG_01",1e)|Vma Mod|SL|1
+(0027,"GEMS_IMAG_01",1f)|Vma Clip|SL|1
+(0027,"GEMS_IMAG_01",20)|Smart Scan On Off Flag|SS|1
+(0027,"GEMS_IMAG_01",30)|Foreign Image Revision|SH|1
+(0027,"GEMS_IMAG_01",31)|Imaging Mode|SS|1
+(0027,"GEMS_IMAG_01",32)|Pulse Sequence|SS|1
+(0027,"GEMS_IMAG_01",33)|Imaging Options|SL|1
+(0027,"GEMS_IMAG_01",35)|Plane Type|SS|1
+(0027,"GEMS_IMAG_01",36)|Oblique Plane|SL|1
+(0027,"GEMS_IMAG_01",40)|RAS Letter Of Image Location|SH|1
+(0027,"GEMS_IMAG_01",41)|Image Location|FL|1
+(0027,"GEMS_IMAG_01",42)|Center R Coord Of Plane Image|FL|1
+(0027,"GEMS_IMAG_01",43)|Center A Coord Of Plane Image|FL|1
+(0027,"GEMS_IMAG_01",44)|Center S Coord Of Plane Image|FL|1
+(0027,"GEMS_IMAG_01",45)|Normal R Coord|FL|1
+(0027,"GEMS_IMAG_01",46)|Normal A Coord|FL|1
+(0027,"GEMS_IMAG_01",47)|Normal S Coord|FL|1
+(0027,"GEMS_IMAG_01",48)|R Coord Of Top Right Corner|FL|1
+(0027,"GEMS_IMAG_01",49)|A Coord Of Top Right Corner|FL|1
+(0027,"GEMS_IMAG_01",4a)|S Coord Of Top Right Corner|FL|1
+(0027,"GEMS_IMAG_01",4b)|R Coord Of Bottom Right Corner|FL|1
+(0027,"GEMS_IMAG_01",4c)|A Coord Of Bottom Right Corner|FL|1
+(0027,"GEMS_IMAG_01",4d)|S Coord Of Bottom Right Corner|FL|1
+(0027,"GEMS_IMAG_01",50)|Table Start Location|FL|1
+(0027,"GEMS_IMAG_01",51)|Table End Location|FL|1
+(0027,"GEMS_IMAG_01",52)|RAS Letter For Side Of Image|SH|1
+(0027,"GEMS_IMAG_01",53)|RAS Letter For Anterior Posterior|SH|1
+(0027,"GEMS_IMAG_01",54)|RAS Letter For Scout Start Loc|SH|1
+(0027,"GEMS_IMAG_01",55)|RAS Letter For Scout End Loc|SH|1
+(0027,"GEMS_IMAG_01",60)|Image Dimension X|FL|1
+(0027,"GEMS_IMAG_01",61)|Image Dimension Y|FL|1
+(0027,"GEMS_IMAG_01",62)|Number Of Excitations|FL|1
+(0029,"GEMS_IMPS_01",04)|Lower Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",05)|Lower Range Of Pixels|DS|1
+(0029,"GEMS_IMPS_01",06)|Lower Range Of Pixels|DS|1
+(0029,"GEMS_IMPS_01",07)|Lower Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",08)|Lower Range Of Pixels|SH|1
+(0029,"GEMS_IMPS_01",09)|Lower Range Of Pixels|SH|1
+(0029,"GEMS_IMPS_01",0a)|Lower Range Of Pixels|SS|1
+(0029,"GEMS_IMPS_01",15)|Lower Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",16)|Lower Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",17)|Lower Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",18)|Upper Range Of Pixels|SL|1
+(0029,"GEMS_IMPS_01",1a)|Length Of Total Header In Bytes|SL|1
+(0029,"GEMS_IMPS_01",26)|Version Of Header Structure|SS|1
+(0029,"GEMS_IMPS_01",34)|Advantage Comp Overflow|SL|1
+(0029,"GEMS_IMPS_01",35)|Advantage Comp Underflow|SL|1
+(0043,"GEMS_PARM_01",01)|Bitmap Of Prescan Options|SS|1
+(0043,"GEMS_PARM_01",02)|Gradient Offset In X|SS|1
+(0043,"GEMS_PARM_01",03)|Gradient Offset In Y|SS|1
+(0043,"GEMS_PARM_01",04)|Gradient Offset In Z|SS|1
+(0043,"GEMS_PARM_01",05)|Image Is Original Or Unoriginal|SS|1
+(0043,"GEMS_PARM_01",06)|Number Of EPI Shots|SS|1
+(0043,"GEMS_PARM_01",07)|Views Per Segment|SS|1
+(0043,"GEMS_PARM_01",08)|Respiratory Rate In BPM|SS|1
+(0043,"GEMS_PARM_01",09)|Respiratory Trigger Point|SS|1
+(0043,"GEMS_PARM_01",0a)|Type Of Receiver Used|SS|1
+(0043,"GEMS_PARM_01",0b)|Peak Rate Of Change Of Gradient Field|DS|1
+(0043,"GEMS_PARM_01",0c)|Limits In Units Of Percent|DS|1
+(0043,"GEMS_PARM_01",0d)|PSD Estimated Limit|DS|1
+(0043,"GEMS_PARM_01",0e)|PSD Estimated Limit In Tesla Per Second|DS|1
+(0043,"GEMS_PARM_01",0f)|SAR Avg Head|DS|1
+(0043,"GEMS_PARM_01",10)|Window Value|US|1
+(0043,"GEMS_PARM_01",11)|Total Input Views|US|1
+(0043,"GEMS_PARM_01",12)|Xray Chain|SS|3
+(0043,"GEMS_PARM_01",13)|Recon Kernel Parameters|SS|5
+(0043,"GEMS_PARM_01",14)|Calibration Parameters|SS|3
+(0043,"GEMS_PARM_01",15)|Total Output Views|SS|3
+(0043,"GEMS_PARM_01",16)|Number Of Overranges|SS|5
+(0043,"GEMS_PARM_01",17)|IBH Image Scale Factors|DS|1
+(0043,"GEMS_PARM_01",18)|BBH Coefficients|DS|3
+(0043,"GEMS_PARM_01",19)|Number Of BBH Chains To Blend|SS|1
+(0043,"GEMS_PARM_01",1a)|Starting Channel Number|SL|1
+(0043,"GEMS_PARM_01",1b)|PPScan Parameters|SS|1
+(0043,"GEMS_PARM_01",1c)|GE Image Integrity|SS|1
+(0043,"GEMS_PARM_01",1d)|Level Value|SS|1
+(0043,"GEMS_PARM_01",1e)|Delta Start Time|DS|1
+(0043,"GEMS_PARM_01",1f)|Max Overranges In A View|SL|1
+(0043,"GEMS_PARM_01",20)|Avg Overranges All Views|DS|1
+(0043,"GEMS_PARM_01",21)|Corrected Afterglow Terms|SS|1
+(0043,"GEMS_PARM_01",25)|Reference Channels|SS|6
+(0043,"GEMS_PARM_01",26)|No Views Ref Channels Blocked|US|6
+(0043,"GEMS_PARM_01",27)|Scan Pitch Ratio|SH|1
+(0043,"GEMS_PARM_01",28)|Unique Image Identifier|OB|1
+(0043,"GEMS_PARM_01",29)|Histogram Tables|OB|1
+(0043,"GEMS_PARM_01",2a)|User Defined Data|OB|1
+(0043,"GEMS_PARM_01",2b)|Private Scan Options|SS|4
+(0043,"GEMS_PARM_01",2c)|Effective Echo Spacing|SS|1
+(0043,"GEMS_PARM_01",2d)|String Slop Field 1|SH|1
+(0043,"GEMS_PARM_01",2e)|String Slop Field 2|SH|1
+(0043,"GEMS_PARM_01",2f)|Raw Data Type|SS|1
+(0043,"GEMS_PARM_01",30)|Raw Data Type|SS|1
+(0043,"GEMS_PARM_01",31)|RA Coord Of Target Recon Centre|DS|2
+(0043,"GEMS_PARM_01",32)|Raw Data Type|SS|1
+(0043,"GEMS_PARM_01",33)|Neg Scan Spacing|FL|1
+(0043,"GEMS_PARM_01",34)|Offset Frequency|IS|1
+(0043,"GEMS_PARM_01",35)|User Usage Tag|UL|1
+(0043,"GEMS_PARM_01",36)|User Fill Map MSW|UL|1
+(0043,"GEMS_PARM_01",37)|User Fill Map LSW|UL|1
+(0043,"GEMS_PARM_01",38)|User 25 To User 48|FL|24
+(0043,"GEMS_PARM_01",39)|Slop Integer 6 To Slop Integer 9|IS|4
+(0043,"GEMS_PARM_01",40)|Trigger On Position|FL|4
+(0043,"GEMS_PARM_01",41)|Degree Of Rotation|FL|4
+(0043,"GEMS_PARM_01",42)|DAS Trigger Source|SL|4
+(0043,"GEMS_PARM_01",43)|DAS Fpa Gain|SL|4
+(0043,"GEMS_PARM_01",44)|DAS Output Source|SL|4
+(0043,"GEMS_PARM_01",45)|DAS Ad Input|SL|4
+(0043,"GEMS_PARM_01",46)|DAS Cal Mode|SL|4
+(0043,"GEMS_PARM_01",47)|DAS Cal Frequency|SL|4
+(0043,"GEMS_PARM_01",48)|DAS Reg Xm|SL|4
+(0043,"GEMS_PARM_01",49)|DAS Auto Zero|SL|4
+(0043,"GEMS_PARM_01",4a)|Starting Channel Of View|SS|4
+(0043,"GEMS_PARM_01",4b)|DAS Xm Pattern|SL|4
+(0043,"GEMS_PARM_01",4c)|TGGC Trigger Mode|SS|4
+(0043,"GEMS_PARM_01",4d)|Start Scan To Xray On Delay|FL|4
+(0043,"GEMS_PARM_01",4e)|Duration Of Xray On|FL|4
+(0011,"GEMS_PATI_01",10)|Patient Status|SS|1
+(0021,"GEMS_RELA_01",03)|Series From Which Prescribed|SS|1
+(0021,"GEMS_RELA_01",05)|Genesis Version Now|SH|1
+(0021,"GEMS_RELA_01",07)|Series Record Checksum|UL|1
+(0021,"GEMS_RELA_01",15)|?|US|1
+(0021,"GEMS_RELA_01",16)|?|SS|1
+(0021,"GEMS_RELA_01",18)|Genesis Version Now|SH|1
+(0021,"GEMS_RELA_01",19)|Acq Recon Record Checksum|UL|1
+(0021,"GEMS_RELA_01",20)|Table Start Location|DS|1
+(0021,"GEMS_RELA_01",35)|Series From Which Prescribed|SS|1
+(0021,"GEMS_RELA_01",36)|Image From Which Prescribed|SS|1
+(0021,"GEMS_RELA_01",37)|Screen Format|SS|1
+(0021,"GEMS_RELA_01",4a)|Anatomical Reference For Scout|LO|1
+(0021,"GEMS_RELA_01",4e)|?|US|1
+(0021,"GEMS_RELA_01",4f)|Locations In Acquisition|SS|1
+(0021,"GEMS_RELA_01",50)|Graphically Prescribed|SS|1
+(0021,"GEMS_RELA_01",51)|Rotation From Source X Rot|DS|1
+(0021,"GEMS_RELA_01",52)|Rotation From Source Y Rot|DS|1
+(0021,"GEMS_RELA_01",53)|Rotation From Source Z Rot|DS|1
+(0021,"GEMS_RELA_01",54)|Image Position|SH|3
+(0021,"GEMS_RELA_01",55)|Image Orientation|SH|6
+(0021,"GEMS_RELA_01",56)|Integer Slop|SL|1
+(0021,"GEMS_RELA_01",57)|Integer Slop|SL|1
+(0021,"GEMS_RELA_01",58)|Integer Slop|SL|1
+(0021,"GEMS_RELA_01",59)|Integer Slop|SL|1
+(0021,"GEMS_RELA_01",5a)|Integer Slop|SL|1
+(0021,"GEMS_RELA_01",5b)|Float Slop|DS|1
+(0021,"GEMS_RELA_01",5c)|Float Slop|DS|1
+(0021,"GEMS_RELA_01",5d)|Float Slop|DS|1
+(0021,"GEMS_RELA_01",5e)|Float Slop|DS|1
+(0021,"GEMS_RELA_01",5f)|Float Slop|DS|1
+(0021,"GEMS_RELA_01",70)|?|LT|1
+(0021,"GEMS_RELA_01",71)|?|LT|1
+(0021,"GEMS_RELA_01",81)|Auto Window Level Alpha|DS|1
+(0021,"GEMS_RELA_01",82)|Auto Window Level Beta|DS|1
+(0021,"GEMS_RELA_01",83)|Auto Window Level Window|DS|1
+(0021,"GEMS_RELA_01",84)|Auto Window Level Level|DS|1
+(0021,"GEMS_RELA_01",90)|Tube Focal Spot Position|SS|1
+(0021,"GEMS_RELA_01",91)|Biopsy Position|SS|1
+(0021,"GEMS_RELA_01",92)|Biopsy T Location|FL|1
+(0021,"GEMS_RELA_01",93)|Biopsy Ref Location|FL|1
+(0045,"GEMS_SENO_02",04)|AES|CS|1
+(0045,"GEMS_SENO_02",06)|Angulation|DS|1
+(0045,"GEMS_SENO_02",09)|Real Magnification Factor|DS|1
+(0045,"GEMS_SENO_02",0b)|Senograph Type|CS|1
+(0045,"GEMS_SENO_02",0c)|Integration Time|DS|1
+(0045,"GEMS_SENO_02",0d)|ROI Origin X and Y|DS|1
+(0045,"GEMS_SENO_02",11)|Receptor Size cm X and Y|DS|2
+(0045,"GEMS_SENO_02",12)|Receptor Size Pixels X and Y|IS|2
+(0045,"GEMS_SENO_02",13)|Screen|ST|1
+(0045,"GEMS_SENO_02",14)|Pixel Pitch Microns|DS|1
+(0045,"GEMS_SENO_02",15)|Pixel Depth Bits|IS|1
+(0045,"GEMS_SENO_02",16)|Binning Factor X and Y|IS|2
+(0045,"GEMS_SENO_02",1b)|Clinical View|CS|1
+(0045,"GEMS_SENO_02",1d)|Mean Of Raw Gray Levels|DS|1
+(0045,"GEMS_SENO_02",1e)|Mean Of Offset Gray Levels|DS|1
+(0045,"GEMS_SENO_02",1f)|Mean Of Corrected Gray Levels|DS|1
+(0045,"GEMS_SENO_02",20)|Mean Of Region Gray Levels|DS|1
+(0045,"GEMS_SENO_02",21)|Mean Of Log Region Gray Levels|DS|1
+(0045,"GEMS_SENO_02",22)|Standard Deviation Of Raw Gray Levels|DS|1
+(0045,"GEMS_SENO_02",23)|Standard Deviation Of Corrected Gray Levels|DS|1
+(0045,"GEMS_SENO_02",24)|Standard Deviation Of Region Gray Levels|DS|1
+(0045,"GEMS_SENO_02",25)|Standard Deviation Of Log Region Gray Levels|DS|1
+(0045,"GEMS_SENO_02",26)|MAO Buffer|OB|1
+(0045,"GEMS_SENO_02",27)|Set Number|IS|1
+(0045,"GEMS_SENO_02",28)|WindowingType (LINEAR or GAMMA)|CS|1
+(0045,"GEMS_SENO_02",29)|WindowingParameters|DS|1-n
+(0045,"GEMS_SENO_02",2a)|Crosshair Cursor X Coordinates|IS|1
+(0045,"GEMS_SENO_02",2b)|Crosshair Cursor Y Coordinates|IS|1
+(0045,"GEMS_SENO_02",39)|Vignette Rows|US|1
+(0045,"GEMS_SENO_02",3a)|Vignette Columns|US|1
+(0045,"GEMS_SENO_02",3b)|Vignette Bits Allocated|US|1
+(0045,"GEMS_SENO_02",3c)|Vignette Bits Stored|US|1
+(0045,"GEMS_SENO_02",3d)|Vignette High Bit|US|1
+(0045,"GEMS_SENO_02",3e)|Vignette Pixel Representation|US|1
+(0045,"GEMS_SENO_02",3f)|Vignette Pixel Data|OB|1
+(0025,"GEMS_SERS_01",06)|Last Pulse Sequence Used|SS|1
+(0025,"GEMS_SERS_01",07)|Images In Series|SL|1
+(0025,"GEMS_SERS_01",10)|Landmark Counter|SL|1
+(0025,"GEMS_SERS_01",11)|Number Of Acquisitions|SS|1
+(0025,"GEMS_SERS_01",14)|Indicates Number Of Updates To Header|SL|1
+(0025,"GEMS_SERS_01",17)|Series Complete Flag|SL|1
+(0025,"GEMS_SERS_01",18)|Number Of Images Archived|SL|1
+(0025,"GEMS_SERS_01",19)|Last Image Number Used|SL|1
+(0025,"GEMS_SERS_01",1a)|Primary Receiver Suite And Host|SH|1
+(0023,"GEMS_STDY_01",01)|Number Of Series In Study|SL|1
+(0023,"GEMS_STDY_01",02)|Number Of Unarchived Series|SL|1
+(0023,"GEMS_STDY_01",10)|Reference Image Field|SS|1
+(0023,"GEMS_STDY_01",50)|Summary Image|SS|1
+(0023,"GEMS_STDY_01",70)|Start Time Secs In First Axial|FD|1
+(0023,"GEMS_STDY_01",74)|Number Of Updates To Header|SL|1
+(0023,"GEMS_STDY_01",7d)|Indicates If Study Has Complete Info|SS|1
+(0033,"GEMS_YMHD_01",05)|?|UN|1
+(0033,"GEMS_YMHD_01",06)|?|UN|1
+(0019,"GE_GENESIS_REV3.0",39)|Axial Type|SS|1
+(0019,"GE_GENESIS_REV3.0",8f)|Swap Phase Frequency|SS|1
+(0019,"GE_GENESIS_REV3.0",9c)|Pulse Sequence Name|SS|1
+(0019,"GE_GENESIS_REV3.0",9f)|Coil Type|SS|1
+(0019,"GE_GENESIS_REV3.0",a4)|SAT Fat Water Bone|SS|1
+(0019,"GE_GENESIS_REV3.0",c0)|Bitmap Of SAT Selections|SS|1
+(0019,"GE_GENESIS_REV3.0",c1)|Surface Coil Intensity Correction Flag|SS|1
+(0019,"GE_GENESIS_REV3.0",cb)|Phase Contrast Flow Axis|SS|1
+(0019,"GE_GENESIS_REV3.0",cc)|Phase Contrast Velocity Encoding|SS|1
+(0019,"GE_GENESIS_REV3.0",d5)|Fractional Echo|SS|1
+(0019,"GE_GENESIS_REV3.0",d8)|Variable Echo Flag|SS|1
+(0019,"GE_GENESIS_REV3.0",d9)|Concatenated Sat|DS|1
+(0019,"GE_GENESIS_REV3.0",f2)|Number Of Phases|SS|1
+(0043,"GE_GENESIS_REV3.0",1e)|Delta Start Time|DS|1
+(0043,"GE_GENESIS_REV3.0",27)|Scan Pitch Ratio|SH|1
+(0029,"ISG shadow",70)|?|IS|1
+(0029,"ISG shadow",80)|?|IS|1
+(0029,"ISG shadow",90)|?|IS|1
+(0009,"ISI",01)|SIENET General Purpose IMGEF|UN|1
+(0009,"MERGE TECHNOLOGIES, INC.",00)|?|OB|1
+(0009,"PAPYRUS",00)|Original File Name|LT|1
+(0009,"PAPYRUS",10)|Original File Location|LT|1
+(0009,"PAPYRUS",18)|Data Set Identifier|LT|1
+(0041,"PAPYRUS",00)|Papyrus Comments|LT|1-n
+(0041,"PAPYRUS",10)|Folder Type|US|1
+(0041,"PAPYRUS",11)|Patient Folder Data Set ID|LT|1
+(0041,"PAPYRUS",20)|Folder Name|LT|1
+(0041,"PAPYRUS",30)|Creation Date|DA|1
+(0041,"PAPYRUS",32)|Creation Time|TM|1
+(0041,"PAPYRUS",34)|Modified Date|DA|1
+(0041,"PAPYRUS",36)|Modified Time|TM|1
+(0041,"PAPYRUS",40)|Owner Name|LT|1-n
+(0041,"PAPYRUS",50)|Folder Status|LT|1
+(0041,"PAPYRUS",60)|Number of Images|UL|1
+(0041,"PAPYRUS",62)|Number of Other|UL|1
+(0041,"PAPYRUS",a0)|External Folder Element DSID|LT|1-n
+(0041,"PAPYRUS",a1)|External Folder Element Data Set Type|US|1-n
+(0041,"PAPYRUS",a2)|External Folder Element File Location|LT|1-n
+(0041,"PAPYRUS",a3)|External Folder Element Length|UL|1-n
+(0041,"PAPYRUS",b0)|Internal Folder Element DSID|LT|1-n
+(0041,"PAPYRUS",b1)|Internal Folder Element Data Set Type|US|1-n
+(0041,"PAPYRUS",b2)|Internal Offset To Data Set|UL|1-n
+(0041,"PAPYRUS",b3)|Internal Offset To Image|UL|1-n
+(0041,"PAPYRUS 3.0",00)|Papyrus Comments|LT|1
+(0041,"PAPYRUS 3.0",10)|Pointer Sequence|SQ|1
+(0041,"PAPYRUS 3.0",11)|Image Pointer|UL|1
+(0041,"PAPYRUS 3.0",12)|Pixel Offset|UL|1
+(0041,"PAPYRUS 3.0",13)|Image Identifier Sequence|SQ|1
+(0041,"PAPYRUS 3.0",14)|External File Reference Sequence|SQ|1
+(0041,"PAPYRUS 3.0",15)|Number of Images|US|1
+(0041,"PAPYRUS 3.0",21)|Referenced SOP Class UID|UI|1
+(0041,"PAPYRUS 3.0",22)|Referenced SOP Instance UID|UI|1
+(0041,"PAPYRUS 3.0",31)|Referenced File Name|LT|1
+(0041,"PAPYRUS 3.0",32)|Referenced File Path|LT|1-n
+(0041,"PAPYRUS 3.0",41)|Referenced Image SOP Class UID|UI|1
+(0041,"PAPYRUS 3.0",42)|Referenced Image SOP Instance UID|UI|1
+(0041,"PAPYRUS 3.0",50)|Image Sequence|SQ|1
+(6000,"PAPYRUS 3.0",00)|Overlay ID|IS|1
+(6000,"PAPYRUS 3.0",01)|Linked Overlays|LT|1-n
+(6000,"PAPYRUS 3.0",10)|Overlay Rows|US|1
+(6000,"PAPYRUS 3.0",11)|Overlay Columns|US|1
+(6000,"PAPYRUS 3.0",40)|Overlay Type|LO|1
+(6000,"PAPYRUS 3.0",50)|Overlay Origin|US|1-n
+(6000,"PAPYRUS 3.0",60)|Editable|LO|1
+(6000,"PAPYRUS 3.0",70)|Overlay Font|LO|1
+(6000,"PAPYRUS 3.0",72)|Overlay Style|LO|1
+(6000,"PAPYRUS 3.0",74)|Overlay Font Size|US|1
+(6000,"PAPYRUS 3.0",76)|Overlay Color|LO|1
+(6000,"PAPYRUS 3.0",78)|Shadow Size|US|1
+(6000,"PAPYRUS 3.0",80)|Fill Pattern|LO|1
+(6000,"PAPYRUS 3.0",82)|Overlay Pen Size|US|1
+(6000,"PAPYRUS 3.0",a0)|Label|LO|1
+(6000,"PAPYRUS 3.0",a2)|Post It Text|LT|1
+(6000,"PAPYRUS 3.0",a4)|Anchor Point|US|2
+(6000,"PAPYRUS 3.0",b0)|ROI Type|LO|1
+(6000,"PAPYRUS 3.0",b2)|Attached Annotation|LT|1
+(6000,"PAPYRUS 3.0",ba)|Contour Points|US|1-n
+(6000,"PAPYRUS 3.0",bc)|Mask Data|US|1-n
+(6000,"PAPYRUS 3.0",c0)|UIN Overlay Sequence|SQ|1
+(0009,"PHILIPS MR",10)|SPI Release|LO|1
+(0009,"PHILIPS MR",12)|?|LO|1
+(0019,"PHILIPS MR R5.5/PART",00)|Field of View|DS|1
+(0019,"PHILIPS MR R5.6/PART",00)|Field of View|DS|1
+(0019,"PHILIPS MR SPECTRO;1",01)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",02)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",03)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",04)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",05)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",06)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",07)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",08)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",09)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",10)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",12)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",13)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",14)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",15)|?|US|1-n
+(0019,"PHILIPS MR SPECTRO;1",16)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",17)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",18)|?|UN|1
+(0019,"PHILIPS MR SPECTRO;1",20)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",21)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",22)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",23)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",24)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",25)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",26)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",27)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",28)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",29)|?|IS|1-n
+(0019,"PHILIPS MR SPECTRO;1",31)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",32)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",41)|?|LT|1
+(0019,"PHILIPS MR SPECTRO;1",42)|?|IS|2
+(0019,"PHILIPS MR SPECTRO;1",43)|?|IS|2
+(0019,"PHILIPS MR SPECTRO;1",45)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",46)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",47)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",48)|?|IS|1
+(0019,"PHILIPS MR SPECTRO;1",49)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",50)|?|UN|1
+(0019,"PHILIPS MR SPECTRO;1",60)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",61)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",70)|?|UN|1
+(0019,"PHILIPS MR SPECTRO;1",71)|?|IS|1-n
+(0019,"PHILIPS MR SPECTRO;1",72)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",73)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",74)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",76)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",77)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",78)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",79)|?|US|1
+(0019,"PHILIPS MR SPECTRO;1",80)|?|IS|1
+(0019,"PHILIPS MR/LAST",09)|Main Magnetic Field|DS|1
+(0019,"PHILIPS MR/LAST",0e)|Flow Compensation|IS|1
+(0019,"PHILIPS MR/LAST",b1)|Minimum RR Interval|IS|1
+(0019,"PHILIPS MR/LAST",b2)|Maximum RR Interval|IS|1
+(0019,"PHILIPS MR/LAST",b3)|Number of Rejections|IS|1
+(0019,"PHILIPS MR/LAST",b4)|Number of RR Intervals|IS|1-n
+(0019,"PHILIPS MR/LAST",b5)|Arrhythmia Rejection|IS|1
+(0019,"PHILIPS MR/LAST",c0)|?|DS|1-n
+(0019,"PHILIPS MR/LAST",c6)|Cycled Multiple Slice|IS|1
+(0019,"PHILIPS MR/LAST",ce)|REST|IS|1
+(0019,"PHILIPS MR/LAST",d5)|?|DS|1
+(0019,"PHILIPS MR/LAST",d6)|Fourier Interpolation|IS|1
+(0019,"PHILIPS MR/LAST",d9)|?|IS|1-n
+(0019,"PHILIPS MR/LAST",e0)|Prepulse|IS|1
+(0019,"PHILIPS MR/LAST",e1)|Prepulse Delay|DS|1
+(0019,"PHILIPS MR/LAST",e2)|?|IS|1
+(0019,"PHILIPS MR/LAST",e3)|?|DS|1
+(0019,"PHILIPS MR/LAST",f0)|WS Protocol String 1|LT|1
+(0019,"PHILIPS MR/LAST",f1)|WS Protocol String 2|LT|1
+(0019,"PHILIPS MR/LAST",f2)|WS Protocol String 3|LT|1
+(0019,"PHILIPS MR/LAST",f3)|WS Protocol String 4|LT|1
+(0021,"PHILIPS MR/LAST",00)|?|IS|1
+(0021,"PHILIPS MR/LAST",10)|?|IS|1
+(0021,"PHILIPS MR/LAST",20)|?|IS|1
+(0021,"PHILIPS MR/LAST",21)|Slice Gap|DS|1
+(0021,"PHILIPS MR/LAST",22)|Stack Radial Angle|DS|1
+(0027,"PHILIPS MR/LAST",00)|?|US|1
+(0027,"PHILIPS MR/LAST",11)|?|US|1-n
+(0027,"PHILIPS MR/LAST",12)|?|DS|1-n
+(0027,"PHILIPS MR/LAST",13)|?|DS|1-n
+(0027,"PHILIPS MR/LAST",14)|?|DS|1-n
+(0027,"PHILIPS MR/LAST",15)|?|DS|1-n
+(0027,"PHILIPS MR/LAST",16)|?|LO|1
+(0029,"PHILIPS MR/LAST",10)|FP Min|DS|1
+(0029,"PHILIPS MR/LAST",20)|FP Max|DS|1
+(0029,"PHILIPS MR/LAST",30)|Scaled Minimum|DS|1
+(0029,"PHILIPS MR/LAST",40)|Scaled Maximum|DS|1
+(0029,"PHILIPS MR/LAST",50)|Window Minimum|DS|1
+(0029,"PHILIPS MR/LAST",60)|Window Maximum|DS|1
+(0029,"PHILIPS MR/LAST",61)|?|IS|1
+(0029,"PHILIPS MR/LAST",70)|?|DS|1
+(0029,"PHILIPS MR/LAST",71)|?|DS|1
+(0029,"PHILIPS MR/LAST",72)|?|IS|1
+(0029,"PHILIPS MR/LAST",80)|View Center|IS|1
+(0029,"PHILIPS MR/LAST",81)|View Size|IS|1
+(0029,"PHILIPS MR/LAST",82)|View Zoom|IS|1
+(0029,"PHILIPS MR/LAST",83)|View Transform|IS|1
+(6001,"PHILIPS MR/LAST",00)|?|LT|1
+(0019,"PHILIPS MR/PART",00)|Field of View|DS|1
+(0019,"PHILIPS MR/PART",00)|Number of Stacks|IS|1
+(0019,"PHILIPS MR/PART",01)|Stack Type|IS|1-n
+(0019,"PHILIPS MR/PART",02)|?|IS|1-n
+(0019,"PHILIPS MR/PART",05)|CC Angulation|DS|1
+(0019,"PHILIPS MR/PART",06)|AP Angulation|DS|1
+(0019,"PHILIPS MR/PART",07)|LR Angulation|DS|1
+(0019,"PHILIPS MR/PART",08)|Patient Orientation 1|IS|1
+(0019,"PHILIPS MR/PART",08)|Patient Position|IS|1
+(0019,"PHILIPS MR/PART",09)|Patient Orientation|IS|1
+(0019,"PHILIPS MR/PART",0a)|Slice Orientation|IS|1
+(0019,"PHILIPS MR/PART",0b)|LR Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0b)|LR Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0c)|CC Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0c)|CC Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0d)|AP Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0d)|AP Offcenter|DS|1
+(0019,"PHILIPS MR/PART",0e)|?|DS|1
+(0019,"PHILIPS MR/PART",0f)|Number of Slices|IS|1
+(0019,"PHILIPS MR/PART",10)|Slice Factor|DS|1
+(0019,"PHILIPS MR/PART",11)|Echo Times|DS|1-n
+(0019,"PHILIPS MR/PART",15)|Dynamic Study|IS|1
+(0019,"PHILIPS MR/PART",18)|Heartbeat Interval|DS|1
+(0019,"PHILIPS MR/PART",19)|Repetition Time FFE|DS|1
+(0019,"PHILIPS MR/PART",1a)|FFE Flip Angle|DS|1
+(0019,"PHILIPS MR/PART",1b)|Number of Scans|IS|1
+(0019,"PHILIPS MR/PART",21)|?|DS|1-n
+(0019,"PHILIPS MR/PART",22)|Dynamic Scan Time Begin|DS|1
+(0019,"PHILIPS MR/PART",24)|?|IS|1
+(0019,"PHILIPS MR/PART",45)|Reconstruction Resolution|IS|1
+(0019,"PHILIPS MR/PART",64)|Repetition Time SE|DS|1
+(0019,"PHILIPS MR/PART",65)|Repetition Time IR|DS|1
+(0019,"PHILIPS MR/PART",69)|Number of Phases|IS|1
+(0019,"PHILIPS MR/PART",6a)|Cardiac Frequency|IS|1
+(0019,"PHILIPS MR/PART",6b)|Inversion Delay|DS|1
+(0019,"PHILIPS MR/PART",6c)|Gate Delay|DS|1
+(0019,"PHILIPS MR/PART",6d)|Gate Width|DS|1
+(0019,"PHILIPS MR/PART",6e)|Trigger Delay Time|DS|1
+(0019,"PHILIPS MR/PART",80)|Number of Chemical Shifts|IS|1
+(0019,"PHILIPS MR/PART",81)|Chemical Shift|DS|1
+(0019,"PHILIPS MR/PART",84)|Number of Rows|IS|1
+(0019,"PHILIPS MR/PART",85)|Number of Samples|IS|1
+(0019,"PHILIPS MR/PART",94)|Magnetization Transfer Contrast|LO|1
+(0019,"PHILIPS MR/PART",95)|Spectral Presaturation With Inversion Recovery|LO|1
+(0019,"PHILIPS MR/PART",96)|?|IS|1
+(0019,"PHILIPS MR/PART",97)|?|LO|1
+(0019,"PHILIPS MR/PART",a0)|?|IS|1
+(0019,"PHILIPS MR/PART",a1)|?|DS|1
+(0019,"PHILIPS MR/PART",a3)|?|DS|1
+(0019,"PHILIPS MR/PART",a4)|?|CS|1
+(0019,"PHILIPS MR/PART",c0)|Trigger Delay Times|DS|1
+(0019,"PHILIPS MR/PART",c8)|?|IS|1
+(0019,"PHILIPS MR/PART",c9)|Foldover Direction Transverse|IS|1
+(0019,"PHILIPS MR/PART",ca)|Foldover Direction Sagittal|IS|1
+(0019,"PHILIPS MR/PART",cb)|Foldover Direction Coronal|IS|1
+(0019,"PHILIPS MR/PART",cc)|?|IS|1
+(0019,"PHILIPS MR/PART",cd)|?|IS|1
+(0019,"PHILIPS MR/PART",ce)|?|IS|1
+(0019,"PHILIPS MR/PART",cf)|Number of Echoes|IS|1
+(0019,"PHILIPS MR/PART",d0)|Scan Resolution|IS|1
+(0019,"PHILIPS MR/PART",d2)|Water Fat Shift|LO|2
+(0019,"PHILIPS MR/PART",d4)|Artifact Reduction|IS|1
+(0019,"PHILIPS MR/PART",d5)|?|IS|1
+(0019,"PHILIPS MR/PART",d6)|?|IS|1
+(0019,"PHILIPS MR/PART",d7)|Scan Percentage|DS|1
+(0019,"PHILIPS MR/PART",d8)|Halfscan|IS|1
+(0019,"PHILIPS MR/PART",d9)|EPI Factor|IS|1
+(0019,"PHILIPS MR/PART",da)|Turbo Factor|IS|1
+(0019,"PHILIPS MR/PART",db)|?|IS|1
+(0019,"PHILIPS MR/PART",e0)|Percentage of Scan Completed|IS|1
+(0019,"PHILIPS MR/PART",e0)|Prepulse Type|IS|1
+(0019,"PHILIPS MR/PART",e1)|Prepulse Delay|DS|1
+(0019,"PHILIPS MR/PART",e1)|?|IS|1
+(0019,"PHILIPS MR/PART",e3)|Phase Contrast Velocity|DS|1
+(0019,"PHILIPS MR/PART",fc)|Resonance Frequency|IS|1
+(0021,"PHILIPS MR/PART",00)|Scan Date|DA|1
+(0021,"PHILIPS MR/PART",00)|Series Date|DA|1
+(0021,"PHILIPS MR/PART",00)|Reconstruction Number|IS|1
+(0021,"PHILIPS MR/PART",10)|Image Type|IS|1
+(0021,"PHILIPS MR/PART",10)|Scan Time|TM|1
+(0021,"PHILIPS MR/PART",20)|Slice Number|IS|1
+(0021,"PHILIPS MR/PART",21)|Slice Gap|IS|1
+(0021,"PHILIPS MR/PART",30)|Echo Number|IS|1
+(0021,"PHILIPS MR/PART",31)|Patient Reference ID|DS|1
+(0021,"PHILIPS MR/PART",35)|Chemical Shift Number|IS|1
+(0021,"PHILIPS MR/PART",40)|Phase Number|IS|1
+(0021,"PHILIPS MR/PART",50)|Dynamic Scan Number|IS|1
+(0021,"PHILIPS MR/PART",60)|Number of Rows In Object|IS|1
+(0021,"PHILIPS MR/PART",61)|Row Number|IS|1-n
+(0021,"PHILIPS MR/PART",62)|?|IS|1-n
+(0029,"PHILIPS MR/PART",00)|?|DS|2
+(0029,"PHILIPS MR/PART",04)|?|US|1
+(0029,"PHILIPS MR/PART",10)|?|DS|1
+(0029,"PHILIPS MR/PART",11)|?|DS|1
+(0029,"PHILIPS MR/PART",20)|?|LO|1
+(0029,"PHILIPS MR/PART",31)|?|DS|2
+(0029,"PHILIPS MR/PART",32)|?|DS|2
+(0029,"PHILIPS MR/PART",c3)|Scan Resolution|IS|1
+(0029,"PHILIPS MR/PART",c4)|Field of View|IS|1
+(0029,"PHILIPS MR/PART",d5)|Slice Thickness|LT|1
+(0019,"PHILIPS-MR-1",11)|Chemical Shift Number|IS|1
+(0019,"PHILIPS-MR-1",12)|Phase Number|IS|1
+(0021,"PHILIPS-MR-1",01)|Reconstruction Number|IS|1
+(0021,"PHILIPS-MR-1",02)|Slice Number|IS|1
+(7001,"Picker NM Private Group",01)|?|UI|1
+(7001,"Picker NM Private Group",02)|?|OB|1
+(0019,"SIEMENS CM VA0  ACQU",10)|Parameter File Name|LT|1
+(0019,"SIEMENS CM VA0  ACQU",11)|Sequence File Name|LT|1
+(0019,"SIEMENS CM VA0  ACQU",12)|Sequence File Owner|LT|1
+(0019,"SIEMENS CM VA0  ACQU",13)|Sequence Description|LT|1
+(0019,"SIEMENS CM VA0  ACQU",14)|EPI File Name|LT|1
+(0009,"SIEMENS CM VA0  CMS",00)|Number of Measurements|DS|1
+(0009,"SIEMENS CM VA0  CMS",10)|Storage Mode|LT|1
+(0009,"SIEMENS CM VA0  CMS",12)|Evaluation Mask - Image|UL|1
+(0009,"SIEMENS CM VA0  CMS",26)|Last Move Date|DA|1
+(0009,"SIEMENS CM VA0  CMS",27)|Last Move Time|TM|1
+(0011,"SIEMENS CM VA0  CMS",0a)|?|LT|1
+(0011,"SIEMENS CM VA0  CMS",10)|Registration Date|DA|1
+(0011,"SIEMENS CM VA0  CMS",11)|Registration Time|TM|1
+(0011,"SIEMENS CM VA0  CMS",22)|?|LT|1
+(0011,"SIEMENS CM VA0  CMS",23)|Used Patient Weight|DS|1
+(0011,"SIEMENS CM VA0  CMS",40)|Organ Code|IS|1
+(0013,"SIEMENS CM VA0  CMS",00)|Modifying Physician|LT|1
+(0013,"SIEMENS CM VA0  CMS",10)|Modification Date|DA|1
+(0013,"SIEMENS CM VA0  CMS",12)|Modification Time|TM|1
+(0013,"SIEMENS CM VA0  CMS",20)|Patient Name|LT|1
+(0013,"SIEMENS CM VA0  CMS",22)|Patient Id|LT|1
+(0013,"SIEMENS CM VA0  CMS",30)|Patient Birthdate|DA|1
+(0013,"SIEMENS CM VA0  CMS",31)|Patient Weight|DS|1
+(0013,"SIEMENS CM VA0  CMS",32)|Patients Maiden Name|LT|1
+(0013,"SIEMENS CM VA0  CMS",33)|Referring Physician|LT|1
+(0013,"SIEMENS CM VA0  CMS",34)|Admitting Diagnosis|LT|1
+(0013,"SIEMENS CM VA0  CMS",35)|Patient Sex|LT|1
+(0013,"SIEMENS CM VA0  CMS",40)|Procedure Description|LT|1
+(0013,"SIEMENS CM VA0  CMS",42)|Patient Rest Direction|LT|1
+(0013,"SIEMENS CM VA0  CMS",44)|Patient Position|LT|1
+(0013,"SIEMENS CM VA0  CMS",46)|View Direction|LT|1
+(0013,"SIEMENS CM VA0  CMS",50)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",51)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",52)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",53)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",54)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",55)|?|LT|1
+(0013,"SIEMENS CM VA0  CMS",56)|?|LT|1
+(0019,"SIEMENS CM VA0  CMS",10)|Net Frequency|DS|1
+(0019,"SIEMENS CM VA0  CMS",20)|Measurement Mode|LT|1
+(0019,"SIEMENS CM VA0  CMS",30)|Calculation Mode|LT|1
+(0019,"SIEMENS CM VA0  CMS",50)|Noise Level|IS|1
+(0019,"SIEMENS CM VA0  CMS",60)|Number of Data Bytes|IS|1
+(0021,"SIEMENS CM VA0  CMS",20)|FoV|DS|2
+(0021,"SIEMENS CM VA0  CMS",22)|Image Magnification Factor|DS|1
+(0021,"SIEMENS CM VA0  CMS",24)|Image Scroll Offset|DS|2
+(0021,"SIEMENS CM VA0  CMS",26)|Image Pixel Offset|IS|1
+(0021,"SIEMENS CM VA0  CMS",30)|View Direction|LT|1
+(0021,"SIEMENS CM VA0  CMS",32)|Patient Rest Direction|CS|1
+(0021,"SIEMENS CM VA0  CMS",60)|Image Position|DS|3
+(0021,"SIEMENS CM VA0  CMS",61)|Image Normal|DS|3
+(0021,"SIEMENS CM VA0  CMS",63)|Image Distance|DS|1
+(0021,"SIEMENS CM VA0  CMS",65)|Image Positioning History Mask|US|1
+(0021,"SIEMENS CM VA0  CMS",6a)|Image Row|DS|3
+(0021,"SIEMENS CM VA0  CMS",6b)|Image Column|DS|3
+(0021,"SIEMENS CM VA0  CMS",70)|Patient Orientation Set1|LT|3
+(0021,"SIEMENS CM VA0  CMS",71)|Patient Orientation Set2|LT|3
+(0021,"SIEMENS CM VA0  CMS",80)|Study Name|LT|1
+(0021,"SIEMENS CM VA0  CMS",82)|Study Type|LT|3
+(0029,"SIEMENS CM VA0  CMS",10)|Window Style|LT|1
+(0029,"SIEMENS CM VA0  CMS",11)|?|LT|1
+(0029,"SIEMENS CM VA0  CMS",13)|?|LT|1
+(0029,"SIEMENS CM VA0  CMS",20)|Pixel Quality Code|LT|3
+(0029,"SIEMENS CM VA0  CMS",22)|Pixel Quality Value|IS|3
+(0029,"SIEMENS CM VA0  CMS",50)|Archive Code|LT|1
+(0029,"SIEMENS CM VA0  CMS",51)|Exposure Code|LT|1
+(0029,"SIEMENS CM VA0  CMS",52)|Sort Code|LT|1
+(0029,"SIEMENS CM VA0  CMS",53)|?|LT|1
+(0029,"SIEMENS CM VA0  CMS",60)|Splash|LT|1
+(0051,"SIEMENS CM VA0  CMS",10)|Image Text|LT|1-n
+(6021,"SIEMENS CM VA0  CMS",00)|Image Graphics Format Code|LT|1
+(6021,"SIEMENS CM VA0  CMS",10)|Image Graphics|LT|1
+(7fe1,"SIEMENS CM VA0  CMS",00)|Binary Data|OB|1-n
+(0009,"SIEMENS CM VA0  LAB",10)|Generator Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",11)|Gantry Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",12)|X-Ray Tube Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",13)|Detector Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",14)|DAS Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",15)|SMI Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",16)|CPU Identification Label|LT|1
+(0009,"SIEMENS CM VA0  LAB",20)|Header Version|LT|1
+(0019,"SIEMENS CT VA0  COAD",10)|Distance Source To Source Side Collimator|DS|1
+(0019,"SIEMENS CT VA0  COAD",11)|Distance Source To Detector Side Collimator|DS|1
+(0019,"SIEMENS CT VA0  COAD",20)|Number of Possible Channels|IS|1
+(0019,"SIEMENS CT VA0  COAD",21)|Mean Channel Number|IS|1
+(0019,"SIEMENS CT VA0  COAD",22)|Detector Spacing|DS|1
+(0019,"SIEMENS CT VA0  COAD",23)|Detector Center|DS|1
+(0019,"SIEMENS CT VA0  COAD",24)|Reading Integration Time|DS|1
+(0019,"SIEMENS CT VA0  COAD",50)|Detector Alignment|DS|1
+(0019,"SIEMENS CT VA0  COAD",52)|? |DS|1
+(0019,"SIEMENS CT VA0  COAD",54)|? |DS|1
+(0019,"SIEMENS CT VA0  COAD",60)|Focus Alignment|DS|1
+(0019,"SIEMENS CT VA0  COAD",65)|Focal Spot Deflection Amplitude|UL|1
+(0019,"SIEMENS CT VA0  COAD",66)|Focal Spot Deflection Phase|UL|1
+(0019,"SIEMENS CT VA0  COAD",67)|Focal Spot Deflection Offset|UL|1
+(0019,"SIEMENS CT VA0  COAD",70)|Water Scaling Factor|DS|1
+(0019,"SIEMENS CT VA0  COAD",71)|Interpolation Factor|DS|1
+(0019,"SIEMENS CT VA0  COAD",80)|Patient Region|LT|1
+(0019,"SIEMENS CT VA0  COAD",82)|Patient Phase of Life|LT|1
+(0019,"SIEMENS CT VA0  COAD",90)|Osteo Offset|DS|1
+(0019,"SIEMENS CT VA0  COAD",93)|Osteo Regression Line Intercept|DS|1
+(0019,"SIEMENS CT VA0  COAD",94)|Osteo Standardization Code|DS|1
+(0019,"SIEMENS CT VA0  COAD",96)|Osteo Phantom Number|IS|1
+(0019,"SIEMENS CT VA0  COAD",a3)|?|US|1-n
+(0019,"SIEMENS CT VA0  COAD",a4)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",a5)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",a6)|?|US|1-n
+(0019,"SIEMENS CT VA0  COAD",a7)|?|US|1-n
+(0019,"SIEMENS CT VA0  COAD",a8)|?|US|1-n
+(0019,"SIEMENS CT VA0  COAD",a9)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",aa)|?|LT|1
+(0019,"SIEMENS CT VA0  COAD",ab)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",ac)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",ad)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",ae)|?|DS|1
+(0019,"SIEMENS CT VA0  COAD",af)|?|DS|1
+(0019,"SIEMENS CT VA0  GEN",10)|Source Side Collimator Aperture|DS|1
+(0019,"SIEMENS CT VA0  GEN",11)|Detector Side Collimator Aperture|DS|1
+(0019,"SIEMENS CT VA0  GEN",20)|Exposure Time|DS|1
+(0019,"SIEMENS CT VA0  GEN",21)|Exposure Current|DS|1
+(0019,"SIEMENS CT VA0  GEN",25)|KVP Generator Power Current|DS|1
+(0019,"SIEMENS CT VA0  GEN",26)|Generator Voltage|DS|1
+(0019,"SIEMENS CT VA0  GEN",40)|Master Control Mask|UL|1
+(0019,"SIEMENS CT VA0  GEN",42)|Processing Mask|US|5
+(0019,"SIEMENS CT VA0  GEN",44)|?|US|1-n
+(0019,"SIEMENS CT VA0  GEN",45)|?|US|1-n
+(0019,"SIEMENS CT VA0  GEN",62)|Number of Virtuell Channels|IS|1
+(0019,"SIEMENS CT VA0  GEN",70)|Number of Readings|IS|1
+(0019,"SIEMENS CT VA0  GEN",71)|?|LT|1-n
+(0019,"SIEMENS CT VA0  GEN",74)|Number of Projections|IS|1
+(0019,"SIEMENS CT VA0  GEN",75)|Number of Bytes|IS|1
+(0019,"SIEMENS CT VA0  GEN",80)|Reconstruction Algorithm Set|LT|1
+(0019,"SIEMENS CT VA0  GEN",81)|Reconstruction Algorithm Index|LT|1
+(0019,"SIEMENS CT VA0  GEN",82)|Regeneration Software Version|LT|1
+(0019,"SIEMENS CT VA0  GEN",88)|?|DS|1
+(0021,"SIEMENS CT VA0  GEN",10)|Rotation Angle|IS|1
+(0021,"SIEMENS CT VA0  GEN",11)|Start Angle|IS|1
+(0021,"SIEMENS CT VA0  GEN",20)|?|US|1-n
+(0021,"SIEMENS CT VA0  GEN",30)|Topogram Tube Position|IS|1
+(0021,"SIEMENS CT VA0  GEN",32)|Length of Topogram|DS|1
+(0021,"SIEMENS CT VA0  GEN",34)|Topogram Correction Factor|DS|1
+(0021,"SIEMENS CT VA0  GEN",36)|Maximum Table Position|DS|1
+(0021,"SIEMENS CT VA0  GEN",40)|Table Move Direction Code|IS|1
+(0021,"SIEMENS CT VA0  GEN",45)|VOI Start Row|IS|1
+(0021,"SIEMENS CT VA0  GEN",46)|VOI Stop Row|IS|1
+(0021,"SIEMENS CT VA0  GEN",47)|VOI Start Column|IS|1
+(0021,"SIEMENS CT VA0  GEN",48)|VOI Stop Column|IS|1
+(0021,"SIEMENS CT VA0  GEN",49)|VOI Start Slice|IS|1
+(0021,"SIEMENS CT VA0  GEN",4a)|VOI Stop Slice|IS|1
+(0021,"SIEMENS CT VA0  GEN",50)|Vector Start Row|IS|1
+(0021,"SIEMENS CT VA0  GEN",51)|Vector Row Step|IS|1
+(0021,"SIEMENS CT VA0  GEN",52)|Vector Start Column|IS|1
+(0021,"SIEMENS CT VA0  GEN",53)|Vector Column Step|IS|1
+(0021,"SIEMENS CT VA0  GEN",60)|Range Type Code|IS|1
+(0021,"SIEMENS CT VA0  GEN",62)|Reference Type Code|IS|1
+(0021,"SIEMENS CT VA0  GEN",70)|Object Orientation|DS|3
+(0021,"SIEMENS CT VA0  GEN",72)|Light Orientation|DS|3
+(0021,"SIEMENS CT VA0  GEN",75)|Light Brightness|DS|1
+(0021,"SIEMENS CT VA0  GEN",76)|Light Contrast|DS|1
+(0021,"SIEMENS CT VA0  GEN",7a)|Overlay Threshold|IS|2
+(0021,"SIEMENS CT VA0  GEN",7b)|Surface Threshold|IS|2
+(0021,"SIEMENS CT VA0  GEN",7c)|Grey Scale Threshold|IS|2
+(0021,"SIEMENS CT VA0  GEN",a0)|?|DS|1
+(0021,"SIEMENS CT VA0  GEN",a2)|?|LT|1
+(0021,"SIEMENS CT VA0  GEN",a7)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",10)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",30)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",31)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",32)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",34)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",40)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",42)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",50)|?|LT|1
+(0009,"SIEMENS CT VA0  IDE",51)|?|LT|1
+(0009,"SIEMENS CT VA0  ORI",20)|?|LT|1
+(0009,"SIEMENS CT VA0  ORI",30)|?|LT|1
+(6021,"SIEMENS CT VA0  OST",00)|Osteo Contour Comment|LT|1
+(6021,"SIEMENS CT VA0  OST",10)|Osteo Contour Buffer|US|256
+(0021,"SIEMENS CT VA0  RAW",10)|Creation Mask|UL|2
+(0021,"SIEMENS CT VA0  RAW",20)|Evaluation Mask|UL|2
+(0021,"SIEMENS CT VA0  RAW",30)|Extended Processing Mask|US|7
+(0021,"SIEMENS CT VA0  RAW",40)|?|US|1-n
+(0021,"SIEMENS CT VA0  RAW",41)|?|US|1-n
+(0021,"SIEMENS CT VA0  RAW",42)|?|US|1-n
+(0021,"SIEMENS CT VA0  RAW",43)|?|US|1-n
+(0021,"SIEMENS CT VA0  RAW",44)|?|US|1-n
+(0021,"SIEMENS CT VA0  RAW",50)|?|LT|1
+(0009,"SIEMENS DICOM",10)|?|UN|1
+(0009,"SIEMENS DICOM",12)|?|LT|1
+(0019,"SIEMENS DLR.01",10)|Measurement Mode|LT|1
+(0019,"SIEMENS DLR.01",11)|Image Type|LT|1
+(0019,"SIEMENS DLR.01",15)|Software Version|LT|1
+(0019,"SIEMENS DLR.01",20)|MPM Code|LT|1
+(0019,"SIEMENS DLR.01",21)|Latitude|LT|1
+(0019,"SIEMENS DLR.01",22)|Sensitivity|LT|1
+(0019,"SIEMENS DLR.01",23)|EDR|LT|1
+(0019,"SIEMENS DLR.01",24)|L Fix|LT|1
+(0019,"SIEMENS DLR.01",25)|S Fix|LT|1
+(0019,"SIEMENS DLR.01",26)|Preset Mode|LT|1
+(0019,"SIEMENS DLR.01",27)|Region|LT|1
+(0019,"SIEMENS DLR.01",28)|Subregion|LT|1
+(0019,"SIEMENS DLR.01",30)|Orientation|LT|1
+(0019,"SIEMENS DLR.01",31)|Mark On Film|LT|1
+(0019,"SIEMENS DLR.01",32)|Rotation On DRC|LT|1
+(0019,"SIEMENS DLR.01",40)|Reader Type|LT|1
+(0019,"SIEMENS DLR.01",41)|Sub Modality|LT|1
+(0019,"SIEMENS DLR.01",42)|Reader Serial Number|LT|1
+(0019,"SIEMENS DLR.01",50)|Cassette Scale|LT|1
+(0019,"SIEMENS DLR.01",51)|Cassette Matrix|LT|1
+(0019,"SIEMENS DLR.01",52)|Cassette Submatrix|LT|1
+(0019,"SIEMENS DLR.01",53)|Barcode|LT|1
+(0019,"SIEMENS DLR.01",60)|GT - Contrast Type|LT|1
+(0019,"SIEMENS DLR.01",61)|GA - Rotation Amount|LT|1
+(0019,"SIEMENS DLR.01",62)|GC - Rotation Center|LT|1
+(0019,"SIEMENS DLR.01",63)|GS - Density Shift|LT|1
+(0019,"SIEMENS DLR.01",64)|RN - Frequency Rank|US|1
+(0019,"SIEMENS DLR.01",65)|RE - Frequency Enhancement|LT|1
+(0019,"SIEMENS DLR.01",66)|RT - Frequency Type|LT|1
+(0019,"SIEMENS DLR.01",67)|Kernel Length|LT|1
+(0019,"SIEMENS DLR.01",68)|Kernel Mode|UL|1
+(0019,"SIEMENS DLR.01",69)|Convolution Mode|UL|1
+(0019,"SIEMENS DLR.01",70)|PLA Source|LT|1
+(0019,"SIEMENS DLR.01",71)|PLA Destination|LT|1
+(0019,"SIEMENS DLR.01",75)|UID Original Image|LT|1
+(0019,"SIEMENS DLR.01",76)|?|LT|1
+(0019,"SIEMENS DLR.01",80)|Reader Header|LT|1
+(0019,"SIEMENS DLR.01",90)|PLA of Secondary Destination|LT|1
+(0019,"SIEMENS DLR.01",a0)|?|DS|1
+(0019,"SIEMENS DLR.01",a1)|?|DS|1
+(0041,"SIEMENS DLR.01",10)|Number of Hardcopies|US|1
+(0041,"SIEMENS DLR.01",20)|Film Format|LT|1
+(0041,"SIEMENS DLR.01",30)|Film Size|LT|1
+(0041,"SIEMENS DLR.01",31)|Full Film Format|LT|1
+(0003,"SIEMENS ISI",08)|ISI Command Field|US|1
+(0003,"SIEMENS ISI",11)|Attach ID Application Code|US|1
+(0003,"SIEMENS ISI",12)|Attach ID Message Count|UL|1
+(0003,"SIEMENS ISI",13)|Attach ID Date|DA|1
+(0003,"SIEMENS ISI",14)|Attach ID Time|TM|1
+(0003,"SIEMENS ISI",20)|Message Type|US|1
+(0003,"SIEMENS ISI",30)|Max Waiting Date|DA|1
+(0003,"SIEMENS ISI",31)|Max Waiting Time|TM|1
+(0009,"SIEMENS ISI",01)|RIS Patient Info IMGEF|UN|1
+(0011,"SIEMENS ISI",03)|Patient UID|LT|1
+(0011,"SIEMENS ISI",04)|Patient ID|LT|1
+(0011,"SIEMENS ISI",0a)|Case ID|LT|1
+(0011,"SIEMENS ISI",22)|Request ID|LT|1
+(0011,"SIEMENS ISI",23)|Examination UID|LT|1
+(0011,"SIEMENS ISI",a1)|Patient Registration Date|DA|1
+(0011,"SIEMENS ISI",a2)|Patient Registration Time|TM|1
+(0011,"SIEMENS ISI",b0)|Patient Last Name|LT|1
+(0011,"SIEMENS ISI",b2)|Patient First Name|LT|1
+(0011,"SIEMENS ISI",b4)|Patient Hospital Status|LT|1
+(0011,"SIEMENS ISI",bc)|Current Location Time|TM|1
+(0011,"SIEMENS ISI",c0)|Patient Insurance Status|LT|1
+(0011,"SIEMENS ISI",d0)|Patient Billing Type|LT|1
+(0011,"SIEMENS ISI",d2)|Patient Billing Address|LT|1
+(0031,"SIEMENS ISI",12)|Examination Reason|LT|1
+(0031,"SIEMENS ISI",30)|Requested Date|DA|1
+(0031,"SIEMENS ISI",32)|Worklist Request Start Time|TM|1
+(0031,"SIEMENS ISI",33)|Worklist Request End Time|TM|1
+(0031,"SIEMENS ISI",4a)|Requested Time|TM|1
+(0031,"SIEMENS ISI",80)|Requested Location|LT|1
+(0055,"SIEMENS ISI",46)|Current Ward|LT|1
+(0193,"SIEMENS ISI",02)|RIS Key|DS|1
+(0307,"SIEMENS ISI",01)|RIS Worklist IMGEF|UN|1
+(0309,"SIEMENS ISI",01)|RIS Report IMGEF|UN|1
+(4009,"SIEMENS ISI",01)|Report ID|LT|1
+(4009,"SIEMENS ISI",20)|Report Status|LT|1
+(4009,"SIEMENS ISI",30)|Report Creation Date|DA|1
+(4009,"SIEMENS ISI",70)|Report Approving Physician|LT|1
+(4009,"SIEMENS ISI",e0)|Report Text|LT|1
+(4009,"SIEMENS ISI",e1)|Report Author|LT|1
+(4009,"SIEMENS ISI",e3)|Reporting Radiologist|LT|1
+(0009,"SIEMENS MED",10)|Recognition Code|LT|1
+(0009,"SIEMENS MED",30)|Byte Offset of Original Header|UL|1
+(0009,"SIEMENS MED",31)|Length of Original Header|UL|1
+(0009,"SIEMENS MED",40)|Byte Offset of Pixelmatrix|UL|1
+(0009,"SIEMENS MED",41)|Length of Pixelmatrix In Bytes|UL|1
+(0009,"SIEMENS MED",50)|?|LT|1
+(0009,"SIEMENS MED",51)|?|LT|1
+(0009,"SIEMENS MED",f5)|PDM EFID Placeholder|LT|1
+(0009,"SIEMENS MED",f6)|PDM Data Object Type Extension|LT|1
+(0021,"SIEMENS MED",10)|Zoom|DS|1
+(0021,"SIEMENS MED",11)|Target|DS|2
+(0021,"SIEMENS MED",12)|Tube Angle|IS|1
+(0021,"SIEMENS MED",20)|ROI Mask|US|1
+(7001,"SIEMENS MED",10)|Dummy|LT|1
+(7003,"SIEMENS MED",10)|Header|LT|1
+(7005,"SIEMENS MED",10)|Dummy|LT|1
+(0029,"SIEMENS MED DISPLAY",04)|Photometric Interpretation|LT|1
+(0029,"SIEMENS MED DISPLAY",10)|Rows of Submatrix|US|1
+(0029,"SIEMENS MED DISPLAY",11)|Columns of Submatrix|US|1
+(0029,"SIEMENS MED DISPLAY",20)|?|US|1
+(0029,"SIEMENS MED DISPLAY",21)|?|US|1
+(0029,"SIEMENS MED DISPLAY",50)|Origin of Submatrix|US|1
+(0029,"SIEMENS MED DISPLAY",99)|Shutter Type|LT|1
+(0029,"SIEMENS MED DISPLAY",a0)|Rows of Rectangular Shutter|US|1
+(0029,"SIEMENS MED DISPLAY",a1)|Columns of Rectangular Shutter|US|1
+(0029,"SIEMENS MED DISPLAY",a2)|Origin of Rectangular Shutter|US|1
+(0029,"SIEMENS MED DISPLAY",b0)|Radius of Circular Shutter|US|1
+(0029,"SIEMENS MED DISPLAY",b2)|Origin of Circular Shutter|US|1
+(0029,"SIEMENS MED DISPLAY",c1)|Contour of Irregular Shutter|US|1
+(0029,"SIEMENS MED HG",10)|List of Group Numbers|US|1
+(0029,"SIEMENS MED HG",15)|List of Shadow Owner Codes|LT|1
+(0029,"SIEMENS MED HG",20)|List of Element Numbers|US|1
+(0029,"SIEMENS MED HG",30)|List of Total Display Length|US|1
+(0029,"SIEMENS MED HG",40)|List of Display Prefix|LT|1
+(0029,"SIEMENS MED HG",50)|List of Display Postfix|LT|1
+(0029,"SIEMENS MED HG",60)|List of Text Position|US|1
+(0029,"SIEMENS MED HG",70)|List of Text Concatenation|LT|1
+(0029,"SIEMENS MED MG",10)|List of Group Numbers|US|1
+(0029,"SIEMENS MED MG",15)|List of Shadow Owner Codes|LT|1
+(0029,"SIEMENS MED MG",20)|List of Element Numbers|US|1
+(0029,"SIEMENS MED MG",30)|List of Total Display Length|US|1
+(0029,"SIEMENS MED MG",40)|List of Display Prefix|LT|1
+(0029,"SIEMENS MED MG",50)|List of Display Postfix|LT|1
+(0029,"SIEMENS MED MG",60)|List of Text Position|US|1
+(0029,"SIEMENS MED MG",70)|List of Text Concatenation|LT|1
+(0019,"SIEMENS MR VA0  COAD",12)|Magnetic Field Strength|DS|1
+(0019,"SIEMENS MR VA0  COAD",14)|ADC Voltage|DS|1
+(0019,"SIEMENS MR VA0  COAD",16)|ADC Offset|DS|2
+(0019,"SIEMENS MR VA0  COAD",20)|Transmitter Amplitude|DS|1
+(0019,"SIEMENS MR VA0  COAD",21)|Number of Transmitter Amplitudes|IS|1
+(0019,"SIEMENS MR VA0  COAD",22)|Transmitter Attenuator|DS|1
+(0019,"SIEMENS MR VA0  COAD",24)|Transmitter Calibration|DS|1
+(0019,"SIEMENS MR VA0  COAD",26)|Transmitter Reference|DS|1
+(0019,"SIEMENS MR VA0  COAD",50)|Receiver Total Gain|DS|1
+(0019,"SIEMENS MR VA0  COAD",51)|Receiver Amplifier Gain|DS|1
+(0019,"SIEMENS MR VA0  COAD",52)|Receiver Preamplifier Gain|DS|1
+(0019,"SIEMENS MR VA0  COAD",54)|Receiver Cable Attenuation|DS|1
+(0019,"SIEMENS MR VA0  COAD",55)|Receiver Reference Gain|DS|1
+(0019,"SIEMENS MR VA0  COAD",56)|Receiver Filter Frequency|DS|1
+(0019,"SIEMENS MR VA0  COAD",60)|Reconstruction Scale Factor|DS|1
+(0019,"SIEMENS MR VA0  COAD",62)|Reference Scale Factor|DS|1
+(0019,"SIEMENS MR VA0  COAD",70)|Phase Gradient Amplitude|DS|1
+(0019,"SIEMENS MR VA0  COAD",71)|Readout Gradient Amplitude|DS|1
+(0019,"SIEMENS MR VA0  COAD",72)|Selection Gradient Amplitude|DS|1
+(0019,"SIEMENS MR VA0  COAD",80)|Gradient Delay Time|DS|3
+(0019,"SIEMENS MR VA0  COAD",82)|Total Gradient Delay Time|DS|1
+(0019,"SIEMENS MR VA0  COAD",90)|Sensitivity Correction Label|LT|1
+(0019,"SIEMENS MR VA0  COAD",91)|Saturation Phase Encoding Vector Coronal Component|DS|6
+(0019,"SIEMENS MR VA0  COAD",92)|Saturation Readout Vector Coronal Component|DS|6
+(0019,"SIEMENS MR VA0  COAD",a0)|RF Watchdog Mask|US|3
+(0019,"SIEMENS MR VA0  COAD",a1)|EPI Reconstruction Slope|DS|1
+(0019,"SIEMENS MR VA0  COAD",a2)|RF Power Error Indicator|DS|1
+(0019,"SIEMENS MR VA0  COAD",a5)|Specific Absorption Rate Whole Body|DS|3
+(0019,"SIEMENS MR VA0  COAD",a6)|Specific Energy Dose|DS|3
+(0019,"SIEMENS MR VA0  COAD",b0)|Adjustment Status Mask|UL|1
+(0019,"SIEMENS MR VA0  COAD",c1)|EPI Capacity|DS|6
+(0019,"SIEMENS MR VA0  COAD",c2)|EPI Inductance|DS|3
+(0019,"SIEMENS MR VA0  COAD",c3)|EPI Switch Configuration Code|IS|1-n
+(0019,"SIEMENS MR VA0  COAD",c4)|EPI Switch Hardware Code|IS|1-n
+(0019,"SIEMENS MR VA0  COAD",c5)|EPI Switch Delay Time|DS|1-n
+(0019,"SIEMENS MR VA0  COAD",d1)|Flow Sensitivity|DS|1
+(0019,"SIEMENS MR VA0  COAD",d2)|Calculation Submode|LT|1
+(0019,"SIEMENS MR VA0  COAD",d3)|Field of View Ratio|DS|1
+(0019,"SIEMENS MR VA0  COAD",d4)|Base Raw Matrix Size|IS|1
+(0019,"SIEMENS MR VA0  COAD",d5)|2D Oversampling Lines|IS|1
+(0019,"SIEMENS MR VA0  COAD",d6)|3D Phase Oversampling Partitions|IS|1
+(0019,"SIEMENS MR VA0  COAD",d7)|Echo Line Position|IS|1
+(0019,"SIEMENS MR VA0  COAD",d8)|Echo Column Position|IS|1
+(0019,"SIEMENS MR VA0  COAD",d9)|Lines Per Segment|IS|1
+(0019,"SIEMENS MR VA0  COAD",da)|PhaseCodingDirection|LT|1
+(0019,"SIEMENS MR VA0  GEN",10)|Total Measurement Time Nominal|DS|1
+(0019,"SIEMENS MR VA0  GEN",11)|Total Measurement Time Current|DS|1
+(0019,"SIEMENS MR VA0  GEN",12)|Start Delay Time|DS|1
+(0019,"SIEMENS MR VA0  GEN",13)|Dwell Time|DS|1
+(0019,"SIEMENS MR VA0  GEN",14)|Number of Phases|IS|1
+(0019,"SIEMENS MR VA0  GEN",16)|Sequence Control Mask|UL|2
+(0019,"SIEMENS MR VA0  GEN",18)|Measurement Status Mask|UL|1
+(0019,"SIEMENS MR VA0  GEN",20)|Number of Fourier Lines Nominal|IS|1
+(0019,"SIEMENS MR VA0  GEN",21)|Number of Fourier Lines Current|IS|1
+(0019,"SIEMENS MR VA0  GEN",26)|Number of Fourier Lines after Zero|IS|1
+(0019,"SIEMENS MR VA0  GEN",28)|First Measured Fourier Line|IS|1
+(0019,"SIEMENS MR VA0  GEN",30)|Acquisition Columns|IS|1
+(0019,"SIEMENS MR VA0  GEN",31)|Reconstruction Columns|IS|1
+(0019,"SIEMENS MR VA0  GEN",40)|Array Coil Element Number|IS|1
+(0019,"SIEMENS MR VA0  GEN",41)|Array Coil Element Select Mask|UL|1
+(0019,"SIEMENS MR VA0  GEN",42)|Array Coil Element Data Mask|UL|1
+(0019,"SIEMENS MR VA0  GEN",43)|Array Coil Element To ADC Connect|IS|1-n
+(0019,"SIEMENS MR VA0  GEN",44)|Array Coil Element Noise Level|DS|1-n
+(0019,"SIEMENS MR VA0  GEN",45)|Array Coil ADC Pair Number|IS|1
+(0019,"SIEMENS MR VA0  GEN",46)|Array Coil Combination Mask|UL|1
+(0019,"SIEMENS MR VA0  GEN",50)|Number of Averages Current|IS|1
+(0019,"SIEMENS MR VA0  GEN",60)|Flip Angle|DS|1
+(0019,"SIEMENS MR VA0  GEN",70)|Number of Prescans|IS|1
+(0019,"SIEMENS MR VA0  GEN",81)|Filter Type for Raw Data|LT|1
+(0019,"SIEMENS MR VA0  GEN",82)|Filter Parameter for Raw Data|DS|1-n
+(0019,"SIEMENS MR VA0  GEN",83)|Filter Type for Image Data|LT|1
+(0019,"SIEMENS MR VA0  GEN",84)|Filter Parameter for Image Data|DS|1-n
+(0019,"SIEMENS MR VA0  GEN",85)|Filter Type for Phase Correction|LT|1
+(0019,"SIEMENS MR VA0  GEN",86)|Filter Parameter for Phase Correction|DS|1-n
+(0019,"SIEMENS MR VA0  GEN",87)|Normalization Filter Type for Image Data|LT|1
+(0019,"SIEMENS MR VA0  GEN",88)|Normalization Filter Parameter for Image Data|DS|1-n
+(0019,"SIEMENS MR VA0  GEN",90)|Number of Saturation Regions|IS|1
+(0019,"SIEMENS MR VA0  GEN",91)|Saturation Phase Encoding Vector Sagittal Component|DS|6
+(0019,"SIEMENS MR VA0  GEN",92)|Saturation Readout Vector Sagittal Component|DS|6
+(0019,"SIEMENS MR VA0  GEN",93)|EPI Stimulation Monitor Mode|DS|1
+(0019,"SIEMENS MR VA0  GEN",94)|Image Rotation Angle|DS|1
+(0019,"SIEMENS MR VA0  GEN",96)|Coil ID Mask|UL|3
+(0019,"SIEMENS MR VA0  GEN",97)|Coil Class Mask|UL|2
+(0019,"SIEMENS MR VA0  GEN",98)|Coil Position|DS|3
+(0019,"SIEMENS MR VA0  GEN",a0)|EPI Reconstruction Phase|DS|1
+(0019,"SIEMENS MR VA0  GEN",a1)|EPI Reconstruction Slope|DS|1
+(0021,"SIEMENS MR VA0  GEN",20)|Phase Correction Rows Sequence|IS|1
+(0021,"SIEMENS MR VA0  GEN",21)|Phase Correction Columns Sequence|IS|1
+(0021,"SIEMENS MR VA0  GEN",22)|Phase Correction Rows Reconstruction|IS|1
+(0021,"SIEMENS MR VA0  GEN",24)|Phase Correction Columns Reconstruction|IS|1
+(0021,"SIEMENS MR VA0  GEN",30)|Number of 3D Raw Partitions Nominal|IS|1
+(0021,"SIEMENS MR VA0  GEN",31)|Number of 3D Raw Partitions Current|IS|1
+(0021,"SIEMENS MR VA0  GEN",34)|Number of 3D Image Partitions|IS|1
+(0021,"SIEMENS MR VA0  GEN",36)|Actual 3D Image Partition Number|IS|1
+(0021,"SIEMENS MR VA0  GEN",39)|Slab Thickness|DS|1
+(0021,"SIEMENS MR VA0  GEN",40)|Number of Slices Nominal|IS|1
+(0021,"SIEMENS MR VA0  GEN",41)|Number of Slices Current|IS|1
+(0021,"SIEMENS MR VA0  GEN",42)|Current Slice Number|IS|1
+(0021,"SIEMENS MR VA0  GEN",43)|Current Group Number|IS|1
+(0021,"SIEMENS MR VA0  GEN",44)|Current Slice Distance Factor|DS|1
+(0021,"SIEMENS MR VA0  GEN",45)|MIP Start Row|IS|1
+(0021,"SIEMENS MR VA0  GEN",46)|MIP Stop Row|IS|1
+(0021,"SIEMENS MR VA0  GEN",47)|MIP Start Column|IS|1
+(0021,"SIEMENS MR VA0  GEN",48)|MIP Stop Column|IS|1
+(0021,"SIEMENS MR VA0  GEN",49)|MIP Start Slice|IS|1
+(0021,"SIEMENS MR VA0  GEN",4a)|MIP Stop Slice|IS|1
+(0021,"SIEMENS MR VA0  GEN",4f)|Order of Slices|LT|1
+(0021,"SIEMENS MR VA0  GEN",50)|Signal Mask|US|1
+(0021,"SIEMENS MR VA0  GEN",52)|Delay After Trigger|DS|1
+(0021,"SIEMENS MR VA0  GEN",53)|RR Interval|IS|1
+(0021,"SIEMENS MR VA0  GEN",54)|Number of Trigger Pulses|DS|1
+(0021,"SIEMENS MR VA0  GEN",56)|Repetition Time Effective|DS|1
+(0021,"SIEMENS MR VA0  GEN",57)|Gate Phase|LT|1
+(0021,"SIEMENS MR VA0  GEN",58)|Gate Threshold|DS|1
+(0021,"SIEMENS MR VA0  GEN",59)|Gated Ratio|DS|1
+(0021,"SIEMENS MR VA0  GEN",60)|Number of Interpolated Images|IS|1
+(0021,"SIEMENS MR VA0  GEN",70)|Number of Echoes|IS|1
+(0021,"SIEMENS MR VA0  GEN",72)|Second Echo Time|DS|1
+(0021,"SIEMENS MR VA0  GEN",72)|Second Repetition Time|DS|1
+(0021,"SIEMENS MR VA0  GEN",73)|Second Repetition Time|DS|1
+(0021,"SIEMENS MR VA0  GEN",80)|Cardiac Code|IS|1
+(0021,"SIEMENS MR VA0  GEN",91)|Saturation PhaseEncoding Vector Transverse Component|DS|6
+(0021,"SIEMENS MR VA0  GEN",92)|Saturation Readout Vector Transverse Component|DS|6
+(0021,"SIEMENS MR VA0  GEN",93)|EPI Change Value of Magnitude|DS|1
+(0021,"SIEMENS MR VA0  GEN",94)|EPI Change Value of X Component|DS|1
+(0021,"SIEMENS MR VA0  GEN",95)|EPI Change Value of Y Component|DS|1
+(0021,"SIEMENS MR VA0  GEN",96)|EPI Change Value of Z Component|DS|1
+(0021,"SIEMENS MR VA0  RAW",00)|Sequence Type|LT|1
+(0021,"SIEMENS MR VA0  RAW",01)|Vector Size Original|IS|1
+(0021,"SIEMENS MR VA0  RAW",02)|Vector Size Extended|IS|1
+(0021,"SIEMENS MR VA0  RAW",03)|Acquired Spectral Range|DS|1
+(0021,"SIEMENS MR VA0  RAW",04)|VOI Position|DS|3
+(0021,"SIEMENS MR VA0  RAW",05)|VOI Size|DS|3
+(0021,"SIEMENS MR VA0  RAW",06)|CSI Matrix Size Original|IS|3
+(0021,"SIEMENS MR VA0  RAW",07)|CSI Matrix Size Extended|IS|3
+(0021,"SIEMENS MR VA0  RAW",08)|Spatial Grid Shift|DS|3
+(0021,"SIEMENS MR VA0  RAW",09)|Signal Limits Minimum|DS|1
+(0021,"SIEMENS MR VA0  RAW",10)|Signal Limits Maximum|DS|1
+(0021,"SIEMENS MR VA0  RAW",11)|Spec Info Mask|DS|1
+(0021,"SIEMENS MR VA0  RAW",12)|EPI Time Rate of Change of Magnitude|DS|1
+(0021,"SIEMENS MR VA0  RAW",13)|EPI Time Rate of Change of X Component|DS|1
+(0021,"SIEMENS MR VA0  RAW",14)|EPI Time Rate of Change of Y Component|DS|1
+(0021,"SIEMENS MR VA0  RAW",15)|EPI Time Rate of Change of Z Component|DS|1
+(0021,"SIEMENS MR VA0  RAW",16)|EPI Time Rate of Change Legal Limit 1|DS|1
+(0021,"SIEMENS MR VA0  RAW",17)|EPI Operation Mode Flag|DS|1
+(0021,"SIEMENS MR VA0  RAW",18)|EPI Field Calculation Safety Factor|DS|1
+(0021,"SIEMENS MR VA0  RAW",19)|EPI Legal Limit 1 of Change Value|DS|1
+(0021,"SIEMENS MR VA0  RAW",20)|EPI Legal Limit 2 of Change Value|DS|1
+(0021,"SIEMENS MR VA0  RAW",21)|EPI Rise Time|DS|1
+(0021,"SIEMENS MR VA0  RAW",30)|Array Coil ADC Offset|DS|16
+(0021,"SIEMENS MR VA0  RAW",31)|Array Coil Preamplifier Gain|DS|16
+(0021,"SIEMENS MR VA0  RAW",50)|Saturation Type|LT|1
+(0021,"SIEMENS MR VA0  RAW",51)|Saturation Normal Vector|DS|3
+(0021,"SIEMENS MR VA0  RAW",52)|Saturation Position Vector|DS|3
+(0021,"SIEMENS MR VA0  RAW",53)|Saturation Thickness|DS|6
+(0021,"SIEMENS MR VA0  RAW",54)|Saturation Width|DS|6
+(0021,"SIEMENS MR VA0  RAW",55)|Saturation Distance|DS|6
+(7fe3,"SIEMENS NUMARIS II",00)|Image Graphics Format Code|LT|1
+(7fe3,"SIEMENS NUMARIS II",10)|Image Graphics|OB|1
+(7fe3,"SIEMENS NUMARIS II",20)|Image Graphics Dummy|OB|1
+(0011,"SIEMENS RA GEN",20)|?|US|1-n
+(0011,"SIEMENS RA GEN",25)|?|US|1-n
+(0011,"SIEMENS RA GEN",30)|?|LT|1
+(0011,"SIEMENS RA GEN",35)|?|LT|1
+(0011,"SIEMENS RA GEN",40)|?|LT|1
+(0019,"SIEMENS RA GEN",15)|?|US|1
+(0019,"SIEMENS RA GEN",20)|?|US|1-n
+(0019,"SIEMENS RA GEN",22)|?|US|1-n
+(0019,"SIEMENS RA GEN",24)|?|LT|1
+(0019,"SIEMENS RA GEN",26)|?|US|1
+(0019,"SIEMENS RA GEN",28)|?|US|1
+(0019,"SIEMENS RA GEN",2a)|?|US|1
+(0019,"SIEMENS RA GEN",2c)|?|US|1
+(0019,"SIEMENS RA GEN",2e)|?|UN|1
+(0019,"SIEMENS RA GEN",30)|?|UN|1
+(0019,"SIEMENS RA GEN",32)|?|US|1
+(0019,"SIEMENS RA GEN",34)|?|US|1
+(0019,"SIEMENS RA GEN",36)|?|US|1
+(0019,"SIEMENS RA GEN",38)|?|US|1
+(0019,"SIEMENS RA GEN",3a)|?|US|1
+(0019,"SIEMENS RA GEN",3c)|?|US|1
+(0019,"SIEMENS RA GEN",3e)|?|US|1
+(0019,"SIEMENS RA GEN",40)|?|US|1
+(0019,"SIEMENS RA GEN",42)|?|US|1
+(0019,"SIEMENS RA GEN",44)|?|US|1
+(0019,"SIEMENS RA GEN",46)|?|US|1-n
+(0019,"SIEMENS RA GEN",48)|?|US|1
+(0019,"SIEMENS RA GEN",4a)|?|US|1
+(0019,"SIEMENS RA GEN",4c)|?|US|1
+(0019,"SIEMENS RA GEN",50)|?|US|1-n
+(0019,"SIEMENS RA GEN",52)|?|US|1
+(0019,"SIEMENS RA GEN",54)|?|US|1
+(0019,"SIEMENS RA GEN",56)|?|US|1
+(0019,"SIEMENS RA GEN",58)|?|US|1
+(0019,"SIEMENS RA GEN",5a)|?|US|1
+(0019,"SIEMENS RA GEN",5c)|?|UN|1
+(0019,"SIEMENS RA GEN",5e)|?|US|1-n
+(0019,"SIEMENS RA GEN",60)|?|US|1-n
+(0019,"SIEMENS RA GEN",62)|?|US|1-n
+(0019,"SIEMENS RA GEN",64)|?|US|1-n
+(0019,"SIEMENS RA GEN",66)|?|US|1-n
+(0019,"SIEMENS RA GEN",68)|?|US|1-n
+(0019,"SIEMENS RA GEN",6a)|?|US|1-n
+(0019,"SIEMENS RA GEN",70)|?|US|1-n
+(0019,"SIEMENS RA GEN",72)|?|US|1-n
+(0019,"SIEMENS RA GEN",74)|?|US|1-n
+(0019,"SIEMENS RA GEN",76)|?|US|1-n
+(0019,"SIEMENS RA GEN",78)|?|US|1-n
+(0019,"SIEMENS RA GEN",7a)|?|US|1-n
+(0019,"SIEMENS RA GEN",7c)|?|US|1-n
+(0019,"SIEMENS RA GEN",7e)|?|US|1-n
+(0019,"SIEMENS RA GEN",80)|?|US|1-n
+(0019,"SIEMENS RA GEN",82)|?|US|1-n
+(0019,"SIEMENS RA GEN",84)|?|US|1-n
+(0019,"SIEMENS RA GEN",86)|?|US|1-n
+(0019,"SIEMENS RA GEN",88)|?|US|1-n
+(0019,"SIEMENS RA GEN",8a)|?|US|1-n
+(0019,"SIEMENS RA GEN",8c)|?|US|1-n
+(0019,"SIEMENS RA GEN",8e)|?|US|1-n
+(0019,"SIEMENS RA GEN",92)|?|US|1-n
+(0019,"SIEMENS RA GEN",94)|?|US|1-n
+(0019,"SIEMENS RA GEN",96)|?|US|1-n
+(0019,"SIEMENS RA GEN",98)|?|US|1-n
+(0019,"SIEMENS RA GEN",9a)|?|US|1-n
+(0019,"SIEMENS RA GEN",9c)|?|US|1-n
+(0019,"SIEMENS RA GEN",9e)|?|US|1-n
+(0021,"SIEMENS RA GEN",15)|?|US|1
+(0021,"SIEMENS RA GEN",20)|?|US|1
+(0021,"SIEMENS RA GEN",25)|?|US|1
+(0021,"SIEMENS RA GEN",30)|?|US|1
+(0021,"SIEMENS RA GEN",40)|?|US|1
+(0019,"SIEMENS RA PLANE A",20)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",22)|?|US|1
+(0019,"SIEMENS RA PLANE A",24)|?|US|1
+(0019,"SIEMENS RA PLANE A",26)|?|US|1
+(0019,"SIEMENS RA PLANE A",28)|?|US|1
+(0019,"SIEMENS RA PLANE A",2a)|?|US|1
+(0019,"SIEMENS RA PLANE A",2c)|?|US|1
+(0019,"SIEMENS RA PLANE A",2e)|?|US|1
+(0019,"SIEMENS RA PLANE A",30)|?|US|1
+(0019,"SIEMENS RA PLANE A",32)|?|US|1
+(0019,"SIEMENS RA PLANE A",34)|?|US|1
+(0019,"SIEMENS RA PLANE A",36)|?|US|1
+(0019,"SIEMENS RA PLANE A",38)|?|US|1
+(0019,"SIEMENS RA PLANE A",3a)|?|US|1
+(0019,"SIEMENS RA PLANE A",3c)|?|US|1
+(0019,"SIEMENS RA PLANE A",3e)|?|US|1
+(0019,"SIEMENS RA PLANE A",40)|?|US|1
+(0019,"SIEMENS RA PLANE A",42)|?|US|1
+(0019,"SIEMENS RA PLANE A",44)|?|US|1
+(0019,"SIEMENS RA PLANE A",46)|?|US|1
+(0019,"SIEMENS RA PLANE A",48)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",4a)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",4c)|?|US|1
+(0019,"SIEMENS RA PLANE A",4e)|?|US|1
+(0019,"SIEMENS RA PLANE A",50)|?|US|1
+(0019,"SIEMENS RA PLANE A",52)|?|US|1
+(0019,"SIEMENS RA PLANE A",54)|?|US|1
+(0019,"SIEMENS RA PLANE A",56)|?|US|1
+(0019,"SIEMENS RA PLANE A",58)|?|US|1
+(0019,"SIEMENS RA PLANE A",5a)|?|US|1
+(0019,"SIEMENS RA PLANE A",5c)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",5e)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",60)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",62)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",64)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",66)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",68)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",6a)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",6c)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",6e)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",70)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",72)|?|UN|1
+(0019,"SIEMENS RA PLANE A",74)|?|UN|1
+(0019,"SIEMENS RA PLANE A",76)|?|UN|1
+(0019,"SIEMENS RA PLANE A",78)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",7a)|?|US|1
+(0019,"SIEMENS RA PLANE A",7c)|?|US|1
+(0019,"SIEMENS RA PLANE A",7e)|?|US|1
+(0019,"SIEMENS RA PLANE A",80)|?|US|1
+(0019,"SIEMENS RA PLANE A",82)|?|US|1
+(0019,"SIEMENS RA PLANE A",84)|?|US|1
+(0019,"SIEMENS RA PLANE A",86)|?|US|1
+(0019,"SIEMENS RA PLANE A",88)|?|US|1
+(0019,"SIEMENS RA PLANE A",8a)|?|US|1
+(0019,"SIEMENS RA PLANE A",8c)|?|US|1
+(0019,"SIEMENS RA PLANE A",8e)|?|US|1
+(0019,"SIEMENS RA PLANE A",90)|?|US|1
+(0019,"SIEMENS RA PLANE A",92)|?|US|1
+(0019,"SIEMENS RA PLANE A",94)|?|US|1
+(0019,"SIEMENS RA PLANE A",96)|?|US|1
+(0019,"SIEMENS RA PLANE A",98)|?|US|1
+(0019,"SIEMENS RA PLANE A",9a)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",9c)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",9e)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",a0)|?|US|1
+(0019,"SIEMENS RA PLANE A",a2)|?|US|1
+(0019,"SIEMENS RA PLANE A",a4)|?|US|1
+(0019,"SIEMENS RA PLANE A",a6)|?|US|1
+(0019,"SIEMENS RA PLANE A",a8)|?|US|1-n
+(0019,"SIEMENS RA PLANE A",aa)|?|US|1
+(0019,"SIEMENS RA PLANE A",ac)|?|US|1
+(0019,"SIEMENS RA PLANE B",20)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",22)|?|US|1
+(0019,"SIEMENS RA PLANE B",24)|?|US|1
+(0019,"SIEMENS RA PLANE B",26)|?|US|1
+(0019,"SIEMENS RA PLANE B",28)|?|US|1
+(0019,"SIEMENS RA PLANE B",2a)|?|US|1
+(0019,"SIEMENS RA PLANE B",2c)|?|US|1
+(0019,"SIEMENS RA PLANE B",2e)|?|US|1
+(0019,"SIEMENS RA PLANE B",30)|?|US|1
+(0019,"SIEMENS RA PLANE B",32)|?|US|1
+(0019,"SIEMENS RA PLANE B",34)|?|US|1
+(0019,"SIEMENS RA PLANE B",36)|?|US|1
+(0019,"SIEMENS RA PLANE B",38)|?|US|1
+(0019,"SIEMENS RA PLANE B",3a)|?|US|1
+(0019,"SIEMENS RA PLANE B",3c)|?|US|1
+(0019,"SIEMENS RA PLANE B",3e)|?|US|1
+(0019,"SIEMENS RA PLANE B",40)|?|US|1
+(0019,"SIEMENS RA PLANE B",42)|?|US|1
+(0019,"SIEMENS RA PLANE B",44)|?|US|1
+(0019,"SIEMENS RA PLANE B",46)|?|US|1
+(0019,"SIEMENS RA PLANE B",48)|?|US|1
+(0019,"SIEMENS RA PLANE B",4a)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",4c)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",4e)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",50)|?|US|1
+(0019,"SIEMENS RA PLANE B",52)|?|US|1
+(0019,"SIEMENS RA PLANE B",54)|?|US|1
+(0019,"SIEMENS RA PLANE B",56)|?|US|1
+(0019,"SIEMENS RA PLANE B",58)|?|US|1
+(0019,"SIEMENS RA PLANE B",5a)|?|US|1
+(0019,"SIEMENS RA PLANE B",5c)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",5e)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",60)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",62)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",64)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",66)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",68)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",6a)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",6c)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",6e)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",70)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",72)|?|UN|1
+(0019,"SIEMENS RA PLANE B",74)|?|UN|1
+(0019,"SIEMENS RA PLANE B",76)|?|UN|1
+(0019,"SIEMENS RA PLANE B",78)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",7a)|?|US|1
+(0019,"SIEMENS RA PLANE B",7c)|?|US|1
+(0019,"SIEMENS RA PLANE B",7e)|?|US|1
+(0019,"SIEMENS RA PLANE B",80)|?|US|1
+(0019,"SIEMENS RA PLANE B",82)|?|US|1
+(0019,"SIEMENS RA PLANE B",84)|?|US|1
+(0019,"SIEMENS RA PLANE B",86)|?|US|1
+(0019,"SIEMENS RA PLANE B",88)|?|US|1
+(0019,"SIEMENS RA PLANE B",8a)|?|US|1
+(0019,"SIEMENS RA PLANE B",8c)|?|US|1
+(0019,"SIEMENS RA PLANE B",8e)|?|US|1
+(0019,"SIEMENS RA PLANE B",90)|?|US|1
+(0019,"SIEMENS RA PLANE B",92)|?|US|1
+(0019,"SIEMENS RA PLANE B",94)|?|US|1
+(0019,"SIEMENS RA PLANE B",96)|?|US|1
+(0019,"SIEMENS RA PLANE B",98)|?|US|1
+(0019,"SIEMENS RA PLANE B",9a)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",9c)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",9e)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",a0)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",a2)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",a4)|?|US|1
+(0019,"SIEMENS RA PLANE B",a6)|?|US|1
+(0019,"SIEMENS RA PLANE B",a8)|?|US|1-n
+(0019,"SIEMENS RA PLANE B",aa)|?|US|1
+(0019,"SIEMENS RA PLANE B",ac)|?|US|1
+(0011,"SIEMENS RIS",10)|Patient UID|LT|1
+(0011,"SIEMENS RIS",11)|Patient ID|LT|1
+(0011,"SIEMENS RIS",20)|Patient Registration Date|DA|1
+(0011,"SIEMENS RIS",21)|Patient Registration Time|TM|1
+(0011,"SIEMENS RIS",30)|Patientname RIS|LT|1
+(0011,"SIEMENS RIS",31)|Patientprename RIS|LT|1
+(0011,"SIEMENS RIS",40)|Patient Hospital Status|LT|1
+(0011,"SIEMENS RIS",41)|Medical Alerts|LT|1
+(0011,"SIEMENS RIS",42)|Contrast Allergies|LT|1
+(0031,"SIEMENS RIS",10)|Request UID|LT|1
+(0031,"SIEMENS RIS",45)|Requesting Physician|LT|1
+(0031,"SIEMENS RIS",50)|Requested Physician|LT|1
+(0033,"SIEMENS RIS",10)|Patient Study UID|LT|1
+(0009,"SIENET",01)|SIENET Command Field|US|1
+(0009,"SIENET",14)|Receiver PLA|LT|1
+(0009,"SIENET",16)|Transfer Priority|US|1
+(0009,"SIENET",29)|Actual User|LT|1
+(0095,"SIENET",01)|Examination Folder ID|LT|1
+(0095,"SIENET",04)|Folder Reported Status|UL|1
+(0095,"SIENET",05)|Folder Reporting Radiologist|LT|1
+(0095,"SIENET",07)|SIENET ISA PLA|LT|1
+(0099,"SIENET",02)|Data Object Attributes|UL|1
+(0009,"SPI",10)|Comments|LT|1
+(0009,"SPI",15)|UID|LT|1
+(0009,"SPI",40)|Data Object Type|US|1
+(0009,"SPI",41)|Data Object Subtype|LT|1
+(0011,"SPI",10)|Organ|LT|1
+(0011,"SPI",15)|Allergy Indication|LT|1
+(0011,"SPI",20)|Pregnancy|LT|1
+(0029,"SPI",60)|Compression Algorithm|LT|1
+(0009,"SPI RELEASE 1",10)|Comments|LT|1
+(0009,"SPI RELEASE 1",15)|UID|LO|1
+(0009,"SPI RELEASE 1",40)|Data Object Type|US|1
+(0009,"SPI RELEASE 1",41)|Data Object Subtype|LO|1
+(0011,"SPI RELEASE 1",10)|Organ|LT|1
+(0011,"SPI RELEASE 1",15)|Allergy Indication|LT|1
+(0011,"SPI RELEASE 1",20)|Pregnancy|LT|1
+(0029,"SPI RELEASE 1",60)|Compression Algorithm|LT|1
+(0009,"SPI Release 1",10)|Comments|LT|1
+(0009,"SPI Release 1",15)|UID|LO|1
+(0009,"SPI Release 1",40)|Data Object Type|US|1
+(0009,"SPI Release 1",41)|Data Object Subtype|LO|1
+(0011,"SPI Release 1",10)|Organ|LT|1
+(0011,"SPI Release 1",15)|Allergy Indication|LT|1
+(0011,"SPI Release 1",20)|Pregnancy|LT|1
+(0029,"SPI Release 1",60)|Compression Algorithm|LT|1
+(0009,"SPI-P Release 1",00)|Data Object Recognition Code|LT|1
+(0009,"SPI-P Release 1",04)|Image Data Consistence|LO|1
+(0009,"SPI-P Release 1",08)|?|US|1
+(0009,"SPI-P Release 1",12)|?|LO|1
+(0009,"SPI-P Release 1",15)|Unique Identifier|LO|1
+(0009,"SPI-P Release 1",16)|?|LO|1
+(0009,"SPI-P Release 1",18)|?|LO|1
+(0009,"SPI-P Release 1",21)|?|LT|1
+(0009,"SPI-P Release 1",31)|PACS Unique Identifier|LT|1
+(0009,"SPI-P Release 1",34)|Cluster Unique Identifier|LT|1
+(0009,"SPI-P Release 1",38)|System Unique Identifier|LT|1
+(0009,"SPI-P Release 1",39)|?|LT|1
+(0009,"SPI-P Release 1",51)|Study Unique Identifier|LT|1
+(0009,"SPI-P Release 1",61)|Series Unique Identifier|LT|1
+(0009,"SPI-P Release 1",91)|?|LT|1
+(0009,"SPI-P Release 1",f2)|?|LT|1
+(0009,"SPI-P Release 1",f3)|?|UN|1
+(0009,"SPI-P Release 1",f4)|?|LT|1
+(0009,"SPI-P Release 1",f5)|?|UN|1
+(0009,"SPI-P Release 1",f7)|?|LT|1
+(0011,"SPI-P Release 1",10)|Patient Entry ID|LT|1
+(0011,"SPI-P Release 1",21)|?|UN|1
+(0011,"SPI-P Release 1",22)|?|UN|1
+(0011,"SPI-P Release 1",31)|?|UN|1
+(0011,"SPI-P Release 1",32)|?|UN|1
+(0019,"SPI-P Release 1",00)|?|UN|1
+(0019,"SPI-P Release 1",01)|?|UN|1
+(0019,"SPI-P Release 1",02)|?|UN|1
+(0019,"SPI-P Release 1",10)|Mains Frequency|US|1
+(0019,"SPI-P Release 1",25)|Original Pixel Data Quality|LT|1-n
+(0019,"SPI-P Release 1",30)|ECG Triggering|US|1
+(0019,"SPI-P Release 1",31)|ECG 1 Offset|UN|1
+(0019,"SPI-P Release 1",32)|ECG 2 Offset 1|UN|1
+(0019,"SPI-P Release 1",33)|ECG 2 Offset 2|UN|1
+(0019,"SPI-P Release 1",50)|Video Scan Mode|US|1
+(0019,"SPI-P Release 1",51)|Video LineRate|US|1
+(0019,"SPI-P Release 1",60)|Xray Technique|US|1
+(0019,"SPI-P Release 1",61)|Image Identifier Fromat|DS|1
+(0019,"SPI-P Release 1",62)|Iris Diaphragm|US|1
+(0019,"SPI-P Release 1",63)|Filter|CS|1
+(0019,"SPI-P Release 1",64)|Cine Parallel|CS|1
+(0019,"SPI-P Release 1",65)|Cine Master|CS|1
+(0019,"SPI-P Release 1",70)|Exposure Channel|US|1
+(0019,"SPI-P Release 1",71)|Exposure Channel First Image|UN|1
+(0019,"SPI-P Release 1",72)|Processing Channel|US|1
+(0019,"SPI-P Release 1",80)|Acquisition Delay|DS|1
+(0019,"SPI-P Release 1",81)|Relative Image Time|UN|1
+(0019,"SPI-P Release 1",90)|Video White Compression|CS|1
+(0019,"SPI-P Release 1",a0)|Angulation|US|1
+(0019,"SPI-P Release 1",a1)|Rotation|US|1
+(0021,"SPI-P Release 1",12)|Series Unique Identifier|LT|1
+(0021,"SPI-P Release 1",14)|?|LT|1
+(0029,"SPI-P Release 1",00)|?|DS|4
+(0029,"SPI-P Release 1",20)|Pixel Aspect Ratio|DS|1
+(0029,"SPI-P Release 1",25)|Processed Pixel Data Quality|LO|1-n
+(0029,"SPI-P Release 1",30)|?|LT|1
+(0029,"SPI-P Release 1",38)|?|US|1
+(0029,"SPI-P Release 1",60)|?|LT|1
+(0029,"SPI-P Release 1",61)|?|LT|1
+(0029,"SPI-P Release 1",67)|?|LT|1
+(0029,"SPI-P Release 1",70)|Window ID|LT|1
+(0029,"SPI-P Release 1",71)|Video Invert Subtracted|CS|1
+(0029,"SPI-P Release 1",72)|Video Invert Nonsubtracted|CS|1
+(0029,"SPI-P Release 1",77)|Window Select Status|CS|1
+(0029,"SPI-P Release 1",78)|ECG Display Printing ID|LT|1
+(0029,"SPI-P Release 1",79)|ECG Display Printing|CS|1
+(0029,"SPI-P Release 1",7e)|ECG Display Printing Enable Status|CS|1
+(0029,"SPI-P Release 1",7f)|ECG Display Printing Select Status|CS|1
+(0029,"SPI-P Release 1",80)|Physiological Display ID|LT|1
+(0029,"SPI-P Release 1",81)|Preferred Physiological Channel Display|US|1
+(0029,"SPI-P Release 1",8e)|Physiological Display Enable Status|CS|1
+(0029,"SPI-P Release 1",8f)|Physiological Display Select Status|CS|1
+(0029,"SPI-P Release 1",c0)|Functional Shutter ID|LT|1
+(0029,"SPI-P Release 1",c1)|Field Of Shutter|US|1
+(0029,"SPI-P Release 1",c5)|Field Of Shutter Rectangle|LT|1
+(0029,"SPI-P Release 1",ce)|Shutter Enable Status|CS|1
+(0029,"SPI-P Release 1",cf)|Shutter Select Status|CS|1
+(7fe1,"SPI-P Release 1",10)|Pixel Data|OW/OB|1
+(0009,"SPI-P Release 1;1",c0)|?|LT|1
+(0009,"SPI-P Release 1;1",c1)|?|LT|1
+(0019,"SPI-P Release 1;1",00)|Physiological Data Type|UN|1
+(0019,"SPI-P Release 1;1",01)|Physiological Data Channel And Kind|UN|1
+(0019,"SPI-P Release 1;1",02)|Sample Bits Allocated|US|1
+(0019,"SPI-P Release 1;1",03)|Sample Bits Stored|US|1
+(0019,"SPI-P Release 1;1",04)|Sample High Bit|US|1
+(0019,"SPI-P Release 1;1",05)|Sample Representation|US|1
+(0019,"SPI-P Release 1;1",06)|Smallest Sample Value|UN|1
+(0019,"SPI-P Release 1;1",07)|Largest Sample Value|UN|1
+(0019,"SPI-P Release 1;1",08)|Number Of Samples|UN|1
+(0019,"SPI-P Release 1;1",09)|Sample Data|UN|1
+(0019,"SPI-P Release 1;1",0a)|Sample Rate|UN|1
+(0019,"SPI-P Release 1;1",10)|Physiological Data Type 2|UN|1
+(0019,"SPI-P Release 1;1",11)|Physiological Data Channel And Kind 2|UN|1
+(0019,"SPI-P Release 1;1",12)|Sample Bits Allocated 2|US|1
+(0019,"SPI-P Release 1;1",13)|Sample Bits Stored 2|US|1
+(0019,"SPI-P Release 1;1",14)|Sample High Bit 2|US|1
+(0019,"SPI-P Release 1;1",15)|Sample Representation 2|US|1
+(0019,"SPI-P Release 1;1",16)|Smallest Sample Value 2|UN|1
+(0019,"SPI-P Release 1;1",17)|Largest Sample Value 2|UN|1
+(0019,"SPI-P Release 1;1",18)|Number Of Samples 2|UN|1
+(0019,"SPI-P Release 1;1",19)|Sample Data 2|UN|1
+(0019,"SPI-P Release 1;1",1a)|Sample Rate 2|UN|1
+(0029,"SPI-P Release 1;1",00)|Zoom ID|LT|1
+(0029,"SPI-P Release 1;1",01)|Zoom Rectangle|DS|1-n
+(0029,"SPI-P Release 1;1",03)|Zoom Factor|DS|1
+(0029,"SPI-P Release 1;1",04)|Zoom Function|US|1
+(0029,"SPI-P Release 1;1",0e)|Zoom Enable Status|CS|1
+(0029,"SPI-P Release 1;1",0f)|Zoom Select Status|CS|1
+(0029,"SPI-P Release 1;1",40)|Magnifying Glass ID|LT|1
+(0029,"SPI-P Release 1;1",41)|Magnifying Glass Rectangle|DS|1-n
+(0029,"SPI-P Release 1;1",43)|Magnifying Glass Factor|DS|1
+(0029,"SPI-P Release 1;1",44)|Magnifying Glass Function|US|1
+(0029,"SPI-P Release 1;1",4e)|Magnifying Glass Enable Status|CS|1
+(0029,"SPI-P Release 1;1",4f)|Magnifying Glass Select Status|CS|1
+(0029,"SPI-P Release 1;2",00)|Subtraction Mask ID|LT|1
+(0029,"SPI-P Release 1;2",04)|Masking Function|UN|1
+(0029,"SPI-P Release 1;2",0c)|Proprietary Masking Parameters|UN|1
+(0029,"SPI-P Release 1;2",1e)|Subtraction Mask Enable Status|CS|1
+(0029,"SPI-P Release 1;2",1f)|Subtraction Mask Select Status|CS|1
+(0029,"SPI-P Release 1;3",00)|Image Enhancement ID|LT|1
+(0029,"SPI-P Release 1;3",01)|Image Enhancement|LT|1
+(0029,"SPI-P Release 1;3",02)|Convolution ID|LT|1
+(0029,"SPI-P Release 1;3",03)|Convolution Type|LT|1
+(0029,"SPI-P Release 1;3",04)|Convolution Kernel Size ID|LT|1
+(0029,"SPI-P Release 1;3",05)|Convolution Kernel Size|US|2
+(0029,"SPI-P Release 1;3",06)|Convolution Kernel|US|1-n
+(0029,"SPI-P Release 1;3",0c)|Enhancement Gain|DS|1
+(0029,"SPI-P Release 1;3",1e)|Image Enhancement Enable Status|CS|1
+(0029,"SPI-P Release 1;3",1f)|Image Enhancement Select Status|CS|1
+(0011,"SPI-P Release 2;1",18)|?|LT|1
+(0023,"SPI-P Release 2;1",0d)|?|UI|1
+(0023,"SPI-P Release 2;1",0e)|?|UI|1
+(0009,"SPI-P-GV-CT Release 1",00)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",10)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",20)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",30)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",40)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",50)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",60)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",70)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",75)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",80)|?|LO|1
+(0009,"SPI-P-GV-CT Release 1",90)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",08)|?|IS|1
+(0019,"SPI-P-GV-CT Release 1",09)|?|IS|1
+(0019,"SPI-P-GV-CT Release 1",0a)|?|IS|1
+(0019,"SPI-P-GV-CT Release 1",10)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",20)|?|TM|1
+(0019,"SPI-P-GV-CT Release 1",50)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",60)|?|DS|1
+(0019,"SPI-P-GV-CT Release 1",61)|?|US|1
+(0019,"SPI-P-GV-CT Release 1",63)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",64)|?|US|1
+(0019,"SPI-P-GV-CT Release 1",65)|?|IS|1
+(0019,"SPI-P-GV-CT Release 1",70)|?|LT|1
+(0019,"SPI-P-GV-CT Release 1",80)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",81)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",90)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",a0)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",a1)|?|US|1
+(0019,"SPI-P-GV-CT Release 1",a2)|?|US|1
+(0019,"SPI-P-GV-CT Release 1",a3)|?|US|1
+(0019,"SPI-P-GV-CT Release 1",b0)|?|LO|1
+(0019,"SPI-P-GV-CT Release 1",b1)|?|LO|1
+(0021,"SPI-P-GV-CT Release 1",20)|?|LO|1
+(0021,"SPI-P-GV-CT Release 1",30)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",40)|?|LO|1
+(0021,"SPI-P-GV-CT Release 1",50)|?|LO|1
+(0021,"SPI-P-GV-CT Release 1",60)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",70)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",80)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",90)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",a0)|?|US|1
+(0021,"SPI-P-GV-CT Release 1",a1)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",a2)|?|DS|1
+(0021,"SPI-P-GV-CT Release 1",a3)|?|LT|1
+(0021,"SPI-P-GV-CT Release 1",a4)|?|LT|1
+(0021,"SPI-P-GV-CT Release 1",b0)|?|LO|1
+(0021,"SPI-P-GV-CT Release 1",c0)|?|LO|1
+(0029,"SPI-P-GV-CT Release 1",10)|?|LO|1
+(0029,"SPI-P-GV-CT Release 1",30)|?|UL|1
+(0029,"SPI-P-GV-CT Release 1",31)|?|UL|1
+(0029,"SPI-P-GV-CT Release 1",32)|?|UL|1
+(0029,"SPI-P-GV-CT Release 1",33)|?|UL|1
+(0029,"SPI-P-GV-CT Release 1",80)|?|LO|1
+(0029,"SPI-P-GV-CT Release 1",90)|?|LO|1
+(0029,"SPI-P-GV-CT Release 1",d0)|?|IS|1
+(0029,"SPI-P-GV-CT Release 1",d1)|?|IS|1
+(0019,"SPI-P-PCR Release 2",30)|?|US|1
+(0021,"SPI-P-Private-CWS Release 1",00)|Window Of Images ID|LT|1
+(0021,"SPI-P-Private-CWS Release 1",01)|Window Of Images Type|CS|1
+(0021,"SPI-P-Private-CWS Release 1",02)|WindowOfImagesScope|IS|1-n
+(0019,"SPI-P-Private-DCI Release 1",10)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",11)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",12)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",13)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",14)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",15)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",16)|?|UN|1
+(0019,"SPI-P-Private-DCI Release 1",17)|?|UN|1
+(0021,"SPI-P-Private_CDS Release 1",40)|?|IS|1
+(0029,"SPI-P-Private_CDS Release 1",00)|?|UN|1
+(0019,"SPI-P-Private_ICS Release 1",30)|?|DS|1
+(0019,"SPI-P-Private_ICS Release 1",31)|?|LO|1
+(0029,"SPI-P-Private_ICS Release 1",0f)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",10)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",1b)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",1c)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",21)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",4c)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1",67)|?|LO|1
+(0029,"SPI-P-Private_ICS Release 1",68)|?|US|1
+(0029,"SPI-P-Private_ICS Release 1",6a)|?|LO|1
+(0029,"SPI-P-Private_ICS Release 1",6b)|?|US|1
+(0029,"SPI-P-Private_ICS Release 1;1",00)|?|SL|1
+(0029,"SPI-P-Private_ICS Release 1;1",05)|?|FL|1
+(0029,"SPI-P-Private_ICS Release 1;1",06)|?|FL|1
+(0029,"SPI-P-Private_ICS Release 1;1",20)|?|FL|1
+(0029,"SPI-P-Private_ICS Release 1;1",21)|?|FL|1
+(0029,"SPI-P-Private_ICS Release 1;1",cd)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1;2",00)|?|FD|1
+(0029,"SPI-P-Private_ICS Release 1;2",01)|?|FD|1
+(0029,"SPI-P-Private_ICS Release 1;2",02)|?|FD|1
+(0029,"SPI-P-Private_ICS Release 1;2",03)|?|SL|1
+(0029,"SPI-P-Private_ICS Release 1;2",04)|?|SL|1
+(0029,"SPI-P-Private_ICS Release 1;2",05)|?|SL|1
+(0029,"SPI-P-Private_ICS Release 1;4",e0)|?|SQ|1
+(0029,"SPI-P-Private_ICS Release 1;5",50)|?|CS|1
+(0029,"SPI-P-Private_ICS Release 1;5",55)|?|CS|1
+(0019,"SPI-P-XSB-DCI Release 1",10)|Video Beam Boost|LT|1
+(0019,"SPI-P-XSB-DCI Release 1",11)|Channel Generating Video Sync|US|1
+(0019,"SPI-P-XSB-DCI Release 1",12)|Video Gain|US|1
+(0019,"SPI-P-XSB-DCI Release 1",13)|Video Offset|US|1
+(0019,"SPI-P-XSB-DCI Release 1",20)|RTD Data Compression Factor|DS|1
+(0029,"Silhouette Annot V1.0",11)|Annotation Name|IS|1
+(0029,"Silhouette Annot V1.0",12)|Annotation Font|LT|1
+(0029,"Silhouette Annot V1.0",13)|Annotation Text Foreground Color|LT|1
+(0029,"Silhouette Annot V1.0",14)|Annotation Text Background Color|LT|1
+(0029,"Silhouette Annot V1.0",15)|Annotation Text Backing Mode|UL|1
+(0029,"Silhouette Annot V1.0",16)|Annotation Text Justification|UL|1
+(0029,"Silhouette Annot V1.0",17)|Annotation Text Location|UL|1
+(0029,"Silhouette Annot V1.0",18)|Annotation Text String|LT|1
+(0029,"Silhouette Annot V1.0",19)|Annotation Text Attach Mode|UL|1
+(0029,"Silhouette Annot V1.0",20)|Annotation Text Cursor Mode|UL|1
+(0029,"Silhouette Annot V1.0",21)|Annotation Text Shadow Offset X|UL|1
+(0029,"Silhouette Annot V1.0",22)|Annotation Text Shadow Offset Y|UL|1
+(0029,"Silhouette Annot V1.0",23)|Annotation Line Color|LT|1
+(0029,"Silhouette Annot V1.0",24)|Annotation Line Thickness|UL|1
+(0029,"Silhouette Annot V1.0",25)|Annotation Line Type|UL|1
+(0029,"Silhouette Annot V1.0",26)|Annotation Line Style|UL|1
+(0029,"Silhouette Annot V1.0",27)|Annotation Line Dash Length|UL|1
+(0029,"Silhouette Annot V1.0",28)|Annotation Line Attach Mode|UL|1
+(0029,"Silhouette Annot V1.0",29)|Annotation Line Point Count|UL|1
+(0029,"Silhouette Annot V1.0",30)|Annotation Line Points|FD|1
+(0029,"Silhouette Annot V1.0",31)|Annotation Line Control Size|UL|1
+(0029,"Silhouette Annot V1.0",32)|Annotation Marker Color|LT|1
+(0029,"Silhouette Annot V1.0",33)|Annotation Marker Type|UL|1
+(0029,"Silhouette Annot V1.0",34)|Annotation Marker Size|UL|1
+(0029,"Silhouette Annot V1.0",35)|Annotation Marker Location|FD|1
+(0029,"Silhouette Annot V1.0",36)|Annotation Marker Attach Mode|UL|1
+(0029,"Silhouette Annot V1.0",37)|Annotation Geom Color|LT|1
+(0029,"Silhouette Annot V1.0",38)|Annotation Geom Thickness|UL|1
+(0029,"Silhouette Annot V1.0",39)|Annotation Geom Line Style|UL|1
+(0029,"Silhouette Annot V1.0",40)|Annotation Geom Dash Length|UL|1
+(0029,"Silhouette Annot V1.0",41)|Annotation Geom Fill Pattern|UL|1
+(0029,"Silhouette Annot V1.0",42)|Annotation Interactivity|UL|1
+(0029,"Silhouette Annot V1.0",43)|Annotation Arrow Length|FD|1
+(0029,"Silhouette Annot V1.0",44)|Annotation Arrow Angle|FD|1
+(0029,"Silhouette Annot V1.0",45)|Annotation Don't Save|UL|1
+(0029,"Silhouette Graphics Export V1.0",00)|?|UI|1
+(0029,"Silhouette Line V1.0",11)|Line Name|IS|1
+(0029,"Silhouette Line V1.0",12)|Line Name Font|LT|1
+(0029,"Silhouette Line V1.0",13)|Line Name Display|UL|1
+(0029,"Silhouette Line V1.0",14)|Line Normal Color|LT|1
+(0029,"Silhouette Line V1.0",15)|Line Type|UL|1
+(0029,"Silhouette Line V1.0",16)|Line Thickness|UL|1
+(0029,"Silhouette Line V1.0",17)|Line Style|UL|1
+(0029,"Silhouette Line V1.0",18)|Line Dash Length|UL|1
+(0029,"Silhouette Line V1.0",19)|Line Interactivity|UL|1
+(0029,"Silhouette Line V1.0",20)|Line Measurement Color|LT|1
+(0029,"Silhouette Line V1.0",21)|Line Measurement Font|LT|1
+(0029,"Silhouette Line V1.0",22)|Line Measurement Dash Length|UL|1
+(0029,"Silhouette Line V1.0",23)|Line Point Space|UL|1
+(0029,"Silhouette Line V1.0",24)|Line Points|FD|1
+(0029,"Silhouette Line V1.0",25)|Line Control Point Size|UL|1
+(0029,"Silhouette Line V1.0",26)|Line Control Point Space|UL|1
+(0029,"Silhouette Line V1.0",27)|Line Control Points|FD|1
+(0029,"Silhouette Line V1.0",28)|Line Label|LT|1
+(0029,"Silhouette Line V1.0",29)|Line Don't Save|UL|1
+(0029,"Silhouette ROI V1.0",11)|ROI Name|IS|1
+(0029,"Silhouette ROI V1.0",12)|ROI Name Font|LT|1
+(0029,"Silhouette ROI V1.0",13)|ROI Normal Color|LT|1
+(0029,"Silhouette ROI V1.0",14)|ROI Fill Pattern|UL|1
+(0029,"Silhouette ROI V1.0",15)|ROI Bp Seg|UL|1
+(0029,"Silhouette ROI V1.0",16)|ROI Bp Seg Pairs|UN|1
+(0029,"Silhouette ROI V1.0",17)|ROI Seed Space|UL|1
+(0029,"Silhouette ROI V1.0",18)|ROI Seeds|UN|1
+(0029,"Silhouette ROI V1.0",19)|ROI Line Thickness|UL|1
+(0029,"Silhouette ROI V1.0",20)|ROI Line Style|UL|1
+(0029,"Silhouette ROI V1.0",21)|ROI Line Dash Length|UL|1
+(0029,"Silhouette ROI V1.0",22)|ROI Interactivity|UL|1
+(0029,"Silhouette ROI V1.0",23)|ROI Name Position|UL|1
+(0029,"Silhouette ROI V1.0",24)|ROI Name Display|UL|1
+(0029,"Silhouette ROI V1.0",25)|ROI Label|LT|1
+(0029,"Silhouette ROI V1.0",26)|ROI Shape|UL|1
+(0029,"Silhouette ROI V1.0",27)|ROI Shape Tilt|FD|1
+(0029,"Silhouette ROI V1.0",28)|ROI Shape Points Count|UL|1
+(0029,"Silhouette ROI V1.0",29)|ROI Shape Points Space|UL|1
+(0029,"Silhouette ROI V1.0",30)|ROI Shape Points|FD|1
+(0029,"Silhouette ROI V1.0",31)|ROI Shape Control Points Count|UL|1
+(0029,"Silhouette ROI V1.0",32)|ROI Shape Control Points Space|UL|1
+(0029,"Silhouette ROI V1.0",33)|ROI Shape Control Points|FD|1
+(0029,"Silhouette ROI V1.0",34)|ROI Don't Save|UL|1
+(0029,"Silhouette Sequence Ids V1.0",41)|?|SQ|1
+(0029,"Silhouette Sequence Ids V1.0",42)|?|SQ|1
+(0029,"Silhouette Sequence Ids V1.0",43)|?|SQ|1
+(0029,"Silhouette V1.0",13)|?|UL|1
+(0029,"Silhouette V1.0",14)|?|UL|1
+(0029,"Silhouette V1.0",17)|?|UN|1
+(0029,"Silhouette V1.0",18)|?|UN|1
+(0029,"Silhouette V1.0",19)|?|UL|1
+(0029,"Silhouette V1.0",1a)|?|UN|1
+(0029,"Silhouette V1.0",1b)|?|UL|1
+(0029,"Silhouette V1.0",1c)|?|UL|1
+(0029,"Silhouette V1.0",1d)|?|UN|1
+(0029,"Silhouette V1.0",1e)|?|UN|1
+(0029,"Silhouette V1.0",21)|?|US|1
+(0029,"Silhouette V1.0",22)|?|US|1
+(0029,"Silhouette V1.0",23)|?|US|1
+(0029,"Silhouette V1.0",24)|?|US|1
+(0029,"Silhouette V1.0",25)|?|US|1
+(0029,"Silhouette V1.0",27)|?|UN|1
+(0029,"Silhouette V1.0",28)|?|UN|1
+(0029,"Silhouette V1.0",29)|?|UN|1
+(0029,"Silhouette V1.0",30)|?|UN|1
+(0029,"Silhouette V1.0",52)|?|US|1
+(0029,"Silhouette V1.0",53)|?|LT|1
+(0029,"Silhouette V1.0",54)|?|UN|1
+(0029,"Silhouette V1.0",55)|?|LT|1
+(0029,"Silhouette V1.0",56)|?|LT|1
+(0029,"Silhouette V1.0",57)|?|UN|1
+(0009,"TOSHIBA_MEC_1.0",01)|?|LT|1
+(0009,"TOSHIBA_MEC_1.0",02)|?|US|1-n
+(0009,"TOSHIBA_MEC_1.0",03)|?|US|1-n
+(0009,"TOSHIBA_MEC_1.0",04)|?|US|1-n
+(0011,"TOSHIBA_MEC_1.0",01)|?|LT|1
+(0011,"TOSHIBA_MEC_1.0",02)|?|US|1-n
+(0019,"TOSHIBA_MEC_1.0",01)|?|US|1-n
+(0019,"TOSHIBA_MEC_1.0",02)|?|US|1-n
+(0021,"TOSHIBA_MEC_1.0",01)|?|US|1-n
+(0021,"TOSHIBA_MEC_1.0",02)|?|US|1-n
+(0021,"TOSHIBA_MEC_1.0",03)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_1.0",01)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_1.0",02)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_1.0",03)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_1.0",10)|?|US|1-n
+(0019,"TOSHIBA_MEC_CT_1.0",01)|?|IS|1
+(0019,"TOSHIBA_MEC_CT_1.0",02)|?|IS|1
+(0019,"TOSHIBA_MEC_CT_1.0",03)|?|US|1-n
+(0019,"TOSHIBA_MEC_CT_1.0",04)|?|LT|1
+(0019,"TOSHIBA_MEC_CT_1.0",05)|?|LT|1
+(0019,"TOSHIBA_MEC_CT_1.0",06)|?|US|1-n
+(0019,"TOSHIBA_MEC_CT_1.0",07)|?|US|1-n
+(0019,"TOSHIBA_MEC_CT_1.0",08)|Orientation Head Feet|LT|1
+(0019,"TOSHIBA_MEC_CT_1.0",09)|View Direction|LT|1
+(0019,"TOSHIBA_MEC_CT_1.0",0a)|Orientation Supine Prone|LT|1
+(0019,"TOSHIBA_MEC_CT_1.0",0b)|?|DS|1
+(0019,"TOSHIBA_MEC_CT_1.0",0c)|?|US|1-n
+(0019,"TOSHIBA_MEC_CT_1.0",0d)|Time|TM|1
+(0019,"TOSHIBA_MEC_CT_1.0",0e)|?|DS|1
+(7ff1,"TOSHIBA_MEC_CT_1.0",01)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",02)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",03)|?|IS|1
+(7ff1,"TOSHIBA_MEC_CT_1.0",04)|?|IS|1
+(7ff1,"TOSHIBA_MEC_CT_1.0",05)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",07)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",08)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",09)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",0a)|?|LT|1
+(7ff1,"TOSHIBA_MEC_CT_1.0",0b)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",0c)|?|US|1-n
+(7ff1,"TOSHIBA_MEC_CT_1.0",0d)|?|US|1-n
+(2111,"NIRS_Melco",00)|Plan Calculation Status|CS|1
+(2111,"NIRS_Melco",01)|Plan Calculation Message|ST|1
+(2111,"NIRS_Melco",02)|Verification Content|CS|1
+(2111,"NIRS_Melco",03)|Dose Grid Definition Sequence|SQ|1
+(2111,"NIRS_Melco",04)|Verification Image Group Number|IS|1
+(2111,"NIRS_Melco",05)|Verification Image Type|CS|1
+(2111,"NIRS_Melco",06)|Additional Verification Image Type|CS|1
+(2111,"NIRS_Melco",08)|Beam Calculation Request|CS|1
+(2111,"NIRS_Melco",09)|Beam Calculation Status|CS|1
+(2111,"NIRS_Melco",0a)|Beam Calculation Message|ST|1
+(2111,"NIRS_Melco",0b)|Longitudinal Spreading Technique|CS|1
+(2111,"NIRS_Melco",0c)|Lateral Spreading Technique|CS|1
+(2111,"NIRS_Melco",0f)|Verification Image Comment|ST|1
+(2111,"NIRS_Melco",10)|Calculated Dose Sequence|SQ|1
+(2111,"NIRS_Melco",11)|Calculated Dose Device ID|CS|1
+(2111,"NIRS_Melco",12)|Calculated Dose Description|ST|1
+(2111,"NIRS_Melco",13)|Final Cumulative Calculated Dose Value|DS|1
+(2111,"NIRS_Melco",14)|Calculated Point|DS|3
+(2111,"NIRS_Melco",15)|Beam Target Sequence|SQ|1
+(2111,"NIRS_Melco",16)|Target Maximum Water Equivalent Depth|DS|1
+(2111,"NIRS_Melco",17)|Target Water Equivalent Thickness|DS|1
+(2111,"NIRS_Melco",18)|Lateral Margin|DS|1
+(2111,"NIRS_Melco",19)|Distal Margin|DS|1
+(2111,"NIRS_Melco",1a)|Proximal Margin|DS|1
+(2111,"NIRS_Melco",1b)|Field Area|DS|1
+(2111,"NIRS_Melco",1c)|Dose Calculation Program ID|SH|1
+(2111,"NIRS_Melco",1d)|Reference Beam Data ID|SH|1
+(2111,"NIRS_Melco",1e)|Meterset Calibration Beam Data ID|SH|1
+(2111,"NIRS_Melco",1f)|Reference CT Calibration Data ID|SH|1
+(2111,"NIRS_Melco",20)|Nominal Treated Volume|DS|1
+(2111,"NIRS_Melco",21)|Internal Margins|DS|3
+(2111,"NIRS_Melco",22)|Number of Sweeps|IS|1
+(2111,"NIRS_Melco",23)|Slice Thickness|DS|1
+(2111,"NIRS_Melco",24)|Beam Meterset Correction Request Sequence|SQ|1
+(2111,"NIRS_Melco",25)|Beam Meterset Correction Request|CS|1
+(2111,"NIRS_Melco",26)|Compensator Description|ST|1
+(2111,"NIRS_Melco",27)|Compensator Design Type|CS|1
+(2111,"NIRS_Melco",28)|Compensator Milling Side|CS|1
+(2111,"NIRS_Melco",29)|Compensator Smearing Distance|DS|1
+(2111,"NIRS_Melco",2a)|Block Milling Tool Diameter|ST|1
+(2111,"NIRS_Melco",2b)|Nominal Beam Intensity|DS|1
+(2111,"NIRS_Melco",2c)|Nominal Beam Intensity Unit|CS|1
+(2111,"NIRS_Melco",2d)|Scatter Thickness|DS|1
+(2111,"NIRS_Melco",2e)|Nominal Wobbling Radius|DS|1
+(2111,"NIRS_Melco",2f)|Range Modulator Average Water Equivalent Thickness|DS|1
+(2111,"NIRS_Melco",30)|Air Gap|DS|1
+(2111,"NIRS_Melco",31)|Prescribed Range|DS|1
+(2111,"NIRS_Melco",32)|Plan Calculation Request|CS|1
+(2111,"NIRS_Melco",33)|CT Number of Water|DS|1
+(2111,"NIRS_Melco",34)|CT Number of Air|DS|1
+(2111,"NIRS_Melco",35)|Calculated Dose Number|IS|1
+(2111,"NIRS_Melco",36)|Reference Depth in Water|DS|1
+(2111,"NIRS_Melco",37)|RBE at Reference Measurement Depth|DS|1
+(2111,"NIRS_Melco",38)|RBE Model Name|SH|1
+(2111,"NIRS_Melco",39)|Block Description|ST|1
+(2111,"NIRS_Melco",3a)|Beam Dose Specification Point Water Equivalent Depth|DS|1
+(2111,"NIRS_Melco",3b)|Beam Effective Dose|DS|1
+(2111,"NIRS_Melco",3c)|Target Maximum Off-Axis Distance|DS|1
+(2111,"NIRS_Melco",3d)|Nominal Uniform Field Diameter|DS|1
+(2111,"NIRS_Melco",3e)|Reference Field Width|DS|1
+(2111,"NIRS_Melco",3f)|Reference Field Length|DS|1
+(2111,"NIRS_Melco",41)|Dose Output in Reference Measurement Condition|DS|1
+(2111,"NIRS_Melco",42)|Control Point Calculated Dose Sequence|SQ|1
+(2111,"NIRS_Melco",43)|Referenced Calculated Dose Number|IS|1
+(2111,"NIRS_Melco",44)|Cummulative Calculated Dose|DS|1
+(2111,"NIRS_Melco",45)|Scatter ID|SH|1
+(2111,"NIRS_Melco",46)|Compensator Maximum Physical Thickness on Target|DS|1
+(2111,"NIRS_Melco",47)|Compensator Minimum Physical Thickness|DS|1
+(2111,"NIRS_Melco",48)|Ridge Filter ID|SH|1
+(2111,"NIRS_Melco",49)|Compensator Additional Lateral Margin|DS|1
+(2111,"NIRS_Melco",4a)|Beam Calculation Condition Modified Status|CS|1
+(2111,"NIRS_Melco",4b)|Treatment Study Phase ID|>|SH
+(2111,"NIRS_Melco",4c)|Planned Treatment Start Date|DT|1
+(2111,"NIRS_Melco",4d)|Referenced Calculation Order Id|UI|1
+(2111,"NIRS_Melco",4e)|Number of Fractions Prescribed for This Treatment|IS|1
+(2111,"NIRS_Melco",4f)|Instantaneous Beam Size|DS|1
+(2111,"NIRS_Melco",50)|Fraction Dose Prescribed for This Treatment|DS|1
+(2111,"NIRS_Melco",51)|Dose Calculation Program Version|SH|1
+(2111,"NIRS_Melco",55)|TBD|DS|1
+(2111,"NIRS_Melco",56)|TBD|SH|1
+###############################
+# ITC Private tags
+###############################
+(3005,"ITC_for_RTOG_Conversion",26)|ROI Simple Name|LO|1
+(3005,"ITC_for_RTOG_Conversion",28)|ROI Match Name|LO|1
+(3005,"ITC_for_RTOG_Conversion",2a)|DVH Plan Name|LO|1
+(3005,"ITC_for_RTOG_Conversion",2c)|DVH Plan Description|LO|1
+(3005,"ITC_for_RTOG_Conversion",2e)|DVH arm|DS|1
+(3005,"ITC_for_RTOG_Conversion",30)|DVH prescription|DS|1
+(3005,"ITC_DVH_Computation",50)|DVH Source|LO|1
+(3005,"ITC_DVH_Computation",01)|Specified Heterogeneity|LO|1
+(3005,"ITC_DVH_Computation",02)|Dose Summation Id|LO|1
+(3005,"ITC_DVH_Computation",03)|Dose Manufacturer|LO|1
+(3005,"ITC_DVH_Computation",04)|Dose Model Name|LO|1
+(3005,"ITC_DVH_Computation",05)|Referenced Dose Grid|SQ|1
+(3005,"ITC_Dangling_RO",01)|Referenced ROI Number Deleted|CS|1
+(3005,"ITC_Dangling_RO",01)|Name of Deleted ROI|LO|1
+###############################
+# CTP Private tags
+###############################
+(0013,"CTP",10)|Project Name|LO|1
+(0013,"CTP",11)|Trial Name|LO|1
+(0013,"CTP",12)|Site Name|LO|1
+(0013,"CTP",13)|Site Id|LO|1
+(0013,"CTP",14)|Visibility Id|LO|1

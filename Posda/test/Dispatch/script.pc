@@ -1,0 +1,22 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/script.pc,v $
+#$Date: 2009/05/11 17:02:16 $
+#$Revision: 1.1 $
+my($this, $fh, $out, $args) = @_;
+my $name = $args->[0];
+my $filename = $args->[1];
+my $dir = $args->[2];
+unless(-f $filename) {
+  print $out "$filename is not a file\n";
+  return;
+}
+unless(-d $dir) {
+  print $out "$dir is not a directory\n";
+  return;
+}
+print $out "Creating along with following objects:\n";
+for my $i (keys %{$this->{objects}}){
+  print $out "\t$i\n";
+}
+Dispatch::Command::Basic::File->new(
+  $filename, $this->{out}, $dir, $this->{objects}
+);

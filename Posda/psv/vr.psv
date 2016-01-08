@@ -1,0 +1,40 @@
+#$Source: /home/bbennett/pass/archive/Posda/psv/vr.psv,v $
+#$Date: 2008/04/30 19:17:36 $
+#$Revision: 1.2 $
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+#vr_code |        vr_name        |  len  | fixed | pad_leading | pad_null | pad_trailing | strip_leading | strip_trailing | strip_trailing_null | vr_type
+ UL      | Unsigned Long         |     4 | t     | f           | f        | f            | f             | f              | f                   | ulong
+ ST      | Short Text            |  1024 | f     | f           | f        | t            | f             | t              | f                   | text
+ SQ      | Sequence              |       | f     | f           | f        | f            | f             | f              | f                   | seq
+ IS      | Integer String        |    12 | f     | t           | f        | f            | t             | t              | f                   | text
+ UT      | Unlimited Text        |       | f     | f           | f        | t            | f             | f              | f                   | text
+ AT      | Attribute Tag         |     4 | t     | f           | f        | f            | f             | f              | f                   | ushort
+ OB      | Other Byte            |       | f     | f           | f        | f            | f             | f              | f                   | raw
+ FL      | Floating Point Single |     4 | t     | f           | f        | f            | f             | f              | f                   | raw
+ UI      | Unique Identifier     |    64 | f     | f           | t        | f            | f             | f              | t                   | text
+ AS      | Age String            |     4 | t     | f           | f        | f            | f             | f              | f                   | text
+ SS      | Signed Short          |     2 | t     | f           | f        | f            | f             | f              | f                   | sshort
+ DT      | Date Time             |    26 | f     | t           | f        | f            | t             | t              | f                   | text
+ SH      | Short String          |    16 | f     | t           | f        | f            | t             | t              | f                   | text
+ LO      | Long String           |    64 | f     | t           | f        | f            | t             | t              | f                   | text
+ PN      | Person Name           |    64 | f     | f           | f        | t            | f             | t              | f                   | text
+ DS      | Decimal String        |    16 | f     | t           | f        | f            | t             | t              | f                   | text
+ LT      | Long Text             | 10240 | f     | f           | f        | t            | f             | t              | f                   | text
+ OW      | Other Word            |       | f     | f           | f        | f            | f             | f              | f                   | raw
+ CS      | Code String           |    16 | f     | t           | f        | f            | t             | t              | f                   | text
+ TM      | Time                  |    16 | f     | f           | f        | t            | f             | t              | f                   | text
+ FD      | Floating Point Double |     8 | t     | f           | f        | f            | f             | f              | f                   | raw
+ AE      | Application Entity    |    16 | f     | t           | f        | f            | t             | t              | f                   | text
+ UN      | Unknown               |       | f     | f           | f        | f            | f             | f              | f                   | raw
+ SL      | Signed Long           |     4 | t     | f           | f        | f            | f             | f              | f                   | slong
+ DA      | Date                  |    10 | f     | f           | f        | f            | f             | f              | f                   | text
+ OF      | Other Float String    |       | f     | f           | f        | f            | f             | f              | f                   | raw
+ US      | Unsigned Short        |     2 | t     | f           | f        | f            | f             | f              | f                   | ushort
+

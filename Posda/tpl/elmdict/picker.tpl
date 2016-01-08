@@ -1,0 +1,28 @@
+#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/picker.tpl,v $
+#$Date: 2009/03/25 14:01:00 $
+#$Revision: 1.1 $
+#
+(7001,0001) VERS="PCK"	VR="UI"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0002) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0003) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0004) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0005) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0006) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0007) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0008) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0009) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0010) VERS="PCK"	VR="SQ"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0011) VERS="PCK"	VR="LO"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0012) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0013) VERS="PCK"	VR="US"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0014) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0016) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7001,0017) VERS="PCK"	VR="LO"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
+(7101,0000) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0001) VERS="PCK"	VR="SL"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0002) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0003) VERS="PCK"	VR="SL"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0004) VERS="PCK"	VR="SH"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0005) VERS="PCK"	VR="SH"   VM="2"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0006) VERS="PCK"	VR="SH"   VM="4"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"
+(7101,0010) VERS="PCK"	VR="DS"   VM="1"	Owner="Picker MR Private Group"	Keyword="?"		Name="?"

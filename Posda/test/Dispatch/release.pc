@@ -1,0 +1,15 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/release.pc,v $
+#$Date: 2008/10/19 22:35:42 $
+#$Revision: 1.1 $
+my($this, $fh, $out, $args) = @_;
+my $obj = $args->[0];
+unless(exists $this->{objects}->{$obj}) {
+  print "$obj doesn't exist\n";
+  return;
+}
+unless(ref($this->{objects}->{$obj}) eq "Dispatch::Dicom::Connection"){
+  print "$obj isn't a dicom connection\n";
+  return;
+}
+$this->{objects}->{$obj}->Release();
+delete $this->{objects}->{$obj};

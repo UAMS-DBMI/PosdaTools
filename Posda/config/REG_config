@@ -1,0 +1,36 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/REG_config,v $
+#$Date: 2008/06/27 17:14:41 $
+#$Revision: 1.3 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0012)|Instance Creation Date|20080221
+(0008,0013)|Instance Creation Time|1
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.66.1
+(0008,0021)|Series Date|20080221
+(0008,0031)|Series Time|100000
+(0008,0033)|Content (formerly Image) Time|100000
+(0008,0060)|Modality|REG
+(0008,0070)|Manufacturer|Posda.com
+(0008,0090)|Referring Physician's Name|
+(0008,103e)|Series Description|Spatial Registration Series
+(0070,0080)|Presentation Label|Pseudo Phantoms
+(0070,0081)|Presentation Description|Constructed from Configuration Files
+(0070,0084)|Presentation Creator's Name|Anonymous
+(0070,0308)[0](0070,0309)[0](0070,030a)[0](0070,030c)|Frame of Reference Transformation Matrix Type|RIGID
+(0070,0308)[0](0070,0309)[0](0070,030a)[0](0070,030c)|Frame of Reference Transformation Matrix Type|RIGID
+(0070,0308)[0](0070,0309)[0](0070,030a)[0](3006,00c6)|Frame of Reference Transformation Matrix|1\0\0\0\0\1\0\0\0\0\1\0\0\0\0\1
+(0070,0308)[0](0070,0309)[0](0070,030d)[0](0008,0100)|Code Value|125023
+(0070,0308)[0](0070,0309)[0](0070,030d)[0](0008,0102)|Coding Scheme Designator|DCM
+(0070,0308)[0](0070,0309)[0](0070,030d)[0](0008,0103)|Coding Scheme Version|20040115
+(0070,0308)[0](0070,0309)[0](0070,030d)[0](0008,0104)|Code Meaning|Acquisition Equipment Alignment
+(0070,0308)[1](0070,0309)[0](0070,030a)[0](0070,030c)|Frame of Reference Transformation Matrix Type|RIGID
+(0070,0308)[1](0070,0309)[0](0070,030d)[0](0008,0100)|Code Value|125023
+(0070,0308)[1](0070,0309)[0](0070,030d)[0](0008,0102)|Coding Scheme Designator|DCM
+(0070,0308)[1](0070,0309)[0](0070,030d)[0](0008,0103)|Coding Scheme Version|20040115
+(0070,0308)[1](0070,0309)[0](0070,030d)[0](0008,0104)|Code Meaning|Acquisition Equipment Alignment

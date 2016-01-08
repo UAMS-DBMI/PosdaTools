@@ -1,0 +1,57 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/contrib/simple/CT_FFS1_config,v $
+#$Date: 2008/06/05 15:49:04 $
+#$Revision: 1.1 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0008)|Image Type|DERIVED\PRIMARY\AXIAL
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.2
+(0008,0021)|Series Date|20080307
+(0008,0022)|Acquisition Date|20080307
+(0008,0031)|Series Time|113012.515000
+(0008,0032)|Acquisition Time|112955.073600
+(0008,0060)|Modality|CT
+(0008,0070)|Manufacturer|CMS, Inc
+(0008,1010)|Station Name|12 in PowerBook
+(0008,1090)|Manufacturer's Model Name|Bill's perl scripts
+(0018,0015)|Body Part Examined|Imagination
+(0018,0050)|Slice Thickness|2
+(0018,0060)|KVP|120
+(0018,0090)|Data Collection Diameter|600
+(0018,1000)|Device Serial Number|0123
+(0018,1020)|Software Version(s)|.0005
+(0018,1030)|Protocol Name|CT-PET Pseudo Phantoms
+(0018,1100)|Reconstruction Diameter|600
+(0018,1110)|Distance Source to Detector|1040
+(0018,1111)|Distance Source to Patient|570
+(0018,1120)|Gantry/Detector Tilt|0
+(0018,1130)|Table Height|184
+(0018,1140)|Rotation Direction|CW
+(0018,1150)|Exposure Time|500
+(0018,1151)|X-ray Tube Current|66
+(0018,1152)|Exposure|41
+(0018,1160)|Filter Type|0
+(0018,1170)|Generator Power|18
+(0018,1190)|Focal Spot(s)|1.2
+(0018,1200)|Date of Last Calibration|20080221
+(0018,1201)|Time of Last Calibration|074458.000000
+(0018,1210)|Convolution Kernel|B19f
+(0018,5100)|Patient Position|HFS
+(0020,0012)|Acquisition Number|1
+(0020,0037)|Image Orientation (Patient)|1\0\0\0\1\0
+(0020,1040)|Position Reference Indicator|<null>
+(0020,4000)|Image Comments|<null>
+(0028,0002)|Samples per Pixel|1
+(0028,0004)|Photometric Interpretation|MONOCHROME2
+(0028,0010)|Rows|512
+(0028,0011)|Columns|512
+(0028,0030)|Pixel Spacing|1\1
+(0028,0100)|Bits Allocated|16
+(0028,0101)|Bits Stored|12
+(0028,0102)|High Bit|11
+(0028,0103)|Pixel Representation|0

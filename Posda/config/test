@@ -1,0 +1,125 @@
+#########################################################################
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/test,v $
+#$Date: 2008/07/09 17:55:46 $
+#$Revision: 1.3 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+#########################################################################
+#
+#base_uid specifies a UID root to be used for UID's to be generated
+#during rendering.  If not present, a new root will be obtained from
+#posda.com (if its up).
+#   !!!!!!!!!Either change, comment out, or delete this!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!Every time you render!!!!!!!!!!!!!!!!!!!!!!
+#
+#       | name
+base_uid|1.3.6.1.4.1.22213.1.1554.2
+#########################################################################
+#
+#posda_arg specifies a property to be supplied to posda.com when obtaining
+#  a uid root.  Only used if no base_uid specified.  
+#    Note: you can add any property you like.  Just make up a key.
+#          The following keys are built in, and need not be configured:
+#          package => "Posda::PseudoPhantom"
+#          user => <whatever `whoami` returns>
+#          host => <whatever `hostname` returns>
+#          purpose => <whatever `hostname` returns>
+#
+#  posda.com will remember these parameters, but will not share them with
+#     anyone
+#
+#        |key |value
+posda_arg|name|<your name here>
+posda_arg|email|<your email addr here>
+posda_arg|reason|Generating a set of Pseudo Phantoms
+#posda_arg|address|<your address here>
+# etc
+# ...
+#########################################################################
+#
+#base_for creates a base frame of reference with a given name
+#       | name
+base_for|base
+#########################################################################
+#
+#base_dir creates a base directory for config files 
+#       | name
+#base_dir|<insert base config directory>
+#########################################################################
+#
+#name_obj creates an obj with a name of a particular type
+#  params based on type
+#                    frame of ref
+#        |name   |type  \    / parms(based on type)
+#        |       |sphere|    | center  | radius
+named_obj|outer_1|sphere|base|(150,0,0)|70
+named_obj|inner_1|sphere|base|(150,0,0)|65
+named_obj|outer_2|sphere|base|(-150,0,0)|60
+named_obj|inner_2|sphere|base|(-150,0,0)|55
+#########################################################################
+#
+#obj_list creates an ordered list of objects
+#       |name      |obj    | ...
+obj_list|inner_list|inner_1|inner_2
+obj_list|outer_list|outer_1|outer_2
+#########################################################################
+#
+# obj_lists can be concatenated using combined_obj_list
+#
+#                |  name   |list| ...
+combined_obj_list|full_list|inner_list|outer_list
+#########################################################################
+#
+#set_obj_prop assigns prop with name and value to all objs in list and for
+#        frame of ref      value 
+#           \     /prop name\ / list_name
+set_obj_prop|base|ct_density|0|inner_list
+set_obj_prop|base|ct_density|1000|outer_list
+set_obj_prop|base|pet_count_center|500000|inner_list
+set_obj_prop|base|pet_count_inner_attenuation|10|inner_list
+set_obj_prop|base|pet_count_inner_attenuation_type|square|inner_list
+set_obj_prop|base|pet_count_outside|500|inner_list
+set_obj_prop|base|pet_count_outer_attenuation|1|inner_list
+set_obj_prop|base|pet_count_outer_attenuation_type|linear|inner_list
+#########################################################################
+#
+#transformed_for defines new frame of reference by transforming existing
+#
+#           new frame of ref name
+#              \     /base|   shift or rotate| ...
+transformed_for|trans|base|shift=(-150,0,0)|rz=5|shift=(150,0,0)
+#########################################################################
+#
+#xform_obj_list copies objects from one frame of reference to another
+#
+#             |from=>to   |obj_list
+xform_obj_list|base=>trans|full_list
+#########################################################################
+#
+# study defines a base study
+#
+#  study_id            study directory
+#    \ /for |config_file \      / study description
+study|1|base|Study_config|Study1|Original
+study|2|trans|Study_config|Study2|Transformed
+#########################################################################
+#
+# series defines a series to be generated
+#
+# study id
+#  \    /
+#   \   |series_num
+#    \  |  /          series directory
+#     \ | /for |conf file\       /type(parms)      [|obj_list]
+series|1|1|base|CT_config|Series1|CT(2.0,10,[0,0,0])|full_list
+series|1|2|base|PT_config|Series2|PT(5.0,5,[0,0,0])|inner_list
+series|1|3|base|REG_config|Series3|REG(trans=>base,base=>trans)|full_list
+series|2|1|trans|CT_config|Series1|CT(2.0,10,[0,0,0])|full_list
+series|2|2|trans|PT_config|Series2|PT(5.0,5,[0,0,0])|inner_list
+series|2|3|trans|REG_config|Series3|REG(base=>trans,trans=>base)|full_list

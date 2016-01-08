@@ -1,0 +1,70 @@
+#
+#$Source: /home/bbennett/pass/archive/Posda/config/MR_config,v $
+#$Date: 2008/06/27 17:14:41 $
+#$Revision: 1.3 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0008)|Image Type|DERIVED\PRIMARY\AXIAL
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.4
+(0008,0021)|Series Date|20080325
+(0008,0022)|Acquisition Date|20080325
+(0008,0031)|Series Time|093656.698000
+(0008,0032)|Acquisition Time|092903.015000
+(0008,0060)|Modality|MR
+(0008,0070)|Manufacturer|Posda.com
+(0008,1010)|Station Name|DI-MOG01-MR20
+(0008,103e)|Series Description|Rendered MR
+(0008,1070)|Operator's Name|meduser
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,0010)|Contrast/Bolus Agent|20ML MAGNEVIST
+(0018,0020)|Scanning Sequence|GR\IR
+(0018,0021)|Sequence Variant|SP\MP
+(0018,0022)|Scan Options|IR
+(0018,0023)|MR Acquisition Type|3D
+(0018,0024)|Sequence Name|*tfl3d1
+(0018,0025)|Angio Flag|N
+(0018,0050)|Slice Thickness|1
+(0018,0080)|Repetition Time|2120
+(0018,0081)|Echo Time|4.18
+(0018,0082)|Inversion Time|1100
+(0018,0083)|Number of Averages|1
+(0018,0084)|Imaging Frequency|63.627947
+(0018,0085)|Imaged Nucleus|1H
+(0018,0086)|Echo Number(s)|1
+(0018,0087)|Magnetic Field Strength|1.5
+(0018,0089)|Number of Phase Encoding Steps|193
+(0018,0091)|Echo Train Length|1
+(0018,0093)|Percent Sampling|80.4167
+(0018,0094)|Percent Phase Field of View|75
+(0018,0095)|Pixel Bandwidth|235
+(0018,1000)|Device Serial Number|25174
+(0018,1020)|Software Version(s)|syngo MR B13 4VB13A
+(0018,1030)|Protocol Name|MPRAGE Axial 1mm Gad
+(0018,1041)|Contrast/Bolus Volume|20
+(0018,1044)|Contrast/Bolus Total Dose|0
+(0018,1048)|Contrast/Bolus Ingredient|
+(0018,1049)|Contrast/Bolus Ingredient Concentration|0
+(0018,1251)|Transmit Coil Name|Body
+(0018,1310)|Acquisition Matrix|0\256\256\0
+(0018,1312)|Phase Encoding Direction|ROW
+(0018,1314)|Flip Angle|15
+(0018,1315)|Variable Flip Angle Flag|N
+(0018,1316)|SAR|0.03545444436144
+(0018,1318)|dB/dt|0
+(0018,5100)|Patient Position|HFS
+(0020,0037)|Image Orientation (Patient)|0.99780146801985\0.03373616021014\0.057044736056\0.0662739044981\-0.5079222551515\-0.858849668047
+(0020,1040)|Position Reference Indicator|
+(0028,0002)|Samples per Pixel|1
+(0028,0004)|Photometric Interpretation|MONOCHROME2
+(0028,0010)|Rows|256
+(0028,0011)|Columns|256
+(0028,0030)|Pixel Spacing|1.5\1.5
+(0028,0100)|Bits Allocated|16
+(0028,0101)|Bits Stored|12
+(0028,0102)|High Bit|11
+(0028,0103)|Pixel Representation|0

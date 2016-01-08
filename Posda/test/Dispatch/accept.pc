@@ -1,0 +1,10 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/accept.pc,v $
+#$Date: 2009/05/11 17:02:51 $
+#$Revision: 1.2 $
+my($this, $fh, $out, $args) = @_;
+#my $clos = Dispatch::Test::CreateSockReader($out, $args->[0]);
+my $clos = Dispatch::Test::CreateSockAcceptor($out, $args->[0]);
+my $acceptor = Dispatch::Acceptor->new($clos);
+my $foo =  $acceptor->port_server($args->[1]);
+$foo->Add("reader");
+$this->{objects}->{$args->[0]} = $foo;

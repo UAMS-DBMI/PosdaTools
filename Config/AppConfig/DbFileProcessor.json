@@ -1,0 +1,11 @@
+//  $Source: /home/bbennett/pass/archive/FileDistConfig/AppConfig/DicomReceiver.json,v $
+//  $Date: 2014/01/23 18:02:59 $
+//  $Revision: 1.6 $
+//
+{
+  "database" : "posda_files",
+  "log_file" : "/home/quasar/cache/Logs/PosdaDbImport.log",
+  "sub_process_program" : "ProcessPosdaFilesInDb.pl",
+  "chunk_size" : 10,
+  "parallelism" : 1,
+}

@@ -1,0 +1,46 @@
+//  $Source: /home/bbennett/pass/archive/FileDistConfig/JavaScriptTest/Environment.json,v $
+//  $Date: 2014/05/22 13:01:03 $
+//  $Revision: 1.3 $
+// 
+{
+  "ApplicationInitClass" : "PosdaCuration::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/home/quasar/cache/Data/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/home/quasar/PosdaTools/HttpRoot/http_root",
+  "LoginTemp" : "/home/quasar/cache/Data/TempDirectory",
+  "JavascriptRoot" : "/home/quasar/PosdaTools/PosdaCuration/javascript",
+  "QuarantineMasterRoot" : "/home/quasar/PosdaTools/Data/quarantines",
+  "QuarantineRoot" : "/home/quasar/PosdaTools/Data/QuarantinedExtractions/data",
+  "DicomInfoCache" : "/home/quasar/cache/Data",
+  "database_host" : "localhost",
+  "database_name" : "posda_files",
+  "ExtractionManagerPort" : "64612",
+  "ExtractionRoot" :
+     "/home/quasar/cache/Data/HierarchicalExtractions/data",
+  "extraction_root" :
+     "/home/quasar/cache/Data/HierarchicalExtractions/data",
+  "UserInfoDir" : "/home/quasar/cache/UserData",
+  "DicomDestinations" : {
+    "IntakeServer" : {
+      "host" : "144.30.1.71",
+      "port" : "11112",
+      "calling_ae" : "POSDA",
+      "called_ae" : "CTP"
+    },
+    "LocalLoopback" : {
+      "host" : "localhost",
+      "port" : "64611",
+      "calling_ae" : "SEND_LOOP",
+      "called_ae" : "RCV_LOOP"
+    },
+    "Bill's OsiriX" : {
+      "host" : "144.30.109.157",
+      "port" : "11112",
+      "calling_ae" : "POSDA",
+      "called_ae" : "OSIRIX"
+    },
+  }
+}

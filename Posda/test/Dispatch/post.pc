@@ -1,0 +1,8 @@
+#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/post.pc,v $
+#$Date: 2009/05/28 16:02:42 $
+#$Revision: 1.2 $
+my($this, $fh, $out, $args) = @_;
+if(exists $this->{objects}->{$args->[0]}){
+  $this->{objects}->{$args->[0]}->post();
+}
+delete($this->{objects}->{$args->[0]});

@@ -1,0 +1,23 @@
+//  $Source: /home/quasar/pass/archive/PosdaAppMacConfig/FileDistConfig/Environment.json,v $
+//  $Date: 2015/09/01 15:27:18 $
+//  $Revision: 1.2 $
+// 
+{
+  "ApplicationInitClass" : "FileDist::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/home/quasar/PosdaTools/HttpRoot/http_root",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/home/quasar/cache/Login.db",
+  "CacheDir" : "/home/quasar/cache",
+  "TestDataRoot" : "/home/quasar/cache/Data/TestData",
+  "ParticipantDataRoot" : 
+    "/home/quasar/cache/Data/Participant_Data_2014C",
+  "ParticipantResultsRoot" : 
+    "/home/quasar/cache/Data/Participant_Results_2014C",
+  "ReceiverDataRoot" : "/home/quasar/cache/DicomReceiver",
+  "TempDataRoot" : 
+    "/home/quasar/cache/Data/TempDirectory",
+  "AnonymizeParallelism" : 5,
+}

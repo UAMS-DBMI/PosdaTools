@@ -1,0 +1,87 @@
+#!/usr/bin/perl -w
+#$Source: /home/bbennett/pass/archive/Posda/config/examples/ASetOfPseudoPhantoms/main_config,v $
+#$Date: 2009/07/25 15:05:02 $
+#$Revision: 1.1 $
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+posda_arg|name|Bill Bennett
+posda_arg|email|posda.admin@posda.com
+posda_arg|reason|Generating a set of Pseudo Phantoms
+base_for|base
+####################################################
+named_obj|patient|cylinder|base|(0,0,200)|(0,0,-200)|250
+named_obj|arrow1_c|cylinder|base|(0,0,0)|(150,0,0)|20
+named_obj|arrow1_n|cone|base|(175,0,0)|(150,0,0)|1
+named_obj|arrow1|union|base|arrow1_c|arrow1_n
+#
+named_obj|arrow2_c|cylinder|base|(0,0,0)|(0,150,0)|15
+named_obj|arrow2_n|cone|base|(0,175,0)|(0,150,0)|1
+named_obj|arrow2|union|base|arrow2_c|arrow2_n
+#
+named_obj|arrow3_c|cylinder|base|(0,0,0)|(0,0,150)|10
+named_obj|arrow3_n|cone|base|(0,0,175)|(0,0,150)|1
+named_obj|arrow3|union|base|arrow3_c|arrow3_n
+#
+named_obj|tumor|sphere|base|(87.5,87.5,87.5)|30
+#
+named_obj|organs|union|base|arrow1|arrow2|arrow3
+#
+named_obj|anatomy|union|base|organs|tumor
+####################################################
+named_obj|beam_1|static_beam|base|HFS|(87.5,87.5,87.5)|(-30,30)|(-30,30)|0|0|0|0|1000
+named_obj|beam_2|static_beam|base|HFS|(87.5,87.5,87.5)|(-150,150)|(-150,150)|0|0|0|0|1000
+named_obj|beam_4|static_beam|base|HFS|(87.5,87.5,87.5)|(-30,30)|(-30,30)|0|45|0|0|1000
+named_obj|beam_6|static_beam|base|HFS|(87.5,87.5,87.5)|(-30,30)|(-30,30)|0|135|0|0|1000
+named_obj|beam_7|static_beam|base|HFS|(87.5,87.5,87.5)|(-30,30)|(-30,30)|0|90|0|0|1000
+####################################################
+obj_list|water|patient
+obj_list|anatomy|anatomy
+obj_list|full_list|organs|tumor|patient
+#
+obj_list|patient|patient
+obj_list|organs|organs
+obj_list|tumor|tumor
+####################################################
+set_obj_prop|base|ct_density|0|water
+set_obj_prop|base|ct_density|500|organs
+set_obj_prop|base|ct_density|1000|tumor
+####################################################
+roi|base|external|1||AUTOMATIC|patient
+roi|base|organs|2||AUTOMATIC|organs
+roi|base|tumor|3||AUTOMATIC|tumor
+#
+roi_color|base|1|0\128\128
+roi_color|base|2|0\128\255
+roi_color|base|3|128\128\255
+#
+roi_obs|base|1|1|interpreted_type|EXTERNAL
+roi_obs|base|1|1|observation_label|Patient
+roi_obs|base|1|1|interpreter|
+#
+roi_obs|base|2|2|interpreted_type|ORGAN
+roi_obs|base|2|2|observation_label|organs
+roi_obs|base|2|2|interpreter|
+#
+roi_obs|base|3|3|interpreted_type|TUMOR
+roi_obs|base|3|3|observation_label|tumor
+roi_obs|base|3|3|interpreter|
+####################################################
+beam_dose|bd_1|base|beam_1|anatomy|1000|100
+beam_dose|bd_2|base|beam_2|anatomy|1000|100
+beam_dose|bd_4|base|beam_4|anatomy|1000|100
+beam_dose|bd_6|base|beam_6|anatomy|1000|100
+beam_dose|bd_7|base|beam_7|anatomy|1000|100
+#
+plan_dose|pd|base|bd_1|bd_2|bd_4|bd_6|bd_7
+####################################################
+study|1|base|Study_config|Study1|Head First Supine
+series|1|1|base|CT_config|Series1|CT(2.0,200,[0,0,0])|full_list
+series|1|2|base|RTS_config|Series2|RTS(1,1,1,2,3,4)|none
+series|1|3|base|RTP_config|Series3|RTP(1,2,pd,bd_1=1,bd_2=2,bd_4=3,bd_7=4)|none
+series|1|4|base|RTD_config|Series4|RTD(4.0,100,[0,0,0],plan=pd)|none
+series|1|5|base|RTD_config_high|Series5|RTD(1.0,400,[0,0,0],plan=pd)|none

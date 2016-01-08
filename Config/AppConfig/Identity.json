@@ -1,0 +1,17 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/AppConfig/Identity.json,v $
+//  $Date: 2014/09/22 18:37:47 $
+//  $Revision: 1.2 $
+// 
+{
+  "Greeting": { },
+  "ImageName": "PosdaLogo.png",
+  "HostName": "quasar's test system",
+  "Title": "Posda DICOM Curation",
+  "LoginTitle": "Posda Curation Tools",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 780,
+  "width": 1000,
+}

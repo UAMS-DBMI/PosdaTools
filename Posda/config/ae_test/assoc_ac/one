@@ -1,0 +1,79 @@
+#$Source: /home/bbennett/pass/archive/Posda/config/ae_test/assoc_ac/one,v $
+#$Date: 2009/11/20 20:13:06 $
+#$Revision: 1.1 $
+#
+#Copyright 2009, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+calling: TEST_ONE
+called: TEST_ONE
+max_length: 16384
+num_invoked: 3
+num_performed: 3
+pres_context: 1|0|1.2.840.10008.1.2.1
+pres_context: 3|0|1.2.840.10008.1.2.1
+pres_context: 5|0|1.2.840.10008.1.2.1
+pres_context: 7|0|1.2.840.10008.1.2.1
+pres_context: 9|0|1.2.840.10008.1.2.1
+pres_context: 11|0|1.2.840.10008.1.2.1
+pres_context: 13|0|1.2.840.10008.1.2.1
+pres_context: 15|0|1.2.840.10008.1.2.1
+pres_context: 17|0|1.2.840.10008.1.2.1
+pres_context: 19|0|1.2.840.10008.1.2.1
+pres_context: 21|0|1.2.840.10008.1.2.1
+pres_context: 23|0|1.2.840.10008.1.2.1
+pres_context: 25|0|1.2.840.10008.1.2
+pres_context: 27|0|1.2.840.10008.1.2
+pres_context: 29|0|1.2.840.10008.1.2
+pres_context: 31|0|1.2.840.10008.1.2.1
+pres_context: 33|0|1.2.840.10008.1.2.1
+pres_context: 35|0|1.2.840.10008.1.2.1
+pres_context: 37|0|1.2.840.10008.1.2.1
+pres_context: 39|0|1.2.840.10008.1.2.1
+pres_context: 41|0|1.2.840.10008.1.2.1
+pres_context: 43|0|1.2.840.10008.1.2.1
+pres_context: 45|1|1.2.840.10008.1.2.1
+pres_context: 47|1|1.2.840.10008.1.2.1
+pres_context: 49|1|1.2.840.10008.1.2.1
+pres_context: 51|0|1.2.840.10008.1.2.1
+pres_context: 53|0|1.2.840.10008.1.2.1
+pres_context: 55|0|1.2.840.10008.1.2.1
+pres_context: 57|0|1.2.840.10008.1.2.1
+pres_context: 59|2|1.2.840.10008.1.2.1
+pres_context: 61|2|1.2.840.10008.1.2.1
+pres_context: 63|2|1.2.840.10008.1.2.1
+pres_context: 65|0|1.2.840.10008.1.2.1
+pres_context: 67|0|1.2.840.10008.1.2.1
+pres_context: 71|0|1.2.840.10008.1.2.1
+pres_context: 73|0|1.2.840.10008.1.2.1
+pres_context: 75|0|1.2.840.10008.1.2.1
+pres_context: 77|0|1.2.840.10008.1.2.1
+pres_context: 79|3|1.2.840.10008.1.2
+pres_context: 81|3|1.2.840.10008.1.2.1
+pres_context: 83|3|1.2.840.10008.1.2.1
+pres_context: 85|0|1.2.840.10008.1.2.1
+pres_context: 87|0|1.2.840.10008.1.2.1
+pres_context: 89|0|1.2.840.10008.1.2.1
+pres_context: 91|0|1.2.840.10008.1.2.1
+pres_context: 93|0|1.2.840.10008.1.2.1
+pres_context: 95|4|1.2.840.10008.1.2
+pres_context: 97|4|1.2.840.10008.1.2.1
+pres_context: 99|4|1.2.840.10008.1.2.1
+pres_context: 101|0|1.2.840.10008.1.2.1
+pres_context: 103|0|1.2.840.10008.1.2.1
+pres_context: 105|0|1.2.840.10008.1.2.1
+pres_context: 107|0|1.2.840.10008.1.2.1
+pres_context: 109|0|1.2.840.10008.1.2.1
+pres_context: 111|0|1.2.840.10008.1.2.1
+pres_context: 113|0|1.2.840.10008.1.2.1
+pres_context: 115|0|1.2.840.10008.1.2.1
+pres_context: 117|0|1.2.840.10008.1.2.1
+pres_context: 119|0|1.2.840.10008.1.2.1
+pres_context: 121|0|1.2.840.10008.1.2.1
+pres_context: 123|0|1.2.840.10008.1.2.1
+pres_context: 125|0|1.2.840.10008.1.2.1
+pres_context: 127|0|1.2.840.10008.1.2.1
+pres_context: 129|0|1.2.840.10008.1.2.1

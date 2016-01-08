@@ -1,0 +1,27 @@
+#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/spi.tpl,v $
+#$Date: 2009/03/25 14:01:18 $
+#$Revision: 1.1 $
+#
+(0009,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="Comments"				Name="Comments"
+(0009,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="Comments"				Name="Comments"
+(0009,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="Comments"				Name="Comments"
+(0009,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="UID"					Name="UID"
+(0009,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="UID"					Name="UID"
+(0009,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="UID"					Name="UID"
+(0009,0040) VERS="SPI" VR="US"   VM="1"	Owner="SPI"			Keyword="DataObjectType"			Name="Data Object Type"
+(0009,0040) VERS="SPI" VR="US"   VM="1"	Owner="SPI RELEASE 1"		Keyword="DataObjectType"			Name="Data Object Type"
+(0009,0040) VERS="SPI" VR="US"   VM="1"	Owner="SPI Release 1"		Keyword="DataObjectType"			Name="Data Object Type"
+(0009,0041) VERS="SPI" VR="SH"   VM="1"	Owner="SPI"			Keyword="DataObjectSubtype"			Name="Data Object Subtype"
+(0009,0041) VERS="SPI" VR="SH"   VM="1"	Owner="SPI RELEASE 1"		Keyword="DataObjectSubtype"			Name="Data Object Subtype"
+(0009,0041) VERS="SPI" VR="SH"   VM="1"	Owner="SPI Release 1"		Keyword="DataObjectSubtype"			Name="Data Object Subtype"
+(0011,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="Organ"					Name="Organ"
+(0011,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="Organ"					Name="Organ"
+(0011,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="Organ"					Name="Organ"
+(0011,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="AllergyIndication"			Name="Allergy Indication"
+(0011,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="AllergyIndication"			Name="Allergy Indication"
+(0011,0015) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="AllergyIndication"			Name="Allergy Indication"
+(0011,0020) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="Pregnancy"				Name="Pregnancy"
+(0011,0020) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="Pregnancy"				Name="Pregnancy"
+(0011,0020) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="Pregnancy"				Name="Pregnancy"
+(0029,0060) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="CompressionAlgorithm"			Name="Compression Algorithm"
+(0029,0060) VERS="SPI" VR="LO"   VM="1"	Owner="SPI Release 1"		Keyword="CompressionAlgorithm"			Name="Compression Algorithm"
