@@ -362,6 +362,9 @@ sub Collections{
     if($this->{CheckAgainstIntake}){
       return $this->CheckAgainstIntake($http, $dyn);
     }
+    if($this->{CheckAgainstPublic}){
+      return $this->CheckAgainstPublic($http, $dyn);
+    }
     return $this->DbCollectionsAndExtractions($http, $dyn);
   } elsif($this->{CollectionMode} eq "PendingDiscard"){
     return $this->PendingDiscard($http, $dyn);
@@ -514,8 +517,8 @@ sub ContinueDbCollectionsAndExtractions{
       "Site: $this->{SelectedSite}</h3>" .
       '<?dyn="Collection_Site_Counts"?>&nbsp;&nbsp;' . 
       "<a href=\"DownloadCounts?obj_path=$this->{path}\">download</a>" .
-      '<?dyn="SimpleButton" op="SetCheckAgainstIntake" ' .
-      'caption="Check Against Intake" sync="Update();"?>' .
+      '<?dyn="IntakeCheckButtons"?>' .
+      '<?dyn="PublicCheckButtons"?>' .
       '<small><table border="1" width="100%">' .
       '<tr><th width="10%">Subject</th><th width="45%">DB Info</th>' .
       '<th width="45%">Extraction Info</th></tr>' .
@@ -524,6 +527,26 @@ sub ContinueDbCollectionsAndExtractions{
   };
   return $sub;
 };
+sub IntakeCheckButtons{
+  my($this, $http, $dyn) = @_;
+  my $button = '<?dyn="SimpleButton" op="SetCheckAgainstIntake" ' .
+    'caption="Check Against Intake" sync="Update();"?>';
+  if(exists $this->{IntakeCheckHierarchy}){
+    $button = '<?dyn="SimpleButton" op="ClearIntakeData" ' .
+      'caption="Clear Intake Check" sync="Update();"?>';
+  }
+  $this->RefreshEngine($http, $dyn, $button);
+}
+sub PublicCheckButtons{
+  my($this, $http, $dyn) = @_;
+  my $button = '<?dyn="SimpleButton" op="SetCheckAgainstPublic" ' .
+    'caption="Check Against Public" sync="Update();"?>';
+  if(exists $this->{PublicCheckHierarchy}){
+    $button = '<?dyn="SimpleButton" op="ClearPublicData" ' .
+      'caption="Clear Public Check" sync="Update();"?>';
+  }
+  $this->RefreshEngine($http, $dyn, $button);
+}
 sub Collection_Site_Counts{
   my($this, $http, $dyn) = @_;
   my $subjects = 0;
@@ -623,6 +646,8 @@ sub NewQuery{
   my($this) = @_;
   delete $this->{SelectedCollection};
   delete $this->{SelectedSite};
+  $this->ClearIntakeData;
+  $this->ClearPublicData;
 }
 sub ExpandRows{
   my($this, $http, $dyn) = @_;
@@ -885,6 +910,28 @@ sub ExpandExtractionInfo{
   }
   if(defined $dyn->{send_hist}){
     $status .= "<br>with send";
+  }
+  if(exists $this->{IntakeCheckHierarchy}){
+    my $check = $this->{IntakeCheckHierarchy}->{$dyn->{subj}};
+    my $num_only_in_ext = keys %{$check->{OnlyInExt}};
+    my $num_only_in_pub = keys %{$check->{OnlyInIntake}};
+    if($num_only_in_ext != 0 || $num_only_in_pub != 0){
+      $status .= '<br><span style="background-color:red;">' .
+        "doesn't match intake</span>";
+    } else {
+      $status .= "<br>matches intake";
+    }
+  }
+  if(exists $this->{PublicCheckHierarchy}){
+    my $check = $this->{PublicCheckHierarchy}->{$dyn->{subj}};
+    my $num_only_in_ext = keys %{$check->{OnlyInExt}};
+    my $num_only_in_pub = keys %{$check->{OnlyInPublic}};
+    if($num_only_in_ext != 0 || $num_only_in_pub != 0){
+      $status .= '<br><span style="background-color:red;">' .
+        "doesn't match public</span>";
+    } else {
+      $status .= "<br>matches public";
+    }
   }
   my $link = $this->MakeHostLinkSync("info", "ShowInfo", {
     subj => $dyn->{subj}
@@ -1208,6 +1255,159 @@ sub StatusOfExtractionSearch{
 
 }
 #############################################
+#Check Against Public
+#
+sub CheckAgainstPublic{
+  my($this, $http, $dyn) = @_;
+  if($this->{CheckAgainstPublic} < 3 ){
+    my $num_found_patient = keys %{$this->{PublicData}};
+    $this->RefreshEngine($http, $dyn,
+      'Currently querying Public:<br>' . $num_found_patient .
+      ' subjects found');
+  } elsif ($this->{CheckAgainstPublic} == 3){
+    my $num_subj = keys %{$this->{CollectionRows}};
+    my $num_subj_in_intake = keys %{$this->{PublicData}};
+    my $num_subj_waiting = @{$this->{PublicCheckSubjectsToDo}};
+    my $num_subj_with_error = @{$this->{PublicCheckSubjectsWithError}};
+    my $num_subj_ok = @{$this->{PublicCheckSubjectsOk}};
+    my $num_subj_not_checked = @{$this->{PublicCheckSubjectsNotChecked}};
+    $this->RefreshEngine($http, $dyn,
+      'Checking subject in intake against subjects in Posda:<ul>' .
+      "<li>Total Subjects: $num_subj</li>" .
+      "<li>Subjects in Public: $num_subj_in_intake</li>" .
+      "<li>Subjects Waiting: $num_subj_waiting</li>" .
+      "<li>Subjects With Error: $num_subj_with_error</li>" .
+      "<li>Subjects Ok: $num_subj_ok</li>" .
+      "<li>Subjects Not Checked: $num_subj_not_checked</li>" .
+      '</ul>'
+    );
+  } else {
+#    $this->RefreshEngine($http, $dyn,
+#      'Checking against intake is curently under development:<br>' .
+#      '<?dyn="SimpleButton" ' .
+#      'caption="OK" op="ClearCheckAgainstPublic" sync="Update();"?>');
+     $this->ClearCheckAgainstPublic($http, $dyn);
+  }
+}
+sub SetCheckAgainstPublic{
+  my($this, $http, $dyn) = @_;
+  $this->{CheckAgainstPublic} = 1;
+  $this->{PublicData} = {};
+  my $collection = $this->{SelectedCollection};
+  my $site = $this->{SelectedSite};
+  my $cmd = 'GetIntakeImagesForCollectionSite.pl 144.30.1.74 "'.
+   $collection . '" "' . $site . '"';
+  Dispatch::LineReader->new_cmd($cmd,
+    $this->CheckAgainstPublicLine,
+    $this->CheckAgainstPublicDone); 
+  $this->{CheckAgainstPublic} = 2;
+}
+sub ClearCheckAgainstPublic{
+  my($this, $http, $dyn) = @_;
+  delete $this->{CheckAgainstPublic};
+}
+sub CheckAgainstPublicLine{
+  my($this) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    my($pid, $SopInst, $StudyInst, $SeriesInst) = split(/\|/, $line);
+    unless(exists $this->{PublicData}->{$pid}) { $this->AutoRefresh };
+    $this->{PublicData}->{$pid}->{$StudyInst}->{$SeriesInst}->{$SopInst} = 1;
+  };
+  return $sub;
+}
+sub CheckAgainstPublicDone{
+  my($this) = @_;
+  my $sub = sub {
+    $this->{CheckAgainstPublic} = 3;
+    $this->AutoRefresh();
+    $this->{PublicCheckSubjectsToDo} = [keys %{$this->{CollectionRows}} ];
+    $this->{PublicCheckSubjectsWithError} = [];
+    $this->{PublicCheckSubjectsOk} = [];
+    $this->{PublicCheckSubjectsNotChecked} = [];
+    $this->{PublicCheckHierarchy} = {};
+    Dispatch::Select::Background->new($this->PublicCheckCrank)->queue;
+  };
+  return $sub;
+}
+sub PublicCheckCrank{
+  my($this) = @_;
+  my $sub = sub {
+    my($disp) = @_;
+    unless(exists $this->{CheckAgainstPublic}) { return }
+    my $num_to_check = @{$this->{PublicCheckSubjectsToDo}};
+    unless($num_to_check > 0){
+      $this->{CheckAgainstPublic} = 4;
+      return;
+    }
+    my $next = shift(@{$this->{PublicCheckSubjectsToDo}});
+    $this->CheckPublicSubject($next);
+    $disp->queue;
+  };
+  return $sub;
+}
+sub CheckPublicSubject{
+  my($this, $subj) = @_;
+  my $subj_hierarchy = $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}
+    ->{$subj}->{studies};
+  my %ExtractionHierarchy;
+  for my $st (keys %$subj_hierarchy){
+    my $st_h = $subj_hierarchy->{$st};
+    my $study_uid = $st_h->{uid};
+    for my $se (keys %{$st_h->{series}}){
+      my $se_h = $st_h->{series}->{$se};
+      my $series_uid = $se_h->{uid};
+      for my $f (keys %{$se_h->{files}}){
+        my $f_h = $se_h->{files}->{$f};
+        my $sop_uid = $f_h->{sop_instance_uid};
+        $ExtractionHierarchy{$study_uid}->{$series_uid}->{$sop_uid} = 1;
+      }
+    }
+  }
+  my $PublicHierarchyToCompare = $this->{PublicData}->{$subj};
+  # find files in both and only in extraction
+  my %InAll;
+  my %OnlyInExt;
+  my %OnlyInPublic;
+  for my $st (keys %ExtractionHierarchy){
+    for my $se (keys %{$ExtractionHierarchy{$st}}){
+      for my $f (keys %{$ExtractionHierarchy{$st}->{$se}}){
+        if(exists $PublicHierarchyToCompare->{$st}->{$se}->{$f}){
+          $InAll{$st}->{$se}->{$f} = 1;
+        } else {
+          $OnlyInExt{$st}->{$se}->{$f} = 1;
+        }
+      }
+    }
+  }
+  # find files in intake, not in extraction
+  for my $st (keys %$PublicHierarchyToCompare){
+    for my $se (keys %{$PublicHierarchyToCompare->{$st}}){
+      for my $f (keys %{$PublicHierarchyToCompare->{$st}->{$se}}){
+        unless(exists $ExtractionHierarchy{$st}->{$se}->{$f}){
+          $OnlyInPublic{$st}->{$se}->{$f} = 1;
+        }
+      }
+    }
+  }
+  $this->{PublicCheckHierarchy}{$subj} = {
+    InAll => \%InAll,
+    OnlyInExt => \%OnlyInExt,
+    OnlyInPublic => \%OnlyInPublic,
+  };
+  $this->AutoRefresh;
+}
+sub ClearPublicData{
+  my($this, $http, $dyn) = @_;
+  delete $this->{PublicCheckHierarchy};
+  delete $this->{PublicCheckSubjectsNotChecked};
+  delete $this->{PublicCheckSubjectsOk};
+  delete $this->{PublicCheckSubjectsToDo};
+  delete $this->{PublicCheckSubjectsWithError};
+  delete $this->{PublicData};
+}
+#############################################
+#############################################
 #Check Against Intake
 #
 sub CheckAgainstIntake{
@@ -1235,10 +1435,11 @@ sub CheckAgainstIntake{
       '</ul>'
     );
   } else {
-    $this->RefreshEngine($http, $dyn,
-      'Checking against intake is curently under development:<br>' .
-      '<?dyn="SimpleButton" ' .
-      'caption="OK" op="ClearCheckAgainstIntake" sync="Update();"?>');
+#    $this->RefreshEngine($http, $dyn,
+#      'Checking against intake is curently under development:<br>' .
+#      '<?dyn="SimpleButton" ' .
+#      'caption="OK" op="ClearCheckAgainstIntake" sync="Update();"?>');
+     $this->ClearCheckAgainstIntake($http, $dyn);
   }
 }
 sub SetCheckAgainstIntake{
@@ -1300,7 +1501,6 @@ sub IntakeCheckCrank{
 }
 sub CheckIntakeSubject{
   my($this, $subj) = @_;
-  print STDERR "Should check subject $subj here\n";
   my $subj_hierarchy = $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}
     ->{$subj}->{studies};
   my %ExtractionHierarchy;
@@ -1349,6 +1549,15 @@ sub CheckIntakeSubject{
     OnlyInIntake => \%OnlyInIntake,
   };
   $this->AutoRefresh;
+}
+sub ClearIntakeData{
+  my($this, $http, $dyn) = @_;
+  delete $this->{IntakeCheckHierarchy};
+  delete $this->{IntakeCheckSubjectsNotChecked};
+  delete $this->{IntakeCheckSubjectsOk};
+  delete $this->{IntakeCheckSubjectsToDo};
+  delete $this->{IntakeCheckSubjectsWithError};
+  delete $this->{IntakeData};
 }
 #############################################
 
