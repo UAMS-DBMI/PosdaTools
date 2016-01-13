@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/Application.pm,v $
-#$Date: 2015/12/22 14:50:57 $
-#$Revision: 1.4 $
+#$Date: 2016/01/13 13:59:45 $
+#$Revision: 1.5 $
 #
 use strict;
 package PosdaCuration::Application;
@@ -359,6 +359,9 @@ sub Collections{
     ){
       return $this->CollectionSelection($http, $dyn);
     }
+    if($this->{CheckAgainstIntake}){
+      return $this->CheckAgainstIntake($http, $dyn);
+    }
     return $this->DbCollectionsAndExtractions($http, $dyn);
   } elsif($this->{CollectionMode} eq "PendingDiscard"){
     return $this->PendingDiscard($http, $dyn);
@@ -511,6 +514,8 @@ sub ContinueDbCollectionsAndExtractions{
       "Site: $this->{SelectedSite}</h3>" .
       '<?dyn="Collection_Site_Counts"?>&nbsp;&nbsp;' . 
       "<a href=\"DownloadCounts?obj_path=$this->{path}\">download</a>" .
+      '<?dyn="SimpleButton" op="SetCheckAgainstIntake" ' .
+      'caption="Check Against Intake" sync="Update();"?>' .
       '<small><table border="1" width="100%">' .
       '<tr><th width="10%">Subject</th><th width="45%">DB Info</th>' .
       '<th width="45%">Extraction Info</th></tr>' .
@@ -1201,6 +1206,149 @@ sub StatusOfExtractionSearch{
     $http->queue("Directory Search Finished");
   }
 
+}
+#############################################
+#Check Against Intake
+#
+sub CheckAgainstIntake{
+  my($this, $http, $dyn) = @_;
+  if($this->{CheckAgainstIntake} < 3 ){
+    my $num_found_patient = keys %{$this->{IntakeData}};
+    $this->RefreshEngine($http, $dyn,
+      'Currently querying Intake:<br>' . $num_found_patient .
+      ' subjects found');
+  } elsif ($this->{CheckAgainstIntake} == 3){
+    my $num_subj = keys %{$this->{CollectionRows}};
+    my $num_subj_in_intake = keys %{$this->{IntakeData}};
+    my $num_subj_waiting = @{$this->{IntakeCheckSubjectsToDo}};
+    my $num_subj_with_error = @{$this->{IntakeCheckSubjectsWithError}};
+    my $num_subj_ok = @{$this->{IntakeCheckSubjectsOk}};
+    my $num_subj_not_checked = @{$this->{IntakeCheckSubjectsNotChecked}};
+    $this->RefreshEngine($http, $dyn,
+      'Checking subject in intake against subjects in Posda:<ul>' .
+      "<li>Total Subjects: $num_subj</li>" .
+      "<li>Subjects in Intake: $num_subj_in_intake</li>" .
+      "<li>Subjects Waiting: $num_subj_waiting</li>" .
+      "<li>Subjects With Error: $num_subj_with_error</li>" .
+      "<li>Subjects Ok: $num_subj_ok</li>" .
+      "<li>Subjects Not Checked: $num_subj_not_checked</li>" .
+      '</ul>'
+    );
+  } else {
+    $this->RefreshEngine($http, $dyn,
+      'Checking against intake is curently under development:<br>' .
+      '<?dyn="SimpleButton" ' .
+      'caption="OK" op="ClearCheckAgainstIntake" sync="Update();"?>');
+  }
+}
+sub SetCheckAgainstIntake{
+  my($this, $http, $dyn) = @_;
+  $this->{CheckAgainstIntake} = 1;
+  $this->{IntakeData} = {};
+  my $collection = $this->{SelectedCollection};
+  my $site = $this->{SelectedSite};
+  my $cmd = 'GetIntakeImagesForCollectionSite.pl 144.30.1.71 "'.
+   $collection . '" "' . $site . '"';
+  Dispatch::LineReader->new_cmd($cmd,
+    $this->CheckAgainstIntakeLine,
+    $this->CheckAgainstIntakeDone); 
+  $this->{CheckAgainstIntake} = 2;
+}
+sub ClearCheckAgainstIntake{
+  my($this, $http, $dyn) = @_;
+  delete $this->{CheckAgainstIntake};
+}
+sub CheckAgainstIntakeLine{
+  my($this) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    my($pid, $SopInst, $StudyInst, $SeriesInst) = split(/\|/, $line);
+    unless(exists $this->{IntakeData}->{$pid}) { $this->AutoRefresh };
+    $this->{IntakeData}->{$pid}->{$StudyInst}->{$SeriesInst}->{$SopInst} = 1;
+  };
+  return $sub;
+}
+sub CheckAgainstIntakeDone{
+  my($this) = @_;
+  my $sub = sub {
+    $this->{CheckAgainstIntake} = 3;
+    $this->AutoRefresh();
+    $this->{IntakeCheckSubjectsToDo} = [keys %{$this->{CollectionRows}} ];
+    $this->{IntakeCheckSubjectsWithError} = [];
+    $this->{IntakeCheckSubjectsOk} = [];
+    $this->{IntakeCheckSubjectsNotChecked} = [];
+    $this->{IntakeCheckHierarchy} = {};
+    Dispatch::Select::Background->new($this->IntakeCheckCrank)->queue;
+  };
+  return $sub;
+}
+sub IntakeCheckCrank{
+  my($this) = @_;
+  my $sub = sub {
+    my($disp) = @_;
+    unless(exists $this->{CheckAgainstIntake}) { return }
+    my $num_to_check = @{$this->{IntakeCheckSubjectsToDo}};
+    unless($num_to_check > 0){
+      $this->{CheckAgainstIntake} = 4;
+      return;
+    }
+    my $next = shift(@{$this->{IntakeCheckSubjectsToDo}});
+    $this->CheckIntakeSubject($next);
+    $disp->queue;
+  };
+  return $sub;
+}
+sub CheckIntakeSubject{
+  my($this, $subj) = @_;
+  print STDERR "Should check subject $subj here\n";
+  my $subj_hierarchy = $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}
+    ->{$subj}->{studies};
+  my %ExtractionHierarchy;
+  for my $st (keys %$subj_hierarchy){
+    my $st_h = $subj_hierarchy->{$st};
+    my $study_uid = $st_h->{uid};
+    for my $se (keys %{$st_h->{series}}){
+      my $se_h = $st_h->{series}->{$se};
+      my $series_uid = $se_h->{uid};
+      for my $f (keys %{$se_h->{files}}){
+        my $f_h = $se_h->{files}->{$f};
+        my $sop_uid = $f_h->{sop_instance_uid};
+        $ExtractionHierarchy{$study_uid}->{$series_uid}->{$sop_uid} = 1;
+      }
+    }
+  }
+  my $IntakeHierarchyToCompare = $this->{IntakeData}->{$subj};
+  # find files in both and only in extraction
+  my %InAll;
+  my %OnlyInExt;
+  my %OnlyInIntake;
+  for my $st (keys %ExtractionHierarchy){
+    for my $se (keys %{$ExtractionHierarchy{$st}}){
+      for my $f (keys %{$ExtractionHierarchy{$st}->{$se}}){
+        if(exists $IntakeHierarchyToCompare->{$st}->{$se}->{$f}){
+          $InAll{$st}->{$se}->{$f} = 1;
+        } else {
+          $OnlyInExt{$st}->{$se}->{$f} = 1;
+        }
+      }
+    }
+  }
+  # find files in intake, not in extraction
+  for my $st (keys %$IntakeHierarchyToCompare){
+    for my $se (keys %{$IntakeHierarchyToCompare->{$st}}){
+      for my $f (keys %{$IntakeHierarchyToCompare->{$st}->{$se}}){
+        unless(exists $ExtractionHierarchy{$st}->{$se}->{$f}){
+          $OnlyInIntake{$st}->{$se}->{$f} = 1;
+        }
+      }
+    }
+  }
+  $this->{IntakeCheckHierarchy}{$subj} = {
+    InAll => \%InAll,
+    OnlyInExt => \%OnlyInExt,
+    OnlyInIntake => \%OnlyInIntake,
+  };
+  $this->AutoRefresh;
 }
 #############################################
 
@@ -2494,6 +2642,31 @@ sub GetSeriesFor{
     return "&lt;not found&gt;";
   }
 }
+## Called from Series Report (child)
+sub ApplyInstanceNumbersFix{
+  my($this, $http, $dyn, $edits) = @_;
+  $this->HideErrors($http, $dyn);
+  my $info = $this->{DisplayInfoIn};
+  my $coll = $this->{DisplayInfoIn}->{Collection};
+  my $site = $this->{DisplayInfoIn}->{Site};
+  my $subj = $this->{DisplayInfoIn}->{subj};
+#  my $edit_instructions = {
+#    operation => "EditAndAnalyze",
+#    files_to_link => {},
+#    cache_dir => "$this->{DicomInfoCache}/dicom_info",
+#    parallelism => 3,
+#    destination => $dest_dir,
+#    source => $source_dir,
+#    info_dir => "$edit_dir/$next_rev",
+#    FileEdits => $edits,
+#  };
+  for my $i (keys %{$info->{DicomInfo}->{FilesToDigest}}){
+    unless(exists $edits->{$i}){
+#      $edit_instruction->{files_to_link}
+    }
+  }
+}
+## Called from GeneralEdit (child);
 sub ApplyGeneralEdits{
   my($this, $http, $dyn, $general_edits) = @_;
   $this->HideErrors($http, $dyn);

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/SeriesReport.pm,v $
-#$Date: 2015/11/04 20:14:51 $
-#$Revision: 1.1 $
+#$Date: 2016/01/13 13:59:45 $
+#$Revision: 1.2 $
 #
 use strict;
 use POSIX 'strftime';
@@ -202,6 +202,77 @@ sub DownloadExcel{
     $http->queue("\n");
   }
 }
+sub ImageNumberCheck{
+  my($this, $http, $dyn) = @_;
+  my $check = $this->IsMissingInstanceNumbers;
+  if($check =~ "no") { return }
+  if($check eq "some") { $http->queue("  Missing some Instance Numbers") }
+  if($check eq "all"){
+    $this->DelegateButton($http, { op => "AddInstanceNumbersInOrder",
+      caption => "Add Ordered Instance Numbers" });
+  }
+  if($check eq "error") { $http->queue(" Error checking Instance Numbers") }
+}
+sub IsMissingInstanceNumbers{
+  my($this) = @_;
+  my $num_rows = 0;
+  my $num_instance_numbers = 0;
+  for my $ii (
+    sort 
+    { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
+       $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
+    }
+    keys %{$this->{digs_in_series_and_study}}
+  ){
+    my $i = $this->{digs_in_series_and_study}->{$ii};
+    $num_rows += 1;
+    if(
+      defined $i->{"(0020,0013)"} &&
+      $i->{"(0020,0013)"} ne ""
+    ){ $num_instance_numbers += 1 }
+  }
+  if($num_instance_numbers == $num_rows) { return "no" }
+  if($num_instance_numbers <= 0) { return "all" }
+  if($num_instance_numbers < $num_rows) { return "some" }
+  if($num_instance_numbers > $num_rows) { return "error" }
+}
+sub AddInstanceNumbersInOrder{
+  my($this, $http, $dyn) = @_;
+  my $parent = $this->parent;
+  my $cmds = {};
+  my $instance_number = 0;
+  for my $ii (
+    sort 
+    { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
+       $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
+    }
+    keys %{$this->{digs_in_series_and_study}}
+  ){
+    $instance_number += 1;
+    my $f_info = $this->{digs_in_series_and_study}->{$ii};
+    my $file = $f_info->{file};
+    if($file =~ /^(.*revisions\/)(\d+)(\/.*)$/){
+      my $pre = $1;
+      my $rev = $2;
+      my $post = $3;
+      my $next_rev = $rev + 1;
+      my $new_file = "$pre$next_rev$post";
+      $cmds->{$file} = {
+        from_file => $file,
+        to_file => $new_file,
+        full_ele_additions => {
+          "(0020,0013)" => $instance_number,
+        },
+      };
+    }
+  }
+  if($parent->can("ApplyInstanceNumbersFix")){
+    $parent->ApplyInstanceNumbersFix($http, $dyn, $cmds);
+  } else {
+    print STDERR "parent can't ApplyInstanceNumbersFix\n";
+  }
+  $this->QueueJsCmd("CloseThisWindow();");
+}
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
   my $sop_type = [keys %{$this->{SopTypes}}]->[0];
@@ -210,6 +281,7 @@ sub ContentResponse{
   }
   $this->RefreshEngine($http, $dyn,
     "<small><a href=\"DownloadExcel?obj_path=$this->{path}\">download</a>" .
+    '<?dyn="ImageNumberCheck"?>' .
     "<table border=\"1\"><tr><th>Image</th><th>modality</th>" .
     "<th colspan=\"6\">IOP</th><th colspan=\"3\">IPP</th>" .
     "<th>Type</th><th>location</th>" .
