@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.4.2-5.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="352px" viewBox="0 0 502 352" enable-background="new 0 0 502 352" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="350"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="316.071" x2="385.641" y2="316.071"/>
+		<path fill="#005695" d="M388.002,315.047c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C391.377,315.946,389.771,315.58,388.002,315.047z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="398.122" y1="335.148" x2="398.122" y2="40.328"/>
+		
+			<rect x="372.323" y="16.574" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="27"/>
+		<text transform="matrix(1 0 0 1 384.874 32.584)"  font-size="9">Printer</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="69.501" x2="385.642" y2="69.501"/>
+		<path fill="#005695" d="M388.003,68.476c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.226,2.401-0.992,4.054-1.491
+			c1.77-0.535,3.375-0.9,4.415-1.031C391.378,69.376,389.772,69.01,388.003,68.476z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="93.932" x2="385.642" y2="93.932"/>
+		<path fill="#005695" d="M388.003,92.906c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.226,2.401-0.992,4.054-1.491
+			c1.77-0.535,3.375-0.9,4.415-1.031C391.378,93.807,389.772,93.44,388.003,92.906z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="118.362" x2="385.641" y2="118.362"/>
+		<path fill="#005695" d="M388.002,117.338c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C391.377,118.237,389.771,117.871,388.002,117.338z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="144.336" x2="385.641" y2="144.336"/>
+		<path fill="#005695" d="M388.002,143.311c-1.652-0.5-2.728-0.959-4.054-1.492v5.045c0.475-0.226,2.401-0.992,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.377,144.211,389.771,143.845,388.002,143.311z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="167.84" x2="385.641" y2="167.84"/>
+		<path fill="#005695" d="M388.002,166.814c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.377,167.715,389.771,167.35,388.002,166.814z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="192.785" x2="385.642" y2="192.785"/>
+		<path fill="#005695" d="M388.003,191.76c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.378,192.66,389.772,192.295,388.003,191.76z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="217.217" x2="385.642" y2="217.217"/>
+		<path fill="#005695" d="M388.003,216.19c-1.652-0.499-2.728-0.959-4.054-1.491v5.045c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.378,217.092,389.772,216.727,388.003,216.19z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="392.417" y1="266.182" x2="111.245" y2="266.182"/>
+		<path fill="#005695" d="M108.884,265.156c1.652-0.5,2.728-0.959,4.054-1.492v5.045c-0.475-0.226-2.401-0.992-4.054-1.492
+			c-1.77-0.534-3.375-0.9-4.415-1.03C105.509,266.057,107.114,265.69,108.884,265.156z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="291.126" x2="385.641" y2="291.126"/>
+		<path fill="#005695" d="M388.002,290.102c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C391.377,291.001,389.771,290.635,388.002,290.102z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="100.338" y1="335.427" x2="100.338" y2="40.607"/>
+		
+			<rect x="77.837" y="16.574" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 81.0845 28.1016)"><tspan x="0" y="0"  font-size="9">Hardcopy</tspan><tspan x="13.256" y="10.8"  font-size="9">AE</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M104.515,55.513h-9v270.975c3.15,0,5.968,0,9,0V55.513z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M402.424,55.513h-9v270.975c3.149,0,5.968,0,9,0V55.513z"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="393.022,229.527 380.991,229.527 
+			380.991,244.661 386.54,244.661 		"/>
+		<path fill="#005695" d="M388.901,245.687c-1.652,0.5-2.728,0.959-4.054,1.492v-5.045c0.475,0.227,2.401,0.992,4.054,1.492
+			c1.77,0.535,3.375,0.9,4.415,1.031C392.276,244.786,390.671,245.153,388.901,245.687z"/>
+		<rect x="118.491" y="60.764" fill="none" width="258.5" height="258.187"/>
+		<text transform="matrix(1 0 0 1 118.4912 66.4941)"><tspan x="0" y="0"  font-size="8">1. Open Association</tspan><tspan x="0" y="24.6"  font-size="8">2. N-GET (Printer)</tspan><tspan x="0" y="49.2"  font-size="8">3. N-CREATE (Film Session)</tspan><tspan x="0" y="73.8"  font-size="8">4. N-CREATE (Presentation LUT)</tspan><tspan x="0" y="98.4"  font-size="8">5. N-CREATE (Film Box)</tspan><tspan x="0" y="123"  font-size="8">6. N-SET (Image Box)</tspan><tspan x="0" y="147.6"  font-size="8">7. N-ACTION (Film Box)</tspan><tspan x="183.371" y="172.2"  font-size="8">8. Print Film Sheet(s)</tspan><tspan x="0" y="196.8"  font-size="8">9. N-EVENT-REPORT (Printer)</tspan><tspan x="0" y="221.4"  font-size="8">10. N-DELETE (Film Session)</tspan><tspan x="0" y="246"  font-size="8">11. Close Association</tspan></text>
+	</g>
+</g>
+</svg>

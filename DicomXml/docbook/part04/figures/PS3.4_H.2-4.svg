@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_H.2-4.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:09 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="312px" viewBox="0 0 502 312" enable-background="new 0 0 502 312" xml:space="preserve">
+<rect x="1" y="1" fill="#F5EED6" width="500" height="310"/>
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	
+		<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		250.54,45.065 250.54,32.47 349.54,32.47 349.54,140.47 250.54,140.47 250.54,127.874 159.989,127.874 159.989,140.47 
+		60.989,140.47 60.989,32.47 159.989,32.47 159.989,45.065 	"/>
+	<text transform="matrix(1 0 0 1 174.5137 83.7778)"  font-size="9">ASSOCIATION</text>
+	<text transform="matrix(1 0 0 1 57.8223 27.1689)"  font-size="12">SCU</text>
+	<path fill="#86B2D8" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" d="M74.489,41.47h72v90h-72
+		V41.47z"/>
+	<text transform="matrix(1 0 0 1 250.6533 27.1689)"  font-size="12">SCP</text>
+	<text transform="matrix(1 0 0 1 103.4863 89.8135)"  font-size="12">AE</text>
+	<path fill="#86B2D8" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" d="M264.04,41.47h72v90h-72
+		V41.47z"/>
+	<text transform="matrix(1 0 0 1 293.0371 89.8135)"  font-size="12">AE</text>
+	
+		<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="336.488" y1="71.47" x2="378.489" y2="49.329"/>
+	
+		<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="336.488" y1="101.47" x2="378.489" y2="123.329"/>
+	
+		<path fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M378.489,32.47h65.689v32.689h-65.689V32.47z"/>
+	<text transform="matrix(1 0 0 1 385.8301 45.9229)"><tspan x="0" y="0"  font-size="9">HARDCOPY</tspan><tspan x="2" y="10.8"  font-size="9">PRINTER 1</tspan></text>
+	
+		<path fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M378.489,107.78h65.689v32.689h-65.689V107.78z"/>
+	<text transform="matrix(1 0 0 1 385.8301 121.2334)"><tspan x="0" y="0"  font-size="9">HARDCOPY</tspan><tspan x="2" y="10.8"  font-size="9">PRINTER 2</tspan></text>
+	
+		<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="146.686" y1="86.47" x2="264.126" y2="86.47"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="146.686" cy="86.47" r="3.49"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="264.126" cy="86.47" r="3.49"/>
+	
+		<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		250.54,200.068 250.54,187.47 349.54,187.47 349.54,295.47 250.54,295.47 250.54,282.864 159.989,282.864 159.989,295.47 
+		60.989,295.47 60.989,187.47 159.989,187.47 159.989,200.068 	"/>
+	<text transform="matrix(1 0 0 1 170.7607 264.8477)"  font-size="9">ASSOCIATION 2</text>
+	<text transform="matrix(1 0 0 1 57.8223 182.1689)"  font-size="12">SCU</text>
+	<path fill="#86B2D8" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" d="M74.489,196.47h72v90h-72
+		V196.47z"/>
+	<text transform="matrix(1 0 0 1 250.6533 182.1689)"  font-size="12">SCP</text>
+	<text transform="matrix(1 0 0 1 103.4863 244.8135)"  font-size="12">AE</text>
+	
+		<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="336.89" y1="214.819" x2="378.489" y2="204.329"/>
+	
+		<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="336.488" y1="268.22" x2="378.489" y2="278.33"/>
+	
+		<path fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M378.489,187.47h65.689v32.689h-65.689V187.47z"/>
+	<text transform="matrix(1 0 0 1 385.8301 200.9229)"><tspan x="0" y="0"  font-size="9">HARDCOPY</tspan><tspan x="2" y="10.8"  font-size="9">PRINTER 1</tspan></text>
+	
+		<path fill="#CCDEF0" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M378.489,262.78h65.689v32.689h-65.689V262.78z"/>
+	<text transform="matrix(1 0 0 1 385.8301 276.2334)"><tspan x="0" y="0"  font-size="9">HARDCOPY</tspan><tspan x="2" y="10.8"  font-size="9">PRINTER 2</tspan></text>
+	<text transform="matrix(1 0 0 1 170.7607 211.3379)"  font-size="9">ASSOCIATION 1</text>
+	<path fill="#86B2D8" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" d="M264.04,233.47v-37.125
+		h72v37.125H264.04z"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="146.686" y1="214.914" x2="264.126" y2="214.914"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="146.686" cy="214.914" r="3.49"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="264.126" cy="214.914" r="3.49"/>
+	<path fill="#86B2D8" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" d="M336.04,249.219v37.126
+		h-72v-37.126H336.04z"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="146.686" y1="267.782" x2="264.126" y2="267.782"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="146.686" cy="267.782" r="3.49"/>
+	
+		<circle fill="#FFFFFF" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" cx="264.126" cy="267.782" r="3.49"/>
+	<text transform="matrix(1 0 0 1 289.7002 267.8135)"  font-size="12">AE2</text>
+	<text transform="matrix(1 0 0 1 289.7002 220.8135)"  font-size="12">AE1</text>
+</g>
+</svg>

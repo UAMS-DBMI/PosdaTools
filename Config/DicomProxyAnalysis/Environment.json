@@ -1,0 +1,15 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomProxyAnalysis/Environment.json,v $
+//  $Date: 2014/09/22 18:45:20 $
+//  $Revision: 1.1 $
+// 
+{
+  "ApplicationInitClass" : "DicomProxyAnalysis::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "AuthenticationType" : "DB",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/Users/bbennett/cache/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/Users/bbennett/PosdaTools/HttpRoot/http_root",
+  "AnalysisRootDir" : "/Users/bbennett/cache/ProxyData/Analysis",
+}

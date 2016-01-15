@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.12-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="477px" viewBox="0 0 502 477" enable-background="new 0 0 502 477" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="475"/>
+	<g>
+		<rect x="65.938" y="18.661" fill="#FFFFFF" width="370.124" height="439.171"/>
+		<rect x="69.678" y="21.061" fill="none" width="226.143" height="9.381"/>
+		<text transform="matrix(0.9288 0 0 1 69.6777 28.1494)" font-size="9.9207">DICOM SOP Instance 1</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="436.062" y1="461.66" x2="436.062" y2="15.34"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="65.938" y1="461.66" x2="65.938" y2="15.34"/>
+		<rect x="65.938" y="39.582" fill="none" width="117.313" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 68.3755 46.0244)" font-size="9">Other Attributes (unencrypted)</text>
+		<rect x="191.814" y="445.66" fill="none" width="117.313" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 194.251 452.0879)" font-size="9">Other Attributes (unencrypted)</text>
+		
+			<rect x="65.938" y="59.687" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="369.065" height="377.935"/>
+		<rect x="83.504" y="64.312" fill="none" width="205.154" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 83.5039 70.7432)" font-size="9">Encrypted Attributes Sequence</text>
+		
+			<rect x="83.504" y="74.323" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="351.5" height="185.781"/>
+		<rect x="91.443" y="77.934" fill="none" width="198.934" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 91.4434 84.3672)" font-size="9">Item 1 (of n)</text>
+		
+			<rect x="101.068" y="89.483" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="333.936" height="170.621"/>
+		<rect x="109.008" y="93.373" fill="none" width="198.934" height="20.91"/>
+		<text transform="matrix(0.9288 0 0 1 109.0078 99.814)"><tspan x="0" y="0" font-size="9">Encrypted Content Transfer Syntax</tspan><tspan x="0" y="10.8" font-size="9">Encrypted Content</tspan></text>
+		
+			<rect x="117.846" y="114.283" fill="#FFF200" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="317.158" height="146.18"/>
+		<rect x="124.573" y="116.979" fill="none" width="183.594" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 124.5732 123.4199)" font-size="9">Cryptographic Message Syntax (CMS) envelope</text>
+		<g>
+			
+				<rect x="134.513" y="129.403" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="300.491" height="30.78"/>
+			
+				<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="134.513" y1="144.794" x2="435.004" y2="144.794"/>
+		</g>
+		<rect x="144.985" y="133.565" fill="none" width="148.631" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 144.9849 140.0098)" font-size="9">CMS Attributes</text>
+		<rect x="144.985" y="147.899" fill="none" width="148.631" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 144.9849 154.3438)" font-size="9">CMS Attributes</text>
+		
+			<rect x="134.513" y="160.184" fill="#BCBEC0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="300.491" height="99.92"/>
+		<rect x="145.675" y="164.373" fill="none" width="165.257" height="11.428"/>
+		<text transform="matrix(0.9288 0 0 1 145.6748 170.8022)" font-size="9">Encrypted Content</text>
+		
+			<rect x="151.038" y="176.709" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="283.966" height="83.396"/>
+		<rect x="162.2" y="180.898" fill="none" width="165.257" height="11.428"/>
+		<text transform="matrix(0.9288 0 0 1 162.2002 187.3276)" font-size="9">Modified Attributes Sequence</text>
+		
+			<rect x="173.426" y="193.68" fill="#BCBEC0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="261.439" height="66.783"/>
+		
+			<rect x="191.918" y="210.393" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.947" height="50.07"/>
+		<rect x="178.207" y="197.661" fill="none" width="219.291" height="9.38"/>
+		<text transform="matrix(0.9288 0 0 1 178.207 204.749)" font-size="9.9207">Item 1 (of only 1) </text>
+		<rect x="191.918" y="210.031" fill="#FFFFFF" stroke="#010101" width="243.086" height="50.072"/>
+		<line fill="#FFFFFF" stroke="#010101" x1="191.918" y1="244.25" x2="435.004" y2="244.25"/>
+		<line fill="#FFFFFF" stroke="#010101" x1="191.918" y1="227.314" x2="435.004" y2="227.314"/>
+		<rect x="198.088" y="248.865" fill="none" width="57.891" height="9.381"/>
+		<text transform="matrix(0.9288 0 0 1 198.0884 255.9531)" font-size="9.9207">Attributes...</text>
+		<rect x="198.089" y="216.107" fill="none" width="57.89" height="9.379"/>
+		<text transform="matrix(0.9288 0 0 1 198.0889 223.1953)" font-size="9.9207">Attributes...</text>
+		<rect x="198.088" y="232.531" fill="none" width="57.891" height="9.381"/>
+		<text transform="matrix(0.9288 0 0 1 198.0884 239.6201)" font-size="9.9207">Attributes...</text>
+		<rect x="264.628" y="222.555" fill="#FFFFFF" width="146.085" height="29.334"/>
+		<rect x="275.487" y="232.531" fill="none" width="135.226" height="9.381"/>
+		<text transform="matrix(0.9288 0 0 1 275.4873 241.1084)" font-size="12">Attributes to be encrypted</text>
+		<g>
+			
+				<rect x="83.504" y="273.598" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="351.5" height="67.262"/>
+			<rect x="91.443" y="277.209" fill="none" width="198.934" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 91.4434 283.6289)" font-size="9">Item 2 (of n)</text>
+			
+				<rect x="101.068" y="288.758" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="333.936" height="52.102"/>
+			<rect x="109.008" y="292.646" fill="none" width="198.934" height="20.91"/>
+			<text transform="matrix(0.9288 0 0 1 109.0078 299.0762)"><tspan x="0" y="0" font-size="9">Encrypted Content Transfer Syntax</tspan><tspan x="0" y="10.8" font-size="9">Encrypted Content</tspan></text>
+			
+				<rect x="117.846" y="313.859" fill="#FFF200" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="317.158" height="27"/>
+			<rect x="124.573" y="316.254" fill="none" width="183.594" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 124.5732 322.6836)" font-size="9">Cryptographic Message Syntax (CMS) envelope</text>
+		</g>
+		<g>
+			
+				<rect x="83.504" y="370.359" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="351.5" height="67.262"/>
+			<rect x="91.443" y="373.971" fill="none" width="198.934" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 91.4434 380.3936)" font-size="9">Item n (of n)</text>
+			<rect x="91.443" y="354.471" fill="none" width="198.934" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 91.4434 360.8936)" font-size="9">...</text>
+			
+				<rect x="101.068" y="385.52" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="333.936" height="52.102"/>
+			<rect x="109.008" y="389.41" fill="none" width="198.934" height="20.91"/>
+			<text transform="matrix(0.9288 0 0 1 109.0078 395.8398)"><tspan x="0" y="0" font-size="9">Encrypted Content Transfer Syntax</tspan><tspan x="0" y="10.801" font-size="9">Encrypted Content</tspan></text>
+			
+				<rect x="117.846" y="410.621" fill="#FFF200" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="317.158" height="27"/>
+			<rect x="124.573" y="413.018" fill="none" width="183.594" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 124.5732 419.4473)" font-size="9">Cryptographic Message Syntax (CMS) envelope</text>
+		</g>
+	</g>
+</g>
+</svg>

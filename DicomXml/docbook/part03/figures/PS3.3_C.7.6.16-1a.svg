@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.16-1a.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="587px" viewBox="0 0 502 587" enable-background="new 0 0 502 587" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 1: Information Object Definitions
+   </desc>
+   <title>
+	Figure C.7.6.16-1a SOP Instance UID of Concatenation Source
+structure
+   </title>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="585"/>
+	<g>
+		<path fill="none" stroke="#0DB14B" stroke-width="2" d="M50.091,482.48c0-4.875,21.454-4.875,47.922-4.875
+			c26.47,0,47.927,0,47.927,4.875c0,4.873-21.457,4.873-47.927,4.873C71.545,487.354,50.091,487.354,50.091,482.48z"/>
+		<path fill="none" stroke="#0DB14B" stroke-width="2" d="M201.326,508.279c0-7.531,21.454-7.531,47.922-7.531
+			c26.474,0,47.931,0,47.931,7.531c0,7.529-21.457,7.529-47.931,7.529C222.78,515.809,201.326,515.809,201.326,508.279z"/>
+		<path fill="none" stroke="#0DB14B" stroke-width="2" d="M359.811,508.279c0-7.531,21.453-7.531,47.922-7.531
+			c26.473,0,47.93,0,47.93,7.531c0,7.529-21.457,7.529-47.93,7.529C381.264,515.809,359.811,515.809,359.811,508.279z"/>
+		<g>
+			
+				<polygon fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				42.223,39.775 153.808,39.775 153.808,288.354 161.008,295.354 146.607,303.854 153.808,310.104 153.808,467.777 42.223,467.777 
+				42.223,310.354 35.022,303.854 49.423,295.354 42.223,288.354 			"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="458.268" x2="153.808" y2="458.268"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="448.76" x2="153.808" y2="448.76"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="439.25" x2="153.808" y2="439.25"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="429.742" x2="153.808" y2="429.742"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="420.232" x2="153.808" y2="420.232"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="410.725" x2="153.808" y2="410.725"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="401.215" x2="153.808" y2="401.215"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="391.707" x2="153.808" y2="391.707"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="382.197" x2="153.808" y2="382.197"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="372.689" x2="153.808" y2="372.689"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="363.18" x2="153.808" y2="363.18"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="353.672" x2="153.808" y2="353.672"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="344.162" x2="153.808" y2="344.162"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="334.652" x2="153.808" y2="334.652"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="268.091" x2="153.808" y2="268.091"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="258.583" x2="153.808" y2="258.583"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="248.969" x2="153.808" y2="248.969"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="239.46" x2="153.808" y2="239.46"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="229.952" x2="153.808" y2="229.952"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="220.443" x2="153.808" y2="220.443"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="210.934" x2="153.808" y2="210.934"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="201.425" x2="153.808" y2="201.425"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="191.917" x2="153.808" y2="191.917"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="182.408" x2="153.808" y2="182.408"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="172.899" x2="153.808" y2="172.899"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="163.39" x2="153.808" y2="163.39"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="153.881" x2="153.808" y2="153.881"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="144.372" x2="153.808" y2="144.372"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="134.863" x2="153.808" y2="134.863"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="125.354" x2="153.808" y2="125.354"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="115.846" x2="153.808" y2="115.846"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="106.337" x2="153.808" y2="106.337"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="42.223" y1="96.828" x2="153.808" y2="96.828"/>
+			<rect x="58.5" y="98.077" fill="none" width="79.029" height="8.511"/>
+			<text transform="matrix(0.9288 0 0 1 82.4526 104.5205)" font-size="9">Frame 1</text>
+			<rect x="58.078" y="298.002" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 90.2739 306.5938)" font-size="12">. . .</text>
+			<rect x="58.896" y="458.787" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 82.4526 465.2295)" font-size="9">Frame n</text>
+			
+				<rect x="42.223" y="39.775" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="57.053"/>
+			<rect x="78.274" y="64.046" fill="none" width="39.482" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 84.3071 70.4888)" font-size="9">Header</text>
+		</g>
+		<rect x="57.779" y="16.291" fill="none" width="80.473" height="23.685"/>
+		<text transform="matrix(0.9288 0 0 1 69.3618 23.4478)"><tspan x="0" y="0" font-size="10">SOP Instance</tspan><tspan x="-7.515" y="12" font-size="10">not concatenated</tspan></text>
+		<rect x="214.364" y="16.29" fill="none" width="80.473" height="32.833"/>
+		<text transform="matrix(0.9288 0 0 1 216.397 23.4482)"><tspan x="0" y="0" font-size="10">SOP Instance split </tspan><tspan x="2.5" y="12" font-size="10">in SOP Instances </tspan><tspan x="-0.288" y="24" font-size="10">of concatenation A</tspan></text>
+		<rect x="370.949" y="16.289" fill="none" width="80.473" height="32.835"/>
+		<text transform="matrix(0.9288 0 0 1 372.9824 23.4473)"><tspan x="0" y="0" font-size="10">SOP Instance split </tspan><tspan x="2.5" y="12" font-size="10">in SOP Instances </tspan><tspan x="-0.288" y="24" font-size="10">of concatenation B</tspan></text>
+		<rect x="58.891" y="480.59" fill="none" width="78.249" height="6.621"/>
+		<text transform="matrix(0.9288 0 0 1 58.8911 484.8848)" font-size="6">SOP Instance UID = 1.2.3.4.5</text>
+		<rect x="205.935" y="480.59" fill="none" width="97.331" height="37.432"/>
+		<text transform="matrix(0.9288 0 0 1 205.9355 484.8848)"><tspan x="0" y="0" font-size="6">SOP Instance UID is different for each </tspan><tspan x="0" y="7.2" font-size="6">SOP Instance of the concatenation</tspan><tspan x="0" y="14.4" font-size="6">Concatenation UID = 1.2.10.11.12 </tspan><tspan x="0" y="21.601" font-size="6">SOP Instance UID of Concatenation </tspan><tspan x="0" y="28.8" font-size="6">Source = 1.2.3.4.5</tspan></text>
+		<rect x="363.064" y="480.588" fill="none" width="96.242" height="37.434"/>
+		<text transform="matrix(0.9288 0 0 1 363.0645 484.8828)"><tspan x="0" y="0" font-size="6">SOP Instance UID is different for each </tspan><tspan x="0" y="7.2" font-size="6">SOP Instance of the concatenation</tspan><tspan x="0" y="14.4" font-size="6">Concatenation UID = 1.9.13.14.15 </tspan><tspan x="0" y="21.601" font-size="6">SOP Instance UID of Concatenation </tspan><tspan x="0" y="28.8" font-size="6">Source = 1.2.3.4.5</tspan></text>
+		<g>
+			<path fill="none" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M256.78,80.896h-7.572l10.573,26.018l10.572-26.018h-7.572v-1.64c0-6.675-6.729-12.105-15-12.105h-81.974v6h81.974
+				c4.878,0,9,2.796,9,6.105C256.781,79.256,256.781,80.896,256.78,80.896z"/>
+		</g>
+		<g>
+			<path fill="none" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M418.775,80.896h-7.572l10.572,26.018l10.572-26.018h-7.572V66.655c0-6.675-6.729-12.105-15-12.105H165.808v6h243.968
+				c4.879,0,9,2.796,9,6.105V80.896z"/>
+		</g>
+		<g>
+			
+				<rect x="198.808" y="124.649" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="101.843"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="216.833" x2="310.393" y2="216.833"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="207.323" x2="310.393" y2="207.323"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="197.963" x2="310.393" y2="197.963"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="178.797" x2="310.393" y2="178.797"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="169.288" x2="310.393" y2="169.288"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="159.78" x2="310.393" y2="159.78"/>
+			<rect x="215.085" y="161.828" fill="none" width="79.03" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 239.0376 168.269)" font-size="9">Frame 1</text>
+			<rect x="215.481" y="218.22" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 240.4331 224.6621)" font-size="9">Frame j</text>
+			<rect x="198.808" y="114.806" fill="none" width="61.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 200.2744 121.248)" font-size="9">SOP Instance 1</text>
+			<rect x="214.663" y="180.394" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 246.8589 188.9849)" font-size="12">. . .</text>
+			
+				<rect x="198.808" y="124.649" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="35.131"/>
+			<rect x="234.859" y="137.959" fill="none" width="39.482" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 240.8921 144.4038)" font-size="9">Header</text>
+			
+				<rect x="198.808" y="245.173" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="101.844"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="337.357" x2="310.393" y2="337.357"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="327.848" x2="310.393" y2="327.848"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="318.488" x2="310.393" y2="318.488"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="299.322" x2="310.393" y2="299.322"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="289.812" x2="310.393" y2="289.812"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="280.304" x2="310.393" y2="280.304"/>
+			<rect x="215.085" y="282.351" fill="none" width="79.03" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 235.6685 288.7935)" font-size="9">Frame j+1</text>
+			<rect x="215.481" y="338.744" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 239.272 345.1865)" font-size="9">Frame k</text>
+			<rect x="198.808" y="235.33" fill="none" width="61.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 200.2744 241.7725)" font-size="9">SOP Instance 2</text>
+			<rect x="214.663" y="300.918" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 246.8589 309.5088)" font-size="12">. . .</text>
+			
+				<rect x="198.808" y="245.173" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="35.131"/>
+			<rect x="234.859" y="258.483" fill="none" width="39.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 240.8916 264.9277)" font-size="9">Header</text>
+			
+				<rect x="198.808" y="365.697" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="101.844"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="457.881" x2="310.393" y2="457.881"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="448.371" x2="310.393" y2="448.371"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="439.012" x2="310.393" y2="439.012"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="419.846" x2="310.393" y2="419.846"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="410.336" x2="310.393" y2="410.336"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="198.808" y1="400.828" x2="310.393" y2="400.828"/>
+			<rect x="215.085" y="402.875" fill="none" width="79.03" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 234.5073 409.3174)" font-size="9">Frame k+1</text>
+			<rect x="215.481" y="459.268" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 239.0376 465.7109)" font-size="9">Frame n</text>
+			<rect x="198.808" y="355.854" fill="none" width="61.483" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 200.2744 362.2969)" font-size="9">SOP Instance 3</text>
+			<rect x="214.663" y="421.441" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 246.8589 430.0332)" font-size="12">. . .</text>
+			
+				<rect x="198.808" y="365.697" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="35.131"/>
+			<rect x="234.859" y="379.008" fill="none" width="39.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 240.8916 385.4521)" font-size="9">Header</text>
+		</g>
+		<g>
+			
+				<rect x="355.393" y="211.213" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.586" height="166.277"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="367.98" x2="466.979" y2="367.98"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="358.475" x2="466.979" y2="358.475"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="348.965" x2="466.979" y2="348.965"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="339.457" x2="466.979" y2="339.457"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="329.947" x2="466.979" y2="329.947"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="301.422" x2="466.979" y2="301.422"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="291.911" x2="466.979" y2="291.911"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="282.403" x2="466.979" y2="282.403"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="272.893" x2="466.979" y2="272.893"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="261.373" x2="466.979" y2="261.373"/>
+			<rect x="371.67" y="263.147" fill="none" width="79.029" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 397.0186 269.5884)" font-size="9">Frame i</text>
+			<rect x="372.066" y="368.5" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 394.4668 374.9434)" font-size="9">Frame m</text>
+			<rect x="371.248" y="308.502" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 403.4443 317.0928)" font-size="12">. . .</text>
+			<rect x="355.394" y="201.662" fill="none" width="61.482" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 356.8604 208.1045)" font-size="9">SOP Instance 2</text>
+			
+				<rect x="355.393" y="211.212" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.585" height="50.341"/>
+			<rect x="391.443" y="232.128" fill="none" width="39.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 397.4766 238.5723)" font-size="9">Header</text>
+			
+				<rect x="355.393" y="400.828" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.586" height="66.713"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="457.881" x2="466.979" y2="457.881"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="439.012" x2="466.979" y2="439.012"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="419.846" x2="466.979" y2="419.846"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="429.207" x2="466.979" y2="429.207"/>
+			<rect x="371.671" y="421.441" fill="none" width="79.03" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 389.7012 427.8838)" font-size="9">Frame m+1</text>
+			<rect x="372.066" y="459.268" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 395.623 465.7109)" font-size="9">Frame n</text>
+			<rect x="355.393" y="391.012" fill="none" width="61.483" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 356.8594 397.457)" font-size="9">SOP Instance 3</text>
+			<rect x="371.248" y="441.713" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 403.4443 450.3047)" font-size="12">. . .</text>
+			
+				<rect x="355.393" y="400.828" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.586" height="19.018"/>
+			<rect x="391.444" y="405.416" fill="none" width="39.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 397.4902 411.8613)" font-size="9">Header</text>
+			<rect x="355.393" y="114.806" fill="none" width="61.483" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 356.8594 121.249)" font-size="9">SOP Instance 1</text>
+			
+				<rect x="355.393" y="124.649" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.586" height="66.713"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="181.702" x2="466.979" y2="181.702"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="162.833" x2="466.979" y2="162.833"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="143.667" x2="466.979" y2="143.667"/>
+			
+				<line fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="355.393" y1="153.028" x2="466.979" y2="153.028"/>
+			<rect x="371.671" y="145.262" fill="none" width="79.03" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 395.623 151.7056)" font-size="9">Frame 1</text>
+			<rect x="372.066" y="183.088" fill="none" width="78.238" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 395.623 189.5322)" font-size="9">Frame h</text>
+			<rect x="371.248" y="165.534" fill="none" width="79.875" height="11.703"/>
+			<text transform="matrix(0.9288 0 0 1 403.4443 174.126)" font-size="12">. . .</text>
+			
+				<rect x="355.393" y="124.649" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="111.586" height="19.018"/>
+			<rect x="391.444" y="129.238" fill="none" width="39.483" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 397.4902 135.6821)" font-size="9">Header</text>
+		</g>
+		<rect x="91.485" y="540.711" fill="none" width="107.861" height="30"/>
+		<text transform="matrix(0.9288 0 0 1 91.4839 546.4404)"><tspan x="0" y="0" font-size="8">SOP Instance UID of</tspan><tspan x="0" y="9.6" font-size="8">Concatenation Source does not</tspan><tspan x="0" y="19.2" font-size="8">change across Concatenations</tspan></text>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="165.863" y1="542.152" x2="141.938" y2="497.071"/>
+				<g>
+					<polygon fill="#005695" points="144.735,497.382 138.616,490.811 140.629,499.561 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="165.863" y1="542.152" x2="191.5" y2="517.156"/>
+				<g>
+					<polygon fill="#005695" points="191.988,519.928 196.575,512.209 188.743,516.6 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="165.863" y1="542.152" x2="347.043" y2="514.493"/>
+				<g>
+					<polygon fill="#005695" points="345.826,517.03 354.049,513.424 345.125,512.435 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

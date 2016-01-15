@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_AA.3-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="227px" viewBox="0 0 502 227" enable-background="new 0 0 502 227" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="225"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="246.383" y1="211.874" x2="246.383" y2="39.16"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="339.259" y1="211.874" x2="339.259" y2="39.16"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="432.138" y1="211.874" x2="432.138" y2="39.16"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="69.862" y1="211.874" x2="69.862" y2="39.16"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="74.62" y1="69.052" x2="231.138" y2="69.052"/>
+				<path fill="#005695" d="M233.5,68.027c-1.653-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.374-0.9,4.415-1.031C236.874,68.927,235.269,68.561,233.5,68.027z"/>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 85.8735 65.9492)"><tspan x="0" y="0" font-size="8">1. Set-up acquisition</tspan><tspan x="0" y="49.2" font-size="8">2. Perform Acquisition</tspan><tspan x="0" y="73.8" font-size="8">3. Enter Dose Information</tspan><tspan x="0" y="98.4" font-size="8">4. Create Dose Report</tspan><tspan x="0" y="123" font-size="8">5. Send Dose Report</tspan></text>
+		
+			<rect x="65.618" y="58.306" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="20.713"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="75.923" y1="142.001" x2="327.448" y2="142.001"/>
+				<path fill="#005695" d="M329.811,140.977c-1.654-0.5-2.729-0.96-4.055-1.492v5.045c0.475-0.227,2.4-0.993,4.055-1.492
+					c1.77-0.535,3.373-0.9,4.414-1.031C333.184,141.876,331.58,141.51,329.811,140.977z"/>
+			</g>
+		</g>
+		
+			<rect x="65.62" y="132.999" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="18.002"/>
+		
+			<rect x="334.757" y="132.198" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.004" height="47.957"/>
+		
+			<rect x="242.383" y="59.333" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="18"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="420.718" y1="192.409" x2="343.763" y2="192.409"/>
+				<path fill="#005695" d="M423.08,191.385c-1.654-0.5-2.729-0.96-4.055-1.492v5.045c0.475-0.227,2.4-0.993,4.055-1.492
+					c1.77-0.535,3.373-0.9,4.414-1.031C426.453,192.284,424.85,191.918,423.08,191.385z"/>
+			</g>
+		</g>
+		
+			<rect x="334.759" y="183.409" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.004" height="18"/>
+		
+			<rect x="427.81" y="183.409" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.004" height="18"/>
+		
+			<rect x="242.383" y="85.761" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="37.74"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="84.658" y1="166.743" x2="334.757" y2="166.743"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="84.658" y1="192.409" x2="334.757" y2="192.409"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="84.658" y1="118.077" x2="238.107" y2="118.077"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="240.138,118.077 222.138,118.077 
+					222.138,90.599 235.361,90.599 				"/>
+				<path fill="#005695" d="M237.723,89.574c-1.653-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.374-0.9,4.415-1.031C241.097,90.474,239.493,90.108,237.723,89.574z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="343.763,166.739 361.763,166.739 
+					361.763,141.999 348.538,141.999 				"/>
+				<path fill="#005695" d="M346.177,143.023c1.653,0.5,2.728,0.96,4.054,1.492v-5.045c-0.475,0.227-2.4,0.993-4.054,1.492
+					c-1.77,0.535-3.374,0.9-4.415,1.031C342.803,142.124,344.407,142.49,346.177,143.023z"/>
+			</g>
+		</g>
+		
+			<rect x="210.383" y="15.126" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="27"/>
+		<text transform="matrix(1 0 0 1 224.6191 25.7217)"><tspan x="0" y="0" font-size="9">Acquisition</tspan><tspan x="5.005" y="10.8" font-size="9">Modality</tspan></text>
+		
+			<rect x="303.257" y="15.126" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.006" height="27"/>
+		<text transform="matrix(1 0 0 1 313.9971 25.7217)"><tspan x="0" y="0" font-size="9">Dose Report</tspan><tspan x="11.252" y="10.8" font-size="9">Station</tspan></text>
+		
+			<rect x="396.138" y="15.126" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="27"/>
+		<text transform="matrix(1 0 0 1 410.1191 25.7217)"><tspan x="0" y="0" font-size="9">Long-Term</tspan><tspan x="6.246" y="10.8" font-size="9">Storage</tspan></text>
+		
+			<rect x="33.862" y="15.126" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="27"/>
+		<text transform="matrix(1 0 0 1 60.3496 31.1221)" font-size="9">User</text>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.21.3-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="392px" viewBox="0 0 502 392" enable-background="new 0 0 502 392" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="390"/>
+	<g>
+		<g>
+			<rect x="94.5" y="30.75" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="313" height="131.5"/>
+			<rect x="106.466" y="100.75" fill="#B2CEE7" stroke="#B2CEE7" stroke-miterlimit="1" width="130.604" height="54"/>
+			<rect x="381.966" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="164.466" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="178.966" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="193.466" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="207.966" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="222.466" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="237.07" y="62.074" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="251.465" y="62.074" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="265.965" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="280.465" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="294.965" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="309.465" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="106.466" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="120.966" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="135.466" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="149.966" y="62.074" fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 94.5 23.5649)" font-size="10">2D Projection SOP Instance A</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 108.9854 88.9741)" font-size="8">M1...</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 142.2266 49.2319)" font-size="9">Mask Acquisition</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 128.7808 110.4878)"><tspan x="0" y="0" font-size="10">Acquisition context 1</tspan><tspan x="0" y="14.8" font-size="9">- Frames M1 to M2</tspan><tspan x="0" y="27.6" font-size="9">- Rotation of 180º</tspan><tspan x="0" y="40.4" font-size="9">- Without contrast media</tspan></text>
+			</g>
+			<rect x="265.965" y="100.75" fill="#6799C8" width="130.605" height="54"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 290.8457 110.4878)"><tspan x="0" y="0" font-size="10">Acquisition context 2</tspan><tspan x="0" y="14.8" font-size="9">- Frames C1 to C2</tspan><tspan x="0" y="27.6" font-size="9">- Rotation of 180º</tspan><tspan x="0" y="40.4" font-size="9">- With contrast media</tspan></text>
+			</g>
+			<rect x="323.965" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="338.465" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.401" height="14.401"/>
+			<rect x="352.966" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<rect x="367.466" y="62.074" fill="#6799C8" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.401"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 219.8286 88.9741)" font-size="8">...M2</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 268.876 88.9741)" font-size="8">C1...</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 379.7188 88.9741)" font-size="8">...C2</text>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="111.931" y1="51.881" x2="230.524" y2="51.881"/>
+					<g>
+						<polygon fill="#010101" points="113.12,53.624 106.615,51.881 113.12,50.138 						"/>
+					</g>
+					<g>
+						<polygon fill="#010101" points="229.335,53.624 235.84,51.881 229.335,50.138 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 295.3926 49.2319)" font-size="9">Contrast Acquisition</text>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="271.389" y1="51.881" x2="390.624" y2="51.881"/>
+					<g>
+						<polygon fill="#010101" points="272.578,53.624 266.073,51.881 272.578,50.138 						"/>
+					</g>
+					<g>
+						<polygon fill="#010101" points="389.435,53.624 395.939,51.881 389.435,50.138 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<rect x="95.479" y="208.299" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="313" height="168.999"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="127.586,239.726 127.586,300.698 107.443,313.706 107.443,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="141.784,239.726 141.784,300.698 121.642,313.704 121.642,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="155.98,239.726 155.982,300.7 135.84,313.706 135.84,252.735 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="170.18,239.726 170.18,300.698 150.037,313.706 150.037,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="184.378,239.726 184.378,300.698 164.235,313.706 164.235,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="198.576,239.726 198.576,300.698 178.434,313.706 178.434,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="212.773,239.726 212.773,300.698 192.631,313.704 192.631,252.733 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="226.972,239.726 226.972,300.7 206.829,313.706 206.829,252.735 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" points="241.169,239.726 241.169,300.698 221.027,313.706 221.027,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="283.763,239.726 283.763,300.698 263.62,313.704 
+				263.62,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="297.959,239.726 297.96,300.7 277.817,313.706 
+				277.817,252.735 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="312.158,239.726 312.158,300.698 292.016,313.706 
+				292.016,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="326.356,239.726 326.356,300.698 306.214,313.706 
+				306.214,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="340.554,239.726 340.554,300.698 320.411,313.706 
+				320.411,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="354.752,239.726 354.752,300.698 334.609,313.704 
+				334.609,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="368.948,239.726 368.95,300.7 348.808,313.706 
+				348.808,252.735 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="383.146,239.726 383.146,300.698 363.005,313.706 
+				363.005,252.733 			"/>
+			<polygon fill="#6799C8" stroke="#010101" stroke-miterlimit="1" points="397.345,239.726 397.345,300.698 377.202,313.706 
+				377.202,252.733 			"/>
+			<rect x="107.443" y="339.497" fill="#B2CEE7" stroke="#B2CEE7" stroke-miterlimit="1" width="130.605" height="29.498"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 93.5225 201.1133)" font-size="10">X-Ray 3D Image SOP Instance</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 148.0591 226.7793)" font-size="9">No SUB Mask</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 123.582 349.2363)"><tspan x="0" y="0" font-size="10">Reconstruction 1</tspan><tspan x="0" y="14.799" font-size="9">- From Acquisition context 1</tspan></text>
+			</g>
+			<rect x="266.943" y="339.497" fill="#6799C8" width="130.605" height="29.498"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 270.0684 349.2363)"><tspan x="0" y="0" font-size="10">Reconstruction 2</tspan><tspan x="0" y="14.799" font-size="9">- From Acquisition contexts 1 and 2</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 107.4438 323.0215)" font-size="8">1...</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 221.0273 323.0215)" font-size="8">...N</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 263.6211 323.0215)" font-size="8">N+1...</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 377.2021 323.0215)" font-size="8">...N+k</text>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="113.014" y1="229.429" x2="231.608" y2="229.429"/>
+					<g>
+						<polygon fill="#010101" points="114.203,231.172 107.698,229.429 114.203,227.686 						"/>
+					</g>
+					<g>
+						<polygon fill="#010101" points="230.419,231.172 236.924,229.429 230.419,227.686 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 323.4922 226.7793)" font-size="9">SUB</text>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="272.478" y1="229.429" x2="391.713" y2="229.429"/>
+					<g>
+						<polygon fill="#010101" points="273.667,231.172 267.162,229.429 273.667,227.686 						"/>
+					</g>
+					<g>
+						<polygon fill="#010101" points="390.523,231.172 397.028,229.429 390.523,227.686 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

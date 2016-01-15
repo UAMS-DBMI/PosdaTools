@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="242px" viewBox="0 0 502 242" enable-background="new 0 0 502 242" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="240"/>
+	<g>
+		
+			<rect x="224.269" y="17.669" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="252" height="126"/>
+		
+			<path fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M476.269,59.689"/>
+		
+			<path fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M224.269,59.689"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 230.2773 27.2563)"><tspan x="0" y="0" font-size="10">Image Matrix</tspan><tspan x="0" y="11" font-size="10">• Columns: 1024</tspan><tspan x="0" y="22" font-size="10">• Rows: 512</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 25.7324 29.7935)"><tspan x="0" y="0" font-size="10">Upper Horizontal Edge (0018, 1606)</tspan><tspan x="56.418" y="10.008" font-size="10">Value: 256</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 25.7324 61.729)"><tspan x="0" y="0" font-size="10">Lower Horizontal Edge (0018, 1608)</tspan><tspan x="56.418" y="10.008" font-size="10">Value: 768</tspan></text>
+		</g>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="198.903" y1="49.188" x2="286.617" y2="49.188"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="198.903" y1="112.169" x2="286.617" y2="112.169"/>
+		<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="171.944" y1="33.03" x2="202.147" y2="33.03"/>
+		<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="171.944" y1="64.952" x2="212.229" y2="64.952"/>
+		<rect x="287.27" y="49.169" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="125.998" height="63"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 293.0293 60.4067)"><tspan x="0" y="0" font-size="10">Display Area</tspan><tspan x="0" y="11" font-size="10">• Columns: 512</tspan><tspan x="0" y="22" font-size="10">• Rows: 256</tspan></text>
+		</g>
+		<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="254.617" y1="177.669" x2="254.617" y2="161.638"/>
+		<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="359.457" y1="199.418" x2="359.457" y2="154.371"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="224.269" y1="163.457" x2="224.269" y2="143.669"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="287.269" y1="163.457" x2="287.269" y2="112.762"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="413.269" y1="163.457" x2="413.269" y2="112.762"/>
+		<g>
+			<line fill="#4F8ABE" x1="224.863" y1="154.183" x2="413.268" y2="154.183"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="224.863" y1="154.183" x2="406.18" y2="154.183"/>
+				<g>
+					<polygon fill="#005695" points="404.595,156.507 413.268,154.183 404.595,151.858 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="224.863" y1="161.638" x2="287.269" y2="161.638"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="224.863" y1="161.638" x2="280.181" y2="161.638"/>
+				<g>
+					<polygon fill="#005695" points="278.596,163.962 287.269,161.638 278.596,159.313 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="202.147" y1="17.448" x2="202.147" y2="49.169"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="202.147" y1="17.448" x2="202.147" y2="42.082"/>
+				<g>
+					<polygon fill="#005695" points="199.823,40.496 202.147,49.169 204.472,40.496 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="212" y1="17.448" x2="212" y2="112.169"/>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="212" y1="17.448" x2="212" y2="105.082"/>
+				<g>
+					<polygon fill="#005695" points="209.676,103.496 212,112.169 214.324,103.496 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="12,6" x1="198.902" y1="17.832" x2="224.269" y2="17.832"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 193.605 189.7363)"><tspan x="0" y="0" font-size="10">Left Vertical Edge (0018, 1602)</tspan><tspan x="45.303" y="10.009" font-size="10">Value: 256</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 295.5078 211.2363)"><tspan x="0" y="0" font-size="10">Right Vertical Edge (0018, 1604)</tspan><tspan x="48.634" y="10.009" font-size="10">Value: 768</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

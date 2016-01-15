@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_CC.1-4.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:21 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="192px" viewBox="0 0 502 192" enable-background="new 0 0 502 192" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="190"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="388.782" y1="176.382" x2="388.782" y2="38.714"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="91.001" y1="176.681" x2="91.001" y2="39.011"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M95.178,54.885h-9v112.269c3.149,0,5.968,0,9,0V54.885z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M393.084,54.885h-9v112.269c3.149,0,5.968,0,9,0V54.885z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M331.807,15.319H446v27H331.807V15.319z"/>
+		<text transform="matrix(1 0 0 1 373.7793 25.9131)"><tspan x="0" y="0" font-size="9">Node B</tspan><tspan x="-38.762" y="10.8" font-size="9">Committed Storage Device</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M56.001,15.319H126v27H56.001V15.319z"/>
+		<text transform="matrix(1 0 0 1 75.9951 25.9131)"><tspan x="0" y="0" font-size="9">Node A</tspan><tspan x="-16.005" y="10.8" font-size="9">Imaging Device</tspan></text>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="95.132" y1="67.886" x2="376.302" y2="67.886"/>
+										<path fill="#005695" d="M378.663,66.86c-1.652-0.498-2.728-0.959-4.054-1.49v5.043c0.475-0.225,2.401-0.992,4.054-1.49
+											c1.77-0.535,3.375-0.9,4.415-1.031C382.038,67.761,380.433,67.396,378.663,66.86z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="95.132" y1="112.427" x2="376.301" y2="112.427"/>
+										<path fill="#005695" d="M378.662,111.403c-1.652-0.5-2.728-0.961-4.054-1.492v5.045c0.475-0.227,2.401-0.994,4.054-1.492
+											c1.77-0.535,3.375-0.9,4.415-1.031C382.037,112.302,380.432,111.937,378.662,111.403z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="383.077" y1="156.149" x2="101.908" y2="156.149"/>
+										<path fill="#005695" d="M99.547,155.126c1.652-0.5,2.728-0.961,4.054-1.492v5.045c-0.475-0.227-2.401-0.994-4.054-1.492
+											c-1.77-0.535-3.375-0.9-4.415-1.031C96.172,156.024,97.777,155.659,99.547,155.126z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<rect x="109.154" y="59.149" fill="none" width="190.394" height="100.167"/>
+		<text transform="matrix(1 0 0 1 109.1543 64.8633)"><tspan x="0" y="0" font-size="8">1. Storage of images, overlays, etc. on Storage </tspan><tspan x="10" y="12" font-size="8">Media by off-line means</tspan><tspan x="0" y="44" font-size="8">2. N-ACTION (request storage commitment) including </tspan><tspan x="10" y="56" font-size="8">Storage Media file-set ID/UID</tspan><tspan x="0" y="88" font-size="8">(3) N-EVENT-REPORT (response status)</tspan></text>
+	</g>
+</g>
+</svg>

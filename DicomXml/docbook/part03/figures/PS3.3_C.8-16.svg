@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8-16.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="332px" viewBox="0 0 502 332" enable-background="new 0 0 502 332" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="330"/>
+<g>
+	<rect x="89.002" y="28.888" fill="#BCBEC0" stroke="#000000" width="323.997" height="288"/>
+	<text transform="matrix(1 0 0 1 253.9131 51.0942)" fill="#0DB14B" font-size="14">Y</text>
+	<text transform="matrix(1 0 0 1 366.2324 286.6172)" fill="#ED1C24" font-size="14">X</text>
+	<g>
+		<text transform="matrix(0.963 0 0 1 149.9785 285.5371)" font-size="10.2494">Origin</text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 132.4165 246.5156)" font-size="10.2494">Specimen</text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 126.3872 206.041)"><tspan x="0" y="0" font-size="10.2494">Glass Slide</tspan><tspan x="7.967" y="12.299" font-size="10.2494">Substrate</tspan></text>
+	</g>
+	<rect x="259.651" y="84.688" fill="#E6E7E8" stroke="#000000" width="72" height="197.999"/>
+	<rect x="264.151" y="90.688" fill="#B2CEE7" stroke="#000000" width="63" height="63"/>
+	<rect x="277.651" y="196.987" fill="#005695" stroke="#000000" width="36" height="54"/>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="258.582" y1="282.687" x2="350.978" y2="282.687"/>
+			<g>
+				<polygon fill="#ED1C24" points="348.6,286.173 361.608,282.687 348.6,279.2 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#0DB14B" stroke-width="2" stroke-linecap="round" x1="258.582" y1="282.687" x2="258.582" y2="68.713"/>
+			<g>
+				<polygon fill="#0DB14B" points="262.068,71.091 258.582,58.082 255.096,71.091 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 283.5762 124.062)" font-size="10.2494">Label</text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 273.7061 293.3945)"><tspan x="0" y="0" font-size="10.2494">Specimen</tspan><tspan x="10.82" y="12.3" font-size="10.2494">Edge</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 283.5762 68.7285)"><tspan x="0" y="0" font-size="10.2494">Label</tspan><tspan x="0.571" y="12.299" font-size="10.2494">Edge</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 89.002 24.1953)" font-size="10.2494">Microscope Stage</text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 336.2422 177.3945)"><tspan x="0" y="0" font-size="10.2494">Right</tspan><tspan x="0" y="12.3" font-size="10.2494">Edge</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.963 0 0 1 231.709 177.3945)"><tspan x="0" y="0" font-size="10.2494">Left</tspan><tspan x="0" y="12.3" font-size="10.2494">Edge</tspan></text>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="2" stroke-miterlimit="1" x1="183.652" y1="243.665" x2="267.021" y2="243.665"/>
+			<g>
+				<polygon fill="#003468" points="264.643,247.151 277.651,243.665 264.643,240.179 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="2" stroke-miterlimit="1" x1="183.652" y1="282.687" x2="248.955" y2="282.687"/>
+			<g>
+				<polygon fill="#003468" points="246.577,286.173 259.586,282.687 246.577,279.2 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line fill="none" stroke="#003468" stroke-width="2" stroke-miterlimit="1" x1="183.652" y1="209.34" x2="258.706" y2="209.34"/>
+			<g>
+				<polygon fill="#003468" points="256.328,212.826 269.337,209.34 256.328,205.854 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

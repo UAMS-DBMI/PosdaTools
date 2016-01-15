@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_N.2-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="67px" viewBox="0 0 502 67" enable-background="new 0 0 502 67" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="65"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="335.682" y1="33.489" x2="347.812" y2="33.489"/>
+				<g>
+					<polygon fill="#005695" points="346.228,35.813 354.9,33.489 346.228,31.165 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="244.461" y1="33.489" x2="256.594" y2="33.489"/>
+				<g>
+					<polygon fill="#005695" points="255.009,35.813 263.682,33.489 255.009,31.165 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="171.241" y1="33.489" x2="183.374" y2="33.489"/>
+				<g>
+					<polygon fill="#005695" points="181.788,35.813 190.461,33.489 181.788,31.165 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="78.298" y1="33.489" x2="92.154" y2="33.489"/>
+				<g>
+					<polygon fill="#005695" points="90.568,35.813 99.241,33.489 90.568,31.165 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="426.9" y1="33.489" x2="437.381" y2="33.489"/>
+				<g>
+					<polygon fill="#005695" points="435.796,35.813 444.469,33.489 435.796,31.165 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="99.241" y="15.5" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 120.7324 29.5718)"><tspan x="0" y="0"  font-size="9">Shutter</tspan><tspan x="-15.752" y="10.799"  font-size="9">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 37.6406 25.208)"><tspan x="0" y="0"  font-size="9">Device</tspan><tspan x="-11.27" y="10.8"  font-size="9">Independent</tspan><tspan x="-0.004" y="21.601"  font-size="9">Values</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 446.1201 36.0078)"  font-size="9">Display</text>
+		</g>
+		
+			<rect x="190.461" y="15.5" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 204.958 25.5054)"><tspan x="0" y="0"  font-size="9">Image</tspan><tspan x="-3.751" y="10.799"  font-size="9">Relative</tspan><tspan x="-9.011" y="21.6"  font-size="9">Annotation</tspan></text>
+		</g>
+		
+			<rect x="263.682" y="15.5" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 285.9219 29.5718)"><tspan x="0" y="0"  font-size="9">Spatial</tspan><tspan x="-16.502" y="10.799"  font-size="9">Transformation</tspan></text>
+		</g>
+		
+			<rect x="354.9" y="15.5" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 359.1348 25.5054)"><tspan x="0" y="0"  font-size="9">Displayed Area </tspan><tspan x="15.508" y="10.799"  font-size="9">Relative</tspan><tspan x="10.248" y="21.6"  font-size="9">Annotation</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_U.1.8-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:44 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="102px" viewBox="0 0 502 102" enable-background="new 0 0 502 102" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="100"/>
+<text transform="matrix(1 0 0 1 143.6011 58.0361)"><tspan x="0" y="0" fill="#ED1C24"  font-size="24">P</tspan><tspan x="12.17" y="0" fill="#ED1C24"  font-size="24">ending final a</tspan><tspan x="148.271" y="0" fill="#ED1C24"  font-size="24">r</tspan><tspan x="156.694" y="0" fill="#ED1C24"  font-size="24">t</tspan><tspan x="164.731" y="0" fill="#ED1C24"  font-size="24">w</tspan><tspan x="182.185" y="0" fill="#ED1C24"  font-size="24">o</tspan><tspan x="195.36" y="0" fill="#ED1C24"  font-size="24">r</tspan><tspan x="203.302" y="0" fill="#ED1C24"  font-size="24">k</tspan></text>
+</svg>

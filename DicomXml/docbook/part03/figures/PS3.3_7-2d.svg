@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_7-2d.svg,v $ -->
+<!-- $Date: 2014/05/09 13:00:48 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="162px" viewBox="0 0 502 162" enable-background="new 0 0 502 162" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="160"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="197.019" y1="43.451" x2="197.019" y2="58.025"/>
+				<g>
+					<polygon fill="#005695" points="194.694,56.439 197.019,65.112 199.343,56.439 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="238.223,110.818 238.223,94.883 
+					197.019,94.883 197.019,82.883 				"/>
+				<g>
+					<polygon fill="#005695" points="240.547,109.233 238.223,117.906 235.898,109.233 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="304.869" y1="43.451" x2="304.869" y2="58.025"/>
+				<g>
+					<polygon fill="#005695" points="302.545,56.439 304.869,65.112 307.193,56.439 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="263.721,110.818 263.721,94.883 
+					304.925,94.883 304.925,82.883 				"/>
+				<g>
+					<polygon fill="#005695" points="266.045,109.233 263.721,117.906 261.396,109.233 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	
+		<rect x="147.63" y="14.755" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.696"/>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		152.02,73.742 196.953,64.88 242.02,73.869 242.02,73.891 196.953,82.88 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 175.7578 76.3765)" font-size="9">references</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 149.7808 26.9771)"><tspan x="0" y="0" font-size="12">Implant Assembly</tspan><tspan x="10.005" y="11.733" font-size="12">Template IOD</tspan></text>
+	</g>
+	
+		<rect x="255.37" y="14.755" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.696"/>
+	<g>
+		<text transform="matrix(1 0 0 1 258.5137 26.9771)"><tspan x="0" y="0" font-size="12">Implant Template</tspan><tspan x="17.344" y="11.733" font-size="12">Group IOD</tspan></text>
+	</g>
+	
+		<rect x="201.095" y="118.55" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.695"/>
+	<g>
+		<text transform="matrix(1 0 0 1 208.2368 130.7744)"><tspan x="0" y="0" font-size="12">Generic Implant</tspan><tspan x="5.007" y="11.733" font-size="12">Template IOD</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 214.833 65.4546)" font-size="9">0-n</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 218.1143 87.459)" font-size="9">1-n</text>
+	</g>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		259.87,73.742 304.804,64.88 349.87,73.869 349.87,73.891 304.804,82.88 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 283.6084 76.3765)" font-size="9">references</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 322.6836 65.4546)" font-size="9">0-n</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 325.9648 87.459)" font-size="9">1-n</text>
+	</g>
+</g>
+</svg>

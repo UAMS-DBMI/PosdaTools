@@ -1,21 +1,25 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownload.pl,v $ #$Date: 2016/01/13 13:59:30 $
-#$Revision: 1.3 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownload.pl,v $ #$Date: 2016/01/15 17:00:39 $
+#$Revision: 1.4 $
 #
 use strict;
 use DBI;
-my $usage = "GetCountsReportForDownload.pl <db> <collection> <site>\n";
+my $usage = "GetCountsReportForDwnload.pl <db> <collection> <site>\n";
 my $dbh = DBI->connect("DBI:Pg:database=$ARGV[0]", "", "");
 my $q = <<EOF;
 select
   distinct 
-    patient_id, '' as image_type, modality, study_date, study_description,
+    patient_id, image_type, modality, study_date, study_description,
     series_description, study_instance_uid, series_instance_uid, 
     manufacturer, manuf_model_name, software_versions,
     count(*) as num_files
 from
-  ctp_file natural join file_patient natural join file_series natural join 
-  file_study natural join file_equipment file_image
+  ctp_file join file_patient using(file_id) 
+  join file_series using(file_id)
+  join file_study using(file_id)
+  join file_equipment using(file_id)
+  left join file_image using(file_id)
+  join image using (image_id)
 where 
   project_name = ? and site_name = ? and visibility is null
 group by
@@ -41,12 +45,8 @@ while(my $h = $qh->fetchrow_hashref){
     $in_current_study = 0;
   }
   $in_current_study += $h->{num_files};
-#  my @foo = split(/\\/, $h->{image_type});
-#  my $image_type = $foo[0];
-  my $image_type = "<not fetched>";
-  for my $i (keys %$h){
-    unless(defined $h->{$i}){ $h->{$i} = '<undefined>' }
-  }
+  my @foo = split(/\\/, $h->{image_type});
+  my $image_type = $foo[0];
   print 
     "\"$h->{patient_id}\"," .
     "\"$image_type\"," .

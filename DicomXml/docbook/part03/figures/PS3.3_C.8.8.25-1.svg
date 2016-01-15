@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.8.25-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="322px" viewBox="0 0 502 322" enable-background="new 0 0 502 322" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="320"/>
+	<g>
+		<rect x="77.631" y="214.808" fill="none" width="59.973" height="21.959"/>
+		<text transform="matrix(0.9288 0 0 1 77.6172 221.9541)"><tspan x="0" y="0" font-size="10">Virtual Source</tspan><tspan x="0" y="12" font-size="10">Axis Distance</tspan></text>
+		<rect x="34.522" y="252.931" fill="none" width="103.082" height="21.334"/>
+		<text transform="matrix(0.9288 0 0 1 38.5557 260.0742)"><tspan x="0" y="0" font-size="10">Isocenter to Block Tray </tspan><tspan x="31.678" y="12" font-size="10">Distance</tspan></text>
+		<rect x="19.854" y="284.427" fill="none" width="117.75" height="21.334"/>
+		<text transform="matrix(0.9288 0 0 1 25.2803 291.5742)"><tspan x="0" y="0" font-size="10">Isocenter to Compensator </tspan><tspan x="38.075" y="12" font-size="10">Distance</tspan></text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="160.417" y1="225.476" x2="413.897" y2="225.476"/>
+				<g>
+					<polygon fill="#005695" points="162.003,227.8 153.33,225.476 162.003,223.151 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="412.312,227.8 420.985,225.476 412.312,223.151 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="274.197" y1="257.476" x2="413.897" y2="257.476"/>
+				<g>
+					<polygon fill="#005695" points="275.782,259.8 267.109,257.476 275.782,255.151 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="412.312,259.8 420.985,257.476 412.312,255.151 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="324.775" y1="289.476" x2="413.9" y2="289.476"/>
+				<g>
+					<polygon fill="#005695" points="326.36,291.8 317.688,289.476 326.36,287.151 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="412.315,291.8 420.988,289.476 412.315,287.151 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="130.537" y="16.24" fill="none" width="109.575" height="41.985"/>
+		<text transform="matrix(0.9288 0 0 1 173.9688 23.3862)"><tspan x="0" y="0" font-size="10">Block</tspan><tspan x="-30.574" y="12" font-size="10">( Mounting Position</tspan><tspan x="-29.309" y="24" font-size="10">= PATIENT SIDE )</tspan></text>
+		<rect x="345.964" y="16.24" fill="none" width="109.574" height="41.985"/>
+		<text transform="matrix(0.9288 0 0 1 372.8721 23.3857)"><tspan x="0" y="0" font-size="10">Compensator</tspan><tspan x="-12.785" y="12" font-size="10">( Mounting Position</tspan><tspan x="-11.799" y="24" font-size="10">= SOURCE SIDE )</tspan></text>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="153.349" y1="100.247" x2="153.349" y2="303.788"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="267.108" y1="163.718" x2="267.108" y2="303.788"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="317.688" y1="163.718" x2="317.688" y2="303.788"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="420.985" y1="100.247" x2="420.985" y2="303.788"/>
+		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#B3B3B3" points="317.49,37.525 284.678,37.525 284.678,74.018 
+			292.958,78.312 300.931,86.284 300.931,90.271 296.944,94.563 296.944,98.55 300.931,98.55 300.931,102.538 300.931,110.815 
+			305.225,110.815 305.225,114.804 300.931,118.789 296.944,118.789 292.958,123.084 288.971,127.069 284.678,127.069 
+			284.678,163.563 317.49,163.563 		"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="317.49" y1="37.525" x2="284.678" y2="37.525"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="284.678" y1="37.525" x2="284.678" y2="74.018"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="284.678" y1="74.018" x2="292.958" y2="78.312"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="292.958" y1="78.312" x2="300.931" y2="86.284"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="86.284" x2="300.931" y2="90.271"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="90.271" x2="296.944" y2="94.563"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="296.944" y1="94.563" x2="296.944" y2="98.55"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="296.944" y1="98.55" x2="300.931" y2="98.55"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="98.55" x2="300.931" y2="102.538"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="102.538" x2="300.931" y2="110.815"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="110.815" x2="305.225" y2="110.815"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="305.225" y1="110.815" x2="305.225" y2="114.804"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="305.225" y1="114.804" x2="300.931" y2="118.789"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="300.931" y1="118.789" x2="296.944" y2="118.789"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="296.944" y1="118.789" x2="292.958" y2="123.084"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="292.958" y1="123.084" x2="288.971" y2="127.069"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="288.971" y1="127.069" x2="284.678" y2="127.069"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="284.678" y1="127.069" x2="284.678" y2="163.563"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="284.678" y1="163.563" x2="317.49" y2="163.563"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="317.49" y1="163.563" x2="317.49" y2="37.525"/>
+		
+			<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="10" x1="317.49" y1="37.525" x2="317.49" y2="37.525"/>
+		
+			<rect x="267.108" y="37.525" fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" stroke="#000000" width="17.25" height="36.492"/>
+		
+			<rect x="267.108" y="126.979" fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" stroke="#000000" width="17.25" height="36.584"/>
+		<polygon points="161.833,101.784 154.785,101.784 154.785,108.833 151.832,108.833 151.832,101.784 144.783,101.784 
+			144.783,98.831 151.832,98.831 151.832,91.782 154.785,91.782 154.785,98.831 161.833,98.831 		"/>
+		<polygon points="429.51,101.784 422.461,101.784 422.461,108.833 419.508,108.833 419.508,101.784 412.459,101.784 
+			412.459,98.831 419.508,98.831 419.508,91.782 422.461,91.782 422.461,98.831 429.51,98.831 		"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="153.349" y1="100.544" x2="420.676" y2="100.544"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="140.104" y1="257.476" x2="267.109" y2="257.476"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="140.104" y1="225.476" x2="153.349" y2="225.476"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="140.104" y1="289.142" x2="317.688" y2="289.142"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="367.11,20.066 
+					330.796,20.066 309.516,48.872 				"/>
+				<g>
+					<polygon fill="#005695" points="308.588,46.216 305.304,54.572 312.326,48.978 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="201.484,20.666 
+					251.329,20.666 271.852,47.336 				"/>
+				<g>
+					<polygon fill="#005695" points="269.043,47.497 276.174,52.953 272.727,44.663 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="349.473" y="164.591" fill="none" width="97.108" height="29.389"/>
+		<text transform="matrix(0.9288 0 0 1 359.5703 171.7373)"><tspan x="0" y="0" font-size="10">Compensator Tray</tspan><tspan x="24.736" y="12" font-size="10">(virtual)</tspan></text>
+		<rect x="170.233" y="164.591" fill="none" width="61.332" height="29.389"/>
+		<text transform="matrix(0.9288 0 0 1 178.9644 171.7373)"><tspan x="0" y="0" font-size="10">Block Tray</tspan><tspan x="6.948" y="12" font-size="10">(virtual)</tspan></text>
+		<rect x="83.261" y="70.192" fill="none" width="68.665" height="29.389"/>
+		<text transform="matrix(0.9288 0 0 1 104.4292 77.3486)"><tspan x="0" y="0" font-size="10">Virtual</tspan><tspan x="-14.448" y="12" font-size="10">Source (X/Y)</tspan></text>
+		<rect x="420.814" y="85.122" fill="none" width="61.332" height="14.693"/>
+		<text transform="matrix(0.9288 0 0 1 432.377 92.2783)" font-size="10">Isocenter</text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					356.146,169.149 332.739,169.149 323.221,160.171 				"/>
+				<g>
+					<polygon fill="#005695" points="325.968,159.568 318.064,155.308 322.778,162.949 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					225.579,169.149 251.486,169.149 262.33,159.916 				"/>
+				<g>
+					<polygon fill="#005695" points="262.63,162.714 267.727,155.321 259.616,159.174 					"/>
+				</g>
+			</g>
+		</g>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="267.108" y1="174.335" x2="267.108" y2="27.711"/>
+	</g>
+</g>
+</svg>

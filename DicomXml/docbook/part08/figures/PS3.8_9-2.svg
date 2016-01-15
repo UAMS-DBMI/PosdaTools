@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part08/figures/PS3.8_9-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="302px" viewBox="0 0 502 302" enable-background="new 0 0 502 302" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.8 Network Communication Support for Message Exchange
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F6F0D8" width="500" height="300"/>
+	<g>
+		<g>
+			<rect x="56.99" y="29.771" fill="#FFFFFF" stroke="#000000" width="389.87" height="50.391"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 56.999 23.7681)" font-size="10">A-ASSOCIATE-RJ PDU/A-RELEASE-RQ PDU/A-RELEASE-RP PDU/A-ABORT PDU</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 56.1396 90.0815)" font-size="7">* Note: Depending on the specific PDU this field may be used or reserved.</text>
+			</g>
+			<rect x="102.346" y="40.218" fill="#4F8ABE" stroke="#000000" width="37.649" height="27.055"/>
+			<rect x="177.012" y="40.218" fill="#4F8ABE" stroke="#000000" width="37.649" height="27.055"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 151.5278 51.167)"><tspan x="0" y="0" font-size="8">PDU</tspan><tspan x="-3.789" y="9.6" font-size="8">Length</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 221.7607 55.9766)" font-size="8">Result *</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 258.2344 55.9766)" font-size="8">Source *</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 296.2012 51.167)"><tspan x="0" y="0" font-size="8">Reason/</tspan><tspan x="4.004" y="9.6" font-size="8">Diag *</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 75.3149 51.167)"><tspan x="0" y="0" font-size="8">PDU</tspan><tspan x="-0.448" y="9.6" font-size="8">Type</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 80.7988 75.3359)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 120.0898 75.3359)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 157.0107 75.3359)" font-size="8">4</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 194.1465 75.3359)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 232.9111 75.3359)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 269.7979 75.3359)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 307.373 75.3359)" font-size="8">1</text>
+			</g>
+			<rect x="64.537" y="40.218" fill="none" stroke="#000000" width="262.989" height="27.055"/>
+			<line fill="none" stroke="#000000" x1="289.966" y1="40.218" x2="289.966" y2="67.272"/>
+			<line fill="none" stroke="#000000" x1="252.405" y1="40.218" x2="252.405" y2="67.272"/>
+			<line fill="none" stroke="#000000" x1="214.845" y1="40.218" x2="214.845" y2="67.272"/>
+			<line fill="none" stroke="#000000" x1="177.22" y1="40.218" x2="177.22" y2="67.272"/>
+			<line fill="none" stroke="#000000" x1="139.658" y1="40.218" x2="139.658" y2="67.272"/>
+			<line fill="none" stroke="#000000" x1="102.098" y1="40.218" x2="102.098" y2="67.272"/>
+		</g>
+		<g>
+			<rect x="56.14" y="147.257" fill="#FFFFFF" stroke="#000000" width="389.871" height="127.606"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 56.1489 141.2539)" font-size="10">P-DATA-TF PDU</text>
+			</g>
+			<path fill="none" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-dasharray="4" d="M176.529,182.508
+				c0,0,3.409,14.332-17.699,20.506c-9.457,2.766-8.711,3.654-94.561,6.521"/>
+			<path fill="none" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-dasharray="4" d="M326.276,182.539
+				c0,0-1.455,12.898,14.027,19.062c13.701,5.453,68.32,7.934,68.32,7.934"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 80.9458 192.0234)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 120.2368 192.0234)" font-size="8">1</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 157.1577 192.0234)" font-size="8">4</text>
+			</g>
+			<rect x="64.27" y="156.205" fill="none" stroke="#000000" width="262.026" height="27.055"/>
+			<line fill="none" stroke="#000000" x1="176.539" y1="156.205" x2="176.539" y2="183.26"/>
+			<rect x="101.693" y="156.205" fill="#4F8ABE" stroke="#000000" width="37.423" height="27.055"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 74.2295 167.1406)"><tspan x="0" y="0" font-size="8">PDU</tspan><tspan x="-0.448" y="9.6" font-size="8">Type</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 150.4424 167.1406)"><tspan x="0" y="0" font-size="8">PDU</tspan><tspan x="-3.789" y="9.6" font-size="8">Length</tspan></text>
+			</g>
+			<rect x="64.27" y="209.535" fill="#CCDEF0" stroke="#000000" width="345.913" height="53.666"/>
+			<rect x="176.539" y="156.205" fill="#CCDEF0" stroke="#000000" width="149.757" height="27.055"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 226.3037 162.3311)"><tspan x="0" y="0" font-size="8">(Variable Field)</tspan><tspan x="-11.344" y="9.601" font-size="8">Contains one or more</tspan><tspan x="-52.478" y="19.2" font-size="8">Presentation Data Value Items  shown below</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 154.8599 254.6133)" font-size="8">4</text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 194.1509 254.6133)" font-size="8">1</text>
+			</g>
+			<rect x="141.693" y="218.553" fill="none" stroke="#000000" width="224.603" height="27.055"/>
+			<line fill="none" stroke="#000000" x1="216.542" y1="218.553" x2="216.542" y2="245.607"/>
+			<line fill="none" stroke="#000000" x1="179.146" y1="218.553" x2="179.146" y2="245.607"/>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 154.8164 229.4902)"><tspan x="0" y="0" font-size="8">Item</tspan><tspan x="-4.455" y="9.6" font-size="8">Length</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 189.6572 229.4902)"><tspan x="0" y="0" font-size="8">Pres.</tspan><tspan x="-9.561" y="9.6" font-size="8">Context ID</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 239.8418 224.6797)"><tspan x="0" y="0" font-size="8">Presentation-data-Values (PDV)</tspan><tspan x="26.465" y="9.601" font-size="8">DICOM message</tspan><tspan x="-3.777" y="19.201" font-size="8">Command or Data Set Information</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 55.1396 284.79)" font-size="7">Note: All field sizes in bytes</text>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

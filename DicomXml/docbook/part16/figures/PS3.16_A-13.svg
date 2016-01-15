@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part16/figures/PS3.16_A-13.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="167px" viewBox="0 0 502 167" enable-background="new 0 0 502 167" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.16 Part 16: Content Mapping Resource
+   </desc>
+   <title>
+	Figure A-13: References to Registration Objects 
+   </title>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="165"/>
+<g>
+	<g>
+		<path fill="#B2CEE7" d="M118.111,19.592c0-1.98,1.62-3.6,3.6-3.6H223.29c1.98,0,3.6,1.62,3.6,3.6v136.884
+			c0,1.979-1.62,3.6-3.6,3.6H121.711c-1.98,0-3.6-1.62-3.6-3.6V19.592z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" d="M118.111,19.592c0-1.98,1.62-3.6,3.6-3.6
+			H223.29c1.98,0,3.6,1.62,3.6,3.6v136.884c0,1.979-1.62,3.6-3.6,3.6H121.711c-1.98,0-3.6-1.62-3.6-3.6V19.592z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 118.1108 13.1289)" font-size="7">Implementation Plan SR Document</text>
+	<g>
+		<path fill="#CCDEF0" d="M172.397,74.395c0-1.98,1.62-3.6,3.6-3.6h32.8c1.98,0,3.6,1.62,3.6,3.6v12.951c0,1.979-1.62,3.6-3.6,3.6
+			h-32.8c-1.98,0-3.6-1.62-3.6-3.6V74.395z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M172.397,74.395
+			c0-1.98,1.62-3.6,3.6-3.6h32.8c1.98,0,3.6,1.62,3.6,3.6v12.951c0,1.979-1.62,3.6-3.6,3.6h-32.8c-1.98,0-3.6-1.62-3.6-3.6V74.395z"
+			/>
+	</g>
+	<text transform="matrix(1 0 0 1 181.8984 82.5405)" font-size="6">For UID</text>
+	<g>
+		<path fill="#CCDEF0" d="M131.262,46.131c0-1.98,1.62-3.6,3.6-3.6h53.83c1.98,0,3.6,1.62,3.6,3.6v12.949c0,1.98-1.62,3.6-3.6,3.6
+			h-53.83c-1.98,0-3.6-1.62-3.6-3.6V46.131z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M131.262,46.131
+			c0-1.98,1.62-3.6,3.6-3.6h53.83c1.98,0,3.6,1.62,3.6,3.6v12.949c0,1.98-1.62,3.6-3.6,3.6h-53.83c-1.98,0-3.6-1.62-3.6-3.6V46.131z
+			"/>
+	</g>
+	<text transform="matrix(1 0 0 1 135.7622 54.2764)" font-size="6">Spatial Registration</text>
+	<text transform="matrix(1 0 0 1 159.2759 34.9434)" font-size="6">...</text>
+	<g>
+		<path fill="#CCDEF0" d="M172.398,103.212c0-1.979,1.62-3.6,3.6-3.6h32.8c1.98,0,3.6,1.62,3.6,3.6v12.951c0,1.979-1.62,3.6-3.6,3.6
+			h-32.8c-1.98,0-3.6-1.62-3.6-3.6V103.212z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M172.398,103.212
+			c0-1.979,1.62-3.6,3.6-3.6h32.8c1.98,0,3.6,1.62,3.6,3.6v12.951c0,1.979-1.62,3.6-3.6,3.6h-32.8c-1.98,0-3.6-1.62-3.6-3.6V103.212
+			z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 181.8984 111.3652)" font-size="6">For UID</text>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" points="
+				161.788,80.942 161.788,109.057 165.92,109.057 			"/>
+			<g>
+				<polygon points="164.434,111.235 172.564,109.057 164.434,106.878 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" points="
+				161.788,62.899 161.788,80.872 165.92,80.872 			"/>
+			<g>
+				<polygon points="164.434,83.051 172.564,80.872 164.434,78.693 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="192.292" y1="52.606" x2="194.292" y2="52.606"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="3.8334,2.875" x1="197.167" y1="52.606" x2="262.813" y2="52.606"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="264.251" y1="52.606" x2="266.251" y2="52.606"/>
+			<g>
+				<polygon fill="#003468" points="264.27,55.512 275.11,52.606 264.27,49.701 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<path fill="#86B2D8" d="M275.11,38.543c0-1.98,1.62-3.6,3.6-3.6h101.58c1.979,0,3.6,1.62,3.6,3.6v117.933
+			c0,1.979-1.62,3.6-3.6,3.6H278.71c-1.979,0-3.6-1.62-3.6-3.6V38.543z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" d="M275.11,38.543c0-1.98,1.62-3.6,3.6-3.6
+			h101.58c1.979,0,3.6,1.62,3.6,3.6v117.933c0,1.979-1.62,3.6-3.6,3.6H278.71c-1.979,0-3.6-1.62-3.6-3.6V38.543z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 275.1104 31.8789)" font-size="7">Registration Object</text>
+	<g>
+		<path fill="#CCDEF0" d="M315.982,46.131c0-1.98,1.62-3.6,3.6-3.6h53.83c1.979,0,3.6,1.62,3.6,3.6v12.949c0,1.98-1.62,3.6-3.6,3.6
+			h-53.83c-1.979,0-3.6-1.62-3.6-3.6V46.131z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M315.982,46.131
+			c0-1.98,1.62-3.6,3.6-3.6h53.83c1.979,0,3.6,1.62,3.6,3.6v12.949c0,1.98-1.62,3.6-3.6,3.6h-53.83c-1.979,0-3.6-1.62-3.6-3.6
+			V46.131z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 319.8193 50.6763)"><tspan x="0" y="0" font-size="6">Registration</tspan><tspan x="0" y="7.2" font-size="6">Frame of Reference</tspan></text>
+	<g>
+		<path fill="#CCDEF0" d="M335.641,74.395c0-1.98-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951
+			c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6V74.395z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M335.641,74.395
+			c0-1.98-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6
+			V74.395z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 292.7988 82.5405)" font-size="6">Reference FoR</text>
+	<g>
+		<path fill="#CCDEF0" d="M335.641,102.859c0-1.979-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951
+			c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6V102.859z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M335.641,102.859
+			c0-1.979-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6
+			V102.859z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 292.7988 111.0049)" font-size="6">Reference FoR</text>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" points="
+				346.273,80.942 346.273,108.704 342.142,108.704 			"/>
+			<g>
+				<polygon points="343.628,106.525 335.497,108.704 343.628,110.883 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<path fill="#CCDEF0" d="M335.641,130.622c0-1.979-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951
+			c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6V130.622z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="1" d="M335.641,130.622
+			c0-1.979-1.62-3.6-3.6-3.6H294.24c-1.979,0-3.6,1.62-3.6,3.6v12.951c0,1.979,1.62,3.6,3.6,3.6h37.801c1.979,0,3.6-1.62,3.6-3.6
+			V130.622z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 292.7988 138.7676)" font-size="6">Reference FoR</text>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" points="
+				346.273,108.705 346.273,136.467 342.142,136.467 			"/>
+			<g>
+				<polygon points="343.628,134.288 335.497,136.467 343.628,138.646 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" points="
+				346.273,62.899 346.273,80.872 342.142,80.872 			"/>
+			<g>
+				<polygon points="343.628,78.693 335.497,80.872 343.628,83.051 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" x1="213.147" y1="80.87" x2="214.147" y2="80.87"/>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="2.0251,3.0377" x1="217.185" y1="80.87" x2="281.482" y2="80.87"/>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" x1="283.001" y1="80.87" x2="284.001" y2="80.87"/>
+			<g>
+				<polygon fill="#003468" points="282.515,83.049 290.646,80.87 282.515,78.691 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" x1="213.147" y1="108.704" x2="214.147" y2="108.704"/>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="2.0251,3.0377" x1="217.185" y1="108.704" x2="281.482" y2="108.704"/>
+			
+				<line fill="none" stroke="#003468" stroke-width="0.75" stroke-linecap="square" stroke-miterlimit="10" x1="283.001" y1="108.704" x2="284.001" y2="108.704"/>
+			<g>
+				<polygon fill="#003468" points="282.515,110.883 290.646,108.704 282.515,106.525 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

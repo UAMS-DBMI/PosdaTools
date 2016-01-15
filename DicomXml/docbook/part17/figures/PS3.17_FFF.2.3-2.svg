@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.3-2.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:44 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="562px" viewBox="0 0 502.001 562" enable-background="new 0 0 502.001 562" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="560"/>
+	<g>
+		
+			<rect x="54.338" y="30.263" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.889" height="180.369"/>
+		
+			<rect x="54.338" y="16.265" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.889" height="13.998"/>
+		<rect x="320.813" y="19.376" fill="none" width="126.849" height="525.999"/>
+		<text transform="matrix(0.9288 0 0 1 320.8135 25.1016)"><tspan x="0" y="0" font-size="8">= SUB</tspan><tspan x="0" y="42" font-size="8">= AVG_SUB</tspan><tspan x="0" y="56" font-size="8">= 1</tspan><tspan x="0" y="70" font-size="8">= 27\35</tspan><tspan x="0" y="84" font-size="8">= 26</tspan><tspan x="0" y="98" font-size="8">= SYSTEM</tspan><tspan x="0" y="126" font-size="8">= AVG_SUB</tspan><tspan x="0" y="140" font-size="8">= 1</tspan><tspan x="0" y="154" font-size="8">= 6\25</tspan><tspan x="0" y="168" font-size="8">= 1\2\3\4\5</tspan><tspan x="0" y="182" font-size="8">= SYSTEM</tspan><tspan x="0" y="238" font-size="8">= 1</tspan><tspan x="0" y="252" font-size="8">= 5</tspan><tspan x="0" y="266" font-size="8">= DISPLAY</tspan><tspan x="0" y="280" font-size="8">= NAT</tspan><tspan x="0" y="308" font-size="8">= 6</tspan><tspan x="0" y="322" font-size="8">= 25</tspan><tspan x="0" y="336" font-size="8">= DISPLAY</tspan><tspan x="0" y="350" font-size="8">= SUB</tspan><tspan x="0" y="364" font-size="8">= 0</tspan><tspan x="0" y="392" font-size="8">= 26</tspan><tspan x="0" y="406" font-size="8">= 26</tspan><tspan x="0" y="420" font-size="8">= SKIP</tspan><tspan x="0" y="434" font-size="8">= NAT</tspan><tspan x="0" y="462" font-size="8">= 27</tspan><tspan x="0" y="476" font-size="8">= 35</tspan><tspan x="0" y="490" font-size="8">= DISPLAY</tspan><tspan x="0" y="504" font-size="8">= SUB</tspan><tspan x="0" y="518" font-size="8">= 20</tspan></text>
+		
+			<rect x="54.338" y="224.63" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="321.105"/>
+		
+			<rect x="69.448" y="238.558" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="69.906"/>
+		<rect x="58.478" y="228.073" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 233.8013)" font-size="8">Frame Display Sequence</text>
+		<rect x="73.719" y="242.494" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 248.2188)" font-size="8">Item 1</text>
+		<rect x="256.338" y="228.06" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 233.7886)" font-size="8">(0008,9458)</text>
+		<g>
+			
+				<rect x="84.578" y="252.486" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.664" height="14"/>
+			
+				<rect x="84.577" y="266.438" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.649" height="14"/>
+			
+				<rect x="84.577" y="280.391" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.649" height="14"/>
+			
+				<rect x="84.577" y="294.344" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.649" height="14"/>
+			<rect x="92.036" y="257.181" fill="none" width="108.83" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 92.0361 262.9028)" font-size="8">&gt;Start Trim</text>
+			<rect x="92.036" y="285.014" fill="none" width="136.58" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 92.0356 290.7344)" font-size="8">&gt;Skip Frame Range Flag</text>
+			<rect x="256.338" y="257.181" fill="none" width="44.984" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.3379 262.9053)" font-size="8">(0008,2142)</text>
+			<rect x="256.74" y="285.014" fill="none" width="44.582" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.7402 290.7383)" font-size="8">(0008,9460)</text>
+			<rect x="92.036" y="271.098" fill="none" width="136.58" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 92.0356 276.8169)" font-size="8">&gt;Stop Trim</text>
+			<rect x="256.74" y="271.098" fill="none" width="44.582" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.7402 276.8223)" font-size="8">(0008,2143)</text>
+			<rect x="92.036" y="298.932" fill="none" width="158.964" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 92.0361 304.6582)" font-size="8">&gt;Recommended Viewing Mode</text>
+			<rect x="256.338" y="298.932" fill="none" width="44.984" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.3379 304.6562)" font-size="8">(0028,1090)</text>
+		</g>
+		
+			<rect x="54.338" y="210.632" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.889" height="13.998"/>
+		<rect x="58.478" y="215.183" fill="none" width="164.902" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 220.9092)" font-size="8">...</text>
+		
+			<rect x="69.448" y="308.463" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.908"/>
+		
+			<rect x="84.577" y="322.512" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.576" y="336.463" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="350.416" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14.001"/>
+		
+			<rect x="84.576" y="364.369" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14.002"/>
+		<rect x="92.036" y="327.207" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 332.9277)" font-size="8">&gt;Start Trim</text>
+		<rect x="92.035" y="355.039" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 360.7598)" font-size="8">&gt;Skip Frame Range Flag</text>
+		<rect x="73.719" y="312.398" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 318.125)" font-size="8">Item 2</text>
+		<rect x="256.338" y="326.486" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 332.2109)" font-size="8">(0008,2142)</text>
+		<rect x="256.74" y="354.32" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 360.0449)" font-size="8">(0008,9460)</text>
+		<rect x="92.035" y="341.123" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 346.8418)" font-size="8">&gt;Stop Trim</text>
+		<rect x="256.74" y="340.404" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 346.1279)" font-size="8">(0008,2143)</text>
+		<rect x="92.036" y="368.959" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 374.6836)" font-size="8">&gt;Recommended Viewing Mode</text>
+		<rect x="256.338" y="368.239" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 373.9609)" font-size="8">(0028,1090)</text>
+		
+			<rect x="84.576" y="378.371" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="382.959" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 388.6836)" font-size="8">&gt;Mask Visibility Percentage</text>
+		<rect x="256.338" y="382.239" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 387.9609)" font-size="8">(0028,9478)</text>
+		
+			<rect x="69.448" y="392.371" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="69.906"/>
+		
+			<rect x="84.577" y="406.42" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.576" y="420.372" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="434.325" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="448.277" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="411.115" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 416.834)" font-size="8">&gt;Start Trim</text>
+		<rect x="92.035" y="438.948" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 444.666)" font-size="8">&gt;Skip Frame Range Flag</text>
+		<rect x="73.719" y="396.307" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 402.0293)" font-size="8">Item 3</text>
+		<rect x="256.338" y="410.395" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 416.1162)" font-size="8">(0008,2142)</text>
+		<rect x="256.74" y="438.228" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 443.9492)" font-size="8">(0008,9460)</text>
+		<rect x="92.035" y="425.032" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 430.748)" font-size="8">&gt;Stop Trim</text>
+		<rect x="256.74" y="424.312" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 430.0332)" font-size="8">(0008,2143)</text>
+		<rect x="92.036" y="452.865" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 458.5889)" font-size="8">&gt;Recommended Viewing Mode</text>
+		<rect x="256.338" y="452.146" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 457.8672)" font-size="8">(0008,9459)</text>
+		
+			<rect x="69.573" y="462.277" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.458"/>
+		
+			<rect x="84.702" y="475.878" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.701" y="489.83" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.701" y="503.783" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.701" y="517.735" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.161" y="480.573" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.1606 486.292)" font-size="8">&gt;Start Trim</text>
+		<rect x="92.16" y="508.406" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.1602 514.124)" font-size="8">&gt;Skip Frame Range Flag</text>
+		<rect x="73.844" y="466.485" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.8438 472.208)" font-size="8">Item 4</text>
+		<rect x="256.463" y="479.853" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.4629 485.5742)" font-size="8">(0008,2142)</text>
+		<rect x="256.865" y="507.686" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.8652 513.4082)" font-size="8">(0008,9460)</text>
+		<rect x="92.16" y="494.49" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.1602 500.2061)" font-size="8">&gt;Stop Trim</text>
+		<rect x="256.865" y="493.77" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.8652 499.4912)" font-size="8">(0008,2143)</text>
+		<rect x="92.161" y="522.323" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.1606 528.0469)" font-size="8">&gt;Recommended Viewing Mode</text>
+		<rect x="256.463" y="521.604" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4629 527.3242)" font-size="8">(0028,1090)</text>
+		
+			<rect x="84.701" y="531.735" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.161" y="536.323" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.1606 542.0469)" font-size="8">&gt;Mask Visibility Percentage</text>
+		<rect x="256.463" y="535.604" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4629 541.3242)" font-size="8">(0028,9478)</text>
+		
+			<rect x="69.448" y="127.446" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.186"/>
+		
+			<rect x="84.576" y="141.086" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="145.674" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 151.4004)" font-size="8">&gt;Mask Operation</text>
+		<rect x="256.338" y="145.675" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 151.3984)" font-size="8">(0028,6101)</text>
+		
+			<rect x="84.577" y="154.774" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.576" y="168.727" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="182.68" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="196.632" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="159.47" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 165.1909)" font-size="8">&gt;Subtraction Item ID</text>
+		<rect x="92.035" y="187.303" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 193.0229)" font-size="8">&gt;Mask Frame Numbers</text>
+		<rect x="73.719" y="132.032" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 137.7573)" font-size="8">Item 2</text>
+		<rect x="256.338" y="159.47" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 165.1934)" font-size="8">(0028,9416)</text>
+		<rect x="256.74" y="187.303" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 193.0269)" font-size="8">(0028,6110)</text>
+		<rect x="92.035" y="173.387" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 179.105)" font-size="8">&gt;Applicable Frame Range</text>
+		<rect x="256.74" y="173.387" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 179.1104)" font-size="8">(0028,6104)</text>
+		<rect x="92.036" y="201.22" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 206.9458)" font-size="8">&gt;Mask Selection Mode</text>
+		<rect x="256.338" y="201.221" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 206.9438)" font-size="8">(0028,9454)</text>
+		
+			<rect x="69.448" y="44.261" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.186"/>
+		
+			<rect x="84.576" y="57.901" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="62.489" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 68.2148)" font-size="8">&gt;Mask Operation</text>
+		<rect x="256.338" y="62.49" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 68.2158)" font-size="8">(0028,6101)</text>
+		<rect x="256.338" y="19.737" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 25.4624)" font-size="8">(0028,6101)</text>
+		<rect x="256.338" y="33.735" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 39.4604)" font-size="8">(0028,6100)</text>
+		
+			<rect x="84.577" y="71.589" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.576" y="85.541" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="99.494" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="113.446" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		<rect x="92.036" y="76.284" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 82.0054)" font-size="8">&gt;Subtraction Item ID</text>
+		<rect x="92.035" y="104.117" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 109.8374)" font-size="8">&gt;Mask Frame Numbers</text>
+		<rect x="73.719" y="48.847" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 54.5718)" font-size="8">Item 1</text>
+		<rect x="256.338" y="76.284" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 82.0078)" font-size="8">(0028,9416)</text>
+		<rect x="256.74" y="104.117" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 109.8413)" font-size="8">(0028,6110)</text>
+		<rect x="92.035" y="90.201" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 95.9194)" font-size="8">&gt;Applicable Frame Range</text>
+		<rect x="256.74" y="90.201" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 95.9248)" font-size="8">(0028,6104)</text>
+		<rect x="92.036" y="118.034" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 123.7603)" font-size="8">&gt;Mask Selection Mode</text>
+		<rect x="256.338" y="118.035" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 123.7583)" font-size="8">(0028,9454)</text>
+		<rect x="58.478" y="33.734" fill="none" width="164.902" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 39.46)" font-size="8">Mask Subtraction Sequence</text>
+		<rect x="58.478" y="19.736" fill="none" width="164.902" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 25.4619)" font-size="8">Recommended Viewing Mode</text>
+	</g>
+</g>
+</svg>

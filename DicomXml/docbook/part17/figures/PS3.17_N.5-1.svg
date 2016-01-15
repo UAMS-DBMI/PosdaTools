@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_N.5-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:57 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="457px" viewBox="0 0 502 457" enable-background="new 0 0 502 457" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="455"/>
+	<g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="208.185,41.197 208.185,50.181 
+					57.387,50.181 57.387,64.919 				"/>
+				<path fill="#005695" d="M58.412,67.281c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C57.512,70.655,57.878,69.051,58.412,67.281z"/>
+			</g>
+		</g>
+		
+			<rect x="172.126" y="14.561" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.113" height="27.001"/>
+		<g>
+			<text transform="matrix(1 0 0 1 188.5366 25.4888)"><tspan x="0" y="0" font-size="7">IVUS Report</tspan><tspan x="-3.297" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="137.302" y1="50.267" x2="137.302" y2="64.919"/>
+				<path fill="#005695" d="M138.327,67.281c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C137.427,70.655,137.792,69.051,138.327,67.281z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="217.025" y1="50.267" x2="217.025" y2="64.919"/>
+				<path fill="#005695" d="M218.049,67.281c0.499-1.653,0.96-2.728,1.491-4.054h-5.044c0.226,0.475,0.993,2.401,1.491,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C217.15,70.655,217.515,69.051,218.049,67.281z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="208.482,50.266 208.496,50.267 
+					297.253,50.266 297.253,64.917 				"/>
+				<path fill="#005695" d="M298.278,67.279c0.5-1.653,0.96-2.728,1.492-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C297.378,70.653,297.745,69.049,298.278,67.279z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="57.905" y1="91.887" x2="57.905" y2="98.781"/>
+				<path fill="#005695" d="M58.93,101.143c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C58.03,104.517,58.396,102.912,58.93,101.143z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="137.304" y1="91.887" x2="137.304" y2="98.781"/>
+				<path fill="#005695" d="M138.329,101.143c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C137.429,104.517,137.794,102.912,138.329,101.143z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="216.705" y1="91.887" x2="216.705" y2="98.781"/>
+				<path fill="#005695" d="M217.729,101.143c0.499-1.653,0.96-2.728,1.491-4.054h-5.044c0.226,0.475,0.993,2.401,1.491,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C216.83,104.517,217.195,102.912,217.729,101.143z"/>
+			</g>
+		</g>
+		
+			<rect x="21.904" y="105.034" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="24.546"/>
+		<g>
+			<text transform="matrix(1 0 0 1 47.4004 115.0474)"><tspan x="0" y="0" font-size="7">Vessel</tspan><tspan x="-12.438" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			21.902,81.726 57.873,70.945 93.908,82.074 93.908,82.1 57.834,93.034 		"/>
+		
+			<rect x="101.3" y="105.034" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="24.546"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			101.298,81.726 137.269,70.945 173.304,82.074 173.304,82.1 137.23,93.034 		"/>
+		
+			<rect x="180.697" y="105.034" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.005" height="24.546"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			180.695,81.726 216.667,70.945 252.704,82.074 252.704,82.1 216.63,93.034 		"/>
+		
+			<rect x="260.728" y="105.034" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.003" height="24.546"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			260.726,81.726 296.698,70.945 332.733,82.074 332.733,82.1 296.661,93.034 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 126.7988 115.0474)"><tspan x="0" y="0" font-size="7">Vessel</tspan><tspan x="-12.438" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 206.1973 115.0474)"><tspan x="0" y="0" font-size="7">Vessel</tspan><tspan x="-12.438" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="296.73" y1="91.887" x2="296.73" y2="98.781"/>
+				<path fill="#005695" d="M297.754,101.143c0.5-1.653,0.96-2.728,1.492-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C296.855,104.517,297.221,102.912,297.754,101.143z"/>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 275.3286 115.0474)"><tspan x="0" y="0" font-size="7">Image Library</tspan><tspan x="-1.545" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="152.219" y1="253.713" x2="152.219" y2="271.961"/>
+				<path fill="#005695" d="M153.244,274.322c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C152.344,277.697,152.71,276.092,153.244,274.322z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="57.905" y1="129.587" x2="57.905" y2="268.361"/>
+				<path fill="#005695" d="M58.93,270.723c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C58.03,274.098,58.396,272.492,58.93,270.723z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="152.566" y1="298.934" x2="152.566" y2="305.828"/>
+				<path fill="#005695" d="M153.591,308.189c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C152.691,311.564,153.057,309.959,153.591,308.189z"/>
+			</g>
+		</g>
+		
+			<rect x="112.064" y="312.08" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 127.2773 323.0234)" font-size="7">Arterial Location</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			107.563,287.666 152.526,275.684 197.569,288.053 197.569,288.082 152.479,300.232 		"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="246.881" y1="298.934" x2="246.881" y2="305.828"/>
+				<path fill="#005695" d="M247.906,308.189c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C247.006,311.564,247.373,309.959,247.906,308.189z"/>
+			</g>
+		</g>
+		
+			<rect x="210.878" y="312.08" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 219.835 323.0234)" font-size="7">Procedure Phase</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="246.88" y1="253.713" x2="246.88" y2="271.961"/>
+				<path fill="#005695" d="M247.906,274.322c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C247.005,277.697,247.371,276.092,247.906,274.322z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="330.206" y1="253.713" x2="330.206" y2="271.961"/>
+				<path fill="#005695" d="M331.231,274.322c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C330.331,277.697,330.696,276.092,331.231,274.322z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="330.205" y1="298.934" x2="330.205" y2="305.828"/>
+				<path fill="#005695" d="M331.229,308.189c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C330.33,311.564,330.696,309.959,331.229,308.189z"/>
+			</g>
+		</g>
+		
+			<rect x="294.204" y="312.08" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.001" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 300.4399 323.0234)" font-size="7">Vessel Morphology</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			294.204,287.723 330.172,278.141 366.208,288.031 366.208,288.055 330.134,297.777 		"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="57.988,253.711 58.038,253.713 
+					409.928,253.711 409.928,253.713 409.928,271.961 				"/>
+				<path fill="#005695" d="M410.954,274.322c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C410.053,277.697,410.418,276.092,410.954,274.322z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="409.931" y1="298.934" x2="409.931" y2="305.828"/>
+				<path fill="#005695" d="M410.956,308.189c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C410.056,311.564,410.422,309.959,410.956,308.189z"/>
+			</g>
+		</g>
+		
+			<rect x="373.927" y="312.08" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 385.2241 323.0234)" font-size="7">Vessel Findings</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			373.927,287.723 409.898,278.141 445.933,288.031 445.933,288.055 409.861,297.777 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" points="
+			296.347,50.266 296.359,50.267 379.58,50.266 		"/>
+		<text transform="matrix(1 0 0 1 119.3101 289.9062)" font-size="7">HAS OBS CONTEXT</text>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			201.878,287.666 246.841,275.684 291.884,288.053 291.884,288.082 246.794,300.232 		"/>
+		<text transform="matrix(1 0 0 1 213.6265 289.9062)" font-size="7">HAS OBS CONTEXT</text>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			310.851,157.092 351.319,143.915 391.858,157.518 391.858,157.549 351.275,170.913 		"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="296.727" y1="157.053" x2="305.622" y2="157.053"/>
+				<path fill="#005695" d="M307.983,156.029c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C311.358,156.928,309.752,156.562,307.983,156.029z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="391.858" y1="157.598" x2="399.905" y2="157.598"/>
+				<path fill="#005695" d="M402.266,156.574c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C405.641,157.473,404.036,157.107,402.266,156.574z"/>
+			</g>
+		</g>
+		
+			<rect x="407.647" y="143.913" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.002" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 421.3003 155.1572)"><tspan x="0" y="0" font-size="7">Image Reference</tspan><tspan x="15.568" y="8.4" font-size="7">IMAGE</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			310.851,191.592 351.319,178.415 391.858,192.018 391.858,192.049 351.275,205.413 		"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="391.858" y1="192.098" x2="399.905" y2="192.098"/>
+				<path fill="#005695" d="M402.266,191.074c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C405.641,191.973,404.036,191.607,402.266,191.074z"/>
+			</g>
+		</g>
+		
+			<rect x="407.647" y="178.413" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.002" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 421.3003 189.6572)"><tspan x="0" y="0" font-size="7">Image Reference</tspan><tspan x="15.568" y="8.4" font-size="7">IMAGE</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="296.727,129.579 296.727,191.592 
+					305.622,191.592 				"/>
+				<path fill="#005695" d="M307.983,190.568c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C311.358,191.467,309.752,191.101,307.983,190.568z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" points="
+					296.727,191.591 296.727,218.664 305.622,218.664 				"/>
+				<path fill="#005695" d="M307.983,217.639c-1.652-0.499-2.728-0.96-4.054-1.491v5.044c0.475-0.226,2.401-0.993,4.054-1.491
+					c1.77-0.535,3.375-0.9,4.415-1.031C311.358,218.539,309.752,218.173,307.983,217.639z"/>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 39.8203 83.9341)" font-size="7">CONTAINS</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="57.905" y1="297.453" x2="57.905" y2="304.346"/>
+				<path fill="#005695" d="M58.93,306.709c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C58.03,310.082,58.396,308.479,58.93,306.709z"/>
+			</g>
+		</g>
+		
+			<rect x="21.904" y="312.08" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 47.5918 318.8242)"><tspan x="0" y="0" font-size="7">Lesion</tspan><tspan x="-12.63" y="8.399" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			21.902,287.291 57.873,276.51 93.908,287.639 93.908,287.666 57.834,298.6 		"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="153.1" y1="362.379" x2="153.1" y2="380.627"/>
+				<path fill="#005695" d="M154.125,382.99c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C153.225,386.363,153.591,384.76,154.125,382.99z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="58.786" y1="330.08" x2="58.786" y2="380.627"/>
+				<path fill="#005695" d="M59.811,382.99c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C58.911,386.363,59.276,384.76,59.811,382.99z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="247.762" y1="407.6" x2="247.762" y2="414.496"/>
+				<path fill="#005695" d="M248.787,416.857c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C247.887,420.232,248.253,418.627,248.787,416.857z"/>
+			</g>
+		</g>
+		
+			<rect x="211.76" y="420.748" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.001" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 215.4712 431.6895)" font-size="7">IVUS Measurements</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="247.761" y1="362.379" x2="247.761" y2="380.627"/>
+				<path fill="#005695" d="M248.787,382.99c0.499-1.654,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C247.886,386.363,248.251,384.76,248.787,382.99z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="331.086" y1="362.379" x2="331.086" y2="380.627"/>
+				<path fill="#005695" d="M332.112,382.99c0.499-1.654,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C331.211,386.363,331.577,384.76,332.112,382.99z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="331.085" y1="407.6" x2="331.085" y2="414.496"/>
+				<path fill="#005695" d="M332.11,416.857c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C331.21,420.232,331.577,418.627,332.11,416.857z"/>
+			</g>
+		</g>
+		
+			<rect x="295.084" y="420.748" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.001" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 311.2456 431.6895)" font-size="7">Device Used</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			295.084,396.391 331.053,386.807 367.089,396.699 367.089,396.723 331.015,406.445 		"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			211.76,396.391 247.729,386.807 283.765,396.699 283.765,396.723 247.691,406.445 		"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="58.869,362.379 58.918,362.379 
+					410.809,362.379 410.809,362.379 410.809,380.627 				"/>
+				<path fill="#005695" d="M411.834,382.99c0.499-1.654,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C410.934,386.363,411.299,384.76,411.834,382.99z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="410.812" y1="407.6" x2="410.812" y2="414.496"/>
+				<path fill="#005695" d="M411.836,416.857c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C410.937,420.232,411.303,418.627,411.836,416.857z"/>
+			</g>
+		</g>
+		
+			<rect x="374.808" y="420.748" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 397.5825 431.6895)" font-size="7">Findings</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			374.808,396.391 410.779,386.807 446.814,396.699 446.814,396.723 410.742,406.445 		"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="58.786" y1="407.6" x2="58.786" y2="414.496"/>
+				<path fill="#005695" d="M59.811,416.857c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C58.911,420.232,59.276,418.627,59.811,416.857z"/>
+			</g>
+		</g>
+		
+			<rect x="18.286" y="420.746" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 34.2671 431.6895)" font-size="7">Lesion Location</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			103.789,396.334 58.826,384.352 13.783,396.721 13.783,396.75 58.873,408.9 		"/>
+		<text transform="matrix(1 0 0 1 25.5269 398.5703)" font-size="7">HAS OBS CONTEXT</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="153.447" y1="406.119" x2="153.447" y2="413.014"/>
+				<path fill="#005695" d="M154.472,415.375c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C153.572,418.75,153.938,417.145,154.472,415.375z"/>
+			</g>
+		</g>
+		
+			<rect x="117.446" y="420.746" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.002" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 136.9097 427.4902)"><tspan x="0" y="0" font-size="7">Qualitative</tspan><tspan x="-4.276" y="8.4" font-size="7">Assessments</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			189.45,395.959 153.479,385.178 117.444,396.307 117.444,396.332 153.517,407.266 		"/>
+		<text transform="matrix(1 0 0 1 119.2173 83.9341)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 198.6143 83.9341)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 278.6411 83.9341)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 333.27 159.3574)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 332.7798 193.8574)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 39.2603 289.498)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 134.8022 398.166)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 229.1182 398.5703)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 312.4429 398.5703)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 311.562 289.9023)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 391.2856 289.9023)" font-size="7">CONTAINS</text>
+		<text transform="matrix(1 0 0 1 392.1665 398.5703)" font-size="7">CONTAINS</text>
+	</g>
+</g>
+</svg>

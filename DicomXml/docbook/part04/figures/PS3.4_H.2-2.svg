@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_H.2-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="132px" viewBox="0 0 502 132" enable-background="new 0 0 502 132" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="130"/>
+	<g>
+		
+			<rect x="25.101" y="52.382" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 45.8164 66.8467)"><tspan x="0" y="0"  font-size="11">Image</tspan><tspan x="-11.927" y="10.533"  font-size="11">Generation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 78.6621 26.3066)"  font-size="12">PRINT SCU</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 332.1074 26.3066)"  font-size="12">PRINT SCP</text>
+		</g>
+		<g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="97.551" y1="70.375" x2="113.469" y2="70.375"/>
+					<g>
+						<polygon fill="#005695" points="111.092,73.861 124.101,70.375 111.092,66.889 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="223.218" y1="70.375" x2="250.268" y2="70.375"/>
+					<g>
+						<polygon fill="#005695" points="247.891,73.861 260.899,70.375 247.891,66.889 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="350.661" y1="70.375" x2="367.269" y2="70.375"/>
+					<g>
+						<polygon fill="#005695" points="364.891,73.861 377.899,70.375 364.891,66.889 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="124.101" y="52.382" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 130.5049 61.5801)"><tspan x="0" y="0"  font-size="11">Modality-Specific </tspan><tspan x="-0.309" y="10.533"  font-size="11">and User-Specific</tspan><tspan x="3.362" y="21.066"  font-size="11">Transformations</tspan></text>
+		</g>
+		
+			<rect x="260.899" y="52.382" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 287.5625 66.8467)"><tspan x="0" y="0"  font-size="11">Polarity</tspan><tspan x="-18.646" y="10.533"  font-size="11">Transformation</tspan></text>
+		</g>
+		
+			<rect x="377.899" y="52.382" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 384.6025 66.8467)"><tspan x="0" y="0"  font-size="11">Presentation LUT</tspan><tspan x="5.814" y="10.533"  font-size="11">Transformation</tspan></text>
+		</g>
+		
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="241.479" y1="15.667" x2="241.479" y2="116.334"/>
+	</g>
+</g>
+</svg>

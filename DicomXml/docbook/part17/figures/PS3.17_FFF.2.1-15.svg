@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-15.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="552px" viewBox="0 0 502.001 552" enable-background="new 0 0 502.001 552" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="550"/>
+	<g>
+		<rect x="330.508" y="19.286" fill="none" width="126.85" height="24.253"/>
+		<text transform="matrix(0.9288 0 0 1 330.5117 25.0122)"><tspan x="0" y="0" font-size="8">= CARM</tspan><tspan x="0" y="13.75" font-size="8">= YES</tspan></text>
+		
+			<rect x="38.837" y="16.675" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="279.501" height="13.659"/>
+		
+			<rect x="38.837" y="43.632" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="279.501" height="13.565"/>
+		
+			<rect x="38.837" y="30.312" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="279.501" height="13.565"/>
+		<rect x="42.977" y="32.897" fill="none" width="141.53" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 42.9766 38.6216)" font-size="8">C-Arm Positioner Tabletop Relationship</text>
+		<rect x="42.977" y="47.056" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 42.9766 52.7798)" font-size="8">...</text>
+		<rect x="269.633" y="32.897" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 38.6221)" font-size="8">(0018,9474)</text>
+		
+			<rect x="38.837" y="57.16" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="279.501" height="478.165"/>
+		
+			<rect x="53.947" y="70.729" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="264.391" height="154.865"/>
+		
+			<rect x="69.157" y="84.057" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="56.821"/>
+		
+			<rect x="84.367" y="98.826" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="42"/>
+		
+			<rect x="97.071" y="112.826" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="126.826" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="42.977" y="60.604" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 42.9766 66.3315)" font-size="8">Per-Frame Functional Groups Sequence</text>
+		<rect x="76.535" y="88.752" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 94.4731)" font-size="8">&gt;Positioner Position Sequence</text>
+		<g>
+			<rect x="106.789" y="116.523" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 122.248)" font-size="8">&gt;&gt;Positioner Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="130.441" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 136.1543)" font-size="8">&gt;&gt;Positioner Secondary Angle</text>
+		</g>
+		<rect x="58.218" y="74.664" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 58.2173 80.3892)" font-size="8">Item 1</text>
+		<rect x="88.218" y="102.609" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 108.3213)" font-size="8">Item 1</text>
+		<rect x="269.633" y="60.59" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 66.3188)" font-size="8">(5200,9230)</text>
+		<rect x="269.633" y="88.752" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 94.4756)" font-size="8">(0018,9405)</text>
+		<g>
+			<rect x="269.977" y="116.525" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 122.248)" font-size="8">(0018,1510)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="130.441" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 136.1646)" font-size="8">(0018,1511)</text>
+		</g>
+		
+			<rect x="69.157" y="140.825" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="70.769"/>
+		
+			<rect x="84.367" y="155.595" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="55.999"/>
+		
+			<rect x="97.071" y="169.595" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="183.595" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="76.535" y="145.521" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 151.2461)" font-size="8">&gt;Isocenter Reference System Sequence</text>
+		<g>
+			<rect x="106.789" y="173.292" fill="none" width="129.235" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 179.0171)" font-size="8">&gt;&gt;Positioner Isocenter  Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="187.21" fill="none" width="134.483" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 192.9351)" font-size="8">&gt;&gt;Positioner Isocenter Secondary Angle</text>
+		</g>
+		<rect x="88.218" y="159.378" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 165.0903)" font-size="8">Item 1</text>
+		<rect x="269.633" y="145.521" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 151.2446)" font-size="8">(0018,9462)</text>
+		<g>
+			<rect x="269.977" y="173.294" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 179.0171)" font-size="8">(0018,9463)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="187.21" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 192.9336)" font-size="8">(0018,9464)</text>
+		</g>
+		
+			<rect x="97.071" y="197.594" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="69.157" y="211.594" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="14"/>
+		<g>
+			<rect x="106.789" y="200.703" fill="none" width="156.654" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 206.4282)" font-size="8">&gt;&gt;Positioner Isocenter Detector Rotation Angle</text>
+		</g>
+		<g>
+			<rect x="269.977" y="200.699" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 206.4131)" font-size="8">(003A,0214)</text>
+		</g>
+		<rect x="42.977" y="19.646" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 42.9766 25.3696)" font-size="8">Positioner Type</text>
+		<rect x="269.738" y="19.646" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 269.7422 25.3696)" font-size="8">(0018,1508)</text>
+		<rect x="76.535" y="214.734" fill="none" width="136.58" height="7.718"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 220.46)" font-size="8">...</text>
+		
+			<rect x="53.947" y="225.594" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="264.391" height="154.865"/>
+		
+			<rect x="69.157" y="238.922" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="56.821"/>
+		
+			<rect x="84.367" y="253.691" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="42"/>
+		
+			<rect x="97.071" y="267.691" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="281.691" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="76.535" y="243.617" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 249.3389)" font-size="8">&gt;Positioner Position Sequence</text>
+		<g>
+			<rect x="106.789" y="271.389" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 277.1133)" font-size="8">&gt;&gt;Positioner Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="285.307" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 291.0195)" font-size="8">&gt;&gt;Positioner Secondary Angle</text>
+		</g>
+		<rect x="58.218" y="229.529" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 58.2173 235.2549)" font-size="8">Item “N/2”</text>
+		<rect x="88.218" y="257.475" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 263.187)" font-size="8">Item 1</text>
+		<rect x="269.633" y="243.617" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 249.3413)" font-size="8">(0018,9405)</text>
+		<g>
+			<rect x="269.977" y="271.391" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 277.1133)" font-size="8">(0018,1510)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="285.307" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 291.0303)" font-size="8">(0018,1511)</text>
+		</g>
+		
+			<rect x="69.157" y="295.691" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="70.768"/>
+		
+			<rect x="84.367" y="310.461" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="55.998"/>
+		
+			<rect x="97.071" y="324.461" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="338.461" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="76.535" y="300.387" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 306.1113)" font-size="8">&gt;Isocenter Reference System Sequence</text>
+		<g>
+			<rect x="106.789" y="328.158" fill="none" width="129.235" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 333.8828)" font-size="8">&gt;&gt;Positioner Isocenter  Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="342.076" fill="none" width="134.483" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 347.8008)" font-size="8">&gt;&gt;Positioner Isocenter Secondary Angle</text>
+		</g>
+		<rect x="88.218" y="314.244" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 319.9561)" font-size="8">Item 1</text>
+		<rect x="269.633" y="300.387" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 306.1104)" font-size="8">(0018,9462)</text>
+		<g>
+			<rect x="269.977" y="328.16" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 333.8828)" font-size="8">(0018,9463)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="342.076" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 347.7988)" font-size="8">(0018,9464)</text>
+		</g>
+		
+			<rect x="97.071" y="352.459" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="69.157" y="366.459" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="14"/>
+		<g>
+			<rect x="106.789" y="355.568" fill="none" width="156.654" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 361.2939)" font-size="8">&gt;&gt;Positioner Isocenter Detector Rotation Angle</text>
+		</g>
+		<g>
+			<rect x="269.977" y="355.564" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 361.2793)" font-size="8">(003A,0214)</text>
+		</g>
+		<rect x="76.535" y="369.6" fill="none" width="136.58" height="7.719"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 375.3262)" font-size="8">...</text>
+		
+			<rect x="53.947" y="380.459" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="264.391" height="154.865"/>
+		
+			<rect x="69.157" y="393.787" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="56.821"/>
+		
+			<rect x="84.367" y="408.557" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="42"/>
+		
+			<rect x="97.071" y="422.557" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="436.557" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="76.535" y="398.482" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 404.2041)" font-size="8">&gt;Positioner Position Sequence</text>
+		<g>
+			<rect x="106.789" y="426.254" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 431.9785)" font-size="8">&gt;&gt;Positioner Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="440.172" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 445.8848)" font-size="8">&gt;&gt;Positioner Secondary Angle</text>
+		</g>
+		<rect x="58.218" y="384.395" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 58.2173 390.1201)" font-size="8">Item “N”</text>
+		<rect x="88.218" y="412.34" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 418.0527)" font-size="8">Item 1</text>
+		<rect x="269.633" y="398.482" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 404.207)" font-size="8">(0018,9405)</text>
+		<g>
+			<rect x="269.977" y="426.256" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 431.9785)" font-size="8">(0018,1510)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="440.172" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 445.8955)" font-size="8">(0018,1511)</text>
+		</g>
+		
+			<rect x="69.157" y="450.557" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="70.768"/>
+		
+			<rect x="84.367" y="465.326" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="233.971" height="55.998"/>
+		
+			<rect x="97.071" y="479.326" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="97.071" y="493.326" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		<rect x="76.535" y="455.252" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 460.9766)" font-size="8">&gt;Isocenter Reference System Sequence</text>
+		<g>
+			<rect x="106.789" y="483.023" fill="none" width="129.235" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 488.748)" font-size="8">&gt;&gt;Positioner Isocenter  Primary Angle</text>
+		</g>
+		<g>
+			<rect x="106.789" y="496.941" fill="none" width="134.483" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 106.7881 502.666)" font-size="8">&gt;&gt;Positioner Isocenter Secondary Angle</text>
+		</g>
+		<rect x="88.218" y="469.109" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 88.2173 474.8213)" font-size="8">Item 1</text>
+		<rect x="269.633" y="455.252" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 269.6367 460.9756)" font-size="8">(0018,9462)</text>
+		<g>
+			<rect x="269.977" y="483.025" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 488.748)" font-size="8">(0018,9463)</text>
+		</g>
+		<g>
+			<rect x="269.793" y="496.941" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.7969 502.6641)" font-size="8">(0018,9464)</text>
+		</g>
+		
+			<rect x="97.071" y="507.324" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="221.267" height="14"/>
+		
+			<rect x="69.157" y="521.324" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="249.181" height="14"/>
+		<g>
+			<rect x="106.789" y="510.434" fill="none" width="156.654" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 106.7886 516.1592)" font-size="8">&gt;&gt;Positioner Isocenter Detector Rotation Angle</text>
+		</g>
+		<g>
+			<rect x="269.977" y="510.43" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 269.9805 516.1445)" font-size="8">(003A,0214)</text>
+		</g>
+		<rect x="76.535" y="524.465" fill="none" width="136.58" height="7.719"/>
+		<text transform="matrix(0.9288 0 0 1 76.5342 530.1914)" font-size="8">...</text>
+		<rect x="330.508" y="73.397" fill="none" width="132.656" height="446.725"/>
+		<text transform="matrix(0.9288 0 0 1 330.5078 79.1221)"><tspan x="0" y="0" font-size="8">Frame 1</tspan><tspan x="0" y="42.3" font-size="8">= 90.0</tspan><tspan x="0" y="56.4" font-size="8">= 0.0</tspan><tspan x="0" y="98.7" font-size="8">= -90.0</tspan><tspan x="0" y="112.8" font-size="8">= 0.0</tspan><tspan x="0" y="126.9" font-size="8">= 0.0</tspan><tspan x="0" y="155.1" font-size="8">Frame “N/2”</tspan><tspan x="0" y="197.4" font-size="8">= 180.0</tspan><tspan x="0" y="211.5" font-size="8">= 0.0</tspan><tspan x="0" y="253.8" font-size="8">= 0.0</tspan><tspan x="0" y="267.9" font-size="8">= 0.0</tspan><tspan x="0" y="282" font-size="8">= 0.0</tspan><tspan x="0" y="310.2" font-size="8">Frame “N”</tspan><tspan x="0" y="352.5" font-size="8">= -90.0</tspan><tspan x="0" y="366.601" font-size="8">= 0.0</tspan><tspan x="0" y="408.9" font-size="8">= 90.0</tspan><tspan x="0" y="423" font-size="8">= 0.0</tspan><tspan x="0" y="437.101" font-size="8">= 0.0</tspan></text>
+	</g>
+</g>
+</svg>

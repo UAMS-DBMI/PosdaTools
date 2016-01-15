@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_7-2a.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="587px" viewBox="0 0 502 587" enable-background="new 0 0 502 587" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="585"/>
+	<g>
+		<polyline opacity="0.4" fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+			275.984,35.854 275.984,43.162 249.158,43.162 248.96,43.162 222.133,43.162 222.133,49.179 		"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.935,34.024 275.935,43.162 
+					222.167,43.162 222.167,51.587 				"/>
+				<g>
+					<polygon fill="#005695" points="219.843,50.002 222.167,58.675 224.491,50.002 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.981,34.024 275.981,43.162 
+					331.486,43.162 331.486,52.087 				"/>
+				<g>
+					<polygon fill="#005695" points="329.162,50.502 331.486,59.175 333.811,50.502 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.981,185.989 275.981,193.258 
+					331.486,193.258 331.486,282.86 				"/>
+				<g>
+					<polygon fill="#005695" points="329.162,281.274 331.486,289.947 333.811,281.274 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.935,185.989 275.935,193.258 
+					222.167,193.258 222.167,198.805 				"/>
+				<g>
+					<polygon fill="#005695" points="219.843,197.22 222.167,205.893 224.491,197.22 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.935,160.505 275.935,156.21 
+					222.167,156.21 222.167,142.59 				"/>
+				<g>
+					<polygon fill="#005695" points="278.259,158.92 275.935,167.593 273.61,158.92 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,347.576 276.027,347.576 
+					276.027,322.898 221.808,322.898 221.808,309.158 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,349.9 262.026,347.576 270.699,345.252 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="283.083,347.576 276.172,347.576 
+					276.172,322.898 331.467,322.898 331.467,309.158 				"/>
+				<g>
+					<polygon fill="#005695" points="281.498,345.252 290.171,347.576 281.498,349.9 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,382.736 275.824,382.736 
+					275.824,347.234 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,385.061 262.026,382.736 270.699,380.412 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,382.736 276.07,382.736 
+					276.07,347.234 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,380.412 289.866,382.736 281.193,385.061 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,418.244 275.824,418.244 
+					275.824,382.234 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,420.568 262.026,418.244 270.699,415.92 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,418.244 276.07,418.244 
+					276.07,382.234 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,415.92 289.866,418.244 281.193,420.568 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,454.234 275.824,454.234 
+					275.824,418.225 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,456.559 262.026,454.234 270.699,451.91 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,454.234 276.07,454.234 
+					276.07,418.225 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,451.91 289.866,454.234 281.193,456.559 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,490.225 275.824,490.225 
+					275.824,454.215 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,492.549 262.026,490.225 270.699,487.9 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,490.225 276.07,490.225 
+					276.07,454.215 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,487.9 289.866,490.225 281.193,492.549 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,526.215 276.07,526.215 
+					276.07,490.205 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,523.891 289.866,526.215 281.193,528.539 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="275.981,160.505 275.981,156.21 
+					331.486,156.21 331.486,76.54 				"/>
+				<g>
+					<polygon fill="#005695" points="278.306,158.92 275.981,167.593 273.657,158.92 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="222.167" y1="76.54" x2="222.167" y2="84.278"/>
+				<g>
+					<polygon fill="#005695" points="219.843,82.692 222.167,91.365 224.491,82.692 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="222.167" y1="109.365" x2="222.167" y2="117.572"/>
+				<g>
+					<polygon fill="#005695" points="219.843,115.986 222.167,124.659 224.491,115.986 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="222.167" y1="233.829" x2="222.167" y2="243.873"/>
+				<g>
+					<polygon fill="#005695" points="219.843,242.287 222.167,250.96 224.491,242.287 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="222.167" y1="273.805" x2="222.167" y2="283.553"/>
+				<g>
+					<polygon fill="#005695" points="219.843,281.968 222.167,290.641 224.491,281.968 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="290.243" y="374.461" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 305.2334 386.7812)" font-size="9">Fiducials IOD</text>
+		</g>
+		
+			<rect x="290.243" y="410.471" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 310.4824 422.791)" font-size="9">Image IOD</text>
+		</g>
+		
+			<rect x="290.243" y="446.471" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 303.2324 458.791)" font-size="9">Raw Data IOD</text>
+		</g>
+		
+			<rect x="125.598" y="373.371" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="17.996"/>
+		<g>
+			<text transform="matrix(1.0389 0 0 1 147.4951 385.6895)" font-size="9">MR Spectroscopy IOD</text>
+		</g>
+		
+			<rect x="125.598" y="409.359" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1.0389 0 0 1 139.4326 421.6797)" font-size="9">Radiotherapy Objects IOD</text>
+		</g>
+		
+			<rect x="125.599" y="445.369" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1.0341 0 0 1 133.7295 457.6895)" font-size="9">Encapsulated Document IOD</text>
+		</g>
+		
+			<rect x="125.599" y="481.369" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 130.9717 493.6895)" font-size="9">Real-World Value Mapping IOD</text>
+		</g>
+		
+			<rect x="125.598" y="338.369" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 147.7236 350.6885)" font-size="9">Presentation State IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 336.2852)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 372.0195)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 407.7539)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 443.4883)" font-size="9">0-n</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			172.029,220.122 221.456,206.829 271.029,220.313 271.029,220.345 221.456,233.829 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 195.5864 222.8223)" font-size="9">comprised of</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			286.461,299.504 331.364,290.641 376.402,299.631 376.402,299.652 331.364,308.641 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 310.1797 302.1367)" font-size="9">references</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			176.439,299.504 221.373,290.641 266.439,299.631 266.439,299.652 221.373,308.641 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 200.1479 302.1367)" font-size="9">references</text>
+		</g>
+		
+			<rect x="177.32" y="250.96" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="88.113" height="22.845"/>
+		<g>
+			<text transform="matrix(1 0 0 1 182.8281 259.4717)"><tspan x="0" y="0" font-size="9">Modality performed</tspan><tspan x="-4.254" y="8.8" font-size="9">Procedure Steps IOD</tspan></text>
+		</g>
+		
+			<rect x="233.977" y="16.006" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.97" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 244.9326 28.3301)" font-size="12">Patient IOD</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			176.343,67.402 221.277,58.54 266.343,67.53 266.343,67.551 221.277,76.54 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 200.0508 70.0361)" font-size="9">references</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			286.322,67.402 331.226,58.54 376.264,67.53 376.264,67.551 331.226,76.54 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 310.0391 70.0361)" font-size="9">references</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			176.343,133.521 221.277,124.659 266.343,133.648 266.343,133.669 221.277,142.659 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 200.0513 136.1533)" font-size="9">references</text>
+		</g>
+		
+			<rect x="233.259" y="167.989" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.966" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 247.5498 180.313)" font-size="12">Study IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 351.5654 58.582)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 351.5645 81.3076)" font-size="9">1-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 243.2788 125.3828)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 242.5586 147.3877)" font-size="9">1-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 243.2788 58.582)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 242.5586 81.3076)" font-size="9">1-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 243.2788 291.2144)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 352.9395 291.2144)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 242.5591 210.0854)" font-size="9">1-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 242.5586 237.1313)" font-size="9">1-n</text>
+		</g>
+		
+			<rect x="290.243" y="481.785" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 302.4873 494.1055)" font-size="9">Waveform IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 478.8027)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 336.2852)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 372.0195)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 407.7539)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 443.4883)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 478.8027)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,526.215 275.824,526.215 
+					275.824,490.205 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,528.539 262.026,526.215 270.699,523.891 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="125.599" y="517.1" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 133.2236 528.5928)" font-size="9">Stereometric Relationship IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 514.1172)" font-size="9">0-n</text>
+		</g>
+		
+			<rect x="290.243" y="517.1" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 294.9785 529.4199)" font-size="9">SR Document IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 514.1182)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="282.778,562.109 276.07,562.109 
+					276.07,526.1 				"/>
+				<g>
+					<polygon fill="#005695" points="281.193,559.785 289.866,562.109 281.193,564.434 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="269.114,562.109 275.824,562.109 
+					275.824,526.1 				"/>
+				<g>
+					<polygon fill="#005695" points="270.699,564.434 262.026,562.109 270.699,559.785 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="125.599" y="552.994" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="136.8" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 154.9854 564.4873)" font-size="9">Measurements IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 250.0029 550.0117)" font-size="9">0-n</text>
+		</g>
+		
+			<rect x="290.243" y="552.994" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 307.4814 565.3145)" font-size="9">Surface IOD</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 289.4434 550.0127)" font-size="9">0-n</text>
+		</g>
+		
+			<rect x="290.243" y="339.189" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.995" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 298.9785 351.5098)" font-size="9">Registration IOD</text>
+		</g>
+		
+			<rect x="179.172" y="91.365" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.972" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 197.4697 103.6904)" font-size="12">Visit IOD</text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_Y-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="327px" viewBox="0 0 502 327" enable-background="new 0 0 502 327" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="325"/>
+	<g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="205.978" y1="304.789" x2="118.619" y2="304.789"/>
+				<path fill="#ED1C24" d="M116.257,305.814c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.401,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C112.883,304.914,114.488,305.279,116.257,305.814z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="367.152" y1="304.789" x2="280.259" y2="304.789"/>
+				<path fill="#ED1C24" d="M369.514,303.764c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C372.889,304.664,371.283,304.299,369.514,303.764z"/>
+			</g>
+		</g>
+		<g>
+			<rect x="215.333" y="301.205" fill="none" width="56.636" height="7.367"/>
+			<text transform="matrix(1 0 0 1 215.3335 307.6367)" font-size="9">Window width</text>
+		</g>
+		<g>
+			<rect x="439.576" y="244.115" fill="none" width="23.044" height="20.801"/>
+			<text transform="matrix(1 0 0 1 439.5762 250.5469)"><tspan x="0" y="0" font-size="9">Input</tspan><tspan x="0" y="10.8" font-size="9">levels</tspan></text>
+		</g>
+		<g>
+			<rect x="58.285" y="18.973" fill="none" width="28.188" height="21.541"/>
+			<text transform="matrix(1 0 0 1 58.2847 25.4038)"><tspan x="0" y="0" font-size="9">Output</tspan><tspan x="0" y="10.8" font-size="9">levels</tspan></text>
+		</g>
+		<g>
+			<rect x="213.045" y="285.26" fill="none" width="61.213" height="10.77"/>
+			<text transform="matrix(1 0 0 1 213.0449 291.6875)" font-size="9">Window center</text>
+		</g>
+		<rect x="71.553" y="61.184" fill="#CCDEF0" stroke="#000000" width="342" height="193.332"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="64.353" y1="99.841" x2="413.553" y2="99.841"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="64.353" y1="61.184" x2="413.553" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="64.353" y1="138.498" x2="413.553" y2="138.498"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="64.353" y1="177.201" x2="413.553" y2="177.201"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="64.353" y1="215.859" x2="413.553" y2="215.859"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="379.319" y1="261.715" x2="379.319" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="413.161" y1="261.715" x2="413.161" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="345.169" y1="261.715" x2="345.169" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="310.937" y1="261.715" x2="310.937" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="276.786" y1="261.715" x2="276.786" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="242.553" y1="261.715" x2="242.553" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="208.319" y1="261.715" x2="208.319" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="174.169" y1="261.715" x2="174.169" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="139.936" y1="261.715" x2="139.936" y2="61.184"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="105.786" y1="261.715" x2="105.786" y2="61.184"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#003468" points="71.553,51.183 71.553,254.516 427.553,254.516 				"/>
+				<path fill="#003468" d="M429.914,253.49c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C433.289,254.391,431.684,254.025,429.914,253.49z"/>
+				<path fill="#003468" d="M70.528,48.821c-0.5,1.653-0.959,2.728-1.492,4.054h5.044c-0.226-0.475-0.993-2.401-1.492-4.054
+					c-0.535-1.77-0.9-3.374-1.031-4.415C71.428,45.447,71.062,47.052,70.528,48.821z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="243.651" y1="166.902" x2="243.651" y2="282.736"/>
+				<path fill="#ED1C24" d="M242.626,164.541c-0.5,1.653-0.959,2.728-1.492,4.054h5.044c-0.226-0.475-0.993-2.4-1.492-4.054
+					c-0.535-1.77-0.9-3.375-1.031-4.415C243.526,161.167,243.161,162.771,242.626,164.541z"/>
+			</g>
+		</g>
+		<g>
+			<rect x="214.978" y="15.373" fill="none" width="57.348" height="10.771"/>
+			<text transform="matrix(1 0 0 1 214.978 23.2354)" font-size="11">Linear LUT</text>
+		</g>
+		<g>
+			<rect x="39.38" y="57.559" fill="none" width="22.812" height="203.436"/>
+			<text transform="matrix(1 0 0 1 43.8394 65.4204)"><tspan x="0" y="0" font-size="11">250</tspan><tspan x="0" y="38.2" font-size="11">200</tspan><tspan x="0" y="76.4" font-size="11">150</tspan><tspan x="0" y="114.6" font-size="11">100</tspan><tspan x="6.118" y="152.8" font-size="11">50</tspan><tspan x="12.235" y="191" font-size="11">0</tspan></text>
+		</g>
+		<g>
+			<rect x="68.187" y="264.916" fill="none" width="354.146" height="10.311"/>
+			<text transform="matrix(1 0 0 1 68.1865 272.7793)"><tspan x="0" y="0" font-size="11">0</tspan><tspan x="6.118" y="0" font-size="11" letter-spacing="53">	</tspan><tspan x="62.549" y="0" font-size="11">50</tspan><tspan x="74.784" y="0" font-size="11" letter-spacing="49">	</tspan><tspan x="127.49" y="0" font-size="11">100</tspan><tspan x="145.843" y="0" font-size="11" letter-spacing="47">	</tspan><tspan x="196.157" y="0" font-size="11">150</tspan><tspan x="214.51" y="0" font-size="11" letter-spacing="46">	</tspan><tspan x="264.157" y="0" font-size="11">200</tspan><tspan x="282.51" y="0" font-size="11" letter-spacing="47">	</tspan><tspan x="332.823" y="0" font-size="11">250</tspan></text>
+		</g>
+		<polyline fill="none" stroke="#2E3192" stroke-width="3" points="422.22,56.518 379.319,56.518 107.984,254.516 71.553,254.516 		
+			"/>
+		<line fill="none" stroke="#ED1C24" stroke-dasharray="4" x1="107.984" y1="311.627" x2="107.984" y2="241.85"/>
+		<line fill="none" stroke="#ED1C24" stroke-dasharray="4" x1="379.319" y1="47.85" x2="379.319" y2="311.627"/>
+	</g>
+</g>
+</svg>

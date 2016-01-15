@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part11/figures/PS3.11_6-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="496.042px" height="386.524px" viewBox="0 0 496.042 386.524" enable-background="new 0 0 496.042 386.524"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure 6-1 RELATIONSHIP BETWEEN AN APPLICATION PROFILE AND PARTS OF DICOM
+  </title>
+  <desc>
+	DICOM PS 3.11-2008 Part 11: Media Storage Application Profiles
+  </desc>
+</g>
+
+<symbol  id="Bounding_Box" viewBox="-248.021 -218.053 496.043 436.106">
+	<polygon fill="#F4EED7" points="248.021,-218.053 -248.021,-218.053 -248.021,218.053 248.021,218.053 	"/>
+</symbol>
+<use xlink:href="#Bounding_Box"  width="496.043" height="436.106" x="-248.021" y="-218.053" transform="matrix(1 0 0 -0.8863 248.0215 193.2622)" overflow="visible"/>
+<path fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+	M280.191,30.448h201.502v342.001H280.191V30.448z"/>
+<path fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+	M14.616,30.448h235.877v342.001H14.616V30.448z"/>
+<text transform="matrix(1 0 0 1 281.0132 24.7139)" font-size="12">Parts of DICOM Standard</text>
+<g>
+	<text transform="matrix(1 0 0 1 14.3477 24.7139)" font-size="12">PS3.11: Media Storage Application Profiles</text>
+</g>
+<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="176.853" y1="104.613" x2="361.973" y2="104.613"/>
+<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="114.028" y1="200.308" x2="362.064" y2="200.308"/>
+<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="197.305" y1="296.002" x2="362.052" y2="296.002"/>
+<text transform="matrix(1 0 0 1 25.9653 59.1631)"><tspan x="0" y="0" font-size="11">Conformance Requirements</tspan><tspan x="0" y="48" font-size="11">Information Object Definitions</tspan><tspan x="0" y="96" font-size="11">Service Classes</tspan><tspan x="0" y="144" font-size="11">Transfer Syntax</tspan><tspan x="0" y="192" font-size="11">File Format, Directory</tspan><tspan x="0" y="240" font-size="11">Medium Format, Physical Medium</tspan><tspan x="0" y="288" font-size="11">Security Profile</tspan></text>
+<g>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="167.847" y1="56.767" x2="293.631" y2="56.767"/>
+</g>
+<g>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="110.737" y1="152.461" x2="293.631" y2="152.461"/>
+</g>
+<g>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="135.742" y1="248.155" x2="293.63" y2="248.155"/>
+</g>
+<g>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="104.222" y1="343.85" x2="293.63" y2="343.85"/>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M293.631,143.426c0-1.98,1.62-3.6,3.6-3.6h99.746c1.979,0,3.6,1.62,3.6,3.6v22.308
+			c0,1.98-1.62,3.6-3.6,3.6h-99.746c-1.979,0-3.6-1.62-3.6-3.6V143.426z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M293.631,143.426c0-1.98,1.62-3.6,3.6-3.6h99.746c1.979,0,3.6,1.62,3.6,3.6v22.308c0,1.98-1.62,3.6-3.6,3.6h-99.746
+			c-1.979,0-3.6-1.62-3.6-3.6V143.426z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 322.6675 152.0107)"><tspan x="0" y="0" font-size="8">Service Class</tspan><tspan x="-0.229" y="9.6" font-size="8">Specifications</tspan></text>
+	<text transform="matrix(1 0 0 1 293.1323 134.6934)" font-size="9">PS3.4</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M361.973,95.474c0-1.98,1.62-3.6,3.6-3.6h99.786c1.979,0,3.6,1.62,3.6,3.6v22.307c0,1.98-1.62,3.6-3.6,3.6
+			h-99.786c-1.979,0-3.6-1.62-3.6-3.6V95.474z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M361.973,95.474c0-1.98,1.62-3.6,3.6-3.6h99.786c1.979,0,3.6,1.62,3.6,3.6v22.307c0,1.98-1.62,3.6-3.6,3.6h-99.786
+			c-1.979,0-3.6-1.62-3.6-3.6V95.474z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 395.4536 104.0566)"><tspan x="0" y="0" font-size="8">Information</tspan><tspan x="-11.338" y="9.6" font-size="8">Object Definitions</tspan></text>
+	<text transform="matrix(1 0 0 1 362.2573 88.0869)" font-size="9">PS3.3</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M361.994,190.394c0-1.98,1.62-3.6,3.6-3.6h99.747c1.979,0,3.6,1.62,3.6,3.6V212.7
+			c0,1.979-1.62,3.6-3.6,3.6h-99.747c-1.979,0-3.6-1.62-3.6-3.6V190.394z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M361.994,190.394c0-1.98,1.62-3.6,3.6-3.6h99.747c1.979,0,3.6,1.62,3.6,3.6V212.7c0,1.979-1.62,3.6-3.6,3.6h-99.747
+			c-1.979,0-3.6-1.62-3.6-3.6V190.394z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 381.8892 198.9766)"><tspan x="0" y="0" font-size="8">Data Structure and</tspan><tspan x="14.9" y="9.6" font-size="8">Semantics</tspan></text>
+	<text transform="matrix(1 0 0 1 362.2583 182.2881)" font-size="9">PS3.5</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M293.63,237.371c0-1.979,1.62-3.6,3.6-3.6h99.747c1.979,0,3.6,1.62,3.6,3.6V259.6
+			c0,1.979-1.62,3.6-3.6,3.6H297.23c-1.979,0-3.6-1.62-3.6-3.6V237.371z"/>
+		<path fill="none" stroke="#000000" stroke-width="0.75" d="M293.63,237.371c0-1.979,1.62-3.6,3.6-3.6h99.747
+			c1.979,0,3.6,1.62,3.6,3.6V259.6c0,1.979-1.62,3.6-3.6,3.6H297.23c-1.979,0-3.6-1.62-3.6-3.6V237.371z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 305.7573 245.918)"><tspan x="0" y="0" font-size="8">Media Storage and File</tspan><tspan x="-8.889" y="9.6" font-size="8">Format for Data Interchange</tspan></text>
+	<text transform="matrix(1 0 0 1 293.1323 229.9482)" font-size="9">PS3.10</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M362.052,284.651c0-1.979,1.62-3.6,3.6-3.6h99.746c1.979,0,3.6,1.62,3.6,3.6v22.228
+			c0,1.979-1.62,3.6-3.6,3.6h-99.746c-1.979,0-3.6-1.62-3.6-3.6V284.651z"/>
+		<path fill="none" stroke="#000000" stroke-width="0.75" d="M362.052,284.651c0-1.979,1.62-3.6,3.6-3.6h99.746
+			c1.979,0,3.6,1.62,3.6,3.6v22.228c0,1.979-1.62,3.6-3.6,3.6h-99.746c-1.979,0-3.6-1.62-3.6-3.6V284.651z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 365.0552 293.1982)"><tspan x="0" y="0" font-size="8">Media Formats and Physical</tspan><tspan x="1.992" y="9.601" font-size="8">Media for Data Interchange</tspan></text>
+	<text transform="matrix(1 0 0 1 362.2583 277.2285)" font-size="9">PS3.12</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M293.63,332.092c0-1.979,1.62-3.6,3.6-3.6h99.747c1.979,0,3.6,1.62,3.6,3.6v22.24
+			c0,1.979-1.62,3.6-3.6,3.6H297.23c-1.979,0-3.6-1.62-3.6-3.6V332.092z"/>
+		<path fill="none" stroke="#010101" stroke-width="0.75" d="M293.63,332.092c0-1.979,1.62-3.6,3.6-3.6h99.747
+			c1.979,0,3.6,1.62,3.6,3.6v22.24c0,1.979-1.62,3.6-3.6,3.6H297.23c-1.979,0-3.6-1.62-3.6-3.6V332.092z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 332.6694 340.6504)"><tspan x="0" y="0" font-size="8">Security</tspan><tspan x="1.111" y="9.6" font-size="8">Profiles</tspan></text>
+	<text transform="matrix(1 0 0 1 293.1313 324.3213)" font-size="9">PS3.15</text>
+</g>
+<g>
+	<g>
+		<path fill="#CCDFF0" d="M293.631,48.619c0-1.98,1.62-3.6,3.6-3.6h99.746c1.979,0,3.6,1.62,3.6,3.6v22.307c0,1.98-1.62,3.6-3.6,3.6
+			h-99.746c-1.979,0-3.6-1.62-3.6-3.6V48.619z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M293.631,48.619c0-1.98,1.62-3.6,3.6-3.6h99.746c1.979,0,3.6,1.62,3.6,3.6v22.307c0,1.98-1.62,3.6-3.6,3.6h-99.746
+			c-1.979,0-3.6-1.62-3.6-3.6V48.619z"/>
+	</g>
+	<text transform="matrix(1 0 0 1 323.1069 61.2822)" font-size="8">Conformance</text>
+	<text transform="matrix(1 0 0 1 293.1323 40.3838)" font-size="9">PS3.2</text>
+</g>
+</svg>

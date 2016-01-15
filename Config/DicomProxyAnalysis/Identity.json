@@ -1,0 +1,14 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomProxyAnalysis/Identity.json,v $
+//  $Date: 2014/09/22 18:45:33 $
+//  $Revision: 1.1 $
+// 
+{
+  "Greeting": { },
+  "HostName": "bills_mac",
+  "Title": "Dicom Proxy Analysis",
+  "LoginTitle": "Login for Dicom Proxy Analysis",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+}

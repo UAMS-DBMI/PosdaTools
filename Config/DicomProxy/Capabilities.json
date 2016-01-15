@@ -1,0 +1,33 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomProxy/Capabilities.json,v $
+//  $Date: 2014/09/22 18:44:26 $
+//  $Revision: 1.1 $
+// 
+{
+  "Default": {
+  },
+  "root": { 
+    "CanDebug": 1,
+    "IsExpert": 1,
+    "IsExpertCapable": 1,
+  },
+  "bbennett": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "ksmith": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "kclark": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "tnolan": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+}

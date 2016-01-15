@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_GGG.6-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="419.406px" viewBox="0 0 502 419.406" enable-background="new 0 0 502 419.406" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="417.406"/>
+	<g>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="97.233" y1="68.537" x2="97.233" y2="386.869"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="299.834" y1="68.537" x2="299.834" y2="387.869"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="439.732" y1="68.537" x2="439.732" y2="379.869"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,139.703 315.25,139.703 
+			315.219,149.531 310.316,149.534 		"/>
+		<polygon fill="#005695" points="311.504,147.79 305,149.536 311.506,151.276 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,169.453 315.25,169.453 
+			315.219,179.281 310.316,179.284 		"/>
+		<polygon fill="#005695" points="311.504,177.54 305,179.286 311.506,181.026 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,195.453 315.25,195.453 
+			315.219,205.281 310.316,205.285 		"/>
+		<polygon fill="#005695" points="311.504,203.541 305,205.287 311.506,207.026 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,221.703 315.25,221.703 
+			315.219,231.531 310.316,231.535 		"/>
+		<polygon fill="#005695" points="311.504,229.791 305,231.537 311.506,233.277 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,303.203 315.25,303.203 
+			315.219,313.031 310.316,313.035 		"/>
+		<polygon fill="#005695" points="311.504,311.291 305,313.037 311.506,314.777 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="305,365.703 315.25,365.703 
+			315.219,375.531 310.316,375.535 		"/>
+		<polygon fill="#005695" points="311.504,373.791 305,375.537 311.506,377.275 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="91.399,206.037 81.149,206.037 
+			81.18,215.865 86.083,215.867 		"/>
+		<polygon fill="#005695" points="84.894,217.609 91.399,215.869 84.896,214.125 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="91.399,140.787 81.149,140.787 
+			81.18,150.615 86.083,150.618 		"/>
+		<polygon fill="#005695" points="84.894,152.36 91.399,150.62 84.896,148.874 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="91.399,232.037 81.149,232.037 
+			81.18,241.865 86.083,241.867 		"/>
+		<polygon fill="#005695" points="84.894,243.609 91.399,241.869 84.896,240.125 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" points="91.399,312.037 81.149,312.037 
+			81.18,321.865 86.083,321.867 		"/>
+		<polygon fill="#005695" points="84.894,323.609 91.399,321.869 84.896,320.125 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,3" x1="305" y1="259.871" x2="429.416" y2="259.871"/>
+		<polygon fill="#005695" points="428.229,261.613 434.732,259.871 428.229,258.127 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,3" x1="310.316" y1="267.371" x2="434.732" y2="267.371"/>
+		<polygon fill="#005695" points="311.506,269.113 305,267.371 311.506,265.627 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="101.899" y1="103.703" x2="289.518" y2="103.703"/>
+		<polygon fill="#005695" points="288.33,105.447 294.834,103.704 288.33,101.96 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="101.899" y1="143.87" x2="289.518" y2="143.87"/>
+		<polygon fill="#005695" points="288.33,145.613 294.834,143.87 288.33,142.127 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="101.899" y1="205.871" x2="294.834" y2="205.871"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="101.899" y1="232.037" x2="294.834" y2="232.037"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="107.215" y1="313.787" x2="294.834" y2="313.787"/>
+		<polygon fill="#005695" points="108.404,315.529 101.9,313.787 108.404,312.045 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="101.899" y1="336.287" x2="289.518" y2="336.287"/>
+		<polygon fill="#005695" points="288.33,338.029 294.834,336.287 288.33,334.543 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="101.899" y1="365.787" x2="289.518" y2="365.787"/>
+		<polygon fill="#005695" points="288.33,367.529 294.834,365.787 288.33,364.043 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" x1="107.215" y1="343.037" x2="294.834" y2="343.037"/>
+		<polygon fill="#005695" points="108.404,344.779 101.9,343.037 108.404,341.293 		"/>
+		<rect x="91.899" y="228.453" fill="#CCDEF0" width="9.5" height="16.666"/>
+		
+			<rect x="91.899" y="228.453" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="16.666"/>
+		<rect x="91.899" y="202.703" fill="#CCDEF0" width="9.5" height="16.667"/>
+		
+			<rect x="91.899" y="202.703" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="16.667"/>
+		<rect x="91.899" y="306.703" fill="#CCDEF0" width="9.5" height="64.666"/>
+		
+			<rect x="91.899" y="306.703" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="64.666"/>
+		<rect x="295.25" y="97.203" fill="#CCDEF0" width="9.5" height="13.167"/>
+		
+			<rect x="295.25" y="97.203" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.167"/>
+		<rect x="92.149" y="97.203" fill="#CCDEF0" width="9.5" height="13.167"/>
+		
+			<rect x="92.149" y="97.203" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.167"/>
+		
+			<rect x="434.648" y="254.787" fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,2" width="9.5" height="17.5"/>
+		<rect x="295.25" y="362.703" fill="#CCDEF0" width="9.5" height="16.834"/>
+		
+			<rect x="295.25" y="362.703" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="16.834"/>
+		<rect x="295.25" y="330.578" fill="#CCDEF0" width="9.5" height="18.416"/>
+		
+			<rect x="295.25" y="330.578" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="18.416"/>
+		<rect x="295.25" y="136.953" fill="#CCDEF0" width="9.5" height="13.167"/>
+		
+			<rect x="295.25" y="136.953" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.167"/>
+		<rect x="92.149" y="136.954" fill="#CCDEF0" width="9.5" height="22.833"/>
+		
+			<rect x="92.149" y="136.954" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="22.833"/>
+		<rect x="295.25" y="164.953" fill="#CCDEF0" width="9.5" height="154.167"/>
+		
+			<rect x="295.25" y="164.953" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="154.167"/>
+		<rect x="422.398" y="38.37" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="10" width="35" height="30"/>
+		<rect x="282.118" y="45.57" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="10" width="50" height="30"/>
+		<rect x="278.519" y="41.97" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="10" width="50" height="30"/>
+		<rect x="274.919" y="38.37" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="10" width="50" height="30"/>
+		<rect x="79.732" y="38.37" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="10" width="35" height="30"/>
+		<text transform="matrix(1 0 0 1 89.2314 55.875)" fill="#010101" font-size="9">RIS</text>
+		<text transform="matrix(1 0 0 1 286.166 50.4751)"><tspan x="0" y="0" fill="#010101" font-size="9">X-RAY</tspan><tspan x="-7.502" y="10.8" fill="#010101" font-size="9">(Room #1)</tspan></text>
+		<text transform="matrix(1 0 0 1 427.1445 55.875)" fill="#010101" font-size="9">PACS</text>
+		<text transform="matrix(1 0 0 1 322.833 145.2026)" fill="#010101" font-size="6.5">Create UPS for Task X</text>
+		<text transform="matrix(1 0 0 1 24.0005 120.2036)" fill="#010101" font-size="6.5">Patient (Mr. X) arrives </text>
+		<text transform="matrix(1 0 0 1 24.0005 128.0034)" fill="#010101" font-size="6.5">at Reception</text>
+		<text transform="matrix(1 0 0 1 24.0005 143.5386)" fill="#010101" font-size="6.5">RIS assigns Mr. X</text>
+		<text transform="matrix(1 0 0 1 24.0005 151.3384)" fill="#010101" font-size="6.5">to Room 1</text>
+		<text transform="matrix(1 0 0 1 24.0005 208.0381)" fill="#010101" font-size="6.5">Display Progress</text>
+		<text transform="matrix(1 0 0 1 24.0005 215.8379)" fill="#010101" font-size="6.5">“Exam Started”</text>
+		<text transform="matrix(1 0 0 1 24.0005 232.0361)" fill="#010101" font-size="6.5">Display Progress</text>
+		<text transform="matrix(1 0 0 1 24.0005 239.8359)" fill="#010101" font-size="6.5">“All Views Taken”</text>
+		<text transform="matrix(1 0 0 1 24.0005 313.5391)" fill="#010101" font-size="6.5">Display Progress</text>
+		<text transform="matrix(1 0 0 1 24.0005 321.3398)" fill="#010101" font-size="6.5">“Exam Complete”</text>
+		<text transform="matrix(1 0 0 1 322.833 172.873)" fill="#010101" font-size="6.5">Tech confirms identity of Mr. X</text>
+		<text transform="matrix(1 0 0 1 322.833 180.6729)" fill="#010101" font-size="6.5">and begins procedure</text>
+		<text transform="matrix(1 0 0 1 322.833 199.6919)" fill="#010101" font-size="6.5">Update Task X UPS Status to</text>
+		<text transform="matrix(1 0 0 1 322.833 207.4922)" fill="#010101" font-size="6.5">IN-PROGRESS</text>
+		<text transform="matrix(1 0 0 1 322.833 226.5117)" fill="#010101" font-size="6.5">Update Task X UPS Progress to</text>
+		<text transform="matrix(1 0 0 1 322.833 234.3105)" fill="#010101" font-size="6.5">“All Views Taken”</text>
+		<text transform="matrix(1 0 0 1 322.833 257.2305)" fill="#005695" font-size="6.5">Store Images</text>
+		<text transform="matrix(1 0 0 1 322.833 288.0469)" fill="#010101" font-size="6.5">Update Task X Details</text>
+		<text transform="matrix(1 0 0 1 322.833 306.7148)" fill="#010101" font-size="6.5">Update Task X UPS Status to</text>
+		<text transform="matrix(1 0 0 1 322.833 314.5146)" fill="#010101" font-size="6.5">COMPLETE</text>
+		<text transform="matrix(1 0 0 1 322.833 371.3828)" fill="#010101" font-size="6.5">Delete Task X</text>
+		<text transform="matrix(1 0 0 1 110.563 92.5527)" fill="#010101" font-size="6.5">Subscribe globally for events</text>
+		<text transform="matrix(1 0 0 1 110.563 100.3525)" fill="#010101" font-size="6.5">(N-ACTION SUBSCRIBE [Well-Known Instance])</text>
+		<text transform="matrix(1 0 0 1 110.5693 153.0547)" fill="#010101" font-size="6.5">Add UPS Task (N-CREATE)</text>
+		<text transform="matrix(1 0 0 1 171.2725 175.0571)" fill="#010101" font-size="6.5">Patient (Mr. X) arrives at X-Ray Room 1</text>
+		<text transform="matrix(1 0 0 1 174.5288 202.5586)" fill="#010101" font-size="6.5">Report Task X In-Progress (N-EVENT)</text>
+		<text transform="matrix(1 0 0 1 182.1143 228.5586)" fill="#010101" font-size="6.5">Report Task X Progress (N-EVENT)</text>
+		<text transform="matrix(1 0 0 1 169.2705 310.0557)" fill="#010101" font-size="6.5">Report Task X Complete (N-EVENT)</text>
+		<text transform="matrix(1 0 0 1 169.2705 334.0537)" fill="#010101" font-size="6.5">Retrieve Final State Details (N-GET)</text>
+		<text transform="matrix(1 0 0 1 110.563 355.0547)" fill="#010101" font-size="6.5">UnSubscribe for Task X</text>
+		<text transform="matrix(1 0 0 1 110.563 362.8555)" fill="#010101" font-size="6.5">(N-ACTION SUBSCRIBE [Task X])</text>
+		<text transform="matrix(1 0 0 1 322.833 117.2026)" fill="#010101" font-size="24">...</text>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.4.2-4.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="267px" viewBox="0 0 502 267" enable-background="new 0 0 502 267" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="265"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="398.122" y1="251.542" x2="398.122" y2="39.491"/>
+		
+			<rect x="372.323" y="15.458" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="27"/>
+		<text transform="matrix(1 0 0 1 374.6172 26.9858)"><tspan x="0" y="0"  font-size="9">Department</tspan><tspan x="3.248" y="10.8"  font-size="9">Scheduler</tspan></text>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="68.385" x2="385.642" y2="68.385"/>
+			<path fill="#005695" d="M388.003,67.36c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+				c1.77-0.534,3.375-0.9,4.415-1.03C391.378,68.26,389.772,67.895,388.003,67.36z"/>
+		</g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="94.977" x2="385.642" y2="94.977"/>
+			<path fill="#005695" d="M388.003,93.951c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.226,2.401-0.992,4.054-1.491
+				c1.77-0.535,3.375-0.9,4.415-1.031C391.378,94.852,389.772,94.485,388.003,93.951z"/>
+		</g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="123.008" x2="385.641" y2="123.008"/>
+			<path fill="#005695" d="M388.002,121.983c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+				c1.77-0.535,3.375-0.9,4.415-1.031C391.377,122.883,389.771,122.517,388.002,121.983z"/>
+		</g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="179.364" x2="385.642" y2="179.364"/>
+			<path fill="#005695" d="M388.003,178.339c-1.652-0.5-2.728-0.959-4.054-1.492v5.045c0.475-0.226,2.401-0.992,4.054-1.492
+				c1.77-0.534,3.375-0.9,4.415-1.03C391.378,179.239,389.772,178.873,388.003,178.339z"/>
+		</g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="205.235" x2="385.642" y2="205.235"/>
+			<path fill="#005695" d="M388.003,204.21c-1.652-0.5-2.728-0.959-4.054-1.492v5.045c0.475-0.226,2.401-0.992,4.054-1.492
+				c1.77-0.534,3.375-0.9,4.415-1.03C391.378,205.11,389.772,204.744,388.003,204.21z"/>
+		</g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="233.269" x2="385.641" y2="233.269"/>
+			<path fill="#005695" d="M388.002,232.243c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+				c1.77-0.534,3.375-0.9,4.415-1.03C391.377,233.144,389.771,232.778,388.002,232.243z"/>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="100.338" y1="251.542" x2="100.338" y2="39.491"/>
+		
+			<rect x="77.837" y="15.458" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 81.8423 26.9858)"><tspan x="0" y="0"  font-size="9">Workflow</tspan><tspan x="12.498" y="10.8"  font-size="9">AE</tspan></text>
+		<text transform="matrix(1 0 0 1 122.6089 64.7544)"><tspan x="0" y="0"  font-size="8">1. Open Association</tspan><tspan x="0" y="27.6"  font-size="8">2. N-CREATE (MPPS) – IN PROGRESS</tspan><tspan x="0" y="55.2"  font-size="8">3. Close Association</tspan><tspan x="0" y="82.8"  font-size="8">4. Acquire Images</tspan><tspan x="0" y="110.4"  font-size="8">1. Open Association</tspan><tspan x="0" y="138"  font-size="8">2. N-CREATE (MPPS) – COMPLETED</tspan><tspan x="0" y="165.599"  font-size="8">3. Close Association</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M402.424,53.319h-9v189.362c3.149,0,5.968,0,9,0V53.319z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M104.491,132.395c-2.968,0-5.907,0-9,0v25.753c2.936,0,5.996,0,9,0V132.395z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M95.491,168.814v73.867c3.149,0,5.968,0,9,0v-73.867C101.487,168.814,98.427,168.814,95.491,168.814z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M95.491,53.319v70.923c3.104-0.308,6.09-0.272,9-0.091V53.319H95.491z"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="107.625,138.002 119.657,138.002 
+					119.657,153.144 114.108,153.144 				"/>
+				<path fill="#005695" d="M111.747,154.17c1.652,0.501,2.728,0.96,4.054,1.493v-5.049c-0.475,0.228-2.401,0.994-4.054,1.494
+					c-1.77,0.535-3.375,0.9-4.415,1.031C108.372,153.269,109.977,153.637,111.747,154.17z"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

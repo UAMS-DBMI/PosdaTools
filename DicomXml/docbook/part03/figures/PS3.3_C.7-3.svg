@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="312px" viewBox="0 0 502 312" enable-background="new 0 0 502 312" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="310"/>
+	<g>
+		
+			<rect x="125" y="47.558" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="252" height="252.001"/>
+		<circle fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" cx="251" cy="173.557" r="126"/>
+		<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="277.863,155.306 266.23,155.306 253.391,171.166 		"/>
+		<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="217.603,127.806 205.97,127.806 193.13,171.164 		"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 125 21.2959)"><tspan x="0" y="0" font-size="10">Image Matrix</tspan><tspan x="0" y="10.008" font-size="10">• Columns: 1024</tspan><tspan x="0" y="20.017" font-size="10">• Rows: 1024</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 220.4102 129.5288)"><tspan x="0" y="0" font-size="10">Radius (0018, 1612)</tspan><tspan x="21.399" y="10.473" font-size="10">Value: 512</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 280.2402 157.9023)"><tspan x="0" y="0" font-size="10">Center (0018, 1610)</tspan><tspan x="8.332" y="12" font-size="10">Value: 512 \ 512</tspan></text>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="250.767" y1="173.557" x2="125" y2="173.557"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="250.767" y1="173.557" x2="132.087" y2="173.557"/>
+				<g>
+					<polygon fill="#005695" points="133.673,171.232 125,173.557 133.673,175.881 					"/>
+				</g>
+			</g>
+		</g>
+		<circle fill="#005695" cx="251" cy="173.557" r="2.391"/>
+	</g>
+</g>
+</svg>

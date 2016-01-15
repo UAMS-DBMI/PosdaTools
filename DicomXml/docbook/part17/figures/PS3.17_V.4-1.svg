@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_V.4-1.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:32 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="612px" height="792px" viewBox="0 0 612 792" enable-background="new 0 0 612 792" xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure V.4 Neurosurgery Planning Hanging Protocol Example
+  </title>
+  <desc>
+	DICOM PS 3.12-2008 Part 17: Explanatory Information
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.874 495.085 499.749">
+	<polygon fill="#F5EED6" points="247.542,-249.874 -247.542,-249.874 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.874" transform="matrix(1 0 0 -0.4885 306.0312 396.0708)" overflow="visible"/>
+<rect x="180.477" y="299.413" fill="#FFFFFF" stroke="#000000" width="253.545" height="194.379"/>
+<rect x="187.479" y="396.602" fill="#DCDDDE" stroke="#000000" width="95.77" height="89.999"/>
+<line fill="#86B2D8" stroke="#000000" x1="187.479" y1="441.601" x2="283.249" y2="441.601"/>
+<line fill="#86B2D8" stroke="#000000" x1="235.367" y1="486.601" x2="235.367" y2="396.602"/>
+<rect x="283.375" y="306.604" fill="#DCDDDE" stroke="#000000" width="143.644" height="179.998"/>
+<line fill="#86B2D8" stroke="#000000" x1="283.375" y1="351.603" x2="427.019" y2="351.603"/>
+<line fill="#86B2D8" stroke="#000000" x1="283.375" y1="396.602" x2="427.019" y2="396.602"/>
+<line fill="#86B2D8" stroke="#000000" x1="283.375" y1="441.602" x2="427.019" y2="441.602"/>
+<line fill="#86B2D8" stroke="#000000" x1="379.148" y1="486.602" x2="379.148" y2="306.604"/>
+<line fill="#86B2D8" stroke="#000000" x1="331.242" y1="486.602" x2="331.242" y2="306.604"/>
+<g>
+	<text transform="matrix(0.9288 0 0 1 436.8193 401.582)" font-size="14">2560</text>
+</g>
+<g>
+	<text transform="matrix(0.9288 0 0 1 148.7588 446.6934)" font-size="14">1024</text>
+</g>
+<g>
+	<text transform="matrix(0.9288 0 0 1 137.146 504.2754)" font-size="11">(0.0, 0.0)</text>
+</g>
+<g>
+	<text transform="matrix(0.9288 0 0 1 434.0303 296.3535)" font-size="11">(1.0, 1.0)</text>
+</g>
+<g>
+	<text transform="matrix(0.9288 0 0 1 219.8384 507.9004)" font-size="14">1024</text>
+</g>
+<g>
+	<text transform="matrix(0.9288 0 0 1 341.4043 507.9004)" font-size="14">2048</text>
+</g>
+</svg>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.13.3.1-2.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="347px" viewBox="0 0 502 347" enable-background="new 0 0 502 347" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="345"/>
+	<g>
+		<rect x="84.301" y="72.982" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="180.002" height="216.742"/>
+		<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="84.301" y1="181.352" x2="264.303" y2="181.352"/>
+		<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="204.314" y1="181.352" x2="204.314" y2="289.724"/>
+		<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="144.287" y1="181.352" x2="144.287" y2="289.724"/>
+		<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="174.167" y1="72.982" x2="174.167" y2="181.352"/>
+		
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" stroke-dasharray="6,2,4,4" x1="174.302" y1="32.352" x2="174.302" y2="330.353"/>
+		<rect x="133.813" y="16.648" fill="#B2CEE7" width="80.977" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 139.0156 26.9307)"><tspan x="0" y="0" font-size="10">left-right vertical</tspan><tspan x="4.451" y="9.333" font-size="10">symmetry line</tspan></text>
+		</g>
+		<rect x="274.479" y="120.417" fill="#B2CEE7" width="142.443" height="13.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 277.0566 129.939)" font-size="10">2 images of equal size in a row</text>
+		</g>
+		<rect x="273.699" y="228.787" fill="#B2CEE7" width="144" height="13.501"/>
+		<g>
+			<text transform="matrix(1 0 0 1 277.0566 238.3105)" font-size="10">3 images of equal size in a row</text>
+		</g>
+	</g>
+</g>
+</svg>

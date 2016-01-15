@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_Q.1-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:57 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="392px" viewBox="0 0 502 392" enable-background="new 0 0 502 392" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="390"/>
+	<g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			215.233,93.911 251.202,85.125 287.233,94.195 287.233,94.216 251.163,103.125 		"/>
+		<text transform="matrix(1 0 0 1 233.1484 96.0742)" font-size="7">CONTAINS</text>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			268.023,209.201 303.992,200.416 340.023,209.484 340.023,209.506 303.954,218.416 		"/>
+		<text transform="matrix(1 0 0 1 285.9395 211.3633)" font-size="7">CONTAINS</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="251.229" y1="103.283" x2="251.229" y2="117.887"/>
+				<path fill="#005695" d="M252.253,120.25c0.5-1.654,0.96-2.729,1.492-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C251.354,123.623,251.719,122.019,252.253,120.25z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="304.023" y1="175.839" x2="304.023" y2="194.475"/>
+				<path fill="#005695" d="M305.048,196.837c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.374,1.031,4.415C304.148,200.211,304.515,198.607,305.048,196.837z"/>
+			</g>
+		</g>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="251.278" y1="160.941" x2="251.278" y2="175.839"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="304.023,175.839 304.004,175.839 
+					198.901,175.839 198.901,175.839 198.901,190.493 				"/>
+				<path fill="#005695" d="M199.926,192.855c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.415C199.026,196.228,199.393,194.625,199.926,192.855z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			149.401,209.094 198.858,195.917 248.4,209.52 248.4,209.553 198.806,222.916 		"/>
+		<text transform="matrix(1 0 0 1 183.3403 207.1641)"><tspan x="0" y="0" font-size="7">HAS OBS</tspan><tspan x="-1.162" y="8.4" font-size="7">CONTEXT</tspan></text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="198.897" y1="223.342" x2="198.897" y2="230.236"/>
+				<path fill="#005695" d="M199.922,232.6c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C199.022,235.973,199.389,234.369,199.922,232.6z"/>
+			</g>
+		</g>
+		
+			<rect x="153.895" y="237.832" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90.002" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 171.4678 244.876)"><tspan x="0" y="0" font-size="7">Observer Context</tspan><tspan x="10.7" y="8.399" font-size="7">TID (1002)</tspan><tspan x="9.733" y="16.8" font-size="7">(INCLUDE)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="303.651" y1="219.287" x2="303.651" y2="229.367"/>
+				<path fill="#005695" d="M304.677,231.729c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C303.776,235.104,304.142,233.498,304.677,231.729z"/>
+			</g>
+		</g>
+		
+			<rect x="258.65" y="237.832" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90.002" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 284.2051 245.1758)"><tspan x="0" y="0" font-size="7">BCID (6053)</tspan><tspan x="-4.088" y="8.4" font-size="7">Breast Imaging</tspan><tspan x="-6.616" y="16.8" font-size="7">Report Elements</tspan><tspan x="8.176" y="25.2" font-size="7">(TEXT)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="303.531" y1="320.664" x2="303.531" y2="332.211"/>
+				<path fill="#005695" d="M304.556,334.574c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C303.656,337.947,304.022,336.344,304.556,334.574z"/>
+			</g>
+		</g>
+		
+			<rect x="258.531" y="338.758" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90.001" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 281.7422 346.1016)"><tspan x="0" y="0" font-size="7">References to</tspan><tspan x="-10.51" y="8.399" font-size="7">Supporting Evidence</tspan><tspan x="7.009" y="16.799" font-size="7">TID (350)</tspan><tspan x="4.096" y="25.199" font-size="7">(INCLUDE)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="303.768" y1="274.068" x2="303.768" y2="288.721"/>
+				<path fill="#005695" d="M304.792,291.082c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C303.893,294.457,304.259,292.852,304.792,291.082z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			254.032,307.32 303.489,294.143 353.031,307.746 353.031,307.777 303.437,321.143 		"/>
+		<text transform="matrix(1 0 0 1 285.6426 305.3848)"><tspan x="0" y="0" font-size="7">INFERRED</tspan><tspan x="7.587" y="8.4" font-size="7">FROM</tspan></text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="251.233" y1="65.356" x2="251.233" y2="77.449"/>
+				<path fill="#005695" d="M252.259,79.811c0.499-1.653,0.959-2.728,1.491-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.416C251.358,83.185,251.725,81.58,252.259,79.811z"/>
+			</g>
+		</g>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" x1="251.233" y1="13.551" x2="251.233" y2="38.356"/>
+		
+			<rect x="197.232" y="38.356" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108.001" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 221.0879 49.6011)"><tspan x="0" y="0" font-size="7">Narrative Summary</tspan><tspan x="7.201" y="8.4" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+		
+			<rect x="206.228" y="125.602" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90.003" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 231.5879 132.9468)"><tspan x="0" y="0" font-size="7">DCID (6052)</tspan><tspan x="-15.373" y="8.4" font-size="7">Breast Imaging Report</tspan><tspan x="0.386" y="16.8" font-size="7">Section Title</tspan><tspan x="-3.299" y="25.2" font-size="7">(CONTAINER)</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

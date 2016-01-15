@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.17.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="672px" viewBox="0 0 502 672" enable-background="new 0 0 502 672" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="670"/>
+	<g>
+		<rect x="79.649" y="492.044" fill="#86B2D8" stroke="#000000" width="90" height="27"/>
+		<rect x="179.546" y="492.044" fill="#86B2D8" stroke="#000000" width="89.999" height="36"/>
+		<rect x="290.242" y="492.044" fill="#86B2D8" stroke="#000000" width="89.994" height="27"/>
+		<rect x="400.934" y="317.375" fill="#86B2D8" stroke="#000000" width="89.998" height="27.003"/>
+		<rect x="400.896" y="416.878" fill="#86B2D8" stroke="#000000" width="89.998" height="27"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					69.569,43.047 69.569,52.23 124.58,52.23 124.58,60.806 				"/>
+				<g>
+					<polygon fill="#005695" points="122.256,59.221 124.58,67.894 126.904,59.221 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" points="
+					335.387,345.058 335.387,354.241 365.805,354.241 365.805,361.738 				"/>
+				<g>
+					<polygon fill="#005695" points="363.48,360.153 365.805,368.826 368.129,360.153 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" points="
+					335.209,345.058 335.209,354.241 304.791,354.241 304.791,361.738 				"/>
+				<g>
+					<polygon fill="#005695" points="302.467,360.153 304.791,368.826 307.115,360.153 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					69.569,147.167 69.569,156.351 124.58,156.351 124.58,164.926 				"/>
+				<g>
+					<polygon fill="#005695" points="122.256,163.341 124.58,172.014 126.904,163.341 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					122.548,156.351 224.36,156.351 224.36,164.926 				"/>
+				<g>
+					<polygon fill="#005695" points="222.036,163.341 224.36,172.014 226.684,163.341 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					222.688,156.351 335.303,156.351 335.303,164.926 				"/>
+				<g>
+					<polygon fill="#005695" points="332.979,163.341 335.303,172.014 337.627,163.341 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					333.271,156.351 445.881,156.351 445.881,164.926 				"/>
+				<g>
+					<polygon fill="#005695" points="443.557,163.341 445.881,172.014 448.205,163.341 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="79.649" y="114.703" fill="#86B2D8" stroke="#000000" width="90" height="27"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="124.649" y1="96.795" x2="124.649" y2="105.908"/>
+				<g>
+					<polygon fill="#005695" points="122.325,104.322 124.649,112.995 126.974,104.322 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			84.149,82.267 124.591,68.974 165.149,82.458 165.149,82.489 124.591,95.974 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 97.9932 84.9722)" font-size="7">has concept mod</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 97.4111 125.9414)"><tspan x="0" y="0" font-size="7">Leaf Node CODE</tspan><tspan x="-11.729" y="8.4" font-size="7">&quot;Views = PA and Lateral&quot;</tspan></text>
+		</g>
+		<rect x="79.649" y="218.154" fill="#86B2D8" stroke="#000000" width="90" height="27"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="124.649" y1="200.246" x2="124.649" y2="209.359"/>
+				<g>
+					<polygon fill="#005695" points="122.325,207.773 124.649,216.446 126.973,207.773 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			84.149,185.718 124.59,172.425 165.149,185.909 165.149,185.94 124.59,199.425 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 111.6123 188.4233)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 91.9648 229.3926)"><tspan x="0" y="0" font-size="7">Content Node CODE</tspan><tspan x="7.533" y="8.4" font-size="7">&quot;finding = mass&quot;</tspan></text>
+		</g>
+		<rect x="179.546" y="218.154" fill="#86B2D8" stroke="#000000" width="89.999" height="27"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="224.546" y1="200.246" x2="224.546" y2="209.359"/>
+				<g>
+					<polygon fill="#005695" points="222.222,207.773 224.546,216.446 226.871,207.773 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			184.046,185.718 224.488,172.425 265.047,185.909 265.047,185.94 224.488,199.425 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 211.5093 188.4233)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 196.1411 229.3926)"><tspan x="0" y="0" font-size="7">Leaf Node IMAGE</tspan><tspan x="12.493" y="8.4" font-size="7">&quot;Baseline&quot;</tspan></text>
+		</g>
+		<rect x="290.242" y="218.154" fill="#86B2D8" stroke="#000000" width="89.994" height="27"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="335.236" y1="200.246" x2="335.236" y2="209.359"/>
+				<g>
+					<polygon fill="#005695" points="332.912,207.773 335.236,216.446 337.561,207.773 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			294.74,185.718 335.178,172.425 375.736,185.909 375.736,185.94 335.178,199.425 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 322.207 188.4233)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 312.8643 225.1924)"><tspan x="0" y="0" font-size="7">Heading Node</tspan><tspan x="1.765" y="8.4" font-size="7">CONTAINER</tspan><tspan x="0.827" y="16.8" font-size="7">&quot;Conclusions&quot;</tspan></text>
+		</g>
+		<rect x="400.934" y="218.154" fill="#86B2D8" stroke="#000000" width="89.998" height="27"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="445.932" y1="200.246" x2="445.932" y2="209.359"/>
+				<g>
+					<polygon fill="#005695" points="443.607,207.773 445.932,216.446 448.256,207.773 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			405.434,185.718 445.873,172.425 486.432,185.909 486.432,185.94 445.873,199.425 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 432.9033 188.4233)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 423.5605 225.1924)"><tspan x="0" y="0" font-size="7">Heading Node</tspan><tspan x="1.766" y="8.4" font-size="7">CONTAINER</tspan><tspan x="-17.187" y="16.8" font-size="7">&quot;Specific Image Findings”</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					69.568,42.688 69.569,430.241 124.58,430.241 124.58,437.738 				"/>
+				<g>
+					<polygon fill="#005695" points="122.256,436.153 124.58,444.826 126.904,436.153 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					122.548,430.241 224.36,430.241 224.36,437.738 				"/>
+				<g>
+					<polygon fill="#005695" points="222.036,436.153 224.36,444.826 226.684,436.153 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					222.688,430.241 335.303,430.241 335.303,437.738 				"/>
+				<g>
+					<polygon fill="#005695" points="332.979,436.153 335.303,444.826 337.627,436.153 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="124.649" y1="474.136" x2="124.649" y2="483.607"/>
+				<g>
+					<polygon fill="#005695" points="122.325,482.022 124.649,490.695 126.973,482.022 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			84.149,459.608 124.59,446.315 165.149,459.8 165.149,459.831 124.59,473.315 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 100.1328 462.3027)" font-size="7">has obs context</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 89.6304 499.0723)"><tspan x="0" y="0" font-size="7">Content Node PNAME</tspan><tspan x="-0.561" y="8.4" font-size="7">&quot;Recording Observer =</tspan><tspan x="6.976" y="16.801" font-size="7">Smith^John^^Dr^&quot;</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="224.546" y1="474.136" x2="224.546" y2="483.607"/>
+				<g>
+					<polygon fill="#005695" points="222.222,482.022 224.546,490.695 226.871,482.022 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			184.046,459.608 224.488,446.315 265.047,459.8 265.047,459.831 224.488,473.315 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 200.0298 462.3027)" font-size="7">has obs context</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 188.9463 499.3721)"><tspan x="0" y="0" font-size="7">Content Node UIDREF</tspan><tspan x="0.311" y="8.399" font-size="7">&quot;Study Instance UID of</tspan><tspan x="-7.976" y="16.8" font-size="7">Evidence Directly Examined</tspan><tspan x="-5.824" y="25.2" font-size="7">by RO = 1.2.3.4.5.6.7.100&quot;</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="335.236" y1="474.136" x2="335.236" y2="483.607"/>
+				<g>
+					<polygon fill="#005695" points="332.912,482.022 335.236,490.695 337.561,482.022 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			294.74,459.608 335.178,446.315 375.736,459.8 375.736,459.831 335.178,473.315 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 310.7266 462.3027)" font-size="7">has obs context</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 300.2246 499.0723)"><tspan x="0" y="0" font-size="7">Content Node PNAME</tspan><tspan x="-3.771" y="8.4" font-size="7">&quot;Patient-Data-Acquisition</tspan><tspan x="-6.549" y="16.801" font-size="7">Subject = Homer^Jane^^^&quot;</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="124.58" y1="246.381" x2="124.58" y2="264.14"/>
+				<g>
+					<polygon fill="#005695" points="122.255,262.555 124.58,271.228 126.904,262.555 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+					124.58,255.564 224.36,255.564 224.36,264.14 				"/>
+				<g>
+					<polygon fill="#005695" points="222.036,262.555 224.36,271.228 226.684,262.555 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="335.303" y1="245.484" x2="335.303" y2="262.7"/>
+				<g>
+					<polygon fill="#005695" points="332.979,261.114 335.303,269.787 337.627,261.114 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="445.881" y1="245.484" x2="445.881" y2="262.7"/>
+				<g>
+					<polygon fill="#005695" points="443.557,261.114 445.881,269.787 448.205,261.114 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="79.649" y="317.375" fill="#86B2D8" stroke="#000000" width="90" height="27.003"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="124.649" y1="299.465" x2="124.649" y2="308.579"/>
+				<g>
+					<polygon fill="#005695" points="122.325,306.993 124.649,315.666 126.973,306.993 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			84.149,284.936 124.59,271.641 165.149,285.127 165.149,285.158 124.59,298.645 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 102.4692 287.6367)" font-size="7">has properties</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 99.5527 328.606)"><tspan x="0" y="0" font-size="7">Leaf Node NUM</tspan><tspan x="-5.5" y="8.4" font-size="7">&quot;diameter = 1.3 cm&quot;</tspan></text>
+		</g>
+		<rect x="179.546" y="317.375" fill="#86B2D8" stroke="#000000" width="89.999" height="27.003"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="224.546" y1="299.465" x2="224.546" y2="308.579"/>
+				<g>
+					<polygon fill="#005695" points="222.222,306.993 224.546,315.666 226.871,306.993 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			184.046,284.936 224.488,271.641 265.047,285.127 265.047,285.158 224.488,298.645 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 202.3662 287.6367)" font-size="7">has properties</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 197.3081 328.606)"><tspan x="0" y="0" font-size="7">Leaf Node CODE</tspan><tspan x="-12.308" y="8.4" font-size="7">&quot;margination = infiltrative&quot;</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			277.789,382.942 304.75,369.649 331.787,383.134 331.787,383.165 304.75,396.649 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 284.9453 385.6367)" font-size="7">inferred from</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			338.846,382.942 365.809,369.649 392.846,383.134 392.846,383.165 365.809,396.649 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 346.0039 385.6367)" font-size="7">inferred from</text>
+		</g>
+		<rect x="290.242" y="317.375" fill="#86B2D8" stroke="#000000" width="89.994" height="27.003"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="335.236" y1="299.465" x2="335.236" y2="308.579"/>
+				<g>
+					<polygon fill="#005695" points="332.912,306.993 335.236,315.666 337.561,306.993 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			294.74,284.936 335.178,271.641 375.736,285.127 375.736,285.158 335.178,298.645 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 322.207 287.6367)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 302.5586 324.4058)"><tspan x="0" y="0" font-size="7">Content Node CODE</tspan><tspan x="-2.709" y="8.4" font-size="7">&quot;conclusion = probable</tspan><tspan x="12.766" y="16.799" font-size="7">malignancy &quot;</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="445.932" y1="299.465" x2="445.932" y2="308.579"/>
+				<g>
+					<polygon fill="#005695" points="443.607,306.993 445.932,315.666 448.256,306.993 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			405.434,284.936 445.873,271.641 486.432,285.127 486.432,285.158 445.873,298.645 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 432.9033 287.6367)" font-size="7">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 408.0059 328.606)"><tspan x="0" y="0" font-size="7">Content Node SCOORD</tspan><tspan x="-4.824" y="8.4" font-size="7">&quot;best illustration of findings&quot;</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="445.904" y1="344.995" x2="445.904" y2="363.649"/>
+				<g>
+					<polygon fill="#005695" points="443.58,362.064 445.904,370.737 448.229,362.064 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="445.895" y1="398.97" x2="445.895" y2="408.081"/>
+				<g>
+					<polygon fill="#005695" points="443.57,406.496 445.895,415.169 448.219,406.496 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			405.396,384.442 445.836,371.149 486.395,384.634 486.395,384.665 445.836,398.149 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 424.8926 387.1367)" font-size="7">selected from</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 417.498 432.3057)" font-size="7">Leaf Node IMAGE</text>
+		</g>
+		
+			<rect x="11.068" y="15.683" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="117" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 14.3276 26.9214)"><tspan x="0" y="0" font-size="7">Document Root Node CONTAINER</tspan><tspan x="7.439" y="8.4" font-size="7">&quot;Chest X-ray&quot; (Document Title)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" points="
+					304.533,397.335 304.533,410.118 273.818,410.118 273.818,301.401 236.557,301.401 236.557,309.479 				"/>
+				<g>
+					<polygon fill="#005695" points="234.233,307.894 236.557,316.566 238.881,307.894 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" points="
+					365.967,397.335 365.967,410.118 396.68,410.118 396.68,301.401 433.938,301.401 433.938,309.479 				"/>
+				<g>
+					<polygon fill="#005695" points="431.613,307.894 433.938,316.566 436.262,307.894 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="20.315" y="549.303" fill="#FFFFFF" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="461.367" height="107.016"/>
+		<text transform="matrix(0.9288 0 0 1 25.9277 561.9121)" font-size="9">Legend:</text>
+		<text transform="matrix(1 0 0 1 85.9165 563.2559)"><tspan x="0" y="0" font-size="9">By-value (BV)</tspan><tspan x="0" y="14.801" font-size="9">By-Reference (BR)</tspan></text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="61.416" y1="560.155" x2="76.082" y2="560.155"/>
+				<path fill="#005695" d="M78.916,558.926c-1.984-0.6-3.273-1.151-4.865-1.79v6.053c0.569-0.271,2.881-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.236C82.964,560.005,81.039,559.566,78.916,558.926z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" x1="61.416" y1="574.821" x2="76.082" y2="574.821"/>
+				<path fill="#005695" d="M78.916,573.592c-1.984-0.6-3.273-1.151-4.865-1.79v6.053c0.569-0.271,2.881-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.236C82.964,574.671,81.039,574.232,78.916,573.592z"/>
+			</g>
+		</g>
+		<rect x="26.015" y="586.597" fill="none" width="452.333" height="62.904"/>
+		<text transform="matrix(1 0 0 1 26.0156 593.0391)"><tspan x="0" y="0" font-size="9">Notes: </tspan><tspan x="20" y="10.799" font-size="9">1. For nodes of type CONTAINER, the contents of the Concept Name Code Sequence are shown in quotes.</tspan><tspan x="20" y="21.6" font-size="9">2. For nodes of Value Type CODE, PNAME, NUM the contents are shown as “Concept Name Code </tspan><tspan x="30" y="32.399" font-size="9">Sequence = Value”.</tspan><tspan x="20" y="43.199" font-size="9">3. For the nodes of Value Type IMAGE and SCOORD, the contents of the Concept Name Code Sequence </tspan><tspan x="30" y="54" font-size="9">indicating the purpose of reference are shown in quotes.</tspan></text>
+	</g>
+</g>
+</svg>

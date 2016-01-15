@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.8.25-5.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:19 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="462px" viewBox="0 0 502 462" enable-background="new 0 0 502 462" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="460"/>
+	<g>
+		<g>
+			<rect x="11.042" y="330.558" fill="#FFFFFF" width="479.916" height="116.139"/>
+			<rect x="336.741" y="330.558" fill="#CCDEF0" width="154.217" height="116.139"/>
+			<text transform="matrix(1 0 0 1 30.6055 367.9893)"><tspan x="0" y="0" font-size="10">θ</tspan><tspan x="5.191" y="7" font-size="7">Light</tspan></text>
+			<text transform="matrix(1 0 0 1 37.584 409.4883)"><tspan x="0" y="0" font-size="10">d</tspan><tspan x="6.17" y="5" font-size="10">w</tspan></text>
+			<text transform="matrix(1 0 0 1 20.5264 389.2441)"><tspan x="0" y="0" font-size="10">X</tspan><tspan x="6.554" y="5" font-size="10">b</tspan></text>
+			<text transform="matrix(1 0 0 1 33.3623 389.2441)"><tspan x="0" y="0" font-size="10">, Z</tspan><tspan x="12.052" y="5" font-size="10">b</tspan></text>
+			<g>
+				<text transform="matrix(1 0 0 1 65.0215 352.7461)" font-size="10">Fixation Light</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 65.0215 370.9951)" font-size="10">Fixation light azimuthal angle</text>
+			</g>
+			<text transform="matrix(1 0 0 1 40.667 429.7324)"><tspan x="0" y="0" font-size="10">θ</tspan><tspan x="5.253" y="7" font-size="7">w</tspan></text>
+			<g>
+				<text transform="matrix(1 0 0 1 65.0215 432.7383)" font-size="10">Wedge orientation angle</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 65.0215 391.7441)" font-size="10">axes of the IEC BEAM LIMITING DEVICE coordinate system</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 65.0215 411.9883)" font-size="10">Wedge thin edge position</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 45.4136 352.7461)" font-size="10">L</text>
+			</g>
+			<rect x="11.042" y="330.558" fill="none" stroke="#000000" stroke-width="1.2964" width="479.916" height="116.139"/>
+			<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M367.865,395.585
+				c0-9.904,8.024-17.928,17.922-17.928s17.921,8.023,17.921,17.928c0,9.895-8.023,17.92-17.921,17.92
+				S367.865,405.479,367.865,395.585z"/>
+			<text transform="matrix(1 0 0 1 478.2988 430.0723)"><tspan x="0" y="0" fill="#00AEEF" font-size="8.7867">Z</tspan><tspan x="5.977" y="3.66" fill="#00AEEF" font-size="6.59">b</tspan></text>
+			<text transform="matrix(1 0 0 1 340.4297 411.2529)"><tspan x="0" y="0" fill="#ED1C24" font-size="8.7867">X</tspan><tspan x="6.224" y="3.661" fill="#ED1C24" font-size="6.59">b</tspan></text>
+			<text transform="matrix(1 0 0 1 382.5098 343.1309)"><tspan x="0" y="0" fill="#0DB14B" font-size="8.7867">Y</tspan><tspan x="6.223" y="3.66" fill="#0DB14B" font-size="6.59">b</tspan></text>
+			<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M387.157,395.097
+				c-1.015-6.072,1.816-11.607,6.329-12.365c4.512-0.758,8.995,3.551,10.017,9.623c1.017,6.072-1.814,11.607-6.327,12.365
+				C392.664,405.479,388.18,401.169,387.157,395.097z"/>
+			<path fill="#6D6E71" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M391.557,394.468
+				c-0.51-3.045,1.054-5.854,3.498-6.262c2.445-0.414,4.842,1.727,5.355,4.779c0.509,3.047-1.055,5.85-3.501,6.264
+				C394.463,399.661,392.067,397.519,391.557,394.468z"/>
+			<path fill="#FFF200" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M440.006,398.882
+				c0-2.619,2.124-4.738,4.735-4.738c2.614,0,4.736,2.119,4.736,4.738c0,2.609-2.122,4.729-4.736,4.729
+				C442.13,403.61,440.006,401.491,440.006,398.882z"/>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#00AEEF" stroke-linecap="round" stroke-linejoin="round" x1="385.787" y1="395.581" x2="469.139" y2="423.132"/>
+					<g>
+						<polygon fill="#00AEEF" points="467.463,424.414 474.186,424.8 468.557,421.104 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path fill="none" stroke="#ED1C24" stroke-linecap="round" stroke-linejoin="round" d="M385.787,395.581
+						c0,0-19.176,7.144-29.587,10.915"/>
+					<g>
+						<polygon fill="#ED1C24" points="356.69,404.407 351.186,408.285 357.893,407.68 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#0DB14B" stroke-linecap="round" x1="385.787" y1="395.585" x2="385.787" y2="353.615"/>
+					<g>
+						<polygon fill="#0DB14B" points="387.53,354.805 385.787,348.3 384.044,354.805 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-dasharray="1.1894" x1="385.787" y1="395.585" x2="444.743" y2="398.878"/>
+			<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M452.757,417.714
+				c0-0.785,0.642-1.418,1.423-1.418c0.788,0,1.426,0.633,1.426,1.418c0,0.787-0.638,1.424-1.426,1.424
+				C453.398,419.138,452.757,418.501,452.757,417.714z"/>
+			
+				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.1894" x1="380.245" y1="403.101" x2="454.087" y2="417.618"/>
+			
+				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="385.787" y1="395.585" x2="376.502" y2="408.175"/>
+			<polygon fill="#BCBEC0" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" points="414.37,436.421 
+				395.521,420.993 397.839,420.993 416.688,436.421 			"/>
+			<polygon fill="#E6E7E8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" points="423.046,419.589 
+				405.872,401.726 397.83,420.921 416.68,436.351 			"/>
+			<polygon fill="#BCBEC0" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" points="405.804,401.743 
+				397.803,420.993 395.483,420.993 			"/>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 372.7744 78.104)"><tspan x="0" y="0" font-size="14">θ</tspan><tspan x="9.714" y="7" font-size="14">Light</tspan></text>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" points="370.622,71.27 360.812,71.27 349.199,91.294 					"/>
+					<g>
+						<polygon fill="#005695" points="347.983,88.756 345.644,97.425 352.005,91.088 						"/>
+					</g>
+				</g>
+			</g>
+			<text transform="matrix(1 0 0 1 122.8384 78)"><tspan x="0" y="0" font-size="14">θ</tspan><tspan x="6.838" y="7" font-size="14">w</tspan></text>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" points="143.72,75.775 152.566,75.775 217.358,115.658 					"/>
+					<g>
+						<polygon fill="#005695" points="214.79,116.807 223.394,119.374 217.227,112.848 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 191.6895 314.0039)" font-size="12">Wedge</text>
+			</g>
+			<text transform="matrix(1 0 0 1 247.313 25.938)"><tspan x="0" y="0" fill="#0DB14B" font-size="12">Y</tspan><tspan x="8.5" y="5" fill="#0DB14B" font-size="9">b</tspan></text>
+			<text transform="matrix(1 0 0 1 89.1528 207.938)"><tspan x="0" y="0" fill="#ED1C24" font-size="12">X</tspan><tspan x="8.499" y="5" fill="#ED1C24" font-size="9">b</tspan></text>
+			<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M173.354,206.37
+				c0-43.84,35.54-79.38,79.378-79.38c43.84,0,79.381,35.541,79.381,79.38c0,43.84-35.541,79.358-79.381,79.358
+				C208.894,285.728,173.354,250.21,173.354,206.37z"/>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="252.7" y1="206.299" x2="136.012" y2="206.299"/>
+					<g>
+						<polygon fill="#ED1C24" points="138.39,202.813 125.381,206.299 138.39,209.786 						"/>
+					</g>
+				</g>
+			</g>
+			<circle fill="#FFF200" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" cx="328.953" cy="162.175" r="15.446"/>
+			
+				<circle fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2" cx="252.701" cy="206.299" r="24.333"/>
+			<polygon fill="#E6E7E8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" points="214.503,132.938 
+				143.548,145.352 171.141,302.983 242.096,290.579 			"/>
+			
+				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="402.233" y1="180.357" x2="411.909" y2="178.655"/>
+			
+				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="402.233" y1="180.357" x2="158.049" y2="224.377"/>
+			<g>
+				<g>
+					<line fill="none" stroke="#0DB14B" stroke-width="2" stroke-linecap="round" x1="252.7" y1="206.299" x2="252.7" y2="56.792"/>
+					<g>
+						<polygon fill="#0DB14B" points="256.187,59.169 252.7,46.16 249.214,59.169 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M252.729,65.399
+						c68.354,0,125.949,46.599,143.409,110.094"/>
+					<g>
+						<polygon points="394.136,174.785 397.458,180.643 397.51,173.909 						"/>
+					</g>
+				</g>
+			</g>
+			<text transform="matrix(1 0 0 1 256.3477 254.2344)"><tspan x="0" y="0" font-size="12">d</tspan><tspan x="7.087" y="5" font-size="9">w</tspan></text>
+			<g>
+				<g>
+					<line fill="none" stroke="#000000" stroke-linecap="round" x1="258.34" y1="210.229" x2="268.103" y2="217.449"/>
+					<g>
+						<polygon points="258.26,212.337 254.066,207.068 260.332,209.534 						"/>
+					</g>
+					<g>
+						<polygon points="266.109,218.144 272.376,220.61 268.183,215.34 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 326.1416 166.0352)" font-size="12">L</text>
+			</g>
+			<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2" d="M174.823,220.61
+				c-0.848-4.642-1.29-9.425-1.29-14.311c0-30.132,16.833-56.332,41.607-69.709"/>
+			
+				<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4" x1="228.221" y1="206.298" x2="154.217" y2="206.299"/>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" points="254.332,251.374 245.484,251.374 259.521,221.529 					"/>
+					<g>
+						<polygon fill="#005695" points="260.949,223.953 262.537,215.116 256.743,221.975 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M318.478,142.408
+						C301.815,125.256,278.502,114.6,252.7,114.6c-50.644,0-91.699,41.055-91.699,91.699"/>
+					<g>
+						<polygon points="318.919,140.373 322.069,146.325 316.365,142.746 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-6.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:44 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="197px" viewBox="0 0 502.001 197" enable-background="new 0 0 502.001 197" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="195"/>
+	<g>
+		<rect x="93.026" y="35.63" fill="#CCDEF0" width="142.928" height="41.323"/>
+		
+			<rect x="107.153" y="44.018" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" x1="367.498" y1="25.902" x2="367.498" y2="27.902"/>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4.0891,2.0446" x1="367.498" y1="29.947" x2="367.498" y2="157.732"/>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" x1="367.498" y1="158.755" x2="367.498" y2="160.755"/>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 93.0234 32.1963)"><tspan x="0" y="0" font-size="9">I</tspan><tspan x="2.752" y="0" font-size="9">m</tspan><tspan x="10.52" y="0" font-size="9">a</tspan><tspan x="16.029" y="0" font-size="9">g</tspan><tspan x="21.052" y="0" font-size="9">i</tspan><tspan x="23.304" y="0" font-size="9">ng</tspan><tspan x="33.351" y="0" font-size="9"> </tspan><tspan x="36.103" y="0" font-size="9">M</tspan><tspan x="43.69" y="0" font-size="9">od</tspan><tspan x="53.737" y="0" font-size="9">a</tspan><tspan x="59.246" y="0" font-size="9">li</tspan><tspan x="63.749" y="0" font-size="9">t</tspan><tspan x="66.016" y="0" font-size="9">y</tspan></text>
+		<text transform="matrix(1 0 0 1 115.7812 87.3354)"><tspan x="0" y="0" font-size="8">References</tspan><tspan x="0" y="9.6" font-size="8">UID</tspan></text>
+		<text transform="matrix(1 0 0 1 180.5312 87.3354)"><tspan x="0" y="0" font-size="8">Time</tspan><tspan x="0" y="9.6" font-size="8">Synchronized</tspan></text>
+		<rect x="93.026" y="103.716" fill="#CCDEF0" width="142.928" height="41.324"/>
+		<text transform="matrix(1 0 0 1 93.0259 155.7832)"><tspan x="0" y="0" font-size="9">Waveform </tspan><tspan x="45.774" y="0" font-size="9">M</tspan><tspan x="53.361" y="0" font-size="9">od</tspan><tspan x="63.408" y="0" font-size="9">a</tspan><tspan x="68.917" y="0" font-size="9">li</tspan><tspan x="73.42" y="0" font-size="9">t</tspan><tspan x="75.687" y="0" font-size="9">y</tspan></text>
+		<rect x="377.953" y="31.188" fill="#CCDEF0" width="76.363" height="121.5"/>
+		<text transform="matrix(1 0 0 1 376.9067 29.1362)" font-size="9">Workstation</text>
+		<text transform="matrix(1 0 0 1 47.686 91.814)"><tspan x="0" y="0" font-size="9">P</tspan><tspan x="6.228" y="0" font-size="9">a</tspan><tspan x="11.737" y="0" font-size="9">t</tspan><tspan x="14.004" y="0" font-size="9">i</tspan><tspan x="16.255" y="0" font-size="9">e</tspan><tspan x="21.765" y="0" font-size="9">n</tspan><tspan x="26.788" y="0" font-size="9">t</tspan></text>
+		<g>
+			<text transform="matrix(1 0 0 1 120.7988 53.1167)"><tspan x="0" y="0" font-size="9">X-Ray</tspan><tspan x="-10.257" y="10.8" font-size="9">Acquisition </tspan></text>
+		</g>
+		
+			<rect x="107.153" y="111.745" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+		<g>
+			<text transform="matrix(1 0 0 1 123.4775 120.8438)"><tspan x="0" y="0" font-size="9">ECG</tspan><tspan x="-12.936" y="10.799" font-size="9">Acquisition </tspan></text>
+		</g>
+		
+			<rect x="176.687" y="44.018" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+		
+			<rect x="251.403" y="44.018" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="93.996" height="24"/>
+		<text transform="matrix(1 0 0 1 254.2456 53.1167)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.991" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M </tspan><tspan x="32.335" y="0" font-size="9">E</tspan><tspan x="37.87" y="0" font-size="9">nh</tspan><tspan x="47.917" y="0" font-size="9">a</tspan><tspan x="53.427" y="0" font-size="9">n</tspan><tspan x="58.45" y="0" font-size="9">c</tspan><tspan x="62.788" y="0" font-size="9">e</tspan><tspan x="68.298" y="0" font-size="9">d</tspan><tspan x="73.321" y="0" font-size="9"> </tspan><tspan x="76.073" y="0" font-size="9">X</tspan><tspan x="82.302" y="0" font-size="9">A</tspan><tspan x="15.047" y="10.8" font-size="9">S</tspan><tspan x="21.274" y="10.8" font-size="9">O</tspan><tspan x="28.203" y="10.8" font-size="9">P</tspan><tspan x="34.431" y="10.8" font-size="9"> I</tspan><tspan x="39.937" y="10.8" font-size="9">n</tspan><tspan x="44.96" y="10.8" font-size="9">s</tspan><tspan x="48.614" y="10.8" font-size="9">t</tspan><tspan x="50.88" y="10.8" font-size="9">a</tspan><tspan x="56.39" y="10.8" font-size="9">n</tspan><tspan x="61.413" y="10.8" font-size="9">c</tspan><tspan x="65.751" y="10.8" font-size="9">e </tspan></text>
+		<text transform="matrix(1 0 0 1 187.8511 53.1167)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.991" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M</tspan><tspan x="-3.757" y="10.8" font-size="9">E</tspan><tspan x="1.778" y="10.8" font-size="9">ncoding</tspan></text>
+		
+			<rect x="176.687" y="111.745" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+		<text transform="matrix(1 0 0 1 187.8511 120.8438)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.991" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M</tspan><tspan x="-3.757" y="10.801" font-size="9">E</tspan><tspan x="1.778" y="10.801" font-size="9">ncoding</tspan></text>
+		
+			<rect x="251.403" y="111.743" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="93.996" height="24"/>
+		<text transform="matrix(1 0 0 1 257.5591 120.8418)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.99" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M </tspan><tspan x="32.335" y="0" font-size="9">General ECG</tspan><tspan x="11.733" y="10.8" font-size="9">S</tspan><tspan x="17.961" y="10.8" font-size="9">O</tspan><tspan x="24.89" y="10.8" font-size="9">P</tspan><tspan x="31.117" y="10.8" font-size="9"> I</tspan><tspan x="36.623" y="10.8" font-size="9">n</tspan><tspan x="41.646" y="10.8" font-size="9">s</tspan><tspan x="45.301" y="10.8" font-size="9">t</tspan><tspan x="47.566" y="10.8" font-size="9">a</tspan><tspan x="53.076" y="10.8" font-size="9">n</tspan><tspan x="58.1" y="10.8" font-size="9">c</tspan><tspan x="62.438" y="10.8" font-size="9">e </tspan></text>
+		<g>
+			
+				<rect x="391.852" y="76.953" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="50" height="24"/>
+			<text transform="matrix(1 0 0 1 394.6987 85.4531)"><tspan x="0" y="0" font-size="9">A</tspan><tspan x="6.228" y="0" font-size="9">pp</tspan><tspan x="15.915" y="0" font-size="9">li</tspan><tspan x="20.04" y="0" font-size="9">c</tspan><tspan x="24.873" y="0" font-size="9">a</tspan><tspan x="29.716" y="0" font-size="9">t</tspan><tspan x="32.469" y="0" font-size="9">i</tspan><tspan x="34.531" y="0" font-size="9">on</tspan><tspan x="0.069" y="10.8" font-size="9">(</tspan><tspan x="2.832" y="10.8" font-size="9">V</tspan><tspan x="9.061" y="10.8" font-size="9">i</tspan><tspan x="11.123" y="10.8" font-size="9">e</tspan><tspan x="15.966" y="10.8" font-size="9">w</tspan><tspan x="22.205" y="10.8" font-size="9">e</tspan><tspan x="27.048" y="10.8" font-size="9">r</tspan><tspan x="29.812" y="10.8" font-size="9">…) </tspan></text>
+		</g>
+		<text transform="matrix(1 0 0 1 350.1235 172.0703)"><tspan x="0" y="0" font-size="9">N</tspan><tspan x="6.238" y="0" font-size="9">e</tspan><tspan x="11.082" y="0" font-size="9">t</tspan><tspan x="13.834" y="0" font-size="9">w</tspan><tspan x="20.074" y="0" font-size="9">o</tspan><tspan x="24.916" y="0" font-size="9">r</tspan><tspan x="27.68" y="0" font-size="9">k</tspan><tspan x="32.514" y="0" font-size="9">,</tspan><tspan x="-11.893" y="10.801" font-size="9">Offline Media</tspan><tspan x="44.408" y="10.801" font-size="9"> </tspan></text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="228.012" y1="56.017" x2="243.825" y2="56.017"/>
+				<g>
+					<polygon fill="#005695" points="242.24,58.341 250.913,56.017 242.24,53.692 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="228.012" y1="123.745" x2="243.825" y2="123.745"/>
+				<g>
+					<polygon fill="#005695" points="242.24,126.069 250.913,123.745 242.24,121.421 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="159.512" y1="56.017" x2="169.126" y2="56.017"/>
+				<g>
+					<polygon fill="#005695" points="167.541,58.341 176.213,56.017 167.541,53.692 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="159.512" y1="123.745" x2="169.126" y2="123.745"/>
+				<g>
+					<polygon fill="#005695" points="167.541,126.069 176.213,123.745 167.541,121.421 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="99.17,56.362 86.851,56.362 
+					86.851,89.847 79.794,89.847 				"/>
+				<g>
+					<polygon fill="#005695" points="97.584,54.038 106.257,56.362 97.584,58.687 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="111.887" y1="82.269" x2="111.887" y2="98.401"/>
+				<g>
+					<polygon fill="#005695" points="110.144,83.458 111.887,76.953 113.63,83.458 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="110.144,97.212 111.887,103.717 113.63,97.212 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="176.213" y1="82.846" x2="176.213" y2="98.401"/>
+				<g>
+					<polygon fill="#005695" points="174.47,84.035 176.213,77.53 177.957,84.035 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="174.47,97.212 176.213,103.717 177.957,97.212 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<path fill="none" d="M250.913,62.716"/>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="99.17,123.745 86.851,123.745 
+					86.851,90.26 79.794,90.26 				"/>
+				<g>
+					<polygon fill="#005695" points="97.584,121.421 106.257,123.745 97.584,126.069 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="345.401,56.362 357.247,56.362 
+					357.247,82.646 384.213,82.646 				"/>
+				<g>
+					<polygon fill="#005695" points="382.628,84.971 391.301,82.646 382.628,80.322 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="345.401,123.745 357.247,123.745 
+					357.247,96.38 384.213,96.38 				"/>
+				<g>
+					<polygon fill="#005695" points="382.628,98.704 391.301,96.38 382.628,94.056 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

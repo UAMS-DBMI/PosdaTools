@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.17.3-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="272px" viewBox="0 0 502 272" enable-background="new 0 0 502 272" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<g>
+		<rect x="1" y="1" fill="#F5EED6" width="500" height="270"/>
+	</g>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="260.943" y1="143.324" x2="260.943" y2="153.357"/>
+				<g>
+					<polygon fill="#005695" points="258.619,151.772 260.943,160.445 263.268,151.772 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="260.943" y1="91.404" x2="260.943" y2="103.492"/>
+				<g>
+					<polygon fill="#005695" points="258.619,101.907 260.943,110.58 263.268,101.907 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					261.393,183.451 261.393,201.277 196.065,201.277 196.065,127.677 213.352,127.677 				"/>
+				<g>
+					<polygon fill="#005695" points="211.767,130.001 220.439,127.677 211.767,125.353 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="260.941" y1="48.067" x2="260.941" y2="69.941"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="260.941" y1="48.067" x2="260.941" y2="62.854"/>
+				<g>
+					<polygon fill="#005695" points="258.617,61.269 260.941,69.941 263.266,61.269 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="215.939" y="16.532" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="89.996" height="31.493"/>
+		<g>
+			<text transform="matrix(1 0 0 1 232.9268 34.7729)" font-size="9">SR Document</text>
+		</g>
+		
+			<rect x="220.439" y="110.651" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80.996" height="31.493"/>
+		<g>
+			<text transform="matrix(1 0 0 1 232.1729 128.8916)" font-size="9">Content Item *</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 290.873 163.0098)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 282.8721 185.0137)" font-size="9">0-n</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			224.955,171.525 260.865,160.447 296.918,171.686 296.918,171.711 260.865,182.947 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 242.5986 173.9727)" font-size="9">related to</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 291.9316 72.5923)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 291.9316 94.5972)" font-size="9">1</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			224.939,81.019 260.883,69.941 296.936,81.179 296.936,81.204 260.883,92.441 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 244.2007 83.6919)" font-size="9">contains</text>
+		</g>
+		
+			<rect x="103" y="225.277" fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="296" height="30.191"/>
+		<rect x="106.25" y="227.01" fill="none" width="289.5" height="22.809"/>
+		<text transform="matrix(0.9288 0 0 1 106.25 233.4512)" font-size="9">* Note:</text>
+		<text transform="matrix(1 0 0 1 106.25 247.4512)" font-size="9">A Content Item may contain either Observation Context or other content.</text>
+	</g>
+</g>
+</svg>

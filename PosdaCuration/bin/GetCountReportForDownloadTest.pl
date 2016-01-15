@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownloadTest.pl,v $ #$Date: 2016/01/13 13:56:13 $
-#$Revision: 1.1 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownloadTest.pl,v $ #$Date: 2016/01/15 17:00:25 $
+#$Revision: 1.2 $
 #
 use strict;
 use DBI;
@@ -14,9 +14,12 @@ select
     manufacturer, manuf_model_name, software_versions,
     count(*) as num_files
 from
-  file_patient natural join file_series natural join 
-  file_study natural join file_equipment natural left join
-  file_image natural left join image natural join ctp_file
+  ctp_file join file_patient using(file_id) 
+  join file_series using(file_id)
+  join file_study using(file_id)
+  join file_equipment using(file_id)
+  left join file_image using(file_id)
+  join image using (image_id)
 where 
   project_name = ? and site_name = ? and visibility is null
 group by

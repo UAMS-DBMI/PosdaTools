@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-25.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="352px" viewBox="0 0 502.001 352" enable-background="new 0 0 502.001 352" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="350"/>
+	<g>
+		
+			<rect x="44.685" y="321.069" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.565"/>
+		<rect x="48.825" y="324.494" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 330.2168)" font-size="8">...</text>
+		
+			<rect x="44.685" y="139.121" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="181.767"/>
+		
+			<rect x="59.795" y="152.689" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="303.988" height="168.38"/>
+		
+			<rect x="75.005" y="179.923" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="288.778" height="84.377"/>
+		
+			<rect x="90.215" y="194.692" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="273.568" height="69.607"/>
+		
+			<rect x="102.919" y="208.692" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="260.864" height="14"/>
+		
+			<rect x="102.919" y="222.692" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="260.864" height="14"/>
+		<rect x="48.825" y="142.565" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 148.293)" font-size="8">Shared Functional Groups Sequence</text>
+		<rect x="82.382" y="184.619" fill="none" width="186.911" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 82.3828 190.3438)" font-size="8">&gt;Field of View Sequence</text>
+		<g>
+			<rect x="112.637" y="212.39" fill="none" width="156.656" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 112.6372 218.1152)" font-size="8">&gt;&gt;Field of View Shape </text>
+		</g>
+		<g>
+			<rect x="112.636" y="226.308" fill="none" width="187.657" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 112.6367 232.0332)" font-size="8">&gt;&gt;Field of View Dimensions in Float</text>
+		</g>
+		<rect x="64.065" y="156.625" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 64.0654 162.3506)" font-size="8">Item 1</text>
+		<rect x="94.065" y="198.476" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 94.0654 204.1875)" font-size="8">Item 1</text>
+		<rect x="318.318" y="142.551" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 148.2803)" font-size="8">(5200,9229)</text>
+		
+			<rect x="44.685" y="125.912" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="128.997" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 134.7246)" font-size="8">...</text>
+		
+			<rect x="44.685" y="112.344" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="115.428" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 121.1562)" font-size="8">Intensifier Active Dimension(s)</text>
+		<rect x="318.318" y="115.415" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 121.1436)" font-size="8">(0018,9428)</text>
+		
+			<rect x="44.685" y="98.775" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="101.86" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 107.5879)" font-size="8">Intensifier Active Shape</text>
+		<rect x="318.318" y="101.846" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 107.5752)" font-size="8">(0018,9427)</text>
+		
+			<rect x="44.685" y="85.207" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="88.292" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 94.0195)" font-size="8">Intensifier Size</text>
+		<rect x="318.318" y="88.278" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 94.0068)" font-size="8">(0018,1162)</text>
+		
+			<rect x="44.685" y="71.639" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="74.723" fill="none" width="263.244" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 80.4487)" font-size="8">Distance Receptor Plane to Detector Housing</text>
+		<rect x="318.318" y="74.709" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 80.4385)" font-size="8">(0018,9426)</text>
+		
+			<rect x="44.685" y="58.07" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="61.155" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 66.8828)" font-size="8">X-Ray Receptor Type</text>
+		<rect x="318.318" y="61.141" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 66.8701)" font-size="8">(0018,9420)</text>
+		
+			<rect x="44.685" y="44.502" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="47.586" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 53.3145)" font-size="8">Columns</text>
+		<rect x="318.318" y="47.573" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 53.3018)" font-size="8">(0028,0011)</text>
+		
+			<rect x="44.685" y="30.934" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="34.018" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 39.7461)" font-size="8">Rows</text>
+		<rect x="318.318" y="34.004" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 39.7334)" font-size="8">(0028,0010)</text>
+		
+			<rect x="44.685" y="17.365" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="319.099" height="13.568"/>
+		<rect x="48.825" y="20.45" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 48.8247 26.1777)" font-size="8">...</text>
+		<rect x="318.318" y="184.619" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 190.3418)" font-size="8">(0018,9432)</text>
+		<g>
+			<rect x="318.662" y="212.392" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 318.668 218.1143)" font-size="8">(0018,1147)</text>
+		</g>
+		<g>
+			<rect x="318.479" y="226.308" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 318.4844 232.0312)" font-size="8">(0018,9461)</text>
+		</g>
+		
+			<rect x="102.919" y="236.66" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="260.864" height="14"/>
+		<g>
+			<rect x="112.637" y="240.357" fill="none" width="187.656" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 112.6372 246.083)" font-size="8">&gt;&gt;Field of View Rotation</text>
+		</g>
+		
+			<rect x="102.919" y="250.3" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="260.864" height="14"/>
+		<g>
+			<rect x="112.637" y="253.998" fill="none" width="156.656" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 112.6372 259.7227)" font-size="8">&gt;&gt;Field of View Horizontal Flip</text>
+		</g>
+		<g>
+			<rect x="318.662" y="240.359" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 318.668 246.084)" font-size="8">(0018,7032)</text>
+		</g>
+		<g>
+			<rect x="318.662" y="253.999" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 318.668 259.7129)" font-size="8">(0018,7034)</text>
+		</g>
+		
+			<rect x="75.005" y="264.3" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="288.778" height="42.77"/>
+		
+			<rect x="90.215" y="279.069" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="273.568" height="28"/>
+		
+			<rect x="102.919" y="293.069" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="260.864" height="14"/>
+		<rect x="82.382" y="268.996" fill="none" width="186.911" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 82.3828 274.7207)" font-size="8">&gt;Frame Pixel Data Properties Sequence</text>
+		<g>
+			<rect x="112.637" y="296.767" fill="none" width="156.656" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 112.6372 302.4922)" font-size="8">&gt;&gt;Imager Pixel Spacing</text>
+		</g>
+		<rect x="94.065" y="282.854" fill="none" width="96.499" height="7.714"/>
+		<text transform="matrix(0.9288 0 0 1 94.0654 288.5645)" font-size="8">Item 1</text>
+		<rect x="318.318" y="268.996" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 318.3242 274.7188)" font-size="8">(0028,9443)</text>
+		<g>
+			<rect x="318.662" y="296.769" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 318.668 302.4922)" font-size="8">(0018,1164)</text>
+		</g>
+		
+			<rect x="75.005" y="166.212" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="288.778" height="14"/>
+		<rect x="82.382" y="169.353" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 82.3823 175.0776)" font-size="8">...</text>
+		
+			<rect x="75.005" y="307.069" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="288.778" height="14"/>
+		<rect x="82.382" y="310.21" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 82.3823 315.9355)" font-size="8">...</text>
+		<rect x="372.354" y="19.37" fill="none" width="84.963" height="314.184"/>
+		<text transform="matrix(0.9288 0 0 1 372.3535 38.9453)"><tspan x="0" y="0" font-size="8">= 1024</tspan><tspan x="0" y="13.85" font-size="8">= 1024</tspan><tspan x="0" y="27.7" font-size="8">= IMG_INTENSIFIER</tspan><tspan x="0" y="41.55" font-size="8">= 40.0</tspan><tspan x="0" y="55.4" font-size="8">= 0 410.0</tspan><tspan x="0" y="69.25" font-size="8">= ROUND</tspan><tspan x="0" y="83.1" font-size="8">= 310</tspan><tspan x="0" y="180.05" font-size="8">= CIRCULAR</tspan><tspan x="0" y="193.9" font-size="8">= 300.0</tspan><tspan x="0" y="207.75" font-size="8">= 0</tspan><tspan x="0" y="221.6" font-size="8">= 0</tspan><tspan x="0" y="235.45" font-size="8">= NO</tspan><tspan x="0" y="263.15" font-size="8">= 0.3413\0.3413</tspan></text>
+	</g>
+</g>
+</svg>

@@ -1,11 +1,11 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/UnHideSubject.pl,v $ #$Date: 2015/12/15 14:14:12 $
-#$Revision: 1.1 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/UnHideSubject.pl,v $ #$Date: 2016/01/15 17:01:07 $
+#$Revision: 1.2 $
 #
 use strict;
 use DBI;
-my $usage = "HideSubject.pl <db> <coll> <site> <subj>\n";
-unless($#ARGV = 3) { die $usage }
+my $usage = "UnHideSubject.pl <db> <coll> <site> <subj>\n";
+unless($#ARGV == 3) { die $usage }
 my $dbh = DBI->connect("DBI:Pg:database=$ARGV[0]", "", "");
 my $q= <<EOF;
 update

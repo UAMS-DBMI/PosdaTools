@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/Application.pm,v $
-#$Date: 2016/01/13 13:59:45 $
-#$Revision: 1.5 $
+#$Date: 2016/01/15 18:06:15 $
+#$Revision: 1.6 $
 #
 use strict;
 package PosdaCuration::Application;
@@ -1287,6 +1287,7 @@ sub CheckAgainstPublic{
 #      '<?dyn="SimpleButton" ' .
 #      'caption="OK" op="ClearCheckAgainstPublic" sync="Update();"?>');
      $this->ClearCheckAgainstPublic($http, $dyn);
+     $this->AutoRefresh;
   }
 }
 sub SetCheckAgainstPublic{
@@ -1440,6 +1441,7 @@ sub CheckAgainstIntake{
 #      '<?dyn="SimpleButton" ' .
 #      'caption="OK" op="ClearCheckAgainstIntake" sync="Update();"?>');
      $this->ClearCheckAgainstIntake($http, $dyn);
+     $this->AutoRefresh;
   }
 }
 sub SetCheckAgainstIntake{
@@ -2859,21 +2861,42 @@ sub ApplyInstanceNumbersFix{
   my $coll = $this->{DisplayInfoIn}->{Collection};
   my $site = $this->{DisplayInfoIn}->{Site};
   my $subj = $this->{DisplayInfoIn}->{subj};
-#  my $edit_instructions = {
-#    operation => "EditAndAnalyze",
-#    files_to_link => {},
-#    cache_dir => "$this->{DicomInfoCache}/dicom_info",
-#    parallelism => 3,
-#    destination => $dest_dir,
-#    source => $source_dir,
-#    info_dir => "$edit_dir/$next_rev",
-#    FileEdits => $edits,
-#  };
-  for my $i (keys %{$info->{DicomInfo}->{FilesToDigest}}){
-    unless(exists $edits->{$i}){
-#      $edit_instruction->{files_to_link}
+  my $edit_dir = "$this->{ExtractionRoot}/$coll/" .
+    "$site/$subj/revisions";
+  my $dir_info =
+      $this->GetExtractionEditDirsAndFiles($subj);
+  my $source_dir = "$edit_dir/$dir_info->{current_rev}/files";
+  my $next_rev = $dir_info->{current_rev} + 1;
+  my $dest_dir = "$edit_dir/$next_rev/files";
+  my $edit_instructions = {
+    operation => "EditAndAnalyze",
+    files_to_link => {},
+    cache_dir => "$this->{DicomInfoCache}/dicom_info",
+    parallelism => 3,
+    destination => $dest_dir,
+    source => $source_dir,
+    info_dir => "$edit_dir/$next_rev",
+    FileEdits => $edits,
+  };
+  file_to_link:
+  for my $f (keys %{$info->{DicomInfo}->{FilesToDigest}}){
+    unless(exists $edits->{$f}){
+      unless($f =~/^(.*)\/([^\/]+)$/){
+        print STDERR "Can't extract file to link from $f\n";
+        next file_to_link;
+      }
+      my $dir = $1;
+      my $file = $2;
+      $edit_instructions->{files_to_link}->{$file} = 
+        $info->{DicomInfo}->{FilesToDigest}->{$f};
     }
   }
+  $this->{PendingEdits} = $edit_instructions;
+  $dyn->{for} = "Edit";
+  $dyn->{subj} = $subj;
+  $this->RequestLock($http, $dyn,
+    $this->WhenEditLockComplete($http, $dyn, $edit_instructions));
+  $this->AutoRefresh($http, $dyn);
 }
 ## Called from GeneralEdit (child);
 sub ApplyGeneralEdits{
@@ -3279,19 +3302,19 @@ sub DiscardExtraction{
   my $session = $this->{session};
   my $pid = $$;
   unless(defined $session){
-    print STDERR "Session undefined";
+    print STDERR "Session undefined in DiscardExtraction\n";
     $session = '<undef>';
   }
   unless(defined $user){
-    print STDERR "$user undefined";
+    print STDERR "$user undefined in DiscardExtraction\n";
     $user = '<undef>';
   }
   unless(defined $dyn->{collection}){
-    print STDERR "collection undefined";
+    print STDERR "collection undefined in DiscardExtraction\n";
     $dyn->{collection} = '<undef>';
   }
   unless(defined $dyn->{site}){
-    print STDERR "site undefined";
+    print STDERR "site undefined in DiscardExtraction\n";
     $dyn->{collection} = '<undef>';
   }
   my $new_args = [ "DiscardExtraction",

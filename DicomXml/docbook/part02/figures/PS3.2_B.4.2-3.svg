@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.4.2-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="252px" viewBox="0 0 502 252" enable-background="new 0 0 502 252" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="250"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="398.122" y1="236.845" x2="398.122" y2="39.188"/>
+		
+			<rect x="372.323" y="15.155" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="27"/>
+		<text transform="matrix(1 0 0 1 374.6172 26.6831)"><tspan x="0" y="0"  font-size="9">Department</tspan><tspan x="3.248" y="10.8"  font-size="9">Scheduler</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="68.082" x2="385.642" y2="68.082"/>
+		<path fill="#005695" d="M388.003,67.058c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.378,67.957,389.772,67.592,388.003,67.058z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="92.513" x2="385.642" y2="92.513"/>
+		<path fill="#005695" d="M388.003,91.488c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.378,92.388,389.772,92.022,388.003,91.488z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="392.417" y1="119.104" x2="111.245" y2="119.104"/>
+		<path fill="#005695" d="M108.884,118.079c1.652-0.5,2.728-0.959,4.054-1.492v5.045c-0.475-0.226-2.401-0.992-4.054-1.492
+			c-1.77-0.534-3.375-0.9-4.415-1.03C105.509,118.979,107.114,118.613,108.884,118.079z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="392.417" y1="145.077" x2="111.245" y2="145.077"/>
+		<path fill="#005695" d="M108.884,144.052c1.652-0.499,2.728-0.959,4.054-1.491v5.044c-0.475-0.225-2.401-0.992-4.054-1.491
+			c-1.77-0.534-3.375-0.9-4.415-1.03C105.509,144.952,107.114,144.587,108.884,144.052z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="392.417" y1="170.022" x2="111.245" y2="170.022"/>
+		<path fill="#005695" d="M108.884,168.997c1.652-0.5,2.728-0.959,4.054-1.492v5.045c-0.475-0.226-2.401-0.992-4.054-1.492
+			c-1.77-0.534-3.375-0.9-4.415-1.03C105.509,169.897,107.114,169.531,108.884,168.997z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="104.469" y1="194.968" x2="385.642" y2="194.968"/>
+		<path fill="#005695" d="M388.003,193.942c-1.652-0.5-2.728-0.959-4.054-1.492v5.045c0.475-0.226,2.401-0.992,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C391.378,194.843,389.772,194.477,388.003,193.942z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="100.338" y1="236.845" x2="100.338" y2="39.188"/>
+		
+			<rect x="77.837" y="15.155" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 81.8423 26.6831)"><tspan x="0" y="0"  font-size="9">Workflow</tspan><tspan x="12.498" y="10.8"  font-size="9">AE</tspan></text>
+		<text transform="matrix(1 0 0 1 122.6089 64.4517)"><tspan x="0" y="0"  font-size="8">1. Open Association</tspan><tspan x="0" y="25.6"  font-size="8">2. C-FIND Request (Worklist Query)</tspan><tspan x="0" y="51.2"  font-size="8">3. C-FIND Response (Worklist Item) – Status - Pending</tspan><tspan x="0" y="76.8"  font-size="8">4. C-FIND Response (Worklist Item) – Status - Pending</tspan><tspan x="0" y="102.4"  font-size="8">5. C-FIND Response – Status - Success</tspan><tspan x="0" y="128"  font-size="8">6. Close Association</tspan><tspan x="0" y="153.599"  font-size="8">7. Select Worklist Item</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M104.515,54.094h-9v147.892c3.15,0,5.968,0,9,0V54.094z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M402.424,54.094h-9v147.892c3.149,0,5.968,0,9,0V54.094z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M95.515,207.845v20.25h9v-20.25C101.482,207.845,98.665,207.845,95.515,207.845z"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="107.625,209.667 119.657,209.667 
+			119.657,223.363 114.108,223.363 		"/>
+		<path fill="#005695" d="M111.747,224.389c1.652,0.5,2.728,0.959,4.054,1.492v-5.045c-0.475,0.227-2.401,0.992-4.054,1.492
+			c-1.77,0.535-3.375,0.9-4.415,1.031C108.372,223.488,109.977,223.855,111.747,224.389z"/>
+	</g>
+</g>
+</svg>

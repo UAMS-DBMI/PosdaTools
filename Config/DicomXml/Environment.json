@@ -1,0 +1,14 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomXml/Environment.json,v $
+//  $Date: 2014/09/22 18:46:45 $
+//  $Revision: 1.1 $
+// 
+{
+  "ApplicationInitClass" : "DicomXml::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/Users/bbennett/PosdaToolsTest/HttpRoot/http_root",
+  "ParsedDicomRoot" : "/Users/bbennett/PosdaToolsTest/ParsedDicom",
+  "DicomXmlRoot" : "/Users/bbennett/PosdaToolsTest/DicomXml/docbook",
+  "ParsedIodRoot" : "/Users/bbennett/PosdaToolsTest/ParsedIods",
+}

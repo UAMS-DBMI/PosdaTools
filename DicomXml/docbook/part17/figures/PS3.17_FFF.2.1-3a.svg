@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-3a.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="307px" viewBox="0 0 502.001 307" enable-background="new 0 0 502.001 307" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="305"/>
+	<g>
+		
+			<rect x="61.743" y="122.896" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="136.556" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.659"/>
+		
+			<rect x="61.743" y="150.214" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.566"/>
+		
+			<rect x="61.743" y="163.873" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="125.193"/>
+		
+			<rect x="76.854" y="177.438" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.517" height="111.628"/>
+		
+			<rect x="92.063" y="191.11" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.307" height="97.956"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="92.783" y1="219.164" x2="319.164" y2="219.164"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="92.783" y1="205.063" x2="319.164" y2="205.063"/>
+		
+			<rect x="107.273" y="233.312" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.097" height="55.916"/>
+		
+			<rect x="119.978" y="246.979" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.393" height="28.102"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="124.085" y1="260.932" x2="319.164" y2="260.932"/>
+		
+			<rect x="119.978" y="275.062" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.393" height="14.166"/>
+		
+			<rect x="61.743" y="109.343" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="95.791" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="82.269" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="68.748" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="55.226" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="41.705" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		
+			<rect x="61.743" y="28.183" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.627" height="13.591"/>
+		<rect x="328.219" y="30.89" fill="none" width="112.039" height="260.341"/>
+		<text transform="matrix(0.9288 0 0 1 328.2188 36.6216)"><tspan x="0" y="0" font-size="8">= UID “A”</tspan><tspan x="0" y="27.5" font-size="8">= UID “B”</tspan><tspan x="0" y="41.25" font-size="8">= XA</tspan><tspan x="0" y="68.75" font-size="8">= UID “C”</tspan><tspan x="0" y="82.5" font-size="8">= NO TRIGGER</tspan><tspan x="0" y="96.25" font-size="8">= Y</tspan><tspan x="0" y="123.75" font-size="8">= UID “D”</tspan><tspan x="0" y="165" font-size="8">= 1.2.840.10008.5.1.4.1.1.9.1.2</tspan><tspan x="0" y="178.75" font-size="8">= UID “E”</tspan><tspan x="0" y="220" font-size="8">= 121303</tspan><tspan x="0" y="233.75" font-size="8">= DCM</tspan><tspan x="0" y="247.5" font-size="8">= Simultaneous ECG</tspan></text>
+		<rect x="65.883" y="31.122" fill="none" width="175.978" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 36.8491)" font-size="8">Study Instance UID</text>
+		<rect x="62.103" y="15.77" fill="none" width="175.978" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 62.1025 21.4971)" font-size="8">Enhanced XA SOP Instance</text>
+		<rect x="65.883" y="44.644" fill="none" width="156.672" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 50.3706)" font-size="8">...</text>
+		<rect x="65.883" y="58.165" fill="none" width="142.656" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 63.8916)" font-size="8">Series Instance UID</text>
+		<rect x="65.883" y="125.834" fill="none" width="142.322" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 131.5596)" font-size="8">Acquisition Time Synchronized</text>
+		<rect x="65.883" y="139.528" fill="none" width="141.863" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 145.2559)" font-size="8">...</text>
+		<rect x="65.883" y="153.139" fill="none" width="141.53" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 158.8672)" font-size="8">SOP Instance UID</text>
+		<rect x="65.883" y="167.298" fill="none" width="141.988" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 173.0244)" font-size="8">Referenced Instance Sequence</text>
+		<rect x="99.441" y="195.447" fill="none" width="108.83" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 99.4409 201.166)" font-size="8">&gt;Referenced SOP Class UID</text>
+		<rect x="99.44" y="223.059" fill="none" width="136.58" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 99.4404 228.7754)" font-size="8">&gt;Purpose of Reference Code Sequence</text>
+		<g>
+			<rect x="129.695" y="251.316" fill="none" width="78.953" height="7.716"/>
+			<text transform="matrix(0.9288 0 0 1 129.6953 257.0273)" font-size="8">&gt;&gt;Code Value</text>
+		</g>
+		<g>
+			<rect x="129.695" y="264.826" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 129.6948 270.5381)" font-size="8">&gt;&gt;Coding Scheme Designator</text>
+		</g>
+		<rect x="81.124" y="181.359" fill="none" width="127.729" height="7.72"/>
+		<text transform="matrix(0.9288 0 0 1 81.124 187.082)" font-size="8">Item 1</text>
+		<rect x="111.124" y="236.137" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 111.124 241.8477)" font-size="8">Item 1</text>
+		<g>
+			<rect x="129.695" y="279.4" fill="none" width="78.953" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 129.6953 285.1084)" font-size="8">&gt;&gt;Code Meaning</text>
+		</g>
+		<rect x="264.194" y="31.122" fill="none" width="44.533" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 264.1934 36.8491)" font-size="8">(0020,000D)</text>
+		<rect x="264.343" y="58.165" fill="none" width="44.385" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 264.3418 63.8916)" font-size="8">(0020,000E)</text>
+		<rect x="263.849" y="125.834" fill="none" width="44.879" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 263.8477 131.5596)" font-size="8">(0008,1800)</text>
+		<rect x="65.883" y="112.281" fill="none" width="142.322" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 118.0068)" font-size="8">Synchronization Trigger</text>
+		<rect x="263.849" y="112.281" fill="none" width="44.879" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 263.8477 118.0068)" font-size="8">(0018,106A)</text>
+		<rect x="65.883" y="98.729" fill="none" width="142.322" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 104.4541)" font-size="8">Synchronization Frame of Reference UID</text>
+		<rect x="263.849" y="98.729" fill="none" width="44.879" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 263.8477 104.4541)" font-size="8">(0020,0200)</text>
+		<rect x="263.743" y="153.139" fill="none" width="44.984" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 263.7422 158.8672)" font-size="8">(0008,0018)</text>
+		<rect x="263.743" y="167.285" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 263.7422 173.0117)" font-size="8">(0008,114A)</text>
+		<rect x="263.743" y="195.436" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 263.7422 201.1533)" font-size="8">(0008,1150)</text>
+		<rect x="264.146" y="223.047" fill="none" width="44.582" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 264.1445 228.7598)" font-size="8">(0040,A170)</text>
+		<rect x="99.44" y="208.98" fill="none" width="136.58" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 99.4404 214.6973)" font-size="8">&gt;Referenced SOP Instance UID</text>
+		<rect x="264.146" y="208.969" fill="none" width="44.582" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 264.1445 214.6816)" font-size="8">(0008,1155)</text>
+		<g>
+			<rect x="264.087" y="251.305" fill="none" width="44.641" height="7.714"/>
+			<text transform="matrix(0.9288 0 0 1 264.0859 257.0137)" font-size="8">(0008,0100)</text>
+		</g>
+		<g>
+			<rect x="263.903" y="264.814" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 263.9023 270.5215)" font-size="8">(0028,9503)</text>
+		</g>
+		<g>
+			<rect x="264.063" y="279.389" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 264.0625 285.0957)" font-size="8">(0008,0104)</text>
+		</g>
+		<rect x="65.883" y="71.686" fill="none" width="142.656" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 77.4131)" font-size="8">Modality</text>
+		<rect x="264.343" y="71.686" fill="none" width="44.385" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 264.3418 77.4131)" font-size="8">(0008,0060)</text>
+		<rect x="65.883" y="85.208" fill="none" width="156.673" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 65.8833 90.9346)" font-size="8">...</text>
+	</g>
+</g>
+</svg>

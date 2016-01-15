@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_F.4.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="457px" viewBox="0 0 502 457" enable-background="new 0 0 502 457" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<polyline fill="#F5EED6" points="1,456 1,1 501,1 501,456 	"/>
+	<g>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M367.932,384.477c0-24.846,20.141-44.986,44.984-44.986c24.861,0,45.016,20.141,45.016,44.986s-20.154,45.018-45.016,45.018
+			C388.072,429.495,367.932,409.323,367.932,384.477z"/>
+		<text transform="matrix(1 0 0 1 397.1748 354.603)"><tspan x="0" y="0"  font-size="9">Storage</tspan><tspan x="-21.25" y="10.799"  font-size="9">Commitment Push</tspan><tspan x="-25.014" y="21.6"  font-size="9">Model Request Sent</tspan><tspan x="-12.252" y="32.399"  font-size="9">Unsolicited by</tspan><tspan x="-8.499" y="43.199"  font-size="9">Remote AE.</tspan><tspan x="-19.007" y="54"  font-size="9">Report Received </tspan><tspan x="-2.499" y="64.799"  font-size="9">in Return</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" x1="334.795" y1="439.896" x2="334.795" y2="32.208"/>
+		<g>
+			<path fill="#B2CEE7" d="M265.798,20.703c0-1.98,1.62-3.6,3.6-3.6h130.797c1.979,0,3.6,1.62,3.6,3.6v8.586
+				c0,1.98-1.62,3.6-3.6,3.6H269.397c-1.979,0-3.6-1.62-3.6-3.6V20.703z"/>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 269.6836 28.8262)"  font-size="11">DICOM Standard Interface</text>
+		</g>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M44.068,137.811c0-24.846,20.142-44.986,44.985-44.986c24.863,0,45.015,20.141,45.015,44.986
+			c0,24.845-20.152,45.017-45.015,45.017C64.21,182.828,44.068,162.656,44.068,137.811z"/>
+		<text transform="matrix(1 0 0 1 69.0659 109.0186)"><tspan x="0" y="0"  font-size="9">QUERY - </tspan><tspan x="-15.754" y="10.8"  font-size="9">RETRIEVE - SCP</tspan><tspan x="-20.019" y="21.6"  font-size="9">AE Requests Image</tspan><tspan x="0.993" y="32.4"  font-size="9">Export by</tspan><tspan x="-22.755" y="43.2"  font-size="9">STORAGE - SCU AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="134.896" y1="137.452" x2="185.007" y2="87.343"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="135.391" y1="137.269" x2="185.501" y2="187.377"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="365.959" y1="88.828" x2="329.002" y2="88.828"/>
+		<path fill="#005695" d="M326.168,87.598c1.983-0.6,3.273-1.151,4.865-1.79v6.053c-0.57-0.271-2.882-1.19-4.865-1.79
+			c-2.124-0.642-4.049-1.08-5.298-1.236C322.119,88.678,324.044,88.239,326.168,87.598z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M367.933,88.818c0-24.846,20.141-44.985,44.984-44.985c24.861,0,45.016,20.14,45.016,44.985s-20.154,45.018-45.016,45.018
+			C388.073,133.835,367.933,113.664,367.933,88.818z"/>
+		<text transform="matrix(1 0 0 1 397.1787 69.7441)"><tspan x="0" y="0"  font-size="9">Remote</tspan><tspan x="-18.763" y="10.8"  font-size="9">Application Entity</tspan><tspan x="-23.26" y="21.6"  font-size="9">Issues Verification, </tspan><tspan x="-22.256" y="32.4"  font-size="9">Query, or Retrieve </tspan><tspan x="-5.001" y="43.2"  font-size="9">Command</tspan></text>
+		
+			<rect x="184.965" y="67.837" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="135" height="41.994"/>
+		<text transform="matrix(1 0 0 1 187.6763 78.7012)"><tspan x="0" y="0"  font-size="11">QUERY - RETRIEVE SCP</tspan><tspan x="37.883" y="13.2"  font-size="11">Application</tspan><tspan x="51.034" y="26.4"  font-size="11">Entity</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="320.869" y1="187.38" x2="357.826" y2="187.38"/>
+		<path fill="#005695" d="M360.66,186.151c-1.983-0.6-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.19,4.865-1.79
+			c2.124-0.642,4.049-1.08,5.298-1.236C364.709,187.231,362.784,186.792,360.66,186.151z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M367.932,187.372c0-24.846,20.141-44.985,44.984-44.985c24.861,0,45.016,20.14,45.016,44.985s-20.154,45.018-45.016,45.018
+			C388.072,232.389,367.932,212.217,367.932,187.372z"/>
+		<text transform="matrix(1 0 0 1 391.1699 173.6973)"><tspan x="0" y="0"  font-size="9">Requested</tspan><tspan x="-13.002" y="10.8"  font-size="9">Images Received</tspan><tspan x="0.006" y="21.6"  font-size="9">by Remote</tspan><tspan x="-12.753" y="32.4"  font-size="9">Application Entity</tspan></text>
+		
+			<rect x="184.965" y="166.39" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="135" height="41.994"/>
+		<text transform="matrix(1 0 0 1 209.0723 177.2529)"><tspan x="0" y="0"  font-size="11">STORAGE - SCU</tspan><tspan x="16.487" y="13.2"  font-size="11">Application</tspan><tspan x="29.638" y="26.4"  font-size="11">Entity</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="365.959" y1="285.933" x2="329.002" y2="285.933"/>
+		<path fill="#005695" d="M326.168,284.704c1.983-0.6,3.273-1.151,4.865-1.79v6.053c-0.57-0.271-2.882-1.19-4.865-1.79
+			c-2.124-0.642-4.049-1.08-5.298-1.236C322.119,285.784,324.044,285.344,326.168,284.704z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M367.93,285.923c0-24.845,20.141-44.984,44.984-44.984c24.861,0,45.016,20.14,45.016,44.984c0,24.846-20.154,45.018-45.016,45.018
+			C388.07,330.941,367.93,310.769,367.93,285.923z"/>
+		<text transform="matrix(1 0 0 1 390.6777 266.8491)"><tspan x="0" y="0"  font-size="9">Verification</tspan><tspan x="-6.006" y="10.801"  font-size="9">or Image Sent </tspan><tspan x="-1" y="21.601"  font-size="9">Unsolicited </tspan><tspan x="0.5" y="32.4"  font-size="9">by Remote</tspan><tspan x="-12.259" y="43.201"  font-size="9">Application Entity</tspan></text>
+		
+			<rect x="184.965" y="264.943" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="135" height="41.994"/>
+		<text transform="matrix(1 0 0 1 209.3755 275.8062)"><tspan x="0" y="0"  font-size="11">STORAGE - SCP</tspan><tspan x="16.184" y="13.201"  font-size="11">Application</tspan><tspan x="29.334" y="26.4"  font-size="11">Entity</tspan></text>
+		
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="364.746" y1="359.907" x2="314.344" y2="309.504"/>
+		<path fill="#005695" d="M367.62,361.042c-0.979-1.827-1.501-3.129-2.175-4.706l-4.28,4.28c0.595,0.211,2.88,1.194,4.706,2.174
+			c1.955,1.048,3.627,2.1,4.62,2.872C369.719,364.667,368.668,362.996,367.62,361.042z"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="326.541" y1="304.489" x2="376.943" y2="354.891"/>
+		<path fill="#005695" d="M323.667,303.354c0.979,1.827,1.501,3.129,2.175,4.706l4.28-4.28c-0.595-0.211-2.88-1.194-4.706-2.174
+			c-1.955-1.048-3.627-2.1-4.62-2.872C321.568,299.728,322.619,301.4,323.667,303.354z"/>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.11.19-3.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="272px" viewBox="0 0 502 272" enable-background="new 0 0 502 272" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="270"/>
+	<g>
+		<rect x="78.194" y="40.05" fill="#FFFFFF" stroke="#003468" width="360.001" height="210"/>
+		<rect x="78.194" y="40.05" fill="#CCDEF0" stroke="#003468" width="180.001" height="90.001"/>
+		<rect x="198.194" y="70.051" fill="#6799C8" stroke="#003468" width="240.001" height="120"/>
+		<rect x="138.194" y="100.051" fill="#003468" stroke="#003468" width="180.001" height="150"/>
+		<line fill="none" stroke="#003468" x1="78.194" y1="30.05" x2="78.194" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="40.05" x2="78.155" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="70.051" x2="78.155" y2="70.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="100.051" x2="78.155" y2="100.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="130.051" x2="78.155" y2="130.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="160.051" x2="78.155" y2="160.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="190.051" x2="78.155" y2="190.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="220.051" x2="78.155" y2="220.051"/>
+		<line fill="none" stroke="#003468" x1="68.155" y1="250.051" x2="78.155" y2="250.051"/>
+		<line fill="none" stroke="#003468" x1="138.194" y1="30.05" x2="138.194" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="198.195" y1="30.05" x2="198.195" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="258.195" y1="30.05" x2="258.195" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="318.195" y1="30.05" x2="318.195" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="378.195" y1="30.05" x2="378.195" y2="40.05"/>
+		<line fill="none" stroke="#003468" x1="438.195" y1="30.05" x2="438.195" y2="40.05"/>
+		<text transform="matrix(0.9288 0 0 1 76.0869 24.5059)" font-size="9">1</text>
+		<text transform="matrix(0.9288 0 0 1 60.395 42.5059)" font-size="9">1</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 72.5059)" font-size="9">10</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 102.5059)" font-size="9">20</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 132.5059)" font-size="9">30</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 162.5059)" font-size="9">40</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 192.5059)" font-size="9">50</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 222.5059)" font-size="9">60</text>
+		<text transform="matrix(0.9288 0 0 1 56.1802 252.5059)" font-size="9">70</text>
+		<text transform="matrix(0.9288 0 0 1 133.9795 24.5059)" font-size="9">20</text>
+		<text transform="matrix(0.9288 0 0 1 193.9805 24.5059)" font-size="9">40</text>
+		<text transform="matrix(0.9288 0 0 1 253.9805 24.5059)" font-size="9">60</text>
+		<text transform="matrix(0.9288 0 0 1 313.9805 24.5059)" font-size="9">80</text>
+		<text transform="matrix(0.9288 0 0 1 371.873 24.5059)" font-size="9">100</text>
+		<text transform="matrix(0.9288 0 0 1 431.873 24.5059)" font-size="9">120</text>
+		<text transform="matrix(0.9288 0 0 1 381.4238 52.5146)" font-size="10">No pixel shift</text>
+		<text transform="matrix(0.9288 0 0 1 81.7944 52.5146)" font-size="10">Region 1: pixel shift 1.2\3.4</text>
+		<text transform="matrix(0.9288 0 0 1 201.7944 82.5151)" font-size="10">Region 2: pixel shift -0.8\7.0</text>
+		<text transform="matrix(0.9288 0 0 1 141.7944 112.5151)" fill="#FFFFFF" font-size="10">Region 3: pixel shift  0.0\-1.1</text>
+	</g>
+</g>
+</svg>

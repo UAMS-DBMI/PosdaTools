@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part05/figures/PS3.5_D.2-4.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:30 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.084px" height="195.852px" viewBox="0 0 495.084 195.852" enable-background="new 0 0 495.084 195.852"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.5-2008 5: Data Structures and Encoding
+   </desc>
+   <title>
+	Figure D.2-4 Example 4 of Pixel and Overlay Data Cells
+   </title>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.3919 247.5425 97.9258)" overflow="visible"/>
+<rect x="53.039" y="33.327" fill="#CCDFF0" stroke="#010101" stroke-miterlimit="1" width="389.011" height="144.528"/>
+<g>
+	<text transform="matrix(0.8815 0 0 1 53.0386 30.0078)" font-size="11">Example 4: Overlay Data Cells</text>
+</g>
+<g>
+	<text transform="matrix(0.8815 0 0 1 67.4526 87.2432)"><tspan x="0" y="0" font-size="11">Bits Allocated = 1</tspan><tspan x="0" y="13.2" font-size="11">Bits Position = 0</tspan></text>
+</g>
+<rect x="212.454" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="197.954" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="183.454" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="168.953" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.401" height="14.402"/>
+<rect x="154.453" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="139.847" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="125.453" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="110.953" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="96.453" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="81.953" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="67.453" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="270.454" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="255.954" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="241.454" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<rect x="226.954" y="49.584" fill="#FFFFFF" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 275.2007 59.5742)" font-size="10">1</text>
+	</g>
+</g>
+<rect x="284.854" y="49.584" fill="#0DB14B" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.402"/>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 289.6011 59.5742)" font-size="10">0</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 261.231 59.5742)" font-size="10">2</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 246.6392 59.5742)" font-size="10">3</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 232.0444 59.5742)" font-size="10">4</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 217.4536 59.5742)" font-size="10">5</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 142.1455 59.5742)" fill="#312A36" font-size="10">10</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 69.749 59.5742)" font-size="10">15</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 84.251 59.5742)" font-size="10">14</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 98.7505 59.5742)" font-size="10">13</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 113.251 59.5742)" font-size="10">12</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 127.7505 59.5742)" font-size="10">11</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 159.2021 59.5742)" font-size="10">9</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 173.7026 59.5742)" font-size="10">8</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 188.2021 59.5742)" font-size="10">7</text>
+	</g>
+</g>
+<g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 202.7026 59.5742)" font-size="10">6</text>
+	</g>
+</g>
+<rect x="69.747" y="117.461" fill="none" width="361.908" height="54.667"/>
+<text transform="matrix(0.8815 0 0 1 67.7471 125.335)"><tspan x="0" y="0" font-size="11">Note: In this example, the Overlay Bits are numbered in the same manner that Pixel </tspan><tspan x="29.494" y="13.2" font-size="11">Cells are numbered in the other examples in this Annex. That is, Overlay Bit 1 </tspan><tspan x="29.494" y="26.4" font-size="11">is the first bit of the Overlay Plane, encoded from left to right and top to </tspan><tspan x="29.494" y="39.6" font-size="11">bottom, a row at a time.</tspan></text>
+</svg>

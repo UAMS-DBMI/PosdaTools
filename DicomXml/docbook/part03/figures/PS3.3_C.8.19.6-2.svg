@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.19.6-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="542px" viewBox="0 0 502 542" enable-background="new 0 0 502 542" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="540"/>
+	<g>
+		<rect x="11.791" y="426.62" fill="#FFFFFF" stroke="#000000" stroke-width="1.2964" width="351" height="99.715"/>
+		<circle fill="#CCDEF0" stroke="#939598" stroke-miterlimit="1" stroke-dasharray="1,4" cx="315.776" cy="212.695" r="174.678"/>
+		<g>
+			<g>
+				<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="1" d="M305.146,57.875
+					c-9.663,0.654-19.083,2.192-28.18,4.535"/>
+				<g>
+					<polygon points="302.641,54.535 315.775,57.517 302.911,61.502 					"/>
+				</g>
+				<g>
+					<polygon points="278.298,58.442 266.775,65.413 280.24,65.139 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="185.799" y="131.923" transform="matrix(0.9717 -0.236 0.236 0.9717 -25.263 71.602)" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="201.306" height="18.804"/>
+		
+			<rect x="217.172" y="299.567" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="201.304" height="4.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 43.2974 216.0229)" font-size="12">Isocenter</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 11.5464 163.1064)" font-size="12">Image Receptor</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 21.1021 390.8242)" font-size="12">X-Ray Source</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 282.021 77.7168)"><tspan x="0" y="0" font-size="12">Beam</tspan><tspan x="0.328" y="12.408" font-size="12">Angle</tspan></text>
+		</g>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="91.405" y1="161.115" x2="187.68" y2="161.115"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="88.405" y1="212.166" x2="298.314" y2="212.166"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="88.905" y1="250.167" x2="264.303" y2="250.167"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 54.0151 253.8188)" font-size="12">Patient</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 56.3755 276.0732)" font-size="12">Object</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 24.6143 305.1445)" font-size="12">Patient Table</text>
+		</g>
+		
+			<ellipse fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" cx="317.823" cy="271.194" rx="52.666" ry="28"/>
+		
+			<path fill="#ED1C24" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M317.875,285.999c-3.586-7.189-7.172-6.061-10.758-13.25c-5.59-11.207,10.646-20.623,10.713-5.057
+			c0-15.561,16.277-6.18,10.707,5.062c-3.564,7.189-7.127,6.057-10.689,13.244"/>
+		<polygon fill="none" stroke="#ED1C24" stroke-miterlimit="1" stroke-dasharray="2" points="344.879,383.782 261.108,145.229 
+			285.499,139.307 309.893,133.381 		"/>
+		<path stroke="#000000" stroke-miterlimit="1" d="M307.314,212.695c0-2.485-2.015-4.5-4.5-4.5v4.5H307.314z"/>
+		
+			<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M302.814,208.195c-2.485,0-4.5,2.015-4.5,4.5h4.5V208.195z"/>
+		<path stroke="#000000" stroke-miterlimit="1" d="M298.314,212.695c0,2.485,2.015,4.5,4.5,4.5v-4.5H298.314z"/>
+		
+			<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M302.814,212.695v4.5c2.485,0,4.5-2.015,4.5-4.5H302.814z"/>
+		
+			<path fill="#F69679" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M287.71,147.933c-8.137-1.622-15.316,0.686-23.452-0.937c-12.68-2.529,19.336-15.021,21.259-7.694
+			c-1.787-7.356,32.474-10.982,22.409-2.909c-6.442,5.162-13.834,6.391-20.271,11.554"/>
+		
+			<ellipse transform="matrix(0.9717 -0.2361 0.2361 0.9717 -80.9159 92.2877)" fill="#FEDA00" cx="344.949" cy="384.061" rx="7.773" ry="7.99"/>
+		<circle cx="344.842" cy="383.929" r="0.785"/>
+		<path d="M344.342,385.888c-0.665-0.191-1.217-0.736-1.396-1.473c-0.014-0.055-0.023-0.109-0.032-0.166l-4.629,1.125
+			c0.012,0.055,0.024,0.111,0.038,0.164c0.604,2.49,2.452,4.342,4.691,5.023L344.342,385.888z"/>
+		<path d="M346.156,385.448c0.504-0.477,0.744-1.213,0.565-1.949c-0.014-0.055-0.028-0.109-0.047-0.162l4.629-1.125
+			c0.015,0.055,0.027,0.109,0.041,0.164c0.604,2.49-0.187,4.982-1.865,6.615L346.156,385.448z"/>
+		<path d="M343.374,382.589c0.498-0.48,1.223-0.779,1.949-0.566c0.055,0.016,0.107,0.035,0.159,0.055l1.342-4.57
+			c-0.054-0.018-0.107-0.033-0.163-0.051c-2.457-0.721-4.947,0.107-6.657,1.707L343.374,382.589z"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="88.905" y1="273.167" x2="296.302" y2="273.167"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="88.905" y1="301.667" x2="201.692" y2="301.667"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="88.905" y1="387.167" x2="297.073" y2="387.167"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="103.605" y1="168.874" x2="103.605" y2="379.797"/>
+				<g>
+					<polygon fill="#005695" points="101.281,170.459 103.605,161.786 105.929,170.459 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="101.281,378.212 103.605,386.885 105.929,378.212 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="92.605" y="189.416" fill="#F2EFD1" width="22" height="14.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 94.7876 199.9941)" font-size="12">SID</text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="124.248" y1="220.093" x2="124.248" y2="379.797"/>
+				<g>
+					<polygon fill="#005695" points="121.923,221.679 124.248,213.006 126.572,221.679 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="121.923,378.212 124.248,386.885 126.572,378.212 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="113.748" y="280.511" fill="#F2EFD1" width="22" height="14.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 115.6357 291.0938)" font-size="12">ISO</text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="167.957" y1="219.194" x2="167.957" y2="294.278"/>
+				<g>
+					<polygon fill="#005695" points="165.632,220.779 167.957,212.106 170.281,220.779 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="165.632,292.693 167.957,301.366 170.281,292.693 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="156.957" y="253.614" fill="#CCDEF0" width="22" height="14.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 160.9048 264.1943)" font-size="12">TH</text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="146.352" y1="281.456" x2="146.352" y2="379.797"/>
+				<g>
+					<polygon fill="#005695" points="144.028,283.041 146.352,274.368 148.676,283.041 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="144.028,378.212 146.352,386.885 148.676,378.212 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="135.352" y="341.714" fill="#F2EFD1" width="22" height="14.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 134.8901 352.2939)" font-size="12">SOD</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 251.5044 111.894)" font-size="12">#Px</text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="189.105" y1="247.265" x2="189.105" y2="265.237"/>
+				<g>
+					<polygon fill="#005695" points="186.781,263.651 189.105,272.324 191.429,263.651 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="189.105" y1="326.741" x2="189.105" y2="308.413"/>
+				<g>
+					<polygon fill="#005695" points="191.429,309.998 189.105,301.325 186.781,309.998 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="178.098" y="279.417" fill="#CCDEF0" width="22" height="14.5"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 181.7524 289.9941)" font-size="12">TO</text>
+		</g>
+		<polyline fill="none" stroke="#333333" points="273.874,109.1 281.714,109.1 295.207,136.348 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 217.1724 437.5176)"><tspan x="0" y="0" font-size="8">ISO : Source Isocenter Distance</tspan><tspan x="0" y="11.6" font-size="8">SID : Source Image Receptor Distance</tspan><tspan x="0" y="23.199" font-size="8">SOD: Source Object Distance</tspan><tspan x="0" y="34.799" font-size="8">TH : Table Height</tspan><tspan x="0" y="46.4" font-size="8">TO : Distance Object Table Top</tspan><tspan x="0" y="58" font-size="8">D: Distance in Object</tspan><tspan x="0" y="69.6" font-size="8">#Px: Number Pixels</tspan><tspan x="0" y="81.199" font-size="8">ΔPx: Imager Pixel Spacing</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 19.0913 441.0625)"><tspan x="0" y="0" font-size="10">D = # Px * Δ Px * SOD / SID</tspan><tspan x="0" y="16" font-size="10">SOD = ISO - (TH-TO) / cos°(Beam Angle)</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 313.3687 277.3945)" fill="#FFFFFF" font-size="14">D</text>
+		</g>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="317.822" y1="299.194" x2="317.822" y2="98.666"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#00AEEF" stroke-width="2" x1="317.003" y1="299.306" x2="317.003" y2="26.297"/>
+				<g>
+					<polygon fill="#00AEEF" points="320.49,28.675 317.003,15.666 313.517,28.675 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#00AEEF" stroke-width="2" stroke-dasharray="2,2" x1="324.963" y1="298.912" x2="258.519" y2="32.288"/>
+				<g>
+					<polygon fill="#00AEEF" points="262.477,33.751 255.949,21.972 255.711,35.438 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

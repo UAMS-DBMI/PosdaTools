@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_Q.2-3.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:32 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="612px" height="792px" viewBox="0 0 612 792" enable-background="new 0 0 612 792" xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure Q.2-3: Example 3 – Diagnostic Mammography - Unilateral 
+  </title>
+  <desc>
+	DICOM PS 3.12-2008 Part 17: Explanatory Information
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.874 495.085 499.749">
+	<polygon fill="#F5EED6" points="247.542,-249.874 -247.542,-249.874 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.874" transform="matrix(1 0 0 -0.5526 306.0312 396.0708)" overflow="visible"/>
+<rect x="112.531" y="274.571" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="387" height="243"/>
+<g>
+	<text transform="matrix(1 0 0 1 134.7739 296.8555)"><tspan x="0" y="0" font-size="10">Procedure reported</tspan><tspan x="0" y="12" font-size="10">Film screen mammography, left breast.</tspan><tspan x="0" y="36" font-size="10">Reason for procedure</tspan><tspan x="0" y="48" font-size="10">Non-bloody discharge left breast.</tspan><tspan x="0" y="72" font-size="10">Breast composition</tspan><tspan x="0" y="84" font-size="10">The breast is almost entirely fat.</tspan><tspan x="0" y="108" font-size="10">Findings</tspan><tspan x="0" y="120" font-size="10">Film screen mammograms were performed. There are heterogeneous calcifications</tspan><tspan x="0" y="132" font-size="10">regionally distributed in the 1 o’clock upper outer quadrant, anterior region</tspan><tspan x="0" y="144" font-size="10">of the left breast. There is an increase in the number of calcifications from</tspan><tspan x="0" y="156" font-size="10">the prior exam.</tspan><tspan x="0" y="180" font-size="10">Impressions</tspan><tspan x="0" y="192" font-size="10">BI-RADS® Category 3: Probably Benign Finding. Short interval follow-up of</tspan><tspan x="0" y="204" font-size="10">the left breast is recommended in 6 months.</tspan></text>
+</g>
+</svg>

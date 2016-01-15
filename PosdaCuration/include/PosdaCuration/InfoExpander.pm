@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/InfoExpander.pm,v $
-#$Date: 2015/12/22 14:50:57 $
-#$Revision: 1.3 $
+#$Date: 2016/01/15 18:06:15 $
+#$Revision: 1.4 $
 #
 use strict;
 package PosdaCuration::InfoExpander;
@@ -365,6 +365,8 @@ sub PendingHideSeries{
   my($this, $http, $dyn) = @_;
   $this->RefreshEngine($http, $dyn,
     '<h3>Are you sure you want to hide this series:</h3>' .
+    '<h5>This will also discard this extraction (as a side effect)</h5>' .
+    '<h5>And will discard the Intake Check</h5>' .
     "<ul><li>Nickname: $this->{PendingHideSeriesNn}</li>" .
     "<li>Uid: $this->{PendingHideSeriesUid}</li>" .
     '<?dyn="NotSoSimpleButton" caption="Yes, Hide" ' .
@@ -387,10 +389,32 @@ sub HideSeries{
   my $series = $this->{PendingHideSeriesUid};
   my $cmd = "HideSeries.pl " .
     "\"$this->{Environment}->{database_name}\" " .
+    "\"$this->{SelectedCollection}\" " .
+    "\"$this->{SelectedSite}\" " .
     "\"$series\"";
-################# here xyzzy
+print STDERR "Cmd: $cmd\n";
+  Dispatch::LineReader->new_cmd($cmd, $this->HideSeriesLine, 
+    $this->DoneWithHideSeries($http, $dyn)
+  );
+}
+sub HideSeriesLine{
+  my($this) = @_;
+  my $sub = sub {
+    my($line) = @_;
+  };
+  return $sub;
 }
 sub DoneWithHideSeries{
+  my($this, $http, $dyn) = @_;
+  my $sub = sub {
+    $this->ClearIntakeData($http, $dyn);
+    $this->DiscardExtraction($http, {
+      collection => $this->{DisplayInfoIn}->{Collection},
+      site => $this->{DisplayInfoIn}->{Site},
+      subj => $this->{DisplayInfoIn}->{subj}
+    });
+  };
+  return $sub;
 }
 sub SeriesReport{
   my($this, $http, $dyn) = @_;

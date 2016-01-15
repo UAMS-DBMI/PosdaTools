@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part05/figures/PS3.5_D-1.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:30 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.085px" height="302.548px" viewBox="0 0 495.085 302.548" enable-background="new 0 0 495.085 302.548"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.5-2008 5: Data Structures and Encoding
+   </desc>
+   <title>
+	Figure G.6-2 An Image Pixel Plane
+   </title>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.6054 247.5425 151.2739)" overflow="visible"/>
+<g>
+	<g>
+		
+			<rect x="121.542" y="33.778" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="252.001" height="252"/>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 121.5425 27.4082)" font-size="12">Image Plane</text>
+		</g>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(1.1496 0 0 1 159.375 150.9673)" font-size="8">Pixel i-1</text>
+		</g>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(1.1496 0 0 1 177.1304 136.7002)" font-size="8">Pixel i</text>
+		</g>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(1.1496 0 0 1 267.2363 222.8833)" font-size="8">Pixel i+1</text>
+		</g>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(1.1496 0 0 1 280.7363 209.3833)" font-size="8">Pixel i+2</text>
+		</g>
+	</g>
+	<g>
+		<rect x="121.542" y="33.778" fill="none" stroke="#939598" stroke-miterlimit="1" width="252.001" height="252"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="121.542" y1="274.334" x2="373.543" y2="274.334"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="208.648" y1="182.665" x2="262.898" y2="182.665"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="208.648" y1="171.221" x2="262.898" y2="171.221"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="121.542" y1="56.665" x2="373.543" y2="56.665"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="121.542" y1="45.221" x2="373.543" y2="45.221"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="362.1" y1="33.778" x2="362.1" y2="285.778"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="350.656" y1="33.778" x2="350.656" y2="285.778"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="258.986" y1="167.188" x2="258.986" y2="186.688"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="247.543" y1="167.188" x2="247.543" y2="186.688"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="236.1" y1="167.188" x2="236.1" y2="186.688"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="224.656" y1="167.188" x2="224.656" y2="186.688"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="213.15" y1="167.188" x2="213.15" y2="186.688"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="144.429" y1="33.778" x2="144.429" y2="285.778"/>
+		<line fill="none" stroke="#939598" stroke-miterlimit="1" x1="132.985" y1="33.778" x2="132.985" y2="285.778"/>
+	</g>
+	<rect x="224.655" y="171.221" fill="#6799C8" stroke="#000000" stroke-miterlimit="1" width="11.505" height="11.443"/>
+	<rect x="213.15" y="171.221" fill="#87B2D8" stroke="#000000" stroke-miterlimit="1" width="11.505" height="11.443"/>
+	<rect x="236.16" y="171.221" fill="#4E8ABE" stroke="#000000" stroke-miterlimit="1" width="11.505" height="11.443"/>
+	<rect x="247.665" y="171.221" fill="#005595" stroke="#000000" stroke-miterlimit="1" width="11.505" height="11.443"/>
+	<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="278.09,206.552 266.457,206.552 253.617,177.111 	"/>
+	<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="265.997,220.151 254.364,220.151 241.524,177.565 	"/>
+	<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="194.124,148.485 205.757,148.485 218.597,177.926 	"/>
+	<polyline fill="none" stroke="#010101" stroke-miterlimit="1" points="206.217,134.886 217.85,134.886 230.689,177.472 	"/>
+	<g>
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-miterlimit="1" x1="149.594" y1="63.865" x2="328.72" y2="63.865"/>
+		<path fill="#005595" d="M327.593,63.865l-2.423-4.323l0.136-0.098l6.496,2.8c2.263,0.54,4.526,1.08,6.79,1.621
+			c-2.264,0.54-4.527,1.081-6.79,1.621l-6.496,2.801l-0.136-0.074L327.593,63.865z"/>
+	</g>
+	<g>
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-miterlimit="1" x1="150.415" y1="68.081" x2="150.415" y2="247.22"/>
+		<path fill="#005595" d="M150.415,246.092l4.324-2.422l0.098,0.136l-2.801,6.496c-0.54,2.263-1.08,4.526-1.621,6.79
+			c-0.54-2.264-1.08-4.527-1.621-6.79l-2.8-6.496l0.073-0.136L150.415,246.092z"/>
+	</g>
+	<rect x="121.543" y="33.778" fill="none" stroke="#000000" stroke-miterlimit="1" width="252" height="252"/>
+</g>
+</svg>

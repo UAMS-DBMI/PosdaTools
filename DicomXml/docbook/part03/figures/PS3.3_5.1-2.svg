@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_5.1-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:19 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="77px" viewBox="0 0 502 77" enable-background="new 0 0 502 77" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="75"/>
+	<g>
+		<line fill="#4F8ABE" x1="133.64" y1="38.494" x2="195.682" y2="38.494"/>
+		<g>
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="133.64" y1="38.494" x2="186.823" y2="38.494"/>
+			<g>
+				<polygon fill="#005695" points="184.841,41.399 195.682,38.494 184.841,35.589 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<line fill="#4F8ABE" x1="304.883" y1="38.494" x2="368.359" y2="38.494"/>
+		<g>
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="304.883" y1="38.494" x2="359.5" y2="38.494"/>
+			<g>
+				<polygon fill="#005695" points="357.519,41.399 368.359,38.494 357.519,35.589 				"/>
+			</g>
+		</g>
+	</g>
+	
+		<rect x="368.359" y="24.101" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="28.8"/>
+	<text transform="matrix(1 0 0 1 374.8457 35.2769)"><tspan x="0" y="0" font-size="10">Destination</tspan><tspan x="-2.217" y="12" font-size="10">Entity Name</tspan></text>
+	
+		<rect x="70.641" y="24.101" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="62.999" height="28.8"/>
+	<text transform="matrix(1 0 0 1 86.2983 35.2769)"><tspan x="0" y="0" font-size="10">Source</tspan><tspan x="-11.389" y="12" font-size="10">Entity Name</tspan></text>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		306.643,38.501 251.162,61.5 195.682,38.501 251.162,15.501 	"/>
+	<text transform="matrix(1 0 0 1 228.1484 40.7363)" font-size="9">relationship</text>
+	<g>
+		<text transform="matrix(1 0 0 1 195.6821 34.3462)" font-size="9">a</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 301.6367 34.3462)" font-size="9">b</text>
+	</g>
+</g>
+</svg>

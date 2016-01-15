@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.16-5a.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:19 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="222.339px" viewBox="0 0 502 222.339" enable-background="new 0 0 502 222.339" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="220.339"/>
+<g>
+	<rect x="29.968" y="11.668" fill="none" width="185" height="191.333"/>
+	<text transform="matrix(0.9288 0 0 1 23.9678 18.1069)"><tspan x="0" y="0" font-size="9">Cardiac R-R Interval Specified (0018,9070):</tspan><tspan x="12.92" y="10.8" font-size="9">R - R interval in ms at prescription time</tspan><tspan x="0" y="32.4" font-size="9">OR...</tspan><tspan x="0" y="54" font-size="9">R - R Interval Time Nominal (0020,9251):</tspan><tspan x="12.92" y="64.8" font-size="9">Actual measured R - R peak of this cycle.</tspan><tspan x="0" y="162" font-size="9">Nominal Cardiac Trigger Delay Time (0020,9153):</tspan><tspan x="12.92" y="172.8" font-size="9">nominal delay in ms after previous R-peak.</tspan></text>
+	<g>
+		<g>
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="241.076" y1="56.058" x2="393.677" y2="56.058"/>
+			<g>
+				<polygon fill="#005695" points="242.661,58.382 233.988,56.058 242.661,53.733 				"/>
+			</g>
+			<g>
+				<polygon fill="#005695" points="392.092,58.382 400.765,56.058 392.092,53.733 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="224.264" y1="177.797" x2="232.651" y2="177.797"/>
+			<g>
+				<polygon fill="#005695" points="231.065,180.121 239.738,177.797 231.065,175.473 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="224.264" y1="186.111" x2="248.125" y2="186.111"/>
+			<g>
+				<polygon fill="#005695" points="246.54,188.436 255.213,186.111 246.54,183.787 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="224.264" y1="194.426" x2="264.363" y2="194.426"/>
+			<g>
+				<polygon fill="#005695" points="262.778,196.75 271.451,194.426 262.778,192.102 				"/>
+			</g>
+		</g>
+	</g>
+	<text transform="matrix(0.9288 0 0 1 405.1865 60.5576)" font-size="12">R</text>
+	<text transform="matrix(0.9288 0 0 1 221.1865 60.5576)" font-size="12">R</text>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" x1="224.547" y1="112.45" x2="224.547" y2="205.168"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="239.88" y1="112.45" x2="239.88" y2="205.168"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="255.213" y1="112.45" x2="255.213" y2="205.168"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="270.546" y1="112.45" x2="270.546" y2="205.168"/>
+	<path fill="none" stroke="#ED1C24" stroke-width="2" stroke-miterlimit="1" d="M155.967,121.143
+		c18.416-0.01,34.235-0.02,34.235-0.02s4.168-0.596,6.551-8.256c0.875-2.813,3.211-2.976,4.416,0.246
+		c3.939,10.539,4.307,8.089,13.396,8.089l5.357,13.026l5.036-70.938l3.622,80.084l4.549-22.07c0,0,13.552-0.001,20.43,0
+		c5.324,0.001,7.289-9.64,15.41-9.64c7.732,0,9.1,9.408,15.379,9.408c4.279,0,90.402-0.049,90.402-0.049s4.168-0.596,6.551-8.256
+		c0.875-2.813,3.211-2.976,4.416,0.246c3.939,10.539,4.307,8.089,14.115,8.089l4.643,13.126l5.037-70.938l3.621,80.084l4.549-22.07
+		c0,0,13.553-0.001,20.43,0c5.324,0.001,7.289-9.64,15.41-9.64c7.732,0,9.1,9.408,15.379,9.408c4.279,0,20.51-0.072,20.51-0.072"/>
+</g>
+</svg>

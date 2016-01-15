@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_B-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:56 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="457px" viewBox="0 0 502 457" enable-background="new 0 0 502 457" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="455"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="85.418" x2="458.688" y2="85.418"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="111.085" x2="458.688" y2="111.085"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="136.419" x2="458.688" y2="136.419"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="165.085" x2="458.688" y2="165.085"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="191.591" x2="458.688" y2="191.591"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="218.818" x2="458.688" y2="218.818"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="271.73" x2="458.688" y2="271.73"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="326.4" x2="458.688" y2="326.4"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="244.684" x2="458.688" y2="244.684"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="353.947" x2="458.688" y2="353.947"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="298.854" x2="234.615" y2="298.854"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="379.734" x2="458.688" y2="379.734"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="406.24" x2="458.688" y2="406.24"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="197.688" y1="434.193" x2="458.688" y2="434.193"/>
+			</g>
+		</g>
+		<rect x="469.366" y="36.627" fill="none" width="17.379" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 469.3682 43.0737)" font-size="9">time</text>
+		<rect x="15.688" y="80.714" fill="none" width="176" height="357.967"/>
+		<text transform="matrix(0.9288 0 0 1 91.7881 87.1553)"><tspan x="0" y="0" font-size="9">Patient / Visit Management            </tspan><tspan x="48.528" y="26.8" font-size="9">Patient Arrived</tspan><tspan x="29.509" y="53.6" font-size="9">Study Management</tspan><tspan x="39.506" y="80.4" font-size="9">Study Scheduled</tspan><tspan x="-15.487" y="107.2" font-size="9">Modality Worklist Management</tspan><tspan x="36.518" y="134" font-size="9">Image Acquisition</tspan><tspan x="5.001" y="160.8" font-size="9">Image Acquisition Started</tspan><tspan x="-76.021" y="187.6" font-size="9">Mod Perf Procedure Step / Study Comp Mgmt</tspan><tspan x="12.999" y="214.4" font-size="9">Patient / Procedure Info</tspan><tspan x="48.52" y="241.2" font-size="9">Image Storage</tspan><tspan x="-9.506" y="268" font-size="9">Image Acquisition Completed</tspan><tspan x="52.545" y="294.8" font-size="9">Results Mgmt</tspan><tspan x="60.525" y="321.6" font-size="9">Study Read</tspan><tspan x="31.513" y="348.4" font-size="9">Patient Discharged</tspan></text>
+		<g>
+			
+				<path fill="#FFFFFF" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M229.688,31.627h18v18h-18V31.627z"/>
+		</g>
+		<g>
+			<path fill="#CCDEF0" stroke="#B2CEE7" stroke-miterlimit="1" d="M203.688,14.627h235.001v52H203.688V14.627z"/>
+		</g>
+		<g>
+			
+				<path fill="#B2CEE7" stroke="#86B2D8" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M229.688,31.627h209.001v18H229.688V31.627z"/>
+		</g>
+		<g>
+			
+				<path fill="#86B2D8" stroke="#6799C8" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M263.354,27.127h92.535v27h-92.535V27.127z"/>
+		</g>
+		<g>
+			
+				<path fill="#6799C8" stroke="#4F8ABE" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M372.747,26.627h35.107v27.5h-35.107V26.627z"/>
+		</g>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="203.688" y1="40.627" x2="203.688" y2="111.344"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="356.61" y1="68.64" x2="356.61" y2="353.947"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="372.747" y1="68.64" x2="372.747" y2="379.734"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="407.854" y1="68.64" x2="407.854" y2="379.734"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="438.688" y1="68.134" x2="438.688" y2="434.193"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="197.688" y1="40.621" x2="458.688" y2="40.621"/>
+				<path d="M461.522,39.391c-1.984-0.6-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.881-1.19,4.865-1.79
+					c2.123-0.642,4.049-1.08,5.297-1.236C465.571,40.471,463.646,40.032,461.522,39.391z"/>
+			</g>
+		</g>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="204.048" y1="85.418" x2="438.015" y2="85.418"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="203.325" y1="111.344" x2="204.766" y2="111.344"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="229.688" y1="136.293" x2="398.128" y2="136.293"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,8" x1="398.128" y1="136.293" x2="466.151" y2="136.293"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="229.688" y1="165.074" x2="231.129" y2="165.074"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="438.015" y1="433.68" x2="439.454" y2="433.68"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,8" x1="282.688" y1="326.4" x2="364.124" y2="326.4"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="263.153" y1="244.729" x2="264.595" y2="244.729"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="355.169" y1="353.947" x2="356.61" y2="353.947"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="398.128" y1="68.134" x2="398.128" y2="406.504"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="396.688" y1="406.504" x2="398.128" y2="406.504"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="277.354" y1="271.73" x2="355.89" y2="271.73"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="263.873" y1="218.818" x2="355.89" y2="218.818"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="229.688" y1="191.591" x2="263.354" y2="191.591"/>
+		
+			<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="374.188" y1="379.734" x2="407.854" y2="379.734"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="229.688" y1="40.882" x2="229.688" y2="191.591"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="263.354" y1="43.654" x2="263.354" y2="244.684"/>
+		<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			248.891,150.155 251.837,150.154 246.968,139.96 246.969,139.96 242.1,150.154 245.046,150.155 245.046,178.576 242.1,178.576 
+			246.969,188.771 246.968,188.771 251.837,178.576 248.891,178.576 		"/>
+		<path fill="#FFFFFF" stroke="#4F8ABE" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M248.924,270.35
+			v-75.602h-3.846v79.446h16.184l0.001,2.945l13.797-4.869v0.002l-13.797-4.869l-0.001,2.947
+			C261.263,270.35,253.36,270.35,248.924,270.35z"/>
+		<g>
+			<circle fill="#0DB14B" stroke="#000000" cx="246.968" cy="164.365" r="9"/>
+			<rect x="242.969" y="158.335" fill="none" width="9.407" height="10.781"/>
+			<text transform="matrix(0.9288 0 0 1 242.9692 168.085)" font-size="13.6216">A</text>
+		</g>
+		<g>
+			<circle fill="#FFF200" stroke="#000000" cx="246.521" cy="231.062" r="9"/>
+			<rect x="242.902" y="225.769" fill="none" width="8.672" height="11.543"/>
+			<text transform="matrix(0.9288 0 0 1 242.9028 235.5146)" font-size="13.6216">B</text>
+		</g>
+		<g>
+			<g>
+				
+					<path fill="none" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="4,6" d="
+					M231.462,194.748C230.408,318.432,234.52,326.4,267.31,326.4"/>
+				<path fill="#4F8ABE" d="M272.033,324.35c-3.307-0.998-5.456-1.918-8.108-2.982v10.088c0.949-0.451,4.802-1.984,8.108-2.982
+					c3.539-1.07,6.748-1.801,8.829-2.062C278.781,326.15,275.572,325.418,272.033,324.35z"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

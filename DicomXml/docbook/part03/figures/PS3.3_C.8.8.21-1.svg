@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.8.21-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="267px" viewBox="0 0 502 267" enable-background="new 0 0 502 267" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="265"/>
+<g>
+	<rect x="24.499" y="16.46" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="453.002" height="45.002"/>
+	<rect x="32.686" y="21.783" fill="none" width="227.749" height="34.354"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 28.2158)"><tspan x="0" y="0" font-size="9">Example 1: 2 Control Points, 2 complete Partial Treatments</tspan><tspan x="0" y="10.8" font-size="9">Total Meterset: 50</tspan><tspan x="0" y="21.6" font-size="9">Interruption at: 18 MU</tspan></text>
+	<rect x="24.499" y="61.499" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="453.002" height="63.01"/>
+	<rect x="32.686" y="73.749" fill="none" width="116.249" height="8.502"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 80.1782)" font-size="9">RT Plan:</text>
+	<g>
+		<g>
+			<line fill="#B2CEE7" x1="209.473" y1="85.03" x2="263.474" y2="85.03"/>
+			<circle fill="#B2CEE7" cx="263.474" cy="85.031" r="3.76"/>
+			<circle fill="#B2CEE7" cx="209.473" cy="85.03" r="3.76"/>
+		</g>
+		<g>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="209.473" y1="85.03" x2="263.474" y2="85.03"/>
+			<circle fill="#010101" cx="263.474" cy="85.031" r="3.76"/>
+			<circle fill="#010101" cx="209.473" cy="85.03" r="3.76"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 203.3701 97.1606)" font-size="9">0</text>
+	<text transform="matrix(1 0 0 1 256.8701 97.1606)" font-size="9">1</text>
+	<rect x="32.686" y="104.243" fill="none" width="116.249" height="8.502"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 110.6689)" font-size="9">Cumulative Meterset Weight:</text>
+	<text transform="matrix(1 0 0 1 203.7871 111.2607)" font-size="9">0.0</text>
+	<text transform="matrix(1 0 0 1 257.2871 111.2607)" font-size="9">1.0</text>
+	<rect x="24.499" y="124.457" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="453.002" height="63.003"/>
+	<rect x="32.686" y="133.336" fill="none" width="116.249" height="8.501"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 139.7578)" font-size="9">RT Treatment Record 1 of 2</text>
+	<g>
+		<g>
+			<line fill="#B2CEE7" x1="209.473" y1="144.618" x2="263.474" y2="144.618"/>
+			<circle fill="#B2CEE7" cx="263.474" cy="144.619" r="3.759"/>
+			<circle fill="#B2CEE7" cx="209.473" cy="144.618" r="3.759"/>
+		</g>
+		<g>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="209.473" y1="144.618" x2="263.474" y2="144.618"/>
+			<circle fill="#010101" cx="263.474" cy="144.619" r="3.759"/>
+			<circle fill="#010101" cx="209.473" cy="144.618" r="3.759"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 203.3701 156.7402)" font-size="9">0</text>
+	<text transform="matrix(1 0 0 1 256.8701 156.7402)" font-size="9">1</text>
+	<rect x="32.686" y="163.829" fill="none" width="116.249" height="19.01"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 170.248)"><tspan x="0" y="0" font-size="9">Specified Meterset:</tspan><tspan x="0" y="10.799" font-size="9">Delivered Meterset:</tspan></text>
+	<text transform="matrix(1 0 0 1 203.3701 170.8398)"><tspan x="0" y="0" font-size="9">0</tspan><tspan x="0" y="10.801" font-size="9">0</tspan></text>
+	<rect x="309.687" y="163.829" fill="none" width="116.248" height="19.01"/>
+	<text transform="matrix(0.9288 0 0 1 309.6855 170.248)" font-size="9">Delivered MU:</text>
+	<text transform="matrix(1 0 0 1 393.8672 170.8398)" font-size="9">18</text>
+	<text transform="matrix(1 0 0 1 257.1484 170.8398)"><tspan x="0" y="0" font-size="9">50</tspan><tspan x="0" y="10.801" font-size="9">18</tspan></text>
+	<rect x="24.499" y="187.54" fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" width="453.002" height="63"/>
+	<rect x="32.686" y="196.421" fill="none" width="116.249" height="8.5"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 202.8379)" font-size="9">RT Treatment Record 2 of 2</text>
+	<g>
+		<g>
+			<line fill="#B2CEE7" x1="209.473" y1="207.7" x2="263.474" y2="207.7"/>
+			<circle fill="#B2CEE7" cx="263.474" cy="207.701" r="3.759"/>
+			<circle fill="#B2CEE7" cx="209.473" cy="207.7" r="3.759"/>
+		</g>
+		<g>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="209.473" y1="207.7" x2="263.474" y2="207.7"/>
+			<circle fill="#010101" cx="263.474" cy="207.701" r="3.759"/>
+			<circle fill="#010101" cx="209.473" cy="207.7" r="3.759"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 203.3701 219.8203)" font-size="9">0</text>
+	<text transform="matrix(1 0 0 1 256.8701 219.8203)" font-size="9">1</text>
+	<rect x="32.686" y="226.909" fill="none" width="116.249" height="19.01"/>
+	<text transform="matrix(0.9288 0 0 1 32.6855 233.3281)"><tspan x="0" y="0" font-size="9">Specified Meterset:</tspan><tspan x="0" y="10.799" font-size="9">Delivered Meterset:</tspan></text>
+	<text transform="matrix(1 0 0 1 203.3701 233.9199)"><tspan x="0" y="0" font-size="9">0</tspan><tspan x="-2.502" y="10.801" font-size="9">18</tspan></text>
+	<rect x="309.687" y="226.909" fill="none" width="116.248" height="19.01"/>
+	<text transform="matrix(0.9288 0 0 1 309.6855 233.3281)" font-size="9">Delivered MU:</text>
+	<text transform="matrix(1 0 0 1 393.8672 233.9199)" font-size="9">32</text>
+	<text transform="matrix(1 0 0 1 257.1484 233.9199)"><tspan x="0" y="0" font-size="9">50</tspan><tspan x="0" y="10.801" font-size="9">50</tspan></text>
+	<rect x="209.654" y="131.117" fill="#4F8ABE" stroke="#000000" stroke-miterlimit="1" width="21.6" height="13.501"/>
+	<rect x="209.654" y="194.198" fill="#4F8ABE" stroke="#000000" stroke-miterlimit="1" width="21.6" height="13.5"/>
+	<rect x="230.254" y="194.198" fill="#4F8ABE" stroke="#000000" stroke-miterlimit="1" width="32.399" height="13.5"/>
+</g>
+</svg>

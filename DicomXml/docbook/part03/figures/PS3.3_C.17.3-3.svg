@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.17.3-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:19 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="282px" viewBox="0 0 502 282" enable-background="new 0 0 502 282" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="280"/>
+	<g>
+		
+			<rect x="218.335" y="16.437" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="143.995" height="45.001"/>
+		<g>
+			<text transform="matrix(1 0 0 1 277.6597 29.2002)"><tspan x="0" y="0" font-size="12">Root</tspan><tspan x="-39.351" y="11.733" font-size="12">Content Item ID: 01</tspan><tspan x="-21.664" y="23.467" font-size="12">Seq(___,___)</tspan></text>
+		</g>
+		
+			<rect x="139.668" y="119.582" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="143.998" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 151.3008 138.2114)"><tspan x="0" y="0" font-size="12">Content Item ID: 01 01</tspan><tspan x="26.027" y="11.734" font-size="12">Seq(___,___)</tspan></text>
+		</g>
+		
+			<rect x="296.999" y="119.582" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="143.999" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 308.6343 138.2114)"><tspan x="0" y="0" font-size="12">Content Item ID: 01 02</tspan><tspan x="26.027" y="11.734" font-size="12">Seq(___,___)</tspan></text>
+		</g>
+		
+			<rect x="61.001" y="220.564" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="144.001" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 64.2935 239.1953)"><tspan x="0" y="0" font-size="12">Content Item ID: 01 01 01</tspan><tspan x="34.368" y="11.734" font-size="12">Seq(___,___)</tspan></text>
+		</g>
+		
+			<rect x="218.334" y="220.564" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="143.996" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 221.627 239.1953)"><tspan x="0" y="0" font-size="12">Content Item ID: 01 01 02</tspan><tspan x="34.369" y="11.734" font-size="12">Seq(___,___)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="290.504" y1="52.844" x2="228.469" y2="113.076"/>
+				<g>
+					<polygon fill="#005695" points="227.987,110.304 223.384,118.013 231.226,113.639 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="210.542" y1="149.381" x2="143.356" y2="214.61"/>
+				<g>
+					<polygon fill="#005695" points="142.875,211.838 138.271,219.547 146.112,215.173 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="311.753" y1="52.844" x2="373.789" y2="113.076"/>
+				<g>
+					<polygon fill="#005695" points="371.033,113.639 378.874,118.013 374.27,110.304 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="233.213" y1="149.381" x2="300.398" y2="214.609"/>
+				<g>
+					<polygon fill="#005695" points="297.641,215.173 305.483,219.547 300.879,211.838 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_PP.3-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:44 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="342px" viewBox="0 0 502 342" enable-background="new 0 0 502 342" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="340"/>
+	<g>
+		
+			<rect x="30.17" y="37.122" opacity="0.89" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="220" height="289.125"/>
+		
+			<rect x="347.152" y="139.917" opacity="0.89" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="121.104" height="186.329"/>
+		
+			<rect x="347.152" y="37.122" opacity="0.89" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125" height="70"/>
+		<g>
+			
+				<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				206.434,75.732 206.434,71.029 331.234,71.029 331.234,67.245 345.097,73.498 331.234,79.754 331.234,75.732 			"/>
+		</g>
+		<g>
+			
+				<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				209.312,175.809 209.312,171.105 332.238,171.105 332.238,167.322 346.24,173.574 332.238,179.83 332.238,175.809 			"/>
+		</g>
+		<g>
+			
+				<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				240.631,237.236 240.631,232.535 332.238,232.535 332.238,228.75 346.24,235.004 332.238,241.26 332.238,237.236 			"/>
+		</g>
+		<g>
+			
+				<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				240.631,295.727 240.631,291.025 332.238,291.025 332.238,287.24 346.24,293.494 332.238,299.75 332.238,295.727 			"/>
+		</g>
+		
+			<rect x="46.491" y="127.916" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80" height="23.999"/>
+		<g>
+			<text transform="matrix(1 0 0 1 64.2529 138.02)"><tspan x="0" y="0" font-size="10">Scan Line</tspan><tspan x="-13.335" y="9.333" font-size="10">Processed Data</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 30.1699 33.9365)" font-size="10">Ultrasound Modality</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 347.1479 24.603)"><tspan x="0" y="0" font-size="10">Enhanced US SOP Classes</tspan><tspan x="0" y="9.333" font-size="10">3D Volume type</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 347.1479 126.4995)"><tspan x="0" y="0" font-size="10">US SOP Classes</tspan><tspan x="0" y="9.333" font-size="10">2D Image types</tspan></text>
+		</g>
+		
+			<rect x="190.555" y="223.006" fill="#FFFFFF" stroke="#86B2D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="50" height="23.998"/>
+		<g>
+			<text transform="matrix(1 0 0 1 198.6021 233.1064)"><tspan x="0" y="0" font-size="10">Volume</tspan><tspan x="2.224" y="9.333" font-size="10">Slicing</tspan></text>
+		</g>
+		
+			<rect x="190.555" y="281.496" fill="#FFFFFF" stroke="#86B2D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="50" height="23.998"/>
+		<g>
+			<text transform="matrix(1 0 0 1 198.6021 291.5967)"><tspan x="0" y="0" font-size="10">Volume</tspan><tspan x="-6.118" y="9.333" font-size="10">Rendering</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<rect x="161.254" y="46.119" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+				
+					<rect x="160.254" y="47.119" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="159.254" y="48.119" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="158.254" y="49.119" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="157.254" y="50.119" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="156.213" y="51.16" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="155.213" y="52.16" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="154.213" y="53.16" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+				
+					<rect x="153.213" y="54.16" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.002"/>
+				
+					<rect x="152.213" y="55.16" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.002"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 157.5938 75.2056)"><tspan x="0" y="0" font-size="8">Cartesian</tspan><tspan x="3.557" y="6.933" font-size="8">Volume</tspan></text>
+			</g>
+		</g>
+		<g>
+			
+				<rect x="164.213" y="141.6" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+			
+				<rect x="161.213" y="144.602" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="158.213" y="147.602" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="155.213" y="150.602" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="152.213" y="153.602" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			<g>
+				<text transform="matrix(1 0 0 1 162.8159 173.3184)"><tspan x="0" y="0" font-size="8">Set of  </tspan><tspan x="-8.219" y="9.601" font-size="8">2D Frames</tspan></text>
+			</g>
+		</g>
+		<g>
+			
+				<rect x="388.792" y="145.2" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.001"/>
+			
+				<rect x="385.792" y="148.202" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="382.792" y="151.201" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="379.792" y="154.201" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			
+				<rect x="376.792" y="157.201" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45"/>
+			<g>
+				<text transform="matrix(1 0 0 1 382.5073 171.1587)"><tspan x="0" y="0" font-size="8">Spatially-</tspan><tspan x="4.221" y="6.933" font-size="8">related</tspan><tspan x="5.557" y="13.867" font-size="8">set of </tspan><tspan x="-3.33" y="20.8" font-size="8">2D Frames</tspan></text>
+			</g>
+		</g>
+		<g>
+			
+				<rect x="376.792" y="270.994" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.002"/>
+			<g>
+				<text transform="matrix(1 0 0 1 381.3901 291.7959)"><tspan x="0" y="0" font-size="8">Rendered</tspan><tspan x="8.898" y="6.933" font-size="8">View</tspan></text>
+			</g>
+		</g>
+		<g>
+			
+				<rect x="376.792" y="212.504" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.002"/>
+			<g>
+				<text transform="matrix(1 0 0 1 390.0698 233.3018)"><tspan x="0" y="0" font-size="8">MPR</tspan><tspan x="0.219" y="6.933" font-size="8">View</tspan></text>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="177.018" y1="107.408" x2="177.018" y2="134.112"/>
+				<g>
+					<polygon fill="#005695" points="174.693,108.993 177.018,100.32 179.342,108.993 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="174.693,132.527 177.018,141.2 179.342,132.527 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="144.432,73.795 135.364,73.795 
+					135.351,139.75 126.618,139.802 				"/>
+				<g>
+					<polygon fill="#005695" points="142.847,71.471 151.52,73.795 142.847,76.119 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="38.915" y1="139.671" x2="29.847" y2="139.671"/>
+				<g>
+					<polygon fill="#005695" points="37.33,137.347 46.002,139.671 37.33,141.996 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="144.432,173.996 135.364,173.996 
+					135.351,139.725 126.618,139.672 				"/>
+				<g>
+					<polygon fill="#005695" points="142.847,171.672 151.52,173.996 142.847,176.32 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="183.077,293.494 174.002,293.494 
+					174.002,198.84 				"/>
+				<g>
+					<polygon fill="#005695" points="181.491,291.17 190.164,293.494 181.491,295.818 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="183.077,235.006 174.002,235.006 
+					174.002,199.17 				"/>
+				<g>
+					<polygon fill="#005695" points="181.491,232.682 190.164,235.006 181.491,237.33 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<rect x="376.796" y="54.633" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45" height="45.004"/>
+				
+					<polygon fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					421.796,99.637 432.113,90.638 432.113,45.636 421.796,54.633 				"/>
+				
+					<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					431.876,45.592 386.876,45.592 376.796,54.633 421.796,54.633 				"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 379.5063 72.6206)"><tspan x="0" y="0" font-size="8">3D Volume</tspan><tspan x="3.777" y="6.933" font-size="8">Databset</tspan></text>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 263.2378 60.603)"><tspan x="0" y="0" font-size="8">Export of</tspan><tspan x="0" y="6.933" font-size="8">Volume Dataset</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 262.8784 160.9126)"><tspan x="0" y="0" font-size="8">Export of Direct</tspan><tspan x="0" y="6.933" font-size="8">Viewing Frames</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 263.2378 273.9893)"><tspan x="0" y="0" font-size="8">Export of</tspan><tspan x="0" y="6.933" font-size="8">Volume-Rendered</tspan><tspan x="0" y="13.866" font-size="8">Views</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 262.8784 222.5684)"><tspan x="0" y="0" font-size="8">Export of</tspan><tspan x="0" y="6.934" font-size="8">MPR Views</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

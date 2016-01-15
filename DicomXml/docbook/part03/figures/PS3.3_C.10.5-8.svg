@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.10.5-8.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="202px" viewBox="0 0 502 202" enable-background="new 0 0 502 202" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="200"/>
+	<g>
+		<path fill="#CCDEF0" stroke="#939598" stroke-width="0.5" stroke-miterlimit="10" stroke-dasharray="1,1" d="M381.15,95.112
+			c0,41.429-33.588,75.009-75.004,75.009s-75.005-33.58-75.005-75.009c0-41.422,33.589-75.001,75.005-75.001
+			S381.15,53.69,381.15,95.112z"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="211.606,60.936 239.365,60.936 
+					264.07,81.118 				"/>
+				<g>
+					<polygon points="262.384,81.616 267.501,83.92 264.223,79.366 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 185.354 63.9795)" font-size="10">Ticks</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="239.345" y1="60.771" x2="248.283" y2="83.708"/>
+				<g>
+					<polygon points="246.57,83.312 249.892,87.835 249.277,82.257 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="none" stroke="#003468" stroke-miterlimit="10" x1="317.561" y1="95.116" x2="381.15" y2="95.116"/>
+			<line fill="none" stroke="#003468" stroke-miterlimit="10" x1="231.143" y1="95.116" x2="294.561" y2="95.116"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="231.142" y1="85.116" x2="231.143" y2="105.115"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="249.892" y1="90.117" x2="249.892" y2="100.115"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="268.646" y1="85.111" x2="268.643" y2="105.12"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="287.396" y1="90.112" x2="287.393" y2="100.12"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="324.9" y1="90.116" x2="324.898" y2="100.115"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="343.65" y1="85.116" x2="343.65" y2="105.115"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="362.4" y1="90.116" x2="362.4" y2="100.116"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="381.15" y1="85.116" x2="381.15" y2="105.115"/>
+		</g>
+		<g>
+			<line fill="none" stroke="#003468" stroke-miterlimit="10" x1="306.146" y1="83.616" x2="306.146" y2="20.111"/>
+			<line fill="none" stroke="#003468" stroke-miterlimit="10" x1="306.146" y1="170.119" x2="306.146" y2="106.619"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="296.146" y1="170.121" x2="316.146" y2="170.119"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="301.146" y1="151.371" x2="311.145" y2="151.369"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="296.143" y1="132.615" x2="316.15" y2="132.619"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="301.143" y1="113.865" x2="311.15" y2="113.869"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="301.146" y1="76.361" x2="311.146" y2="76.363"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="296.146" y1="57.611" x2="316.146" y2="57.611"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="301.146" y1="38.861" x2="311.146" y2="38.861"/>
+			
+				<line fill="none" stroke="#003468" stroke-linecap="square" stroke-miterlimit="10" x1="296.146" y1="20.111" x2="316.146" y2="20.111"/>
+		</g>
+		<text transform="matrix(1 0 0 1 226.4395 117.334)" font-size="10">-2</text>
+		<text transform="matrix(1 0 0 1 284.0312 172.7471)" font-size="10">-2</text>
+		<text transform="matrix(1 0 0 1 264.2002 117.334)" font-size="10">-1</text>
+		<text transform="matrix(1 0 0 1 284.0312 135.334)" font-size="10">-1</text>
+		<text transform="matrix(1 0 0 1 340.8701 117.334)" font-size="10">1</text>
+		<text transform="matrix(1 0 0 1 285.6953 60.3335)" font-size="10">1</text>
+		<text transform="matrix(1 0 0 1 378.3711 117.334)" font-size="10">2</text>
+		<text transform="matrix(1 0 0 1 285.6953 23.3335)" font-size="10">2</text>
+		
+			<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="309.885" y1="105.992" x2="302.41" y2="84.242"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="211.189,33.395 263.009,33.395 
+					300.476,89.152 				"/>
+				<g>
+					<polygon points="298.718,89.14 302.946,92.829 301.129,87.52 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="211.189,133.027 241.232,133.027 
+					303.16,102.314 				"/>
+				<g>
+					<polygon points="302.918,104.057 307.129,100.347 301.628,101.454 					"/>
+				</g>
+			</g>
+		</g>
+		<circle fill="#003468" stroke="#003468" stroke-width="2" stroke-miterlimit="10" cx="306.146" cy="95.116" r="1.701"/>
+		<text transform="matrix(1 0 0 1 155.5859 135.6621)"><tspan x="0" y="0" font-size="10">Gap Length</tspan><tspan x="-0.833" y="9.333" font-size="10">(0070,0261)</tspan></text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="211.189,172.629 244.831,172.629 
+					258.972,158.949 				"/>
+				<g>
+					<polygon points="259.27,160.682 262.155,155.869 257.249,158.594 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 118.0684 174.9023)"><tspan x="0" y="0" font-size="10">Diameter of Visibility</tspan><tspan x="18.325" y="9.332" font-size="10">(0070,0262)</tspan></text>
+		<text transform="matrix(1 0 0 1 182.0093 36.1924)" font-size="10">Origin</text>
+		
+			<circle fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" stroke-dasharray="1,2" cx="306.146" cy="95.115" r="11.5"/>
+	</g>
+</g>
+</svg>

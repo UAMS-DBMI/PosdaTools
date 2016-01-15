@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part15/figures/PS3.15_F.1-7.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.085px" height="166.866px" viewBox="0 0 495.085 166.866" enable-background="new 0 0 495.085 166.866"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure F.1-7 DDNS Coordination
+  </title>
+  <desc>
+	DICOM PS 3.15-2008 Part 15: Security and System Management Profiles
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<g>
+	
+		<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.3339 247.5425 83.4331)" overflow="visible"/>
+	<g>
+		<path fill="#B2CEE7" d="M318.755,18.647c0-0.992,0.812-1.803,1.803-1.803h59.395c0.991,0,1.803,0.812,1.803,1.803V42.04
+			c0,0.992-0.812,1.803-1.803,1.803h-59.395c-0.991,0-1.803-0.812-1.803-1.803V18.647z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.3756" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M318.755,18.647c0-0.992,0.812-1.803,1.803-1.803h59.395c0.991,0,1.803,0.812,1.803,1.803V42.04c0,0.992-0.812,1.803-1.803,1.803
+			h-59.395c-0.991,0-1.803-0.812-1.803-1.803V18.647z"/>
+	</g>
+	<g>
+		<text transform="matrix(0.9288 0 0 1 327.9082 32.519)" font-size="9">DNS Server</text>
+	</g>
+	<g>
+		<path fill="#B2CEE7" d="M113.33,18.647c0-0.992,0.812-1.803,1.803-1.803h59.394c0.992,0,1.803,0.812,1.803,1.803V42.04
+			c0,0.992-0.812,1.803-1.803,1.803h-59.394c-0.992,0-1.803-0.812-1.803-1.803V18.647z"/>
+		
+			<path fill="none" stroke="#010101" stroke-width="0.3756" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M113.33,18.647c0-0.992,0.812-1.803,1.803-1.803h59.394c0.992,0,1.803,0.812,1.803,1.803V42.04c0,0.992-0.812,1.803-1.803,1.803
+			h-59.394c-0.992,0-1.803-0.812-1.803-1.803V18.647z"/>
+	</g>
+	<g>
+		<text transform="matrix(0.9288 0 0 1 119.5146 32.519)" font-size="9">DHCP Server</text>
+	</g>
+	<circle fill="#CCDFF0" stroke="#010101" stroke-width="0.6316" cx="247.54" cy="114.024" r="36"/>
+	<g>
+		<text transform="matrix(1 0 0 1 231.9561 110.1636)"><tspan x="0" y="0" font-size="11">DDNS</tspan><tspan x="-15.603" y="13.2" font-size="11">Coordination</tspan></text>
+	</g>
+	<g>
+		<g>
+			<line fill="#4E8ABE" x1="280.445" y1="84.055" x2="318.045" y2="44.868"/>
+			<path fill="#4E8ABE" d="M279.908,85.503c0.902-0.509,1.549-0.783,2.33-1.137l-2.185-2.095c-0.1,0.299-0.567,1.452-1.038,2.375
+				c-0.504,0.988-1.012,1.835-1.388,2.339C278.117,86.59,278.941,86.047,279.908,85.503z"/>
+		</g>
+		<g>
+			
+				<line fill="none" stroke="#005595" stroke-width="1.5942" stroke-linecap="round" stroke-miterlimit="1" x1="280.445" y1="84.055" x2="318.045" y2="44.868"/>
+			<path fill="#005595" d="M279.589,86.364c1.439-0.811,2.469-1.248,3.714-1.811l-3.481-3.34c-0.158,0.477-0.904,2.314-1.655,3.786
+				c-0.803,1.575-1.613,2.925-2.212,3.729C276.733,88.096,278.048,87.231,279.589,86.364z"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line fill="#4E8ABE" x1="214.531" y1="84.056" x2="176.933" y2="44.869"/>
+			<path fill="#4E8ABE" d="M215.956,84.653c-0.471-0.924-0.718-1.58-1.038-2.375l-2.184,2.095c0.295,0.112,1.427,0.628,2.33,1.136
+				c0.966,0.544,1.791,1.087,2.28,1.483C216.968,86.487,216.46,85.64,215.956,84.653z"/>
+		</g>
+		<g>
+			
+				<line fill="none" stroke="#005595" stroke-width="1.5942" stroke-linecap="round" stroke-miterlimit="1" x1="214.531" y1="84.056" x2="176.933" y2="44.869"/>
+			<path fill="#005595" d="M216.803,85.007c-0.75-1.472-1.145-2.519-1.655-3.786l-3.482,3.341c0.47,0.178,2.275,0.999,3.715,1.81
+				c1.541,0.867,2.855,1.732,3.635,2.364C218.416,87.932,217.606,86.583,216.803,85.007z"/>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_E.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:57 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="287px" viewBox="0 0 502 287" enable-background="new 0 0 502 287" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="285"/>
+	<g>
+		<rect x="75.629" y="52.625" fill="#CCDEF0" stroke="#003468" stroke-width="0.5" width="295.431" height="203.374"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="71.095" x2="371.06" y2="71.095"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="89.615" x2="371.06" y2="89.615"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="108.085" x2="371.06" y2="108.085"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="126.556" x2="371.06" y2="126.556"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="145.076" x2="371.06" y2="145.076"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="163.547" x2="371.06" y2="163.547"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="182.066" x2="371.06" y2="182.066"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="200.537" x2="371.06" y2="200.537"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="219.008" x2="371.06" y2="219.008"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="75.629" y1="237.527" x2="371.06" y2="237.527"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="351.37" y1="255.998" x2="351.37" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="331.679" y1="255.998" x2="331.679" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="311.987" y1="255.998" x2="311.987" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="292.298" y1="255.998" x2="292.298" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="272.606" y1="255.998" x2="272.606" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="252.915" y1="255.998" x2="252.915" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="233.226" y1="255.998" x2="233.226" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="213.462" y1="255.998" x2="213.462" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="193.771" y1="255.998" x2="193.771" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="174.081" y1="255.998" x2="174.081" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="154.393" y1="255.998" x2="154.393" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="134.701" y1="255.998" x2="134.701" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="115.011" y1="255.998" x2="115.011" y2="52.625"/>
+		
+			<line fill="#CCDEF0" stroke="#657DA6" stroke-width="0.5" stroke-miterlimit="10" x1="95.32" y1="255.998" x2="95.32" y2="52.625"/>
+		<g>
+			<text transform="matrix(1 0 0 1 51.1787 33.5747)" font-size="8">SENSITIVITY</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 390.4805 258.7021)"><tspan x="0" y="0" font-size="8">FALSE MARKERS /</tspan><tspan x="22.896" y="9.601" font-size="8">IMAGE</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 201.1816 158.9746)" font-size="11">OPERATING POINT</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 185.4487 28.2368)"><tspan x="0" y="0" font-size="11">FROC Curve of</tspan><tspan x="-7.941" y="13.2" font-size="11">CAD ALGORITHM</tspan></text>
+		</g>
+		<polyline fill="none" stroke="#ED1C24" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="76.349,255.639 
+			77.789,251.799 80.189,246.52 81.629,240.52 83.789,234.52 88.349,219.639 93.629,204.039 100.349,187.479 109.229,171.158 
+			120.509,156.039 127.229,148.6 134.669,142.599 143.789,136.599 153.389,130.838 164.669,125.559 176.669,119.559 
+			190.108,114.279 203.549,108.999 232.108,99.399 259.709,89.559 273.869,85.239 286.589,81.399 298.589,77.559 309.869,73.958 
+			319.709,70.119 327.869,67.239 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 103.0146 208.8398)" fill="#ED1C24" font-size="12">0</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 144.7803 152.4434)" fill="#ED1C24" font-size="12">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 184.3721 130.8359)" fill="#ED1C24" font-size="12">2</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 223.9712 117.1548)" fill="#ED1C24" font-size="12">3</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 261.5303 102.9946)" fill="#ED1C24" font-size="12">4</text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#003468" stroke-width="2" stroke-miterlimit="10" points="373.316,255.998 75.629,255.998 
+					75.629,50.284 				"/>
+				<g>
+					<polygon fill="#003468" points="370.938,252.512 383.947,255.998 370.938,259.484 					"/>
+				</g>
+				<g>
+					<polygon fill="#003468" points="79.115,52.661 75.629,39.652 72.143,52.661 					"/>
+				</g>
+			</g>
+		</g>
+		<circle fill="#ED1C24" cx="95.321" cy="200.537" r="5.4"/>
+		<circle fill="#ED1C24" cx="134.702" cy="142.195" r="5.4"/>
+		<circle fill="#ED1C24" cx="174.082" cy="121.156" r="5.4"/>
+		<circle fill="#ED1C24" cx="252.915" cy="92.497" r="5.4"/>
+		<circle fill="#ED1C24" cx="213.462" cy="105.416" r="5.4"/>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="187px" viewBox="0 0 502.001 187" enable-background="new 0 0 502.001 187" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500.001" height="185"/>
+<g>
+	<rect x="94.578" y="24.966" fill="#CCDEF0" width="222.002" height="121.5"/>
+	
+		<rect x="117.236" y="37.795" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" x1="341.58" y1="19.68" x2="341.58" y2="21.68"/>
+			
+				<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4.0784,2.0392" x1="341.58" y1="23.719" x2="341.58" y2="145.052"/>
+			
+				<line fill="none" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-miterlimit="1" x1="341.58" y1="146.071" x2="341.58" y2="148.071"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 95.8853 22.5566)"><tspan x="0" y="0" font-size="9">I</tspan><tspan x="2.752" y="0" font-size="9">m</tspan><tspan x="10.52" y="0" font-size="9">a</tspan><tspan x="16.029" y="0" font-size="9">g</tspan><tspan x="21.052" y="0" font-size="9">i</tspan><tspan x="23.304" y="0" font-size="9">ng</tspan><tspan x="33.351" y="0" font-size="9"> </tspan><tspan x="36.103" y="0" font-size="9">M</tspan><tspan x="43.69" y="0" font-size="9">od</tspan><tspan x="53.737" y="0" font-size="9">a</tspan><tspan x="59.246" y="0" font-size="9">li</tspan><tspan x="63.749" y="0" font-size="9">t</tspan><tspan x="66.016" y="0" font-size="9">y</tspan></text>
+	<rect x="366.433" y="24.966" fill="#CCDEF0" width="85" height="121.5"/>
+	<text transform="matrix(1 0 0 1 365.3882 22.9165)" font-size="9">Workstation</text>
+	<text transform="matrix(1 0 0 1 50.5679 85.5942)"><tspan x="0" y="0" font-size="9">P</tspan><tspan x="6.228" y="0" font-size="9">a</tspan><tspan x="11.737" y="0" font-size="9">t</tspan><tspan x="14.004" y="0" font-size="9">i</tspan><tspan x="16.255" y="0" font-size="9">e</tspan><tspan x="21.765" y="0" font-size="9">n</tspan><tspan x="26.788" y="0" font-size="9">t</tspan></text>
+	<text transform="matrix(1 0 0 1 131.6411 46.897)"><tspan x="0" y="0" font-size="9" letter-spacing="-1">X</tspan><tspan x="4.851" y="0" font-size="9">-</tspan><tspan x="7.614" y="0" font-size="9">R</tspan><tspan x="13.853" y="0" font-size="9">a</tspan><tspan x="18.696" y="0" font-size="9">y</tspan><tspan x="-11.837" y="10.8" font-size="9">A</tspan><tspan x="-5.609" y="10.8" font-size="9">c</tspan><tspan x="-0.776" y="10.8" font-size="9">qu</tspan><tspan x="8.911" y="10.8" font-size="9">i</tspan><tspan x="10.973" y="10.8" font-size="9">s</tspan><tspan x="15.806" y="10.8" font-size="9">i</tspan><tspan x="17.869" y="10.8" font-size="9">t</tspan><tspan x="20.621" y="10.8" font-size="9">i</tspan><tspan x="22.684" y="10.8" font-size="9">o</tspan><tspan x="27.527" y="10.8" font-size="9">n </tspan></text>
+	
+		<rect x="117.236" y="105.522" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.999" height="24"/>
+	<text transform="matrix(1 0 0 1 134.6396 114.623)"><tspan x="0" y="0" font-size="9" letter-spacing="-1">ECG</tspan><tspan x="-14.835" y="10.801" font-size="9">A</tspan><tspan x="-8.607" y="10.801" font-size="9">c</tspan><tspan x="-3.774" y="10.801" font-size="9">qu</tspan><tspan x="5.912" y="10.801" font-size="9">i</tspan><tspan x="7.975" y="10.801" font-size="9">s</tspan><tspan x="12.808" y="10.801" font-size="9">i</tspan><tspan x="14.87" y="10.801" font-size="9">t</tspan><tspan x="17.623" y="10.801" font-size="9">i</tspan><tspan x="19.685" y="10.801" font-size="9">o</tspan><tspan x="24.529" y="10.801" font-size="9">n </tspan></text>
+	
+		<rect x="200.285" y="37.795" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="93.999" height="24"/>
+	<text transform="matrix(1 0 0 1 203.1274 46.897)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.991" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M </tspan><tspan x="32.335" y="0" font-size="9">E</tspan><tspan x="37.871" y="0" font-size="9">nh</tspan><tspan x="47.917" y="0" font-size="9">a</tspan><tspan x="53.427" y="0" font-size="9">n</tspan><tspan x="58.45" y="0" font-size="9">c</tspan><tspan x="62.788" y="0" font-size="9">e</tspan><tspan x="68.297" y="0" font-size="9">d</tspan><tspan x="73.32" y="0" font-size="9"> </tspan><tspan x="76.073" y="0" font-size="9">X</tspan><tspan x="82.301" y="0" font-size="9">A</tspan><tspan x="15.047" y="10.8" font-size="9">S</tspan><tspan x="21.275" y="10.8" font-size="9">O</tspan><tspan x="28.203" y="10.8" font-size="9">P</tspan><tspan x="34.431" y="10.8" font-size="9"> I</tspan><tspan x="39.936" y="10.8" font-size="9">n</tspan><tspan x="44.959" y="10.8" font-size="9">s</tspan><tspan x="48.614" y="10.8" font-size="9">t</tspan><tspan x="50.88" y="10.8" font-size="9">a</tspan><tspan x="56.39" y="10.8" font-size="9">n</tspan><tspan x="61.412" y="10.8" font-size="9">c</tspan><tspan x="65.751" y="10.8" font-size="9">e </tspan></text>
+	
+		<rect x="200.285" y="105.521" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="93.999" height="24"/>
+	<text transform="matrix(1 0 0 1 206.4404 114.6221)"><tspan x="0" y="0" font-size="9">D</tspan><tspan x="6.238" y="0" font-size="9">I</tspan><tspan x="8.991" y="0" font-size="9">C</tspan><tspan x="15.229" y="0" font-size="9">O</tspan><tspan x="22.158" y="0" font-size="9">M </tspan><tspan x="32.335" y="0" font-size="9">General ECG</tspan><tspan x="11.734" y="10.8" font-size="9">S</tspan><tspan x="17.962" y="10.8" font-size="9">O</tspan><tspan x="24.89" y="10.8" font-size="9">P</tspan><tspan x="31.118" y="10.8" font-size="9"> I</tspan><tspan x="36.623" y="10.8" font-size="9">n</tspan><tspan x="41.646" y="10.8" font-size="9">s</tspan><tspan x="45.301" y="10.8" font-size="9">t</tspan><tspan x="47.567" y="10.8" font-size="9">a</tspan><tspan x="53.077" y="10.8" font-size="9">n</tspan><tspan x="58.099" y="10.8" font-size="9">c</tspan><tspan x="62.438" y="10.8" font-size="9">e </tspan></text>
+	<g>
+		
+			<rect x="383.932" y="70.73" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="50" height="24"/>
+		<text transform="matrix(1 0 0 1 386.7808 79.2334)"><tspan x="0" y="0" font-size="9">A</tspan><tspan x="6.228" y="0" font-size="9">pp</tspan><tspan x="15.915" y="0" font-size="9">li</tspan><tspan x="20.04" y="0" font-size="9">c</tspan><tspan x="24.873" y="0" font-size="9">a</tspan><tspan x="29.716" y="0" font-size="9">t</tspan><tspan x="32.469" y="0" font-size="9">i</tspan><tspan x="34.531" y="0" font-size="9">on</tspan><tspan x="0.069" y="10.8" font-size="9">(</tspan><tspan x="2.832" y="10.8" font-size="9">V</tspan><tspan x="9.061" y="10.8" font-size="9">i</tspan><tspan x="11.123" y="10.8" font-size="9">e</tspan><tspan x="15.966" y="10.8" font-size="9">w</tspan><tspan x="22.205" y="10.8" font-size="9">e</tspan><tspan x="27.048" y="10.8" font-size="9">r</tspan><tspan x="29.812" y="10.8" font-size="9">…) </tspan></text>
+	</g>
+	<text transform="matrix(1 0 0 1 324.2056 158.6504)"><tspan x="0" y="0" font-size="9">N</tspan><tspan x="6.238" y="0" font-size="9">e</tspan><tspan x="11.082" y="0" font-size="9">t</tspan><tspan x="13.834" y="0" font-size="9">w</tspan><tspan x="20.074" y="0" font-size="9">o</tspan><tspan x="24.916" y="0" font-size="9">r</tspan><tspan x="27.68" y="0" font-size="9">k</tspan><tspan x="32.514" y="0" font-size="9">,</tspan><tspan x="-11.893" y="10.801" font-size="9">Offline Media</tspan><tspan x="44.408" y="10.801" font-size="9"> </tspan></text>
+	<g>
+		<g>
+			<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="169.235" y1="49.794" x2="192.707" y2="49.794"/>
+			<g>
+				<polygon fill="#005695" points="191.122,52.118 199.794,49.794 191.122,47.47 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="169.235" y1="117.522" x2="192.707" y2="117.522"/>
+			<g>
+				<polygon fill="#005695" points="191.122,119.847 199.794,117.522 191.122,115.198 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="108.894,50.14 104.134,50.14 
+				104.134,83.624 82.677,83.624 			"/>
+			<g>
+				<polygon fill="#005695" points="107.308,47.815 115.981,50.14 107.308,52.464 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="192.707,56.493 182.423,56.493 
+				182.423,112.468 169.605,112.468 			"/>
+			<g>
+				<polygon fill="#005695" points="191.122,54.169 199.794,56.493 191.122,58.817 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="108.894,117.522 104.134,117.522 
+				104.134,84.037 82.677,84.037 			"/>
+			<g>
+				<polygon fill="#005695" points="107.308,115.198 115.981,117.522 107.308,119.847 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="294.286,50.14 306.131,50.14 
+				306.131,76.424 376.293,76.424 			"/>
+			<g>
+				<polygon fill="#005695" points="374.708,78.748 383.381,76.424 374.708,74.1 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="294.286,117.522 306.131,117.522 
+				306.131,90.157 376.293,90.157 			"/>
+			<g>
+				<polygon fill="#005695" points="374.708,92.481 383.381,90.157 374.708,87.833 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

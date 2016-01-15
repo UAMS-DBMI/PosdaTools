@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part01/figures/PS3.1_6.19-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:07 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="500px" height="200px" viewBox="0 0 500 200" enable-background="new 0 0 500 200"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.1 Part 1: Introduction and Overview
+   </desc>
+   <title>
+	Figure 6.19-2 Illustration of platform independence via the Hosted Application architecture
+   </title>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="498" height="198"/>
+
+<polygon fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+	134.1,30.017 35.013,30.017 35.013,55.453 116.716,55.453 116.716,65.207 134.1,65.207 "/>
+<rect x="34.887" y="64.824" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="1,2" width="73.73" height="23.789"/>
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.75" points="53.823,62.234 44.555,62.234 44.555,69.92 99.037,69.92 
+	99.037,62.234 89.769,62.234 89.769,59.776 84.854,59.776 84.854,62.234 84.854,62.234 58.735,62.234 58.738,64.731 53.822,64.731 
+	"/>
+<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="89.769,58.097 99.037,58.097 99.037,50.412 44.555,50.412 
+	44.555,58.097 53.822,58.097 53.822,60.555 58.738,60.555 58.738,58.097 58.738,58.097 84.855,58.097 84.854,55.601 89.769,55.601 
+	"/>
+<polygon fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+	244.101,30.017 145.013,30.017 145.013,55.453 226.716,55.453 226.716,65.207 244.101,65.207 "/>
+<rect x="144.888" y="64.824" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="1,2" width="73.73" height="23.789"/>
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.75" points="163.823,62.234 154.556,62.234 154.556,69.92 209.038,69.92 
+	209.038,62.234 199.769,62.234 199.769,59.776 194.854,59.776 194.854,62.234 194.854,62.234 168.735,62.234 168.738,64.731 
+	163.823,64.731 "/>
+<rect x="182.5" y="146.829" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108.217" height="34.915"/>
+<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="210.292,143.027 196.69,143.027 196.69,154.308 
+	276.656,154.308 276.656,143.027 263.051,143.027 263.051,139.42 255.838,139.42 255.838,143.027 255.838,143.027 217.501,143.027 
+	217.506,146.692 210.292,146.692 "/>
+<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="199.769,58.097 209.038,58.097 209.038,50.412 
+	154.556,50.412 154.556,58.097 163.823,58.097 163.823,60.555 168.738,60.555 168.738,58.097 168.738,58.097 194.856,58.097 
+	194.854,55.601 199.769,55.601 "/>
+<polygon fill="#005695" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+	354.102,30.017 255.014,30.017 255.014,55.453 336.717,55.453 336.717,65.207 354.102,65.207 "/>
+<rect x="254.889" y="64.824" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="1,2" width="73.73" height="23.789"/>
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.75" points="273.824,62.234 264.557,62.234 264.557,69.92 319.039,69.92 
+	319.039,62.234 309.77,62.234 309.77,59.776 304.855,59.776 304.855,62.234 304.855,62.234 278.736,62.234 278.74,64.731 
+	273.824,64.731 "/>
+<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="309.77,58.097 319.039,58.097 319.039,50.412 264.557,50.412 
+	264.557,58.097 273.824,58.097 273.824,60.555 278.74,60.555 278.74,58.097 278.74,58.097 304.857,58.097 304.855,55.601 
+	309.77,55.601 "/>
+<polygon fill="#003468" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+	464.102,30.017 365.014,30.017 365.014,55.453 446.717,55.453 446.717,65.207 464.102,65.207 "/>
+<rect x="364.889" y="64.824" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="1,2" width="73.73" height="23.789"/>
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.75" points="383.824,62.234 374.557,62.234 374.557,69.92 429.039,69.92 
+	429.039,62.234 419.77,62.234 419.77,59.776 414.855,59.776 414.855,62.234 414.855,62.234 388.736,62.234 388.74,64.731 
+	383.824,64.731 "/>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#010101" stroke-width="0.75" stroke-linejoin="round" x1="236.806" y1="138.291" x2="220.902" y2="94.853"/>
+		<g>
+			<polygon fill="#010101" points="223.459,95.499 218.618,88.613 219.367,96.998 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#010101" stroke-width="0.75" stroke-linejoin="round" x1="236.806" y1="138.291" x2="252.531" y2="95.153"/>
+		<g>
+			<polygon fill="#010101" points="254.069,97.295 254.807,88.91 249.975,95.803 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#010101" stroke-width="0.75" stroke-linejoin="round" x1="236.462" y1="138.213" x2="114.05" y2="91.095"/>
+		<g>
+			<polygon fill="#010101" points="116.219,89.595 107.849,88.708 114.654,93.662 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#010101" stroke-width="0.75" stroke-linejoin="round" x1="236.806" y1="138.291" x2="359.385" y2="91.096"/>
+		<g>
+			<polygon fill="#010101" points="358.781,93.663 365.586,88.708 357.216,89.596 			"/>
+		</g>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 35.0127 24.6567)" font-size="11">Hosting System B</text>
+<text transform="matrix(1 0 0 1 145.0127 24.6567)" font-size="11">Hosting System C</text>
+<text transform="matrix(1 0 0 1 185.5454 169.9971)" font-size="11">Hosted Application A</text>
+<text transform="matrix(1 0 0 1 255.0137 24.6567)" font-size="11">Hosting System D</text>
+<text transform="matrix(1 0 0 1 365.0137 24.6567)" font-size="11">Hosting System E</text>
+<rect x="29.644" y="151.185" fill="none" width="144.5" height="31.5"/>
+<text transform="matrix(1 0 0 1 29.6426 157.627)"><tspan x="0" y="0" font-size="9">The same Hosted Application A</tspan><tspan x="0" y="10.799" font-size="9">can run on any Hosting System B-E </tspan><tspan x="0" y="21.6" font-size="9">that implements the API.</tspan></text>
+<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="419.77,58.097 429.039,58.097 429.039,50.412 374.557,50.412 
+	374.557,58.097 383.824,58.097 383.824,60.555 388.74,60.555 388.74,58.097 388.74,58.097 414.857,58.097 414.855,55.601 
+	419.77,55.601 "/>
+</svg>

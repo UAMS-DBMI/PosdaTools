@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part08/figures/PS3.8_E.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="232px" viewBox="0 0 502 232" enable-background="new 0 0 502 232" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.8 Network Communication Support for Message Exchange
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F6F0D8" width="500" height="230"/>
+	<g>
+		<rect x="45.07" y="30.905" fill="#FFFFFF" stroke="#000000" width="411.861" height="185.059"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 45.0796 24.9019)" font-size="10">PRESENTATION DATA VALUE AND THE MESSAGE CONTROL HEADER</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 221.2266 187.6758)" font-size="8">Bit 0: Command / Data</text>
+		</g>
+		<path fill="none" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-dasharray="4" d="M165.459,66.155
+			c0,0,3.409,9.758-17.699,15.933c-9.457,2.766-37.094,8.229-94.561,11.095"/>
+		<path fill="none" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-dasharray="4" d="M315.229,66.187
+			c0,0,0.822,9.737,25.701,15.901c22.016,5.453,106.623,11.095,106.623,11.095"/>
+		<line fill="none" stroke="#000000" x1="165.469" y1="39.853" x2="165.469" y2="66.907"/>
+		<rect x="53.2" y="93.183" fill="#CCDEF0" stroke="#000000" width="394.731" height="76.697"/>
+		<rect x="165.469" y="39.853" fill="#CCDEF0" stroke="#000000" width="149.756" height="27.055"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 196.2051 45.9927)"><tspan x="0" y="0" font-size="8">Presentation-data-Values (PDV)</tspan><tspan x="26.465" y="9.6" font-size="8">DICOM message</tspan><tspan x="-3.777" y="19.2" font-size="8">Command or Data Set Information</tspan></text>
+		</g>
+		<rect x="62.2" y="127.964" fill="#4F8ABE" stroke="#000000" width="102.736" height="27.055"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 277.5654 134.5186)"><tspan x="0" y="0" font-size="8">Message Data Set Fragment</tspan><tspan x="47.579" y="9.601" font-size="8">or</tspan><tspan x="-2.887" y="19.2" font-size="8">Message Command Fragment</tspan></text>
+		</g>
+		<rect x="62.2" y="127.964" fill="none" stroke="#000000" width="376.731" height="27.055"/>
+		<line fill="none" stroke="#000000" x1="199.151" y1="127.964" x2="199.151" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="182.043" y1="127.964" x2="182.043" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="164.936" y1="127.964" x2="164.936" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="147.829" y1="127.964" x2="147.829" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="130.721" y1="127.964" x2="130.721" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="113.614" y1="127.964" x2="113.614" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="96.415" y1="127.964" x2="96.415" y2="155.019"/>
+		<line fill="none" stroke="#000000" x1="79.307" y1="127.964" x2="79.307" y2="155.019"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 68.8394 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 86.0215 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 103.2031 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 120.3853 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 137.5669 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 154.749 144.5625)" font-size="8">0</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 172.0669 137.9629)"><tspan x="0" y="0" font-size="8">1</tspan><tspan x="0" y="9.6" font-size="8">0</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 189.249 137.9629)"><tspan x="0" y="0" font-size="8">1</tspan><tspan x="0" y="9.6" font-size="8">0</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="218.93,185.484 191.597,185.484 191.597,161.376 				
+					"/>
+				<g>
+					<polygon fill="#005695" points="193.34,162.565 191.597,156.061 189.854,162.565 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 221.2266 206.3955)" font-size="8">Bit 1: Last / Not Last</text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="218.93,204.308 174.93,204.308 174.93,161.376 				"/>
+				<g>
+					<polygon fill="#005695" points="176.673,162.565 174.93,156.061 173.187,162.565 					"/>
+				</g>
+			</g>
+		</g>
+		<polyline fill="none" stroke="#000000" points="199.151,122.694 199.151,117.283 62.2,117.283 62.2,122.694 		"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 91.4297 114.0532)" font-size="8">Message Control Header</text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_R.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="367px" viewBox="0 0 502 367" enable-background="new 0 0 502 367" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="365"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="64.687" y1="93.801" x2="251" y2="93.801"/>
+				<path fill="#003468" d="M253.362,92.776c-1.653-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.374-0.9,4.415-1.031C256.736,93.676,255.132,93.31,253.362,92.776z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="313.516" y1="119.096" x2="72.338" y2="119.096"/>
+				<path fill="#003468" d="M69.977,120.121c1.653,0.5,2.728,0.959,4.054,1.492v-5.044c-0.475,0.226-2.401,0.993-4.054,1.492
+					c-1.77,0.535-3.374,0.9-4.415,1.031C66.603,119.221,68.207,119.586,69.977,120.121z"/>
+				<path fill="#003468" d="M315.877,118.071c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C319.252,118.971,317.646,118.605,315.877,118.071z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="313.516" y1="231.9" x2="64.687" y2="231.9"/>
+				<path fill="#003468" d="M315.877,230.875c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C319.252,231.775,317.646,231.41,315.877,230.875z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="318.887" y1="255.352" x2="72.338" y2="255.352"/>
+				<path fill="#003468" d="M69.977,256.377c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.401,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C66.603,255.477,68.207,255.842,69.977,256.377z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="380.602" y1="174.037" x2="72.339" y2="174.037"/>
+				<path fill="#003468" d="M69.977,175.062c1.653,0.5,2.728,0.959,4.054,1.492v-5.044c-0.475,0.226-2.401,0.993-4.054,1.492
+					c-1.77,0.535-3.374,0.9-4.415,1.031C66.603,174.162,68.208,174.528,69.977,175.062z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="64.687" y1="151.646" x2="373.904" y2="151.646"/>
+				<path fill="#003468" d="M376.266,150.622c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C379.641,151.521,378.035,151.156,376.266,150.622z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="64.687" y1="280.391" x2="436.891" y2="280.391"/>
+				<path fill="#003468" d="M439.252,279.365c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C442.627,280.266,441.021,279.9,439.252,279.365z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#003468" stroke-linecap="round" stroke-miterlimit="1" x1="441.572" y1="307.105" x2="69.367" y2="307.105"/>
+				<path fill="#003468" d="M67.005,308.131c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.401,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C63.631,307.23,65.236,307.596,67.005,308.131z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="59.686" y1="350.496" x2="59.686" y2="40.537"/>
+		<text transform="matrix(1 0 0 1 73.1392 67.3311)"><tspan x="0" y="0" font-size="8">Obtain IP Parameters</tspan><tspan x="10" y="23.6" font-size="8">DHCP query</tspan><tspan x="10" y="47.2" font-size="8">Update DNS data (DDNS)</tspan><tspan x="0" y="80.8" font-size="8">Obtain Time</tspan><tspan x="10" y="104.4" font-size="8">Provide Time</tspan><tspan x="0" y="138" font-size="8">Obtain saved Configuration Information</tspan><tspan x="10" y="161.6" font-size="8">Find LDAP servers</tspan><tspan x="10" y="208.8" font-size="8">Obtain saved Configuration</tspan><tspan x="0" y="256" font-size="8">Activate saved Configuration</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="262.182" y1="350.496" x2="262.182" y2="40.537"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="323.389" y1="350.496" x2="323.389" y2="40.537"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="385.105" y1="350.496" x2="385.105" y2="40.537"/>
+		
+			<rect x="258.189" y="90.521" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.002" height="28.574"/>
+		
+			<rect x="319.387" y="115.408" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.002" height="50.096"/>
+		
+			<rect x="380.602" y="151.646" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.002" height="22.391"/>
+		
+			<rect x="318.887" y="231.898" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.002" height="22.391"/>
+		
+			<rect x="55.685" y="64.88" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="65.72"/>
+		
+			<rect x="55.685" y="145.439" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="40.128"/>
+		
+			<rect x="55.685" y="196.74" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="142.568"/>
+		
+			<rect x="28.685" y="16.503" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="27"/>
+		<text transform="matrix(1 0 0 1 46.4312 32.5044)" font-size="9">Device</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="446.312" y1="350.496" x2="446.312" y2="40.537"/>
+		
+			<rect x="235.688" y="16.503" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.001" height="27"/>
+		<text transform="matrix(1 0 0 1 249.9312 27.104)"><tspan x="0" y="0" font-size="9">DHCP</tspan><tspan x="-0.503" y="10.8" font-size="9">Server</tspan></text>
+		
+			<rect x="296.389" y="16.503" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="27"/>
+		<text transform="matrix(1 0 0 1 313.8281 27.104)"><tspan x="0" y="0" font-size="9">DNS</tspan><tspan x="-3.752" y="10.8" font-size="9">Server</tspan></text>
+		
+			<rect x="358.102" y="16.503" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.006" height="27"/>
+		<text transform="matrix(1 0 0 1 376.1045 27.104)"><tspan x="0" y="0" font-size="9">NTP</tspan><tspan x="-6.504" y="10.8" font-size="9">Servers</tspan></text>
+		
+			<rect x="419.311" y="16.503" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.006" height="27"/>
+		<text transform="matrix(1 0 0 1 434.498 27.104)"><tspan x="0" y="0" font-size="9">LDAP</tspan><tspan x="-1.498" y="10.8" font-size="9">Server</tspan></text>
+		
+			<rect x="441.812" y="280.391" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.002" height="26.715"/>
+		<circle fill="#ED1C24" stroke="#000000" stroke-miterlimit="1" cx="226.076" cy="110.008" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.1831 113.9053)" font-size="14">a</text>
+		<circle fill="#ED1C24" stroke="#000000" stroke-miterlimit="1" cx="226.076" cy="84.802" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.1831 88.6982)" font-size="14">a</text>
+		<circle fill="#ED1C24" stroke="#000000" stroke-miterlimit="1" cx="296.388" cy="110.008" r="7.2"/>
+		<text transform="matrix(1 0 0 1 292.4941 113.9053)" font-size="14">a</text>
+		<circle fill="#FFF200" stroke="#000000" stroke-miterlimit="1" cx="226.47" cy="164.784" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.9365 169.4014)" font-size="14">b</text>
+		<circle fill="#FFF200" stroke="#000000" stroke-miterlimit="1" cx="226.076" cy="142.561" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.543 147.1768)" font-size="14">b</text>
+		<circle fill="#0DB14B" stroke="#000000" stroke-miterlimit="1" cx="226.47" cy="246.01" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.5767 249.9072)" font-size="14">c</text>
+		<circle fill="#0DB14B" stroke="#000000" stroke-miterlimit="1" cx="226.47" cy="222.537" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.5767 226.4365)" font-size="14">c</text>
+		<circle fill="#00AEEF" stroke="#000000" stroke-miterlimit="1" cx="226.47" cy="297.869" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.2168 302.4893)" font-size="14">d</text>
+		<circle fill="#00AEEF" stroke="#000000" stroke-miterlimit="1" cx="226.47" cy="271.033" r="7.2"/>
+		<text transform="matrix(1 0 0 1 222.2168 275.6514)" font-size="14">d</text>
+	</g>
+</g>
+</svg>

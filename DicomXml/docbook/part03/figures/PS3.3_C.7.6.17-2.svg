@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.17-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="357px" viewBox="0 0 502 357" enable-background="new 0 0 502 357" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="355"/>
+<g>
+	<g>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="453.822" y1="340.288" x2="453.822" y2="16.712"/>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="268.639" y1="340.288" x2="268.639" y2="16.712"/>
+			<rect x="304.854" y="18.125" fill="none" width="117.313" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 322.1562 24.5591)" font-size="9">Derived SOP Instance</text>
+			
+				<rect x="268.595" y="106.008" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="185.184" height="181.081"/>
+			
+				<rect x="268.595" y="31.139" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="185.184" height="74.853"/>
+			<rect x="284.234" y="35.766" fill="none" width="166.378" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 284.2305 42.2041)" font-size="9">Dimension Organization Sequence</text>
+			
+				<rect x="282.84" y="44.944" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="30.524"/>
+			<rect x="289.279" y="48.556" fill="none" width="161.333" height="8.511"/>
+			<text transform="matrix(0.9288 0 0 1 289.2754 54.9946)" font-size="9">Item 1</text>
+			
+				<rect x="296.795" y="60.104" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.364"/>
+			<rect x="304.533" y="63.882" fill="none" width="143.013" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.5303 70.3208)" font-size="9">xx.yy.zz.1</text>
+			
+				<rect x="282.84" y="75.468" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="30.524"/>
+			<rect x="289.279" y="79.08" fill="none" width="161.333" height="8.511"/>
+			<text transform="matrix(0.9288 0 0 1 289.2754 85.5181)" font-size="9">Item 2</text>
+			
+				<rect x="296.795" y="90.629" fill="#A7A9AC" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.364"/>
+			<rect x="304.533" y="94.407" fill="none" width="143.013" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.5303 100.8442)" font-size="9">xx.yy.zz.2</text>
+			<rect x="268.595" y="287.159" fill="#CCDEF0" width="185.184" height="44.328"/>
+			<rect x="282.84" y="300.964" fill="#86B2D8" width="170.938" height="30.523"/>
+			<rect x="296.795" y="316.124" fill="#FFFFFF" width="156.694" height="15.365"/>
+			
+				<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				453.489,331.489 453.489,287.161 268.306,287.161 268.306,331.489 			"/>
+			
+				<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				453.489,331.489 453.489,300.966 282.551,300.966 282.551,331.489 			"/>
+			
+				<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				296.795,331.489 296.795,316.124 453.489,316.124 453.489,331.489 			"/>
+			<rect x="284.234" y="110.633" fill="none" width="166.378" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 284.2305 117.0571)" font-size="9">Dimension Index Sequence</text>
+			
+				<rect x="282.84" y="119.492" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="60.844"/>
+			<g>
+				<rect x="289.279" y="123.413" fill="none" width="161.333" height="10.936"/>
+				<text transform="matrix(0.9288 0 0 1 289.2754 129.8447)" font-size="9">Item 1</text>
+			</g>
+			
+				<rect x="297.084" y="134.348" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="45.82"/>
+			
+				<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.084" y1="164.887" x2="453.778" y2="164.887"/>
+			
+				<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.084" y1="149.629" x2="453.778" y2="149.629"/>
+			<rect x="304.822" y="138.43" fill="none" width="143.013" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 144.8652)" font-size="9">0020,9057 (In-Stack Position Index)</text>
+			<rect x="304.822" y="153.938" fill="none" width="143.362" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 160.3721)" font-size="9">0020,9111 (Frame Content Sequence)</text>
+			
+				<rect x="297.084" y="164.972" fill="#A7A9AC" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.364"/>
+			<rect x="304.822" y="168.75" fill="none" width="143.013" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 175.1738)" font-size="9">xx.yy.zz.2</text>
+			
+				<rect x="282.84" y="180.336" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="60.844"/>
+			<g>
+				<rect x="289.279" y="184.256" fill="none" width="161.333" height="10.936"/>
+				<text transform="matrix(0.9288 0 0 1 289.2754 190.6885)" font-size="9">Item 2</text>
+			</g>
+			
+				<rect x="297.084" y="195.191" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="45.82"/>
+			
+				<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.084" y1="225.73" x2="453.778" y2="225.73"/>
+			
+				<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.084" y1="210.473" x2="453.778" y2="210.473"/>
+			<rect x="304.822" y="199.273" fill="none" width="143.013" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 205.709)" font-size="9">0020,9128 (Temporal Position Index)</text>
+			<rect x="304.822" y="214.781" fill="none" width="143.362" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 221.2158)" font-size="9">0020,9111 (Frame Content Sequence)</text>
+			
+				<rect x="297.084" y="225.816" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.363"/>
+			<rect x="304.822" y="229.594" fill="none" width="143.013" height="8.51"/>
+			<text transform="matrix(0.9288 0 0 1 304.8184 236.0176)" font-size="9">xx.yy.zz.1</text>
+			
+				<rect x="282.84" y="241.18" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="45.909"/>
+			<g>
+				<rect x="289.279" y="245.098" fill="none" width="161.333" height="10.927"/>
+				<text transform="matrix(0.9288 0 0 1 289.2754 251.5254)" font-size="9">Item 3</text>
+			</g>
+			
+				<rect x="296.795" y="256.376" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.352"/>
+			<rect x="304.533" y="260.104" fill="none" width="143.013" height="8.506"/>
+			<text transform="matrix(0.9288 0 0 1 304.5303 266.5449)" font-size="9">0018,9114 (MR Echo Sequence)</text>
+			
+				<rect x="296.795" y="271.728" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.361"/>
+			<rect x="304.533" y="275.503" fill="none" width="143.013" height="8.512"/>
+			<text transform="matrix(0.9288 0 0 1 304.5303 281.9512)" font-size="9">xx.yy.zz.1</text>
+		</g>
+		<g>
+			<g>
+				<path fill="none" stroke="#0DB14B" d="M460.808,104.285c3.667,6.796,6.224,18.895,6.224,32.688
+					c0,14.565-5.734,28.346-10.466,35.197"/>
+				<g>
+					<polygon fill="#0DB14B" points="460.055,108.001 454.109,98.482 464.018,103.753 					"/>
+				</g>
+				<g>
+					<circle fill="#0DB14B" cx="456.645" cy="172.004" r="3.759"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path fill="none" stroke="#F7941E" d="M461.221,73.504c7.861,11.954,13.811,42.885,13.811,79.16
+					c0,34.352-10.732,66.718-18.641,80.337"/>
+				<g>
+					<polygon fill="#F7941E" points="460.752,77.27 454.109,68.223 464.386,72.735 					"/>
+				</g>
+				<g>
+					<circle fill="#F7941E" cx="456.466" cy="232.832" r="3.76"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path fill="none" stroke="#F7941E" d="M462.041,72.853c12.513,12.623,22.323,54.047,22.323,103.203
+					c0,44.423-16.116,86.224-27.604,102.907"/>
+				<g>
+					<polygon fill="#F7941E" points="462.258,76.62 454.109,68.902 465.025,71.511 					"/>
+				</g>
+				<g>
+					<circle fill="#F7941E" cx="456.867" cy="278.807" r="3.76"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<g>
+		
+			<rect x="17.637" y="75.398" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="185.184" height="181.105"/>
+		<rect x="53.852" y="18.125" fill="none" width="117.313" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 71.1558 24.5591)" font-size="9">Original SOP Instance</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="202.82" y1="340.288" x2="202.82" y2="16.712"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="17.637" y1="340.288" x2="17.637" y2="16.712"/>
+		
+			<rect x="17.637" y="31.139" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="185.184" height="44.329"/>
+		<rect x="33.276" y="35.766" fill="none" width="166.378" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 33.2754 42.2041)" font-size="9">Dimension Organization Sequence</text>
+		
+			<rect x="31.882" y="44.944" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="30.524"/>
+		<rect x="38.321" y="48.556" fill="none" width="161.333" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 38.3203 54.9946)" font-size="9">Item 1</text>
+		<g>
+			
+				<rect x="46.126" y="60.104" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.364"/>
+		</g>
+		<rect x="53.864" y="63.882" fill="none" width="143.013" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 70.3208)" font-size="9">xx.yy.zz.1</text>
+		<rect x="33.276" y="80.023" fill="none" width="166.378" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 33.2754 86.46)" font-size="9">Dimension Index Sequence</text>
+		<g>
+			
+				<rect x="31.882" y="88.882" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="60.843"/>
+			<g>
+				<rect x="38.321" y="92.802" fill="none" width="161.333" height="10.936"/>
+				<text transform="matrix(0.9288 0 0 1 38.3208 99.2412)" font-size="9">Item 1</text>
+			</g>
+			<g>
+				
+					<rect x="46.126" y="103.738" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="45.819"/>
+				
+					<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="46.126" y1="134.277" x2="202.82" y2="134.277"/>
+				
+					<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="46.126" y1="119.019" x2="202.82" y2="119.019"/>
+			</g>
+			<rect x="53.864" y="107.82" fill="none" width="143.013" height="8.511"/>
+			<text transform="matrix(0.9288 0 0 1 53.8633 114.2617)" font-size="9">0020,9057 (In-Stack Position Index)</text>
+			<rect x="53.864" y="123.327" fill="none" width="143.362" height="8.509"/>
+			<text transform="matrix(0.9288 0 0 1 53.8633 129.7686)" font-size="9">0020,9111 (Frame Content Sequence)</text>
+			<g>
+				<g>
+					
+						<rect x="46.126" y="134.362" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.363"/>
+				</g>
+				<rect x="53.864" y="138.139" fill="none" width="143.013" height="8.511"/>
+				<text transform="matrix(0.9288 0 0 1 53.8633 144.5742)" font-size="9">xx.yy.zz.1</text>
+			</g>
+		</g>
+		
+			<rect x="31.882" y="149.725" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="60.843"/>
+		<g>
+			<rect x="38.321" y="153.646" fill="none" width="161.333" height="10.936"/>
+			<text transform="matrix(0.9288 0 0 1 38.3208 160.0889)" font-size="9">Item 2</text>
+		</g>
+		
+			<rect x="46.126" y="164.582" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="45.819"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="46.126" y1="195.121" x2="202.82" y2="195.121"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="46.126" y1="179.861" x2="202.82" y2="179.861"/>
+		<rect x="53.864" y="168.665" fill="none" width="143.013" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 175.1094)" font-size="9">0020,9128 (Temporal Position Index)</text>
+		<rect x="53.864" y="184.17" fill="none" width="143.362" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 190.6162)" font-size="9">0020,9111 (Frame Content Sequence)</text>
+		<g>
+			
+				<rect x="46.126" y="195.205" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.363"/>
+		</g>
+		<rect x="53.864" y="198.982" fill="none" width="143.013" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 205.418)" font-size="9">xx.yy.zz.1</text>
+		
+			<rect x="31.882" y="210.568" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.938" height="45.935"/>
+		<g>
+			<rect x="38.321" y="214.49" fill="none" width="161.333" height="10.936"/>
+			<text transform="matrix(0.9288 0 0 1 38.3208 220.9258)" font-size="9">Item 3</text>
+		</g>
+		
+			<rect x="46.126" y="225.775" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.363"/>
+		<rect x="53.864" y="229.508" fill="none" width="143.013" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 235.9453)" font-size="9">0018,9114 (MR Echo Sequence)</text>
+		
+			<rect x="46.126" y="241.139" fill="#D1D3D4" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="156.694" height="15.364"/>
+		<rect x="53.864" y="244.916" fill="none" width="143.013" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 53.8633 251.3516)" font-size="9">xx.yy.zz.1</text>
+		<rect x="17.875" y="256.489" fill="#CCDEF0" width="185.184" height="44.328"/>
+		<rect x="32.12" y="270.294" fill="#86B2D8" width="170.938" height="30.523"/>
+		<rect x="46.075" y="285.454" fill="#FFFFFF" width="156.694" height="15.363"/>
+		
+			<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			202.82,300.817 202.82,256.489 17.637,256.489 17.637,300.817 		"/>
+		
+			<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			202.82,300.817 202.82,270.294 31.882,270.294 31.882,300.817 		"/>
+		
+			<polyline fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			46.126,300.817 46.126,285.454 202.82,285.454 202.82,300.817 		"/>
+	</g>
+	<rect x="205.524" y="276.435" fill="none" width="61.016" height="22.34"/>
+	<text transform="matrix(0.9288 0 0 1 216.5132 282.8672)"><tspan x="0" y="0" font-size="9">Equivalent</tspan><tspan x="-8.506" y="10.8" font-size="9">Index Meaning</tspan></text>
+	<rect x="205.524" y="170.493" fill="none" width="61.016" height="22.341"/>
+	<text transform="matrix(0.9288 0 0 1 207.917 176.9258)"><tspan x="0" y="0" font-size="9">Non-equivalent</tspan><tspan x="0.749" y="10.8" font-size="9">Index Meaning</tspan></text>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,6" x1="214.852" y1="146.621" x2="275.536" y2="167.657"/>
+			<g>
+				<polygon fill="#003468" points="215.956,150.694 204.807,143.139 218.24,144.106 				"/>
+			</g>
+			<g>
+				<polygon fill="#003468" points="272.147,170.172 285.581,171.139 274.432,163.584 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,6" x1="214.852" y1="206.904" x2="275.536" y2="227.939"/>
+			<g>
+				<polygon fill="#003468" points="215.956,210.977 204.807,203.422 218.24,204.389 				"/>
+			</g>
+			<g>
+				<polygon fill="#003468" points="272.147,230.455 285.581,231.422 274.432,223.867 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#003468" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,6" x1="214.852" y1="252.794" x2="275.536" y2="273.829"/>
+			<g>
+				<polygon fill="#003468" points="215.956,256.866 204.807,249.312 218.24,250.278 				"/>
+			</g>
+			<g>
+				<polygon fill="#003468" points="272.147,276.345 285.581,277.312 274.432,269.757 				"/>
+			</g>
+		</g>
+	</g>
+	<path fill="#ED1C24" d="M239.975,152.375c-0.14,0.181-0.224,0.45-0.224,0.72c0,0.271,0,0.271,0.613,1.32
+		c0.056,0.12,3.678,8.22,3.678,8.55c0,0.63-0.362,0.96-1.059,0.96c0,0-2.368,0.09-2.675,0.09c-0.864,0-3.651-6.779-3.874-6.779
+		c-0.167,0-0.278,0.09-0.558,0.569c-0.111,0.12-3.678,5.069-4.012,5.489c-0.473,0.631-1.309,0.811-1.309,0.811
+		c-0.363-0.029-3.707,0.03-3.734,0.03c-0.307,0-0.557-0.21-0.557-0.45c0-0.3,0.25-0.72,0.695-1.26
+		c0.949-1.051,7.021-9.51,7.021-9.96c0-0.39-3.26-7.829-3.26-8.009c0-0.361,0.307-0.601,0.754-0.601c0.11,0,3.147,0.03,3.259,0.03
+		c0.612,0,2.591,5.01,2.758,5.01s1.506-2.16,1.562-2.221c0.529-0.75,2.09-2.909,2.675-2.909c0.223,0,3.037,0.03,3.26,0.03
+		c0.529,0,0.81,0.18,0.81,0.569c0,0.33-1.172,1.979-1.311,2.16C244.293,146.855,240.28,151.955,239.975,152.375z"/>
+	<path fill="#0DB14B" stroke="#0DB14B" stroke-miterlimit="1" d="M250.593,209.471c-7.231,4-14.562,14.447-16.347,19.049
+		c-1.896-3.398-8.594-8.719-12.774-9.58l8.173-5.396l4.414,7.65c0-5.449,11.633-19.674,16.534-19.674V209.471z"/>
+	<path fill="#0DB14B" stroke="#0DB14B" stroke-miterlimit="1" d="M250.593,253.392c-7.231,4-14.562,14.445-16.347,19.049
+		c-1.896-3.4-8.594-8.721-12.774-9.582l8.173-5.395l4.414,7.648c0-5.449,11.633-19.673,16.534-19.673V253.392z"/>
+</g>
+</svg>

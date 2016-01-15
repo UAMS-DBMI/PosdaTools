@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_NN.4-3.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="397px" viewBox="0 0 502 397" enable-background="new 0 0 502 397" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="395"/>
+	<g>
+		<rect x="101" y="234.179" fill="#E7E7E7" stroke="#010101" width="300" height="109.093"/>
+		<rect x="110.091" y="240.997" fill="#FFFFFF" stroke="#010101" width="47.728" height="95.456"/>
+		<text transform="matrix(0 -0.963 1 0 138.7588 314.8857)" fill="#010101" font-size="15.5294">Slide ID</text>
+		<g>
+			<text transform="matrix(0.963 0 0 1 190.5352 378.3291)" font-size="8">Tissue Section Item ID</text>
+		</g>
+		<g>
+			<text transform="matrix(0.963 0 0 1 287.2354 378.3291)" font-size="8">Tissue Section Item ID</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="326.39" y1="366.834" x2="326.39" y2="328.113"/>
+				<g>
+					<polygon points="327.842,329.104 326.39,323.684 324.938,329.104 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="229.62" y1="366.834" x2="229.62" y2="328.113"/>
+				<g>
+					<polygon points="231.073,329.104 229.62,323.684 228.167,329.104 					"/>
+				</g>
+			</g>
+		</g>
+		<path fill="#ED1C24" stroke="#ED1C24" stroke-miterlimit="1" d="M249.391,308.17c-21.757-6.842-27.367-8.825-42.125-8.825
+			c-6.566,0-3.967-45.295,16.764-42.918C238.339,258.068,267.568,313.886,249.391,308.17z"/>
+		<path fill="#00AEEF" stroke="#00AEEF" stroke-miterlimit="1" d="M344.143,311.904c-50.948,5-30.504-16.579-31.812-18.762
+			c-11.889-19.813-7.323-31.168,2.092-36.805c12.621-7.558,45.35,3.573,28.397,6.843c-16.354,3.153-11.05,6.876-7.196,24.75
+			C338.234,300.049,348.307,311.496,344.143,311.904z"/>
+		<path fill="#ED1C24" stroke="#ED1C24" stroke-miterlimit="1" d="M330.386,167.682c-7.389-2.323-9.293-2.997-14.305-2.997
+			c-2.23,0-1.348-15.382,5.692-14.574C326.633,150.668,336.559,169.623,330.386,167.682z"/>
+		<path fill="#ED1C24" stroke="#ED1C24" stroke-miterlimit="1" d="M136.98,87.728c-8.516-2.677-10.711-3.454-16.487-3.454
+			c-2.57,0-1.552-17.728,6.561-16.797C132.654,68.119,144.094,89.965,136.98,87.728z"/>
+		<path fill="#00AEEF" stroke="#00AEEF" stroke-miterlimit="1" d="M358.962,168.95c-17.301,1.698-10.358-5.63-10.803-6.371
+			c-4.037-6.729-2.487-10.584,0.711-12.498c4.285-2.566,15.399,1.213,9.643,2.324c-5.554,1.071-3.752,2.335-2.443,8.404
+			C356.956,164.924,360.376,168.812,358.962,168.95z"/>
+		<path fill="#00AEEF" stroke="#00AEEF" stroke-miterlimit="1" d="M374.633,87.411c-17.301,1.698-10.358-5.63-10.803-6.371
+			c-4.037-6.729-2.487-10.584,0.711-12.498c4.285-2.566,15.399,1.213,9.643,2.324c-5.554,1.071-3.752,2.335-2.443,8.404
+			C372.627,83.385,376.047,87.272,374.633,87.411z"/>
+		<g>
+			<rect x="157.084" y="16.032" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="31.606" height="23.705"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="188.69,39.737 188.69,16.032 194.38,22.859 
+				194.38,45.426 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="194.38,45.426 163.626,45.426 157.084,39.737 
+				188.69,39.737 			"/>
+		</g>
+		<text transform="matrix(1 0 0 1 165.3101 30.5762)" font-size="8">Part</text>
+		<g>
+			<rect x="307.566" y="16.997" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="31.605" height="23.705"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="339.172,40.702 339.172,16.997 344.861,23.824 
+				344.861,46.392 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="344.861,46.392 314.107,46.392 307.566,40.702 
+				339.172,40.702 			"/>
+		</g>
+		<text transform="matrix(1 0 0 1 315.793 31.5405)" font-size="8">Part</text>
+		<g>
+			<rect x="213.642" y="124.033" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="75.642" height="56.727"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="289.283,180.76 289.283,124.033 302.896,140.37 
+				302.896,194.376 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="302.896,194.376 229.298,194.376 213.642,180.76 
+				289.283,180.76 			"/>
+		</g>
+		<text transform="matrix(1 0 0 1 235.187 134.4365)"><tspan x="0" y="0" font-size="8">Cassette</tspan><tspan x="-5.777" y="9.6" font-size="8">(Tissue dice</tspan><tspan x="-10.68" y="19.2" font-size="8">embedded in a</tspan><tspan x="4.672" y="28.8" font-size="8">Block)</tspan><tspan x="-5.111" y="38.4" font-size="8">Cassette ID</tspan></text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="250.983,116.433 250.983,101.98 
+					175.73,101.98 175.73,89.097 				"/>
+				<g>
+					<polygon fill="#005695" points="253.308,114.848 250.983,123.521 248.659,114.848 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="251.227,116.433 251.227,101.98 
+					326.217,101.98 326.217,89.097 				"/>
+				<g>
+					<polygon fill="#005695" points="253.551,114.848 251.227,123.521 248.902,114.848 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="250.897" y1="226.056" x2="250.897" y2="194.376"/>
+				<g>
+					<polygon fill="#005695" points="253.222,224.471 250.897,233.144 248.573,224.471 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="175.719" y1="60.437" x2="175.719" y2="46.04"/>
+				<g>
+					<polygon fill="#005695" points="178.043,58.852 175.719,67.524 173.395,58.852 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="326.23" y1="60.437" x2="326.23" y2="46.04"/>
+				<g>
+					<polygon fill="#005695" points="328.555,58.852 326.23,67.524 323.906,58.852 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="151.001" y="67.254" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="49.575" height="20.822"/>
+		<text transform="matrix(1 0 0 1 155.5581 79.7109)" font-size="8">Tissue dice</text>
+		<rect x="301.424" y="67.254" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="49.576" height="20.822"/>
+		<text transform="matrix(1 0 0 1 305.9824 79.7109)" font-size="8">Tissue dice</text>
+	</g>
+</g>
+</svg>
