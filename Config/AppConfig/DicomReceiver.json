@@ -72,12 +72,6 @@
     },
   },
   "association_end_handlers" : {
-    "pre_parse_and_move" : {
-      "script": "PreParseDicom.pl <called> <calling> <assoc_dir> <CacheDir> <LinkDir> <Parallelism>",
-      "CacheDir": "/Users/quasar/cache/dicom_info",
-      "LinkDir": "/cache/quasar/NewItcToolsData/submission/dicom/incoming",
-      "Parallelism": 10,
-    },
     "populate_posda_db" : {
       "script": "ImportFromReceiveDirIntoDigestDir.pl <assoc_dir> <db_name> <comment>",
       "db_name" : "posda_files",
