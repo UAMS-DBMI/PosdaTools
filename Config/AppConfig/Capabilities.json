@@ -25,6 +25,7 @@
       "DicomProxyAnalysis" : 1,
       "NewItcTools" : 1,
       "PosdaCuration" : 1,
+      "SubmissionSender" : 1,
     },
   },
 }

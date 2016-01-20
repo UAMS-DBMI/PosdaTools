@@ -9,6 +9,19 @@
     64631, 64632, 64633, 64634, 64635, 64636, 64637, 64638, 64639, 64640,
   ],
   "Apps": {
+    "SubmissionSender": {
+      "Directory": "/home/quasar/PosdaTools/Config/SubmissionSender",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Select Original Submissions",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 9
+    },
     "FileDist": {
       "Directory": "/home/quasar/PosdaTools/Config/FileDistConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
