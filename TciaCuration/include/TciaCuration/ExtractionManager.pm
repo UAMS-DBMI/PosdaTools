@@ -58,6 +58,11 @@ sub KeepAlive{
         delete $this->{CompletedSubProcesses}->{$k}
       }
     }
+#    for my $k (keys %{$this->{CompletedSubPhiChecks}}){
+#      if($now - $this->{CompletedSubPhiChecks}->{$k}->{end_time} > 600){
+#        delete $this->{CompletedSubPhiChecks}->{$k}
+#      }
+#    }
     unless($this->{KillTimer}){
       $this->$method($message);
       $self->timer($delay);
@@ -1366,7 +1371,19 @@ sub CheckForPhi{
   }
   # Check for PHI here in sub-process
   my $ext_dir = "$dir/$coll/$site/$subj";
-  my $cmd = "CheckForPhi.pl \"$ext_dir\"";
+  my $rev_dir = "$ext_dir/revisions";
+  my $current_rev_dir = $this->GetCurrentRevDir($rev_dir);
+  unless(defined $current_rev_dir && -d $current_rev_dir){
+    Dispatch::Select::Socket->new(
+      $this->SendOperationStatus(
+        ["Error: Can't find Current Rev dir for $ext_dir " .
+          "(therefore can't CheckForPhi)"]
+      ),
+      $fh)->Add("writer");
+    return;
+  }
+  my $cmd = "CheckForPhi.pl \"$current_rev_dir/files\" \"$current_rev_dir\" ".
+    "2>\"$current_rev_dir/phi_errors.txt\"";
   my $now = time;
   my $trans = {
     Collection => $coll,
@@ -1392,10 +1409,24 @@ sub CheckForPhi{
     ]),
     $fh
   )->Add("writer");
-  $this->{RunningPhiChecks}->{$id} = $trans;
-  Dispatch::LineReader->new_cmd($cmd,
-      $this->UpdatePhiCheckStatus($id),
-      $this->EndPhiCheck($id));
+  $this->{QueuedPhiChecks}->{$id} = $trans;
+  $this->DispatchPhiCheck;
+}
+sub DispatchPhiCheck{
+  my($this) = @_;
+  my $running = keys %{$this->{RunningPhiChecks}};
+  my $queued = keys %{$this->{QueuedPhiChecks}};
+  while($running < 3 && $queued > 0){
+    my $id = [ sort { $a <=> $b } keys %{$this->{QueuedPhiChecks}} ]->[0];
+    my $trans = $this->{QueuedPhiChecks}->{$id};
+    delete $this->{QueuedPhiChecks}->{$id};
+    $this->{RunningPhiChecks}->{$id} = $trans;
+    Dispatch::LineReader->new_cmd($trans->{cmd},
+        $this->UpdatePhiCheckStatus($id),
+        $this->EndPhiCheck($id));
+    $running = keys %{$this->{RunningPhiChecks}};
+    $queued = keys %{$this->{QueuedPhiChecks}};
+  }
 }
 sub UpdatePhiCheckStatus{
   my($this, $id) = @_;
@@ -1427,10 +1458,11 @@ sub EndPhiCheck{
     my $now = time;
     my $t = $this->{RunningPhiChecks}->{$id};
     delete $this->{RunningPhiChecks}->{$id};
-    $this->{CompletedSubPhiChecks}->{$id} = $t;
+#    $this->{CompletedSubPhiChecks}->{$id} = $t;
     $t->{end_time} = $now;
     $t->{elapsed} = $now - $t->{LockedAt};
     $this->DeleteLock($id);
+    $this->DispatchPhiCheck;
   };
   return $sub;
 }
@@ -1448,7 +1480,7 @@ sub ListLocks{
       "Collection", "For", "Site", "Subj", "Session", "User", "Status",
       "NextRev"
     ){
-      if(exists $lock->{$k}){
+      if(exists($lock->{$k}) && defined($lock->{$k})){
         push(@parm_list, "$k=$lock->{$k}");
       }
     }
@@ -1461,6 +1493,28 @@ sub ListLocks{
     $this->SendOperationStatus(
       \@resp_list),
     $fh)->Add("writer");
+}
+sub GetCurrentRevDir{
+  my($this, $rev_dir) = @_;
+  opendir DIR, $rev_dir or die return undef;
+  my @revisions;
+  while(my $f = readdir(DIR)){
+    if($f =~ /^\./) { next }
+    if($f =~ /^del_/) { next } ## ???
+    if($f =~ /^\d+$/){
+      unless(-d "$rev_dir/$f"){
+        print {$this->{Log}} "Error: non directory revision ($f) in $rev_dir\n";
+        next;
+      }
+      push(@revisions, $f);
+    } else {
+    }
+  }
+  @revisions = sort {$a <=> $b} @revisions;
+  my $last_rev = $revisions[$#revisions];
+  my $current_rev_dir = "$rev_dir/$last_rev";
+  unless(-d $current_rev_dir) { return undef }
+  return $current_rev_dir;
 }
 sub GetLockStatus{
   my($this, $args, $fh, $foo) = @_;
