@@ -373,16 +373,23 @@ EOF
   sub AvailAppContent{
     my($this, $http, $dyn) = @_;
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
+
+    my $table_headers = '<tr>' .
+                        '<th "width=10%">Name</th>' .
+                        '<th "width=30%">Description</th>' .
+                        '<th "width=10%"></th>' . 
+                        '</tr>';
+    
+    $this->RefreshEngine($http, $dyn, 
+      '<table class="table" width="100%">');
+
+
     if(scalar(keys %$default_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        '<h3>Apps Available to All:</h3>' .
-        '<table class="table" width="100%">'.
-        '<tr>' .
-        '<th "width=10%">Name</th>' .
-        '<th "width=30%">Description</th>' .
-        '<th "width=10%"></th></tr>');
+        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
+        $table_headers
+      );
       $this->AppTableRows($http, $dyn, $default_apps);
-      $this->RefreshEngine($http, $dyn, '</table>');
     }
     my $user = $this->get_user;
     unless(defined $user) { print STDERR "no user\n";return };
@@ -390,15 +397,11 @@ EOF
     my $user_apps = $this->{Capabilities}->{$user}->{Apps};
     if(scalar(keys %$user_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        "<h3>Apps Available to $user:</h3>" .
-        '<table class="table" width="100%">' . 
-        '<tr>' .
-        '<th "width=10%">Name</th>' .
-        '<th "width=30%">Description</th>' .
-        '<th "width=10%"></th></tr>');
+        "<tr><td colspan=3><h4>Apps Available to $user</h4></td</tr>" .
+        $table_headers);
       $this->AppTableRows($http, $dyn, $user_apps);
-      $this->RefreshEngine($http, $dyn, '</table>');
     }
+    $this->RefreshEngine($http, $dyn, '</table>');
   }
   sub AppTableRows{
     my($this, $http, $dyn, $privs) = @_;
