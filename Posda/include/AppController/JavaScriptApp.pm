@@ -208,34 +208,39 @@ EOF
           condition => $this->{capability}->{IsAdmin},
           caption => "reload config",
           method => "ReloadConfig",
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => 1,
           caption => "show apps",
           method => "SetMenuMode",
-          args => { mode => "avail_apps" }
+          args => { mode => "avail_apps" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => $this->{capability}->{IsAdmin},
           caption => "show bom",
           method => "SetMenuMode",
-          args => { mode => "bom" }
+          args => { mode => "bom" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => 1,
           caption => "show receiver",
           method => "SetMenuMode",
-          args => { mode => "dicom_receiver" }
+          args => { mode => "dicom_receiver" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => $this->get_user,
           caption => "password",
           method => "SetMenuMode",
-          args => { mode => "password" }
+          args => { mode => "password" },
+		  #style => "small",
         },
       ]
     );
@@ -370,8 +375,8 @@ EOF
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
     if(scalar(keys %$default_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        '<hr>Apps Available to All:' .
-        '<table width="100%">'.
+        '<h3>Apps Available to All:</h3>' .
+        '<table class="table" width="100%">'.
         '<tr>' .
         '<th "width=10%">Name</th>' .
         '<th "width=30%">Description</th>' .
@@ -385,8 +390,8 @@ EOF
     my $user_apps = $this->{Capabilities}->{$user}->{Apps};
     if(scalar(keys %$user_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        "<hr>Apps Available to $user:" .
-        '<table width="100%">' . 
+        "<h3>Apps Available to $user:</h3>" .
+        '<table class="table" width="100%">' . 
         '<tr>' .
         '<th "width=10%">Name</th>' .
         '<th "width=30%">Description</th>' .

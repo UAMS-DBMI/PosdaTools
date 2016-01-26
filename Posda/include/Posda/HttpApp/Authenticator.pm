@@ -14,7 +14,8 @@ use Debug;
     if($user) {
       if($this->{ExitOnLogout}){
         my $resp =
-         '<span onClick="javascript:CloseThisWindow();">close' .
+         '<span class="btn btn-danger" ' .
+		 'onClick="javascript:CloseThisWindow();">Close' .
          '</span><br><?dyn="DebugButton"?>';
         $this->RefreshEngine($http, $dyn, $resp);
       } else {

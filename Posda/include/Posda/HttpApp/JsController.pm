@@ -18,6 +18,10 @@ my $base_header = <<EOF;
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <head>
+<!-- HttpApp::JsController line 20 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-1.12.0.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <?dyn="CssStyle"?>
 <title><?dyn="title"?></title>
 EOF
@@ -307,10 +311,12 @@ sub SelectByValue{
   my($this, $http, $dyn) = @_;
   unless(defined $dyn->{op}) { $dyn->{op} = "ChangeMode" }
   $http->queue(
-    "<select onChange=\"ChangeMode('$dyn->{op}', " . 
+    "<select class=\"form-control\" onChange=\"ChangeMode('$dyn->{op}', " . 
     "this.options[this.selectedIndex].value);\">"
   );
 }
+# Builds a <select>
+# TODO: But why are there two? The other is SelectByValue
 sub SelectDelegateByValue{
   my($this, $http, $dyn) = @_;
   my $op = "Delegate";
@@ -328,7 +334,8 @@ sub SelectDelegateByValue{
     $v_string .= "&$p";
   }
   $http->queue(
-    "<select onChange=\"PosdaGetRemoteMethod('$op', " . "'value=' + " .
+    "<select class=\"form-control\" onChange=\"PosdaGetRemoteMethod('$op', " . 
+    "'value=' + " .
     "this.options[this.selectedIndex].value + '$v_string', " .
     "function(){" .
     (exists($dyn->{sync})? $dyn->{sync}: "") .
@@ -429,8 +436,8 @@ sub QueueCanDebug{
   $http->queue($this->CanDebug() ? "true" : "false");
 }
 sub MakeHostLink{
-  my($this, $caption, $method, $args, $small) = @_;
-  my $text = '<span onClick="javascript:PosdaGetRemoteMethod(' . 
+  my($this, $caption, $method, $args, $small, $class) = @_;
+  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" . 
     "'$method'";
   my @a;
   my $at = "";
@@ -442,7 +449,7 @@ sub MakeHostLink{
   }
   $text .= ", '$at', function() {});" . '" ' .
     ($small ? 'style="font-size:small;"' : 'style="font-size:large;"') .
-    '>' ."$caption</span>";
+    '>' ."$caption</a>";
   return $text;
 }
 sub MakeHostLinkSync{
@@ -477,7 +484,7 @@ sub MakeJavascriptLink{
 }
 sub SimpleButton{
   my($this, $http, $dyn) = @_;
-  my $string = '<input type="button" ' .
+  my $string = '<input class="btn btn-sm btn-primary" type="button" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'$dyn->{op}', " . 
     (exists($dyn->{parm})? "'parm=$dyn->{parm}'" : "''") .
@@ -500,7 +507,7 @@ sub NotSoSimpleButton{
     $hstring .= "$parms[$i]";
     unless($i == $#parms) { $hstring .= "&" }
   }
-  my $string = '<input type="button" ' .
+  my $string = '<input class="btn btn-sm btn-default" type="button" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'$dyn->{op}', '$hstring', " .
     'function () {' .
@@ -534,6 +541,7 @@ sub DelegateButton{
 }
 sub MakeMenu{
   my($this, $http, $dyn, $list) = @_;
+  $http->queue('<div class="list-group">');
   for my $m (@$list){
     if($m->{condition}){
       if($m->{type} eq "host_link"){
@@ -542,8 +550,10 @@ sub MakeMenu{
           $small = 1;
         }
         my $link = 
-          $this->MakeHostLink($m->{caption}, $m->{method}, $m->{args}, $small);
-        $http->queue("<small>$link</small><br />");
+          $this->MakeHostLink($m->{caption}, $m->{method}, $m->{args}, $small,
+          "list-group-item");
+        # $http->queue("<a href='' class=\"list-group-item\">$link</a>");
+        $http->queue($link);
       } elsif($m->{type} eq "host_link_sync"){
         my $small;
         if(exists($m->{style}) && $m->{style} eq "small"){
@@ -552,6 +562,7 @@ sub MakeMenu{
         my $link = 
           $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
             $m->{args}, $small, $m->{sync});
+        # TODO: This probably also needs to be an li?
         $http->queue("<small>$link</small><br />");
       } elsif ($m->{type} eq "javascript"){
         my $link = $this->MakeJavascriptLink(
@@ -564,6 +575,7 @@ sub MakeMenu{
       }
     }
   }
+  $http->queue('</div>');
 }
 sub CheckBox{
   my($this, $group, $value, $op, $checked, $parm) = @_;

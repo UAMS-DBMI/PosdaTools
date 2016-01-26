@@ -214,9 +214,13 @@ sub MenuResponse{
   }
   if($this->{Mode} eq "Selection"){
     return $http->queue(
-      '<span onClick="javascript:alert(' . 
+      '<span class="btn btn-default" ' .
+        'onClick="javascript:alert(' . 
         "'This is a test'" .
-        ');">test</span>'
+        ');">test</span>' .
+      '<span class="btn btn-default" onClick="javascript:alert(' . 
+        "'This is also a test'" .
+        ');">Second Test</span>'
     );
   }
   if($this->{Mode} eq "ProcessingDirectories"){
