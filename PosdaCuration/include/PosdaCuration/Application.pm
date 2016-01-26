@@ -767,10 +767,12 @@ sub ExpandExtraction{
   if(exists $this->{DirectoryLocks}->{$col}->{$site}->{$subj}){
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
     my $reason = "edit";
-    if($lock_status->{NextRev} eq "0"){
-      $reason = "extraction";
-    } elsif($lock_status->{NextRev} eq "discard"){
-      $reason = "discard";
+    if($lock_status->{For} ne "PhiSearch"){
+      if($lock_status->{NextRev} eq "0"){
+        $reason = "extraction";
+      } elsif($lock_status->{NextRev} eq "discard"){
+        $reason = "discard";
+      }
     }
     $reason = $lock_status->{For};
     my $status = $lock_status->{Status};
@@ -2222,9 +2224,17 @@ sub PhiMenu{
   $dyn->{col} = $this->{DisplayInfoIn}->{Collection};
   $dyn->{site} = $this->{DisplayInfoIn}->{Site};
   $dyn->{subj} = $this->{DisplayInfoIn}->{subj};
-  $this->RefreshEngine($http, $dyn,
+  my $rev = $this->{DisplayInfoIn}->{rev_hist}->{CurrentRev};
+  my $rev_dir = "$this->{ExtractionRoot}/$dyn->{col}/$dyn->{site}/" .
+    "$dyn->{subj}/revisions/$rev";
+  unless(-f "$rev_dir/PhiCheck.info"){
+    return $this->RefreshEngine($http, $dyn,
     '<?dyn="NotSoSimpleButton" caption="Search For PHI" ' .
     'op="PhiSearch" sync="Update();"?>');
+  }
+  $this->RefreshEngine($http, $dyn,
+    '<?dyn="NotSoSimpleButton" caption="Show Phi" ' .
+    'op="ShowPhi" sync="Update();"?>');
 }
 sub DestinationDropDown{
   my($this, $http, $dyn) = @_;
@@ -3506,5 +3516,52 @@ sub MakeLinkEditLists{
     }
   }
   return(\%files_to_link, \%files_to_edit);
+}
+################################
+# PhiSearch Transaction
+sub PhiSearch{
+  my($this, $http, $dyn) = @_;
+  $this->HideErrors;
+  delete $this->{DirectoryLocks};
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+  unless(defined $session){
+    print STDERR "Session undefined in PhiSearch\n";
+    $session = '<undef>';
+  }
+  unless(defined $user){
+    print STDERR "$user undefined in PhiSearch\n";
+    $user = '<undef>';
+  }
+  my $new_args = [ "CheckForPhi",
+    "Session: $session", "User: $user", "Pid: $pid" ,
+    "Collection: $this->{DisplayInfoIn}->{Collection}",
+    "Site: $this->{DisplayInfoIn}->{Site}",
+    "Subject: $this->{DisplayInfoIn}->{subj}",
+    "For: PhiSearch",
+#    "Response: $this->{BaseExternalNotificationUrl}",
+  ];
+  if(
+    $this->SimpleTransaction($this->{ExtractionManagerPort},
+    $new_args,
+    $this->WhenPhiQueued($http, $dyn))
+  ){
+    return;
+  } else {
+    print STDERR "Phi failed: probably double click\n";
+  }
+}
+sub WhenPhiQueued{
+  my($this, $http, $dyn) = @_;
+  my $sub = sub {
+    print STDERR "PhiCalculation Queued\n";
+    # nothing to do here???
+    my($lines) = @_;
+    for my $line (@$lines){
+      print STDERR "\t$line\n";
+    }
+  };
+  return $sub;
 }
 1;

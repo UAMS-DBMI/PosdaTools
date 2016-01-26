@@ -16,7 +16,7 @@ sub MakeEleFun{
   my($file, $values) = @_;
   my $sub = sub {
     my($ele, $n_sig) = @_;
-    if($ele eq "(7fe0,0010)") { return }
+    if($n_sig eq "(7fe0,0010)") { return }
     unless($ele->{type} eq "text" || $ele->{type} eq "raw") { return }
     my @values;
     if(ref($ele->{value}) eq ""){
