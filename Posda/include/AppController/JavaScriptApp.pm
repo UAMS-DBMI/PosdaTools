@@ -863,28 +863,25 @@ EOF
     $this->{user} = $this->get_user;
     $this->{user_name} = $this->GetUserName($this->{user},
        $this->{PasswordDbFile});
-    my $form =
-      '<form onSubmit="' .
-      "PosdaGetRemoteMethod('PasswordChange'," .
-      "'old='+this.elements['OldPassword'].value+'&amp;newp='" .
-      "+this.elements['NewPassword'].value+'&amp;rpt='" .
-      "+this.elements['RepeatPassword'].value, " .
-      "function(){Update();});" .
-      ' return false;">' . "\n" .
-      '<table><tr><td align="right">Current password:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="OldPassword">' .
-      '</td></tr><tr>'. "\n" .
-      '<td align="right">New Password:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="NewPassword">' .
-      '</td></tr>'. "\n" .
-      '<td align="right">Repeat:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="RepeatPassword">' .
-      '<tr><td></td><td>' .
-      '<input type="submit" name="Submit" value="Change">' .
-      '</td><tr></table></form>';
+    my $form = <<FORM;
+<form onSubmit="
+PosdaGetRemoteMethod('PasswordChange', 'old='+this.elements['OldPassword'].value+'&amp;newp='+this.elements['NewPassword'].value+'&amp;rpt=' +this.elements['RepeatPassword'].value, function(){Update();});return false;">
+  <div class="form-group">
+    <label for="OldPassword">Current Password</label>
+    <input type="password" class="form-control" id="OldPassword" placeholder="Current Password">
+  </div>
+  <div class="form-group">
+    <label for="NewPassword">New Password</label>
+    <input type="password" class="form-control" id="NewPassword" placeholder="New Password">
+  </div>
+  <div class="form-group">
+    <label for="RepeatPassword">Repeat New Password</label>
+    <input type="password" class="form-control" id="RepeatPassword" placeholder="New Password">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+FORM
+;
     $this->RefreshEngine($http, $dyn, $form);
     if($this->{password_message}){
       $http->queue($this->{password_message});
