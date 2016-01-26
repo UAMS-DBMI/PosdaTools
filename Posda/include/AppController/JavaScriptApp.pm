@@ -93,7 +93,7 @@ EOF
     $this->{login_width} = 
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
-    $this->SetInitialExpertAndDebug("bbennett");
+    $this->SetInitialExpertAndDebug("quasar");
     if($this->CanDebug){
       Posda::HttpApp::DebugWindow->new($sess, "Debug");
     }
