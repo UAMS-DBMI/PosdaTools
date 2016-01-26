@@ -206,14 +206,14 @@ EOF
         {
           type=> "host_link",
           condition => $this->{capability}->{IsAdmin},
-          caption => "reload config",
+          caption => "Reload Config",
           method => "ReloadConfig",
 		  #style => "small",
         },
         {
           type => "host_link",
           condition => 1,
-          caption => "show apps",
+          caption => "Show Apps",
           method => "SetMenuMode",
           args => { mode => "avail_apps" },
 		  #style => "small",
@@ -221,7 +221,7 @@ EOF
         {
           type => "host_link",
           condition => $this->{capability}->{IsAdmin},
-          caption => "show bom",
+          caption => "Show BOM",
           method => "SetMenuMode",
           args => { mode => "bom" },
 		  #style => "small",
@@ -229,7 +229,7 @@ EOF
         {
           type => "host_link",
           condition => 1,
-          caption => "show receiver",
+          caption => "Show Receiver",
           method => "SetMenuMode",
           args => { mode => "dicom_receiver" },
 		  #style => "small",
@@ -237,7 +237,7 @@ EOF
         {
           type => "host_link",
           condition => $this->get_user,
-          caption => "password",
+          caption => "Password",
           method => "SetMenuMode",
           args => { mode => "password" },
 		  #style => "small",

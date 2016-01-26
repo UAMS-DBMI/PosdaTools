@@ -448,7 +448,7 @@ sub MakeHostLink{
     $at .= join('&', @a);
   }
   $text .= ", '$at', function() {});" . '" ' .
-    ($small ? 'style="font-size:small;"' : 'style="font-size:large;"') .
+    ($small ? 'style="font-size:small;"' : '') .
     '>' ."$caption</a>";
   return $text;
 }
