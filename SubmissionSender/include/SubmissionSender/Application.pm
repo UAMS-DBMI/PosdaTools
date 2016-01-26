@@ -276,12 +276,60 @@ sub ContentResponse{
     }
     $http->queue('</table>');
     $this->RefreshEngine($http, $dyn,
+      'Send to <?dyn="SendToDropDown"?>' 
+    );
+    return;
+  }
+}
+sub SendToDropDown{
+  my($this, $http, $dyn) = @_;
+  my $dicom_destinations = $this->{Environment}->{DicomDestinations};
+  my @dest_keys = sort keys %$dicom_destinations;
+
+  my $dest_text = "---- select destination ----";
+
+  unless(defined $this->{SelectedDicomDestination}){
+    $this->{SelectedDicomDestination} = $dest_text;
+  }
+  $this->RefreshEngine($http, $dyn, '<?dyn="SelectByValue" op="SetDicomDest"?>');
+  for my $i ( $dest_text, @dest_keys){
+    $http->queue("<option value=\"$i\"" .
+      ($i eq $this->{SelectedDicomDestination} ? " selected" : "") .
+      ">$i</option>");
+  }
+  $http->queue('</select>');
+  unless($this->{SelectedDicomDestination} eq $dest_text){
+    # Add the button to send the files
+    $this->RefreshEngine($http, $dyn,
       '<?dyn="NotSoSimpleButton" ' .
       'op="SendTheseFiles" ' .
       'caption="Send These Files" ' .
       'sync="Update();"?>');
-    return;
   }
+}
+sub SetDicomDest{
+  my($this, $http, $dyn) = @_;
+
+  $this->{SelectedDicomDestination} = $dyn->{value};
+}
+sub SendToDropDown2{
+  my($this, $http, $dyn) = @_;
+  # This call begins the <select>, and also ties the op callback
+  $this->SelectDelegateByValue($http, {
+    op => "SomethingIHaventWrittenYet",
+    sync => "Update();",
+  });
+
+  my @collections = sort keys %{$this->{Collections}};
+  for my $col ("none", @collections){
+    $http->queue("<option value=\"$col\"" .
+      ($col eq $this->{SelectedCollection} ? " selected" : "") .
+      ">$col</option>");
+  }
+  $http->queue("</select>");
+  # if($this->{SelectedCollection} ne "none"){
+  #   $this->SiteDropDown($http, $dyn);
+  # }
 }
 sub CollectionDropDown{
   my($this, $http, $dyn) = @_;
