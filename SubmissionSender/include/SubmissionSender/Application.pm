@@ -12,6 +12,7 @@ use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
+use Posda::NewDicomSender;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
@@ -44,6 +45,8 @@ sub new {
   $this->{title} = "Posda Curation Tools";
   bless $this, $class;
 
+  $this->{FoundFiles} = [];
+
   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
   }
@@ -61,7 +64,8 @@ sub new {
   $this->{width} = $width;
   $this->{menu_width} = 100;
   $this->{content_width} = $this->{width} - $this->{menu_width};
-  $this->SetInitialExpertAndDebug("bbennett");
+  # TODO:  This needs to be moved to a config file!
+  $this->SetInitialExpertAndDebug("quasar");
   if($this->CanDebug){
     Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
@@ -250,7 +254,9 @@ sub ContentResponse{
     my $to_process = @{$this->{DirList}};
     my $processed = @{$this->{DirectoriesProcessed}};
     my $in_process = keys %{$this->{DirectoriesInProcess}};
-    my $files_found = keys %{$this->{FoundFiles}};
+    # change this to be the length of the FoundFiles array?
+    # my $files_found = keys %{$this->{FoundFiles}};
+    my $files_found = scalar @{$this->{FoundFiles}};
     $http->queue(
       '<h3>Scanning Directories for files with DICOM Meta Headers</h3>' .
       '<table><tr><td align="right">Waiting directories:</td>' .
@@ -307,6 +313,32 @@ sub SendToDropDown{
       'sync="Update();"?>');
   }
 }
+sub SendTheseFiles{
+  my($this, $http, $dyn) = @_;
+
+  print "Beginning send of files\n";
+
+  # print "$this->{FoundFiles}\n";
+
+
+  # Pull the destination data from the config file
+  my $dest = $this->{Environment}
+                  ->{DicomDestinations}
+                  ->{$this->{SelectedDicomDestination}};
+  my $host = $dest->{host};
+  my $port = $dest->{port};
+  my $calling = $dest->{calling_ae};
+  my $called = $dest->{called_ae};
+
+  print "$host, $port, $calling, $called\n";
+
+  # Now build the NewDicomSender class
+  # NewDicomSender call signature: 
+  # $host, $port, $called, $calling, $file_list
+  my $sender = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
+
+}
+
 sub SetDicomDest{
   my($this, $http, $dyn) = @_;
 
@@ -564,13 +596,15 @@ sub CollectMetaHeaderLine{
     } elsif($line =~ /xfr_stx:\s*(.*)$/){
       $xfr_stx = $1
     } elsif($line =~ /^####/){
-      $this->{FoundFiles}->{$file} = {
-        offset => $offset,
-        length => $length,
-        sop_class => $sop_class,
+      push(@{$this->{FoundFiles}}, {
+      # $this->{FoundFiles}->{$file} = {
+        file => $file,
+        xfr_stx => $xfr_stx,
+        abs_stx => $sop_class,
         sop_inst => $sop_inst,
-        xfr_stx => $xfr_stx
-      };
+        dataset_offset => $offset,
+        dataset_size => $length,
+      });
       if(exists $this->{SopClass}->{$sop_class}->{$xfr_stx}){
         $this->{SopClass}->{$sop_class}->{$xfr_stx} += 1;
       } else {
