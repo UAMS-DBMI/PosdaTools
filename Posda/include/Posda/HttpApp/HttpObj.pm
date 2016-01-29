@@ -2233,13 +2233,6 @@ sub PopUpLinkAndRefresh{
 my $css_style_header = <<EOF;
 <style type="text/css"> 
 <!-- 
-input , textarea, select, option { 
-  font-family: "Times New Roman", Times, serif; 
-  font-size: 11px; 
-}
-input {
-  font-weight: bold; 
-}
 #content {
   padding: 20px;
 }

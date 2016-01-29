@@ -177,9 +177,9 @@ EOF
     my($this, $http, $dyn) = @_;
     if($this->CanDebug){
       $this->RefreshEngine($http, $dyn,
-        '<span onClick="javascript:' .
+        '<button class="btn btn-sm btn-info" onClick="javascript:' .
         "rt('DebugWindow','Refresh?obj_path=Debug'" .
-        ',1600,1200,0);">debug</span><br>');
+        ',1600,1200,0);">debug</button>');
     } else {
       print STDERR "Can't debug\n";
     }

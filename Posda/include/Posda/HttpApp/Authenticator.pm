@@ -18,29 +18,41 @@ use Debug;
 		 'onClick="javascript:CloseThisWindow();">Close' .
          '</span><br><?dyn="DebugButton"?>';
         $this->RefreshEngine($http, $dyn, $resp);
-      } else {
+	} else {
         $this->RefreshEngine($http, $dyn, "Logged in: $user<br />" .
-          '<span onClick="javascript:' .
+          '<button class="btn btn-sm btn-danger" onClick="javascript:' .
           "PosdaGetRemoteMethod('AppControllerLogout', ''," .
-          'function(){});">logout</span><br />' .
+          'function(){});">Logout</button>' .
           '<?dyn="DebugButton"?>');
       }
     } else {
-      $this->RefreshEngine($http, $dyn,
-        '<form onSubmit="' .
-        "PosdaGetRemoteMethod('AppControllerLogin'," .
-        "'name='+this.elements['UserName'].value+'&amp;" .
-        "password='+this.elements['UserEnteredPassword'].value, null);" .
-        ' return false;">' . "\n" .
-        '<table><tr><td align="right">Username:</td>' .
-        '<td align="left">' .
-        '<input name="UserName">' .
-        '</td></tr><tr>'. "\n" . '<td align="right">Password:</td>' .
-        '<td align="left">' .
-        '<input type="password" name="UserEnteredPassword">' .
-        '</td></tr>'. "\n" . '<tr><td></td><td>' .
-        '<input type="submit" name="Submit" value="Login">' .
-        '</td><tr></table></form>'
+      # $this->RefreshEngine($http, $dyn,
+      #   '<form onSubmit="' .
+      #   "PosdaGetRemoteMethod('AppControllerLogin'," .
+      #   "'name='+this.elements['UserName'].value+'&amp;" .
+      #   "password='+this.elements['UserEnteredPassword'].value, null);" .
+      #   ' return false;">' . "\n" .
+      #   '<table><tr><td align="right">Username:</td>' .
+      #   '<td align="left">' .
+      #   '<input name="UserName">' .
+      #   '</td></tr><tr>'. "\n" . '<td align="right">Password:</td>' .
+      #   '<td align="left">' .
+      #   '<input type="password" name="UserEnteredPassword">' .
+      #   '</td></tr>'. "\n" . '<tr><td></td><td>' .
+      #   '<input class="btn btn-sm btn-default" type="submit" name="Submit" value="Login">' .
+      #   '</td><tr></table></form>'
+      # );
+      $this->RefreshEngine($http, $dyn, <<EOF
+<form onSubmit="PosdaGetRemoteMethod('AppControllerLogin', 'name='+this.elements['UserName'].value+'&amp;password='+this.elements['UserEnteredPassword'].value, null); return false;">
+  <div class="form-group">
+    <input type="input" class="form-control" id="UserName" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="UserEnteredPassword" placeholder="Password">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+EOF
       );
     }
   }
