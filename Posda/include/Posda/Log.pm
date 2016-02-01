@@ -1,34 +1,55 @@
 package Posda::Log;
 # This is a very simple logging library.
+# Usage is simple:
 #
+# use Posda::Log;  # ensure this comes AFTER your package declaration!
+#
+# # Or, if you want to use a custom name for the logger:
+# use Posda::Log "logger_name";
+#
+# Logging functions will then be imported as below:
 # These levels are supported, Low to High:
-# 0 DEBUG
-# 1 INFO
-# 2 WARN
-# 3 ERROR
-# 4 FATAL
+#
+# DEBUG
+# INFO
+# WARN
+# ERROR
+# FATAL
+#
+# If given,  logger_name will be printed instead of the calling module.
 
-require Exporter;
-
-@ISA = qw(Exporter);
-@EXPORT = qw(DEBUG INFO WARN ERROR FATAL);
 my $configured;
 
-sub DEBUG {#{{{
-  dispatch_message(0, @_);
+sub import {
+  no strict 'refs';
+
+  my ($this, $logger_name) = @_;
+
+  # If a logger name is not used, just use the caller's name
+  # This is probably what the user wants 99% of the time anyway.
+  if (not defined ($logger_name)) {
+    $logger_name = caller;
+  }
+
+  my $caller = caller;
+
+  # Manually build a set of closures in the caller's namespace
+  *{ "${caller}::DEBUG" } = sub {
+    dispatch_message(0, "$logger_name: @_");
+  };
+  *{ "${caller}::INFO" } = sub {
+    dispatch_message(1, "$logger_name: @_");
+  };
+  *{ "${caller}::WARN" } = sub {
+    dispatch_message(2, "$logger_name: @_");
+  };
+  *{ "${caller}::ERROR" } = sub {
+    dispatch_message(3, "$logger_name: @_");
+  };
+  *{ "${caller}::FATAL" } = sub {
+    dispatch_message(4, "$logger_name: @_");
+  };
 }
-sub INFO {
-  dispatch_message(1, @_);
-}
-sub WARN {
-  dispatch_message(2, @_);
-}
-sub ERROR {
-  dispatch_message(3, @_);
-}
-sub FATAL {
-  dispatch_message(4, @_);
-}#}}}
 
 
 { # inline package def
@@ -60,7 +81,6 @@ sub FATAL {
     }
   }
 };
-
 
 our @names = qw(DEBUG INFO WARN ERROR FATAL);
 our @outputs = ();
@@ -99,10 +119,10 @@ sub init_screen_only {
 }
 
 sub dispatch_message {
-  $level = shift @_;
+  my $level = shift @_;
   if (not defined($configured)){
     init_screen_only();
-    WARN "Explicit Posda::Log::init not called, defaulting to screen-only output!";
+    dispatch_message(2, "Explicit Posda::Log::init not called, defaulting to screen-only output!");
   }
 
   # apply rules based on current setting
