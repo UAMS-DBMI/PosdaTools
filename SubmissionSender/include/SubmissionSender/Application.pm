@@ -13,6 +13,7 @@ use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
 use Posda::NewDicomSender;
+use Posda::Log;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
@@ -25,6 +26,8 @@ my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
+Posda::Log::init("default.log");
+
 my $expander = <<EOF;
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
@@ -254,8 +257,6 @@ sub ContentResponse{
     my $to_process = @{$this->{DirList}};
     my $processed = @{$this->{DirectoriesProcessed}};
     my $in_process = keys %{$this->{DirectoriesInProcess}};
-    # change this to be the length of the FoundFiles array?
-    # my $files_found = keys %{$this->{FoundFiles}};
     my $files_found = scalar @{$this->{FoundFiles}};
     $http->queue(
       '<h3>Scanning Directories for files with DICOM Meta Headers</h3>' .
@@ -316,10 +317,7 @@ sub SendToDropDown{
 sub SendTheseFiles{
   my($this, $http, $dyn) = @_;
 
-  print "Beginning send of files\n";
-
-  # print "$this->{FoundFiles}\n";
-
+  DEBUG "Beginning send of files";
 
   # Pull the destination data from the config file
   my $dest = $this->{Environment}
@@ -330,12 +328,14 @@ sub SendTheseFiles{
   my $calling = $dest->{calling_ae};
   my $called = $dest->{called_ae};
 
-  print "$host, $port, $calling, $called\n";
+  DEBUG "$host, $port, $calling, $called\n";
 
   # Now build the NewDicomSender class
   # NewDicomSender call signature: 
   # $host, $port, $called, $calling, $file_list
   my $sender = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
+
+  DEBUG "Sender call completed. Everything should be fine, now?";
 
 }
 
@@ -597,7 +597,6 @@ sub CollectMetaHeaderLine{
       $xfr_stx = $1
     } elsif($line =~ /^####/){
       push(@{$this->{FoundFiles}}, {
-      # $this->{FoundFiles}->{$file} = {
         file => $file,
         xfr_stx => $xfr_stx,
         abs_stx => $sop_class,

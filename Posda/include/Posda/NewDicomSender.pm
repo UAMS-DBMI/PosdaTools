@@ -8,6 +8,7 @@ use Dispatch::Dicom::MessageAssembler;
 use Posda::Command;
 
 package Posda::NewDicomSender;
+use Posda::Log;
 
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
@@ -89,18 +90,16 @@ sub new {
     called => $called,
     calling => $calling,
     StartTime => time,
-    file_list => $file_list,
+    FilesToSend => $file_list,
   };
   bless $this, $class;
 
-  print "file_list contains:\n";
-  foreach my $item (@{$this->{file_list}}) {
-    print "$item\n";
+  DEBUG "FilesToSend contains:";
+  foreach my $item (@{$this->{FilesToSend}}) {
+    DEBUG "$item->{file}";
   }
 
-
-  # $this->Initialize;
-  # Dispatch::Select::Background->new($this->StatusReporter)->queue;
+  $this->Initialize;
   return $this;
 }
 sub StatusReporter{
@@ -171,29 +170,18 @@ sub Initialize{
     max_i => "1",
     max_p => "1",
   };
-  # TODO: No need to build list of files, this should be
-  # provided by SubmissionSender (or other caller)
-  $this->{FilesToSend} = [];
+
   $this->{FilesSent} = [];
   $this->{FilesNotSent} = [];
   $this->{FilesInFlight} = {};
   $this->{FilesErrors} = [];
   my %pcs;
-  for my $file (sort keys %{$this->{info}->{FilesToDigest}}){
-    my $dig = $this->{info}->{FilesToDigest}->{$file};
-    my $finfo = $this->{info}->{FilesByDigest}->{$dig};
-    push(@{$this->{FilesToSend}}, {
-      file => $file,
-      xfr_stx => $finfo->{xfr_stx},
-      abs_stx => $finfo->{sop_class_uid},
-      sop_inst => $finfo->{sop_inst_uid},
-      dataset_offset => $finfo->{dataset_start_offset},
-      dataset_size => $finfo->{meta_header}->{DataSetSize},
-    });
-    my $abs = $this->{info}->{FilesByDigest}->{$dig}->{sop_class_uid};
-    my $xfr = $this->{info}->{FilesByDigest}->{$dig}->{xfr_stx};
-    $pcs{$abs}->{$xfr} = 1;
+  # Build the presentation context list, and the Message Handlers list
+  for my $file (@{$this->{FilesToSend}}) {
+    $pcs{$file->{abs_stx}}->{$file->{xfr_stx}} = 1;
+    $MsgHandlers->{$file->{abs_stx}} = "Dispatch::Dicom::Storage";
   }
+
   my $pc_id = 1;
   for my $a (keys %pcs){
     for my $t (keys %{$pcs{$a}}){
@@ -274,6 +262,7 @@ sub FileSent{
   my($this, $file) = @_;
   my $sub = sub {
     my($obj, $status) = @_;
+    DEBUG "A file has been sent.";
     my $f = $this->{FilesInFlight}->{$file};
     $f->{disposition} = "Send Status: $status";
     delete $this->{FilesInFlight}->{$file};
@@ -334,27 +323,28 @@ sub FinalizeStatus{
     end_time => time,
     elapsed => time - $this->{StartTime},
   };
-  my $results;
-  if(-f $this->{ResultsFile}){
-    eval {
-      $results = Storable::retrieve($this->{ResultsFile});
-    };
-    if($@){
-      $results = [
-        { error => "Prior results file failed to parse $@" },
-      ];
-    }
-  }
+  # my $results;
+  # if(-f $this->{ResultsFile}){
+  #   eval {
+  #     $results = Storable::retrieve($this->{ResultsFile});
+  #   };
+  #   if($@){
+  #     $results = [
+  #       { error => "Prior results file failed to parse $@" },
+  #     ];
+  #   }
+  # }
   if(exists $this->{Error}){
     $status->{error} = $this->{Error};
   }
-  push(@{$results}, $status);
-  Storable::store($results, $this->{ResultsFile});
-  exit 0;
+  # push(@{$results}, $status);
+  # Storable::store($results, $this->{ResultsFile});
+  # exit 0;  # Exiting here will kill the application thread, probably a bad idea?
 }
 ################ Association Callbacks
 sub ConnectionCallback{
   my($this) = @_;
+  print("ConnectionCallback called\n");
   my $sub = sub {
     my($con) = @_;
     $this->{State} = "AssociationConnected";
@@ -366,6 +356,7 @@ sub ConnectionCallback{
 }
 sub DisconnectCallback{
   my($this) = @_;
+  print("DisconnectCallback called\n");
   my $sub = sub {
     my($con) = @_;
     my $status;
@@ -386,6 +377,7 @@ sub DisconnectCallback{
 }
 sub ReleaseCallback{
   my($this) = @_;
+  print("ReleaseCallback called\n");
   my $sub = sub {
     my($con) = @_;
     $this->{State} = "PeerRequestedRelease";
