@@ -9,6 +9,7 @@ package Posda::Log;
 # 4 FATAL
 
 require Exporter;
+use Cwd 'abs_path';
 
 @ISA = qw(Exporter);
 @EXPORT = qw(DEBUG INFO WARN ERROR FATAL);
@@ -52,6 +53,7 @@ sub FATAL {
     # only print the date prefix to files
     my $prefix = "";
     if ($this->{output} ne STDOUT) {
+      #print "Prefix set, so this isn't STDOUT!!\n";
       $prefix = gmtime() . ": ";
     }
 
@@ -77,10 +79,12 @@ sub init {
   # TODO: This should be configurable
   # Maybe pass in a list of Log::Output objects?
   if (defined($filename)) {
-    open(my $FH, ">>", $filename);
+    $abs_path = abs_path($filename);
+    print "Posda::Log opening log file at: $abs_path\n";
+    open(my $FH, ">>", $abs_path);
     print {$FH} gmtime() . ": Logfile Opened\n";
     my $file = Posda::Log::Output->new({
-        level => 1,
+        level => 0,
         output => $FH
     });
     push @outputs, $file;

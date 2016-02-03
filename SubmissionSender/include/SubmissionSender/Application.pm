@@ -243,38 +243,90 @@ sub MenuResponse{
 }
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
+  DEBUG "ContentResponse called";
   if($this->{Mode} eq "ScanningDir"){
     return $http->queue("busy");
   }
   if($this->{Mode} eq "Selection"){
     $this->RefreshEngine($http, $dyn,
       'Select a Collection <?dyn="CollectionDropDown"?>' . 
-      '<br><hr><br><?dyn="SummarizeSelection"?>'
+      '<br><?dyn="SummarizeSelection"?>'
     );
     return;
+  }
+  if($this->{Mode} eq "Sending"){
+      # see where its at?
+      # Display the current progress of the send
+      my $statii = $this->{NewDicomSender}->ReportStatus();
+      my $files_sent = scalar @{$statii->{FilesSent}};
+      my $files_to_send = scalar @{$statii->{FilesToSend}};
+      my $files_not_sent = scalar @{$statii->{FilesNotSent}};
+
+      $http->queue(<<"EOF"
+<h3>Sending Progress</h3>
+<table class="table" style="width: 45%">
+<tr>
+    <td>Time Elapsed</td>
+    <td>$statii->{Elapsed}</td>
+</tr>
+<tr>
+    <td>Files Sent</td>
+    <td>$files_sent</td>
+</tr>
+<tr>
+    <td>Files Left to Send</td>
+    <td>$files_to_send</td>
+</tr>
+<tr>
+    <td>Errors</td>
+    <td>$files_not_sent</td>
+</tr>
+</table>
+EOF
+      );
+      if (not $this->{NewDicomSender}->{InProcess}) {
+        $this->{Mode} = "Selection";
+      }
+      $this->AutoRefresh;
+      return;
   }
   if($this->{Mode} eq "ProcessingDirectories"){
     my $to_process = @{$this->{DirList}};
     my $processed = @{$this->{DirectoriesProcessed}};
     my $in_process = keys %{$this->{DirectoriesInProcess}};
     my $files_found = scalar @{$this->{FoundFiles}};
-    $http->queue(
-      '<h3>Scanning Directories for files with DICOM Meta Headers</h3>' .
-      '<table><tr><td align="right">Waiting directories:</td>' .
-      '<td align="left">' . $to_process . '</td></tr><tr>' .
-      '<td align="right">Processed directories:</td><td align="left">' .
-      $processed . '</td></tr>' .
-      '<td align="right">Directories in process:</td><td align="left">' .
-      $in_process . '</td></tr>' .
-      '<td align="right">DICOM files found:</td><td align="left">' .
-      $files_found . '</td></tr>' .
-      '</table>');
+    $http->queue(<<"EOF"
+<h3>Scanning Directories for files with DICOM Meta Headers</h3> 
+<table class="table" style="width: 45%">
+<tr>
+  <td>Waiting directories:</td> 
+  <td>$to_process</td>
+</tr>
+<tr> 
+  <td>Processed directories:</td>
+  <td>$processed</td>
+</tr> 
+  <td>Directories in process:</td>
+  <td>$in_process</td>
+</tr> 
+  <td>DICOM files found:</td>
+  <td align="left">$files_found</td>
+</tr> 
+</table>
+EOF
+    );
     return;
   }
   if($this->{Mode} eq "ProcessingComplete"){
-    $http->queue('<h3>Presentation Contexts Required:</h3>' .
-      '<table border="1"><tr><th>Abstract Syntax</th>' .
-      '<th>Transfer Syntax</th><th>Number Files</th></tr>'
+    $http->queue(<<"EOF"
+<h3>Presentation Contexts Required:</h3> 
+<table class="table" style="width: 65%">
+<tr>
+    <th>Abstract Syntax</th> 
+    <th>Transfer Syntax</th>
+    <th>Number Files</th>
+</tr>
+EOF
     );
     for my $i (0 .. $#{$this->{PresentationContexts}}){
       $http->queue("<tr><td>$this->{PresentationContexts}->[$i]->[0]</td>" .
@@ -290,6 +342,8 @@ sub ContentResponse{
 }
 sub SendToDropDown{
   my($this, $http, $dyn) = @_;
+  DEBUG "SendToDropDown called";
+
   my $dicom_destinations = $this->{Environment}->{DicomDestinations};
   my @dest_keys = sort keys %$dicom_destinations;
 
@@ -333,15 +387,18 @@ sub SendTheseFiles{
   # Now build the NewDicomSender class
   # NewDicomSender call signature: 
   # $host, $port, $called, $calling, $file_list
-  my $sender = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
+  $this->{NewDicomSender} = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
 
   DEBUG "Sender call completed. Everything should be fine, now?";
+  # Should probably go into a Sending mode now, but let's try this?
+  $this->{Mode} = "Sending";
 
 }
 
 sub SetDicomDest{
   my($this, $http, $dyn) = @_;
 
+  DEBUG "SelectedDicomDestination set to $dyn->{value}";
   $this->{SelectedDicomDestination} = $dyn->{value};
 }
 sub SendToDropDown2{
@@ -527,15 +584,35 @@ sub SummarizeSelection{
     }
   }
   $this->{DirList} = \@all_dirs;
-  $this->RefreshEngine($http, $dyn, "Current Selection:<table><tr>" .
-    "<th>Num dirs</th><th>Num Subjects</th><th>Num Sites</th>" .
-    "<th>Num Collections</th></tr><tr>" .
-    "<td>$num_dirs</td><td>$num_subj</td>" .
-    "<td>$num_sites</td><td>$num_colls</td></tr></table>" .
-    '<?dyn="NotSoSimpleButton" ' .
-    'op="AddDirectoriesForAnalysis" ' .
-    'caption="Add These Directories to Send Batch" ' .
-    'sync="Update();"?>');
+  # $this->RefreshEngine($http, $dyn, "Current Selection:<table><tr>" .
+  #   "<th>Num dirs</th><th>Num Subjects</th><th>Num Sites</th>" .
+  #   "<th>Num Collections</th></tr><tr>" .
+  #   "<td>$num_dirs</td><td>$num_subj</td>" .
+  #   "<td>$num_sites</td><td>$num_colls</td></tr></table>" .
+  #   '<?dyn="NotSoSimpleButton" ' .
+  #   'op="AddDirectoriesForAnalysis" ' .
+  #   'caption="Add These Directories to Send Batch" ' .
+  #   'sync="Update();"?>');
+  $this->RefreshEngine($http, $dyn, <<"EOF"
+<p>Current Selection:<p>
+<table class="table" style="width: 65%">
+    <tr> 
+        <th>Num dirs</th>
+        <th>Num Subjects</th>
+        <th>Num Sites</th> 
+        <th>Num Collections</th>
+    </tr>
+    <tr> 
+        <td>$num_dirs</td>
+        <td>$num_subj</td> 
+        <td>$num_sites</td>
+        <td>$num_colls</td>
+    </tr>
+</table> 
+
+<?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();"?>
+EOF
+    );
 }
 sub AddDirectoriesForAnalysis{
   my($this, $http, $dyn) = @_;

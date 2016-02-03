@@ -8,7 +8,7 @@ use Dispatch::Dicom::MessageAssembler;
 use Posda::Command;
 
 package Posda::NewDicomSender;
-use Posda::Log;
+use Posda::Log; # Must be used after package declaration!
 
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
@@ -118,42 +118,23 @@ sub StatusReporter{
   return $sub;
 }
 sub ReportStatus{
+  # Generate status report hash
   my($this) = @_;
-  # if still InProcess,
-  unless($this->{InProcess}) { return }
-  # Report Status on STDOUT
+
   my %statii;
-#    $statii{Status} = $this->{State};
-  my $elapsed = time - $this->{StartTime};
+
   $statii{Elapsed} = time - $this->{StartTime};
-  my $files_to_send = @{$this->{FilesToSend}};
-  if($files_to_send){
-    $statii{FilesToSend} = $files_to_send;
-  }
-  my $files_sent = @{$this->{FilesSent}};
-  if($files_sent){
-    $statii{FilesSent} = $files_sent;
-  }
-  my $files_not_sent = @{$this->{FilesNotSent}};
-  if($files_not_sent){
-    $statii{FilesNotSent} = $files_not_sent;
-  }
-  my $files_in_flight = keys %{$this->{FilesInFlight}};
-  if($files_in_flight){
-    $statii{FilesInFlight} = $files_in_flight;
-  }
-  my $files_errors = @{$this->{FilesErrors}};
-  if($files_errors){
-    $statii{FilesErrors} = $files_errors;
-  }
+  $statii{FilesToSend} = $this->{FilesToSend};
+  $statii{FilesSent} = $this->{FilesSent};
+  $statii{FilesNotSent} = $this->{FilesNotSent};
+  $statii{FilesInFlight} = $this->{FilesInFlight};
+  $statii{FilesErrors} = $this->{FilesErrors};
+
   if(exists $this->{Error}) {
     $statii{Error} = $this->{Error};
   }
-  print "Status=$this->{State}";
-  for my $i (keys %statii){
-    print "&$i=$statii{$i}";
-  }
-  print "\n";
+
+  return \%statii;
 }
 sub Initialize{
   my($this) = @_;
@@ -344,7 +325,7 @@ sub FinalizeStatus{
 ################ Association Callbacks
 sub ConnectionCallback{
   my($this) = @_;
-  print("ConnectionCallback called\n");
+  DEBUG "ConnectionCallback called";
   my $sub = sub {
     my($con) = @_;
     $this->{State} = "AssociationConnected";
@@ -356,7 +337,7 @@ sub ConnectionCallback{
 }
 sub DisconnectCallback{
   my($this) = @_;
-  print("DisconnectCallback called\n");
+  DEBUG "DisconnectCallback called";
   my $sub = sub {
     my($con) = @_;
     my $status;
@@ -377,7 +358,7 @@ sub DisconnectCallback{
 }
 sub ReleaseCallback{
   my($this) = @_;
-  print("ReleaseCallback called\n");
+  DEBUG "ReleaseCallback called";
   my $sub = sub {
     my($con) = @_;
     $this->{State} = "PeerRequestedRelease";
