@@ -4,8 +4,8 @@
 // 
 {
   "Greeting": { },
-  "HostName": "bills_mac",
-  "Title": "Browse Dicom Standard - bills_mac",
+  "HostName": "tcia-utilities",
+  "Title": "Browse Dicom Standard - tcia-utilities",
   "LoginTitle": "Login for Browsing Dicom Standard",
   "LogoImage": "/PosdaLogo.png",
   "LogoHeight": "81",

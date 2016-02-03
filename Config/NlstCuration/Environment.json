@@ -1,0 +1,41 @@
+//  $Source: /home/bbennett/pass/archive/FileDistConfig/JavaScriptTest/Environment.json,v $
+//  $Date: 2014/05/22 13:01:03 $
+//  $Revision: 1.3 $
+// 
+{
+  "ApplicationInitClass" : "PosdaCuration::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/cache/bbennett/Data/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "LoginTemp" : "/cache/bbennett/Data/TempDirectory",
+  "JavascriptRoot" : "/home/bbennett/PosdaTools/PosdaCuration/javascript",
+  "DicomInfoCache" : "/bennett-temp/Data",
+  "database_host" : "tcia-utilities",
+  "database_name" : "nlst_images",
+  "ExtractionManagerPort" : "64613",
+  "ExtractionRoot" :
+     "/bennett-temp/Data/HierarchicalExtractions/data",
+  "extraction_root" :
+     "/bennett-temp/Data/HierarchicalExtractions/data",
+  "UserInfoDir" : "/bennett-temp/UserData",
+  "IsNlstCuration" : 1,
+  "NlstGoodPatlist" : "/bennett-temp/NLST/PatientListPlus",
+  "NlstBadPatlist" : "/bennett-temp/NLST/PatientList",
+  "DicomDestinations" : {
+    "IntakeServer" : {
+      "host" : "tcia-intake-1",
+      "port" : "11112",
+      "calling_ae" : "POSDA",
+      "called_ae" : "CTP"
+    },
+    "LocalLoopback" : {
+      "host" : "localhost",
+      "port" : "64611",
+      "calling_ae" : "SEND_LOOP",
+      "called_ae" : "RCV_LOOP"
+    },
+  }
+}

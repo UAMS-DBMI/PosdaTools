@@ -1,0 +1,15 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/NewItcToolsConfig/Identity.json,v $
+//  $Date: 2014/09/22 18:50:25 $
+//  $Revision: 1.1 $
+// 
+{
+  "Greeting": { },
+  "ImageName": "Cloud.jpg",
+  "LogoImage": "/ITCLogoWeb.jpg",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Itc",
+  "HostName": "tcia-utilities",
+  "Title": "ITC QA Tools - tcia-utilities",
+  "LoginTitle": "Login Page for NewItcTools",
+}

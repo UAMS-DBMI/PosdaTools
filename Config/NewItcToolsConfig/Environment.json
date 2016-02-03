@@ -1,0 +1,35 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/NewItcToolsConfig/Environment.json,v $
+//  $Date: 2014/09/22 18:50:12 $
+//  $Revision: 1.1 $
+// 
+{
+  "ApplicationInitClass" : "NewItcTools::NewStart",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AuthenticationType" : "DB",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
+  "RrtProtocolDefs" : 
+    "/home/bbennett/PosdaTools/NewItcTools/config/rrt_protocol_defs",
+  "StdTissueNames" : 
+    "/home/bbennett/PosdaTools/NewItcTools/config/std_tissue_names",
+  "SubmissionDir" : 
+    "/cache/bbennett/NewItcToolsData/submission",
+  "ArchiveDir" :
+    "/cache/bbennett/NewItcToolsData/archive",
+  "CompletedArchiveDir" :
+    "/cache/bbennett/NewItcToolsData/finalize",
+  "CacheDir" : "/cache/bbennett",
+  "PersistentDir" :
+    "/cache/bbennett/NewItcToolsData/persistent",
+  "GlobalPersistentDir" :
+    "/cache/bbennett/NewItcToolsData/global_persistent",
+  "WorkingDir" : 
+    "/cache/bbennett/NewItcToolsData/working",
+  "TempDir" : 
+    "/cache/bbennett/NewItcToolsData/temp",
+  "tools_db_defs_dir" :
+    "/cache/bbennett/NewItcToolsData/db_defs",
+}

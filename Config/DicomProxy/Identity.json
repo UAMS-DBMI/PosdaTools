@@ -4,7 +4,7 @@
 // 
 {
   "Greeting": { },
-  "HostName": "bills_mac",
+  "HostName": "tcia-utilities",
   "Title": "Dicom Transparent Proxy",
   "LoginTitle": "Login for Dicom Transparent Proxy",
   "LogoImage": "/PosdaLogo.png",

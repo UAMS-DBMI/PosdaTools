@@ -3,8 +3,8 @@
 //  $Revision: 1.6 $
 //
 {
-  "database" : "posda_files",
-  "log_file" : "/cache/bbennett/Logs/PosdaDbImport.log",
+  "database" : "nlst_images",
+  "log_file" : "/cache/bbennett/Logs/NlstDbImport.log",
   "sub_process_program" : "ProcessPosdaFilesInDb.pl",
   "chunk_size" : 10,
   "parallelism" : 1,

@@ -1,0 +1,18 @@
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/JavaScriptTest/Identity.json,v $
+//  $Date: 2014/09/22 18:49:45 $
+//  $Revision: 1.1 $
+// 
+{
+  "Greeting": { },
+  "HostName": "JavaScriptTestApp - on Bill's iMac",
+  "Title": "JavaScript Test Application - on Bill's iMac",
+  "LoginTitle": "Login for JavaScript Test App",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 780,
+  "width": 1000,
+  "menu_width": 100,
+  "content_width": 900,
+}

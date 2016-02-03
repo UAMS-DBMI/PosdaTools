@@ -8,8 +8,8 @@
   "ApplicationLoginMethod" : "Login",
   "AuthenticationType" : "DB",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/Users/bbennett/cache/Login.db",
+  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/Users/bbennett/PosdaTools/HttpRoot/http_root",
-  "AnalysisRootDir" : "/Users/bbennett/cache/ProxyData/Analysis",
+  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AnalysisRootDir" : "/cache/bbennett/ProxyData/Analysis",
 }
