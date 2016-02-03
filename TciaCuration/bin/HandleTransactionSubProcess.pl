@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/TciaCuration/bin/HandleTransactionSubProcess.pl,v $
-#$Date: 2015/12/15 14:14:45 $
-#$Revision: 1.17 $
+#$Date: 2016/01/26 19:58:45 $
+#$Revision: 1.18 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package
@@ -301,12 +301,12 @@ unless($#ARGV == 0) { die $help }
     # $this->{desc} = {
     #   patient_id => <patient_id>,
     #   studies => {
-    #     <db_id> => {
+    #     <study_uid> => {
     #       pid => <patient_id>,
     #       desc => <study description>,
     #       uid => <study instance uid>,
     #       series => {
-    #         <db_id> => {
+    #         <series_uid> => {
     #           body_part => <body_part>,
     #           desc => <series_desc>,
     #           modality => <modality>,
@@ -316,8 +316,7 @@ unless($#ARGV == 0) { die $help }
     #               sop_instance_uid => <sop_instance_uid>,
     #               file => <file_path>,
     #               file_size => <file_size>,
-    #               curation_time_stamp => <date/time>,
-    #               md5 => <md5 digest (leading zeros surpressed)>,
+    #               md5 => <md5 digest>,
     #               visibility => 1 | 0,
     #             },
     #             ...

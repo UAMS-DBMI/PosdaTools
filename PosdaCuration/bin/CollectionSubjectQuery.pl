@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/CollectionQuery.pl,v $ #$Date: 2016/01/26 19:52:11 $
-#$Revision: 1.3 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/CollectionSubjectQuery.pl,v $ #$Date: 2016/01/26 19:50:07 $
+#$Revision: 1.1 $
 #
 use strict;
 use DBI;
@@ -11,22 +11,22 @@ select
   series_date, patient_name, patient_id, sex, series_instance_uid,
   study_instance_uid, study_date, study_description, accession_number,
   study_id,
-  count(distinct file_id)
+  digest
 from
-  ctp_file natural join file_patient natural join
+  ctp_file natural join file_patient natural join file natural join
   file_series natural join file_study
 where
-  project_name = ? and site_name = ? and visibility is null
-group by
-  modality, body_part_examined, series_description,
-  series_date, patient_name, patient_id, sex, series_instance_uid,
-  study_instance_uid, study_date, study_description, accession_number,
-  study_id
+  project_name = ? and site_name = ? and patient_id = ? and visibility is null
 order by
   study_instance_uid, series_instance_uid
 EOF
+#group by
+#  modality, body_part_examined, series_description,
+#  series_date, patient_name, patient_id, sex, series_instance_uid,
+#  study_instance_uid, study_date, study_description, accession_number,
+#  study_id
 my $p = $dbh->prepare($q) or die "$!";
-$p->execute($ARGV[1], $ARGV[2]) or die $!;
+$p->execute($ARGV[1], $ARGV[2], $ARGV[3]) or die $!;
 my @list;
 while(my $h = $p->fetchrow_hashref){
   push(@list, $h);
@@ -52,7 +52,7 @@ for my $i (@list) {
   if(defined $i->{study_id}) {$st_id = $i->{study_id}}
   print("$i->{patient_id}|$pname|$i->{study_instance_uid}|$st_date|$t_desc|" .
     "$i->{series_instance_uid}|$ser_date|$desc|$i->{modality}|$sex|$acces|" .
-    "$st_id|$body_part|$i->{count}\n");
+    "$st_id|$body_part|$i->{digest}\n");
 }
 
 #my($pat_id, $pname, $st_inst, $st_date, $st_desc,

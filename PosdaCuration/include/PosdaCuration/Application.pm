@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/Application.pm,v $
-#$Date: 2016/01/15 18:06:15 $
-#$Revision: 1.6 $
+#$Date: 2016/01/26 19:52:11 $
+#$Revision: 1.7 $
 #
 use strict;
 package PosdaCuration::Application;
@@ -366,17 +366,12 @@ sub Collections{
       return $this->CheckAgainstPublic($http, $dyn);
     }
     return $this->DbCollectionsAndExtractions($http, $dyn);
-  } elsif($this->{CollectionMode} eq "PendingDiscard"){
-    return $this->PendingDiscard($http, $dyn);
-  } elsif($this->{CollectionMode} eq "PendingHideSubject"){
-    return $this->PendingHideSubject($http, $dyn);
-  } elsif($this->{CollectionMode} eq "PendingHideSeries"){
-    return $this->PendingHideSeries($http, $dyn);
-  } elsif($this->{CollectionMode} eq "InfoDisplay"){
-    return $this->DisplayInfo($http, $dyn);
+  } elsif($this->can($this->{CollectionMode})){
+    my $meth = $this->{CollectionMode};
+    $this->$meth($http, $dyn);
   } elsif($this->{CollectionMode} eq "MergeOpenDirectories"){
     return $this->MergeContent($http, $dyn);
-  } elsif($this->{CollectionMode} eq "GeneralPurposeEditor"){
+  } elsif($this->{CollectionMode} eq "GeneralPurposeEditorContent"){
     return $this->GeneralPurposeEditorContent($http, $dyn);
   } else {
     die "Unknown CollectionMode: $this->{CollectionMode}";
@@ -517,8 +512,17 @@ sub ContinueDbCollectionsAndExtractions{
       "Site: $this->{SelectedSite}</h3>" .
       '<?dyn="Collection_Site_Counts"?>&nbsp;&nbsp;' . 
       "<a href=\"DownloadCounts?obj_path=$this->{path}\">download</a>" .
+      '<br/>' .
       '<?dyn="IntakeCheckButtons"?>' .
       '<?dyn="PublicCheckButtons"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" ' .
+      'op="DiscardIncompleteExtractions" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Extact All Unextracted" ' .
+      'op="ExtractAllUnextracted" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Scan All For PHI" ' .
+      'op="ScanAllForPhi" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" ' .
+      'op="RemoveAllPhiScans" sync="Update();"?>' .
       '<small><table border="1" width="100%">' .
       '<tr><th width="10%">Subject</th><th width="45%">DB Info</th>' .
       '<th width="45%">Extraction Info</th></tr>' .
@@ -1786,7 +1790,7 @@ sub ContinueLockChecker{
 sub ShowInfo{
   my($this, $http, $dyn) = @_;
   my $subj = $dyn->{subj};
-  $this->{CollectionMode} = "InfoDisplay";
+  $this->{CollectionMode} = "DisplayInfo";
   unless(exists $this->{NickNames}) {
     $this->{NickNames} = Posda::Nicknames->new;
   }
@@ -1866,7 +1870,7 @@ sub HideInfo{
 }
 sub RestoreInfo{
   my($this, $http, $dyn) = @_;
-  $this->{CollectionMode} = "InfoDisplay";
+  $this->{CollectionMode} = "DisplayInfo";
 }
 sub DisplayInfo{
   my($this, $http, $dyn) = @_;
@@ -3325,7 +3329,7 @@ sub DiscardExtraction{
   }
   unless(defined $dyn->{site}){
     print STDERR "site undefined in DiscardExtraction\n";
-    $dyn->{collection} = '<undef>';
+    $dyn->{site} = '<undef>';
   }
   my $new_args = [ "DiscardExtraction",
     "Session: $session", "User: $user", "Pid: $pid" ,
@@ -3394,7 +3398,7 @@ sub GeneralPurposeEditor{
     PosdaCuration::GeneralPurposeEditor->new($this->{session}, $child_name,
       $this->{DisplayInfoIn});
   }
-  $this->{CollectionMode} = "GeneralPurposeEditor";
+  $this->{CollectionMode} = "GeneralPurposeEditorContent";
 }
 sub GeneralPurposeEditorContent{
   my($this, $http, $dyn) = @_;
@@ -3518,6 +3522,482 @@ sub MakeLinkEditLists{
   return(\%files_to_link, \%files_to_edit);
 }
 ################################
+# ExtractAllUnextracted
+sub ExtractAllUnextracted{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "PendingExtractAll";
+  $this->{PendingExtractAllSite} = $this->{SelectedSite};
+  $this->{PendingExtractAllCollection} = $this->{SelectedCollection};
+  my @extractions_to_perform; 
+  for my $subj (sort keys %{$this->{DbResults}}){
+    unless(exists $this->{ExtractionsHierarchies}->{$subj}) { next }
+    unless(
+      exists(
+        $this->{ExtractionsHierarchies}
+          ->{$subj}->{hierarchy}->{$subj}->{studies}
+      )
+    ){ push(@extractions_to_perform, $subj) }
+  }
+  $this->{PendingExtractAllList} = \@extractions_to_perform;
+}
+sub PendingExtractAll{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>Are you the sure you want to perform the following ' .
+    'extractions:</h3>' .
+    "<ul><li>Collection: $this->{PendingExtractAllCollection}</li>" .
+    "<li>Site: $this->{PendingExtractAllSite}</li>" .
+    "<li>Subjects:<ul>");
+  for my $i (@{$this->{PendingExtractAllList}}){
+    $http->queue("<li>$i</li>");
+  }
+  $this->RefreshEngine($http, $dyn,
+    '</ul></li></ul>' .
+    '<?dyn="NotSoSimpleButton" caption="Yes, Extract" ' .
+    'op="ExtractAllYes" sync="Update();"?></td><td>' .
+    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Extract" ' .
+    'op="DontExtractAll" sync="Update();"?></td><td>'
+  );
+}
+sub DontExtractAll{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingExtractAllSite};
+  delete $this->{PendingExtractAllCollection};
+  delete $this->{PendingExtractAllList};
+}
+sub ExtractAllYes{
+  my($this, $http, $dyn) = @_;
+  my @list = @{$this->{PendingExtractAllList}};
+  Dispatch::Select::Background->new($this->ExtractSubjects(
+    $http, $dyn, \@list)
+  )->queue;
+  $this->{CollectionMode} = "PreparingExtractions";
+  delete $this->{PendingExtractAllSite};
+  delete $this->{PendingExtractAllCollection};
+#  delete $this->{PendingExtractAllList};
+  $this->{ProcessingExtractAllList} = \@list;
+}
+sub ExtractSubjects{
+  my($this, $http, $dyn, $subjects) = @_;
+  my $sub = sub {
+    my($disp) = @_;
+    if($#{$subjects} == -1){
+      $this->{CollectionMode} = "CollectionsSelection";
+      delete $this->{PendingExtractAllList};
+      delete $this->{ProcessingExtractAllList};
+      return;
+    }
+    my $next = shift @{$subjects};
+    $this->ExtractNextSubject($next, $disp);
+  };
+  return $sub;
+}
+sub PreparingExtractions{
+  my($this, $http, $dyn) = @_;
+  my $total_to_extract = @{$this->{PendingExtractAllList}};
+  my $waiting_to_extract = @{$this->{ProcessingExtractAllList}};
+  $http->queue("<h2>Preparing Extractions</h2>" .
+    "Total: $total_to_extract<br>" .
+    "Waiting: $waiting_to_extract");
+}
+#sub ExtractSubject{
+#  my($this, $http, $dyn) = @_;
+#  my $cmd = "BuildExtractionCommands.pl " .
+#    "\"$this->{Environment}->{database_name}\" " .
+#    "\"$this->{SelectedCollection}\" " .
+#    "\"$this->{SelectedSite}\" " .
+#    "\"$dyn->{subj}\"";
+#  my $struct = {};
+#  Dispatch::LineReader->new_cmd($cmd,
+#    $this->BuildExtractionLine($this->{SelectedCollection},
+#      $this->{SelectedSite}, $dyn->{subj}, $struct),
+#    $this->BuildExtractionEnd($http, $dyn,
+#      $this->{SelectedCollection},
+#      $this->{SelectedSite}, $dyn->{subj}, $struct)
+#  );
+#}
+#sub BuildExtractionEnd{
+#  my($this, $http, $dyn, $collection, $site, $subj, $struct) = @_;
+#  my $sub = sub{
+#    $this->LockForExtractSubject($http, $dyn, $subj, $struct);
+#  };
+#  return $sub;
+#}
+#sub LockForExtractSubject{
+#  my($this, $http, $dyn, $subj, $struct) = @_;
+#  $this->RequestLock($http, $dyn,
+#    $this->WhenExtractionLockComplete($http, $dyn, $subj, $struct));
+#}
+#sub WhenExtractionLockComplete{
+#  my($this, $http, $dyn, $subj, $struct) = @_;
+#  my $sub = sub {
+#    my($lines) = @_;
+#    my %args;
+#    for my $line (@$lines){
+#      if($line =~ /^(.*):\s*(.*)$/){
+#        my $k = $1; my $v = $2;
+#        $args{$k} = $v;
+#      }
+#    }
+#    if(exists($args{Locked}) && $args{Locked} eq "OK"){
+#      my $extract_struct = {
+#        operation => "ExtractAndAnalyze",
+#        destination => $args{"Destination File Directory"},
+#        info_dir => $args{"Revision Dir"},
+#        cache_dir => "$this->{DicomInfoCache}/dicom_info",
+#        parallelism => 5,
+#        desc => {
+#          patient_id => $subj,
+#          studies => $struct,
+#        },
+#      };
+#      $extract_struct->{desc}->{patient_id} = $subj;
+#      my $commands = $args{"Revision Dir"} . "/creation.pinfo";
+#      store($extract_struct, $commands);
+#      my $session = $this->{session};
+#      my $pid = $$;
+#      my $user = $this->get_user;
+#      my $new_args = [ "ApplyEdits", "Id: $args{Id}",
+#        "Session: $session", "User: $user", "Pid: $pid" ,
+#        "Commands: $commands" ];
+#      $this->SimpleTransaction($this->{ExtractionManagerPort},
+#        $new_args,
+#        $this->WhenEditQueued($http, $dyn));
+#    } else {
+#      print STDERR "Extraction Lock Failed - probably double click\n";
+#    }
+#  };
+#  return $sub;
+#}
+#sub WhenEditQueued{
+#  my($this, $http, $dyn) = @_;
+#  my $sub = sub {
+#    # nothing to do here???
+#    my($lines) = @_;
+#  };
+#  return $sub;
+#}
+sub ExtractNextSubject{
+  my($this, $next, $disp) = @_;
+  my $cmd = "BuildExtractionCommands.pl " .
+    "\"$this->{Environment}->{database_name}\" " .
+    "\"$this->{SelectedCollection}\" " .
+    "\"$this->{SelectedSite}\" " .
+    "\"$next\"";
+  my $struct = {};
+  Dispatch::LineReader->new_cmd($cmd,
+    $this->BuildExtractionLine($this->{SelectedCollection},
+      $this->{SelectedSite}, $next, $struct),
+    $this->BuildNextExtractionEnd(
+      $this->{SelectedCollection},
+      $this->{SelectedSite}, $next, $struct, $disp)
+  );
+  $this->AutoRefresh;
+}
+sub BuildNextExtractionEnd{
+  my($this, $collection, $site, $subj, $struct, $disp) = @_;
+  my $sub = sub{
+    $this->LockForNextExtractSubject($subj, $struct, $disp);
+  };
+  return $sub;
+}
+sub LockForNextExtractSubject{
+  my($this, $subj, $struct, $disp) = @_;
+  $this->NewRequestLockForEdit($subj,
+    $this->WhenNextExtractionLockComplete($subj, $struct, $disp));
+}
+sub WhenNextExtractionLockComplete{
+  my($this, $subj, $struct, $disp) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+    my %args;
+    for my $line (@$lines){
+      if($line =~ /^(.*):\s*(.*)$/){
+        my $k = $1; my $v = $2;
+        $args{$k} = $v;
+      }
+    }
+    if(exists($args{Locked}) && $args{Locked} eq "OK"){
+      my $extract_struct = {
+        operation => "ExtractAndAnalyze",
+        destination => $args{"Destination File Directory"},
+        info_dir => $args{"Revision Dir"},
+        cache_dir => "$this->{DicomInfoCache}/dicom_info",
+        parallelism => 5,
+        desc => {
+          patient_id => $subj,
+          studies => $struct,
+        },
+      };
+      $extract_struct->{desc}->{patient_id} = $subj;
+      my $commands = $args{"Revision Dir"} . "/creation.pinfo";
+      store($extract_struct, $commands);
+      my $session = $this->{session};
+      my $pid = $$;
+      my $user = $this->get_user;
+      my $new_args = [ "ApplyEdits", "Id: $args{Id}",
+        "Session: $session", "User: $user", "Pid: $pid" ,
+        "Commands: $commands" ];
+      $this->SimpleTransaction($this->{ExtractionManagerPort},
+        $new_args,
+        $this->WhenNextExtractQueued($disp));
+    } else {
+      print STDERR "Extraction Lock Failed - probably double click\n";
+    }
+  };
+  return $sub;
+}
+sub WhenNextExtractQueued{
+  my($this, $disp) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+print "In WhenNextExtractQueued($lines)\n";
+    if(ref($lines) eq "ARRAY"){
+      print "Response:\n";
+      for my $line (@$lines){
+        print "\t$line\n";
+      }
+    }
+print "##########\n";
+    $disp->queue;
+  };
+  return $sub;
+}
+################################
+# Discard Incomplete Extractions
+sub DiscardIncompleteExtractions{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "PendingDiscardIE";
+  $this->{PendingIEDiscardSite} = $this->{SelectedSite};
+  $this->{PendingIEDiscardCollection} = $this->{SelectedCollection};
+  my @extractions_to_discard; 
+  for my $subj (sort keys %{$this->{DbResults}}){
+    unless(exists $this->{ExtractionsHierarchies}->{$subj}) { next }
+    unless(
+      exists(
+        $this->{ExtractionsHierarchies}
+          ->{$subj}->{hierarchy}->{$subj}->{studies}
+      )
+    ){ next }
+    my($db_studies, $db_series, $db_images) =
+      $this->GetCountsDatabase($this->{DbResults}->{$subj}->{studies});
+    my($ex_studies, $ex_series, $ex_images) =
+      $this->GetCountsExtraction(
+        $this->{ExtractionsHierarchies}
+          ->{$subj}->{hierarchy}->{$subj}->{studies}
+      )
+    ;
+    unless($db_images == $ex_images){
+      push(@extractions_to_discard, $subj);
+    }
+  }
+  $this->{PendingIEDiscardSubjectList} = \@extractions_to_discard;
+}
+sub PendingDiscardIE{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>Are you the sure you want to discard the following extractions:</h3>' .
+    "<ul><li>Collection: $this->{PendingIEDiscardCollection}</li>" .
+    "<li>Site: $this->{PendingIEDiscardSite}</li>" .
+    "<li>Subjects:<ul>");
+  for my $i (@{$this->{PendingIEDiscardSubjectList}}){
+    $http->queue("<li>$i</li>");
+  }
+  $this->RefreshEngine($http, $dyn,
+    '</ul></li></ul>' .
+    '<?dyn="NotSoSimpleButton" caption="Yes, Discard" ' .
+    'op="DiscardIncompleteExtractionsYes" sync="Update();"?></td><td>' .
+    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Discard" ' .
+    'op="DontDiscardIncompleteExtraction" sync="Update();"?></td><td>'
+  );
+}
+sub DontDiscardIncompleteExtraction{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingIEDiscardSite};
+  delete $this->{PendingIEDiscardCollection};
+  delete $this->{PendingIEDiscardSubjectList};
+}
+sub DiscardIncompleteExtractionsYes{
+  my($this, $http, $dyn) = @_;
+  my @list = @{$this->{PendingIEDiscardSubjectList}};
+  Dispatch::Select::Background->new($this->DiscardSubjects(
+    $http, $dyn, \@list)
+  )->queue;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingIEDiscardSite};
+  delete $this->{PendingIEDiscardCollection};
+  delete $this->{PendingIEDiscardSubjectList};
+}
+sub DiscardSubjects{
+  my($this, $http, $dyn, $subjects) = @_;
+  my $sub = sub {
+    my($disp) = @_;
+    if($#{$subjects} == -1){
+      return;
+    }
+    my $next = shift @{$subjects};
+    $this->DiscardNextSubject($next, $disp);
+  };
+  return $sub;
+}
+sub DiscardNextSubject{
+  my($this, $next, $disp) = @_;
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+  my $collection;
+  my $site;
+  unless(defined $session){
+    print STDERR "Session undefined in DiscardNextSubject\n";
+    $session = '<undef>';
+  }
+  unless(defined $user){
+    print STDERR "$user undefined in DiscardNextSubject\n";
+    $user = '<undef>';
+  }
+  unless(defined $this->{SelectedCollection}){
+    print STDERR "collection undefined in DiscardNextSubject\n";
+    return;
+  }
+  unless(defined $this->{SelectedSite}){
+    print STDERR "site undefined in DiscardNextSubject\n";
+    return;
+  }
+  my $new_args = [ "DiscardExtraction",
+    "Session: $session", "User: $user", "Pid: $pid" ,
+    "Collection: $this->{SelectedCollection}",
+    "Site: $this->{SelectedSite}",
+    "Subject: $next",
+    "For: Discard",
+#    "Response: $this->{BaseExternalNotificationUrl}",
+  ];
+print "Invoking Discard:\n";
+for my $line(@$new_args){
+  print "\t$line\n";
+}
+print "###########\n";
+  if(
+    $this->SimpleTransaction($this->{ExtractionManagerPort},
+    $new_args,
+    $this->WhenNextDiscardQueued($disp))
+  ){
+    print "Discard succeeded\n";
+    return;
+  } else {
+    print STDERR "Discard failed: probably double click\n";
+  }
+}
+sub WhenNextDiscardQueued{
+  my($this, $disp) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+print "In WhenNextDiscardQueued($lines)\n";
+    if(ref($lines) eq "ARRAY"){
+      print "Response:\n";
+      for my $line (@$lines){
+        print "\t$line\n";
+      }
+    }
+print "##########\n";
+    $disp->queue;
+  };
+  return $sub;
+}
+################################
+sub GetCountsExtraction{
+  my($this, $struct) = @_;
+  my $num_studies = keys %{$struct};
+  my $num_series = 0;
+  my $num_images = 0;
+  for my $std (keys %$struct){
+    $num_series += keys %{$struct->{$std}->{series}};
+    for my $ser ( keys %{$struct->{$std}->{series}}){
+      $num_images += keys %{$struct->{$std}->{series}->{$ser}->{files}};
+    }
+  }
+  return($num_studies, $num_series, $num_images);
+}
+sub GetCountsDatabase{
+  my($this, $struct) = @_;
+  my $num_studies = keys %{$struct};
+  my $num_series = 0;
+  my $num_images = 0;
+  for my $std (keys %$struct){
+    $num_series += keys %{$struct->{$std}->{series}};
+    for my $ser ( keys %{$struct->{$std}->{series}}){
+      $num_images += $struct->{$std}->{series}->{$ser}->{num_files};
+    }
+  }
+  return($num_studies, $num_series, $num_images);
+}
+sub NewRequestLockForEdit{
+  my($this, $subj, $at_end) = @_;
+  my $collection = $this->{SelectedCollection};
+  my $site = $this->{SelectedSite};
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+#  my $url = $this->{BaseExternalNotificationUrl};
+  $this->LockExtractionDirectory({
+    Collection => $collection,
+    Site => $site,
+    Subject => $subj,
+    Session => $session,
+    User => $user,
+    Pid => $pid,
+    For => "Edit",
+#    Response => $url,
+   }, $at_end);
+}
+sub GetLatestRevDir{
+  my($this, $coll, $site, $subj) = @_;
+  my $base_dir = "$this->{ExtractionRoot}/$coll/$site/$subj";
+  my $rev_hist = Storable::retrieve("$base_dir/rev_hist.pinfo");
+  my $latest_rev = $rev_hist->{CurrentRev};
+  return "$base_dir/revisions/$latest_rev";
+}
+################################
+# Remove All Phi Scans
+sub RemoveAllPhiScans{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionsMode} = "RemovingPhiScans";
+  $this->{PhiRemoveLines} = [];
+  my $dir = $this->{ExtractionRoot} . "/$this->{SelectedCollection}" .
+    "/$this->{SelectedSite}";
+  my $cmd = "RemovePhiScans.pl \"$dir\"";
+  Dispatch::LineReader->new_cmd($cmd,
+    $this->RemovePhiScanLines,
+    $this->RemovePhiScanLinesDone);
+}
+sub RemovingPhiScans{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Removing PHI file:<br><pre>");
+  for my $line (@{$this->{PhiRemoveLines}}){
+    $http->queue("$line\n");
+  }
+  $http->queue("</pre>");
+}
+sub RemovePhiScanLines{
+  my($this) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    push @{$this->{PhiRemoveLines}}, $line;
+    $this->AutoRefresh;
+  };
+  return $sub;
+}
+sub RemovePhiScanLinesDone{
+  my($this) = @_;
+  my $sub = sub {
+    $this->{CollectionsMode} = "CollectionsSelection";
+    delete $this->{PhiRemoveLines};
+    $this->AutoRefresh;
+  };
+  return $sub;
+}
+################################
 # PhiSearch Transaction
 sub PhiSearch{
   my($this, $http, $dyn) = @_;
@@ -3563,5 +4043,311 @@ sub WhenPhiQueued{
     }
   };
   return $sub;
+}
+################################
+# Scan for PHI if not already scanned
+sub ScanAllForPhi{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "PendingPhiScans";
+  $this->{PendingPhiScanSite} = $this->{SelectedSite};
+  $this->{PendingPhiScanCollection} = $this->{SelectedCollection};
+  my @SubjsToScan; 
+  my @SubjsScanned; 
+  for my $subj (sort keys %{$this->{DbResults}}){
+    unless(exists $this->{ExtractionsHierarchies}->{$subj}) { next }
+    my $rev_dir = $this->GetLatestRevDir($this->{SelectedCollection},
+      $this->{SelectedSite}, $subj);
+    if(-f "$rev_dir/PhiCheck.info"){
+      push @SubjsScanned, "$rev_dir/PhiCheck.info";
+    } else {
+      push @SubjsToScan, $subj;
+    }
+  }
+  if(@SubjsToScan > 0){
+    $this->{PendingPhiScanSubjectList} = \@SubjsToScan;
+  } elsif(@SubjsScanned > 0){
+    $this->{PendingPhiConsolidationList} = \@SubjsScanned;
+    $this->{CollectionMode} = "AllSubjectsScanned";
+  } else {
+    $this->DontDoPhiScans;
+  }
+}
+sub PendingPhiScans{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>Are you the sure you want to scan the following for PHI:</h3>' .
+    "<ul><li>Collection: $this->{PendingPhiScanCollection}</li>" .
+    "<li>Site: $this->{PendingPhiScanSite}</li>" .
+    "<li>Subjects:<ul>");
+  for my $i (@{$this->{PendingPhiScanSubjectList}}){
+    $http->queue("<li>$i</li>");
+  }
+  $this->RefreshEngine($http, $dyn,
+    '</ul></li></ul>' .
+    '<?dyn="NotSoSimpleButton" caption="Yes, Scan" ' .
+    'op="PhiScansYes" sync="Update();"?></td><td>' .
+    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Scan" ' .
+    'op="DontDoPhiScans" sync="Update();"?></td><td>'
+  );
+}
+sub DontDoPhiScans{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingPhiScanSite};
+  delete $this->{PendingPhiScanCollection};
+  delete $this->{PendingPhiScanSubjectList};
+}
+sub PhiScansYes{
+  my($this, $http, $dyn) = @_;
+  my @list = @{$this->{PendingPhiScanSubjectList}};
+  Dispatch::Select::Background->new($this->PhiScanSubjects(
+    $http, $dyn, \@list)
+  )->queue;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingPhiScanSite};
+  delete $this->{PendingPhiScanCollection};
+  delete $this->{PendingPhiScanSubjectList};
+}
+sub PhiScanSubjects{
+  my($this, $http, $dyn, $subjects) = @_;
+  my $sub = sub {
+    my($disp) = @_;
+    if($#{$subjects} == -1){
+      return;
+    }
+    my $next = shift @{$subjects};
+    $this->PhiScanNextSubject($next, $disp);
+  };
+  return $sub;
+}
+sub PhiScanNextSubject{
+  my($this, $next, $disp) = @_;
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+  my $collection;
+  my $site;
+  unless(defined $session){
+    print STDERR "Session undefined in PhiScanNextSubject\n";
+    $session = '<undef>';
+  }
+  unless(defined $user){
+    print STDERR "$user undefined in PhiScanNextSubject\n";
+    $user = '<undef>';
+  }
+  unless(defined $this->{SelectedCollection}){
+    print STDERR "collection undefined in PhiScanNextSubject\n";
+    return;
+  }
+  unless(defined $this->{SelectedSite}){
+    print STDERR "site undefined in PhiScanNextSubject\n";
+    return;
+  }
+#  my $new_args = [ "DiscardExtraction",
+#    "Session: $session", "User: $user", "Pid: $pid" ,
+#    "Collection: $this->{SelectedCollection}",
+#    "Site: $this->{SelectedSite}",
+#    "Subject: $next",
+#    "For: Discard",
+##    "Response: $this->{BaseExternalNotificationUrl}",
+#  ];
+  my $new_args = [ "CheckForPhi",
+    "Session: $session", "User: $user", "Pid: $pid" ,
+    "Collection: $this->{SelectedCollection}",
+    "Site: $this->{SelectedSite}",
+    "Subject: $next",
+    "For: PhiSearch",
+#    "Response: $this->{BaseExternalNotificationUrl}",
+  ];
+print "Invoking PhiScan:\n";
+for my $line(@$new_args){
+  print "\t$line\n";
+}
+print "###########\n";
+  if(
+    $this->SimpleTransaction($this->{ExtractionManagerPort},
+    $new_args,
+    $this->WhenNextPhiScanQueued($disp))
+  ){
+    print "PhiScan succeeded\n";
+    return;
+  } else {
+    print STDERR "PhiScan failed: probably double click\n";
+  }
+}
+sub WhenNextPhiScanQueued{
+  my($this, $disp) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+print "In WhenNextPhiScanQueued($lines)\n";
+    if(ref($lines) eq "ARRAY"){
+      print "Response:\n";
+      for my $line (@$lines){
+        print "\t$line\n";
+      }
+    }
+print "##########\n";
+    $disp->queue;
+  };
+  return $sub;
+}
+sub AllSubjectsScanned{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>All Subjects have already been scanned for PHI</h3>' .
+    "<ul><li>Collection: $this->{PendingPhiScanCollection}</li>" .
+    "<li>Site: $this->{PendingPhiScanSite}</li>" .
+    "</ul>". 
+    '<?dyn="NotSoSimpleButton" caption="Ok, (Go back)" ' .
+    'op="DontConsolidate" sync="Update();"?></td><td>' .
+    '<?dyn="NotSoSimpleButton" caption="Consolidate Scans For Review" ' .
+    'op="ConsolidatePhi" sync="Update();"?></td><td>'
+  );
+}
+sub DontConsolidate{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "CollectionsSelection";
+  delete $this->{PendingPhiScanSite};
+  delete $this->{PendingPhiScanCollection};
+  delete $this->{PendingPhiConsolidationList};
+}
+sub ConsolidatePhi{
+  my($this, $http, $dyn) = @_;
+  my $phi_root = $this->{Environment}->{PhiAnalysisRoot} .
+    "/$this->{SelectedCollection}";
+  unless(-d $phi_root){
+    unless(mkdir($phi_root) == 1){
+      my $error = "Couldn't mkdir $phi_root ($!)";
+      delete $this->{PendingPhiScanSite};
+      delete $this->{PendingPhiScanCollection};
+      delete $this->{PendingPhiConsolidationList};
+      $this->SetCollectionError($error);
+      return;
+    }
+  }
+  $phi_root = "$phi_root/$this->{SelectedSite}";
+  unless(-d $phi_root){
+    unless(mkdir($phi_root) == 1){
+      my $error = "Couldn't mkdir $phi_root ($!)";
+      delete $this->{PendingPhiScanSite};
+      delete $this->{PendingPhiScanCollection};
+      delete $this->{PendingPhiConsolidationList};
+      $this->SetCollectionError($error);
+      return;
+    }
+  }
+  my $dir;
+  unless(opendir $dir, $phi_root){
+    return $this->SetCollectionError("Can't opendir $phi_root");
+  }
+  my @rounds;
+  while (my $d = readdir($dir)){
+    if($d =~ /^\./) { next }
+    unless($d =~ /^[\d]+$/) {
+      print STDERR "bad format for round directory ($d) in $phi_root\n";
+      next;
+    }
+    unless(-d "$phi_root/$d"){
+      print STDERR "not a directory ($d) in $phi_root\n";
+      next;
+    }
+    push @rounds, $d;
+  }
+  my $current_round;
+  my $next_round;
+  if(@rounds <= 0){
+    $next_round = 0;
+  } else {
+    @rounds = sort {$a<=>$b} @rounds;
+    $current_round = $rounds[$#rounds];
+    $next_round = $current_round + 1;
+  }
+  if(defined $current_round){
+    # Right here you could scan the data in the current round
+    # and see if the files from which it is constructed are the
+    # same as those in the current list, and just put up a message
+    # saying that its already been done.
+    # Alternatively, you could move this (and immediately 
+    # preceeding/following) code to the sub-process ...
+    #
+  }
+  unless(mkdir("$phi_root/$next_round") == 1){
+    return $this->SetCollectionError("Can't mkdir $phi_root/$next_round ($!)");
+  }
+  my $report_file = "$phi_root/$next_round/consolidated.pinfo";
+  my $bom_file = "$phi_root/$next_round/consolidation_bom.txt";
+  my($sock, $pid) = $this->ReadWriteChild("SubProcessConsolidatePhiScans.pl " .
+    "\"$bom_file\" \"$report_file\"");
+  Dispatch::Select::Socket->new($this->FeedConsolidater, $sock)->Add("writer");
+  Dispatch::Select::Socket->new(
+    $this->ReadConsolidater($pid), $sock)->Add("reader");
+  $this->{CollectionMode} = "PhiConsolidationInProgress";
+}
+sub FeedConsolidater{
+  my($this) = @_;
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    if(my $file = shift (@{$this->{PendingPhiConsolidationList}})){
+      print $sock "$file\n";
+    } else {
+      $disp->Remove("writer");
+      shutdown($sock, 1);
+    }
+  };
+  return $sub;
+}
+sub ReadConsolidater{
+  my($this, $pid) = @_;
+  my $buff = "";
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    my $ret = read($sock, $buff, 1024, length($buff));
+    unless(defined($ret) && $ret < 0){
+      $disp->Remove("reader");
+      $this->HarvestPid($pid);
+      $this->AutoRefresh;
+      $this->{CollectionMode} = "PhiConsolidationComplete";
+      $this->{PhiConsolidationStatus} = $buff;
+    }
+  };
+  return $sub;
+}
+sub PhiConsolidationInProgress{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>Consolidation in Progress</h3>'
+  );
+}
+sub PhiConsolidationComplete{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>Consolidation Complete</h3>' . $this->{PhiConsolidationStatus} .
+    '<br/><?dyn="NotSoSimpleButton" caption="Got It" ' .
+    'op="ClearConsolidation" sync="Update();"?>'
+  );
+}
+sub ClearConsolidation{
+  my($this, $http, $dyn) = @_;
+  delete $this->{ConsolidationStatus};
+  $this->{CollectionMode} = "CollectionsSelection";
+}
+################################
+sub SetCollectionError{
+  my($this, $message) = @_;
+  $this->{CollectionMode} = "CollectionError";
+  $this->{CollectionError} = $message;
+}
+sub CollectionError{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    '<h3>An Error Occured:</h3>' . $this->{CollectionError} .
+    '<br/><?dyn="NotSoSimpleButton" caption="Got It" ' .
+    'op="ClearCollectionError" sync="Update();"?>'
+  );
+}
+sub ClearCollectionError{
+  my($this, $http, $dyn) = @_;
+  delete $this->{CollectionError};
+  $this->{CollectionMode} = "CollectionsSelection";
 }
 1;

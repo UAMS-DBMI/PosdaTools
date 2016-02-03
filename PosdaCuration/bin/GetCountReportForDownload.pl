@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownload.pl,v $ #$Date: 2016/01/15 17:00:39 $
-#$Revision: 1.4 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownload.pl,v $ #$Date: 2016/01/26 19:52:11 $
+#$Revision: 1.5 $
 #
 use strict;
 use DBI;
@@ -12,14 +12,14 @@ select
     patient_id, image_type, modality, study_date, study_description,
     series_description, study_instance_uid, series_instance_uid, 
     manufacturer, manuf_model_name, software_versions,
-    count(*) as num_files
+    count(distinct file_id) as num_files
 from
   ctp_file join file_patient using(file_id) 
   join file_series using(file_id)
   join file_study using(file_id)
   join file_equipment using(file_id)
   left join file_image using(file_id)
-  join image using (image_id)
+  left join image using (image_id)
 where 
   project_name = ? and site_name = ? and visibility is null
 group by

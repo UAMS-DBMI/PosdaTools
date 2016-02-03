@@ -233,12 +233,15 @@ EOF
   }
   sub finish{
     my($http) = @_;
+print "In $http" . "->finish\n";
     if(
       defined $http->{output_queue} &&
       $http->{output_queue}->can("finish")
     ){
+print STDERR "Calling $http->{output_queue}" . "->finish\n";
       $http->{output_queue}->finish();
     }
+    $http->{Finished} = time;
   }
   sub queuer{
     my($http) = @_;
@@ -255,13 +258,18 @@ EOF
   }
   sub DESTROY {
     my($http) = @_;
+if($http->{Finished}){
+my $elapsed = time - $http->{Finished};
+print STDERR "$elapsed seconds between finish and destroy\n";
+print STDERR "In $http" . "->DESTROY\n";
+}
     if (defined $http->{socket}) {
       unless(exists $http->{header_sent}){
         # print STDERR "sending Html Header: OK\n";
         # $http->{socket}->print($TextHeaderText);
         # $http->{socket}->print("\n OK 200 ");
-       $http->{socket}->print($HtmlHeaderText);
-         $http->{socket}->print(
+        $http->{socket}->print($HtmlHeaderText);
+        $http->{socket}->print(
           "\n<html><head> </head><body> </body></html>\n");
       }
     }
