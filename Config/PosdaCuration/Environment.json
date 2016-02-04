@@ -7,23 +7,31 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/home/quasar/cache/Data/Login.db",
+  "AuthenticationDbFileName" : "/cache/bbennett/Data/Login.db",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/quasar/PosdaTools/HttpRoot/http_root",
-  "LoginTemp" : "/home/quasar/cache/Data/TempDirectory",
-  "JavascriptRoot" : "/home/quasar/PosdaTools/PosdaCuration/javascript",
-  "QuarantineMasterRoot" : "/home/quasar/PosdaTools/Data/quarantines",
-  "QuarantineRoot" : "/home/quasar/PosdaTools/Data/QuarantinedExtractions/data",
-  "DicomInfoCache" : "/home/quasar/cache/Data",
-  "database_host" : "localhost",
+  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "LoginTemp" : "/cache/bbennett/Data/TempDirectory",
+  "JavascriptRoot" : "/home/bbennett/PosdaTools/PosdaCuration/javascript",
+  "QuarantineMasterRoot" : "/home/bbennett/PosdaTools/Data/quarantines",
+  "QuarantineRoot" : "/home/bbennett/PosdaTools/Data/QuarantinedExtractions/data",
+  "DicomInfoCache" : "/cache/bbennett/Data",
+  "database_host" : "tcia-utilities",
   "database_name" : "posda_files",
   "ExtractionManagerPort" : "64612",
   "ExtractionRoot" :
-     "/home/quasar/cache/Data/HierarchicalExtractions/data",
+     "/cache/bbennett/Data/HierarchicalExtractions/data",
+  "PhiAnalysisRoot" :
+     "/cache/bbennett/Data/PhiAnalysis/data",
   "extraction_root" :
-     "/home/quasar/cache/Data/HierarchicalExtractions/data",
-  "UserInfoDir" : "/home/quasar/cache/UserData",
+     "/cache/bbennett/Data/HierarchicalExtractions/data",
+  "UserInfoDir" : "/cache/bbennett/UserData",
   "DicomDestinations" : {
+    "Quasar" : {
+      "host" : "dbmi-imac.ad.uams.edu",
+      "port" : "64611",
+      "calling_ae" : "POSDA",
+      "called_ae" : "QUASAR"
+    },
     "IntakeServer" : {
       "host" : "144.30.1.71",
       "port" : "11112",
@@ -38,9 +46,17 @@
     },
     "Bill's OsiriX" : {
       "host" : "144.30.109.157",
+//      "host" : "192.168.97.73",
       "port" : "11112",
       "calling_ae" : "POSDA",
-      "called_ae" : "OSIRIX"
+      "called_ae" : "BBOSIRIX"
+    },
+    "Bill's Posda" : {
+      "host" : "144.30.109.157",
+//      "host" : "192.168.97.73",
+      "port" : "64611",
+      "calling_ae" : "POSDA",
+      "called_ae" : "BBPOSDA"
     },
   }
 }

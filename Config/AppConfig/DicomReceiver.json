@@ -21,6 +21,22 @@
       "pres_contexts": "ImpOnly",
       "end_handler": "populate_posda_db",
     },
+    "OSIRIX_FIND": {
+      "ae_title": "OSIRIX_TEST",
+      "allowed_calling_ae_titles": {
+        "BBENNETT_OSI": 1,
+        "<ANY>": 1,
+      },
+      "app_context": "1.2.840.10008.3.1.1.1",
+      "imp_class_uid": "1.3.6.1.4.1.22213.1.69",
+      "imp_ver_name": "Posda Ver 1.0",
+      "protocol_version": 1,
+      "max_length": 16384,
+      "num_invoked": 3,
+      "num_performed": 3,
+      "incoming_message_handler": "std",
+      "pres_contexts": "query_find",
+    },
     "FD_TEST_1": {
       "ae_title": "FD_TEST_1",
       "allowed_calling_ae_titles": {
@@ -72,12 +88,18 @@
     },
   },
   "association_end_handlers" : {
+    "pre_parse_and_move" : {
+      "script": "PreParseDicom.pl <called> <calling> <assoc_dir> <CacheDir> <LinkDir> <Parallelism>",
+      "CacheDir": "/cache/bbennett/dicom_info",
+      "LinkDir": "/cache/bbennett/NewItcToolsData/submission/dicom/incoming",
+      "Parallelism": 10,
+    },
     "populate_posda_db" : {
       "script": "ImportFromReceiveDirIntoDigestDir.pl <assoc_dir> <db_name> <comment>",
       "db_name" : "posda_files",
       "comment" : "'association receive'",
       "processing_prio" : 1,
-      "LinkDir" : "/home/quasar/cache/DicomFiles",
+      "LinkDir" : "/cache/bbennett/DicomFiles",
     },
   },
   "incoming_message_handlers" : {

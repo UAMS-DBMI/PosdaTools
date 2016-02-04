@@ -4,8 +4,8 @@
 // 
 {
   "Greeting": { },
-  "HostName": "quasar's test system",
-  "Title": "Posda Curation Application - quasar's test system",
+  "HostName": "tcia-utilities",
+  "Title": "Posda Curation Application - tcia-utilities",
   "LoginTitle": "Login for Posda Curation App",
   "LogoImage": "/PosdaLogo.png",
   "LogoHeight": "81",

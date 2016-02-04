@@ -1,4 +1,4 @@
-//  $Source: /home/quasar/pass/archive/PosdaAppMacConfig/FileDistConfig/Environment.json,v $
+//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/FileDistConfig/Environment.json,v $
 //  $Date: 2015/09/01 15:27:18 $
 //  $Revision: 1.2 $
 // 
@@ -7,17 +7,17 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/quasar/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/home/quasar/cache/Login.db",
-  "CacheDir" : "/home/quasar/cache",
-  "TestDataRoot" : "/home/quasar/cache/Data/TestData",
+  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
+  "CacheDir" : "/cache/bbennett",
+  "TestDataRoot" : "/cache/bbennett/Data/TestData",
   "ParticipantDataRoot" : 
-    "/home/quasar/cache/Data/Participant_Data_2014C",
+    "/cache/bbennett/Data/Participant_Data_2014C",
   "ParticipantResultsRoot" : 
-    "/home/quasar/cache/Data/Participant_Results_2014C",
-  "ReceiverDataRoot" : "/home/quasar/cache/DicomReceiver",
+    "/cache/bbennett/Data/Participant_Results_2014C",
+  "ReceiverDataRoot" : "/cache/bbennett/DicomReceiver",
   "TempDataRoot" : 
-    "/home/quasar/cache/Data/TempDirectory",
+    "/cache/bbennett/Data/TempDirectory",
   "AnonymizeParallelism" : 5,
 }

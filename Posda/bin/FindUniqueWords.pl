@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/Posda/bin/FindUniqueWords.pl,v $
-#$Date: 2014/11/06 17:48:36 $
-#$Revision: 1.4 $
+#$Date: 2016/01/26 19:38:18 $
+#$Revision: 1.5 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package
@@ -29,19 +29,51 @@ sub MakeEleFun{
     value:
     for my $v (@values){
       unless(defined $v) { next value }
-      $v =~ s/[\0\s]+$//g;
-      $v =~ s/\s*$//g;
-      $v =~ s/^\s*//g;
+      if($v eq "") { next value }
       unless($v =~ /^[[:print:][:cntrl:]]+$/){ next value }
 #      if($v =~ /^[0-9\.\+\-Ee ]+$/) { next value }
       if($v =~ /\n/){
         my @values = split(/[\n,']/, $v);
+        value1:
         for my $i (@values){
-          $i =~ s/^\s*//; 
-          $i =~ s/\s*$//; 
+          $i =~ tr/\000-\037/ /;
+          $i =~ s/\s*$//g;
+          $i =~ s/^\s*//g;
+          $i =~ s/\s*$/ /; 
+          $i =~ s/\|/ /g;
+          if ($i eq "") { next value1 }
+          if($i =~ /[^[:print:]]/){
+            my @foo = split(/[^[:print:]]+/, $i);
+            foo:
+            for my $j (@foo){
+              $i =~ tr/\000-\037/ /;
+              $i =~ s/\s*$//g;
+              $i =~ s/^\s*//g;
+              $i =~ s/\s*$/ /; 
+              if($j eq "") { next foo }
+              $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
+            }
+          } else {
+            $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+          }
+        }
+      } elsif(length($v) > 64) {
+        my @values = split(/\s*/, $v);
+        value2:
+        for my $i (@values){
+          $i =~ tr/\000-\037/ /;
+          $i =~ s/\|/ /g;
+          $i =~ s/\s*$//g;
+          $i =~ s/^\s*//g;
+          if($i eq "" ) { next value2 }
           $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
         }
       } else {
+        $v =~ tr/\000-\037/ /;
+        $v =~ s/\|/ /g;
+        $v =~ s/\s*$//g;
+        $v =~ s/^\s*//g;
+        if($v eq "") { next value }
         $values->{$v}->{$n_sig}->{$ele->{VR}} = 1;
       }
     }

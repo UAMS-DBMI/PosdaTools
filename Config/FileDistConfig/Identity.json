@@ -4,8 +4,8 @@
 // 
 {
   "Greeting": { },
-  "HostName": "quasar's test machine",
-  "Title": "File Distribution Application - quasar's test machine",
+  "HostName": "tcia-utilities",
+  "Title": "File Distribution Application - tcia-utilities",
   "LoginTitle": "Login for File Distribution",
   "LogoImage": "/PosdaLogo.png",
   "LogoHeight": "81",

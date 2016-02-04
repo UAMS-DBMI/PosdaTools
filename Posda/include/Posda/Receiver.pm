@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #$Source: /home/bbennett/pass/archive/Posda/include/Posda/Receiver.pm,v $
-#$Date: 2015/12/15 14:06:03 $
-#$Revision: 1.20 $
+#$Date: 2016/01/26 19:39:30 $
+#$Revision: 1.21 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package
@@ -412,7 +412,7 @@ sub PostProcessAssociations{
   my $num_queued = @{$this->{PostProcessingQueue}};
   while(
     $num_queued > 0 && 
-    $num_running < 3,
+    $num_running < 1,
   ){
     # Start a handler ...
     # then try again:

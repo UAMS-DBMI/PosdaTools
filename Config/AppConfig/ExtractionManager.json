@@ -4,8 +4,8 @@
 //
 {
   "extraction_root" :
-    "/home/quasar/cache/Data/HierarchicalExtractions/data",
-  "log_file" : "/home/quasar/cache/Data/HierarchicalExtractions/log_file",
+    "/cache/bbennett/Data/HierarchicalExtractions/data",
+  "log_file" : "/cache/bbennett/Data/HierarchicalExtractions/log_file",
   "sub_process_program" : "HandleTransactionSubProcess.pl",
   "parallelism" : 3,
 }

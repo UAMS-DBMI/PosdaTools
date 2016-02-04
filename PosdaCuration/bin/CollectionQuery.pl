@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/CollectionQuery.pl,v $ #$Date: 2015/12/15 14:10:27 $
-#$Revision: 1.2 $
+#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/CollectionQuery.pl,v $ #$Date: 2016/01/26 19:52:11 $
+#$Revision: 1.3 $
 #
 use strict;
 use DBI;
@@ -11,7 +11,7 @@ select
   series_date, patient_name, patient_id, sex, series_instance_uid,
   study_instance_uid, study_date, study_description, accession_number,
   study_id,
-  count(*)
+  count(distinct file_id)
 from
   ctp_file natural join file_patient natural join
   file_series natural join file_study

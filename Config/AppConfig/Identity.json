@@ -5,7 +5,7 @@
 {
   "Greeting": { },
   "ImageName": "PosdaLogo.png",
-  "HostName": "quasar's test system",
+  "HostName": "tcia-utilities",
   "Title": "Posda DICOM Curation",
   "LoginTitle": "Posda Curation Tools",
   "LogoImage": "/PosdaLogo.png",
