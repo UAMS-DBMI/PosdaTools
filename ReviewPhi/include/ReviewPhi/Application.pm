@@ -396,7 +396,9 @@ sub RetrieveInfo{
             } elsif($ele eq "(0020,000e)") { # Series Instance
               $f_info{$f}->{series_instance} = $v;
             }
-            $s_date{$f} = $v;
+            if($ele eq "(0008,0021)" || $ele eq "(0008,0060)"){
+              $s_date{$f} = $v;
+            }
           }
         }
         my $owner_string;
