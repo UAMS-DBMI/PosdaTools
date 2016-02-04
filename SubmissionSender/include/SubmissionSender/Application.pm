@@ -125,14 +125,19 @@ sub user{
 my $content = <<EOF;
 <div id="container" style="width:<?dyn="width"?>px">
 <div id="header" style="background-color:#E0E0FF;">
-<table width="100%"><tr width="100%"><td>
-<?dyn="Logo"?>
-</td><td>
-<h1 style="margin-bottom:0;"><?dyn="title"?></h1>
-User: <?dyn="user"?>
-</td><td valign="top" align="right">
-<div id="login">&lt;login&gt;</div>
-</td></tr></table></div>
+  <table width="100%">
+    <tr width="100%">
+      <td><?dyn="Logo"?></td>
+      <td>
+        <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
+        User: <?dyn="user"?>
+      </td>
+      <td valign="top" align="right">
+        <div id="login">&lt;login&gt;</div>
+      </td>
+    </tr>
+  </table>
+</div>
 <div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
 &lt;wait&gt;
 </div>
