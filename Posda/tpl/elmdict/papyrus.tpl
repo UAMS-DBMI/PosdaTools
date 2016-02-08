@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/papyrus.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0009,0000) VERS="PAP"  VR="LT"   VM="1"	Owner="PAPYRUS"	Keyword="OriginalFileName"			Name="Original File Name"
 (0009,0010) VERS="PAP"  VR="LT"   VM="1"	Owner="PAPYRUS"			Keyword="OriginalFileLocation"		Name="Original File Location"

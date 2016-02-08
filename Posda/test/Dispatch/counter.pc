@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/counter.pc,v $
-#$Date: 2009/05/11 17:02:51 $
-#$Revision: 1.2 $
 my($this, $fh, $out, $args) = @_;
 my $rm = Dispatch::Test::CreateDeleter($args->[0], $this->{objects});
 my $foo = Dispatch::Select::Background->new(

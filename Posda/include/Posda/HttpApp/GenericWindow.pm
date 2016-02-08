@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/GenericWindow.pm,v $
-#$Date: 2012/04/12 17:07:56 $
-#$Revision: 1.8 $
 #
 use strict;
 {

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/ImageDisp.pm,v $
-#$Date: 2014/10/20 19:51:25 $
-#$Revision: 1.25 $
 #
 use strict;
 package Posda::HttpApp::ImageDisp;

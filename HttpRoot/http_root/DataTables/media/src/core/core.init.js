@@ -1,10 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/core/core.init.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
 /**
  * Draw the table for the first time, adding all required features
  *  @param {object} oSettings dataTables settings object

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/ConsolidatePhiScans.pl,v $
-#$Date: 2016/01/26 19:50:24 $
-#$Revision: 1.1 $
 #
 use strict;
 use Storable qw( store_fd );

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/dicom3.tpl,v $
-#$Date: 2010/10/19 20:43:46 $
-#$Revision: 1.4 $
 #
 (0000,0000) VERS="3"	VR="UL"   VM="1"	Keyword="CommandGroupLength"			Name="Command Group Length"
 (0000,0001) VERS="2RET"	VR="UL"   VM="1"	Keyword="CommandLengthToEnd"			Name="Command Length to End"

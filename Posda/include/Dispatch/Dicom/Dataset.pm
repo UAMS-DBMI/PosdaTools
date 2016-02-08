@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Dicom/Dataset.pm,v $
-#$Date: 2011/08/24 20:48:51 $
-#$Revision: 1.10 $
 use Dispatch::Dicom;
 my $dbg = sub {print @_};
 use strict;

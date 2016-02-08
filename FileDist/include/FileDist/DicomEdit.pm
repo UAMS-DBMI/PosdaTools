@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/DicomEdit.pm,v $
-#$Date: 2014/12/19 21:38:53 $
-#$Revision: 1.13 $
 #
 use strict;
 use Posda::HttpApp::GenericIframe;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/ExtractionManager.pm,v $
-#$Date: 2016/01/26 19:59:42 $
-#$Revision: 1.17 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

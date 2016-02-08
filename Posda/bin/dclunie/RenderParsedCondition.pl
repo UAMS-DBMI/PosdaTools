@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/dclunie/RenderParsedCondition.pl,v $
-#$Date: 2009/09/14 15:14:50 $
-#$Revision: 1.1 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

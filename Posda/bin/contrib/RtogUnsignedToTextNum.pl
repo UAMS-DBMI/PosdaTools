@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/RtogUnsignedToTextNum.pl,v $
-#$Date: 2010/03/24 18:49:04 $
-#$Revision: 1.1 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

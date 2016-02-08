@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/tests_onhold/2_js/js_data_mixed_types.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
 // DATA_TEMPLATE: js_data_mixed_types
 oTest.fnStart( "Sanity checks for DataTables with data from JS with mixed data types" );
 

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/GenerateBOM.pl,v $
-#$Date: 2012/06/22 16:16:30 $
-#$Revision: 1.4 $
 #
 use File::Find;
 use Digest::MD5;

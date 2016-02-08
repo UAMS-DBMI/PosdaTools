@@ -1,7 +1,4 @@
 
--- $Source: /home/bbennett/pass/archive/Posda/sql/dicom_images.sql,v $
--- $Date: 2015/10/28 16:30:36 $
--- $Revision: 1.39 $
 -- 
 -- Copyright 2008, Bill Bennett
 --  Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/FixBadlyAnonymizedCtsAndStruct.pl,v $
-#$Date: 2010/08/11 14:36:16 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

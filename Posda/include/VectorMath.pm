@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/Posda/include/VectorMath.pm,v $
-#$Date: 2012/07/26 15:39:59 $
-#$Revision: 1.11 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

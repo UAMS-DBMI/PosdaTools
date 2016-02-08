@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/DumpEles.pl,v $
-#$Date: 2011/06/23 15:31:25 $
-#$Revision: 1.7 $
 
 use Cwd;
 use strict;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/TestValueDigest.pl,v $
-#$Date: 2014/07/10 16:38:02 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

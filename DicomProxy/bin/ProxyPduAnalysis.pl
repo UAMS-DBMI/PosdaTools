@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/bin/ProxyPduAnalysis.pl,v $
-#$Date: 2014/01/16 15:58:18 $
-#$Revision: 1.3 $
 #
 use strict;
 use Storable qw( store_fd );

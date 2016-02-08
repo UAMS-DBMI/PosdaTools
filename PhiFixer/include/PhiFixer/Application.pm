@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/Application.pm,v $
-#$Date: 2016/01/15 18:06:15 $
-#$Revision: 1.6 $
 #
 use strict;
 package PhiFixer::Application;

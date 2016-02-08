@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/dclunie/ExpandAllModulesFromDir.pl,v $
-#$Date: 2009/08/29 16:13:47 $
-#$Revision: 1.1 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/AppController/ManageChildProcess.pm,v $
-#$Date: 2013/08/16 19:03:37 $
-#$Revision: 1.3 $
 #
 use strict;
 use POSIX 'strftime';

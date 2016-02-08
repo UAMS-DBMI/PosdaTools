@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 #
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/ElementNames.pm,v $
-#$Date: 2014/10/29 12:56:56 $
-#$Revision: 1.8 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

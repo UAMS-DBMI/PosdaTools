@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/bin/CloneSessionInfo.pl,v $
-#$Date: 2014/01/22 20:16:56 $
-#$Revision: 1.2 $
 #
 use strict;
 my $usage = <<EOF;

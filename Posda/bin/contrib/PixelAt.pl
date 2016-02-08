@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/PixelAt.pl,v $
-#$Date: 2013/01/30 21:26:23 $
-#$Revision: 1.1 $
 
 use Cwd;
 use strict;

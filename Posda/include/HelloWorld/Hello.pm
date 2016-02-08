@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/HelloWorld/Hello.pm,v $
-#$Date: 2013/04/09 15:47:37 $
-#$Revision: 1.7 $
 #
 use strict;
 use Posda::HttpApp::HttpObj;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetIntakeImagesForCollectionSite.pl,v $
-#$Date: 2016/01/13 13:59:08 $
-#$Revision: 1.2 $
 #
 use strict;
 use DBI;

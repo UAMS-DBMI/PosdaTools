@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/siemens.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0003,0008) VERS="SSPI"	VR="US"   VM="1"	Owner="SIEMENS ISI"		Keyword="ISICommandField"			Name="ISI Command Field"
 (0003,0011) VERS="SSPI"	VR="US"   VM="1"	Owner="SIEMENS ISI"		Keyword="AttachIDApplicationCode"		Name="Attach ID Application Code"

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/acuson.tpl,v $
-#$Date: 2009/03/25 13:59:28 $
-#$Revision: 1.1 $
 #
 (0009,0000) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
 (0009,0001) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"

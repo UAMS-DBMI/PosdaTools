@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/SeriesSlopeRanges.pl,v $
-#$Date: 2014/08/27 12:38:57 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

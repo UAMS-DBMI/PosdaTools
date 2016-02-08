@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/HideSubject.pl,v $ #$Date: 2016/01/15 17:00:58 $
-#$Revision: 1.2 $
 #
 use strict;
 use DBI;

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/sdmdx.tpl,v $
-#$Date: 2009/03/25 14:08:06 $
-#$Revision: 1.1 $
 #
 StringValues="SDMCID4009CodeValue"	{
 	T-D3000 = Chest,

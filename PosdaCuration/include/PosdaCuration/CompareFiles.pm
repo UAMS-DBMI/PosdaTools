@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/CompareFiles.pm,v $
-#$Date: 2015/11/04 20:13:50 $
-#$Revision: 1.1 $
 #
 use strict;
 use POSIX 'strftime';

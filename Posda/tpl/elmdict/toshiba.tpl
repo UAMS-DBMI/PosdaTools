@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/toshiba.tpl,v $
-#$Date: 2010/04/30 19:53:20 $
-#$Revision: 1.3 $
 #
 (0009,0000) VERS="TSH"  VR="LO"   VM="1"	Owner="TOSHIBA_MEC_OT3"	Keyword="HISRISStudyID"			Name="HIS/RIS Study ID"
 (0009,0001) VERS="TSH"  VR="LT"   VM="1"	Owner="TOSHIBA_MEC_1.0"	Keyword="?"			Name="?"

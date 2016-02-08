@@ -1,6 +1,3 @@
-//  $Source: /home/bbennett/pass/archive/FileDistConfig/AppConfig/DicomReceiver.json,v $
-//  $Date: 2014/01/23 18:02:59 $
-//  $Revision: 1.6 $
 //
 {
   "database" : "nlst_images",

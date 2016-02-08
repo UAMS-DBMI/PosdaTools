@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/RoutingDebug.pm,v $
-#$Date: 2013/06/26 16:03:34 $
-#$Revision: 1.3 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

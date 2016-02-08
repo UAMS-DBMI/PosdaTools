@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ImportPosdaFile.pl,v $
-#$Date: 2015/07/16 17:03:57 $
-#$Revision: 1.6 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

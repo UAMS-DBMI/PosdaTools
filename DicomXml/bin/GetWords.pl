@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/GetWords.pl,v $
-#$Date: 2014/03/21 19:53:49 $
-#$Revision: 1.1 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 package Dispatch::DB::Server;
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/DB/Server.pm,v $
-#$Date: 2012/01/18 18:29:16 $
-#$Revision: 1.7 $
 use strict;
 use FileHandle;
 use Socket;

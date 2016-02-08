@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/LinkDuplicates.pl,v $
-#$Date: 2013/03/25 13:27:28 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

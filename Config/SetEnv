@@ -1,7 +1,4 @@
 #!/bin/sh
-##  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/SetEnv,v $
-##  $Date: 2015/09/01 15:28:15 $
-##  $Revision: 1.1 $
 ## 
 if [ $# -ne 1 ]; then
   echo "$0: Usage: <Application Stage Name>"

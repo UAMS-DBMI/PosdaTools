@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/TestSslUpload.pl,v $
-#$Date: 2010/12/21 12:53:38 $
-#$Revision: 1.4 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

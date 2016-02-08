@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/base.tpl,v $
-#$Date: 2010/04/30 19:16:45 $
-#$Revision: 1.5 $
 #
 DefineMacro="IconImageSequenceMacro"
 	#InvokeMacro="ImagePixelMacro" # would be nice to do this, but can't then insert verify statements (undeclared variables)

@@ -1,10 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/core/core.sizing.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
 /**
  * Convert a CSS unit width to pixels (e.g. 2em)
  *  @param {string} sWidth width to be converted

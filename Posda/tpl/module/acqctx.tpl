@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/acqctx.tpl,v $
-#$Date: 2009/03/25 14:04:14 $
-#$Revision: 1.1 $
 #
 Module="AcquisitionContext"
 	Sequence="AcquisitionContextSequence"			Type="2"	VM="0-n"

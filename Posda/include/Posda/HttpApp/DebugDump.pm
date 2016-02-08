@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/DebugDump.pm,v $
-#$Date: 2013/03/19 18:39:16 $
-#$Revision: 1.3 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 use strict;
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/DeCacheDicomData.pl,v $
-#$Date: 2015/03/27 15:09:44 $
-#$Revision: 1.1 $
 #
 #Copyright 2015, Bill Bennett
 # Part of the Posda package

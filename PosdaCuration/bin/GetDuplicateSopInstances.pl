@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetDuplicateSopInstances.pl,v $ #$Date: 2016/01/26 19:50:45 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

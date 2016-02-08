@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Anonymizer.pm,v $
-#$Date: 2010/05/21 20:18:35 $
-#$Revision: 1.6 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

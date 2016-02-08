@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomXml/include/DicomXml/Application.pm,v $
-#$Date: 2014/09/18 16:44:59 $
-#$Revision: 1.7 $
 #
 use strict;
 use charnames;

@@ -1,7 +1,4 @@
 #
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Parser.pm,v $
-#$Date: 2015/03/11 14:08:56 $
-#$Revision: 1.65 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

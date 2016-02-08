@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ConvertToPart10.pl,v $
-#$Date: 2013/09/30 15:20:53 $
-#$Revision: 1.9 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

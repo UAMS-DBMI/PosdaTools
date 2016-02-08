@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/AnalyzeDoseArray.pl,v $
-#$Date: 2013/04/01 19:54:50 $
-#$Revision: 1.1 $
 #
 use strict;
 use Digest::MD5;

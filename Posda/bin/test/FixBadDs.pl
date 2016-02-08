@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/FixBadDs.pl,v $
-#$Date: 2010/12/21 13:15:57 $
-#$Revision: 1.1 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

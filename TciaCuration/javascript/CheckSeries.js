@@ -1,8 +1,3 @@
-/*
- * $Source: /home/bbennett/pass/archive/TciaCuration/javascript/CheckSeries.js,v $
- * $Date: 2015/06/05 19:41:33 $
- * $Revision: 1.2 $
- */
 var ContentResponse;
 function ContentResponseReturned(text, status, xml){
   var menu;

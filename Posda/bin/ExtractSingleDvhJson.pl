@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ExtractSingleDvhJson.pl,v $
-#$Date: 2013/07/26 19:54:22 $
-#$Revision: 1.2 $
 #
 use strict;
 use Fcntl qw(:seek);

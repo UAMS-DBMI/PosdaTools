@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/PhiSearch.pm,v $
-#$Date: 2014/10/28 20:33:34 $
-#$Revision: 1.13 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

@@ -1,7 +1,4 @@
 #!/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/WindowButtons.pm,v $
-#$Date: 2013/06/24 16:14:38 $
-#$Revision: 1.20 $
 #
 use strict;
 package Posda::HttpApp::WindowButtons;

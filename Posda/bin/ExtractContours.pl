@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ExtractContours.pl,v $
-#$Date: 2013/04/01 19:55:23 $
-#$Revision: 1.1 $
 #
 use strict;
 use Digest::MD5;

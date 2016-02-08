@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/EncodeDataset.pl,v $
-#$Date: 2013/11/07 19:36:23 $
-#$Revision: 1.1 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

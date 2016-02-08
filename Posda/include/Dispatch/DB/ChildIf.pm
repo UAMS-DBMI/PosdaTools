@@ -1,7 +1,4 @@
 package Dispatch::DB::ChildIf;
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/DB/ChildIf.pm,v $
-#$Date: 2012/03/05 15:36:01 $
-#$Revision: 1.2 $
 use strict;
 use FileHandle;
 use Socket;

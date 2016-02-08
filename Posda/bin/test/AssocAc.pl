@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/AssocAc.pl,v $
-#$Date: 2009/11/20 20:08:54 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

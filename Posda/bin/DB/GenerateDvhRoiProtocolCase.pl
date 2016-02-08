@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/GenerateDvhRoiProtocolCase.pl,v $
-#$Date: 2012/10/25 13:00:05 $
-#$Revision: 1.4 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

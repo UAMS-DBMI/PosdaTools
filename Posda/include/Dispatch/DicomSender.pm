@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/DicomSender.pm,v $
-#$Date: 2011/08/16 20:44:05 $
-#$Revision: 1.3 $
 #
 use strict;
 use Dispatch::DicomSnd;

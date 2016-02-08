@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/binval.tpl,v $
-#$Date: 2009/03/25 13:57:35 $
-#$Revision: 1.1 $
 #
 BinaryValues="Zero" {
 	0x0000

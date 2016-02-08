@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/SeriesElements.pl,v $
-#$Date: 2014/11/14 21:21:32 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

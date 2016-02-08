@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/SimplerDicomAnalysis.pm,v $
-#$Date: 2015/12/15 14:06:04 $
-#$Revision: 1.12 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

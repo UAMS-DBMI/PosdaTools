@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/AppController/JavaScriptApp.pm,v $
-#$Date: 2015/05/26 15:54:04 $
-#$Revision: 1.17 $
 #
 use strict;
 use POSIX 'strftime';

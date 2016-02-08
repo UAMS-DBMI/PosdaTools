@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/InfoExpander.pm,v $
-#$Date: 2015/06/05 19:44:16 $
-#$Revision: 1.8 $
 #
 use strict;
 package TciaCuration::InfoExpander;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/SubProcessEditor.pl,v $
-#$Date: 2015/06/02 13:00:50 $
-#$Revision: 1.5 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

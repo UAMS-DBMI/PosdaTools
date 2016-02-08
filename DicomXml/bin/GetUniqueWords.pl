@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/GetUniqueWords.pl,v $
-#$Date: 2014/05/08 19:38:45 $
-#$Revision: 1.2 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

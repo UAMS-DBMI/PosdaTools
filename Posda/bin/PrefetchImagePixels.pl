@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/PrefetchImagePixels.pl,v $
-#$Date: 2013/10/07 19:25:01 $
-#$Revision: 1.2 $
 #
 use strict;
 use Storable qw( store_fd fd_retrieve );

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/ContourExtractor.pl,v $
-#$Date: 2012/04/20 20:55:43 $
-#$Revision: 1.4 $
 #
 use strict;
 use Dispatch::Select;

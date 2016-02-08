@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/SplitIsoDoseContours.pl,v $
-#$Date: 2013/06/07 15:25:58 $
-#$Revision: 1.1 $
 #
 use strict;
 use Cwd;

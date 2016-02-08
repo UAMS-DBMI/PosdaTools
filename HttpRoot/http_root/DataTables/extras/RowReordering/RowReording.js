@@ -1,7 +1,4 @@
 /*
-$Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/RowReordering/RowReording.js,v $
-$Revision: 1.1 $
-$Date: 2013/01/16 19:10:54 $
 * File:        jquery.dataTables.rowReordering.js
 * Version:     1.0.0.
 * Author:      Jovan Popovic 

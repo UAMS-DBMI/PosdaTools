@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/ColReorder/media/js/ColReorder.js,v $
-   $Date: 2013/01/16 19:10:54 $
-   $Revision: 1.1 $
- */
-
 /*
  * File:        ColReorder.js
  * Version:     1.0.5
@@ -10,7 +5,6 @@
  * Description: Controls for column visiblity in DataTables
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Wed Sep 15 18:23:29 BST 2010
- * Modified:    $Date: 2013/01/16 19:10:54 $ by $Author: bbennett $
  * Language:    Javascript
  * License:     GPL v2 or BSD 3 point style
  * Project:     DataTables

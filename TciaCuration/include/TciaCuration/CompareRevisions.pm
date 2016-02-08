@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/CompareRevisions.pm,v $
-#$Date: 2015/06/10 21:07:05 $
-#$Revision: 1.2 $
 #
 use strict;
 use POSIX 'strftime';

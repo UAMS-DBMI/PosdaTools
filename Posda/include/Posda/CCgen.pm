@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/CCgen.pm,v $
-#$Date: 2009/07/17 16:42:44 $
-#$Revision: 1.4 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

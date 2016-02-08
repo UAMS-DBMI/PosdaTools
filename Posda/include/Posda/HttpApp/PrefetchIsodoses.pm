@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/PrefetchIsodoses.pm,v $
-#$Date: 2013/08/21 21:50:54 $
-#$Revision: 1.8 $
 #
 use strict;
 package Posda::HttpApp::PrefetchIsodoses;

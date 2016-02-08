@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/SessionInfo.pm,v $
-#$Date: 2013/10/26 06:03:57 $
-#$Revision: 1.1 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

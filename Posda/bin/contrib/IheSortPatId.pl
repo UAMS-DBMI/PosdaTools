@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/IheSortPatId.pl,v $
-#$Date: 2013/05/13 12:40:25 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

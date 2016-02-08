@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/FindRoutingDestinations.pl,v $
-#$Date: 2013/06/21 20:04:53 $
-#$Revision: 1.1 $
 #
 use strict;
 my $usage = "FindRoutingEndPoints.pl <name>";

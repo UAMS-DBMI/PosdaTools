@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/ColVis/media/docs/media/js/jquery.js,v $
-   $Date: 2013/01/16 19:10:54 $
-   $Revision: 1.1 $
- */
-
 /*!
  * jQuery JavaScript Library v1.5.1
  * http://jquery.com/

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Queue.pm,v $
-#$Date: 2015/06/21 19:30:44 $
-#$Revision: 1.21 $
 use strict;
 package Dispatch::Queue;
 use Errno qw(EINTR EIO :POSIX);

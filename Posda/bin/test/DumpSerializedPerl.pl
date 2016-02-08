@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/DumpSerializedPerl.pl,v $
-#$Date: 2014/05/08 13:36:27 $
-#$Revision: 1.2 $
 #
 use Storable qw( fd_retrieve );
 use Debug;

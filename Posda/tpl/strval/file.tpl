@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/file.tpl,v $
-#$Date: 2009/03/25 14:07:22 $
-#$Revision: 1.1 $
 #
 StringValues="IconImagePhotometricInterpretation" {
 	MONOCHROME1,

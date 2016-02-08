@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/dclunie/ValidateIod.pl,v $
-#$Date: 2009/09/21 19:20:37 $
-#$Revision: 1.2 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

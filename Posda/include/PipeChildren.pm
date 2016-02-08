@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/PipeChildren.pm,v $
-#$Date: 2013/07/15 20:17:20 $
-#$Revision: 1.9 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

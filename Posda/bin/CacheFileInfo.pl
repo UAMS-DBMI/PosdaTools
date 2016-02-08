@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 use strict;
-#$Source: /home/bbennett/pass/archive/Posda/bin/CacheFileInfo.pl,v $
-#$Date: 2015/06/21 19:29:53 $
-#$Revision: 1.4 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

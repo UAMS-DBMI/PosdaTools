@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/AddImportEventToDvhRoiProtocolCase.pl,v $
-#$Date: 2012/04/03 18:38:26 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

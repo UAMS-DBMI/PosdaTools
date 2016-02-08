@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/MakePublicBom.pl,v $
-#$Date: 2015/10/01 13:11:36 $
-#$Revision: 1.1 $
 #
 use strict;
 use Digest::MD5;

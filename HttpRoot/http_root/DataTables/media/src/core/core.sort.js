@@ -1,10 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/core/core.sort.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
 /**
  * Change the order of the table
  *  @param {object} oSettings dataTables settings object

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/echo_dose.pl,v $
-#$Date: 2011/06/10 17:09:01 $
-#$Revision: 1.2 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

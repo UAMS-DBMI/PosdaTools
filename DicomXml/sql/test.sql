@@ -1,6 +1,3 @@
--- $Source: /home/bbennett/pass/archive/DicomXml/sql/test.sql,v $
--- $Date: 2014/05/08 19:42:58 $
--- $Revision: 1.2 $
 -- 
 -- Copyright 2014, Bill Bennett
 --  Part of the Posda package

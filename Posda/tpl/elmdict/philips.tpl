@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/philips.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0009,0000) VERS="PDIC"	VR="UL"   VM="1"	Owner="CARDIO-D.R. 1.0"		Keyword="FileLocation"				Name="File Location"
 (0009,0000) VERS="PSPI"	VR="LO"   VM="1"	Owner="SPI-P-GV-CT Release 1"	Keyword="?"				Name="?"

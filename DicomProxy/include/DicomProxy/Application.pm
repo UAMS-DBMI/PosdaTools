@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/include/DicomProxy/Application.pm,v $
-#$Date: 2014/10/24 12:53:00 $
-#$Revision: 1.16 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

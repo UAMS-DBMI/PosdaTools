@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxyAnalysis/include/DicomProxyAnalysis/ShowCmd.pm,v $
-#$Date: 2014/02/19 15:22:58 $
-#$Revision: 1.3 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

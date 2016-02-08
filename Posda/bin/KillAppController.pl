@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-##$Source: /home/bbennett/pass/archive/Posda/bin/KillAppController.pl,v $
-##$Date: 2014/11/03 13:52:17 $
-##$Revision: 1.7 $
 ##
 #
 #Copyright 2010, Bill Bennett

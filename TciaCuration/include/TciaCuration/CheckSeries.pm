@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/CheckSeries.pm,v $
-#$Date: 2014/11/24 15:35:59 $
-#$Revision: 1.2 $
 #
 use strict;
 use POSIX 'strftime';

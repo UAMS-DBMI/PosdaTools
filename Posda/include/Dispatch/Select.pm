@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Select.pm,v $
-#$Date: 2015/05/20 20:08:13 $
-#$Revision: 1.23 $
 
 use strict;
 use FileHandle;

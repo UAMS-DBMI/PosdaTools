@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/BuildExtractionCommands.pl,v $ #$Date: 2015/12/15 14:10:27 $
-#$Revision: 1.2 $
 #
 use strict;
 use DBI;

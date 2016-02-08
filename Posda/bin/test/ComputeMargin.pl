@@ -14,9 +14,6 @@ my $val_types = {
   point => 1,
   sphere => 1,
 };
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/ComputeMargin.pl,v $
-#$Date: 2011/12/06 17:50:20 $
-#$Revision: 1.17 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

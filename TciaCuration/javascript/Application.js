@@ -1,8 +1,3 @@
-/*
- * $Source: /home/bbennett/pass/archive/TciaCuration/javascript/Application.js,v $
- * $Date: 2015/02/23 22:33:16 $
- * $Revision: 1.3 $
- */
 var MenuResponse;
 function MenuResponseReturned(text, status, xml){
   var menu;

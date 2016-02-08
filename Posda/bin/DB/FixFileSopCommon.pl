@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/FixFileSopCommon.pl,v $ #$Date: 2016/01/26 19:37:14 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

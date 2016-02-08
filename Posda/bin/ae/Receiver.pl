@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Date: 2013/05/13 12:29:55 $
-#$Revision: 1.13 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

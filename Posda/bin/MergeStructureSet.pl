@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/MergeStructureSet.pl,v $
-#$Date: 2014/12/04 15:14:53 $
-#$Revision: 1.5 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

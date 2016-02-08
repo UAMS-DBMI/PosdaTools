@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/GenerateMasks.pl,v $
-#$Date: 2010/05/03 15:07:45 $
-#$Revision: 1.1 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

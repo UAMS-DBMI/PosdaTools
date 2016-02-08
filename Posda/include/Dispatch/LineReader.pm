@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/LineReader.pm,v $
-#$Date: 2014/06/12 17:18:24 $
-#$Revision: 1.7 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/CheckDupId.pl,v $
-#$Date: 2014/05/08 18:54:52 $
-#$Revision: 1.1 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

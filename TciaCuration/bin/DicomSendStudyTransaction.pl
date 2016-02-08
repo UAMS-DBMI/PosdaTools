@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/DicomSendStudyTransaction.pl,v $
-#$Date: 2015/06/21 19:36:10 $
-#$Revision: 1.1 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

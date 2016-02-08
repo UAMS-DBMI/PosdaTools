@@ -1,7 +1,4 @@
 <! --
-  $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/Scroller/media/data/server_processing.php,v $
-  $Date: 2013/01/16 19:10:54 $
-  $Revision: 1.1 $
 -->
 
 <?php

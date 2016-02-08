@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/PrintRotations.pl,v $
-#$Date: 2011/12/05 16:57:36 $
-#$Revision: 1.2 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

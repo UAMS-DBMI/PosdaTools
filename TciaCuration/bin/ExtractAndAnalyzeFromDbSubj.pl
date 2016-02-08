@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/ExtractAndAnalyzeFromDbSubj.pl,v $
-#$Date: 2015/01/06 20:45:34 $
-#$Revision: 1.1 $
 #
 use strict;
 use Storable qw( store_fd );

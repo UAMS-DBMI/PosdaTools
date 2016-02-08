@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/FileImport.pm,v $
-#$Date: 2010/09/14 14:14:16 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

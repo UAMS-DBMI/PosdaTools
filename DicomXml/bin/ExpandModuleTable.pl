@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/ExpandModuleTable.pl,v $
-#$Date: 2014/08/27 12:30:26 $
-#$Revision: 1.10 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

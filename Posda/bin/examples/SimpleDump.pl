@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 use Posda::Dataset;
-#$Source: /home/bbennett/pass/archive/Posda/bin/examples/SimpleDump.pl,v $
-#$Date: 2009/07/17 16:39:12 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

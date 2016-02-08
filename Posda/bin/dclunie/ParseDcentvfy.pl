@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/dclunie/ParseDcentvfy.pl,v $
-#$Date: 2013/07/18 16:41:33 $
-#$Revision: 1.1 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

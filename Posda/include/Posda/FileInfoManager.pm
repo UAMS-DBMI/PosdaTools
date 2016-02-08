@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/FileInfoManager.pm,v $
-#$Date: 2014/12/05 13:53:29 $
-#$Revision: 1.17 $
 #
 #  FileManager manages several hashs for in use DICOM files.
 #  FileManager->{ManagedFiles}->

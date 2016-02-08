@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/dd.tpl,v $
-#$Date: 2010/10/19 20:43:46 $
-#$Revision: 1.6 $
 #
 (0009,0000) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"
 (0009,0001) VERS="ACU"	VR="IS"   VM="1"	Owner="ACUSON"	Keyword="?"			Name="?"

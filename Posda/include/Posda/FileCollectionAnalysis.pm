@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/FileCollectionAnalysis.pm,v $
-#$Date: 2015/06/03 14:17:32 $
-#$Revision: 1.16 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

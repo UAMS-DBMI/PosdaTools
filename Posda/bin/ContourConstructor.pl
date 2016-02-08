@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ContourConstructor.pl,v $
-#$Date: 2013/08/12 13:32:37 $
-#$Revision: 1.6 $
 #
 # Input Structure:
 #<STDIN> = [

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/LocalUIDServer.pl,v $
-#$Date: 2011/09/08 23:35:46 $
-#$Revision: 1.2 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

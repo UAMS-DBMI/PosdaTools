@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/MakeIsoDoseFiles.pl,v $
-#$Date: 2013/06/07 11:55:44 $
-#$Revision: 1.1 $
 #
 use strict;
 use Storable qw( store_fd fd_retrieve );

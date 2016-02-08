@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Dicom/Storage.pm,v $
-#$Date: 2015/04/22 19:35:51 $
-#$Revision: 1.11 $
 use Dispatch::Dicom;
 my $dbg = sub {print @_};
 use strict;

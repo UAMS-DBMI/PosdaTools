@@ -1,6 +1,4 @@
 # $RCSfile: Template.pm,v $
-# $Revision: 1.6 $
-# $Date: 2010/04/21 17:54:11 $
 package Dispatch::Template;
 sub Dispatch {
   my($d, $name, $queue, $sess, $env) = @_;

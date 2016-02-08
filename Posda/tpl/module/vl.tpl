@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/vl.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 Module="VLImage"
 	Name="ImageType"									Type="1"	ValueSelector="0"	StringEnumValues="ImageType1"

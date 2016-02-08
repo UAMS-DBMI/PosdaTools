@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/Messages.pm,v $
-#$Date: 2011/08/11 16:11:16 $
-#$Revision: 1.5 $
 #
 use strict;
 {

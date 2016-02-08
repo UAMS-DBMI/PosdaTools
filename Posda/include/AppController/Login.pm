@@ -1,7 +1,4 @@
 #!/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/AppController/Login.pm,v $
-#$Date: 2013/10/20 13:10:59 $
-#$Revision: 1.6 $
 #
 use strict;
 package AppController::Login;

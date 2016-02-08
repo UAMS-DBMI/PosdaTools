@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DirPerlStructToJson.pl,v $
-#$Date: 2014/08/27 12:27:02 $
-#$Revision: 1.1 $
 use strict;
 use Cwd;
 my $usage = "DirPerlStructToJson.pl <from_dir> <to_dir>\n";

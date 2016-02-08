@@ -1,7 +1,4 @@
 #!/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/SubController.pm,v $
-#$Date: 2012/02/01 13:02:15 $
-#$Revision: 1.7 $
 #
 use strict;
 package Posda::HttpApp::SubController;

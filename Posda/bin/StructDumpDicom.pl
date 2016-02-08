@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/StructDumpDicom.pl,v $
-#$Date: 2011/09/12 13:45:12 $
-#$Revision: 1.3 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

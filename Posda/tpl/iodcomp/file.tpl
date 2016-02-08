@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/iodcomp/file.tpl,v $
-#$Date: 2009/03/25 14:02:28 $
-#$Revision: 1.1 $
 #
 CompositeIOD="BasicDirectory"					Condition="MediaStorageDirectoryInstance"
 	InformationEntity="File"

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/DicomClient.pm,v $
-#$Date: 2013/04/09 15:49:37 $
-#$Revision: 1.2 $
 #
 use strict;
 use Dispatch::Select;

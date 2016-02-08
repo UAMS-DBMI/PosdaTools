@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/agfa.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0009,0010) VERS="AGFA"	VR="LO"   VM="1"	Owner="AGFA"		Keyword="?"				Name="?"
 (0009,0011) VERS="AGFA"	VR="LO"   VM="1"	Owner="AGFA"		Keyword="?"				Name="?"

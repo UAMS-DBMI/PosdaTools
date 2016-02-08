@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/CountBitmapBits.pl,v $
-#$Date: 2012/03/02 16:49:15 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

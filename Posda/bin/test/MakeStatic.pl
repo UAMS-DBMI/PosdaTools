@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/MakeStatic.pl,v $
-#$Date: 2011/05/12 17:44:34 $
-#$Revision: 1.4 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package
@@ -85,9 +82,6 @@ sub finder{
 
 my $header = <<'EOF';
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/MakeStatic.pl,v $
-#$Date: 2011/05/12 17:44:34 $
-#$Revision: 1.4 $
 #
 
 #########################Static Content#########################

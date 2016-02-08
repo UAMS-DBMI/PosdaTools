@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/BgColor.pm,v $
-#$Date: 2012/12/19 16:07:35 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/CnvRtogToDicom.pm,v $
-#$Date: 2013/03/15 20:57:59 $
-#$Revision: 1.17 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

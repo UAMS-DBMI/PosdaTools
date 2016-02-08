@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ByteSwapDicomPixelData.pl,v $
-#$Date: 2013/12/13 20:58:45 $
-#$Revision: 1.1 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

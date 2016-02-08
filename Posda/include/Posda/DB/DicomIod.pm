@@ -1,4 +1,3 @@
-#$Revision: 1.22 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

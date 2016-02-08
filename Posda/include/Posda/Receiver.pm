@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Receiver.pm,v $
-#$Date: 2016/01/26 19:39:30 $
-#$Revision: 1.21 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

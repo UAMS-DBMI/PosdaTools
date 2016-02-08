@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Command/Basic.pm,v $
-#$Date: 2010/06/11 20:55:39 $
-#$Revision: 1.13 $
 
 use strict;
 use Debug;

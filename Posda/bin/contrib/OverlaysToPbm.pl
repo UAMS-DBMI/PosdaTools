@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/OverlaysToPbm.pl,v $
-#$Date: 2008/12/12 20:46:59 $
-#$Revision: 1.7 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

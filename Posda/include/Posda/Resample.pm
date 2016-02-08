@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Resample.pm,v $
-#$Date: 2012/03/15 19:28:17 $
-#$Revision: 1.5 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/PixelDigest.pl,v $
-#$Date: 2013/04/01 19:46:51 $
-#$Revision: 1.4 $
 #
 use strict;
 use Digest::MD5;

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/file.tpl,v $
-#$Date: 2009/03/25 14:04:49 $
-#$Revision: 1.1 $
 #
 Module="FileMetaInformation"
 

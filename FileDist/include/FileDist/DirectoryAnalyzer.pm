@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/DirectoryAnalyzer.pm,v $
-#$Date: 2013/09/27 19:50:29 $
-#$Revision: 1.2 $
 #
 use strict;
 package FileDist::DirectoryAnalyzer;

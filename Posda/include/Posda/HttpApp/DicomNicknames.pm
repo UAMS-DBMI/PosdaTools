@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/DicomNicknames.pm,v $
-#$Date: 2013/10/07 02:39:26 $
-#$Revision: 1.3 $
 #
 use strict;
 {

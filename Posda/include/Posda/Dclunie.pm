@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Dclunie.pm,v $
-#$Date: 2012/02/07 13:41:44 $
-#$Revision: 1.10 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

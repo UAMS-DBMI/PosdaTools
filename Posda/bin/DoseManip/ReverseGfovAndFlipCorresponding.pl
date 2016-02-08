@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DoseManip/ReverseGfovAndFlipCorresponding.pl,v $
-#$Date: 2013/02/06 20:01:28 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

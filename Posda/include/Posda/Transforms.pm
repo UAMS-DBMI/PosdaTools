@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Transforms.pm,v $
-#$Date: 2015/05/31 23:35:53 $
-#$Revision: 1.11 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

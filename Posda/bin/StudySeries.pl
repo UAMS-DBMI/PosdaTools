@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/StudySeries.pl,v $
-#$Date: 2013/08/16 18:53:32 $
-#$Revision: 1.6 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

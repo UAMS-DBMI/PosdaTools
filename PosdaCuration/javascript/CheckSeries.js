@@ -1,8 +1,3 @@
-/*
- * $Source: /home/bbennett/pass/archive/PosdaCuration/javascript/CheckSeries.js,v $
- * $Date: 2015/11/04 20:19:09 $
- * $Revision: 1.1 $
- */
 var ContentResponse;
 function ContentResponseReturned(text, status, xml){
   var menu;

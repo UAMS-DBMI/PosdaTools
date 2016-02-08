@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Dicom/Verification.pm,v $
-#$Date: 2010/10/12 21:25:48 $
-#$Revision: 1.2 $
 use Dispatch::Dicom;
 my $dbg = sub {print @_};
 use Dispatch::Dicom::Message;

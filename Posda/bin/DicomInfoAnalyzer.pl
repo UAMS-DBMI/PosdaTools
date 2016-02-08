@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DicomInfoAnalyzer.pl,v $
-#$Date: 2014/06/03 15:51:09 $
-#$Revision: 1.2 $
 #
 use strict;
 use Posda::Try;

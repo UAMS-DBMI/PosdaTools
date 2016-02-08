@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/ToPbm.pl,v $
-#$Date: 2011/09/02 01:16:59 $
-#$Revision: 1.3 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/GetIodModuleTable.pl,v $
-#$Date: 2014/07/25 13:51:40 $
-#$Revision: 1.1 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

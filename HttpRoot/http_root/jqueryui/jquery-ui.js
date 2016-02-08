@@ -1,7 +1,4 @@
 /*!
- $Source: /home/bbennett/pass/archive/HttpRoot/http_root/jqueryui/jquery-ui.js,v $
- $Date: 2013/01/16 19:10:53 $
- $Revision: 1.1 $
  * jQuery UI 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)

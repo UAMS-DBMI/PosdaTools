@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/UidCollector.pm,v $
-#$Date: 2013/10/06 02:26:31 $
-#$Revision: 1.1 $
 #
 use strict;
 package FileDist::UidCollector;

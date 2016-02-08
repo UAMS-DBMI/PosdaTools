@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/UncompressBitMap.pl,v $
-#$Date: 2011/11/04 20:49:05 $
-#$Revision: 1.3 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

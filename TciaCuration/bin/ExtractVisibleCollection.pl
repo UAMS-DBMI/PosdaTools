@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/ExtractVisibleCollection.pl,v $
-#$Date: 2014/11/14 21:48:10 $
-#$Revision: 1.2 $
 #
 use strict;
 use DBI;

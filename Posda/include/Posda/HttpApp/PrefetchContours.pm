@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/PrefetchContours.pm,v $
-#$Date: 2013/06/21 20:05:42 $
-#$Revision: 1.9 $
 #
 use strict;
 package Posda::HttpApp::PrefetchContours;

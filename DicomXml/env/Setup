@@ -1,8 +1,5 @@
 # Set up DicomXml Environment based on $1
 #
-#$Source: /home/bbennett/pass/archive/DicomXml/env/Setup,v $
-#$Date: 2014/05/08 19:42:05 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

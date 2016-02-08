@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/report/BrachySummary.pl,v $
-#$Date: 2011/06/23 15:31:25 $
-#$Revision: 1.4 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

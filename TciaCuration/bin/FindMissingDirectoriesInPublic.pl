@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/FindMissingDirectoriesInPublic.pl,v $
-#$Date: 2015/08/12 21:29:27 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

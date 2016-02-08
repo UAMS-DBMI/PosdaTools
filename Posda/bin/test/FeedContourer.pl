@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/FeedContourer.pl,v $
-#$Date: 2011/12/01 16:42:56 $
-#$Revision: 1.2 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

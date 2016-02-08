@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 use strict;
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/ImportTgz.pl,v $
-#$Date: 2012/04/10 14:14:45 $
-#$Revision: 1.3 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/Anonymizer.pm,v $
-#$Date: 2014/05/14 16:03:54 $
-#$Revision: 1.12 $
 #
 use strict;
 use Posda::HttpApp::GenericIframe;

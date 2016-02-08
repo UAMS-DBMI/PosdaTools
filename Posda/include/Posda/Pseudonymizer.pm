@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Pseudonymizer.pm,v $
-#$Date: 2012/02/07 13:41:44 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

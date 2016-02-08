@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/ParseIntoPerlStruct.pl,v $
-#$Date: 2014/08/12 19:51:17 $
-#$Revision: 1.2 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

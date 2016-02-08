@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/DebugObjs.pm,v $
-#$Date: 2011/10/17 13:21:46 $
-#$Revision: 1.1 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

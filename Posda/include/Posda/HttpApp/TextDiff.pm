@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/TextDiff.pm,v $
-#$Date: 2011/03/03 21:29:21 $
-#$Revision: 1.1 $
 #
 use strict;
 package Posda::HttpApp::TextDiff;

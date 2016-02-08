@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/DirMenu.pl,v $
-#$Date: 2014/11/06 18:04:08 $
-#$Revision: 1.2 $
 #
 use strict;
 my $dir = $ARGV[0];

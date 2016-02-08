@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/HandleTransactionSubProcess.pl,v $
-#$Date: 2016/01/26 19:58:45 $
-#$Revision: 1.18 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

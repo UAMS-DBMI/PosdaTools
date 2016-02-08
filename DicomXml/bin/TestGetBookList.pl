@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/TestGetBookList.pl,v $
-#$Date: 2014/05/08 19:30:33 $
-#$Revision: 1.1 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

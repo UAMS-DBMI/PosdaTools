@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/DvhBinCollector.pl,v $
-#$Date: 2011/10/14 20:08:20 $
-#$Revision: 1.2 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

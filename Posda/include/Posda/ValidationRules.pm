@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/ValidationRules.pm,v $
-#$Date: 2015/12/15 14:06:03 $
-#$Revision: 1.18 $
 package Posda::ValidationRules;
 use vars qw( @rules @consistent_series @consistent_study @consistent_patient);
 my $basic_sop_rules = [ "list", 

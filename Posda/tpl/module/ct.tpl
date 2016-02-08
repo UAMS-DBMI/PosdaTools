@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/ct.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 DefineMacro="CTFrameVOILUTMacro" InformationEntity="FunctionalGroup"
 	Sequence="FrameVOILUTSequence"				Type="1"	VM="1"

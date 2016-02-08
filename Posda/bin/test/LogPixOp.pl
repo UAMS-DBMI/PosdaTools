@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/LogPixOp.pl,v $
-#$Date: 2011/11/15 19:33:45 $
-#$Revision: 1.6 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

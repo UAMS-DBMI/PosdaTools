@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/AnalyzeRoi.pl,v $
-#$Date: 2013/04/09 15:48:44 $
-#$Revision: 1.1 $
 #
 use strict;
 my $usage = 

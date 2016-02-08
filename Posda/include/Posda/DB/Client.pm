@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w use strict;
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/DB/Client.pm,v $
-#$Date: 2012/04/10 14:14:45 $
-#$Revision: 1.9 $
 #
 #
 #Copyright 2010, Bill Bennett

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/BuildParsedDicom.pl,v $
-#$Date: 2014/08/15 15:31:15 $
-#$Revision: 1.1 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

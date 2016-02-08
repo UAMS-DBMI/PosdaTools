@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/cache/SortedDigestsFromPosdaDbFiles.pl,v $
-#$Date: 2015/12/15 14:07:55 $
-#$Revision: 1.1 $
 #
 #Copyright 2015, Bill Bennett
 # Part of the Posda package

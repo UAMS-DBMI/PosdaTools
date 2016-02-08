@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/DumpDicom.pl,v $
-#$Date: 2014/07/11 20:43:07 $
-#$Revision: 1.11 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

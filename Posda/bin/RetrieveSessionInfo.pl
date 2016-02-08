@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/RetrieveSessionInfo.pl,v $
-#$Date: 2013/10/24 04:04:09 $
-#$Revision: 1.4 $
 #
 #Copyright 2013, Bill Bennett and Erik Strom
 # Part of the Posda package

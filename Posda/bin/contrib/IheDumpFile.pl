@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/IheDumpFile.pl,v $
-#$Date: 2014/02/19 13:34:12 $
-#$Revision: 1.3 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

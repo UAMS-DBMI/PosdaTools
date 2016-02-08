@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/CalculatePixelCorners.pl,v $
-#$Date: 2009/02/25 16:11:02 $
-#$Revision: 1.6 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

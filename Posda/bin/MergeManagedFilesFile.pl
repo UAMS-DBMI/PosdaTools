@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/MergeManagedFilesFile.pl,v $
-#$Date: 2011/12/07 18:30:59 $
-#$Revision: 1.2 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

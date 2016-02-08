@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/SeriesReport.pm,v $
-#$Date: 2016/01/13 13:59:45 $
-#$Revision: 1.2 $
 #
 use strict;
 use POSIX 'strftime';

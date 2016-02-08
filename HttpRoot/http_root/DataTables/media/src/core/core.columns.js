@@ -1,10 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/core/core.columns.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
 /**
  * Add a column to the list used for the table with default values
  *  @param {object} oSettings dataTables settings object

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DoseManip/FlipDosePlanesHoriz.pl,v $
-#$Date: 2012/05/23 15:32:17 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

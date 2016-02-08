@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/spi.tpl,v $
-#$Date: 2009/03/25 14:01:18 $
-#$Revision: 1.1 $
 #
 (0009,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI"			Keyword="Comments"				Name="Comments"
 (0009,0010) VERS="SPI" VR="LO"   VM="1"	Owner="SPI RELEASE 1"		Keyword="Comments"				Name="Comments"

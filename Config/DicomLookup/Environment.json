@@ -1,6 +1,3 @@
-//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomLookup/Environment.json,v $
-//  $Date: 2014/09/22 18:43:41 $
-//  $Revision: 1.1 $
 // 
 {
   "ApplicationInitClass" : "DicomLookup::Application",

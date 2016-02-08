@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/GetElementValue.pl,v $
-#$Date: 2012/03/28 12:21:27 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

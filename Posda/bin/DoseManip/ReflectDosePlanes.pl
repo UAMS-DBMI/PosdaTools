@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DoseManip/ReflectDosePlanes.pl,v $
-#$Date: 2012/07/23 15:08:07 $
-#$Revision: 1.4 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

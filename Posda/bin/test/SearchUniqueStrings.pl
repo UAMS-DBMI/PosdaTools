@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/SearchUniqueStrings.pl,v $
-#$Date: 2014/05/13 20:17:48 $
-#$Revision: 1.2 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

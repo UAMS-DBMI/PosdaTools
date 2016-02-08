@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w 
 use strict;
-#$Source: /home/bbennett/pass/archive/Posda/bin/RoiVolume.pl,v $
-#$Date: 2012/03/02 15:51:37 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

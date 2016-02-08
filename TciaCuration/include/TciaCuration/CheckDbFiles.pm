@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/CheckDbFiles.pm,v $
-#$Date: 2015/05/20 19:57:37 $
-#$Revision: 1.1 $
 #
 use strict;
 use POSIX 'strftime';

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Validator.pm,v $
-#$Date: 2010/05/11 17:13:20 $
-#$Revision: 1.3 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

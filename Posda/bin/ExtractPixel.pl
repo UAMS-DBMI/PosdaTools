@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ExtractPixel.pl,v $
-#$Date: 2013/04/18 15:05:16 $
-#$Revision: 1.1 $
 #
 use strict;
 use Digest::MD5;

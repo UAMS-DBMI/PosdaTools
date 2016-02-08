@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/PosdaApplication.pm,v $
-#$Date: 2013/08/19 18:19:52 $
-#$Revision: 1.4 $
 #
 use strict;
 use AppController::Start;

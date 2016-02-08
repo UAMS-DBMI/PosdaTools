@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Test.pm,v $
-#$Date: 2009/05/28 17:24:11 $
-#$Revision: 1.5 $
 
 use strict;
 package Dispatch::Test;

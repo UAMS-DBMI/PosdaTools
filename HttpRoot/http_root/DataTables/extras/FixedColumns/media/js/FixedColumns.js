@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/FixedColumns/media/js/FixedColumns.js,v $
-   $Date: 2013/01/16 19:10:54 $
-   $Revision: 1.1 $
- */
-
 /**
  * @summary     FixedColumns
  * @description Freeze columns in place on a scrolling DataTable

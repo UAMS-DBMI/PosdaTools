@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/CompareFiles.pm,v $
-#$Date: 2013/12/03 14:37:57 $
-#$Revision: 1.6 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/AutoFill/media/docs/media/js/shCore.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 /**
  * SyntaxHighlighter
  * http://alexgorbatchev.com/SyntaxHighlighter

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/SeriesReport.pm,v $
-#$Date: 2015/06/02 13:05:41 $
-#$Revision: 1.5 $
 #
 use strict;
 use POSIX 'strftime';

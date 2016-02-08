@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/iodcomp/vl.tpl,v $
-#$Date: 2010/04/30 18:53:52 $
-#$Revision: 1.2 $
 #
 CompositeIOD="VLEndoscopicImage"		Condition="VisibleLightEndoscopicImageInstance"
 	InformationEntity="File"

@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/UnHideStudy.pl,v $ #$Date: 2016/01/15 18:11:28 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

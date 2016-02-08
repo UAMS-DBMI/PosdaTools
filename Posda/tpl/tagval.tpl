@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/tagval.tpl,v $
-#$Date: 2009/03/25 13:58:47 $
-#$Revision: 1.1 $
 #
 # should check these with data dictionary ?
 # should match with ImageType value 3 allowed combinations ?

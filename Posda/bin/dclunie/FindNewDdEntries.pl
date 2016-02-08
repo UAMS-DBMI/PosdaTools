@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/dclunie/FindNewDdEntries.pl,v $
-#$Date: 2010/04/30 20:15:09 $
-#$Revision: 1.1 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

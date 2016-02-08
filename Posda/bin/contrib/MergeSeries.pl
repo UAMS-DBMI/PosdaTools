@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/MergeSeries.pl,v $
-#$Date: 2011/06/23 15:31:26 $
-#$Revision: 1.4 $
 #
 #Copyright 2009, Bill Bennett
 # Part of the Posda package

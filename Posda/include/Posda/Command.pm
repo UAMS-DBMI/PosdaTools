@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Command.pm,v $
-#$Date: 2014/02/14 21:00:31 $
-#$Revision: 1.12 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

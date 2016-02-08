@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/other.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0003,0000) VERS="AEG"	VR="US"   VM="1-n"	Owner="AEGIS_DICOM_2.00"	Keyword="?"			Name="?"
 (0005,0000) VERS="AEG"	VR="US"   VM="1-n"	Owner="AEGIS_DICOM_2.00"	Keyword="?"			Name="?"

@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/tests_onhold/1_dom/th_in_body.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 // DATA_TEMPLATE: dom_data_th
 oTest.fnStart( "Sanity checks for DataTables with DOM data and a TH in the body" );
 

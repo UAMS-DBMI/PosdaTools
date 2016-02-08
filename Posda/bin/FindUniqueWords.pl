@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/FindUniqueWords.pl,v $
-#$Date: 2016/01/26 19:38:18 $
-#$Revision: 1.5 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

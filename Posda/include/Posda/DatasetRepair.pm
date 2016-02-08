@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/DatasetRepair.pm,v $
-#$Date: 2010/12/21 13:19:14 $
-#$Revision: 1.1 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

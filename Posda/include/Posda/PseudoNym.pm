@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/PseudoNym.pm,v $
-#$Date: 2008/04/30 19:17:35 $
-#$Revision: 1.2 $
 #
 #
 #Copyright 2008, Bill Bennett

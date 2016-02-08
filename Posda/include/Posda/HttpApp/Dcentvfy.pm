@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/Dcentvfy.pm,v $
-#$Date: 2013/09/05 15:21:56 $
-#$Revision: 1.1 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

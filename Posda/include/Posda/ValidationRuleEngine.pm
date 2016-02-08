@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/ValidationRuleEngine.pm,v $
-#$Date: 2014/05/08 14:10:21 $
-#$Revision: 1.8 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/condn.tpl,v $
-#$Date: 2009/09/21 19:14:31 $
-#$Revision: 1.2 $
 #
 # Conditions to detect Composite IOD presence ...
 #

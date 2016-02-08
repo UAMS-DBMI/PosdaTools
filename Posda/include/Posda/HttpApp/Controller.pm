@@ -1,7 +1,4 @@
 #!/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/Controller.pm,v $
-#$Date: 2013/06/20 15:56:16 $
-#$Revision: 1.29 $
 #
 use strict;
 package Posda::HttpApp::Controller;

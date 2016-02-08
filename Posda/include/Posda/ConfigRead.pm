@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/ConfigRead.pm,v $
-#$Date: 2013/11/01 19:36:54 $
-#$Revision: 1.4 $
 #
 use strict;
 use JSON::PP;

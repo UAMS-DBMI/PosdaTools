@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/MakePlan.pl,v $
-#$Date: 2008/07/24 11:30:24 $
-#$Revision: 1.2 $
 
 use strict;
 use Posda::Dataset;

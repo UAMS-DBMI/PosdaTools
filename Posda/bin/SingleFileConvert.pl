@@ -1,9 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
 {
-#$Source: /home/bbennett/pass/archive/Posda/bin/SingleFileConvert.pl,v $
-#$Date: 2014/07/23 14:42:58 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package
@@ -3243,9 +3240,6 @@ InitDD();
 }
 {
 #
-#$Source: /home/bbennett/pass/archive/Posda/bin/SingleFileConvert.pl,v $
-#$Date: 2014/07/23 14:42:58 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package
@@ -4519,9 +4513,6 @@ sub new {
 }
 }
 {
-#$Source: /home/bbennett/pass/archive/Posda/bin/SingleFileConvert.pl,v $
-#$Date: 2014/07/23 14:42:58 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package
@@ -4731,9 +4722,6 @@ sub DumpWarnings{
 }
 {
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/SingleFileConvert.pl,v $
-#$Date: 2014/07/23 14:42:58 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package
@@ -4836,9 +4824,6 @@ sub PrintBigEndian{
 }
 }
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/SingleFileConvert.pl,v $
-#$Date: 2014/07/23 14:42:58 $
-#$Revision: 1.1 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

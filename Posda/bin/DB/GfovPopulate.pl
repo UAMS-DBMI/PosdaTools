@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/GfovPopulate.pl,v $
-#$Date: 2013/09/06 19:23:54 $
-#$Revision: 1.2 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

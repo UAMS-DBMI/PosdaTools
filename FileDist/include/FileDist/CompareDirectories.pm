@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/CompareDirectories.pm,v $
-#$Date: 2013/12/03 14:37:40 $
-#$Revision: 1.10 $
 #
 use strict;
 use Posda::HttpApp::GenericIframe;

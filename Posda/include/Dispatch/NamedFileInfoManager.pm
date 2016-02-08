@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/NamedFileInfoManager.pm,v $
-#$Date: 2013/03/28 21:41:21 $
-#$Revision: 1.1 $
 use strict;
 package Dispatch::NamedFileInfoManager;
 use Posda::FileInfoManager;

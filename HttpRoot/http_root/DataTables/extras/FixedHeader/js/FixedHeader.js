@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/FixedHeader/js/FixedHeader.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 /*
  * File:        FixedHeader.js
  * Version:     2.0.6

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/iodcomp/rt.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 CompositeIOD="RTImage"		Condition="RTImageInstance"
 	InformationEntity="File"

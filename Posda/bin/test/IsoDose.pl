@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/IsoDose.pl,v $
-#$Date: 2011/11/10 18:15:53 $
-#$Revision: 1.3 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

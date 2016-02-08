@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/CheckBOM.pl,v $
-#$Date: 2014/05/20 13:31:24 $
-#$Revision: 1.6 $
 #
 use File::Find;
 use Digest::MD5;

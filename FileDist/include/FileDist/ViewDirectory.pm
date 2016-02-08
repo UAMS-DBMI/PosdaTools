@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/ViewDirectory.pm,v $
-#$Date: 2014/09/25 20:54:25 $
-#$Revision: 1.5 $
 #
 use strict;
 use Posda::HttpApp::GenericIframe;

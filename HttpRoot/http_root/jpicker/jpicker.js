@@ -1,7 +1,4 @@
 ﻿/*
- $Source: /home/bbennett/pass/archive/HttpRoot/http_root/jpicker/jpicker.js,v $
- $Date: 2013/01/16 19:10:57 $
- $Revision: 1.1 $
  * jPicker 1.1.6
  *
  * jQuery Plugin for Photoshop style color picker

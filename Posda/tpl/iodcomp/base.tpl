@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/iodcomp/base.tpl,v $
-#$Date: 2010/04/30 18:53:52 $
-#$Revision: 1.2 $
 #
 CompositeIOD="CRImage"			Condition="CRImageInstance"
 	InformationEntity="File"

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/UIDServer.pm,v $
-#$Date: 2011/09/08 23:35:46 $
-#$Revision: 1.5 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

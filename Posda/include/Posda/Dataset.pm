@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Dataset.pm,v $
-#$Date: 2015/05/20 20:12:02 $
-#$Revision: 1.125 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

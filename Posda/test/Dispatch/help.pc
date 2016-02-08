@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/test/Dispatch/help.pc,v $
-#$Date: 2009/05/27 16:04:01 $
-#$Revision: 1.2 $
 my($this, $fh, $out, $args) = @_;
 if($#{$args} >= 0){
   my $obj_name = $args->[0];

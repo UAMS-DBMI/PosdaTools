@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/HexDump.pm,v $
-#$Date: 2010/10/27 12:17:18 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

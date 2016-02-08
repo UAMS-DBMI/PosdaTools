@@ -1,7 +1,4 @@
 #!/usr/bin/speedy -w -- -t4
-#$Source: /home/bbennett/pass/archive/Posda/bin/SpeedyDicomInfoAnalyzer.pl,v $
-#$Date: 2013/06/28 12:56:33 $
-#$Revision: 1.3 $
 #
 use strict;
 use Posda::Try;

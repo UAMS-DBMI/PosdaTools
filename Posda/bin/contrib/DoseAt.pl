@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/DoseAt.pl,v $
-#$Date: 2013/01/30 21:22:55 $
-#$Revision: 1.12 $
 
 use Cwd;
 use strict;

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/camtron.tpl,v $
-#$Date: 2009/03/25 13:59:49 $
-#$Revision: 1.1 $
 #
 (0029,0010) VERS="CMT"	VR="LT"   VM="1"	Owner="CAMTRONICS IP"		Keyword="?"				Name="?"
 (0029,0010) VERS="CMT"	VR="LT"   VM="1"	Owner="CAMTRONICS"		Keyword="Commentline"			Name="Commentline"

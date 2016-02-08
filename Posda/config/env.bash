@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/config/env.bash,v $
-#$Date: 2010/02/23 17:27:35 $
-#$Revision: 1.1 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

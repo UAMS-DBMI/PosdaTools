@@ -1,10 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/core/core.data.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
 /**
  * Add a data array to the table, creating DOM node etc. This is the parallel to 
  * _fnGatherData, but for adding rows from a Javascript source, rather than a

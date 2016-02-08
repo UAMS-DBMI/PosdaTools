@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/cache/SortedDigestsFromDicomInfoCache.pl,v $
-#$Date: 2015/04/20 20:27:10 $
-#$Revision: 1.1 $
 #
 #Copyright 2015, Bill Bennett
 # Part of the Posda package

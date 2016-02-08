@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/IheCompareDir.pl,v $
-#$Date: 2013/05/01 15:26:41 $
-#$Revision: 1.3 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

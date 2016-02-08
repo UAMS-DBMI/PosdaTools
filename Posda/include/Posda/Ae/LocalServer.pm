@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Ae/LocalServer.pm,v $
-#$Date: 2010/01/03 22:44:36 $
-#$Revision: 1.3 $
 use strict;
 {
   ########################################

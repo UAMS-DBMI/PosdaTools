@@ -1,8 +1,3 @@
-/*
- * $Source: /home/bbennett/pass/archive/PosdaCuration/javascript/Application.js,v $
- * $Date: 2015/11/03 16:22:20 $
- * $Revision: 1.1 $
- */
 var MenuResponse;
 function MenuResponseReturned(text, status, xml){
   var menu;

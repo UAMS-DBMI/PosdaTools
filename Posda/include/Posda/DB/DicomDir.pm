@@ -1,4 +1,3 @@
-#$Revision: 1.3 $
 package Posda::DB::DicomDir;
 #
 #Copyright 2008, Bill Bennett

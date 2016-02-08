@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Ae/Negotiation.pm,v $
-#$Date: 2010/01/03 22:45:25 $
-#$Revision: 1.1 $
 
 use strict;
 {

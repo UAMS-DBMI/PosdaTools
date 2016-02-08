@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 use strict;
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/DirReader.pl,v $
-#$Date: 2012/03/23 20:37:19 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

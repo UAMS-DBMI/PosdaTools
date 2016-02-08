@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/waveform.tpl,v $
-#$Date: 2010/04/30 19:21:25 $
-#$Revision: 1.4 $
 #
 Module="Synchronization"
 	Name="SynchronizationFrameOfReferenceUID"		Type="1"

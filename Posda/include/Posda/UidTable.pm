@@ -1,7 +1,4 @@
 #
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/UidTable.pm,v $
-#$Date: 2012/05/23 16:58:31 $
-#$Revision: 1.6 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

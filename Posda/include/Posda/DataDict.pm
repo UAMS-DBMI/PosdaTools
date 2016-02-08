@@ -1,7 +1,4 @@
 #
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/DataDict.pm,v $
-#$Date: 2015/12/22 14:45:24 $
-#$Revision: 1.53 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

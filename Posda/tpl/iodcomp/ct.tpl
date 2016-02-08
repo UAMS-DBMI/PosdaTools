@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/iodcomp/ct.tpl,v $
-#$Date: 2010/04/30 18:53:52 $
-#$Revision: 1.2 $
 #
 CompositeIOD="EnhancedCTImage"			Condition="EnhancedCTImageInstance"
 	InformationEntity="File"

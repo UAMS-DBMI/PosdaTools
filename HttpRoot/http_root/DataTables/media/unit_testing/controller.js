@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/controller.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 var giTotalTestCount = 0;
 var giActiveModule = 0;
 var giModuleTests;

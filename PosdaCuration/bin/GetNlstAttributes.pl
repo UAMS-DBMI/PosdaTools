@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetNlstAttributes.pl,v $ #$Date: 2015/12/15 14:12:42 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

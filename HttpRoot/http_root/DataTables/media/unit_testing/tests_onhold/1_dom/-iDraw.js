@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/tests_onhold/1_dom/-iDraw.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 // DATA_TEMPLATE: dom_data
 oTest.fnStart( "iDraw - check that iDraw increments for each draw" );
 

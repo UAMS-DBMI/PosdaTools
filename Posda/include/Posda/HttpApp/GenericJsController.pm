@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/GenericJsController.pm,v $
-#$Date: 2014/05/16 18:37:47 $
-#$Revision: 1.5 $
 #
 use strict;
 package Posda::HttpApp::GenericJsController;

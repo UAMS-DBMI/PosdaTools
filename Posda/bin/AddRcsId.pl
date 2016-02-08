@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-#$Date: 2012/06/22 15:37:04 $
-#$Revision: 1.4 $
 #
 #Copyright 2012, Bill Bennett and Erik Strom
 # Part of the Posda package
@@ -15,33 +12,18 @@ use File::Path qw(make_path);
 use Cwd;
 my $hdr_html = <<EOF;
 <! --
-  \$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-  \$Date: 2012/06/22 15:37:04 $
-  \$Revision: 1.4 $
 -->
 EOF
 my $hdr_c = <<EOF;
-/* \$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-   \$Date: 2012/06/22 15:37:04 $
-   \$Revision: 1.4 $
  */
 EOF
 my $hdr_perl = <<EOF;
 #!/usr/bin/perl -w
-#  \$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-#  \$Date: 2012/06/22 15:37:04 $
-#  \$Revision: 1.4 $
 EOF
 my $hdr_sh = <<EOF;
 #!/usr/sh
-#  \$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-#  \$Date: 2012/06/22 15:37:04 $
-#  \$Revision: 1.4 $
 EOF
 my $hdr_json = <<EOF;
-//  \$Source: /home/bbennett/pass/archive/Posda/bin/AddRcsId.pl,v $
-//  \$Date: 2012/06/22 15:37:04 $
-//  \$Revision: 1.4 $
 EOF
 my $usage = "$0 <source_dir> <destination_dir>";
 unless($#ARGV == 1) { die "$usage\n" }

@@ -1,9 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/ColReorder/media/docs/media/js/doc.js,v $
-   $Date: 2013/01/16 19:10:54 $
-   $Revision: 1.1 $
- */
-
-
 (function() {
 
 var showingNav = true;

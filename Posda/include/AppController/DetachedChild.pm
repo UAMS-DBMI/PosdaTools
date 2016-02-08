@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/AppController/DetachedChild.pm,v $
-#$Date: 2015/05/20 20:03:13 $
-#$Revision: 1.3 $
 #
 
 use strict;

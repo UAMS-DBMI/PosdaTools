@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/CheckSubjImages.pl,v $
-#$Date: 2015/10/01 13:08:43 $
-#$Revision: 1.1 $
 #
 use strict;
 use Posda::Try;

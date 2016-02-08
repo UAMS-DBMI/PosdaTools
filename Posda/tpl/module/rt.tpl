@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/rt.tpl,v $
-#$Date: 2010/04/30 19:19:02 $
-#$Revision: 1.4 $
 #
 DefineMacro="BeamLimitingDevicePositionMacro"
 	Sequence="BeamLimitingDevicePositionSequence"				Type="1C"	VM="1-n"	NoCondition=""

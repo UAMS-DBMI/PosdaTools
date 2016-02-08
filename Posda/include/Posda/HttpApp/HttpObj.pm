@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/HttpObj.pm,v $
-#$Date: 2015/04/20 20:18:30 $
-#$Revision: 1.206 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

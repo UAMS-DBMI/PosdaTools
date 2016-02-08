@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/ComputeRotations.pl,v $
-#$Date: 2011/12/16 13:26:35 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

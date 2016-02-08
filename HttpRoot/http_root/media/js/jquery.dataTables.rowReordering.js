@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/media/js/jquery.dataTables.rowReordering.js,v $
-   $Date: 2013/01/16 19:10:53 $
-   $Revision: 1.1 $
- */
-
 /*
 * File:        jquery.dataTables.rowReordering.js
 * Version:     1.0.0.

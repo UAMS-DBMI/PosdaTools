@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/bin/TransmitTimesByBytes.pl,v $
-#$Date: 2014/10/27 12:37:50 $
-#$Revision: 1.4 $
 #
 use strict;
 use Storable qw( store_fd fd_retrieve);

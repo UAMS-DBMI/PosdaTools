@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/RuleValidation.pl,v $
-#$Date: 2013/05/17 15:11:04 $
-#$Revision: 1.1 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

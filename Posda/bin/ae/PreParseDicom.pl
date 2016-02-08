@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Date: 2015/09/09 17:26:36 $
-#$Revision: 1.2 $
 use strict;
 use Dispatch::Select;
 use Dispatch::EventHandler;

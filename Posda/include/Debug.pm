@@ -1,7 +1,5 @@
 #!/usr/local/bin/perl
 # $RCSfile: Debug.pm,v $
-# $Revision: 1.5 $
-# $Date: 2010/04/06 19:26:56 $
 package Debug;
 
 sub logvalue{

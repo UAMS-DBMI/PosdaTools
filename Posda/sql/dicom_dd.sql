@@ -1,7 +1,4 @@
 --
--- $Source: /home/bbennett/pass/archive/Posda/sql/dicom_dd.sql,v $
--- $Date: 2010/02/10 15:24:15 $
--- $Revision: 1.3 $
 -- 
 -- Copyright 2008, Bill Bennett
 --  Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/BoundDoseToRoi.pl,v $
-#$Date: 2012/02/08 21:05:04 $
-#$Revision: 1.1 $
 #
 use strict;
 use Cwd;

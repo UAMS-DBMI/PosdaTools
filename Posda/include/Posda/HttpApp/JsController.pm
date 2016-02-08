@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/JsController.pm,v $
-#$Date: 2015/06/10 21:08:49 $
-#$Revision: 1.22 $
 #
 use strict;
 package Posda::HttpApp::JsController;

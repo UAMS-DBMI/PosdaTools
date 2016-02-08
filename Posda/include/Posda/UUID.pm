@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/UUID.pm,v $
-#$Date: 2014/12/05 19:19:22 $
-#$Revision: 1.3 $
 #
 #
 #Copyright 2010, Bill Bennett

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/AnalyzeDirectory.pl,v $
-#$Date: 2014/12/17 21:25:04 $
-#$Revision: 1.2 $
 #
 use strict;
 use Storable qw( store_fd );

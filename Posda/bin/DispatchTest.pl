@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DispatchTest.pl,v $
-#$Date: 2009/05/28 17:25:19 $
-#$Revision: 1.5 $
 
 use strict;
 use Dispatch::Select;

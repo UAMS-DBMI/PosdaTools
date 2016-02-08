@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/ConstructRoiContour.pl,v $
-#$Date: 2013/05/28 16:52:02 $
-#$Revision: 1.1 $
 #
 use strict;
 use JSON::PP;

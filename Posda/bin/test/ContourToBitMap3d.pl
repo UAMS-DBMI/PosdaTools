@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/ContourToBitMap3d.pl,v $
-#$Date: 2011/10/14 20:09:02 $
-#$Revision: 1.5 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

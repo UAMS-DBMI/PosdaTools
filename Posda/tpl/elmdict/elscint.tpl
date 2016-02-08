@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/elscint.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 (0003,0001) VERS="EL1"	VR="OW"   VM="1"	Owner="ELSCINT1"	Keyword="OffsetListStructure"			Name="Offset List Structure"
 (00E1,0001) VERS="EL1"	VR="US"   VM="1"	Owner="ELSCINT1"	Keyword="DataDictionaryVersion"			Name="Data Dictionary Version"

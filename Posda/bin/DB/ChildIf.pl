@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DB/ChildIf.pl,v $
-#$Date: 2012/03/05 15:36:01 $
-#$Revision: 1.3 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

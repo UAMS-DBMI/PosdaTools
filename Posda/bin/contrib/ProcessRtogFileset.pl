@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/ProcessRtogFileset.pl,v $
-#$Date: 2014/12/11 22:16:33 $
-#$Revision: 1.32 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/us.tpl,v $
-#$Date: 2009/03/25 14:08:32 $
-#$Revision: 1.1 $
 #
 StringValues="OverlaySubtypeUS" {
 	ACTIVE 2D/BMODE IMAGE AREA = Identification of the active area of a 2D/B-mode image

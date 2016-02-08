@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/picker.tpl,v $
-#$Date: 2009/03/25 14:01:00 $
-#$Revision: 1.1 $
 #
 (7001,0001) VERS="PCK"	VR="UI"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"
 (7001,0002) VERS="PCK"	VR="OB"   VM="1"	Owner="Picker NM Private Group"	Keyword="?"		Name="?"

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/ProcessPosdaFilesInDb.pl,v $
-#$Date: 2015/10/28 16:30:16 $
-#$Revision: 1.2 $
 #
 use DBD::Pg;
 use Posda::Try;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/SplitFractionatedPlanAndDose.pl,v $
-#$Date: 2011/06/23 15:31:26 $
-#$Revision: 1.3 $
 #  
 # Written 2010 09 22 by Erik Strom.
 #

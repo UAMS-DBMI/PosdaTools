@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/UidCollector.pm,v $
-#$Date: 2015/04/01 19:41:57 $
-#$Revision: 1.1 $
 #
 use strict;
 package Posda::UidCollector;

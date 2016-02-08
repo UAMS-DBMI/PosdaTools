@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/softcopy.tpl,v $
-#$Date: 2009/03/25 14:08:14 $
-#$Revision: 1.1 $
 #
 StringValues="AnnotationUnits"	{
 	PIXEL,

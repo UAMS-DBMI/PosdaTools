@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/TestUUID.pl,v $
-#$Date: 2014/12/05 19:18:29 $
-#$Revision: 1.2 $
 #
 #
 #Copyright 2014, Bill Bennett

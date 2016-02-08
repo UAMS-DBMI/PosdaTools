@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/include/DicomProxy/Forwarder.pm,v $
-#$Date: 2014/10/23 17:39:03 $
-#$Revision: 1.4 $
 #
 use strict;
 use Dispatch::Select;

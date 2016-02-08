@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/DicomLookup/Application.pm,v $
-#$Date: 2013/10/16 20:03:49 $
-#$Revision: 1.1 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

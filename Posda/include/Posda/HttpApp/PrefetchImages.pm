@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/PrefetchImages.pm,v $
-#$Date: 2013/08/08 14:14:15 $
-#$Revision: 1.7 $
 #
 use strict;
 package Posda::HttpApp::PrefetchImages;

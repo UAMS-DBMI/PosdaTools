@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/BigDumpDicom.pl,v $
-#$Date: 2011/06/23 15:31:26 $
-#$Revision: 1.4 $
 # Alter to the directory that other DICOM files are installed in.
 #
 #Copyright 2008, Bill Bennett

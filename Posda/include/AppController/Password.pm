@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/AppController/Password.pm,v $
-#$Date: 2013/10/20 13:10:59 $
-#$Revision: 1.3 $
 #
 use strict;
 use POSIX 'strftime';

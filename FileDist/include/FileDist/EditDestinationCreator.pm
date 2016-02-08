@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/EditDestinationCreator.pm,v $
-#$Date: 2014/03/17 19:38:11 $
-#$Revision: 1.3 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/DensityGenerator.pm,v $
-#$Date: 2008/12/10 17:08:55 $
-#$Revision: 1.9 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

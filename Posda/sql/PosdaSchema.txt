@@ -1,8 +1,5 @@
 ---
 ---
---- $Source: /home/bbennett/pass/archive/Posda/sql/PosdaSchema.txt,v $
---- $Date: 2012/03/30 18:40:50 $
---- $Revision: 1.2 $
 ---
 --- DICOMDIR Information
 ---

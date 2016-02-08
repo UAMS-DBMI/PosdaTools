@@ -1,6 +1,3 @@
-//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/DicomProxyAnalysis/Environment.json,v $
-//  $Date: 2014/09/22 18:45:20 $
-//  $Revision: 1.1 $
 // 
 {
   "ApplicationInitClass" : "DicomProxyAnalysis::Application",

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/GetPublicCollectionSites.pl,v $
-#$Date: 2015/08/12 21:34:38 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

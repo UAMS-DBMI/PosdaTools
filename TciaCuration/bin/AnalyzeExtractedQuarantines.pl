@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/AnalyzeExtractedQuarantines.pl,v $
-#$Date: 2015/03/13 21:33:51 $
-#$Revision: 1.1 $
 #
 use strict;
 use Storable;

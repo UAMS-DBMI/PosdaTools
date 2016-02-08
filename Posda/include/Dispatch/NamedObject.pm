@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/NamedObject.pm,v $
-#$Date: 2015/04/29 19:46:36 $
-#$Revision: 1.22 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

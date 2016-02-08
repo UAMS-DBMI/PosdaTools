@@ -1,7 +1,4 @@
 <! --
-  $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/templates/dymanic_table.php,v $
-  $Date: 2013/01/16 19:10:57 $
-  $Revision: 1.1 $
 -->
 
 <?php

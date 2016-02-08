@@ -1,11 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/src/model/model.column.js,v $
-   $Date: 2013/01/16 19:10:57 $
-   $Revision: 1.1 $
- */
-
-
-
-
 /**
  * Template object for the column information object in DataTables. This object
  * is held in the settings aoColumns array and contains all the information that

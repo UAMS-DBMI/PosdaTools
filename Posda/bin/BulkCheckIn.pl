@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/BulkCheckIn.pl,v $
-#$Date: 2012/06/22 15:52:36 $
-#$Revision: 1.3 $
 #
 #Copyright 2012, Bill Bennett and Erik Strom
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/FindAndLinkQuarantines.pl,v $
-#$Date: 2015/06/22 11:56:10 $
-#$Revision: 1.5 $
 #
 use strict;
 use Posda::Find;

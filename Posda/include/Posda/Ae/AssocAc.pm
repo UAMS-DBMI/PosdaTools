@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Ae/AssocAc.pm,v $
-#$Date: 2010/01/03 22:43:37 $
-#$Revision: 1.2 $
 
 use strict;
 {

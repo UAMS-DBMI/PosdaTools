@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/HttpObjApp.pl,v $
-#$Date: 2010/04/26 01:02:01 $
-#$Revision: 1.3 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

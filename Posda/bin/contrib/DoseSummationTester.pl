@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/DoseSummationTester.pl,v $
-#$Date: 2013/01/30 21:23:21 $
-#$Revision: 1.2 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

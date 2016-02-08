@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/cache/CollectRevisions.pl,v $
-#$Date: 2015/04/20 20:26:54 $
-#$Revision: 1.1 $
 #
 #Copyright 2015, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/FrameOfRef/ApplyTransformImage.pl,v $
-#$Date: 2012/01/04 14:26:43 $
-#$Revision: 1.11 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

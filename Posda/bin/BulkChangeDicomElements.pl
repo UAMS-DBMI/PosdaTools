@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/BulkChangeDicomElements.pl,v $
-#$Date: 2013/04/03 12:56:17 $
-#$Revision: 1.1 $
 #
 #Copyright 2012, Bill Bennett and Erik Strom
 # Part of the Posda package

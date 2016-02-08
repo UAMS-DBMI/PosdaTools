@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/TableTools/media/js/ZeroClipboard.js,v $
-   $Date: 2013/01/16 19:10:54 $
-   $Revision: 1.1 $
- */
-
 // Simple Set Clipboard System
 // Author: Joseph Huckaby
 

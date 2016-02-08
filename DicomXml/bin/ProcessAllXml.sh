@@ -1,7 +1,4 @@
 #!/bin/csh
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/ProcessAllXml.sh,v $
-#$Date: 2014/03/21 19:54:24 $
-#$Revision: 1.1 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

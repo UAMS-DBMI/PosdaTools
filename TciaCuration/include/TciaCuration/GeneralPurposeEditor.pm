@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/GeneralPurposeEditor.pm,v $
-#$Date: 2015/06/24 12:45:40 $
-#$Revision: 1.7 $
 #
 use strict;
 package TciaCuration::GeneralPurposeEditor;

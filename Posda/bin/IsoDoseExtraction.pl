@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/IsoDoseExtraction.pl,v $
-#$Date: 2013/10/17 16:15:09 $
-#$Revision: 1.5 $
 #
 use strict;
 use Storable qw( store_fd fd_retrieve );

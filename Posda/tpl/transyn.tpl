@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/transyn.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 Name="ImplicitVRLittleEndian"	Desc="Implicit VR Little Endian"				Uid="1.2.840.10008.1.2"		Endian="little"	VR="implicit"	Encap="no"
 Name="Default"			Desc="Implicit VR Little Endian"				Uid="1.2.840.10008.1.2"		Endian="little"	VR="implicit"	Encap="no"

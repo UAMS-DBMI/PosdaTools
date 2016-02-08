@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/tests_onhold/5_ajax_objects/_zero_config_null_source.js,v $
-   $Date: 2013/01/16 19:10:56 $
-   $Revision: 1.1 $
- */
-
 // DATA_TEMPLATE: js_data
 oTest.fnStart( "Sanity checks for DataTables with data from JS - Null data source for last column" );
 

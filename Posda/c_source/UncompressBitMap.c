@@ -1,7 +1,4 @@
 /*
-#$Source: /home/bbennett/pass/archive/Posda/c_source/UncompressBitMap.c,v $
-#$Date: 2014/05/14 15:43:21 $
-#$Revision: 1.5 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

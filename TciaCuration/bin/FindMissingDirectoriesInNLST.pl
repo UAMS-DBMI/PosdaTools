@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/FindMissingDirectoriesInNLST.pl,v $
-#$Date: 2015/08/12 21:28:56 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

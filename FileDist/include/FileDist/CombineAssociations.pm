@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/CombineAssociations.pm,v $
-#$Date: 2013/08/19 19:32:58 $
-#$Revision: 1.1 $
 #
 use strict;
 use Posda::HttpApp::GenericIframe;

@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/nm.tpl,v $
-#$Date: 2009/03/25 14:07:38 $
-#$Revision: 1.1 $
 #
 StringValues="NuclearMedicineSeriesTypeRetired" {
 	STATIC,

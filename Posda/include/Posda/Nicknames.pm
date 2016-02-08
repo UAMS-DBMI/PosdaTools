@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Nicknames.pm,v $
-#$Date: 2015/11/04 20:06:31 $
-#$Revision: 1.6 $
 #
 use strict;
 {

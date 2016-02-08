@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/media/js/jquery-ui.js,v $
-   $Date: 2013/01/16 19:10:53 $
-   $Revision: 1.1 $
- */
-
 /*!
  * Note: While Microsoft is not the author of this file, Microsoft is
  * offering you a license subject to the terms of the Microsoft Software

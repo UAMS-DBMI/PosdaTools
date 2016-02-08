@@ -1,6 +1,3 @@
--- $Source: /home/bbennett/pass/archive/Posda/sql/pop_passwd.sql,v $
--- $Date: 2010/08/06 17:11:31 $
--- $Revision: 1.2 $
 -- 
 -- Copyright 2010, Bill Bennett
 --  Part of the Posda package

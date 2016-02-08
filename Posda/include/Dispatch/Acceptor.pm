@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Acceptor.pm,v $
-#$Date: 2010/11/03 14:35:39 $
-#$Revision: 1.5 $
 use strict;
 use FileHandle;
 package Dispatch::Acceptor;

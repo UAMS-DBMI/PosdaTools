@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/CompressedPixBitMapToContour.pl,v $
-#$Date: 2012/04/24 12:24:28 $
-#$Revision: 1.5 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/KeyTable/js/KeyTable.js,v $
-   $Date: 2013/01/16 19:10:53 $
-   $Revision: 1.1 $
- */
-
 /*
  * File:        KeyTable.js
  * Version:     1.1.7
@@ -10,7 +5,6 @@
  * Description: Keyboard navigation for HTML tables
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Fri Mar 13 21:24:02 GMT 2009
- * Modified:    $Date: 2013/01/16 19:10:53 $ by $Author: bbennett $
  * Language:    Javascript
  * License:     GPL v2 or BSD 3 point style
  * Project:     Just a little bit of fun :-)

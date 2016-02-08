@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/BitmapPlaneBitCounter.pl,v $
-#$Date: 2011/10/06 16:11:35 $
-#$Revision: 1.1 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

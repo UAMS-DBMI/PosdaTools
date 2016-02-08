@@ -1,9 +1,3 @@
-/*!
- *
- * $Source: /home/bbennett/pass/archive/HttpRoot/http_root/ReportCustomize.js,v $
- * $Date: 2013/01/16 19:10:53 $
- * $Revision: 1.1 $
- */
   var ColHdrs = { };
   var CutPoints;
   var iterations = 1;

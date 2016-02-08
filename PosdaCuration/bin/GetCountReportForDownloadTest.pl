@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/bin/GetCountReportForDownloadTest.pl,v $ #$Date: 2016/01/15 17:00:25 $
-#$Revision: 1.2 $
 #
 use strict;
 use DBI;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/DirBrowse.pm,v $
-#$Date: 2011/03/07 14:37:16 $
-#$Revision: 1.13 $
 #
 use strict;
 use File::Spec;

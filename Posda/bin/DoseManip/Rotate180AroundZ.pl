@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/DoseManip/Rotate180AroundZ.pl,v $
-#$Date: 2011/06/23 15:28:45 $
-#$Revision: 1.3 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

@@ -1,8 +1,5 @@
 /*!
  *
- * $Source: /home/bbennett/pass/archive/HttpRoot/http_root/plugins/jquery.cookie.js,v $
- * $Date: 2013/01/16 19:10:53 $
- * $Revision: 1.1 $
 *
 * jQuery Cookie Plugin
 * https://github.com/carhartl/jquery-cookie

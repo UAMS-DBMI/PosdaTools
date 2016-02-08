@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/GetRevisionCreationInfo.pl,v $
-#$Date: 2015/03/27 14:58:09 $
-#$Revision: 1.1 $
 use strict;
 use Storable;
 my $usage = <<EOF;

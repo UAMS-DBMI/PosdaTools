@@ -1,7 +1,4 @@
 #
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/ImageMagickRender.pm,v $
-#$Date: 2012/02/07 13:41:43 $
-#$Revision: 1.14 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/DirectoryManager.pm,v $
-#$Date: 2013/11/25 21:32:17 $
-#$Revision: 1.10 $
 #
 use strict;
 package Posda::DirectoryManager;

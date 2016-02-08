@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/Pbm3dSplitter.pl,v $
-#$Date: 2011/12/09 18:27:20 $
-#$Revision: 1.3 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package

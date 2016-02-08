@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/DumpDVH.pl,v $
-#$Date: 2009/10/09 18:52:28 $
-#$Revision: 1.7 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

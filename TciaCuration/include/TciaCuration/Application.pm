@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/include/TciaCuration/Application.pm,v $
-#$Date: 2015/06/21 19:33:52 $
-#$Revision: 1.50 $
 #
 use strict;
 package TciaCuration::Application;

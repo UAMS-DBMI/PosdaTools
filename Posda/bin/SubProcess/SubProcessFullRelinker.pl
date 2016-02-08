@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-##$Source: /home/bbennett/pass/archive/Posda/bin/SubProcess/SubProcessFullRelinker.pl,v $
-#$Date: 2015/12/15 14:06:04 $
-#$Revision: 1.3 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

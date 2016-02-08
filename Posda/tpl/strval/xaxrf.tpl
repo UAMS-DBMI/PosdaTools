@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/strval/xaxrf.tpl,v $
-#$Date: 2009/03/25 14:09:02 $
-#$Revision: 1.1 $
 #
 StringValues="XRayFieldOfViewShape" {
 	ROUND,

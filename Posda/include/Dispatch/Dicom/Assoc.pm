@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Dispatch/Dicom/Assoc.pm,v $
-#$Date: 2014/01/16 15:52:37 $
-#$Revision: 1.10 $
 
 use strict;
 {

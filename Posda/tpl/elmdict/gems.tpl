@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/gems.tpl,v $
-#$Date: 2011/06/06 20:12:45 $
-#$Revision: 1.4 $
 #
 (0009,0001) VERS="GEM"	VR="LO"   VM="2"	Owner="GEMS_PETD_01"		Keyword="ImplementationVersionName"	Name="Implementation Version Name"
 (0009,0002) VERS="GEM"	VR="LO"   VM="1"	Owner="GEMS_PETD_01"		Keyword="PatientID"			Name="Patient ID"

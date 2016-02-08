@@ -1,6 +1,3 @@
--- $Source: /home/bbennett/pass/archive/Posda/sql/Assoc.sql,v $
--- $Date: 2010/01/03 22:46:34 $
--- $Revision: 1.2 $
 -- 
 -- Copyright 2008, Bill Bennett
 --  Part of the Posda package

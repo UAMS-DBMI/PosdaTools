@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/AppController/AppController.pl,v $
-#$Date: 2015/01/19 15:09:19 $
-#$Revision: 1.11 $
 #
 use strict;
 use DBI;

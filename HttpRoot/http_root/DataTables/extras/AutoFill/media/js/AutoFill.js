@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/extras/AutoFill/media/js/AutoFill.js,v $
-   $Date: 2013/01/16 19:10:55 $
-   $Revision: 1.1 $
- */
-
 /*
  * File:        AutoFill.js
  * Version:     1.1.2
@@ -10,7 +5,6 @@
  * Description: AutoFill for DataTables
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Mon  6 Sep 2010 16:54:41 BST
- * Modified:    $Date: 2013/01/16 19:10:55 $ by $Author: bbennett $
  * Language:    Javascript
  * License:     GPL v2 or BSD 3 point
  * Project:     DataTables

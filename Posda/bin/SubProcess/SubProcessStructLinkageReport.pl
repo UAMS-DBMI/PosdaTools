@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-##$Source: /home/bbennett/pass/archive/Posda/bin/SubProcess/SubProcessStructLinkageReport.pl,v $
-#$Date: 2015/06/02 13:01:48 $
-#$Revision: 1.2 $
 #
 #Copyright 2013, Bill Bennett
 # Part of the Posda package

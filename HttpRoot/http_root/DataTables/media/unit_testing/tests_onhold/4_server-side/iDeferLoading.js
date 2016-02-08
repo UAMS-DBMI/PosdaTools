@@ -1,8 +1,3 @@
-/* $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DataTables/media/unit_testing/tests_onhold/4_server-side/iDeferLoading.js,v $
-   $Date: 2013/01/16 19:10:56 $
-   $Revision: 1.1 $
- */
-
 // DATA_TEMPLATE: deferred_table
 /*
  */

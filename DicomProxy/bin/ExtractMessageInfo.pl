@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/DicomProxy/bin/ExtractMessageInfo.pl,v $
-#$Date: 2014/02/14 20:56:58 $
-#$Revision: 1.3 $
 #
 use strict;
 use Storable qw( store_fd fd_retrieve );

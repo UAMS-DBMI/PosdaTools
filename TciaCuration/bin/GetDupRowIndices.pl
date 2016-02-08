@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/GetDupRowIndices.pl,v $
-#$Date: 2015/10/01 13:09:26 $
-#$Revision: 1.1 $
 #
 use strict;
 use DBI;

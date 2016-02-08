@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/PseudoPhantom.pm,v $
-#$Date: 2012/02/07 13:41:43 $
-#$Revision: 1.57 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

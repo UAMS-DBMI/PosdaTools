@@ -1,11 +1,3 @@
-/*
-
- *
- * $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DicomImageDisp.js,v $
- * $Date: 2013/05/31 15:05:44 $
- * $Revision: 1.17 $
-
- */
   var ImageToDraw = new Image;
   var ImageUrl;
   var ImageLabels;

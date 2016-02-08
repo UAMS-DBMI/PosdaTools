@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/xaxrf.tpl,v $
-#$Date: 2010/04/30 19:22:41 $
-#$Revision: 1.4 $
 #
 Module="FramePointers"
 	Name="RepresentativeFrameNumber"	Type="3"	NotZeroError=""

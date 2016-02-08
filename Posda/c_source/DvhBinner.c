@@ -1,7 +1,4 @@
 /*
-#$Source: /home/bbennett/pass/archive/Posda/c_source/DvhBinner.c,v $
-#$Date: 2014/05/14 15:43:21 $
-#$Revision: 1.13 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

@@ -1,8 +1,3 @@
-/*
- * $Source: /home/bbennett/pass/archive/Posda/javascript/AppController.js,v $
- * $Date: 2014/06/10 20:36:33 $
- * $Revision: 1.4 $
- */
 function MenuResponseReturned(text, status, xml){
   document.getElementById('menu').innerHTML = text;
 }

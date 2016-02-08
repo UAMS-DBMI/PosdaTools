@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/Anonymize.pl,v $
-#$Date: 2009/04/16 15:31:53 $
-#$Revision: 1.10 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

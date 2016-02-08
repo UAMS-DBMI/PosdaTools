@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/DoseInterp.pl,v $
-#$Date: 2011/10/18 13:42:21 $
-#$Revision: 1.11 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

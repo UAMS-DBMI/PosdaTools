@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/RelinkDose.pl,v $
-#$Date: 2012/11/13 17:42:26 $
-#$Revision: 1.2 $
 #
 #Copyright 2012, Bill Bennett
 # Part of the Posda package

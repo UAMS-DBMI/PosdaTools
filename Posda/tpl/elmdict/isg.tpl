@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/elmdict/isg.tpl,v $
-#$Date: 2009/03/25 14:00:23 $
-#$Revision: 1.1 $
 #
 (0029,0070) VERS="ISG"	VR="IS"   VM="1"	Owner="ISG shadow"	Keyword="?"						Name="?"
 (0029,0080) VERS="ISG"	VR="IS"   VM="1"	Owner="ISG shadow"	Keyword="?"						Name="?"

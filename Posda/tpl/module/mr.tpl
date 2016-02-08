@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/mr.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 DefineMacro="CommonCTMRImageDescriptionImageLevelMacro" InformationEntity="Image"
 	Name="PixelPresentation"						Type="1"	StringEnumValues="CommonCTMRPixelPresentationImageLevel"

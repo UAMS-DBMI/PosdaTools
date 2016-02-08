@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/TciaCuration/bin/PhiSearch.pl,v $
-#$Date: 2014/12/17 21:22:58 $
-#$Revision: 1.1 $
 #
 use strict;
 use Storable qw( store_fd );

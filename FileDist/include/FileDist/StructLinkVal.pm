@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/StructLinkVal.pm,v $
-#$Date: 2014/09/30 20:54:15 $
-#$Revision: 1.5 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

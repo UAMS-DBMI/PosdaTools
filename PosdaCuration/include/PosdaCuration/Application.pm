@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/Application.pm,v $
-#$Date: 2016/01/26 19:52:11 $
-#$Revision: 1.7 $
 #
 use strict;
 package PosdaCuration::Application;

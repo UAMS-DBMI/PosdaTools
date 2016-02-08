@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/CompressContours.pl,v $
-#$Date: 2011/06/23 15:31:26 $
-#$Revision: 1.2 $
 
 #use Cwd;
 use strict;

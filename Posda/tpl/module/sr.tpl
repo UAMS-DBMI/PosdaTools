@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/tpl/module/sr.tpl,v $
-#$Date: 2010/04/30 18:53:53 $
-#$Revision: 1.2 $
 #
 DefineMacro="HierarchicalSOPInstanceReferenceMacro"
 	Name="StudyInstanceUID"									Type="1"

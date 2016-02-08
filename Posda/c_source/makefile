@@ -1,6 +1,3 @@
-#$Source: /home/bbennett/pass/archive/Posda/c_source/makefile,v $
-#$Date: 2013/07/12 12:02:38 $
-#$Revision: 1.12 $
 #
 #Copyright 2008, Bill Bennett, Erik Strom
 # Part of the Posda package

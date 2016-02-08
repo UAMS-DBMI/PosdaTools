@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/test/HttpApp.pl,v $
-#$Date: 2010/04/21 17:55:12 $
-#$Revision: 1.18 $
 #
 #Copyright 2010, Bill Bennett
 # Part of the Posda package

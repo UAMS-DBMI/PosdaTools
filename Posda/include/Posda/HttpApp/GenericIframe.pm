@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/GenericIframe.pm,v $
-#$Date: 2013/11/04 21:38:50 $
-#$Revision: 1.8 $
 #
 use strict;
 package Posda::HttpApp::GenericIframe;

@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/PopulateDicomXml.pl,v $
-#$Date: 2014/05/08 19:39:25 $
-#$Revision: 1.3 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

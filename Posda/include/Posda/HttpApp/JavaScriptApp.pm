@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/HttpApp/JavaScriptApp.pm,v $
-#$Date: 2014/05/23 17:29:16 $
-#$Revision: 1.2 $
 #
 use strict;
 package Posda::HttpApp::JavaScriptApp;

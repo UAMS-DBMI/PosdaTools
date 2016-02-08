@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/include/Posda/Find.pm,v $
-#$Date: 2013/05/13 12:35:23 $
-#$Revision: 1.10 $
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package

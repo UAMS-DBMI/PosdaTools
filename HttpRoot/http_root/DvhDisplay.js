@@ -1,8 +1,5 @@
 /*!
  *
- * $Source: /home/bbennett/pass/archive/HttpRoot/http_root/DvhDisplay.js,v $
- * $Date: 2013/01/16 19:10:53 $
- * $Revision: 1.1 $
 
  <div> layout:
  [chartr]

@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w 
-#$Source: /home/bbennett/pass/archive/Posda/bin/contrib/CalculateBinWidth.pl,v $
-#$Date: 2011/03/22 14:03:25 $
-#$Revision: 1.1 $
 use strict;
 use Posda::Try;
 my $file = $ARGV[0];

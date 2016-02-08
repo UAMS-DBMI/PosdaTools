@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/FileDist/include/FileDist/DirectorySelector.pm,v $
-#$Date: 2015/03/06 13:46:50 $
-#$Revision: 1.14 $
 #
 use strict;
 use Posda::HttpApp::GenericMfWindow;

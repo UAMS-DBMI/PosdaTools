@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-#$Source: /home/bbennett/pass/archive/DicomXml/bin/TestExpandIodModule.pl,v $
-#$Date: 2014/08/15 20:45:32 $
-#$Revision: 1.5 $
 #
 #Copyright 2014, Bill Bennett
 # Part of the Posda package

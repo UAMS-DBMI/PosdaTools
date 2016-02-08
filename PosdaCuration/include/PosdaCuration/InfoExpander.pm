@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/PosdaCuration/include/PosdaCuration/InfoExpander.pm,v $
-#$Date: 2016/01/15 18:06:15 $
-#$Revision: 1.4 $
 #
 use strict;
 package PosdaCuration::InfoExpander;

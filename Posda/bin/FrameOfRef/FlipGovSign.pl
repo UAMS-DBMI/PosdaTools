@@ -1,7 +1,4 @@
 #!/usr/bin/perl -w
-#$Source: /home/bbennett/pass/archive/Posda/bin/FrameOfRef/FlipGovSign.pl,v $
-#$Date: 2011/08/03 19:56:38 $
-#$Revision: 1.1 $
 #
 #Copyright 2011, Bill Bennett
 # Part of the Posda package
