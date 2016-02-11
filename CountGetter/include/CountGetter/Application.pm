@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 package CountGetter::Application;
+use CountGetter::SopToName;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -86,6 +87,8 @@ sub new {
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{DicomInfoCache};
   $this->{ExtractionRoot} =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{ExtractionRoot};
+  # TODO: This script is used by two apps now.. maybe we should move it to 
+  # Posda/bin ?
   my $cmd = 
     "ScanSubmissionDirectories.pl $this->{Environment}->{SubmissionRoot}";
   Dispatch::LineReader->new_cmd($cmd, $this->DirLine, $this->DirEnd);
@@ -254,6 +257,7 @@ sub ContentResponse{
     );
     return;
   }
+  # delete?
   if($this->{Mode} eq "Sending"){
       # see where its at?
       # Display the current progress of the send
@@ -322,21 +326,55 @@ EOF
 <h3>Presentation Contexts Required:</h3> 
 <table class="table" style="width: 65%">
 <tr>
-    <th>Abstract Syntax</th> 
-    <th>Transfer Syntax</th>
+    <th>Subject</th> 
+    <th>File Type</th>
     <th>Number Files</th>
 </tr>
 EOF
     );
-    for my $i (0 .. $#{$this->{PresentationContexts}}){
-      $http->queue("<tr><td>$this->{PresentationContexts}->[$i]->[0]</td>" .
-        "<td>$this->{PresentationContexts}->[$i]->[1]->[0]</td>" .
-        "<td>$this->{PresentationContextCounts}->[$i]</td></tr>");
+    # build list of all subjects and their counts
+    # Subject, File Type, File Count (distinct sop uid)
+
+    $this->{SubjectList} = {};
+    my $sop_to_name = $CountGetter::SopToName::sop_to_name;
+
+    for my $file (@{$this->{FoundFiles}}) {
+      my $subj = $file->{subject};
+      my $ftype = $file->{abs_stx};
+
+      if (not defined $this->{SubjectList}->{$subj}) {
+        $this->{SubjectList}->{$subj} = {};
+      }
+
+      if (defined $this->{SubjectList}->{$subj}->{$ftype}) {
+        $this->{SubjectList}->{$subj}->{$ftype} += 1;
+      } else {
+        $this->{SubjectList}->{$subj}->{$ftype} = 1;
+      }
     }
+
+    for my $subject (keys %{$this->{SubjectList}}) {
+      $http->queue("<tr><td colspan='3'>$subject</td></tr>");
+
+      for my $ftype (keys %{$this->{SubjectList}->{$subject}}) {
+        my $name = $sop_to_name->{$ftype};
+        $http->queue(<<"EOF"
+<tr>
+  <td></td>
+  <td>$name</td>
+  <td>$this->{SubjectList}->{$subject}->{$ftype}</td>
+</tr>
+EOF
+        );
+      }
+    }
+
+    # for my $i (0 .. $#{$this->{PresentationContexts}}){
+    #   $http->queue("<tr><td>$this->{PresentationContexts}->[$i]->[0]</td>" .
+    #     "<td>$this->{PresentationContexts}->[$i]->[1]->[0]</td>" .
+    #     "<td>$this->{PresentationContextCounts}->[$i]</td></tr>");
+    # }
     $http->queue('</table>');
-    $this->RefreshEngine($http, $dyn,
-      'Send to <?dyn="SendToDropDown"?>' 
-    );
     return;
   }
 }
@@ -584,15 +622,6 @@ sub SummarizeSelection{
     }
   }
   $this->{DirList} = \@all_dirs;
-  # $this->RefreshEngine($http, $dyn, "Current Selection:<table><tr>" .
-  #   "<th>Num dirs</th><th>Num Subjects</th><th>Num Sites</th>" .
-  #   "<th>Num Collections</th></tr><tr>" .
-  #   "<td>$num_dirs</td><td>$num_subj</td>" .
-  #   "<td>$num_sites</td><td>$num_colls</td></tr></table>" .
-  #   '<?dyn="NotSoSimpleButton" ' .
-  #   'op="AddDirectoriesForAnalysis" ' .
-  #   'caption="Add These Directories to Send Batch" ' .
-  #   'sync="Update();"?>');
   $this->RefreshEngine($http, $dyn, <<"EOF"
 <p>Current Selection:<p>
 <table class="table" style="width: 65%">
@@ -642,6 +671,7 @@ sub CrankNextDirectory{
     $this->{PresentationContextCounts} = [];
     for my $as (keys %{$this->{SopClass}}){
       for my $xs (keys %{$this->{SopClass}->{$as}}){
+        DEBUG "xs is: $xs";
         push @{$this->{PresentationContexts}}, [$as, [$xs]];
         push @{$this->{PresentationContextCounts}}, 
           $this->{SopClass}->{$as}->{$xs};
@@ -653,6 +683,7 @@ sub CrankNextDirectory{
 sub CollectMetaHeaderLine{
   my($this, $next) = @_;
   my $file = "No file yet";
+  my $subject = "No subject yet";
   my $offset = "No offset yet";
   my $length = "No length yet";
   my $sop_class = "No sop_class yet";
@@ -662,6 +693,9 @@ sub CollectMetaHeaderLine{
     my($line) = @_;
     if($line =~ /^File:\s*(.*)$/){
       $file = $1;
+    # TODO: Can this be done without the extra variable?
+      my @bits = split('/', $file);
+      $subject = $bits[-2];
     } elsif($line =~ /^offset:\s*(.*)$/){
       $offset = $1
     } elsif($line =~ /length:\s*(.*)$/){
@@ -675,12 +709,18 @@ sub CollectMetaHeaderLine{
     } elsif($line =~ /^####/){
       push(@{$this->{FoundFiles}}, {
         file => $file,
+        subject => $subject,
         xfr_stx => $xfr_stx,
         abs_stx => $sop_class,
         sop_inst => $sop_inst,
         dataset_offset => $offset,
         dataset_size => $length,
       });
+      if(exists $this->{QTest}->{$sop_class}->{$xfr_stx}){
+        $this->{QTest}->{$sop_class}->{$xfr_stx} += 1;
+      } else {
+        $this->{QTest}->{$sop_class}->{$xfr_stx} = 1;
+      }
       if(exists $this->{SopClass}->{$sop_class}->{$xfr_stx}){
         $this->{SopClass}->{$sop_class}->{$xfr_stx} += 1;
       } else {
