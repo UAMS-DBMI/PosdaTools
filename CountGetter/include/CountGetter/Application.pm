@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
 package CountGetter::Application;
-use CountGetter::SopToName;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -10,6 +9,7 @@ use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
 use Posda::Log;
+use Posda::DataDict;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
@@ -45,6 +45,7 @@ sub new {
   bless $this, $class;
 
   $this->{FoundFiles} = [];
+  $this->{DataDict} = Posda::DataDict->new();
 
   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
@@ -331,7 +332,7 @@ EOF
       $http->queue("<tr><td colspan='3'>$subject</td></tr>");
 
       for my $ftype (keys %{$this->{SubjectList}->{$subject}}) {
-        my $name = CountGetter::SopToName::GetName($ftype);
+        my $name = $this->{DataDict}->GetSopClName($ftype);
         my $count = keys %{$this->{SubjectList}->{$subject}->{$ftype}};
         $http->queue(<<"EOF"
 <tr>
@@ -356,7 +357,7 @@ sub DownloadCSV{
 
   for my $subject (sort keys %{$this->{SubjectList}}) {
     for my $ftype (sort keys %{$this->{SubjectList}->{$subject}}) {
-      my $name = CountGetter::SopToName::GetName($ftype);
+      my $name = $this->{DataDict}->GetSopClName($ftype);
       my $count = keys %{$this->{SubjectList}->{$subject}->{$ftype}};
 
       $http->queue("$subject,$name,$count\n");
