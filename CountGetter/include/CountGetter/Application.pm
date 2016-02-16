@@ -217,33 +217,37 @@ sub DebugButton{
     print STDERR "Can't debug\n";
   }
 }
+
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
+
   if($this->{Mode} eq "ScanningDir"){
     return $http->queue("busy");
-  }
-  if($this->{Mode} eq "Selection"){
-    return $http->queue(
-      '<span onClick="javascript:alert(' . 
-        "'This is a test'" .
-        ');">test</span>'
-    );
-  }
-  if($this->{Mode} eq "ProcessingDirectories"){
-    return $http->queue(
-      '<span onClick="javascript:alert(' . 
-        "'This is a test'" .
-        ');">test</span>'
-    );
-  }
-  if($this->{Mode} eq "ProcessingComplete"){
-    return $http->queue(
-      '<span onClick="javascript:alert(' . 
-        "'This is a test'" .
-        ');">test</span>'
+  } else {
+    $this->MakeMenu($http, $dyn,
+      [
+        { type => "host_link_sync",
+          condition => 1,
+          style => "large",
+          caption => "New Scan",
+          method => "NewScan",
+          sync => "Update();",
+        },
+      ]
     );
   }
 }
+
+sub NewScan{
+  my($this, $http, $dyn) = @_;
+  # Reset the scan and move back to the Selection screen
+
+  $this->{Mode} = "Selection";
+  $this->{FoundFiles} = [];
+
+  $this->AutoRefresh;
+}
+
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
   DEBUG "ContentResponse called";
@@ -257,43 +261,7 @@ sub ContentResponse{
     );
     return;
   }
-  # delete?
-  if($this->{Mode} eq "Sending"){
-      # see where its at?
-      # Display the current progress of the send
-      my $statii = $this->{NewDicomSender}->ReportStatus();
-      my $files_sent = scalar @{$statii->{FilesSent}};
-      my $files_to_send = scalar @{$statii->{FilesToSend}};
-      my $files_not_sent = scalar @{$statii->{FilesNotSent}};
 
-      $http->queue(<<"EOF"
-<h3>Sending Progress</h3>
-<table class="table" style="width: 45%">
-<tr>
-    <td>Time Elapsed</td>
-    <td>$statii->{Elapsed}</td>
-</tr>
-<tr>
-    <td>Files Sent</td>
-    <td>$files_sent</td>
-</tr>
-<tr>
-    <td>Files Left to Send</td>
-    <td>$files_to_send</td>
-</tr>
-<tr>
-    <td>Errors</td>
-    <td>$files_not_sent</td>
-</tr>
-</table>
-EOF
-      );
-      if (not $this->{NewDicomSender}->{InProcess}) {
-        $this->{Mode} = "Selection";
-      }
-      $this->AutoRefresh;
-      return;
-  }
   if($this->{Mode} eq "ProcessingDirectories"){
     my $to_process = @{$this->{DirList}};
     my $processed = @{$this->{DirectoriesProcessed}};
@@ -321,9 +289,15 @@ EOF
     );
     return;
   }
+
   if($this->{Mode} eq "ProcessingComplete"){
-    $http->queue(<<"EOF"
-<h3>Presentation Contexts Required:</h3> 
+    # TODO: Should the Download button just be in the menu bar?
+    #
+    # Note: The download link is a link rather than a SimpleButton, 
+    # because we want to avoid doing an AJAX call, but a direct call!
+    $this->RefreshEngine($http, $dyn, <<"EOF"
+<h3>Files Found</h3> 
+<a class="btn btn-sm btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
 <table class="table" style="width: 65%">
 <tr>
     <th>Subject</th> 
@@ -336,128 +310,60 @@ EOF
     # Subject, File Type, File Count (distinct sop uid)
 
     $this->{SubjectList} = {};
-    my $sop_to_name = $CountGetter::SopToName::sop_to_name;
 
     for my $file (@{$this->{FoundFiles}}) {
       my $subj = $file->{subject};
       my $ftype = $file->{abs_stx};
+      my $sop_inst = $file->{sop_inst};
 
       if (not defined $this->{SubjectList}->{$subj}) {
         $this->{SubjectList}->{$subj} = {};
       }
 
-      if (defined $this->{SubjectList}->{$subj}->{$ftype}) {
-        $this->{SubjectList}->{$subj}->{$ftype} += 1;
-      } else {
-        $this->{SubjectList}->{$subj}->{$ftype} = 1;
-      }
+      # Collect the distinct list of sop instances
+      # if (not defined $this->{SubjectList}->{$subj}->{$ftype}) {
+      #   $this->{SubjectList}->{$subj}->{$ftype} = {};
+      # }
+      $this->{SubjectList}->{$subj}->{$ftype}->{$sop_inst} = 1;
     }
 
-    for my $subject (keys %{$this->{SubjectList}}) {
+    for my $subject (sort keys %{$this->{SubjectList}}) {
       $http->queue("<tr><td colspan='3'>$subject</td></tr>");
 
       for my $ftype (keys %{$this->{SubjectList}->{$subject}}) {
-        my $name = $sop_to_name->{$ftype};
+        my $name = CountGetter::SopToName::GetName($ftype);
+        my $count = keys %{$this->{SubjectList}->{$subject}->{$ftype}};
         $http->queue(<<"EOF"
 <tr>
   <td></td>
   <td>$name</td>
-  <td>$this->{SubjectList}->{$subject}->{$ftype}</td>
+  <td>$count</td>
 </tr>
 EOF
         );
       }
     }
-
-    # for my $i (0 .. $#{$this->{PresentationContexts}}){
-    #   $http->queue("<tr><td>$this->{PresentationContexts}->[$i]->[0]</td>" .
-    #     "<td>$this->{PresentationContexts}->[$i]->[1]->[0]</td>" .
-    #     "<td>$this->{PresentationContextCounts}->[$i]</td></tr>");
-    # }
     $http->queue('</table>');
     return;
   }
 }
-sub SendToDropDown{
+sub DownloadCSV{
   my($this, $http, $dyn) = @_;
-  DEBUG "SendToDropDown called";
+  DEBUG "Generating CSV";
+  $http->DownloadHeader("text/csv", "CountGetter.csv");
 
-  my $dicom_destinations = $this->{Environment}->{DicomDestinations};
-  my @dest_keys = sort keys %$dicom_destinations;
+  $http->queue("Subject,File Type,Count\n");
 
-  my $dest_text = "---- select destination ----";
+  for my $subject (sort keys %{$this->{SubjectList}}) {
+    for my $ftype (sort keys %{$this->{SubjectList}->{$subject}}) {
+      my $name = CountGetter::SopToName::GetName($ftype);
+      my $count = keys %{$this->{SubjectList}->{$subject}->{$ftype}};
 
-  unless(defined $this->{SelectedDicomDestination}){
-    $this->{SelectedDicomDestination} = $dest_text;
-  }
-  $this->RefreshEngine($http, $dyn, '<?dyn="SelectByValue" op="SetDicomDest"?>');
-  for my $i ( $dest_text, @dest_keys){
-    $http->queue("<option value=\"$i\"" .
-      ($i eq $this->{SelectedDicomDestination} ? " selected" : "") .
-      ">$i</option>");
-  }
-  $http->queue('</select>');
-  unless($this->{SelectedDicomDestination} eq $dest_text){
-    # Add the button to send the files
-    $this->RefreshEngine($http, $dyn,
-      '<?dyn="NotSoSimpleButton" ' .
-      'op="SendTheseFiles" ' .
-      'caption="Send These Files" ' .
-      'sync="Update();"?>');
+      $http->queue("$subject,$name,$count\n");
+    }
   }
 }
-sub SendTheseFiles{
-  my($this, $http, $dyn) = @_;
 
-  DEBUG "Beginning send of files";
-
-  # Pull the destination data from the config file
-  my $dest = $this->{Environment}
-                  ->{DicomDestinations}
-                  ->{$this->{SelectedDicomDestination}};
-  my $host = $dest->{host};
-  my $port = $dest->{port};
-  my $calling = $dest->{calling_ae};
-  my $called = $dest->{called_ae};
-
-  DEBUG "$host, $port, $calling, $called\n";
-
-  # Now build the NewDicomSender class
-  # NewDicomSender call signature: 
-  # $host, $port, $called, $calling, $file_list
-  $this->{NewDicomSender} = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
-
-  DEBUG "Sender call completed. Everything should be fine, now?";
-  # Should probably go into a Sending mode now, but let's try this?
-  $this->{Mode} = "Sending";
-
-}
-
-sub SetDicomDest{
-  my($this, $http, $dyn) = @_;
-
-  DEBUG "SelectedDicomDestination set to $dyn->{value}";
-  $this->{SelectedDicomDestination} = $dyn->{value};
-}
-sub SendToDropDown2{
-  my($this, $http, $dyn) = @_;
-  # This call begins the <select>, and also ties the op callback
-  $this->SelectDelegateByValue($http, {
-    op => "SomethingIHaventWrittenYet",
-    sync => "Update();",
-  });
-
-  my @collections = sort keys %{$this->{Collections}};
-  for my $col ("none", @collections){
-    $http->queue("<option value=\"$col\"" .
-      ($col eq $this->{SelectedCollection} ? " selected" : "") .
-      ">$col</option>");
-  }
-  $http->queue("</select>");
-  # if($this->{SelectedCollection} ne "none"){
-  #   $this->SiteDropDown($http, $dyn);
-  # }
-}
 sub CollectionDropDown{
   my($this, $http, $dyn) = @_;
   $this->SelectDelegateByValue($http, {
@@ -577,6 +483,7 @@ sub SelectDir{
   my($this, $http, $dyn) = @_;
   $this->{SelectedDir} = $dyn->{value};
 }
+
 sub SummarizeSelection{
   my($this, $http, $dyn) = @_;
   my $num_colls = 0;
@@ -643,6 +550,7 @@ sub SummarizeSelection{
 EOF
     );
 }
+
 sub AddDirectoriesForAnalysis{
   my($this, $http, $dyn) = @_;
   $this->{DirectoriesProcessed} = [];
@@ -650,6 +558,7 @@ sub AddDirectoriesForAnalysis{
   $this->{Mode} = "ProcessingDirectories";
   $this->CrankNextDirectory;
 }
+
 sub CrankNextDirectory{
   my($this) = @_;
   my $to_process = @{$this->{DirList}};
@@ -680,6 +589,7 @@ sub CrankNextDirectory{
   }
   $this->AutoRefresh;
 }
+
 sub CollectMetaHeaderLine{
   my($this, $next) = @_;
   my $file = "No file yet";
@@ -736,6 +646,7 @@ sub CollectMetaHeaderLine{
   };
   return $sub;
 }
+
 sub EndMetaHeaderLines{
   my($this, $next) = @_;
   my $sub = sub {
@@ -745,4 +656,5 @@ sub EndMetaHeaderLines{
   };
   return $sub;
 }
+
 1;

@@ -244,3 +244,13 @@ $sop_to_name = {
   "1.2.840.10008.15.0.4.6" => "dicomNetworkConnection",
   "1.2.840.10008.15.0.4.7" => "dicomUniqueAETitle",
 };
+
+sub GetName{
+  my ($sop_uid) = @_;
+
+  if (defined $sop_to_name->{$sop_uid}) {
+    return $sop_to_name->{$sop_uid};
+  } else {
+    return $sop_uid;
+  }
+}
