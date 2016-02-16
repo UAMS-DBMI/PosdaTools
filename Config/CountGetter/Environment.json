@@ -1,0 +1,49 @@
+{
+  "ApplicationInitClass" : "CountGetter::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "/home/quasar/cache/Data/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "/home/quasar/PosdaTools/HttpRoot/http_root",
+  "LoginTemp" : "/home/quasar/cache/Data/TempDirectory",
+  "JavascriptRoot" : "/home/quasar/PosdaTools/CountGetter/javascript",
+  "DicomInfoCache" : "/home/quasar/cache/Data",
+  "UserInfoDir" : "/home/quasar/cache/UserData",
+  "SubmissionRoot" : "/mnt/intake1-data/tcia/storage_site",
+
+  "DicomDestinations" : {
+    "Quasar" : {
+      "host" : "dbmi-imac.ad.uams.edu",
+      "port" : "64611",
+      "calling_ae" : "POSDA",
+      "called_ae" : "QUASAR"
+    },
+    "IntakeServer" : {
+      "host" : "144.30.1.71",
+      "port" : "11112",
+      "calling_ae" : "POSDA",
+      "called_ae" : "CTP"
+    },
+    "LocalLoopback" : {
+      "host" : "localhost",
+      "port" : "64611",
+      "calling_ae" : "SEND_LOOP",
+      "called_ae" : "RCV_LOOP"
+    },
+    "Bill's OsiriX" : {
+      "host" : "144.30.109.157",
+//      "host" : "192.168.97.73",
+      "port" : "11112",
+      "calling_ae" : "POSDA",
+      "called_ae" : "BBOSIRIX"
+    },
+    "Bill's Posda" : {
+      "host" : "144.30.109.157",
+//      "host" : "192.168.97.73",
+      "port" : "64611",
+      "calling_ae" : "POSDA",
+      "called_ae" : "BBPOSDA"
+    },
+  }
+}
