@@ -6,7 +6,7 @@
   ],
   "Apps": {
     "SubmissionSender": {
-      "Directory": "/home/quasar/PosdaTools/Config/SubmissionSender",
+      "Directory": "/home/posda/PosdaTools/Config/SubmissionSender",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Select Original Submissions",
       "WindowName" : "_new",

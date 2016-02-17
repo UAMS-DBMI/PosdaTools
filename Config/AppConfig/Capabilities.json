@@ -22,6 +22,7 @@
       "NewItcTools" : 1,
       "PosdaCuration" : 1,
       "CountGetter" : 1,
+      "SubmissionSender" : 1,
     },
   },
   "bbennett": {
