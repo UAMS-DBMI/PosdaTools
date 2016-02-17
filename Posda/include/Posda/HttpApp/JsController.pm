@@ -450,8 +450,8 @@ sub MakeHostLink{
   return $text;
 }
 sub MakeHostLinkSync{
-  my($this, $caption, $method, $args, $small, $sync) = @_;
-  my $text = '<span onClick="javascript:PosdaGetRemoteMethod(' . 
+  my($this, $caption, $method, $args, $small, $sync, $class) = @_;
+  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" . 
     "'$method'";
   my @a;
   my $at = "";
@@ -461,10 +461,10 @@ sub MakeHostLinkSync{
     }
     $at .= join('&', @a);
   }
+  # TODO: Revisit what passing "small" does
   $text .= ", '$at', function() {$sync});" . '" ' .
-    ($small ? 'style="font-size:small;color:blue;"' : 
-      'style="font-size:large;color:blue;"') .
-    '>' ."$caption</span>";
+    ($small ? 'style="font-size:small;"' : '') .
+    '>' ."$caption</a>";
   return $text;
 }
 sub MakeJavascriptLink{
@@ -558,9 +558,9 @@ sub MakeMenu{
         }
         my $link = 
           $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
-            $m->{args}, $small, $m->{sync});
-        # TODO: This probably also needs to be an li?
-        $http->queue("<small>$link</small><br />");
+            $m->{args}, $small, $m->{sync}, "list-group-item");
+        # $http->queue("<small>$link</small><br />");
+        $http->queue($link);
       } elsif ($m->{type} eq "javascript"){
         my $link = $this->MakeJavascriptLink(
           $m->{caption}, $m->{method}, $m->{args});
