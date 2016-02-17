@@ -12,7 +12,7 @@ fi
 export APP_CONTROLLER_ROOT=~/$1
 export APP_CONTROLLER_STAGE=`basename $APP_CONTROLLER_ROOT`
 cd $APP_CONTROLLER_ROOT
-export PS1="[\u@\h: $APP_CONTROLLER_STAGE]$ "
+# export PS1="[\u@\h: $APP_CONTROLLER_STAGE]$ "
 
 if [ ! -d "$APP_CONTROLLER_ROOT" ]; then
   echo "$0: root dir does not exist: $APP_CONTROLLER_ROOT."
