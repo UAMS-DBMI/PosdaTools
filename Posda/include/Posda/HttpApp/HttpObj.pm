@@ -2230,12 +2230,8 @@ sub PopUpLinkAndRefresh{
 my $css_style_header = <<EOF;
 <style type="text/css"> 
 <!-- 
-input , textarea, select, option { 
-  font-family: "Times New Roman", Times, serif; 
-  font-size: 11px; 
-}
-input {
-  font-weight: bold; 
+#content {
+  padding: 20px;
 }
 --> 
 </style> 
@@ -2251,6 +2247,7 @@ my $base_header = <<EOF;
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <head>
+<!-- HttpApp::HttpObj line 2266 -->
 <?dyn="CssStyle"?>
 <title><?dyn="title"?></title>
 EOF

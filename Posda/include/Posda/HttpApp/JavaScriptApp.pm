@@ -11,6 +11,7 @@ use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController" );
 my $expander = <<EOF;
+<!-- this is from HttpApp::JavaScriptApp -->
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
 <?dyn="JsController"?>

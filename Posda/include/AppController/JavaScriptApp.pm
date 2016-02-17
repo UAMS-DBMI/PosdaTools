@@ -174,9 +174,9 @@ EOF
     my($this, $http, $dyn) = @_;
     if($this->CanDebug){
       $this->RefreshEngine($http, $dyn,
-        '<span onClick="javascript:' .
+        '<button class="btn btn-sm btn-info" onClick="javascript:' .
         "rt('DebugWindow','Refresh?obj_path=Debug'" .
-        ',1600,1200,0);">debug</span><br>');
+        ',1600,1200,0);">debug</button>');
     } else {
       print STDERR "Can't debug\n";
     }
@@ -203,36 +203,41 @@ EOF
         {
           type=> "host_link",
           condition => $this->{capability}->{IsAdmin},
-          caption => "reload config",
+          caption => "Reload Config",
           method => "ReloadConfig",
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => 1,
-          caption => "show apps",
+          caption => "Show Apps",
           method => "SetMenuMode",
-          args => { mode => "avail_apps" }
+          args => { mode => "avail_apps" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => $this->{capability}->{IsAdmin},
-          caption => "show bom",
+          caption => "Show BOM",
           method => "SetMenuMode",
-          args => { mode => "bom" }
+          args => { mode => "bom" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => 1,
-          caption => "show receiver",
+          caption => "Show Receiver",
           method => "SetMenuMode",
-          args => { mode => "dicom_receiver" }
+          args => { mode => "dicom_receiver" },
+		  #style => "small",
         },
         {
           type => "host_link",
           condition => $this->get_user,
-          caption => "password",
+          caption => "Password",
           method => "SetMenuMode",
-          args => { mode => "password" }
+          args => { mode => "password" },
+		  #style => "small",
         },
       ]
     );
@@ -365,16 +370,23 @@ EOF
   sub AvailAppContent{
     my($this, $http, $dyn) = @_;
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
+
+    my $table_headers = '<tr>' .
+                        '<th "width=10%">Name</th>' .
+                        '<th "width=30%">Description</th>' .
+                        '<th "width=10%"></th>' . 
+                        '</tr>';
+    
+    $this->RefreshEngine($http, $dyn, 
+      '<table class="table" width="100%">');
+
+
     if(scalar(keys %$default_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        '<hr>Apps Available to All:' .
-        '<table width="100%">'.
-        '<tr>' .
-        '<th "width=10%">Name</th>' .
-        '<th "width=30%">Description</th>' .
-        '<th "width=10%"></th></tr>');
+        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
+        $table_headers
+      );
       $this->AppTableRows($http, $dyn, $default_apps);
-      $this->RefreshEngine($http, $dyn, '</table>');
     }
     my $user = $this->get_user;
     unless(defined $user) { print STDERR "no user\n";return };
@@ -382,15 +394,11 @@ EOF
     my $user_apps = $this->{Capabilities}->{$user}->{Apps};
     if(scalar(keys %$user_apps) >= 1){
       $this->RefreshEngine($http, $dyn, 
-        "<hr>Apps Available to $user:" .
-        '<table width="100%">' . 
-        '<tr>' .
-        '<th "width=10%">Name</th>' .
-        '<th "width=30%">Description</th>' .
-        '<th "width=10%"></th></tr>');
+        "<tr><td colspan=3><h4>Apps Available to $user</h4></td</tr>" .
+        $table_headers);
       $this->AppTableRows($http, $dyn, $user_apps);
-      $this->RefreshEngine($http, $dyn, '</table>');
     }
+    $this->RefreshEngine($http, $dyn, '</table>');
   }
   sub AppTableRows{
     my($this, $http, $dyn, $privs) = @_;
@@ -852,28 +860,25 @@ EOF
     $this->{user} = $this->get_user;
     $this->{user_name} = $this->GetUserName($this->{user},
        $this->{PasswordDbFile});
-    my $form =
-      '<form onSubmit="' .
-      "PosdaGetRemoteMethod('PasswordChange'," .
-      "'old='+this.elements['OldPassword'].value+'&amp;newp='" .
-      "+this.elements['NewPassword'].value+'&amp;rpt='" .
-      "+this.elements['RepeatPassword'].value, " .
-      "function(){Update();});" .
-      ' return false;">' . "\n" .
-      '<table><tr><td align="right">Current password:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="OldPassword">' .
-      '</td></tr><tr>'. "\n" .
-      '<td align="right">New Password:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="NewPassword">' .
-      '</td></tr>'. "\n" .
-      '<td align="right">Repeat:</td>' .
-      '<td align="left">' .
-      '<input type="password" name="RepeatPassword">' .
-      '<tr><td></td><td>' .
-      '<input type="submit" name="Submit" value="Change">' .
-      '</td><tr></table></form>';
+    my $form = <<FORM;
+<form onSubmit="
+PosdaGetRemoteMethod('PasswordChange', 'old='+this.elements['OldPassword'].value+'&amp;newp='+this.elements['NewPassword'].value+'&amp;rpt=' +this.elements['RepeatPassword'].value, function(){Update();});return false;">
+  <div class="form-group">
+    <label for="OldPassword">Current Password</label>
+    <input type="password" class="form-control" id="OldPassword" placeholder="Current Password">
+  </div>
+  <div class="form-group">
+    <label for="NewPassword">New Password</label>
+    <input type="password" class="form-control" id="NewPassword" placeholder="New Password">
+  </div>
+  <div class="form-group">
+    <label for="RepeatPassword">Repeat New Password</label>
+    <input type="password" class="form-control" id="RepeatPassword" placeholder="New Password">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+FORM
+;
     $this->RefreshEngine($http, $dyn, $form);
     if($this->{password_message}){
       $http->queue($this->{password_message});
