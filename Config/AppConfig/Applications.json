@@ -1,4 +1,4 @@
-
+{
   "SocketPool": [
     64663, 64664, 64665, 64666, 64667, 64668, 64669,
     64670, 64671, 64672, 64673, 64674, 64675, 64676, 64677, 64678, 64679,
@@ -9,6 +9,19 @@
       "Directory": "/home/posda/PosdaTools/Config/FileDistConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "File Distribution Application",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 1,
+    },
+    "CountGetter": {
+      "Directory": "/home/posda/PosdaTools/Config/CountGetter",
+      "Application" : "AppController.pl <host> <port> <dir> <color>",
+      "Description" : "Count Getter Application",
       "WindowName" : "_new",
       "interactive": 1,
       "scrollbar" : 1,
