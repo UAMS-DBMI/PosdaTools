@@ -33,7 +33,7 @@
     },
     "CountGetter": {
       "Directory": "/home/posda/PosdaTools/Config/CountGetter",
-      "Application" : "AppController.pl <host> <port> <dir> <color>",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Count Getter Application",
       "WindowName" : "_new",
       "interactive": 1,
