@@ -5,6 +5,19 @@
     64680, 64681, 64682, 64683, 64684, 64685, 64686, 64687, 64688, 64689,
   ],
   "Apps": {
+    "SubmissionSender": {
+      "Directory": "/home/quasar/PosdaTools/Config/SubmissionSender",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Select Original Submissions",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 9
+    },
     "FileDist": {
       "Directory": "/home/posda/PosdaTools/Config/FileDistConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
