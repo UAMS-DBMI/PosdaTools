@@ -4,29 +4,29 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
   "AuthenticationType" : "DB",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
+  "AuthenticationDbFileName" : "/cache/posda/Login.db",
   "RrtProtocolDefs" : 
-    "/home/bbennett/PosdaTools/NewItcTools/config/rrt_protocol_defs",
+    "/home/posda/PosdaTools/NewItcTools/config/rrt_protocol_defs",
   "StdTissueNames" : 
-    "/home/bbennett/PosdaTools/NewItcTools/config/std_tissue_names",
+    "/home/posda/PosdaTools/NewItcTools/config/std_tissue_names",
   "SubmissionDir" : 
-    "/cache/bbennett/NewItcToolsData/submission",
+    "/cache/posda/NewItcToolsData/submission",
   "ArchiveDir" :
-    "/cache/bbennett/NewItcToolsData/archive",
+    "/cache/posda/NewItcToolsData/archive",
   "CompletedArchiveDir" :
-    "/cache/bbennett/NewItcToolsData/finalize",
-  "CacheDir" : "/cache/bbennett",
+    "/cache/posda/NewItcToolsData/finalize",
+  "CacheDir" : "/cache/posda",
   "PersistentDir" :
-    "/cache/bbennett/NewItcToolsData/persistent",
+    "/cache/posda/NewItcToolsData/persistent",
   "GlobalPersistentDir" :
-    "/cache/bbennett/NewItcToolsData/global_persistent",
+    "/cache/posda/NewItcToolsData/global_persistent",
   "WorkingDir" : 
-    "/cache/bbennett/NewItcToolsData/working",
+    "/cache/posda/NewItcToolsData/working",
   "TempDir" : 
-    "/cache/bbennett/NewItcToolsData/temp",
+    "/cache/posda/NewItcToolsData/temp",
   "tools_db_defs_dir" :
-    "/cache/bbennett/NewItcToolsData/db_defs",
+    "/cache/posda/NewItcToolsData/db_defs",
 }

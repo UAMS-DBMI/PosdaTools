@@ -4,17 +4,17 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
-  "CacheDir" : "/cache/bbennett",
-  "TestDataRoot" : "/cache/bbennett/Data/TestData",
+  "AuthenticationDbFileName" : "/cache/posda/Login.db",
+  "CacheDir" : "/cache/posda",
+  "TestDataRoot" : "/cache/posda/Data/TestData",
   "ParticipantDataRoot" : 
-    "/cache/bbennett/Data/Participant_Data_2014C",
+    "/cache/posda/Data/Participant_Data_2014C",
   "ParticipantResultsRoot" : 
-    "/cache/bbennett/Data/Participant_Results_2014C",
-  "ReceiverDataRoot" : "/cache/bbennett/DicomReceiver",
+    "/cache/posda/Data/Participant_Results_2014C",
+  "ReceiverDataRoot" : "/cache/posda/DicomReceiver",
   "TempDataRoot" : 
-    "/cache/bbennett/Data/TempDirectory",
+    "/cache/posda/Data/TempDirectory",
   "AnonymizeParallelism" : 5,
 }

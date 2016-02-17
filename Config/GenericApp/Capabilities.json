@@ -12,6 +12,11 @@
     "IsExpert":  1,
     "IsExpertCapable": 1,
   },
+  "quasar": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
   "ksmith": {
     "CanDebug": 1,
     "IsExpert":  1,

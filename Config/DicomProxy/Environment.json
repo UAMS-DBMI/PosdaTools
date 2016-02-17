@@ -1,48 +1,21 @@
-// 
 {
   "ApplicationInitClass" : "DicomProxy::Application",
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
+  "AuthenticationDbFileName" : "/cache/posda/Login.db",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
   
-  "ConnectionRootDir" : "/cache/bbennett/ProxyData/Connections",
-  "AnalysisRootDir" : "/cache/bbennett/ProxyData/Analysis",
+  "ConnectionRootDir" : "/cache/posda/Data/ProxyData/Connections",
+  "AnalysisRootDir" : "/cache/posda/Data/ProxyData/Analysis",
   "IncomingSocketPool" : [ 
-    64811, 64812, 64813, 64814, 64815, 64816, 64817, 64818, 64819, 64820,
-    64821, 64822, 64823, 64824, 64825, 64826, 64827, 64828, 64829, 64830,
-    64831, 64832, 64833, 64834, 64835, 64836, 64837, 64838, 64839, 64840,
+    64812, 64813, 64814, 64815, 64816, 64817, 64818, 64819, 64820,
   ],
   "ProxyDestinations" : {
-    "BillsOsirix" : {
-      "host": "localhost",
-      "port": "11112",
-    },
     "LocalSCP" : {
       "host": "localhost",
-      "port": "1041",
+      "port": "64611",
     },
-    "Varian4DWL_WD" : {
-      "host": "192.168.203.44",
-      "port": "108",
-    },
-    "Varian4DWL_TD" : {
-      "host": "192.168.203.44",
-      "port": "107",
-    },
-    "TOMOWKFSTORESCP" : {
-      "host": "192.168.203.61",
-      "port": "11112",
-    },
-    "N1000_TDS" : {
-      "host": "192.168.203.61",
-      "port": "104",
-    },
-    "BrainLab_Query" : {
-      "host": "192.168.203.59",
-      "port": "104",
-    }
   }
 }

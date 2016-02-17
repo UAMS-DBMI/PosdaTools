@@ -1,8 +1,8 @@
 //
 {
   "extraction_root" :
-    "/cache/bbennett/Data/HierarchicalExtractions/data",
-  "log_file" : "/cache/bbennett/Data/HierarchicalExtractions/log_file",
+    "/cache/posda/Data/HierarchicalExtractions/data",
+  "log_file" : "/cache/posda/Data/HierarchicalExtractions/log_file",
   "sub_process_program" : "HandleTransactionSubProcess.pl",
   "parallelism" : 3,
 }

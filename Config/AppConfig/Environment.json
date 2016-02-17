@@ -4,8 +4,8 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "ApplicationName" : "Testing Application Server",
-  "AppHttpRoot" : "/home/bbennett/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/bbennett/Login.db",
-  "JavascriptRoot" : "/home/bbennett/PosdaTools/Posda/javascript",
+  "AuthenticationDbFileName" : "/cache/posda/Login.db",
+  "JavascriptRoot" : "/home/posda/PosdaTools/Posda/javascript",
 }

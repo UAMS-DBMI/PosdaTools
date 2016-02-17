@@ -1,7 +1,7 @@
 //
 {
   "extraction_root" :
-    "/bennett-temp/Data/HierarchicalExtractions/data",
+    "/cache/posda/Data/HierarchicalExtractions/data",
   "log_file" : "/bennett-temp/Data/HierarchicalExtractions/log_file",
   "sub_process_program" : "HandleTransactionSubProcess.pl",
   "parallelism" : 3,

@@ -1,7 +1,3 @@
-//  $Source: /home/bbennett/pass/archive/PosdaAppMacConfig/AppConfig/Capabilities.json,v $
-//  $Date: 2015/09/01 15:27:18 $
-//  $Revision: 1.3 $
-// 
 {
   "Default": {
     "Apps": {
@@ -15,6 +11,20 @@
     "IsExpertCapable": 1,
   },
   "quasar": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+    "IsAdmin": 1,
+    "Apps": {
+      "FileDist" : 1,
+      "DicomProxy" : 1,
+      "DicomProxyAnalysis" : 1,
+      "NewItcTools" : 1,
+      "PosdaCuration" : 1,
+      "CountGetter" : 1,
+    },
+  },
+  "bbennett": {
     "CanDebug": 1,
     "IsExpert":  1,
     "IsExpertCapable": 1,

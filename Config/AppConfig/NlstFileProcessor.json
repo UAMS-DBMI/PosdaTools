@@ -1,7 +1,7 @@
 //
 {
   "database" : "nlst_images",
-  "log_file" : "/cache/bbennett/Logs/NlstDbImport.log",
+  "log_file" : "/cache/posda/Logs/NlstDbImport.log",
   "sub_process_program" : "ProcessPosdaFilesInDb.pl",
   "chunk_size" : 10,
   "parallelism" : 1,
