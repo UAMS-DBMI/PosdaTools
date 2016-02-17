@@ -358,6 +358,7 @@ FileIsReady($db, $file_id);
 my $file_count = @FileList;
 if($file_count <= 0){
   UpdateAssocStatus($db, $id, "association processing complete");
+  print "No files in association\n";
   exit;
 }
 ############################################################
@@ -406,5 +407,8 @@ if(
   $#{$AssocInfo{errors}} < 0 &&
   $#FileErrors < 0
 ){
+  print "Removing $assoc_dir\n";
   remove_tree($assoc_dir);
+} else {
+  print STDERR "Not removing $assoc_dir\n";
 }

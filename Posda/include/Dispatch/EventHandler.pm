@@ -302,17 +302,17 @@ sub ReadSerializedResponse{
     unless(defined $count) { die "read failed ($!)" }
     if($count <= 0){
       my $result;
-#      my $text_len = length $text;
-#      print STDERR "text len: $text_len\n";
+      my $text_len = length $text;
+      print STDERR "text len: $text_len\n";
       my $res_text;
       if($text =~ /^pst0(.*)$/s){
-#        print STDERR "Discarding a pst0 from result text\n";
+        print STDERR "Discarding a pst0 from result text\n";
         $res_text = $1;
       } else {
         $res_text = $text;
       }
-#      my $res_length = length $res_text;
-#      print STDERR "Length of response text: $res_length\n";
+      my $res_length = length $res_text;
+      print STDERR "Length of response text: $res_length\n";
       eval{
         $result = &Storable::thaw($res_text);
       };

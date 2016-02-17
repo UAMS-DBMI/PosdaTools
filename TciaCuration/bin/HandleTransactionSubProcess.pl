@@ -200,7 +200,10 @@ unless($#ARGV == 0) { die $help }
     my $queued_for_analysis =  @{$this->{AnalysisQueue}};
     my $extract_wait = 0;
     if(exists $this->{ExtractList}){
-      $extract_wait = @{$this->{ExtractList}};
+      $extract_wait += @{$this->{ExtractList}};
+    }
+    if(exists $this->{InExtraction}){
+      $extract_wait += keys %{$this->{InExtraction}};
     }
     my $in_edit = 0;
     if(exists $this->{EditsInProgress}){
@@ -254,7 +257,7 @@ unless($#ARGV == 0) { die $help }
     $this->{Status} = "Ok";
     $this->ReportStatus;
     $this->{FileCollectionAnalysis}->ConsistencyErrors;
-    $this->{FileCollectionAnalysis}->ImageNumberErrors;
+#    $this->{FileCollectionAnalysis}->ImageNumberErrors;
     $this->{FileCollectionAnalysis}->StructureSetLinkages;
     $this->{FileCollectionAnalysis}->BuildNewHierarchy;
     my $analysis_info = $this->{FileCollectionAnalysis};
@@ -404,6 +407,7 @@ unless($#ARGV == 0) { die $help }
       my $to_file = $extraction->{dest_file};
 unless($from_file) { die "foo" }
       my $cmd = "cp \"$from_file\" \"$to_file\"";
+print STDERR "Extraction Command: $cmd\n";
       my $fh;
       if(open $fh, "$cmd|"){
         Dispatch::Select::Socket->new(

@@ -265,6 +265,7 @@ print STDERR "Round: $round\n";
             selections => "$dir/selection.txt",
             submission => "$dir/submission.pinfo",
             file_info => "$dir/file_info.pinfo",
+            private_tag_info => "$dir/private_tag_info.pinfo",
           };
         } else {
           print STDERR "One of these files doesn't exist\n" .
@@ -309,6 +310,7 @@ sub Initialized{
       selections => $r->{selections},
       submission => $r->{submission},
       file_info => $r->{file_info},
+      private_tag_info => $r->{private_tag_info},
 #      sync => "AlertAndUpdate('foo');",
       sync => "Update();",
     });
@@ -329,6 +331,7 @@ sub SelectReport{
   $this->{selections_file} = $dyn->{selections};
   $this->{submission_file} = $dyn->{submission};
   $this->{FileInfoFile} = $dyn->{file_info};
+  $this->{PrivateTagInfoFile} = $dyn->{private_tag_info};
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
   if(-r $this->{selections_file}){
     Dispatch::LineReader->new_file($this->{selections_file},
@@ -355,6 +358,7 @@ sub RetrieveInfo{
   my($this) = @_;
   my %s_date;
   my %f_info;
+  my %pt_info;
   my $sub = sub {
     $this->{info} = Storable::retrieve $this->{file};
     $this->{Mode} = "Info";
@@ -402,6 +406,9 @@ sub RetrieveInfo{
         if($ele =~ /^\(....,\"([^\"]+)\",/){
           $owner_string = $1;
           $owner_strings{$owner_string} = 1;
+          for my $f(keys %{$this->{info}->{$v}->{$ele}->{files}}){
+            $pt_info{$ele}->{$f} = 1;
+          }
         }
         my $vr = $this->{info}->{$v}->{$ele}->{vr};
         $vrs{$vr} = 1;
@@ -417,6 +424,7 @@ sub RetrieveInfo{
     $this->{Owners} = \%owner_strings;
     $this->{Sdates} = \%s_date;
     $this->{FileInfo} = \%f_info;
+    $this->{PrivateTagInfo} = \%pt_info;
   };
   return $sub;
 }
@@ -728,6 +736,8 @@ sub SubmitAndExit{
     }
   }
   Storable::store $this->{info}, $this->{submission_file};
+  Storable::store $this->{FileInfo}, $this->{FileInfoFile};
+  Storable::store $this->{PrivateTagInfo}, $this->{PrivateTagInfoFile};
   Dispatch::Select::Background->new($this->Exiter)->timer(2);
 }
 sub Exiter{
