@@ -5,6 +5,7 @@
 #
 use strict;
 package PosdaCuration::Application;
+use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
@@ -61,7 +62,7 @@ sub new {
   $this->{Exports}->{ApplyGeneralEdits} = 1;
   $this->{Exports}->{GetDisplayInfoIn} = 1;
   $this->{Exports}->{GetExtractionRoot} = 1;
- 
+  $this->{DD} = Posda::DataDict->new;
   bless $this, $class;
   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
@@ -523,6 +524,12 @@ sub ContinueDbCollectionsAndExtractions{
       'op="ScanAllForPhi" sync="Update();"?>' .
       '<?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" ' .
       'op="RemoveAllPhiScans" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" ' .
+      'op="FixStudyInconsistencies" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" ' .
+      'op="FixSeriesInconsistencies" sync="Update();"?>' .
+      '<?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" ' .
+      'op="FixPatientInconsistencies" sync="Update();"?>' .
       '<small><table border="1" width="100%">' .
       '<tr><th width="10%">Subject</th><th width="45%">DB Info</th>' .
       '<th width="45%">Extraction Info</th></tr>' .
@@ -3437,7 +3444,11 @@ sub GetExtractionEditDirsAndFiles{
   } else {
     print STDERR "Rev hist: $rev_hist_file doesn't exist\n";
   }
-  my $h = { current_rev => $current_rev };
+  my $h = {
+    current_rev => $current_rev,
+    info_dir => "$rev_dir/$current_rev",
+    file_dir => "$rev_dir/$current_rev/files",
+  };
   my $hierarchy_file = "$rev_dir/$current_rev/hierarchy.pinfo";
   if(-f $hierarchy_file){
     my $hierarchy;
@@ -3962,7 +3973,7 @@ sub GetLatestRevDir{
 # Remove All Phi Scans
 sub RemoveAllPhiScans{
   my($this, $http, $dyn) = @_;
-  $this->{CollectionsMode} = "RemovingPhiScans";
+  $this->{CollectionMode} = "RemovingPhiScans";
   $this->{PhiRemoveLines} = [];
   my $dir = $this->{ExtractionRoot} . "/$this->{SelectedCollection}" .
     "/$this->{SelectedSite}";
@@ -3991,7 +4002,7 @@ sub RemovePhiScanLines{
 sub RemovePhiScanLinesDone{
   my($this) = @_;
   my $sub = sub {
-    $this->{CollectionsMode} = "CollectionsSelection";
+    $this->{CollectionMode} = "CollectionsSelection";
     delete $this->{PhiRemoveLines};
     $this->AutoRefresh;
   };
@@ -4349,5 +4360,726 @@ sub ClearCollectionError{
   my($this, $http, $dyn) = @_;
   delete $this->{CollectionError};
   $this->{CollectionMode} = "CollectionsSelection";
+}
+################################
+# Fix Study Inconsistencies
+sub FixStudyInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "ScanningStudyInconsistencies";
+  my $dir = $this->{ExtractionRoot} . "/$this->{SelectedCollection}" .
+    "/$this->{SelectedSite}";
+  my $cmd = "FindStudyConsistencyErrors.pl \"$dir\"";
+  my $pid = open my $fh, "$cmd|" or die "Can't open $cmd|";
+  Dispatch::Select::Socket->new(
+    $this->ReadSerializedResponse($this->SaveStudyInconsistencies, $pid),
+    $fh
+  )->Add("reader");
+}
+sub SaveStudyInconsistencies{
+  my($this) = @_;
+  my $sub = sub {
+    my($stat, $results) = @_;
+    if($stat eq "Succeeded"){
+      $this->{StudyInconsistencies} = $results;
+      $this->{CollectionMode} = "ProposingStudyInconsistencyFixes";
+      my @subjs = keys %$results;
+      Dispatch::Select::Background->new(
+        $this->ProposeStudyFixes(\@subjs))->queue;
+    } else {
+      my $error = "Status to Study Inconsistency Scan: $stat";
+      $this->SetCollectionError($error);
+    }
+    $this->AutoRefresh;
+  };
+  return $sub;
+}
+sub ScanningStudyInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Scanning for Study Inconsistencies");
+}
+sub ProposingStudyInconsistencyFixes{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Proposing Study Inconsistency Fixes");
+}
+sub StudyInconsistenciesFound{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    "Study Inconsistencies Found:" .
+    '<?dyn="NotSoSimpleButton" op="CancelStudyFixes" caption="Cancel"' . 
+    ' sync="Update();"?>' .
+    '<?dyn="NotSoSimpleButton" op="ApplyStudyFixes" ' .
+    'caption="Apply Selected Fixes"' . 
+    ' sync="Update();"?>'
+  );
+  for my $subj (sort keys %{$this->{StudyInconsistencies}}){
+    $http->queue("<hr>Subject: $subj<br>");
+    for my $i (0 .. $#{$this->{StudyInconsistencies}->{$subj}}){
+      my $err = $this->{StudyInconsistencies}->{$subj}->[$i];
+      $this->DisplayProposedStudyFix(
+        $http, $dyn, $subj, $i, $err->{ProposedFix});
+    }
+  }
+}
+sub CancelStudyFixes{
+  my($this, $http, $dyn) = @_;
+  delete $this->{StudyInconsistencies};
+  $this->{CollectionMode} = "CollectionsSelection";
+}
+sub ProposeStudyFixes{
+  my($this, $subjs) = @_;
+  my $sub = sub{
+    my($disp) = @_;
+    if($#{$subjs} < 0){
+      $this->{CollectionMode} = "StudyInconsistenciesFound";
+      $this->AutoRefresh;
+      return;
+    }
+    my $next = shift @$subjs;
+    $disp->queue;
+    my $err_subj = $this->{StudyInconsistencies}->{$next};
+    for my $err_info (@$err_subj){
+      my $dir_info = $this->GetExtractionEditDirsAndFiles($next);
+      my $dicom_info = Storable::retrieve($dir_info->{dicom_info_file});
+      my $hierarchy = Storable::retrieve($dir_info->{hierarchy_file});
+      my %files_in_study;
+      my $studies = $hierarchy->{$next}->{studies};
+      for my $i (keys %{$studies}){
+        if($studies->{$i}->{uid} eq $err_info->{study_uid}){
+          for my $j (keys %{$studies->{$i}->{series}}){
+            for my $f (
+              keys %{$studies->{$i}->{series}->{$j}->{files}}
+            ){
+              my $digest = $dicom_info->{FilesToDigest}->{$f};
+              $files_in_study{$f} = $dicom_info->{FilesByDigest}->{$digest};
+            }
+          }
+        }
+      }
+      if(
+        $err_info->{type} eq "study_consistency" &&
+        $err_info->{sub_type} eq "multiple element values"
+      ){
+        my $ele = $err_info->{ele};
+        my $ele_info = $this->{DD}->get_ele_by_sig($ele);
+        my $ele_desc = $ele_info->{Name};
+        my @fix_list;
+        for my $v (@{$err_info->{values}}){
+          my $fix = {};
+          for my $f(keys %files_in_study){
+            unless($files_in_study{$f}->{$ele} eq $v){
+              $fix->{files}->{$f} = 1;
+            }
+            $fix->{ele} = $ele;
+            $fix->{ele_desc} = $ele_desc;
+            if($v eq "<undef>"){
+              $fix->{op} = "delete";
+            } else {
+              $fix->{op} = "set";
+              $fix->{value} = $v;
+            }
+          }
+          $fix->{num_files} = keys %{$fix->{files}};
+          push @fix_list, $fix;
+        }
+        $err_info->{ProposedFix} = [
+          sort {$a->{num_files} <=> $b->{num_files}} @fix_list
+        ];
+        $err_info->{ProposedFix}->[0]->{selected} = 1;
+      }
+    }
+  };
+  return $sub;
+}
+sub DisplayProposedStudyFix{
+  my($this, $http, $dyn, $subj, $i, $fix) = @_;
+  $http->queue("<small><table border><tr>" .
+    "<th>Element</th><th>Name</th><th>Number Files</th><th>Operation</th>" .
+    "<th>Value</th><th>Sel</th></tr>");
+  for my $j (0 .. $#{$fix}){
+    my $f = $fix->[$j];
+    my $value = "";
+    if(exists $f->{value}) { $value = $f->{value} }
+    $http->queue("<tr><td>$f->{ele}</td><td>$f->{ele_desc}</td>" .
+      "<td>$f->{num_files}</td><td>$f->{op}</td><td>$value</td><td>");
+    $http->queue($this->RadioButtonDelegate(
+       $subj . "_$i", $j, exists($f->{selected}), {
+          op => "SelectStudyFix",
+          subj => $subj,
+          fix => $i,
+          index => $j,
+          sync => "Update();",
+        }
+      )
+    );
+    $http->queue("</td></tr>");
+  }
+  $http->queue("</table></small>");
+}
+sub SelectStudyFix{
+  my($this, $http, $dyn) = @_;
+  my $subj = $dyn->{subj};
+  my $fix = $dyn->{fix};
+  my $index = $dyn->{index};
+  for my $i (
+    0 .. $#{$this->{StudyInconsistencies}->{$subj}->[$fix]->{ProposedFix}}
+  ){
+    delete $this->{StudyInconsistencies}->{$subj}->[$fix]->{ProposedFix}
+      ->[$i]->{selected};
+  }
+  $this->{StudyInconsistencies}->{$subj}->[$fix]->{ProposedFix}->[$index]
+    ->{selected} = 1;
+}
+sub ApplyStudyFixes{
+  my($this, $http, $dyn) = @_;
+  for my $subj (keys %{$this->{StudyInconsistencies}}){
+    my $sub_array = $this->{StudyInconsistencies}->{$subj};
+    for my $fix (@$sub_array){
+      p_fix:
+      for my $p_fix (@{$fix->{ProposedFix}}){
+        unless($p_fix->{selected}) { next p_fix }
+        for my $f (keys %{$p_fix->{files}}){
+          if($p_fix->{op} eq "delete"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_deletes}->{$p_fix->{ele}} = 1;
+          } elsif ($p_fix->{op} eq "set"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_additions}->{$p_fix->{ele}} = $p_fix->{value};
+          }
+        }
+      }
+    }
+  }
+  for my $k (keys %{$this->{FixesToApply}}){
+    $this->{FixesToApplySave}->{$k} = $this->{FixesToApply}->{$k};
+  }
+  delete $this->{StudyInconsistencies};
+  $this->{CollectionMode} = "ApplyFixes";
+  my @fixes_to_apply = sort keys %{$this->{FixesToApply}};
+  $this->{FixesApplied} = {};
+  $this->{FixesFailed} = {};
+  Dispatch::Select::Background->new(
+   $this->ApplyNextFix(\@fixes_to_apply)
+  )->queue;
+}
+################################
+# ApplyFixes
+#
+sub ApplyFixes{
+  my($this, $http, $dyn) = @_;
+  $http->queue("ApplyingFixes<ul>");
+  my $to_apply = keys %{$this->{FixesToApply}};
+  my $applied = keys %{$this->{FixesApplied}};
+  my $failed = keys %{$this->{FixesFailed}};
+  $http->queue("<li>Remaining: $to_apply</li>");
+  $http->queue("<li>Applied: $applied</li>");
+  $http->queue("<li>Failed: $failed</li>");
+  $http->queue("</ul>");
+}
+sub ApplyNextFix{
+  my($this, $fixes_to_apply) = @_;
+  my $sub = sub{
+    my($disp) = @_;
+    $this->AutoRefresh;
+    if($#{$fixes_to_apply} < 0){
+      $this->{CollectionMode} = "CollectionsSelection";
+      delete $this->{FixesFailed};
+      delete $this->{FixesApplied};
+      delete $this->{FixesToApply};
+      return;
+    }
+    my $next = shift @{$fixes_to_apply};
+    my $next_fix = $this->{FixesToApply}->{$next}->{FileEdits};
+    my $dir_info = $this->GetExtractionEditDirsAndFiles($next);
+    my $dicom_info = Storable::retrieve($dir_info->{dicom_info_file});
+    my $Fix = {
+      FileEdits => $next_fix,
+      cache_dir => "$this->{DicomInfoCache}/dicom_info",
+      source => "$dir_info->{file_dir}",
+      operation => "EditAndAnalyze",
+      parallelism => 3,
+    };
+    for my $file (keys %{$dicom_info->{FilesToDigest}}){
+      if(exists $next_fix->{$file}){
+        if($file =~ /^(.*)\/([^\/]+)$/){
+          my $path = $1; my $f = $2;
+          $next_fix->{$file}->{file_only} = $f;
+        } else {
+          print STDERR "File to edit ($file) can't be split into path, file\n";
+          $this->{FixesFailed}->{$next} = 1;
+          $disp->queue;
+          return;
+        }
+      } else {
+        if($file =~ /^(.*)\/([^\/]+)$/){
+          my $path = $1; my $f = $2;
+          unless($path eq $Fix->{source}){
+            print STDERR "File to link ($f) isn't in source dir\n" .
+              "\t$Fix->{source}\n" .
+              "\t$path\n";
+            $this->{FixesFailed}->{$next} = 1;
+            $disp->queue;
+            return;
+          }
+          $Fix->{files_to_link}->{$f} = $dicom_info->{FilesToDigest}->{$file};
+        } else {
+          print STDERR "File to link ($file) can't be split into path, file\n";
+          $this->{FixesFailed}->{$next} = 1;
+          $disp->queue;
+          return;
+        }
+      }
+    }
+    $this->NewRequestLockForEdit($next,
+      $this->WhenApplyLockGranted($Fix, $disp, $next));
+  };
+  return $sub;
+}
+sub WhenApplyLockGranted{
+  my($this, $fix, $disp, $subj) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+    my %args;
+    for my $line (@$lines){
+      if($line =~ /^(.*):\s*(.*)$/){
+        my $k = $1; my $v = $2;
+        $args{$k} = $v;
+      }
+    }
+    if(exists($args{Locked}) && $args{Locked} eq "OK"){
+      $fix->{info_dir} = $args{"Revision Dir"};
+      $fix->{destination} = $args{"Destination File Directory"};
+      for my $f (keys %{$fix->{FileEdits}}){
+        $fix->{FileEdits}->{$f}->{from_file} = $f;
+        $fix->{FileEdits}->{$f}->{to_file} = 
+          "$fix->{destination}/$fix->{FileEdits}->{$f}->{file_only}";
+        delete $fix->{FileEdits}->{$f}->{file_only};
+      }
+      my $commands = $args{"Revision Dir"} . "/creation.pinfo";
+      store($fix, $commands);
+      my $session = $this->{session};
+      my $pid = $$;
+      my $user = $this->get_user;
+      my $new_args = [ "ApplyEdits", "Id: $args{Id}",
+        "Session: $session", "User: $user", "Pid: $pid" ,
+        "Commands: $commands" ];
+      $this->{FixApplied}->{$subj} = 1;
+      $this->SimpleTransaction($this->{ExtractionManagerPort},
+        $new_args,
+        $this->WhenApplyEditQueued($subj, $disp));
+    } else {
+      print STDERR "Extraction Lock Failed - probably double click\n";
+    }
+  };
+  return $sub;
+}
+sub WhenApplyEditQueued{
+  my($this, $subj, $disp) = @_;
+  my $sub = sub {
+    my($lines) = @_;
+    $this->{FixesApplied}->{$subj} = 1;
+    print STDERR "################\nApplyEditQueued\n";
+    for my $l (@$lines){
+      print STDERR "$l\n";
+    }
+    print STDERR "################\nApplyEditQueued\n";
+    $disp->queue;
+  };
+  return $sub;
+}
+
+################################
+# Fix Series Inconsistencies
+sub FixSeriesInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "ScanningSeriesInconsistencies";
+  my $dir = $this->{ExtractionRoot} . "/$this->{SelectedCollection}" .
+    "/$this->{SelectedSite}";
+  my $cmd = "FindSeriesConsistencyErrors.pl \"$dir\"";
+  my $pid = open my $fh, "$cmd|" or die "Can't open $cmd|";
+  Dispatch::Select::Socket->new(
+    $this->ReadSerializedResponse($this->SaveSeriesInconsistencies, $pid),
+    $fh
+  )->Add("reader");
+}
+sub SaveSeriesInconsistencies{
+  my($this) = @_;
+  my $sub = sub {
+    my($stat, $results) = @_;
+    if($stat eq "Succeeded"){
+      $this->{SeriesInconsistencies} = $results;
+      $this->{CollectionMode} = "ProposingSeriesInconsistencyFixes";
+      my @subjs = keys %$results;
+      Dispatch::Select::Background->new(
+        $this->ProposeSeriesFixes(\@subjs))->queue;
+    } else {
+      my $error = "Status to Series Inconsistency Scan: $stat";
+      $this->SetCollectionError($error);
+    }
+    $this->AutoRefresh;
+  };
+  return $sub;
+}
+sub ScanningSeriesInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Scanning for Series Inconsistencies");
+}
+sub ProposingSeriesInconsistencyFixes{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Proposing Series Inconsistency Fixes");
+}
+sub SeriesInconsistenciesFound{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    "Series Inconsistencies Found:" .
+    '<?dyn="NotSoSimpleButton" op="CancelSeriesFixes" caption="Cancel"' . 
+    ' sync="Update();"?>' .
+    '<?dyn="NotSoSimpleButton" op="ApplySeriesFixes" ' .
+    'caption="Apply Selected Fixes"' . 
+    ' sync="Update();"?>'
+  );
+  for my $subj (sort keys %{$this->{SeriesInconsistencies}}){
+    $http->queue("<hr>Subject: $subj<br>");
+    for my $i (0 .. $#{$this->{SeriesInconsistencies}->{$subj}}){
+      my $err = $this->{SeriesInconsistencies}->{$subj}->[$i];
+      $this->DisplayProposedSeriesFix(
+        $http, $dyn, $subj, $i, $err->{ProposedFix});
+    }
+  }
+}
+sub CancelSeriesFixes{
+  my($this, $http, $dyn) = @_;
+  delete $this->{SeriesInconsistencies};
+  $this->{CollectionMode} = "CollectionsSelection";
+}
+sub ProposeSeriesFixes{
+  my($this, $subjs) = @_;
+  my $sub = sub{
+    my($disp) = @_;
+    if($#{$subjs} < 0){
+      $this->{CollectionMode} = "SeriesInconsistenciesFound";
+      $this->AutoRefresh;
+      return;
+    }
+    my $next = shift @$subjs;
+    $disp->queue;
+    my $err_subj = $this->{SeriesInconsistencies}->{$next};
+    for my $err_info (@$err_subj){
+      my $dir_info = $this->GetExtractionEditDirsAndFiles($next);
+      my $dicom_info = Storable::retrieve($dir_info->{dicom_info_file});
+      my $hierarchy = Storable::retrieve($dir_info->{hierarchy_file});
+      my %files_in_series;
+      my $studies = $hierarchy->{$next}->{studies};
+      for my $i (keys %{$studies}){
+        series:
+        for my $j (keys %{$studies->{$i}->{series}}){
+          my $series_uid = $studies->{$i}->{series}->{$j}->{uid};
+          unless($series_uid eq $err_info->{series_uid}) {next series}
+          for my $f (
+            keys %{$studies->{$i}->{series}->{$j}->{files}}
+          ){
+            my $digest = $dicom_info->{FilesToDigest}->{$f};
+            $files_in_series{$f} = $dicom_info->{FilesByDigest}->{$digest};
+          }
+        }
+      }
+      if(
+        $err_info->{type} eq "series_consistency" &&
+        $err_info->{sub_type} eq "multiple element values"
+      ){
+        my $ele = $err_info->{ele};
+        my $ele_info = $this->{DD}->get_ele_by_sig($ele);
+        my $ele_desc = $ele_info->{Name};
+        my @fix_list;
+        for my $v (@{$err_info->{values}}){
+          my $fix = {};
+          for my $f(keys %files_in_series){
+            my $ev = $files_in_series{$f}->{$ele};
+            unless($files_in_series{$f}->{$ele} eq $v){
+              $fix->{files}->{$f} = 1;
+            }
+            $fix->{ele} = $ele;
+            $fix->{ele_desc} = $ele_desc;
+            if($v eq "<undef>"){
+              $fix->{op} = "delete";
+            } else {
+              $fix->{op} = "set";
+              $fix->{value} = $v;
+            }
+          }
+          $fix->{num_files} = keys %{$fix->{files}};
+          push @fix_list, $fix;
+        }
+        $err_info->{ProposedFix} = [
+          sort {$a->{num_files} <=> $b->{num_files}} @fix_list
+        ];
+        $err_info->{ProposedFix}->[0]->{selected} = 1;
+      }
+    }
+  };
+  return $sub;
+}
+sub DisplayProposedSeriesFix{
+  my($this, $http, $dyn, $subj, $i, $fix) = @_;
+  $http->queue("<small><table border><tr>" .
+    "<th>Element</th><th>Name</th><th>Number Files</th><th>Operation</th>" .
+    "<th>Value</th><th>Sel</th></tr>");
+  for my $j (0 .. $#{$fix}){
+    my $f = $fix->[$j];
+    my $value = "";
+    if(exists $f->{value}) { $value = $f->{value} }
+    $http->queue("<tr><td>$f->{ele}</td><td>$f->{ele_desc}</td>" .
+      "<td>$f->{num_files}</td><td>$f->{op}</td><td>$value</td><td>");
+    $http->queue($this->RadioButtonDelegate(
+       $subj . "_$i", $j, exists($f->{selected}), {
+          op => "SelectSeriesFix",
+          subj => $subj,
+          fix => $i,
+          index => $j,
+          sync => "Update();",
+        }
+      )
+    );
+    $http->queue("</td></tr>");
+  }
+  $http->queue("</table></small>");
+}
+sub SelectSeriesFix{
+  my($this, $http, $dyn) = @_;
+  my $subj = $dyn->{subj};
+  my $fix = $dyn->{fix};
+  my $index = $dyn->{index};
+  for my $i (
+    0 .. $#{$this->{SeriesInconsistencies}->{$subj}->[$fix]->{ProposedFix}}
+  ){
+    delete $this->{SeriesInconsistencies}->{$subj}->[$fix]->{ProposedFix}
+      ->[$i]->{selected};
+  }
+  $this->{SeriesInconsistencies}->{$subj}->[$fix]->{ProposedFix}->[$index]
+    ->{selected} = 1;
+}
+sub ApplySeriesFixes{
+  my($this, $http, $dyn) = @_;
+  for my $subj (keys %{$this->{SeriesInconsistencies}}){
+    my $sub_array = $this->{SeriesInconsistencies}->{$subj};
+    for my $fix (@$sub_array){
+      p_fix:
+      for my $p_fix (@{$fix->{ProposedFix}}){
+        unless($p_fix->{selected}) { next p_fix }
+        for my $f (keys %{$p_fix->{files}}){
+          if($p_fix->{op} eq "delete"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_deletes}->{$p_fix->{ele}} = 1;
+          } elsif ($p_fix->{op} eq "set"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_additions}->{$p_fix->{ele}} = $p_fix->{value};
+          }
+        }
+      }
+    }
+  }
+  delete $this->{SeriesInconsistencies};
+  $this->{CollectionMode} = "ApplyFixes";
+  my @fixes_to_apply = sort keys %{$this->{FixesToApply}};
+  $this->{FixesApplied} = {};
+  $this->{FixesFailed} = {};
+  Dispatch::Select::Background->new(
+   $this->ApplyNextFix(\@fixes_to_apply)
+  )->queue;
+}
+################################
+# Fix Patient Inconsistencies
+sub FixPatientInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $this->{CollectionMode} = "ScanningPatientInconsistencies";
+  my $dir = $this->{ExtractionRoot} . "/$this->{SelectedCollection}" .
+    "/$this->{SelectedSite}";
+  my $cmd = "FindPatientConsistencyErrors.pl \"$dir\"";
+  my $pid = open my $fh, "$cmd|" or die "Can't open $cmd|";
+  Dispatch::Select::Socket->new(
+    $this->ReadSerializedResponse($this->SavePatientInconsistencies, $pid),
+    $fh
+  )->Add("reader");
+}
+sub SavePatientInconsistencies{
+  my($this) = @_;
+  my $sub = sub {
+    my($stat, $results) = @_;
+    if($stat eq "Succeeded"){
+      $this->{PatientInconsistencies} = $results;
+      $this->{CollectionMode} = "ProposingPatientInconsistencyFixes";
+      my @subjs = keys %$results;
+      Dispatch::Select::Background->new(
+        $this->ProposePatientFixes(\@subjs))->queue;
+    } else {
+      my $error = "Status to Patient Inconsistency Scan: $stat";
+      $this->SetCollectionError($error);
+    }
+    $this->AutoRefresh;
+  };
+  return $sub;
+}
+sub ScanningPatientInconsistencies{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Scanning for Patient Inconsistencies");
+}
+sub ProposingPatientInconsistencyFixes{
+  my($this, $http, $dyn) = @_;
+  $http->queue("Proposing Patient Inconsistency Fixes");
+}
+sub PatientInconsistenciesFound{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+    "Patient Inconsistencies Found:" .
+    '<?dyn="NotSoSimpleButton" op="CancelPatientFixes" caption="Cancel"' . 
+    ' sync="Update();"?>' .
+    '<?dyn="NotSoSimpleButton" op="ApplyPatientFixes" ' .
+    'caption="Apply Selected Fixes"' . 
+    ' sync="Update();"?>'
+  );
+  for my $subj (sort keys %{$this->{PatientInconsistencies}}){
+    $http->queue("<hr>Subject: $subj<br>");
+    for my $i (0 .. $#{$this->{PatientInconsistencies}->{$subj}}){
+      my $err = $this->{PatientInconsistencies}->{$subj}->[$i];
+      $this->DisplayProposedPatientFix(
+        $http, $dyn, $subj, $i, $err->{ProposedFix});
+    }
+  }
+}
+sub CancelPatientFixes{
+  my($this, $http, $dyn) = @_;
+  delete $this->{PatientInconsistencies};
+  $this->{CollectionMode} = "CollectionsSelection";
+}
+sub ProposePatientFixes{
+  my($this, $subjs) = @_;
+  my $sub = sub{
+    my($disp) = @_;
+    if($#{$subjs} < 0){
+      $this->{CollectionMode} = "PatientInconsistenciesFound";
+      $this->AutoRefresh;
+      return;
+    }
+    my $next = shift @$subjs;
+    $disp->queue;
+    my $err_subj = $this->{PatientInconsistencies}->{$next};
+    for my $err_info (@$err_subj){
+      my $dir_info = $this->GetExtractionEditDirsAndFiles($next);
+      my $dicom_info = Storable::retrieve($dir_info->{dicom_info_file});
+      my $hierarchy = Storable::retrieve($dir_info->{hierarchy_file});
+      my %files_in_patient;
+      my $studies = $hierarchy->{$next}->{studies};
+      for my $i (keys %{$studies}){
+        for my $j (keys %{$studies->{$i}->{series}}){
+          for my $f (
+            keys %{$studies->{$i}->{series}->{$j}->{files}}
+          ){
+            my $digest = $dicom_info->{FilesToDigest}->{$f};
+            $files_in_patient{$f} = $dicom_info->{FilesByDigest}->{$digest};
+          }
+        }
+      }
+      if(
+        $err_info->{type} eq "patient_consistency" &&
+        $err_info->{sub_type} eq "multiple element values"
+      ){
+        my $ele = $err_info->{ele};
+        my $ele_info = $this->{DD}->get_ele_by_sig($ele);
+        my $ele_desc = $ele_info->{Name};
+        my @fix_list;
+        for my $v (@{$err_info->{values}}){
+          my $fix = {};
+          for my $f(keys %files_in_patient){
+            my $ev = $files_in_patient{$f}->{$ele};
+            unless($files_in_patient{$f}->{$ele} eq $v){
+              $fix->{files}->{$f} = 1;
+            }
+            $fix->{ele} = $ele;
+            $fix->{ele_desc} = $ele_desc;
+            if($v eq "<undef>"){
+              $fix->{op} = "delete";
+            } else {
+              $fix->{op} = "set";
+              $fix->{value} = $v;
+            }
+          }
+          $fix->{num_files} = keys %{$fix->{files}};
+          push @fix_list, $fix;
+        }
+        $err_info->{ProposedFix} = [
+          sort {$a->{num_files} <=> $b->{num_files}} @fix_list
+        ];
+        $err_info->{ProposedFix}->[0]->{selected} = 1;
+      }
+    }
+  };
+  return $sub;
+}
+sub DisplayProposedPatientFix{
+  my($this, $http, $dyn, $subj, $i, $fix) = @_;
+  $http->queue("<small><table border><tr>" .
+    "<th>Element</th><th>Name</th><th>Number Files</th><th>Operation</th>" .
+    "<th>Value</th><th>Sel</th></tr>");
+  for my $j (0 .. $#{$fix}){
+    my $f = $fix->[$j];
+    my $value = "";
+    if(exists $f->{value}) { $value = $f->{value} }
+    $http->queue("<tr><td>$f->{ele}</td><td>$f->{ele_desc}</td>" .
+      "<td>$f->{num_files}</td><td>$f->{op}</td><td>$value</td><td>");
+    $http->queue($this->RadioButtonDelegate(
+       $subj . "_$i", $j, exists($f->{selected}), {
+          op => "SelectPatientFix",
+          subj => $subj,
+          fix => $i,
+          index => $j,
+          sync => "Update();",
+        }
+      )
+    );
+    $http->queue("</td></tr>");
+  }
+  $http->queue("</table></small>");
+}
+sub SelectPatientFix{
+  my($this, $http, $dyn) = @_;
+  my $subj = $dyn->{subj};
+  my $fix = $dyn->{fix};
+  my $index = $dyn->{index};
+  for my $i (
+    0 .. $#{$this->{PatientInconsistencies}->{$subj}->[$fix]->{ProposedFix}}
+  ){
+    delete $this->{PatientInconsistencies}->{$subj}->[$fix]->{ProposedFix}
+      ->[$i]->{selected};
+  }
+  $this->{PatientInconsistencies}->{$subj}->[$fix]->{ProposedFix}->[$index]
+    ->{selected} = 1;
+}
+sub ApplyPatientFixes{
+  my($this, $http, $dyn) = @_;
+  for my $subj (keys %{$this->{PatientInconsistencies}}){
+    my $sub_array = $this->{PatientInconsistencies}->{$subj};
+    for my $fix (@$sub_array){
+      p_fix:
+      for my $p_fix (@{$fix->{ProposedFix}}){
+        unless($p_fix->{selected}) { next p_fix }
+        for my $f (keys %{$p_fix->{files}}){
+          if($p_fix->{op} eq "delete"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_deletes}->{$p_fix->{ele}} = 1;
+          } elsif ($p_fix->{op} eq "set"){
+            $this->{FixesToApply}->{$subj}->{FileEdits}->
+              {$f}->{full_ele_additions}->{$p_fix->{ele}} = $p_fix->{value};
+          }
+        }
+      }
+    }
+  }
+  delete $this->{PatientInconsistencies};
+  $this->{CollectionMode} = "ApplyFixes";
+  my @fixes_to_apply = sort keys %{$this->{FixesToApply}};
+  $this->{FixesApplied} = {};
+  $this->{FixesFailed} = {};
+  Dispatch::Select::Background->new(
+   $this->ApplyNextFix(\@fixes_to_apply)
+  )->queue;
 }
 1;

@@ -219,10 +219,10 @@ sub ExpandStudyHierarchyWithPatientInfo{
       }
       my $fbd = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest};
       for my $dig (
-        sort
-        {
-          $fbd->{$a}->{normalized_loc} <=> $fbd->{$b}->{normalized_loc}
-        }
+#        sort
+#        {
+#          $fbd->{$a}->{normalized_loc} <=> $fbd->{$b}->{normalized_loc}
+#        }
         keys %digests
       ){
         my $di = $fbd->{$dig};

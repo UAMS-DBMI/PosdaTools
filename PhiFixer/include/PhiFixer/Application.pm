@@ -268,6 +268,7 @@ sub SpecificInitialize{
             selections => "$dir/selection.txt",
             submission => "$dir/submission.pinfo",
             file_info => "$dir/file_info.pinfo",
+            private_tag_info => "$dir/private_tag_info.pinfo",
           };
         }
       }
@@ -308,6 +309,7 @@ sub Initialized{
       selections => $r->{selections},
       submission => $r->{submission},
       file_info => $r->{file_info},
+      private_tag_info => $r->{private_tag_info},
 #      sync => "AlertAndUpdate('foo');",
       sync => "Update();",
     });
@@ -328,6 +330,7 @@ sub SelectReport{
   $this->{selections_file} = $dyn->{selections};
   $this->{submission_file} = $dyn->{submission};
   $this->{file_info_file} = $dyn->{file_info};
+  $this->{private_tag_info_file} = $dyn->{private_tag_info};
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
 #  $http->queue("This is a test");
 #  $http->finish;
@@ -336,15 +339,20 @@ sub RetrieveInfo{
   my($this) = @_;
   my $sub = sub {
     $this->{FileInfo} = Storable::retrieve $this->{file_info_file};
+    $this->{PrivateTagInfo} = Storable::retrieve $this->{private_tag_info_file};
     $this->{info} = Storable::retrieve $this->{submission_file};
     $this->{Mode} = "Info";
     $this->{ByTag} = {};
     $this->{ByFile} = {};
+    $this->{PrivateTags} = {};
     for my $v (keys %{$this->{info}}){
       for my $t (keys %{$this->{info}->{$v}}){
         for my $f (keys %{$this->{info}->{$v}->{$t}->{files}}){
           $this->{ByTag}->{$t}->{$v}->{$f} = 1;
           $this->{ByFile}->{$f}->{$t}->{$v} = 1;
+          if($t =~/^\([\da-f]{4},\"[^\"]+\",[\da-f]{2}\)$/){
+            $this->{PrivateTags}->{$t}->{$f} = 1;
+          }
         }
       }
     }
@@ -353,7 +361,47 @@ sub RetrieveInfo{
 }
 sub Info{
   my($this, $http, $dyn) = @_;
-  $http->queue("<small>Tags Remaining:<br>");
+  my $modes = {
+    PrivateTagReview => "Review Private Tags",
+    InfoTagValueMode => "Review Potential PHI",
+  };
+  unless(defined($this->{InfoMode})){
+    $this->{InfoMode} = "PrivateTagReview";
+  }
+  $this->SelectByValue($http, {
+    op => "SetInfoMode",
+    sync => "Update();",
+  });
+  for my $i (keys %$modes){
+    $http->queue("<option value=\"$i\"" .
+      ($this->{InfoMode} eq $i ? ' selected' : "") .
+      ">$modes->{$i}</option>");
+  }
+  $http->queue("</select><hr>");
+  if($this->can($this->{InfoMode})){
+    my $meth = $this->{InfoMode};
+    $this->$meth($http, $dyn);
+  } else {
+    $http->queue("Undefined InfoMode: $this->{InfoMode}");
+  }
+}
+sub SetInfoMode{
+  my($this, $http, $dyn) = @_;
+  $this->{InfoMode} = $dyn->{value};
+}
+sub PrivateTagReview{
+  my($this, $http, $dyn) = @_;
+  unless(exists $this->{PrivateTagsToReview}){
+    $this->{PrivateTagsToReview} = [ 
+      sort keys %{$this->{PrivateTagInfo}}
+    ];
+  }
+  $http->queue("PrivateTagReview");
+}
+sub InfoTagValueMode{
+  my($this, $http, $dyn) = @_;
+  $this->TagFilters($http, $dyn);
+  unless(defined($this->{TagIndex})){$this->{TagIndex} = 0 }
   my %tags;
   tag:
   for my $i (sort keys %{$this->{ByTag}}){
@@ -363,8 +411,8 @@ sub Info{
     $tags{$ic} = $i;
   }
   my $tag_count = keys %tags;
-  $http->queue("<small>Tags Remaining ($tag_count):<br>");
-  my $max_count = 20;
+  $http->queue("Tags Remaining ($tag_count):<br>");
+  my $max_count = 30;
   render:
   for my $i (sort keys %tags){
     $max_count -= 1;
@@ -396,6 +444,27 @@ sub SetSelectedEle{
   }
 
 }
+sub TagFilters{
+  my($this, $http, $dyn) = @_;
+  $http->queue("<small>");
+  unless(defined $this->{TagFilters}->{OnlyPublic}){
+    $this->{TagFilters}->{OnlyPublic} = "false";
+  }
+  unless(defined $this->{TagFilters}->{OnlyPrivate}){
+    $this->{TagFilters}->{OnlyPrivate} = "false";
+  }
+  $http->queue($this->CheckBoxDelegate("TagFilters", 
+    "OnlyPublic" ,  $this->{TagFilters}->{OnlyPublic} eq "true",
+    { op => "SetCheckBox", sync => "Update();" }) . "Only public");
+  $http->queue($this->CheckBoxDelegate("TagFilters", 
+    "OnlyPrivate" ,  $this->{TagFilters}->{OnlyPrivate} eq "true",
+    { op => "SetCheckBox", sync => "Update();" }) . "Only private");
+  $http->queue("<hr>");
+}
+sub SetCheckBox{
+  my($this, $http, $dyn) = @_;
+  $this->{$dyn->{group}}->{$dyn->{value}} = $dyn->{checked};
+}
 ###########################
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
@@ -412,7 +481,7 @@ sub TagSelected{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
   $this->RefreshEngine($http, $dyn,
-    '<?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" ' .
+    '<small><?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" ' .
     'sync="Update();"?>' . 
     'Tag selected: '. $tag .
     '<hr>');
@@ -421,6 +490,7 @@ sub TagSelected{
     $this->TagInfo($http, $dyn, $i);
   }
   $this->TagValueReport($http, $dyn, $tag);
+  $http->queue("</small>");
 }
 sub TagInfo{
   my($this, $http, $dyn, $tag) = @_;
