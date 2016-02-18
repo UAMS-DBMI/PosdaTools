@@ -10,12 +10,14 @@ use Debug;
     my $user = $this->get_user;
     if($user) {
       if($this->{ExitOnLogout}){
-        my $resp =
-         '<span class="btn btn-danger" ' .
-		 'onClick="javascript:CloseThisWindow();">Close' .
-         '</span><br><?dyn="DebugButton"?>';
+        my $resp = qq{
+         <span class="btn btn-sm btn-danger"
+         onClick="javascript:CloseThisWindow();">
+           Close
+         </span><?dyn="DebugButton"?>
+         };
         $this->RefreshEngine($http, $dyn, $resp);
-	} else {
+  } else {
         $this->RefreshEngine($http, $dyn, "Logged in: $user<br />" .
           '<button class="btn btn-sm btn-danger" onClick="javascript:' .
           "PosdaGetRemoteMethod('AppControllerLogout', ''," .
