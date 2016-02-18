@@ -24,20 +24,20 @@ use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 Posda::Log::init("default.log");
 
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="JsController"?>
-<?dyn="JsContent"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
-my $bad_config = <<EOF;
-<?dyn="BadConfigReport"?>
-EOF
+my $expander = qq{
+  <?dyn="BaseHeader"?>
+  <script type="text/javascript">
+  <?dyn="JsController"?>
+  <?dyn="JsContent"?>
+  </script>
+  </head>
+  <body>
+  <?dyn="Content"?>
+  <?dyn="Footer"?>
+};
+my $bad_config = qq{
+  <?dyn="BadConfigReport"?>
+};
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -121,33 +121,32 @@ sub user{
   my($this, $http, $dyn) = @_;
   $http->queue($this->get_user);
 }
-my $content = <<EOF;
-<div id="container" style="width:<?dyn="width"?>px">
-<div id="header" style="background-color:#E0E0FF;">
-  <table width="100%">
-    <tr width="100%">
-      <td><?dyn="Logo"?></td>
-      <td>
-        <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
-        User: <?dyn="user"?>
-      </td>
-      <td valign="top" align="right">
-        <div id="login">&lt;login&gt;</div>
-      </td>
-    </tr>
-  </table>
-</div>
-<div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
-&lt;wait&gt;
-</div>
-<div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
-&lt;Content&gt;</div>
-<div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-Posda.com</div>
+my $content = qq{
+  <div id="container" style="width:<?dyn="width"?>px">
+  <div id="header" style="background-color:#E0E0FF;">
+    <table width="100%">
+      <tr width="100%">
+        <td><?dyn="Logo"?></td>
+        <td>
+          <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
+          User: <?dyn="user"?>
+        </td>
+        <td valign="top" align="right">
+          <div id="login">&lt;login&gt;</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
+  &lt;wait&gt;
+  </div>
+  <div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
+  &lt;Content&gt;</div>
+  <div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
+  Posda.com</div>
 
-</div>
-
-EOF
+  </div>
+};
 sub Content{
   my($this, $http, $dyn) = @_;
   if($this->{BadConfigFiles}) {
@@ -210,10 +209,11 @@ sub JsContent{
 sub DebugButton{
   my($this, $http, $dyn) = @_;
   if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
+    $this->RefreshEngine($http, $dyn, qq{
+      <span class="btn btn-sm btn-info" 
+       onClick="javascript:rt('DebugWindow',
+       'Refresh?obj_path=Debug',1600,1200,0);">Debug</span>
+    });
   } else {
     print STDERR "Can't debug\n";
   }
@@ -268,26 +268,25 @@ sub ContentResponse{
     my $processed = @{$this->{DirectoriesProcessed}};
     my $in_process = keys %{$this->{DirectoriesInProcess}};
     my $files_found = scalar @{$this->{FoundFiles}};
-    $http->queue(<<"EOF"
-<h3>Scanning Directories for files with DICOM Meta Headers</h3> 
-<table class="table" style="width: 45%">
-<tr>
-  <td>Waiting directories:</td> 
-  <td>$to_process</td>
-</tr>
-<tr> 
-  <td>Processed directories:</td>
-  <td>$processed</td>
-</tr> 
-  <td>Directories in process:</td>
-  <td>$in_process</td>
-</tr> 
-  <td>DICOM files found:</td>
-  <td align="left">$files_found</td>
-</tr> 
-</table>
-EOF
-    );
+    $http->queue(qq{
+      <h3>Scanning Directories for files with DICOM Meta Headers</h3> 
+      <table class="table" style="width: 45%">
+      <tr>
+        <td>Waiting directories:</td> 
+        <td>$to_process</td>
+      </tr>
+      <tr> 
+        <td>Processed directories:</td>
+        <td>$processed</td>
+      </tr> 
+        <td>Directories in process:</td>
+        <td>$in_process</td>
+      </tr> 
+        <td>DICOM files found:</td>
+        <td align="left">$files_found</td>
+      </tr> 
+      </table>
+    });
     return;
   }
 
@@ -296,17 +295,16 @@ EOF
     #
     # Note: The download link is a link rather than a SimpleButton, 
     # because we want to avoid doing an AJAX call, but a direct call!
-    $this->RefreshEngine($http, $dyn, <<"EOF"
-<h3>Files Found</h3> 
-<a class="btn btn-sm btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
-<table class="table" style="width: 65%">
-<tr>
-    <th>Subject</th> 
-    <th>File Type</th>
-    <th>Number Files</th>
-</tr>
-EOF
-    );
+    $this->RefreshEngine($http, $dyn, qq{
+      <h3>Files Found</h3> 
+      <a class="btn btn-sm btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
+      <table class="table" style="width: 65%">
+      <tr>
+          <th>Subject</th> 
+          <th>File Type</th>
+          <th>Number Files</th>
+      </tr>
+    });
     # build list of all subjects and their counts
     # Subject, File Type, File Count (distinct sop uid)
 
@@ -334,14 +332,13 @@ EOF
       for my $ftype (keys %{$this->{SubjectList}->{$subject}}) {
         my $name = $this->{DataDict}->GetSopClName($ftype);
         my $count = keys %{$this->{SubjectList}->{$subject}->{$ftype}};
-        $http->queue(<<"EOF"
-<tr>
-  <td></td>
-  <td>$name</td>
-  <td>$count</td>
-</tr>
-EOF
-        );
+        $http->queue(qq{
+          <tr>
+            <td></td>
+            <td>$name</td>
+            <td>$count</td>
+          </tr>
+        });
       }
     }
     $http->queue('</table>');
@@ -530,26 +527,25 @@ sub SummarizeSelection{
     }
   }
   $this->{DirList} = \@all_dirs;
-  $this->RefreshEngine($http, $dyn, <<"EOF"
-<p>Current Selection:<p>
-<table class="table" style="width: 65%">
-    <tr> 
-        <th>Num dirs</th>
-        <th>Num Subjects</th>
-        <th>Num Sites</th> 
-        <th>Num Collections</th>
-    </tr>
-    <tr> 
-        <td>$num_dirs</td>
-        <td>$num_subj</td> 
-        <td>$num_sites</td>
-        <td>$num_colls</td>
-    </tr>
-</table> 
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>Current Selection:<p>
+    <table class="table" style="width: 65%">
+        <tr> 
+            <th>Num dirs</th>
+            <th>Num Subjects</th>
+            <th>Num Sites</th> 
+            <th>Num Collections</th>
+        </tr>
+        <tr> 
+            <td>$num_dirs</td>
+            <td>$num_subj</td> 
+            <td>$num_sites</td>
+            <td>$num_colls</td>
+        </tr>
+    </table> 
 
-<?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();"?>
-EOF
-    );
+    <?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();"?>
+  });
 }
 
 sub AddDirectoriesForAnalysis{

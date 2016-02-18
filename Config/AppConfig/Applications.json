@@ -5,6 +5,19 @@
     64680, 64681, 64682, 64683, 64684, 64685, 64686, 64687, 64688, 64689,
   ],
   "Apps": {
+    "GenericApp": {
+      "Directory": "/home/posda/PosdaTools/Config/GenericApp",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Generic App (Template App)",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 1,
+    },
     "SubmissionSender": {
       "Directory": "/home/posda/PosdaTools/Config/SubmissionSender",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
