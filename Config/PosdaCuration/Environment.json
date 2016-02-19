@@ -14,7 +14,7 @@
   "DicomInfoCache" : "/cache/posda/Data",
   "database_host" : "tcia-utilities",
   "database_name" : "posda_files",
-  "ExtractionManagerPort" : "64612",
+  "ExtractionManagerPort" : "64662",
   "ExtractionRoot" :
      "/cache/posda/Data/HierarchicalExtractions/data",
   "PhiAnalysisRoot" :

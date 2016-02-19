@@ -27,7 +27,7 @@
     },
     "LocalLoopback" : {
       "host" : "localhost",
-      "port" : "64611",
+      "port" : "64661",
       "calling_ae" : "SEND_LOOP",
       "called_ae" : "RCV_LOOP"
     },
