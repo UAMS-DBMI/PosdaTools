@@ -503,35 +503,39 @@ sub ContinueDbCollectionsAndExtractions{
     for my $subj (keys %{$this->{ExtractionsHierarchies}}){
       $this->{CollectionRows}->{$subj} = 1;
     }
-    $this->RefreshEngine($http, $dyn,
-      '<?dyn="SimpleButton" op="NewQuery" caption="New Query" ' .
-      'sync="Update();"?>' .
-      "<hr><h3>Collection: $this->{SelectedCollection}&nbsp;&nbsp;" .
-      "Site: $this->{SelectedSite}</h3>" .
-      '<?dyn="Collection_Site_Counts"?>&nbsp;&nbsp;' . 
-      "<a href=\"DownloadCounts?obj_path=$this->{path}\">download</a>" .
-      '<br/>' .
-      '<?dyn="IntakeCheckButtons"?>' .
-      '<?dyn="PublicCheckButtons"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" ' .
-      'op="DiscardIncompleteExtractions" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Extact All Unextracted" ' .
-      'op="ExtractAllUnextracted" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Scan All For PHI" ' .
-      'op="ScanAllForPhi" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" ' .
-      'op="RemoveAllPhiScans" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" ' .
-      'op="FixStudyInconsistencies" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" ' .
-      'op="FixSeriesInconsistencies" sync="Update();"?>' .
-      '<?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" ' .
-      'op="FixPatientInconsistencies" sync="Update();"?>' .
-      '<small><table border="1" width="100%">' .
-      '<tr><th width="10%">Subject</th><th width="45%">DB Info</th>' .
-      '<th width="45%">Extraction Info</th></tr>' .
-      '<?dyn="ExpandRows"?></table></small>'
-    );
+    $this->RefreshEngine($http, $dyn, qq{
+      <?dyn="SimpleButton" op="NewQuery" caption="New Query" sync="Update();"?>
+      <hr>
+      <h3>Collection: $this->{SelectedCollection}</h3>
+      <h4>Site: $this->{SelectedSite}</h4>
+      <p><?dyn="Collection_Site_Counts"?></p>
+      <p>
+        <a class="btn btn-sm btn-primary" href="DownloadCounts?obj_path=$this->{path}\">Download CSV</a>
+      </p>
+      <div class="btn-group" role="group" aria-label="Operations">
+        <?dyn="IntakeCheckButtons"?>
+        <?dyn="PublicCheckButtons"?>
+        <?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" op="DiscardIncompleteExtractions" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Extact All Unextracted" op="ExtractAllUnextracted" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Scan All For PHI" op="ScanAllForPhi" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" op="RemoveAllPhiScans" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" op="FixStudyInconsistencies" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" op="FixSeriesInconsistencies" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" op="FixPatientInconsistencies" sync="Update();"?>
+      </div>
+      <table class="table table-striped" width="100%">
+        <thead>
+        <tr>
+          <th width="10%">Subject</th>
+          <th width="45%">DB Info</th>
+          <th width="45%">Extraction Info</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?dyn="ExpandRows"?>
+        </tbody>
+      </table>
+    });
   };
   return $sub;
 };
@@ -698,15 +702,17 @@ sub ExpandRow{
     $this->NotSoSimpleButton($http, {
        op => "CloseSubjInfo",
        subject => $subj,
-       caption => "close",
-       sync => "Update();"
+       caption => "Close",
+       sync => "Update();",
+       class => "btn btn-sm btn-danger"
     });
   } else {
     $this->NotSoSimpleButton($http, {
        op => "OpenSubjInfo",
        subject => $subj,
-       caption => "open",
-       sync => "Update();"
+       caption => "Open",
+       sync => "Update();",
+       class => "btn btn-sm btn-default"
     });
   }
   my @pat_name;
@@ -722,15 +728,30 @@ sub ExpandRow{
   if($patient_name ne $subj){
     $http->queue($patient_name);
   }
-  $http->queue('</td><td valign="top" align="left">');
-  $http->queue('<table width="100%"><tr>');
-  $http->queue('<td valign="top" align="left">');
+  $http->queue(qq{
+    </td>
+    <td valign="top" align="left">
+      <table width="100%">
+        <tr>
+          <td valign="top" align="left">
+  });
   $this->ExpandDbInfo($http, $dyn);
-  $http->queue('</td><td valign="top" align="right"><small>');
-  $http->queue('</small></td>');
-  $http->queue('</tr></table></td><td valign="top">');
+  $http->queue(qq{
+          </td>
+          <td valign="top" align="right">
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top">
+  });
   $this->ExpandExtraction($http, $dyn);
-  $http->queue("</td></tr></td></tr>");
+  # TODO: This looks like too many tags?
+  $http->queue(qq{
+    </td>
+    </tr>
+    </td>
+    </tr>});
 }
 sub ExpandDbInfo{
   my($this, $http, $dyn) = @_;
@@ -798,14 +819,22 @@ sub ExpandExtraction{
     if(-d $rev_0_dir){
       $http->queue("Stale directory analysis");
     } else {
-      $http->queue($this->MakeHostLinkSync("extract", "ExtractSubject", {
+      $http->queue(qq{
+        <div class="btn-group" role="group">
+      });
+
+      $http->queue($this->MakeHostLinkSync("Extract", "ExtractSubject", {
         subj => $dyn->{subj},
         for => "Extraction",
-      }, 1, "Update();"));
-      $http->queue("<br/>");
-      $http->queue($this->MakeHostLinkSync("hide", "HideSubjectOK", {
+      }, 1, "Update();", "btn btn-xs btn-primary"));
+
+      $http->queue($this->MakeHostLinkSync("Hide", "HideSubjectOK", {
         subj => $dyn->{subj},
-      }, 1, "Update();"));
+      }, 1, "Update();", "btn btn-xs btn-default"));
+
+      $http->queue(qq{
+        </div>
+      });
     }
     return;
   }
@@ -839,19 +868,18 @@ sub HideSubjectOK{
 }
 sub PendingHideSubject{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>Are you sure you want to hide this subject:</h3>' .
-    "<ul><li>Collection: $this->{PendingHideCollection}</li>" .
-    "<li>Site: $this->{PendingHideSite}</li>" .
-    "<li>Subject: $this->{PendingHideSubject}</li></ul>" .
-    '<?dyn="NotSoSimpleButton" caption="Yes, Hide" ' .
-    "subj=\"$this->{PendingHideSubject}\" " .
-    "collection=\"$this->{PendingHideCollection}\" " .
-    "site=\"$this->{PendingHideSite}\" " .
-    'op="HideSubject" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Hide" ' .
-    'op="DontHideSubject" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>Are you sure you want to hide this subject:</h3>
+    <ul>
+      <li>Collection: $this->{PendingHideCollection}</li>
+      <li>Site: $this->{PendingHideSite}</li>
+      <li>Subject: $this->{PendingHideSubject}</li>
+    </ul>
+    <div class="btn-group" role="group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Hide" subj="$this->{PendingHideSubject}" collection="$this->{PendingHideCollection}" site="$this->{PendingHideSite}" op="HideSubject" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Hide" op="DontHideSubject" sync="Update();"?>
+    </div>
+  });
 }
 sub DontHideSubject{
   my($this, $http, $dyn) = @_;

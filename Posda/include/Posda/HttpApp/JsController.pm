@@ -8,20 +8,20 @@ use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
 use vars qw( @ISA );
 @ISA = ( "Dispatch::NamedObject", "Posda::HttpObj" );
-my $base_header = <<EOF;
-<?dyn="html_header"?><!DOCTYPE html
+my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
-<head>
-<!-- HttpApp::JsController line 20 -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-1.12.0.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<?dyn="CssStyle"?>
-<title><?dyn="title"?></title>
-EOF
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+  <head>
+    <!-- HttpApp::JsController line 20 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <?dyn="CssStyle"?>
+    <title><?dyn="title"?></title>
+};
+
 my $js_controller_hdr = <<EOF;
 function rt(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes," +
@@ -451,6 +451,9 @@ sub MakeHostLink{
 }
 sub MakeHostLinkSync{
   my($this, $caption, $method, $args, $small, $sync, $class) = @_;
+  if (not defined $class) {
+    $class = "";
+  }
   my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" . 
     "'$method'";
   my @a;
@@ -481,7 +484,7 @@ sub MakeJavascriptLink{
 }
 sub SimpleButton{
   my($this, $http, $dyn) = @_;
-  my $string = '<input class="btn btn-sm btn-primary" type="button" ' .
+  my $string = '<input class="btn btn-sm btn-default" type="button" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'$dyn->{op}', " . 
     (exists($dyn->{parm})? "'parm=$dyn->{parm}'" : "''") .
@@ -504,7 +507,11 @@ sub NotSoSimpleButton{
     $hstring .= "$parms[$i]";
     unless($i == $#parms) { $hstring .= "&" }
   }
-  my $string = '<input class="btn btn-sm btn-default" type="button" ' .
+  my $class = "btn btn-default";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  my $string = qq{<input class="$class" type="button" } .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'$dyn->{op}', '$hstring', " .
     'function () {' .

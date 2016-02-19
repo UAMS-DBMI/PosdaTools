@@ -46,7 +46,7 @@ sub ExpandStudyHierarchy{
   unless(exists $this->{NickNames}){
     $this->{NickNames} = Posda::Nicknames->new;
   }
-  $http->queue('<table width="100%" border="1">');
+  $http->queue('<table class="table table-bordered table-sm" width="100%">');
   for my $study_uid(sort keys %$studies){
     my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
       "STUDY", $study_uid
@@ -67,10 +67,10 @@ sub ExpandStudyHierarchy{
     if(keys %{$study->{st_date}} > 1){ $study_date = "&lt;inconsistent&gt;" }
     else { $study_date = [ keys %{$study->{st_date}} ]->[0] }
     my $num_series = keys %{$study->{series}};
-    $http->queue('<tr><td colspan="2">' . $study_nn . 
+    $http->queue('<tr><th colspan="2">' . $study_nn . 
       ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "") .
       '</td>');
-    $http->queue('<td colspan="4">' . 
+    $http->queue('<th colspan="4">' . 
       "$study_date:$study_description:$accession_number" . 
       '</td></tr>');
     for my $series_uid (sort keys %{$study->{series}}){
