@@ -23,8 +23,8 @@ my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
-my $expander = qq{
-  <?dyn="BaseHeader"?>
+
+my $expander = qq{<?dyn="BaseHeader"?>
   <script type="text/javascript">
   <?dyn="JsController"?>
   <?dyn="JsContent"?>

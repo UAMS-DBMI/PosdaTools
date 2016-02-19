@@ -28,8 +28,7 @@ use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 Posda::Log::init("default.log");
 
-my $expander = qq{
-  <?dyn="BaseHeader"?>
+my $expander = qq{<?dyn="BaseHeader"?>
   <script type="text/javascript">
   <?dyn="JsController"?>
   <?dyn="JsContent"?>
