@@ -290,8 +290,15 @@ sub Initialized{
   if($#{$this->{ReportsAvailable}} < 0){
     return $http->queue("No reports available");
   }
-  $http->queue("Reports available:<table border>" .
-    "<tr><th>Collection</th><th>Site</th><th>Round</th></tr>");
+  $http->queue(qq{
+    <p>Reports available:</p>
+    <table class="table-sm table-bordered">
+    <tr>
+      <th>Collection</th>
+      <th>Site</th>
+      <th>Round</th>
+    </tr>
+  });
   for my $r (@{$this->{ReportsAvailable}}){
     $http->queue("<tr><td>$r->{collection}</td>");
     $http->queue("<td>$r->{site}</td>");
@@ -309,6 +316,7 @@ sub Initialized{
       private_tag_info => $r->{private_tag_info},
 #      sync => "AlertAndUpdate('foo');",
       sync => "Update();",
+      class => "btn btn-xs btn-default", # Extra small button, so it fits!
     });
     $http->queue("</td></tr>");
   }
