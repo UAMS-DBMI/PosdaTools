@@ -235,7 +235,7 @@ sub SpecificInitialize{
     }
     site:
     while(my $site = readdir(DIR1)){
-      if($site =~ /^\./) { next coll }
+      if($site =~ /^\./) { next site }
       unless(-d "$root/$coll/$site") {
         print STDERR "'$root/$coll/$site' is not a directory\n";
         next;
