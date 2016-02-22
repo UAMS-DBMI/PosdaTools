@@ -526,7 +526,8 @@ sub TagValueReport{
   $http->queue("<hr>");
   $http->queue("<table border><th>Value</th></th><th># Patients</th>" .
     "<th># Studies</th><th># Series</th><th># Modalities</th>" .
-    "<th># SOP Classes</th><th># Files</th>");
+    "<th># SOP Classes</th><th># Files</th><th>Study Dates</th>".
+    "<th>Series Dates</th><th>Select</th>");
   for my $v (keys %{$this->{ByTag}->{$tag}}){
     $http->queue("<tr><td>$v</td>");
     my $num_files = keys %{$this->{ByTag}->{$tag}->{$v}};
@@ -558,14 +559,83 @@ sub TagValueReport{
     $http->queue("<td>$num_modalities</td>"); # Modalities
     $http->queue("<td>$num_sop_classes</td>"); # SOP Classes
     $http->queue("<td>$num_files</td>");
-    $http->queue("</tr>");
+    my $dates = $this->GetStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){
+      $http->queue("<td>$dates->[0]</td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+    }
+    $dates = $this->GetSeriesDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){
+      $http->queue("<td>$dates->[0]</td><td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td><td>");
+    }
+    my @files = sort keys %{$this->{ByTag}->{$tag}->{$v}};
+    my $selected_file = "select";
+    $this->{SelectedTagForExtraction} = $tag;
+    if(
+      defined($this->{SelectedFileForExtraction}) &&
+      $this->{SelectedTagForExtraction} eq $tag &&
+      $this->{SelectedValueForExtraction} eq $v
+    ){
+      $selected_file = $this->{SelectedFileForExtraction};
+    }
+    $this->SelectDelegateByValue($http,
+      {
+        op => "SelectFileForDisplay",
+        tag_value => $v,
+        sync => "Update();",
+      }
+    );
+    my $options = ["select", @files];
+    for my $i (0 .. $#{$options}){
+      my $f = $options->[$i];
+      $http->queue("<option value=\"$f\"" .
+        ($f eq $selected_file ? "selected" : "") .
+        ($f eq "select"? ">select": ">file_$i") . "</option>");
+    }
+    $http->queue("</select>");
+    $http->queue("</td></tr>");
   }
   $http->queue("</table>");
+}
+sub SelectFileForDisplay{
+  my($this, $http, $dyn) = @_;
+  if($dyn->{value} eq "select"){
+    delete $this->{SelectedFileForExtraction};
+    delete $this->{SelectedTagForExtraction};
+    delete $this->{SelectedValueForExtraction};
+  } else {
+    $this->{SelectedFileForExtraction} = $dyn->{value};
+    $this->{SelectedValueForExtraction} = $dyn->{tag_value};
+  }
+}
+sub GetStudyDates{
+  my($this, $list) = @_;
+  my %dates;
+  for my $f (@$list){
+    my $study_date = $this->{FileInfo}->{$f}->{study_date};
+    $dates{$study_date} = 1;
+  }
+  return [ sort keys %dates];
+}
+sub GetSeriesDates{
+  my($this, $list) = @_;
+  my %dates;
+  for my $f (@$list){
+    my $series_date = $this->{FileInfo}->{$f}->{series_date};
+    $dates{$series_date} = 1;
+  }
+  return [ sort keys %dates];
 }
 sub DisposeTag{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
   delete $this->{SelectedEles}->{$tag};
+  delete $this->{SelectedFileForExtraction};
+  delete $this->{SelectedTagForExtraction};
+  delete $this->{SelectedValueForExtraction};
   $this->{Disposed}->{$tag} = 1;
   $this->SelectNextAvailableTag;
 }
