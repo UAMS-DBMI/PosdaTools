@@ -38,7 +38,7 @@ function UpdateDatePickers() {
   console.log("updated date pickers");
 }
 function Update(){ 
-  UpdateMenu();
   UpdateContent();
+  UpdateMenu();
   UpdateLogin();
 }
