@@ -173,10 +173,13 @@ EOF
   sub DebugButton{
     my($this, $http, $dyn) = @_;
     if($this->CanDebug){
-      $this->RefreshEngine($http, $dyn,
-        '<button class="btn btn-sm btn-info" onClick="javascript:' .
-        "rt('DebugWindow','Refresh?obj_path=Debug'" .
-        ',1600,1200,0);">debug</button>');
+      $this->RefreshEngine($http, $dyn, qq{
+        <button class="btn btn-sm btn-info" 
+         onClick="javascript:rt('DebugWindow','Refresh?obj_path=Debug'
+         ,1600,1200,0);">
+          Debug
+        </button>
+      });
     } else {
       print STDERR "Can't debug\n";
     }
