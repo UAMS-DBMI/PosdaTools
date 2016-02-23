@@ -18,15 +18,20 @@ use Debug;
          };
         $this->RefreshEngine($http, $dyn, $resp);
   } else {
-        $this->RefreshEngine($http, $dyn, "Logged in: $user<br />" .
-          '<button class="btn btn-sm btn-danger" onClick="javascript:' .
-          "PosdaGetRemoteMethod('AppControllerLogout', ''," .
-          'function(){});">Logout</button>' .
-          '<?dyn="DebugButton"?>');
+        $this->RefreshEngine($http, $dyn, qq{
+          <p>Logged in: $user</p>
+          <button class="btn btn-sm btn-danger"
+            onClick="javascript:PosdaGetRemoteMethod('AppControllerLogout', 
+                                                     '', function(){});">
+            Logout
+          </button>
+          <?dyn="DebugButton"?>
+        });
       }
     } else {
       $this->RefreshEngine($http, $dyn, qq{
-        <form onSubmit="PosdaGetRemoteMethod('AppControllerLogin', 
+        <form class="navbar-form"
+          onSubmit="PosdaGetRemoteMethod('AppControllerLogin', 
           'name='+this.elements['UserName'].value+'&amp;password='+this.elements['UserEnteredPassword'].value, null); return false;">
           <div class="form-group">
             <input type="input" class="form-control" id="UserName" placeholder="Username">

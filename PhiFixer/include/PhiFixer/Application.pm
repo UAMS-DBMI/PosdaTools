@@ -22,20 +22,22 @@ my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="JsController"?>
-<?dyn="JsContent"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
-my $bad_config = <<EOF;
-<?dyn="BadConfigReport"?>
-EOF
+
+my $expander = qq{<?dyn="BaseHeader"?>
+  <script type="text/javascript">
+  <?dyn="JsController"?>
+  <?dyn="JsContent"?>
+  </script>
+  </head>
+  <body>
+  <?dyn="Content"?>
+  <?dyn="Footer"?>
+};
+
+my $bad_config = qq{
+  <?dyn="BadConfigReport"?>
+};
+
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -112,28 +114,36 @@ sub user{
   my($this, $http, $dyn) = @_;
   $http->queue($this->get_user);
 }
-my $content = <<EOF;
-<div id="container" style="width:<?dyn="width"?>px">
-<div id="header" style="background-color:#E0E0FF;">
-<table width="100%"><tr width="100%"><td>
-<?dyn="Logo"?>
-</td><td>
-<h1 style="margin-bottom:0;"><?dyn="title"?></h1>
-User: <?dyn="user"?>
-</td><td valign="top" align="right">
-<div id="login">&lt;login&gt;</div>
-</td></tr></table></div>
-<div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
-&lt;wait&gt;
-</div>
-<div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
-&lt;Content&gt;</div>
-<div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-Posda.com</div>
+my $content = qq{
+  <div id="container" style="width:<?dyn="width"?>px">
+  <div id="header" style="background-color:#E0E0FF;">
+    <table width="100%">
+    <tr width="100%">
+      <td>
+        <?dyn="Logo"?>
+      </td>
+      <td>
+        <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
+        User: <?dyn="user"?>
+      </td>
+      <td valign="top" align="right">
+        <div id="login">&lt;login&gt;</div>
+      </td>
+    </tr>
+    </table>
+  </div>
+  <div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
+    &lt;wait&gt;
+  </div>
+  <div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
+    &lt;Content&gt;
+  </div>
+  <div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
+    Posda.com
+  </div>
+  </div>
+};
 
-</div>
-
-EOF
 sub Content{
   my($this, $http, $dyn) = @_;
   if($this->{BadConfigFiles}) {
@@ -196,10 +206,11 @@ sub JsContent{
 sub DebugButton{
   my($this, $http, $dyn) = @_;
   if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
+    $this->RefreshEngine($http, $dyn, qq{
+      <span class="btn btn-sm btn-info" 
+       onClick="javascript:rt('DebugWindow',
+       'Refresh?obj_path=Debug',1600,1200,0);">Debug</span>
+    });
   } else {
     print STDERR "Can't debug\n";
   }
@@ -235,7 +246,7 @@ sub SpecificInitialize{
     }
     site:
     while(my $site = readdir(DIR1)){
-      if($site =~ /^\./) { next coll }
+      if($site =~ /^\./) { next site }
       unless(-d "$root/$coll/$site") {
         print STDERR "'$root/$coll/$site' is not a directory\n";
         next;
@@ -290,8 +301,15 @@ sub Initialized{
   if($#{$this->{ReportsAvailable}} < 0){
     return $http->queue("No reports available");
   }
-  $http->queue("Reports available:<table border>" .
-    "<tr><th>Collection</th><th>Site</th><th>Round</th></tr>");
+  $http->queue(qq{
+    <p>Reports available:</p>
+    <table class="table-sm table-bordered">
+    <tr>
+      <th>Collection</th>
+      <th>Site</th>
+      <th>Round</th>
+    </tr>
+  });
   for my $r (@{$this->{ReportsAvailable}}){
     $http->queue("<tr><td>$r->{collection}</td>");
     $http->queue("<td>$r->{site}</td>");
@@ -309,6 +327,7 @@ sub Initialized{
       private_tag_info => $r->{private_tag_info},
 #      sync => "AlertAndUpdate('foo');",
       sync => "Update();",
+      class => "btn btn-xs btn-default", # Extra small button, so it fits!
     });
     $http->queue("</td></tr>");
   }
