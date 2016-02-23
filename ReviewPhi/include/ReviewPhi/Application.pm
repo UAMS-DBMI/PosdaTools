@@ -397,7 +397,7 @@ sub RetrieveInfo{
             } elsif($ele eq "(0020,000e)") { # Series Instance
               $f_info{$f}->{series_instance} = $v;
             }
-            if($ele eq "(0008,0021)" || $ele eq "(0008,0060)"){
+            if($ele eq "(0008,0021)" || $ele eq "(0008,0020)"){
               $s_date{$f} = $v;
             }
           }
@@ -456,7 +456,8 @@ sub Info{
   }
   if(
     exists $this->{SelectedVrs}->{OB} ||
-    exists $this->{SelectedVrs}->{UN}
+    exists $this->{SelectedVrs}->{UN} ||
+    exists $this->{SelectedVrs}->{DS}
   ){
     $this->OtherOptions($http, $dyn);
   }

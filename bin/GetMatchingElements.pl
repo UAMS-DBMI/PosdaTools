@@ -14,7 +14,7 @@ use Cwd;
 Posda::Dataset::InitDD();
 
 my $usage = sub {
-	print "usage: $0 <file> <ele_sig>";
+	print "usage: $0 <file> <ele_sig_match>";
 	exit(-1);
 };
 unless(
@@ -28,16 +28,14 @@ my $file = $ARGV[0]; unless($file =~ /^\//) { $file = getcwd."/$file" }
 my($df, $ds, $size, $xfr_stx, $errors)  = Posda::Dataset::Try($ARGV[0]);
 unless($ds) { die "$file didn't parse into a dataset" }
 my $ele_sig = $ARGV[1];
-my $value = $ds->Get($ele_sig);
-my $type = $Posda::Dataset::DD->get_type_by_sig($ele_sig);
-if(ref($value) eq "ARRAY"){
-  if($type eq "text"){
-    my $new_value = join("\\", @$value);
-    print "$new_value\n";;
-  } else {
-    my $new_value = join("", @$value);
-    print "$new_value\n";
+my $matches = $ds->NewSearch($ele_sig);
+my $sub_sig = $ele_sig;
+if(ref $matches eq "ARRAY"){
+  for my $m (@$matches){
+    for my $i (0 .. $#{$m}){
+      my $mn = "<$i>";
+      $sub_sig =~ s/$mn/$m->[$i]/;
+    }
+    print "$sub_sig\n";
   }
-} else {
-  print "$value\n";
 }
