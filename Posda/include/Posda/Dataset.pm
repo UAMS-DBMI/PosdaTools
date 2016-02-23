@@ -2210,6 +2210,175 @@ sub NextIndex{
   unless(ref($desc->{value}) eq "ARRAY"){ return 0 }
   return(scalar @{$desc->{value}});
 }
+sub NewSearch{
+  my($this, $pat, $match, $list, $accum, $index_list, $depth, $full_pat) = @_;
+  unless(defined $list) { $list = [] }
+  unless(defined $accum) { $accum = [] }
+  unless(defined $index_list) { $index_list = {} }
+  unless(defined $depth) { $depth = 0 }
+  unless(defined $full_pat) {$full_pat = ""}
+  my($grp, $ele, $owner, $index);
+  my $remain = $pat;
+  if($pat =~ /^\((....),(....)\)\[([^\]]+)\](.*)$/){
+    $grp = hex($1);
+    $ele = hex($2);
+    $index = $3;
+    $remain = $4;
+    unless(defined $this->{$grp}->{$ele}){
+      return $list;
+    }
+    if($index =~ /^\d+$/){
+      unless($this->{$grp}->{$ele}->{VR} eq "SQ"){
+        die "indexing a non seq VR";
+      }
+      $this = $this->{$grp}->{$ele}->{value}->[$index];
+      unless(defined($this) && ref($this) eq "Posda::Dataset"){
+        return $list;
+      }
+      return $this->NewSearch($remain, $match, $list, $accum, $index_list,
+        $depth + 1, sprintf("$full_pat(%04x,%04x)[$index]", $grp, $ele));
+    } elsif($index =~ /^<\d+>$/){
+      my $which = scalar @$accum;
+      $index_list->{$index} = $which;
+      unless($this->{$grp}->{$ele}->{VR} eq "SQ"){
+        die sprintf("indexing a non seq VR $full_pat(%04x,%04x)[$which]",
+           $grp, $ele);
+      }
+      my $obj_list = $this->{$grp}->{$ele}->{value};
+      for my $i (0 .. $#{$obj_list}){
+        my $obj = $obj_list->[$i];
+        if(defined $obj){
+          unless(ref($obj) eq "Posda::Dataset"){
+            die "item in a SQ is not a dataset";
+          }
+          if($remain){
+            $obj->NewSearch($remain, 
+              $match, $list, [@$accum, $i], $index_list,
+              $depth+1, 
+              sprintf("$full_pat(%04x,%04x)[$i]", $grp, $ele));
+          } else {
+            push(@$list, [@$accum, $i]);
+          }
+        }
+      }
+      return $list;
+    } else {
+      die "uncovered case";
+    }
+  } elsif ($pat=~ /^\((....),\"([^\"]*)\",(..)\)\[([^\]]+)\](.*)$/){
+    $grp = hex($1);
+    $owner = $2;
+    $ele = hex($3);
+    $index = $4;
+    $remain = $5;
+#print STDERR "Grp: $grp, Owner: $owner, Ele: $ele, Index: $index, remain: $remain\n";
+    unless($grp & 1) { die "only private groups have owner: $pat" }
+    unless(exists $this->{$grp}) { return undef }
+    unless(exists $this->{$grp}->{private}){
+        $this->ConvertToPrivate($grp);
+    }
+    unless(defined $this->{$grp}->{private}->{$owner}->{$ele}){
+      return $list;
+    }
+    if($index =~ /^\d+$/){
+      unless($this->{$grp}->{private}->{$owner}->{$ele}->{VR} eq "SQ"){
+        die "indexing a non seq VR";
+      }
+      $this = $this->{$grp}->{private}->{$owner}->{$ele}->{value}->[$index];
+      unless(defined($this) && ref($this) eq "Posda::Dataset"){
+        return $list;
+      }
+      return $this->NewSearch($remain, $match, $list, $accum, $index_list,
+        $depth + 1, 
+        sprintf("$full_pat(%04x,\"$owner\",%02x)[$index]", $grp, $owner, $ele));
+    } elsif($index =~ /^<\d+>$/){
+      my $which = scalar @$accum;
+      $index_list->{$index} = $which;
+      unless($this->{$grp}->{private}->{$owner}->{$ele}->{VR} eq "SQ"){
+        die sprintf(
+           "indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]",
+           $grp, $ele);
+      }
+      my $obj_list = $this->{$grp}->{private}->{$owner}->{$ele}->{value};
+      for my $i (0 .. $#{$obj_list}){
+        my $obj = $obj_list->[$i];
+        if(defined $obj){
+          unless(ref($obj) eq "Posda::Dataset"){
+            die "item in a SQ is not a dataset";
+          }
+          if($remain){
+            $obj->NewSearch($remain, 
+              $match, $list, [@$accum, $i], $index_list,
+              $depth+1, 
+              sprintf("$full_pat(%04x,\"$owner\",%02x)[$i]", $grp, $ele));
+          } else {
+            push(@$list, [@$accum, $i]);
+          }
+        }
+      }
+      return $list;
+    }
+  } elsif($pat =~ /^\((....),(....)\)$/){
+    my $grp = hex($1);
+    my $ele = hex($2);
+    if(exists $this->{$grp}->{$ele}){
+      if(defined $match){
+        if(ref($match) eq "CODE"){
+          if(&$match($this->{$grp}->{$ele})){
+            push(@$list, $accum);
+          }
+        } else{
+          if($match eq $this->{$grp}->{$ele}->{value}){
+            push(@$list, $accum);
+          }
+        }
+      } else {
+        push(@$list, $accum);
+      }
+    }
+    return $list;
+  } elsif ($pat=~ /^\((....),\"([^\"]*)\",(..)\)$/){
+    $grp = hex($1);
+    $owner = $2;
+    $ele = hex($3);
+#print STDERR "Grp: $grp, Owner: $owner, Ele: $ele\n";
+    unless($grp & 1) { die "only private groups have owner: $pat" }
+    unless(exists $this->{$grp}) { return undef }
+    unless(exists $this->{$grp}->{private}){
+        $this->ConvertToPrivate($grp);
+    }
+    unless(defined $this->{$grp}->{private}->{$owner}->{$ele}){
+      return $list;
+    }
+    if(exists $this->{$grp}->{private}->{$owner}->{$ele}){
+      if(defined $match){
+        if(ref($match) eq "CODE"){
+          if(&$match($this->{$grp}->{private}->{$owner}->{$ele})){
+            push(@$list, $accum);
+          }
+        } else{
+          if($match eq $this->{$grp}->{privater}->{$owner}->{$ele}->{value}){
+            push(@$list, $accum);
+          }
+        }
+      } else {
+        push(@$list, $accum);
+      }
+    }
+    return $list;
+  } else {
+    my $message = "Backtrace:\n";
+    my $i = 0;
+    while(caller($i)){
+      my @foo = caller($i);
+      $i++;
+      my $file = $foo[1];
+      my $line = $foo[2];
+      $message .= "\tline $line of $file\n";
+    }
+    die $message . "bad pattern ($full_pat)";
+  }
+}
 sub Search{
   my($this, $pat, $match, $list, $accum, $index_list, $depth, $full_pat) = @_;
   #if($pat =~ /A-F/) { $pat =~ tr/A-F/a-f/ }

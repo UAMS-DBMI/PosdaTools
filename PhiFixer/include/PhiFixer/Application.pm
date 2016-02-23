@@ -458,7 +458,7 @@ sub SetSelectedEle{
     delete $this->{SelectedEles}->{$dyn->{value}};
     $this->{ContentMode} = "WaitingForTag";
   }
-
+  $this->ClearFileSelection($http, $dyn);
 }
 sub TagFilters{
   my($this, $http, $dyn) = @_;
@@ -496,6 +496,10 @@ sub WaitingForTag{
 sub TagSelected{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
+  if(exists $this->{SelectedFileForExtraction}){
+    $this->{SelectedTagForExtraction} = $tag;
+    return $this->FileAndTagSelected($http, $dyn);
+  }
   $this->RefreshEngine($http, $dyn,
     '<small><?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" ' .
     'sync="Update();"?>' . 
@@ -628,7 +632,64 @@ sub SelectFileForDisplay{
   } else {
     $this->{SelectedFileForExtraction} = $dyn->{value};
     $this->{SelectedValueForExtraction} = $dyn->{tag_value};
+    delete $this->{SelectedTagInstances};
+    if($this->{SelectedTagForExtraction} =~ /<\d+>/){
+      $this->{ReadingTagInstances} = 1;
+      Dispatch::LineReader->new_cmd("GetMatchingElements.pl \"" .
+        $this->{SelectedFileForExtraction} . "\" '" .
+        $this->{SelectedTagForExtraction} . "'",
+        $this->ReadTagInstances,
+        $this->TagInstancesRead);
+    }
   }
+}
+sub FileAndTagSelected{
+  my($this, $http, $dyn) = @_;
+  my $tag_disp = $this->{SelectedTagForExtraction};
+  $tag_disp =~ s/</&lt;/g;
+  $tag_disp =~ s/>/&gt;/g;
+  $this->RefreshEngine($http, $dyn,
+    '<?dyn="NotSoSimpleButton" op="ClearFileSelection" ' .
+    'caption="Clear File Selection" sync="Update();"?><br>' .
+    "File Selected: $this->{SelectedFileForExtraction}<br>" .
+    "Tag Selected: $tag_disp<br>");
+  if($this->{SelectedTagForExtraction} =~ /<\d+>/){
+    $http->queue("Tag Instances: ");
+    if(exists $this->{ReadingTagInstances}){
+      $http->queue("&lt;waiting&gt;<br>");
+    } else {
+      $http->queue("<ul>");
+      for my $t (@{$this->{SelectedTagInstances}}){
+        $http->queue("<li>$t</li>");
+      }
+      $http->queue("</ul>");
+    }
+  }
+  $this->RefreshEngine($http, $dyn,
+    "Value Selected: $this->{SelectedValueForExtraction}<br>");
+}
+sub ClearFileSelection{
+  my($this, $http, $dyn) = @_;
+  delete $this->{SelectedFileForExtraction};
+  delete $this->{SelectedTagForExtraction};
+  delete $this->{SelectedValueForExtraction};
+  delete $this->{SelectedTagInstances};
+}
+sub ReadTagInstances{
+  my($this) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    push @{$this->{SelectedTagInstances}}, $line;
+  };
+  return $sub;
+}
+sub TagInstancesRead{
+  my($this) = @_;
+  my $sub = sub {
+    delete $this->{ReadingTagInstances};
+    $this->AutoRefresh;
+  };
+  return $sub;
 }
 sub GetStudyDates{
   my($this, $list) = @_;
