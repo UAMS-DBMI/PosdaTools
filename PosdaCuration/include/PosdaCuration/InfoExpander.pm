@@ -46,7 +46,7 @@ sub ExpandStudyHierarchy{
   unless(exists $this->{NickNames}){
     $this->{NickNames} = Posda::Nicknames->new;
   }
-  $http->queue('<table class="table table-bordered table-sm" width="100%">');
+  $http->queue('<table class="table table-bordered table-sm" style="white-space: normal" width="80%">');
   for my $study_uid(sort keys %$studies){
     my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
       "STUDY", $study_uid
@@ -101,7 +101,7 @@ sub ExpandStudyHierarchyExtraction{
   unless(exists $this->{NickNames}) {
     $this->{NickNames} = Posda::Nicknames->new;
   }
-  $http->queue('<table width="100%" border="1">');
+  $http->queue('<table class="table table-bordered table-sm" width="80%">');
   for my $study (
     sort {
       $studies->{$a}->{uid} cmp $studies->{$b}->{uid}
@@ -112,13 +112,13 @@ sub ExpandStudyHierarchyExtraction{
       $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
     my $study_id = $studies->{$study}->{id};
     if(ref($study_id)){ $study_id = "&lt;inconsistent&gt;" }
-    $http->queue('<tr><td colspan="2">' . $study_nn .
+    $http->queue('<tr><th colspan="2">' . $study_nn .
       ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "") .
-      '</td>');
-    $http->queue('<td colspan="3">' .
+      '</th>');
+    $http->queue('<th colspan="4">' .
       (ref($studies->{$study}->{desc})eq "ARRAY" ?
         "&lt;inconsistent&gt;" : $studies->{$study}->{desc}));
-    $http->queue('</td></tr>');
+    $http->queue('</th></tr>');
     my $s_st = $studies->{$study}->{series};
     for my $series (
       sort {
@@ -145,6 +145,7 @@ sub ExpandStudyHierarchyExtraction{
   $http->queue('</table>');
 }
 sub ExpandStudyHierarchyWithPatientInfo{
+  # This is part of the "Show Info" screen
   my($this, $http, $dyn, $studies) = @_;
   unless(exists $this->{NickNames}) {
     $this->{NickNames} = Posda::Nicknames->new;

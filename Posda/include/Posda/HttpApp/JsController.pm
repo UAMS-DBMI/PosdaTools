@@ -226,7 +226,7 @@ sub PollTimer{
 sub EntryBox{
   my($this, $http, $dyn) = @_;
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
-  $http->queue('<input type="text"' .
+  $http->queue('<input class="form-control" type="text"' .
     ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
     ($dyn->{default} ? " value=\"$dyn->{default}\"" : "") .
     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
@@ -484,7 +484,7 @@ sub MakeJavascriptLink{
 }
 sub SimpleButton{
   my($this, $http, $dyn) = @_;
-  my $string = '<input class="btn btn-sm btn-default" type="button" ' .
+  my $string = '<input class="btn btn-default" type="button" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'$dyn->{op}', " . 
     (exists($dyn->{parm})? "'parm=$dyn->{parm}'" : "''") .

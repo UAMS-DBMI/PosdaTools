@@ -2378,6 +2378,21 @@ sub InvokeChild{
   }
   $child->$child_method($http, $dyn);
 }
+# Moved here from App instances
+# TODO: Go through every modern app and remove the DebugButton method
+# "modern app" would be any that ISA Posda::HttpApp::HttpObj (or children)
+sub DebugButton{
+  my($this, $http, $dyn) = @_;
+  if($this->CanDebug){
+    $this->RefreshEngine($http, $dyn, qq{
+      <span class="btn btn-sm btn-info" 
+       onClick="javascript:rt('DebugWindow',
+       'Refresh?obj_path=Debug',1600,1200,0);">Debug</span>
+    });
+  } else {
+    print STDERR "Can't debug\n";
+  }
+}
 sub Debug{
   my($this, $http, $dyn) = @_;
   my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});

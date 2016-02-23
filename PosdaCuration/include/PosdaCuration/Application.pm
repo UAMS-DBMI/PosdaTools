@@ -25,20 +25,22 @@ use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator",
   "PosdaCuration::InfoExpander" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="JsController"?>
-<?dyn="JsContent"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
-my $bad_config = <<EOF;
-<?dyn="BadConfigReport"?>
-EOF
+
+my $expander = qq{<?dyn="BaseHeader"?>
+  <script type="text/javascript">
+  <?dyn="JsController"?>
+  <?dyn="JsContent"?>
+  </script>
+  </head>
+  <body>
+  <?dyn="Content"?>
+  <?dyn="Footer"?>
+};
+
+my $bad_config = qq{
+  <?dyn="BadConfigReport"?>
+};
+
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -231,17 +233,6 @@ sub JsContent{
   open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
   if($this->{mode} eq "Collections"){
@@ -311,26 +302,61 @@ sub CollectionLine{
 sub CollectionEnd{
   my($this, $http, $dyn, $lines) = @_;
   my $sub = sub{
-    $this->RefreshEngine($http, $dyn,
-      '<br>Collection: <?dyn="EntryBox" default="'. $this->{SelectingCollection} .
-      '" op="EnterCollection" name="collection"?>&nbsp;&nbsp;' .
-      'Site: <?dyn="EntryBox" default="' . $this->{SelectingSite} .
-      '" op="EnterSite" name="site"?>' .
-      '<?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo"' .
-      ' sync="Update();"' .
-      ' caption="Query Database"?><?dyn="QueryHistory"?>');
-      $http->queue("<table><tr><th><small>Collection</small></th>" .
-        "<th><small>Site</small><th><small>Images</small></td></tr>");
+    $this->RefreshEngine($http, $dyn, qq{
+      <div class="well">
+        <div class="form-group">
+          <label>Collection:</label>
+          <?dyn="EntryBox" default="$this->{SelectingCollection}" op="EnterCollection" name="collection"?>
+        </div>
+        <div class="form-group">
+          <label>Site:</label>
+          <?dyn="EntryBox" default="$this->{SelectingSite}" op="EnterSite" name="site"?>
+        </div>
+        <?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo" sync="Update();" caption="Query Database"?>
+      </div>
+      <div class="form-group">
+        <?dyn="QueryHistory"?>
+      </div>
+    });
+
+    $http->queue(qq{
+      <table class="table table-hover">
+      <tr>
+        <th>
+          Collection
+        </th>
+        <th>
+          Site
+        <th>
+          Images
+        </th>
+        <th>
+          Select
+        </th>
+      </tr>
+    });
     for my $l (@$lines){
       my($col, $site, $num) = split(/\|/, $l);
-      $http->queue("<tr><td><small>$col</small></td>" .
-        "<td><small>$site</small></td><td><small>$num</small></td><td>");
+      $http->queue(qq{
+        <tr>
+          <td>
+            $col
+          </td>
+          <td>
+            $site
+          </td>
+          <td>
+            $num
+          </td>
+          <td>
+      });
       $this->NotSoSimpleButton($http, {
         op=>"SetCollectionSiteButton",
-        caption => "sel",
+        caption => "Select",
         sync => "Update();",
         col => $col,
-        site => $site
+        site => $site,
+        class => "btn btn-primary"
       });
       $http->queue("</td></tr>");
     }
