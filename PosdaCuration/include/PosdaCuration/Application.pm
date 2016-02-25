@@ -4116,7 +4116,9 @@ sub ScanAllForPhi{
   my @SubjsToScan; 
   my @SubjsScanned; 
   for my $subj (sort keys %{$this->{DbResults}}){
-    unless(exists $this->{ExtractionsHierarchies}->{$subj}) { next }
+    # Currently ExtractionsHierarchies is created for every subject,
+    # but will be empty for unextracted subjects.
+    unless(keys %{$this->{ExtractionsHierarchies}->{$subj}}) { next }
     my $rev_dir = $this->GetLatestRevDir($this->{SelectedCollection},
       $this->{SelectedSite}, $subj);
     if(-f "$rev_dir/PhiCheck.info"){
