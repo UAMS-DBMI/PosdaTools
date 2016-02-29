@@ -255,10 +255,13 @@ sub ContentResponse{
     return $http->queue("busy");
   }
   if($this->{Mode} eq "Selection"){
-    $this->RefreshEngine($http, $dyn,
-      'Select a Collection <?dyn="CollectionDropDown"?>' . 
-      '<br><?dyn="SummarizeSelection"?>'
-    );
+    $this->RefreshEngine($http, $dyn, qq{
+      <div class="form-group">
+        <label>Select a Collection</label>
+        <?dyn="CollectionDropDown"?>
+      </div>
+      <?dyn="SummarizeSelection"?>
+    });
     return;
   }
 
@@ -271,7 +274,7 @@ sub ContentResponse{
       <h3>Scanning Directories for files with DICOM Meta Headers</h3> 
       <table class="table" style="width: 45%">
       <tr>
-        <td>Waiting directories:</td> 
+        <td>Waiting directories:</td>
         <td>$to_process</td>
       </tr>
       <tr> 
@@ -543,7 +546,7 @@ sub SummarizeSelection{
         </tr>
     </table> 
 
-    <?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();"?>
+    <?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();" class="btn btn-primary"?>
   });
 }
 
