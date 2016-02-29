@@ -14,6 +14,7 @@ use Posda::UUID;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use PosdaCuration::InfoExpander;
+use PosdaCuration::DuplicateSopResolution;
 use Fcntl qw(:seek);
 use File::Path 'remove_tree';
 use Digest::MD5;
@@ -2377,12 +2378,30 @@ sub RenderErrorList{
 }
 sub RenderEditMenu{
   my($this, $http, $dyn) = @_;
+  $this->RenderResolveDuplicateSopsMenu($http, $dyn);
   $this->RenderSplitBySeriesDescMenu($http, $dyn);
   $this->RenderRehashSsMenu($http, $dyn);
   $this->RenderRelinkSsMenu($http, $dyn);
   $this->RefreshEngine($http, $dyn,
     '<?dyn="NotSoSimpleButton" caption="General Edits" ' .
     'op="GeneralPurposeEditor" sync="Update();"?>');
+}
+sub RenderResolveDuplicateSopsMenu{
+  my($this, $http, $dyn) = @_;
+  delete $this->{DupSopInstList};
+  my %DupSopInstances;
+  for my $e (@{$this->{DisplayInfoIn}->{error_info}}){
+    if($e->{type} eq "duplicate sop_instance"){
+      $DupSopInstances{$e->{sop_inst}} = 1;
+    }
+  }
+  my @DupSops = keys %DupSopInstances;
+  if(@DupSops) {
+    $this->{DupSopInstList} = \@DupSops;
+    $this->RefreshEngine($http, $dyn,
+     '<?dyn="NotSoSimpleButton" caption="Resolve Dup Sop Instances" ' .
+     'op="ResolveDupSopInstances" sync="Update();"?>');
+  }
 }
 sub RenderSplitBySeriesDescMenu{
   my($this, $http, $dyn) = @_;
@@ -3418,6 +3437,33 @@ sub DiscardLastRevision{
 sub HideErrors{
   my($this, $http, $dyn) = @_;
   $this->{CollectionMode} = "CollectionsSelection";
+}
+############################################
+##  ResolveDupSopInstances
+#############################################
+sub ResolveDupSopInstances{
+  my($this, $http, $dyn) = @_;
+  my $child_name = $this->child_path("ResolveDupSopInstances");
+  my $child = $this->child("ResolveDupSopInstances");
+  unless($child) {
+    PosdaCuration::DuplicateSopResolution->new($this->{session}, $child_name,
+      $this->{DisplayInfoIn},
+      $this->{DupSopInstList});
+  }
+  $this->{CollectionMode} = "ResolveDupSopInstancesContent";
+}
+sub ResolveDupSopInstancesContent{
+  my($this, $http, $dyn) = @_;
+    my $child = $this->child("ResolveDupSopInstances");
+    unless(defined $child){
+      return $this->HideInfo;
+    }
+    if($child->can("Refresh")){
+      $child->Refresh($http, $dyn);
+    } else {
+      $this->HideInfo;
+    }
+    return;
 }
 ############################################
 ##  GeneralPurposeEditor
