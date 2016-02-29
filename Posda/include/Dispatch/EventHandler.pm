@@ -266,6 +266,16 @@ sub SerializedSubProcess{
   Dispatch::Select::Socket->new($this->WriteSerializedData($serialized_args,
     $finished, $pid), $fh)->Add("writer");
 }
+
+# Parameters are normal, response will be a Serialized Response
+sub SemiSerializedSubProcess {
+  my($this, $command, $finished) = @_;
+
+  my($fh, $pid) = $this->ReadWriteChild($command);
+  Dispatch::Select::Socket->new(
+    $this->ReadSerializedResponse($finished, $pid), $fh)->Add("reader");
+}
+
 sub WriteSerializedData{
   my($this, $data, $finished, $pid) = @_;
   my $length = length($data);

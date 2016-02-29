@@ -26,20 +26,22 @@ use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator",
   "PosdaCuration::InfoExpander" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="JsController"?>
-<?dyn="JsContent"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
-my $bad_config = <<EOF;
-<?dyn="BadConfigReport"?>
-EOF
+
+my $expander = qq{<?dyn="BaseHeader"?>
+  <script type="text/javascript">
+  <?dyn="JsController"?>
+  <?dyn="JsContent"?>
+  </script>
+  </head>
+  <body>
+  <?dyn="Content"?>
+  <?dyn="Footer"?>
+};
+
+my $bad_config = qq{
+  <?dyn="BadConfigReport"?>
+};
+
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -72,7 +74,8 @@ sub new {
   unless(mkdir $this->{LoginTempDir}) {
     die "can't mkdir $this->{LoginTempDir}"
   }
-  my $width = $this->{Identity}->{width};
+  my $width = 1400;
+  # my $width = 1200;
   my $height = $this->{Identity}->{height};
   $this->{title} = $this->{Identity}->{Title};
   $this->{database_host} =
@@ -232,17 +235,6 @@ sub JsContent{
   open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
   if($this->{mode} eq "Collections"){
@@ -288,14 +280,14 @@ sub CollectionsMenu{
       { type => "host_link_sync",
         condition => 1,
         style => "small",
-        caption => "refresh DB",
+        caption => "Refresh DB",
         method => "RefreshDbData",
         sync => "Update();",
       },
       { type => "host_link_sync",
         condition => 1,
         style => "small",
-        caption => "refresh dir",
+        caption => "Refresh Dir",
         method => "RefreshDirData",
         sync => "Update();",
       },
@@ -312,30 +304,66 @@ sub CollectionLine{
 sub CollectionEnd{
   my($this, $http, $dyn, $lines) = @_;
   my $sub = sub{
-    $this->RefreshEngine($http, $dyn,
-      '<br>Collection: <?dyn="EntryBox" default="'. $this->{SelectingCollection} .
-      '" op="EnterCollection" name="collection"?>&nbsp;&nbsp;' .
-      'Site: <?dyn="EntryBox" default="' . $this->{SelectingSite} .
-      '" op="EnterSite" name="site"?>' .
-      '<?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo"' .
-      ' sync="Update();"' .
-      ' caption="Query Database"?><?dyn="QueryHistory"?>');
-      $http->queue("<table><tr><th><small>Collection</small></th>" .
-        "<th><small>Site</small><th><small>Images</small></td></tr>");
+    $this->RefreshEngine($http, $dyn, qq{
+      <div class="col-md-8">
+      <div class="well">
+        <div class="form-group">
+          <label>Collection:</label>
+          <?dyn="EntryBox" default="$this->{SelectingCollection}" op="EnterCollection" name="collection"?>
+        </div>
+        <div class="form-group">
+          <label>Site:</label>
+          <?dyn="EntryBox" default="$this->{SelectingSite}" op="EnterSite" name="site"?>
+        </div>
+        <?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo" sync="Update();" caption="Query Database"?>
+      </div>
+      <div class="form-group">
+        <?dyn="QueryHistory"?>
+      </div>
+    });
+
+    $http->queue(qq{
+      <table class="table table-hover">
+      <tr>
+        <th>
+          Collection
+        </th>
+        <th>
+          Site
+        <th>
+          Images
+        </th>
+        <th>
+          Select
+        </th>
+      </tr>
+    });
     for my $l (@$lines){
       my($col, $site, $num) = split(/\|/, $l);
-      $http->queue("<tr><td><small>$col</small></td>" .
-        "<td><small>$site</small></td><td><small>$num</small></td><td>");
+      $http->queue(qq{
+        <tr>
+          <td>
+            $col
+          </td>
+          <td>
+            $site
+          </td>
+          <td>
+            $num
+          </td>
+          <td>
+      });
       $this->NotSoSimpleButton($http, {
         op=>"SetCollectionSiteButton",
-        caption => "sel",
+        caption => "Select",
         sync => "Update();",
         col => $col,
-        site => $site
+        site => $site,
+        class => "btn btn-primary"
       });
       $http->queue("</td></tr>");
     }
-    $http->queue("</table>");
+    $http->queue("</table></div>");
   };
   return $sub;
 }
@@ -507,22 +535,42 @@ sub ContinueDbCollectionsAndExtractions{
     $this->RefreshEngine($http, $dyn, qq{
       <?dyn="SimpleButton" op="NewQuery" caption="New Query" sync="Update();"?>
       <hr>
+
       <h3>Collection: $this->{SelectedCollection}</h3>
       <h4>Site: $this->{SelectedSite}</h4>
+
       <p><?dyn="Collection_Site_Counts"?></p>
       <p>
         <a class="btn btn-sm btn-primary" href="DownloadCounts?obj_path=$this->{path}\">Download CSV</a>
       </p>
-      <div class="btn-group" role="group" aria-label="Operations">
-        <?dyn="IntakeCheckButtons"?>
-        <?dyn="PublicCheckButtons"?>
-        <?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" op="DiscardIncompleteExtractions" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Extact All Unextracted" op="ExtractAllUnextracted" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Scan All For PHI" op="ScanAllForPhi" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" op="RemoveAllPhiScans" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" op="FixStudyInconsistencies" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" op="FixSeriesInconsistencies" sync="Update();"?>
-        <?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" op="FixPatientInconsistencies" sync="Update();"?>
+
+      <div class="form-group">
+        <div class="btn-group" role="group">
+          <?dyn="IntakeCheckButtons"?>
+          <?dyn="PublicCheckButtons"?>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="btn-group" role="group">
+          <?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" op="DiscardIncompleteExtractions" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" caption="Extact All Unextracted" op="ExtractAllUnextracted" sync="Update();"?>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="btn-group" role="group">
+          <?dyn="NotSoSimpleButton" caption="Scan All For PHI" op="ScanAllForPhi" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" op="RemoveAllPhiScans" sync="Update();"?>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="btn-group" role="group">
+          <?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" op="FixStudyInconsistencies" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" op="FixSeriesInconsistencies" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" op="FixPatientInconsistencies" sync="Update();"?>
+        </div>
       </div>
       <table class="table table-striped" width="100%">
         <thead>
@@ -697,7 +745,7 @@ sub ExpandRow{
   } else {
     $http->queue("<tr>");
   }
-  $http->queue("<td valign=\"top\">$subj<br>");
+  $http->queue("<td valign=\"top\"><p>$subj</p>");
   $dyn->{subj} = $subj;
   if($this->{InfoSel}->{$col}->{$site}->{$subj}){
     $this->NotSoSimpleButton($http, {
@@ -727,7 +775,7 @@ sub ExpandRow{
     $patient_name = $pat_name[0];
   }
   if($patient_name ne $subj){
-    $http->queue($patient_name);
+    $http->queue("<p>$patient_name</p>");
   }
   $http->queue(qq{
     </td>
@@ -848,11 +896,29 @@ sub ExpandExtraction{
       $this->{ExtractionsHierarchies}->{$dyn->{subj}}->{errors};
     $dyn->{send_hist} =
       $this->{ExtractionsHierarchies}->{$dyn->{subj}}->{send_hist};
-    $http->queue('<table width=100%"><tr><td valign="top" align="left">');
-    $this->ExpandExtractionStudyInfo($http, $dyn);
-    $http->queue('</td><td valign="top" align="right">');
-    $this->ExpandExtractionInfo($http, $dyn);
-    $http->queue('</td></tr></table>');
+    # If this collection is open, only call ExpandExtractionStudyInfo
+    # otherwise draw the whole table
+    if($this->{InfoSel}->{$col}->{$site}->{$subj}){
+      $this->ExpandStudyHierarchyExtraction($http, $dyn,
+        $dyn->{hierarchy}->{$dyn->{subj}}->{studies});
+    } else {
+      $http->queue(qq{
+        <table width=100%">
+          <tr>
+            <td valign="top" align="left">
+      });
+      $this->ExpandExtractionStudyInfo($http, $dyn);
+      $http->queue(qq{
+          </td>
+          <td valign="top" align="right">
+      });
+      $this->ExpandExtractionInfo($http, $dyn);
+      $http->queue(qq{
+            </td>
+          </tr>
+        </table>
+      });
+    }
   };
 }
 ##########################
@@ -972,9 +1038,9 @@ sub ExpandExtractionInfo{
       $status .= "<br>matches public";
     }
   }
-  my $link = $this->MakeHostLinkSync("info", "ShowInfo", {
+  my $link = $this->MakeHostLinkSync("Info", "ShowInfo", {
     subj => $dyn->{subj}
-  }, 1, "Update();");
+  }, 1, "Update();", "btn btn-xs btn-default");
   $http->queue("$status<br>$link");
 }
 sub ExtractSubject{
@@ -1310,16 +1376,17 @@ sub CheckAgainstPublic{
     my $num_subj_with_error = @{$this->{PublicCheckSubjectsWithError}};
     my $num_subj_ok = @{$this->{PublicCheckSubjectsOk}};
     my $num_subj_not_checked = @{$this->{PublicCheckSubjectsNotChecked}};
-    $this->RefreshEngine($http, $dyn,
-      'Checking subject in intake against subjects in Posda:<ul>' .
-      "<li>Total Subjects: $num_subj</li>" .
-      "<li>Subjects in Public: $num_subj_in_intake</li>" .
-      "<li>Subjects Waiting: $num_subj_waiting</li>" .
-      "<li>Subjects With Error: $num_subj_with_error</li>" .
-      "<li>Subjects Ok: $num_subj_ok</li>" .
-      "<li>Subjects Not Checked: $num_subj_not_checked</li>" .
-      '</ul>'
-    );
+    $this->RefreshEngine($http, $dyn, qq{
+      Checking subject in public against subjects in Posda:
+      <ul>
+        <li>Total Subjects: $num_subj</li>
+        <li>Subjects in Public: $num_subj_in_intake</li>
+        <li>Subjects Waiting: $num_subj_waiting</li>
+        <li>Subjects With Error: $num_subj_with_error</li>
+        <li>Subjects Ok: $num_subj_ok</li>
+        <li>Subjects Not Checked: $num_subj_not_checked</li>
+      </ul>
+    });
   } else {
 #    $this->RefreshEngine($http, $dyn,
 #      'Checking against intake is curently under development:<br>' .
@@ -1464,16 +1531,17 @@ sub CheckAgainstIntake{
     my $num_subj_with_error = @{$this->{IntakeCheckSubjectsWithError}};
     my $num_subj_ok = @{$this->{IntakeCheckSubjectsOk}};
     my $num_subj_not_checked = @{$this->{IntakeCheckSubjectsNotChecked}};
-    $this->RefreshEngine($http, $dyn,
-      'Checking subject in intake against subjects in Posda:<ul>' .
-      "<li>Total Subjects: $num_subj</li>" .
-      "<li>Subjects in Intake: $num_subj_in_intake</li>" .
-      "<li>Subjects Waiting: $num_subj_waiting</li>" .
-      "<li>Subjects With Error: $num_subj_with_error</li>" .
-      "<li>Subjects Ok: $num_subj_ok</li>" .
-      "<li>Subjects Not Checked: $num_subj_not_checked</li>" .
-      '</ul>'
-    );
+    $this->RefreshEngine($http, $dyn, qq{
+      Checking subject in intake against subjects in Posda:
+      <ul>
+        <li>Total Subjects: $num_subj</li>
+        <li>Subjects in Public: $num_subj_in_intake</li>
+        <li>Subjects Waiting: $num_subj_waiting</li>
+        <li>Subjects With Error: $num_subj_with_error</li>
+        <li>Subjects Ok: $num_subj_ok</li>
+        <li>Subjects Not Checked: $num_subj_not_checked</li>
+      </ul>
+    });
   } else {
 #    $this->RefreshEngine($http, $dyn,
 #      'Checking against intake is curently under development:<br>' .
@@ -3338,19 +3406,18 @@ sub DiscardExtractionOK{
 }
 sub PendingDiscard{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>Are you sure you want to discard this extraction:</h3>' .
-    "<ul><li>Collection: $this->{PendingDiscardCollection}</li>" .
-    "<li>Site: $this->{PendingDiscardSite}</li>" .
-    "<li>Subject: $this->{PendingDiscardSubject}</li></ul>" .
-    '<?dyn="NotSoSimpleButton" caption="Yes, Discard" ' .
-    "subj=\"$this->{PendingDiscardSubject}\" " .
-    "collection=\"$this->{PendingDiscardCollection}\" " .
-    "site=\"$this->{PendingDiscardSite}\" " .
-    'op="DiscardExtraction" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Discard" ' .
-    'op="DontDiscardExtraction" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>Are you sure you want to discard this extraction:</h3>
+    <ul>
+      <li>Collection: $this->{PendingDiscardCollection}</li>
+      <li>Site: $this->{PendingDiscardSite}</li>
+      <li>Subject: $this->{PendingDiscardSubject}</li>
+    </ul>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Discard" subj="$this->{PendingDiscardSubject}" collection="$this->{PendingDiscardCollection}" site="$this->{PendingDiscardSite}" op="DiscardExtraction" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Discard" op="DontDiscardExtraction" sync="Update();"?>
+    </div>
+  });
 }
 sub DontDiscardExtraction{
   my($this, $http, $dyn) = @_;
@@ -3624,22 +3691,27 @@ sub ExtractAllUnextracted{
 }
 sub PendingExtractAll{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>Are you the sure you want to perform the following ' .
-    'extractions:</h3>' .
-    "<ul><li>Collection: $this->{PendingExtractAllCollection}</li>" .
-    "<li>Site: $this->{PendingExtractAllSite}</li>" .
-    "<li>Subjects:<ul>");
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>Are you sure you want to perform the following extractions:</h3>
+    <ul>
+      <li>Collection: $this->{PendingExtractAllCollection}</li>
+      <li>Site: $this->{PendingExtractAllSite}</li>
+      <li>
+        Subjects:
+        <ul>
+  });
   for my $i (@{$this->{PendingExtractAllList}}){
     $http->queue("<li>$i</li>");
   }
-  $this->RefreshEngine($http, $dyn,
-    '</ul></li></ul>' .
-    '<?dyn="NotSoSimpleButton" caption="Yes, Extract" ' .
-    'op="ExtractAllYes" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Extract" ' .
-    'op="DontExtractAll" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+        </ul>
+      </li>
+    </ul>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Extract" op="ExtractAllYes" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Extract" op="DontExtractAll" sync="Update();"?>
+    </div>
+  });
 }
 sub DontExtractAll{
   my($this, $http, $dyn) = @_;
@@ -3878,21 +3950,27 @@ sub DiscardIncompleteExtractions{
 }
 sub PendingDiscardIE{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>Are you the sure you want to discard the following extractions:</h3>' .
-    "<ul><li>Collection: $this->{PendingIEDiscardCollection}</li>" .
-    "<li>Site: $this->{PendingIEDiscardSite}</li>" .
-    "<li>Subjects:<ul>");
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>Are you the sure you want to discard the following extractions:</h3>
+    <ul>
+      <li>Collection: $this->{PendingIEDiscardCollection}</li>
+      <li>Site: $this->{PendingIEDiscardSite}</li>
+      <li>
+        Subjects:
+        <ul>
+  });
   for my $i (@{$this->{PendingIEDiscardSubjectList}}){
     $http->queue("<li>$i</li>");
   }
-  $this->RefreshEngine($http, $dyn,
-    '</ul></li></ul>' .
-    '<?dyn="NotSoSimpleButton" caption="Yes, Discard" ' .
-    'op="DiscardIncompleteExtractionsYes" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Discard" ' .
-    'op="DontDiscardIncompleteExtraction" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+        </ul>
+      </li>
+    </ul>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Discard" op="DiscardIncompleteExtractionsYes" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Discard" op="DontDiscardIncompleteExtraction" sync="Update();"?>
+    </div>
+  });
 }
 sub DontDiscardIncompleteExtraction{
   my($this, $http, $dyn) = @_;
@@ -4136,7 +4214,9 @@ sub ScanAllForPhi{
   my @SubjsToScan; 
   my @SubjsScanned; 
   for my $subj (sort keys %{$this->{DbResults}}){
-    unless(exists $this->{ExtractionsHierarchies}->{$subj}) { next }
+    # Currently ExtractionsHierarchies is created for every subject,
+    # but will be empty for unextracted subjects.
+    unless(keys %{$this->{ExtractionsHierarchies}->{$subj}}) { next }
     my $rev_dir = $this->GetLatestRevDir($this->{SelectedCollection},
       $this->{SelectedSite}, $subj);
     if(-f "$rev_dir/PhiCheck.info"){
@@ -4156,21 +4236,27 @@ sub ScanAllForPhi{
 }
 sub PendingPhiScans{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>Are you the sure you want to scan the following for PHI:</h3>' .
-    "<ul><li>Collection: $this->{PendingPhiScanCollection}</li>" .
-    "<li>Site: $this->{PendingPhiScanSite}</li>" .
-    "<li>Subjects:<ul>");
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>Are you sure you want to scan the following for PHI:</h3>
+    <ul>
+      <li>Collection: $this->{PendingPhiScanCollection}</li>
+      <li>Site: $this->{PendingPhiScanSite}</li>
+      <li>
+        Subjects:
+        <ul>
+  });
   for my $i (@{$this->{PendingPhiScanSubjectList}}){
     $http->queue("<li>$i</li>");
   }
-  $this->RefreshEngine($http, $dyn,
-    '</ul></li></ul>' .
-    '<?dyn="NotSoSimpleButton" caption="Yes, Scan" ' .
-    'op="PhiScansYes" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="No, Don' . "'" . 't Scan" ' .
-    'op="DontDoPhiScans" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+        </ul>
+      </li>
+    </ul>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Scan" op="PhiScansYes" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Scan" op="DontDoPhiScans" sync="Update();"?>
+    </div>
+  });
 }
 sub DontDoPhiScans{
   my($this, $http, $dyn) = @_;
@@ -4275,16 +4361,17 @@ print "##########\n";
 }
 sub AllSubjectsScanned{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-    '<h3>All Subjects have already been scanned for PHI</h3>' .
-    "<ul><li>Collection: $this->{PendingPhiScanCollection}</li>" .
-    "<li>Site: $this->{PendingPhiScanSite}</li>" .
-    "</ul>". 
-    '<?dyn="NotSoSimpleButton" caption="Ok, (Go back)" ' .
-    'op="DontConsolidate" sync="Update();"?></td><td>' .
-    '<?dyn="NotSoSimpleButton" caption="Consolidate Scans For Review" ' .
-    'op="ConsolidatePhi" sync="Update();"?></td><td>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>All Subjects have already been scanned for PHI</h3>
+    <ul>
+      <li>Collection: $this->{PendingPhiScanCollection}</li>
+      <li>Site: $this->{PendingPhiScanSite}</li>
+    </ul>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Ok, (Go back)" op="DontConsolidate" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="Consolidate Scans For Review" op="ConsolidatePhi" sync="Update();"?>
+    </div>
+  });
 }
 sub DontConsolidate{
   my($this, $http, $dyn) = @_;

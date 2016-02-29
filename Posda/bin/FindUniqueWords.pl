@@ -36,7 +36,6 @@ sub MakeEleFun{
           $i =~ tr/\000-\037/ /;
           $i =~ s/\s*$//g;
           $i =~ s/^\s*//g;
-          $i =~ s/\s*$/ /; 
           $i =~ s/\|/ /g;
           if ($i eq "") { next value1 }
           if($i =~ /[^[:print:]]/){
@@ -46,7 +45,6 @@ sub MakeEleFun{
               $i =~ tr/\000-\037/ /;
               $i =~ s/\s*$//g;
               $i =~ s/^\s*//g;
-              $i =~ s/\s*$/ /; 
               if($j eq "") { next foo }
               $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
             }

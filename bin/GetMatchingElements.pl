@@ -29,9 +29,10 @@ my($df, $ds, $size, $xfr_stx, $errors)  = Posda::Dataset::Try($ARGV[0]);
 unless($ds) { die "$file didn't parse into a dataset" }
 my $ele_sig = $ARGV[1];
 my $matches = $ds->NewSearch($ele_sig);
-my $sub_sig = $ele_sig;
+
 if(ref $matches eq "ARRAY"){
   for my $m (@$matches){
+    my $sub_sig = $ele_sig;
     for my $i (0 .. $#{$m}){
       my $mn = "<$i>";
       $sub_sig =~ s/$mn/$m->[$i]/;

@@ -500,17 +500,18 @@ sub TagSelected{
     $this->{SelectedTagForExtraction} = $tag;
     return $this->FileAndTagSelected($http, $dyn);
   }
-  $this->RefreshEngine($http, $dyn,
-    '<small><?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" ' .
-    'sync="Update();"?>' . 
-    'Tag selected: '. $tag .
-    '<hr>');
+  $this->RefreshEngine($http, $dyn, qq{
+    <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" sync="Update();"?>
+    <p>
+      Tag selected: $tag
+    </p>
+    <hr/>
+  });
   my @constituents = split(/\[<\d+>\]/,$tag);
   for my $i (@constituents){
     $this->TagInfo($http, $dyn, $i);
   }
   $this->TagValueReport($http, $dyn, $tag);
-  $http->queue("</small>");
 }
 sub TagInfo{
   my($this, $http, $dyn, $tag) = @_;
@@ -518,7 +519,7 @@ sub TagInfo{
   my $vr = "&lt;unknown&gt;";
   my $vm = "&lt;unknown&gt;";
   my $keyword = "&lt;unknown&gt;";
-  $http->queue("$tag: ");
+  $http->queue("<p>$tag: ");
   if($tag =~/^\(([\da-f]{4}),([\da-f]{4})\)$/){
     my $grp = hex($1);
     my $ele = hex($2);
@@ -542,15 +543,26 @@ sub TagInfo{
   } else {
     $http->queue(" no pattern match\n");
   }
-  $http->queue("<br>");
+  $http->queue("</p>");
 }
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
-  $http->queue("<hr>");
-  $http->queue("<table border><th>Value</th></th><th># Patients</th>" .
-    "<th># Studies</th><th># Series</th><th># Modalities</th>" .
-    "<th># SOP Classes</th><th># Files</th><th>Study Dates</th>".
-    "<th>Series Dates</th><th>Select</th>");
+  $http->queue(qq{
+    <hr/>
+    <table class="table table-condensed table-bordered">
+    <tr>
+      <th>Value</th>
+      <th># Patients</th>
+      <th># Studies</th>
+      <th># Series</th>
+      <th># Modalities</th>
+      <th># SOP Classes</th>
+      <th># Files</th>
+      <th>Study Dates</th>
+      <th>Series Dates</th>
+      <th>Select</th>
+    </tr>
+  });
   for my $v (keys %{$this->{ByTag}->{$tag}}){
     $http->queue("<tr><td>$v</td>");
     my $num_files = keys %{$this->{ByTag}->{$tag}->{$v}};
@@ -633,14 +645,15 @@ sub SelectFileForDisplay{
     $this->{SelectedFileForExtraction} = $dyn->{value};
     $this->{SelectedValueForExtraction} = $dyn->{tag_value};
     delete $this->{SelectedTagInstances};
-    if($this->{SelectedTagForExtraction} =~ /<\d+>/){
-      $this->{ReadingTagInstances} = 1;
-      Dispatch::LineReader->new_cmd("GetMatchingElements.pl \"" .
-        $this->{SelectedFileForExtraction} . "\" '" .
-        $this->{SelectedTagForExtraction} . "'",
-        $this->ReadTagInstances,
-        $this->TagInstancesRead);
-    }
+    delete $this->{SelectedTagFullValue};
+
+    # Get the full tag value
+    $this->{ReadingFullTagValue} = 1;
+
+    $this->SemiSerializedSubProcess("GetElementValue2.pl \"" .
+      $this->{SelectedFileForExtraction} . "\" '" .
+      $this->{SelectedTagForExtraction} . "'",
+      $this->FullTagRead);
   }
 }
 sub FileAndTagSelected{
@@ -648,25 +661,60 @@ sub FileAndTagSelected{
   my $tag_disp = $this->{SelectedTagForExtraction};
   $tag_disp =~ s/</&lt;/g;
   $tag_disp =~ s/>/&gt;/g;
-  $this->RefreshEngine($http, $dyn,
-    '<?dyn="NotSoSimpleButton" op="ClearFileSelection" ' .
-    'caption="Clear File Selection" sync="Update();"?><br>' .
-    "File Selected: $this->{SelectedFileForExtraction}<br>" .
-    "Tag Selected: $tag_disp<br>");
-  if($this->{SelectedTagForExtraction} =~ /<\d+>/){
-    $http->queue("Tag Instances: ");
-    if(exists $this->{ReadingTagInstances}){
-      $http->queue("&lt;waiting&gt;<br>");
-    } else {
-      $http->queue("<ul>");
-      for my $t (@{$this->{SelectedTagInstances}}){
-        $http->queue("<li>$t</li>");
-      }
-      $http->queue("</ul>");
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>
+      <?dyn="NotSoSimpleButton" op="ClearFileSelection" caption="Clear File Selection" sync="Update();"?>
+    </p>
+    <div class="panel panel-default">
+      <div class="panel-heading">File Selected</div>
+      <div class="panel-body">
+        $this->{SelectedFileForExtraction}
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Tag Selected
+      </div>
+      <div class="panel-body">
+        $tag_disp
+      </div>
+    </div>
+  });
+  $http->queue(qq{
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Value Selected
+      </div>
+      <div class="panel-body">
+        $this->{SelectedValueForExtraction}
+      </div>
+    </div>
+  });
+  $http->queue(qq{
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Matching Tag Instances and Raw Data
+      </div>
+      <div class="panel-body">
+  });
+
+  if(exists $this->{ReadingFullTagValue}){
+    $http->queue("&lt;waiting&gt;<br>");
+  } else {
+    $http->queue("<ul class=\"list-group\">");
+    for my $k (sort keys %{$this->{SelectedTagFullValue}}) {
+      $http->queue(qq{
+        <li class="list-group-item">
+          <p>$k</p>
+          <pre style="overflow: auto; word-wrap: normal;">$this->{SelectedTagFullValue}->{$k}</pre>
+        </li>
+      });
     }
+    $http->queue("</ul>");
   }
-  $this->RefreshEngine($http, $dyn,
-    "Value Selected: $this->{SelectedValueForExtraction}<br>");
+  $http->queue("</div></div>");
+
 }
 sub ClearFileSelection{
   my($this, $http, $dyn) = @_;
@@ -690,6 +738,35 @@ sub TagInstancesRead{
     $this->AutoRefresh;
   };
   return $sub;
+}
+sub FullTagRead{
+  my($this) = @_;
+  my $sub = sub {
+    my($status, $result) = @_;
+    # TODO: Should this only set to $result if $success is good?
+    $this->ProcessFullTagValues($result);
+  };
+  return $sub;
+}
+sub ProcessFullTagValues {
+  my($this, $result) = @_;
+    # drop all entries where the value does not contain our intended string
+    my $val = $this->{SelectedValueForExtraction};
+
+    for my $k (keys %{$result}) {
+      my $testval = $result->{$k};
+
+      my $compare = index($testval, $val);
+
+      unless ($compare != -1) {
+        delete $result->{$k};
+      }
+    }
+
+    # last step after everything is good
+    delete $this->{ReadingFullTagValue};
+    $this->{SelectedTagFullValue} = $result;
+    $this->AutoRefresh;
 }
 sub GetStudyDates{
   my($this, $list) = @_;
