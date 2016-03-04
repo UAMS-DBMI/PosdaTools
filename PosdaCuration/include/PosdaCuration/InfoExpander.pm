@@ -7,6 +7,9 @@ use PosdaCuration::FileView;
 use PosdaCuration::SeriesReport;
 use PosdaCuration::CompareFiles;
 use PosdaCuration::CompareRevisions;
+
+use constant INCONSISTENT => '&lt;inconsistent&gt;';
+
 sub ExpandStudyCounts{
   my($this, $http, $dyn, $struct) = @_;
   my $num_studies = keys %{$struct};
@@ -42,11 +45,16 @@ sub ExpandStudyCountsExtraction{
   }
 }
 sub ExpandStudyHierarchy{
+  # TODO: Expands the database hierarchy?
   my($this, $http, $dyn, $studies) = @_;
+  # the passed $studies is $this->{DbInfo}->???
   unless(exists $this->{NickNames}){
     $this->{NickNames} = Posda::Nicknames->new;
   }
-  $http->queue('<table class="table table-bordered table-sm" style="white-space: normal" width="80%">');
+  $http->queue(qq{
+    <table class="table table-bordered table-sm" 
+     style="white-space: normal" width="80%">
+  });
   for my $study_uid(sort keys %$studies){
     my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
       "STUDY", $study_uid
@@ -56,90 +64,183 @@ sub ExpandStudyHierarchy{
     my $accession_number;
     my $study_date;
     my $study_description;
-    if(keys %{$study->{st_desc}} > 1){
-      $study_description = "&lt;inconsistent&gt;"
-    } else { $study_description = [ keys %{$study->{st_desc}} ]->[0] }
-    if(keys %{$study->{st_id}} > 1){ $study_id = "&lt;inconsistent&gt;" }
-    else { $study_id = [ keys %{$study->{st_id}} ]->[0] }
-    if(keys %{$study->{accession_num}} > 1){
-      $accession_number = "&lt;inconsistent&gt;" 
-    } else { $accession_number = [ keys %{$study->{accession_num}} ]->[0] }
-    if(keys %{$study->{st_date}} > 1){ $study_date = "&lt;inconsistent&gt;" }
-    else { $study_date = [ keys %{$study->{st_date}} ]->[0] }
+
+    if (keys %{$study->{st_desc}} > 1) {
+      $study_description = INCONSISTENT;
+    } else { 
+      $study_description = [ keys %{$study->{st_desc}} ]->[0];
+    }
+
+    if (keys %{$study->{st_id}} > 1) {
+      $study_id = INCONSISTENT;
+    } else {
+      $study_id = [ keys %{$study->{st_id}} ]->[0];
+    }
+
+    if (keys %{$study->{accession_num}} > 1) {
+      $accession_number = INCONSISTENT;
+    } else {
+      $accession_number = [ keys %{$study->{accession_num}} ]->[0];
+    }
+
+    if (keys %{$study->{st_date}} > 1) {
+      $study_date = INCONSISTENT;
+    } else {
+      $study_date = [ keys %{$study->{st_date}} ]->[0];
+    }
+
     my $num_series = keys %{$study->{series}};
-    $http->queue('<tr><th colspan="2">' . $study_nn . 
-      ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "") .
-      '</td>');
-    $http->queue('<th colspan="4">' . 
-      "$study_date:$study_description:$accession_number" . 
-      '</td></tr>');
-    for my $series_uid (sort keys %{$study->{series}}){
+
+    my $study_id_text = ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "");
+
+    $http->queue(qq{
+      <tr>
+        <th colspan="2">
+          $study_nn$study_id_text
+        </th>
+    });
+
+    $http->queue(qq{
+        <th colspan="4">
+          $study_date:$study_description <!-- :$accession_number -->
+        </th>
+      </tr>
+    });
+
+    for my $series_uid (sort keys %{$study->{series}}) {
       my $s = $study->{series}->{$series_uid};
       my $modality;
       my $series_date;
       my $series_desc;
       my $body_part;
-      if(keys %{$s->{modality}} > 1) { $modality = '&lt;inconsistent&gt;' }
-      else { $modality = [ keys %{$s->{modality}} ]->[0] }
-      if(keys %{$s->{ser_date}} > 1) { $series_date = '&lt;inconsistent&gt;' }
-      else { $series_date = [ keys %{$s->{ser_date}} ]->[0] }
-      if(keys %{$s->{ser_desc}} > 1) { $series_desc = '&lt;inconsistent&gt;' }
-      else { $series_desc = [ keys %{$s->{ser_desc}} ]->[0] }
-      if(keys %{$s->{body_part}} > 1) { $body_part = '&lt;inconsistent&gt;' }
-      else { $body_part = [ keys %{$s->{body_part}} ]->[0] }
+
+      if (keys %{$s->{modality}} > 1) {
+        $modality = INCONSISTENT;
+      } else {
+        $modality = [ keys %{$s->{modality}} ]->[0];
+      }
+
+      if (keys %{$s->{ser_date}} > 1) {
+        $series_date = INCONSISTENT;
+      } else {
+        $series_date = [ keys %{$s->{ser_date}} ]->[0];
+      }
+
+      if (keys %{$s->{ser_desc}} > 1) {
+        $series_desc = INCONSISTENT;
+      } else {
+        $series_desc = [ keys %{$s->{ser_desc}} ]->[0];
+      }
+
+      if (keys %{$s->{body_part}} > 1) {
+        $body_part = INCONSISTENT;
+      } else {
+        $body_part = [ keys %{$s->{body_part}} ]->[0];
+      }
+
       my $series_nn = 
         $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
-      $http->queue('<tr><td>==&gt;</td><td>' . $series_nn . '</td>');
-      $http->queue("<td>$modality</td><td>$body_part</td>");
-      $http->queue("<td>$series_date:$series_desc</td><td>$s->{num_files}</td></tr>");
+      $http->queue(qq{
+        <tr>
+          <td>==&gt;</td>
+          <td>$series_nn</td>
+          <td>$modality</td>
+          <td>$body_part</td>
+          <td>$series_date:$series_desc</td>
+          <td>$s->{num_files}</td>
+        </tr>
+      });
     }
   }
   $http->queue("</table>");
 }
+
 sub ExpandStudyHierarchyExtraction{
+  # Expand on-disk extraction info
+  # TODO: how does this differ from the above function?
+  # The data structure it gets passed is *completely* different, basically
+  # TODO: Maybe we can adjust this structure to match the other, or the other way around?
   my($this, $http, $dyn, $studies) = @_;
+
+  # INFO: $studies = $this->{ExtractionsHierarchies}->{ER-1002}->{hierarchy}->{ER-1002}->{studies}
+  # where ER-1002 is the subject
+
   unless(exists $this->{NickNames}) {
     $this->{NickNames} = Posda::Nicknames->new;
   }
-  $http->queue('<table class="table table-bordered table-sm" width="80%">');
+
+  $http->queue(qq{
+    <table class="table table-bordered table-sm" 
+     style="white-space: normal" width="80%">
+  });
+
   for my $study (
     sort {
       $studies->{$a}->{uid} cmp $studies->{$b}->{uid}
     } keys %{$studies}
   ){
     my $study_uid = $studies->{$study}->{uid};
-    my $study_nn =
-      $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
+    my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
+      "STUDY", $study_uid
+    );
     my $study_id = $studies->{$study}->{id};
-    if(ref($study_id)){ $study_id = "&lt;inconsistent&gt;" }
-    $http->queue('<tr><th colspan="2">' . $study_nn .
-      ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "") .
-      '</th>');
-    $http->queue('<th colspan="4">' .
-      (ref($studies->{$study}->{desc})eq "ARRAY" ?
-        "&lt;inconsistent&gt;" : $studies->{$study}->{desc}));
-    $http->queue('</th></tr>');
+
+    if (ref($study_id)) {  # if invalid reference?
+      $study_id = INCONSISTENT;
+    }
+
+    my $study_id_text = ((defined($study_id) && ($study_id ne "")) ? " ($study_id)" : "");
+
+    $http->queue(qq{
+      <tr>
+        <th colspan="2">
+          $study_nn$study_id_text
+        </th>
+    });
+
+    my $study_desc = (ref($studies->{$study}->{desc}) eq "ARRAY" ? 
+       INCONSISTENT: $studies->{$study}->{desc});
+    # TODO: Why is the study date missing here? we have it somewhere
+    $http->queue(qq{
+        <th colspan="4">
+          $study_desc
+        </th>
+      </tr>
+    });
+
     my $s_st = $studies->{$study}->{series};
     for my $series (
       sort {
         $s_st->{$a}->{uid} cmp $s_st->{$b}->{uid}
       } keys %$s_st
     ){
-      my $series_uid =
-        $studies->{$study}->{series}->{$series}->{uid};
+      my $series_uid = $studies->{$study}->{series}->{$series}->{uid};
+      # my $series_date = $studies->{$study}->{series}->{$series}->{sdates};
+      my $series_date = '';  # to keep it consistent with the other one, for now
+
       my $series_nn =
         $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
       my $s = $studies->{$study}->{series}->{$series};
-      $http->queue('<tr><td>==&gt;</td><td>' . $series_nn . '</td>');
-      $http->queue("<td>$s->{modality}</td><td>" .
-        (ref($s->{desc}) eq "ARRAY" ? "&lt;inconsistent&gt;" : $s->{desc}) .
-        "</td>");
-      my $count = keys %{$s->{files}};
-      $http->queue("<td>" .
-        (ref($s->{body_part}) eq "ARRAY" ?
-          "&lt;inconsistent&gt;" :
-          $s->{body_part}) .
-        "</td><td>$count</td></tr>");
+
+      my $modality = $s->{modality};
+      my $num_files = keys %{$s->{files}};
+
+      my $series_desc = (ref($s->{desc}) eq "ARRAY" ? 
+        INCONSISTENT: $s->{desc});
+
+      my $body_part = (ref($s->{body_part}) eq "ARRAY" ?
+          INCONSISTENT: $s->{body_part});
+
+      $http->queue(qq{
+        <tr>
+          <td>==&gt;</td>
+          <td>$series_nn</td>
+          <td>$modality</td>
+          <td>$body_part</td>
+          <td>$series_date :$series_desc</td>
+          <td>$num_files</td>
+        </tr>
+      });
     }
   }
   $http->queue('</table>');
