@@ -45,6 +45,7 @@ sub InsertFile{
     $file_id = $h->{id};
   } else {
     $file_id = $files[0]->{file_id};
+print STDERR "file ($digest) already in DB\n";
   }
   $unlocker->execute;
   return $file_id;
@@ -177,6 +178,7 @@ file:
 while (my $fname = <STDIN>){
   chomp $fname;
   unless(-f $fname){
+print STDERR "$fname is not a file\n";
     push(@FileErrors, "$fname is not a file");
     next file;
   }

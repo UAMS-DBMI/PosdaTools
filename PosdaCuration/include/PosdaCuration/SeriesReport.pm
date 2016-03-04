@@ -390,10 +390,16 @@ sub StructContentResponse{
       'Waiting for structure set Report');
   }
   for my $roi (keys %{$this->{StructureSetReport}->{contour_rept}}){
+    my $num_contours = keys 
+      %{$this->{StructureSetReport}->{contour_rept}->{$roi}};
     $http->queue("<small><table border><tr>" .
-      '<th><th colspan="6">' . "ROI = $roi</th></tr>" .
+      '<th><th colspan="6">' . "ROI = $roi ($num_contours contours)");
+    $http->queue("<small><a href=\"DownloadRoiExcel?obj_path=$this->{path}" .
+      "&roi=$roi\">download</a></small>");
+    $http->queue("</th></tr>" .
       '<tr><th>linked img</th><th>nearest img</th>' .
       '<th>avg_dist</th><th>max_dist</th><th>min_dist</th>' .
+      '<th>img_z</th><th>avg_z</th>' .
       '<th>num_pts</th></tr>');
     for my $i (
       sort {$a <=> $b} 
@@ -411,9 +417,14 @@ sub StructContentResponse{
       my $av_dist = sprintf("%0.10f", $Info->{avg_z} - $Info->{img_z});
       my $max_dist = sprintf("%0.10f", $Info->{max_z} - $Info->{img_z});
       my $min_dist = sprintf("%0.10f", $Info->{min_z} - $Info->{img_z});
+      my $img_z = sprintf("%0.10f", $Info->{img_z});
+      my $avg_z = sprintf("%0.10f", $Info->{avg_z});
       my $n_p = $Info->{number_points};
       $http->queue("<tr><td>$linked</td><td>$nearest</td><td>$av_dist</td>" .
-        "<td>$max_dist</td><td>$min_dist</td><td>$n_p</td></tr>");
+        "<td>$max_dist</td><td>$min_dist</td>" .
+        "<td>$img_z</td><td>$avg_z</td>" .
+        "<td>$n_p</td>" .
+        "</tr>");
     }
     $http->queue("</table></small>");
   }
@@ -481,5 +492,38 @@ sub WhenStructureSetAnalyzed{
     $this->AutoRefresh;
   };
   return $sub;
+}
+sub DownloadRoiExcel{
+  my($this, $http, $dyn) = @_;
+  my $roi = $dyn->{roi};
+  $http->DownloadHeader("text/csv", "$roi.csv");
+  $http->queue('"linked_img","nearest_img","avg_dist",' .
+    '"max_dist","min_dist","img_z","avg_z","num_pts"' .
+    "\n");
+  for my $i (
+    sort {$a <=> $b} 
+   keys %{$this->{StructureSetReport}->{contour_rept}->{$roi}}
+  ){
+    my $Info = $this->{StructureSetReport}->{contour_rept}->{$roi}->{$i};
+    my $linked = $this->{NickNames}->GetFileNicknamesByUid(
+      [$this->{StructureSetReport}
+        ->{contour_rept}->{$roi}->{$i}->{linked_sop}]->[0]
+    );
+    my $nearest = $this->{NickNames}->GetFileNicknamesByUid(
+      [$this->{StructureSetReport}
+        ->{contour_rept}->{$roi}->{$i}->{nearest_sop}]->[0]
+    );
+    my $av_dist = sprintf("%0.10f", $Info->{avg_z} - $Info->{img_z});
+    my $max_dist = sprintf("%0.10f", $Info->{max_z} - $Info->{img_z});
+    my $min_dist = sprintf("%0.10f", $Info->{min_z} - $Info->{img_z});
+    my $img_z = sprintf("%0.10f", $Info->{img_z});
+    my $avg_z = sprintf("%0.10f", $Info->{avg_z});
+    my $n_p = $Info->{number_points};
+    $http->queue("\"$linked\",\"$nearest\",\"$av_dist\"," .
+      "\"$max_dist\",\"$min_dist\"," .
+      "\"$img_z\",\"$avg_z\"," .
+      "\"$n_p\"" .
+      "\n");
+  }
 }
 1;
