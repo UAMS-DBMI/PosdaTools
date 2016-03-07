@@ -21,6 +21,7 @@ use Digest::MD5;
 use JSON::PP;
 use Debug;
 use Storable;
+use Data::Dumper;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -652,6 +653,64 @@ sub CompareInfoSelectionChanged {
   }
 }
 
+sub copy_series {
+  my($args) = @_;
+
+  my $source = $args->{source};
+  my $dest = $args->{dest};
+  my $compare = $args->{compare};
+
+  $dest->{uid} = $source->{uid};
+  $dest->{body_part} = $source->{body_part};
+  $dest->{desc} = $source->{desc};
+  $dest->{modality} = $source->{modality};
+  $dest->{sdates} = $source->{sdates};
+
+  for my $file_key (keys %{$source->{files}}) {
+    my $src_file = $source->{files}->{$file_key};
+
+    my $uid = $src_file->{sop_instance_uid};
+
+    if (not defined $compare->{$uid}) {
+      next;  # skip this file if it is not in $compare
+    }
+
+    # the file is the end of the structure, so no more recursing
+    $dest->{files}->{$file_key} = $src_file;
+  }
+}
+
+sub copy_study {
+  my($args) = @_;
+
+  my $source = $args->{source};
+  my $dest = $args->{dest};
+  my $compare = $args->{compare};
+
+  $dest->{date} = $source->{date};
+  $dest->{desc} = $source->{desc};
+  $dest->{id} = $source->{id};
+  $dest->{pid} = $source->{pid};
+  $dest->{pname} = $source->{pname};
+  $dest->{uid} = $source->{uid};
+
+  for my $series_key (keys %{$source->{series}}) {
+    my $src_series = $source->{series}->{$series_key};
+
+    if (not defined $compare->{$src_series->{uid}}) {
+      next;  # skip this series if it is not in $compare
+    }
+
+    $dest->{series}->{$series_key} = {};
+
+    copy_series {
+      source  => $src_series,
+      dest    => $dest->{series}->{$series_key},
+      compare => $compare->{$src_series->{uid}}
+    }
+  }
+}
+
 sub GenerateCompareDataStructure {
   my($this, $compare) = @_;
 
@@ -674,16 +733,25 @@ sub GenerateCompareDataStructure {
     for my $study_key (keys %{$src_subject->{hierarchy}->{$sub_key}->{studies}}) {
       my $src_study = $src_subject->{hierarchy}->{$sub_key}->{studies}->{$study_key};
 
-      # test to see if this uid is in $compare
-      unless (defined $compare->{$sub_key}->{InAll}->{$src_study->{uid}}) {
-        next;  # Skip this study_key if no match against $compare
+      if (not defined $compare->{$sub_key}->{InAll}->{$src_study->{uid}}) {
+        next;  # Skip this study if no match against $compare
       }
 
-      $dst_subject->{hierarchy}->{$sub_key}->{studies}->{$study_key} = $src_study;
+      # recursively copy the study
+      my $dst_study = $dst_subject->{hierarchy}->{$sub_key}->{studies}->{$study_key} = {};
+
+      copy_study {
+        source  => $src_study,
+        dest    => $dst_study,
+        compare => $compare->{$sub_key}->{InAll}->{$src_study->{uid}}
+      };
     }
   }
   return $dest;
 }
+
+
+
 
 sub DrawSelectFromHash {
   # Draw a simple SelectByValue, using a hash of values
@@ -692,6 +760,10 @@ sub DrawSelectFromHash {
   # $options_hash: hash of options, in form {value => display_value}
   # $selected_key: the key of the currently selected item
   my($this, $http, $dyn, $op, $options_hash, $selected_key) = @_;
+
+  if (not defined $selected_key) {
+    $selected_key = '';
+  }
 
   $this->RefreshEngine($http, $dyn, qq{<?dyn="SelectByValue" op="$op"?>});
 
@@ -1410,6 +1482,18 @@ sub StatusOfDbQuery{
   }
   $this->InvokeAfterDelay("AutoRefresh", 3);
 }
+
+sub ResetExtractionSelection {
+  my($this) = @_;
+
+  # Ensure the original extractions hierarchy is set
+  if (defined $this->{ExtractionsHierarchiesOriginal}) {
+    $this->{ExtractionsHierarchies} = $this->{ExtractionsHierarchiesOriginal};
+  }
+
+  $this->{CompareInfoSelection} = "extraction";
+}
+
 #############################################
 sub StartExtractionSearch{
   my($this, $http, $dyn) = @_;
@@ -1500,6 +1584,9 @@ sub StatusOfExtractionSearch{
 #
 sub CheckAgainstPublic{
   my($this, $http, $dyn) = @_;
+
+  $this->ResetExtractionSelection;
+
   if($this->{CheckAgainstPublic} < 3 ){
     my $num_found_patient = keys %{$this->{PublicData}};
     $this->RefreshEngine($http, $dyn,
@@ -1652,6 +1739,8 @@ sub ClearPublicData{
   delete $this->{PublicCheckSubjectsToDo};
   delete $this->{PublicCheckSubjectsWithError};
   delete $this->{PublicData};
+  
+  $this->ResetExtractionSelection;
 }
 #############################################
 #############################################
@@ -1659,6 +1748,9 @@ sub ClearPublicData{
 #
 sub CheckAgainstIntake{
   my($this, $http, $dyn) = @_;
+
+  $this->ResetExtractionSelection;
+
   if($this->{CheckAgainstIntake} < 3 ){
     my $num_found_patient = keys %{$this->{IntakeData}};
     $this->RefreshEngine($http, $dyn,
@@ -1816,6 +1908,8 @@ sub ClearIntakeData{
   delete $this->{IntakeCheckSubjectsToDo};
   delete $this->{IntakeCheckSubjectsWithError};
   delete $this->{IntakeData};
+
+  $this->ResetExtractionSelection;
 }
 #############################################
 
