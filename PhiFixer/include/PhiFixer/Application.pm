@@ -421,6 +421,7 @@ sub PrivateTagReview{
     ];
   }
 
+  $http->queue(qq{<div style="margin-left: 5px;">});
   for my $id (keys @{$this->{PrivateTagsToReview}}) {
     $http->queue(
       $this->CheckBoxDelegate("SelectedPriv", $id,
@@ -430,21 +431,64 @@ sub PrivateTagReview{
     );
     $http->queue("$this->{PrivateTagsToReview}->[$id]</input><br>");
   }
+  $http->queue("</div>");
 }
+
 sub PrivateTagReviewContent {
   my($this, $http, $dyn) = @_;
 
-  $http->queue("<h1>PrivateTagReviewContent</h1>");
-
   my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
+  my $affected_files = scalar keys $this->{PrivateTagInfo}->{$selected_tag};
 
-  # display the tag, some info, and how many files are affected
-  my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
-  $http->queue("<p>$selected_tag</p>");
+  my $also_in_phi_list = '';
+  if (defined $this->{PrivateTags}->{$selected_tag}) {
+    $also_in_phi_list = qq{
+      <span class="label label-danger">
+        This tag is also in the PHI List!
+      </span>
+    };
+  }
+
+  $http->queue(qq{
+    <h1>$selected_tag</h1>
+    <h3>
+      Affected Files: <span class="label label-info">$affected_files</span>
+      $also_in_phi_list
+    </h3>
+    <div class="form-group">
+  });
+
+  $this->NotSoSimpleButton($http, {
+    op => "ApplyDispositionToAll",
+    caption => "Apply recommended disposition to all files",
+    sync => "Update();",
+    class => "btn btn-warning", 
+  });
+
+  $http->queue(qq{
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Tag Details
+      </div>
+      <div class="panel-body">
+  });
 
   $this->DrawTagDetails($http, $dyn, $selected_tag);
 
+  $http->queue(qq{
+    </div>
+  });
 }
+
+sub ApplyDispositionToAll {
+  my($this, $http, $dyn) = @_;
+
+  my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
+  print "ApplyDispositionToAll: $selected_tag\n";
+
+}
+
 sub InfoTagValueMode{
   my($this, $http, $dyn) = @_;
   $this->TagFilters($http, $dyn);
@@ -615,6 +659,7 @@ sub DrawTagDetails {
       pt_consensus_name => "Consensus Name",
       pt_consensus_vr => "Consensus VR",
       pt_consensus_vm => "Consensus VM",
+      pt_consensus_disposition => "Disposition",
     };
 
     $http->queue(qq{
