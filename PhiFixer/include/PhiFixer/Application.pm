@@ -387,6 +387,8 @@ sub Info{
   };
   unless(defined($this->{InfoMode})){
     $this->{InfoMode} = "PrivateTagReview";
+    $this->{ContentMode} = "WaitingForTag";
+    $this->{SelectedPriv} = -1;  # a value that can't exist
   }
   $this->SelectByValue($http, {
     op => "SetInfoMode",
@@ -408,6 +410,8 @@ sub Info{
 sub SetInfoMode{
   my($this, $http, $dyn) = @_;
   $this->{InfoMode} = $dyn->{value};
+  $this->{ContentMode} = 'WaitingForTag';  # also clear content 
+  $this->{SelectedPriv} = -1;  # clear selected private tag, if any
 }
 sub PrivateTagReview{
   my($this, $http, $dyn) = @_;
@@ -416,7 +420,30 @@ sub PrivateTagReview{
       sort keys %{$this->{PrivateTagInfo}}
     ];
   }
-  $http->queue("PrivateTagReview");
+
+  for my $id (keys @{$this->{PrivateTagsToReview}}) {
+    $http->queue(
+      $this->CheckBoxDelegate("SelectedPriv", $id,
+        ($this->{SelectedPriv} == $id),
+        { op => "SetSelectedPriv", sync => "Update();" }
+      ) 
+    );
+    $http->queue("$this->{PrivateTagsToReview}->[$id]</input><br>");
+  }
+}
+sub PrivateTagReviewContent {
+  my($this, $http, $dyn) = @_;
+
+  $http->queue("<h1>PrivateTagReviewContent</h1>");
+
+  my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
+
+  # display the tag, some info, and how many files are affected
+  my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
+  $http->queue("<p>$selected_tag</p>");
+
+  $this->DrawTagDetails($http, $dyn, $selected_tag);
+
 }
 sub InfoTagValueMode{
   my($this, $http, $dyn) = @_;
@@ -443,12 +470,27 @@ sub InfoTagValueMode{
           { op => "SetSelectedEle", sync => "Update();" }
         ) 
       );
-      $http->queue("$tags{$i}<br>");
+      $http->queue("$tags{$i}<br></input>");
     } else {
-      $http->queue("...<br>");
+      $http->queue("...<br></input>");
       last render;
     }
   }
+}
+sub SetSelectedPriv{
+  my($this, $http, $dyn) = @_;
+  my $value = $dyn->{value};
+
+  print "SetSelectedPriv: $value\n";
+
+  if($dyn->{checked} eq "true"){
+     $this->{SelectedPriv} = $value;
+     $this->{ContentMode} = "PrivateTagReviewContent";
+  } else {
+    $this->{SelectedPriv} = -1;  # a value that can't exist
+    $this->{ContentMode} = "WaitingForTag";
+  }
+  # $this->ClearFileSelection($http, $dyn);
 }
 sub SetSelectedEle{
   my($this, $http, $dyn) = @_;
@@ -542,7 +584,6 @@ sub TagInfo{
   } elsif ($tag =~ /^\(([\da-f]{4}),\"([^\"]+)\",([\da-f]{2})\)$/){
     # this is a private tag
 
-    my $details = PhiFixer::PrivateTagInfo::get_info($tag);
 
     my $owner = $2;
     my $grp = hex($1);
@@ -554,6 +595,21 @@ sub TagInfo{
       $http->queue(" Unknown private tag");
     }
 
+    $this->DrawTagDetails($http, $dyn, $tag);
+
+  } else {
+    $http->queue(" no pattern match\n");
+  }
+  $http->queue("</div></div>");
+}
+
+sub DrawTagDetails {
+  # Draw the details about the given $tag,
+  # by queueing to $http, after getting info via
+  # PhiFixer::PrivateTagInfo::get_info
+  my($this, $http, $dyn, $tag) = @_;
+
+    my $details = PhiFixer::PrivateTagInfo::get_info($tag);
     my $fields = {
       pt_signature => "Signature",
       pt_consensus_name => "Consensus Name",
@@ -577,13 +633,7 @@ sub TagInfo{
       }
     }
     $http->queue("</table></div>");
-
-  } else {
-    $http->queue(" no pattern match\n");
-  }
-  $http->queue("</div></div>");
 }
-
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
   $http->queue(qq{
