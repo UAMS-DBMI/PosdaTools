@@ -2,6 +2,7 @@
 #
 use strict;
 package PhiFixer::Application;
+use PhiFixer::PrivateTagInfo;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -21,6 +22,9 @@ use Storable;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
+
+use constant UNKNOWN => '&lt;unknown&gt;';
+
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 
 my $expander = qq{<?dyn="BaseHeader"?>
@@ -502,9 +506,7 @@ sub TagSelected{
   }
   $this->RefreshEngine($http, $dyn, qq{
     <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" sync="Update();"?>
-    <p>
-      Tag selected: $tag
-    </p>
+    <h3>Tag selected: $tag</h3>
     <hr/>
   });
   my @constituents = split(/\[<\d+>\]/,$tag);
@@ -515,11 +517,18 @@ sub TagSelected{
 }
 sub TagInfo{
   my($this, $http, $dyn, $tag) = @_;
-  my $tag_name = "&lt;unknown&gt;";
-  my $vr = "&lt;unknown&gt;";
-  my $vm = "&lt;unknown&gt;";
-  my $keyword = "&lt;unknown&gt;";
-  $http->queue("<p>$tag: ");
+  my $tag_name = UNKNOWN;
+  my $vr = UNKNOWN;
+  my $vm = UNKNOWN;
+  my $keyword = UNKNOWN;
+
+  $http->queue(qq{
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Tag:</strong> $tag
+      </div>
+      <div class="panel-body">
+  });
   if($tag =~/^\(([\da-f]{4}),([\da-f]{4})\)$/){
     my $grp = hex($1);
     my $ele = hex($2);
@@ -531,20 +540,50 @@ sub TagInfo{
     }
     $http->queue(" $vr, $vm, $keyword, $tag_name");
   } elsif ($tag =~ /^\(([\da-f]{4}),\"([^\"]+)\",([\da-f]{2})\)$/){
+    # this is a private tag
+
+    my $details = PhiFixer::PrivateTagInfo::get_info($tag);
+
     my $owner = $2;
     my $grp = hex($1);
     my $ele = hex($3);
     if(exists $this->{DD}->{PvtDict}->{$owner}->{$grp}->{$ele}){
       my $d = $this->{DD}->{PvtDict}->{$owner}->{$grp}->{$ele};
-      $http->queue(" $d->{VR}, $d->{VM}, $d->{Name}");
+      $http->queue(" <p>$d->{VR}, $d->{VM}, $d->{Name}</p>");
     } else {
       $http->queue(" Unknown private tag");
     }
+
+    my $fields = {
+      pt_signature => "Signature",
+      pt_consensus_name => "Consensus Name",
+      pt_consensus_vr => "Consensus VR",
+      pt_consensus_vm => "Consensus VM",
+    };
+
+    $http->queue(qq{
+      <div class="panel panel-default panel-body">
+      <table class="table table-condensed">
+    });
+
+    for my $detail_row (@{$details}) {
+      for my $key (sort keys %{$fields}) {
+        $http->queue(qq{
+          <tr>
+            <td>$fields->{$key}</td>
+            <td>$detail_row->{$key}</td>
+          </tr>
+        });
+      }
+    }
+    $http->queue("</table></div>");
+
   } else {
     $http->queue(" no pattern match\n");
   }
-  $http->queue("</p>");
+  $http->queue("</div></div>");
 }
+
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
   $http->queue(qq{
