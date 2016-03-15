@@ -22,6 +22,9 @@
   "extraction_root" :
      "/cache/posda/Data/HierarchicalExtractions/data",
   "UserInfoDir" : "/cache/posda/UserData",
+  "IntakeDatabaseHost" : "144.30.1.71",
+  "PublicDatabaseHost" : "144.30.1.74",
+
   "DicomDestinations" : {
     "Quasar" : {
       "host" : "dbmi-imac.ad.uams.edu",

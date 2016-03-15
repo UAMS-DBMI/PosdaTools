@@ -21,6 +21,7 @@ use Digest::MD5;
 use JSON::PP;
 use Debug;
 use Storable;
+use Data::Dumper;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -437,6 +438,7 @@ sub SetCollectionAndSite{
   $this->SaveUserHistory;
   delete $this->{DbResults};
   delete $this->{ExtractionsHierarchies};
+  delete $this->{ExtractionsHierarchiesOriginal};
   $this->{DbQueryInProgress} = 1;
   $this->{ExtractionSearchInProgress} = 1;
   $this->StartDbQuery;
@@ -577,7 +579,7 @@ sub ContinueDbCollectionsAndExtractions{
         <tr>
           <th width="10%">Subject</th>
           <th width="45%">DB Info</th>
-          <th width="45%">Extraction Info</th>
+          <th width="45%"><?dyn="DrawExtractionInfoHeader"?></th>
         </tr>
         </thead>
         <tbody>
@@ -588,26 +590,229 @@ sub ContinueDbCollectionsAndExtractions{
   };
   return $sub;
 };
+sub DrawExtractionInfoHeader {
+  my($this, $http, $dyn) = @_;
+  # if there is Intake or Public Check data,
+  # darw a combo box
+
+  my $draw_select = 0;
+  my $options = { extraction => "Extraction Info" };
+
+  if (defined $this->{IntakeCheckHierarchy}) {
+    $draw_select = 1;
+    $options->{intake} = "Intake Info";
+  }
+
+  if (defined $this->{PublicCheckHierarchy}) {
+    $draw_select = 1;
+    $options->{public} = "Public Info";
+  }
+
+  if ($draw_select) {
+    $this->DrawSelectFromHash($http, $dyn, "CompareInfoSelectionChanged",
+      $options, $this->{CompareInfoSelection});
+  } else {
+    $http->queue("Extraction Info");
+  }
+}
+
+sub CompareInfoSelectionChanged {
+  my($this, $http, $dyn) = @_;
+
+  my $selection = $dyn->{value};
+  $this->{CompareInfoSelection} = $selection;
+
+  # Because we are going to muck about changing the ExtractionsHierarchies
+  # key, we should make a copy so we can restore it later
+  if (not defined $this->{ExtractionsHierarchiesOriginal}) {
+    $this->{ExtractionsHierarchiesOriginal} = $this->{ExtractionsHierarchies};
+  }
+
+  # if it doesn't already exist,
+  # build the comparison data structure
+
+  if ($selection eq 'intake') {
+    if (not defined $this->{CompareInfoIntake}) {
+      # genreate it
+      $this->{CompareInfoIntake} =
+        $this->GenerateCompareDataStructure($this->{IntakeCheckHierarchy});
+    }
+    $this->{ExtractionsHierarchies} = $this->{CompareInfoIntake};
+  }
+  if ($selection eq 'public') {
+    if (not defined $this->{CompareInfoPublic}) {
+      # genreate it
+      $this->{CompareInfoPublic} =
+        $this->GenerateCompareDataStructure($this->{PublicCheckHierarchy});
+    }
+    $this->{ExtractionsHierarchies} = $this->{CompareInfoPublic};
+  }
+  if ($selection eq 'extraction') {
+    # Restore the real ExtractionsHierarchies in this case
+    $this->{ExtractionsHierarchies} = $this->{ExtractionsHierarchiesOriginal};
+  }
+}
+
+sub copy_series {
+  my($args) = @_;
+
+  my $source = $args->{source};
+  my $dest = $args->{dest};
+  my $compare = $args->{compare};
+
+  $dest->{uid} = $source->{uid};
+  $dest->{body_part} = $source->{body_part};
+  $dest->{desc} = $source->{desc};
+  $dest->{modality} = $source->{modality};
+  $dest->{sdates} = $source->{sdates};
+
+  for my $file_key (keys %{$source->{files}}) {
+    my $src_file = $source->{files}->{$file_key};
+
+    my $uid = $src_file->{sop_instance_uid};
+
+    if (not defined $compare->{$uid}) {
+      next;  # skip this file if it is not in $compare
+    }
+
+    # the file is the end of the structure, so no more recursing
+    $dest->{files}->{$file_key} = $src_file;
+  }
+}
+
+sub copy_study {
+  my($args) = @_;
+
+  my $source = $args->{source};
+  my $dest = $args->{dest};
+  my $compare = $args->{compare};
+
+  $dest->{date} = $source->{date};
+  $dest->{desc} = $source->{desc};
+  $dest->{id} = $source->{id};
+  $dest->{pid} = $source->{pid};
+  $dest->{pname} = $source->{pname};
+  $dest->{uid} = $source->{uid};
+
+  for my $series_key (keys %{$source->{series}}) {
+    my $src_series = $source->{series}->{$series_key};
+
+    if (not defined $compare->{$src_series->{uid}}) {
+      next;  # skip this series if it is not in $compare
+    }
+
+    $dest->{series}->{$series_key} = {};
+
+    copy_series {
+      source  => $src_series,
+      dest    => $dest->{series}->{$series_key},
+      compare => $compare->{$src_series->{uid}}
+    }
+  }
+}
+
+sub GenerateCompareDataStructure {
+  my($this, $compare) = @_;
+
+  my $source = $this->{ExtractionsHierarchiesOriginal};
+  my $dest = {};
+
+  # run through $source and build $dest,
+  # copying only the series uids found in $compare
+
+  for my $sub_key (keys %$source) {
+    my $src_subject = $source->{$sub_key};
+    my $dst_subject = $dest->{$sub_key} = {};
+
+    $dst_subject->{InfoDir} = $src_subject->{InfoDir};
+    $dst_subject->{errors} = $src_subject->{errors};
+    $dst_subject->{ignored_errors} = $src_subject->{ignored_errors};
+    $dst_subject->{rev_hist} = $src_subject->{rev_hist};
+    $dst_subject->{sent_hist} = $src_subject->{sent_hist};
+
+    for my $study_key (keys %{$src_subject->{hierarchy}->{$sub_key}->{studies}}) {
+      my $src_study = $src_subject->{hierarchy}->{$sub_key}->{studies}->{$study_key};
+
+      if (not defined $compare->{$sub_key}->{InAll}->{$src_study->{uid}}) {
+        next;  # Skip this study if no match against $compare
+      }
+
+      # recursively copy the study
+      my $dst_study = $dst_subject->{hierarchy}->{$sub_key}->{studies}->{$study_key} = {};
+
+      copy_study {
+        source  => $src_study,
+        dest    => $dst_study,
+        compare => $compare->{$sub_key}->{InAll}->{$src_study->{uid}}
+      };
+    }
+  }
+  return $dest;
+}
+
+
+
+
+sub DrawSelectFromHash {
+  # Draw a simple SelectByValue, using a hash of values
+  #
+  # $op: op to pass to SelectByValue
+  # $options_hash: hash of options, in form {value => display_value}
+  # $selected_key: the key of the currently selected item
+  my($this, $http, $dyn, $op, $options_hash, $selected_key) = @_;
+
+  if (not defined $selected_key) {
+    $selected_key = '';
+  }
+
+  $this->RefreshEngine($http, $dyn, qq{<?dyn="SelectByValue" op="$op"?>});
+
+  for my $k (sort keys %$options_hash) {
+    my $val = $options_hash->{$k};
+    my $selected = "";
+    if ($k eq $selected_key) {
+      $selected = "selected=\"selected\"";
+    }
+    $http->queue("<option value=\"$k\" $selected>$val</option>");
+  }
+
+  $http->queue("</option>");
+}
+
 sub IntakeCheckButtons{
   my($this, $http, $dyn) = @_;
-  my $button = '<?dyn="SimpleButton" op="SetCheckAgainstIntake" ' .
-    'caption="Check Against Intake" sync="Update();"?>';
   if(exists $this->{IntakeCheckHierarchy}){
-    $button = '<?dyn="SimpleButton" op="ClearIntakeData" ' .
-      'caption="Clear Intake Check" sync="Update();"?>';
+    $this->SimpleButton($http, {
+        op => "ClearIntakeData",
+        caption => "Clear Intake Check" ,
+        sync => "Update();"
+    });
+  } else {
+    $this->SimpleButton($http, {
+        op => "SetCheckAgainstIntake",
+        caption => "Check Against Intake" ,
+        sync => "Update();"
+    });
   }
-  $this->RefreshEngine($http, $dyn, $button);
 }
+
 sub PublicCheckButtons{
   my($this, $http, $dyn) = @_;
-  my $button = '<?dyn="SimpleButton" op="SetCheckAgainstPublic" ' .
-    'caption="Check Against Public" sync="Update();"?>';
   if(exists $this->{PublicCheckHierarchy}){
-    $button = '<?dyn="SimpleButton" op="ClearPublicData" ' .
-      'caption="Clear Public Check" sync="Update();"?>';
+    $this->SimpleButton($http, {
+      op => "ClearPublicData",
+      caption => "Clear Public Check",
+      sync => "Update();"
+    });
+  } else {
+    $this->SimpleButton($http, {
+      op => "SetCheckAgainstPublic",
+      caption => "Check Against Public",
+      sync => "Update();"
+    });
   }
-  $this->RefreshEngine($http, $dyn, $button);
 }
+
 sub Collection_Site_Counts{
   my($this, $http, $dyn) = @_;
   my $subjects = 0;
@@ -707,6 +912,9 @@ sub NewQuery{
   my($this) = @_;
   delete $this->{SelectedCollection};
   delete $this->{SelectedSite};
+  delete $this->{CompareInfoSelection};
+  delete $this->{CompareInfoIntake};
+  delete $this->{CompareInfoPublic};
   $this->ClearIntakeData;
   $this->ClearPublicData;
 }
@@ -1274,6 +1482,18 @@ sub StatusOfDbQuery{
   }
   $this->InvokeAfterDelay("AutoRefresh", 3);
 }
+
+sub ResetExtractionSelection {
+  my($this) = @_;
+
+  # Ensure the original extractions hierarchy is set
+  if (defined $this->{ExtractionsHierarchiesOriginal}) {
+    $this->{ExtractionsHierarchies} = $this->{ExtractionsHierarchiesOriginal};
+  }
+
+  $this->{CompareInfoSelection} = "extraction";
+}
+
 #############################################
 sub StartExtractionSearch{
   my($this, $http, $dyn) = @_;
@@ -1364,6 +1584,9 @@ sub StatusOfExtractionSearch{
 #
 sub CheckAgainstPublic{
   my($this, $http, $dyn) = @_;
+
+  $this->ResetExtractionSelection;
+
   if($this->{CheckAgainstPublic} < 3 ){
     my $num_found_patient = keys %{$this->{PublicData}};
     $this->RefreshEngine($http, $dyn,
@@ -1400,10 +1623,14 @@ sub SetCheckAgainstPublic{
   my($this, $http, $dyn) = @_;
   $this->{CheckAgainstPublic} = 1;
   $this->{PublicData} = {};
+
+  my $script = 'GetIntakeImagesForCollectionSite.pl';
   my $collection = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
-  my $cmd = 'GetIntakeImagesForCollectionSite.pl 144.30.1.74 "'.
-   $collection . '" "' . $site . '"';
+  my $host = $this->{Environment}->{PublicDatabaseHost};
+
+  my $cmd = qq{$script $host "$collection" "$site"};
+
   Dispatch::LineReader->new_cmd($cmd,
     $this->CheckAgainstPublicLine,
     $this->CheckAgainstPublicDone); 
@@ -1512,6 +1739,8 @@ sub ClearPublicData{
   delete $this->{PublicCheckSubjectsToDo};
   delete $this->{PublicCheckSubjectsWithError};
   delete $this->{PublicData};
+  
+  $this->ResetExtractionSelection;
 }
 #############################################
 #############################################
@@ -1519,6 +1748,9 @@ sub ClearPublicData{
 #
 sub CheckAgainstIntake{
   my($this, $http, $dyn) = @_;
+
+  $this->ResetExtractionSelection;
+
   if($this->{CheckAgainstIntake} < 3 ){
     my $num_found_patient = keys %{$this->{IntakeData}};
     $this->RefreshEngine($http, $dyn,
@@ -1551,19 +1783,25 @@ sub CheckAgainstIntake{
      $this->AutoRefresh;
   }
 }
+
 sub SetCheckAgainstIntake{
   my($this, $http, $dyn) = @_;
   $this->{CheckAgainstIntake} = 1;
   $this->{IntakeData} = {};
+
+  my $script = 'GetIntakeImagesForCollectionSite.pl';
   my $collection = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
-  my $cmd = 'GetIntakeImagesForCollectionSite.pl 144.30.1.71 "'.
-   $collection . '" "' . $site . '"';
+  my $host = $this->{Environment}->{IntakeDatabaseHost};
+
+  my $cmd = qq{$script $host "$collection" "$site"};
+  print "$cmd\n";
   Dispatch::LineReader->new_cmd($cmd,
     $this->CheckAgainstIntakeLine,
     $this->CheckAgainstIntakeDone); 
   $this->{CheckAgainstIntake} = 2;
 }
+
 sub ClearCheckAgainstIntake{
   my($this, $http, $dyn) = @_;
   delete $this->{CheckAgainstIntake};
@@ -1612,6 +1850,8 @@ sub CheckIntakeSubject{
   my($this, $subj) = @_;
   my $subj_hierarchy = $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}
     ->{$subj}->{studies};
+
+  # build the %ExtractionHierarchy
   my %ExtractionHierarchy;
   for my $st (keys %$subj_hierarchy){
     my $st_h = $subj_hierarchy->{$st};
@@ -1626,6 +1866,7 @@ sub CheckIntakeSubject{
       }
     }
   }
+
   my $IntakeHierarchyToCompare = $this->{IntakeData}->{$subj};
   # find files in both and only in extraction
   my %InAll;
@@ -1667,6 +1908,8 @@ sub ClearIntakeData{
   delete $this->{IntakeCheckSubjectsToDo};
   delete $this->{IntakeCheckSubjectsWithError};
   delete $this->{IntakeData};
+
+  $this->ResetExtractionSelection;
 }
 #############################################
 
