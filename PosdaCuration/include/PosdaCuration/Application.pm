@@ -18,7 +18,7 @@ use PosdaCuration::DuplicateSopResolution;
 use Fcntl qw(:seek);
 use File::Path 'remove_tree';
 use Digest::MD5;
-use JSON::PP;
+use JSON;
 use Debug;
 use Storable;
 use Data::Dumper;

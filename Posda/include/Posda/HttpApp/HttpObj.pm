@@ -9,7 +9,7 @@ use strict;
 use Dispatch::NamedObject;
 package Posda::HttpObj;
 use Socket;
-use JSON::PP;
+use JSON;
 use File::Path;
 use Storable qw( store retrieve store_fd fd_retrieve );
 #################################################

@@ -3,12 +3,12 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/posda/Login.db",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   
-  "ConnectionRootDir" : "/cache/posda/Data/ProxyData/Connections",
-  "AnalysisRootDir" : "/cache/posda/Data/ProxyData/Analysis",
+  "ConnectionRootDir" : "POSDA_CACHE_ROOT/Data/ProxyData/Connections",
+  "AnalysisRootDir" : "POSDA_CACHE_ROOT/Data/ProxyData/Analysis",
   "IncomingSocketPool" : [ 
     64812, 64813, 64814, 64815, 64816, 64817, 64818, 64819, 64820,
   ],

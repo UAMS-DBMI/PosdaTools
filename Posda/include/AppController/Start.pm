@@ -11,7 +11,7 @@ use AppController::ChildProcess;
 use AppController::ManageChildProcess;
 use AppController::CheckBOM;
 use AppController::Password;
-use JSON::PP;
+use JSON;
 use Dispatch::LineReader;
 use Debug;
 my $dbg = sub {print @_};

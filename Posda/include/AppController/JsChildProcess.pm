@@ -52,6 +52,7 @@ sub new{
   $this->{top} = $this->{process_desc}->{top};
   $this->{left} = $this->{process_desc}->{left};
   $this->{socket_list} = $this->FetchFromAbove("GetAvailableSockets");
+  $this->{StartTime} = time;
   $this->TryNextSocket;
   return $this;
 }
@@ -154,6 +155,15 @@ sub ContentResponse{
 }
 sub TryNextSocket{
   my($this) = @_;
+  my $now = time;
+  if($now - $this->{StartTime} > 20){
+    $this->{ErrorMessage} = "Hmmm.  Long time before I noticed " .
+      "this failure. Better give up.";
+    $this->{State} = "Error";
+    print STDERR $this->{ErrorMessage};
+    $this->AutoRefresh;
+    return;
+  }
   my $next_socket = shift(@{$this->{socket_list}});
   unless($next_socket) {
     $this->{State} = "Error";

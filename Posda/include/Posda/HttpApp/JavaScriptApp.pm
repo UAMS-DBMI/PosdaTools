@@ -6,7 +6,7 @@ use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
 use Fcntl qw(:seek);
-use JSON::PP;
+use JSON;
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController" );

@@ -25,6 +25,8 @@
       "CountGetter" : 1,
       "SubmissionSender" : 1,
       "GenericApp" : 1,
+      "PhiFixer" : 1,
+      "ReviewPhi" : 1,
     },
   },
   "bbennett": {
