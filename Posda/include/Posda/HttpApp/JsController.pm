@@ -312,6 +312,32 @@ sub SelectByValue{
     "this.options[this.selectedIndex].value);\">"
   );
 }
+sub DrawSelectFromHash {
+  # Draw a simple SelectByValue, using a hash of values
+  #
+  # $op: op to pass to SelectByValue
+  # $options_hash: hash of options, in form {value => display_value}
+  # $selected_key: the key of the currently selected item
+  my($this, $http, $dyn, $op, $options_hash, $selected_key) = @_;
+
+  if (not defined $selected_key) {
+    $selected_key = '';
+  }
+
+  $dyn->{op} = $op;
+  $this->SelectByValue($http, $dyn);
+
+  for my $k (sort keys %$options_hash) {
+    my $val = $options_hash->{$k};
+    my $selected = "";
+    if ($k eq $selected_key) {
+      $selected = "selected=\"selected\"";
+    }
+    $http->queue("<option value=\"$k\" $selected>$val</option>");
+  }
+
+  $http->queue("</option></select>");
+}
 # Builds a <select>
 # TODO: But why are there two? The other is SelectByValue
 sub SelectDelegateByValue{
