@@ -2,7 +2,7 @@
 #
 use strict;
 use Fcntl qw(:seek);
-use JSON::PP;
+use JSON;
 use Storable qw( store_fd fd_retrieve );
 #
 # Data structure sent in on STDIN
@@ -172,5 +172,5 @@ for my $p (@{$dvh->{data}}) {
 $dvh->{min_dose} = $dvh->{data}->[0]->[0];
 $dvh->{max_dose} = $dvh->{data}->[$#{$dvh->{data}}]->[0];
 $dvh->{Status} = "OK";
-my $json = JSON::PP->new();
+my $json = JSON->new();
 print $json->encode($dvh);

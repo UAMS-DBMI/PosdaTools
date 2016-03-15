@@ -80,7 +80,7 @@
 #  <eof>
 #Encodes a batch of closed 2d contours (see SplitIsoDoseContours.pl)
 use strict;
-use JSON::PP;
+use JSON;
 use Storable qw( store_fd fd_retrieve );
 use Posda::FlipRotate;
 use Debug;
@@ -103,7 +103,7 @@ for my $i (@$to_do){
     print STDERR "ContourConstructor.pl: Unknown type $i->{type}\n";
   }
 }
-my $json = JSON::PP->new();
+my $json = JSON->new();
 #$json->pretty(0);
 #my $json_text = $json->encode(\@Contours);
 #print STDERR "Json text: $json_text\n";
