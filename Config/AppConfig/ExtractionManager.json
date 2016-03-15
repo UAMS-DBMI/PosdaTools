@@ -1,8 +1,8 @@
 //
 {
   "extraction_root" :
-    "/cache/posda/Data/HierarchicalExtractions/data",
-  "log_file" : "/cache/posda/Data/HierarchicalExtractions/log_file",
+    "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
+  "log_file" : "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/log_file",
   "sub_process_program" : "HandleTransactionSubProcess.pl",
   "parallelism" : 3,
 }

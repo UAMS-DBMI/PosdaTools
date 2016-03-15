@@ -4,29 +4,29 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "AuthenticationType" : "DB",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/posda/Login.db",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
   "RrtProtocolDefs" : 
-    "/home/posda/PosdaTools/NewItcTools/config/rrt_protocol_defs",
+    "POSDA_ROOT/NewItcTools/config/rrt_protocol_defs",
   "StdTissueNames" : 
-    "/home/posda/PosdaTools/NewItcTools/config/std_tissue_names",
+    "POSDA_ROOT/NewItcTools/config/std_tissue_names",
   "SubmissionDir" : 
-    "/cache/posda/NewItcToolsData/submission",
+    "POSDA_CACHE_ROOT/NewItcToolsData/submission",
   "ArchiveDir" :
-    "/cache/posda/NewItcToolsData/archive",
+    "POSDA_CACHE_ROOT/NewItcToolsData/archive",
   "CompletedArchiveDir" :
-    "/cache/posda/NewItcToolsData/finalize",
-  "CacheDir" : "/cache/posda",
+    "POSDA_CACHE_ROOT/NewItcToolsData/finalize",
+  "CacheDir" : "POSDA_CACHE_ROOT",
   "PersistentDir" :
-    "/cache/posda/NewItcToolsData/persistent",
+    "POSDA_CACHE_ROOT/NewItcToolsData/persistent",
   "GlobalPersistentDir" :
-    "/cache/posda/NewItcToolsData/global_persistent",
+    "POSDA_CACHE_ROOT/NewItcToolsData/global_persistent",
   "WorkingDir" : 
-    "/cache/posda/NewItcToolsData/working",
+    "POSDA_CACHE_ROOT/NewItcToolsData/working",
   "TempDir" : 
-    "/cache/posda/NewItcToolsData/temp",
+    "POSDA_CACHE_ROOT/NewItcToolsData/temp",
   "tools_db_defs_dir" :
-    "/cache/posda/NewItcToolsData/db_defs",
+    "POSDA_CACHE_ROOT/NewItcToolsData/db_defs",
 }

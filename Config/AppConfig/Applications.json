@@ -6,7 +6,7 @@
   ],
   "Apps": {
     "GenericApp": {
-      "Directory": "/home/posda/PosdaTools/Config/GenericApp",
+      "Directory": "POSDA_ROOT/Config/GenericApp",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Generic App (Template App)",
       "WindowName" : "_new",
@@ -18,8 +18,34 @@
       "w" : 1024,
       "sort_order" : 1,
     },
+    "ReviewPhi": {
+      "Directory": "POSDA_ROOT/Config/ReviewPhi",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Fix PHI",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 1,
+    },
+    "PhiFixer": {
+      "Directory": "POSDA_ROOT/Config/PhiFixer",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Fix PHI",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 1,
+    },
     "SubmissionSender": {
-      "Directory": "/home/posda/PosdaTools/Config/SubmissionSender",
+      "Directory": "POSDA_ROOT/Config/SubmissionSender",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Select Original Submissions",
       "WindowName" : "_new",
@@ -32,7 +58,7 @@
       "sort_order" : 9
     },
     "FileDist": {
-      "Directory": "/home/posda/PosdaTools/Config/FileDistConfig",
+      "Directory": "POSDA_ROOT/Config/FileDistConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "File Distribution Application",
       "WindowName" : "_new",
@@ -45,7 +71,7 @@
       "sort_order" : 1,
     },
     "CountGetter": {
-      "Directory": "/home/posda/PosdaTools/Config/CountGetter",
+      "Directory": "POSDA_ROOT/Config/CountGetter",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Count Getter Application",
       "WindowName" : "_new",
@@ -58,7 +84,7 @@
       "sort_order" : 1,
     },
     "DicomLookup": {
-      "Directory": "/home/posda/PosdaTools/Config/DicomLookup",
+      "Directory": "POSDA_ROOT/Config/DicomLookup",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "Dicom Element Lookup",
       "WindowName" : "_new",
@@ -71,7 +97,7 @@
       "sort_order" : 2,
     },
     "DicomProxy": {
-      "Directory": "/home/posda/PosdaTools/Config/DicomProxy",
+      "Directory": "POSDA_ROOT/Config/DicomProxy",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "Dicom Transparent Proxy",
       "WindowName" : "_new",
@@ -84,7 +110,7 @@
       "sort_order" : 3,
     },
     "DicomProxyAnalysis": {
-      "Directory": "/home/posda/PosdaTools/Config/DicomProxyAnalysis",
+      "Directory": "POSDA_ROOT/Config/DicomProxyAnalysis",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "Dicom Proxy Analysis",
       "WindowName" : "_new",
@@ -97,7 +123,7 @@
       "sort_order" : 4,
     },
     "NewItcTools": {
-      "Directory": "/home/posda/PosdaTools/Config/NewItcToolsConfig",
+      "Directory": "POSDA_ROOT/Config/NewItcToolsConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "New Itc Tools Application",
       "WindowName" : "_new",
@@ -110,7 +136,7 @@
       "sort_order" : 5,
     },
     "DicomXmlBrowsing": {
-      "Directory": "/home/posda/PosdaTools/Config/DicomXml",
+      "Directory": "POSDA_ROOT/Config/DicomXml",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
       "Description" : "Browse Docbook Version of DICOM Standard",
       "WindowName" : "_new",
@@ -123,7 +149,7 @@
       "sort_order" : 6,
     },
     "PosdaCuration": {
-      "Directory": "/home/posda/PosdaTools/Config/PosdaCuration",
+      "Directory": "POSDA_ROOT/Config/PosdaCuration",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Posda Curation Tools",
       "WindowName" : "_new",
@@ -136,7 +162,7 @@
       "sort_order" : 7,
     },
     "TciaCuration": {
-      "Directory": "/home/posda/PosdaTools/Config/TciaCuration",
+      "Directory": "POSDA_ROOT/Config/TciaCuration",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
       "Description" : "Tcia Curation Tools",
       "WindowName" : "_new",
@@ -155,7 +181,7 @@
        "CreationArgs": [
          64661,
          ["Config", "DicomReceiver"],
-         "/cache/posda/Data/DicomReceiver",
+         "POSDA_CACHE_ROOT/Data/DicomReceiver",
        ],
     },
     "ExtractionManager": {
@@ -163,16 +189,22 @@
        "CreationArgs": [
          64662,
          ["Config", "ExtractionManager"],
-         "/cache/posda/Data/HierarchicalExtractions",
+         "POSDA_CACHE_ROOT/Data/HierarchicalExtractions",
+       ],
+    },
+    "DbFileImport": {
+       "ObjClass": "TciaCuration::DbFileProcessor",
+       "CreationArgs": [
+         ["Config", "DbFileProcessor"]
        ],
     },
   },
   "BomDirs": {
-    "Posda": "/home/posda/PosdaTools/Posda",
-    "FileDist": "/home/posda/PosdaTools/FileDist",
-    "FileDistConfig": "/home/posda/PosdaTools/Config",
-    "HttpRoot": "/home/posda/PosdaTools/HttpRoot",
-    "NewItcTools": "/home/posda/PosdaTools/NewItcTools",
-    "TciaCuration": "/home/posda/PosdaTools/TciaCuration"
+    "Posda": "POSDA_ROOT/Posda",
+    "FileDist": "POSDA_ROOT/FileDist",
+    "FileDistConfig": "POSDA_ROOT/Config",
+    "HttpRoot": "POSDA_ROOT/HttpRoot",
+    "NewItcTools": "POSDA_ROOT/NewItcTools",
+    "TciaCuration": "POSDA_ROOT/TciaCuration"
   },
 }
