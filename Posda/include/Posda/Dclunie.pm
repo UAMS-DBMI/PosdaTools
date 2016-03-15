@@ -18,7 +18,8 @@ my $dbg = sub { print @_ };
 sub parse_dict_file{
   my $fn = shift;
   open FILE, "<", "$fn" or die "can't open $fn";
-  my $list = shift;
+#  my $list = shift;
+  my $list = [];
   my $line_no = 0;
   while(my $line = <FILE>){
     chomp $line;
@@ -41,7 +42,11 @@ sub parse_dict_file{
       $hash{$key} = $value;
     }
     unless($remain =~ /^\s*$/){
-      die "leftover foo: $remain in line: $line\n";
+      if($remain =~ /^\s*#(.*)$/){
+        $hash{wry_comment} = $1;
+      } else {
+        print STDERR "leftover foo: $remain in line: $line\n";
+      }
     }
     push(@$list, \%hash);
   }
