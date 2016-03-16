@@ -5,8 +5,8 @@
   "ApplicationLoginMethod" : "Login",
   "AuthenticationType" : "DB",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/posda/Login.db",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
-  "AnalysisRootDir" : "/cache/posda/ProxyData/Analysis",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "AnalysisRootDir" : "POSDA_CACHE_ROOT/ProxyData/Analysis",
 }

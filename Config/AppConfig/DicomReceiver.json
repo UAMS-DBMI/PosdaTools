@@ -87,8 +87,8 @@
   "association_end_handlers" : {
     "pre_parse_and_move" : {
       "script": "PreParseDicom.pl <called> <calling> <assoc_dir> <CacheDir> <LinkDir> <Parallelism>",
-      "CacheDir": "/cache/posda/dicom_info",
-      "LinkDir": "/cache/posda/NewItcToolsData/submission/dicom/incoming",
+      "CacheDir": "POSDA_CACHE_ROOT/dicom_info",
+      "LinkDir": "POSDA_CACHE_ROOT/NewItcToolsData/submission/dicom/incoming",
       "Parallelism": 10,
     },
     "populate_posda_db" : {
@@ -96,7 +96,7 @@
       "db_name" : "posda_files",
       "comment" : "'association receive'",
       "processing_prio" : 1,
-      "LinkDir" : "/cache/posda/DicomFiles",
+      "LinkDir" : "POSDA_CACHE_ROOT/DicomFiles",
     },
   },
   "incoming_message_handlers" : {

@@ -8,7 +8,7 @@ use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::ConfigRead;
 use AppController::JsChildProcess;
-use JSON::PP;
+use JSON;
 use Dispatch::LineReader;
 use Debug;
 my $dbg = sub {print @_};
