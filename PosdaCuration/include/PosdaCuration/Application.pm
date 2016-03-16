@@ -2337,7 +2337,7 @@ sub ExtractionMenus{
   $this->RefreshEngine($http, $dyn,
 #    "<small><a href=\"DownloadTar?obj_path=$this->{path}\">download</a>" .
 #     '<hr>' .
-    '<?dyn="DupSops"?>' .
+#    '<?dyn="DupSops"?>' .
     '<?dyn="RenderEditMenu"?>' .
     '<?dyn="SendMenu"?><hr>'.
     '<?dyn="PhiMenu"?>')
@@ -2662,21 +2662,21 @@ sub WhenSendQueued{
   };
   return $sub;
 }
-sub DupSops{
-  my($this, $http, $dyn) = @_;
-  my $dup_sops = [];
-  for my $i (keys %{$this->{DisplayInfoIn}->{sop_to_files}}){
-    unless(ref($this->{DisplayInfoIn}->{sop_to_files}->{$i}) eq "ARRAY"){
-      die "Corrupted sop_to_files in DisplayInfoIn";
-    }
-    if($#{$this->{DisplayInfoIn}->{sop_to_files}->{$i}} > 0){
-      push(@$dup_sops, $this->{DisplayInfoIn}->{sop_to_files}->{$i});
-    }
-    $this->{DisplayInfoIn}->{DuplicateSops} = $dup_sops;
-    if($#{$dup_sops} < 0) { return }
-    $http->queue("Duplicate SOPs exists!!!!<hr>");
-  }
-}
+#sub DupSops{
+#  my($this, $http, $dyn) = @_;
+#  my $dup_sops = [];
+#  for my $i (keys %{$this->{DisplayInfoIn}->{sop_to_files}}){
+#    unless(ref($this->{DisplayInfoIn}->{sop_to_files}->{$i}) eq "ARRAY"){
+#      die "Corrupted sop_to_files in DisplayInfoIn";
+#    }
+#    if($#{$this->{DisplayInfoIn}->{sop_to_files}->{$i}} > 0){
+#      push(@$dup_sops, $this->{DisplayInfoIn}->{sop_to_files}->{$i});
+#    }
+#    $this->{DisplayInfoIn}->{DuplicateSops} = $dup_sops;
+#    if($#{$dup_sops} < 0) { return }
+#    $http->queue("Duplicate SOPs exists!!!!<hr>");
+#  }
+#}
 sub RenderErrorList{
   my($this, $http, $dyn) = @_;
   my $error_info = $this->{ExtractionsHierarchies}->{$dyn->{subj}}->{errors};
@@ -2699,7 +2699,7 @@ sub RenderEditMenu{
 }
 sub RenderResolveDuplicateSopsMenu{
   my($this, $http, $dyn) = @_;
-  delete $this->{DupSopInstList};
+  delete $this->{DisplayInfoIn}->{DupSopInstList};
   my %DupSopInstances;
   for my $e (@{$this->{DisplayInfoIn}->{error_info}}){
     if($e->{type} eq "duplicate sop_instance"){
@@ -2708,7 +2708,7 @@ sub RenderResolveDuplicateSopsMenu{
   }
   my @DupSops = keys %DupSopInstances;
   if(@DupSops) {
-    $this->{DupSopInstList} = \@DupSops;
+    $this->{DisplayInfoIn}->{DupSopInstList} = \@DupSops;
     $this->RefreshEngine($http, $dyn,
      '<?dyn="NotSoSimpleButton" caption="Resolve Dup Sop Instances" ' .
      'op="ResolveDupSopInstances" sync="Update();"?>');
@@ -3758,7 +3758,7 @@ sub ResolveDupSopInstances{
   unless($child) {
     PosdaCuration::DuplicateSopResolution->new($this->{session}, $child_name,
       $this->{DisplayInfoIn},
-      $this->{DupSopInstList});
+      $this->{DisplayInfoIn}->{DupSopInstList});
   }
   $this->{CollectionMode} = "ResolveDupSopInstancesContent";
 }
