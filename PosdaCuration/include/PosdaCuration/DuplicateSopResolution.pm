@@ -28,6 +28,7 @@ sub new {
   $this->{DisplayInfoIn} = $display_info;
   $this->{DisplayInfoIn} = $display_info;
   bless $this, $class;
+  $this->{db} = $this->parent->{Environment}->{database_name};
   $this->InitializeSopList($sop_list);
   $this->{Mode} = "FetchingSopInfo";
   return $this;
@@ -45,7 +46,7 @@ sub Content{
 sub InitializeSopList{
   my($this, $sop_list) = @_;
   my($child, $child_pid) = $this->ReadWriteChild(
-    "GetDuplicateSopInfoBySops.pl posda_files_test");
+    "GetDuplicateSopInfoBySops.pl $this->{db}");
   for my $sop (@$sop_list){
     print $child "$sop\n";
   }
@@ -65,7 +66,7 @@ sub SaveDupSopInfo{
       $this->{Mode} = "DataFetched";
       $this->parent->AutoRefresh;
     } else {
-      die "GetDuplicateSopInfoBySops.pl posda_files returned $stat";
+      die "GetDuplicateSopInfoBySops.pl $this->{db} returned $stat";
     }
   };
   return $sub;
@@ -170,7 +171,7 @@ sub DataFetched{
       '</td>' .
       '<td rowspan="' . $num_files . '">'
     );
-    $this->NotSoSimpleButton($http, {
+    $this->DelegateButton($http, {
       caption => "Compare",
       op => "CompareSopInstances",
       sop => $sop,
@@ -288,7 +289,7 @@ sub KeepButton{
     }
   }
   if($all_sops_have_selection){
-    $this->NotSoSimpleButton($http, {
+    $this->DelegateButton($http, {
       caption => "Keep",
       op => "SetStatus",
       sync => "Update();",
@@ -300,9 +301,15 @@ sub KeepButton{
 sub CompareSopInstances{
   my($this, $http, $dyn) = @_;
   my $sop = $dyn->{sop};
-  ##  Stuff here
-  return; #remove when stuff above appears
-  print STDERR "Here's where we compare $from_file to $to_file\n";
+  my $from_file_nn = $this->{CompareFromSelections}->{$sop};
+  unless($from_file_nn) { return }
+  unless(exists $this->{FileIdToFile}->{$from_file_nn}){ return }
+  my $from_file = $this->{FileIdToFile}->{$from_file_nn};
+  my $to_file_nn = $this->{CompareToSelections}->{$sop};
+  unless($to_file_nn) { return }
+  unless(exists $this->{FileIdToFile}->{$to_file_nn}){ return }
+  my $to_file = $this->{FileIdToFile}->{$to_file_nn};
+#  print STDERR "Here's where we compare $from_file to $to_file\n";
   my $child_path = $this->child_path("compare_${from_file_nn}_$to_file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){
@@ -314,5 +321,53 @@ sub CompareSopInstances{
       print STDERR 'PosdaCuration::CompareFiles->new failed!!!' . "\n";
     }
   }
+}
+sub SetStatus{
+  my($this, $http, $dyn) = @_;
+  my %hide_list;
+  my %keep_list;
+  for my $sop(keys %{$this->{DupSopInfo}}){
+    for my $f (keys %{$this->{DupSopInfo}->{$sop}}){
+      my $f_info = $this->{DupSopInfo}->{$sop}->{$f};
+      my $file_id = $f_info->{file_id};
+      if($file_id eq $this->{KeepSelections}->{$sop}){
+        $keep_list{$file_id} = 1;
+      } else {
+        $hide_list{$file_id} = 1;
+      }
+    }
+  }
+  $this->{HideList} = \%hide_list;
+  $this->{KeepList} = \%keep_list;
+  $this->{Mode} = "ApproveHideFunction";
+}
+sub ApproveHideFunction{
+  my($this, $http, $dyn) = @_;
+  my $num_to_hide = keys %{$this->{HideList}};
+  my $num_to_keep = keys %{$this->{KeepList}};
+  $this->RefreshEngine($http, $dyn, 
+    '<h2>Hide Duplicate Sops</h2>Do you want to hide all the non-selected ' .
+    'files as duplicate SOP Instance UIDs?<br>  There are '. $num_to_keep .
+    ' files selected to be kept.<br>' .
+    'There are ' . $num_to_hide . ' files to be hidden.' .
+    '<hr><?dyn="DelegateButton" op="HideDuplicates" ' .
+    'caption="Yes, hide the files" sync="Update();"?>  ' .
+    '<?dyn="DelegateButton" op="DontHideDuplicates" ' .
+    'caption="No, don' . "'" . 't hide the files" sync="Update();"?>');
+}
+sub DontHideDuplicates{
+  my($this, $http, $dyn) = @_;
+  delete $this->{HideList};
+  delete $this->{KeepList};
+  $this->{Mode} = "DataFetched";
+}
+sub HideDuplicates{
+  my($this, $http, $dyn) = @_;
+  my @duplicate_files = sort { $a <=> $b } keys %{$this->{HideList}};
+  open my $fh, "|HideFiles.pl $this->{db}";
+  for my $id (@duplicate_files){
+    print $fh "$id\n";
+  }
+  $this->GoBack($http, $dyn);
 }
 1;
