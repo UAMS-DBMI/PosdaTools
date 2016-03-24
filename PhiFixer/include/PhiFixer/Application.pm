@@ -15,10 +15,12 @@ use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
 use File::Path 'remove_tree';
-use Digest::MD5;
+use Digest::MD5 'md5_hex';
 use JSON;
 use Debug;
 use Storable;
+use File::Basename;
+use Data::Dumper;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -50,6 +52,36 @@ my $disposition_map = {
   R => 'Review',
   0 => 'None',
 };
+
+my $phi_disposition_map = {
+  S => "Shift",
+  D => "Delete",
+  C => "Clear",
+};
+
+
+sub get_subj_files_path {
+  # Return the portion of the file path up to files/
+  # TODO: Make this better, it will explode for a collection called "files"
+  my ($file) = @_;
+
+  $file =~ /(.*\/files\/)/;
+
+  return $1;
+}
+
+sub get_dicom_in_dir {
+  # Return an arrayref of all DICOM files in the given directory
+  # TODO: This should probably be loading the dicom.pinfo file
+  # from the revision dir, rather than scanning for .dcm files
+  # some more info could be returned as well!
+  my ($dir) = @_;
+
+  # Assumes $dir ends with /
+  my @files = glob($dir . '*.dcm');
+  return \@files;
+}
+
 
 sub new {
   my($class, $sess, $path) = @_;
@@ -430,6 +462,13 @@ sub PrivateTagReview{
     ];
   }
 
+  # TODO: button is for testing only
+  $this->NotSoSimpleButton($http, {
+    op => "FinishEarly",
+    caption => "Finish NOW!",
+    sync => "Update();",
+  });
+
   $http->queue(qq{<div style="margin-left: 5px;">});
   for my $id (keys @{$this->{PrivateTagsToReview}}) {
     $http->queue(
@@ -441,6 +480,13 @@ sub PrivateTagReview{
     $http->queue("$this->{PrivateTagsToReview}->[$id]</input><br>");
   }
   $http->queue("</div>");
+}
+
+sub FinishEarly {
+  my($this, $http, $dyn) = @_;
+
+  $this->{ContentMode} = "AllTagsDisposed";
+  $this->{Mode} = "MenuAllTagsDisposed";
 }
 
 sub GetDispositionFromDetails {
@@ -470,7 +516,6 @@ sub GetDispositionFromDetails {
     return $dispo;
   }
 }
-
 sub PrivateTagReviewContent {
   my($this, $http, $dyn) = @_;
 
@@ -478,7 +523,7 @@ sub PrivateTagReviewContent {
   if (not defined $selected_tag) {
     return;
   }
-  my $affected_files = scalar keys $this->{PrivateTagInfo}->{$selected_tag};
+  my $affected_files = scalar keys %{$this->{PrivateTagInfo}->{$selected_tag}};
 
   my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
 
@@ -494,7 +539,6 @@ sub PrivateTagReviewContent {
     };
   }
 
-  # $http->queue(qq{
   $this->RefreshEngine($http, $dyn, qq{
     <h1>$selected_tag</h1>
     <h3>
@@ -549,9 +593,17 @@ sub ApplyDispositionToAll {
 
   $this->{DisposedPrivate}->{$selected_tag} = $disposition;
 
+  if ($disposition ne 'R') {
+    # if this tag is in the list for PHI review, we can
+    # remove it now, as any action other than (R)eview
+    # will eliminate any possible PHI.
+
+    $this->{Disposed}->{$selected_tag} = 1;
+  }
+
   print "ApplyDispositionToAll: $selected_tag => $disposition\n";
 
-  # remove the selected tag from the list?
+  # remove the selected tag from the list
   splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
 
   # move the selected index up one if we were at the end of the list
@@ -559,9 +611,13 @@ sub ApplyDispositionToAll {
     $this->{SelectedPriv} -= 1;
   }
 
+  # if there is nothing more to do here, move on to PHI display
+  if ($this->{SelectedPriv} == -1) {
+    $this->{InfoMode} = 'InfoTagValueMode';
+  }
+
   # clear the disposition setting
   delete $this->{DispositionSelected};
-
 }
 
 sub InfoTagValueMode{
@@ -657,6 +713,188 @@ sub ContentResponse{
     $http->queue("Unknown ContentMode: \"$mode\"");
   }
 }
+sub GetAffectedFilesCount {
+  my($this, $http, $dyn, $tag) = @_;
+  # Get the number of files affected by the tag
+  # It may be in both sets (PHI and Private), but the numbers should match
+
+  if (defined $this->{PrivateTagInfo}->{$tag}) {
+    return scalar keys %{$this->{PrivateTagInfo}->{$tag}};
+  }
+
+  if (defined $this->{ByTag}->{$tag}) {
+    # have to count the files in every sub-key of the tag
+    my $total = 0;
+    while (my ($sub, $files) = each %{$this->{ByTag}->{$tag}}) {
+      $total += scalar keys %{$files};
+    }
+
+    return $total;
+  }
+
+  # something bad has happened
+  return -1;
+}
+
+sub DrawSelectionSummary {
+  my($this, $http, $dyn, $selection, $map) = @_;
+
+  # sort tags into groups based on their disposition
+  my $selection_by_disp = {};
+
+  while (my ($tag, $disp) = each %{$selection}) {
+    $selection_by_disp->{$disp}->{$tag} = 1;
+  }
+
+  $http->queue(qq{
+    <table class="table">
+    <tr>
+      <th>Disposition</ht>
+      <th>Tag</th>
+      <th>Files</th>
+    </tr>
+  });
+  for my $disp (sort keys %{$selection_by_disp}) {
+    my $tag_hash = $selection_by_disp->{$disp};
+    $http->queue(qq{
+      <tr>
+        <td>$map->{$disp}</td>
+      </tr>
+    });
+    for my $tag (sort keys %{$tag_hash}) {
+      my $count = $this->GetAffectedFilesCount($http, $dyn, $tag);
+      $http->queue(qq{
+        <tr>
+          <td></td>
+          <td>$tag</td>
+          <td>$count</td>
+        </tr>
+      });
+    }
+    # $http->queue(qq{
+    # });
+  }
+
+  $http->queue(qq{
+    </table>
+  });
+}
+
+sub AllTagsDisposed {
+  my($this, $http, $dyn) = @_;
+
+  $http->queue(qq{
+    <h2>Private Tag Selections</h2>
+  });
+  $this->DrawSelectionSummary($http, $dyn,
+    $this->{DisposedPrivate}, $disposition_map);
+
+  $http->queue(qq{
+    <h2>PHI Tag Selections</h2>
+  });
+  $this->DrawSelectionSummary($http, $dyn,
+    $this->{DisposedPHI}, $phi_disposition_map);
+
+
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>The above changes will be applied immediately. Do you wish to continue?</p>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Continue" op="FixAllYes" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Continue" op="FixAllNo" sync="Update();"?>
+    </div>
+  });
+
+}
+
+sub FixAllYes {
+  my($this, $http, $dyn) = @_;
+  print "Fixing all...\n";
+
+  # first some things that we'll need
+  $this->{Collection};
+  $this->{FileInfo}; # may be a list of every file in the collection?
+                     # No, Bill says this is the files this PHI list concerns
+
+
+  # Let's start by looking at some of the files to fix, Private first.
+
+  # Affected filenames are here:
+  # $this->{PrivateTagInfo}->{$tag}
+
+  my $subjects = {};
+  for my $tag (keys %{$this->{DisposedPrivate}}) {
+    print "Tag: $tag\n";
+    print $this->{PrivateTagInfo}->{$tag}, "\n";
+
+    for my $file (keys %{$this->{PrivateTagInfo}->{$tag}}){
+      if (defined $this->{FileInfo}->{$file}) {
+        $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag} = $this->{DisposedPrivate}->{$tag};
+      }
+    }
+  }
+
+  for my $subj (sort keys %$subjects) {
+    print "Subject: $subj\n";
+
+    my $files_with_changes = [keys $subjects->{$subj}];
+
+    my $f = $files_with_changes->[0];  # the first file
+
+    my $source_path = dirname($f);
+    my $destination_path = "$source_path/../../1/files";
+
+    my $files_dir = get_subj_files_path($f);
+    my $all_files = get_dicom_in_dir($files_dir);
+
+    # now we we can get the difference
+    # for now just print a report
+    print "Count of all files: ", scalar @$all_files, "\n";
+    print "Count of changed files: ", scalar @$files_with_changes, "\n";
+
+    # now.. get the difference of them.. found this on some StackOverflow ans
+    my @unchanged_files = grep(!defined $subjects->{$subj}->{$_}, @$all_files);
+
+    print "Count of unchanged files:", scalar @unchanged_files, "\n";
+
+    # unchanged -> link
+    # changed -> make the required adjustments
+
+    my $files_to_link = {};
+    for my $f (@unchanged_files) {
+      my $bn = basename($f);
+      $files_to_link->{$bn} = md5_hex($bn);  # just hash the filename, should be enough
+    }
+
+    # Build the list of changes
+    my $change_list = {};
+    for my $f (@$files_with_changes) {
+      my $file = basename($f);
+      my $tags = $subjects->{$subj}->{$f};
+
+      $change_list->{$f} = {
+        from_file => "$source_path/$file",
+        to_file => "$destination_path/$file",
+        # actually put the list of tag changes here...
+        full_ele_deletes => $tags,  # this is a placeholder
+      }
+    }
+
+    # put things together
+    my $fix_hash = {
+      source => $source_path,
+      destination => $destination_path,
+      operation => 'EditAndAnalyze',
+      parallelism => 3,
+      FileEdits => $change_list,
+      files_to_link => $files_to_link,
+      info_dir => "$source_path/../../1",  # required
+      cache_dir => "/cache/posda/Data/dicom_info", # also required, but set to what? TODO
+    };
+
+    store($fix_hash, "/home/posda/PosdaTools/edits_$subj.pinfo");
+  }
+}
+
 sub WaitingForTag{
   my($this, $http, $dyn) = @_;
     $http->queue("Waiting for a Tag to be chosen.");
@@ -669,8 +907,15 @@ sub TagSelected{
     return $this->FileAndTagSelected($http, $dyn);
   }
   $this->RefreshEngine($http, $dyn, qq{
-    <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" sync="Update();"?>
-    <h3>Tag selected: $tag</h3>
+    <h1>$tag</h1>
+    <div class="form-group" style="width:60%;">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Apply Disposition" sync="Update();" class="btn btn-warning"?>
+        </span>
+        <?dyn="DrawPHIDispoDropdown"?>
+      </div>
+    </div>
     <hr/>
   });
   my @constituents = split(/\[<\d+>\]/,$tag);
@@ -679,6 +924,25 @@ sub TagSelected{
   }
   $this->TagValueReport($http, $dyn, $tag);
 }
+
+sub DrawPHIDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+
+  # Set a default when first drawing
+  if (not defined $this->{PHIDispositionSelected}) {
+    $this->{PHIDispositionSelected} = 'C';
+  }
+
+  $this->DrawSelectFromHash($http, $dyn, "SetPHIDispoDropdown", 
+    $phi_disposition_map, $this->{PHIDispositionSelected});
+}
+sub SetPHIDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+  $this->{PHIDispositionSelected} = $dyn->{value};
+}
+
 sub TagInfo{
   my($this, $http, $dyn, $tag) = @_;
   my $tag_name = UNKNOWN;
@@ -1001,12 +1265,19 @@ sub GetSeriesDates{
 sub DisposeTag{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
+
   delete $this->{SelectedEles}->{$tag};
   delete $this->{SelectedFileForExtraction};
   delete $this->{SelectedTagForExtraction};
   delete $this->{SelectedValueForExtraction};
   $this->{Disposed}->{$tag} = 1;
   $this->SelectNextAvailableTag;
+
+  my $disposition = $this->{PHIDispositionSelected};
+
+  $this->{DisposedPHI}->{$tag} = $disposition;
+
+  print "DisposeTag: $tag => $disposition\n";
 }
 sub SelectNextAvailableTag{
   my($this) = @_;
