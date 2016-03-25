@@ -742,4 +742,71 @@ sub Delegate{
   }
   $delegator->$method($http, $dyn);
 }
+
+sub SimpleTransaction{
+  my($this, $port, $lines, $response) = @_;
+  print "JSController::SimpleTransaction, port: $port\n";
+
+  my $sock;
+  unless(
+    $sock = IO::Socket::INET->new(
+     PeerAddr => "localhost",
+     PeerPort => $port,
+     Proto => 'tcp',
+     Timeout => 1,
+     Blocking => 0,
+    )
+  ){
+    print "-> Aborting, socket could not be opened!\n";
+    return 0;
+  }
+  my $text = join("\n", @$lines) . "\n\n";
+  Dispatch::Select::Socket->new($this->WriteTransactionParms($text, $response),
+    $sock)->Add("writer");
+}
+sub WriteTransactionParms{
+  my($this, $text, $response) = @_;
+  print "JsController::WriteTransactionParms\n";
+  my $offset = 0;
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    my $length = length($text);
+    if($offset == length($text)){
+      $disp->Remove;
+      Dispatch::Select::Socket->new($this->ReadTransactionResponse($response),
+        $sock)->Add("reader");
+    } else {
+      my $len = syswrite($sock, $text, length($text) - $offset, $offset);
+      if($len <= 0) {
+        print STDERR "Wrote $len bytes ($!)\n";
+        $offset = length($text);
+      } else { $offset += $len }
+    }
+  };
+  return $sub;
+}
+sub ReadTransactionResponse{
+  my($this, $response) = @_;
+  print "JsController::ReadTransactionResponse\n";
+  my $text = "";
+  my @lines;
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    my $len = sysread($sock, $text, 65536, length($text));
+    if($len <= 0){
+      if($text) { push @lines, $text }
+      $disp->Remove;
+      &$response(\@lines);
+    } else {
+      while($text =~/^([^\n]*)\n(.*)$/s){
+        my $line = $1;
+        $text = $2;
+        push(@lines, $line);
+      }
+    }
+  };
+  return $sub;
+}
+
+
 1;
