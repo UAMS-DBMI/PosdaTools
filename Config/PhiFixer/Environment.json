@@ -12,4 +12,7 @@
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
   "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
   "PhiAnalysisRoot" : "POSDA_CACHE_ROOT/Data/PhiAnalysis/data",
+  "ExtractionRoot" :
+     "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
+  "ExtractionManagerPort" : "64662",
 }

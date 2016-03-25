@@ -90,6 +90,7 @@ sub new {
   bless $this, $class;
 
   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
+    
     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
   }
   $this->{expander} = $expander;
@@ -385,8 +386,8 @@ sub SelectReport{
     return;
   }
   $this->{Collection} = $dyn->{collection};
-  $this->{Site} = $dyn->{Site};
-  $this->{Round} = $dyn->{Round};
+  $this->{Site} = $dyn->{site};
+  $this->{Round} = $dyn->{round};
   $this->{file} = $dyn->{file};
   $this->{selections_file} = $dyn->{selections};
   $this->{submission_file} = $dyn->{submission};
@@ -856,18 +857,103 @@ sub FixAllYes {
 
     print "Count of unchanged files:", scalar @unchanged_files, "\n";
 
+    $this->RequestLockForEdit($subj, $this->CloseTTAL({
+      files_with_changes => $files_with_changes,
+      source_path => $source_path,
+      destination_path => $destination_path,
+      files_dir => $files_dir,
+      all_files => $all_files,
+      unchanged_files => \@unchanged_files,
+      subjects => $subjects,
+      subj => $subj,
+    }));
+  }
+}
+
+################################################################################
+# TODO: cleanup
+################################################################################
+sub RequestLockForEdit{
+  my($this, $subj, $at_end) = @_;
+
+  print "RequestLockForEdit\n";
+
+  my $collection = $this->{Collection};
+  my $site = $this->{Site};
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+  $this->LockExtractionDirectory({
+    Collection => $collection,
+    Site => $site,
+    Subject => $subj,
+    Session => $session,
+    User => $user,
+    Pid => $pid,
+    For => "Edit",
+   }, $at_end);
+}
+
+sub LockExtractionDirectory{
+  my($this, $args, $when_done) = @_;
+  # delete $this->{DirectoryLocks};
+  print "LockExtractionDirectory\n";
+  my @lines;
+  push(@lines, "LockForEdit");
+  for my $k (keys %$args){
+    unless(defined($k) && defined($args->{$k})){ next }
+    push(@lines, "$k: $args->{$k}");
+  }
+
+  print "Locking with these lines:\n";
+  print Dumper(@lines);
+
+  if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
+    [@lines],
+    $when_done)
+  ){
+    return;
+  }
+}
+# this is not generic, just for testing the response
+sub CloseTTAL {
+  my($this, $parms) = @_;
+  return sub {
+    my($lines) = @_;
+
+    my $subjects = $parms->{subjects};
+    my $subj = $parms->{subj};
+    my $source_path = $parms->{source_path};
+
+    my %args;
+    for my $line (@$lines){
+      if($line =~ /^(.*):\s*(.*)$/){
+        my $k = $1; my $v = $2;
+        $args{$k} = $v;
+      }
+    }
+
+    unless (defined $args{Locked} and $args{Locked} eq 'OK') {
+      print "Failed to get lock! Aborting!\n";
+      return;
+    }
+
+    my $destination_path = $args{'Destination File Directory'};
+
+    print Dumper(\%args);
+
     # unchanged -> link
     # changed -> make the required adjustments
 
     my $files_to_link = {};
-    for my $f (@unchanged_files) {
+    for my $f (@{$parms->{unchanged_files}}) {
       my $bn = basename($f);
       $files_to_link->{$bn} = md5_hex($bn);  # just hash the filename, should be enough
     }
 
     # Build the list of changes
     my $change_list = {};
-    for my $f (@$files_with_changes) {
+    for my $f (@{$parms->{files_with_changes}}) {
       my $file = basename($f);
       my $tags = $subjects->{$subj}->{$f};
 
@@ -879,6 +965,7 @@ sub FixAllYes {
       }
     }
 
+    my $revision_dir = $args{'Revision Dir'};
     # put things together
     my $fix_hash = {
       source => $source_path,
@@ -887,14 +974,51 @@ sub FixAllYes {
       parallelism => 3,
       FileEdits => $change_list,
       files_to_link => $files_to_link,
-      info_dir => "$source_path/../../1",  # required
+      info_dir => $revision_dir,  # required
       cache_dir => "/cache/posda/Data/dicom_info", # also required, but set to what? TODO
     };
 
-    store($fix_hash, "/home/posda/PosdaTools/edits_$subj.pinfo");
-  }
+    my $pinfo = "$revision_dir/edits.pinfo";
+    print "Saving pinfo to: $pinfo\n";
+    store($fix_hash, $pinfo);
+
+    $this->TestTestTestAfterLock($args{Id}, $pinfo);
+  };
 }
 
+sub TestTestTestAfterLock {
+  my($this, $id, $commands) = @_;
+
+  # Look here for a good example:
+  # WhenExtractionLockComplete
+
+  my $session = $this->{session};
+  my $pid = $$;
+  my $user = $this->get_user;
+  my $new_args = [
+    "ApplyEdits", 
+    "Id: $id",
+    "Session: $session", 
+    "User: $user", 
+    "Pid: $pid" ,
+    "Commands: $commands" 
+  ];
+
+  print "==========================\n";
+  print Dumper($new_args);
+  print "==========================\n";
+  $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
+    $new_args,
+    $this->TestWhenDoneTest());
+}
+
+sub TestWhenDoneTest {
+  return sub {
+    print "TestTestTest completed?\n";
+  };
+}
+
+################################################################################
 sub WaitingForTag{
   my($this, $http, $dyn) = @_;
     $http->queue("Waiting for a Tag to be chosen.");
