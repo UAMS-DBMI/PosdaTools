@@ -10,7 +10,6 @@ package PhiFixer::PrivateTagInfo;
 
 use strict;
 use DBI;
-use JSON::XS;
 
 # TODO: These need to be moved into a config file!
 my $db_name = 'private_tag_kb';

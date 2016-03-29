@@ -475,7 +475,7 @@ sub PrivateTagReview{
   });
 
   $http->queue(qq{<div style="margin-left: 5px;">});
-  for my $id (keys @{$this->{PrivateTagsToReview}}) {
+  for my $id (0 .. $#{$this->{PrivateTagsToReview}}) {
     $http->queue(
       $this->CheckBoxDelegate("SelectedPriv", $id,
         ($this->{SelectedPriv} == $id),
@@ -949,7 +949,7 @@ sub FixAllYes {
   for my $subj (sort keys %$subjects) {
     print "Subject: $subj\n";
 
-    my $files_with_changes = [keys $subjects->{$subj}];
+    my $files_with_changes = [keys %{$subjects->{$subj}}];
 
     my $f = $files_with_changes->[0];  # the first file
 
