@@ -1032,10 +1032,12 @@ sub ExpandExtraction{
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
     my $reason = "edit";
     if($lock_status->{For} ne "PhiSearch"){
-      if($lock_status->{NextRev} eq "0"){
-        $reason = "extraction";
-      } elsif($lock_status->{NextRev} eq "discard"){
-        $reason = "discard";
+      if (defined $lock_status->{NextRev}) {
+        if($lock_status->{NextRev} eq "0"){
+          $reason = "extraction";
+        } elsif($lock_status->{NextRev} eq "discard"){
+          $reason = "discard";
+        }
       }
     }
     $reason = $lock_status->{For};

@@ -18,7 +18,9 @@ sub ExpandStudyCounts{
   for my $std (keys %$struct){
     $num_series += keys %{$struct->{$std}->{series}};
     for my $ser ( keys %{$struct->{$std}->{series}}){
-      $num_images += $struct->{$std}->{series}->{$ser}->{num_files};
+      if (defined $struct->{$std}->{series}->{$ser}->{num_files}) {
+        $num_images += $struct->{$std}->{series}->{$ser}->{num_files};
+      }
     }
   }
   $this->{LastImageCountSeen} = $num_images;
