@@ -42,6 +42,15 @@ my $bad_config = qq{
   <?dyn="BadConfigReport"?>
 };
 
+my $disposition_map = {
+  Z => 'Zero',
+  X => 'Delete',
+  K => 'Keep',
+  C => 'Clean',
+  R => 'Review',
+  0 => 'None',
+};
+
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -387,6 +396,8 @@ sub Info{
   };
   unless(defined($this->{InfoMode})){
     $this->{InfoMode} = "PrivateTagReview";
+    $this->{ContentMode} = "WaitingForTag";
+    $this->{SelectedPriv} = -1;  # a value that can't exist
   }
   $this->SelectByValue($http, {
     op => "SetInfoMode",
@@ -408,6 +419,8 @@ sub Info{
 sub SetInfoMode{
   my($this, $http, $dyn) = @_;
   $this->{InfoMode} = $dyn->{value};
+  $this->{ContentMode} = 'WaitingForTag';  # also clear content 
+  $this->{SelectedPriv} = -1;  # clear selected private tag, if any
 }
 sub PrivateTagReview{
   my($this, $http, $dyn) = @_;
@@ -416,8 +429,141 @@ sub PrivateTagReview{
       sort keys %{$this->{PrivateTagInfo}}
     ];
   }
-  $http->queue("PrivateTagReview");
+
+  $http->queue(qq{<div style="margin-left: 5px;">});
+  for my $id (keys @{$this->{PrivateTagsToReview}}) {
+    $http->queue(
+      $this->CheckBoxDelegate("SelectedPriv", $id,
+        ($this->{SelectedPriv} == $id),
+        { op => "SetSelectedPriv", sync => "Update();" }
+      ) 
+    );
+    $http->queue("$this->{PrivateTagsToReview}->[$id]</input><br>");
+  }
+  $http->queue("</div>");
 }
+
+sub GetDispositionFromDetails {
+  # Return a dispo only if all elements agree
+  my($this, $http, $dyn, $details) = @_;
+
+  # details will be an array.
+
+  # TODO: is there a better way? only using a hash here
+  # so that it is easy to determine if all the rows match.. 
+  my %disps;
+
+  for my $row (@{$details}) {
+    $disps{$row->{pt_consensus_disposition}} = 1;
+  }
+
+  # If anything other than a single result, there is no consensus
+  # disposition!
+  if (scalar(keys %disps) != 1) {
+    return 0;
+  }
+
+  # TODO: This is the most terrible thing I have ever written
+  # but is there actually a better way to return the first
+  # element from a hash? [ values %disps ]->[0], but that is uglier!
+  for my $dispo (%disps) {
+    return $dispo;
+  }
+}
+
+sub PrivateTagReviewContent {
+  my($this, $http, $dyn) = @_;
+
+  my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
+  if (not defined $selected_tag) {
+    return;
+  }
+  my $affected_files = scalar keys $this->{PrivateTagInfo}->{$selected_tag};
+
+  my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
+
+  my $disposition = $this->GetDispositionFromDetails($http, $dyn, $details);
+  $this->{DispositionRecommended} = $disposition;
+
+  my $also_in_phi_list = '';
+  if (defined $this->{PrivateTags}->{$selected_tag}) {
+    $also_in_phi_list = qq{
+      <span class="label label-danger">
+        This tag is also in the PHI List!
+      </span>
+    };
+  }
+
+  # $http->queue(qq{
+  $this->RefreshEngine($http, $dyn, qq{
+    <h1>$selected_tag</h1>
+    <h3>
+      Affected Files: <span class="label label-info">$affected_files</span>
+      $also_in_phi_list
+    </h3>
+    <h3>Recommended Disposition: <span class="label label-default">$disposition_map->{$disposition}</span></h3>
+    <div class="form-group" style="width:60%;">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <?dyn="NotSoSimpleButton" op="ApplyDispositionToAll" caption="Apply Disposition" sync="Update();" class="btn btn-warning"?>
+        </span>
+        <?dyn="DrawDispoDropdown"?>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Tag Details
+      </div>
+      <div class="panel-body">
+  });
+
+  $this->DrawTagDetails($http, $dyn, $details);
+
+  $this->RefreshEngine($http, $dyn, qq{
+    </div>
+  });
+}
+
+sub DrawDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+  if (not defined $this->{DispositionSelected}) {
+    $this->{DispositionSelected} = $this->{DispositionRecommended};
+  }
+
+  $this->DrawSelectFromHash($http, $dyn, "SetDispoDropdown", 
+    $disposition_map, $this->{DispositionSelected});
+}
+
+sub SetDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+  $this->{DispositionSelected} = $dyn->{value};
+}
+
+sub ApplyDispositionToAll {
+  my($this, $http, $dyn) = @_;
+
+  my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
+  my $disposition = $this->{DispositionSelected};
+
+  $this->{DisposedPrivate}->{$selected_tag} = $disposition;
+
+  print "ApplyDispositionToAll: $selected_tag => $disposition\n";
+
+  # remove the selected tag from the list?
+  splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
+
+  # move the selected index up one if we were at the end of the list
+  if ($this->{SelectedPriv} >= scalar(@{$this->{PrivateTagsToReview}})) {
+    $this->{SelectedPriv} -= 1;
+  }
+
+  # clear the disposition setting
+  delete $this->{DispositionSelected};
+
+}
+
 sub InfoTagValueMode{
   my($this, $http, $dyn) = @_;
   $this->TagFilters($http, $dyn);
@@ -443,12 +589,30 @@ sub InfoTagValueMode{
           { op => "SetSelectedEle", sync => "Update();" }
         ) 
       );
-      $http->queue("$tags{$i}<br>");
+      $http->queue("$tags{$i}<br></input>");
     } else {
-      $http->queue("...<br>");
+      $http->queue("...<br></input>");
       last render;
     }
   }
+}
+sub SetSelectedPriv{
+  my($this, $http, $dyn) = @_;
+  my $value = $dyn->{value};
+
+  print "SetSelectedPriv: $value\n";
+
+  # unset the selected disposition
+  delete $this->{DispositionSelected};
+
+  if($dyn->{checked} eq "true"){
+     $this->{SelectedPriv} = $value;
+     $this->{ContentMode} = "PrivateTagReviewContent";
+  } else {
+    $this->{SelectedPriv} = -1;  # a value that can't exist
+    $this->{ContentMode} = "WaitingForTag";
+  }
+  # $this->ClearFileSelection($http, $dyn);
 }
 sub SetSelectedEle{
   my($this, $http, $dyn) = @_;
@@ -542,7 +706,6 @@ sub TagInfo{
   } elsif ($tag =~ /^\(([\da-f]{4}),\"([^\"]+)\",([\da-f]{2})\)$/){
     # this is a private tag
 
-    my $details = PhiFixer::PrivateTagInfo::get_info($tag);
 
     my $owner = $2;
     my $grp = hex($1);
@@ -554,11 +717,27 @@ sub TagInfo{
       $http->queue(" Unknown private tag");
     }
 
+    my $details = PhiFixer::PrivateTagInfo::get_info($tag);
+    $this->DrawTagDetails($http, $dyn, $details);
+
+  } else {
+    $http->queue(" no pattern match\n");
+  }
+  $http->queue("</div></div>");
+}
+
+sub DrawTagDetails {
+  # Draw the details about the given tag,
+  # #details should be the results from
+  # PhiFixer::PrivateTagInfo::get_info
+  my($this, $http, $dyn, $details) = @_;
+
     my $fields = {
       pt_signature => "Signature",
       pt_consensus_name => "Consensus Name",
       pt_consensus_vr => "Consensus VR",
       pt_consensus_vm => "Consensus VM",
+      pt_consensus_disposition => "Disposition",
     };
 
     $http->queue(qq{
@@ -577,13 +756,7 @@ sub TagInfo{
       }
     }
     $http->queue("</table></div>");
-
-  } else {
-    $http->queue(" no pattern match\n");
-  }
-  $http->queue("</div></div>");
 }
-
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
   $http->queue(qq{
