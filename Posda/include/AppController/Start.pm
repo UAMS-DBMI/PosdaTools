@@ -11,6 +11,7 @@ use AppController::ChildProcess;
 use AppController::ManageChildProcess;
 use AppController::CheckBOM;
 use AppController::Password;
+use AppController::AppTracker;
 use JSON;
 use Dispatch::LineReader;
 use Debug;

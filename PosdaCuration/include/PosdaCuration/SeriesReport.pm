@@ -389,6 +389,10 @@ sub StructContentResponse{
     return $this->RefreshEngine($http, $dyn,
       'Waiting for structure set Report');
   }
+  my @rois = keys %{$this->{StructureSetReport}->{contour_rept}};
+  unless (@rois > 0){
+    $http->queue("No report from sub-process");
+  }
   for my $roi (keys %{$this->{StructureSetReport}->{contour_rept}}){
     my $num_contours = keys 
       %{$this->{StructureSetReport}->{contour_rept}->{$roi}};
@@ -485,6 +489,66 @@ sub StartStructureSetReport{
      "SubProcessStructLinkageReport.pl", $this->WhenStructureSetAnalyzed);
 }
 sub WhenStructureSetAnalyzed{
+  my($this) = @_;
+  my $sub = sub {
+    my($status, $struct) = @_;
+    if($status eq "Success"){
+      my @rois = keys %{$struct->{contour_rept}};
+      if(@rois > 0){
+        print STDERR "################\n" .
+          "Got a Structure Set Report\n";
+        $this->{StructureSetReport} = $struct;
+        $this->AutoRefresh;
+      } else { 
+        print STDERR "################\n" .
+          "Checking links against Public Database\n";
+        $this->StartStructureSetPublicReport;
+      }
+    } else {
+      print STDERR "################\n" .
+        "Checking links against Public Database\n";
+      $this->StartStructureSetPublicReport;
+    }
+  };
+  return $sub;
+}
+sub StartStructureSetPublicReport{
+  my($this) = @_;
+  my $req = {
+    from_file => $this->{SelectedStructureSet},
+  };
+  my $dig = $this->{files_in_series_and_study}->{$this->{SelectedStructureSet}};
+  my $s_info = $this->{digs_in_series_and_study}->{$dig};
+  $req->{analyze_contours} = {
+     study_uid => $s_info->{series_refs}->[0]->{ref_study},
+     series_uid => $s_info->{series_refs}->[0]->{ref_series},
+     for_uid => $s_info->{series_refs}->[0]->{ref_for},
+  };
+  my @sops;
+  for my $f_uid (@{$s_info->{series_refs}->[0]->{img_list}}){
+    push(@sops, $f_uid);
+  }
+  my $args = {
+    db_host => $this->parent->{Environment}->{PublicDatabaseHost},
+    sop_list => \@sops
+  };
+  $this->SerializedSubProcess($args, "GetGeometricInfoFromDb.pl",
+    $this->WhenGeometricInfoFetched($req));
+
+}
+sub WhenGeometricInfoFetched{
+  my($this, $req) = @_;
+  my $sub = sub {
+    my($status, $struct) = @_;
+    $req->{analyze_contours}->{files} = $struct->{files};
+    $this->{AnalysisParameters} = $req;
+    $this->SerializedSubProcess($this->{AnalysisParameters},
+       "SubProcessStructLinkageReport.pl",
+       $this->WhenStructureSetAnalyzedPublic);
+  };
+  return $sub;
+}
+sub WhenStructureSetAnalyzedPublic{
   my($this) = @_;
   my $sub = sub {
     my($status, $struct) = @_;

@@ -185,7 +185,7 @@ sub Initialize{
     );
   };
   if($@){
-    #print STDERR "Unable to connect: $@\n";
+    print STDERR "Unable to connect: $@\n";
     $this->{State} = "Failed";
     $this->{Error} = "Unable to connect $@";
     chomp $this->{Error};
@@ -325,9 +325,9 @@ sub FinalizeStatus{
 ################ Association Callbacks
 sub ConnectionCallback{
   my($this) = @_;
-  DEBUG "ConnectionCallback called";
   my $sub = sub {
     my($con) = @_;
+        DEBUG "ConnectionCallback called";
     $this->{State} = "AssociationConnected";
     $this->{association_ac} = $this->{Association}->{assoc_ac};
     $this->ReportStatus;
@@ -337,9 +337,9 @@ sub ConnectionCallback{
 }
 sub DisconnectCallback{
   my($this) = @_;
-  DEBUG "DisconnectCallback called";
   my $sub = sub {
     my($con) = @_;
+    DEBUG "DisconnectCallback called";
     my $status;
     if(exists $con->{Abort}){
       $status = $con->{Abort}->{mess};
@@ -358,9 +358,9 @@ sub DisconnectCallback{
 }
 sub ReleaseCallback{
   my($this) = @_;
-  DEBUG "ReleaseCallback called";
   my $sub = sub {
     my($con) = @_;
+    DEBUG "ReleaseCallback called";
     $this->{State} = "PeerRequestedRelease";
     $this->ReportStatus;
     $this->AbortSending;
