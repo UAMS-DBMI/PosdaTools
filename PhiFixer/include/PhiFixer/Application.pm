@@ -1,8 +1,5 @@
 #!/usr/bin/perl -w
 
-use feature 'signatures';
-no warnings 'experimental::signatures';
-
 use strict;
 package PhiFixer::Application;
 use PhiFixer::PrivateTagInfo;
@@ -814,7 +811,8 @@ sub AllTagsDisposed {
 
 }
 
-sub shift_temp($this, $tag, $file) {
+sub shift_temp {
+  my ($this, $tag, $file) = @_;
   #TODO: This default value is almost certainly wrong!
   my $val = 'SHIFT';
 
@@ -846,7 +844,8 @@ sub shift_temp($this, $tag, $file) {
   return ['short_ele_replacements', $val];
 }
 
-sub hash_temp($this, $tag, $file) {
+sub hash_temp {
+  my ($this, $tag, $file) = @_;
   # same for every tag/file
   my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
   my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
@@ -854,7 +853,8 @@ sub hash_temp($this, $tag, $file) {
   return ['hash_unhashed_uid', $uid_root];
 }
 
-sub translate_dispositions($this, $tags, $from_file, $to_file) {
+sub translate_dispositions {
+  my ($this, $tags, $from_file, $to_file) = @_;
   # Translate the dispos into actions for the subprocess editor
 
   # the possible actions
