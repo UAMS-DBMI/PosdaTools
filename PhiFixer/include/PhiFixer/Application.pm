@@ -1,8 +1,12 @@
 #!/usr/bin/perl -w
-#
+
+use feature 'signatures';
+no warnings 'experimental::signatures';
+
 use strict;
 package PhiFixer::Application;
 use PhiFixer::PrivateTagInfo;
+use PhiFixer::DicomRootInfo;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -15,10 +19,14 @@ use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
 use File::Path 'remove_tree';
-use Digest::MD5;
+use Digest::MD5 'md5_hex';
 use JSON;
 use Debug;
 use Storable;
+use File::Basename;
+use Data::Dumper;
+use Time::Piece;
+use Time::Seconds;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -51,6 +59,37 @@ my $disposition_map = {
   0 => 'None',
 };
 
+my $phi_disposition_map = {
+  S => "Shift",
+  H => "Hash",
+  X => "Delete",
+  C => "Clear",
+};
+
+
+sub get_subj_files_path {
+  # Return the portion of the file path up to files/
+  # TODO: Make this better, it will explode for a collection called "files"
+  my ($file) = @_;
+
+  $file =~ /(.*\/files\/)/;
+
+  return $1;
+}
+
+sub get_dicom_in_dir {
+  # Return an arrayref of all DICOM files in the given directory
+  # TODO: This should probably be loading the dicom.pinfo file
+  # from the revision dir, rather than scanning for .dcm files
+  # some more info could be returned as well!
+  my ($dir) = @_;
+
+  # Assumes $dir ends with /
+  my @files = glob($dir . '*.dcm');
+  return \@files;
+}
+
+
 sub new {
   my($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
@@ -58,6 +97,7 @@ sub new {
   bless $this, $class;
 
   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
+    
     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
   }
   $this->{expander} = $expander;
@@ -353,8 +393,8 @@ sub SelectReport{
     return;
   }
   $this->{Collection} = $dyn->{collection};
-  $this->{Site} = $dyn->{Site};
-  $this->{Round} = $dyn->{Round};
+  $this->{Site} = $dyn->{site};
+  $this->{Round} = $dyn->{round};
   $this->{file} = $dyn->{file};
   $this->{selections_file} = $dyn->{selections};
   $this->{submission_file} = $dyn->{submission};
@@ -430,6 +470,13 @@ sub PrivateTagReview{
     ];
   }
 
+  # TODO: button is for testing only
+  $this->NotSoSimpleButton($http, {
+    op => "FinishEarly",
+    caption => "Finish NOW!",
+    sync => "Update();",
+  });
+
   $http->queue(qq{<div style="margin-left: 5px;">});
   for my $id (keys @{$this->{PrivateTagsToReview}}) {
     $http->queue(
@@ -441,6 +488,13 @@ sub PrivateTagReview{
     $http->queue("$this->{PrivateTagsToReview}->[$id]</input><br>");
   }
   $http->queue("</div>");
+}
+
+sub FinishEarly {
+  my($this, $http, $dyn) = @_;
+
+  $this->{ContentMode} = "AllTagsDisposed";
+  $this->{Mode} = "MenuAllTagsDisposed";
 }
 
 sub GetDispositionFromDetails {
@@ -470,7 +524,6 @@ sub GetDispositionFromDetails {
     return $dispo;
   }
 }
-
 sub PrivateTagReviewContent {
   my($this, $http, $dyn) = @_;
 
@@ -478,7 +531,7 @@ sub PrivateTagReviewContent {
   if (not defined $selected_tag) {
     return;
   }
-  my $affected_files = scalar keys $this->{PrivateTagInfo}->{$selected_tag};
+  my $affected_files = scalar keys %{$this->{PrivateTagInfo}->{$selected_tag}};
 
   my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
 
@@ -494,7 +547,6 @@ sub PrivateTagReviewContent {
     };
   }
 
-  # $http->queue(qq{
   $this->RefreshEngine($http, $dyn, qq{
     <h1>$selected_tag</h1>
     <h3>
@@ -549,9 +601,17 @@ sub ApplyDispositionToAll {
 
   $this->{DisposedPrivate}->{$selected_tag} = $disposition;
 
+  if ($disposition ne 'R') {
+    # if this tag is in the list for PHI review, we can
+    # remove it now, as any action other than (R)eview
+    # will eliminate any possible PHI.
+
+    $this->{Disposed}->{$selected_tag} = 1;
+  }
+
   print "ApplyDispositionToAll: $selected_tag => $disposition\n";
 
-  # remove the selected tag from the list?
+  # remove the selected tag from the list
   splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
 
   # move the selected index up one if we were at the end of the list
@@ -559,9 +619,13 @@ sub ApplyDispositionToAll {
     $this->{SelectedPriv} -= 1;
   }
 
+  # if there is nothing more to do here, move on to PHI display
+  if ($this->{SelectedPriv} == -1) {
+    $this->{InfoMode} = 'InfoTagValueMode';
+  }
+
   # clear the disposition setting
   delete $this->{DispositionSelected};
-
 }
 
 sub InfoTagValueMode{
@@ -657,6 +721,389 @@ sub ContentResponse{
     $http->queue("Unknown ContentMode: \"$mode\"");
   }
 }
+sub GetAffectedFilesCount {
+  my($this, $http, $dyn, $tag) = @_;
+  # Get the number of files affected by the tag
+  # It may be in both sets (PHI and Private), but the numbers should match
+
+  if (defined $this->{PrivateTagInfo}->{$tag}) {
+    return scalar keys %{$this->{PrivateTagInfo}->{$tag}};
+  }
+
+  if (defined $this->{ByTag}->{$tag}) {
+    # have to count the files in every sub-key of the tag
+    my $total = 0;
+    while (my ($sub, $files) = each %{$this->{ByTag}->{$tag}}) {
+      $total += scalar keys %{$files};
+    }
+
+    return $total;
+  }
+
+  # something bad has happened
+  return -1;
+}
+
+sub DrawSelectionSummary {
+  my($this, $http, $dyn, $selection, $map) = @_;
+
+  # sort tags into groups based on their disposition
+  my $selection_by_disp = {};
+
+  while (my ($tag, $disp) = each %{$selection}) {
+    $selection_by_disp->{$disp}->{$tag} = 1;
+  }
+
+  $http->queue(qq{
+    <table class="table">
+    <tr>
+      <th>Disposition</ht>
+      <th>Tag</th>
+      <th>Files</th>
+    </tr>
+  });
+  for my $disp (sort keys %{$selection_by_disp}) {
+    my $tag_hash = $selection_by_disp->{$disp};
+    $http->queue(qq{
+      <tr>
+        <td>$map->{$disp}</td>
+      </tr>
+    });
+    for my $tag (sort keys %{$tag_hash}) {
+      my $count = $this->GetAffectedFilesCount($http, $dyn, $tag);
+      $http->queue(qq{
+        <tr>
+          <td></td>
+          <td>$tag</td>
+          <td>$count</td>
+        </tr>
+      });
+    }
+    # $http->queue(qq{
+    # });
+  }
+
+  $http->queue(qq{
+    </table>
+  });
+}
+
+sub AllTagsDisposed {
+  my($this, $http, $dyn) = @_;
+
+  $http->queue(qq{
+    <h2>Private Tag Selections</h2>
+  });
+  $this->DrawSelectionSummary($http, $dyn,
+    $this->{DisposedPrivate}, $disposition_map);
+
+  $http->queue(qq{
+    <h2>PHI Tag Selections</h2>
+  });
+  $this->DrawSelectionSummary($http, $dyn,
+    $this->{DisposedPHI}, $phi_disposition_map);
+
+
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>The above changes will be applied immediately. Do you wish to continue?</p>
+    <div class="btn-group">
+      <?dyn="NotSoSimpleButton" caption="Yes, Continue" op="FixAllYes" sync="Update();"?>
+      <?dyn="NotSoSimpleButton" caption="No, Don't Continue" op="FixAllNo" sync="Update();"?>
+    </div>
+  });
+
+}
+
+sub shift_temp($this, $tag, $file) {
+  #TODO: This default value is almost certainly wrong!
+  my $val = 'SHIFT';
+
+  if (defined $this->{ByFile}->{$file}->{$tag}) {
+    my $orig_val = [keys %{$this->{ByFile}->{$file}->{$tag}}]->[0];
+
+    # consult dicom roots database for the date shift value
+    my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+
+    # For now, only going to do this for date VRs
+    my $VR = $this->{DD}->get_ele_by_sig($tag)->{VR};
+    my $format;
+
+    if ($VR eq 'DA') {
+      # parse as a date
+      $format = '%Y%m%d';
+    } 
+    if ($VR eq 'DT') {
+      # parse as datetime
+      $format = '%Y%m%d%H%M%S';
+    }
+
+    if (defined $format) {
+      my $date = Time::Piece->strptime($orig_val, $format);
+      $date += (ONE_DAY * $info->{date_inc});
+      $val = $date->strftime($format);
+    }
+  }
+  return ['short_ele_replacements', $val];
+}
+
+sub hash_temp($this, $tag, $file) {
+  # same for every tag/file
+  my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
+
+  return ['hash_unhashed_uid', $uid_root];
+}
+
+sub translate_dispositions($this, $tags, $from_file, $to_file) {
+  # Translate the dispos into actions for the subprocess editor
+
+  # the possible actions
+  my $action_map = {
+    Z => 'full_ele_replacements',
+    X => 'full_ele_deletes',
+    K => 'none',
+    C => 'full_ele_replacements',
+    R => 'none',
+    0 => 'none',
+    S => \&shift_temp,
+    H => \&hash_temp,
+  };
+
+  my $actions = {};
+
+  for my $tag (keys %$tags) {
+    my $disp = $tags->{$tag};
+    my $action = $action_map->{$disp};
+
+    my $val = 1;  # default value, will work for delete
+
+    if ($action eq 'full_ele_replacements') {
+      # replace the value with a blank
+      $val = "BLANK";
+    }
+    if ($action eq 'hash_unhashed_uid') {
+      # replace with root uid TODO: from where?
+      $val = "ROOTUID";
+    }
+
+    # if action is code
+    if (ref($action) eq 'CODE') {
+      ($action, $val) = @{&$action($this, $tag, $from_file)};
+    }
+
+    $actions->{$action}->{$tag} = $val;
+
+  }
+
+  delete $actions->{none};  # nothing to do for them
+  $actions->{to_file} = $to_file;
+  $actions->{from_file} = $from_file;
+
+  # print Dumper($actions);
+  return $actions;
+}
+
+sub FixAllYes {
+  my($this, $http, $dyn) = @_;
+  print "Fixing all...\n";
+
+  # first some things that we'll need
+  $this->{Collection};
+  $this->{FileInfo}; # may be a list of every file in the collection?
+                     # No, Bill says this is the files this PHI list concerns
+
+
+  # Let's start by looking at some of the files to fix, Private first.
+
+  # Affected filenames are here:
+  # $this->{PrivateTagInfo}->{$tag}
+
+  my $subjects = {};
+  # Add the private tags to the list
+  for my $tag (keys %{$this->{DisposedPrivate}}) {
+    print "Tag: $tag\n";
+    print $this->{PrivateTagInfo}->{$tag}, "\n";  # this is the list of files
+
+    for my $file (keys %{$this->{PrivateTagInfo}->{$tag}}){
+      if (defined $this->{FileInfo}->{$file}) {
+        $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+          = $this->{DisposedPrivate}->{$tag};
+      }
+    }
+  }
+  # Add the PHI tags/files to the list
+  for my $tag (keys %{$this->{DisposedPHI}}) {
+    print "Tag: $tag\n";
+
+    for my $val (values %{$this->{ByTag}->{$tag}}) {
+      for my $file (keys %$val) {
+        if (defined $this->{FileInfo}->{$file}) {
+          $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+            = $this->{DisposedPHI}->{$tag};
+        }
+      }
+    }
+  }
+
+
+  for my $subj (sort keys %$subjects) {
+    print "Subject: $subj\n";
+
+    my $files_with_changes = [keys $subjects->{$subj}];
+
+    my $f = $files_with_changes->[0];  # the first file
+
+    my $source_path = dirname($f);
+
+    my $files_dir = get_subj_files_path($f);
+    my $all_files = get_dicom_in_dir($files_dir);
+
+    # now.. get the difference of them.. found this on some StackOverflow ans
+    my @unchanged_files = grep(!defined $subjects->{$subj}->{$_}, @$all_files);
+
+    $this->RequestLockForEdit($subj, sub {
+      my($lines) = @_;
+
+      my %args;
+      for my $line (@$lines){
+        if($line =~ /^(.*):\s*(.*)$/){
+          my $k = $1; my $v = $2;
+          $args{$k} = $v;
+        }
+      }
+
+      unless (defined $args{Locked} and $args{Locked} eq 'OK') {
+        print "Failed to get lock! Aborting!\n";
+        return;
+      }
+
+      my $destination_path = $args{'Destination File Directory'};
+
+      # print Dumper(\%args);
+
+      # unchanged -> link
+      # changed -> make the required adjustments
+
+      my $files_to_link = {};
+      for my $f (@unchanged_files) {
+        my $bn = basename($f);
+        $files_to_link->{$bn} = md5_hex($bn);  # just hash the filename,
+                                               # should be enough
+      }
+
+      # Build the list of changes
+      my $change_list = {};
+      for my $f (@$files_with_changes) {
+        my $file = basename($f);
+        my $tags = $subjects->{$subj}->{$f};
+
+        $change_list->{$f} = translate_dispositions($this, $tags, 
+                                                    "$source_path/$file",
+                                                    "$destination_path/$file");
+      }
+
+      my $revision_dir = $args{'Revision Dir'};
+      # put things together
+      my $fix_hash = {
+        source => $source_path,
+        destination => $destination_path,
+        operation => 'EditAndAnalyze',
+        parallelism => 5,
+        FileEdits => $change_list,
+        files_to_link => $files_to_link,
+        info_dir => $revision_dir,  # required
+        cache_dir => "$this->{DicomInfoCache}/dicom_info",
+      };
+
+      my $pinfo = "$revision_dir/edits.pinfo";
+      print "Saving pinfo to: $pinfo\n";
+      store($fix_hash, $pinfo);
+
+      $this->TestTestTestAfterLock($args{Id}, $pinfo);
+
+    });
+  }
+}
+
+################################################################################
+# TODO: cleanup
+################################################################################
+sub RequestLockForEdit{
+  my($this, $subj, $at_end) = @_;
+
+  print "RequestLockForEdit\n";
+
+  my $collection = $this->{Collection};
+  my $site = $this->{Site};
+  my $user = $this->get_user;
+  my $session = $this->{session};
+  my $pid = $$;
+  $this->LockExtractionDirectory({
+    Collection => $collection,
+    Site => $site,
+    Subject => $subj,
+    Session => $session,
+    User => $user,
+    Pid => $pid,
+    For => "Edit",
+   }, $at_end);
+}
+
+sub LockExtractionDirectory{
+  my($this, $args, $when_done) = @_;
+  # delete $this->{DirectoryLocks};
+  print "LockExtractionDirectory\n";
+  my @lines;
+  push(@lines, "LockForEdit");
+  for my $k (keys %$args){
+    unless(defined($k) && defined($args->{$k})){ next }
+    push(@lines, "$k: $args->{$k}");
+  }
+
+  print "Locking with these lines:\n";
+  print Dumper(@lines);
+
+  if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
+    [@lines],
+    $when_done)
+  ){
+    return;
+  }
+}
+
+sub TestTestTestAfterLock {
+  my($this, $id, $commands) = @_;
+
+  # Look here for a good example:
+  # WhenExtractionLockComplete
+
+  my $session = $this->{session};
+  my $pid = $$;
+  my $user = $this->get_user;
+  my $new_args = [
+    "ApplyEdits", 
+    "Id: $id",
+    "Session: $session", 
+    "User: $user", 
+    "Pid: $pid" ,
+    "Commands: $commands" 
+  ];
+
+  print "==========================\n";
+  print Dumper($new_args);
+  print "==========================\n";
+  $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
+    $new_args,
+    $this->TestWhenDoneTest());
+}
+
+sub TestWhenDoneTest {
+  return sub {
+    print "TestTestTest completed?\n";
+  };
+}
+
+################################################################################
 sub WaitingForTag{
   my($this, $http, $dyn) = @_;
     $http->queue("Waiting for a Tag to be chosen.");
@@ -669,8 +1116,15 @@ sub TagSelected{
     return $this->FileAndTagSelected($http, $dyn);
   }
   $this->RefreshEngine($http, $dyn, qq{
-    <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Dispose" sync="Update();"?>
-    <h3>Tag selected: $tag</h3>
+    <h1>$tag</h1>
+    <div class="form-group" style="width:60%;">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <?dyn="NotSoSimpleButton" op="DisposeTag" caption="Apply Disposition" sync="Update();" class="btn btn-warning"?>
+        </span>
+        <?dyn="DrawPHIDispoDropdown"?>
+      </div>
+    </div>
     <hr/>
   });
   my @constituents = split(/\[<\d+>\]/,$tag);
@@ -679,6 +1133,25 @@ sub TagSelected{
   }
   $this->TagValueReport($http, $dyn, $tag);
 }
+
+sub DrawPHIDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+
+  # Set a default when first drawing
+  if (not defined $this->{PHIDispositionSelected}) {
+    $this->{PHIDispositionSelected} = 'C';
+  }
+
+  $this->DrawSelectFromHash($http, $dyn, "SetPHIDispoDropdown", 
+    $phi_disposition_map, $this->{PHIDispositionSelected});
+}
+sub SetPHIDispoDropdown {
+  my($this, $http, $dyn) = @_;
+
+  $this->{PHIDispositionSelected} = $dyn->{value};
+}
+
 sub TagInfo{
   my($this, $http, $dyn, $tag) = @_;
   my $tag_name = UNKNOWN;
@@ -1001,12 +1474,19 @@ sub GetSeriesDates{
 sub DisposeTag{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
+
   delete $this->{SelectedEles}->{$tag};
   delete $this->{SelectedFileForExtraction};
   delete $this->{SelectedTagForExtraction};
   delete $this->{SelectedValueForExtraction};
   $this->{Disposed}->{$tag} = 1;
   $this->SelectNextAvailableTag;
+
+  my $disposition = $this->{PHIDispositionSelected};
+
+  $this->{DisposedPHI}->{$tag} = $disposition;
+
+  print "DisposeTag: $tag => $disposition\n";
 }
 sub SelectNextAvailableTag{
   my($this) = @_;
