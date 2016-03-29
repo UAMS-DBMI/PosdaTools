@@ -1,8 +1,12 @@
 #!/usr/bin/perl -w
-#
+
+use feature 'signatures';
+no warnings 'experimental::signatures';
+
 use strict;
 package PhiFixer::Application;
 use PhiFixer::PrivateTagInfo;
+use PhiFixer::DicomRootInfo;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -21,6 +25,8 @@ use Debug;
 use Storable;
 use File::Basename;
 use Data::Dumper;
+use Time::Piece;
+use Time::Seconds;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -55,7 +61,8 @@ my $disposition_map = {
 
 my $phi_disposition_map = {
   S => "Shift",
-  D => "Delete",
+  H => "Hash",
+  X => "Delete",
   C => "Clear",
 };
 
@@ -807,6 +814,95 @@ sub AllTagsDisposed {
 
 }
 
+sub shift_temp($this, $tag, $file) {
+  #TODO: This default value is almost certainly wrong!
+  my $val = 'SHIFT';
+
+  if (defined $this->{ByFile}->{$file}->{$tag}) {
+    my $orig_val = [keys %{$this->{ByFile}->{$file}->{$tag}}]->[0];
+
+    # consult dicom roots database for the date shift value
+    my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+
+    # For now, only going to do this for date VRs
+    my $VR = $this->{DD}->get_ele_by_sig($tag)->{VR};
+    my $format;
+
+    if ($VR eq 'DA') {
+      # parse as a date
+      $format = '%Y%m%d';
+    } 
+    if ($VR eq 'DT') {
+      # parse as datetime
+      $format = '%Y%m%d%H%M%S';
+    }
+
+    if (defined $format) {
+      my $date = Time::Piece->strptime($orig_val, $format);
+      $date += (ONE_DAY * $info->{date_inc});
+      $val = $date->strftime($format);
+    }
+  }
+  return ['short_ele_replacements', $val];
+}
+
+sub hash_temp($this, $tag, $file) {
+  # same for every tag/file
+  my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
+
+  return ['hash_unhashed_uid', $uid_root];
+}
+
+sub translate_dispositions($this, $tags, $from_file, $to_file) {
+  # Translate the dispos into actions for the subprocess editor
+
+  # the possible actions
+  my $action_map = {
+    Z => 'full_ele_replacements',
+    X => 'full_ele_deletes',
+    K => 'none',
+    C => 'full_ele_replacements',
+    R => 'none',
+    0 => 'none',
+    S => \&shift_temp,
+    H => \&hash_temp,
+  };
+
+  my $actions = {};
+
+  for my $tag (keys %$tags) {
+    my $disp = $tags->{$tag};
+    my $action = $action_map->{$disp};
+
+    my $val = 1;  # default value, will work for delete
+
+    if ($action eq 'full_ele_replacements') {
+      # replace the value with a blank
+      $val = "BLANK";
+    }
+    if ($action eq 'hash_unhashed_uid') {
+      # replace with root uid TODO: from where?
+      $val = "ROOTUID";
+    }
+
+    # if action is code
+    if (ref($action) eq 'CODE') {
+      ($action, $val) = @{&$action($this, $tag, $from_file)};
+    }
+
+    $actions->{$action}->{$tag} = $val;
+
+  }
+
+  delete $actions->{none};  # nothing to do for them
+  $actions->{to_file} = $to_file;
+  $actions->{from_file} = $from_file;
+
+  # print Dumper($actions);
+  return $actions;
+}
+
 sub FixAllYes {
   my($this, $http, $dyn) = @_;
   print "Fixing all...\n";
@@ -823,16 +919,32 @@ sub FixAllYes {
   # $this->{PrivateTagInfo}->{$tag}
 
   my $subjects = {};
+  # Add the private tags to the list
   for my $tag (keys %{$this->{DisposedPrivate}}) {
     print "Tag: $tag\n";
-    print $this->{PrivateTagInfo}->{$tag}, "\n";
+    print $this->{PrivateTagInfo}->{$tag}, "\n";  # this is the list of files
 
     for my $file (keys %{$this->{PrivateTagInfo}->{$tag}}){
       if (defined $this->{FileInfo}->{$file}) {
-        $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag} = $this->{DisposedPrivate}->{$tag};
+        $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+          = $this->{DisposedPrivate}->{$tag};
       }
     }
   }
+  # Add the PHI tags/files to the list
+  for my $tag (keys %{$this->{DisposedPHI}}) {
+    print "Tag: $tag\n";
+
+    for my $val (values %{$this->{ByTag}->{$tag}}) {
+      for my $file (keys %$val) {
+        if (defined $this->{FileInfo}->{$file}) {
+          $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+            = $this->{DisposedPHI}->{$tag};
+        }
+      }
+    }
+  }
+
 
   for my $subj (sort keys %$subjects) {
     print "Subject: $subj\n";
@@ -842,31 +954,74 @@ sub FixAllYes {
     my $f = $files_with_changes->[0];  # the first file
 
     my $source_path = dirname($f);
-    my $destination_path = "$source_path/../../1/files";
 
     my $files_dir = get_subj_files_path($f);
     my $all_files = get_dicom_in_dir($files_dir);
 
-    # now we we can get the difference
-    # for now just print a report
-    print "Count of all files: ", scalar @$all_files, "\n";
-    print "Count of changed files: ", scalar @$files_with_changes, "\n";
-
     # now.. get the difference of them.. found this on some StackOverflow ans
     my @unchanged_files = grep(!defined $subjects->{$subj}->{$_}, @$all_files);
 
-    print "Count of unchanged files:", scalar @unchanged_files, "\n";
+    $this->RequestLockForEdit($subj, sub {
+      my($lines) = @_;
 
-    $this->RequestLockForEdit($subj, $this->CloseTTAL({
-      files_with_changes => $files_with_changes,
-      source_path => $source_path,
-      destination_path => $destination_path,
-      files_dir => $files_dir,
-      all_files => $all_files,
-      unchanged_files => \@unchanged_files,
-      subjects => $subjects,
-      subj => $subj,
-    }));
+      my %args;
+      for my $line (@$lines){
+        if($line =~ /^(.*):\s*(.*)$/){
+          my $k = $1; my $v = $2;
+          $args{$k} = $v;
+        }
+      }
+
+      unless (defined $args{Locked} and $args{Locked} eq 'OK') {
+        print "Failed to get lock! Aborting!\n";
+        return;
+      }
+
+      my $destination_path = $args{'Destination File Directory'};
+
+      # print Dumper(\%args);
+
+      # unchanged -> link
+      # changed -> make the required adjustments
+
+      my $files_to_link = {};
+      for my $f (@unchanged_files) {
+        my $bn = basename($f);
+        $files_to_link->{$bn} = md5_hex($bn);  # just hash the filename,
+                                               # should be enough
+      }
+
+      # Build the list of changes
+      my $change_list = {};
+      for my $f (@$files_with_changes) {
+        my $file = basename($f);
+        my $tags = $subjects->{$subj}->{$f};
+
+        $change_list->{$f} = translate_dispositions($this, $tags, 
+                                                    "$source_path/$file",
+                                                    "$destination_path/$file");
+      }
+
+      my $revision_dir = $args{'Revision Dir'};
+      # put things together
+      my $fix_hash = {
+        source => $source_path,
+        destination => $destination_path,
+        operation => 'EditAndAnalyze',
+        parallelism => 5,
+        FileEdits => $change_list,
+        files_to_link => $files_to_link,
+        info_dir => $revision_dir,  # required
+        cache_dir => "$this->{DicomInfoCache}/dicom_info",
+      };
+
+      my $pinfo = "$revision_dir/edits.pinfo";
+      print "Saving pinfo to: $pinfo\n";
+      store($fix_hash, $pinfo);
+
+      $this->TestTestTestAfterLock($args{Id}, $pinfo);
+
+    });
   }
 }
 
@@ -914,76 +1069,6 @@ sub LockExtractionDirectory{
   ){
     return;
   }
-}
-# this is not generic, just for testing the response
-sub CloseTTAL {
-  my($this, $parms) = @_;
-  return sub {
-    my($lines) = @_;
-
-    my $subjects = $parms->{subjects};
-    my $subj = $parms->{subj};
-    my $source_path = $parms->{source_path};
-
-    my %args;
-    for my $line (@$lines){
-      if($line =~ /^(.*):\s*(.*)$/){
-        my $k = $1; my $v = $2;
-        $args{$k} = $v;
-      }
-    }
-
-    unless (defined $args{Locked} and $args{Locked} eq 'OK') {
-      print "Failed to get lock! Aborting!\n";
-      return;
-    }
-
-    my $destination_path = $args{'Destination File Directory'};
-
-    print Dumper(\%args);
-
-    # unchanged -> link
-    # changed -> make the required adjustments
-
-    my $files_to_link = {};
-    for my $f (@{$parms->{unchanged_files}}) {
-      my $bn = basename($f);
-      $files_to_link->{$bn} = md5_hex($bn);  # just hash the filename, should be enough
-    }
-
-    # Build the list of changes
-    my $change_list = {};
-    for my $f (@{$parms->{files_with_changes}}) {
-      my $file = basename($f);
-      my $tags = $subjects->{$subj}->{$f};
-
-      $change_list->{$f} = {
-        from_file => "$source_path/$file",
-        to_file => "$destination_path/$file",
-        # actually put the list of tag changes here...
-        full_ele_deletes => $tags,  # this is a placeholder
-      }
-    }
-
-    my $revision_dir = $args{'Revision Dir'};
-    # put things together
-    my $fix_hash = {
-      source => $source_path,
-      destination => $destination_path,
-      operation => 'EditAndAnalyze',
-      parallelism => 3,
-      FileEdits => $change_list,
-      files_to_link => $files_to_link,
-      info_dir => $revision_dir,  # required
-      cache_dir => "/cache/posda/Data/dicom_info", # also required, but set to what? TODO
-    };
-
-    my $pinfo = "$revision_dir/edits.pinfo";
-    print "Saving pinfo to: $pinfo\n";
-    store($fix_hash, $pinfo);
-
-    $this->TestTestTestAfterLock($args{Id}, $pinfo);
-  };
 }
 
 sub TestTestTestAfterLock {
