@@ -53,14 +53,15 @@ my $disposition_map = {
   K => 'Keep',
   C => 'Clean',
   R => 'Review',
-  0 => 'None',
+  0 => 'None (Review)',
 };
 
 my $phi_disposition_map = {
-  S => "Shift",
-  H => "Hash",
-  X => "Delete",
-  C => "Clear",
+  S => 'Shift',
+  H => 'Hash',
+  X => 'Delete',
+  C => 'Clear',
+  K => 'Keep',
 };
 
 
@@ -598,7 +599,7 @@ sub ApplyDispositionToAll {
 
   $this->{DisposedPrivate}->{$selected_tag} = $disposition;
 
-  if ($disposition ne 'R') {
+  unless ($disposition eq 'R' or $disposition eq '0') {
     # if this tag is in the list for PHI review, we can
     # remove it now, as any action other than (R)eview
     # will eliminate any possible PHI.
