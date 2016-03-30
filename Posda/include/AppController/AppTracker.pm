@@ -84,7 +84,7 @@ sub EndPs{
     my $num_rcv_sessions = 
       keys %{$main::HTTP_STATIC_OBJS{DicomReceiver}->{ActiveConnections}};
     my $num_running_apps = 
-      keys %$AppController::RunningApps;
+      keys %AppController::RunningApps;
     $this->{gfb}->execute;
     my $h = $this->{gfb}->fetchrow_hashref;
     $this->{gfb}->finish;
