@@ -100,8 +100,11 @@ sub EndPs{
       keys %{$main::HTTP_STATIC_OBJS{ExtractionManager}->{QueuedSubProcesses}};
     my $running_sends =
       keys %{$main::HTTP_STATIC_OBJS{ExtractionManager}->{RunningSends}};
+    unless(exists $main::HTTP_STATIC_OBJS{ExtractionManager}->{QueuedSends}){
+      $main::HTTP_STATIC_OBJS{ExtractionManager}->{QueuedSends} = [];
+    }
     my $queued_sends = 
-      keys %{$main::HTTP_STATIC_OBJS{ExtractionManager}->{QueuedSends}};
+      @{$main::HTTP_STATIC_OBJS{ExtractionManager}->{QueuedSends}};
     my $running_discards =
       keys %{$main::HTTP_STATIC_OBJS{ExtractionManager}->{RunningDiscards}};
     my $num_locks = 
