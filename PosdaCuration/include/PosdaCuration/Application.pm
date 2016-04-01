@@ -18,7 +18,7 @@ use PosdaCuration::DuplicateSopResolution;
 use Fcntl qw(:seek);
 use File::Path 'remove_tree';
 use Digest::MD5;
-use JSON::PP;
+use JSON;
 use Debug;
 use Storable;
 use Data::Dumper;
@@ -290,6 +290,13 @@ sub CollectionsMenu{
         style => "small",
         caption => "Refresh Dir",
         method => "RefreshDirData",
+        sync => "Update();",
+      },
+      { type => "host_link_sync",
+        condition => 1,
+        style => "small",
+        caption => "TestTestTest",
+        method => "TestTestTest",
         sync => "Update();",
       },
     ]);
@@ -750,35 +757,6 @@ sub GenerateCompareDataStructure {
   return $dest;
 }
 
-
-
-
-sub DrawSelectFromHash {
-  # Draw a simple SelectByValue, using a hash of values
-  #
-  # $op: op to pass to SelectByValue
-  # $options_hash: hash of options, in form {value => display_value}
-  # $selected_key: the key of the currently selected item
-  my($this, $http, $dyn, $op, $options_hash, $selected_key) = @_;
-
-  if (not defined $selected_key) {
-    $selected_key = '';
-  }
-
-  $this->RefreshEngine($http, $dyn, qq{<?dyn="SelectByValue" op="$op"?>});
-
-  for my $k (sort keys %$options_hash) {
-    my $val = $options_hash->{$k};
-    my $selected = "";
-    if ($k eq $selected_key) {
-      $selected = "selected=\"selected\"";
-    }
-    $http->queue("<option value=\"$k\" $selected>$val</option>");
-  }
-
-  $http->queue("</option>");
-}
-
 sub IntakeCheckButtons{
   my($this, $http, $dyn) = @_;
   if(exists $this->{IntakeCheckHierarchy}){
@@ -1054,10 +1032,12 @@ sub ExpandExtraction{
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
     my $reason = "edit";
     if($lock_status->{For} ne "PhiSearch"){
-      if($lock_status->{NextRev} eq "0"){
-        $reason = "extraction";
-      } elsif($lock_status->{NextRev} eq "discard"){
-        $reason = "discard";
+      if (defined $lock_status->{NextRev}) {
+        if($lock_status->{NextRev} eq "0"){
+          $reason = "extraction";
+        } elsif($lock_status->{NextRev} eq "discard"){
+          $reason = "discard";
+        }
       }
     }
     $reason = $lock_status->{For};
@@ -1972,66 +1952,68 @@ sub ExtractionLockLineHandler{
   return $sub;
 }
 ########################################################
-# possibly move to parent and inherit
-sub SimpleTransaction{
-  my($this, $port, $lines, $response) = @_;
-  my $sock;
-  unless(
-    $sock = IO::Socket::INET->new(
-     PeerAddr => "localhost",
-     PeerPort => $port,
-     Proto => 'tcp',
-     Timeout => 1,
-     Blocking => 0,
-    )
-  ){
-    return 0;
-  }
-  my $text = join("\n", @$lines) . "\n\n";
-  Dispatch::Select::Socket->new($this->WriteTransactionParms($text, $response),
-    $sock)->Add("writer");
-}
-sub WriteTransactionParms{
-  my($this, $text, $response) = @_;
-  my $offset = 0;
-  my $sub = sub {
-    my($disp, $sock) = @_;
-    my $length = length($text);
-    if($offset == length($text)){
-      $disp->Remove;
-      Dispatch::Select::Socket->new($this->ReadTransactionResponse($response),
-        $sock)->Add("reader");
-    } else {
-      my $len = syswrite($sock, $text, length($text) - $offset, $offset);
-      if($len <= 0) {
-        print STDERR "Wrote $len bytes ($!)\n";
-        $offset = length($text);
-      } else { $offset += $len }
-    }
-  };
-  return $sub;
-}
-sub ReadTransactionResponse{
-  my($this, $response) = @_;
-  my $text = "";
-  my @lines;
-  my $sub = sub {
-    my($disp, $sock) = @_;
-    my $len = sysread($sock, $text, 65536, length($text));
-    if($len <= 0){
-      if($text) { push @lines, $text }
-      $disp->Remove;
-      &$response(\@lines);
-    } else {
-      while($text =~/^([^\n]*)\n(.*)$/s){
-        my $line = $1;
-        $text = $2;
-        push(@lines, $line);
-      }
-    }
-  };
-  return $sub;
-}
+# moved to parent and inherit
+########################################################
+#
+# sub SimpleTransaction{
+#   my($this, $port, $lines, $response) = @_;
+#   my $sock;
+#   unless(
+#     $sock = IO::Socket::INET->new(
+#      PeerAddr => "localhost",
+#      PeerPort => $port,
+#      Proto => 'tcp',
+#      Timeout => 1,
+#      Blocking => 0,
+#     )
+#   ){
+#     return 0;
+#   }
+#   my $text = join("\n", @$lines) . "\n\n";
+#   Dispatch::Select::Socket->new($this->WriteTransactionParms($text, $response),
+#     $sock)->Add("writer");
+# }
+# sub WriteTransactionParms{
+#   my($this, $text, $response) = @_;
+#   my $offset = 0;
+#   my $sub = sub {
+#     my($disp, $sock) = @_;
+#     my $length = length($text);
+#     if($offset == length($text)){
+#       $disp->Remove;
+#       Dispatch::Select::Socket->new($this->ReadTransactionResponse($response),
+#         $sock)->Add("reader");
+#     } else {
+#       my $len = syswrite($sock, $text, length($text) - $offset, $offset);
+#       if($len <= 0) {
+#         print STDERR "Wrote $len bytes ($!)\n";
+#         $offset = length($text);
+#       } else { $offset += $len }
+#     }
+#   };
+#   return $sub;
+# }
+# sub ReadTransactionResponse{
+#   my($this, $response) = @_;
+#   my $text = "";
+#   my @lines;
+#   my $sub = sub {
+#     my($disp, $sock) = @_;
+#     my $len = sysread($sock, $text, 65536, length($text));
+#     if($len <= 0){
+#       if($text) { push @lines, $text }
+#       $disp->Remove;
+#       &$response(\@lines);
+#     } else {
+#       while($text =~/^([^\n]*)\n(.*)$/s){
+#         my $line = $1;
+#         $text = $2;
+#         push(@lines, $line);
+#       }
+#     }
+#   };
+#   return $sub;
+# }
 sub RequestLock{
   my($this, $http, $dyn, $at_end) = @_;
   my $subj = $dyn->{subj};
@@ -5064,6 +5046,8 @@ sub WhenApplyLockGranted{
         "Session: $session", "User: $user", "Pid: $pid" ,
         "Commands: $commands" ];
       $this->{FixApplied}->{$subj} = 1;
+      print "==========================\n";
+      print Dumper($new_args);
       $this->SimpleTransaction($this->{ExtractionManagerPort},
         $new_args,
         $this->WhenApplyEditQueued($subj, $disp));
@@ -5483,4 +5467,76 @@ sub ApplyPatientFixes{
    $this->ApplyNextFix(\@fixes_to_apply)
   )->queue;
 }
+
+
+
+################################################################################
+
+
+
+sub TestTestTest {
+  my($this, $http, $dyn) = @_;
+  print "requesting lock via NewRequestLockForEdit\n";
+  # TODO: subject comes from where??
+  $this->NewRequestLockForEdit("LDCT-07-002", $this->CloseTTAL);
+}
+
+sub CloseTTAL {
+  my($this, $http, $dyn) = @_;
+  return sub {
+    my($lines) = @_;
+
+    print "====================================\n";
+    for my $k (@$lines) {
+      print "==] $k\n";
+    }
+    print "====================================\n";
+
+    my %args;
+    for my $line (@$lines){
+      if($line =~ /^(.*):\s*(.*)$/){
+        my $k = $1; my $v = $2;
+        $args{$k} = $v;
+      }
+    }
+
+    print Dumper(%args);
+
+    $this->TestTestTestAfterLock($args{Id});
+  };
+}
+
+sub TestTestTestAfterLock {
+  my($this, $id) = @_;
+  my $commands = "/home/posda/PosdaTools/edits.pinfo";
+
+  # Look here for a good example:
+  # WhenExtractionLockComplete
+
+  my $session = $this->{session};
+  my $pid = $$;
+  my $user = $this->get_user;
+  my $new_args = [
+    "ApplyEdits", 
+    "Id: $id",
+    "Session: $session", 
+    "User: $user", 
+    "Pid: $pid" ,
+    "Commands: $commands" 
+  ];
+
+  print "==========================\n";
+  print Dumper($new_args);
+  print "==========================\n";
+  $this->SimpleTransaction($this->{ExtractionManagerPort},
+    $new_args,
+    $this->TestWhenDoneTest());
+}
+
+sub TestWhenDoneTest {
+  return sub {
+    print "TestTestTest completed?\n";
+  };
+}
+
 1;

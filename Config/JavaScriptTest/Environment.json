@@ -4,6 +4,6 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
-  "JavascriptRoot" : "/home/posda/PosdaTools/JavaScriptTest/javascript",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "JavascriptRoot" : "POSDA_ROOT/JavaScriptTest/javascript",
 }

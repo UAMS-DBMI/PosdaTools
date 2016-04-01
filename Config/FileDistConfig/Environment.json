@@ -4,17 +4,17 @@
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
-  "AppHttpRoot" : "/home/posda/PosdaTools/HttpRoot/http_root",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "AuthenticationDbType" : "File",
-  "AuthenticationDbFileName" : "/cache/posda/Login.db",
-  "CacheDir" : "/cache/posda",
-  "TestDataRoot" : "/cache/posda/Data/TestData",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "CacheDir" : "POSDA_CACHE_ROOT",
+  "TestDataRoot" : "POSDA_CACHE_ROOT/Data/TestData",
   "ParticipantDataRoot" : 
-    "/cache/posda/Data/Participant_Data_2014C",
+    "POSDA_CACHE_ROOT/Data/Participant_Data_2014C",
   "ParticipantResultsRoot" : 
-    "/cache/posda/Data/Participant_Results_2014C",
-  "ReceiverDataRoot" : "/cache/posda/DicomReceiver",
+    "POSDA_CACHE_ROOT/Data/Participant_Results_2014C",
+  "ReceiverDataRoot" : "POSDA_CACHE_ROOT/DicomReceiver",
   "TempDataRoot" : 
-    "/cache/posda/Data/TempDirectory",
+    "POSDA_CACHE_ROOT/Data/TempDirectory",
   "AnonymizeParallelism" : 5,
 }

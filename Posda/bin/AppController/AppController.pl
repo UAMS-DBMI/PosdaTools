@@ -8,7 +8,7 @@ use Dispatch::Http;
 use Dispatch::Select;
 use Posda::ConfigRead;
 use Cwd;
-use JSON::PP;
+use JSON;
 
 $| = 1;
 
