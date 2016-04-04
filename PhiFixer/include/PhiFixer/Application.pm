@@ -398,6 +398,8 @@ sub SelectReport{
   $this->{submission_file} = $dyn->{submission};
   $this->{file_info_file} = $dyn->{file_info};
   $this->{private_tag_info_file} = $dyn->{private_tag_info};
+  $this->{RootsInfo} = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
 #  $http->queue("This is a test");
 #  $http->finish;
@@ -469,6 +471,7 @@ sub PrivateTagReview{
   }
 
   # TODO: button is for testing only
+  # TESTING
   $this->NotSoSimpleButton($http, {
     op => "FinishEarly",
     caption => "Finish NOW!",
@@ -1233,19 +1236,21 @@ sub DrawTagDetails {
 }
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
+
+
   $http->queue(qq{
     <hr/>
     <table class="table table-condensed table-bordered">
     <tr>
       <th>Value</th>
+      <th>Study Dates</th>
+      <th>Unshifted Study Dates</th>
       <th># Patients</th>
       <th># Studies</th>
       <th># Series</th>
       <th># Modalities</th>
       <th># SOP Classes</th>
       <th># Files</th>
-      <th>Study Dates</th>
-      <th>Series Dates</th>
       <th>Select</th>
     </tr>
   });
@@ -1269,6 +1274,21 @@ sub TagValueReport{
       $series{$series} = 1;
       $sop_classes{$sop_class} = 1;
     }
+
+    my $dates = $this->GetStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){  # if 0 ele eq last ele? should not just check for length?
+      $http->queue("<td>$dates->[0]</td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+    }
+
+    my $dates = $this->GetUnshiftedStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){
+      $http->queue("<td>$dates->[0]</td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+    }
+
     my $num_pats = keys %pats;
     my $num_studies = keys %studies;
     my $num_series = keys %series;
@@ -1279,19 +1299,8 @@ sub TagValueReport{
     $http->queue("<td>$num_series</td>"); # Series
     $http->queue("<td>$num_modalities</td>"); # Modalities
     $http->queue("<td>$num_sop_classes</td>"); # SOP Classes
-    $http->queue("<td>$num_files</td>");
-    my $dates = $this->GetStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
-    if($dates->[0] eq $dates->[$#{$dates}]){
-      $http->queue("<td>$dates->[0]</td>");
-    } else {
-      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
-    }
-    $dates = $this->GetSeriesDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
-    if($dates->[0] eq $dates->[$#{$dates}]){
-      $http->queue("<td>$dates->[0]</td><td>");
-    } else {
-      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td><td>");
-    }
+
+    $http->queue("<td>");
     my @files = sort keys %{$this->{ByTag}->{$tag}->{$v}};
     my $selected_file = "select";
     $this->{SelectedTagForExtraction} = $tag;
@@ -1462,6 +1471,21 @@ sub GetStudyDates{
     $dates{$study_date} = 1;
   }
   return [ sort keys %dates];
+}
+sub GetUnshiftedStudyDates{
+  my($this, $list) = @_;
+  my $format = '%Y%m%d';
+
+  my $dates = $this->GetStudyDates($list);
+  my $shifted_dates = [];
+
+  for my $d (@$dates) {
+    my $date = Time::Piece->strptime($d, $format);
+    $date -= (ONE_DAY * $this->{RootsInfo}->{date_inc});
+    push @$shifted_dates, $date->strftime($format);
+  }
+
+  return $shifted_dates;
 }
 sub GetSeriesDates{
   my($this, $list) = @_;
