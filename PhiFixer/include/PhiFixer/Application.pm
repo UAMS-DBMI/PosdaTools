@@ -823,9 +823,6 @@ sub shift_temp {
   if (defined $this->{ByFile}->{$file}->{$tag}) {
     my $orig_val = [keys %{$this->{ByFile}->{$file}->{$tag}}]->[0];
 
-    # consult dicom roots database for the date shift value
-    my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
-
     # For now, only going to do this for date VRs
     my $VR = $this->{DD}->get_ele_by_sig($tag)->{VR};
     my $format;
@@ -841,7 +838,7 @@ sub shift_temp {
 
     if (defined $format) {
       my $date = Time::Piece->strptime($orig_val, $format);
-      $date += (ONE_DAY * $info->{date_inc});
+      $date += (ONE_DAY * $this->{RootsInfo}->{date_inc});
       $val = $date->strftime($format);
     }
   }
@@ -851,7 +848,7 @@ sub shift_temp {
 sub hash_temp {
   my ($this, $tag, $file) = @_;
   # same for every tag/file
-  my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  my $info = $this->{RootsInfo};
   my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
 
   return ['hash_unhashed_uid', $uid_root];
@@ -1299,6 +1296,7 @@ sub TagValueReport{
     $http->queue("<td>$num_series</td>"); # Series
     $http->queue("<td>$num_modalities</td>"); # Modalities
     $http->queue("<td>$num_sop_classes</td>"); # SOP Classes
+    $http->queue("<td>$num_files</td>");
 
     $http->queue("<td>");
     my @files = sort keys %{$this->{ByTag}->{$tag}->{$v}};
