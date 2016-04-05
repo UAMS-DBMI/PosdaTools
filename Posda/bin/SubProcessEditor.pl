@@ -187,10 +187,10 @@ my $edit_function = sub {
     }
   }
   # full_ele_replacements
-  for my $s (keys %{$edits->{full_ele_substitutions}}){
+  for my $s (keys %{$edits->{full_ele_replacements}}){
     if($sig eq $s){
-      $ele->{value} = $edits->{full_ele_substitutions}->{$s};
-      $results->{short_ele_substitutions} += 1;
+      $ele->{value} = $edits->{full_ele_replacements}->{$s};
+      $results->{full_ele_replacements} += 1;
     }
   }
 };
