@@ -16,8 +16,13 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
   <head>
     <!-- HttpApp::JsController line 20 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css">
+
     <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.min.js" charset="utf-8"></script>
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
 };
@@ -589,10 +594,11 @@ sub MakeMenu{
         if(exists($m->{style}) && $m->{style} eq "small"){
           $small = 1;
         }
+        # Default sync method of Update()
+        my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
         my $link = 
           $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
-            $m->{args}, $small, $m->{sync}, "list-group-item");
-        # $http->queue("<small>$link</small><br />");
+            $m->{args}, $small, $sync_method, "list-group-item");
         $http->queue($link);
       } elsif ($m->{type} eq "javascript"){
         my $link = $this->MakeJavascriptLink(
