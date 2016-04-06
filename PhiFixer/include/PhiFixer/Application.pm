@@ -845,7 +845,7 @@ sub shift_temp {
 
     if (defined $format) {
       my $date = Time::Piece->strptime($orig_val, $format);
-      $date += (ONE_DAY * $this->{RootsInfo}->{date_inc});
+      $date -= (ONE_DAY * $this->{RootsInfo}->{date_inc});
       $val = $date->strftime($format);
     }
   }
@@ -1531,7 +1531,7 @@ sub GetUnshiftedStudyDates{
 
   for my $d (@$dates) {
     my $date = Time::Piece->strptime($d, $format);
-    $date -= (ONE_DAY * $this->{RootsInfo}->{date_inc});
+    $date += (ONE_DAY * $this->{RootsInfo}->{date_inc});
     push @$shifted_dates, $date->strftime($format);
   }
 
