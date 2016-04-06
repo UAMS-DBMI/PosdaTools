@@ -492,7 +492,7 @@ sub WhenStructureSetAnalyzed{
   my($this) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
-    if($status eq "Success"){
+    if($status eq "Succeeded"){
       my @rois = keys %{$struct->{contour_rept}};
       if(@rois > 0){
         print STDERR "################\n" .
