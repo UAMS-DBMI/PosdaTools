@@ -32,6 +32,10 @@ use constant UNKNOWN => '&lt;unknown&gt;';
 
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 
+sub DEBUG {
+  #print @_, "\n";
+}
+
 my $expander = qq{<?dyn="BaseHeader"?>
   <script type="text/javascript">
   <?dyn="JsController"?>
@@ -610,7 +614,7 @@ sub ApplyDispositionToAll {
     $this->{Disposed}->{$selected_tag} = 1;
   }
 
-  print "ApplyDispositionToAll: $selected_tag => $disposition\n";
+  DEBUG "ApplyDispositionToAll: $selected_tag => $disposition";
 
   # remove the selected tag from the list
   splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
@@ -664,8 +668,6 @@ sub InfoTagValueMode{
 sub SetSelectedPriv{
   my($this, $http, $dyn) = @_;
   my $value = $dyn->{value};
-
-  print "SetSelectedPriv: $value\n";
 
   # unset the selected disposition
   delete $this->{DispositionSelected};
@@ -906,7 +908,6 @@ sub translate_dispositions {
 
 sub FixAllYes {
   my($this, $http, $dyn) = @_;
-  print "Fixing all...\n";
 
   # first some things that we'll need
   $this->{Collection};
@@ -922,9 +923,6 @@ sub FixAllYes {
   my $subjects = {};
   # Add the private tags to the list
   for my $tag (keys %{$this->{DisposedPrivate}}) {
-    print "Tag: $tag\n";
-    print $this->{PrivateTagInfo}->{$tag}, "\n";  # this is the list of files
-
     for my $file (keys %{$this->{PrivateTagInfo}->{$tag}}){
       if (defined $this->{FileInfo}->{$file}) {
         $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
@@ -948,8 +946,6 @@ sub FixAllYes {
 
 
   for my $subj (sort keys %$subjects) {
-    print "Subject: $subj\n";
-
     my $files_with_changes = [keys %{$subjects->{$subj}}];
 
     my $f = $files_with_changes->[0];  # the first file
@@ -1017,7 +1013,7 @@ sub FixAllYes {
       };
 
       my $pinfo = "$revision_dir/edits.pinfo";
-      print "Saving pinfo to: $pinfo\n";
+      DEBUG "Saving pinfo to: $pinfo";
       store($fix_hash, $pinfo);
 
       $this->TestTestTestAfterLock($args{Id}, $pinfo);
@@ -1032,7 +1028,7 @@ sub FixAllYes {
 sub RequestLockForEdit{
   my($this, $subj, $at_end) = @_;
 
-  print "RequestLockForEdit\n";
+  DEBUG "RequestLockForEdit";
 
   my $collection = $this->{Collection};
   my $site = $this->{Site};
@@ -1053,7 +1049,7 @@ sub RequestLockForEdit{
 sub LockExtractionDirectory{
   my($this, $args, $when_done) = @_;
   # delete $this->{DirectoryLocks};
-  print "LockExtractionDirectory\n";
+  DEBUG "LockExtractionDirectory";
   my @lines;
   push(@lines, "LockForEdit");
   for my $k (keys %$args){
@@ -1061,8 +1057,8 @@ sub LockExtractionDirectory{
     push(@lines, "$k: $args->{$k}");
   }
 
-  print "Locking with these lines:\n";
-  print Dumper(@lines);
+  DEBUG "Locking with these lines:";
+  DEBUG Dumper(@lines);
 
   if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     [@lines],
@@ -1090,9 +1086,9 @@ sub TestTestTestAfterLock {
     "Commands: $commands" 
   ];
 
-  print "==========================\n";
-  print Dumper($new_args);
-  print "==========================\n";
+  DEBUG "==========================";
+  DEBUG Dumper($new_args);
+  DEBUG "==========================";
   $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     $new_args,
     $this->TestWhenDoneTest());
@@ -1100,7 +1096,7 @@ sub TestTestTestAfterLock {
 
 sub TestWhenDoneTest {
   return sub {
-    print "TestTestTest completed?\n";
+    DEBUG "TestTestTest completed?";
   };
 }
 
