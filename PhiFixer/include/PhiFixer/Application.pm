@@ -32,6 +32,10 @@ use constant UNKNOWN => '&lt;unknown&gt;';
 
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 
+sub DEBUG {
+  print @_, "\n";
+}
+
 my $expander = qq{<?dyn="BaseHeader"?>
   <script type="text/javascript">
   <?dyn="JsController"?>
@@ -398,6 +402,8 @@ sub SelectReport{
   $this->{submission_file} = $dyn->{submission};
   $this->{file_info_file} = $dyn->{file_info};
   $this->{private_tag_info_file} = $dyn->{private_tag_info};
+  $this->{RootsInfo} = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
 #  $http->queue("This is a test");
 #  $http->finish;
@@ -469,6 +475,7 @@ sub PrivateTagReview{
   }
 
   # TODO: button is for testing only
+  # TESTING DEBUG
   $this->NotSoSimpleButton($http, {
     op => "FinishEarly",
     caption => "Finish NOW!",
@@ -607,7 +614,7 @@ sub ApplyDispositionToAll {
     $this->{Disposed}->{$selected_tag} = 1;
   }
 
-  print "ApplyDispositionToAll: $selected_tag => $disposition\n";
+  DEBUG "ApplyDispositionToAll: $selected_tag => $disposition";
 
   # remove the selected tag from the list
   splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
@@ -662,8 +669,6 @@ sub SetSelectedPriv{
   my($this, $http, $dyn) = @_;
   my $value = $dyn->{value};
 
-  print "SetSelectedPriv: $value\n";
-
   # unset the selected disposition
   delete $this->{DispositionSelected};
 
@@ -689,6 +694,7 @@ sub SetSelectedEle{
     $this->{ContentMode} = "WaitingForTag";
   }
   $this->ClearFileSelection($http, $dyn);
+  delete $this->{DispoChecks}; # ensure old checks aren't carried over
 }
 sub TagFilters{
   my($this, $http, $dyn) = @_;
@@ -798,6 +804,10 @@ sub AllTagsDisposed {
   $http->queue(qq{
     <h2>PHI Tag Selections</h2>
   });
+
+  # Add in CPLX just before drawing summary
+  # This was omitted originally to keep it out of the disposition dropdown
+  $phi_disposition_map->{CPLX} = 'Complex, per-value';
   $this->DrawSelectionSummary($http, $dyn,
     $this->{DisposedPHI}, $phi_disposition_map);
 
@@ -820,9 +830,6 @@ sub shift_temp {
   if (defined $this->{ByFile}->{$file}->{$tag}) {
     my $orig_val = [keys %{$this->{ByFile}->{$file}->{$tag}}]->[0];
 
-    # consult dicom roots database for the date shift value
-    my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
-
     # For now, only going to do this for date VRs
     my $VR = $this->{DD}->get_ele_by_sig($tag)->{VR};
     my $format;
@@ -838,7 +845,7 @@ sub shift_temp {
 
     if (defined $format) {
       my $date = Time::Piece->strptime($orig_val, $format);
-      $date += (ONE_DAY * $info->{date_inc});
+      $date += (ONE_DAY * $this->{RootsInfo}->{date_inc});
       $val = $date->strftime($format);
     }
   }
@@ -848,7 +855,7 @@ sub shift_temp {
 sub hash_temp {
   my ($this, $tag, $file) = @_;
   # same for every tag/file
-  my $info = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  my $info = $this->{RootsInfo};
   my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
 
   return ['hash_unhashed_uid', $uid_root];
@@ -880,11 +887,7 @@ sub translate_dispositions {
 
     if ($action eq 'full_ele_replacements') {
       # replace the value with a blank
-      $val = "BLANK";
-    }
-    if ($action eq 'hash_unhashed_uid') {
-      # replace with root uid TODO: from where?
-      $val = "ROOTUID";
+      $val = " ";
     }
 
     # if action is code
@@ -906,7 +909,6 @@ sub translate_dispositions {
 
 sub FixAllYes {
   my($this, $http, $dyn) = @_;
-  print "Fixing all...\n";
 
   # first some things that we'll need
   $this->{Collection};
@@ -922,9 +924,6 @@ sub FixAllYes {
   my $subjects = {};
   # Add the private tags to the list
   for my $tag (keys %{$this->{DisposedPrivate}}) {
-    print "Tag: $tag\n";
-    print $this->{PrivateTagInfo}->{$tag}, "\n";  # this is the list of files
-
     for my $file (keys %{$this->{PrivateTagInfo}->{$tag}}){
       if (defined $this->{FileInfo}->{$file}) {
         $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
@@ -934,13 +933,17 @@ sub FixAllYes {
   }
   # Add the PHI tags/files to the list
   for my $tag (keys %{$this->{DisposedPHI}}) {
-    print "Tag: $tag\n";
-
-    for my $val (values %{$this->{ByTag}->{$tag}}) {
-      for my $file (keys %$val) {
+    for my $val (keys %{$this->{ByTag}->{$tag}}) {
+      for my $file (keys %{$this->{ByTag}->{$tag}->{$val}}) {
         if (defined $this->{FileInfo}->{$file}) {
-          $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
-            = $this->{DisposedPHI}->{$tag};
+          # if its a complex dispo, set correctly here
+          if ($this->{DisposedPHI}->{$tag} eq 'CPLX') {
+            $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+              = $this->{ComplexDispo}->{$tag}->{$val};
+          } else {
+            $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+              = $this->{DisposedPHI}->{$tag};
+          }
         }
       }
     }
@@ -948,8 +951,6 @@ sub FixAllYes {
 
 
   for my $subj (sort keys %$subjects) {
-    print "Subject: $subj\n";
-
     my $files_with_changes = [keys %{$subjects->{$subj}}];
 
     my $f = $files_with_changes->[0];  # the first file
@@ -1017,13 +1018,33 @@ sub FixAllYes {
       };
 
       my $pinfo = "$revision_dir/edits.pinfo";
-      print "Saving pinfo to: $pinfo\n";
+      DEBUG "Saving pinfo to: $pinfo";
       store($fix_hash, $pinfo);
 
       $this->TestTestTestAfterLock($args{Id}, $pinfo);
 
     });
   }
+
+  $this->{ContentMode} = "AllDoneHere";
+  $this->AutoRefresh;
+}
+
+sub AllDoneHere {
+  my($this, $http, $dyn) = @_;
+
+  $http->queue("All done!");
+
+  $this->NotSoSimpleButton($http, {
+    op => "ResetEverything",
+    caption => "Begin again",
+    sync => "Update();",
+  });
+}
+
+sub ResetEverything {
+  my($this, $http, $dyn) = @_;
+
 }
 
 ################################################################################
@@ -1032,7 +1053,7 @@ sub FixAllYes {
 sub RequestLockForEdit{
   my($this, $subj, $at_end) = @_;
 
-  print "RequestLockForEdit\n";
+  DEBUG "RequestLockForEdit";
 
   my $collection = $this->{Collection};
   my $site = $this->{Site};
@@ -1053,7 +1074,7 @@ sub RequestLockForEdit{
 sub LockExtractionDirectory{
   my($this, $args, $when_done) = @_;
   # delete $this->{DirectoryLocks};
-  print "LockExtractionDirectory\n";
+  DEBUG "LockExtractionDirectory";
   my @lines;
   push(@lines, "LockForEdit");
   for my $k (keys %$args){
@@ -1061,8 +1082,8 @@ sub LockExtractionDirectory{
     push(@lines, "$k: $args->{$k}");
   }
 
-  print "Locking with these lines:\n";
-  print Dumper(@lines);
+  DEBUG "Locking with these lines:";
+  DEBUG Dumper(@lines);
 
   if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     [@lines],
@@ -1090,9 +1111,9 @@ sub TestTestTestAfterLock {
     "Commands: $commands" 
   ];
 
-  print "==========================\n";
-  print Dumper($new_args);
-  print "==========================\n";
+  DEBUG "==========================";
+  DEBUG Dumper($new_args);
+  DEBUG "==========================";
   $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     $new_args,
     $this->TestWhenDoneTest());
@@ -1100,7 +1121,7 @@ sub TestTestTestAfterLock {
 
 sub TestWhenDoneTest {
   return sub {
-    print "TestTestTest completed?\n";
+    DEBUG "TestTestTest completed?";
   };
 }
 
@@ -1233,23 +1254,31 @@ sub DrawTagDetails {
 }
 sub TagValueReport{
   my($this, $http, $dyn, $tag) = @_;
+
+
   $http->queue(qq{
     <hr/>
     <table class="table table-condensed table-bordered">
     <tr>
       <th>Value</th>
+      <th>Study Dates</th>
+      <th>Unshifted Study Dates</th>
       <th># Patients</th>
       <th># Studies</th>
       <th># Series</th>
       <th># Modalities</th>
       <th># SOP Classes</th>
       <th># Files</th>
-      <th>Study Dates</th>
-      <th>Series Dates</th>
+      <th>Dispose</th>
       <th>Select</th>
     </tr>
   });
   for my $v (keys %{$this->{ByTag}->{$tag}}){
+    if (defined $this->{DispoChecks}->{$v} and $this->{DispoChecks}->{$v} == 2){
+      # dispo already applied to this row
+      next;
+    }
+
     $http->queue("<tr><td>$v</td>");
     my $num_files = keys %{$this->{ByTag}->{$tag}->{$v}};
     my %pats;
@@ -1269,6 +1298,21 @@ sub TagValueReport{
       $series{$series} = 1;
       $sop_classes{$sop_class} = 1;
     }
+
+    my $dates = $this->GetStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){  # if 0 ele eq last ele? should not just check for length?
+      $http->queue("<td>$dates->[0]</td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+    }
+
+    my $dates = $this->GetUnshiftedStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
+    if($dates->[0] eq $dates->[$#{$dates}]){
+      $http->queue("<td>$dates->[0]</td>");
+    } else {
+      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+    }
+
     my $num_pats = keys %pats;
     my $num_studies = keys %studies;
     my $num_series = keys %series;
@@ -1280,18 +1324,23 @@ sub TagValueReport{
     $http->queue("<td>$num_modalities</td>"); # Modalities
     $http->queue("<td>$num_sop_classes</td>"); # SOP Classes
     $http->queue("<td>$num_files</td>");
-    my $dates = $this->GetStudyDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
-    if($dates->[0] eq $dates->[$#{$dates}]){
-      $http->queue("<td>$dates->[0]</td>");
-    } else {
-      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td>");
+
+    # default to on, so set it as so here
+    if (not defined $this->{DispoChecks}->{$v}){
+      $this->{DispoChecks}->{$v} = 1;
     }
-    $dates = $this->GetSeriesDates([keys %{$this->{ByTag}->{$tag}->{$v}}]);
-    if($dates->[0] eq $dates->[$#{$dates}]){
-      $http->queue("<td>$dates->[0]</td><td>");
-    } else {
-      $http->queue("<td>$dates->[0] - $dates->[$#{$dates}]</td><td>");
-    }
+
+    $http->queue(
+      "<td>" . 
+      $this->CheckBoxDelegate("DisposeCheck", $v,
+        $this->{DispoChecks}->{$v},
+        { op => "DisposeCheckClicked", sync => "Update();" }
+      ) .
+      "</td>"
+    );
+
+    # draw the select box
+    $http->queue("<td>");
     my @files = sort keys %{$this->{ByTag}->{$tag}->{$v}};
     my $selected_file = "select";
     $this->{SelectedTagForExtraction} = $tag;
@@ -1321,6 +1370,16 @@ sub TagValueReport{
   }
   $http->queue("</table>");
 }
+
+sub DisposeCheckClicked {
+  my($this, $http, $dyn) = @_;
+  my $id = $dyn->{value};
+
+  if (defined $this->{DispoChecks}->{$id}){
+    $this->{DispoChecks}->{$id} = !$this->{DispoChecks}->{$id};
+  }
+}
+
 sub SelectFileForDisplay{
   my($this, $http, $dyn) = @_;
   if($dyn->{value} eq "select"){
@@ -1463,6 +1522,21 @@ sub GetStudyDates{
   }
   return [ sort keys %dates];
 }
+sub GetUnshiftedStudyDates{
+  my($this, $list) = @_;
+  my $format = '%Y%m%d';
+
+  my $dates = $this->GetStudyDates($list);
+  my $shifted_dates = [];
+
+  for my $d (@$dates) {
+    my $date = Time::Piece->strptime($d, $format);
+    $date -= (ONE_DAY * $this->{RootsInfo}->{date_inc});
+    push @$shifted_dates, $date->strftime($format);
+  }
+
+  return $shifted_dates;
+}
 sub GetSeriesDates{
   my($this, $list) = @_;
   my %dates;
@@ -1476,18 +1550,47 @@ sub DisposeTag{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
 
+  my $disposition = $this->{PHIDispositionSelected};
+
+  # check to see if there are any Values without Dispo checked
+  my $undisposed_exist = 0;
+  for my $val (keys %{$this->{DispoChecks}}) {
+    if ($this->{DispoChecks}->{$val} != 1){ # 0 or 2 trigger this
+      $undisposed_exist = 1;
+      last;
+    }
+  }
+
+  if ($undisposed_exist) {  # This is a ComplexDisposition
+    DEBUG "ComplexDisposition!";
+    my $undisposed_remain = 0;
+
+    for my $val (keys %{$this->{DispoChecks}}) {
+      if ($this->{DispoChecks}->{$val} == 1){
+        $this->{ComplexDispo}->{$tag}->{$val} = $disposition;
+        $this->{DispoChecks}->{$val} = 2;  # mark it as done
+        DEBUG "DisposeComplex $tag - $val => $disposition";
+      } elsif ($this->{DispoChecks}->{$val} == 0) {
+        $undisposed_remain = 1;
+      }
+    }
+
+    if ($undisposed_remain) {
+      return;
+    } else {
+      $disposition = 'CPLX';
+    }
+  }
+
   delete $this->{SelectedEles}->{$tag};
   delete $this->{SelectedFileForExtraction};
   delete $this->{SelectedTagForExtraction};
   delete $this->{SelectedValueForExtraction};
+  delete $this->{DispoChecks};
   $this->{Disposed}->{$tag} = 1;
   $this->SelectNextAvailableTag;
 
-  my $disposition = $this->{PHIDispositionSelected};
-
   $this->{DisposedPHI}->{$tag} = $disposition;
-
-  print "DisposeTag: $tag => $disposition\n";
 }
 sub SelectNextAvailableTag{
   my($this) = @_;
