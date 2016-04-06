@@ -33,7 +33,7 @@ use constant UNKNOWN => '&lt;unknown&gt;';
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 
 sub DEBUG {
-  #print @_, "\n";
+  print @_, "\n";
 }
 
 my $expander = qq{<?dyn="BaseHeader"?>
@@ -475,7 +475,7 @@ sub PrivateTagReview{
   }
 
   # TODO: button is for testing only
-  # TESTING
+  # TESTING DEBUG
   $this->NotSoSimpleButton($http, {
     op => "FinishEarly",
     caption => "Finish NOW!",
@@ -694,6 +694,7 @@ sub SetSelectedEle{
     $this->{ContentMode} = "WaitingForTag";
   }
   $this->ClearFileSelection($http, $dyn);
+  delete $this->{DispoChecks}; # ensure old checks aren't carried over
 }
 sub TagFilters{
   my($this, $http, $dyn) = @_;
@@ -803,6 +804,10 @@ sub AllTagsDisposed {
   $http->queue(qq{
     <h2>PHI Tag Selections</h2>
   });
+
+  # Add in CPLX just before drawing summary
+  # This was omitted originally to keep it out of the disposition dropdown
+  $phi_disposition_map->{CPLX} = 'Complex, per-value';
   $this->DrawSelectionSummary($http, $dyn,
     $this->{DisposedPHI}, $phi_disposition_map);
 
@@ -882,11 +887,7 @@ sub translate_dispositions {
 
     if ($action eq 'full_ele_replacements') {
       # replace the value with a blank
-      $val = "BLANK";
-    }
-    if ($action eq 'hash_unhashed_uid') {
-      # replace with root uid TODO: from where?
-      $val = "ROOTUID";
+      $val = " ";
     }
 
     # if action is code
@@ -932,13 +933,17 @@ sub FixAllYes {
   }
   # Add the PHI tags/files to the list
   for my $tag (keys %{$this->{DisposedPHI}}) {
-    print "Tag: $tag\n";
-
-    for my $val (values %{$this->{ByTag}->{$tag}}) {
-      for my $file (keys %$val) {
+    for my $val (keys %{$this->{ByTag}->{$tag}}) {
+      for my $file (keys %{$this->{ByTag}->{$tag}->{$val}}) {
         if (defined $this->{FileInfo}->{$file}) {
-          $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
-            = $this->{DisposedPHI}->{$tag};
+          # if its a complex dispo, set correctly here
+          if ($this->{DisposedPHI}->{$tag} eq 'CPLX') {
+            $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+              = $this->{ComplexDispo}->{$tag}->{$val};
+          } else {
+            $subjects->{$this->{FileInfo}->{$file}->{patient_id}}->{$file}->{$tag}
+              = $this->{DisposedPHI}->{$tag};
+          }
         }
       }
     }
@@ -1020,6 +1025,26 @@ sub FixAllYes {
 
     });
   }
+
+  $this->{ContentMode} = "AllDoneHere";
+  $this->AutoRefresh;
+}
+
+sub AllDoneHere {
+  my($this, $http, $dyn) = @_;
+
+  $http->queue("All done!");
+
+  $this->NotSoSimpleButton($http, {
+    op => "ResetEverything",
+    caption => "Begin again",
+    sync => "Update();",
+  });
+}
+
+sub ResetEverything {
+  my($this, $http, $dyn) = @_;
+
 }
 
 ################################################################################
@@ -1244,10 +1269,16 @@ sub TagValueReport{
       <th># Modalities</th>
       <th># SOP Classes</th>
       <th># Files</th>
+      <th>Dispose</th>
       <th>Select</th>
     </tr>
   });
   for my $v (keys %{$this->{ByTag}->{$tag}}){
+    if (defined $this->{DispoChecks}->{$v} and $this->{DispoChecks}->{$v} == 2){
+      # dispo already applied to this row
+      next;
+    }
+
     $http->queue("<tr><td>$v</td>");
     my $num_files = keys %{$this->{ByTag}->{$tag}->{$v}};
     my %pats;
@@ -1294,6 +1325,21 @@ sub TagValueReport{
     $http->queue("<td>$num_sop_classes</td>"); # SOP Classes
     $http->queue("<td>$num_files</td>");
 
+    # default to on, so set it as so here
+    if (not defined $this->{DispoChecks}->{$v}){
+      $this->{DispoChecks}->{$v} = 1;
+    }
+
+    $http->queue(
+      "<td>" . 
+      $this->CheckBoxDelegate("DisposeCheck", $v,
+        $this->{DispoChecks}->{$v},
+        { op => "DisposeCheckClicked", sync => "Update();" }
+      ) .
+      "</td>"
+    );
+
+    # draw the select box
     $http->queue("<td>");
     my @files = sort keys %{$this->{ByTag}->{$tag}->{$v}};
     my $selected_file = "select";
@@ -1324,6 +1370,16 @@ sub TagValueReport{
   }
   $http->queue("</table>");
 }
+
+sub DisposeCheckClicked {
+  my($this, $http, $dyn) = @_;
+  my $id = $dyn->{value};
+
+  if (defined $this->{DispoChecks}->{$id}){
+    $this->{DispoChecks}->{$id} = !$this->{DispoChecks}->{$id};
+  }
+}
+
 sub SelectFileForDisplay{
   my($this, $http, $dyn) = @_;
   if($dyn->{value} eq "select"){
@@ -1494,18 +1550,47 @@ sub DisposeTag{
   my($this, $http, $dyn) = @_;
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
 
+  my $disposition = $this->{PHIDispositionSelected};
+
+  # check to see if there are any Values without Dispo checked
+  my $undisposed_exist = 0;
+  for my $val (keys %{$this->{DispoChecks}}) {
+    if ($this->{DispoChecks}->{$val} != 1){ # 0 or 2 trigger this
+      $undisposed_exist = 1;
+      last;
+    }
+  }
+
+  if ($undisposed_exist) {  # This is a ComplexDisposition
+    DEBUG "ComplexDisposition!";
+    my $undisposed_remain = 0;
+
+    for my $val (keys %{$this->{DispoChecks}}) {
+      if ($this->{DispoChecks}->{$val} == 1){
+        $this->{ComplexDispo}->{$tag}->{$val} = $disposition;
+        $this->{DispoChecks}->{$val} = 2;  # mark it as done
+        DEBUG "DisposeComplex $tag - $val => $disposition";
+      } elsif ($this->{DispoChecks}->{$val} == 0) {
+        $undisposed_remain = 1;
+      }
+    }
+
+    if ($undisposed_remain) {
+      return;
+    } else {
+      $disposition = 'CPLX';
+    }
+  }
+
   delete $this->{SelectedEles}->{$tag};
   delete $this->{SelectedFileForExtraction};
   delete $this->{SelectedTagForExtraction};
   delete $this->{SelectedValueForExtraction};
+  delete $this->{DispoChecks};
   $this->{Disposed}->{$tag} = 1;
   $this->SelectNextAvailableTag;
 
-  my $disposition = $this->{PHIDispositionSelected};
-
   $this->{DisposedPHI}->{$tag} = $disposition;
-
-  print "DisposeTag: $tag => $disposition\n";
 }
 sub SelectNextAvailableTag{
   my($this) = @_;
