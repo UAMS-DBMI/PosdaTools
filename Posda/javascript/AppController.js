@@ -38,33 +38,25 @@ function Update(){
   UpdateLogin();
 }
 
-function makeChartFromSimpleData(rec_data, db_data) {
-  var full_rec_data = [];
-  var full_db_data = [];
+function makeChartFromSimpleData(data, element, key_msg) {
+  var full_data = [];
 
-  $.each(rec_data, function(i, v) {
-    full_rec_data.push({x: i, y: v});
+  $.each(data, function(i, v) {
+    full_data.push({x: i, y: v});
   });
 
-  $.each(db_data, function(i, v) {
-    full_db_data.push({x: i, y: v});
-  });
 
   var data = [
     { 
-      values: full_rec_data,
-      key: 'recieve_backlog'
-    },
-    { 
-      values: full_db_data,
-      key: 'db_backlog'
+      values: full_data,
+      key: key_msg
     },
   ];
 
-  makeChart(data);
+  makeChart(data, element);
 
 }
-function makeChart(testData) {
+function makeChart(testData, element) {
 
 
   nv.addGraph(function() {
@@ -77,7 +69,7 @@ function makeChart(testData) {
 
       chart.yAxis.axisLabel('Count');
 
-      d3.select("#chart svg")
+      d3.select("#" + element + " svg")
           .datum(testData)
           .call(chart);
 

@@ -462,8 +462,13 @@ EOF
     $http->queue(qq{
       <h2>Status Report</h2>
 
-      <div id="chart">
+      <div id="chart1">
         <h3>dirs_in_recieve_backlog over last 24 hours</h3>
+        <svg></svg>
+      </div>
+
+      <div id="chart2">
+        <h3>db_backlog over last 24 hours</h3>
         <svg></svg>
       </div>
 
@@ -471,11 +476,10 @@ EOF
         var rec_data = $rec_json;
         var db_data = $db_json;
 
-        makeChartFromSimpleData(rec_data, db_data);
+        makeChartFromSimpleData(rec_data, "chart1", "recieve_backlog");
+        makeChartFromSimpleData(db_data, "chart2", "db_backlog");
       </script>
     });
-
-
   }
   ################### BOM Stuff ############################
   sub MakeBomMenu{
