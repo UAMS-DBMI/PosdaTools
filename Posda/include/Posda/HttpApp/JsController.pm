@@ -745,7 +745,6 @@ sub Delegate{
 
 sub SimpleTransaction{
   my($this, $port, $lines, $response) = @_;
-  print "JSController::SimpleTransaction, port: $port\n";
 
   my $sock;
   unless(
@@ -766,7 +765,6 @@ sub SimpleTransaction{
 }
 sub WriteTransactionParms{
   my($this, $text, $response) = @_;
-  print "JsController::WriteTransactionParms\n";
   my $offset = 0;
   my $sub = sub {
     my($disp, $sock) = @_;
@@ -787,7 +785,6 @@ sub WriteTransactionParms{
 }
 sub ReadTransactionResponse{
   my($this, $response) = @_;
-  print "JsController::ReadTransactionResponse\n";
   my $text = "";
   my @lines;
   my $sub = sub {
@@ -807,6 +804,5 @@ sub ReadTransactionResponse{
   };
   return $sub;
 }
-
 
 1;
