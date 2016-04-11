@@ -532,6 +532,17 @@ sub GetDispositionFromDetails {
 sub PrivateTagReviewContent {
   my($this, $http, $dyn) = @_;
 
+  my $disp_adjustment_map = {
+    X => 'X',
+    K => 'K',
+    R => 'R',
+    Z => 'Z',
+    '' => '0',
+
+    K3 => 'K',
+    KB => 'K',
+  };
+
   my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
   if (not defined $selected_tag) {
     return;
@@ -541,6 +552,13 @@ sub PrivateTagReviewContent {
   my $details = PhiFixer::PrivateTagInfo::get_info($selected_tag);
 
   my $disposition = $this->GetDispositionFromDetails($http, $dyn, $details);
+
+  if (not defined $disp_adjustment_map->{$disposition}) {
+    $disposition = '0';
+  } else {
+    $disposition = $disp_adjustment_map->{$disposition};
+  }
+
   $this->{DispositionRecommended} = $disposition;
 
   my $also_in_phi_list = '';
