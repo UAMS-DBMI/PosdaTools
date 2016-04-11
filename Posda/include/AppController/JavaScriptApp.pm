@@ -8,7 +8,7 @@ use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::ConfigRead;
 use AppController::JsChildProcess;
-use JSON::PP;
+use JSON;
 use Dispatch::LineReader;
 use Debug;
 my $dbg = sub {print @_};
@@ -90,7 +90,7 @@ EOF
     $this->{login_width} = 
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
-    $this->SetInitialExpertAndDebug("quasar");
+    $this->SetInitialExpertAndDebug("bbennett");
     if($this->CanDebug){
       Posda::HttpApp::DebugWindow->new($sess, "Debug");
     }

@@ -2,6 +2,8 @@
 #
 use strict;
 use DBI;
+my $usage = "GetEarlyDuplicateSopFileIdsToHide.pl <db_name> <patient_id>/n";
+unless($#ARGV == 1){ die $usage }
 my $dbh = DBI->connect("DBI:Pg:database=$ARGV[0]", "", "");
 my $q1 = <<EOF;
 select
@@ -30,7 +32,7 @@ my $qh1 = $dbh->prepare($q1);
 my $qh2 = $dbh->prepare($q2);
 $qh1->execute;
 while(my $h1 = $qh1->fetchrow_hashref){
-print STDERR "Looking for dups of $h1->{sop_instance_uid}\n";
+#print STDERR "Looking for dups of $h1->{sop_instance_uid}\n";
   my %TimesByFile;
   $qh2->execute($h1->{sop_instance_uid}, $ARGV[1]);
   while (my $h2 = $qh2->fetchrow_hashref){

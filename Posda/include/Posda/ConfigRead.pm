@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 use strict;
-use JSON::PP;
+use JSON;
 use Debug;
 my $dbg = sub {print @_};
 
@@ -27,13 +27,26 @@ sub ReadJsonFile{
       "can not open config file: $file, Error $!.\n";
     return undef;
   }
+  # load the file in, ignoring comment lines
+  # NOTE: JSON does not actually allow comments, so they have to be 
+  # stripped out here!
   while (<$cf>) { chomp; unless ($_ =~ m/^\s*\/\//) {$text .= $_;} }
   close($cf);
-  my $json = JSON::PP->new();
+
+  # replace environment variables in the input json text
+  for my $v (%ENV) {
+    if ($v =~ /^POSDA_/) {  # Only replace POSDA_ vars
+      $text =~ s/$v/$ENV{$v}/g;
+    }
+  }
+
+  my $json = JSON->new();
   $json->relaxed(1);
+
   eval {
     $data = $json->decode( $text );
   };
+
   if ($@) {
     print STDERR "ReadJsonFile:: bad json file: $file.\n";
     print STDERR "##########\n$@\n###########\n";

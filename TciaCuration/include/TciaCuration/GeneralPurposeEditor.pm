@@ -11,7 +11,7 @@ use Posda::UidCollector;
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Digest::MD5;
-use JSON::PP;
+use JSON;
 use Debug;
 use Storable;
 my $dbg = sub {print STDERR @_ };

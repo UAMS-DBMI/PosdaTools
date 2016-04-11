@@ -28,8 +28,8 @@ my $create_site = <<EOF;
 EOF
 my $create_submission = <<EOF;
   insert into Submission
-    (collection_id, site_id, collection_name, site_name, body_part_entered,
-     patient_id_prefix, access_type, date_inc, extra)
+    (collection_id, site_id, collection_name, site_name, patient_id_prefix,
+     body_part_entered, access_type, date_inc, extra)
   values
     (?, ?, ?, ?, ?, ?, ?, ?, ?)
 EOF
@@ -38,6 +38,13 @@ my $create_submission_event = <<EOF;
     (submission_id, event_type, occurance_date_time, reporting_user, comment)
   values
     (?, ?, ?, ?, ?)
+EOF
+my $select_spreadsheet = <<EOF;
+select
+  collection_name, site_name, collection_code, site_code,
+  patient_id_prefix, body_part_entered, access_type, date_inc, extra
+from
+  submission natural join collection natural join site
 EOF
 my $gcbc = $dbh->prepare($get_collection_by_code);
 my $gsbc = $dbh->prepare($get_site_by_code);

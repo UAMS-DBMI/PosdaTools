@@ -24,6 +24,7 @@ sub new{
   $this->{AuthUser} = "";
   $this->{RealUser} = "";
   $this->{ImportsFromAbove}->{GetSocketList} = 1;
+  $this->{StartTime} = time;
   bless $this, $class;
   $this->{host} = $host;
   if($this->{host} =~ /^(.*):(.*)$/){
@@ -42,6 +43,12 @@ sub new{
 }
 sub TryNextSocket{
   my($this) = @_;
+  my $now = time;
+  if($now - $this->{StartTime} > 20){
+    print STDERR "Hmmm.  Long time before I noticed this failure.  ".
+      "Better give up.";
+    return;
+  }
   my $next_socket = shift(@{$this->{socket_list}});
   unless($next_socket) {
     $this->{State} = "Error";

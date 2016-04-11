@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 use strict;
-use JSON::PP;
+use JSON;
 use Storable qw( store_fd fd_retrieve );
 use Posda::FlipRotate;
 use Debug;
