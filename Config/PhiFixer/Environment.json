@@ -14,5 +14,5 @@
   "PhiAnalysisRoot" : "POSDA_CACHE_ROOT/Data/PhiAnalysis/data",
   "ExtractionRoot" :
      "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
-  "ExtractionManagerPort" : "64662",
+  "ExtractionManagerPort" : "64612",
 }
