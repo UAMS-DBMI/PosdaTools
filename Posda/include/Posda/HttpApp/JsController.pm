@@ -15,9 +15,14 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
   <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
   <head>
     <!-- HttpApp::JsController line 20 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/nv.d3.css">
+
+    <script src="/js/jquery-1.12.0.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/d3.v3.min.js"></script>
+    <script src="/js/nv.d3.min.js"></script>
+
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
 };
