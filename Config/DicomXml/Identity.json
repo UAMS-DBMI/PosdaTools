@@ -2,7 +2,7 @@
 {
   "Greeting": { },
   "HostName": "tcia-utilities",
-  "Title": "Browse Dicom Standard - tcia-utilities",
+  "Title": "Browse Dicom Standard",
   "LoginTitle": "Login for Browsing Dicom Standard",
   "LogoImage": "/PosdaLogo.png",
   "LogoHeight": "81",

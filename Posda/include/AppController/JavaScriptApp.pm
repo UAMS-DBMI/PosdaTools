@@ -489,34 +489,34 @@ EOF
       {
         type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
        method => "ReloadConfig",
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },
       {
         type => "host_link_sync",
         condition => $this->get_user,
-        caption => "password",
+        caption => "Password",
         method => "SetMenuMode",
         args => { mode => "password" }
       },
@@ -527,7 +527,7 @@ EOF
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "clear diffs",
+        caption => "Clear Diffs",
         method => "ClearBomDiffs",
         args => { mode => "initial" },
       },
@@ -667,27 +667,27 @@ EOF
       {
         type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
         method => "ReloadConfig",
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },
@@ -865,27 +865,27 @@ EOF
       {
         type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
         method => "ReloadConfig",
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
         type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },
