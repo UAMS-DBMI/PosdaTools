@@ -34,7 +34,7 @@ use Debug;
           onSubmit="PosdaGetRemoteMethod('AppControllerLogin', 
           'name='+this.elements['UserName'].value+'&amp;password='+this.elements['UserEnteredPassword'].value, null); return false;">
           <div class="form-group">
-            <input type="input" class="form-control" id="UserName" placeholder="Username">
+            <input type="text" class="form-control" id="UserName" placeholder="Username">
           </div>
           <div class="form-group">
             <input type="password" class="form-control" id="UserEnteredPassword" placeholder="Password">

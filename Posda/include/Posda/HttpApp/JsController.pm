@@ -15,14 +15,14 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
   <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
   <head>
     <!-- HttpApp::JsController line 20 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/nv.d3.css">
 
-    <link rel="stylesheet" href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css">
+    <script src="/js/jquery-1.12.0.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/d3.v3.min.js"></script>
+    <script src="/js/nv.d3.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.min.js" charset="utf-8"></script>
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
 };
@@ -751,7 +751,6 @@ sub Delegate{
 
 sub SimpleTransaction{
   my($this, $port, $lines, $response) = @_;
-  print "JSController::SimpleTransaction, port: $port\n";
 
   my $sock;
   unless(
@@ -772,7 +771,6 @@ sub SimpleTransaction{
 }
 sub WriteTransactionParms{
   my($this, $text, $response) = @_;
-  print "JsController::WriteTransactionParms\n";
   my $offset = 0;
   my $sub = sub {
     my($disp, $sock) = @_;
@@ -793,7 +791,6 @@ sub WriteTransactionParms{
 }
 sub ReadTransactionResponse{
   my($this, $response) = @_;
-  print "JsController::ReadTransactionResponse\n";
   my $text = "";
   my @lines;
   my $sub = sub {
@@ -813,6 +810,5 @@ sub ReadTransactionResponse{
   };
   return $sub;
 }
-
 
 1;
