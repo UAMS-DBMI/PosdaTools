@@ -293,13 +293,6 @@ sub CollectionsMenu{
         method => "RefreshDirData",
         sync => "Update();",
       },
-      { type => "host_link_sync",
-        condition => 1,
-        style => "small",
-        caption => "TestTestTest",
-        method => "TestTestTest",
-        sync => "Update();",
-      },
     ]);
 }
 sub CollectionLine{
@@ -5566,77 +5559,6 @@ sub ApplyPatientFixes{
   Dispatch::Select::Background->new(
    $this->ApplyNextFix(\@fixes_to_apply)
   )->queue;
-}
-
-
-
-################################################################################
-
-
-
-sub TestTestTest {
-  my($this, $http, $dyn) = @_;
-  print "requesting lock via NewRequestLockForEdit\n";
-  # TODO: subject comes from where??
-  $this->NewRequestLockForEdit("LDCT-07-002", $this->CloseTTAL);
-}
-
-sub CloseTTAL {
-  my($this, $http, $dyn) = @_;
-  return sub {
-    my($lines) = @_;
-
-    print "====================================\n";
-    for my $k (@$lines) {
-      print "==] $k\n";
-    }
-    print "====================================\n";
-
-    my %args;
-    for my $line (@$lines){
-      if($line =~ /^(.*):\s*(.*)$/){
-        my $k = $1; my $v = $2;
-        $args{$k} = $v;
-      }
-    }
-
-    print Dumper(%args);
-
-    $this->TestTestTestAfterLock($args{Id});
-  };
-}
-
-sub TestTestTestAfterLock {
-  my($this, $id) = @_;
-  my $commands = "/home/posda/PosdaTools/edits.pinfo";
-
-  # Look here for a good example:
-  # WhenExtractionLockComplete
-
-  my $session = $this->{session};
-  my $pid = $$;
-  my $user = $this->get_user;
-  my $new_args = [
-    "ApplyEdits", 
-    "Id: $id",
-    "Session: $session", 
-    "User: $user", 
-    "Pid: $pid" ,
-    "Commands: $commands" 
-  ];
-
-  print "==========================\n";
-  print Dumper($new_args);
-  print "==========================\n";
-  $this->SimpleTransaction($this->{ExtractionManagerPort},
-    $new_args,
-    $this->TestWhenDoneTest());
-}
-
-sub TestWhenDoneTest {
-  return sub {
-    print "TestTestTest completed?\n";
-  };
 }
 
 1;
