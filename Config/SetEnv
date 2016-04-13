@@ -1,52 +1,22 @@
-#!/bin/sh
-if [ $# -ne 1 ]; then
-  echo "$0: Usage: <Application Stage Name>"
-  exit -1;
-fi
+#!/usr/bin/env bash
 
-export APP_CONTROLLER_ROOT=$1
-if [ ${APP_CONTROLLER_ROOT:0:1} = "/" ]; then
-  echo "$0: Usage: <Application Stage Name>"
-  exit -1;
-fi
-export APP_CONTROLLER_ROOT=~/$1
+export APP_CONTROLLER_ROOT="$(pwd)"
 export APP_CONTROLLER_STAGE=`basename $APP_CONTROLLER_ROOT`
-cd $APP_CONTROLLER_ROOT
-# export PS1="[\u@\h: $APP_CONTROLLER_STAGE]$ "
 
-if [ ! -d "$APP_CONTROLLER_ROOT" ]; then
-  echo "$0: root dir does not exist: $APP_CONTROLLER_ROOT."
-  exit -1;
-fi
-if [ -z $PRE_PACKAGE_PATH ]; then
-  export PRE_PACKAGE_PATH=/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/opt/local/bin
-fi
-export PERL5LIB=$PRE_PACKAGE_PERL5LIB
-export PATH=$APP_CONTROLLER_ROOT/bin:$PRE_PACKAGE_PATH
+export PS1="Posda (\u::$APP_CONTROLLER_STAGE)> "
+
+export PATH=$APP_CONTROLLER_ROOT/bin:$PATH
 export POSDA_HOME=$APP_CONTROLLER_ROOT/Posda
-export FILEDISTAPP_HOME=$APP_CONTROLLER_ROOT/FileDist
-export DICOMPROXY_HOME=$APP_CONTROLLER_ROOT/DicomProxy
-export DICOMPROXYANALYSIS_HOME=$APP_CONTROLLER_ROOT/DicomProxyAnalysis
-export DICOMXML_HOME=$APP_CONTROLLER_ROOT/DicomXml
-export TCIA_CURATION_HOME=$APP_CONTROLLER_ROOT/TciaCuration
-export POSDA_CURATION_HOME=$APP_CONTROLLER_ROOT/PosdaCuration
-export REVIEW_PHI_HOME=$APP_CONTROLLER_ROOT/ReviewPhi
-export FIX_PHI_HOME=$APP_CONTROLLER_ROOT/PhiFixer
-export GENERIC_APP_HOME=$APP_CONTROLLER_ROOT/GenericApp
-export COUNT_GETTER_HOME=$APP_CONTROLLER_ROOT/CountGetter
-export SUBSENDER_HOME=$APP_CONTROLLER_ROOT/SubmissionSender
-. $TCIA_CURATION_HOME/env/Setup $TCIA_CURATION_HOME
-. $POSDA_CURATION_HOME/env/Setup $POSDA_CURATION_HOME
-. $COUNT_GETTER_HOME/env/Setup $COUNT_GETTER_HOME
-. $SUBSENDER_HOME/env/Setup $SUBSENDER_HOME
-. $GENERIC_APP_HOME/env/Setup $GENERIC_APP_HOME
-. $REVIEW_PHI_HOME/env/Setup $REVIEW_PHI_HOME
-. $FIX_PHI_HOME/env/Setup $FIX_PHI_HOME
-. $DICOMXML_HOME/env/Setup $DICOMXML_HOME
-. $FILEDISTAPP_HOME/env/Setup $FILEDISTAPP_HOME
-. $DICOMPROXY_HOME/env/Setup $DICOMPROXY_HOME
-. $DICOMPROXYANALYSIS_HOME/env/Setup $DICOMPROXYANALYSIS_HOME
-. $POSDA_HOME/env/Setup $POSDA_HOME
+
+# Automatically setup all installed apps
+for i in **/env/Setup; do
+  NAME=$(dirname $(dirname $i))  # ugly way to get the first dirname
+  source $i $APP_CONTROLLER_ROOT/$NAME
+done
+
+###############################################################################
+# Actual configuration variables
+###############################################################################
 
 export POSDA_DEBUG=0
 export POSDA_TEST_COMMANDS=$POSDA_HOME/test/Dispatch
@@ -56,3 +26,4 @@ export POSDA_TEST_BIN=$POSDA_HOME/bin/test
 
 export POSDA_ROOT=$APP_CONTROLLER_ROOT
 export POSDA_CACHE_ROOT=/cache/bbennett
+export POSDA_PORT=64610

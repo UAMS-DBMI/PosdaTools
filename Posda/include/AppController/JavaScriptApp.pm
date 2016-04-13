@@ -8,9 +8,11 @@ use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::ConfigRead;
 use AppController::JsChildProcess;
+use AppController::StatusInfo;
 use JSON;
 use Dispatch::LineReader;
 use Debug;
+use Switch;
 my $dbg = sub {print @_};
 {
   package AppController;
@@ -18,6 +20,7 @@ my $dbg = sub {print @_};
 }
 {
   package AppController::JavaScriptApp;
+  use JSON;
   use Storable qw( store retrieve store_fd fd_retrieve );
   use vars qw( @ISA );
   @ISA = ("Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator");
@@ -204,43 +207,51 @@ EOF
     $this->MakeMenu($http, $dyn,
       [
         {
-          type=> "host_link",
+          type=> "host_link_sync",
           condition => $this->{capability}->{IsAdmin},
           caption => "Reload Config",
           method => "ReloadConfig",
-		  #style => "small",
+          sync => "Update();",
         },
         {
-          type => "host_link",
+          type => "host_link_sync",
           condition => 1,
           caption => "Show Apps",
           method => "SetMenuMode",
           args => { mode => "avail_apps" },
-		  #style => "small",
+          sync => "Update();",
         },
         {
-          type => "host_link",
+          type => "host_link_sync",
           condition => $this->{capability}->{IsAdmin},
           caption => "Show BOM",
           method => "SetMenuMode",
           args => { mode => "bom" },
-		  #style => "small",
+          sync => "Update();",
         },
         {
-          type => "host_link",
+          type => "host_link_sync",
           condition => 1,
           caption => "Show Receiver",
           method => "SetMenuMode",
           args => { mode => "dicom_receiver" },
-		  #style => "small",
+          sync => "Update();",
         },
         {
-          type => "host_link",
+          type => "host_link_sync",
           condition => $this->get_user,
           caption => "Password",
           method => "SetMenuMode",
           args => { mode => "password" },
-		  #style => "small",
+          sync => "Update();",
+        },
+        {
+          type => "host_link_sync",
+          condition => $this->get_user,
+          caption => "Status Report",
+          method => "SetMenuMode",
+          args => { mode => "status_report" },
+          sync => "Update();",
         },
       ]
     );
@@ -284,25 +295,30 @@ EOF
     };
     return $sub;
   }
-  sub ContentResponse{
+
+  sub ContentResponse {
     my($this, $http, $dyn) = @_;
-    if(defined($this->{menu_mode}) && $this->{menu_mode} eq "bom"){
-      $this->BomContent($http, $dyn);
-    } elsif(defined($this->{menu_mode}) && $this->{menu_mode} eq "avail_apps"){
-      $this->AvailAppContent($http, $dyn);
-    } elsif(
-      defined($this->{menu_mode}) && $this->{menu_mode} eq "dicom_receiver"
-    ){
-      $this->DicomReceiverContent($http, $dyn);
-    } elsif(
-      defined($this->{menu_mode}) && $this->{menu_mode} eq "password"
-    ){
-      $this->PasswordContent($http, $dyn);
-    } else {
-      my $resp = "Here's some content";
-      $http->queue($resp);
+
+    my $mode = 0;
+    if (defined $this->{menu_mode}) {
+      $mode = $this->{menu_mode};
+    }
+
+    switch ($mode) {
+
+      case "bom"            { $this->BomContent($http, $dyn) }
+      case "avail_apps"     { $this->AvailAppContent($http, $dyn) }
+      case "dicom_receiver" { $this->DicomReceiverContent($http, $dyn) }
+      case "password"       { $this->PasswordContent($http, $dyn) }
+      case "status_report"  { $this->StatusReport($http, $dyn) }
+
+      else {
+        my $resp = "Here's some content";
+        $http->queue($resp);
+      }
     }
   }
+
   sub TitleAndInfoResponse{
     my($this, $http, $dyn) = @_;
     unless(defined $this->{menu_mode}){ $this->{menu_mode} = "avail_apps" }
@@ -435,42 +451,72 @@ EOF
     my $count = @ret;
     return \@ret;
   }
+  sub StatusReport {
+    my($this, $http, $dyn) = @_;
+
+    my ($db, $rec) = @{AppController::StatusInfo::get_24hour_stats()};
+
+    my $rec_json = encode_json($rec);
+    my $db_json = encode_json($db);
+
+    $http->queue(qq{
+      <h2>Status Report</h2>
+
+      <div id="chart1">
+        <h3>dirs_in_recieve_backlog over last 24 hours</h3>
+        <svg></svg>
+      </div>
+
+      <div id="chart2">
+        <h3>db_backlog over last 24 hours</h3>
+        <svg></svg>
+      </div>
+
+      <script class="magicscript">
+        var rec_data = $rec_json;
+        var db_data = $db_json;
+
+        makeChartFromSimpleData(rec_data, "chart1", "recieve_backlog");
+        makeChartFromSimpleData(db_data, "chart2", "db_backlog");
+      </script>
+    });
+  }
   ################### BOM Stuff ############################
   sub MakeBomMenu{
     my($this, $http, $dyn) = @_;
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
     my $bom_menu = [ 
       {
-        type=> "host_link",
+        type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
        method => "ReloadConfig",
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => $this->get_user,
-        caption => "password",
+        caption => "Password",
         method => "SetMenuMode",
         args => { mode => "password" }
       },
@@ -479,21 +525,21 @@ EOF
         condition => 1,
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "clear diffs",
+        caption => "Clear Diffs",
         method => "ClearBomDiffs",
         args => { mode => "initial" },
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => $this->{BomMode} eq "ShowBom",
         caption => "DiffMode",
         method => "SetBomMenuMode",
         args => { mode => "ShowDiffs" },
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => $this->{BomMode} eq "ShowDiffs",
         caption => "BomMode",
         method => "SetBomMenuMode",
@@ -508,7 +554,7 @@ EOF
       sort keys %{$main::HTTP_APP_CONFIG->{config}->{Applications}->{BomDirs}}
     ){
       push(@$bom_menu, {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
         caption => $i,
         method => "SetBomDir",
@@ -619,29 +665,29 @@ EOF
     my($this, $http, $dyn) = @_;
     my $dr_menu = [ 
       {
-        type=> "host_link",
+        type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
         method => "ReloadConfig",
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },
@@ -653,14 +699,14 @@ EOF
     my $obj = $this->{StaticObjs}->{DicomReceiver};
     if(scalar(keys %{$obj->{ActiveConnections}}) > 0){
       push(@$dr_menu, {
-        type => "host_link", 
+        type => "host_link_sync", 
         condition => 1,
         caption => "Active Connections:",
         method => "ShowActiveConnections",
       });
       for my $i (sort keys %{$obj->{ActiveConnections}}){
         push(@$dr_menu, {
-          type => "host_link",
+          type => "host_link_sync",
           condition => 1,
           caption => "- $i",
           method => "SetActiveConnection",
@@ -671,7 +717,7 @@ EOF
       push(@$dr_menu, { type => "hr", condition => 1 });
     }
     push(@$dr_menu, {
-      type => "host_link",
+      type => "host_link_sync",
       condition => 1,
       caption => "App Entities",
       method => "ShowApplicationEntities",
@@ -681,7 +727,7 @@ EOF
       $foo =~ s/</&lt;/g;
       $foo =~ s/>/&gt;/g;
       push(@$dr_menu, {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
         caption => "- $foo",
         method => "SetActiveAe",
@@ -817,29 +863,29 @@ EOF
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
     my $pass_menu = [ 
       {
-        type=> "host_link",
+        type=> "host_link_sync",
         condition => $this->{capability}->{IsAdmin},
-        caption => "reload config",
+        caption => "Reload Config",
         method => "ReloadConfig",
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show apps",
+        caption => "Show Apps",
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show bom",
+        caption => "Show Bom",
         method => "SetMenuMode",
         args => { mode => "bom" }
       },
       {
-        type => "host_link",
+        type => "host_link_sync",
         condition => 1,
-        caption => "show receiver",
+        caption => "Show Receiver",
         method => "SetMenuMode",
         args => { mode => "dicom_receiver" }
       },

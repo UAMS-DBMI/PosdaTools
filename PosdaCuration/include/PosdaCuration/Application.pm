@@ -22,6 +22,7 @@ use JSON;
 use Debug;
 use Storable;
 use Data::Dumper;
+use DBI;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -292,13 +293,6 @@ sub CollectionsMenu{
         method => "RefreshDirData",
         sync => "Update();",
       },
-      { type => "host_link_sync",
-        condition => 1,
-        style => "small",
-        caption => "TestTestTest",
-        method => "TestTestTest",
-        sync => "Update();",
-      },
     ]);
 }
 sub CollectionLine{
@@ -556,7 +550,13 @@ sub ContinueDbCollectionsAndExtractions{
       <div class="form-group">
         <div class="btn-group" role="group">
           <?dyn="IntakeCheckButtons"?>
+          <?dyn="NotSoSimpleButton" caption="Fix Intake Differences" op="FixIntakeDifferences" sync="Update();" class="btn btn-warning"?>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="btn-group" role="group">
           <?dyn="PublicCheckButtons"?>
+          <?dyn="NotSoSimpleButton" caption="Fix Public Differences" op="FixPublicDifferences" sync="Update();" class="btn btn-warning"?>
         </div>
       </div>
 
@@ -757,19 +757,110 @@ sub GenerateCompareDataStructure {
   return $dest;
 }
 
+sub FixIntakeDifferences {
+  my($this, $http, $dyn) = @_;
+  $this->FixDifferences($http, 'IntakeCheckHierarchy');
+}
+sub FixPublicDifferences {
+  my($this, $http, $dyn) = @_;
+  $this->FixDifferences($http, 'PublicCheckHierarchy');
+}
+sub FixDifferences {
+  my($this, $http, $fix_hierarchy) = @_;
+
+  sub abort {
+    my $msg = "FixDifferences: There are no differences for $fix_hierarchy! Aborting!";
+    print "$msg\n";
+    $this->QueueJsCmd("alert('$msg');");
+  }
+
+  if (not defined $this->{$fix_hierarchy}) {
+    return abort;
+  }
+
+  $this->ResetExtractionSelection();
+
+  my @files;
+  my $subjects = {};
+
+  # Extract all files from the IntakeCheckHierarchy
+  # Also remember which subjects this included
+  for my $subject_name (keys %{$this->{$fix_hierarchy}}) {
+    my $subject = $this->{$fix_hierarchy}->{$subject_name};
+    for my $study (values %{$subject->{OnlyInExt}}) {
+      $subjects->{$subject_name} = 1;  # remember this subject
+      for my $series (values %{$study}) {
+        for my $file (keys %{$series}) {
+          push @files, $file;
+        }
+      }
+    }
+  }
+
+  # if the list is empty, there is nothing to do, so don't try it!
+  if (not scalar @files) {
+    return abort;
+  }
+
+  # Build the query to hide these files
+  my @stringified;
+
+  # TODO: There has got to be a shorter way to do this.. right?
+  for my $f (@files) {
+    push @stringified, "'$f'";
+  }
+
+  my $files_as_sql_list = join(",\n", @stringified);
+
+  my $query = qq{
+    update
+      ctp_file
+    set 
+      visibility = 'hidden'
+    where 
+      file_id in (
+        select file_id 
+        from file_sop_common
+        where sop_instance_uid in (
+          $files_as_sql_list
+        )
+      )
+  };
+
+  # print $query;
+  my $dbh = DBI->connect("DBI:Pg:database=" . 
+    $this->{Environment}->{database_name}, "", "");
+  my $p = $dbh->prepare($query) or die "$!";
+  $p->execute() or die $!;
+
+  # if that worked, we now need to queue all the subjects for discard
+  $this->ClearIntakeData;  # checks will now be invalid, so clear them
+  $this->ClearPublicData;
+  for my $subj (keys %{$subjects}) {
+    print "Attempting to discard subject: $subj\n";
+    $this->DiscardExtraction($http, { 
+        subj => $subj,
+        collection => $this->{SelectingCollection},
+        site => $this->{SelectingSite}
+      })
+  }
+}
+
 sub IntakeCheckButtons{
   my($this, $http, $dyn) = @_;
   if(exists $this->{IntakeCheckHierarchy}){
-    $this->SimpleButton($http, {
+    $this->NotSoSimpleButton($http, {
         op => "ClearIntakeData",
         caption => "Clear Intake Check" ,
-        sync => "Update();"
+        sync => "Update();",
+        class => "btn btn-info"
     });
   } else {
-    $this->SimpleButton($http, {
+    $this->NotSoSimpleButton($http, {
         op => "SetCheckAgainstIntake",
         caption => "Check Against Intake" ,
-        sync => "Update();"
+        sync => "Update();",
+        class => "btn btn-primary"
     });
   }
 }
@@ -777,16 +868,18 @@ sub IntakeCheckButtons{
 sub PublicCheckButtons{
   my($this, $http, $dyn) = @_;
   if(exists $this->{PublicCheckHierarchy}){
-    $this->SimpleButton($http, {
+    $this->NotSoSimpleButton($http, {
       op => "ClearPublicData",
       caption => "Clear Public Check",
-      sync => "Update();"
+      sync => "Update();",
+      class => "btn btn-info"
     });
   } else {
-    $this->SimpleButton($http, {
+    $this->NotSoSimpleButton($http, {
       op => "SetCheckAgainstPublic",
       caption => "Check Against Public",
-      sync => "Update();"
+      sync => "Update();",
+      class => "btn btn-primary"
     });
   }
 }
@@ -5466,77 +5559,6 @@ sub ApplyPatientFixes{
   Dispatch::Select::Background->new(
    $this->ApplyNextFix(\@fixes_to_apply)
   )->queue;
-}
-
-
-
-################################################################################
-
-
-
-sub TestTestTest {
-  my($this, $http, $dyn) = @_;
-  print "requesting lock via NewRequestLockForEdit\n";
-  # TODO: subject comes from where??
-  $this->NewRequestLockForEdit("LDCT-07-002", $this->CloseTTAL);
-}
-
-sub CloseTTAL {
-  my($this, $http, $dyn) = @_;
-  return sub {
-    my($lines) = @_;
-
-    print "====================================\n";
-    for my $k (@$lines) {
-      print "==] $k\n";
-    }
-    print "====================================\n";
-
-    my %args;
-    for my $line (@$lines){
-      if($line =~ /^(.*):\s*(.*)$/){
-        my $k = $1; my $v = $2;
-        $args{$k} = $v;
-      }
-    }
-
-    print Dumper(%args);
-
-    $this->TestTestTestAfterLock($args{Id});
-  };
-}
-
-sub TestTestTestAfterLock {
-  my($this, $id) = @_;
-  my $commands = "/home/posda/PosdaTools/edits.pinfo";
-
-  # Look here for a good example:
-  # WhenExtractionLockComplete
-
-  my $session = $this->{session};
-  my $pid = $$;
-  my $user = $this->get_user;
-  my $new_args = [
-    "ApplyEdits", 
-    "Id: $id",
-    "Session: $session", 
-    "User: $user", 
-    "Pid: $pid" ,
-    "Commands: $commands" 
-  ];
-
-  print "==========================\n";
-  print Dumper($new_args);
-  print "==========================\n";
-  $this->SimpleTransaction($this->{ExtractionManagerPort},
-    $new_args,
-    $this->TestWhenDoneTest());
-}
-
-sub TestWhenDoneTest {
-  return sub {
-    print "TestTestTest completed?\n";
-  };
 }
 
 1;
