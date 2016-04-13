@@ -217,7 +217,6 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
     $this->{FilesInFlight} = {};
     $this->{FilesErrors} = [];
     my %pcs;
-print STDERR "Sending Study: $StudyToSend:\n";
     file:
     for my $file (sort keys %{$this->{info}->{FilesToDigest}}){
       my $dig = $this->{info}->{FilesToDigest}->{$file};
@@ -240,8 +239,6 @@ print STDERR "Sending Study: $StudyToSend:\n";
       my $xfr = $this->{info}->{FilesByDigest}->{$dig}->{xfr_stx};
       $pcs{$abs}->{$xfr} = 1;
     }
-my $file_count = @{$this->{FilesToSend}};
-print "\t$file_count files to send\n";
     my $pc_id = 1;
     for my $a (keys %pcs){
       for my $t (keys %{$pcs{$a}}){
