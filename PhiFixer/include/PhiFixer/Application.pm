@@ -1035,7 +1035,7 @@ sub FixAllYes {
         cache_dir => "$this->{DicomInfoCache}/dicom_info",
       };
 
-      my $pinfo = "$revision_dir/edits.pinfo";
+      my $pinfo = "$revision_dir/creation.pinfo";
       DEBUG "Saving pinfo to: $pinfo";
       store($fix_hash, $pinfo);
 
