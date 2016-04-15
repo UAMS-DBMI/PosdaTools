@@ -307,16 +307,26 @@ sub CollectionLine{
 sub CollectionEnd{
   my($this, $http, $dyn, $lines) = @_;
   my $sub = sub{
+    my $selecting_collection = '';
+    my $selecting_site = '';
+
+    if (defined $this->{SelectingCollection}) {
+      $selecting_collection = $this->{SelectingCollection};
+    }
+    if (defined $this->{SelectingSite}) {
+      $selecting_site = $this->{SelectingSite};
+    }
+
     $this->RefreshEngine($http, $dyn, qq{
       <div class="col-md-8">
       <div class="well">
         <div class="form-group">
           <label>Collection:</label>
-          <?dyn="EntryBox" default="$this->{SelectingCollection}" op="EnterCollection" name="collection"?>
+          <?dyn="EntryBox" default="$selecting_collection" op="EnterCollection" name="collection"?>
         </div>
         <div class="form-group">
           <label>Site:</label>
-          <?dyn="EntryBox" default="$this->{SelectingSite}" op="EnterSite" name="site"?>
+          <?dyn="EntryBox" default="$selecting_site" op="EnterSite" name="site"?>
         </div>
         <?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo" sync="Update();" caption="Query Database"?>
       </div>
@@ -343,6 +353,7 @@ sub CollectionEnd{
     });
     for my $l (@$lines){
       my($col, $site, $num) = split(/\|/, $l);
+      print "$col$site$num\n";
       $http->queue(qq{
         <tr>
           <td>
@@ -370,6 +381,7 @@ sub CollectionEnd{
   };
   return $sub;
 }
+
 sub Collections{
   my($this, $http, $dyn) = @_;
   if(
@@ -775,14 +787,15 @@ sub FixPublicDifferences {
 sub FixDifferences {
   my($this, $http, $fix_hierarchy) = @_;
 
-  sub abort {
+  my $abort = sub {
     my $msg = "FixDifferences: There are no differences for $fix_hierarchy! Aborting!";
-    print "$msg\n";
+    print STDERR "$msg\n";
     $this->QueueJsCmd("alert('$msg');");
-  }
+  };
 
   if (not defined $this->{$fix_hierarchy}) {
-    return abort;
+    &$abort();
+    return;
   }
 
   $this->ResetExtractionSelection();
@@ -806,7 +819,8 @@ sub FixDifferences {
 
   # if the list is empty, there is nothing to do, so don't try it!
   if (not scalar @files) {
-    return abort;
+    &$abort();
+    return;
   }
 
   # Build the query to hide these files
@@ -2145,8 +2159,9 @@ print STDERR "LockChecker shutting down\n";
       return;
     }
     if(
-      $this->{mode} eq "Collections" &&
-      $this->{CollectionMode} eq "CollectionsSelection"
+      (defined $this->{mode} and $this->{mode} eq "Collections") &&
+      (defined $this->{CollectionMode} and 
+        $this->{CollectionMode} eq "CollectionsSelection")
     ){
       unless(
         $this->{DbQueryInProgress} || $this->{ExtractionSearchInProgress}
