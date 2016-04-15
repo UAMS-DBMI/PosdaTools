@@ -2,6 +2,7 @@
 #
 use strict;
 package PosdaCuration::Application;
+use Method::Signatures;
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
 use Posda::HttpApp::JsController;
@@ -547,39 +548,8 @@ sub ContinueDbCollectionsAndExtractions{
         <a class="btn btn-sm btn-primary" href="DownloadCounts?obj_path=$this->{path}\">Download CSV</a>
       </p>
 
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="IntakeCheckButtons"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Intake Differences" op="FixIntakeDifferences" sync="Update();" class="btn btn-warning"?>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="PublicCheckButtons"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Public Differences" op="FixPublicDifferences" sync="Update();" class="btn btn-warning"?>
-        </div>
-      </div>
+      <?dyn="DrawMainButtonBar"?>
 
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" op="DiscardIncompleteExtractions" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Extact All Unextracted" op="ExtractAllUnextracted" sync="Update();"?>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Scan All For PHI" op="ScanAllForPhi" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" op="RemoveAllPhiScans" sync="Update();"?>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" op="FixStudyInconsistencies" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" op="FixSeriesInconsistencies" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" op="FixPatientInconsistencies" sync="Update();"?>
-        </div>
       </div>
       <table class="table table-striped" width="100%">
         <thead>
@@ -597,6 +567,43 @@ sub ContinueDbCollectionsAndExtractions{
   };
   return $sub;
 };
+
+method DrawMainButtonBar($http, $dyn) {
+  $self->MakeMenuBar($http, [
+    {caption => 'Intake',
+     items => [
+        $self->Intake_Check_or_Clear(),
+        {caption => 'Fix Differences', op => 'FixIntakeDifferences'},
+      ]
+    },
+    {caption => 'Public',
+     items => [
+        $self->Public_Check_or_Clear(),
+        {caption => 'Fix Differences', op => 'FixPublicDifferences'},
+      ]
+    },
+    {caption => 'Extractions',
+     items => [
+        {caption => 'Delete Incomplete', op => 'DiscardIncompleteExtractions'},
+        {caption => 'Extract all Unextracted', op => 'ExtractAllUnextracted'},
+      ]
+    },
+    {caption => 'PHI',
+     items => [
+        {caption => 'Scan all for PHI', op => 'ScanAllForPhi'},
+        {caption => 'Remove all PHI scans', op => 'RemoveAllPhiScans'},
+      ]
+    },
+    {caption => 'Inconsistencies',
+     items => [
+        {caption => 'Fix Study Inconsistencies', op => 'FixStudyInconsistencies'},
+        {caption => 'Fix Series Inconsistencies', op => 'FixSeriesInconsistencies'},
+        {caption => 'Fix Patient Inconsistencies', op => 'FixPatientInconsistencies'},
+      ]
+    }
+  ]);
+}
+
 sub DrawExtractionInfoHeader {
   my($this, $http, $dyn) = @_;
   # if there is Intake or Public Check data,
@@ -846,41 +853,19 @@ sub FixDifferences {
   }
 }
 
-sub IntakeCheckButtons{
-  my($this, $http, $dyn) = @_;
-  if(exists $this->{IntakeCheckHierarchy}){
-    $this->NotSoSimpleButton($http, {
-        op => "ClearIntakeData",
-        caption => "Clear Intake Check" ,
-        sync => "Update();",
-        class => "btn btn-info"
-    });
+method Intake_Check_or_Clear() {
+  if(exists $self->{IntakeCheckHierarchy}) {
+    return {caption => 'Clear Check', op => 'ClearIntakeData'};
   } else {
-    $this->NotSoSimpleButton($http, {
-        op => "SetCheckAgainstIntake",
-        caption => "Check Against Intake" ,
-        sync => "Update();",
-        class => "btn btn-primary"
-    });
+    return {caption => 'Check Against', op => 'SetCheckAgainstIntake'};
   }
 }
 
-sub PublicCheckButtons{
-  my($this, $http, $dyn) = @_;
-  if(exists $this->{PublicCheckHierarchy}){
-    $this->NotSoSimpleButton($http, {
-      op => "ClearPublicData",
-      caption => "Clear Public Check",
-      sync => "Update();",
-      class => "btn btn-info"
-    });
+method Public_Check_or_Clear() {
+  if(exists $self->{PublicCheckHierarchy}) {
+    return {caption => 'Clear Check', op => 'ClearPublicData'};
   } else {
-    $this->NotSoSimpleButton($http, {
-      op => "SetCheckAgainstPublic",
-      caption => "Check Against Public",
-      sync => "Update();",
-      class => "btn btn-primary"
-    });
+    return {caption => 'Check Against', op => 'SetCheckAgainstPublic'};
   }
 }
 

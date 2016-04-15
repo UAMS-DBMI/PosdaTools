@@ -2,6 +2,7 @@
 #
 use strict;
 package Posda::HttpApp::JsController;
+use Method::Signatures;
 use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
@@ -809,6 +810,71 @@ sub ReadTransactionResponse{
     }
   };
   return $sub;
+}
+
+method MakeMenuBar($http, $menu) {
+  # Generate a jquery-based button bar from the given menu hash
+  #
+  # $menu should look like this:
+  # class is optional
+  #
+  # my $menu = [
+  #   {caption => 'Extractions',
+  #    class => 'btn btn-primary',
+  #    items => [
+  #       {caption => 'Delete Incomplete', op => 'DiscardIncompleteExtractions'},
+  #       {caption => 'Extract all Unextracted', op => 'ExtractAllUnextracted'},
+  #     ]
+  #   },
+  #   {caption => 'PHI',
+  #    items => [
+  #       {caption => 'Scan all for PHI', op => 'ScanAllForPhi'},
+  #       {caption => 'Remove all PHI scans', op => 'RemoveAllPhiScans'},
+  #     ]
+  #   },
+  #   {caption => 'Inconsistencies',
+  #    items => [
+  #       {caption => 'Fix Study Inconsistencies', op => 'FixStudyInconsistencies'},
+  #       {caption => 'Fix Series Inconsistencies', op => 'FixSeriesInconsistencies'},
+  #       {caption => 'Fix Patient Inconsistencies', op => 'FixPatientInconsistencies'},
+  #     ]
+  #   }
+  # ];
+  #
+  for my $top (@$menu) {
+    my $class = "btn btn-default";
+
+    if (defined $top->{class}) {
+      $class = $top->{class};
+    }
+
+    $http->queue(qq{
+      <div class="btn-group">
+        <button type="button" 
+                class="$class dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          $top->{caption} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+
+    });
+    for my $entry (@{$top->{items}}) {
+
+      my $op = qq{javascript:PosdaGetRemoteMethod('$entry->{op}', '', function() {Update();});};
+
+      $http->queue(qq{
+        <li><a href="$op">
+          $entry->{caption}
+        </a></li>
+      });
+    }
+    $http->queue(qq{
+        </ul>
+      </div>
+    });
+  }
 }
 
 1;
