@@ -462,6 +462,10 @@ EOF
     $http->queue(qq{
       <h2>Status Report</h2>
 
+      <a href="http://tcia-utilities:19999" target="blank" class="btn btn-primary">
+        System Monitor
+      </a>
+
       <div id="chart1">
         <h3>dirs_in_recieve_backlog over last 24 hours</h3>
         <svg></svg>
