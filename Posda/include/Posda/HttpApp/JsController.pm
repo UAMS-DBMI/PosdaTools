@@ -841,6 +841,7 @@ method MakeMenuBar($http, $menu) {
   #   }
   # ];
   #
+  $http->queue('<div class="btn-group">');
   for my $top (@$menu) {
     my $class = "btn btn-default";
 
@@ -875,6 +876,7 @@ method MakeMenuBar($http, $menu) {
       </div>
     });
   }
+  $http->queue('</div>');
 }
 
 1;
