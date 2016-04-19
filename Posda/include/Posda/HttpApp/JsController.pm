@@ -2,6 +2,7 @@
 #
 use strict;
 package Posda::HttpApp::JsController;
+use Method::Signatures;
 use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
@@ -15,9 +16,14 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
   <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
   <head>
     <!-- HttpApp::JsController line 20 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/nv.d3.css">
+
+    <script src="/js/jquery-1.12.0.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/d3.v3.min.js"></script>
+    <script src="/js/nv.d3.min.js"></script>
+
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
 };
@@ -589,10 +595,11 @@ sub MakeMenu{
         if(exists($m->{style}) && $m->{style} eq "small"){
           $small = 1;
         }
+        # Default sync method of Update()
+        my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
         my $link = 
           $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
-            $m->{args}, $small, $m->{sync}, "list-group-item");
-        # $http->queue("<small>$link</small><br />");
+            $m->{args}, $small, $sync_method, "list-group-item");
         $http->queue($link);
       } elsif ($m->{type} eq "javascript"){
         my $link = $this->MakeJavascriptLink(
@@ -745,7 +752,6 @@ sub Delegate{
 
 sub SimpleTransaction{
   my($this, $port, $lines, $response) = @_;
-  print "JSController::SimpleTransaction, port: $port\n";
 
   my $sock;
   unless(
@@ -766,7 +772,6 @@ sub SimpleTransaction{
 }
 sub WriteTransactionParms{
   my($this, $text, $response) = @_;
-  print "JsController::WriteTransactionParms\n";
   my $offset = 0;
   my $sub = sub {
     my($disp, $sock) = @_;
@@ -787,7 +792,6 @@ sub WriteTransactionParms{
 }
 sub ReadTransactionResponse{
   my($this, $response) = @_;
-  print "JsController::ReadTransactionResponse\n";
   my $text = "";
   my @lines;
   my $sub = sub {
@@ -808,5 +812,69 @@ sub ReadTransactionResponse{
   return $sub;
 }
 
+method MakeMenuBar($http, $menu) {
+  # Generate a jquery-based button bar from the given menu hash
+  #
+  # $menu should look like this:
+  # class is optional
+  #
+  # my $menu = [
+  #   {caption => 'Extractions',
+  #    class => 'btn btn-primary',
+  #    items => [
+  #       {caption => 'Delete Incomplete', op => 'DiscardIncompleteExtractions'},
+  #       {caption => 'Extract all Unextracted', op => 'ExtractAllUnextracted'},
+  #     ]
+  #   },
+  #   {caption => 'PHI',
+  #    items => [
+  #       {caption => 'Scan all for PHI', op => 'ScanAllForPhi'},
+  #       {caption => 'Remove all PHI scans', op => 'RemoveAllPhiScans'},
+  #     ]
+  #   },
+  #   {caption => 'Inconsistencies',
+  #    items => [
+  #       {caption => 'Fix Study Inconsistencies', op => 'FixStudyInconsistencies'},
+  #       {caption => 'Fix Series Inconsistencies', op => 'FixSeriesInconsistencies'},
+  #       {caption => 'Fix Patient Inconsistencies', op => 'FixPatientInconsistencies'},
+  #     ]
+  #   }
+  # ];
+  #
+  for my $top (@$menu) {
+    my $class = "btn btn-default";
+
+    if (defined $top->{class}) {
+      $class = $top->{class};
+    }
+
+    $http->queue(qq{
+      <div class="btn-group">
+        <button type="button" 
+                class="$class dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          $top->{caption} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+
+    });
+    for my $entry (@{$top->{items}}) {
+
+      my $op = qq{javascript:PosdaGetRemoteMethod('$entry->{op}', '', function() {Update();});};
+
+      $http->queue(qq{
+        <li><a href="$op">
+          $entry->{caption}
+        </a></li>
+      });
+    }
+    $http->queue(qq{
+        </ul>
+      </div>
+    });
+  }
+}
 
 1;

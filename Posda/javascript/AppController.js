@@ -3,6 +3,7 @@ function MenuResponseReturned(text, status, xml){
 }
 function ContentResponseReturned(text, status, xml){
   document.getElementById('content').innerHTML = text;
+  RunMagicScript();
 }
 function LoginResponseReturned(text, status, xml){
   document.getElementById('login').innerHTML = text;
@@ -23,9 +24,56 @@ function UpdateContent(){
 function UpdateLogin(){
   PosdaGetRemoteMethod("LoginResponse", "" , LoginResponseReturned);
 }
+function RunMagicScript() {
+  // Execute any script found in a .magicscript block
+  $(".magicscript").each(function(index, element) {
+    eval($(element).text());
+  });
+}
 function Update(){ 
+  console.log("update called");
   UpdateTitleAndInfo();
   UpdateMenu();
   UpdateContent();
   UpdateLogin();
 }
+
+function makeChartFromSimpleData(data, element, key_msg) {
+  var full_data = [];
+
+  $.each(data, function(i, v) {
+    full_data.push({x: i, y: v});
+  });
+
+
+  var data = [
+    { 
+      values: full_data,
+      key: key_msg
+    },
+  ];
+
+  makeChart(data, element);
+
+}
+function makeChart(testData, element) {
+
+
+  nv.addGraph(function() {
+      var chart = nv.models.lineChart();
+
+      chart.xAxis.axisLabel('Minutes ago')
+        .tickFormat(function(d) {
+          return 1440 - d;
+        });
+
+      chart.yAxis.axisLabel('Count');
+
+      d3.select("#" + element + " svg")
+          .datum(testData)
+          .call(chart);
+
+      return chart;
+  });
+}
+
