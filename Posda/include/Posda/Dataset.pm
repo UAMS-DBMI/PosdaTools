@@ -158,6 +158,7 @@ sub EncodeEle{
   unless(defined $value) {
     return undef;
   }
+  if($value eq ""){ return undef }
   unless(ref($value) eq "ARRAY"){
    $value = [$value];
   }
@@ -2956,7 +2957,7 @@ sub Insert{
     my $index = $1;
     if(defined $owner){
       # and its a private element by owner
-      unless(exist $this->{$grp}->{private}->{$owner}->{$ele}){
+      unless(exists $this->{$grp}->{private}->{$owner}->{$ele}){
         $this->{$grp}->{$ele} = {
           VR => $DD->get_pvt_vr($grp, $owner, $ele),
           type => $DD->get_pvt_type($grp, $owner, $ele),
