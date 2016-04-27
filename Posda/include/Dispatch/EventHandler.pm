@@ -111,8 +111,8 @@ sub Die{
       ){
         mem_entry:
         for my $i (0 .. $#{$mem_mon->{histogram}}){
-          if(exists $mem_mon->{histogram}->{pmem}){
-            $mem_percent = "$mem_mon->{histogram}->{pmem} ($i)";
+          if(ref($mem_mon->{histogram}->[$i]) eq "HASH"){
+            $mem_percent = "$mem_mon->{histogram}->[$i]->{pmem} ($i)";
             last mem_entry;
           }
         }
