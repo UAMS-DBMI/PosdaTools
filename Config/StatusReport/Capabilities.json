@@ -1,0 +1,39 @@
+{
+  "Default": {
+  },
+  "root": { 
+    "CanDebug": 1,
+    "IsExpert": 1,
+    "IsExpertCapable": 1,
+  },
+  "bbennett": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "quasar": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "ksmith": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "kclark": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "tnolan": {
+    "CanDebug": 1,
+    "IsExpert":  1,
+    "IsExpertCapable": 1,
+  },
+  "sberryman": {
+    "CanDebug": 0,
+    "IsExpert":  0,
+    "IsExpertCapable": 0,
+  },
+}
