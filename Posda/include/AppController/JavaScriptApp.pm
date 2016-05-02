@@ -245,14 +245,6 @@ EOF
           args => { mode => "password" },
           sync => "Update();",
         },
-        {
-          type => "host_link_sync",
-          condition => $this->get_user,
-          caption => "Status Report",
-          method => "SetMenuMode",
-          args => { mode => "status_report" },
-          sync => "Update();",
-        },
       ]
     );
   }
@@ -310,7 +302,6 @@ EOF
       case "avail_apps"     { $this->AvailAppContent($http, $dyn) }
       case "dicom_receiver" { $this->DicomReceiverContent($http, $dyn) }
       case "password"       { $this->PasswordContent($http, $dyn) }
-      case "status_report"  { $this->StatusReport($http, $dyn) }
 
       else {
         my $resp = "Here's some content";
@@ -369,9 +360,10 @@ EOF
   }
   sub ReloadConfig{
     my($this) = @_;
-    my $new_config = Posda::ConfigRead->new($this->{config_dir});
-    $this->{NewConfig} = $new_config;
-    $this->RouteAbove("ConfigReloaded");
+    # Disabled because it is causing instant crash
+    # my $new_config = Posda::ConfigRead->new($this->{config_dir});
+    # $this->{NewConfig} = $new_config;
+    # $this->RouteAbove("ConfigReloaded");
   }
   sub ConfigReloaded{
     my($this) = @_;
@@ -451,40 +443,7 @@ EOF
     my $count = @ret;
     return \@ret;
   }
-  sub StatusReport {
-    my($this, $http, $dyn) = @_;
 
-    my ($db, $rec) = @{AppController::StatusInfo::get_24hour_stats()};
-
-    my $rec_json = encode_json($rec);
-    my $db_json = encode_json($db);
-
-    $http->queue(qq{
-      <h2>Status Report</h2>
-
-      <a href="http://tcia-utilities:19999" target="blank" class="btn btn-primary">
-        System Monitor
-      </a>
-
-      <div id="chart1">
-        <h3>dirs_in_recieve_backlog over last 24 hours</h3>
-        <svg></svg>
-      </div>
-
-      <div id="chart2">
-        <h3>db_backlog over last 24 hours</h3>
-        <svg></svg>
-      </div>
-
-      <script class="magicscript">
-        var rec_data = $rec_json;
-        var db_data = $db_json;
-
-        makeChartFromSimpleData(rec_data, "chart1", "recieve_backlog");
-        makeChartFromSimpleData(db_data, "chart2", "db_backlog");
-      </script>
-    });
-  }
   ################### BOM Stuff ############################
   sub MakeBomMenu{
     my($this, $http, $dyn) = @_;
