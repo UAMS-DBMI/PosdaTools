@@ -3268,14 +3268,12 @@ sub Delete{
   unless(
     (
       (! defined($owner)) &&
-      exists($this->{$grp}->{$ele}) &&
-      exists($this->{$grp}->{$ele}->{value})
+      exists($this->{$grp}->{$ele})
     ) || (
       defined($owner) &&
       exists($this->{$grp}->{private}) &&
       exists($this->{$grp}->{private}->{$owner}) &&
-      exists($this->{$grp}->{private}->{$owner}->{$ele}) &&
-      exists($this->{$grp}->{private}->{$owner}->{$ele}->{value})
+      exists($this->{$grp}->{private}->{$owner}->{$ele})
     )
   ){
     return undef;
