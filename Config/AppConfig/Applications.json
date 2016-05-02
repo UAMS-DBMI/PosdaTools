@@ -1,8 +1,8 @@
 {
   "SocketPool": [
-    64663, 64664, 64665, 64666, 64667, 64668, 64669,
-    64670, 64671, 64672, 64673, 64674, 64675, 64676, 64677, 64678, 64679,
-    64680, 64681, 64682, 64683, 64684, 64685, 64686, 64687, 64688, 64689,
+    64613, 64614, 64615, 64616, 64617, 64618, 64619,
+    64620, 64621, 64622, 64623, 64624, 64625, 64626, 64622, 64628, 64629,
+    64630, 64631, 64632, 64633, 64634, 64635, 64636, 64637, 64638, 64639,
   ],
   "Apps": {
     "PosdaCuration": {
@@ -161,18 +161,44 @@
       "w" : 1524,
       "sort_order" : 12,
     },
-    "GenericApp": {
-      "Directory": "POSDA_ROOT/Config/GenericApp",
+    "ReviewPHI": {
+      "Directory": "/home/posda/PosdaTools/Config/ReviewPhi",
       "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
-      "Description" : "Generic App (Template App)",
+      "Description" : "PHI Review Tool",
       "WindowName" : "_new",
       "interactive": 1,
       "scrollbar" : 1,
       "top" : 100,
       "left" : 100,
-      "h" : 950,
-      "w" : 1024,
-      "sort_order" : 13,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 10,
+    },
+    "FixPHI": {
+      "Directory": "/home/posda/PosdaTools/Config/PhiFixer",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "PHI View and Fix Tool",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 11,
+    },
+    "GenericApp": {
+      "Directory": "/home/posda/PosdaTools/Config/GenericApp",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "GenericApp",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 700,
+      "w" : 1200,
+      "sort_order" : 100,
     },
     "StatusReport": {
       "Directory": "POSDA_ROOT/Config/StatusReport",
@@ -192,23 +218,32 @@
     "DicomReceiver": {
        "ObjClass": "Posda::Receiver",
        "CreationArgs": [
-         64661,
+         64611,
          ["Config", "DicomReceiver"],
-         "POSDA_CACHE_ROOT/Data/DicomReceiver",
+         "/cache/bbennett/DicomReceiver",
        ],
     },
     "ExtractionManager": {
        "ObjClass": "TciaCuration::ExtractionManager",
        "CreationArgs": [
-         64662,
+         64612,
          ["Config", "ExtractionManager"],
-         "POSDA_CACHE_ROOT/Data/HierarchicalExtractions",
+         "/cache/bbennett/Data/HierarchicalExtractions",
        ],
     },
     "DbFileImport": {
        "ObjClass": "TciaCuration::DbFileProcessor",
        "CreationArgs": [
          ["Config", "DbFileProcessor"]
+       ],
+    },
+    "AppTracker": {
+       "ObjClass": "AppController::AppTracker",
+       "CreationArgs": [
+         "app_stats",
+         "10",
+         "posda_files",
+         "Testing Application Server",
        ],
     },
   },

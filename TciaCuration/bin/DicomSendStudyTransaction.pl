@@ -126,73 +126,7 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
   package Sender;
   use vars qw( @ISA );
   @ISA = ( "Dispatch::EventHandler" );
-  my $MsgHandlers = {
-    "1.2.840.10008.1.1" => "Dispatch::Dicom::Verification",
-    "1.2.840.10008.5.1.4.1.1.9.1.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.66.1" =>  "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.66.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.5.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.9.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.6.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.9.3.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.3.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.4" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.12.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.12.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.67" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.65" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.11.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.33" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.3.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.2.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.11" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.1.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.104.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.2.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.4.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.22" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.12.1.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.12.2.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.9.1.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.11.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.9.2.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.9.4.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.59" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.4" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.4.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.50" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.7.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.7.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.7.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.7.4" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.20" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.5.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.11.4" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.77.1.5.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.129" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.128" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.88.40" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.11.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.4" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.6" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.1" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.5" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.8" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.2" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.3" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.481.7" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.66" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.67" => "Dispatch::Dicom::Storage",
-    "1.2.840.10008.5.1.4.1.1.7" => "Dispatch::Dicom::Storage",
-  };
+  my $MsgHandlers;
   sub new {
     my($class, $host, $port, $called, $calling, $info, $results) = @_;
     my $this = {
@@ -292,6 +226,7 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
 #        print STDERR "Send  UID: $StudyToSend\n";
         next file
       }
+      $MsgHandlers->{$finfo->{sop_class_uid}} = "Dispatch::Dicom::Storage";
       push(@{$this->{FilesToSend}}, {
         file => $file,
         xfr_stx => $finfo->{xfr_stx},

@@ -15,9 +15,15 @@
   "DicomDestinations" : {
     "Quasar" : {
       "host" : "dbmi-imac.ad.uams.edu",
-      "port" : "64611",
+      "port" : "64661",
       "calling_ae" : "POSDA",
       "called_ae" : "QUASAR"
+    },
+    "Beast" : {
+      "host" : "144.30.108.235",
+      "port" : "64661",
+      "calling_ae" : "POSDA",
+      "called_ae" : "BEAST"
     },
     "IntakeServer" : {
       "host" : "144.30.1.71",
@@ -25,9 +31,9 @@
       "calling_ae" : "POSDA",
       "called_ae" : "CTP"
     },
-    "LocalLoopback" : {
+    "PosdaDatabase" : {
       "host" : "localhost",
-      "port" : "64661",
+      "port" : "64611",
       "calling_ae" : "SEND_LOOP",
       "called_ae" : "RCV_LOOP"
     },
@@ -39,11 +45,18 @@
       "called_ae" : "BBOSIRIX"
     },
     "Bill's Posda" : {
-      "host" : "144.30.109.157",
+      "host" : "tcia-utilities",
 //      "host" : "192.168.97.73",
-      "port" : "64611",
+      "port" : "64661",
       "calling_ae" : "POSDA",
       "called_ae" : "BBPOSDA"
+    },
+    "Bill's Posda Mac" : {
+//      "host" : "tcia-utilities",
+      "host" : "144.30.109.157",
+      "port" : "64661",
+      "calling_ae" : "POSDA",
+      "called_ae" : "BBMAC"
     },
   }
 }
