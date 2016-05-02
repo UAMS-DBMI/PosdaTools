@@ -7,8 +7,9 @@ use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
+
 use vars qw( @ISA );
-@ISA = ( "Dispatch::NamedObject", "Posda::HttpObj" );
+@ISA = ( "Posda::HttpObj" );
 my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -23,6 +24,8 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/d3.v3.min.js"></script>
     <script src="/js/nv.d3.min.js"></script>
+    <script src="/js/spin.min.js"></script>
+    <script src="/js/jquery.spin.js"></script>
 
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
@@ -514,6 +517,16 @@ sub MakeJavascriptLink{
   $text .= ');">' ."$caption</span>";
   return $text;
 }
+
+method ReallySimpleButton($http, $dyn) {
+  $http->queue(qq{
+    <button class="btn btn-default"
+            onClick="$dyn->{onClick}">
+      $dyn->{caption}
+    </button>
+  });
+}
+
 sub SimpleButton{
   my($this, $http, $dyn) = @_;
   my $string = '<input class="btn btn-default" type="button" ' .
@@ -841,6 +854,7 @@ method MakeMenuBar($http, $menu) {
   #   }
   # ];
   #
+  $http->queue('<div class="btn-group">');
   for my $top (@$menu) {
     my $class = "btn btn-default";
 
@@ -875,6 +889,7 @@ method MakeMenuBar($http, $menu) {
       </div>
     });
   }
+  $http->queue('</div>');
 }
 
 1;

@@ -1,8 +1,7 @@
-#!/usr/bin/perl -w
-#
+#!/usr/bin/perl -w 
 use strict;
 package PosdaCuration::Application;
-use Method::Signatures;
+use Method::Signatures::Simple;
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
 use Posda::HttpApp::JsController;
@@ -14,6 +13,7 @@ use Posda::Nicknames;
 use Posda::UUID;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
+use Dispatch::EventHandler;
 use PosdaCuration::InfoExpander;
 use PosdaCuration::DuplicateSopResolution;
 use Fcntl qw(:seek);
