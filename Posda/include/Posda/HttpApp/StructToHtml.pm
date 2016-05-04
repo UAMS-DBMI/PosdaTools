@@ -109,6 +109,7 @@ sub DumpHtmlStruct{
     $q->queue("{\n");
     for my $i (sort keys %$where){
       my $new_path = $path eq "" ? $i : "$path|$i";
+      $new_path =~ s/"/!!!/g;
       my $new_indent = $indent + 1;
       QueueHtmlText($q, "  " x $new_indent . 
         "<a href=\"SetSelectedPath?obj_path=$this->{path}&amp;path=$new_path" .
@@ -149,7 +150,9 @@ sub DecDepth{
 sub SetSelectedPath{
   my($this, $http, $env) = @_;
   my $title = $env->{title};
-  my @path = split(/\|/, $env->{path});
+  my $unc_path = $env->{path};
+  $unc_path =~ s/!!!/"/g;
+  my @path = split(/\|/, $unc_path);
   $this->{selected_path}->{$title} = \@path;
   $this->Refresh($http, $env);
 }
