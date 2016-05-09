@@ -54,14 +54,15 @@ sub new {
   unless(mkdir $this->{LoginTempDir}) {
     die "can't mkdir $this->{LoginTempDir}"
   }
-  my $width = $this->{Identity}->{width};
-  my $height = $this->{Identity}->{height};
+
   $this->{title} = $this->{Identity}->{Title};
-  $this->{height} = $height;
-  $this->{width} = $width;
-  $this->{menu_width} = 100;
+  $this->{height} = $this->{Identity}->{height};
+  $this->{width} = $this->{Identity}->{width};
+  $this->{menu_width} = $this->{Identity}->{menu_width};
   $this->{content_width} = $this->{width} - $this->{menu_width};
+
   $this->SetInitialExpertAndDebug("bbennett");
+
   if($this->CanDebug){
     Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
