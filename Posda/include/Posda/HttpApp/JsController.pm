@@ -2,12 +2,14 @@
 #
 use strict;
 package Posda::HttpApp::JsController;
+use Method::Signatures;
 use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
+
 use vars qw( @ISA );
-@ISA = ( "Dispatch::NamedObject", "Posda::HttpObj" );
+@ISA = ( "Posda::HttpObj" );
 my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -22,6 +24,8 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/d3.v3.min.js"></script>
     <script src="/js/nv.d3.min.js"></script>
+    <script src="/js/spin.min.js"></script>
+    <script src="/js/jquery.spin.js"></script>
 
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
@@ -513,6 +517,16 @@ sub MakeJavascriptLink{
   $text .= ');">' ."$caption</span>";
   return $text;
 }
+
+method ReallySimpleButton($http, $dyn) {
+  $http->queue(qq{
+    <button class="btn btn-default"
+            onClick="$dyn->{onClick}">
+      $dyn->{caption}
+    </button>
+  });
+}
+
 sub SimpleButton{
   my($this, $http, $dyn) = @_;
   my $string = '<input class="btn btn-default" type="button" ' .
@@ -809,6 +823,73 @@ sub ReadTransactionResponse{
     }
   };
   return $sub;
+}
+
+method MakeMenuBar($http, $menu) {
+  # Generate a jquery-based button bar from the given menu hash
+  #
+  # $menu should look like this:
+  # class is optional
+  #
+  # my $menu = [
+  #   {caption => 'Extractions',
+  #    class => 'btn btn-primary',
+  #    items => [
+  #       {caption => 'Delete Incomplete', op => 'DiscardIncompleteExtractions'},
+  #       {caption => 'Extract all Unextracted', op => 'ExtractAllUnextracted'},
+  #     ]
+  #   },
+  #   {caption => 'PHI',
+  #    items => [
+  #       {caption => 'Scan all for PHI', op => 'ScanAllForPhi'},
+  #       {caption => 'Remove all PHI scans', op => 'RemoveAllPhiScans'},
+  #     ]
+  #   },
+  #   {caption => 'Inconsistencies',
+  #    items => [
+  #       {caption => 'Fix Study Inconsistencies', op => 'FixStudyInconsistencies'},
+  #       {caption => 'Fix Series Inconsistencies', op => 'FixSeriesInconsistencies'},
+  #       {caption => 'Fix Patient Inconsistencies', op => 'FixPatientInconsistencies'},
+  #     ]
+  #   }
+  # ];
+  #
+  $http->queue('<div class="btn-group">');
+  for my $top (@$menu) {
+    my $class = "btn btn-default";
+
+    if (defined $top->{class}) {
+      $class = $top->{class};
+    }
+
+    $http->queue(qq{
+      <div class="btn-group">
+        <button type="button" 
+                class="$class dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          $top->{caption} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+
+    });
+    for my $entry (@{$top->{items}}) {
+
+      my $op = qq{javascript:PosdaGetRemoteMethod('$entry->{op}', '', function() {Update();});};
+
+      $http->queue(qq{
+        <li><a href="$op">
+          $entry->{caption}
+        </a></li>
+      });
+    }
+    $http->queue(qq{
+        </ul>
+      </div>
+    });
+  }
+  $http->queue('</div>');
 }
 
 1;

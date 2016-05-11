@@ -7,11 +7,13 @@
 #
 use strict;
 package Dispatch::EventHandler;
+use Method::Signatures::Simple;
 use Socket;
 use Dispatch::Select;
 use File::Path;
 use Fcntl qw( :flock :DEFAULT F_GETFL F_SETFL O_NONBLOCK );
 use Storable qw( store_fd fd_retrieve nfreeze thaw);
+use JSON;
 
 sub MakeExit{
   my $exiter = sub {
@@ -111,8 +113,8 @@ sub Die{
       ){
         mem_entry:
         for my $i (0 .. $#{$mem_mon->{histogram}}){
-          if(exists $mem_mon->{histogram}->{pmem}){
-            $mem_percent = "$mem_mon->{histogram}->{pmem} ($i)";
+          if(ref($mem_mon->{histogram}->[$i]) eq "HASH"){
+            $mem_percent = "$mem_mon->{histogram}->[$i]->{pmem} ($i)";
             last mem_entry;
           }
         }
@@ -256,6 +258,25 @@ sub KillProcessAndChildren{
   }
   my $count = kill 9, @kill_list;
 }
+
+func JSONSubProcess($command, $finished_callback) {
+  # Execute the given command using Dispatch::LineReader
+  # Assume the returned lines form a single JSON object
+  # Decode that object and pass it to $finished_callback
+  my @lines;
+  Dispatch::LineReader->new_cmd($command,
+    func ($line) {
+      push @lines, $line;
+    },
+    func () {
+      my $json = join(' ', @lines);
+      my $obj = decode_json($json);
+
+      &$finished_callback($obj);
+    }
+  );
+}
+
 sub SerializedSubProcess{
   my($this, $args, $command, $finished) = @_;
 #  my $serialized_args = &Storable::nfreeze($args);
