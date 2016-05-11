@@ -1,6 +1,6 @@
 // 
 {
-  "ApplicationInitClass" : "PhiFixer::Application",
+  "ApplicationInitClass" : "StatusReport::Application",
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
@@ -8,11 +8,22 @@
   "ApplicationName" : "Start",
   "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
-  "JavascriptRoot" : "POSDA_ROOT/PhiFixer/javascript",
+  "JavascriptRoot" : "POSDA_ROOT/StatusReport/javascript",
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
   "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
-  "PhiAnalysisRoot" : "POSDA_CACHE_ROOT/Data/PhiAnalysis/data",
-  "ExtractionRoot" :
-     "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
-  "ExtractionManagerPort" : "64612",
+  "Databases" : {
+    "stats": {
+      "hostname": "tcia-utilities",
+      "database": "app_stats",
+      "username": "postgres",
+      "password": ""
+    },
+    "files": {
+      "hostname": "tcia-utilities",
+      "database": "posda_files",
+      "username": "postgres",
+      "password": ""
+    }
+
+  }
 }

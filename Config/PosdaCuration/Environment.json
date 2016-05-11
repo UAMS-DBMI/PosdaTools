@@ -14,7 +14,7 @@
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
   "database_host" : "localhost",
   "database_name" : "posda_files",
-  "ExtractionManagerPort" : "64662",
+  "ExtractionManagerPort" : "64612",
   "ExtractionRoot" :
      "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
   "PhiAnalysisRoot" :
@@ -25,17 +25,24 @@
   "IntakeDatabaseHost" : "144.30.1.71",
   "PublicDatabaseHost" : "144.30.1.74",
 
+  "UserInfoDir" : "/cache/bbennett/UserData",
   "DicomDestinations" : {
     "Quasar" : {
       "host" : "dbmi-imac.ad.uams.edu",
-      "port" : "64611",
-      "calling_ae" : "POSDA",
+      "port" : "64661",
+      "calling_ae" : "POSDA_UTIL",
       "called_ae" : "QUASAR"
+    },
+    "Beast" : {
+      "host" : "dbmi-dell1.ad.uams.edu",
+      "port" : "64661",
+      "calling_ae" : "POSDA_UTIL",
+      "called_ae" : "POSDA_BEAST"
     },
     "IntakeServer" : {
       "host" : "144.30.1.71",
       "port" : "11112",
-      "calling_ae" : "POSDA",
+      "calling_ae" : "POSDA_UTIL",
       "called_ae" : "CTP"
     },
     "LocalLoopback" : {
@@ -48,14 +55,14 @@
       "host" : "144.30.109.157",
 //      "host" : "192.168.97.73",
       "port" : "11112",
-      "calling_ae" : "POSDA",
+      "calling_ae" : "POSDA_UTIL",
       "called_ae" : "BBOSIRIX"
     },
     "Bill's Posda" : {
-      "host" : "144.30.109.157",
+      "host" : "tcia-utilities",
 //      "host" : "192.168.97.73",
-      "port" : "64611",
-      "calling_ae" : "POSDA",
+      "port" : "64661",
+      "calling_ae" : "POSDA_UTIL",
       "called_ae" : "BBPOSDA"
     },
   }

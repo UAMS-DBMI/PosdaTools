@@ -1,7 +1,7 @@
-#!/usr/bin/perl -w
-#
+#!/usr/bin/perl -w 
 use strict;
 package PosdaCuration::Application;
+use Method::Signatures::Simple;
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
 use Posda::HttpApp::JsController;
@@ -13,6 +13,7 @@ use Posda::Nicknames;
 use Posda::UUID;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
+use Dispatch::EventHandler;
 use PosdaCuration::InfoExpander;
 use PosdaCuration::DuplicateSopResolution;
 use Fcntl qw(:seek);
@@ -306,16 +307,26 @@ sub CollectionLine{
 sub CollectionEnd{
   my($this, $http, $dyn, $lines) = @_;
   my $sub = sub{
+    my $selecting_collection = '';
+    my $selecting_site = '';
+
+    if (defined $this->{SelectingCollection}) {
+      $selecting_collection = $this->{SelectingCollection};
+    }
+    if (defined $this->{SelectingSite}) {
+      $selecting_site = $this->{SelectingSite};
+    }
+
     $this->RefreshEngine($http, $dyn, qq{
       <div class="col-md-8">
       <div class="well">
         <div class="form-group">
           <label>Collection:</label>
-          <?dyn="EntryBox" default="$this->{SelectingCollection}" op="EnterCollection" name="collection"?>
+          <?dyn="EntryBox" default="$selecting_collection" op="EnterCollection" name="collection"?>
         </div>
         <div class="form-group">
           <label>Site:</label>
-          <?dyn="EntryBox" default="$this->{SelectingSite}" op="EnterSite" name="site"?>
+          <?dyn="EntryBox" default="$selecting_site" op="EnterSite" name="site"?>
         </div>
         <?dyn="SimpleButton" op="SetCollectionAndSite" parm="foo" sync="Update();" caption="Query Database"?>
       </div>
@@ -342,6 +353,7 @@ sub CollectionEnd{
     });
     for my $l (@$lines){
       my($col, $site, $num) = split(/\|/, $l);
+      print "$col$site$num\n";
       $http->queue(qq{
         <tr>
           <td>
@@ -369,6 +381,7 @@ sub CollectionEnd{
   };
   return $sub;
 }
+
 sub Collections{
   my($this, $http, $dyn) = @_;
   if(
@@ -547,39 +560,8 @@ sub ContinueDbCollectionsAndExtractions{
         <a class="btn btn-sm btn-primary" href="DownloadCounts?obj_path=$this->{path}\">Download CSV</a>
       </p>
 
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="IntakeCheckButtons"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Intake Differences" op="FixIntakeDifferences" sync="Update();" class="btn btn-warning"?>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="PublicCheckButtons"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Public Differences" op="FixPublicDifferences" sync="Update();" class="btn btn-warning"?>
-        </div>
-      </div>
+      <?dyn="DrawMainButtonBar"?>
 
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Delete Incomplete Extractions" op="DiscardIncompleteExtractions" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Extact All Unextracted" op="ExtractAllUnextracted" sync="Update();"?>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Scan All For PHI" op="ScanAllForPhi" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Remove All PHI Scans" op="RemoveAllPhiScans" sync="Update();"?>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="btn-group" role="group">
-          <?dyn="NotSoSimpleButton" caption="Fix Study Inconsistencies" op="FixStudyInconsistencies" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Series Inconsistencies" op="FixSeriesInconsistencies" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" caption="Fix Patient Inconsistencies" op="FixPatientInconsistencies" sync="Update();"?>
-        </div>
       </div>
       <table class="table table-striped" width="100%">
         <thead>
@@ -597,6 +579,43 @@ sub ContinueDbCollectionsAndExtractions{
   };
   return $sub;
 };
+
+method DrawMainButtonBar($http, $dyn) {
+  $self->MakeMenuBar($http, [
+    {caption => 'Intake',
+     items => [
+        $self->Intake_Check_or_Clear(),
+        {caption => 'Fix Differences', op => 'FixIntakeDifferences'},
+      ]
+    },
+    {caption => 'Public',
+     items => [
+        $self->Public_Check_or_Clear(),
+        {caption => 'Fix Differences', op => 'FixPublicDifferences'},
+      ]
+    },
+    {caption => 'Extractions',
+     items => [
+        {caption => 'Delete Incomplete', op => 'DiscardIncompleteExtractions'},
+        {caption => 'Extract all Unextracted', op => 'ExtractAllUnextracted'},
+      ]
+    },
+    {caption => 'PHI',
+     items => [
+        {caption => 'Scan all for PHI', op => 'ScanAllForPhi'},
+        {caption => 'Remove all PHI scans', op => 'RemoveAllPhiScans'},
+      ]
+    },
+    {caption => 'Inconsistencies',
+     items => [
+        {caption => 'Fix Study Inconsistencies', op => 'FixStudyInconsistencies'},
+        {caption => 'Fix Series Inconsistencies', op => 'FixSeriesInconsistencies'},
+        {caption => 'Fix Patient Inconsistencies', op => 'FixPatientInconsistencies'},
+      ]
+    }
+  ]);
+}
+
 sub DrawExtractionInfoHeader {
   my($this, $http, $dyn) = @_;
   # if there is Intake or Public Check data,
@@ -768,14 +787,15 @@ sub FixPublicDifferences {
 sub FixDifferences {
   my($this, $http, $fix_hierarchy) = @_;
 
-  sub abort {
+  my $abort = sub {
     my $msg = "FixDifferences: There are no differences for $fix_hierarchy! Aborting!";
-    print "$msg\n";
+    print STDERR "$msg\n";
     $this->QueueJsCmd("alert('$msg');");
-  }
+  };
 
   if (not defined $this->{$fix_hierarchy}) {
-    return abort;
+    &$abort();
+    return;
   }
 
   $this->ResetExtractionSelection();
@@ -799,7 +819,8 @@ sub FixDifferences {
 
   # if the list is empty, there is nothing to do, so don't try it!
   if (not scalar @files) {
-    return abort;
+    &$abort();
+    return;
   }
 
   # Build the query to hide these files
@@ -846,41 +867,19 @@ sub FixDifferences {
   }
 }
 
-sub IntakeCheckButtons{
-  my($this, $http, $dyn) = @_;
-  if(exists $this->{IntakeCheckHierarchy}){
-    $this->NotSoSimpleButton($http, {
-        op => "ClearIntakeData",
-        caption => "Clear Intake Check" ,
-        sync => "Update();",
-        class => "btn btn-info"
-    });
+method Intake_Check_or_Clear() {
+  if(exists $self->{IntakeCheckHierarchy}) {
+    return {caption => 'Clear Check', op => 'ClearIntakeData'};
   } else {
-    $this->NotSoSimpleButton($http, {
-        op => "SetCheckAgainstIntake",
-        caption => "Check Against Intake" ,
-        sync => "Update();",
-        class => "btn btn-primary"
-    });
+    return {caption => 'Check Against', op => 'SetCheckAgainstIntake'};
   }
 }
 
-sub PublicCheckButtons{
-  my($this, $http, $dyn) = @_;
-  if(exists $this->{PublicCheckHierarchy}){
-    $this->NotSoSimpleButton($http, {
-      op => "ClearPublicData",
-      caption => "Clear Public Check",
-      sync => "Update();",
-      class => "btn btn-info"
-    });
+method Public_Check_or_Clear() {
+  if(exists $self->{PublicCheckHierarchy}) {
+    return {caption => 'Clear Check', op => 'ClearPublicData'};
   } else {
-    $this->NotSoSimpleButton($http, {
-      op => "SetCheckAgainstPublic",
-      caption => "Check Against Public",
-      sync => "Update();",
-      class => "btn btn-primary"
-    });
+    return {caption => 'Check Against', op => 'SetCheckAgainstPublic'};
   }
 }
 
@@ -2160,8 +2159,9 @@ print STDERR "LockChecker shutting down\n";
       return;
     }
     if(
-      $this->{mode} eq "Collections" &&
-      $this->{CollectionMode} eq "CollectionsSelection"
+      (defined $this->{mode} and $this->{mode} eq "Collections") &&
+      (defined $this->{CollectionMode} and 
+        $this->{CollectionMode} eq "CollectionsSelection")
     ){
       unless(
         $this->{DbQueryInProgress} || $this->{ExtractionSearchInProgress}

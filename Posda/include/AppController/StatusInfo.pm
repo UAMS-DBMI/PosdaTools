@@ -1,64 +1,121 @@
-#!/usr/bin/perl -w
-#
 package AppController::StatusInfo;
 # 
 # A module for getting various stats about the running app
 #
 
-use strict;
-use Method::Signatures;
+use Method::Signatures::Simple;
 use DBI;
-
-# TODO: These need to be moved into a config file!
-my $db_name = 'app_stats';
-my $db_host = 'tcia-utilities';
-my $db_user = 'postgres';
-my $db_pass = '';
+use DBD::Pg ':async';
 
 
-my $last_ran = 0;
-my $cache_result;
+func _get_db_connection($database_info) {
+  my $db_name = $database_info->{database};
+  my $db_host = $database_info->{hostname};
+  my $db_user = $database_info->{username};
+  my $db_pass = $database_info->{password};
 
-func _get_db_connection() {
   DBI->connect("DBI:Pg:database=$db_name;host=$db_host", 
                "$db_user",
                "$db_pass");
 }
 
-func _execute_query($query) {
-  my $conn = _get_db_connection();
-
-  my $statement = $conn->prepare($query) or die "$!";
+func _execute_query_async($conn, $query, $callback) {
+  my $statement = $conn->prepare($query, {pg_async => PG_ASYNC}) or die "$!";
   $statement->execute() or die $!;
 
-  # fetch as an array of hashes
-  my $ret = $statement->fetchall_arrayref({});
-  # my $ret = $statement->fetchrow_hashref();
+  # now we have to Dispatch to the background
+  my $back = Dispatch::Select::Background->new(func($disp) {
+    if ($statement->pg_ready()) {
+      # results are ready
 
-  $statement->finish;
-  $conn->disconnect;
+      # fetch as an array of hashes
+      $statement->pg_result();  # fetch the results into the statement?
+      my $ret = $statement->fetchall_arrayref({});
 
-  return $ret;
+      $statement->finish;
+      $conn->disconnect;
+
+      &$callback($ret);
+
+      $disp->clear();
+
+    } else {
+      $disp->timer(0.5);  # check again in 1/2 second
+    }
+  });
+
+  $back->queue();
 }
 
-func get_info() {
-  # _execute_query(qq{
-  #   select 
-  #     files_in_db_backlog,
-  #     dirs_in_receive_backlog,
-  #     at
-  #   from app_measurement
-  #   where extract(epoch from now() - at) < 30;
-  # });
-  _execute_query(qq{
+func get_recent_uploads_async($database_info, $callback) {
+
+  my $query = qq{
+    select
+        project_name,
+        site_name,
+        dicom_file_type,
+        count(*),
+        (extract(epoch from now() - max(import_time)) / 60)::int as minutes_ago,
+        to_char(max(import_time), 'HH24:MI') as time
+
+    from (
+        select 
+          project_name,
+          site_name,
+          dicom_file_type,
+          sop_instance_uid,
+          import_time
+
+        from 
+          file_import
+          natural join import_event
+          natural join ctp_file
+          natural join dicom_file
+          natural join file_sop_common
+          natural join file_patient
+
+        where import_time > now() - interval '1' day
+          and visibility is null
+    ) as foo
+    group by
+        project_name,
+        site_name,
+        dicom_file_type
+    order by minutes_ago asc;
+  };
+
+  _execute_query_async(_get_db_connection($database_info), $query, $callback);
+}
+
+func get_db_backlog_async($database_info, $callback) {
+  my $query = qq{
     select
       minute,
       max(files_in_db_backlog) as max_db_backlog,
-      max(dirs_in_receive_backlog) as max_dirs_in_backlog,
       count(*)
     from (
       select 
         files_in_db_backlog,
+        at,
+        date_trunc('minute', at) as minute
+      from app_measurement
+      where at > now() - interval '1' day
+    ) a
+    group by minute
+    order by minute
+  };
+
+  _execute_query_async(_get_db_connection($database_info), $query, $callback);
+}
+
+func get_rec_backlog_async($database_info, $callback) {
+  my $query = qq{
+    select
+      minute,
+      max(dirs_in_receive_backlog) as max_dirs_in_backlog,
+      count(*)
+    from (
+      select 
         dirs_in_receive_backlog,
         at,
         date_trunc('minute', at) as minute
@@ -67,29 +124,9 @@ func get_info() {
     ) a
     group by minute
     order by minute
-  });
-}
+  };
 
-func _get_24hour_stats() {
-  my @db_backlog;
-  my @rec_backlog;
-
-  for my $row (@{get_info()}) {
-    push @db_backlog, $row->{max_db_backlog};
-    push @rec_backlog, $row->{max_dirs_in_backlog};
-  }
-
-  return [ \@db_backlog, \@rec_backlog ];
-}
-
-func get_24hour_stats() {
-  if ((time() - $last_ran) >= 15) {
-    $last_ran = time();
-    $cache_result = _get_24hour_stats();
-    print "Cache stale, reloading\n"; # DEBUG
-  }
-
-  return $cache_result;
+  _execute_query_async(_get_db_connection($database_info), $query, $callback);
 }
 
 1;

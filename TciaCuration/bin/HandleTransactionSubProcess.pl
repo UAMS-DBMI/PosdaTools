@@ -187,10 +187,22 @@ unless($#ARGV == 0) { die $help }
     my($this, $desc) = @_;
     my $sub = sub {
       my($disp) = @_;
-      my $analysis = Storable::retrieve $desc->{cache_file};
-      $this->ProcessFileAnalysis($desc->{dest_file}, $analysis, $desc);
-      delete $this->{InAnalysis}->{$desc->{dest_file}};
-      $this->KickAnalysis;
+      my $analysis;
+      eval {$analysis  = Storable::retrieve $desc->{cache_file} };
+      if($@){
+        print STDERR "Error($!): loading cache file $desc->{cache_file}\n" .
+          "\t Deleted - attempting to recache\n";
+        unlink $desc->{cache_file};
+        $this->{InAnalysis}->{$desc->{dest_file}} = $desc;
+        open my $fh, "$this->{Analyzer} \"$desc->{dest_file}\"|"
+          or die "Can't open Analyzer ($!)";
+        Dispatch::Select::Socket->new(
+          $this->DoAnalysis($desc), $fh)->Add("reader");
+      } else {
+        $this->ProcessFileAnalysis($desc->{dest_file}, $analysis, $desc);
+        delete $this->{InAnalysis}->{$desc->{dest_file}};
+        $this->KickAnalysis;
+      }
     };
     return $sub;
   }
@@ -406,8 +418,8 @@ unless($#ARGV == 0) { die $help }
       my $from_file = $extraction->{from_file};
       my $to_file = $extraction->{dest_file};
 unless($from_file) { die "foo" }
-      my $cmd = "cp \"$from_file\" \"$to_file\"";
-print STDERR "Extraction Command: $cmd\n";
+      my $cmd = "ln \"$from_file\" \"$to_file\"";
+#print STDERR "Extraction Command: $cmd\n";
       my $fh;
       if(open $fh, "$cmd|"){
         Dispatch::Select::Socket->new(
@@ -940,6 +952,7 @@ print STDERR "Extraction Command: $cmd\n";
       my $key = $next->{from_file};
       $this->{EditsInProgress}->{$key} = $next;
       my $cmd = "cp \"$next->{copy_from_other}\" \"$next->{to_file}\"";
+print STDERR "Extraction Command: $cmd \n";
       my $fh;
       open($fh, "$cmd}=|");
       Dispatch::Select::Socket->new($this->WhenCopyDone($next), $fh);
