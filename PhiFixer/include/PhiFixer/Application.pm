@@ -5,6 +5,7 @@ use GenericApp::Application;
 @ISA = ("GenericApp::Application");
 
 use Modern::Perl '2010';
+use Method::Signatures::Simple invocant => '$this';
 
 use PhiFixer::PrivateTagInfo;
 use PhiFixer::DicomRootInfo;
@@ -54,87 +55,28 @@ my $phi_disposition_map = {
 };
 
 
-sub get_subj_files_path {
+func get_subj_files_path($file) {
   # Return the portion of the file path up to files/
   # TODO: Make this better, it will explode for a collection called "files"
-  my ($file) = @_;
 
   $file =~ /(.*\/files\/)/;
 
   return $1;
 }
 
-sub get_dicom_in_dir {
+func get_dicom_in_dir($dir) {
   # Return an arrayref of all DICOM files in the given directory
   # TODO: This should probably be loading the dicom.pinfo file
   # from the revision dir, rather than scanning for .dcm files
   # some more info could be returned as well!
-  my ($dir) = @_;
 
   # Assumes $dir ends with /
   my @files = glob($dir . '*.dcm');
   return \@files;
 }
 
-
-# sub new {
-#   my($class, $sess, $path) = @_;
-#   my $this = Dispatch::NamedObject->new($sess, $path);
-#   $this->{DD} = Posda::DataDict->new;
-#   bless $this, $class;
-
-#   if(exists $main::HTTP_APP_CONFIG->{BadJson}){
-    
-#     $this->{BadConfigFiles} = $main::HTTP_APP_CONFIG->{BadJson};
-#   }
-#   $this->{expander} = $expander;
-#   $this->{Identity} = $main::HTTP_APP_CONFIG->{config}->{Identity};
-#   $this->{Environment} = $main::HTTP_APP_CONFIG->{config}->{Environment};
-#   $this->{LoginTempDir} = "$this->{Environment}->{LoginTemp}/$this->{session}";
-#   unless(mkdir $this->{LoginTempDir}) {
-#     die "can't mkdir $this->{LoginTempDir}"
-#   }
-#   my $width = $this->{Identity}->{width};
-#   my $height = $this->{Identity}->{height};
-#   $this->{title} = $this->{Identity}->{Title};
-#   $this->{height} = $height;
-#   $this->{width} = $width;
-#   $this->{menu_width} = 300;
-#   $this->{content_width} = $this->{width} - $this->{menu_width};
-#   $this->SetInitialExpertAndDebug("bbennett");
-#   if($this->CanDebug){
-#     Posda::HttpApp::DebugWindow->new($sess, "Debug");
-#   }
-#   $this->{JavascriptRoot} =
-#     $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
-#   $this->QueueJsCmd("Update();");
-#   my $session = $this->get_session;
-#   $session->{DieOnTimeout} = 1;
-#   if(
-#     exists $main::HTTP_APP_SINGLETON->{token} &&
-#     defined $main::HTTP_APP_SINGLETON->{token}
-#   ){
-#     $session->{logged_in} = 1;
-#     $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{token};
-#     $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
-#     $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
-#   }
-#   $this->{ExitOnLogout} = 1;
-#   $this->{DicomInfoCache} =
-#     $main::HTTP_APP_CONFIG->{config}->{Environment}->{DicomInfoCache};
-#   $this->{ExtractionRoot} =
-#     $main::HTTP_APP_CONFIG->{config}->{Environment}->{ExtractionRoot};
-#   if($this->can("SpecificInitialize")){
-#     $this->SpecificInitialize;
-#   }
-#   return $this;
-# }
-
-# above line is generic
-#######################################################
-# below is app specific
-sub SpecificInitialize{
-  my($this) = @_;
+method SpecificInitialize() {
+  $this->{DD} = Posda::DataDict->new;
   $this->{ContentMode} = "WaitingForTag";
   $this->{GrepString} = "foo";
   my $root = $this->{Environment}->{PhiAnalysisRoot};
@@ -200,19 +142,21 @@ sub SpecificInitialize{
   $this->{ReportsAvailable} = \@reports;
   $this->{Mode} = "Initialized";
 }
-sub ReportError{
-  my($this, $message) = @_;
+
+method ReportError($message) {
   $this->{Mode} = "ErrorReported";
   $this->{ErrorReport} = $message;
 }
-sub MenuResponse{
-  my($this, $http, $dyn) = @_;
+
+method MenuResponse($http, $dyn) {
   my $mode = $this->{Mode};
-  if($this->can($mode)){ return $this->$mode($http, $dyn) }
+  if($this->can($mode)){
+    return $this->$mode($http, $dyn)
+  }
   return $http->queue("Unknown mode $mode");
 }
-sub Initialized{
-  my($this, $http, $dyn) = @_;
+
+method Initialized($http, $dyn) {
   if($#{$this->{ReportsAvailable}} < 0){
     return $http->queue("No reports available");
   }
@@ -240,7 +184,6 @@ sub Initialized{
       submission => $r->{submission},
       file_info => $r->{file_info},
       private_tag_info => $r->{private_tag_info},
-#      sync => "AlertAndUpdate('foo');",
       sync => "Update();",
       class => "btn btn-xs btn-default", # Extra small button, so it fits!
     });
@@ -248,8 +191,8 @@ sub Initialized{
   }
   $http->queue("</table>");
 }
-sub SelectReport{
-  my($this, $http, $dyn) = @_;
+
+method SelectReport($http, $dyn) {
   if(exists $this->{Collection}){
     print STDERR "Select twice!!!!!\n";
     return;
@@ -265,11 +208,9 @@ sub SelectReport{
   $this->{RootsInfo} = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
 
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
-#  $http->queue("This is a test");
-#  $http->finish;
-};
-sub RetrieveInfo{
-  my($this) = @_;
+}
+
+method RetrieveInfo() {
   my $sub = sub {
     $this->{FileInfo} = Storable::retrieve $this->{file_info_file};
     $this->{PrivateTagInfo} = Storable::retrieve $this->{private_tag_info_file};
@@ -292,8 +233,8 @@ sub RetrieveInfo{
   };
   return $sub;
 }
-sub Info{
-  my($this, $http, $dyn) = @_;
+
+method Info($http, $dyn) {
   my $modes = {
     PrivateTagReview => "Review Private Tags",
     InfoTagValueMode => "Review Potential PHI",
@@ -320,14 +261,14 @@ sub Info{
     $http->queue("Undefined InfoMode: $this->{InfoMode}");
   }
 }
-sub SetInfoMode{
-  my($this, $http, $dyn) = @_;
+
+method SetInfoMode($http, $dyn) {
   $this->{InfoMode} = $dyn->{value};
   $this->{ContentMode} = 'WaitingForTag';  # also clear content 
   $this->{SelectedPriv} = -1;  # clear selected private tag, if any
 }
-sub PrivateTagReview{
-  my($this, $http, $dyn) = @_;
+
+method PrivateTagReview($http, $dyn) {
   unless(exists $this->{PrivateTagsToReview}){
     $this->{PrivateTagsToReview} = [ 
       sort keys %{$this->{PrivateTagInfo}}
@@ -355,17 +296,13 @@ sub PrivateTagReview{
   $http->queue("</div>");
 }
 
-sub FinishEarly {
-  my($this, $http, $dyn) = @_;
-
+method FinishEarly($http, $dyn) {
   $this->{ContentMode} = "AllTagsDisposed";
   $this->{Mode} = "MenuAllTagsDisposed";
 }
 
-sub GetDispositionFromDetails {
+method GetDispositionFromDetails($http, $dyn, $details) {
   # Return a dispo only if all elements agree
-  my($this, $http, $dyn, $details) = @_;
-
   # details will be an array.
 
   # TODO: is there a better way? only using a hash here
@@ -389,9 +326,8 @@ sub GetDispositionFromDetails {
     return $dispo;
   }
 }
-sub PrivateTagReviewContent {
-  my($this, $http, $dyn) = @_;
 
+method PrivateTagReviewContent($http, $dyn) {
   my $disp_adjustment_map = {
     X => 'X',
     K => 'K',
@@ -459,9 +395,7 @@ sub PrivateTagReviewContent {
   });
 }
 
-sub DrawDispoDropdown {
-  my($this, $http, $dyn) = @_;
-
+method DrawDispoDropdown($http, $dyn) {
   if (not defined $this->{DispositionSelected}) {
     $this->{DispositionSelected} = $this->{DispositionRecommended};
   }
@@ -470,15 +404,11 @@ sub DrawDispoDropdown {
     $disposition_map, $this->{DispositionSelected});
 }
 
-sub SetDispoDropdown {
-  my($this, $http, $dyn) = @_;
-
+method SetDispoDropdown($http, $dyn) {
   $this->{DispositionSelected} = $dyn->{value};
 }
 
-sub ApplyDispositionToAll {
-  my($this, $http, $dyn) = @_;
-
+method ApplyDispositionToAll($http, $dyn) {
   my $selected_tag = $this->{PrivateTagsToReview}->[$this->{SelectedPriv}];
   my $disposition = $this->{DispositionSelected};
 
@@ -511,8 +441,7 @@ sub ApplyDispositionToAll {
   delete $this->{DispositionSelected};
 }
 
-sub InfoTagValueMode{
-  my($this, $http, $dyn) = @_;
+method InfoTagValueMode($http, $dyn) {
   $this->TagFilters($http, $dyn);
   unless(defined($this->{TagIndex})){$this->{TagIndex} = 0 }
   my %tags;
@@ -543,8 +472,8 @@ sub InfoTagValueMode{
     }
   }
 }
-sub SetSelectedPriv{
-  my($this, $http, $dyn) = @_;
+
+method SetSelectedPriv($http, $dyn) {
   my $value = $dyn->{value};
 
   # unset the selected disposition
@@ -559,12 +488,11 @@ sub SetSelectedPriv{
   }
   # $this->ClearFileSelection($http, $dyn);
 }
-sub SetSelectedEle{
-  my($this, $http, $dyn) = @_;
+
+method SetSelectedEle($http, $dyn) {
   my $value = $dyn->{value};
   $value =~ s/%(..)/pack("c",hex($1))/ge;
   if($dyn->{checked} eq "true"){
-#    $this->{SelectedEles}->{$dyn->{value}} = 1;
      $this->{SelectedEles} = { $dyn->{value}, 1 };
     $this->{ContentMode} = "TagSelected";
   } else {
@@ -574,8 +502,8 @@ sub SetSelectedEle{
   $this->ClearFileSelection($http, $dyn);
   delete $this->{DispoChecks}; # ensure old checks aren't carried over
 }
-sub TagFilters{
-  my($this, $http, $dyn) = @_;
+
+method TagFilters($http, $dyn) {
   $http->queue("<small>");
   unless(defined $this->{TagFilters}->{OnlyPublic}){
     $this->{TagFilters}->{OnlyPublic} = "false";
@@ -591,20 +519,19 @@ sub TagFilters{
     { op => "SetCheckBox", sync => "Update();" }) . "Only private");
   $http->queue("<hr>");
 }
-sub SetCheckBox{
-  my($this, $http, $dyn) = @_;
+
+method SetCheckBox($http, $dyn) {
   $this->{$dyn->{group}}->{$dyn->{value}} = $dyn->{checked};
 }
-###########################
-sub ContentResponse{
-  my($this, $http, $dyn) = @_;
+
+method ContentResponse($http, $dyn) {
   my $mode = $this->{ContentMode};
   if($this->can($mode)){ $this->$mode($http, $dyn) } else {
     $http->queue("Unknown ContentMode: \"$mode\"");
   }
 }
-sub GetAffectedFilesCount {
-  my($this, $http, $dyn, $tag) = @_;
+
+method GetAffectedFilesCount($http, $dyn, $tag) {
   # Get the number of files affected by the tag
   # It may be in both sets (PHI and Private), but the numbers should match
 
@@ -626,9 +553,7 @@ sub GetAffectedFilesCount {
   return -1;
 }
 
-sub DrawSelectionSummary {
-  my($this, $http, $dyn, $selection, $map) = @_;
-
+method DrawSelectionSummary($http, $dyn, $selection, $map) {
   # sort tags into groups based on their disposition
   my $selection_by_disp = {};
 
@@ -670,9 +595,7 @@ sub DrawSelectionSummary {
   });
 }
 
-sub AllTagsDisposed {
-  my($this, $http, $dyn) = @_;
-
+method AllTagsDisposed($http, $dyn) {
   $http->queue(qq{
     <h2>Private Tag Selections</h2>
   });
@@ -700,8 +623,7 @@ sub AllTagsDisposed {
 
 }
 
-sub shift_temp {
-  my ($this, $tag, $file) = @_;
+method shift_temp($tag, $file) {
   #TODO: This default value is almost certainly wrong!
   my $val = 'SHIFT';
 
@@ -730,8 +652,7 @@ sub shift_temp {
   return ['short_ele_replacements', $val];
 }
 
-sub hash_temp {
-  my ($this, $tag, $file) = @_;
+method hash_temp($tag, $file) {
   # same for every tag/file
   my $info = $this->{RootsInfo};
   my $uid_root = "1.3.6.1.4.1.14519.5.2.1.$info->{site_code}.$info->{collection_code}";
@@ -739,9 +660,11 @@ sub hash_temp {
   return ['hash_unhashed_uid', $uid_root];
 }
 
-sub translate_dispositions {
-  my ($this, $tags, $from_file, $to_file) = @_;
+method translate_dispositions($tags, $from_file, $to_file) {
   # Translate the dispos into actions for the subprocess editor
+  DEBUG $tags;
+  DEBUG $from_file;
+  DEBUG $to_file;
 
   # the possible actions
   my $action_map = {
@@ -785,9 +708,7 @@ sub translate_dispositions {
   return $actions;
 }
 
-sub FixAllYes {
-  my($this, $http, $dyn) = @_;
-
+method FixAllYes($http, $dyn) {
   # first some things that we'll need
   # $this->{Collection};
   # $this->{FileInfo}; # may be a list of every file in the collection?
@@ -908,18 +829,15 @@ sub FixAllYes {
   $this->AutoRefresh;
 }
 
-sub AllDoneHere {
-  my($this, $http, $dyn) = @_;
-
+method AllDoneHere($http, $dyn) {
   $http->queue("All done!");
 }
 
 ################################################################################
 # TODO: cleanup
 ################################################################################
-sub RequestLockForEdit{
-  my($this, $subj, $at_end) = @_;
 
+method RequestLockForEdit($subj, $at_end) {
   DEBUG "RequestLockForEdit";
 
   my $collection = $this->{Collection};
@@ -938,8 +856,7 @@ sub RequestLockForEdit{
    }, $at_end);
 }
 
-sub LockExtractionDirectory{
-  my($this, $args, $when_done) = @_;
+method LockExtractionDirectory($args, $when_done) {
   # delete $this->{DirectoryLocks};
   DEBUG "LockExtractionDirectory";
   my @lines;
@@ -949,8 +866,8 @@ sub LockExtractionDirectory{
     push(@lines, "$k: $args->{$k}");
   }
 
-  DEBUG "Locking with these lines:";
-  DEBUG Dumper(@lines);
+  # DEBUG "Locking with these lines:";
+  # DEBUG Dumper(@lines);
 
   if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     [@lines],
@@ -960,9 +877,7 @@ sub LockExtractionDirectory{
   }
 }
 
-sub TestTestTestAfterLock {
-  my($this, $id, $commands) = @_;
-
+method TestTestTestAfterLock($id, $commands) {
   # Look here for a good example:
   # WhenExtractionLockComplete
 
@@ -978,9 +893,9 @@ sub TestTestTestAfterLock {
     "Commands: $commands" 
   ];
 
-  DEBUG "==========================";
-  DEBUG Dumper($new_args);
-  DEBUG "==========================";
+  # DEBUG "==========================";
+  # DEBUG Dumper($new_args);
+  # DEBUG "==========================";
   $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     $new_args,
     $this->TestWhenDoneTest());
@@ -992,13 +907,11 @@ sub TestWhenDoneTest {
   };
 }
 
-################################################################################
-sub WaitingForTag{
-  my($this, $http, $dyn) = @_;
-    $http->queue("Waiting for a Tag to be chosen.");
+method WaitingForTag($http, $dyn) {
+  $http->queue("Waiting for a Tag to be chosen.");
 }
-sub TagSelected{
-  my($this, $http, $dyn) = @_;
+
+method TagSelected($http, $dyn) {
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
   if(exists $this->{SelectedFileForExtraction}){
     $this->{SelectedTagForExtraction} = $tag;
@@ -1023,10 +936,7 @@ sub TagSelected{
   $this->TagValueReport($http, $dyn, $tag);
 }
 
-sub DrawPHIDispoDropdown {
-  my($this, $http, $dyn) = @_;
-
-
+method DrawPHIDispoDropdown($http, $dyn) {
   # Set a default when first drawing
   if (not defined $this->{PHIDispositionSelected}) {
     $this->{PHIDispositionSelected} = 'C';
@@ -1036,14 +946,11 @@ sub DrawPHIDispoDropdown {
     $phi_disposition_map, $this->{PHIDispositionSelected});
 }
 
-sub SetPHIDispoDropdown {
-  my($this, $http, $dyn) = @_;
-
+method SetPHIDispoDropdown($http, $dyn) {
   $this->{PHIDispositionSelected} = $dyn->{value};
 }
 
-sub TagInfo{
-  my($this, $http, $dyn, $tag) = @_;
+method TagInfo($http, $dyn, $tag) {
   my $tag_name = UNKNOWN;
   my $vr = UNKNOWN;
   my $vm = UNKNOWN;
@@ -1089,12 +996,10 @@ sub TagInfo{
   $http->queue("</div></div>");
 }
 
-sub DrawTagDetails {
+method DrawTagDetails($http, $dyn, $details) {
   # Draw the details about the given tag,
-  # #details should be the results from
+  # $details should be the results from
   # PhiFixer::PrivateTagInfo::get_info
-  my($this, $http, $dyn, $details) = @_;
-
     my $fields = {
       pt_signature => "Signature",
       pt_consensus_name => "Consensus Name",
@@ -1120,10 +1025,8 @@ sub DrawTagDetails {
     }
     $http->queue("</table></div>");
 }
-sub TagValueReport{
-  my($this, $http, $dyn, $tag) = @_;
 
-
+method TagValueReport($http, $dyn, $tag) {
   $http->queue(qq{
     <hr/>
     <table class="table table-condensed table-bordered">
@@ -1239,8 +1142,7 @@ sub TagValueReport{
   $http->queue("</table>");
 }
 
-sub DisposeCheckClicked {
-  my($this, $http, $dyn) = @_;
+method DisposeCheckClicked($http, $dyn) {
   my $id = $dyn->{value};
 
   if (defined $this->{DispoChecks}->{$id}){
@@ -1248,8 +1150,7 @@ sub DisposeCheckClicked {
   }
 }
 
-sub SelectFileForDisplay{
-  my($this, $http, $dyn) = @_;
+method SelectFileForDisplay($http, $dyn) {
   if($dyn->{value} eq "select"){
     delete $this->{SelectedFileForExtraction};
     delete $this->{SelectedTagForExtraction};
@@ -1269,8 +1170,8 @@ sub SelectFileForDisplay{
       $this->FullTagRead);
   }
 }
-sub FileAndTagSelected{
-  my($this, $http, $dyn) = @_;
+
+method FileAndTagSelected($http, $dyn) {
   my $tag_disp = $this->{SelectedTagForExtraction};
   $tag_disp =~ s/</&lt;/g;
   $tag_disp =~ s/>/&gt;/g;
@@ -1329,31 +1230,31 @@ sub FileAndTagSelected{
   $http->queue("</div></div>");
 
 }
-sub ClearFileSelection{
-  my($this, $http, $dyn) = @_;
+
+method ClearFileSelection($http, $dyn) {
   delete $this->{SelectedFileForExtraction};
   delete $this->{SelectedTagForExtraction};
   delete $this->{SelectedValueForExtraction};
   delete $this->{SelectedTagInstances};
 }
-sub ReadTagInstances{
-  my($this) = @_;
+
+method ReadTagInstances____() {  # TODO: closure
   my $sub = sub {
     my($line) = @_;
     push @{$this->{SelectedTagInstances}}, $line;
   };
   return $sub;
 }
-sub TagInstancesRead{
-  my($this) = @_;
+
+method TagInstancesRead____() {  # TODO: closure
   my $sub = sub {
     delete $this->{ReadingTagInstances};
     $this->AutoRefresh;
   };
   return $sub;
 }
-sub FullTagRead{
-  my($this) = @_;
+
+method FullTagRead() {  # TODO: closure
   my $sub = sub {
     my($status, $result) = @_;
     # TODO: Should this only set to $result if $success is good?
@@ -1361,8 +1262,8 @@ sub FullTagRead{
   };
   return $sub;
 }
-sub ProcessFullTagValues {
-  my($this, $result) = @_;
+
+method ProcessFullTagValues($result) {
     # drop all entries where the value does not contain our intended string
     my $val = $this->{SelectedValueForExtraction};
 
@@ -1381,8 +1282,8 @@ sub ProcessFullTagValues {
     $this->{SelectedTagFullValue} = $result;
     $this->AutoRefresh;
 }
-sub GetStudyDates{
-  my($this, $list) = @_;
+
+method GetStudyDates($list) {
   my %dates;
   for my $f (@$list){
     my $study_date = $this->{FileInfo}->{$f}->{study_date};
@@ -1390,8 +1291,8 @@ sub GetStudyDates{
   }
   return [ sort keys %dates];
 }
-sub GetUnshiftedStudyDates{
-  my($this, $list) = @_;
+
+method GetUnshiftedStudyDates($list) {
   my $format = '%Y%m%d';
 
   my $dates = $this->GetStudyDates($list);
@@ -1405,8 +1306,8 @@ sub GetUnshiftedStudyDates{
 
   return $shifted_dates;
 }
-sub GetSeriesDates{
-  my($this, $list) = @_;
+
+method GetSeriesDates____($list) {
   my %dates;
   for my $f (@$list){
     my $series_date = $this->{FileInfo}->{$f}->{series_date};
@@ -1414,8 +1315,8 @@ sub GetSeriesDates{
   }
   return [ sort keys %dates];
 }
-sub DisposeTag{
-  my($this, $http, $dyn) = @_;
+
+method DisposeTag($http, $dyn) {
   my $tag = [ keys %{$this->{SelectedEles}} ]->[0];
 
   my $disposition = $this->{PHIDispositionSelected};
@@ -1460,8 +1361,8 @@ sub DisposeTag{
 
   $this->{DisposedPHI}->{$tag} = $disposition;
 }
-sub SelectNextAvailableTag{
-  my($this) = @_;
+
+method SelectNextAvailableTag() {
   my $tag;
   tag:
   for my $i (sort keys %{$this->{ByTag}}){
@@ -1477,8 +1378,8 @@ sub SelectNextAvailableTag{
     $this->{Mode} = "MenuAllTagsDisposed";
   }
 }
-sub MenuAllTagsDisposed{
-  my($this, $http, $dyn) = @_;
+
+method MenuAllTagsDisposed($http, $dyn) {
   $http->queue("All tags disposed");
 }
 1;
