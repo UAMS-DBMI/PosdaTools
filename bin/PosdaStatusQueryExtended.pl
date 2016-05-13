@@ -52,7 +52,7 @@ where file_id in (
 )
 EOF
 unless($#ARGV == 1) { 
-  die "usage: PosdaStatusQuery.pl <collection> <site>"
+  die "usage: PosdaStatusQueryExtended.pl <collection> <site>"
 }
 my $q = $dbh->prepare($rq);
 my $q1 = $dbh->prepare($cq);

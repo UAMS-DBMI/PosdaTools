@@ -216,7 +216,7 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
     for my $file (sort keys %{$this->{info}->{FilesToDigest}}){
       my $dig = $this->{info}->{FilesToDigest}->{$file};
       my $finfo = $this->{info}->{FilesByDigest}->{$dig};
-      $MsgHandler->{$finfo->{sop_class_uid}} = "Dispatch::Dicom::Storage";
+      $MsgHandlers->{$finfo->{sop_class_uid}} = "Dispatch::Dicom::Storage";
       push(@{$this->{FilesToSend}}, {
         file => $file,
         xfr_stx => $finfo->{xfr_stx},

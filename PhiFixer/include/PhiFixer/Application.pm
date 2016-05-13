@@ -145,7 +145,12 @@ method SpecificInitialize() {
 
 method ReportError($message) {
   $this->{Mode} = "ErrorReported";
+  $this->{ContentMode} = "ErrorReported";
   $this->{ErrorReport} = $message;
+}
+
+method ErrorReported($http, $dyn) {
+  $http->queue($this->{ErrorReport});
 }
 
 method MenuResponse($http, $dyn) {
@@ -206,6 +211,10 @@ method SelectReport($http, $dyn) {
   $this->{file_info_file} = $dyn->{file_info};
   $this->{private_tag_info_file} = $dyn->{private_tag_info};
   $this->{RootsInfo} = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  unless ($this->{RootsInfo}) {
+    $this->ReportError("This Collection+Site does not exist in the Dicom Roots database! Cannot continue!");
+    return;
+  }
 
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
 }

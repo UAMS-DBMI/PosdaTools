@@ -117,7 +117,7 @@ sub EndPs{
     my $count_import_time = 0;
     my $avg_import_time = 0;
     my $imports =
-      $main::HTTP_STATIC_OBJS{DbFileImports}->{CompletedSubProcesses};
+      $main::HTTP_STATIC_OBJS{DbFileImport}->{CompletedSubProcesses};
     for my $k (keys %{$imports}){
       $sum_import_time +=
         $imports->{$k}->{end_time} - $imports->{$k}->{start_time};
