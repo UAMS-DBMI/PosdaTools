@@ -370,11 +370,22 @@ EOF
     print STDERR "ConfigReloaded\n";
     for my $i (keys %main::HTTP_STATIC_OBJS){
       my $obj = $main::HTTP_STATIC_OBJS{$i};
-      if($obj->can("ConfigReloaded")){
-        $obj->ConfigReloaded();
+      if(
+        defined($obj) &&
+        ref($obj) &&
+        ref($obj) ne "HASH" &&
+        ref($obj) ne "ARRAY" &&
+        ref($obj) ne "CODE"
+      ){
+        if($obj->can("ConfigReloaded")){
+          $obj->ConfigReloaded();
+        } else {
+          my $class = ref($obj);
+          print STDERR "class: $class can't ConfigReloaded\n";
+        }
       } else {
         my $class = ref($obj);
-        print STDERR "class: $class can't ConfigReloaded\n";
+        print STDERR "Static obj{$i} doesn't appear to be blessed\n";
       }
     }
   }

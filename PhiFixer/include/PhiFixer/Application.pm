@@ -203,7 +203,12 @@ sub SpecificInitialize{
 sub ReportError{
   my($this, $message) = @_;
   $this->{Mode} = "ErrorReported";
+  $this->{ContentMode} = "ErrorReported";
   $this->{ErrorReport} = $message;
+}
+sub ErrorReported {
+  my($this, $http, $dyn) = @_;
+  $http->queue($this->{ErrorReport});
 }
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
@@ -263,6 +268,10 @@ sub SelectReport{
   $this->{file_info_file} = $dyn->{file_info};
   $this->{private_tag_info_file} = $dyn->{private_tag_info};
   $this->{RootsInfo} = PhiFixer::DicomRootInfo::get_info($this->{Collection},$this->{Site});
+  unless ($this->{RootsInfo}) {
+    $this->ReportError("This Collection+Site does not exist in the Dicom Roots database! Cannot continue!");
+    return;
+  }
 
   Dispatch::Select::Background->new($this->RetrieveInfo)->queue;
 #  $http->queue("This is a test");

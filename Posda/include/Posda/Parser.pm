@@ -1046,6 +1046,8 @@ sub CoerceBadVRs{
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
+  }elsif($from_vr eq "DS" && $to_vr eq "FD"){
+    return ("double", $value_s);
   } elsif($from_vr eq "SH" && $to_vr eq "CS"){
     return("text", $value_s);
   } elsif($from_vr eq "LT" && $to_vr eq "LO" && length($value_s) < 65){
