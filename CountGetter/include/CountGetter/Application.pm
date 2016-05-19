@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 package CountGetter::Application;
+use Time::Piece;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -24,11 +25,13 @@ use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
 Posda::Log::init("default.log");
 
-my $expander = qq{<?dyn="BaseHeader"?>
+my $expander = q{<?dyn="BaseHeader"?>
   <script type="text/javascript">
   <?dyn="JsController"?>
   <?dyn="JsContent"?>
   </script>
+  <link rel="stylesheet" href="/jquery-ui-1.11.4/jquery-ui.css">
+  <script src="/jquery-ui-1.11.4/jquery-ui.min.js"></script>
   </head>
   <body>
   <?dyn="Content"?>
@@ -546,8 +549,39 @@ sub SummarizeSelection{
         </tr>
     </table> 
 
-    <?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Add These Directories to Send Batch" sync="Update();" class="btn btn-primary"?>
+    <div class="row">
+    <div class="panel panel-default" style="width: 25%">
+      <div class="panel-heading">Limit by date range</div>
+      <div class="panel-body">
+      <label for="startdate">Start Date:</label>
+      <?dyn="EntryBox" op="StartDateChange" name="startdate" default="$this->{SelectedStartDate}" class="datepicker form-control"?>
+      <label for="enddate">End Date:</label>
+      <?dyn="EntryBox" op="EndDateChange" name="enddate" default="$this->{SelectedEndDate}" class="datepicker form-control"?>
+      </div>
+    </div>
+    </div>
+
+    <?dyn="NotSoSimpleButton" op="AddDirectoriesForAnalysis" caption="Count These Directories" sync="Update();" class="btn btn-primary"?>
   });
+}
+
+sub StartDateChange {
+  my($this, $http, $dyn) = @_;
+  $this->{SelectedStartDate} = $dyn->{value};
+  $this->UpdateDateRange();
+
+}
+sub EndDateChange {
+  my($this, $http, $dyn) = @_;
+  $this->{SelectedEndDate} = $dyn->{value};
+  $this->UpdateDateRange();
+}
+sub UpdateDateRange {
+  my($this) = @_;
+  my $start = Time::Piece->strptime($this->{SelectedStartDate}, "%m/%d/%Y");
+  my $end = Time::Piece->strptime($this->{SelectedEndDate}, "%m/%d/%Y");
+
+  $this->{SearchDateRange} = [$start->epoch, $end->epoch];
 }
 
 sub AddDirectoriesForAnalysis{
@@ -616,24 +650,34 @@ sub CollectMetaHeaderLine{
     } elsif($line =~ /xfr_stx:\s*(.*)$/){
       $xfr_stx = $1
     } elsif($line =~ /^####/){
-      push(@{$this->{FoundFiles}}, {
-        file => $file,
-        subject => $subject,
-        xfr_stx => $xfr_stx,
-        abs_stx => $sop_class,
-        sop_inst => $sop_inst,
-        dataset_offset => $offset,
-        dataset_size => $length,
-      });
-      if(exists $this->{QTest}->{$sop_class}->{$xfr_stx}){
-        $this->{QTest}->{$sop_class}->{$xfr_stx} += 1;
-      } else {
-        $this->{QTest}->{$sop_class}->{$xfr_stx} = 1;
-      }
-      if(exists $this->{SopClass}->{$sop_class}->{$xfr_stx}){
-        $this->{SopClass}->{$sop_class}->{$xfr_stx} += 1;
-      } else {
-        $this->{SopClass}->{$sop_class}->{$xfr_stx} = 1;
+      my @stats = stat($file);
+      my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+       $atime,$mtime,$ctime,$blksize,$blocks) = @stats;
+
+      my ($start, $end) = @{$this->{SearchDateRange}};
+      if (($start == 0 or $ctime >= $start) and 
+          ($end == 0 or $ctime <= $end)) {
+        push(@{$this->{FoundFiles}}, {
+          file => $file,
+          subject => $subject,
+          xfr_stx => $xfr_stx,
+          abs_stx => $sop_class,
+          sop_inst => $sop_inst,
+          dataset_offset => $offset,
+          dataset_size => $length,
+          stat => \@stats,
+        });
+
+        if(exists $this->{QTest}->{$sop_class}->{$xfr_stx}){
+          $this->{QTest}->{$sop_class}->{$xfr_stx} += 1;
+        } else {
+          $this->{QTest}->{$sop_class}->{$xfr_stx} = 1;
+        }
+        if(exists $this->{SopClass}->{$sop_class}->{$xfr_stx}){
+          $this->{SopClass}->{$sop_class}->{$xfr_stx} += 1;
+        } else {
+          $this->{SopClass}->{$sop_class}->{$xfr_stx} = 1;
+        }
       }
       $file = "No file yet";
       $offset = "No offset yet";

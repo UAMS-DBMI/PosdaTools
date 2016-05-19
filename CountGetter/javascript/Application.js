@@ -7,6 +7,7 @@ var ContentResponse;
 function ContentResponseReturned(text, status, xml){
   var menu;
   document.getElementById('content').innerHTML = text;
+  UpdateDatePickers();
 }
 var LoginResponse;
 function LoginResponseReturned(text, status, xml){
@@ -31,6 +32,10 @@ function ModeChanged(text, status, xml){
 }
 function ChangeMode(op, mode){
   PosdaGetRemoteMethod(op, 'value='+mode , ModeChanged);
+}
+function UpdateDatePickers() {
+  $(".datepicker").datepicker();
+  console.log("updated date pickers");
 }
 function Update(){ 
   UpdateMenu();

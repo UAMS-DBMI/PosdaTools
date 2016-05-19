@@ -235,22 +235,26 @@ sub PollTimer{
 sub EntryBox{
   my($this, $http, $dyn) = @_;
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
-  $http->queue('<input class="form-control" type="text"' .
+  my $class = "form-control";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  $http->queue("<input class='$class' type='text'" .
     ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
     ($dyn->{default} ? " value=\"$dyn->{default}\"" : "") .
-    "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
+    # "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
     "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
-    "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .
-    "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
-    "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
-    "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
-    "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
+    # "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .
+    # "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
+    # "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
+    # "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
+    # "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
     "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);\" " .
-    "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
-    "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
-    "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);\" " .
-    "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
-    "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
+    # "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
+    # "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
+    # "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);\" " .
+    # "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
+    # "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
     "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
     "/>");
 }
