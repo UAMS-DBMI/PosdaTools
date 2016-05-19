@@ -3448,12 +3448,19 @@ sub ApplyGeneralEdits{
           next file;
         }
         my $dest_file = "$dest_dir/$file";
-        my $desc = $f_info->{$r->{FullEle}};
-        unless(exists $mapping{$desc}){
-          $mapping{$desc} = $inc;
+        my $suffix;
+        if($r->{FullEle}){
+          my $desc = $f_info->{$r->{FullEle}};
+          unless(exists $mapping{$desc}){
+            $mapping{$desc} = $inc;
+            $inc += 1;
+          }
+          $suffix = $mapping{$desc};
+        } else {
+          $suffix = $inc;
           $inc += 1;
         }
-        my $uid = "$new_uid_base.$mapping{$desc}";
+        my $uid = "$new_uid_base.$suffix";
         unless(exists $Edits->{$f}->{from_file}){
           $Edits->{$f}->{from_file} = $f;
         }
