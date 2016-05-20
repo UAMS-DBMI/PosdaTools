@@ -12,7 +12,7 @@ use IO::Socket::INET;
 use Posda::DebugLog 'on';
 
 use vars qw( @ISA );
-@ISA = ( "Dispatch::NamedObject", "Posda::HttpObj" );
+@ISA = ( "Posda::HttpObj" );
 my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
 <html lang="en-US">
 <head>
