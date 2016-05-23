@@ -27,6 +27,12 @@ sub ExpandStudyCounts{
   $http->queue("Studies: $num_studies<br/>Series: $num_series<br/>" .
     "Images: $num_images");
 }
+sub nnsort {
+  # Nickname sort. Extracts the number from the end of
+  # a nickname (eg, 9 from STUDY_9), and sorts numerically
+  print "Comparing $a to $b...\n";
+  ($a =~ /_(\d+)/)[0] <=> ($b =~ /_(\d+)/)[0];
+}
 sub ExpandStudyCountsExtraction{
   my($this, $http, $dyn, $struct) = @_;
   my $num_studies = keys %{$struct};
@@ -46,21 +52,21 @@ sub ExpandStudyCountsExtraction{
       "Images: <span style=\"background-color:red\">$num_images</span>");
   }
 }
+
 sub ExpandStudyHierarchy{
-  # TODO: Expands the database hierarchy?
-  my($this, $http, $dyn, $studies) = @_;
-  # the passed $studies is $this->{DbInfo}->???
-  unless(exists $this->{NickNames}){
-    $this->{NickNames} = Posda::Nicknames->new;
-  }
+  my($this, $http, $dyn, $studies, $nn) = @_;
+
   $http->queue(qq{
     <table class="table table-bordered table-sm" 
      style="white-space: normal" width="80%">
   });
-  for my $study_uid(sort keys %$studies){
-    my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-      "STUDY", $study_uid
-    );
+
+  # build list of studies along with their nicknames
+  my $study_nicknames = {};
+  map {$study_nicknames->{$nn->Study($_)} = $_} keys %$studies;
+
+  for my $study_nn (sort nnsort (keys %$study_nicknames)) {
+    my $study_uid = $study_nicknames->{$study_nn};
     my $study = $studies->{$study_uid};
     my $study_id;
     my $accession_number;
@@ -109,7 +115,12 @@ sub ExpandStudyHierarchy{
       </tr>
     });
 
-    for my $series_uid (sort keys %{$study->{series}}) {
+    my $series_nicknames = {};
+    map {$series_nicknames->{$nn->Series($_)} = $_} keys %{$study->{series}};
+
+    for my $series_nn (sort nnsort (keys %$series_nicknames)) {
+      print "$series_nn\n";
+      my $series_uid = $series_nicknames->{$series_nn};
       my $s = $study->{series}->{$series_uid};
       my $modality;
       my $series_date;
@@ -140,8 +151,6 @@ sub ExpandStudyHierarchy{
         $body_part = [ keys %{$s->{body_part}} ]->[0];
       }
 
-      my $series_nn = 
-        $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
       $http->queue(qq{
         <tr>
           <td>==&gt;</td>
@@ -162,29 +171,23 @@ sub ExpandStudyHierarchyExtraction{
   # TODO: how does this differ from the above function?
   # The data structure it gets passed is *completely* different, basically
   # TODO: Maybe we can adjust this structure to match the other, or the other way around?
-  my($this, $http, $dyn, $studies) = @_;
+  my($this, $http, $dyn, $studies, $nn) = @_;
 
   # INFO: $studies = $this->{ExtractionsHierarchies}->{ER-1002}->{hierarchy}->{ER-1002}->{studies}
   # where ER-1002 is the subject
-
-  unless(exists $this->{NickNames}) {
-    $this->{NickNames} = Posda::Nicknames->new;
-  }
 
   $http->queue(qq{
     <table class="table table-bordered table-sm" 
      style="white-space: normal" width="80%">
   });
 
-  for my $study (
-    sort {
-      $studies->{$a}->{uid} cmp $studies->{$b}->{uid}
-    } keys %{$studies}
-  ){
+  # build list of studies along with their nicknames
+  my $study_nicknames = {};
+  map {$study_nicknames->{$nn->Study($studies->{$_}->{uid})} = $_} keys %$studies;
+
+  for my $study_nn (sort nnsort (keys %$study_nicknames)) {
+    my $study = $study_nicknames->{$study_nn};
     my $study_uid = $studies->{$study}->{uid};
-    my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-      "STUDY", $study_uid
-    );
     my $study_id = $studies->{$study}->{id};
 
     if (ref($study_id)) {  # if invalid reference?
@@ -211,17 +214,16 @@ sub ExpandStudyHierarchyExtraction{
     });
 
     my $s_st = $studies->{$study}->{series};
-    for my $series (
-      sort {
-        $s_st->{$a}->{uid} cmp $s_st->{$b}->{uid}
-      } keys %$s_st
-    ){
+
+    my $series_nicknames = {};
+    map {$series_nicknames->{$nn->Series($s_st->{$_}->{uid})} = $_} keys %$s_st;
+
+    for my $series_nn (sort nnsort (keys %$series_nicknames)) {
+      my $series = $series_nicknames->{$series_nn};
       my $series_uid = $studies->{$study}->{series}->{$series}->{uid};
       # my $series_date = $studies->{$study}->{series}->{$series}->{sdates};
       my $series_date = '';  # to keep it consistent with the other one, for now
 
-      my $series_nn =
-        $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
       my $s = $studies->{$study}->{series}->{$series};
 
       my $modality = $s->{modality};

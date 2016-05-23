@@ -6,12 +6,15 @@ use Method::Signatures::Simple;
 use DBI;
 
 #{{{ Public Methods
-method new($class: $project_name, $site_name, $subj_id) {
+method new($class: $connection, $project_name, $site_name, $subj_id) {
   my $self = {
     project_name => $project_name,
     site_name => $site_name,
-    subj_id => $subj_id
+    subj_id => $subj_id,
+    ndb => $connection
   };
+
+  print "Posda::Nicknames2($project_name, $site_name, $subj_id)\n";
 
   bless $self, $class;
   $self->__init();
@@ -59,11 +62,6 @@ method File($sop_instance_uid, $digest, $modality) {
 
 #{{{ Private Methods
 method __init() {
-  #TODO: config var
-  my $nn_db = "posda_nicknames";
-
-  $self->{ndb} = DBI->connect("dbi:Pg:dbname=$nn_db");
-
   $self->__load_statements();
 }
 

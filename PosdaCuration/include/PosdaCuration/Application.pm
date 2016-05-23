@@ -10,6 +10,8 @@ use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
+use Posda::Nicknames2;
+use Posda::Nicknames2Factory;
 use Posda::UUID;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
@@ -985,8 +987,9 @@ sub NewQuery{
   delete $this->{CompareInfoSelection};
   delete $this->{CompareInfoIntake};
   delete $this->{CompareInfoPublic};
-  $this->ClearIntakeData;
-  $this->ClearPublicData;
+  $this->ClearIntakeData();
+  $this->ClearPublicData();
+  Posda::Nicknames2Factory::clear();
 }
 sub ExpandRows{
   my($this, $http, $dyn) = @_;
@@ -1105,8 +1108,9 @@ sub ExpandSelectedDbInfo{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
+  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
   my $studies = $this->{DbResults}->{$subj}->{studies};
-  $this->ExpandStudyHierarchy($http, $dyn, $studies);
+  $this->ExpandStudyHierarchy($http, $dyn, $studies, $nn);
 }
 sub ExpandUnSelectedDbInfo{
   my($this, $http, $dyn) = @_;
@@ -1120,6 +1124,7 @@ sub ExpandExtraction{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
+  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
   if(exists $this->{DirectoryLocks}->{$col}->{$site}->{$subj}){
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
     my $reason = "edit";
@@ -1180,7 +1185,7 @@ sub ExpandExtraction{
     # otherwise draw the whole table
     if($this->{InfoSel}->{$col}->{$site}->{$subj}){
       $this->ExpandStudyHierarchyExtraction($http, $dyn,
-        $dyn->{hierarchy}->{$dyn->{subj}}->{studies});
+        $dyn->{hierarchy}->{$dyn->{subj}}->{studies}, $nn);
     } else {
       $http->queue(qq{
         <table width=100%">
@@ -1269,12 +1274,13 @@ sub ExpandExtractionStudyInfo{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
+  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
   unless(exists $this->{InfoSel}->{$col}->{$site}->{$subj}){
     $this->{InfoSel}->{$col}->{$site}->{$subj} = 0;
   }
   if($this->{InfoSel}->{$col}->{$site}->{$subj}){
     $this->ExpandStudyHierarchyExtraction($http, $dyn,
-      $dyn->{hierarchy}->{$dyn->{subj}}->{studies});
+      $dyn->{hierarchy}->{$dyn->{subj}}->{studies}, $nn);
   } else {
     my $col = $this->{SelectedCollection};
     my $site = $this->{SelectedSite};
