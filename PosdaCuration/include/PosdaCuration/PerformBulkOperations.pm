@@ -3,14 +3,15 @@
 use strict;
 use Storable;
 use PosdaCuration::ExtractionManagerIf;
+use Dispatch::EventHandler;
 package PosdaCuration::PerformBulkOperations;
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
 sub new {
   my($class, $root, $col, $site, $session, $user, $port, $async) = @_;
-  my $pid = $0;
+  my $pid = $$;
   my $root_dir = "$root/$col/$site";
-  unless(-d $root_dir) { die "root_dir is not a directory" };
+  unless(-d $root_dir) { die "$root_dir is not a directory" };
   opendir ROOT, $root_dir or die "Can't opendir $root_dir";
   my @subjs;
   while (my $subj = readdir(ROOT)){
@@ -37,6 +38,10 @@ sub new {
   };
   return bless $this, $class;
 }
+sub SetSubjectList{
+  my($this, $list) = @_;
+  $this->{subjs} = $list;
+}
 my $check_async = sub {
   my($this, $resp_hand) = @_;
   if($this->{async}){
@@ -59,11 +64,16 @@ sub MapEdits{
 sub MapEditsSync{
   my($this, $edit_func, $description) = @_;
   subj:
-  for my $subj (@{$this->{subjs}}){
-    print STDERR "Locking $this->{coll}, $this->{site}, " .
-      "$this->{subj}, $description\n";
+  for my $subj (sort @{$this->{subjs}}){
+    my $RevHistFile = "$this->{root_dir}/$subj/rev_hist.pinfo";
+    my $rev_hist = Storable::retrieve($RevHistFile);
+    my $current_rev = $rev_hist->{CurrentRev};
+    my $old_info_dir = "$this->{root_dir}/$subj/revisions/$current_rev";
+    my $source_dir = "$old_info_dir/files";
+#    print STDERR "Locking $this->{coll}, $this->{site}, " .
+#      "$subj, $description\n";
     my $lines = $this->{exif}->LockForEdit(
-      $this->{coll}, $this->{site}, $this->{subj}, "BulkEdit: $description");
+      $this->{coll}, $this->{site}, $subj, "BulkEdit: $description");
     my %resp;
     for my $line (@$lines){
       if($line =~ /(.*):\s*(.*)$/){
@@ -72,16 +82,63 @@ sub MapEditsSync{
       }
     }
     if(exists($resp{Locked}) && $resp{Locked} eq "OK"){  
-      print STDERR "Locked $this->{coll}, " .
-        "$this->{site}, $subj, Id: $resp{Id}\n";
-      for my $k (sort keys %resp){
-        print STDERR "\t$k: $resp{$k}\n";
+#      print STDERR "Locked $this->{coll}, " .
+#        "$this->{site}, $subj, Id: $resp{Id}\n";
+#      for my $k (sort keys %resp){
+#        print STDERR "\t$k: $resp{$k}\n";
+#      }
+      my $destination_dir = $resp{"Destination File Directory"};
+      my $revision_dir = $resp{"Revision Dir"};
+      my $results;
+      for my $i ("dicom.pinfo", "send_hist.pinfo", "error.pinfo",
+        "consistency.pinfo", "hierarchy.pinfo", "link_info.pinfo",
+        "FileCollectionAnalysis.pinfo"
+      ){
+        if(-f "$old_info_dir/$i") {
+          $results->{$i} = Storable::retrieve("$old_info_dir/$i");
+        }
       }
-      my $cmd_file = 
-        &{$edit_func}($this->{coll}, $this->{site}, $subj, \%resp);
+      my @f_list = keys %{$results->{"dicom.pinfo"}->{FilesToDigest}};
+      my $cmd_hash = 
+        &{$edit_func}($this->{coll}, $this->{site}, $subj, \@f_list, $results);
+      my $cmd_file;
+      if(keys %$cmd_hash > 0){
+        for my $f_name (keys %$cmd_hash){
+          $cmd_hash->{$f_name}->{from_file} = $f_name;
+          my $short;
+          if($f_name =~ /\/([^\/]+)$/){
+            $short = $1;
+          }
+          $cmd_hash->{$f_name}->{to_file} = "$destination_dir/$short";
+        }
+        my $cmd_file_content = {
+          cache_dir => "/cache/bbennett/Data/dicom_info",
+          source => "$source_dir",
+          destination => $destination_dir,
+          info_dir => $revision_dir,
+          operation => "EditAndAnalyze",
+          parallelism => 3,
+          FileEdits => $cmd_hash,
+          files_to_link => {},
+        };
+        for my $f (keys %{$results->{"dicom.pinfo"}->{FilesToDigest}}){
+          my $dig = $results->{"dicom.pinfo"}->{FilesToDigest}->{$f};
+          my $short;
+          if($f =~ /\/([^\/]+)$/){
+            $short = $1;
+          } else {
+            die "Can't extract short from $f\n";
+          }
+          unless(exists $cmd_hash->{$f}){
+            $cmd_file_content->{files_to_link}->{$short} = $dig;
+          }
+        }
+        $cmd_file = "$revision_dir/creation.pinfo";
+        Storable::store $cmd_file_content, $cmd_file;
+      }
       if($cmd_file) {
         print STDERR "Applying Edits, Id: $resp{Id}\n";
-        my $lines = $this->{exif}->AppyEdits(
+        my $lines = $this->{exif}->ApplyEdits(
           $resp{Id},
           "$description",
           $cmd_file
@@ -94,11 +151,11 @@ sub MapEditsSync{
           }
         }
       } else {
-        print STDERR "Unlocking Id: $resp{Id}:\n";
+#        print STDERR "Unlocking Id: $resp{Id}:\n";
         my $rlines = $this->{exif}->ReleaseLockWithNoEdit($resp{Id});
-        for my $rline (@$rlines){
-          print STDERR "\t$rline\n";
-        }
+#        for my $rline (@$rlines){
+#          print STDERR "\t$rline\n";
+#        }
       }
     } else {
       print STDERR "Error locking $this->{coll}, $this->{site}, $subj:\n" .

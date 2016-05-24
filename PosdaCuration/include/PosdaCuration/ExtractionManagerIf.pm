@@ -71,6 +71,9 @@ sub ApplyEdits{
   push @lines, "Session: $this->{session}";
   push @lines, "User: $this->{user}";
   push @lines, "Pid: $this->{pid}";
+#print "Apply Edits:\n";
+#for my $line (@lines){ print "$line\n" }
+#die "Look OK?\n";
   return &$do_trans($this, \@lines, $resp_hand);
 }
 sub SendExtraction{
