@@ -70,8 +70,6 @@ sub MapEditsSync{
     my $current_rev = $rev_hist->{CurrentRev};
     my $old_info_dir = "$this->{root_dir}/$subj/revisions/$current_rev";
     my $source_dir = "$old_info_dir/files";
-#    print STDERR "Locking $this->{coll}, $this->{site}, " .
-#      "$subj, $description\n";
     my $lines = $this->{exif}->LockForEdit(
       $this->{coll}, $this->{site}, $subj, "BulkEdit: $description");
     my %resp;
@@ -82,11 +80,6 @@ sub MapEditsSync{
       }
     }
     if(exists($resp{Locked}) && $resp{Locked} eq "OK"){  
-#      print STDERR "Locked $this->{coll}, " .
-#        "$this->{site}, $subj, Id: $resp{Id}\n";
-#      for my $k (sort keys %resp){
-#        print STDERR "\t$k: $resp{$k}\n";
-#      }
       my $destination_dir = $resp{"Destination File Directory"};
       my $revision_dir = $resp{"Revision Dir"};
       my $results;
@@ -151,15 +144,13 @@ sub MapEditsSync{
           }
         }
       } else {
-#        print STDERR "Unlocking Id: $resp{Id}:\n";
         my $rlines = $this->{exif}->ReleaseLockWithNoEdit($resp{Id});
-#        for my $rline (@$rlines){
-#          print STDERR "\t$rline\n";
-#        }
       }
     } else {
-      print STDERR "Error locking $this->{coll}, $this->{site}, $subj:\n" .
-        "\t$resp{Error}\n";
+      print STDERR "Error locking $this->{coll}, $this->{site}, $subj:\n";
+        for my $i (keys %resp){
+          print STDERR "\t$i: $resp{$i}\n";
+        }
     }
   }
 }
@@ -198,7 +189,10 @@ sub MapUnlockedSync{
         $results->{$i} = Storable::retrieve("$old_info_dir/$i");
       }
     }
-    push @List, &{$map_func}($this->{coll}, $this->{site}, $subj, $results);
+    my @f_list = keys %{$results->{"dicom.pinfo"}->{FilesToDigest}};
+    my $v = &{$map_func}($this->{coll}, $this->{site}, $subj, \@f_list,
+      $results);
+    push @List, $v;
   }
   return \@List;
 }
