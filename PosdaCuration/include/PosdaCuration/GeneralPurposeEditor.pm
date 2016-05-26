@@ -736,8 +736,15 @@ sub GetEleMatchingFiles{
 }
 sub GetMatchingFile{
   my($this, $f_nn) = @_;
-  my $files = $this->{NickNames}->GetFilesByFileNickname($f_nn);
-  return @$files;
+  # my $files = $this->{NickNames}->GetFilesByFileNickname($f_nn);
+  # Nicknames2::ToFiles returns array of digests. 
+  # Must turn into filenames:
+  my @files;
+  map { 
+    push @files, $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$_}->{file};
+  } @{$this->{nn}->ToFiles($f_nn)};
+
+  return \@files;
 }
 sub CurrentEdits{
   my($this, $http, $dyn) = @_;
