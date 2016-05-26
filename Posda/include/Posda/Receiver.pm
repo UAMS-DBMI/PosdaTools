@@ -413,18 +413,70 @@ sub PostProcessAssociations{
   ){
     # Start a handler ...
     # then try again:
-    my $cmd = shift(@{$this->{PostProcessingQueue}});
-    eval {
-      Dispatch::LineReader->new_cmd($cmd, $this->ProcessingStatus($cmd),
-        $this->ProcessingEnd($cmd));
-    };
-    if($@){
-      print STDERR "Dispatch::LineRead->new_cmd exception:\n$@\n";
+    if($num_queued > 100){
+      $this->QueueMultiple(100);
+    } elsif ($num_queued > 10) {
+      $this->QueueMultiple(10);
     } else {
-      $this->{RunningPostProcesses}->{$cmd} = 1;
+      $this->QueueMultiple(1);
     }
+#    my $cmd = shift(@{$this->{PostProcessingQueue}});
+#    eval {
+#      Dispatch::LineReader->new_cmd($cmd, $this->ProcessingStatus($cmd),
+#        $this->ProcessingEnd($cmd));
+#    };
+#    if($@){
+#      print STDERR "Dispatch::LineRead->new_cmd exception:\n$@\n";
+#    } else {
+#      $this->{RunningPostProcesses}->{$cmd} = 1;
+#    }
     $num_running = keys %{$this->{RunningPostProcesses}};
     $num_queued = @{$this->{PostProcessingQueue}};
+  }
+}
+sub QueueOne{
+  my($this) = @_;
+  my $cmd = shift(@{$this->{PostProcessingQueue}});
+  eval {
+    Dispatch::LineReader->new_cmd($cmd, $this->ProcessingStatus($cmd),
+      $this->ProcessingEnd($cmd));
+  };
+  if($@){
+    print STDERR "Dispatch::LineRead->new_cmd exception:\n$@\n";
+  } else {
+    $this->{RunningPostProcesses}->{$cmd} = 1;
+  }
+}
+sub QueueMultiple{
+  my($this, $number) = @_;
+  my @to_process = splice @{$this->{PostProcessingQueue}}, 0, $number;
+  my @dir_list;
+  my($db, $comment);
+  for my $line (@to_process) {
+    chomp $line;
+    if($line =~ /^[^\s]+\s([^\s]+)\s([^ ]+)\s'(.*)'$/){
+      my $dir = $1;  $db = $2; $comment = $3;
+      push(@dir_list, $dir);
+    } else {
+      print "Didn't match\n";
+    }
+  }
+  my $cmd_struct = {
+    dirlist => \@dir_list,
+    db => $db,
+    comment => "processing $number $comment",
+  };
+  my $cmd_name = "Multi-Delete $cmd_struct->{dirlist}->[0] $number";
+  eval {
+    $this->SerializedSubProcess(
+      $cmd_struct, "ImportMultipleReceiverDirectories.pl",
+      $this->SerializedProcessingEnd($number, time, $cmd_name)
+    );
+  };
+  if($@){
+    print STDERR "SerializedSubProcess exception:\n$@\n";
+  } else {
+    $this->{RunningPostProcesses}->{$cmd_name} = 1;
   }
 }
 sub ProcessingStatus{
@@ -447,6 +499,22 @@ sub ProcessingEnd{
     print STDERR "Complete\n";
     print STDERR "############################\n";
     delete $this->{RunningPostProcesses}->{$cmd};
+    $this->InvokeAfterDelay("PostProcessAssociations", 0);
+  };
+  return $sub;
+}
+sub SerializedProcessingEnd{
+  my($this, $count, $begin_time, $cmd_name) = @_;
+  my $sub = sub {
+    my($resp) = @_;
+    my $now = time;
+    my $elapsed = $now - $begin_time;
+    print STDERR "############################\n";
+    print STDERR "Imported $count directories\n";
+    print STDERR "Elapsed time: $elapsed\n";
+    print STDERR "$cmd_name\n";
+    print STDERR "############################\n";
+    delete $this->{RunningPostProcesses}->{$cmd_name};
     $this->InvokeAfterDelay("PostProcessAssociations", 0);
   };
   return $sub;
