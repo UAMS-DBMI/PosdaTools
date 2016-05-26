@@ -8,9 +8,11 @@ use Posda::HttpApp::JsController;
 use Posda::UUID;
 use Storable;
 use PosdaCuration::InfoExpander;
+use Posda::Nicknames2Factory;
 use Debug;
 my $dbg = sub { print @_ };
 package PosdaCuration::CompareRevisions;
+use Data::Dumper;
 use Fcntl;
 use vars qw( @ISA );
 @ISA = ("Posda::HttpApp::JsController", "PosdaCuration::InfoExpander");
@@ -150,6 +152,9 @@ sub Initialize{
   $this->{Collection} = $DII->{Collection};
   $this->{Site} = $DII->{Site};
   $this->{Subject} = $DII->{subj};
+  $this->{nn} = Posda::Nicknames2Factory::get($this->{Collection},
+                                              $this->{Site},
+                                              $this->{Subject});
   $this->{Revisions} = [];
   for my $i ($this->{FromRev} .. $this->{ToRev}){
     my $rev_info = {
@@ -215,8 +220,13 @@ sub Refresher{
 }
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn, '<small>' .
-    '<?dyn="ToggleOpen"?><table border><tr>');
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>
+      <?dyn="ToggleOpen"?>
+    </p>
+    <table class="table" style="width: auto">
+      <tr>
+  });
   for my $i (@{$this->{Revisions}}){
     my $rev_no = $i->{rev_num};
     $http->queue("<th>Revision: $rev_no</th>");
@@ -226,7 +236,8 @@ sub ContentResponse{
     $http->queue("<td>");
     if(exists $this->{Open}) { 
       $this->ExpandStudyHierarchy($http, $dyn,
-        $i->{hierarchy}->{$this->{Subject}}->{studies});
+        $i->{hierarchy}->{$this->{Subject}}->{studies},
+        $this->{nn});
     } else {
       $this->ExpandStudyCounts($http, $dyn,
         $i->{hierarchy}->{$this->{Subject}}->{studies});
@@ -234,7 +245,7 @@ sub ContentResponse{
     $http->queue("</td>");
   }
   $http->queue('</tr>');
-  $this->RefreshEngine($http, $dyn, '</table></small>');
+  $this->RefreshEngine($http, $dyn, '</table>');
   $this->ShowOnlyDiffs($http, $dyn);
   $this->ExpandDiffHierarchy($http, $dyn);
 }
@@ -255,11 +266,12 @@ sub ShowOnlyDiffs{
       sync => "Update();",
     });
   }
-  $this->RefreshEngine($http, $dyn, "$showbox Show Only Diffs");
+  $this->RefreshEngine($http, $dyn, "<p>$showbox Show Only Diffs</p>");
 }
 sub ShowOnlyYes{
   my($this, $http, $dyn) = @_;
   print STDERR "In ShowOnlyYes\n";
+  delete $this->{SelectedFiles};
   $this->{ShowOnlyDiffs} = 1;
 }
 sub ShowOnlyNo{
@@ -285,7 +297,8 @@ sub ToggleOpen{
 }
 sub Open{
   my($this, $http, $dyn) = @_;
-  $this->{Open} = 1;
+  $this->QueueJsCmd(q{alert("This doesn't seem to work, so it is disabled.")});
+  # $this->{Open} = 1;
 }
 sub Close{
   my($this, $http, $dyn) = @_;
@@ -298,51 +311,61 @@ sub ExpandDiffHierarchy{
   } else {
     $this->{DispFileHist} = $this->{FileHist};
   }
-  $http->queue("<small><table border><th>Study</th><th>Series</th>");
+  $http->queue(qq{
+    <table class="table" style="width: auto">
+      <tr>
+        <th>Study</th>
+        <th>Series</th>
+  });
   for my $i (@{$this->{Revisions}}){
     $http->queue("<th>Revision: $i->{rev_num}</th>");
   }
-  $http->queue("</tr>");
+  $http->queue(qq{
+      <th></th>
+    </tr>
+  });
   for my $study (sort keys %{$this->{DispFileHist}}){
-    my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-      "Study", $study
-    );
+    my $study_nn = $this->{nn}->Study($study);
     my @series = sort keys %{$this->{DispFileHist}->{$study}};
     my $num_rows = (@series) * 3;
-    $http->queue("<td rowspan=\"$num_rows\" valign=\"top\">" . $study_nn .
-      "</td>");
+    $http->queue(qq{
+      <td rowspan="$num_rows" valign="top">$study_nn</td>
+    });
     for my $series (@series){
-      my $series_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-        "Series", $series
-      );
-      $http->queue("<td rowspan=\"3\" valign=\"top\">$series_nn</td>");
-      $this->RefreshEngine($http, $dyn, '<td>' .
-        '<?dyn="RevDropDown" study="' . $study . '" series="' . $series .
-        '" rev="0"?></td>');
+      my $series_nn = $this->{nn}->Series($series);
+      $http->queue(qq{<td rowspan="3" valign="top">$series_nn</td>});
+      $this->RefreshEngine($http, $dyn, qq{
+        <td>
+          <?dyn="RevDropDown" study="$study" series="$series" rev="0"?>
+        </td>
+      });
       for my $r (1 .. $#{$this->{Revisions}}){
-        $this->RefreshEngine($http, $dyn,
-          '<td><?dyn="CorrespondingFile" study="' . $study .
-          '" series="' . $series . '" rev="'. $r . '"?></td>');
+        $this->RefreshEngine($http, $dyn, qq{
+          <td>
+            <?dyn="CorrespondingFile" study="$study" series="$series" rev="$r"?>
+          </td>
+        });
       }
-      $this->RefreshEngine($http, $dyn,
-        '<td><?dyn="NotSoSimpleButton" op="Compare" study="' . $study .
-        '" series="' . $series . '" caption="Compare"' .
-        ' sync="Update();"?>' .
-        '</td></tr>');
+      $this->RefreshEngine($http, $dyn, qq{
+        <td>
+        <?dyn="NotSoSimpleButton" op="Compare" study="$study" series="$series" caption="Compare" sync="Update();"?>
+        </td>
+        </tr>
+      });
       for my $r (0 .. $#{$this->{Revisions}}){
-        $this->RefreshEngine($http, $dyn, ,
-          '<td><?dyn="FromRadio" study="' . $study. 
-          '" series="' . $series .
-          '" rev="' . $r .
-          '"?></td>');
+        $this->RefreshEngine($http, $dyn, qq{
+          <td>
+            <?dyn="FromRadio" study="$study" series="$series" rev="$r"?>
+          </td>
+        });
       }
       $http->queue("<td>from</td></tr>");
       for my $r (0 .. $#{$this->{Revisions}}){
-        $this->RefreshEngine($http, $dyn, ,
-          '<td><?dyn="ToRadio" study="' . $study. 
-          '" series="' . $series .
-          '" rev="' . $r .
-          '"?></td>');
+        $this->RefreshEngine($http, $dyn, qq{
+          <td>
+            <?dyn="ToRadio" study="$study" series="$series" rev="$r"?>
+          </td>
+        });
       }
       $http->queue("<td>to</td></tr>");
     }
@@ -350,6 +373,7 @@ sub ExpandDiffHierarchy{
   $http->queue("</table></small>");
 }
 sub Reduce{
+  # Remove all entries that lack changes between revisions
   my($this, $struct) = @_;
   my $new = {};
   if(ref($struct) eq "HASH"){
@@ -389,7 +413,7 @@ sub FromRadio{
     op => "SetFromRadio",
     sync => "Update();",
   };
-  my $rbd = $this->RadioButtonDelegate($group, "", $checked, $parms);
+  my $rbd = $this->RadioButtonDelegate($group, "", $checked, $parms, "");
   $http->queue($rbd);
 }
 sub ToRadio{
@@ -409,7 +433,7 @@ sub ToRadio{
     op => "SetToRadio",
     sync => "Update();",
   };
-  my $rbd = $this->RadioButtonDelegate($group, "", $checked, $parms);
+  my $rbd = $this->RadioButtonDelegate($group, "", $checked, $parms, "");
   $http->queue($rbd);
 }
 sub SetToRadio{
@@ -441,20 +465,18 @@ sub RevDropDown{
   unless(exists $this->{SelectedFiles}->{$study}->{$series}){
     $this->{SelectedFiles}->{$study}->{$series} = $list[0];
   }
-  $this->RefreshEngine($http, $dyn, '<?dyn="SelectDelegateByValue" ' .
-    'op="SelectFile" ' .
-    'study="' . $study. '" ' .
-    'series="' . $series. '" ' .
-    'sync="Update();" ' .
-    '?>');
+  $this->RefreshEngine($http, $dyn, qq{
+    <?dyn="SelectDelegateByValue" op="SelectFile" study="$study" series="$series" sync="Update();"?>
+  });
   for my $i (@list){
     my $file = $this->{DispFileHist}->{$study}->{$series}->{$i}->[0]->[0];
     my $dig = $this->{DispFileHist}->{$study}->{$series}->{$i}->[0]->[1];
     my $d_info = $this->{FilesByDigest}->{$dig};
-    my $foo = 
-      $this->{NickNames}->GetDicomNicknamesByFile($file, $d_info);
-    my $file_nn = $foo->[0];
-    my $uid_nn = $foo->[1];
+
+    my $file_nn = $this->{nn}->File($d_info->{sop_inst_uid},
+                                    $d_info->{digest},
+                                    $d_info->{modality});
+
     $http->queue("<option value=\"$file\"" .
       ($file eq $this->{SelectedFiles}->{$study}->{$series} ?
          " selected" : "") .
@@ -469,6 +491,7 @@ sub SelectFile{
   my $file = $dyn->{value};
   $this->{SelectedFiles}->{$study}->{$series} = $file;
 }
+
 sub CorrespondingFile{
   my($this, $http, $dyn) = @_;
   my $study = $dyn->{study};
@@ -476,13 +499,20 @@ sub CorrespondingFile{
   my $rev_i = $dyn->{rev};
   my $rev_num = $this->{Revisions}->[$dyn->{rev}]->{rev_num};
   my $fi = $this->{SelectedFiles}->{$study}->{$series};
-  my $file = $this->{DispFileHist}->{$study}->{$series}->{$fi}->[$rev_i]->[0];
-  my $dig = $this->{DispFileHist}->{$study}->{$series}->{$fi}->[$rev_i]->[1];
+  my $file = $this->{FileHist}->{$study}->{$series}->{$fi}->[$rev_i]->[0];
+  my $dig = $this->{FileHist}->{$study}->{$series}->{$fi}->[$rev_i]->[1];
+  if (not defined $dig) {
+    print "No CorrespondingFile found!\n";
+    print "$study $series $fi $rev_i\n";
+    # print Dumper($this->{DispFileHist});
+    $http->queue("NONE");
+    return;
+  }
   my $d_info = $this->{FilesByDigest}->{$dig};
-  my $foo = 
-    $this->{NickNames}->GetDicomNicknamesByFile($file, $d_info);
-  my $file_nn = $foo->[0];
-  my $uid_nn = $foo->[1];
+
+  my $file_nn = $this->{nn}->File($d_info->{sop_inst_uid},
+                                  $d_info->{digest},
+                                  $d_info->{modality});
   $http->queue("$file_nn");
 }
 sub Compare{

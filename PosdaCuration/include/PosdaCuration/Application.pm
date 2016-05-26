@@ -1102,13 +1102,11 @@ sub ExpandDbInfo{
 }
 sub ExpandSelectedDbInfo{
   my($this, $http, $dyn) = @_;
-  unless(exists $this->{NickNames}) {
-    $this->{NickNames} = Posda::Nicknames->new;
-  }
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
   my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  $this->{nn} = $nn;
   my $studies = $this->{DbResults}->{$subj}->{studies};
   $this->ExpandStudyHierarchy($http, $dyn, $studies, $nn);
 }
@@ -1125,6 +1123,7 @@ sub ExpandExtraction{
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
   my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  $this->{nn} = $nn;
   if(exists $this->{DirectoryLocks}->{$col}->{$site}->{$subj}){
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
     my $reason = "edit";
@@ -1275,6 +1274,7 @@ sub ExpandExtractionStudyInfo{
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
   my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  $this->{nn} = $nn;
   unless(exists $this->{InfoSel}->{$col}->{$site}->{$subj}){
     $this->{InfoSel}->{$col}->{$site}->{$subj} = 0;
   }
@@ -1451,7 +1451,7 @@ sub CloseSubjInfo{
   $this->{InfoSel}->{$col}->{$site}->{$subj} = 0;
   my $count = $this->CountOpenSubj($subj);
   if($count == 0){
-    delete $this->{NickNames};
+    # delete $this->{NickNames};
   }
 }
 sub CountOpenSubj{
@@ -2216,9 +2216,6 @@ sub ShowInfo{
   my($this, $http, $dyn) = @_;
   my $subj = $dyn->{subj};
   $this->{CollectionMode} = "DisplayInfo";
-  unless(exists $this->{NickNames}) {
-    $this->{NickNames} = Posda::Nicknames->new;
-  }
   $this->{DisplayInfoIn} = {
     subj => $subj,
     Collection => $this->{SelectedCollection},
@@ -2300,38 +2297,55 @@ sub RestoreInfo{
 sub DisplayInfo{
   my($this, $http, $dyn) = @_;
   my $info = $this->{DisplayInfoIn};
-  $this->RefreshEngine($http, $dyn,
-    "<h3>Info for Collection: $info->{Collection}, " .
-    "Site: $info->{Site}, Subject: $info->{subj}:  " .
-    '<?dyn="CollectionCounts"?>' .
-    "</h3>");
-  $this->RefreshEngine($http, $dyn,
-    '<table width="100%">' .
-    '<tr><td align="left" valign="top" width="50%">' .
-    '<?dyn="NotSoSimpleButton" caption="Go Back" ' .
-    'op="HideInfo" sync="Update();"?>&nbsp;&nbsp;' .
-    '<?dyn="SendInfo"?>' .
-    $this->NlstLinks($http, $dyn) .
-    '</td><td align="right" valign="top" width="50%">' .
-    '<?dyn="NotSoSimpleButton" caption="Discard This Extraction" ' .
-    'subj="' . $this->{DisplayInfoIn}->{subj} . '" ' .
-    'collection="' . $this->{DisplayInfoIn}->{Collection} . '" ' .
-    'site="' . $this->{DisplayInfoIn}->{Site} . '" ' .
-    'op="DiscardExtractionOK" sync="Update();"?></td></tr>' .
-    '</table><hr><table width="100%">' .
-    '<tr><td valign="top" align="left" width="60%">' .
-    '<?dyn="ExtractionMenus"?></td>' .
-    '<td valign="top" align="right" width="40%"><small>' .
-    '<?dyn="RevisionHistory"?>' .
-    '</small></td></tr></table>' .
-    '<hr>' .
-    '<table width="100%"><tr><td valign="top" align="left" width="75%">' .
-    '<small>' .
-    '<?dyn="ExpandExtractedInfo"?>' .
-    '</small></td><td valign="top" align="left" width="25%">' .
-    '<?dyn="RenderErrorList" subj="'. $this->{DisplayInfoIn}->{subj} . '"?>' .
-    '</td></tr></table>'
-  );
+  $this->RefreshEngine($http, $dyn, qq{
+    <h3>
+      Info for Collection: $info->{Collection},
+      Site: $info->{Site}, Subject: $info->{subj}:
+      <?dyn="CollectionCounts"?>
+    </h3>
+  });
+  my $nlstlinks = $this->NlstLinks($http, $dyn);
+  $this->RefreshEngine($http, $dyn, qq{
+    <table width="100%">
+      <tr>
+        <td align="left" valign="top" width="50%">
+          <?dyn="NotSoSimpleButton" caption="Go Back" op="HideInfo" sync="Update();"?>
+          &nbsp;&nbsp;
+          <?dyn="SendInfo"?>
+          $nlstlinks
+        </td>
+        <td align="right" valign="top" width="50%">
+          <?dyn="NotSoSimpleButton" caption="Discard This Extraction" subj="$this->{DisplayInfoIn}->{subj}" collection="$this->{DisplayInfoIn}->{Collection}" site="$this->{DisplayInfoIn}->{Site}" op="DiscardExtractionOK" sync="Update();"?>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <table width="100%">
+      <tr>
+        <td valign="top" align="left" width="60%">
+          <?dyn="ExtractionMenus"?>
+        </td>
+        <td valign="top" align="right" width="40%">
+          <small>
+            <?dyn="RevisionHistory"?>
+          </small>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <table width="100%">
+    <tr>
+      <td valign="top" align="left" width="75%">
+        <small>
+          <?dyn="ExpandExtractedInfo"?>
+        </small>
+      </td>
+      <td valign="top" align="left" width="25%">
+        <?dyn="RenderErrorList" subj="$this->{DisplayInfoIn}->{subj}"?>
+      </td>
+    </tr>
+    </table>
+  });
 }
 sub CollectionCounts{
   my($this, $http, $dyn) = @_;
@@ -2373,7 +2387,7 @@ sub SendInfo{
 }
 sub NlstLinks{
   my($this, $http, $dyn) = @_;
-  unless($this->{Environment}->{IsNlstCuration}) { return }
+  unless($this->{Environment}->{IsNlstCuration}) { return '';}
   my $subj = $this->{DisplayInfoIn}->{subj};
   my $rev = $this->{DisplayInfoIn}->{rev_hist}->{CurrentRev};
   my @names = keys %{$this->{DbResults}->{$subj}->{pat_name}};
@@ -2410,18 +2424,23 @@ sub NlstLinks{
 sub ExpandExtractedInfo{
   my($this, $http, $dyn) = @_;
   my $subj = $this->{DisplayInfoIn}->{subj};
+  my $col = $this->{SelectedCollection};
+  my $site = $this->{SelectedSite};
+  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  $this->{nn} = $nn;
   $this->ExpandStudyHierarchyWithPatientInfo($http, $dyn,
-    $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}->{$subj}->{studies});
+    $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}->{$subj}->{studies}, $nn);
 }
 sub ExtractionMenus{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn,
-#    "<small><a href=\"DownloadTar?obj_path=$this->{path}\">download</a>" .
-#     '<hr>' .
-#    '<?dyn="DupSops"?>' .
-    '<?dyn="RenderEditMenu"?>' .
-    '<?dyn="SendMenu"?><hr>'.
-    '<?dyn="PhiMenu"?>')
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>
+      <?dyn="RenderEditMenu"?>
+    </p>
+    <?dyn="SendMenu"?>
+    <hr>
+    <?dyn="PhiMenu"?>
+  });
 }
 sub FetchCorrespondingFromNlst{
   my($this, $http, $dyn) = @_;
@@ -2614,18 +2633,20 @@ sub SendMenu{
   $dyn->{col} = $this->{DisplayInfoIn}->{Collection};
   $dyn->{site} = $this->{DisplayInfoIn}->{Site};
   $dyn->{subj} = $this->{DisplayInfoIn}->{subj};
-  $this->RefreshEngine($http, $dyn,
-    '<?dyn="NotSoSimpleButton" caption="Send This Extraction" ' .
-    'op="SendThisExtraction" sync="Update();"?>' .
-    '<?dyn="DestinationDropDown"?><?dyn="SubSendSelection"?>');
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>
+      <?dyn="NotSoSimpleButton" caption="Send This Extraction" op="SendThisExtraction" sync="Update();"?>
+      <?dyn="DestinationDropDown"?>
+      <?dyn="SubSendSelection"?>
+    </p>
+  });
 }
 sub SubSendSelection{
   my($this, $http, $dyn) = @_;
   my %studies;
   my $hierarchy = $this->{DisplayInfoIn}->{hierarchy_by_uid};
   for my $study (sort keys %{$hierarchy}){
-    my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId("STUDY",
-      $study);
+    my $study_nn = $this->{nn}->Study($study);
     $studies{$study_nn} = $study;
   }
   unless(
@@ -2635,7 +2656,7 @@ sub SubSendSelection{
     $this->{DisplayInfoIn}->{SelectedStudyForSend} = "---Select Study---";
   }
   $this->RefreshEngine($http, $dyn,
-    '<?dyn="SelectDelegateByValue" op="SelectSendStudy" sync="Update();"?>');
+    '<?dyn="SelectDelegateByValue" style="width: auto" op="SelectSendStudy" sync="Update();"?>');
   for my $v ("---Select Study---", sort keys %studies){
     $http->queue("<option value=\"$v\"" .
       ($v eq $this->{DisplayInfoIn}->{SelectedStudyForSend} ?
@@ -2672,7 +2693,7 @@ sub DestinationDropDown{
   unless(defined $this->{SelectedDicomDestination}){
     $this->{SelectedDicomDestination} = "---- select destination ----";
   }
-  $this->RefreshEngine($http, $dyn, '<?dyn="SelectByValue" op="SetDest"?>');
+  $this->RefreshEngine($http, $dyn, '<?dyn="SelectByValue" style="width: auto" op="SetDest"?>');
   for my $i ("---- select destination ----", @dests){
     $http->queue("<option value=\"$i\"" .
       ($i eq $this->{SelectedDicomDestination} ? " selected" : "") .
@@ -2719,7 +2740,8 @@ sub SendThisExtraction{
   ){
     $new_args->[0] = "SendFilesInStudy";
     my $study_nn = $this->{DisplayInfoIn}->{SelectedStudyForSend};
-    my $study_uid = $this->{NickNames}->GetEntityIdByNickname($study_nn);
+    my $study_uid = $this->{nn}->ToStudyUID($study_nn);
+
     push @$new_args, "SelectedStudy: $study_uid";
   }
   if(
@@ -2822,8 +2844,7 @@ sub RenderSplitBySeriesDescMenu{
       }
       if($num_images_in_series == $num_distinct_values){
         $split_by_series_needed = 1;
-        my $series_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-          "SERIES", $i->{series_uid});
+        my $series_nn = $this->{nn}->Series($i->{series_uid});
         push @series_to_split_on_desc, {
           series => $i->{series_uid},
           series_nn => $series_nn,
@@ -2993,8 +3014,7 @@ sub RenderRehashSsMenu{
   for my $i (@{$this->{DisplayInfoIn}->{error_info}}){
     if($i->{type} eq "structure_set_linkage"){
       $ss_relink_needed = 1;
-      my $series_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-        "SERIES", $i->{series_uid});
+      my $series_nn = $this->{nn}->Series($i->{series_uid});
       push @ss, {
         series => $i->{series_uid},
         series_nn => $series_nn,
@@ -3012,8 +3032,7 @@ sub RenderRelinkSsMenu{
   for my $i (@{$this->{DisplayInfoIn}->{error_info}}){
     if($i->{type} eq "structure_set_linkage"){
       $ss_relink_needed = 1;
-      my $series_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-        "SERIES", $i->{series_uid});
+      my $series_nn = $this->{nn}->Series($i->{series_uid});
       push @ss, {
         series => $i->{series_uid},
         series_nn => $series_nn,
@@ -3046,9 +3065,8 @@ sub RenderRelinkSsMenu{
     my $series_nn = $s->{series_nn};
     if($#{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}} == 0){
       my $file = $this->{DisplayInfoIn}->{sop_to_files}->{$sop}->[0];
-      my $struct_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-        "RTSTRUCT", $file
-      );
+      my $digest = $this->{DisplayInfoIn}->{dicom_info}->FilesToDigest->{$file};
+      my $struct_nn = $this->{nn}->File($sop, $digest, "RTSTRUCT");
       my $series_desc = $this->GetSeriesDescFromFile($file);
       unless(exists $this->{DisplayInfoIn}->{CheckedSs}->{$file}){
         $this->{DisplayInfoIn}->{CheckedSs}->{$file} = "false";
@@ -3069,12 +3087,9 @@ sub RenderRelinkSsMenu{
       $http->queue("</td></tr>");
     } elsif ($#{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}} > 0){
       for my $file (@{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}}){
-        my $struct_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-          "RTSTRUCT", $file
-        );
-        my $sop_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-          "SOP", $sop
-        );
+        my $digest = $this->{DisplayInfoIn}->{dicom_info}->FilesToDigest->{$file};
+        my $struct_nn = $this->{nn}->File($sop, $digest, "RTSTRUCT");
+        my $sop_nn = $struct_nn;
         my $series_desc = $this->GetSeriesDescFromFile($file);
         unless(exists $this->{DisplayInfoIn}->{CheckedSs}->{$file}){
           $this->{DisplayInfoIn}->{CheckedSs}->{$file} = "false";
@@ -3124,17 +3139,13 @@ sub SelectNoStructs{
 }
 sub LinkageSeriesSelection{
   my($this, $http, $dyn, $file) = @_;
-  my $file_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-    "RTSTRUCT", $file);
   my $dig = $this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}->{$file};
   my $f_info = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$dig};
+  my $file_nn = $this->{nn}->File($f_info->{sop_inst_uid}, $dig, "RTSTRUCT");
+
   my $num_slices = $f_info->{series_refs}->[0]->{num_images};
-  my $study_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-    "STUDY", $f_info->{study_uid}
-  );
-  my $for_nn = $this->{NickNames}->GetEntityNicknameByEntityId(
-   "FOR",
-   $f_info->{for_uid});
+  my $study_nn = $this->{nn}->Study($f_info->{study_uid});
+  my $for_nn = $f_info->{for_uid};
   my $series_desc = $this->GetSeriesDescFromFile($file);
   my $series_to_link = $this->GetFilteredSeriesList($f_info->{study_uid},
     $f_info->{for_uid}, $num_slices, $series_desc);
@@ -3218,9 +3229,7 @@ sub FilterSeries{
     }
     my $foo = {
       series_uid => $series->{uid},
-      series_nn => $this->{NickNames}->GetEntityNicknameByEntityId(
-        "SERIES", $series->{uid}
-      ),
+      series_nn => $this->{nn}->Series($series->{uid}),
       desc => $series->{desc},
     };
     push @$results, $foo;
@@ -3476,6 +3485,7 @@ sub ApplyGeneralEdits{
         $Edits->{$f}->{full_ele_additions}->{"(0020,000e)"} = $uid;
       }
     } else {
+      # print Dumper($r->{affected_files});
       file:
       for my $f (@{$r->{affected_files}}){
         my $dig = $dicom_info->{FilesToDigest}->{$f};
@@ -3871,8 +3881,14 @@ sub GeneralPurposeEditor{
   my $child_name = $this->child_path("GeneralPurposeEditor");
   my $child = $this->child("GeneralPurposeEditor");
   unless($child) {
-    PosdaCuration::GeneralPurposeEditor->new($this->{session}, $child_name,
-      $this->{DisplayInfoIn});
+    my $subj = $this->{DisplayInfoIn}->{subj};
+    my $col = $this->{SelectedCollection};
+    my $site = $this->{SelectedSite};
+    my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+    $this->{nn} = $nn;
+    my $e =PosdaCuration::GeneralPurposeEditor->new($this->{session}, $child_name,
+      $this->{DisplayInfoIn}, $nn);
+    $this->{GeneralPurposeEditorObj} = $e;
   }
   $this->{CollectionMode} = "GeneralPurposeEditorContent";
 }
@@ -5153,7 +5169,7 @@ sub WhenApplyLockGranted{
         "Commands: $commands" ];
       $this->{FixApplied}->{$subj} = 1;
       print "==========================\n";
-      print Dumper($new_args);
+      # print Dumper($new_args);
       $this->SimpleTransaction($this->{ExtractionManagerPort},
         $new_args,
         $this->WhenApplyEditQueued($subj, $disp));

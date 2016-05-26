@@ -6,6 +6,8 @@ use Method::Signatures::Simple;
 use Data::Dumper;
 use DBI;
 
+use constant DEBUG => 0;
+
 #{{{ Public Methods
 method new($class: $connection, $project_name, $site_name, $subj_id) {
   my $self = {
@@ -47,6 +49,9 @@ method Series($series_instance_uid) {
 }
 
 method File($sop_instance_uid, $digest, $modality) {
+  unless (defined $sop_instance_uid and defined $digest and defined $modality) {
+    die "Posda::Nicknames2::File called without all parameters!";
+  }
   if (not defined $self->{file_cache}->{$sop_instance_uid}->
                   {$digest}->{$modality}) {
     $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality} =
@@ -58,6 +63,12 @@ method File($sop_instance_uid, $digest, $modality) {
                              $modality);
   }
   return $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality};
+}
+method ToStudyUID($study_nn) {
+  return $self->__to_study_uid($self->{project_name}, 
+                             $self->{site_name}, 
+                             $self->{subj_id}, 
+                             $study_nn);
 }
 #}}}
 
@@ -79,6 +90,16 @@ method __load_statements() {
   $self->{sql_statements}->{start_trans} = "begin";
   $self->{sql_statements}->{unlock} = "commit";
   $self->{sql_statements}->{abort} = "rollback";
+
+  $self->{sql_statements}->{select_study_uid} = qq{
+    select
+      study_instance_uid
+    from study_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and study_nickname = ?
+  };
 
   $self->{sql_statements}->{select_nn_file} = qq{
     select
@@ -168,6 +189,16 @@ method __load_statements() {
     "update sop_nickname set has_modality_conflict = true\n" .
     "where project_name = ? and site_name = ? and subj_id = ?\n" .
     "and sop_instance_uid = ?";
+}
+
+method __to_study_uid ($project_name,
+                       $site_name,
+                       $subj_id,
+                       $study_nickname) {
+
+  my $statement = $self->__statement('select_study_uid');
+  $statement->execute($project_name, $site_name, $subj_id, $study_nickname);
+  return $statement->fetchrow_arrayref()->[0];
 }
 
 method __study_nickname ($project_name, 
@@ -392,15 +423,26 @@ method __nickname_to_file ($project_name,
                            $nickname) {
 
 
+  if (DEBUG) { 
+    say "__nickname_to_file($project_name, $site_name, $subj_id, $nickname)";
+  }
   # if $nickname has a version number, return only that version
   # if $nickname has no version number, return all files
   # always return a list
 
   # drop any version info
   my $short_nn = ($nickname =~ /(\w+)/)[0];
+  if (DEBUG) { say "short_nn = $short_nn" }
 
   # extract the version number
   my $version = ($nickname =~ /\[(\d)\]/) ? $1:undef;
+  if (DEBUG) { 
+    if (defined $version) {
+      say "version = $version";
+    } else {
+      say "version is undef";
+    }
+  }
 
   my $statement;
   if (defined $version) {
@@ -412,9 +454,16 @@ method __nickname_to_file ($project_name,
     $statement->execute(
       $project_name, $site_name, $subj_id, $short_nn);
   }
+  if (DEBUG) { say "statement executed" }
 
   my @rows;
   map { push @rows, $_->[0]; } @{$statement->fetchall_arrayref()};
+  if (DEBUG) { 
+    say "Rows returned: ", scalar @rows;
+    for my $r (@rows) {
+      say $r;
+    }
+  }
   return \@rows;
 }
 #}}}

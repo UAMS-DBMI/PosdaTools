@@ -7,6 +7,7 @@ use PosdaCuration::FileView;
 use PosdaCuration::SeriesReport;
 use PosdaCuration::CompareFiles;
 use PosdaCuration::CompareRevisions;
+use Data::Dumper;
 
 use constant INCONSISTENT => '&lt;inconsistent&gt;';
 
@@ -30,7 +31,7 @@ sub ExpandStudyCounts{
 sub nnsort {
   # Nickname sort. Extracts the number from the end of
   # a nickname (eg, 9 from STUDY_9), and sorts numerically
-  print "Comparing $a to $b...\n";
+  # print "Comparing $a to $b...\n";
   ($a =~ /_(\d+)/)[0] <=> ($b =~ /_(\d+)/)[0];
 }
 sub ExpandStudyCountsExtraction{
@@ -55,6 +56,7 @@ sub ExpandStudyCountsExtraction{
 
 sub ExpandStudyHierarchy{
   my($this, $http, $dyn, $studies, $nn) = @_;
+  $this->{nn} = $nn;
 
   $http->queue(qq{
     <table class="table table-bordered table-sm" 
@@ -119,7 +121,7 @@ sub ExpandStudyHierarchy{
     map {$series_nicknames->{$nn->Series($_)} = $_} keys %{$study->{series}};
 
     for my $series_nn (sort nnsort (keys %$series_nicknames)) {
-      print "$series_nn\n";
+      # print "$series_nn\n";
       my $series_uid = $series_nicknames->{$series_nn};
       my $s = $study->{series}->{$series_uid};
       my $modality;
@@ -172,6 +174,7 @@ sub ExpandStudyHierarchyExtraction{
   # The data structure it gets passed is *completely* different, basically
   # TODO: Maybe we can adjust this structure to match the other, or the other way around?
   my($this, $http, $dyn, $studies, $nn) = @_;
+  $this->{nn} = $nn;
 
   # INFO: $studies = $this->{ExtractionsHierarchies}->{ER-1002}->{hierarchy}->{ER-1002}->{studies}
   # where ER-1002 is the subject
@@ -251,7 +254,8 @@ sub ExpandStudyHierarchyExtraction{
 }
 sub ExpandStudyHierarchyWithPatientInfo{
   # This is part of the "Show Info" screen
-  my($this, $http, $dyn, $studies) = @_;
+  my($this, $http, $dyn, $studies, $nn) = @_;
+  $this->{nn} = $nn;
   unless(exists $this->{NickNames}) {
     $this->{NickNames} = Posda::Nicknames->new;
   }
@@ -270,8 +274,9 @@ sub ExpandStudyHierarchyWithPatientInfo{
     my $study_uid = $studies->{$study}->{uid};
     my $pid = $studies->{$study}->{pid};
     my $pname = $studies->{$study}->{pname};
-    my $study_nn =
-      $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
+    # my $study_nn =
+    #   $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
+    my $study_nn = $nn->Study($study_uid);
     $http->queue('<tr><td colspan="3">' . $study_nn .
     " (pid = $pid; pname = $pname)" .
     '</td>');
@@ -287,8 +292,9 @@ sub ExpandStudyHierarchyWithPatientInfo{
     ){
       my $series_uid =
         $studies->{$study}->{series}->{$series}->{uid};
-      my $series_nn =
-        $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
+      # my $series_nn =
+      #   $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
+      my $series_nn = $nn->Series($series_uid);
       my $s = $studies->{$study}->{series}->{$series};
       $this->RefreshEngine($http, $dyn,
         '<tr><td>==&gt;</td><td><table width="100%"><tr>' .
@@ -320,21 +326,19 @@ sub ExpandStudyHierarchyWithPatientInfo{
         my $dig = $this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}->{$i};
         $digests{$dig} = $i;
       }
+
       my $fbd = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest};
-      for my $dig (
-#        sort
-#        {
-#          $fbd->{$a}->{normalized_loc} <=> $fbd->{$b}->{normalized_loc}
-#        }
-        keys %digests
-      ){
-        my $di = $fbd->{$dig};
-        my $f_uid_nn = $this->{NickNames}->GetDicomNicknamesByFile(
-          $digests{$dig}, $di);
-        push(@files, $f_uid_nn->[0]);
+      for my $dig (keys %digests) {
+        my $dicom = $fbd->{$dig};
+        my $f_uid_nn = $nn->File($dicom->{sop_inst_uid},
+                                 $dig,
+                                 $dicom->{modality});
+
+        push(@files, $f_uid_nn);
 
       }
-      @files = sort { NumericFileSort($a, $b) } @files;
+      # @files = sort { NumericFileSort($a, $b) } @files;
+      @files = sort nnsort (@files);
       $this->MakeFileInspector($http, $dyn, $series, \@files);
       $http->queue("</td><td>");
       $this->MakeFileFromSelector($http, $dyn, $series, \@files);
@@ -439,8 +443,10 @@ sub FileToView{
 sub ViewFile{
   my($this, $http, $dyn) = @_;
   my $file_nn = $this->{DisplayInfoIn}->{SelectedFileToView}->{$dyn->{series}};
-  my $files = $this->{NickNames}->GetFilesByFileNickname($file_nn);
-  my $file = $files->[0];
+  # my $files = $this->{NickNames}->GetFilesByFileNickname($file_nn);
+  my $files = $this->{nn}->ToFiles($file_nn);
+  # Get the file from the dicom_info??
+  my $file = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$files->[0]}->{file};
   my $child_path = $this->child_path("View_$file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){
@@ -537,6 +543,38 @@ print STDERR "Series_nn: $series_nn, Series_uid: $series_uid\n";
   $this->InvokeAbove("StartChildDisplayer", $child_obj);
   }
 }
+sub FilenameFromDigest {
+  # Convert a digest into a filename. Requires $this->{DisplayInfoIn}
+  my ($this, $digest) = @_;
+  my $file = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$digest}->{file};
+  if (not defined $file) {
+    print STDERR "FilenameFromDigest: No file found for digest $digest\n";
+  }
+  return $file;
+}
+
+sub FilenameFromDigests {
+  # Take an arrayref of digests, and return the filename of the first
+  # one that is defined in $this->{DisplayInfoIn}
+  my ($this, $digests) = @_;
+
+  if (not defined $digests) {
+    print STDERR "FilenameFromDigests called with undefined digest list!\n";
+    return undef;
+  }
+
+  my $file;
+  for my $digest (@$digests) {
+    print "Processing $digest\n";
+    $file = $this->FilenameFromDigest($digest);
+    if (defined $file) {
+      return $file;
+    }
+  }
+  print STDERR "FilenameFromDigests: No files found for any digest in list!\n";
+  return undef;
+}
+
 sub CompareImages{
   my($this, $http, $dyn) = @_;
   my $selected_from_series;
@@ -555,11 +593,21 @@ sub CompareImages{
   }
   my $from_file_nn = $this->{DisplayInfoIn}->{SelectedFileToView}->{$selected_from_series};
   my $to_file_nn = $this->{DisplayInfoIn}->{SelectedFileToView}->{$selected_to_series};
-  my $from_files = $this->{NickNames}->GetFilesByFileNickname($from_file_nn);
-  my $from_file = $from_files->[0];
-  my $to_files = $this->{NickNames}->GetFilesByFileNickname($to_file_nn);
-  my $to_file = $to_files->[0];
+
+  # ToFiles returns digest, so need to convert to filename
+  my $from_files = $this->{nn}->ToFiles($from_file_nn);
+  my $from_file = $this->FilenameFromDigests($from_files);
+
+  my $to_files = $this->{nn}->ToFiles($to_file_nn);
+  my $to_file = $this->FilenameFromDigests($to_files);
+
   print STDERR "Here's where we compare $from_file to $to_file\n";
+  unless (defined $from_file and defined $to_file) {
+    my $msg = "From or To file missing, aborting to avoid crash!\n";
+    $this->QueueJsCmd(qq{alert("$msg");});
+    print STDERR $msg;
+    return;
+  }
   my $child_path = $this->child_path("compare_${from_file_nn}_$to_file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){
@@ -598,14 +646,10 @@ sub ErrorReportCommon{
       if(exists $err->{$i}){
         $http->queue("<li>$i: $err->{$i}");
         if($i eq "study_uid"){
-          my $nn =
-            $this->{NickNames}->GetEntityNicknameByEntityId("STUDY",
-              $err->{$i});
+          my $nn = $this->{nn}->Study($err->{$i});
           $http->queue(" ($nn)");
         } elsif($i eq "series_uid"){
-          my $nn =
-            $this->{NickNames}->GetEntityNicknameByEntityId("SERIES",
-              $err->{$i});
+          my $nn = $this->{nn}->Series($err->{$i});
           $http->queue(" ($nn)");
         } elsif($i eq "ele"){
           my $ele_name = Posda::ElementNames::FromSig($err->{$i});
@@ -831,6 +875,7 @@ sub CompareRevisions{
     $child_obj = PosdaCuration::CompareRevisions->new($this->{session},
       $child_path, $from, $to);
     if($child_obj){
+      $this->{DEBUGObj_CompareRevisions} = $child_obj;
       $this->InvokeAbove("StartChildDisplayer", $child_obj);
     } else {
       print STDERR 'PosdaCuration::CompareRevisions->new failed!!!' . "\n";

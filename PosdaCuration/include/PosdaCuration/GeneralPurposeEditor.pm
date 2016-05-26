@@ -21,8 +21,9 @@ my $expander = '<?dyn="Content"?>';
 @ISA = ( "Posda::HttpApp::JsController", "Posda::UidCollector" ,
   "PosdaCuration::InfoExpander" );
 sub new {
-  my($class, $sess, $path, $display_info) = @_;
+  my($class, $sess, $path, $display_info, $nn) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
+  $this->{nn} = $nn;
   $this->{expander} = $expander;
   $this->{DisplayInfoIn} = $display_info;
   bless $this, $class;
@@ -99,7 +100,6 @@ sub ClearError{
 }
 sub InitializeEdit{
   my($this) = @_;
-  $this->{NickNames} = $this->parent->{NickNames};
   $this->{Modalities} = {};
   $this->CollectUids($this->{DisplayInfoIn}->{dicom_info});
   my $DicomInfo = {};
@@ -127,21 +127,18 @@ sub InitializeEdit{
     keys %{$DicomInfo}
   ];
   for my $f (@{$this->{SortedFiles}}){
-    my $d_nn =
-      $this->{NickNames}->GetDicomNicknamesByFile($f, $DicomInfo->{$f});
-    my $f_nn = $d_nn->[0];
-    $this->{Nicknames}->{f_nn}->{$d_nn->[0]} = $f;
-    $this->{Nicknames}->{r_f_nn}->{$f} = $d_nn->[0];
-    my $uid_nn = $d_nn->[1];
-    $this->{Nicknames}->{uid_nn}->{$d_nn->[1]} = $f;
-    my $st_nn =
-      $this->{NickNames}->GetEntityNicknameByEntityId(
-        "Study", $DicomInfo->{$f}->{study_uid});
-    $this->{Nicknames}->{study_nn}->{$st_nn} = 1;
-    my $series_nn =
-      $this->{NickNames}->GetEntityNicknameByEntityId(
-        "Series", $DicomInfo->{$f}->{series_uid});
     my $modality = $DicomInfo->{$f}->{modality};
+    my $sop_inst_uid = $DicomInfo->{$f}->{sop_inst_uid};
+    my $digest = $DicomInfo->{$f}->{digest};
+    my $f_nn = $this->{nn}->File($sop_inst_uid, $digest, $modality);
+
+    $this->{Nicknames}->{f_nn}->{$f_nn} = $f;
+    $this->{Nicknames}->{r_f_nn}->{$f} = $f_nn;
+    my $uid_nn = $f_nn;
+    $this->{Nicknames}->{uid_nn}->{$f_nn} = $f;
+    my $st_nn = $this->{nn}->Study($DicomInfo->{$f}->{study_uid});
+    $this->{Nicknames}->{study_nn}->{$st_nn} = 1;
+    my $series_nn = $this->{nn}->Series($DicomInfo->{$f}->{series_uid});
     $this->{Nicknames}->{series_nn}->{$series_nn}->{$modality} += 1;
     $this->{Modalities}->{$modality} = 1;
     $this->{Summary}->{$st_nn}->{$series_nn}->{modality}->{$modality} = 1;
@@ -282,8 +279,12 @@ sub FileDropDown{
   for my $i (keys %{$this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}}){
     my $dig = $this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}->{$i};
     my $f_info = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$dig};
-    my $f_nns = $this->{NickNames}->GetDicomNicknamesByFile($i, $f_info);
-    my $f_nn = $f_nns->[0];
+
+    my $modality = $f_info->{modality};
+    my $sop_inst_uid = $f_info->{sop_inst_uid};
+    my $digest = $f_info->{digest};
+    my $f_nn = $this->{nn}->File($sop_inst_uid, $digest, $modality);
+
     $files{$f_nn} = 1;
   }
   my @files = sort keys %files;
@@ -741,10 +742,14 @@ sub GetMatchingFile{
   # Must turn into filenames:
   my @files;
   map { 
-    push @files, $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$_}->{file};
+    my $filename = $this->{DisplayInfoIn}->{dicom_info}
+                        ->{FilesByDigest}->{$_}->{file};
+    if (defined $filename) {
+      push @files, $filename;
+    }
   } @{$this->{nn}->ToFiles($f_nn)};
 
-  return \@files;
+  return @files;
 }
 sub CurrentEdits{
   my($this, $http, $dyn) = @_;
@@ -824,7 +829,7 @@ sub StudySeriesImageSelections{
   my($this, $http, $dyn) = @_;
   $http->queue("<small>");
   $this->ExpandStudyHierarchyWithPatientInfo($http, $dyn, 
-    $this->{DisplayInfoIn}->{hierarchy}->{studies});
+    $this->{DisplayInfoIn}->{hierarchy}->{studies}, $this->{nn});
   $http->queue("</small>");
 }
 sub ApplyEdits{

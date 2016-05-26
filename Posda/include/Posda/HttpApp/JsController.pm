@@ -319,11 +319,17 @@ sub StoreLinkedValue{
 }
 sub SelectByValue{
   my($this, $http, $dyn) = @_;
-  unless(defined $dyn->{op}) { $dyn->{op} = "ChangeMode" }
-  $http->queue(
-    "<select class=\"form-control\" onChange=\"ChangeMode('$dyn->{op}', " . 
-    "this.options[this.selectedIndex].value);\">"
-  );
+  unless(defined $dyn->{op}) {
+    $dyn->{op} = "ChangeMode";
+  }
+
+  my $class = defined $dyn->{class}? $dyn->{class}: "form-control";
+  my $style = defined $dyn->{style}? $dyn->{style}: "";
+
+  $http->queue(qq{
+    <select class="$class" style="$style" 
+      onChange="ChangeMode('$dyn->{op}',this.options[this.selectedIndex].value);">
+  });
 }
 sub DrawSelectFromHash {
   # Draw a simple SelectByValue, using a hash of values
@@ -369,8 +375,12 @@ sub SelectDelegateByValue{
   for my $p (@parms){
     $v_string .= "&$p";
   }
+
+  my $class = defined $dyn->{class}? $dyn->{class}: "form-control";
+  my $style = defined $dyn->{style}? $dyn->{style}: "";
+
   $http->queue(
-    "<select class=\"form-control\" onChange=\"PosdaGetRemoteMethod('$op', " . 
+    "<select class=\"$class\" style=\"$style\" onChange=\"PosdaGetRemoteMethod('$op', " . 
     "'value=' + " .
     "this.options[this.selectedIndex].value + '$v_string', " .
     "function(){" .
@@ -584,7 +594,7 @@ sub DelegateButton{
     $hstring .= "$parms[$i]";
     unless($i == $#parms) { $hstring .= "&" }
   }
-  my $string = '<input type="button" ' .
+  my $string = '<input type="button" class="btn btn-default" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'Delegate', '$hstring', " .
     'function () {' .
@@ -674,7 +684,10 @@ sub CheckBoxDelegate{
   return $input;
 }
 sub RadioButtonDelegate{
-  my($this, $group, $value, $checked, $parms) = @_;
+  my($this, $group, $value, $checked, $parms, $class) = @_;
+  if (not defined $class) {
+    $class = '';
+  }
   my $op = "Delegate";
   $parms->{Delegator} = $this->{path};
   $parms->{Delegated} = $parms->{op};
@@ -685,8 +698,8 @@ sub RadioButtonDelegate{
       $v_string .= "&$i=$parms->{$i}";
     }
   }
-  my $input = '<input type="radio" group="' . $group .
-    '" value="' . $value . '"' .
+  my $input = qq{<input class="$class" type="radio" group="$group"} .
+    ' value="' . $value . '"' .
     ($checked ? ' checked="checked"' : '') .
     ' onClick="javascript:PosdaGetRemoteMethod(' .
     "'$op', " . "'$v_string&checked='+this.checked" .
