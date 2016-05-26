@@ -3,6 +3,7 @@
 package Posda::Nicknames2;
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
+use Data::Dumper;
 use DBI;
 
 #{{{ Public Methods
@@ -78,6 +79,28 @@ method __load_statements() {
   $self->{sql_statements}->{start_trans} = "begin";
   $self->{sql_statements}->{unlock} = "commit";
   $self->{sql_statements}->{abort} = "rollback";
+
+  $self->{sql_statements}->{select_nn_file} = qq{
+    select
+      file_digest
+    from
+      file_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and sop_nickname_copy = ?
+      and version_number = ?
+  };
+  $self->{sql_statements}->{select_nn_files} = qq{
+    select
+      file_digest
+    from
+      file_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and sop_nickname_copy = ?
+  };
 
   $self->{sql_statements}->{lock_sequence_for_update} =
     "select * from nickname_sequence where\n" .
@@ -347,6 +370,52 @@ method __file_nickname ($project_name,
     $sop_instance_uid, 0, $digest, $sop_nn);
   $self->__statement('unlock')->execute;
   return "$sop_nn";
+}
+
+method Sop($sop_instance_uid, $modality) {
+  $self->__sop_nickname($self->{project_name},
+                        $self->{site_name},
+                        $self->{subj_id},
+                        $sop_instance_uid,
+                        $modality);
+}
+
+method ToFiles($nickname) {
+  $self->__nickname_to_file($self->{project_name},
+                            $self->{site_name},
+                            $self->{subj_id},
+                            $nickname);
+}
+method __nickname_to_file ($project_name,
+                           $site_name,
+                           $subj_id,
+                           $nickname) {
+
+
+  # if $nickname has a version number, return only that version
+  # if $nickname has no version number, return all files
+  # always return a list
+
+  # drop any version info
+  my $short_nn = ($nickname =~ /(\w+)/)[0];
+
+  # extract the version number
+  my $version = ($nickname =~ /\[(\d)\]/) ? $1:undef;
+
+  my $statement;
+  if (defined $version) {
+    $statement = $self->__statement('select_nn_file');
+    $statement->execute(
+      $project_name, $site_name, $subj_id, $short_nn, $version);
+  } else {
+    $statement = $self->__statement('select_nn_files');
+    $statement->execute(
+      $project_name, $site_name, $subj_id, $short_nn);
+  }
+
+  my @rows;
+  map { push @rows, $_->[0]; } @{$statement->fetchall_arrayref()};
+  return \@rows;
 }
 #}}}
 
