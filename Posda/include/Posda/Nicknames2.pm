@@ -15,7 +15,7 @@ method new($class: $connection, $project_name, $site_name, $subj_id) {
     ndb => $connection
   };
 
-  print "Posda::Nicknames2($project_name, $site_name, $subj_id)\n";
+  # print "Posda::Nicknames2($project_name, $site_name, $subj_id)\n";
 
   bless $self, $class;
   $self->__init();

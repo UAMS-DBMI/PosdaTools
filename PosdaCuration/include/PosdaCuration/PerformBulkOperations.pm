@@ -4,6 +4,7 @@ use strict;
 use Storable;
 use PosdaCuration::ExtractionManagerIf;
 use Dispatch::EventHandler;
+use Posda::Nicknames2Factory;
 package PosdaCuration::PerformBulkOperations;
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
@@ -99,8 +100,10 @@ sub MapEditsSync{
         }
       }
       my @f_list = keys %{$results->{"dicom.pinfo"}->{FilesToDigest}};
+      my $nickname_obj = Posda::Nicknames2Factory::get(
+        $this->{coll}, $this->{site}, $subj);
       my $cmd_hash = 
-        &{$edit_func}($this->{coll}, $this->{site}, $subj, \@f_list, $results);
+        &{$edit_func}($this->{coll}, $this->{site}, $subj, \@f_list, $results, $nickname_obj);
       my $cmd_file;
       if(keys %$cmd_hash > 0){
         for my $f_name (keys %$cmd_hash){
