@@ -26,6 +26,10 @@ method new($class: $connection, $project_name, $site_name, $subj_id) {
 
 method Study($study_instance_uid) {
 
+  unless (defined $study_instance_uid) {
+    die "Posda::Nicknames2::Study called with undefined parameters!";
+  }
+
   if (not defined $self->{study_cache}->{$study_instance_uid}) {
     $self->{study_cache}->{$study_instance_uid} = 
       $self->__study_nickname($self->{project_name}, 
@@ -38,6 +42,11 @@ method Study($study_instance_uid) {
 }
 
 method Series($series_instance_uid) {
+
+  unless (defined $series_instance_uid) {
+    die "Posda::Nicknames2::Series called with undefined parameters!";
+  }
+
   if (not defined $self->{series_cache}->{$series_instance_uid}) {
     $self->{series_cache}->{$series_instance_uid} = 
       $self->__series_nickname($self->{project_name}, 
@@ -64,23 +73,66 @@ method File($sop_instance_uid, $digest, $modality) {
   }
   return $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality};
 }
+
 method ToStudyUID($study_nn) {
+
+  unless (defined $study_nn) {
+    die "Posda::Nicknames2::ToStudyUID called with undefined parameters!";
+  }
+
   return $self->__to_study_uid($self->{project_name}, 
                              $self->{site_name}, 
                              $self->{subj_id}, 
                              $study_nn);
 }
+
 method ToSeriesUID($series_nn) {
+
+  unless (defined $series_nn) {
+    die "Posda::Nicknames2::ToSeriesUID called with undefined parameters!";
+  }
+
   return $self->__to_series_uid($self->{project_name}, 
                              $self->{site_name}, 
                              $self->{subj_id}, 
                              $series_nn);
 }
+
 method ToSopUID($sop_nn) {
+
+  unless (defined $sop_nn) {
+    die "Posda::Nicknames2::ToSopUID called with undefined parameters!";
+  }
+
   return $self->__to_sop_uid($self->{project_name}, 
                              $self->{site_name}, 
                              $self->{subj_id}, 
                              $sop_nn);
+}
+
+method Sop($sop_instance_uid, $modality) {
+
+  unless (defined $sop_instance_uid and defined $modality) {
+    die "Posda::Nicknames2::Sop called with undefined parameters!";
+  }
+
+  $self->__sop_nickname($self->{project_name},
+                        $self->{site_name},
+                        $self->{subj_id},
+                        $sop_instance_uid,
+                        $modality);
+}
+
+method ToFiles($nickname) {
+
+  unless (defined $nickname) {
+    die "Posda::Nicknames2::ToFiles called with undefined parameters!";
+  }
+
+  $self->__nickname_to_file($self->{project_name},
+                            $self->{site_name},
+                            $self->{subj_id},
+                            $nickname);
 }
 #}}}
 
@@ -458,20 +510,6 @@ method __file_nickname ($project_name,
   return "$sop_nn";
 }
 
-method Sop($sop_instance_uid, $modality) {
-  $self->__sop_nickname($self->{project_name},
-                        $self->{site_name},
-                        $self->{subj_id},
-                        $sop_instance_uid,
-                        $modality);
-}
-
-method ToFiles($nickname) {
-  $self->__nickname_to_file($self->{project_name},
-                            $self->{site_name},
-                            $self->{subj_id},
-                            $nickname);
-}
 method __nickname_to_file ($project_name,
                            $site_name,
                            $subj_id,
