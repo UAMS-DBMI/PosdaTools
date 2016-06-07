@@ -70,6 +70,18 @@ method ToStudyUID($study_nn) {
                              $self->{subj_id}, 
                              $study_nn);
 }
+method ToSeriesUID($series_nn) {
+  return $self->__to_series_uid($self->{project_name}, 
+                             $self->{site_name}, 
+                             $self->{subj_id}, 
+                             $series_nn);
+}
+method ToSopUID($sop_nn) {
+  return $self->__to_sop_uid($self->{project_name}, 
+                             $self->{site_name}, 
+                             $self->{subj_id}, 
+                             $sop_nn);
+}
 #}}}
 
 #{{{ Private Methods
@@ -99,6 +111,26 @@ method __load_statements() {
       and site_name = ?
       and subj_id = ?
       and study_nickname = ?
+  };
+
+  $self->{sql_statements}->{select_series_uid} = qq{
+    select
+      series_instance_uid
+    from series_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and series_nickname = ?
+  };
+
+  $self->{sql_statements}->{select_sop_uid} = qq{
+    select distinct
+      sop_instance_uid
+    from sop_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and sop_nickname = ?
   };
 
   $self->{sql_statements}->{select_nn_file} = qq{
@@ -198,6 +230,29 @@ method __to_study_uid ($project_name,
 
   my $statement = $self->__statement('select_study_uid');
   $statement->execute($project_name, $site_name, $subj_id, $study_nickname);
+  return $statement->fetchrow_arrayref()->[0];
+}
+
+method __to_series_uid ($project_name,
+                       $site_name,
+                       $subj_id,
+                       $study_nickname) {
+  my $statement = $self->__statement('select_series_uid');
+  $statement->execute($project_name, $site_name, $subj_id, $study_nickname);
+  return $statement->fetchrow_arrayref()->[0];
+}
+
+method __to_sop_uid ($project_name,
+                       $site_name,
+                       $subj_id,
+                       $sop_nickname) {
+
+  # nickname could have a version component, get rid of it
+  $sop_nickname =~ /([^\[\]]+)/;
+  my $version_free = $1;
+
+  my $statement = $self->__statement('select_sop_uid');
+  $statement->execute($project_name, $site_name, $subj_id, $version_free);
   return $statement->fetchrow_arrayref()->[0];
 }
 
