@@ -7,6 +7,37 @@ use Data::Dumper;
 use DBI;
 
 use constant DEBUG => 0;
+use constant DBNAME => 'posda_nicknames';
+
+my $cache = {};
+my $connection;
+
+
+func __get_db_connection() {
+  if (not defined $connection) {
+    $connection = DBI->connect("dbi:Pg:dbname=" . DBNAME);
+  }
+
+  return $connection;
+}
+
+# Static method to return Nicknames2 objects from
+# the cache, and always reusing the database connection
+func get($project_name, $site_name, $subj_id) {
+  my $key = "$project_name||$site_name||$subj_id";
+  if (not defined $cache->{$key}) {
+    $cache->{$key} = Posda::Nicknames2->new(
+      __get_db_connection(),
+      $project_name, $site_name, $subj_id);
+  }
+
+  return $cache->{$key};
+}
+
+func clear() {
+  undef $cache;
+}
+
 
 #{{{ Public Methods
 method new($class: $connection, $project_name, $site_name, $subj_id) {
@@ -17,34 +48,154 @@ method new($class: $connection, $project_name, $site_name, $subj_id) {
     ndb => $connection
   };
 
-  # print "Posda::Nicknames2($project_name, $site_name, $subj_id)\n";
+  if (DEBUG) {
+    say STDERR "Posda::Nicknames2($project_name, $site_name, $subj_id)";
+  }
 
   bless $self, $class;
   $self->__init();
   return $self;
 }
 
+## Deprecated methods
+method Sop($sop_instance_uid, $modality) {
+  say STDERR "Posda::Nicknames2::Sop deprecated, use FromSop instead!";
+  return $self->FromSop($sop_instance_uid, $modality);
+}
 method Study($study_instance_uid) {
+  say STDERR "Posda::Nicknames2::Study deprecated, use FromStudy instead!";
+  return $self->FromStudy($study_instance_uid);
+}
+method Series($series_instance_uid) {
+  say STDERR "Posda::Nicknames2::Series deprecated, use FromSeries instead!";
+  return $self->FromSeries($series_instance_uid);
+}
+method File($sop_instance_uid, $digest, $modality) {
+  say STDERR "Posda::Nicknames2::File deprecated, use FromFile instead!";
+  return $self->FromFile($sop_instance_uid, $digest, $modality);
+}
+method ToStudyUID($study_nn) {
+  say STDERR "Posda::Nicknames2::ToStudyUID deprecated, use ToStudy instead!";
+  return $self->ToStudy($study_nn);
+}
+method ToSeriesUID($series_nn) {
+  say STDERR "Posda::Nicknames2::ToSeriesUID deprecated, use ToSeries instead!";
+  return $self->ToSeries($series_nn);
+}
+method ToSopUID($sop_nn) {
+  say STDERR "Posda::Nicknames2::ToSopUID deprecated, use ToSop instead!";
+  return $self->ToSop($sop_nn);
+}
+## End Deprecated methods
+
+method FromUnknown($uid) {
+  my $results = [];
+
+  # try file
+  my $statement = $self->{ndb}->prepare(qq{
+    select distinct
+      project_name,
+      site_name,
+      subj_id,
+      sop_nickname_copy as nickname,
+      'file' as nickname_type
+
+    from file_nickname
+    where sop_instance_uid = ?
+  });
+
+  $statement->execute($uid);
+  push @$results, @{$statement->fetchall_arrayref({})};
+
+  # try sop
+  my $sop_stmt = $self->{ndb}->prepare(qq{
+    select distinct
+      project_name,
+      site_name,
+      subj_id,
+      sop_nickname as nickname,
+      'sop' as nickname_type
+
+    from sop_nickname
+    where sop_instance_uid = ?
+  });
+
+  $sop_stmt->execute($uid);
+  push @$results, @{$sop_stmt->fetchall_arrayref({})};
+
+  # try series
+  my $series_stmt = $self->{ndb}->prepare(qq{
+    select distinct
+      project_name,
+      site_name,
+      subj_id,
+      series_nickname as nickname,
+      'series' as nickname_type
+
+    from series_nickname
+    where series_instance_uid = ?
+  });
+
+  $series_stmt->execute($uid);
+  push @$results, @{$series_stmt->fetchall_arrayref({})};
+
+  # try study
+  my $study_stmt = $self->{ndb}->prepare(qq{
+    select distinct
+      project_name,
+      site_name,
+      subj_id,
+      study_nickname as nickname,
+      'study' as nickname_type
+
+    from study_nickname
+    where study_instance_uid = ?
+  });
+
+  $study_stmt->execute($uid);
+  push @$results, @{$study_stmt->fetchall_arrayref({})};
+
+  # try for
+  my $for_stmt = $self->{ndb}->prepare(qq{
+    select distinct
+      project_name,
+      site_name,
+      subj_id,
+      for_nickname as nickname,
+      'for' as nickname_type
+
+    from for_nickname
+    where for_instance_uid = ?
+  });
+
+  $for_stmt->execute($uid);
+  push @$results, @{$for_stmt->fetchall_arrayref({})};
+
+
+  return $results;
+}
+
+method FromStudy($study_instance_uid) {
 
   unless (defined $study_instance_uid) {
-    die "Posda::Nicknames2::Study called with undefined parameters!";
+    die "Posda::Nicknames2::FromStudy called with undefined parameters!";
   }
 
   if (not defined $self->{study_cache}->{$study_instance_uid}) {
-    $self->{study_cache}->{$study_instance_uid} = 
-      $self->__study_nickname($self->{project_name}, 
-                              $self->{site_name}, 
-                              $self->{subj_id}, 
+    $self->{study_cache}->{$study_instance_uid} =
+      $self->__study_nickname($self->{project_name},
+                              $self->{site_name},
+                              $self->{subj_id},
                               $study_instance_uid);
   }
   return $self->{study_cache}->{$study_instance_uid};
 
 }
 
-method Series($series_instance_uid) {
+method FromSeries($series_instance_uid) {
 
   unless (defined $series_instance_uid) {
-    die "Posda::Nicknames2::Series called with undefined parameters!";
+    die "Posda::Nicknames2::FromSeries called with undefined parameters!";
   }
 
   if (not defined $self->{series_cache}->{$series_instance_uid}) {
@@ -57,10 +208,13 @@ method Series($series_instance_uid) {
   return $self->{series_cache}->{$series_instance_uid};
 }
 
-method File($sop_instance_uid, $digest, $modality) {
-  unless (defined $sop_instance_uid and defined $digest and defined $modality) {
-    die "Posda::Nicknames2::File called without all parameters!";
+method FromFile($sop_instance_uid, $digest, $modality) {
+
+  unless (defined $sop_instance_uid and 
+          defined $digest and defined $modality) {
+    die "Posda::Nicknames2::FromFile called with undefined parameters!";
   }
+
   if (not defined $self->{file_cache}->{$sop_instance_uid}->
                   {$digest}->{$modality}) {
     $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality} =
@@ -74,22 +228,20 @@ method File($sop_instance_uid, $digest, $modality) {
   return $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality};
 }
 
-method ToStudyUID($study_nn) {
+method ToStudy($study_nn) {
 
   unless (defined $study_nn) {
-    die "Posda::Nicknames2::ToStudyUID called with undefined parameters!";
+    die "Posda::Nicknames2::ToStudy called with undefined parameters!";
   }
 
   return $self->__to_study_uid($self->{project_name}, 
-                             $self->{site_name}, 
-                             $self->{subj_id}, 
-                             $study_nn);
+    $self->{site_name}, $self->{subj_id}, $study_nn);
 }
 
-method ToSeriesUID($series_nn) {
+method ToSeries($series_nn) {
 
   unless (defined $series_nn) {
-    die "Posda::Nicknames2::ToSeriesUID called with undefined parameters!";
+    die "Posda::Nicknames2::ToSeries called with undefined parameters!";
   }
 
   return $self->__to_series_uid($self->{project_name}, 
@@ -98,7 +250,7 @@ method ToSeriesUID($series_nn) {
                              $series_nn);
 }
 
-method ToSopUID($sop_nn) {
+method ToSop($sop_nn) {
 
   unless (defined $sop_nn) {
     die "Posda::Nicknames2::ToSopUID called with undefined parameters!";
@@ -110,10 +262,10 @@ method ToSopUID($sop_nn) {
                              $sop_nn);
 }
 
-method Sop($sop_instance_uid, $modality) {
+method FromSop($sop_instance_uid, $modality) {
 
   unless (defined $sop_instance_uid and defined $modality) {
-    die "Posda::Nicknames2::Sop called with undefined parameters!";
+    die "Posda::Nicknames2::FromSop called with undefined parameters!";
   }
 
   $self->__sop_nickname($self->{project_name},
@@ -121,6 +273,30 @@ method Sop($sop_instance_uid, $modality) {
                         $self->{subj_id},
                         $sop_instance_uid,
                         $modality);
+}
+
+method FromFor($sop_instance_uid) {
+
+  unless (defined $sop_instance_uid) {
+    die "Posda::Nicknames2::FromFor called with undefined parameters!";
+  }
+
+  $self->__for_nickname($self->{project_name},
+                        $self->{site_name},
+                        $self->{subj_id},
+                        $sop_instance_uid);
+}
+
+method ToFor($sop_instance_uid) {
+
+  unless (defined $sop_instance_uid) {
+    die "Posda::Nicknames2::ToFor called with undefined parameters!";
+  }
+
+  $self->__to_for_uid($self->{project_name},
+                      $self->{site_name},
+                      $self->{subj_id},
+                      $sop_instance_uid);
 }
 
 method ToFiles($nickname) {
@@ -175,6 +351,16 @@ method __load_statements() {
       and series_nickname = ?
   };
 
+  $self->{sql_statements}->{select_for_uid} = qq{
+    select
+      for_instance_uid
+    from for_nickname
+    where project_name = ?
+      and site_name = ?
+      and subj_id = ?
+      and for_nickname = ?
+  };
+
   $self->{sql_statements}->{select_sop_uid} = qq{
     select distinct
       sop_instance_uid
@@ -207,11 +393,15 @@ method __load_statements() {
       and sop_nickname_copy = ?
   };
 
-  $self->{sql_statements}->{lock_sequence_for_update} =
-    "select * from nickname_sequence where\n" .
-    "project_name = ? and site_name = ? and subj_id = ?\n" .
-    "and nickname_type = ?\n" .
-    "FOR UPDATE";
+  $self->{sql_statements}->{lock_sequence_for_update} = qq{
+    select * 
+    from nickname_sequence 
+    where project_name = ? 
+      and site_name = ? 
+      and subj_id = ?
+      and nickname_type = ?
+    FOR UPDATE
+  };
 
   $self->{sql_statements}->{update_nn_seq} =
     "update nickname_sequence set next_value = ? where\n" .
@@ -223,16 +413,37 @@ method __load_statements() {
     "values(?, ?, ?, ?, 1)";
 
 
-  $self->{sql_statements}->{select_study_nn} =
-    "select study_nickname from study_nickname where\n" .
-    "project_name = ? and site_name = ? and subj_id = ?\n" .
-    "and study_instance_uid = ?";
+  $self->{sql_statements}->{select_study_nn} = qq{
+    select study_nickname 
+    from study_nickname 
+    where project_name = ? 
+      and site_name = ? 
+      and subj_id = ?
+      and study_instance_uid = ?
+  };
 
-  $self->{sql_statements}->{insert_study_nn} =
-    "insert into study_nickname(" .
-    "project_name, site_name, subj_id, study_nickname, study_instance_uid)\n" .
-    "values(?, ?, ?, ?, ?)";
+  $self->{sql_statements}->{select_for_nn} = qq{
+    select for_nickname 
+    from for_nickname 
+    where project_name = ? 
+      and site_name = ? 
+      and subj_id = ?
+      and for_instance_uid = ?
+  };
 
+  $self->{sql_statements}->{insert_study_nn} = qq{
+    insert into study_nickname(
+      project_name, site_name, subj_id, 
+      study_nickname, study_instance_uid)
+    values(?, ?, ?, ?, ?)
+  };
+
+  $self->{sql_statements}->{insert_for_nn} = qq{
+    insert into for_nickname(
+      project_name, site_name, subj_id, 
+      for_nickname, for_instance_uid)
+    values(?, ?, ?, ?, ?)
+  };
 
   $self->{sql_statements}->{select_series_nn} =
     "select series_nickname from series_nickname where\n" .
@@ -282,7 +493,13 @@ method __to_study_uid ($project_name,
 
   my $statement = $self->__statement('select_study_uid');
   $statement->execute($project_name, $site_name, $subj_id, $study_nickname);
-  return $statement->fetchrow_arrayref()->[0];
+
+  my $results = $statement->fetchrow_arrayref();
+  if (defined $results->[0]) {
+    return $results->[0];
+  } else {
+    return undef;
+  }
 }
 
 method __to_series_uid ($project_name,
@@ -291,7 +508,28 @@ method __to_series_uid ($project_name,
                        $study_nickname) {
   my $statement = $self->__statement('select_series_uid');
   $statement->execute($project_name, $site_name, $subj_id, $study_nickname);
-  return $statement->fetchrow_arrayref()->[0];
+
+  my $results = $statement->fetchrow_arrayref();
+  if (defined $results->[0]) {
+    return $results->[0];
+  } else {
+    return undef;
+  }
+}
+
+method __to_for_uid ($project_name,
+                       $site_name,
+                       $subj_id,
+                       $for_nickname) {
+  my $statement = $self->__statement('select_for_uid');
+  $statement->execute($project_name, $site_name, $subj_id, $for_nickname);
+
+  my $results = $statement->fetchrow_arrayref();
+  if (defined $results->[0]) {
+    return $results->[0];
+  } else {
+    return undef;
+  }
 }
 
 method __to_sop_uid ($project_name,
@@ -305,7 +543,79 @@ method __to_sop_uid ($project_name,
 
   my $statement = $self->__statement('select_sop_uid');
   $statement->execute($project_name, $site_name, $subj_id, $version_free);
-  return $statement->fetchrow_arrayref()->[0];
+
+  my $results = $statement->fetchrow_arrayref();
+  if (defined $results->[0]) {
+    return $results->[0];
+  } else {
+    return undef;
+  }
+}
+
+method __for_nickname ($project_name, 
+                       $site_name, 
+                       $subj_id, 
+                       $for_instance_uid) {
+
+  my $ndb = $self->{ndb};
+  $self->__statement('start_trans')->execute;
+
+  my $select_stmt = $self->__statement('select_for_nn');
+
+  $select_stmt->execute(
+    $project_name, $site_name, $subj_id, $for_instance_uid);
+
+  my @rows;
+
+  while (my $row = $select_stmt->fetchrow_hashref()) { 
+    push @rows, $row;
+  }
+
+  if (@rows > 1) {
+     die "multiple FoR rows for project: $project_name, " .
+      "site: $site_name, study: $for_instance_uid, subj: $subj_id";
+  }
+
+  if (@rows == 1) { 
+    $self->__statement('unlock')->execute; 
+    return $rows[0]->{for_nickname};
+  }
+
+  
+  my $lock = $self->__statement('lock_sequence_for_update');
+
+  $lock->execute(
+    $project_name, $site_name, $subj_id, "for");
+
+  my $seq;
+  @rows = ();
+
+  while (my $row = $lock->fetchrow_hashref()){
+    push @rows, $row;
+  }
+
+  if (@rows > 1) {
+    $self->__statement('abort')->execute();
+    die "multiple sequences for $project_name, $site_name, $subj_id, for";
+  }
+
+  if (@rows == 1) {
+    $seq = $rows[0]->{next_value};
+    my $next_value = $seq + 1;
+    $self->__statement('update_nn_seq')->execute(
+      $next_value, $project_name, $site_name, $subj_id, 'for');
+  } else {
+    $seq = 0;
+    $self->__statement('new_nn_seq')->execute(
+      $project_name, $site_name, $subj_id, 'for');
+  }
+
+  my $nn = "FOR_$seq";
+  $self->__statement('insert_for_nn')->execute(
+    $project_name, $site_name, $subj_id, $nn, $for_instance_uid);
+  $self->__statement('unlock')->execute();
+
+  return $nn;
 }
 
 method __study_nickname ($project_name, 
