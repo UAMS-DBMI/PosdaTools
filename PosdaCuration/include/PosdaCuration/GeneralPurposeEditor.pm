@@ -130,15 +130,15 @@ sub InitializeEdit{
     my $modality = $DicomInfo->{$f}->{modality};
     my $sop_inst_uid = $DicomInfo->{$f}->{sop_inst_uid};
     my $digest = $DicomInfo->{$f}->{digest};
-    my $f_nn = $this->{nn}->File($sop_inst_uid, $digest, $modality);
+    my $f_nn = $this->{nn}->FromFile($sop_inst_uid, $digest, $modality);
 
     $this->{Nicknames}->{f_nn}->{$f_nn} = $f;
     $this->{Nicknames}->{r_f_nn}->{$f} = $f_nn;
     my $uid_nn = $f_nn;
     $this->{Nicknames}->{uid_nn}->{$f_nn} = $f;
-    my $st_nn = $this->{nn}->Study($DicomInfo->{$f}->{study_uid});
+    my $st_nn = $this->{nn}->FromStudy($DicomInfo->{$f}->{study_uid});
     $this->{Nicknames}->{study_nn}->{$st_nn} = 1;
-    my $series_nn = $this->{nn}->Series($DicomInfo->{$f}->{series_uid});
+    my $series_nn = $this->{nn}->FromSeries($DicomInfo->{$f}->{series_uid});
     $this->{Nicknames}->{series_nn}->{$series_nn}->{$modality} += 1;
     $this->{Modalities}->{$modality} = 1;
     $this->{Summary}->{$st_nn}->{$series_nn}->{modality}->{$modality} = 1;
@@ -283,7 +283,7 @@ sub FileDropDown{
     my $modality = $f_info->{modality};
     my $sop_inst_uid = $f_info->{sop_inst_uid};
     my $digest = $f_info->{digest};
-    my $f_nn = $this->{nn}->File($sop_inst_uid, $digest, $modality);
+    my $f_nn = $this->{nn}->FromFile($sop_inst_uid, $digest, $modality);
 
     $files{$f_nn} = 1;
   }

@@ -1,5 +1,3 @@
-#!/usr/bin/perl -w
-#
 use strict;
 package PosdaCuration::InfoExpander;
 use Posda::ElementNames;
@@ -65,7 +63,7 @@ sub ExpandStudyHierarchy{
 
   # build list of studies along with their nicknames
   my $study_nicknames = {};
-  map {$study_nicknames->{$nn->Study($_)} = $_} keys %$studies;
+  map {$study_nicknames->{$nn->FromStudy($_)} = $_} keys %$studies;
 
   for my $study_nn (sort nnsort (keys %$study_nicknames)) {
     my $study_uid = $study_nicknames->{$study_nn};
@@ -118,7 +116,7 @@ sub ExpandStudyHierarchy{
     });
 
     my $series_nicknames = {};
-    map {$series_nicknames->{$nn->Series($_)} = $_} keys %{$study->{series}};
+    map {$series_nicknames->{$nn->FromSeries($_)} = $_} keys %{$study->{series}};
 
     for my $series_nn (sort nnsort (keys %$series_nicknames)) {
       # print "$series_nn\n";
@@ -186,7 +184,7 @@ sub ExpandStudyHierarchyExtraction{
 
   # build list of studies along with their nicknames
   my $study_nicknames = {};
-  map {$study_nicknames->{$nn->Study($studies->{$_}->{uid})} = $_} keys %$studies;
+  map {$study_nicknames->{$nn->FromStudy($studies->{$_}->{uid})} = $_} keys %$studies;
 
   for my $study_nn (sort nnsort (keys %$study_nicknames)) {
     my $study = $study_nicknames->{$study_nn};
@@ -219,7 +217,7 @@ sub ExpandStudyHierarchyExtraction{
     my $s_st = $studies->{$study}->{series};
 
     my $series_nicknames = {};
-    map {$series_nicknames->{$nn->Series($s_st->{$_}->{uid})} = $_} keys %$s_st;
+    map {$series_nicknames->{$nn->FromSeries($s_st->{$_}->{uid})} = $_} keys %$s_st;
 
     for my $series_nn (sort nnsort (keys %$series_nicknames)) {
       my $series = $series_nicknames->{$series_nn};
@@ -276,7 +274,7 @@ sub ExpandStudyHierarchyWithPatientInfo{
     my $pname = $studies->{$study}->{pname};
     # my $study_nn =
     #   $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
-    my $study_nn = $nn->Study($study_uid);
+    my $study_nn = $nn->FromStudy($study_uid);
     $http->queue('<tr><td colspan="3">' . $study_nn .
     " (pid = $pid; pname = $pname)" .
     '</td>');
@@ -294,7 +292,7 @@ sub ExpandStudyHierarchyWithPatientInfo{
         $studies->{$study}->{series}->{$series}->{uid};
       # my $series_nn =
       #   $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
-      my $series_nn = $nn->Series($series_uid);
+      my $series_nn = $nn->FromSeries($series_uid);
       my $s = $studies->{$study}->{series}->{$series};
       $this->RefreshEngine($http, $dyn,
         '<tr><td>==&gt;</td><td><table width="100%"><tr>' .
@@ -330,9 +328,9 @@ sub ExpandStudyHierarchyWithPatientInfo{
       my $fbd = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest};
       for my $dig (keys %digests) {
         my $dicom = $fbd->{$dig};
-        my $f_uid_nn = $nn->File($dicom->{sop_inst_uid},
-                                 $dig,
-                                 $dicom->{modality});
+        my $f_uid_nn = $nn->FromFile($dicom->{sop_inst_uid},
+                                     $dig,
+                                     $dicom->{modality});
 
         push(@files, $f_uid_nn);
 
@@ -546,6 +544,13 @@ print STDERR "Series_nn: $series_nn, Series_uid: $series_uid\n";
 sub FilenameFromDigest {
   # Convert a digest into a filename. Requires $this->{DisplayInfoIn}
   my ($this, $digest) = @_;
+  
+  if (not defined $this->{DisplayInfoIn}->{dicom_info}->{DigestToFile}) {
+    # Reverse the FilesToDigest hash to get 
+    $this->{DisplayInfoIn}->{dicom_info}->{DigestToFile} = 
+      {reverse %{$this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}}};
+  }
+
   my $file = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$digest}->{file};
   if (not defined $file) {
     print STDERR "FilenameFromDigest: No file found for digest $digest\n";
@@ -646,10 +651,10 @@ sub ErrorReportCommon{
       if(exists $err->{$i}){
         $http->queue("<li>$i: $err->{$i}");
         if($i eq "study_uid"){
-          my $nn = $this->{nn}->Study($err->{$i});
+          my $nn = $this->{nn}->FromStudy($err->{$i});
           $http->queue(" ($nn)");
         } elsif($i eq "series_uid"){
-          my $nn = $this->{nn}->Series($err->{$i});
+          my $nn = $this->{nn}->FromSeries($err->{$i});
           $http->queue(" ($nn)");
         } elsif($i eq "ele"){
           my $ele_name = Posda::ElementNames::FromSig($err->{$i});
