@@ -25,7 +25,7 @@
   "IntakeDatabaseHost" : "144.30.1.71",
   "PublicDatabaseHost" : "144.30.1.74",
 
-  "UserInfoDir" : "/cache/bbennett/UserData",
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
   "DicomDestinations" : {
     "Quasar" : {
       "host" : "dbmi-imac.ad.uams.edu",
