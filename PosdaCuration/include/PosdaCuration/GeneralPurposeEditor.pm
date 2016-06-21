@@ -574,7 +574,9 @@ sub RecalcEdits{
         @affected_files = $this->GetEleMatchingFiles($rule->{condition}->[1],
           $rule->{condition}->[2]);
       } elsif($rule->{condition}->[0] eq "5"){
-        @affected_files = $this->GetMatchingFile($rule->{condition}->[1]);
+        # @affected_files = $this->GetMatchingFile($rule->{condition}->[1]);
+        @affected_files = $this->FilenameFromDigests(
+          $this->{nn}->ToFiles($rule->{condition}->[1]));
       }
       $rule->{affected_files} = \@affected_files;
       for my $f (@affected_files){

@@ -544,14 +544,15 @@ print STDERR "Series_nn: $series_nn, Series_uid: $series_uid\n";
 sub FilenameFromDigest {
   # Convert a digest into a filename. Requires $this->{DisplayInfoIn}
   my ($this, $digest) = @_;
-  
+
   if (not defined $this->{DisplayInfoIn}->{dicom_info}->{DigestToFile}) {
     # Reverse the FilesToDigest hash to get 
     $this->{DisplayInfoIn}->{dicom_info}->{DigestToFile} = 
       {reverse %{$this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}}};
   }
 
-  my $file = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$digest}->{file};
+  my $file = $this->{DisplayInfoIn}->{dicom_info}->{DigestToFile}->{$digest};
+
   if (not defined $file) {
     print STDERR "FilenameFromDigest: No file found for digest $digest\n";
   }
@@ -570,7 +571,6 @@ sub FilenameFromDigests {
 
   my $file;
   for my $digest (@$digests) {
-    print "Processing $digest\n";
     $file = $this->FilenameFromDigest($digest);
     if (defined $file) {
       return $file;
