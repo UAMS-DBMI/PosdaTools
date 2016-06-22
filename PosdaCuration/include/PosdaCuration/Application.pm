@@ -2220,6 +2220,8 @@ sub ShowInfo{
     Collection => $this->{SelectedCollection},
     Site => $this->{SelectedSite},
   };
+  $this->{nn} = Posda::Nicknames2::get($this->{SelectedCollection}, 
+                                       $this->{SelectedSite}, $subj);
   $this->{DisplayInfoIn}->{rev_hist} =
     $this->{ExtractionsHierarchies}->{$dyn->{subj}}->{rev_hist};
   for my $rev(keys %{$this->{DisplayInfoIn}->{rev_hist}->{Revisions}}){
@@ -3064,7 +3066,7 @@ sub RenderRelinkSsMenu{
     my $series_nn = $s->{series_nn};
     if($#{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}} == 0){
       my $file = $this->{DisplayInfoIn}->{sop_to_files}->{$sop}->[0];
-      my $digest = $this->{DisplayInfoIn}->{dicom_info}->FilesToDigest->{$file};
+      my $digest = $this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}->{$file};
       my $struct_nn = $this->{nn}->FromFile($sop, $digest, "RTSTRUCT");
       my $series_desc = $this->GetSeriesDescFromFile($file);
       unless(exists $this->{DisplayInfoIn}->{CheckedSs}->{$file}){
