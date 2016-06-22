@@ -220,7 +220,7 @@
        "CreationArgs": [
          64611,
          ["Config", "DicomReceiver"],
-         "/cache/bbennett/DicomReceiver",
+         "POSDA_CACHE_ROOT/DicomReceiver",
        ],
     },
     "ExtractionManager": {
@@ -228,7 +228,7 @@
        "CreationArgs": [
          64612,
          ["Config", "ExtractionManager"],
-         "/cache/bbennett/Data/HierarchicalExtractions",
+         "POSDA_CACHE_ROOT/Data/HierarchicalExtractions",
        ],
     },
     "DbFileImport": {

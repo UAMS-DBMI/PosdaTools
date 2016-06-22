@@ -239,8 +239,167 @@ method RetrieveInfo() {
         }
       }
     }
+    Dispatch::Select::Background->new($this->EnsureCurrentRevision)->queue;
   };
   return $sub;
+}
+sub OutOfDate{
+  my($this, $http, $dyn) = @_;
+
+  $http->queue(qq{
+    <h3>Error: Out of Date</h3>
+    <p>
+      This scan includes files of the wrong revision for at least one of it's
+      subjects. You must rescan or remove the offending revisions.
+    </p>
+
+    <table class="table">
+      <tr>
+        <th>Subject</th>
+        <th>Current Revision</th>
+        <th>Revision in this Scan</th>
+      </tr>
+  });
+
+  for my $subj (keys %{$this->{RevisionErrors}}) {
+    my ($file, $current) = @{$this->{RevisionErrors}->{$subj}};
+    $http->queue(qq{
+      <tr>
+        <td>$subj</td>
+        <td>$current</td>
+        <td>$file</td>
+      </tr>
+    })
+  }
+
+  $http->queue("</table>");
+
+  $this->NotSoSimpleButton($http, {
+    op => "StartOver",
+    caption => "Start Over",
+    sync => "Update();",
+  });
+}
+sub OutOfDateMenu{
+  my($this, $http, $dyn) = @_;
+}
+sub StartOver{
+  my($this, $http, $dyn) = @_;
+
+  $this->{Mode} = "Initialized";
+  $this->{ContentMode} = "WaitingForTag";
+
+  delete $this->{Collection};
+  delete $this->{RevisionErrors};
+}
+
+sub EnsureCurrentRevision{
+  my ($this) = @_;
+
+  return sub {
+    print STDERR "EnsureCurrentRevision running!\n";
+
+    my $revisions = {};
+    my $errors = {};
+
+    for my $f (keys %{$this->{FileInfo}}) {
+      my $subj = $this->{FileInfo}->{$f}->{patient_id};
+      if (defined $errors->{$subj}) {
+        # No need to scan it if we already 
+        # know there are erros for this subject
+        next;
+      }
+      if (not defined $revisions->{$subj}) {
+        $revisions->{$subj} = $this->GetCurrentRev($f, $subj);
+      }
+
+      my $file_rev = $this->GetFileRev($f, $subj);
+
+      if ($file_rev != $revisions->{$subj}) {
+        $errors->{$subj} = [$file_rev, $revisions->{$subj}];
+      }
+    }
+
+    if (%$errors) {
+      $this->{RevisionErrors} = $errors;
+      $this->{ContentMode} = 'OutOfDate';
+      $this->{Mode} = "OutOfDateMenu";
+    }
+  };
+}
+
+sub GetCurrentRev {
+  my ($this, $file, $subj) = @_;
+
+  # determine the path to the rev_hist.pinfo
+  $file =~ /(.*$subj)\/revisions\/(\d+)\/files\//;
+
+  my $rev_hist_file = "$1/rev_hist.pinfo";
+  my $file_rev = $2;
+
+  my ($rev_hist, $current_rev);
+
+  eval {
+    $rev_hist = Storable::retrieve($rev_hist_file);
+  };
+
+  if($@){
+    print STDERR "Can't retrieve from $rev_hist_file\n";
+  }
+
+  if(exists $rev_hist->{CurrentRev}) {
+    $current_rev = $rev_hist->{CurrentRev}
+  } else {
+    print STDERR "No CurrentRev in $rev_hist_file\n";
+    $current_rev = 0;
+  }
+
+  return $current_rev;
+}
+
+sub GetFileRev {
+  my ($this, $file, $subj) = @_;
+
+  # determine the path to the rev_hist.pinfo
+  $file =~ /(.*$subj)\/revisions\/(\d+)\/files\//;
+
+  my $file_rev = $2;
+
+  return $file_rev;
+}
+sub Info{
+  my($this, $http, $dyn) = @_;
+  $this->RefreshEngine($http, $dyn,
+      '<?dyn="NotSoSimpleButton" op="ShowSelections" ' .
+      'caption="Show Selections" sync="Update();"?><br>' .
+      "Info loaded: $this->{StringCount} unique text strings<br>" .
+      'Counts By Vr:<table border><tr><th>VR</th><th>Count</th>' .
+      '<th>Display</th></tr>');
+  for my $vr (sort keys %{$this->{VrCounts}}){
+    $http->queue("<tr><td>$vr</td><td>$this->{VrCounts}->{$vr}</td><td>" .
+      $this->CheckBoxDelegate("SelectedVr", $vr,
+        exists($this->{SelectedVrs}->{$vr}),
+        { op => "SetSelectedVr", sync => "Update();" }
+      ) .
+      "</td></tr>");
+  }
+  $http->queue("</table>");
+  if(exists $this->{SelectedVrs}->{UI}){ 
+    $this->UidOptions($http, $dyn);
+  }
+  if(
+    exists $this->{SelectedVrs}->{DA} ||
+    exists $this->{SelectedVrs}->{DT}
+  ){ 
+    $this->DateOptions($http, $dyn);
+  }
+  if(
+    exists $this->{SelectedVrs}->{OB} ||
+    exists $this->{SelectedVrs}->{UN} ||
+    exists $this->{SelectedVrs}->{DS}
+  ){
+    $this->OtherOptions($http, $dyn);
+  }
 }
 
 method Info($http, $dyn) {

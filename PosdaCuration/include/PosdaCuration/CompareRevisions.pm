@@ -8,7 +8,7 @@ use Posda::HttpApp::JsController;
 use Posda::UUID;
 use Storable;
 use PosdaCuration::InfoExpander;
-use Posda::Nicknames2Factory;
+use Posda::Nicknames2;
 use Debug;
 my $dbg = sub { print @_ };
 package PosdaCuration::CompareRevisions;
@@ -152,7 +152,7 @@ sub Initialize{
   $this->{Collection} = $DII->{Collection};
   $this->{Site} = $DII->{Site};
   $this->{Subject} = $DII->{subj};
-  $this->{nn} = Posda::Nicknames2Factory::get($this->{Collection},
+  $this->{nn} = Posda::Nicknames2::get($this->{Collection},
                                               $this->{Site},
                                               $this->{Subject});
   $this->{Revisions} = [];
@@ -325,14 +325,14 @@ sub ExpandDiffHierarchy{
     </tr>
   });
   for my $study (sort keys %{$this->{DispFileHist}}){
-    my $study_nn = $this->{nn}->Study($study);
+    my $study_nn = $this->{nn}->FromStudy($study);
     my @series = sort keys %{$this->{DispFileHist}->{$study}};
     my $num_rows = (@series) * 3;
     $http->queue(qq{
       <td rowspan="$num_rows" valign="top">$study_nn</td>
     });
     for my $series (@series){
-      my $series_nn = $this->{nn}->Series($series);
+      my $series_nn = $this->{nn}->FromSeries($series);
       $http->queue(qq{<td rowspan="3" valign="top">$series_nn</td>});
       $this->RefreshEngine($http, $dyn, qq{
         <td>
@@ -473,7 +473,7 @@ sub RevDropDown{
     my $dig = $this->{DispFileHist}->{$study}->{$series}->{$i}->[0]->[1];
     my $d_info = $this->{FilesByDigest}->{$dig};
 
-    my $file_nn = $this->{nn}->File($d_info->{sop_inst_uid},
+    my $file_nn = $this->{nn}->FromFile($d_info->{sop_inst_uid},
                                     $d_info->{digest},
                                     $d_info->{modality});
 
@@ -510,7 +510,7 @@ sub CorrespondingFile{
   }
   my $d_info = $this->{FilesByDigest}->{$dig};
 
-  my $file_nn = $this->{nn}->File($d_info->{sop_inst_uid},
+  my $file_nn = $this->{nn}->FromFile($d_info->{sop_inst_uid},
                                   $d_info->{digest},
                                   $d_info->{modality});
   $http->queue("$file_nn");

@@ -2,7 +2,7 @@
 #
 use strict;
 package Posda::HttpApp::JsController;
-use Method::Signatures;
+use Method::Signatures::Simple;
 use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;

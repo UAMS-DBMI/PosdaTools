@@ -17,6 +17,7 @@ use Digest::MD5;
 use JSON;
 use Debug;
 use Storable;
+use Data::Dumper;
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -314,8 +315,8 @@ sub SelectReport{
     return;
   }
   $this->{Collection} = $dyn->{collection};
-  $this->{Site} = $dyn->{Site};
-  $this->{Round} = $dyn->{Round};
+  $this->{Site} = $dyn->{site};
+  $this->{Round} = $dyn->{round};
   $this->{file} = $dyn->{file};
   $this->{selections_file} = $dyn->{selections};
   $this->{submission_file} = $dyn->{submission};
@@ -414,8 +415,136 @@ sub RetrieveInfo{
     $this->{Sdates} = \%s_date;
     $this->{FileInfo} = \%f_info;
     $this->{PrivateTagInfo} = \%pt_info;
+
+
+    Dispatch::Select::Background->new($this->EnsureCurrentRevision)->queue;
+
   };
   return $sub;
+}
+sub OutOfDate{
+  my($this, $http, $dyn) = @_;
+
+  $http->queue(qq{
+    <h3>Error: Out of Date</h3>
+    <p>
+      This scan includes files of the wrong revision for at least one of it's
+      subjects. You must rescan or remove the offending revisions.
+    </p>
+
+    <table class="table">
+      <tr>
+        <th>Subject</th>
+        <th>Current Revision</th>
+        <th>Revision in this Scan</th>
+      </tr>
+  });
+
+  for my $subj (keys %{$this->{RevisionErrors}}) {
+    my ($file, $current) = @{$this->{RevisionErrors}->{$subj}};
+    $http->queue(qq{
+      <tr>
+        <td>$subj</td>
+        <td>$current</td>
+        <td>$file</td>
+      </tr>
+    })
+  }
+
+  $http->queue("</table>");
+
+  $this->NotSoSimpleButton($http, {
+    op => "StartOver",
+    caption => "Start Over",
+    sync => "Update();",
+  });
+}
+sub OutOfDateMenu{
+  my($this, $http, $dyn) = @_;
+}
+sub StartOver{
+  my($this, $http, $dyn) = @_;
+
+  $this->{Mode} = "Initialized";
+  $this->{ContentMode} = "ContentSelecting";
+
+  delete $this->{Collection};
+  delete $this->{RevisionErrors};
+}
+
+sub EnsureCurrentRevision{
+  my ($this) = @_;
+
+  return sub {
+    print STDERR "EnsureCurrentRevision running!\n";
+
+    my $revisions = {};
+    my $errors = {};
+
+    for my $f (keys %{$this->{FileInfo}}) {
+      my $subj = $this->{FileInfo}->{$f}->{patient_id};
+      if (defined $errors->{$subj}) {
+        # No need to scan it if we already 
+        # know there are erros for this subject
+        next;
+      }
+      if (not defined $revisions->{$subj}) {
+        $revisions->{$subj} = $this->GetCurrentRev($f, $subj);
+      }
+
+      my $file_rev = $this->GetFileRev($f, $subj);
+
+      if ($file_rev != $revisions->{$subj}) {
+        $errors->{$subj} = [$file_rev, $revisions->{$subj}];
+      }
+    }
+
+    if (%$errors) {
+      $this->{RevisionErrors} = $errors;
+      $this->{ContentMode} = 'OutOfDate';
+      $this->{Mode} = "OutOfDateMenu";
+    }
+  };
+}
+
+sub GetCurrentRev {
+  my ($this, $file, $subj) = @_;
+
+  # determine the path to the rev_hist.pinfo
+  $file =~ /(.*$subj)\/revisions\/(\d+)\/files\//;
+
+  my $rev_hist_file = "$1/rev_hist.pinfo";
+  my $file_rev = $2;
+
+  my ($rev_hist, $current_rev);
+
+  eval {
+    $rev_hist = Storable::retrieve($rev_hist_file);
+  };
+
+  if($@){
+    print STDERR "Can't retrieve from $rev_hist_file\n";
+  }
+
+  if(exists $rev_hist->{CurrentRev}) {
+    $current_rev = $rev_hist->{CurrentRev}
+  } else {
+    print STDERR "No CurrentRev in $rev_hist_file\n";
+    $current_rev = 0;
+  }
+
+  return $current_rev;
+}
+
+sub GetFileRev {
+  my ($this, $file, $subj) = @_;
+
+  # determine the path to the rev_hist.pinfo
+  $file =~ /(.*$subj)\/revisions\/(\d+)\/files\//;
+
+  my $file_rev = $2;
+
+  return $file_rev;
 }
 sub Info{
   my($this, $http, $dyn) = @_;

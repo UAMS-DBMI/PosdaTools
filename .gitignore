@@ -3,3 +3,4 @@ tags
 *.log
 test.pl
 nohup.out
+__pycache__

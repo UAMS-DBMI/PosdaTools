@@ -11,7 +11,6 @@ use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::Nicknames2;
-use Posda::Nicknames2Factory;
 use Posda::UUID;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
@@ -989,7 +988,7 @@ sub NewQuery{
   delete $this->{CompareInfoPublic};
   $this->ClearIntakeData();
   $this->ClearPublicData();
-  Posda::Nicknames2Factory::clear();
+  Posda::Nicknames2::clear();
 }
 sub ExpandRows{
   my($this, $http, $dyn) = @_;
@@ -1105,7 +1104,7 @@ sub ExpandSelectedDbInfo{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
-  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  my $nn = Posda::Nicknames2::get($col, $site, $subj);
   $this->{nn} = $nn;
   my $studies = $this->{DbResults}->{$subj}->{studies};
   $this->ExpandStudyHierarchy($http, $dyn, $studies, $nn);
@@ -1122,7 +1121,7 @@ sub ExpandExtraction{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
-  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  my $nn = Posda::Nicknames2::get($col, $site, $subj);
   $this->{nn} = $nn;
   if(exists $this->{DirectoryLocks}->{$col}->{$site}->{$subj}){
     my $lock_status = $this->{DirectoryLocks}->{$col}->{$site}->{$subj};
@@ -1273,7 +1272,7 @@ sub ExpandExtractionStudyInfo{
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
   my $subj = $dyn->{subj};
-  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  my $nn = Posda::Nicknames2::get($col, $site, $subj);
   $this->{nn} = $nn;
   unless(exists $this->{InfoSel}->{$col}->{$site}->{$subj}){
     $this->{InfoSel}->{$col}->{$site}->{$subj} = 0;
@@ -2426,7 +2425,7 @@ sub ExpandExtractedInfo{
   my $subj = $this->{DisplayInfoIn}->{subj};
   my $col = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
-  my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+  my $nn = Posda::Nicknames2::get($col, $site, $subj);
   $this->{nn} = $nn;
   $this->ExpandStudyHierarchyWithPatientInfo($http, $dyn,
     $this->{ExtractionsHierarchies}->{$subj}->{hierarchy}->{$subj}->{studies}, $nn);
@@ -2646,7 +2645,7 @@ sub SubSendSelection{
   my %studies;
   my $hierarchy = $this->{DisplayInfoIn}->{hierarchy_by_uid};
   for my $study (sort keys %{$hierarchy}){
-    my $study_nn = $this->{nn}->Study($study);
+    my $study_nn = $this->{nn}->FromStudy($study);
     $studies{$study_nn} = $study;
   }
   unless(
@@ -2740,7 +2739,7 @@ sub SendThisExtraction{
   ){
     $new_args->[0] = "SendFilesInStudy";
     my $study_nn = $this->{DisplayInfoIn}->{SelectedStudyForSend};
-    my $study_uid = $this->{nn}->ToStudyUID($study_nn);
+    my $study_uid = $this->{nn}->ToStudy($study_nn);
 
     push @$new_args, "SelectedStudy: $study_uid";
   }
@@ -2844,7 +2843,7 @@ sub RenderSplitBySeriesDescMenu{
       }
       if($num_images_in_series == $num_distinct_values){
         $split_by_series_needed = 1;
-        my $series_nn = $this->{nn}->Series($i->{series_uid});
+        my $series_nn = $this->{nn}->FromSeries($i->{series_uid});
         push @series_to_split_on_desc, {
           series => $i->{series_uid},
           series_nn => $series_nn,
@@ -3014,7 +3013,7 @@ sub RenderRehashSsMenu{
   for my $i (@{$this->{DisplayInfoIn}->{error_info}}){
     if($i->{type} eq "structure_set_linkage"){
       $ss_relink_needed = 1;
-      my $series_nn = $this->{nn}->Series($i->{series_uid});
+      my $series_nn = $this->{nn}->FromSeries($i->{series_uid});
       push @ss, {
         series => $i->{series_uid},
         series_nn => $series_nn,
@@ -3032,7 +3031,7 @@ sub RenderRelinkSsMenu{
   for my $i (@{$this->{DisplayInfoIn}->{error_info}}){
     if($i->{type} eq "structure_set_linkage"){
       $ss_relink_needed = 1;
-      my $series_nn = $this->{nn}->Series($i->{series_uid});
+      my $series_nn = $this->{nn}->FromSeries($i->{series_uid});
       push @ss, {
         series => $i->{series_uid},
         series_nn => $series_nn,
@@ -3066,7 +3065,7 @@ sub RenderRelinkSsMenu{
     if($#{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}} == 0){
       my $file = $this->{DisplayInfoIn}->{sop_to_files}->{$sop}->[0];
       my $digest = $this->{DisplayInfoIn}->{dicom_info}->FilesToDigest->{$file};
-      my $struct_nn = $this->{nn}->File($sop, $digest, "RTSTRUCT");
+      my $struct_nn = $this->{nn}->FromFile($sop, $digest, "RTSTRUCT");
       my $series_desc = $this->GetSeriesDescFromFile($file);
       unless(exists $this->{DisplayInfoIn}->{CheckedSs}->{$file}){
         $this->{DisplayInfoIn}->{CheckedSs}->{$file} = "false";
@@ -3088,7 +3087,7 @@ sub RenderRelinkSsMenu{
     } elsif ($#{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}} > 0){
       for my $file (@{$this->{DisplayInfoIn}->{sop_to_files}->{$sop}}){
         my $digest = $this->{DisplayInfoIn}->{dicom_info}->FilesToDigest->{$file};
-        my $struct_nn = $this->{nn}->File($sop, $digest, "RTSTRUCT");
+        my $struct_nn = $this->{nn}->FromFile($sop, $digest, "RTSTRUCT");
         my $sop_nn = $struct_nn;
         my $series_desc = $this->GetSeriesDescFromFile($file);
         unless(exists $this->{DisplayInfoIn}->{CheckedSs}->{$file}){
@@ -3141,10 +3140,10 @@ sub LinkageSeriesSelection{
   my($this, $http, $dyn, $file) = @_;
   my $dig = $this->{DisplayInfoIn}->{dicom_info}->{FilesToDigest}->{$file};
   my $f_info = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$dig};
-  my $file_nn = $this->{nn}->File($f_info->{sop_inst_uid}, $dig, "RTSTRUCT");
+  my $file_nn = $this->{nn}->FromFile($f_info->{sop_inst_uid}, $dig, "RTSTRUCT");
 
   my $num_slices = $f_info->{series_refs}->[0]->{num_images};
-  my $study_nn = $this->{nn}->Study($f_info->{study_uid});
+  my $study_nn = $this->{nn}->FromStudy($f_info->{study_uid});
   my $for_nn = $f_info->{for_uid};
   my $series_desc = $this->GetSeriesDescFromFile($file);
   my $series_to_link = $this->GetFilteredSeriesList($f_info->{study_uid},
@@ -3229,7 +3228,7 @@ sub FilterSeries{
     }
     my $foo = {
       series_uid => $series->{uid},
-      series_nn => $this->{nn}->Series($series->{uid}),
+      series_nn => $this->{nn}->FromSeries($series->{uid}),
       desc => $series->{desc},
     };
     push @$results, $foo;
@@ -3884,7 +3883,7 @@ sub GeneralPurposeEditor{
     my $subj = $this->{DisplayInfoIn}->{subj};
     my $col = $this->{SelectedCollection};
     my $site = $this->{SelectedSite};
-    my $nn = Posda::Nicknames2Factory::get($col, $site, $subj);
+    my $nn = Posda::Nicknames2::get($col, $site, $subj);
     $this->{nn} = $nn;
     my $e =PosdaCuration::GeneralPurposeEditor->new($this->{session}, $child_name,
       $this->{DisplayInfoIn}, $nn);
