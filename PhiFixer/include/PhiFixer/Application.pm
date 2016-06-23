@@ -249,7 +249,7 @@ sub OutOfDate{
   $http->queue(qq{
     <h3>Error: Out of Date</h3>
     <p>
-      This scan includes files of the wrong revision for at least one of it's
+      This report includes files of the wrong revision for at least one of it's
       subjects. You must rescan or remove the offending revisions.
     </p>
 
@@ -257,7 +257,7 @@ sub OutOfDate{
       <tr>
         <th>Subject</th>
         <th>Current Revision</th>
-        <th>Revision in this Scan</th>
+        <th>Revision in this Report</th>
       </tr>
   });
 
@@ -273,15 +273,41 @@ sub OutOfDate{
   }
 
   $http->queue("</table>");
-
+  $http->queue(qq{
+    <div class="btn-group">
+  });
   $this->NotSoSimpleButton($http, {
     op => "StartOver",
-    caption => "Start Over",
+    caption => "Select a different report",
     sync => "Update();",
+  });
+  $this->NotSoSimpleButton($http, {
+    op => "DeleteScan",
+    caption => "Delete this obsolete report",
+    sync => "Update();",
+    class => "btn btn-warning",
+  });
+  $http->queue(qq{
+    </div>
   });
 }
 sub OutOfDateMenu{
   my($this, $http, $dyn) = @_;
+}
+sub DeleteScan{
+  my($this, $http, $dyn) = @_;
+
+  # delete the scan
+  my $path = dirname($this->{file_info_file});
+
+  if (defined $path) {
+    remove_tree($path);
+  } else {
+    print STDERR "Fatal error attempting to delete a report!!!\n";
+  }
+
+  $this->StartOver($http, $dyn);
+  $this->SpecificInitialize();
 }
 sub StartOver{
   my($this, $http, $dyn) = @_;
