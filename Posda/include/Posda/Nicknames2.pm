@@ -264,7 +264,7 @@ method ToSop($sop_nn) {
 
 method FromSop($sop_instance_uid, $modality) {
 
-  unless (defined $sop_instance_uid and defined $modality) {
+  unless (defined $sop_instance_uid ) { #and defined $modality) {
     die "Posda::Nicknames2::FromSop called with undefined parameters!";
   }
 
@@ -734,12 +734,17 @@ method __sop_nickname ($project_name,
       "subj: $subj_id, sop: $sop_instance_uid";
   }
   if(@rows == 1) {
-    unless($rows[0]->{modality} eq $modality){
+    if(defined $modality and $rows[0]->{modality} ne $modality){
       print STDERR "Modality conflict for SOP: $sop_instance_uid\n";
       $self->__statement('set_sop_modality_conflict')->execute(
         $project_name, $site_name, $subj_id, $sop_instance_uid);
     }
     return $rows[0]->{sop_nickname};
+  }
+  if (not defined $modality) {
+    # if the user didn't know the modality, we can't create a new entry,
+    # so just let them know we found nothing
+    return undef;
   }
   $self->__statement('lock_sequence_for_update')->execute(
     $project_name, $site_name, $subj_id, "sop");
