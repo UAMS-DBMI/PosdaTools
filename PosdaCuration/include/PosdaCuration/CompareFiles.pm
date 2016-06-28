@@ -5,13 +5,18 @@ use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;
 use Posda::HttpApp::WindowButtons;
 use Posda::HttpApp::JsController;
+use Posda::HttpApp::Authenticator;
 use Posda::UUID;
 use Debug;
 my $dbg = sub { print @_ };
 package PosdaCuration::CompareFiles;
+
 use Fcntl;
+use Posda::DebugLog 'off';
+use Data::Dumper;
+
 use vars qw( @ISA );
-@ISA = ("Posda::HttpApp::JsController");
+@ISA = ("Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator");
 my $expander = <<EOF;
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
@@ -27,6 +32,7 @@ sub new{
   my($class, $sess, $path,
     $from_file_nn, $from_file, $to_file_nn, $to_file) = @_;
   my $this = Posda::HttpApp::JsController->new($sess, $path);
+  $this->{ExitOnLogout} = 1;
   $this->{ImportsFromAbove}->{GetHeight} = 1;
   $this->{ImportsFromAbove}->{GetWidth} = 1;
   $this->{ImportsFromAbove}->{GetJavascriptRoot} = 1;
@@ -43,6 +49,7 @@ sub new{
   $this->{ToNickname} = $to_file_nn;
   $this->{ToFile} = $to_file;
   bless $this, $class;
+  DEBUG Dumper($this);
   $this->Initialize;
   return $this;
 }
@@ -114,13 +121,6 @@ sub Logo{
     $http->queue("<img src=\"$image\" height=\"$height\" width=\"$width\" " .
       "alt=\"$alt\">");
 }
-sub LoginResponse{
-  my($this, $http, $dyn) = @_;
-  $http->queue(
-    '<span onClick="javascript:CloseThisWindow();">close' .
-    '</span><br><?dyn="DebugButton"?>'
-  );
-}
 sub JsContent{
   my($this, $http, $dyn) = @_;
   my $js_file = "$this->{JavascriptRoot}/CheckSeries.js";
@@ -128,24 +128,11 @@ sub JsContent{
   my $fh; open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
 sub Initialize{
   my($this) = @_;
-  $this->{NickNames} = $this->parent->{NickNames};
   $this->{LoginTemp} = $this->FetchFromAbove("GetLoginTemp");
   $this->AutoRefresh;
   $this->StartDumps;
-#  Dispatch::Select::Background->new($this->Refresher)->timer(5);
 }
 sub StartDumps{
   my($this) = @_;

@@ -5,6 +5,7 @@ use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;
 use Posda::HttpApp::WindowButtons;
 use Posda::HttpApp::JsController;
+use Posda::HttpApp::Authenticator;
 use Posda::UUID;
 use Storable;
 use PosdaCuration::InfoExpander;
@@ -15,7 +16,7 @@ package PosdaCuration::CompareRevisions;
 use Data::Dumper;
 use Fcntl;
 use vars qw( @ISA );
-@ISA = ("Posda::HttpApp::JsController", "PosdaCuration::InfoExpander");
+@ISA = ("Posda::HttpApp::JsController", "PosdaCuration::InfoExpander", "Posda::HttpApp::Authenticator");
 my $expander = <<EOF;
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
@@ -40,6 +41,7 @@ sub new{
   $this->{JavascriptRoot} = $this->FetchFromAbove("GetJavascriptRoot");
   $this->{expander} = $expander;
   $this->{title} = "Posda Curation Tools: Compare Revisions";
+  $this->{ExitOnLogout} = 1;
   unless(defined $this->{height}) { $this->{height} = 1024 }
   unless(defined $this->{width}) { $this->{width} = 1024 }
   if($from < $to){
@@ -119,13 +121,13 @@ sub Logo{
     $http->queue("<img src=\"$image\" height=\"$height\" width=\"$width\" " .
       "alt=\"$alt\">");
 }
-sub LoginResponse{
-  my($this, $http, $dyn) = @_;
-  $http->queue(
-    '<span onClick="javascript:CloseThisWindow();">close' .
-    '</span><br><?dyn="DebugButton"?>'
-  );
-}
+# sub LoginResponse{
+#   my($this, $http, $dyn) = @_;
+#   $http->queue(
+#     '<span onClick="javascript:CloseThisWindow();">close' .
+#     '</span><br><?dyn="DebugButton"?>'
+#   );
+# }
 sub JsContent{
   my($this, $http, $dyn) = @_;
   my $js_file = "$this->{JavascriptRoot}/CheckSeries.js";
@@ -133,20 +135,19 @@ sub JsContent{
   my $fh; open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
+# sub DebugButton{
+#   my($this, $http, $dyn) = @_;
+#   if($this->CanDebug){
+#     $this->RefreshEngine($http, $dyn,
+#       '<span onClick="javascript:' .
+#       "rt('DebugWindow','Refresh?obj_path=Debug'" .
+#       ',1600,1200,0);">debug</span><br>');
+#   } else {
+#     print STDERR "Can't debug\n";
+#   }
+# }
 sub Initialize{
   my($this) = @_;
-  $this->{NickNames} = Posda::Nicknames->new();
   $this->{ExtractionRoot} = $this->RouteAbove("GetExtractionRoot");
   my $DII = $this->RouteAbove("GetDisplayInfoIn");
   $this->{Collection} = $DII->{Collection};
@@ -522,9 +523,7 @@ sub Compare{
   my $sel_file = $this->{SelectedFiles}->{$study}->{$series};
   my $dig = $this->{FileToDig}->{$sel_file};
   my $di = $this->{FilesByDigest}->{$dig};
-  my $sel_file_nns =
-    $this->{NickNames}->GetDicomNicknamesByFile($sel_file, $di);
-  my $sel_file_nn = $sel_file_nns->[0];
+  # my $sel_file_nn = $this->{nn}->FromFile($di->{sop_inst_uid}, $dig, $di->{modality});
   my $sel_from_rev;
   for my $sel (keys %{$this->{SelectedFromRadio}->{$study}->{$series}}){
     if($this->{SelectedFromRadio}->{$study}->{$series}->{$sel} eq "true"){
@@ -550,17 +549,19 @@ sub Compare{
   my $from_file = $from_file_info->[0];
   my $from_file_dig = $from_file_info->[1];
   my $from_file_i = $this->{FilesByDigest}->{$from_file_dig};
-  my $from_file_nns = 
-    $this->{NickNames}->GetDicomNicknamesByFile($from_file, $from_file_i);
-  my $from_file_nn = $from_file_nns->[0];
+
+  my $from_file_nn = $this->{nn}->FromFile($from_file_i->{sop_inst_uid}, 
+    $from_file_dig, $from_file_i->{modality});
+
   my $to_file_info = $this->{DispFileHist}->{$study}->{$series}->{$sel_file}
     ->[$sel_to_rev];
   my $to_file = $to_file_info->[0];
   my $to_file_dig = $to_file_info->[1];
   my $to_file_i = $this->{FilesByDigest}->{$to_file_dig};
-  my $to_file_nns = 
-    $this->{NickNames}->GetDicomNicknamesByFile($to_file, $to_file_i);
-  my $to_file_nn = $to_file_nns->[0];
+
+  my $to_file_nn = $this->{nn}->FromFile($to_file_i->{sop_inst_uid}, 
+    $to_file_dig, $to_file_i->{modality});
+
   my $child_path = $this->child_path("compare_${from_file_nn}_$to_file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){

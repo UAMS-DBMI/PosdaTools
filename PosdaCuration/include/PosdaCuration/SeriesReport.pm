@@ -1,19 +1,21 @@
-#!/usr/bin/perl -w
-#
-use strict;
 use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;
 use Posda::HttpApp::WindowButtons;
 use Posda::HttpApp::JsController;
+use Posda::HttpApp::Authenticator;
 use Posda::UUID;
 use Posda::DataDict;
 use PosdaCuration::CompareFiles;
 use Debug;
-my $dbg = sub { print @_ };
 package PosdaCuration::SeriesReport;
+use Modern::Perl '2010';
 use Fcntl;
+use Posda::DebugLog 'on';
+
+
 use vars qw( @ISA );
-@ISA = ("Posda::HttpApp::JsController");
+@ISA = ("Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator");
+
 my $expander = <<EOF;
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
@@ -28,6 +30,7 @@ EOF
 sub new{
   my($class, $sess, $path, $series_nn, $series, $study_nn, $study, $dii) = @_;
   my $this = Posda::HttpApp::JsController->new($sess, $path);
+  $this->{ExitOnLogout} = 1;
   $this->{ImportsFromAbove}->{GetJavascriptRoot} = 1;
   $this->{ImportsFromAbove}->{GetHeight} = 1;
   $this->{ImportsFromAbove}->{GetWidth} = 1;
@@ -122,13 +125,6 @@ sub Logo{
     $http->queue("<img src=\"$image\" height=\"$height\" width=\"$width\" " .
       "alt=\"$alt\">");
 }
-sub LoginResponse{
-  my($this, $http, $dyn) = @_;
-  $http->queue(
-    '<span onClick="javascript:CloseThisWindow();">close' .
-    '</span><br><?dyn="DebugButton"?>'
-  );
-}
 sub JsContent{
   my($this, $http, $dyn) = @_;
   my $js_file = "$this->{JavascriptRoot}/CheckSeries.js";
@@ -136,21 +132,10 @@ sub JsContent{
   my $fh; open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
 sub Initialize{
   my($this) = @_;
   my %sop_types;
-  $this->{NickNames} = $this->parent->{NickNames};
+  $this->{nn} = $this->parent->{nn};
   for my $i (keys %{$this->{digs_in_series_and_study}}){
     my $info = $this->{digs_in_series_and_study}->{$i};
     my $sop_class = $info->{sop_class_uid};
@@ -159,25 +144,50 @@ sub Initialize{
   }
   $this->{SopTypes} = \%sop_types;
   $this->AutoRefresh;
-#  Dispatch::Select::Background->new($this->Refresher)->timer(5);
 }
 sub DownloadExcel{
   my($this, $http, $dyn) = @_;
   $http->DownloadHeader("text/csv", "$this->{Nickname}.csv");
-  $http->queue('"Modality","IOP[0]","IOP[1]","IOP[2]",' .
-    '"IOP[3]","IOP[4]","IOP[5]","IPP[0]","IPP[1]","IPP[2]",' .
-    '"Type","location","Offset","Inst #","Rows","Cols","Pix Sp[0]",' .
-    '"Pix Sp[1]"' . "\n");
-  for my $ii (
+
+  # csv headers, surrounded by "s
+  $http->queue(join(',', map { "\"$_\"" } (
+    'Image',
+    'Modality',
+    'IOP[0]',
+    'IOP[1]',
+    'IOP[2]',
+    'IOP[3]',
+    'IOP[4]',
+    'IOP[5]',
+    'IPP[0]',
+    'IPP[1]',
+    'IPP[2]',
+    'Type',
+    'location',
+    'Offset',
+    'Inst #',
+    'Rows',
+    'Cols',
+    'Pix Sp[0]',
+    'Pix Sp[1]' ,
+  )) . "\n");
+
+  for my $digest (
     sort 
     { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
        $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
     }
     keys %{$this->{digs_in_series_and_study}}
   ){
-    my $i = $this->{digs_in_series_and_study}->{$ii};
+    my $i = $this->{digs_in_series_and_study}->{$digest};
     my @ipp = split(/\\/, $i->{"(0020,0037)"});
     my @pix_sp = split(/\\/, $i->{"(0028,0030)"});
+
+    my $nn = $this->{nn}->FromFile($i->{sop_inst_uid}, 
+                                   $digest, 
+                                   $i->{modality});
+
+    $http->queue("\"$nn\",");
     $http->queue("\"$i->{modality}\",");
     $http->queue("$ipp[0],");
     $http->queue("$ipp[1],");
@@ -214,14 +224,14 @@ sub IsMissingInstanceNumbers{
   my($this) = @_;
   my $num_rows = 0;
   my $num_instance_numbers = 0;
-  for my $ii (
+  for my $digest (
     sort 
     { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
        $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
     }
     keys %{$this->{digs_in_series_and_study}}
   ){
-    my $i = $this->{digs_in_series_and_study}->{$ii};
+    my $i = $this->{digs_in_series_and_study}->{$digest};
     $num_rows += 1;
     if(
       defined $i->{"(0020,0013)"} &&
@@ -238,7 +248,7 @@ sub AddInstanceNumbersInOrder{
   my $parent = $this->parent;
   my $cmds = {};
   my $instance_number = 0;
-  for my $ii (
+  for my $digest (
     sort 
     { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
        $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
@@ -246,7 +256,7 @@ sub AddInstanceNumbersInOrder{
     keys %{$this->{digs_in_series_and_study}}
   ){
     $instance_number += 1;
-    my $f_info = $this->{digs_in_series_and_study}->{$ii};
+    my $f_info = $this->{digs_in_series_and_study}->{$digest};
     my $file = $f_info->{file};
     if($file =~ /^(.*revisions\/)(\d+)(\/.*)$/){
       my $pre = $1;
@@ -276,27 +286,48 @@ sub ContentResponse{
   if($sop_type eq "RTS"){
     return $this->StructContentResponse($http, $dyn);
   }
-  $this->RefreshEngine($http, $dyn,
-    "<small><a href=\"DownloadExcel?obj_path=$this->{path}\">download</a>" .
-    '<?dyn="ImageNumberCheck"?>' .
-    "<table border=\"1\"><tr><th>Image</th><th>modality</th>" .
-    "<th colspan=\"6\">IOP</th><th colspan=\"3\">IPP</th>" .
-    "<th>Type</th><th>location</th>" .
-    "<th>Offset</th><th>I #</th>" .
-    "<th>Rows</th><th>Cols</th><th colspan=\"2\">Pix sp</th>" .
-    '<th colspan="2">' .
-    '<?dyn="DelegateButton" op="CompareFiles" caption="Compare"?></th>' .
-    "</tr>");
-  for my $ii (
+  $this->RefreshEngine($http, $dyn, qq{
+    <p>
+      <a class="btn btn-default" href="DownloadExcel?obj_path=$this->{path}">
+        Download CSV
+      </a>
+    </p>
+    <?dyn="ImageNumberCheck"?>
+    <small>
+    <table class="table table-condensed">
+      <tr>
+        <th>Image</th>
+        <th>modality</th>
+        <th colspan="6">IOP</th>
+        <th colspan="3">IPP</th>
+        <th>Type</th>
+        <th>location</th>
+        <th>Offset</th>
+        <th>I #</th>
+        <th>Rows</th>
+        <th>Cols</th>
+        <th colspan="2">Pix sp</th>
+        <th colspan="2">
+        <?dyn="DelegateButton" op="CompareFiles" caption="Compare"?>
+        </th>
+      </tr>
+  });
+  for my $digest (
     sort 
     { $this->{digs_in_series_and_study}->{$a}->{normalized_loc} <=>
        $this->{digs_in_series_and_study}->{$b}->{normalized_loc}
     }
     keys %{$this->{digs_in_series_and_study}}
   ){
-    my $i = $this->{digs_in_series_and_study}->{$ii};
+    my $i = $this->{digs_in_series_and_study}->{$digest};
+    my $file_info = $i; # a sane name
+
     my $i_nn = '&lt;unknown&gt;';
-    my $nn = $this->{NickNames}->GetFileNicknameByDigest($ii);
+    my $nn = $this->{nn}->FromFile($file_info->{sop_inst_uid}, 
+                                   $digest, 
+                                   $file_info->{modality});
+
+
     if(defined $nn) { $i_nn = $nn }
     my @ipp = split(/\\/, $i->{"(0020,0037)"});
     my @pix_sp = split(/\\/, $i->{"(0028,0030)"});
@@ -362,11 +393,13 @@ sub CompareFiles{
   my($this, $http, $dyn) = @_;
   my $from_file_nn = $this->{SelectedFromDump};
   my $to_file_nn = $this->{SelectedToDump};
-  my $from_files = $this->{NickNames}->GetFilesByFileNickname($from_file_nn);
-  my $from_file = $from_files->[0];
-  my $to_files = $this->{NickNames}->GetFilesByFileNickname($to_file_nn);
-  my $to_file = $to_files->[0];
-  print STDERR "Here's where we compare $from_file to $to_file\n";
+
+  my $from_digests = $this->{nn}->ToFiles($from_file_nn);
+  my $from_file = $this->parent->FilenameFromDigests($from_digests);
+  my $to_digests = $this->{nn}->ToFiles($to_file_nn);
+  my $to_file = $this->parent->FilenameFromDigests($to_digests);
+
+  DEBUG "Here's where we compare $from_file to $to_file";
   my $child_path = $this->child_path("compare_${from_file_nn}_$to_file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){
@@ -394,43 +427,64 @@ sub StructContentResponse{
     $http->queue("No report from sub-process");
   }
   for my $roi (keys %{$this->{StructureSetReport}->{contour_rept}}){
-    my $num_contours = keys 
-      %{$this->{StructureSetReport}->{contour_rept}->{$roi}};
-    $http->queue("<small><table border><tr>" .
-      '<th><th colspan="6">' . "ROI = $roi ($num_contours contours)");
-    $http->queue("<small><a href=\"DownloadRoiExcel?obj_path=$this->{path}" .
-      "&roi=$roi\">download</a></small>");
-    $http->queue("</th></tr>" .
-      '<tr><th>linked img</th><th>nearest img</th>' .
-      '<th>avg_dist</th><th>max_dist</th><th>min_dist</th>' .
-      '<th>img_z</th><th>avg_z</th>' .
-      '<th>num_pts</th></tr>');
+    my $num_contours = 
+      keys %{$this->{StructureSetReport}->{contour_rept}->{$roi}};
+
+    $http->queue(qq{
+      <table class="table">
+      <tr>
+        <th colspan="6">ROI = $roi ($num_contours contours)
+          <a class="btn btn-sm btn-default" href="DownloadRoiExcel?obj_path=$this->{path}&roi=$roi">
+            Download CSV
+          </a>
+        </th>
+      </tr>
+      <tr>
+        <th>Linked Image</th>
+        <th>Nearest Image</th>
+        <th>avg dist</th>
+        <th>max dist</th>
+        <th>min dist</th>
+        <th>img z</th>
+        <th>avg z</th>
+        <th>num pts</th>
+      </tr>
+    });
+
     for my $i (
       sort {$a <=> $b} 
       keys %{$this->{StructureSetReport}->{contour_rept}->{$roi}}
     ){
       my $Info = $this->{StructureSetReport}->{contour_rept}->{$roi}->{$i};
-      my $linked = $this->{NickNames}->GetFileNicknamesByUid(
+
+      my $linked = $this->{nn}->FromSop(
         [$this->{StructureSetReport}
-          ->{contour_rept}->{$roi}->{$i}->{linked_sop}]->[0]
-      );
-      my $nearest = $this->{NickNames}->GetFileNicknamesByUid(
+          ->{contour_rept}->{$roi}->{$i}->{linked_sop}]->[0]);
+      my $nearest = $this->{nn}->FromSop(
         [$this->{StructureSetReport}
           ->{contour_rept}->{$roi}->{$i}->{nearest_sop}]->[0]
       );
+
       my $av_dist = sprintf("%0.10f", $Info->{avg_z} - $Info->{img_z});
       my $max_dist = sprintf("%0.10f", $Info->{max_z} - $Info->{img_z});
       my $min_dist = sprintf("%0.10f", $Info->{min_z} - $Info->{img_z});
       my $img_z = sprintf("%0.10f", $Info->{img_z});
       my $avg_z = sprintf("%0.10f", $Info->{avg_z});
       my $n_p = $Info->{number_points};
-      $http->queue("<tr><td>$linked</td><td>$nearest</td><td>$av_dist</td>" .
-        "<td>$max_dist</td><td>$min_dist</td>" .
-        "<td>$img_z</td><td>$avg_z</td>" .
-        "<td>$n_p</td>" .
-        "</tr>");
+      $http->queue(qq{
+        <tr>
+          <td>$linked</td>
+          <td>$nearest</td>
+          <td>$av_dist</td>
+          <td>$max_dist</td>
+          <td>$min_dist</td>
+          <td>$img_z</td>
+          <td>$avg_z</td>
+          <td>$n_p</td>
+        </tr>
+      });
     }
-    $http->queue("</table></small>");
+    $http->queue("</table>");
   }
 }
 sub SelectFirstStructureSet{
@@ -569,11 +623,10 @@ sub DownloadRoiExcel{
    keys %{$this->{StructureSetReport}->{contour_rept}->{$roi}}
   ){
     my $Info = $this->{StructureSetReport}->{contour_rept}->{$roi}->{$i};
-    my $linked = $this->{NickNames}->GetFileNicknamesByUid(
+    my $linked = $this->{nn}->FromSop(
       [$this->{StructureSetReport}
-        ->{contour_rept}->{$roi}->{$i}->{linked_sop}]->[0]
-    );
-    my $nearest = $this->{NickNames}->GetFileNicknamesByUid(
+        ->{contour_rept}->{$roi}->{$i}->{linked_sop}]->[0]);
+    my $nearest = $this->{nn}->FromSop(
       [$this->{StructureSetReport}
         ->{contour_rept}->{$roi}->{$i}->{nearest_sop}]->[0]
     );
