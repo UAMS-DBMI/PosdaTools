@@ -739,7 +739,6 @@ sub GetEleMatchingFiles{
 }
 sub GetMatchingFile{
   my($this, $f_nn) = @_;
-  # my $files = $this->{NickNames}->GetFilesByFileNickname($f_nn);
   # Nicknames2::ToFiles returns array of digests. 
   # Must turn into filenames:
   my @files;

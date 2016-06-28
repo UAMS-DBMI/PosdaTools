@@ -7,6 +7,7 @@ use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
+use IO::Socket::INET;
 
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpObj" );

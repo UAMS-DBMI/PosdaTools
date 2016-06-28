@@ -1,5 +1,3 @@
-#!/usr/local/bin/perl
-# $RCSfile: Debug.pm,v $
 package Debug;
 
 sub logvalue{

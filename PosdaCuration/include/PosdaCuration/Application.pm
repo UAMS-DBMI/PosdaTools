@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w 
 use strict;
 package PosdaCuration::Application;
+use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
@@ -1449,9 +1450,8 @@ sub CloseSubjInfo{
   my $site = $this->{SelectedSite};
   $this->{InfoSel}->{$col}->{$site}->{$subj} = 0;
   my $count = $this->CountOpenSubj($subj);
-  if($count == 0){
-    # delete $this->{NickNames};
-  }
+  # if($count == 0){
+  # }
 }
 sub CountOpenSubj{
   my($this) = @_;

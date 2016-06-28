@@ -7,6 +7,8 @@ use GenericApp::Application;
 use Modern::Perl '2010';
 use Method::Signatures::Simple invocant => '$this';
 
+use Posda::DebugLog 'on';
+
 use PhiFixer::PrivateTagInfo;
 use PhiFixer::DicomRootInfo;
 
@@ -31,10 +33,6 @@ use Time::Seconds;
 
 
 use constant UNKNOWN => '&lt;unknown&gt;';
-
-sub DEBUG {
-  print @_, "\n";
-}
 
 
 my $disposition_map = {
@@ -856,9 +854,9 @@ method hash_temp($tag, $file) {
 
 method translate_dispositions($tags, $from_file, $to_file) {
   # Translate the dispos into actions for the subprocess editor
-  DEBUG $tags;
-  DEBUG $from_file;
-  DEBUG $to_file;
+  # DEBUG $tags;
+  # DEBUG $from_file;
+  # DEBUG $to_file;
 
   # the possible actions
   my $action_map = {
@@ -903,6 +901,8 @@ method translate_dispositions($tags, $from_file, $to_file) {
 }
 
 method FixAllYes($http, $dyn) {
+  DEBUG "FixAllYes beings";
+
   # first some things that we'll need
   # $this->{Collection};
   # $this->{FileInfo}; # may be a list of every file in the collection?
@@ -924,6 +924,8 @@ method FixAllYes($http, $dyn) {
       }
     }
   }
+  DEBUG "private tags added";
+
   # Add the PHI tags/files to the list
   for my $tag (keys %{$this->{DisposedPHI}}) {
     for my $val (keys %{$this->{ByTag}->{$tag}}) {
@@ -941,8 +943,10 @@ method FixAllYes($http, $dyn) {
       }
     }
   }
+  DEBUG "phi tags added";
 
 
+  #TODO: this is a good candidate for backgrounding
   for my $subj (sort keys %$subjects) {
     my $files_with_changes = [keys %{$subjects->{$subj}}];
 
@@ -968,7 +972,8 @@ method FixAllYes($http, $dyn) {
       }
 
       unless (defined $args{Locked} and $args{Locked} eq 'OK') {
-        print "Failed to get lock! Aborting!\n";
+        print STDERR "Failed to get lock on: $subj! Aborting!\n";
+        print STDERR Dumper(\%args);
         return;
       }
 
@@ -1017,8 +1022,10 @@ method FixAllYes($http, $dyn) {
       $this->TestTestTestAfterLock($args{Id}, $pinfo);
 
     });
+    DEBUG "processed for $subj";
   }
 
+  DEBUG "completed";
   $this->{ContentMode} = "AllDoneHere";
   $this->AutoRefresh;
 }

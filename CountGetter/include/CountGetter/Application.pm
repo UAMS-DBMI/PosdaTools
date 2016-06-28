@@ -9,7 +9,7 @@ use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
-use Posda::Log;
+use Posda::DebugLog 'on';
 use Posda::DataDict;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
@@ -23,7 +23,6 @@ my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
-Posda::Log::init("default.log");
 
 my $expander = q{<?dyn="BaseHeader"?>
   <script type="text/javascript">

@@ -254,9 +254,6 @@ sub ExpandStudyHierarchyWithPatientInfo{
   # This is part of the "Show Info" screen
   my($this, $http, $dyn, $studies, $nn) = @_;
   $this->{nn} = $nn;
-  unless(exists $this->{NickNames}) {
-    $this->{NickNames} = Posda::Nicknames->new;
-  }
   $http->queue('<table width="100%" border="1">');
   $http->queue('<tr><td colspan="7"></td><td colspan="2">');
   $this->DelegateButton($http, {
@@ -272,8 +269,6 @@ sub ExpandStudyHierarchyWithPatientInfo{
     my $study_uid = $studies->{$study}->{uid};
     my $pid = $studies->{$study}->{pid};
     my $pname = $studies->{$study}->{pname};
-    # my $study_nn =
-    #   $this->{NickNames}->GetEntityNicknameByEntityId("STUDY", $study_uid);
     my $study_nn = $nn->FromStudy($study_uid);
     $http->queue('<tr><td colspan="3">' . $study_nn .
     " (pid = $pid; pname = $pname)" .
@@ -290,8 +285,6 @@ sub ExpandStudyHierarchyWithPatientInfo{
     ){
       my $series_uid =
         $studies->{$study}->{series}->{$series}->{uid};
-      # my $series_nn =
-      #   $this->{NickNames}->GetEntityNicknameByEntityId("SERIES", $series_uid);
       my $series_nn = $nn->FromSeries($series_uid);
       my $s = $studies->{$study}->{series}->{$series};
       $this->RefreshEngine($http, $dyn,
@@ -375,8 +368,8 @@ sub MakeFileInspector{
       $this->{DisplayInfoIn}->{SelectedFileToView}->{$series} = $file_list->[0];
     }
     for my $nn (@{$file_list}){
-      my $files = $this->{NickNames}->GetFilesByFileNickname($nn);
-      my $file = $files->[0];
+      my $files = $this->{nn}->ToFiles($nn);
+      my $file = $this->FilenameFromDigests($files);
       $http->queue('<option value="' . $nn . '"' .
         ($nn eq $this->{DisplayInfoIn}->{SelectedFileToView}->{$series} ?
            " selected" : "") .
@@ -441,7 +434,6 @@ sub FileToView{
 sub ViewFile{
   my($this, $http, $dyn) = @_;
   my $file_nn = $this->{DisplayInfoIn}->{SelectedFileToView}->{$dyn->{series}};
-  # my $files = $this->{NickNames}->GetFilesByFileNickname($file_nn);
   my $files = $this->{nn}->ToFiles($file_nn);
   # Get the file from the dicom_info??
   my $file = $this->{DisplayInfoIn}->{dicom_info}->{FilesByDigest}->{$files->[0]}->{file};

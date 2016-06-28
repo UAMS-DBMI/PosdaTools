@@ -8,7 +8,7 @@ use Dispatch::Dicom::MessageAssembler;
 use Posda::Command;
 
 package Posda::NewDicomSender;
-use Posda::Log; # Must be used after package declaration!
+use Posda::DebugLog 'on';
 
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
@@ -94,10 +94,10 @@ sub new {
   };
   bless $this, $class;
 
-  DEBUG "FilesToSend contains:";
-  foreach my $item (@{$this->{FilesToSend}}) {
-    DEBUG "$item->{file}";
-  }
+  # DEBUG "FilesToSend contains:";
+  # foreach my $item (@{$this->{FilesToSend}}) {
+  #   DEBUG "$item->{file}";
+  # }
 
   $this->Initialize;
   return $this;

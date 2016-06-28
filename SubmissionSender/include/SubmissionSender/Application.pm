@@ -13,7 +13,7 @@ use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
 use Posda::NewDicomSender;
-use Posda::Log;
+use Posda::DebugLog 'on';
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
@@ -26,7 +26,6 @@ my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );
-Posda::Log::init("default.log");
 
 my $expander = qq{<?dyn="BaseHeader"?>
   <script type="text/javascript">

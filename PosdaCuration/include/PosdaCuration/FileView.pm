@@ -5,13 +5,14 @@ use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;
 use Posda::HttpApp::WindowButtons;
 use Posda::HttpApp::JsController;
+use Posda::HttpApp::Authenticator;
 use Posda::UUID;
 use Debug;
 my $dbg = sub { print @_ };
 package PosdaCuration::FileView;
 use Fcntl;
 use vars qw( @ISA );
-@ISA = ("Posda::HttpApp::JsController");
+@ISA = ("Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator");
 my $expander = <<EOF;
 <?dyn="BaseHeader"?>
 <script type="text/javascript">
@@ -26,6 +27,7 @@ EOF
 sub new{
   my($class, $sess, $path, $file_nn, $file) = @_;
   my $this = Posda::HttpApp::JsController->new($sess, $path);
+  $this->{ExitOnLogout} = 1;
   $this->{ImportsFromAbove}->{GetHeight} = 1;
   $this->{ImportsFromAbove}->{GetWidth} = 1;
   $this->{ImportsFromAbove}->{GetJavascriptRoot} = 1;
@@ -99,13 +101,6 @@ sub Logo{
     $http->queue("<img src=\"$image\" height=\"$height\" width=\"$width\" " .
       "alt=\"$alt\">");
 }
-sub LoginResponse{
-  my($this, $http, $dyn) = @_;
-  $http->queue(
-    '<span onClick="javascript:CloseThisWindow();">close' .
-    '</span><br><?dyn="DebugButton"?>'
-  );
-}
 sub JsContent{
   my($this, $http, $dyn) = @_;
   my $js_file = "$this->{JavascriptRoot}/CheckSeries.js";
@@ -113,20 +108,9 @@ sub JsContent{
   my $fh; open $fh, "<$js_file" or die "can't open $js_file";
   while(my $line = <$fh>) { $http->queue($line) }
 }
-sub DebugButton{
-  my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
-    $this->RefreshEngine($http, $dyn,
-      '<span onClick="javascript:' .
-      "rt('DebugWindow','Refresh?obj_path=Debug'" .
-      ',1600,1200,0);">debug</span><br>');
-  } else {
-    print STDERR "Can't debug\n";
-  }
-}
 sub Initialize{
   my($this) = @_;
-  $this->{NickNames} = $this->parent->{NickNames};
+  $this->{nn} = $this->parent->{nn};
   $this->AutoRefresh;
 #  Dispatch::Select::Background->new($this->Refresher)->timer(5);
 }
@@ -159,7 +143,7 @@ sub LineHandler{
     if(defined($name) && $name eq "Referenced SOP Instance UID"){
       my $extra;
       if($value =~ /^\"(.*)\"$/){
-        my $files = $this->{NickNames}->GetFileNicknamesByUid($1);
+        my $files = $this->{nn}->FromSop($1);
         if($files){
           if(ref($files) eq "ARRAY"){
             $extra = "(";
