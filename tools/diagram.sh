@@ -3,7 +3,7 @@
 function process_app {
   
   FILES=$(
-    find $1 -type f -iname "*.pm"
+    find ../$1 -type f -iname "*.pm"
   )
 
   # echo $app;
