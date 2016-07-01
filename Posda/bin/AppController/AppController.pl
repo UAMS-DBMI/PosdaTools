@@ -7,6 +7,7 @@ use FileHandle;
 use Dispatch::Http;
 use Dispatch::Select;
 use Posda::ConfigRead;
+use Posda::Permissions;
 use Cwd;
 use JSON;
 

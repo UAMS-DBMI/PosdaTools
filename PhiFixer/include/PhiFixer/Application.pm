@@ -12,24 +12,26 @@ use Posda::DebugLog 'on';
 use PhiFixer::PrivateTagInfo;
 use PhiFixer::DicomRootInfo;
 
-use Posda::HttpApp::JsController;
-use Dispatch::NamedObject;
-use Posda::HttpApp::DebugWindow;
-use Posda::HttpApp::Authenticator;
-use Posda::FileCollectionAnalysis;
-use Posda::Nicknames;
-use Posda::UUID;
+# use Posda::HttpApp::JsController;
+# use Dispatch::NamedObject;
+# use Posda::HttpApp::DebugWindow;
+# use Posda::HttpApp::Authenticator;
+# use Posda::FileCollectionAnalysis;
+# use Posda::Nicknames;
+# use Posda::UUID;
 use Posda::DataDict;
-use Dispatch::NamedFileInfoManager;
-use Dispatch::LineReader;
+# use Dispatch::NamedFileInfoManager;
+# use Dispatch::LineReader;
 
 use File::Path 'remove_tree';
 use Digest::MD5 'md5_hex';
 use Storable;
 use File::Basename;
-use Data::Dumper;
+
 use Time::Piece;
 use Time::Seconds;
+
+use Data::Dumper;
 
 
 use constant UNKNOWN => '&lt;unknown&gt;';
@@ -74,6 +76,8 @@ func get_dicom_in_dir($dir) {
 }
 
 method SpecificInitialize() {
+  $this->{http_app_singleton} = $main::HTTP_APP_SINGLETON;
+  $this->{http_app_config} = $main::HTTP_APP_CONFIG;
   $this->{DD} = Posda::DataDict->new;
   $this->{ContentMode} = "WaitingForTag";
   $this->{GrepString} = "foo";

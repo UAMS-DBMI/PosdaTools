@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+# main entry point for Posda???
 #
 use strict;
 use POSIX 'strftime';
@@ -7,23 +7,30 @@ use Posda::HttpApp::JsController;
 use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::ConfigRead;
+
 use AppController::JsChildProcess;
 use AppController::StatusInfo;
+
 use JSON;
 use Dispatch::LineReader;
 use Debug;
 use Switch;
-my $dbg = sub {print @_};
+
+use Posda::DebugLog 'on';
+
 {
   package AppController;
   use vars qw( %RunningApps @HarvestedApps );
 }
 {
   package AppController::JavaScriptApp;
+
   use JSON;
   use Storable qw( store retrieve store_fd fd_retrieve );
+
   use vars qw( @ISA );
   @ISA = ("Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator");
+
 my $redirect = <<EOF;
   HTTP/1.0 201 Created
   Location: <?dyn="echo" field="url"?>
@@ -40,6 +47,7 @@ my $redirect = <<EOF;
     <a href="<dyn="echo" field="url"?>"><?dyn="echo" field="url"?></a>
   </body></html>
 EOF
+
   sub Shutdown{
     my($this, $http, $dyn) = @_;
     my $url = "http://$http->{header}->{host}/";
@@ -64,9 +72,11 @@ EOF
 <?dyn="Content"?>
 <?dyn="Footer"?>
 EOF
+
 my $bad_config = <<EOF;
 <?dyn="BadConfigReport"?>
 EOF
+
   sub new {
     my($class, $sess, $path) = @_;
     my $this = Dispatch::NamedObject->new($sess, $path);
@@ -108,6 +118,7 @@ EOF
     $this->{child_index} = 1;
     return $this;
   }
+
   my $content = <<EOF;
 <div id="container" style="width:<?dyn="width"?>px">
 <div id="header" style="background-color:#E0E0FF;">
@@ -126,6 +137,7 @@ EOF
 Posda.com</div>
 </div>
 EOF
+
   sub Content{
     my($this, $http, $dyn) = @_;
     if($this->{BadConfigFiles}) {
@@ -206,13 +218,6 @@ EOF
     }
     $this->MakeMenu($http, $dyn,
       [
-        {
-          type=> "host_link_sync",
-          condition => $this->{capability}->{IsAdmin},
-          caption => "Reload Config",
-          method => "ReloadConfig",
-          sync => "Update();",
-        },
         {
           type => "host_link_sync",
           condition => 1,
@@ -358,13 +363,6 @@ EOF
     $this->{BomDirs} = $ConfigTree->{Applications}->{BomDirs};
     $this->{Capabilities} = $ConfigTree->{Capabilities};
   }
-  sub ReloadConfig{
-    my($this) = @_;
-    # Disabled because it is causing instant crash
-    # my $new_config = Posda::ConfigRead->new($this->{config_dir});
-    # $this->{NewConfig} = $new_config;
-    # $this->RouteAbove("ConfigReloaded");
-  }
   sub ConfigReloaded{
     my($this) = @_;
     print STDERR "ConfigReloaded\n";
@@ -390,17 +388,19 @@ EOF
     }
   }
   sub AvailAppContent{
+    DEBUG @_;
     my($this, $http, $dyn) = @_;
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
 
-    my $table_headers = '<tr>' .
-                        '<th "width=10%">Name</th>' .
-                        '<th "width=30%">Description</th>' .
-                        '<th "width=10%"></th>' . 
-                        '</tr>';
-    
-    $this->RefreshEngine($http, $dyn, 
-      '<table class="table" width="100%">');
+    my $table_headers = qq{
+      <tr>
+        <th "width=10%">Name</th>
+        <th "width=30%">Description</th>
+        <th "width=10%"></th>
+      </tr>
+    };
+
+    $this->RefreshEngine($http, $dyn, '<table class="table" width="100%">');
 
 
     if(scalar(keys %$default_apps) >= 1){
@@ -410,20 +410,29 @@ EOF
       );
       $this->AppTableRows($http, $dyn, $default_apps);
     }
+
     my $user = $this->get_user;
     unless(defined $user) { print STDERR "no user\n";return };
-    unless(exists $this->{Capabilities}->{$user}->{Apps}){ return }
-    my $user_apps = $this->{Capabilities}->{$user}->{Apps};
-    if(scalar(keys %$user_apps) >= 1){
-      $this->RefreshEngine($http, $dyn, 
-        "<tr><td colspan=3><h4>Apps Available to $user</h4></td</tr>" .
-        $table_headers);
-      $this->AppTableRows($http, $dyn, $user_apps);
-    }
+    # unless(exists $this->{Capabilities}->{$user}->{Apps}){ return }
+
+    # get list of apps user can launch
+    my $user_apps = $this->{permissions}->launchable_apps();
+    $this->RefreshEngine($http, $dyn, 
+      "<tr><td colspan=3><h4>Apps Available to $user</h4></td</tr>" .
+      $table_headers);
+    $this->AppTableRows($http, $dyn, $user_apps);
     $this->RefreshEngine($http, $dyn, '</table>');
   }
+
   sub AppTableRows{
     my($this, $http, $dyn, $privs) = @_;
+
+    if (ref($privs) eq 'ARRAY') {
+      # convert it to a hash
+      my %params = map { $_ => 1 } @$privs;
+      $privs = \%params;
+    }
+
     for my $app (
       sort 
       {$this->{Apps}->{$a}->{sort_order} <=> $this->{Apps}->{$b}->{sort_order}}
@@ -460,12 +469,6 @@ EOF
     my($this, $http, $dyn) = @_;
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
     my $bom_menu = [ 
-      {
-        type=> "host_link_sync",
-        condition => $this->{capability}->{IsAdmin},
-        caption => "Reload Config",
-       method => "ReloadConfig",
-      },
       {
         type => "host_link_sync",
         condition => 1,
@@ -638,12 +641,6 @@ EOF
   sub MakeDrMenu{
     my($this, $http, $dyn) = @_;
     my $dr_menu = [ 
-      {
-        type=> "host_link_sync",
-        condition => $this->{capability}->{IsAdmin},
-        caption => "Reload Config",
-        method => "ReloadConfig",
-      },
       {
         type => "host_link_sync",
         condition => 1,
@@ -836,12 +833,6 @@ EOF
     my($this, $http, $dyn) = @_;
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
     my $pass_menu = [ 
-      {
-        type=> "host_link_sync",
-        condition => $this->{capability}->{IsAdmin},
-        caption => "Reload Config",
-        method => "ReloadConfig",
-      },
       {
         type => "host_link_sync",
         condition => 1,

@@ -10,40 +10,5 @@
   "JavascriptRoot" : "POSDA_ROOT/CountGetter/javascript",
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
   "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
-  "SubmissionRoot" : "/mnt/intake1-data/tcia/storage_site",
-
-  "DicomDestinations" : {
-    "Quasar" : {
-      "host" : "dbmi-imac.ad.uams.edu",
-      "port" : "64611",
-      "calling_ae" : "POSDA",
-      "called_ae" : "QUASAR"
-    },
-    "IntakeServer" : {
-      "host" : "144.30.1.71",
-      "port" : "11112",
-      "calling_ae" : "POSDA",
-      "called_ae" : "CTP"
-    },
-    "LocalLoopback" : {
-      "host" : "localhost",
-      "port" : "64611",
-      "calling_ae" : "SEND_LOOP",
-      "called_ae" : "RCV_LOOP"
-    },
-    "Bill's OsiriX" : {
-      "host" : "144.30.109.157",
-//      "host" : "192.168.97.73",
-      "port" : "11112",
-      "calling_ae" : "POSDA",
-      "called_ae" : "BBOSIRIX"
-    },
-    "Bill's Posda" : {
-      "host" : "144.30.109.157",
-//      "host" : "192.168.97.73",
-      "port" : "64611",
-      "calling_ae" : "POSDA",
-      "called_ae" : "BBPOSDA"
-    },
-  }
+  "SubmissionRoot" : "POSDA_SUBMISSION_ROOT",
 }

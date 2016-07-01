@@ -1,5 +1,5 @@
-#!/usr/bin/perl -w
 use strict;
+
 package CountGetter::Application;
 use Time::Piece;
 use Posda::HttpApp::JsController;
@@ -19,7 +19,8 @@ use Digest::MD5;
 use JSON;
 use Debug;
 use Storable;
-my $dbg = sub {print STDERR @_ };
+use Posda::Config 'Config';
+
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );

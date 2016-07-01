@@ -9,6 +9,8 @@ use Method::Signatures::Simple;
 use Dispatch::NamedObject;
 use Dispatch::Select;
 
+use Posda::Config 'Config';
+
 use BS::Table;
 use AppController::StatusInfo;
 
@@ -18,9 +20,8 @@ use vars '@ISA';
 
 @ISA = ("Dispatch::NamedObject");
 
-method new($class: $sess, $path, $databases) {
+method new($class: $sess, $path) {
   my $this = Dispatch::NamedObject->new($sess, $path);
-  $this->{Databases} = $databases;
 
   bless $this, $class;
   return $this;
@@ -30,7 +31,7 @@ method RecBacklog($http, $dyn) {
   $http->TextHeader();
 
   AppController::StatusInfo::get_rec_backlog_async(
-    $self->{Databases}->{stats}, func($results) {
+    Config('appstats_db_name'), func($results) {
     # results come back as list of hashrefs, need to convert to static list
     my $ret = [];
     for my $row (@{$results}) {
@@ -45,7 +46,7 @@ method DBBacklog($http, $dyn) {
   $http->TextHeader();
 
   AppController::StatusInfo::get_db_backlog_async(
-    $self->{Databases}->{stats}, func($results) {
+    Config('appstats_db_name'), func($results) {
     # results come back as list of hashrefs, need to convert to static list
     my $ret = [];
     for my $row (@{$results}) {
@@ -60,7 +61,7 @@ method UploadCountTable($http, $dyn) {
   $http->TextHeader();
 
   AppController::StatusInfo::get_recent_uploads_async(
-    $self->{Databases}->{files}, func($results) {
+    Config('files_db_name'), func($results) {
     $http->queue(BS::Table::from_hashes($results));
   });
 }

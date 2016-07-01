@@ -1,8 +1,8 @@
-#!/usr/bin/perl -w 
-use strict;
 package PosdaCuration::Application;
+
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
+
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
 use Posda::HttpApp::JsController;
@@ -10,9 +10,10 @@ use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
-use Posda::Nicknames;
 use Posda::Nicknames2;
+use Posda::Config 'Config';
 use Posda::UUID;
+use Posda::DicomSendLocations;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Dispatch::EventHandler;
@@ -26,7 +27,7 @@ use Debug;
 use Storable;
 use Data::Dumper;
 use DBI;
-my $dbg = sub {print STDERR @_ };
+
 use utf8;
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator",
@@ -83,20 +84,13 @@ sub new {
   # my $width = 1200;
   my $height = $this->{Identity}->{height};
   $this->{title} = $this->{Identity}->{Title};
-  $this->{database_host} =
-    $main::HTTP_APP_CONFIG->{config}->{Environment}->{database_host};
   $this->{height} = $height;
   $this->{width} = $width;
   $this->{menu_width} = 100;
   $this->{content_width} = $this->{width} - $this->{menu_width};
-  $this->SetInitialExpertAndDebug("bbennett");
-  if($this->CanDebug){
-    Posda::HttpApp::DebugWindow->new($sess, "Debug");
-  }
   $this->{JavascriptRoot} =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
-  $this->{ExtractionManagerPort} =
-    $main::HTTP_APP_CONFIG->{config}->{Environment}->{ExtractionManagerPort};
+  $this->{ExtractionManagerPort} = Config("extraction_mgr_port");
   $this->QueueJsCmd("Update();");
   my $session = $this->get_session;
   $session->{DieOnTimeout} = 1;
@@ -108,6 +102,9 @@ sub new {
     $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{token};
     $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
     $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
+  }
+  if($this->CanDebug){
+    Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
   my $user_data_root =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{UserInfoDir};
@@ -425,8 +422,9 @@ sub Collections{
 sub CollectionSelection{
   my($this, $http, $dyn) = @_;
   my @lines;
+  my $files_db_name = Config("files_db_name");
   Dispatch::LineReader->new_cmd(
-  "GetCollectionId.pl \"$this->{Environment}->{database_name}\"",
+  "GetCollectionId.pl \"$files_db_name\"",
   $this->CollectionLine($http, $dyn, \@lines),
   $this->CollectionEnd($http, $dyn, \@lines));
 }
@@ -851,8 +849,8 @@ sub FixDifferences {
   };
 
   # print $query;
-  my $dbh = DBI->connect("DBI:Pg:database=" . 
-    $this->{Environment}->{database_name}, "", "");
+  my $files_db_name = 
+  my $dbh = DBI->connect("DBI:Pg:database=" . Config("files_db_name"), "", "");
   my $p = $dbh->prepare($query) or die "$!";
   $p->execute() or die $!;
 
@@ -960,7 +958,7 @@ sub DownloadCounts{
     '"Study Instance Uid","Series Instance UID", "Manufacturer",' .
     '"Model Name","Software Versions"' . "\n");
   my $cmd = "GetCountReportForDownload.pl " .
-    "\"$this->{Environment}->{database_name}\" \"" .
+    "\"${\Config('files_db_name')}\" \"" .
     "$col\" \"" .
     "$site\"\n";
 print STDERR "############################\nCommand:\n$cmd\n##########################\n";
@@ -1246,7 +1244,7 @@ sub HideSubject{
   my $site = $dyn->{site};
   $this->{CollectionMode} = "CollectionsSelection";
   my $cmd = "HideSubject.pl " .
-    "\"$this->{Environment}->{database_name}\" \"" .
+    "\"${\Config('files_db_name')}\" \"" .
     "$collection\" \"" .
     "$site\" \"" .
     "$subj\"";
@@ -1332,7 +1330,7 @@ sub ExpandExtractionInfo{
 sub ExtractSubject{
   my($this, $http, $dyn) = @_;
   my $cmd = "BuildExtractionCommands.pl " .
-    "\"$this->{Environment}->{database_name}\" " .
+    "\"${\Config('files_db_name')}\" " .
     "\"$this->{SelectedCollection}\" " .
     "\"$this->{SelectedSite}\" " .
     "\"$dyn->{subj}\"";
@@ -1472,7 +1470,7 @@ sub StartDbQuery{
   delete $this->{DbResults};
   $this->{QueryReader} = Dispatch::LineReader->new_cmd(
     "NewCollectionQuery.pl \"" .
-    "$this->{Environment}->{database_name}\" \"" .
+    "${\Config('files_db_name')}\" \"" .
     "$this->{SelectedCollection}\" " .
     "\"$this->{SelectedSite}\" ",
     $this->QueryLine($this->{SelectedCollection}, $this->{SelectedSite}),
@@ -2689,7 +2687,7 @@ sub PhiMenu{
 }
 sub DestinationDropDown{
   my($this, $http, $dyn) = @_;
-  my $dest_desc = $this->{Environment}->{DicomDestinations};
+  my $dest_desc = Posda::DicomSendLocations::get();
   my @dests = sort keys %$dest_desc;
   unless(defined $this->{SelectedDicomDestination}){
     $this->{SelectedDicomDestination} = "---- select destination ----";
@@ -2715,7 +2713,7 @@ sub SendThisExtraction{
   my $sess = $this->{session};
   my $user = $this->get_user;
   my $pid = $$;
-  my $dest_desc = $this->{Environment}->{DicomDestinations};
+  my $dest_desc = Posda::DicomSendLocations::get();
   my $dest = $this->{SelectedDicomDestination};
   my $host = $dest_desc->{$dest}->{host};
   my $port = $dest_desc->{$dest}->{port};
@@ -4106,7 +4104,7 @@ sub PreparingExtractions{
 #sub ExtractSubject{
 #  my($this, $http, $dyn) = @_;
 #  my $cmd = "BuildExtractionCommands.pl " .
-#    "\"$this->{Environment}->{database_name}\" " .
+#    "\"${\Config('files_db_name')}\" " .
 #    "\"$this->{SelectedCollection}\" " .
 #    "\"$this->{SelectedSite}\" " .
 #    "\"$dyn->{subj}\"";
@@ -4183,7 +4181,7 @@ sub PreparingExtractions{
 sub ExtractNextSubject{
   my($this, $next, $disp) = @_;
   my $cmd = "BuildExtractionCommands.pl " .
-    "\"$this->{Environment}->{database_name}\" " .
+    "\"${\Config('files_db_name')}\" " .
     "\"$this->{SelectedCollection}\" " .
     "\"$this->{SelectedSite}\" " .
     "\"$next\"";

@@ -12,11 +12,12 @@ use Method::Signatures::Simple;
 use GenericApp::Application;
 use StatusReport::DataProvider;
 
+use Posda::Config 'Config';
+
 
 method SpecificInitialize() {
   $self->{Mode} = "Initialized";
-  StatusReport::DataProvider->new($self->{session}, 'DataProvider',
-                                  $self->{Environment}->{Databases});
+  StatusReport::DataProvider->new($self->{session}, 'DataProvider');
 }
 
 method MenuResponse($http, $dyn) {
@@ -30,7 +31,7 @@ method ContentResponse($http, $dyn) {
   $http->queue(qq{
     <h2>Status Report</h2>
 
-    <a href="http://tcia-utilities:19999" target="blank" class="btn btn-primary">
+    <a href="http://${\Config('external_hostname')}:19999" target="blank" class="btn btn-primary">
       System Monitor
     </a>
 

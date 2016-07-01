@@ -1,7 +1,6 @@
-// 
 {
   "Greeting": { },
-  "HostName": "tcia-utilities",
+  "HostName": "POSDA_EXTERNAL_HOSTNAME",
   "Title": "PHI View and Fix Tool",
   "LoginTitle": "Login for PHI View and Fix Tool",
   "LogoImage": "/PosdaLogo.png",
@@ -11,5 +10,5 @@
   "height": 800,
   "width": 1200,
   "menu_width": 300,
-  "content_width": 800,
+  "content_width": 800
 }
