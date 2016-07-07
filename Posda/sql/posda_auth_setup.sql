@@ -18,20 +18,26 @@ insert into apps (app_name) values ('DicomProxyAnalysis');
 
 
 -- Default users
-insert into users (user_name, full_name) values ('admin', 
-                                                'Default Admin Account');
+insert into users (user_name, full_name, password) values (
+  'admin', 'Default Admin Account', 'admin');
 
 
 -- Default permissions
-insert into permissions (permission_name) values ('full');
 insert into permissions (permission_name) values ('debug');
-insert into permissions (permission_name) values ('expert');
-insert into permissions (permission_name) values ('expertCapable');
 insert into permissions (permission_name) values ('launch');
 
 
 -- Default user/app/permission associations
-insert into user_app_permissions values (1, 1, 1);
+insert into user_app_permissions values (
+  (select user_id from users where user_name = 'admin'),
+  (select app_id from apps where app_name = 'UserAdmin'),
+  (select permission_id from permissions where permission_name = 'launch')
+);
+insert into user_app_permissions values (
+  (select user_id from users where user_name = 'admin'),
+  (select app_id from apps where app_name = 'UserAdmin'),
+  (select permission_id from permissions where permission_name = 'debug')
+);
 
 
 
@@ -50,11 +56,6 @@ insert into user_app_permissions values (
   (select user_id from users where user_name = 'quasar'),
   (select app_id from apps where app_name = 'PosdaCuration'),
   (select permission_id from permissions where permission_name = 'debug')
-);
-insert into user_app_permissions values (
-  (select user_id from users where user_name = 'quasar'),
-  (select app_id from apps where app_name = 'PosdaCuration'),
-  (select permission_id from permissions where permission_name = 'expert')
 );
 
 insert into user_app_permissions values (
