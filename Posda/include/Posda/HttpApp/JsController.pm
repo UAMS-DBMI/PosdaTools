@@ -560,6 +560,7 @@ sub NotSoSimpleButton{
     if($i eq "op") { next }
     if($i eq "caption") { next }
     if($i eq "sync") { next }
+    if($i eq "class") { next }
     push @parms, "$i=$dyn->{$i}";
   }
   my $hstring = "";
@@ -577,6 +578,34 @@ sub NotSoSimpleButton{
     'function () {' .
     (exists($dyn->{sync}) ? $dyn->{sync} : "") .
     '});" value="' .  $dyn->{caption} . '">';
+  $http->queue($string);
+}
+sub NotSoSimpleButtonButton{
+  # A NotSoSimpleButton that is an actual html5 button tag
+  # Always calls Update(); on sync
+  my($this, $http, $dyn)  = @_;
+  my @parms;
+  for my $i (keys %$dyn){
+    if($i eq "op") { next }
+    if($i eq "caption") { next }
+    if($i eq "class") { next }
+    push @parms, "$i=$dyn->{$i}";
+  }
+  my $hstring = "";
+  for my $i (0 .. $#parms){
+    $hstring .= "$parms[$i]";
+    unless($i == $#parms) { $hstring .= "&" }
+  }
+  my $class = "btn btn-default";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  my $string = qq|
+    <button class="$class" type="button" 
+    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () {Update();});"> 
+      $dyn->{caption}
+    </button>
+  |;
   $http->queue($string);
 }
 sub DelegateButton{
