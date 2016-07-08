@@ -1,29 +1,13 @@
-// 
 {
   "ApplicationInitClass" : "StatusReport::Application",
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
   "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
-  "ApplicationName" : "Start",
+  "ApplicationName" : "StatusReport",
   "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
   "JavascriptRoot" : "POSDA_ROOT/StatusReport/javascript",
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
-  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
-  "Databases" : {
-    "stats": {
-      "hostname": "tcia-utilities",
-      "database": "app_stats",
-      "username": "postgres",
-      "password": ""
-    },
-    "files": {
-      "hostname": "tcia-utilities",
-      "database": "posda_files",
-      "username": "postgres",
-      "password": ""
-    }
-
-  }
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData"
 }

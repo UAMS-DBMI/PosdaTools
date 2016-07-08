@@ -324,10 +324,12 @@ sub GetIdentityValue{
 sub CanDebug{
   my($this) = @_;
   my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
-  if(exists $sess->{Privileges}->{capability}->{CanDebug}){
-    return 1;
+  if (defined $this->{Environment}->{ApplicationName} and defined $sess->{permissions}) {
+    return $sess->{permissions}->can($this->{Environment}->{ApplicationName},'debug');
+  } else {
+    print STDERR "CanDebug called before user logged in, or on object with no environment!\n";
+    return 0;
   }
-  return 0;
 }
 sub IsExpert{
   my($this) = @_;

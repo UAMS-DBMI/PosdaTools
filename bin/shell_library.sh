@@ -47,7 +47,9 @@ function penv {
 
 function reconfig {
   echo "Reconfiguring Posda environment..."
+  set -a
   source $APP_CONTROLLER_ROOT/Config/SetEnv $APP_CONTROLLER_STAGE
+  set +a
 }
 
 function start {

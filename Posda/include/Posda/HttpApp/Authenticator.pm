@@ -5,6 +5,12 @@ use Debug;
 {
   package Posda::HttpApp::Authenticator;
   use Storable qw( store retrieve store_fd fd_retrieve );
+  use Posda::Permissions;
+  use Posda::Passwords;
+  use Posda::Config 'Config';
+  use Posda::DebugLog 'on';
+  use Data::Dumper;
+
   sub LoginResponse{
     my($this, $http, $dyn) = @_;
     my $user = $this->get_user;
@@ -39,7 +45,7 @@ use Debug;
           <div class="form-group">
             <input type="password" class="form-control" id="UserEnteredPassword" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-default">Submit</button>
+          <button id="LoginSubmit" type="submit" class="btn btn-default">Submit</button>
         </form>
       });
     }
@@ -51,24 +57,38 @@ use Debug;
   }
   sub AppControllerLogin{
     my($this, $http, $dyn) = @_;
+    print STDERR "Login attempt for: $dyn->{name}\n";
     my $passwd = $dyn->{password};
     my $user = $dyn->{name};
-    my $db_type =
-      $main::HTTP_APP_CONFIG->{config}->{Environment}->{AuthenticationDbType};
-    if($db_type eq "File"){
-      my $file =
-        $main::HTTP_APP_CONFIG->{config}->{Environment}
-          ->{AuthenticationDbFileName};
-      if($this->DbFileValidation($user, $passwd, $file)){
-        $this->SetUserPrivs($user);
-        $this->AutoRefresh;
-      }
+    
+    # login
+
+    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+    my $stmt = $dbh->prepare(qq{
+      select password
+      from users
+      where user_name = ?
+    });
+
+    $stmt->execute(($user));
+    my $row = $stmt->fetchrow_arrayref();
+    my $correct_pass = $row->[0];
+
+    $stmt->finish;
+    $dbh->disconnect;
+
+    if ($this->CheckPassword($correct_pass, $passwd)) {
+      print STDERR "Login succeeded.\n";
+      $this->SetUserPrivs($user);
+      $this->AutoRefresh;
     } else {
-      if($this->DbValidation($user, $passwd)){
-        $this->SetPrivs($user);
-        $this->AutoRefresh;
-      }
+      print STDERR "Login failed!\n";
+      $this->QueueJsCmd("alert('Incorrect login!')");
     }
+  }
+  sub CheckPassword {
+    my ($this, $correct, $candidate) = @_;
+    return Posda::Passwords::is_valid($correct, $candidate);
   }
   sub DbFileValidation{
     my($this, $user, $password, $file) = @_;
@@ -90,6 +110,9 @@ use Debug;
     my($this, $user) = @_;
     my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
     $sess->{AuthUser} = $user;
+    $sess->{permissions} = Posda::Permissions->new($user); 
+    $this->{permissions} = $sess->{permissions};
+    $this->{can} = $sess->{permissions}->can_partial($this->{Environment}->{ApplicationName});
     my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
     $sess->{Privileges}->{capability} = $cap_config->{$user};
     $this->{capability} = $cap_config->{$user};
@@ -99,6 +122,9 @@ use Debug;
     my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
     delete $sess->{AuthUser};
     delete $sess->{Privileges}->{capability};
+    delete $sess->{permissions};
+    delete $this->{permissions};
+    delete $this->{can};
     my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
     delete $this->{capability};
     if(exists $cap_config->{Default}) {

@@ -61,11 +61,8 @@ sub new {
   $this->{menu_width} = $this->{Identity}->{menu_width};
   $this->{content_width} = $this->{width} - $this->{menu_width};
 
-  $this->SetInitialExpertAndDebug("bbennett");
+  # $this->SetInitialExpertAndDebug("bbennett");
 
-  if($this->CanDebug){
-    Posda::HttpApp::DebugWindow->new($sess, "Debug");
-  }
   $this->{JavascriptRoot} =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
   $this->QueueJsCmd("Update();");
@@ -79,6 +76,10 @@ sub new {
     $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{token};
     $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
     $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
+  }
+  # if($this->CanDebug){
+  if($this->{can}('debug')){
+    Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
   $this->{ExitOnLogout} = 1;
   $this->{DicomInfoCache} =

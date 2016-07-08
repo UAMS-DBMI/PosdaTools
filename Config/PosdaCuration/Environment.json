@@ -1,20 +1,16 @@
-// 
 {
   "ApplicationInitClass" : "PosdaCuration::Application",
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
   "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
-  "ApplicationName" : "Start",
+  "ApplicationName" : "PosdaCuration",
   "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
   "JavascriptRoot" : "POSDA_ROOT/PosdaCuration/javascript",
   "QuarantineMasterRoot" : "POSDA_ROOT/Data/quarantines",
   "QuarantineRoot" : "POSDA_ROOT/Data/QuarantinedExtractions/data",
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
-  "database_host" : "localhost",
-  "database_name" : "posda_files",
-  "ExtractionManagerPort" : "64612",
   "ExtractionRoot" :
      "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
   "PhiAnalysisRoot" :
@@ -25,45 +21,5 @@
   "IntakeDatabaseHost" : "144.30.1.71",
   "PublicDatabaseHost" : "144.30.1.74",
 
-  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
-  "DicomDestinations" : {
-    "Quasar" : {
-      "host" : "dbmi-imac.ad.uams.edu",
-      "port" : "64661",
-      "calling_ae" : "POSDA_UTIL",
-      "called_ae" : "QUASAR"
-    },
-    "Beast" : {
-      "host" : "dbmi-dell1.ad.uams.edu",
-      "port" : "64661",
-      "calling_ae" : "POSDA_UTIL",
-      "called_ae" : "POSDA_BEAST"
-    },
-    "IntakeServer" : {
-      "host" : "144.30.1.71",
-      "port" : "11112",
-      "calling_ae" : "POSDA_UTIL",
-      "called_ae" : "CTP"
-    },
-    "LocalLoopback" : {
-      "host" : "localhost",
-      "port" : "64611",
-      "calling_ae" : "SEND_LOOP",
-      "called_ae" : "RCV_LOOP"
-    },
-    "Bill's OsiriX" : {
-      "host" : "144.30.109.157",
-//      "host" : "192.168.97.73",
-      "port" : "11112",
-      "calling_ae" : "POSDA_UTIL",
-      "called_ae" : "BBOSIRIX"
-    },
-    "Bill's Posda" : {
-      "host" : "tcia-utilities",
-//      "host" : "192.168.97.73",
-      "port" : "64661",
-      "calling_ae" : "POSDA_UTIL",
-      "called_ae" : "BBPOSDA"
-    },
-  }
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData"
 }

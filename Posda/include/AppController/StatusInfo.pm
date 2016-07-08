@@ -8,15 +8,8 @@ use DBI;
 use DBD::Pg ':async';
 
 
-func _get_db_connection($database_info) {
-  my $db_name = $database_info->{database};
-  my $db_host = $database_info->{hostname};
-  my $db_user = $database_info->{username};
-  my $db_pass = $database_info->{password};
-
-  DBI->connect("DBI:Pg:database=$db_name;host=$db_host", 
-               "$db_user",
-               "$db_pass");
+func _get_db_connection($database_name) {
+  DBI->connect("DBI:Pg:database=$database_name");
 }
 
 func _execute_query_async($conn, $query, $callback) {
@@ -47,7 +40,7 @@ func _execute_query_async($conn, $query, $callback) {
   $back->queue();
 }
 
-func get_recent_uploads_async($database_info, $callback) {
+func get_recent_uploads_async($database_name, $callback) {
 
   my $query = qq{
     select
@@ -84,10 +77,10 @@ func get_recent_uploads_async($database_info, $callback) {
     order by minutes_ago asc;
   };
 
-  _execute_query_async(_get_db_connection($database_info), $query, $callback);
+  _execute_query_async(_get_db_connection($database_name), $query, $callback);
 }
 
-func get_db_backlog_async($database_info, $callback) {
+func get_db_backlog_async($database_name, $callback) {
   my $query = qq{
     select
       minute,
@@ -105,10 +98,10 @@ func get_db_backlog_async($database_info, $callback) {
     order by minute
   };
 
-  _execute_query_async(_get_db_connection($database_info), $query, $callback);
+  _execute_query_async(_get_db_connection($database_name), $query, $callback);
 }
 
-func get_rec_backlog_async($database_info, $callback) {
+func get_rec_backlog_async($database_name, $callback) {
   my $query = qq{
     select
       minute,
@@ -126,7 +119,7 @@ func get_rec_backlog_async($database_info, $callback) {
     order by minute
   };
 
-  _execute_query_async(_get_db_connection($database_info), $query, $callback);
+  _execute_query_async(_get_db_connection($database_name), $query, $callback);
 }
 
 1;

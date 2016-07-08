@@ -14,6 +14,7 @@ use Posda::Nicknames;
 use Posda::UUID;
 use Posda::NewDicomSender;
 use Posda::DebugLog 'on';
+use Posda::DicomSendLocations;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;
 use Fcntl qw(:seek);
@@ -333,7 +334,7 @@ sub SendToDropDown{
   my($this, $http, $dyn) = @_;
   DEBUG "SendToDropDown called";
 
-  my $dicom_destinations = $this->{Environment}->{DicomDestinations};
+  my $dicom_destinations = Posda::DicomSendLocations::get();
   my @dest_keys = sort keys %$dicom_destinations;
 
   my $dest_text = "---- select destination ----";

@@ -1,14 +1,14 @@
 {
   "Greeting": { },
   "HostName": "POSDA_EXTERNAL_HOSTNAME",
-  "Title": "PHI View and Fix Tool",
-  "LoginTitle": "Login for PHI View and Fix Tool",
+  "Title": "User Administration",
+  "LoginTitle": "Login for Generic Application",
   "LogoImage": "/PosdaLogo.png",
   "LogoHeight": "81",
   "LogoWidth": "151",
   "LogoAlt": "Posda", 
-  "height": 800,
-  "width": 1200,
-  "menu_width": 300,
+  "height": 600,
+  "width": 900,
+  "menu_width": 100,
   "content_width": 800
 }
