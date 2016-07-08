@@ -19,7 +19,7 @@ insert into apps (app_name) values ('DicomProxyAnalysis');
 
 -- Default users
 insert into users (user_name, full_name, password) values (
-  'admin', 'Default Admin Account', 'admin');
+  'admin', 'Default Admin Account', 'aJE5lY8D,2wUueoiymAn8HsfbdAp0kPfTiODV7kpeNUttYTgQGbE');
 
 
 -- Default permissions
