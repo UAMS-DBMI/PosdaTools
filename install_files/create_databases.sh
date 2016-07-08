@@ -2,25 +2,25 @@
 . ../Config/main.env
 
 echo Creating databases.. this will fail if they arleady exist. Do not be alarmed.
-createdb posda_files 
+createdb $POSDA_FILES_DB_NAME
 if [ $? -eq 0 ]; then
-	psql posda_files < $POSDA_ROOT/Posda/sql/dicom_images.sql 
+	psql $POSDA_FILES_DB_NAME < $POSDA_ROOT/Posda/sql/dicom_images.sql 
 	echo "insert into file_storage_root values (0, '$POSDA_CACHE_ROOT', True)" | psql posda_files
 fi	
 
-createdb posda_nicknames
+createdb $POSDA_NICKNAMES_DB_NAME
 if [ $? -eq 0 ]; then
-	psql posda_nicknames < $POSDA_ROOT/Posda/sql/Nickname.sql
-	psql posda_nicknames < $POSDA_ROOT/Posda/sql/Nickname-AddFor.sql
+	psql $POSDA_NICKNAMES_DB_NAME < $POSDA_ROOT/Posda/sql/Nickname.sql
+	psql $POSDA_NICKNAMES_DB_NAME < $POSDA_ROOT/Posda/sql/Nickname-AddFor.sql
 fi
 
-createdb app_stats
+createdb $POSDA_APPSTATS_DB_NAME
 if [ $? -eq 0 ]; then
-	psql app_stats < $POSDA_ROOT/Posda/sql/AppUsageTracker.sql
+	psql $POSDA_APPSTATS_DB_NAME < $POSDA_ROOT/Posda/sql/AppUsageTracker.sql
 fi
 
-createdb posda_auth
+createdb $POSDA_AUTH_DB_NAME
 if [ $? -eq 0 ]; then
-	psql posda_auth < $POSDA_ROOT/Posda/sql/posda_auth.sql
-	psql posda_auth < $POSDA_ROOT/Posda/sql/posda_auth_setup.sql
+	psql $POSDA_AUTH_DB_NAME < $POSDA_ROOT/Posda/sql/posda_auth.sql
+	psql $POSDA_AUTH_DB_NAME < $POSDA_ROOT/Posda/sql/posda_auth_setup.sql
 fi
