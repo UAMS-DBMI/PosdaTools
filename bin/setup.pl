@@ -33,7 +33,7 @@ require JSON; JSON->import;
 require DBD::Pg; DBD::Pg->import;
 require Term::ReadKey; Term::ReadKey->import;
 
-use Posda::Config 'Config';
+require Posda::Config; Posda::Config->import('Config');
 
 say "Creating cache directory structure...";
 say `cd install_files;./create_cache_dirs.sh`;
