@@ -25,6 +25,10 @@ use Posda::DebugLog 'on';
 {
   package AppController::JavaScriptApp;
 
+  use Posda::Config 'Config';
+  use Posda::Passwords;
+  use DBI;
+
   use JSON;
   use Storable qw( store retrieve store_fd fd_retrieve );
 
@@ -863,73 +867,94 @@ EOF
   }
   sub PasswordContent{
     my($this, $http, $dyn) = @_;
-    my $db_type = 
-      $main::HTTP_APP_CONFIG->{config}->{Environment}->{AuthenticationDbType};
-    unless($db_type eq "File"){
-      return $http->queue("Can only change passwords for DB type of \"File\"");
-    }
-    $this->{PasswordDbFile} = 
-      $main::HTTP_APP_CONFIG->{config}->{Environment}
-        ->{AuthenticationDbFileName};
+
     $this->{user} = $this->get_user;
-    $this->{user_name} = $this->GetUserName($this->{user},
-       $this->{PasswordDbFile});
-    my $form = <<FORM;
-<form onSubmit="
-PosdaGetRemoteMethod('PasswordChange', 'old='+this.elements['OldPassword'].value+'&amp;newp='+this.elements['NewPassword'].value+'&amp;rpt=' +this.elements['RepeatPassword'].value, function(){Update();});return false;">
-  <div class="form-group">
-    <label for="OldPassword">Current Password</label>
-    <input type="password" class="form-control" id="OldPassword" placeholder="Current Password">
-  </div>
-  <div class="form-group">
-    <label for="NewPassword">New Password</label>
-    <input type="password" class="form-control" id="NewPassword" placeholder="New Password">
-  </div>
-  <div class="form-group">
-    <label for="RepeatPassword">Repeat New Password</label>
-    <input type="password" class="form-control" id="RepeatPassword" placeholder="New Password">
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
-FORM
-;
-    $this->RefreshEngine($http, $dyn, $form);
+
     if($this->{password_message}){
-      $http->queue($this->{password_message});
+      my $alert_type = "alert-success";
+      if ($this->{password_message} =~ /^E/) {
+        # change to danger if message starts with E
+        $alert_type = "alert-danger";
+      }
+      $http->queue(qq{
+        <div class="alert $alert_type">
+          $this->{password_message}
+        </div>
+      });
     }
+    my $form = qq{
+      <form onSubmit="PosdaGetRemoteMethod('PasswordChange', 'old='+this.elements['OldPassword'].value+'&amp;newp='+this.elements['NewPassword'].value+'&amp;rpt=' +this.elements['RepeatPassword'].value, function(){Update();});return false;">
+        <div class="form-group">
+          <label for="OldPassword">Current Password</label>
+          <input type="password" class="form-control" 
+                 id="OldPassword" placeholder="Current Password">
+        </div>
+        <div class="form-group">
+          <label for="NewPassword">New Password</label>
+          <input type="password" class="form-control" 
+                 id="NewPassword" placeholder="New Password">
+        </div>
+        <div class="form-group">
+          <label for="RepeatPassword">Repeat New Password</label>
+          <input type="password" class="form-control" 
+                 id="RepeatPassword" placeholder="New Password">
+        </div>
+        <button type="submit" class="btn btn-warning">Change Password</button>
+      </form>
+    };
+    $this->RefreshEngine($http, $dyn, $form);
   }
-  sub GetUserName{
-    my($this, $user, $file) = @_;
-    open my $fh, "<$file" or return undef;
-    my %names;
-    while(my $l = <$fh>){
-      chomp $l;
-      my($usr, $pwd, $is_sup, $name) = split(/\|/, $l);
-      $names{$usr} = $name;
-    }
-    close $fh;
-    if($names{$user}) { return $names{$user} };
-    return undef;
-  }
-  sub PasswordChange{
+
+  sub PasswordChange {
     my($this, $http, $dyn) = @_;
-    unless(
-      $this->DbFileValidation($this->{user}, $dyn->{old},
-        $this->{PasswordDbFile})
-    ){
-      return $this->{password_message} = "bad old password";
+
+    my $user = $this->{user};
+
+    my $new_pass = $dyn->{newp};
+    my $old_pass = $dyn->{old};
+    my $rpt_pass = $dyn->{rpt};
+
+    DEBUG "$new_pass, $old_pass, $rpt_pass";
+
+    # verify they match
+    if ($new_pass ne $rpt_pass) {
+      $this->{password_message} = "Error: new passwords do not match!";
+      return;
     }
-    unless($dyn->{newp} eq $dyn->{rpt}){
-      return $this->{password_message} = "non-matching passwords";
+
+    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+
+    # verify current pass
+    my $stmt = $dbh->prepare(qq{
+      select password
+      from users
+      where user_name = ?
+    });
+
+    $stmt->execute($user);
+    my $current_enc = $stmt->fetchrow_arrayref()->[0];
+    $stmt->finish;
+
+    if (not Posda::Passwords::is_valid($current_enc, $old_pass)) {
+      $this->{password_message} = "Error: incorrect old password";
+      return;
     }
-    my $file = $this->{PasswordDbFile};
-    my $salt = 
-      join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64];
-    my $crypted = crypt($dyn->{newp}, $salt);
-    open my $fh, ">>$file" or die "Can't open $file for append";
-    print $fh "$this->{user}|$crypted|1|$this->{user_name}\n";
-    close $fh;
-    $this->{password_message} = "changed password";
+
+
+    # change pass
+    my $enc_pass = Posda::Passwords::encode($new_pass);
+
+    $stmt = $dbh->prepare(qq{
+      update users
+      set password = ?
+      where user_name = ?
+    });
+
+    $stmt->execute($enc_pass, $user);
+    $stmt->finish;
+
+    $dbh->disconnect;
+    $this->{password_message} = "Success: changed password";
   }
 }
 1;

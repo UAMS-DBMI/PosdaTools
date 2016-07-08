@@ -12,6 +12,7 @@ use Storable 'dclone';
 
 use GenericApp::Application;
 
+use Posda::Passwords;
 use Posda::Config 'Config';
 
 use Posda::DebugLog 'on';
@@ -81,7 +82,14 @@ method ContentResponse($http, $dyn) {
 
 method RenderChangesSaved($http, $dyn) {
   $http->queue(qq{
-    Changes saved!
+    <div class="alert alert-success">
+      Changes saved!
+    </div>
+  });
+  $self->NotSoSimpleButtonButton($http, {
+    caption => 'Return to User List',
+    op => 'GoToUserList',
+    class => 'btn btn-primary'
   });
 }
 
@@ -93,7 +101,7 @@ method RenderConfirmDelete($http, $dyn) {
     return;
   }
   $http->queue(qq{
-    <p>
+    <p class="alert alert-danger">
       You are about to delete the user $self->{DeletingUser}.
       This operation CANNOT be undone.
     </p>
@@ -115,17 +123,27 @@ method RenderConfirmDelete($http, $dyn) {
 }
 method RenderUserDeleted($http, $dyn) {
   $http->queue(qq{
-    User deleted!
+    <div class="alert alert-success">
+      User deleted!
+    </div>
   });
   $self->NotSoSimpleButtonButton($http, {
     caption => 'Return to User List',
     op => 'GoToUserList',
+    class => "btn btn-primary"
   });
 }
 
 method RenderUserCreated($http, $dyn) {
   $http->queue(qq{
-    User created!
+    <div class="alert alert-success">
+      User created!
+    </div>
+  });
+  $self->NotSoSimpleButtonButton($http, {
+    caption => 'Assign permissions now',
+    op => 'RenderAssignPerms',
+    class => 'btn btn-primary'
   });
   $self->NotSoSimpleButtonButton($http, {
     caption => 'Return to User List',
@@ -137,7 +155,13 @@ method RenderUserList($http, $dyn) {
   my $users = $self->GetUserList();
 
   $http->queue(qq{
-    <h3>Users</h3>
+    <h2>Users</h2>
+    <hr>
+    <h4>Edit current users</h4>
+    <div class="alert alert-info">
+      Click on a user's name to edit their app permissions and password.
+      Click the <strong>red X</strong> to the right of the user to delete them.
+    </div>
     <table class="table" style="width: auto">
   });
 
@@ -188,7 +212,26 @@ method RenderUserList($http, $dyn) {
 }
 
 method RenderAssignPerms($http, $dyn) {
+  if ($self->{Mode} ne 'RenderAssignPerms') {
+    $self->{Mode} = 'RenderAssignPerms';
+    return;
+  }
+
+  my $username = $self->{SelectedUsername};
+
   $http->queue(qq{
+    <h3>Editing User: $username</h3>
+    <hr>
+    <p class="alert alert-info">
+      Toggle permissions on or off by clicking the buttons to the right of
+      each App name. Note that <strong>launch</strong> permission is required
+      for the user to be able to use the app.
+    </p>
+    <p class="alert alert-warning">
+      Giving a user the ability to launch the UserAdmin app gives them
+      the ability to modify these settings!
+    </p>
+    <h4>Permissions</h4>
     <form id="UpdateForm" onSubmit="PosdaGetRemoteMethod('UpdateSelection', \$('#UpdateForm').serialize(), function(){Update();});return false;">
     <table class="table">
     <tr>
@@ -222,20 +265,82 @@ method RenderAssignPerms($http, $dyn) {
   }
   $http->queue(qq{
     </table>
-    <input id="UpdateFormSubmit" class="btn btn-default" type="submit">
+    <input id="UpdateFormSubmit" class="btn btn-primary" type="submit" value="Assign Permissions">
+    </form>
+
+
+    <hr>
+    <h4>Password</h4>
+    <div class="alert alert-info">
+      Passwords are stored in a hashed format, and therefore cannot be 
+      displayed. You may change the user's password here at any time.
+    </div>
+    <form id="ChangePasswordForm" class="form-inline" 
+          onSubmit="PosdaGetRemoteMethod('UpdatePassword', \$('#ChangePasswordForm').serialize(), function(){Update();});return false;">
+      <input class="form-control" 
+             autocomplete="off"
+             type="password" name="NewUserPass" placeholder="New Password">
+
+      <input id="ChangePasswordFormSubmit" 
+             class="btn btn-warning" type="submit" value="Change Password">
     </form>
   });
 }
+method UpdatePassword($http, $dyn) {
+  my $user = $self->{SelectedUsername};
+  my $pass = $dyn->{NewUserPass};
+
+  my $enc_pass = Posda::Passwords::encode($pass);
+
+  my $stmt = $self->{dbh}->prepare(qq{
+    update users
+    set password = ?
+    where user_name = ?
+  });
+
+  $stmt->execute($enc_pass, $user);
+  $stmt->finish;
+
+  $self->{Mode} = 'RenderChangesSaved';
+}
 
 method UpdateSelection($http, $dyn) {
-  my $selections = {};
+  my @selections;
   map {
     if(/(.*)%7C(.*)/) {
-      $selections->{$1}->{$2} = 1;
+      push @selections, [$self->{SelectedUsername}, $1, $2];
     }
   } keys %$dyn;
 
-  DEBUG Dumper($selections);
+  # turn the selection list into a set of inserts
+  my $query = qq{
+    insert into user_app_permissions values (
+      (select user_id from users where user_name = ?),
+      (select app_id from apps where app_name = ?),
+      (select permission_id from permissions where permission_name = ?)
+    )
+  };
+  # begin transaction
+  $self->{dbh}->{AutoCommit} = 0;  # disabling AutoCommit begins a transaction
+  # delete all current permissions for the user
+  my $del_stmt = $self->{dbh}->prepare(qq{
+    delete from user_app_permissions
+    where user_id = (select user_id from users where user_name = ?)
+  });
+
+  $del_stmt->execute($self->{SelectedUsername});
+  $del_stmt->finish;
+
+  # execute the set of inserts
+  my $stmt = $self->{dbh}->prepare($query);
+  map {
+    $stmt->execute(@$_);
+  } @selections;
+
+  # commit transaction
+  $stmt->finish;
+  $self->{dbh}->commit;
+  $self->{dbh}->{AutoCommit} = 1; # go back to normal
 
   $self->{Mode} = 'RenderChangesSaved';
 }
@@ -244,16 +349,18 @@ method CreateNewUser($http, $dyn) {
   my $name = $dyn->{NewUserName};
   my $pass = $dyn->{NewUserPass};
 
-  DEBUG "$name, $pass";
+  my $enc_pass = Posda::Passwords::encode($pass);
+  DEBUG "$name, $pass, $enc_pass";
 
   my $stmt = $self->{dbh}->prepare(qq{
     insert into users (user_name, full_name, password)
     values (?, '', ?)
   });
 
-  $stmt->execute($name, $pass);
+  $stmt->execute($name, $enc_pass);
   $stmt->finish;
 
+  $self->{SelectedUsername} = $name;
   $self->{Mode} = "RenderUserCreated";
 
 }
@@ -289,6 +396,7 @@ method GetUserList() {
     select
       user_name
     from users
+    order by user_name
   });
 
   $stmt->execute();

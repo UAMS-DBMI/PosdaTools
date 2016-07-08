@@ -6,6 +6,7 @@ use Debug;
   package Posda::HttpApp::Authenticator;
   use Storable qw( store retrieve store_fd fd_retrieve );
   use Posda::Permissions;
+  use Posda::Passwords;
   use Posda::Config 'Config';
   use Posda::DebugLog 'on';
   use Data::Dumper;
@@ -82,16 +83,12 @@ use Debug;
       $this->AutoRefresh;
     } else {
       print STDERR "Login failed!\n";
+      $this->QueueJsCmd("alert('Incorrect login!')");
     }
   }
   sub CheckPassword {
     my ($this, $correct, $candidate) = @_;
-    #TODO: this should be storing the password as some type of salted hash!
-    if ($correct eq $candidate) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return Posda::Passwords::is_valid($correct, $candidate);
   }
   sub DbFileValidation{
     my($this, $user, $password, $file) = @_;
