@@ -23,3 +23,9 @@ if [ $? -eq 0 ]; then
 	psql $POSDA_AUTH_DB_NAME < $POSDA_ROOT/Posda/sql/posda_auth.sql
 	psql $POSDA_AUTH_DB_NAME < $POSDA_ROOT/Posda/sql/posda_auth_setup.sql
 fi
+
+createdb $POSDA_DICOM_ROOTS_DB_NAME
+if [ $? -eq 0 ]; then
+	psql $POSDA_DICOM_ROOTS_DB_NAME < $POSDA_ROOT/Posda/sql/dicom_roots.sql
+	psql $POSDA_DICOM_ROOTS_DB_NAME < $POSDA_ROOT/Posda/sql/dicom_roots_data.sql
+fi

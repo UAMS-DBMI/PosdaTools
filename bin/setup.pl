@@ -87,8 +87,7 @@ my $dbs = [
   ['files', Config('files_db_name')],
   ['nicknames', Config('nicknames_db_name')],
   ['app status', Config('appstats_db_name')],
-  # TODO: This DB is currently missing!
-  # ['DICOM roots', Config('dicom_roots_db_name')],
+  ['DICOM roots', Config('dicom_roots_db_name')],
 ];
 
 map {
