@@ -14,16 +14,4 @@ for i in **/env/Setup; do
   source $i $APP_CONTROLLER_ROOT/$NAME
 done
 
-###############################################################################
-# Actual configuration variables
-###############################################################################
-
-export POSDA_DEBUG=0
-export POSDA_TEST_COMMANDS=$POSDA_HOME/test/Dispatch
-export POSDA_TEST_SCRIPTS=$POSDA_HOME/test/Scripts
-export POSDA_TPL=$POSDA_HOME/tpl
-export POSDA_TEST_BIN=$POSDA_HOME/bin/test
-
-export POSDA_ROOT=$APP_CONTROLLER_ROOT
-export POSDA_CACHE_ROOT=/cache/bbennett
-export POSDA_PORT=64610
+source posda.env
