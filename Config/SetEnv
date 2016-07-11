@@ -14,4 +14,4 @@ for i in **/env/Setup; do
   source $i $APP_CONTROLLER_ROOT/$NAME
 done
 
-source Config/main.env
+source posda.env
