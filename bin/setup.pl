@@ -78,7 +78,7 @@ say "\nCreating cache directory structure... " .
 create_cache_dirs();
 
 say "\nCreating databases...";
-`./install_files/create_databases.sh`;
+`./bin/create_databases.sh`;
 
 
 say "\nTesting database connection...";
