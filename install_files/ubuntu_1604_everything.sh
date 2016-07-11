@@ -14,4 +14,7 @@ sudo -u postgres createuser -s $(whoami)
 
 ./setup.sh
 
+echo "Removing this user from the sudo group"
+sudo deluser $(whoami) sudo
+
 echo "Everything should be ready to go now!"

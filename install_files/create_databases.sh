@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-. ../Config/main.env
 
 echo Creating databases.. this will fail if they arleady exist. Do not be alarmed.
 createdb $POSDA_FILES_DB_NAME
