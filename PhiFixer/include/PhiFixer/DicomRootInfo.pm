@@ -11,11 +11,7 @@ package PhiFixer::DicomRootInfo;
 use strict;
 use DBI;
 
-# TODO: These need to be moved into a config file!
-my $db_name = 'dicom_roots';
-my $db_host = 'tcia-utilities';
-my $db_user = 'postgres';
-my $db_pass = '';
+use Posda::Config 'Config';
 
 my $cache = {};
 
@@ -28,8 +24,7 @@ sub get_info {
     return $cache->{$site}->{$collection};
   }
 
-  my $dbh = DBI->connect("DBI:Pg:database=$db_name;host=$db_host", 
-                         "$db_user", "$db_pass");
+  my $dbh = DBI->connect("DBI:Pg:database=${\Config('dicom_roots_db_name')}");
 
   my $query = qq{
     select
