@@ -12,7 +12,6 @@ echo
 echo "Adding the current user as a postgres superuser"
 sudo -u postgres createuser -s $(whoami)
 
-./create_cache_dirs.sh
-./create_databases.sh
+./setup.sh
 
 echo "Everything should be ready to go now!"

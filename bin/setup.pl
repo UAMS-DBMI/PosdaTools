@@ -5,6 +5,11 @@ my $fatal_msg = "Fatal error encountered, setup cannot continue :(";
 
 say "Welcome to the Posda Setup Tool!\n";
 
+if (not defined $ENV{POSDA_ROOT}) {
+  say "setup.pl cannot be executed directly. Pleasea use setup.sh instead!";
+  die $fatal_msg;
+}
+
 say "Testing for all required Perl modules...";
 eval {
   require Modern::Perl;
@@ -26,7 +31,7 @@ if ($@) {
   say "All modules are installed!";
 }
 
-# mimic use
+# mimic 'use'
 require Modern::Perl; Modern::Perl->import('2010');
 require Method::Signatures::Simple; Method::Signatures::Simple->import;
 require JSON; JSON->import;
