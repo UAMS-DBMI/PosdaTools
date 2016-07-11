@@ -368,8 +368,6 @@ sub MakeFileInspector{
       $this->{DisplayInfoIn}->{SelectedFileToView}->{$series} = $file_list->[0];
     }
     for my $nn (@{$file_list}){
-      my $files = $this->{nn}->ToFiles($nn);
-      my $file = $this->FilenameFromDigests($files);
       $http->queue('<option value="' . $nn . '"' .
         ($nn eq $this->{DisplayInfoIn}->{SelectedFileToView}->{$series} ?
            " selected" : "") .
@@ -872,7 +870,7 @@ sub CompareRevisions{
     $child_obj = PosdaCuration::CompareRevisions->new($this->{session},
       $child_path, $from, $to);
     if($child_obj){
-      $this->{DEBUGObj_CompareRevisions} = $child_obj;
+      $this->{DBGObj_CompareRevisions} = $child_obj;
       $this->InvokeAbove("StartChildDisplayer", $child_obj);
     } else {
       print STDERR 'PosdaCuration::CompareRevisions->new failed!!!' . "\n";
