@@ -4,7 +4,6 @@ use lib 'Posda/include/';
 
 my $fatal_msg = "Fatal error encountered, setup cannot continue :(";
 
-
 sub create_cache_dirs {
   make_path("$ENV{POSDA_CACHE_ROOT}/Data");
   make_path("$ENV{POSDA_CACHE_ROOT}/Data/TempDirectory");
@@ -33,8 +32,6 @@ sub create_cache_dirs {
   make_path("$ENV{POSDA_CACHE_ROOT}/dicom_info");
   make_path("$ENV{POSDA_CACHE_ROOT}/Data/dicom_info");
 }
-
-
 
 say "Welcome to the Posda Setup Tool!\n";
 
@@ -80,7 +77,6 @@ create_cache_dirs();
 say "\nCreating databases...";
 `./bin/create_databases.sh`;
 
-
 say "\nTesting database connection...";
 my $dbs = [
   ['authentication', Config('auth_db_name')],
@@ -102,6 +98,5 @@ map {
     say "Connection successful: $dbname ($name)";
   }
 } @$dbs;
-
 
 say "\nSetup completed successfully.";
