@@ -644,6 +644,54 @@ sub DrawExtractionInfoHeader {
   }
 }
 
+sub atoih {
+  my ($arrayref) = @_;
+  # Array To One-Indexed Hash
+  # Because of evil things
+
+  my $counter = 1;
+  my %hash = map { $counter++ => $_ } @$arrayref;
+
+  return \%hash;
+}
+
+sub BuildHierarchy {
+  # Build a Hierarchy structure, similar to ExtractionHierarchy,
+  # from a simple source of subj->study->series->instance.
+  # This is part of the "Compare to Intake/Public" function.
+  my($this, $source) = @_;
+
+  my $h = {};
+  for my $subj (keys %$source) {
+    $h->{$subj}->{rev_hist} = {CurrentRev => 0};
+    $h->{$subj}->{hierarchy}->{$subj} = {
+      studies => atoih([
+        map {
+          my $study = $_;
+          {
+            pid => $subj,
+            pname => $subj,
+            uid => $_,
+            series => atoih([
+              map {
+                my $series = $_;
+                {
+                  uid => $_,
+                  files => atoih([
+                    map {
+                      {sop_instance_uid => $_}
+                    } keys %{$source->{$subj}->{$study}->{$series}}
+                  ]) 
+                }
+              } keys %{$source->{$subj}->{$study}}
+            ])
+          }
+        } keys %{$source->{$subj}}
+      ])
+    };
+  }
+  return $h;
+}
 sub CompareInfoSelectionChanged {
   my($this, $http, $dyn) = @_;
 
@@ -656,24 +704,17 @@ sub CompareInfoSelectionChanged {
     $this->{ExtractionsHierarchiesOriginal} = $this->{ExtractionsHierarchies};
   }
 
-  # if it doesn't already exist,
-  # build the comparison data structure
-
   if ($selection eq 'intake') {
-    if (not defined $this->{CompareInfoIntake}) {
-      # genreate it
-      $this->{CompareInfoIntake} =
-        $this->GenerateCompareDataStructure($this->{IntakeCheckHierarchy});
+    if (not defined $this->{IntakeHierarchy}) {
+      $this->{IntakeHierarchy} = $this->BuildHierarchy($this->{IntakeData});
     }
-    $this->{ExtractionsHierarchies} = $this->{CompareInfoIntake};
+    $this->{ExtractionsHierarchies} = $this->{IntakeHierarchy};
   }
   if ($selection eq 'public') {
-    if (not defined $this->{CompareInfoPublic}) {
-      # genreate it
-      $this->{CompareInfoPublic} =
-        $this->GenerateCompareDataStructure($this->{PublicCheckHierarchy});
+    if (not defined $this->{PublicHierarchy}) {
+      $this->{PublicHierarchy} = $this->BuildHierarchy($this->{PublicData});
     }
-    $this->{ExtractionsHierarchies} = $this->{CompareInfoPublic};
+    $this->{ExtractionsHierarchies} = $this->{PublicHierarchy};
   }
   if ($selection eq 'extraction') {
     # Restore the real ExtractionsHierarchies in this case
@@ -740,6 +781,8 @@ sub copy_study {
 }
 
 sub GenerateCompareDataStructure {
+  #TODO: Remove this entire set of functions,
+  #      it is not being used any longer.
   my($this, $compare) = @_;
 
   my $source = $this->{ExtractionsHierarchiesOriginal};
@@ -985,8 +1028,8 @@ sub NewQuery{
   delete $this->{SelectedCollection};
   delete $this->{SelectedSite};
   delete $this->{CompareInfoSelection};
-  delete $this->{CompareInfoIntake};
-  delete $this->{CompareInfoPublic};
+  delete $this->{PublicHierarchy};
+  delete $this->{IntakeHierarchy};
   $this->ClearIntakeData();
   $this->ClearPublicData();
   Posda::Nicknames2::clear();
