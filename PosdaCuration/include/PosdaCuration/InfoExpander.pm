@@ -6,6 +6,7 @@ use PosdaCuration::SeriesReport;
 use PosdaCuration::CompareFiles;
 use PosdaCuration::CompareRevisions;
 use Data::Dumper;
+use Posda::DebugLog 'on';
 
 use constant INCONSISTENT => '&lt;inconsistent&gt;';
 
@@ -485,7 +486,6 @@ sub HideSeries{
   my($this, $http, $dyn) = @_;
   my $series = $this->{PendingHideSeriesUid};
   my $cmd = "HideSeries.pl " .
-    "\"$this->{Environment}->{database_name}\" " .
     "\"$this->{SelectedCollection}\" " .
     "\"$this->{SelectedSite}\" " .
     "\"$series\"";

@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w
 #
-use strict;
 use DBI;
-my $usage = "usage: UnHideSeries.pl <db> <coll> <site> <series_uid>\n";
-unless($#ARGV == 3) { die $usage }
-my $dbh = DBI->connect("DBI:Pg:database=$ARGV[0]", "", "");
+use Posda::Config 'Config';
+my $usage = "usage: UnHideSeries.pl <coll> <site> <series_uid>\n";
+unless($#ARGV == 2) { die $usage }
+my $dbh = DBI->connect("DBI:Pg:database=${\Config('files_db_name')}");
 my $q= <<EOF;
 update
   ctp_file
@@ -18,5 +18,5 @@ where
   )
 EOF
 my $p = $dbh->prepare($q) or die "$!";
-$p->execute($ARGV[1], $ARGV[2], $ARGV[3]) or die $!;
+$p->execute($ARGV[0], $ARGV[1], $ARGV[2]) or die $!;
 print "OK\n";
