@@ -1,6 +1,6 @@
 package Posda::Passwords;
 
-use Modern::Perl '2015';
+use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use Digest::SHA 'sha256_base64';
 
