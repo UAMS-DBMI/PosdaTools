@@ -23,6 +23,7 @@ use Digest::MD5;
 use JSON;
 use Debug;
 use Storable;
+use Posda::Config 'Config';
 my $dbg = sub {print STDERR @_ };
 use utf8;
 use vars qw( @ISA );
@@ -70,9 +71,7 @@ sub new {
   $this->{content_width} = $this->{width} - $this->{menu_width};
   # TODO:  This needs to be moved to a config file!
   $this->SetInitialExpertAndDebug("quasar");
-  if($this->CanDebug){
-    Posda::HttpApp::DebugWindow->new($sess, "Debug");
-  }
+
   $this->{JavascriptRoot} =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
   $this->QueueJsCmd("Update();");
@@ -92,6 +91,12 @@ sub new {
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{DicomInfoCache};
   $this->{ExtractionRoot} =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{ExtractionRoot};
+
+  # make sure this always happens after logging in
+  if($this->{can}('debug')){
+    Posda::HttpApp::DebugWindow->new($sess, "Debug");
+  }
+
   my $cmd = 
     "ScanSubmissionDirectories.pl $this->{Environment}->{SubmissionRoot}";
   Dispatch::LineReader->new_cmd($cmd, $this->DirLine, $this->DirEnd);
@@ -211,7 +216,7 @@ sub JsContent{
 }
 sub DebugButton{
   my($this, $http, $dyn) = @_;
-  if($this->CanDebug){
+  if($this->{can}('debug')){
     $this->RefreshEngine($http, $dyn, qq{
       <span class="btn btn-sm btn-info" 
        onClick="javascript:rt('DebugWindow',
@@ -363,10 +368,11 @@ sub SendTheseFiles{
 
   DEBUG "Beginning send of files";
 
+  my $dicom_destinations = Posda::DicomSendLocations::get();
+
   # Pull the destination data from the config file
-  my $dest = $this->{Environment}
-                  ->{DicomDestinations}
-                  ->{$this->{SelectedDicomDestination}};
+  my $dest = $dicom_destinations->{$this->{SelectedDicomDestination}};
+
   my $host = $dest->{host};
   my $port = $dest->{port};
   my $calling = $dest->{calling_ae};

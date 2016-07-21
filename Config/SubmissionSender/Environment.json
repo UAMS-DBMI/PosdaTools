@@ -4,7 +4,7 @@
   "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
   "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
-  "ApplicationName" : "Start",
+  "ApplicationName" : "SubmissionSender",
   "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
   "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
   "JavascriptRoot" : "POSDA_ROOT/PosdaCuration/javascript",

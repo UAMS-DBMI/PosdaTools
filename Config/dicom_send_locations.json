@@ -5,6 +5,12 @@
     "calling_ae" : "POSDA",
     "called_ae" : "QUASAR"
   },
+  "Joseph" : {
+    "host" : "144.30.108.74",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "JOSEPH"
+  },
   "Beast" : {
     "host" : "144.30.108.235",
     "port" : "64661",
