@@ -4,7 +4,7 @@
 
 use lib 'Posda/include/';
 
-use Modern::Perl '2015';
+use Modern::Perl '2010';
 use Method::Signatures::Simple;
 
 use Dispatch::LineReader;
