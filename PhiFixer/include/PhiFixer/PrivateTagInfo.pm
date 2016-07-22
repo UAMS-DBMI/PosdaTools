@@ -8,14 +8,10 @@ package PhiFixer::PrivateTagInfo;
 # If there is more than one match, all rows are returned.
 #
 
-use strict;
-use DBI;
+use Modern::Perl '2010';
+use Posda::Config 'Config';
 
-# TODO: These need to be moved into a config file!
-my $db_name = 'private_tag_kb';
-my $db_host = 'tcia-utilities';
-my $db_user = 'postgres';
-my $db_pass = '';
+use DBI;
 
 my $cache = {};
 
@@ -27,8 +23,7 @@ sub get_info {
     return $cache->{$tag_sig};
   }
 
-  my $dbh = DBI->connect("DBI:Pg:database=$db_name;host=$db_host", 
-                         "$db_user", "$db_pass");
+  my $dbh = DBI->connect("DBI:Pg:database=${\Config('private_tag_db_name')}");
 
   my $query = qq{
     select *

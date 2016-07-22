@@ -28,3 +28,9 @@ createdb $POSDA_DICOM_ROOTS_DB_NAME
 if [ $? -eq 0 ]; then
 	psql $POSDA_DICOM_ROOTS_DB_NAME < $POSDA_ROOT/Posda/sql/dicom_roots.sql
 fi
+
+createdb $POSDA_PRIVATE_TAG_DB_NAME
+if [ $? -eq 0 ]; then
+	psql $POSDA_PRIVATE_TAG_DB_NAME < $POSDA_ROOT/Posda/sql/private_tag_kb.sql
+	psql $POSDA_PRIVATE_TAG_DB_NAME < $POSDA_ROOT/Posda/sql/private_tag_kb_data.sql
+fi

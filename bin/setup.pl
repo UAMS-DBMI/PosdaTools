@@ -84,6 +84,7 @@ my $dbs = [
   ['nicknames', Config('nicknames_db_name')],
   ['app status', Config('appstats_db_name')],
   ['DICOM roots', Config('dicom_roots_db_name')],
+  ['private_tag_kb', Config('private_tag_db_name')],
 ];
 
 map {
