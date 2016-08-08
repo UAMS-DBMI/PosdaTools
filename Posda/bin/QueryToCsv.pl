@@ -1,7 +1,25 @@
 #! /usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::Config 'Config';
 use DBI;
+
+sub to_db {
+  # Look up the given schema name in the environment
+  my ($name) = @_;
+  my $schema_map = {
+    posda_nicknames => "NICKNAMES_DB_NAME",
+    posda_files => "FILES_DB_NAME",
+  };
+
+  my $config_var = $schema_map->{$name};
+  if (defined $config_var) {
+    return Config($config_var);
+  } else {
+    return 'NONE';
+  }
+}
+
 my $usage = "Usage:\n" .
   "  QueryToCsv.pl help\n" .
   "  QueryToCsv.pl help <query_name>\n" .
@@ -80,10 +98,12 @@ if($#ARGV >= 1){
     my $num_req = @$args;
     die "arg mismatch ($ARGV[1]): $num_req vs $num_parms\n";
   }
-  
-  if($ARGV[0] eq "help") { die $usage }
-  my $dbh = DBI->connect("dbi:Pg:dbname=$ARGV[0];");
-  unless($dbh) {die "Can't connect to db: $ARGV[0]\n" };
+
+  my $schema = $q->GetSchema;
+  my $db = to_db($schema);
+
+  my $dbh = DBI->connect("dbi:Pg:dbname=$db;");
+  unless($dbh) {die "Can't connect to db: $db\n" };
   my $cols = $q->GetColumns;
   for my $c (0 .. $#{$cols}){
     my $c_name = $cols->[$c];
@@ -92,7 +112,7 @@ if($#ARGV >= 1){
   }
   print "\n";
   $q->Prepare($dbh);
-  shift @ARGV; shift @ARGV;
+  shift @ARGV; shift @ARGV; # TODO: reduce to one shift when you take out db param
   my $ex_result = $q->Execute(@ARGV);
   if($type eq "select"){
     $q->Rows(
