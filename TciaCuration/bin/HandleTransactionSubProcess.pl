@@ -417,7 +417,8 @@ unless($#ARGV == 0) { die $help }
       my $extraction = shift(@{$this->{ExtractList}});
       my $from_file = $extraction->{from_file};
       my $to_file = $extraction->{dest_file};
-unless($from_file) { die "foo" }
+unless($from_file) { die "HandleTransactionSubProcess.pl no from_file" }
+unless($to_file) { die "HandleTransactionSubProcess.pl no to_file" }
       my $cmd = "ln \"$from_file\" \"$to_file\"";
 #print STDERR "Extraction Command: $cmd\n";
       my $fh;

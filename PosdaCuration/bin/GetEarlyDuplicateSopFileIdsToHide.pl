@@ -12,8 +12,8 @@ from (
   select
     distinct sop_instance_uid, count(*)
   from
-    file_sop_common natural join ctp_file
-  where visibility is null
+    file_sop_common natural join ctp_file natural join file_patient
+  where visibility is null and patient_id = ?
   group by sop_instance_uid) as foo 
 where count > 1
 EOF
@@ -21,20 +21,18 @@ my $q2 = <<EOF;
 select
   file_id, import_time
 from
-  file_import natural join import_event natural join file_patient
-  where file_id in (
-    select
-      file_id from file_sop_common where sop_instance_uid = ?
-      and patient_id = ?
-  )
+  file_import natural join import_event natural join ctp_file
+  natural join file_sop_common
+where
+  sop_instance_uid = ?
 EOF
 my $qh1 = $dbh->prepare($q1);
 my $qh2 = $dbh->prepare($q2);
-$qh1->execute;
+$qh1->execute($ARGV[1]);
 while(my $h1 = $qh1->fetchrow_hashref){
 #print STDERR "Looking for dups of $h1->{sop_instance_uid}\n";
   my %TimesByFile;
-  $qh2->execute($h1->{sop_instance_uid}, $ARGV[1]);
+  $qh2->execute($h1->{sop_instance_uid});
   while (my $h2 = $qh2->fetchrow_hashref){
     unless(exists $TimesByFile{$h2->{file_id}}){
       $TimesByFile{$h2->{file_id}} = $h2->{import_time};

@@ -29,13 +29,13 @@
   "DicomDestinations" : {
     "Quasar" : {
       "host" : "dbmi-imac.ad.uams.edu",
-      "port" : "64661",
+      "port" : "64611",
       "calling_ae" : "POSDA_UTIL",
       "called_ae" : "QUASAR"
     },
     "Beast" : {
       "host" : "dbmi-dell1.ad.uams.edu",
-      "port" : "64661",
+      "port" : "64611",
       "calling_ae" : "POSDA_UTIL",
       "called_ae" : "POSDA_BEAST"
     },

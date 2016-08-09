@@ -25,5 +25,5 @@ export POSDA_TPL=$POSDA_HOME/tpl
 export POSDA_TEST_BIN=$POSDA_HOME/bin/test
 
 export POSDA_ROOT=$APP_CONTROLLER_ROOT
-export POSDA_CACHE_ROOT=/cache/posda
+export POSDA_CACHE_ROOT=/cache/bbennett
 export POSDA_PORT=64610

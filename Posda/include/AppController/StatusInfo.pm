@@ -14,9 +14,7 @@ func _get_db_connection($database_info) {
   my $db_user = $database_info->{username};
   my $db_pass = $database_info->{password};
 
-  DBI->connect("DBI:Pg:database=$db_name;host=$db_host", 
-               "$db_user",
-               "$db_pass");
+  DBI->connect("DBI:Pg:database=$db_name");
 }
 
 func _execute_query_async($conn, $query, $callback) {

@@ -529,39 +529,101 @@ EOF
 $Queries{PosdaTotals}->{args} = [];
 $Queries{PosdaTotals}->{columns} = [
   "project_name", "site_name", "num_subjects",
-  "num_studies", "num_series", "total_files"
+  "num_studies", "num_series", "total_files", "total_sops"
 ];
 $Queries{PosdaTotals}->{schema} = "posda_files";
 $Queries{PosdaTotals}->{query} = <<EOF;
 select 
     distinct project_name, site_name, count(*) as num_subjects,
     sum(num_studies) as num_studies,
-    sum(num_series) as num_series, sum(total_files) as total_files
+    sum(num_series) as num_series, sum(total_files) as total_files,
+    sum(total_sops) as total_sops
 from (
   select
     distinct project_name, site_name, patient_id,
     count(*) as num_studies, sum(num_series) as num_series, 
-    sum(total_files) as total_files
+    sum(total_files) as total_files,
+    sum(total_sops) as total_sops
   from (
     select
        distinct project_name, site_name, patient_id, 
        study_instance_uid, count(*) as num_series,
+       sum(num_sops) as total_sops,
        sum(num_files) as total_files
     from (
       select
         distinct project_name, site_name, patient_id,
         study_instance_uid, series_instance_uid,
-        count(*) as num_files 
+        count(distinct file_id) as num_files,
+        count(distinct sop_instance_uid) as num_sops
       from (
         select
           distinct project_name, site_name, patient_id,
-          study_instance_uid, series_instance_uid, sop_instance_uid 
+          study_instance_uid, series_instance_uid, sop_instance_uid,
+          file_id
         from
            ctp_file natural join file_study natural join
            file_series natural join file_sop_common
            natural join file_patient
         where
           visibility is null
+      ) as foo
+      group by
+        project_name, site_name, patient_id, 
+        study_instance_uid, series_instance_uid
+    ) as foo
+    group by project_name, site_name, patient_id, study_instance_uid
+  ) as foo
+  group by project_name, site_name, patient_id
+) as foo
+group by project_name, site_name
+order by project_name, site_name
+EOF
+##########################################################
+$Queries{PosdaTotalsHidden}->{description} = <<EOF;
+Get totals of files hidden in Posda
+EOF
+$Queries{PosdaTotalsHidden}->{args} = [];
+$Queries{PosdaTotalsHidden}->{columns} = [
+  "project_name", "site_name", "num_subjects",
+  "num_studies", "num_series", "total_files", "total_sops"
+];
+$Queries{PosdaTotalsHidden}->{schema} = "posda_files";
+$Queries{PosdaTotalsHidden}->{query} = <<EOF;
+select 
+    distinct project_name, site_name, count(*) as num_subjects,
+    sum(num_studies) as num_studies,
+    sum(num_series) as num_series, sum(total_files) as total_files,
+    sum(total_sops) as total_sops
+from (
+  select
+    distinct project_name, site_name, patient_id,
+    count(*) as num_studies, sum(num_series) as num_series, 
+    sum(total_files) as total_files,
+    sum(total_sops) as total_sops
+  from (
+    select
+       distinct project_name, site_name, patient_id, 
+       study_instance_uid, count(*) as num_series,
+       sum(num_sops) as total_sops,
+       sum(num_files) as total_files
+    from (
+      select
+        distinct project_name, site_name, patient_id,
+        study_instance_uid, series_instance_uid,
+        count(distinct file_id) as num_files,
+        count(distinct sop_instance_uid) as num_sops
+      from (
+        select
+          distinct project_name, site_name, patient_id,
+          study_instance_uid, series_instance_uid, sop_instance_uid,
+          file_id
+        from
+           ctp_file natural join file_study natural join
+           file_series natural join file_sop_common
+           natural join file_patient
+        where
+          visibility = 'hidden'
       ) as foo
       group by
         project_name, site_name, patient_id, 
@@ -625,16 +687,16 @@ group by project_name, site_name
 order by project_name, site_name
 EOF
 ##########################################################
-$Queries{PosdaTotalsHidden}->{description} = <<EOF;
-Get totals of files hidden in Posda
+$Queries{PosdaTotalsWithDateRangeWithHidden}->{description} = <<EOF;
+Get posda totals by date range
 EOF
-$Queries{PosdaTotalsHidden}->{args} = [];
-$Queries{PosdaTotalsHidden}->{columns} = [
+$Queries{PosdaTotalsWithDateRangeWithHidden}->{args} = [ "start_time", "end_time" ];
+$Queries{PosdaTotalsWithDateRangeWithHidden}->{columns} = [
   "project_name", "site_name", "num_subjects",
   "num_studies", "num_series", "total_files"
 ];
-$Queries{PosdaTotalsHidden}->{schema} = "posda_files";
-$Queries{PosdaTotalsHidden}->{query} = <<EOF;
+$Queries{PosdaTotalsWithDateRangeWithHidden}->{schema} = "posda_files";
+$Queries{PosdaTotalsWithDateRangeWithHidden}->{query} = <<EOF;
 select 
     distinct project_name, site_name, count(*) as num_subjects,
     sum(num_studies) as num_studies,
@@ -658,17 +720,18 @@ from (
         from
            ctp_file natural join file_study natural join
            file_series natural join file_sop_common natural join file_patient
-         where
-           visibility = 'hidden'
-       ) as foo
-       group by
-         project_name, site_name, patient_id, 
-         study_instance_uid, series_instance_uid
+           natural join file_import natural join import_event
+        where
+          import_time >= ? and
+          import_time < ? 
+      ) as foo
+      group by
+        project_name, site_name, patient_id, 
+        study_instance_uid, series_instance_uid
     ) as foo
     group by project_name, site_name, patient_id, study_instance_uid
   ) as foo
   group by project_name, site_name, patient_id
-  order by project_name, site_name, patient_id
 ) as foo
 group by project_name, site_name
 order by project_name, site_name
@@ -823,14 +886,16 @@ $Queries{PixelInfoBySeries}->{schema} = "posda_files";
 $Queries{PixelInfoBySeries}->{columns} = [
  "file_id", "file", "file_offset", "size", "bits_stored", "bits_allocated",
  "pixel_representation", "number_of_frames", "samples_per_pixel",
- "pixel_rows", "pixel_columns", "photometric_interpretation", "modality"
+ "pixel_rows", "pixel_columns", "photometric_interpretation", 
+ "planar_configuration", "modality"
 ];
 $Queries{PixelInfoBySeries}->{query} = <<EOF;
 select
   f.file_id as file_id, root_path || '/' || rel_path as file,
   file_offset, size, modality,
   bits_stored, bits_allocated, pixel_representation, number_of_frames,
-  samples_per_pixel, pixel_rows, pixel_columns, photometric_interpretation
+  samples_per_pixel, pixel_rows, pixel_columns, photometric_interpretation,
+  planar_configuration
 from
   file_image f natural join image natural join unique_pixel_data
   natural join file_series
@@ -1322,7 +1387,7 @@ order by
 EOF
 ##########################################################
 $Queries{PixelTypesWithGeo}->{description} = <<EOF;
-Get distinct pixel types
+Get distinct pixel types with geometry
 EOF
 $Queries{PixelTypesWithGeo}->{args} = [ ];
 $Queries{PixelTypesWithGeo}->{schema} = "posda_files";
@@ -1352,7 +1417,7 @@ order by photometric_interpretation
 EOF
 ##########################################################
 $Queries{PixelTypesWithGeoRGB}->{description} = <<EOF;
-Get distinct pixel types
+Get distinct pixel types with geometry and rgb
 EOF
 $Queries{PixelTypesWithGeoRGB}->{args} = [ ];
 $Queries{PixelTypesWithGeoRGB}->{schema} = "posda_files";
@@ -1384,7 +1449,7 @@ order by photometric_interpretation
 EOF
 ##########################################################
 $Queries{PixelTypesWithNoGeo}->{description} = <<EOF;
-Get distinct pixel types
+Get pixel types with no geometry
 EOF
 $Queries{PixelTypesWithNoGeo}->{args} = [ ];
 $Queries{PixelTypesWithNoGeo}->{schema} = "posda_files";
@@ -1414,7 +1479,7 @@ order by photometric_interpretation
 EOF
 ##########################################################
 $Queries{SeriesNotLikeWithModality}->{description} = <<EOF;
-Get distinct pixel types
+Select series not matching pattern by modality
 EOF
 $Queries{SeriesNotLikeWithModality}->{args} = [
   "modality",
@@ -1446,7 +1511,7 @@ group by series_instance_uid, series_description
 EOF
 ##########################################################
 $Queries{HideSeriesNotLikeWithModality}->{description} = <<EOF;
-Get distinct pixel types
+Hide series not matching pattern by modality
 EOF
 $Queries{HideSeriesNotLikeWithModality}->{args} = [
   "modality",
@@ -1478,5 +1543,28 @@ where file_id in (
       ) as foo
     )
   )
+EOF
+##########################################################
+$Queries{UpdateCountsDb}->{description} = <<EOF;
+EOF
+$Queries{UpdateCountsDb}->{args} = [
+  "project_name",
+  "site_name",
+  "num_subjects",
+  "num_studies",
+  "num_series",
+  "num_files",
+];
+$Queries{UpdateCountsDb}->{schema} = "posda_counts";
+$Queries{UpdateCountsDb}->{query} = <<EOF;
+insert into totals_by_collection_site(
+  count_report_id,
+  collection_name, site_name,
+  num_subjects, num_studies, num_series, num_sops
+) values (
+  currval('count_report_count_report_id_seq'),
+  ?, ?,
+  ?, ?, ?, ?
+)
 EOF
 1;

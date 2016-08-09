@@ -141,6 +141,7 @@ sub DoTransaction{
     "GetLockStatus" => "GetLockStatus",
     "SendAllFiles" => "SendAllFiles",
     "SendFilesInStudy" => "SendFilesInStudy",
+    "SendFilesInSeries" => "SendFilesInSeries",
   };
   unless(ref($lines) eq "ARRAY" && $#{$lines} >= 0){
     Dispatch::Select::Socket->new($this->SendOperationStatus(
@@ -153,7 +154,12 @@ sub DoTransaction{
     if($line =~ /\s*([^\:]+):\s*(.*)\s*$/){
       my $key = $1;
       my $value = $2;
-      $args{$key} = $value;
+      if(exists $args{$key}){
+        unless(ref($args{$key}) eq "ARRAY"){ $args{$key} = [ $args{$key} ] }
+        push(@{$args{$key}}, $value);
+      } else {
+        $args{$key} = $value;
+      }
     } else {
       print {$this->{Log}} "bad arg line: $line\n";
     }
@@ -1259,6 +1265,214 @@ sub SendFilesInStudy{
   Dispatch::Select::Socket->new(
     $this->SendOperationStatus([
       "SendFilesInStudy: OK",
+      "Disposition: Queued",
+      "Id: $trans->{Id}",
+    ]),
+    $fh
+  )->Add("writer");
+  unless(exists $this->{QueuedSends}) { $this->{QueuedSends} = [] }
+  push(@{$this->{QueuedSends}}, $trans);
+  $this->StartSends;
+}
+### Under development
+sub SendFilesInSeries{
+  my($this, $args, $fh, $id) = @_;
+  my $coll = $args->{Collection};
+  my $site = $args->{Site};
+  my $subj = $args->{Subject};
+  my $sess = $args->{Session};
+  my $user = $args->{User};
+  my $pid = $args->{Pid};
+  my $url = $args->{Response};
+  my $host = $args->{Host};
+  my $port = $args->{Port};
+  my $called = $args->{CalledAeTitle};
+  my $calling = $args->{CallingAeTitle};
+  my $dir = $this->{extraction_dir};
+  my $SelectedSeriesList = $args->{SelectedSeriesList};
+  unless(
+    defined($coll) &&
+    defined($site) &&
+    defined($subj) &&
+    defined($sess) &&
+    defined($user) &&
+    defined($pid)
+  ){
+    Dispatch::Select::Socket->new(
+      $this->SendOperationStatus(["Error: bad params"]),
+      $fh)->Add("writer");
+    return;
+  }
+  unless(
+    -d "$dir/$coll" &&
+    -d "$dir/$coll/$site" &&
+    -d "$dir/$coll/$site/$subj"
+  ) {
+    #  Directory doesn't exist
+    Dispatch::Select::Socket->new(
+      $this->SendOperationStatus(
+        ["Error: $dir/$coll/$site/$subj doesn't exist " .
+          "(therefore can't Send)"]
+      ),
+      $fh)->Add("writer");
+    return;
+  }
+  if(exists $this->{locks_by_hierarchy}->{$coll}->{$site}->{$subj}){
+    # Directory is already locked
+    Dispatch::Select::Socket->new(
+      $this->SendOperationStatus(
+        ["Error: Already Locked (Can't Send)"]),
+      $fh)->Add("writer");
+    return;
+  }
+  my $ldir = "$dir/$coll/$site/$subj";
+  my $now = time;
+  my $trans = {
+    Collection => $coll,
+    Site => $site,
+    Subj => $subj,
+    Session => $sess,
+    User => $user,
+    Pid => $pid,
+    LockedAt => $now,
+    Id => $id,
+    Operation => "SendFilesInSeries",
+    For => "Sending",
+    SelectedSeriesList => $SelectedSeriesList,
+    SendParms => {
+      Host => $host,
+      Port => $port,
+      Called => $called,
+      Calling => $calling,
+    },
+  };
+  if(defined $url) { $trans->{Response} = $url }
+  $this->{locks_by_id}->{$id} = $trans;
+  $this->{locks_by_hierarchy}->{$coll}->{$site}->{$subj} = $trans;
+  open my $lfh, ">$ldir/lock.txt";
+  print $lfh "Locked at: $now\n";
+  print $lfh "by: $user\n";
+  print $lfh "in session: $sess\n";
+  print $lfh "running under pid: $pid\n";
+  close $lfh;
+  $trans->{LockFile} = "$ldir/lock.txt";
+  $trans->{HistoryFile} = "$ldir/history.pinfo";
+  $trans->{RevHistFile} = "$ldir/rev_hist.pinfo";
+  $trans->{LockDir} = "$ldir";
+  my $history = [];
+  if(-e "$ldir/history.pinfo"){
+    eval { $history = retrieve "$ldir/history.pinfo" };
+    if($@){
+      $history = [
+        {
+          message => "Existing history file failed to parse",
+          error => $@,
+        },
+        {
+          initial_lock_time => $now,
+          by => $user,
+          session => $sess,
+          pid => $pid,
+        },
+      ]
+    }
+  } else {
+    $history = [
+      {
+        initial_lock_time => $now,
+        by => $user,
+        session => $sess,
+        pid => $pid,
+      },
+    ];
+  }
+  $trans->{History} = $history;
+  my $rev_hist = {};
+  if(-e $trans->{RevHistFile}){
+    eval { $rev_hist = retrieve $trans->{RevHistFile} };
+    if($@){
+      $rev_hist = {
+        error => "Failed to parse RevHist file",
+      };
+    }
+  }
+  $trans->{RevHist} = $rev_hist;
+#  my $rev_dir = "$ldir/revisions";
+  unless(-d "$ldir/revisions") {
+    unless(mkdir "$ldir/revisions"){
+      Dispatch::Select::Socket->new(
+        $this->SendOperationStatus(
+          ["Error: Can't mkdir $ldir/revisions"]),
+        $fh)->Add("writer");
+      $this->DeleteLock($id);
+      return;
+    }
+  }
+  opendir DIR, "$ldir/revisions" or die "Can't opendir $ldir/revisions";
+  my @revisions;
+  while(my $f = readdir(DIR)){
+    if($f =~ /^\./) { next }
+    if($f =~ /^del_/) { next } ## ???
+    if($f =~ /^\d+$/){
+      unless(-d "$ldir/revisions/$f"){
+        print {$this->{Log}} "Error: non directory revision ($f) in $ldir\n";
+        next;
+      }
+      push(@revisions, $f);
+    } else {
+    }
+  }
+  if(@revisions < 0){
+    Dispatch::Select::Socket->new(
+      $this->SendOperationStatus(
+        ["Error: No Data (Can't Send)"]),
+      $fh
+    )->Add("writer");
+    $this->DeleteLock($id);
+    return;
+  }
+  @revisions = sort {$a <=> $b} @revisions;
+  my $first_rev = $revisions[0];
+  my $last_rev = $revisions[$#revisions];
+  $trans->{SendRev} = $last_rev;
+  unless(-d "$ldir/revisions/$last_rev"){
+      Dispatch::Select::Socket->new(
+        $this->SendOperationStatus(
+          ["Error: (Last Rev) $ldir/revisions/$last_rev/files doesn't exist"]),
+        $fh)->Add("writer");
+      $this->DeleteLock($id);
+      return;
+  }
+  $trans->{dicom_info_file} = "$ldir/revisions/$last_rev/dicom.pinfo";
+  $trans->{send_hist_file} = "$ldir/revisions/$last_rev/send_hist.pinfo";
+  unless(-f $trans->{dicom_info_file}){
+      Dispatch::Select::Socket->new(
+        $this->SendOperationStatus(
+          ["Error: $ldir/revisions/$last_rev/dicom.pinfo doesn't exist"]),
+        $fh)->Add("writer");
+      $this->DeleteLock($id);
+      return;
+  }
+  my $cmd = "DicomSendSeriesTransaction.pl \"" .
+    "$trans->{SendParms}->{Host}\" \"" .
+    "$trans->{SendParms}->{Port}\" \"" .
+    "$trans->{SendParms}->{Called}\" \"" .
+    "$trans->{SendParms}->{Calling}\" \"" .
+    "$trans->{dicom_info_file}\" \"" .
+    "$trans->{send_hist_file}\"";
+  unless(ref($trans->{SelectedSeriesList}) eq "ARRAY"){
+    $trans->{SelectedSeriesList} = [$trans->{SelectedSeriesList}];
+  }
+  for my $i (@{$trans->{SelectedSeriesList}}){
+    $cmd .= " \"$i\"";
+  }
+  $trans->{Command} = $cmd;
+  #  Here we need to lock the dir, and start the process
+  if(defined $url) { $trans->{Response} = $url }
+  $trans->{Status} = "Queued";
+  Dispatch::Select::Socket->new(
+    $this->SendOperationStatus([
+      "SendFilesInSeries: OK",
       "Disposition: Queued",
       "Id: $trans->{Id}",
     ]),

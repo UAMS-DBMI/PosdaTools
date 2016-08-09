@@ -95,6 +95,55 @@ sub SendExtraction{
   push @lines, "For: $caption";
   return &$do_trans($this, \@lines, $resp_hand);
 }
+sub SendStudy{
+  my($this, $col, $site, $subj, $study_uid, $host, $port, $calling, $called,
+    $caption, $resp_hand) = @_;
+  &$check_async($this, $resp_hand);
+  my @lines;
+  push @lines, "SendFilesInStudy";
+  push @lines, "SelectedStudy: $study_uid";
+  push @lines, "Collection: $col";
+  push @lines, "Site: $site";
+  push @lines, "Subject: $subj";
+  push @lines, "Host: $host";
+  push @lines, "Port: $port";
+  push @lines, "CallingAeTitle: $calling";
+  push @lines, "CalledAeTitle: $called";
+  push @lines, "Session: $this->{session}";
+  push @lines, "User: $this->{user}";
+  push @lines, "Pid: $this->{pid}";
+  push @lines, "For: $caption";
+  return &$do_trans($this, \@lines, $resp_hand);
+}
+sub SendSeriesList{
+  my($this, $col, $site, $subj, $series_list, $host, $port, $calling, $called,
+    $caption, $resp_hand) = @_;
+  &$check_async($this, $resp_hand);
+  my @lines;
+  push @lines, "SendFilesInSeries";
+  push @lines, "Collection: $col";
+  push @lines, "Site: $site";
+  push @lines, "Subject: $subj";
+  for my $s (@$series_list){
+    push @lines, "SelectedSeriesList: $s";
+  }
+  push @lines, "Host: $host";
+  push @lines, "Port: $port";
+  push @lines, "CallingAeTitle: $calling";
+  push @lines, "CalledAeTitle: $called";
+  push @lines, "Session: $this->{session}";
+  push @lines, "User: $this->{user}";
+  push @lines, "Pid: $this->{pid}";
+  push @lines, "For: $caption";
+  return &$do_trans($this, \@lines, $resp_hand);
+}
+sub ListLocks{
+  my($this, $col, $site, $subj, $for, $resp_hand) = @_;
+  &$check_async($this, $resp_hand);
+  my @lines;
+  push @lines, "ListLocks";
+  return &$do_trans($this, \@lines, $resp_hand);
+}
 ##########################
 # Sync communications
 sub SimpleSyncTransaction{
