@@ -1745,7 +1745,7 @@ sub SetCheckAgainstPublic{
   my $script = 'GetIntakeImagesForCollectionSite.pl';
   my $collection = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
-  my $host = $this->{Environment}->{PublicDatabaseHost};
+  my $host = Config('public_addr');
 
   my $cmd = qq{$script $host "$collection" "$site"};
 
@@ -1910,7 +1910,8 @@ sub SetCheckAgainstIntake{
   my $script = 'GetIntakeImagesForCollectionSite.pl';
   my $collection = $this->{SelectedCollection};
   my $site = $this->{SelectedSite};
-  my $host = $this->{Environment}->{IntakeDatabaseHost};
+  # my $host = $this->{Environment}->{IntakeDatabaseHost};
+  my $host = Config('intake_addr');
 
   my $cmd = qq{$script $host "$collection" "$site"};
   print "$cmd\n";
