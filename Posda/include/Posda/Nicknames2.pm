@@ -94,6 +94,7 @@ method FromUnknown($uid) {
   # try file
   my $statement = $self->{ndb}->prepare(qq{
     select distinct
+      file_digest,
       project_name,
       site_name,
       subj_id,

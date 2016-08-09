@@ -15270,9 +15270,9 @@ my $Dict = {
     },
     "37957" => {
       "KeyWord" => "",
-      "Name" => "",
+      "Name" => "Philips Pirate Element",
       "VM" => "",
-      "VR" => "UN",
+      "VR" => "FD",
       "comment" => "RET - See Note",
       "ele" => "9445",
       "group" => "0018"

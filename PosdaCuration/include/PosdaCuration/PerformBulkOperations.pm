@@ -4,7 +4,7 @@ use strict;
 use Storable;
 use PosdaCuration::ExtractionManagerIf;
 use Dispatch::EventHandler;
-use Posda::Nicknames2Factory;
+use Posda::Nicknames2;
 package PosdaCuration::PerformBulkOperations;
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );
@@ -53,6 +53,44 @@ my $check_async = sub {
     print STDERR "Response handler defined in sync mode - ???\n";
   }
 };
+sub CheckRevisionIntegrity{
+  my($this, $when_done) = @_;
+  &$check_async($this, $when_done);
+  if(defined($when_done) && ref($when_done) eq "CODE"){
+    return $this->CheckRevisionIntegrityAsync($when_done);
+  } else {
+    return $this->CheckRevisionIntegritySync;
+  }
+}
+sub CheckRevisionIntegritySync{
+  my($this) = @_;
+  for my $subj (sort @{$this->{subjs}}){
+    my $RevHistFile = "$this->{root_dir}/$subj/rev_hist.pinfo";
+    my $rev_hist = Storable::retrieve($RevHistFile);
+    my $current_rev = $rev_hist->{CurrentRev};
+    my $old_info_dir = "$this->{root_dir}/$subj/revisions/$current_rev";
+    my $source_dir = "$old_info_dir/files";
+    my $revisions_dir = "$this->{root_dir}/$subj/revisions";
+    opendir DIR, "$revisions_dir" or die "can't opendir $revisions_dir";
+    while(my $sub_dir = readdir(DIR)){
+      if($sub_dir =~ /^\./){next};
+      unless(-d "$revisions_dir/$sub_dir") {
+        print "Non directory in $revisions_dir: $sub_dir\n";
+      }
+      unless($sub_dir =~ /^\d+$/){
+        print "Badly named directory in $revisions_dir: $sub_dir\n";
+      }
+      if($sub_dir > $current_rev){
+        print "To late a rev $revisions_dir/$sub_dir\n";
+      }
+      print "Checked $revisions_dir/$sub_dir\n";
+    }
+  }
+}
+sub CheckRevisionIntegrityAsync{
+  my($this, $when_done) = @_;
+  die "CheckRevisionIntegrityAsync not implemented";
+}
 sub MapEdits{
   my($this, $edit_func, $description, $when_done) = @_;
   &$check_async($this, $when_done);
@@ -71,8 +109,6 @@ sub MapEditsSync{
     my $current_rev = $rev_hist->{CurrentRev};
     my $old_info_dir = "$this->{root_dir}/$subj/revisions/$current_rev";
     my $source_dir = "$old_info_dir/files";
-#    print STDERR "Locking $this->{coll}, $this->{site}, " .
-#      "$subj, $description\n";
     my $lines = $this->{exif}->LockForEdit(
       $this->{coll}, $this->{site}, $subj, "BulkEdit: $description");
     my %resp;
@@ -83,14 +119,9 @@ sub MapEditsSync{
       }
     }
     if(exists($resp{Locked}) && $resp{Locked} eq "OK"){  
-#      print STDERR "Locked $this->{coll}, " .
-#        "$this->{site}, $subj, Id: $resp{Id}\n";
-#      for my $k (sort keys %resp){
-#        print STDERR "\t$k: $resp{$k}\n";
-#      }
       my $destination_dir = $resp{"Destination File Directory"};
       my $revision_dir = $resp{"Revision Dir"};
-      my $results;
+      my $results = { CurrentRev => $current_rev };
       for my $i ("dicom.pinfo", "send_hist.pinfo", "error.pinfo",
         "consistency.pinfo", "hierarchy.pinfo", "link_info.pinfo",
         "FileCollectionAnalysis.pinfo"
@@ -100,19 +131,23 @@ sub MapEditsSync{
         }
       }
       my @f_list = keys %{$results->{"dicom.pinfo"}->{FilesToDigest}};
-      my $nickname_obj = Posda::Nicknames2Factory::get(
+      my $nickname_obj = Posda::Nicknames2::get(
         $this->{coll}, $this->{site}, $subj);
       my $cmd_hash = 
         &{$edit_func}($this->{coll}, $this->{site}, $subj, \@f_list, $results, $nickname_obj);
       my $cmd_file;
+      my $mutable_cmd_hash;
       if(keys %$cmd_hash > 0){
         for my $f_name (keys %$cmd_hash){
-          $cmd_hash->{$f_name}->{from_file} = $f_name;
+          for my $e (keys %{$cmd_hash->{$f_name}}){
+            $mutable_cmd_hash->{$f_name}->{$e} = $cmd_hash->{$f_name}->{$e};
+          }
+          $mutable_cmd_hash->{$f_name}->{from_file} = $f_name;
           my $short;
           if($f_name =~ /\/([^\/]+)$/){
             $short = $1;
           }
-          $cmd_hash->{$f_name}->{to_file} = "$destination_dir/$short";
+          $mutable_cmd_hash->{$f_name}->{to_file} = "$destination_dir/$short";
         }
         my $cmd_file_content = {
           cache_dir => "/cache/bbennett/Data/dicom_info",
@@ -121,7 +156,7 @@ sub MapEditsSync{
           info_dir => $revision_dir,
           operation => "EditAndAnalyze",
           parallelism => 3,
-          FileEdits => $cmd_hash,
+          FileEdits => $mutable_cmd_hash,
           files_to_link => {},
         };
         for my $f (keys %{$results->{"dicom.pinfo"}->{FilesToDigest}}){
@@ -132,7 +167,7 @@ sub MapEditsSync{
           } else {
             die "Can't extract short from $f\n";
           }
-          unless(exists $cmd_hash->{$f}){
+          unless(exists $mutable_cmd_hash->{$f}){
             $cmd_file_content->{files_to_link}->{$short} = $dig;
           }
         }
@@ -154,15 +189,13 @@ sub MapEditsSync{
           }
         }
       } else {
-#        print STDERR "Unlocking Id: $resp{Id}:\n";
         my $rlines = $this->{exif}->ReleaseLockWithNoEdit($resp{Id});
-#        for my $rline (@$rlines){
-#          print STDERR "\t$rline\n";
-#        }
       }
     } else {
-      print STDERR "Error locking $this->{coll}, $this->{site}, $subj:\n" .
-        "\t$resp{Error}\n";
+      print STDERR "Error locking $this->{coll}, $this->{site}, $subj:\n";
+        for my $i (keys %resp){
+          print STDERR "\t$i: $resp{$i}\n";
+        }
     }
   }
 }
@@ -192,7 +225,7 @@ sub MapUnlockedSync{
     my $old_info_dir = "$this->{root_dir}/$subj/revisions/$current_rev";
     my $source_dir = "$old_info_dir/files";
     unless(-d $old_info_dir && -f "$old_info_dir/dicom.pinfo"){ next subj }
-    my $results;
+    my $results = { CurrentRev => $current_rev };
     for my $i ("dicom.pinfo", "send_hist.pinfo", "error.pinfo",
       "consistency.pinfo", "hierarchy.pinfo", "link_info.pinfo",
       "FileCollectionAnalysis.pinfo"
@@ -201,11 +234,16 @@ sub MapUnlockedSync{
         $results->{$i} = Storable::retrieve("$old_info_dir/$i");
       }
     }
-    push @List, &{$map_func}($this->{coll}, $this->{site}, $subj, $results);
+    my @f_list = keys %{$results->{"dicom.pinfo"}->{FilesToDigest}};
+    my $nickname_obj = Posda::Nicknames2::get(
+      $this->{coll}, $this->{site}, $subj);
+    my $v = &{$map_func}($this->{coll}, $this->{site}, $subj, \@f_list,
+      $results, $nickname_obj);
+    push @List, $v;
   }
   return \@List;
 }
 sub MapUnlockedASync{
   my($this, $map_func, $description, $when_done) = @_;
-  die "MapEditsAsync not yet implemented";
+  die "MapUnlockedAsync not yet implemented";
 }

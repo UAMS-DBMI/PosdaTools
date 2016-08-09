@@ -458,6 +458,7 @@ EOF
   }
   sub GetAvailableSockets{
     my($this) = @_;
+    $this->DeleteErrorChildren;
     my @ret;
     for my $s (@{$this->{SocketPool}}){
       unless(exists $this->{RunningApps}->{$s}){
@@ -466,6 +467,19 @@ EOF
     }
     my $count = @ret;
     return \@ret;
+  }
+  sub DeleteErrorChildren{
+    my($this) = @_;
+    for my $i (@{$this->{SocketPool}}){
+      if(
+        exists($this->{RunningApps}->{$i}) &&
+        ref($this->{RunningApps}->{$i}) eq "AppController::JsChildProcess" &&
+        $this->{RunningApps}->{State} eq "Error"
+      ){
+        $this->{ZombieWannaBe}->{$i} = $this->{RunningApps}->{$i};
+        delete $this->{RunningApps}->{$i};
+      }
+    }
   }
 
   ################### BOM Stuff ############################
