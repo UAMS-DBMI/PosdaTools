@@ -5,7 +5,7 @@ use Method::Signatures::Simple;
 use autodie;
 
 use Posda::Config 'Config';
-use Posda::DebugLog 'on';
+use Posda::DebugLog 'off';
 use Data::Dumper;
 
 use DBI;

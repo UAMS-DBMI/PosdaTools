@@ -16,7 +16,7 @@ use Dispatch::LineReader;
 use Debug;
 use Switch;
 
-use Posda::DebugLog 'on';
+use Posda::DebugLog 'off';
 
 {
   package AppController;
@@ -392,7 +392,7 @@ EOF
     }
   }
   sub AvailAppContent{
-    DEBUG @_;
+    # DEBUG @_;
     my($this, $http, $dyn) = @_;
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
 
@@ -928,7 +928,7 @@ EOF
     my $old_pass = $dyn->{old};
     my $rpt_pass = $dyn->{rpt};
 
-    DEBUG "$new_pass, $old_pass, $rpt_pass";
+    # DEBUG "$new_pass, $old_pass, $rpt_pass";
 
     # verify they match
     if ($new_pass ne $rpt_pass) {
