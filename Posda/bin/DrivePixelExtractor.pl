@@ -41,7 +41,7 @@ while(my $line = <FILES>){
   } else {
     my $cmd2 = "convert  -size ${rows}x${cols} -depth 8 $file $ARGV[2]/$file_id.png";
     `$cmd2`;
-    `rm $file`;
+#    `rm $file`;
   }
   open FOO, "tesseract $ARGV[2]/$file_id.png stdout|" or die "foo";
   my $is_bad;
