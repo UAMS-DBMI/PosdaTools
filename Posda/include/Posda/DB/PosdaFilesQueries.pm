@@ -1,7 +1,9 @@
 #! /usr/bin/perl -w
 use strict;
+use JSON;
 package PosdaDB::Queries;
 my %Queries;
+my $Queries = \%Queries;
 sub GetList{
   my($class) = @_;
   my @list = sort keys %Queries;
@@ -77,6 +79,67 @@ sub Rows{
   if(ref($done_closure) eq "CODE"){
     &$done_closure();
   }
+}
+sub Freeze{
+  my($class, $file_name) = @_;
+  my $struct = { queries => $Queries };
+  my $json = JSON->new();
+  $json->pretty(1);
+  my $fh;
+  open($fh, ">$file_name") or die "can't open file for writing";
+  print $fh $json->encode($struct);
+  close $fh;
+}
+sub Clear{
+  my($class, $file_name) = @_;
+  $Queries = {};
+}
+sub Load{
+  my($class, $file) = @_;
+  my $text = "";
+  my $data;
+  my $cf;
+
+  unless (open($cf, '<', $file)) {
+    print STDERR "ReadJsonFile:: can not open config file: $file, Error $!.\n";
+    return undef;
+  }
+
+  # load the file in, ignoring comment lines
+  # NOTE: JSON does not actually allow comments, so they have to be
+  # stripped out here!
+  while (<$cf>) {
+    chomp;
+    unless ($_ =~ m/^\s*\/\//) {
+      $text .= $_;
+    }
+  }
+  close($cf);
+  my $json = JSON->new();
+  $json->relaxed(1);
+  eval {
+    $data = $json->decode($text);
+  };
+
+  if ($@) {
+    print STDERR "ReadJsonFile:: bad json file: $file.\n";
+    print STDERR "##########\n$@\n###########\n";
+    return undef;
+  }
+ 
+  unless(exists $data->{queries} && ref($data->{queries}) eq "HASH"){
+    print STDERR "No queries defined in $file\n";
+    return undef;
+  }
+  for my $q (keys %{$data->{queries}}){
+    if(exists $Queries->{$q}){
+      print STDERR "Replacing $q from $file\n";
+    } else {
+      print STDERR "Adding $q from $file\n";
+    }
+    $Queries->{$q} = $data->{queries}->{$q};
+  }
+  return 1;
 }
 ##########################################################
 $Queries{DuplicateSOPInstanceUIDs}->{description} = <<EOF;
@@ -1416,6 +1479,24 @@ from
 order by photometric_interpretation
 EOF
 ##########################################################
+$Queries{SeriesWithRGB}->{description} = <<EOF;
+Get distinct pixel types with geometry and rgb
+EOF
+$Queries{SeriesWithRGB}->{args} = [ ];
+$Queries{SeriesWithRGB}->{schema} = "posda_files";
+$Queries{SeriesWithRGB}->{columns} = [
+  "series_instance_uid"
+ ];
+$Queries{SeriesWithRGB}->{query} = <<EOF;
+select
+  distinct series_instance_uid
+from
+  image natural join file_image
+  natural join file_series
+where
+  photometric_interpretation = 'RGB'
+EOF
+##########################################################
 $Queries{PixelTypesWithGeoRGB}->{description} = <<EOF;
 Get distinct pixel types with geometry and rgb
 EOF
@@ -1566,5 +1647,60 @@ insert into totals_by_collection_site(
   ?, ?,
   ?, ?, ?, ?
 )
+EOF
+##########################################################
+$Queries{TestThisOne}->{description} = <<EOF;
+EOF
+$Queries{TestThisOne}->{args} = [
+  "project_name",
+  "site_name",
+];
+$Queries{TestThisOne}->{columns} = [
+  "patient_id", "patient_import_status",
+  "total_files", "min_time", "max_time",
+  "num_studies", "num_series"
+];
+$Queries{TestThisOne}->{schema} = "posda_files";
+$Queries{TestThisOne}->{query} = <<EOF;
+select
+  patient_id, patient_import_status,
+  count(distinct file_id) as total_files,
+  min(import_time) min_time, max(import_time) as max_time,
+  count(distinct study_instance_uid) as num_studies,
+  count(distinct series_instance_uid) as num_series
+from
+  ctp_file natural join file natural join
+  file_import natural join import_event natural join
+  file_study natural join file_series natural join file_patient
+  natural join patient_import_status
+where
+  project_name = ? and site_name = ? and visibility is null
+group by patient_id, patient_import_status
+EOF
+##########################################################
+$Queries{ActiveQueries}->{description} = <<EOF;
+EOF
+$Queries{ActiveQueries}->{args} = [
+  "db_name"
+];
+$Queries{ActiveQueries}->{columns} = [
+  "db_name", "proc_pid",
+  "user_id", "user", "waiting",
+  "since_xact_start", "since_query_start",
+  "since_back_end_start", "current_query"
+];
+$Queries{ActiveQueries}->{schema} = "posda_files";
+$Queries{ActiveQueries}->{query} = <<EOF;
+select
+  datname as db_name, procpid as pid,
+  usesysid as user_id, usename as user,
+  waiting, now() - xact_start as since_xact_start,
+  now() - query_start as since_query_start,
+  now() - backend_start as since_back_end_start,
+  current_query
+from
+  pg_stat_activity
+where
+  datname = ?
 EOF
 1;

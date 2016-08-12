@@ -21,6 +21,7 @@ sub to_db {
 }
 
 my $usage = "Usage:\n" .
+  "  QueryToCsv.pl freeze <file_name>\n" .
   "  QueryToCsv.pl help\n" .
   "  QueryToCsv.pl help <query_name>\n" .
   "  QueryToCsv.pl describe <query_name>\n" .
@@ -56,6 +57,10 @@ if($#ARGV == 1){
       print "  $col\n";
     }
     exit;
+  } elsif($ARGV[0] eq "freeze"){
+    my $file = $ARGV[1];
+    PosdaDB::Queries->Freeze($file);
+    exit(0);
   } elsif ($ARGV[0] eq "describe"){
     my $q = PosdaDB::Queries->GetQueryInstance($ARGV[1]);
     unless(defined $q) { die "No query $ARGV[1]\n" }
