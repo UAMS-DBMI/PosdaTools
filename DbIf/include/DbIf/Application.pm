@@ -125,13 +125,9 @@ method SpecificInitialize() {
   }
 }
 
-
 method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
-    for my $m (@{$self->{MenuByMode}->{$self->{Mode}}}){
-      $self->NotSoSimpleButton($http, $m);
-      $http->queue("<br/>");
-    }
+    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
   } else {
     $self->NotSoSimpleButtonButton($http, {
       caption => 'Reset',
