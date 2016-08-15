@@ -5,3 +5,4 @@ test.pl
 nohup.out
 __pycache__
 *.swp
+posda.env
