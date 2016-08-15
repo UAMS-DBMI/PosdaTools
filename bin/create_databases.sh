@@ -4,7 +4,7 @@ echo Creating databases.. this will fail if they arleady exist. Do not be alarme
 createdb $POSDA_FILES_DB_NAME
 if [ $? -eq 0 ]; then
 	psql $POSDA_FILES_DB_NAME < $POSDA_ROOT/Posda/sql/dicom_images.sql 
-	echo "insert into file_storage_root values (0, '$POSDA_CACHE_ROOT', True)" | psql posda_files
+	echo "insert into file_storage_root values (0, '$POSDA_CACHE_ROOT/DicomFiles', True)" | psql posda_files
 fi	
 
 createdb $POSDA_NICKNAMES_DB_NAME
