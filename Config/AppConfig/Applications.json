@@ -200,6 +200,19 @@
       "w" : 1024,
       "sort_order" : 14,
     },
+    "DbIf": {
+      "Directory": "POSDA_ROOT/Config/DbIf",
+      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Description" : "Database Interface",
+      "WindowName" : "_new",
+      "interactive": 1,
+      "scrollbar" : 1,
+      "top" : 100,
+      "left" : 100,
+      "h" : 950,
+      "w" : 1024,
+      "sort_order" : 15,
+    },
   },
   "StaticObjs": {
     "DicomReceiver": {

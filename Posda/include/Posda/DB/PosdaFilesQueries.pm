@@ -4,11 +4,6 @@ use JSON;
 package PosdaDB::Queries;
 my %Queries;
 my $Queries = \%Queries;
-sub GetList{
-  my($class) = @_;
-  my @list = sort keys %Queries;
-  return @list;
-};
 sub GetQueryInstance{
   my($class, $name) = @_;
   unless(exists $Queries{$name}) { return undef }
@@ -80,6 +75,13 @@ sub Rows{
     &$done_closure();
   }
 }
+#########################
+# Class methods
+sub GetList{
+  my($class) = @_;
+  my @list = sort keys %Queries;
+  return @list;
+};
 sub Freeze{
   my($class, $file_name) = @_;
   my $struct = { queries => $Queries };
@@ -93,6 +95,10 @@ sub Freeze{
 sub Clear{
   my($class, $file_name) = @_;
   $Queries = {};
+}
+sub Delete{
+  my($class, $q_name) = @_;
+  delete $Queries{$q_name};
 }
 sub Load{
   my($class, $file) = @_;
@@ -1288,7 +1294,7 @@ $Queries{DiskSpaceByCollection}->{columns} = [
 ];
 $Queries{DiskSpaceByCollection}->{query} = <<EOF;
 select
-  distinct project_name as collection, sum(size)
+  distinct project_name as collection, sum(size) as total_bytes
 from
   ctp_file natural join file
 where
@@ -1684,20 +1690,20 @@ $Queries{ActiveQueries}->{args} = [
   "db_name"
 ];
 $Queries{ActiveQueries}->{columns} = [
-  "db_name", "proc_pid",
+  "db_name", "pid",
   "user_id", "user", "waiting",
   "since_xact_start", "since_query_start",
-  "since_back_end_start", "current_query"
+  "since_back_end_start", "query"
 ];
 $Queries{ActiveQueries}->{schema} = "posda_files";
 $Queries{ActiveQueries}->{query} = <<EOF;
 select
-  datname as db_name, procpid as pid,
+  datname as db_name, pid as pid,
   usesysid as user_id, usename as user,
   waiting, now() - xact_start as since_xact_start,
   now() - query_start as since_query_start,
   now() - backend_start as since_back_end_start,
-  current_query
+  query
 from
   pg_stat_activity
 where

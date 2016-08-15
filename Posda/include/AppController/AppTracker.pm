@@ -60,7 +60,7 @@ sub Timer{
   my($this) = @_;
   my $sub = sub {
     my($disp) = @_;
-    Dispatch::LineReader->new_cmd("ps -p $this->{pid} -o\"pcpu,size,vsize\"",
+    Dispatch::LineReader->new_cmd("ps -p $this->{pid} -o\"pcpu,rss,vsize\"",
       $this->ReadPs, $this->EndPs($disp));
   };
   return $sub;

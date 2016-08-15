@@ -20,6 +20,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
     <!-- HttpApp::JsController line 20 -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/nv.d3.css">
+    <link rel="stylesheet" href="/css/dropzone.css">
 
     <script src="/js/jquery-1.12.0.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -27,6 +28,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
     <script src="/js/nv.d3.min.js"></script>
     <script src="/js/spin.min.js"></script>
     <script src="/js/jquery.spin.js"></script>
+    <script src="/js/dropzone.js"></script>
 
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
