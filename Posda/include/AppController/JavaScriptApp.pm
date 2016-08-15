@@ -108,9 +108,9 @@ EOF
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
     $this->SetInitialExpertAndDebug("bbennett");
-    if($this->CanDebug){
+#    if($this->CanDebug){
       Posda::HttpApp::DebugWindow->new($sess, "Debug");
-    }
+#    }
     $this->{JavascriptRoot} =
       $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
     $this->QueueJsCmd("Update();");
@@ -191,7 +191,7 @@ EOF
   }
   sub DebugButton{
     my($this, $http, $dyn) = @_;
-    if($this->CanDebug){
+#    if($this->CanDebug){
       $this->RefreshEngine($http, $dyn, qq{
         <button class="btn btn-sm btn-info" 
          onClick="javascript:rt('DebugWindow','Refresh?obj_path=Debug'
@@ -199,9 +199,9 @@ EOF
           Debug
         </button>
       });
-    } else {
-      print STDERR "Can't debug\n";
-    }
+#    } else {
+#      print STDERR "Can't debug\n";
+#    }
   }
   sub RevokeLogin{
     my($this, $http, $dyn) = @_;
