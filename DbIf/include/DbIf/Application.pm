@@ -282,24 +282,35 @@ method QueryEnd{
   };
   return $sub;
 }
+
 method QuerySuccessful($http, $dyn){
   if($self->{query}->{query} =~ /^select/){
-    $self->RefreshEngine($http, $dyn, "<table border><tr>");
+
+    $http->queue(qq{
+      <div style="background-color: white">
+      <table class="table table-striped">
+        <tr>
+    });
+
+    # print the column headings
     for my $i (@{$self->{query}->{columns}}){
-      $self->RefreshEngine($http, $dyn, "<th><pre>$i</pre></th>");
+      $http->queue("<th>$i</th>");
     }
-    $self->RefreshEngine($http, $dyn, '</tr>');
+    $http->queue('</tr>');
+
+    # print the rows
     for my $r (@{$self->{Rows}}){
-      $self->RefreshEngine($http, $dyn, '<tr>');
+      $http->queue('<tr>');
       for my $v (@$r){
         unless(defined($v)){ $v = "&lt;undef&gt;" }
-        $self->RefreshEngine($http, $dyn, "<td><pre>$v</pre></td>");
+        $http->queue("<td>$v</td>");
       }
-      $self->RefreshEngine($http, $dyn, '</tr>');
+      $http->queue('</tr>');
     }
   }
-  $self->RefreshEngine($http, $dyn, "</table>");
+  $http->queue('</table><dvi>');
 }
+
 #############################
 my $f_form = '
 <form action="<?dyn="StoreFileUri"?>"
