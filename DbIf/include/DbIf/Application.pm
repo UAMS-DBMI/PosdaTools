@@ -176,16 +176,23 @@ method ContentResponse($http, $dyn) {
 }
 method ListQueries($http, $dyn){
   my @q_list = PosdaDB::Queries->GetList;
-  $self->RefreshEngine($http, $dyn, "<table><tr><th>" .
-    "Queries</th><th></th><th><tr>");
+  $self->RefreshEngine($http, $dyn, qq{
+    <table class="table table-striped table-condensed">
+    <tr>
+      <th>Queries</th>
+      <th></th>
+    <tr>
+  });
   for my $i (@q_list){
-    $self->RefreshEngine($http, $dyn,
-      "<tr><td>$i</td><td>" .
-      '<?dyn="NotSoSimpleButton" op="SetActiveQuery" ' .
-      'caption="Set Active" ' .
-      'query_name="' . $i . '" sync="Update();"?></td><td>' .
-      '<?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" ' .
-      'query_name="' . $i . '" sync="Update();"?></td></tr>');
+    $self->RefreshEngine($http, $dyn, qq{
+      <tr>
+        <td>$i</td>
+        <td>
+          <?dyn="NotSoSimpleButton" op="SetActiveQuery" caption="Set Active" query_name="$i" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" query_name="$i" sync="Update();" class="btn btn-info"?>
+        </td>
+      </tr>
+    });
   }
   $self->RefreshEngine($http, $dyn, "</table>")
 }
