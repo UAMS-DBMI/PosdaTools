@@ -646,7 +646,6 @@ sub MakeMenu{
   my($this, $http, $dyn, $list) = @_;
   $http->queue(qq{<div class="btn-group-vertical spacer-bottom" role="group">});
   for my $m (@$list){
-<<<<<<< 0b9f4c1e9a8ca14b89d2a87facea92f6be346b53
     if(not defined $m->{condition} or $m->{condition}){
       if (not defined $m->{type} or $m->{type} eq "button") {
         my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
@@ -654,11 +653,6 @@ sub MakeMenu{
         $m->{element} = 'a';
         $this->NotSoSimpleButton($http, $m);
       } elsif ($m->{type} eq "host_link"){
-=======
-    if($m->{condition}){
-
-      if($m->{type} eq "host_link"){
->>>>>>> Completely redesigned the look of the CountGetter app, using all bootstrap.
         my $small;
         if(exists($m->{style}) && $m->{style} eq "small"){
           $small = 1;
