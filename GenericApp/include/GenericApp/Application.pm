@@ -131,12 +131,12 @@ my $content = qq{
   </div>
 </nav>
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="page-header">
       <h1><?dyn="title"?></h1>
     </div>
     <div class="row">
-      <div id="menu" class="col-md-2">
+      <div id="menu" class="col-md-1">
       Menu
       </div>
       <div id="content" class="col-md-9">
