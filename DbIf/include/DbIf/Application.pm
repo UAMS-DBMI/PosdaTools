@@ -152,10 +152,7 @@ method SpecificInitialize() {
 
 method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
-    for my $m (@{$self->{MenuByMode}->{$self->{Mode}}}){
-      $self->NotSoSimpleButton($http, $m);
-      $http->queue("<br/>");
-    }
+    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
   } else {
     $self->NotSoSimpleButtonButton($http, {
       caption => 'Reset',
@@ -360,18 +357,24 @@ method TableSelected($http, $dyn){
   my $query = $table->{query};
   my $rows = $table->{rows};
   my $at = $table->{at};
-  $self->RefreshEngine($http, $dyn, "<table border><tr>");
+
+  $http->queue(qq{
+    <div style="background-color: white">
+    <table class="table table-striped">
+      <tr>
+  });
   for my $i (@{$query->{columns}}){
-    $self->RefreshEngine($http, $dyn, "<th><pre>$i</pre></th>");
+    $http->queue("<th>$i</th>");
   }
-  $self->RefreshEngine($http, $dyn, '</tr>');
+  $http->queue('</tr>');
+
   for my $r (@$rows){
-    $self->RefreshEngine($http, $dyn, '<tr>');
+    $http->queue('<tr>');
     for my $v (@$r){
       unless(defined($v)){ $v = "&lt;undef&gt;" }
-      $self->RefreshEngine($http, $dyn, "<td><pre>$v</pre></td>");
+      $http->queue("<td>$v</td>");
     }
-    $self->RefreshEngine($http, $dyn, '</tr>');
+    $http->queue('</tr>');
   }
   $self->RefreshEngine($http, $dyn, "</table>");
 }
