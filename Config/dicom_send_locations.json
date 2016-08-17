@@ -5,6 +5,12 @@
     "calling_ae" : "POSDA",
     "called_ae" : "QUASAR"
   },
+  "RSBIT2" : {
+    "host" : "rsbit2",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "RSBIT"
+  },
   "Joseph" : {
     "host" : "144.30.108.74",
     "port" : "64611",

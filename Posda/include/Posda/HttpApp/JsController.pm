@@ -9,6 +9,8 @@ use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
 use IO::Socket::INET;
 
+use Posda::DebugLog 'on';
+
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpObj" );
 my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
@@ -574,12 +576,17 @@ sub NotSoSimpleButton{
   if (defined $dyn->{class}) {
     $class = $dyn->{class};
   }
-  my $string = qq{<input class="$class" type="button" } .
-    'onClick="javascript:PosdaGetRemoteMethod(' .
-    "'$dyn->{op}', '$hstring', " .
-    'function () {' .
-    (exists($dyn->{sync}) ? $dyn->{sync} : "") .
-    '});" value="' .  $dyn->{caption} . '">';
+  my $sync = exists($dyn->{sync}) ? $dyn->{sync} : "";
+  
+  my $prefix = qq{<input type="button"};
+  my $postfix = "";
+  if(defined $dyn->{element} and $dyn->{element} eq 'a') {
+    $prefix = qq{<a href="#"};
+    $postfix = "$dyn->{caption}</a>";
+  }
+
+  my $string = qq{$prefix class="$class"
+    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () { $sync });" value="$dyn->{caption}">$postfix};
   $http->queue($string);
 }
 sub NotSoSimpleButtonButton{
@@ -635,11 +642,17 @@ sub DelegateButton{
   $http->queue($string);
 }
 sub MakeMenu{
+  DEBUG @_;
   my($this, $http, $dyn, $list) = @_;
   $http->queue('<div class="list-group">');
   for my $m (@$list){
-    if($m->{condition}){
-      if($m->{type} eq "host_link"){
+    if(not defined $m->{condition} or $m->{condition}){
+      if (not defined $m->{type} or $m->{type} eq "button") {
+        my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
+        $m->{class} = 'list-group-item';
+        $m->{element} = 'a';
+        $this->NotSoSimpleButton($http, $m);
+      } elsif ($m->{type} eq "host_link"){
         my $small;
         if(exists($m->{style}) && $m->{style} eq "small"){
           $small = 1;

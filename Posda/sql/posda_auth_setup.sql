@@ -15,6 +15,7 @@ insert into apps (app_name) values ('CountGetter');
 insert into apps (app_name) values ('FileDist');
 insert into apps (app_name) values ('DicomProxy');
 insert into apps (app_name) values ('DicomProxyAnalysis');
+insert into apps (app_name) values ('DbIf');
 
 
 -- Default users
