@@ -1164,6 +1164,11 @@ $Queries{GetSlopeIntercept}->{description} = <<EOF;
 Get a Slope, Intercept for a particular file 
 EOF
 $Queries{GetSlopeIntercept}->{args} = [ "file_id" ];
+$Queries{GetSlopeIntercept}->{tags} = {
+  posda_files => 1,
+  slope_intercept => 1,
+  by_file_id => 1,
+};
 $Queries{GetSlopeIntercept}->{schema} = "posda_files";
 $Queries{GetSlopeIntercept}->{columns} = [
  "slope", "intercept", "si_units",
@@ -1181,6 +1186,11 @@ $Queries{GetWinLev}->{description} = <<EOF;
 Get a Window, Level(s) for a particular file 
 EOF
 $Queries{GetWinLev}->{args} = [ "file_id" ];
+$Queries{GetWinLev}->{tags} = {
+  posda_files => 1,
+  window_level => 1,
+  by_file_id => 1,
+};
 $Queries{GetWinLev}->{schema} = "posda_files";
 $Queries{GetWinLev}->{columns} = [
  "window_width", "window_center", "win_lev_desc", "wl_index"
@@ -1196,20 +1206,33 @@ order by wl_index desc;
 EOF
 ##########################################################
 $Queries{DistinctSopsInSeries}->{description} = <<EOF;
-Get Distinct SOPs in Series
+Get Distinct SOPs in Series with number files
+Only visible filess
 EOF
 $Queries{DistinctSopsInSeries}->{args} = [ "series_instance_uid" ];
+$Queries{DistinctSopsInSeries}->{tags} = {
+  posda_files => 1,
+  sops => 1,
+  duplicates => 1,
+  by_series_instance_uid => 1,
+};
 $Queries{DistinctSopsInSeries}->{schema} = "posda_files";
 $Queries{DistinctSopsInSeries}->{columns} = [
- "sop_instance_uid",
+ "sop_instance_uid", "count"
 ];
 $Queries{DistinctSopsInSeries}->{query} = <<EOF;
-select
-  distinct sop_instance_uid
-from
-  file_series natural join file_sop_common
-where
-  series_instance_uid = ?
+select distinct sop_instance_uid
+from file_sop_common
+where file_id in (
+  select
+    distinct file_id
+  from
+    file_series natural join ctp_file
+  where
+    series_instance_uid = ? and visibility is null
+)
+group by sop_instance_uid
+order by count desc
 EOF
 ##########################################################
 $Queries{DistinctUnhiddenFilesInSeries}->{description} = <<EOF;

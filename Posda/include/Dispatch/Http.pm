@@ -189,6 +189,7 @@ print STDERR "Ewouldblock\n";
         $err_count += 1;
         if($err_count > 1000) { die "Stuck in loop" }
         print STDERR "Yikes\n";
+        sleep 1;
         next;
       }
       $length_read += $count;
