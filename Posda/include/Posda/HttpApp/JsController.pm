@@ -23,6 +23,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/nv.d3.css">
     <link rel="stylesheet" href="/css/dropzone.css">
+    <link rel="stylesheet" href="/highlight/styles/vs.css">
 
     <script src="/js/jquery-1.12.0.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -31,6 +32,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
     <script src="/js/spin.min.js"></script>
     <script src="/js/jquery.spin.js"></script>
     <script src="/js/dropzone.js"></script>
+    <script src="/highlight/highlight.pack.js"></script>
 
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>

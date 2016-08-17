@@ -207,7 +207,6 @@ method SetActiveQuery($http, $dyn){
   $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
 }
 method ActiveQuery($http, $dyn){
-  $self->RefreshEngine($http, $dyn, "<table border>");
   my $descrip = {
     args => {
       caption => "Arguments",
@@ -222,7 +221,6 @@ method ActiveQuery($http, $dyn){
     description => {
       caption=> "Description",
       struct => "text",
-      special => "pre-formatted"
     },
     query => {
       caption=> "Query Text",
@@ -232,48 +230,58 @@ method ActiveQuery($http, $dyn){
     schema => {
       caption=> "Schema",
       struct => "text",
-      special => "pre-formatted"
     },
     name => {
       caption=> "Query Name",
       struct => "text",
-      special => "pre-formatted"
     },
   };
+  $http->queue(q{<table class="table">});
   for my $i ("name", "schema", "description", "columns", "args", "query"){
     my $d = $descrip->{$i};
-    $self->RefreshEngine($http, $dyn, '<tr><td align="right" valign="top">' .
-      '<pre>' .
-      $d->{caption} . '</pre></td><td align="left" valign = "top">'
-    );
+    $http->queue(qq{
+      <tr>
+        <td align="right" valign="top">
+          <strong>$d->{caption}</strong>
+        </td>
+        <td align="left" valign = "top">
+    });
     if($d->{struct} eq "text"){
       if($d->{special} eq "pre-formatted"){
-         $self->RefreshEngine($http, $dyn, "<pre>$self->{query}->{$i}</pre>")
+         $self->RefreshEngine($http, $dyn, "<pre><code class=\"sql\">$self->{query}->{$i}</code></pre>")
       } else {
-         $self->RefreshEngine($http, $dyn, "<pre>$self->{query}->{$i}</pre>")
+         $self->RefreshEngine($http, $dyn, "$self->{query}->{$i}")
       }
     }
     if($d->{struct} eq "array"){
       if($d->{special} eq "pre-formatted-list"){
-        $self->RefreshEngine($http, $dyn, "<pre>");
+
+        $http->queue(qq{
+          <table class="table table-condensed">
+        });
         for my $j (@{$self->{query}->{$i}}){
-          $self->RefreshEngine($http, $dyn, "$j\n");
+          $self->RefreshEngine($http, $dyn, "<tr><td>$j</td></tr>");
         }
-        $self->RefreshEngine($http, $dyn, "</pre>");
+        $self->RefreshEngine($http, $dyn, "</table>");
+
       } elsif($d->{special} eq "form"){
-        $self->RefreshEngine($http, $dyn, "<table>");
+        $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
-          $self->RefreshEngine($http, $dyn, '<tr><td align="right" ' .
-            'valign="top"><pre>' . $arg . '</pre></td>' .
-            '<td align="left" valign="top">');
-          $self->RefreshEngine($http, $dyn,
-            '<?dyn="LinkedDelegateEntryBox" linked="Input" ' .
-            "index=\"$arg\"?>");
-          $self->RefreshEngine($http, $dyn, '</td><tr>');
+          $self->RefreshEngine($http, $dyn, qq{
+            <tr>
+              <th style="width:5%">$arg</th>
+              <td>
+                <?dyn="LinkedDelegateEntryBox" linked="Input" index="$arg"?>
+              </td>
+            </tr>
+          });
         }
-        $self->RefreshEngine($http, $dyn, '</table>' .
-          '<?dyn="NotSoSimpleButton" caption="Query Database" ' .
-          'op="MakeQuery" sync="Update();"?>');
+        $http->queue('</table>');
+        $self->NotSoSimpleButton($http,
+          { caption => "Query Database",
+            op => "MakeQuery",
+            sync => "Update();",
+            class => "btn btn-primary" });
       }
     }
     $self->RefreshEngine("</td></tr>");

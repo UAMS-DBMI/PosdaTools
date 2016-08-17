@@ -133,7 +133,7 @@ my $content = qq{
 
   <div class="container-fluid">
     <div class="page-header">
-      <h1><?dyn="title"?></h1>
+      <center><h1><?dyn="title"?></h1></center>
     </div>
     <div class="row">
       <div id="menu" class="col-md-1">
