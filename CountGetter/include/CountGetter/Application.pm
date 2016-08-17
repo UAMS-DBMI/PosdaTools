@@ -35,7 +35,8 @@ my $expander = q{<?dyn="BaseHeader"?>
   </head>
   <body>
   <?dyn="Content"?>
-  <?dyn="Footer"?>
+</body>
+</html>
 };
 my $bad_config = qq{
   <?dyn="BadConfigReport"?>
@@ -123,32 +124,34 @@ sub user{
   my($this, $http, $dyn) = @_;
   $http->queue($this->get_user);
 }
-my $content = qq{
-  <div id="container" style="width:<?dyn="width"?>px">
-  <div id="header" style="background-color:#E0E0FF;">
-    <table width="100%">
-      <tr width="100%">
-        <td><?dyn="Logo"?></td>
-        <td>
-          <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
-          User: <?dyn="user"?>
-        </td>
-        <td valign="top" align="right">
-          <div id="login">&lt;login&gt;</div>
-        </td>
-      </tr>
-    </table>
-  </div>
-  <div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
-  &lt;wait&gt;
-  </div>
-  <div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
-  &lt;Content&gt;</div>
-  <div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-  Posda.com</div>
 
+my $content = qq{
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        Posda.com
+      </a>
+    </div>
+    <div id="login" class="navbar-nav navbar-right">
+    Login
+    </div>
+  </div>
+</nav>
+  <div class="container">
+    <div class="page-header">
+      <h1><?dyn="title"?></h1>
+    </div>
+    <div class="row">
+      <div id="menu" class="col-md-2">
+      Menu
+      </div>
+      <div id="content" class="col-md-9">
+      </div>
+    </div>
   </div>
 };
+
 sub Content{
   my($this, $http, $dyn) = @_;
   if($this->{BadConfigFiles}) {
@@ -223,22 +226,35 @@ sub DebugButton{
 
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
+  # The menu should be built from a set of defaults,
+  # unless the ContentResponse set some extra things
+  DEBUG "MenuResponse called";
 
-  if($this->{Mode} eq "ScanningDir"){
-    return $http->queue("busy");
-  } else {
-    $this->MakeMenu($http, $dyn,
-      [
-        { type => "host_link_sync",
-          condition => 1,
-          style => "large",
-          caption => "New Scan",
-          method => "NewScan",
-          sync => "Update();",
-        },
-      ]
-    );
+
+  $http->queue(qq{
+      <div class="well well-sm">
+      <div class="btn-group-vertical spacer-bottom" role="group">
+  });
+
+  $http->queue(
+    $this->MakeHostLinkSync("New Scan", "NewScan", 
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan", 
+      "", "", "Update();", "btn btn-default")
+  );
+
+  if(defined $this->{DownloadCSVButton}) {
+      # Rather than this, add to some global dict of what the menu should be?
+      $http->queue(qq{
+          <a class="btn btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
+      });
   }
+
+  $http->queue("</div></div>");
+
+  return;
 }
 
 sub NewScan{
@@ -247,6 +263,7 @@ sub NewScan{
 
   $this->{Mode} = "Selection";
   $this->{FoundFiles} = [];
+  undef $this->{DownloadCSVButton};
 
   $this->AutoRefresh;
 }
@@ -300,9 +317,9 @@ sub ContentResponse{
     #
     # Note: The download link is a link rather than a SimpleButton, 
     # because we want to avoid doing an AJAX call, but a direct call!
+    $this->{DownloadCSVButton} = 1;
     $this->RefreshEngine($http, $dyn, qq{
       <h3>Files Found</h3> 
-      <a class="btn btn-sm btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
       <table class="table" style="width: 65%">
       <tr>
           <th>Subject</th> 
@@ -369,6 +386,10 @@ sub DownloadCSV{
 
 sub CollectionDropDown{
   my($this, $http, $dyn) = @_;
+  $http->queue(qq{
+      <div class="form-group form-inline">
+      Select a Collection:
+  });
   $this->SelectDelegateByValue($http, {
     op => "SelectCollection",
     sync => "Update();",
@@ -379,7 +400,8 @@ sub CollectionDropDown{
       ($col eq $this->{SelectedCollection} ? " selected" : "") .
       ">$col</option>");
   }
-  $http->queue("</select>");
+  $http->queue("</select></div>");
+
   if($this->{SelectedCollection} ne "none"){
     $this->SiteDropDown($http, $dyn);
   }
@@ -401,17 +423,21 @@ sub SelectCollection{
 }
 sub SiteDropDown{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn, 
-  ' Select Site: <?dyn="SelectDelegateByValue" ' .
-  'op="SelectSite" ' .
-  'sync="Update();"?>');
+  $http->queue(qq{
+      <div class="form-group form-inline">
+      Select a Site: 
+  });
+  $this->SelectDelegateByValue($http, {
+    op => "SelectSite",
+    sync => "Update();",
+  });
   my @sites = sort keys %{$this->{Collections}->{$this->{SelectedCollection}}};
   for my $site ("none", @sites){
     $http->queue("<option value=\"$site\"" .
       ($site eq $this->{SelectedSite} ? " selected" : "") .
       ">$site</option>");
   }
-  $http->queue("</select>");
+  $http->queue("</select></div>");
   if($this->{SelectedSite} ne "none"){
     $this->SubjDropDown($http, $dyn);
   }
@@ -432,10 +458,14 @@ sub SelectSite{
 }
 sub SubjDropDown{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn, 
-  ' Select Subject: <?dyn="SelectDelegateByValue" ' .
-  'op="SelectSubj" ' .
-  'sync="Update();"?>');
+  $http->queue(qq{
+      <div class="form-group form-inline">
+      Select a Subject: 
+  });
+  $this->SelectDelegateByValue($http, {
+    op => "SelectSubj",
+    sync => "Update();",
+  });
   my @subjs = sort keys 
     %{
       $this->{Collections}->{$this->{SelectedCollection}}
@@ -446,7 +476,7 @@ sub SubjDropDown{
       ($subj eq $this->{SelectedSubj} ? " selected" : "") .
       ">$subj</option>");
   }
-  $http->queue("</select>");
+  $http->queue("</select></div>");
   if($this->{SelectedSubj} ne "none"){
     $this->DirDropDown($http, $dyn);
   }
@@ -466,10 +496,14 @@ sub SelectSubj{
 }
 sub DirDropDown{
   my($this, $http, $dyn) = @_;
-  $this->RefreshEngine($http, $dyn, 
-  ' Select Directory: <?dyn="SelectDelegateByValue" ' .
-  'op="SelectDir" ' .
-  'sync="Update();"?>');
+  $http->queue(qq{
+      <div class="form-group form-inline">
+      Select a Directory:
+  });
+  $this->SelectDelegateByValue($http, {
+    op => "SelectDir",
+    sync => "Update();",
+  });
   my @dirs = sort keys 
     %{
       $this->{Collections}->{$this->{SelectedCollection}}
@@ -480,7 +514,7 @@ sub DirDropDown{
       ($dir eq $this->{SelectedDir} ? " selected" : "") .
       ">$dir</option>");
   }
-  $http->queue("</select>");
+  $http->queue("</select></div>");
 }
 sub SelectDir{
   my($this, $http, $dyn) = @_;

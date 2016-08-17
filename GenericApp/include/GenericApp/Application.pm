@@ -32,7 +32,8 @@ my $expander = qq{<?dyn="BaseHeader"?>
   </head>
   <body>
   <?dyn="Content"?>
-  <?dyn="Footer"?>
+</body>
+</html>
 };
 
 my $bad_config = qq{
@@ -117,32 +118,30 @@ sub user{
   $http->queue($this->get_user);
 }
 my $content = qq{
-  <div id="container" style="width:<?dyn="width"?>px">
-  <div id="header" style="background-color:#E0E0FF;">
-    <table width="100%">
-    <tr width="100%">
-      <td>
-        <?dyn="Logo"?>
-      </td>
-      <td>
-        <h1 style="margin-bottom:0;"><?dyn="title"?></h1>
-        User: <?dyn="user"?>
-      </td>
-      <td valign="top" align="right">
-        <div id="login">&lt;login&gt;</div>
-      </td>
-    </tr>
-    </table>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        Posda.com
+      </a>
+    </div>
+    <div id="login" class="navbar-nav navbar-right">
+    Login
+    </div>
   </div>
-  <div id="menu" style="background-color:#F0F0FF;height:<?dyn="height"?>px;width:<?dyn="menu_width"?>px;float:left;">
-    &lt;wait&gt;
-  </div>
-  <div id="content" style="overflow:auto;background-color:#F8F8F8;width:<?dyn="content_width"?>px;float:left;">
-    &lt;Content&gt;
-  </div>
-  <div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-    Posda.com
-  </div>
+</nav>
+
+  <div class="container-fluid">
+    <div class="page-header">
+      <center><h1><?dyn="title"?></h1></center>
+    </div>
+    <div class="row">
+      <div id="menu" class="col-md-1">
+      Menu
+      </div>
+      <div id="content" class="col-md-9">
+      </div>
+    </div>
   </div>
 };
 
@@ -228,14 +227,33 @@ sub SpecificInitialize{
 
 sub MenuResponse{
   my($this, $http, $dyn) = @_;
-  $this->MakeMenu($http, $dyn,
-    [{ 
-      type => "host_link",
-      condition => 1,
-      caption => "Test",
-      method => "TestMethod"
-    }]
+
+  $http->queue(qq{
+      <div class="well well-sm">
+      <div class="btn-group-vertical spacer-bottom" role="group">
+  });
+
+  $http->queue(
+    $this->MakeHostLinkSync("New Scan", "NewScan", 
+      "", "", "Update();", "btn btn-default")
   );
+  $http->queue(
+    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan", 
+      "", "", "Update();", "btn btn-default")
+  );
+
+  if(defined $this->{DownloadCSVButton}) {
+      # Rather than this, add to some global dict of what the menu should be?
+      $http->queue(qq{
+          <a class="btn btn-primary" href="DownloadCSV?obj_path=$this->{path}\">Download CSV</a>
+      });
+  }
+
+  $http->queue("</div></div>");
+
+  return;
+
+
 }
 
 sub ContentResponse{

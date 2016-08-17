@@ -17,10 +17,13 @@ use Debug;
     if($user) {
       if($this->{ExitOnLogout}){
         my $resp = qq{
-         <span class="btn btn-sm btn-danger"
-         onClick="javascript:CloseThisWindow();">
-           Close
-         </span><?dyn="DebugButton"?>
+          <!-- Only display when logged in -->
+          <?dyn="DebugButton"?>
+          <button type="button" class="btn btn-danger navbar-btn"
+           onClick="javascript:CloseThisWindow();">
+            Close
+          </button>
+          <p class="navbar-text">Signed in as <?dyn="user"?></p>
          };
         $this->RefreshEngine($http, $dyn, $resp);
   } else {

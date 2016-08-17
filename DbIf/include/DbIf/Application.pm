@@ -152,10 +152,7 @@ method SpecificInitialize() {
 
 method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
-    for my $m (@{$self->{MenuByMode}->{$self->{Mode}}}){
-      $self->NotSoSimpleButton($http, $m);
-      $http->queue("<br/>");
-    }
+    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
   } else {
     $self->NotSoSimpleButtonButton($http, {
       caption => 'Reset',
@@ -179,16 +176,23 @@ method ContentResponse($http, $dyn) {
 }
 method ListQueries($http, $dyn){
   my @q_list = PosdaDB::Queries->GetList;
-  $self->RefreshEngine($http, $dyn, "<table><tr><th>" .
-    "Queries</th><th></th><th><tr>");
+  $self->RefreshEngine($http, $dyn, qq{
+    <table class="table table-striped table-condensed">
+    <tr>
+      <th>Queries</th>
+      <th></th>
+    <tr>
+  });
   for my $i (@q_list){
-    $self->RefreshEngine($http, $dyn,
-      "<tr><td>$i</td><td>" .
-      '<?dyn="NotSoSimpleButton" op="SetActiveQuery" ' .
-      'caption="Set Active" ' .
-      'query_name="' . $i . '" sync="Update();"?></td><td>' .
-      '<?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" ' .
-      'query_name="' . $i . '" sync="Update();"?></td></tr>');
+    $self->RefreshEngine($http, $dyn, qq{
+      <tr>
+        <td>$i</td>
+        <td>
+          <?dyn="NotSoSimpleButton" op="SetActiveQuery" caption="Set Active" query_name="$i" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" query_name="$i" sync="Update();" class="btn btn-info"?>
+        </td>
+      </tr>
+    });
   }
   $self->RefreshEngine($http, $dyn, "</table>")
 }
@@ -203,7 +207,6 @@ method SetActiveQuery($http, $dyn){
   $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
 }
 method ActiveQuery($http, $dyn){
-  $self->RefreshEngine($http, $dyn, "<table border>");
   my $descrip = {
     args => {
       caption => "Arguments",
@@ -218,7 +221,6 @@ method ActiveQuery($http, $dyn){
     description => {
       caption=> "Description",
       struct => "text",
-      special => "pre-formatted"
     },
     query => {
       caption=> "Query Text",
@@ -228,48 +230,58 @@ method ActiveQuery($http, $dyn){
     schema => {
       caption=> "Schema",
       struct => "text",
-      special => "pre-formatted"
     },
     name => {
       caption=> "Query Name",
       struct => "text",
-      special => "pre-formatted"
     },
   };
+  $http->queue(q{<table class="table">});
   for my $i ("name", "schema", "description", "columns", "args", "query"){
     my $d = $descrip->{$i};
-    $self->RefreshEngine($http, $dyn, '<tr><td align="right" valign="top">' .
-      '<pre>' .
-      $d->{caption} . '</pre></td><td align="left" valign = "top">'
-    );
+    $http->queue(qq{
+      <tr>
+        <td align="right" valign="top">
+          <strong>$d->{caption}</strong>
+        </td>
+        <td align="left" valign = "top">
+    });
     if($d->{struct} eq "text"){
       if($d->{special} eq "pre-formatted"){
-         $self->RefreshEngine($http, $dyn, "<pre>$self->{query}->{$i}</pre>")
+         $self->RefreshEngine($http, $dyn, "<pre><code class=\"sql\">$self->{query}->{$i}</code></pre>")
       } else {
-         $self->RefreshEngine($http, $dyn, "<pre>$self->{query}->{$i}</pre>")
+         $self->RefreshEngine($http, $dyn, "$self->{query}->{$i}")
       }
     }
     if($d->{struct} eq "array"){
       if($d->{special} eq "pre-formatted-list"){
-        $self->RefreshEngine($http, $dyn, "<pre>");
+
+        $http->queue(qq{
+          <table class="table table-condensed">
+        });
         for my $j (@{$self->{query}->{$i}}){
-          $self->RefreshEngine($http, $dyn, "$j\n");
+          $self->RefreshEngine($http, $dyn, "<tr><td>$j</td></tr>");
         }
-        $self->RefreshEngine($http, $dyn, "</pre>");
+        $self->RefreshEngine($http, $dyn, "</table>");
+
       } elsif($d->{special} eq "form"){
-        $self->RefreshEngine($http, $dyn, "<table>");
+        $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
-          $self->RefreshEngine($http, $dyn, '<tr><td align="right" ' .
-            'valign="top"><pre>' . $arg . '</pre></td>' .
-            '<td align="left" valign="top">');
-          $self->RefreshEngine($http, $dyn,
-            '<?dyn="LinkedDelegateEntryBox" linked="Input" ' .
-            "index=\"$arg\"?>");
-          $self->RefreshEngine($http, $dyn, '</td><tr>');
+          $self->RefreshEngine($http, $dyn, qq{
+            <tr>
+              <th style="width:5%">$arg</th>
+              <td>
+                <?dyn="LinkedDelegateEntryBox" linked="Input" index="$arg"?>
+              </td>
+            </tr>
+          });
         }
-        $self->RefreshEngine($http, $dyn, '</table>' .
-          '<?dyn="NotSoSimpleButton" caption="Query Database" ' .
-          'op="MakeQuery" sync="Update();"?>');
+        $http->queue('</table>');
+        $self->NotSoSimpleButton($http,
+          { caption => "Query Database",
+            op => "MakeQuery",
+            sync => "Update();",
+            class => "btn btn-primary" });
       }
     }
     $self->RefreshEngine("</td></tr>");
@@ -293,7 +305,17 @@ method MakeQuery($http, $dyn){
   $self->SerializedSubProcess($query, "SubProcessQuery.pl",
     $self->QueryEnd($query));
 }
-method QueryEnd($query){
+
+method QueryWait($http, $dyn) {
+  $http->queue(qq{
+    <div class="alert alert-info">
+      Executing query...
+      <div class="spinner" style="display:inline-block;margin-left:30px"></div>
+    </div>
+  });
+}
+
+method QueryEnd($query) {
   my $sub = sub {
     my($status, $struct) = @_;
     if($self->{Mode} eq "QueryWait"){
@@ -350,18 +372,24 @@ method TableSelected($http, $dyn){
   my $query = $table->{query};
   my $rows = $table->{rows};
   my $at = $table->{at};
-  $self->RefreshEngine($http, $dyn, "<table border><tr>");
+
+  $http->queue(qq{
+    <div style="background-color: white">
+    <table class="table table-striped">
+      <tr>
+  });
   for my $i (@{$query->{columns}}){
-    $self->RefreshEngine($http, $dyn, "<th><pre>$i</pre></th>");
+    $http->queue("<th>$i</th>");
   }
-  $self->RefreshEngine($http, $dyn, '</tr>');
+  $http->queue('</tr>');
+
   for my $r (@$rows){
-    $self->RefreshEngine($http, $dyn, '<tr>');
+    $http->queue('<tr>');
     for my $v (@$r){
       unless(defined($v)){ $v = "&lt;undef&gt;" }
-      $self->RefreshEngine($http, $dyn, "<td><pre>$v</pre></td>");
+      $http->queue("<td>$v</td>");
     }
-    $self->RefreshEngine($http, $dyn, '</tr>');
+    $http->queue('</tr>');
   }
   $self->RefreshEngine($http, $dyn, "</table>");
 }
@@ -422,14 +450,16 @@ method UploadDone($http, $dyn){
   };
   return $sub;
 }
-method ServeUploadQueue{
+
+method ServeUploadQueue() {
   unless($#{$self->{UploadQueue}} >= 0){ return }
-  my $up_load_file = shift $self->{UploadQueue};
+  my $up_load_file = shift @{$self->{UploadQueue}};
   my $command = "ExtractUpload.pl \"$up_load_file\" \"$self->{TempDir}\"";
   my $hash = {};
   Dispatch::LineReader->new_cmd($command, $self->ReadConvertLine($hash),
     $self->ConvertLinesComplete($hash));
 }
+
 method ReadConvertLine($hash){
   my $sub = sub {
     my($line) = @_;

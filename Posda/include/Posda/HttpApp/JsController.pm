@@ -13,16 +13,17 @@ use Posda::DebugLog 'on';
 
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpObj" );
-my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
   <head>
     <!-- HttpApp::JsController line 20 -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/nv.d3.css">
     <link rel="stylesheet" href="/css/dropzone.css">
+    <link rel="stylesheet" href="/highlight/styles/vs.css">
 
     <script src="/js/jquery-1.12.0.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -31,6 +32,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html
     <script src="/js/spin.min.js"></script>
     <script src="/js/jquery.spin.js"></script>
     <script src="/js/dropzone.js"></script>
+    <script src="/highlight/highlight.pack.js"></script>
 
     <?dyn="CssStyle"?>
     <title><?dyn="title"?></title>
@@ -644,7 +646,7 @@ sub DelegateButton{
 sub MakeMenu{
   DEBUG @_;
   my($this, $http, $dyn, $list) = @_;
-  $http->queue('<div class="list-group">');
+  $http->queue(qq{<div class="btn-group-vertical spacer-bottom" role="group">});
   for my $m (@$list){
     if(not defined $m->{condition} or $m->{condition}){
       if (not defined $m->{type} or $m->{type} eq "button") {
@@ -659,9 +661,9 @@ sub MakeMenu{
         }
         my $link = 
           $this->MakeHostLink($m->{caption}, $m->{method}, $m->{args}, $small,
-          "list-group-item");
-        # $http->queue("<a href='' class=\"list-group-item\">$link</a>");
+          "btn btn-default");
         $http->queue($link);
+
       } elsif($m->{type} eq "host_link_sync"){
         my $small;
         if(exists($m->{style}) && $m->{style} eq "small"){
@@ -671,14 +673,17 @@ sub MakeMenu{
         my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
         my $link = 
           $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
-            $m->{args}, $small, $sync_method, "list-group-item");
+            $m->{args}, $small, $sync_method, "btn btn-default");
         $http->queue($link);
+
       } elsif ($m->{type} eq "javascript"){
         my $link = $this->MakeJavascriptLink(
           $m->{caption}, $m->{method}, $m->{args});
         $http->queue("$link<br />");
+
       } elsif ($m->{type} eq "hr"){
         $http->queue("<hr />");
+
       } elsif ($m->{type} eq "info"){
         $http->queue("$m->{caption}<br />");
       }
