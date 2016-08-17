@@ -1216,6 +1216,11 @@ $Queries{DistinctUnhiddenFilesInSeries}->{description} = <<EOF;
 Get Distinct Unhidden Files in Series
 EOF
 $Queries{DistinctUnhiddenFilesInSeries}->{args} = [ "series_instance_uid" ];
+$Queries{DistinctUnhiddenFilesInSeries}->{tags} = {
+  posda_files => 1,
+  file_ids => 1,
+  by_series_instance_uid => 1,
+};
 $Queries{DistinctUnhiddenFilesInSeries}->{schema} = "posda_files";
 $Queries{DistinctUnhiddenFilesInSeries}->{columns} = [
  "file_id",
@@ -1232,7 +1237,12 @@ EOF
 $Queries{ImageIdByFileId}->{description} = <<EOF;
 Get image_id for file_id 
 EOF
-$Queries{ImageIdByFileId}->{args} = [ "series_instance_uid" ];
+$Queries{ImageIdByFileId}->{args} = [ "file_id" ];
+$Queries{ImageIdByFileId}->{tags} = {
+  posda_files => 1,
+  image_id => 1,
+  by_file_id => 1,
+};
 $Queries{ImageIdByFileId}->{schema} = "posda_files";
 $Queries{ImageIdByFileId}->{columns} = [
  "file_id", "image_id",
@@ -1250,6 +1260,11 @@ $Queries{PixelDataIdByFileId}->{description} = <<EOF;
 Get unique_pixel_data_id for file_id 
 EOF
 $Queries{PixelDataIdByFileId}->{args} = [ "file_id" ];
+$Queries{PixelDataIdByFileId}->{tags} = {
+  posda_files => 1,
+  pixel_data_id => 1,
+  by_file_id => 1,
+};
 $Queries{PixelDataIdByFileId}->{schema} = "posda_files";
 $Queries{PixelDataIdByFileId}->{columns} = [
  "file_id", "image_id", "unique_pixel_data_id"
@@ -1268,6 +1283,12 @@ Get unique_pixel_data_id for file_id
 EOF
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{args} =
   [ "file_id" ];
+$Queries{PixelDataIdByFileIdWithOtherFileId}->{tags} = {
+  posda_files => 1,
+  pixel_data_id => 1,
+  duplicates => 1,
+  by_file_id => 1,
+};
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{schema} = "posda_files";
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{columns} = [
  "file_id", "image_id", "unique_pixel_data_id", "other_file_id"
@@ -1288,6 +1309,11 @@ Get disk space used by collection
 EOF
 $Queries{DiskSpaceByCollection}->{args} =
   [ "collection" ];
+$Queries{DiskSpaceByCollection}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  by_collecton => 1,
+};
 $Queries{DiskSpaceByCollection}->{schema} = "posda_files";
 $Queries{DiskSpaceByCollection}->{columns} = [
  "collection", "total_bytes",
@@ -1310,6 +1336,12 @@ $Queries{DiskSpaceByCollectionSummary}->{description} = <<EOF;
 Get disk space used for all collections
 EOF
 $Queries{DiskSpaceByCollectionSummary}->{args} = [ ];
+$Queries{DiskSpaceByCollectionSummary}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  by_collecton => 1,
+  summary => 1,
+};
 $Queries{DiskSpaceByCollectionSummary}->{schema} = "posda_files";
 $Queries{DiskSpaceByCollectionSummary}->{columns} = [
  "collection", "total_bytes"
@@ -1332,6 +1364,11 @@ $Queries{TotalDiskSpace}->{description} = <<EOF;
 Get total disk space used
 EOF
 $Queries{TotalDiskSpace}->{args} = [ ];
+$Queries{TotalDiskSpace}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  all => 1,
+};
 $Queries{TotalDiskSpace}->{schema} = "posda_files";
 $Queries{TotalDiskSpace}->{columns} = [ "total_bytes" ];
 $Queries{TotalDiskSpace}->{query} = <<EOF;
@@ -1350,6 +1387,12 @@ $Queries{PixelTypesWithSlopeCT}->{description} = <<EOF;
 Get distinct pixel types
 EOF
 $Queries{PixelTypesWithSlopeCT}->{args} = [ ];
+$Queries{PixelTypes}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  slope_intercept => 1,
+  ct => 1,
+};
 $Queries{PixelTypesWithSlopeCT}->{schema} = "posda_files";
 $Queries{PixelTypesWithSlopeCT}->{columns} = [
   "photometric_interpretation",
@@ -1410,6 +1453,11 @@ $Queries{PixelTypes}->{description} = <<EOF;
 Get distinct pixel types
 EOF
 $Queries{PixelTypes}->{args} = [ ];
+$Queries{PixelTypes}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  all => 1,
+};
 $Queries{PixelTypes}->{schema} = "posda_files";
 $Queries{PixelTypes}->{columns} = [
   "photometric_interpretation",
@@ -1459,6 +1507,11 @@ $Queries{PixelTypesWithGeo}->{description} = <<EOF;
 Get distinct pixel types with geometry
 EOF
 $Queries{PixelTypesWithGeo}->{args} = [ ];
+$Queries{PixelTypesWithGeo}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+};
 $Queries{PixelTypesWithGeo}->{schema} = "posda_files";
 $Queries{PixelTypesWithGeo}->{columns} = [
   "photometric_interpretation",
@@ -1489,6 +1542,11 @@ $Queries{SeriesWithRGB}->{description} = <<EOF;
 Get distinct pixel types with geometry and rgb
 EOF
 $Queries{SeriesWithRGB}->{args} = [ ];
+$Queries{SeriesWithRGB}->{tags} = {
+  posda_files => 1,
+  find_series => 1,
+  rgb => 1,
+};
 $Queries{SeriesWithRGB}->{schema} = "posda_files";
 $Queries{SeriesWithRGB}->{columns} = [
   "series_instance_uid"
@@ -1507,6 +1565,12 @@ $Queries{PixelTypesWithGeoRGB}->{description} = <<EOF;
 Get distinct pixel types with geometry and rgb
 EOF
 $Queries{PixelTypesWithGeoRGB}->{args} = [ ];
+$Queries{PixelTypesWithGeoRGB}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+  rgb => 1,
+};
 $Queries{PixelTypesWithGeoRGB}->{schema} = "posda_files";
 $Queries{PixelTypesWithGeoRGB}->{columns} = [
   "photometric_interpretation",
@@ -1540,6 +1604,11 @@ Get pixel types with no geometry
 EOF
 $Queries{PixelTypesWithNoGeo}->{args} = [ ];
 $Queries{PixelTypesWithNoGeo}->{schema} = "posda_files";
+$Queries{PixelTypesWithNoGeo}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+};
 $Queries{PixelTypesWithNoGeo}->{columns} = [
   "photometric_interpretation",
   "samples_per_pixel",
@@ -1580,6 +1649,11 @@ $Queries{SeriesNotLikeWithModality}->{columns} = [
    "description",
    "count"
 ];
+$Queries{SeriesNotLikeWithModality}->{tags} = {
+  posda_files => 1,
+  find_series => 1,
+  pattern => 1,
+};
 $Queries{SeriesNotLikeWithModality}->{schema} = "posda_files";
 $Queries{SeriesNotLikeWithModality}->{query} = <<EOF;
 select
@@ -1606,6 +1680,10 @@ $Queries{HideSeriesNotLikeWithModality}->{args} = [
   "site",
   "description_not_matching",
 ];
+$Queries{HideSeriesNotLikeWithModality}->{tags} = {
+  posda_files => 1,
+  update => 1,
+};
 $Queries{HideSeriesNotLikeWithModality}->{schema} = "posda_files";
 $Queries{HideSeriesNotLikeWithModality}->{query} = <<EOF;
 update ctp_file set visibility = 'hidden'
@@ -1634,6 +1712,10 @@ EOF
 ##########################################################
 $Queries{UpdateCountsDb}->{description} = <<EOF;
 EOF
+$Queries{UpdateCountsDb}->{tags} = {
+  posda_counts => 1,
+  insert => 1,
+};
 $Queries{UpdateCountsDb}->{args} = [
   "project_name",
   "site_name",
@@ -1686,6 +1768,9 @@ EOF
 ##########################################################
 $Queries{ActiveQueries}->{description} = <<EOF;
 EOF
+$Queries{ActiveQueries}->{tags} = {
+  postgres_status => 1,
+};
 $Queries{ActiveQueries}->{args} = [
   "db_name"
 ];

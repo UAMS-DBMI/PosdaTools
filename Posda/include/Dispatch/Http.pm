@@ -36,6 +36,9 @@ use Debug;
   my $null_count = 1;
   sub CreateHeaderReader{
     my($this, $socket) = @_;
+if($this->{DebugHeaderReader}){
+print STDERR "CreateHeaderReader called\n";
+}
     my $buff = "";
     my $count = 0;
     my $foo = sub {
@@ -137,6 +140,7 @@ print STDERR "Ewouldblock\n";
   sub ParseIncomingForm{
     my($http) = @_;
     my $length = $http->{header}->{content_length};
+    my $content_type = $http->{header}->{content_type};
     my $buff;
     unless(defined($length) && $length > 0) {
       $http->{form} = {};
@@ -162,6 +166,80 @@ print STDERR "Ewouldblock\n";
         $http->{form}->{$key} = $val;
       }
     }
+  }
+  sub ParseMultipart{
+    my($http, $file) = @_;
+    my $content_length = $http->{header}->{content_length};
+    my $content_type = $http->{header}->{content_type};
+    my $err_count = 0;
+    unless($content_type =~ /multipart\/form-data;\s*boundary=(.*)/){
+      print STDERR  "Can't handle content_type: $content_type";
+      return undef;
+    }
+    my $fh;
+    unless(open $fh, ">$file"){
+      print STDERR "Can't open $file\n";
+      return undef;
+    }
+    my $length_read = 0;
+    while($length_read < $content_length){
+      my $buff;
+      my $count = read($http->{socket}, $buff, 100);
+      unless($count) { 
+        $err_count += 1;
+        if($err_count > 1000) { die "Stuck in loop" }
+        print STDERR "Yikes\n";
+        next;
+      }
+      $length_read += $count;
+      print $fh $buff;
+    }
+    return $file;
+  }
+  sub ParseMultipartShouldWork{
+    my($http, $file, $done) = @_;
+    my $content_length = $http->{header}->{content_length};
+    my $content_type = $http->{header}->{content_type};
+    unless($content_type =~ /multipart\/form-data;\s*boundary=(.*)/){
+      print STDERR  "Can't handle content_type: $content_type";
+      return undef;
+    }
+    my $fh;
+    unless(open $fh, ">$file"){
+      print STDERR "Can't open $file\n";
+      return undef;
+    }
+    my $reader = Dispatch::Select::Socket->new(
+      $http->MultipartReader($content_length, $file, $done), $http->{socket},
+      "MultpartReader"
+    );
+    $reader->Add("reader");
+  }
+  sub MultipartReader{
+    my($http, $length, $fh, $done) = @_;
+    my $read = 0;
+    my $sub = sub {
+      my($disp, $socket) = @_;
+      my $buff;
+      my $count = sysread($socket, $buff, 100);
+      unless($count){
+        if($! == &Errno::EAGAIN){
+print STDERR "Eagain\n";
+          return;
+        }
+        if($! == &Errno::EWOULDBLOCK){
+print STDERR "Ewouldblock\n";
+          return;
+        }
+        $read += $count;
+        print $fh $buff;
+        if($count >= $length){
+          $disp->Remove();
+          &$done();
+        }
+      }
+    };
+    return $sub;
   }
   sub HeaderSent{
     my($http) = @_;
@@ -230,7 +308,7 @@ EOF
   }
   sub finish{
     my($http) = @_;
-print "In $http" . "->finish\n";
+print STDERR "In $http" . "->finish\n";
     if(
       defined $http->{output_queue} &&
       $http->{output_queue}->can("finish")

@@ -4,8 +4,6 @@ package DbIf::Application;
 #
 
 use Posda::DB::PosdaFilesQueries;
-use vars '@ISA';
-@ISA = ("GenericApp::Application");
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -19,6 +17,8 @@ use Posda::Config 'Config';
 use Posda::DebugLog 'on';
 use Data::Dumper;
 
+use vars '@ISA';
+@ISA = ("GenericApp::Application");
 
 method SpecificInitialize() {
   ### change this to initialize from config
@@ -58,6 +58,18 @@ method SpecificInitialize() {
         caption => "Upload",
         op => 'SetMode',
         mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
         sync => 'Update();'
       },
     ],
@@ -103,6 +115,14 @@ method SpecificInitialize() {
         sync => 'Update();'
       },
     ],
+    Files => [
+      {
+        caption => "List",
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+    ],
   };
   $self->{Mode} = "ListQueries";
   my $dbif_dir = "$self->{Environment}->{UserInfoDir}/DbIf";
@@ -123,6 +143,10 @@ method SpecificInitialize() {
       die "Can't mkdir $self->{SavedQueriesDir}";
     }
   }
+  my $temp_dir = "$self->{Environment}->{LoginTemp}/$self->{session}";
+  unless(-d $temp_dir) { die "$temp_dir doesn't exist" }
+  $self->{TempDir} = $temp_dir;
+  $self->{UploadCount} = 0;
 }
 
 
@@ -266,43 +290,84 @@ method MakeQuery($http, $dyn){
   }
   $query->{bindings} = \@bindings;
   $self->{Mode} = "QueryWait";
-  $self->SerializedSubProcess($query, "SubProcessQuery.pl", $self->QueryEnd);
+  $self->SerializedSubProcess($query, "SubProcessQuery.pl",
+    $self->QueryEnd($query));
 }
-method QueryEnd{
+method QueryEnd($query){
   my $sub = sub {
     my($status, $struct) = @_;
-    $self->AutoRefresh;
+    if($self->{Mode} eq "QueryWait"){
+      $self->AutoRefresh;
+    }
     if($status = "Succeeded" && $struct->{Status} eq "OK"){
-      $self->{Mode} = "QuerySuccessful";
-      if(exists $struct->{NumRows}){
-          $self->{NumRows} = $struct->{NumRows}
-      } elsif(exists $struct->{Rows}){
-        $self->{Rows} = $struct->{Rows};
-      } else {
-        $self->{Mode} = "QueryFailed";
-        $self->{QueryReturnedInfo} = $struct;
+      if($query->{query} =~ /^select/ && exists $struct->{Rows}){
+        return $self->CreateAndSelectTableFromQuery($query, $struct);
+      } elsif(exists $struct->{NumRows}){
+        return $self->UpdateInsertCompleted($query, $struct);
       }
+    } else {
+      if($self->{Mode} eq "QueryWait"){
+        $self->{Mode} = "QueryFailed";
+      }
+      unless(exists $self->{FailedQueries}){ $self->{FailedQueries} = [] }
+      push @{$self->{FailedQueries}}, {
+        query => $query,
+        result => $struct
+      };
     }
   };
   return $sub;
 }
-method QuerySuccessful($http, $dyn){
-  if($self->{query}->{query} =~ /^select/){
-    $self->RefreshEngine($http, $dyn, "<table border><tr>");
-    for my $i (@{$self->{query}->{columns}}){
-      $self->RefreshEngine($http, $dyn, "<th><pre>$i</pre></th>");
+method UpdateInsertCompleted($query, $struct){
+  unless(exists $self->{CompletedUpdatesAndInserts}){
+    $self->{CompletedUpdatesAndInserts} = [] }
+  push(@{$self->{CompletedUpdatesAndInserts}}, {
+    query => $query,
+    results => $struct,
+  });
+  my $index = $#{$self->{CompletedUpdatesAndInserts}};
+  if($self->{Mode} eq "QueryWait"){
+    $self->{SelectedUpdateInsert} = $index;
+    $self->{Mode} eq "UpdateInsertStatus";
+  }
+}
+method CreateAndSelectTableFromQuery($query, $struct){
+  unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
+  push(@{$self->{LoadedTables}}, {
+    type => "FromQuery",
+    at => time,
+    query => $query,
+    rows => $struct->{Rows},
+  });
+  my $index = $#{$self->{LoadedTables}};
+  if($self->{Mode} eq "QueryWait"){
+    $self->{Mode} = "TableSelected";
+    $self->{SelectedTable} = $index;
+  }
+}
+method TableSelected($http, $dyn){
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  my $query = $table->{query};
+  my $rows = $table->{rows};
+  my $at = $table->{at};
+  $self->RefreshEngine($http, $dyn, "<table border><tr>");
+  for my $i (@{$query->{columns}}){
+    $self->RefreshEngine($http, $dyn, "<th><pre>$i</pre></th>");
+  }
+  $self->RefreshEngine($http, $dyn, '</tr>');
+  for my $r (@$rows){
+    $self->RefreshEngine($http, $dyn, '<tr>');
+    for my $v (@$r){
+      unless(defined($v)){ $v = "&lt;undef&gt;" }
+      $self->RefreshEngine($http, $dyn, "<td><pre>$v</pre></td>");
     }
     $self->RefreshEngine($http, $dyn, '</tr>');
-    for my $r (@{$self->{Rows}}){
-      $self->RefreshEngine($http, $dyn, '<tr>');
-      for my $v (@$r){
-        unless(defined($v)){ $v = "&lt;undef&gt;" }
-        $self->RefreshEngine($http, $dyn, "<td><pre>$v</pre></td>");
-      }
-      $self->RefreshEngine($http, $dyn, '</tr>');
-    }
   }
   $self->RefreshEngine($http, $dyn, "</table>");
+}
+method UpdateInsertStatus($http, $dyn){
+}
+method UpdatesInserts($http, $dyn){
 }
 #############################
 my $f_form = '
@@ -323,13 +388,113 @@ method StoreFileUri($http, $dyn){
   $http->queue("StoreFile?obj_path=$self->{path}");
 }
 method StoreFile($http, $dyn){
-  $http->queue("<pre>");
-  for my $k (keys %$dyn){
-    $http->queue("dyn{$k} = $dyn->{$k}\n");
+  my $method = $http->{method};
+  my $content_type = $http->{header}->{content_type};
+  unless($method eq "POST" && $content_type =~ /multipart/){
+    print STDERR "No file posted\n";
+    return;
   }
-  for my $k (keys %$http){
-    $http->queue("http{$k} = $http->{$k}\n");
+  $self->{UploadCount}++;
+#  $http->ParseMultipartShouldWork("$self->{TempDir}/$self->{UploadCount}",
+#    $self->UploadDone($http, $dyn));
+  my $file = $http->ParseMultipart("$self->{TempDir}/$self->{UploadCount}");
+  &{$self->UploadDone($http, $dyn)}($file);
+}
+method UploadDone($http, $dyn){
+  my $sub = sub {
+    my($file) = @_;
+    unless(exists($self->{UploadQueue})){ $self->{UploadQueue} = [] }
+    push(@{$self->{UploadQueue}}, $file);
+    $self->InvokeAfterDelay("ServeUploadQueue", 0);
+    $http->queue("<pre>");
+    $http->queue("File uploaded into $file\n");
+    for my $k (keys %$dyn){
+      $http->queue("dyn{$k} = $dyn->{$k}\n");
+    }
+    for my $k (keys %$http){
+      $http->queue("http{$k} = $http->{$k}\n");
+    }
+    for my $k (keys %{$http->{header}}){
+      $http->queue("http{header}->{$k} = $http->{header}->{$k}\n");
+    }
+    $http->queue("<a href=\"Refresh?obj_path=$self->{path}\">Go back</a>");
+    $http->queue("<hr><pre>");
+  };
+  return $sub;
+}
+method ServeUploadQueue{
+  unless($#{$self->{UploadQueue}} >= 0){ return }
+  my $up_load_file = shift $self->{UploadQueue};
+  my $command = "ExtractUpload.pl \"$up_load_file\" \"$self->{TempDir}\"";
+  my $hash = {};
+  Dispatch::LineReader->new_cmd($command, $self->ReadConvertLine($hash),
+    $self->ConvertLinesComplete($hash));
+}
+method ReadConvertLine($hash){
+  my $sub = sub {
+    my($line) = @_;
+    if($line =~ /^(.*):\s*(.*)$/){
+      my $k = $1; my $v = $2;
+      $hash->{$k} = $v;
+    }
+  };
+  return $sub;
+}
+method ConvertLinesComplete($hash){
+  my $sub = sub {
+    push(@{$self->{UploadedFiles}}, $hash);
+    $self->InvokeAfterDelay("ServeUploadQueue", 0);
+  };
+  return $sub;
+}
+method Files($http, $dyn){
+  unless(exists $self->{UploadedFiles}) { $self->{UploadedFiles} = [] }
+  my $num_files = @{$self->{UploadedFiles}};
+  if($num_files == 0){
+    return $self->RefreshEngine($http, $dyn, "No files have been uploaded");
   }
-  $http->queue("<a href=\"Refresh?obj_path=$self->{path}\">Go back</a>");
+  $self->RefreshEngine($http, $dyn,
+    '<table border><tr><th colspan="4"><p>Files Uploaded</p></th></tr>'.
+    '<tr><th><p>File</p></th><th><p>Size</p></th><th><p>Type</p></th>' .
+    '<th><p>Op</p></th></tr>');
+  file:
+  for my $in(0 .. $#{$self->{UploadedFiles}}){
+    my $i = $self->{UploadedFiles}->[$in];
+    my $path = $i->{"Output file"};
+    my $file;
+    if($path =~ /\/([^\/]+)$/){
+      $file = $1;
+    } else {
+      $file = $path;
+    }
+    my $type = $i->{"mime-type"};
+    my $size  = $i->{length};
+    $self->RefreshEngine($http, $dyn, '<tr>' .
+      "<td><p>$file</p></td>" .
+      "<td><p>$size</p></td><td><p>");
+    $self->RefreshEngine($http, $dyn, $type .
+      "</p></td><td><p>");
+    if($type eq "text/csv"){
+      $self->NotSoSimpleButton($http, {
+        caption => "Load as Table",
+        op => "LoadCsvIntoTable",
+        index => $in
+      });
+    }
+    $self->RefreshEngine($http, $dyn, '</p></td></tr>');
+  }
+  $self->RefreshEngine($http, $dyn, '</table>');
+}
+method LoadCsvIntoTable($http, $dyn){
+  $self->{Mode} = "LoadCsvIntoTable";
+  my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output File"};
+  my $cmd = "CsvToPerlStruct.pl \"$file\"";
+}
+method Tables($http, $dyn){
+  unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
+  my $num_tables = @{$self->{LoadedTables}};
+  if($num_tables == 0){
+    return $self->RefreshEngine($http, $dyn, "No tables have been loaded");
+  }
 }
 1;
