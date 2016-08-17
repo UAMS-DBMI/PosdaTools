@@ -293,7 +293,17 @@ method MakeQuery($http, $dyn){
   $self->SerializedSubProcess($query, "SubProcessQuery.pl",
     $self->QueryEnd($query));
 }
-method QueryEnd($query){
+
+method QueryWait($http, $dyn) {
+  $http->queue(qq{
+    <div class="alert alert-info">
+      Executing query...
+      <div class="spinner" style="display:inline-block;margin-left:30px"></div>
+    </div>
+  });
+}
+
+method QueryEnd($query) {
   my $sub = sub {
     my($status, $struct) = @_;
     if($self->{Mode} eq "QueryWait"){
@@ -422,14 +432,16 @@ method UploadDone($http, $dyn){
   };
   return $sub;
 }
-method ServeUploadQueue{
+
+method ServeUploadQueue() {
   unless($#{$self->{UploadQueue}} >= 0){ return }
-  my $up_load_file = shift $self->{UploadQueue};
+  my $up_load_file = shift @{$self->{UploadQueue}};
   my $command = "ExtractUpload.pl \"$up_load_file\" \"$self->{TempDir}\"";
   my $hash = {};
   Dispatch::LineReader->new_cmd($command, $self->ReadConvertLine($hash),
     $self->ConvertLinesComplete($hash));
 }
+
 method ReadConvertLine($hash){
   my $sub = sub {
     my($line) = @_;
