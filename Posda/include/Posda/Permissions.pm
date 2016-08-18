@@ -29,7 +29,7 @@ method _init() {
       app_name,
       permission_name
 
-    from user_app_permissions
+    from user_permissions
     natural join users
     natural join apps
     natural join permissions

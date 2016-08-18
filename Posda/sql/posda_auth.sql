@@ -11,12 +11,12 @@ create table apps (
 );
 create table permissions (
     permission_id serial primary key,
+    app_id integer references apps on delete cascade,
     permission_name text not null
 );
 
-create table user_app_permissions (
+create table user_permissions (
     user_id integer references users on delete cascade,
-    app_id integer references apps on delete cascade,
     permission_id integer references permissions on delete cascade
 );
 
