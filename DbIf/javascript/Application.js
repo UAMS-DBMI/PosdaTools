@@ -4,7 +4,8 @@ function MenuResponseReturned(text, status, xml){
 
 function ContentResponseReturned(text, status, xml){
   document.getElementById('content').innerHTML = text;
-  $(".dropzone").dropzone({url:"/file-upload"});
+
+  Dropzone.discover();
 
   // Apply highlight.js style to any code blocks
   $('pre code').each(function(i, block) {
@@ -47,9 +48,6 @@ function Update(){
   UpdateMenu();
   UpdateContent();
   UpdateLogin();
-  if(Dropzone.autoDiscover){
-    Dropzone.discover();
-  }
 }
 
 var spinner_opts = {

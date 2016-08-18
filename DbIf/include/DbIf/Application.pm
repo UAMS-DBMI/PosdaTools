@@ -400,14 +400,7 @@ method UpdatesInserts($http, $dyn){
 #############################
 my $f_form = '
 <form action="<?dyn="StoreFileUri"?>"
-enctype="multipart/form-data" method="POST">
-<p>
-Please specify a file, or a set of files:<br>
-<input type="file" name="datafile" size="40">
-</p>
-<div>
-<input type="submit" value="Send">
-</div>
+enctype="multipart/form-data" method="POST" class="dropzone">
 </form>';
 method Upload($http, $dyn){
   $self->RefreshEngine($http, $dyn, $f_form);
