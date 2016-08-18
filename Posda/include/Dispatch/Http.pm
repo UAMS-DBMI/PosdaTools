@@ -184,7 +184,11 @@ print STDERR "Ewouldblock\n";
     my $length_read = 0;
     while($length_read < $content_length){
       my $buff;
-      my $count = read($http->{socket}, $buff, 100);
+      my $to_read = 100;
+      if ($to_read > $content_length) {
+        $to_read = $content_length;
+      }
+      my $count = sysread($http->{socket}, $buff, $to_read);
       unless($count) { 
         $err_count += 1;
         if($err_count > 1000) { die "Stuck in loop" }
