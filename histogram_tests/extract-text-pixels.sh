@@ -4,5 +4,7 @@
 # determine the color that text is in
 TCOLOR=$(./colors.py $1)
 
-#convert leveled.png -fill white +opaque "$SECOND" -fill black -opaque "$SECOND" result.png
-convert $1 -fill white +opaque "#$TCOLOR" -fill black -opaque "#$TCOLOR" $2
+for color in $TCOLOR; do
+  #convert leveled.png -fill white +opaque "$SECOND" -fill black -opaque "$SECOND" result.png
+  convert $1 -fill white +opaque "#$color" -fill black -opaque "#$color" $2.$color.png
+done

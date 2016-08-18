@@ -1,4 +1,8 @@
+# output as png, comment to display (and also uncommon pause at end)
+set term png size 1280,1024
+set output "output.png"
+
 rgb(r,g,b) = int(r)*65536 + int(g)*256 + int(b)
 splot 'scatter.dat' using 1:2:3:4:(rgb($1,$2,$3)) with points pt 7 pointsize variable lc rgb variable notitle
 
-pause -1
+#pause -1
