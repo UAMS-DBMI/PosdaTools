@@ -644,7 +644,6 @@ sub DelegateButton{
   $http->queue($string);
 }
 sub MakeMenu{
-  DEBUG @_;
   my($this, $http, $dyn, $list) = @_;
   $http->queue(qq{<div class="btn-group-vertical spacer-bottom" role="group">});
   for my $m (@$list){
