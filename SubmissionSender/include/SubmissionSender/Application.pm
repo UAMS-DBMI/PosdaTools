@@ -93,7 +93,7 @@ sub new {
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{ExtractionRoot};
 
   # make sure this always happens after logging in
-  if($this->{can}('debug')){
+  if($this->{user_has_permission}('debug')){
     Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
 
@@ -216,7 +216,7 @@ sub JsContent{
 }
 sub DebugButton{
   my($this, $http, $dyn) = @_;
-  if($this->{can}('debug')){
+  if($this->{user_has_permission}('debug')){
     $this->RefreshEngine($http, $dyn, qq{
       <span class="btn btn-sm btn-info" 
        onClick="javascript:rt('DebugWindow',
