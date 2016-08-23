@@ -14,6 +14,7 @@ sub GetQueryInstance{
     args => $Queries{$name}->{args},
     columns => $Queries{$name}->{columns},
     schema => $Queries{$name}->{schema},
+    tags => $Queries{$name}->{tags},
   };
   return bless $this, $class;
 };
@@ -84,7 +85,7 @@ sub GetList{
 };
 sub Freeze{
   my($class, $file_name) = @_;
-  my $struct = { queries => $Queries };
+  my $struct = { queries => \%Queries };
   my $json = JSON->new();
   $json->pretty(1);
   my $fh;
@@ -96,9 +97,23 @@ sub Clear{
   my($class, $file_name) = @_;
   $Queries = {};
 }
+sub GetTags{
+  my($class, $name) = @_;
+  return $Queries->{$name}->{tags};
+}
+sub GetAllTags{
+  my($class) = @_;
+  my %tags;
+  for my $q (keys %$Queries){
+    for my $tag (keys %{$Queries->{$q}->{tags}}){
+      $tags{$tag} = 1;
+    }
+  }
+  return \%tags;
+}
 sub Delete{
   my($class, $q_name) = @_;
-  delete $Queries{$q_name};
+  delete $Queries->{$q_name};
 }
 sub Load{
   my($class, $file) = @_;
@@ -1221,7 +1236,7 @@ $Queries{DistinctSopsInSeries}->{columns} = [
  "sop_instance_uid", "count"
 ];
 $Queries{DistinctSopsInSeries}->{query} = <<EOF;
-select distinct sop_instance_uid
+select distinct sop_instance_uid, count(*)
 from file_sop_common
 where file_id in (
   select
@@ -1335,7 +1350,7 @@ $Queries{DiskSpaceByCollection}->{args} =
 $Queries{DiskSpaceByCollection}->{tags} = {
   posda_files => 1,
   storage_used => 1,
-  by_collecton => 1,
+  by_collection => 1,
 };
 $Queries{DiskSpaceByCollection}->{schema} = "posda_files";
 $Queries{DiskSpaceByCollection}->{columns} = [
@@ -1362,7 +1377,7 @@ $Queries{DiskSpaceByCollectionSummary}->{args} = [ ];
 $Queries{DiskSpaceByCollectionSummary}->{tags} = {
   posda_files => 1,
   storage_used => 1,
-  by_collecton => 1,
+  by_collection => 1,
   summary => 1,
 };
 $Queries{DiskSpaceByCollectionSummary}->{schema} = "posda_files";
