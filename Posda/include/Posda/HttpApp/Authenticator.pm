@@ -23,7 +23,7 @@ use Debug;
            onClick="javascript:CloseThisWindow();">
             Close
           </button>
-          <p class="navbar-text">Signed in as <?dyn="user"?></p>
+          <p class="navbar-text">Signed in as $user</p>
          };
         $this->RefreshEngine($http, $dyn, $resp);
   } else {
