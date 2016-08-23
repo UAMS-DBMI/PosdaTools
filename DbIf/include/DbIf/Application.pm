@@ -476,12 +476,20 @@ method UpdateInsertCompleted($query, $struct){
 }
 method CreateAndSelectTableFromQuery($query, $struct){
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
-  push(@{$self->{LoadedTables}}, {
+  my $new_entry = {
     type => "FromQuery",
     at => time,
-    query => $query,
     rows => $struct->{Rows},
-  });
+  };
+  my $new_q = {
+  };
+  for my $i (keys %$query){
+    unless($i eq "columns"){ $new_q->{$i} = $query->{$i} }
+  }
+  my @cols = @{$query->{columns}};
+  $new_q->{columns} = \@cols;
+  $new_entry->{query} = $new_q;
+  push(@{$self->{LoadedTables}}, $new_entry);
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
     $self->{Mode} = "TableSelected";
