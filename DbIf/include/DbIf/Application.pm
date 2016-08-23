@@ -998,7 +998,7 @@ method SeriesAndStudiesFetched($sop_where, $nn_type, $table_n){
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
       my %sop_info;
-      for my $i ($struct->{Rows}){
+      for my $i (@{$struct->{Rows}}){
         $sop_info{$i->[0]}->{series_instance_uid} = $i->[1];
         $sop_info{$i->[0]}->{study_instance_uid} = $i->[2];
       }
@@ -1309,9 +1309,6 @@ print "Render Nicknames: $nn_type, $table_n\n";
       if($version) { $row->{$nn_row} .= "[$version]" }
     }
   } elsif($nn_type eq "sop_nn"){
-print STDERR "Sop info ";
-Debug::GenPrint($dbg, $sop_info, 1);
-print "\n";
     my $sop_instance_uid_row;
     my $nn_row;
     for my $i (0 .. $#{$columns}){
@@ -1330,12 +1327,31 @@ print "\n";
       $columns->[$#{$columns} + 1] = "nickname";
     }
     for my $i ($first_row .. $#{$table->{rows}}){
-      my $sop_instance_uid = $table->{rows}->[$sop_instance_uid_row];
+      my $row = $table->{rows}->[$i];
+      my $sop_instance_uid = $row->[$sop_instance_uid_row];
       my @errors;
       my($proj, $site, $subj, $study, $series, $sop);
+      my $sop_nn_info;
       if(exists $sop_info->{$sop_instance_uid}){
-        my $sop_nn_info = $sop_info->{$sop_instance_uid};
+        $sop_nn_info = $sop_info->{$sop_instance_uid};
+      } else {
+        print STDERR "no SOP nickname data for $sop_instance_uid\n";
+        return;
       }
+      my $study_instance_uid = $sop_nn_info->{study_instance_uid};
+      my $series_instance_uid = $sop_nn_info->{series_instance_uid};
+      my $study_nn_info = $study_info->{$study_instance_uid};
+      my $series_nn_info = $series_info->{$series_instance_uid};
+      my $proj = $study_nn_info->{project_name};
+      my $site = $study_nn_info->{site_name};
+      my $subj = $study_nn_info->{subj_id};
+      my $study_nn = $study_nn_info->{study_nickname};
+      my $series_nn = $series_nn_info->{series_nickname};
+      my $sop_nn = $sop_nn_info->{sop_nickname};
+      unless(defined $study_nn) { $study_nn = "&ltundef&gt;" }
+      unless(defined $series_nn) { $series_nn = "&ltundef&gt;" }
+      unless(defined $sop_nn) { $sop_nn = "&ltundef&gt;" }
+      $row->[$nn_row] = "$proj//$site//$subj//$study_nn//$series_nn//$sop_nn";
     }
   } elsif($nn_type eq "series_nn"){
     my $series_instance_uid_row;
