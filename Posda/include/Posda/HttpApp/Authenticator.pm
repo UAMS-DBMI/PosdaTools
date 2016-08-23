@@ -23,7 +23,7 @@ use Debug;
            onClick="javascript:CloseThisWindow();">
             Close
           </button>
-          <p class="navbar-text">Signed in as <?dyn="user"?></p>
+          <p class="navbar-text">Signed in as $user</p>
          };
         $this->RefreshEngine($http, $dyn, $resp);
   } else {
@@ -115,7 +115,7 @@ use Debug;
     $sess->{AuthUser} = $user;
     $sess->{permissions} = Posda::Permissions->new($user); 
     $this->{permissions} = $sess->{permissions};
-    $this->{can} = $sess->{permissions}->can_partial($this->{Environment}->{ApplicationName});
+    $this->{user_has_permission} = $sess->{permissions}->has_permission_partial($this->{Environment}->{ApplicationName});
     my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
     $sess->{Privileges}->{capability} = $cap_config->{$user};
     $this->{capability} = $cap_config->{$user};
@@ -127,7 +127,7 @@ use Debug;
     delete $sess->{Privileges}->{capability};
     delete $sess->{permissions};
     delete $this->{permissions};
-    delete $this->{can};
+    delete $this->{user_has_permission};
     my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
     delete $this->{capability};
     if(exists $cap_config->{Default}) {

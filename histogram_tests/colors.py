@@ -36,18 +36,22 @@ def hex2rgba(color):
 
 
 def compare_colors(color1, color2):
-	c1 = hex2rgba(color1)
-	c2 = hex2rgba(color2)
+    c1 = hex2rgba(color1)
+    c2 = hex2rgba(color2)
 
-	return (c1[0] - c2[0]) + (c1[1] - c2[1]) + (c1[2] - c2[2])	
+    return abs((c1[0] - c2[0]) + (c1[1] - c2[1]) + (c1[2] - c2[2]))
 
 distance_map = {}
 
-for c in sorted(colormap, key=colormap.get, reverse=True)[:10]:
-	distance_map[c] = compare_colors(c, "000000FF")
+top_ten_colors = sorted(colormap, key=colormap.get, reverse=True)[:10]
+top_color = top_ten_colors[0]
 
-for c in sorted(distance_map, key=distance_map.get, reverse=True):
-    match = c
-    break
+# print(top_color)
 
-print(match)
+for c in top_ten_colors:
+    distance_map[c] = compare_colors(c, top_color)
+
+# print the top 3 candidates
+matches = sorted(distance_map, key=distance_map.get, reverse=True)[:3]
+for m in matches:
+    print(m)

@@ -47,9 +47,8 @@ method GetAllPermissionList() {
 }
 
 method GetAppPermMap() {
-  # NOTE: This cross product is intentional! Do not be alarmed.
   my $stmt = $self->{dbh}->prepare(qq{
-   select * from apps, permissions
+   select * from permissions natural join apps
   });
 
   $stmt->execute();
@@ -308,23 +307,23 @@ method UpdateSelection($http, $dyn) {
   my @selections;
   map {
     if(/(.*)%7C(.*)/) {
-      push @selections, [$self->{SelectedUsername}, $1, $2];
+      push @selections, [$self->{SelectedUsername}, $2, $1];
     }
   } keys %$dyn;
 
   # turn the selection list into a set of inserts
   my $query = qq{
-    insert into user_app_permissions values (
+    insert into user_permissions values (
       (select user_id from users where user_name = ?),
-      (select app_id from apps where app_name = ?),
-      (select permission_id from permissions where permission_name = ?)
+      (select permission_id from permissions where permission_name = ?
+       and app_id = (select app_id from apps where app_name = ?))
     )
   };
   # begin transaction
   $self->{dbh}->{AutoCommit} = 0;  # disabling AutoCommit begins a transaction
   # delete all current permissions for the user
   my $del_stmt = $self->{dbh}->prepare(qq{
-    delete from user_app_permissions
+    delete from user_permissions
     where user_id = (select user_id from users where user_name = ?)
   });
 
@@ -415,7 +414,7 @@ method GetPermissionList($user) {
     select
       app_name,
       permission_name
-    from user_app_permissions
+    from user_permissions
     natural join users
     natural join apps
     natural join permissions

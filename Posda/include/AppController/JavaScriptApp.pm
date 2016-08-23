@@ -210,6 +210,13 @@ EOF
   }
   sub MenuResponse{
     my($this, $http, $dyn) = @_;
+
+    my $user = $this->get_user;
+    my $logged_in = 0;
+    if (defined $user) {
+      $logged_in = 1;
+    }
+
     unless(defined $this->{menu_mode}) { $this->{menu_mode} = "avail_apps" }
     if(defined($this->{menu_mode}) && $this->{menu_mode} eq "bom"){
       return $this->MakeBomMenu($http, $dyn);
@@ -248,14 +255,24 @@ EOF
         },
         {
           type => "host_link_sync",
-          condition => $this->get_user,
+          condition => $logged_in,
           caption => "Password",
           method => "SetMenuMode",
           args => { mode => "password" },
           sync => "Update();",
         },
+        {
+          type => "host_link_sync",
+          condition => !$logged_in,
+          caption => "Create Account",
+          method => "SetMenuMode",
+          args => { mode => "create_account" },
+          sync => "Update();",
+          class => "btn-primary",
+        },
       ]
     );
+
   }
   sub SetMenuMode{
     my($this, $http, $dyn) = @_;
@@ -311,12 +328,146 @@ EOF
       case "avail_apps"     { $this->AvailAppContent($http, $dyn) }
       case "dicom_receiver" { $this->DicomReceiverContent($http, $dyn) }
       case "password"       { $this->PasswordContent($http, $dyn) }
-
+      case "create_account" { $this->CreateAccount($http, $dyn) }
+      case "create_user_success" { $this->CreateAccountSuccess($http, $dyn) }
+      case "create_user_failure" { $this->CreateAccountFailure($http, $dyn) }
       else {
         my $resp = "Here's some content";
         $http->queue($resp);
       }
     }
+  }
+
+  sub CreateAccount {
+    my($this, $http, $dyn) = @_;
+    $http->queue(qq{
+      <main class="container-fluid">
+      <h1>Create Account</h1>
+
+      <p class="alert alert-info">
+        This is the generic account creation wizard.
+        It will create a new account with a predefined
+        set of access permissions.
+      </p>
+
+      <form class="col-md-6" id="CreateAccountForm"
+          onSubmit="PosdaGetRemoteMethod('SubmitCreateAccount', \$('#CreateAccountForm').serialize(), function(){Update();});return false;">
+
+        <div class="form-group">
+          <label for="new_username">Username</label>
+          <input type="text" class="form-control" 
+                 id="new_username" name="new_username" 
+                 placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label for="new_realname">Real Name</label>
+          <input type="text" class="form-control" 
+                 id="new_realname" name="new_realname"
+                 placeholder="Real Name">
+        </div>
+        <p class="alert alert-warning">
+          Real Name is needed to identify you! 
+          Accounts created without a Real Name 
+          may be deleted without notice.
+        </p>
+        <div class="form-group">
+          <label for="new_password">Password</label>
+          <input type="password" class="form-control" 
+                 id="new_password" name="new_password"
+                 placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="repeat_password">Repeat Password</label>
+          <input type="password" class="form-control" 
+                 id="repeat_password" name="repeat_password"
+                 placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+      </main>
+    });
+
+  }
+
+  sub SubmitCreateAccount {
+    my($this, $http, $dyn) = @_;
+
+    my $username = $dyn->{new_username};
+    my $realname = $dyn->{new_realname};
+    my $password = $dyn->{new_password};
+    my $repeat = $dyn->{repeat_password};
+
+
+    # ensure all values are filled out
+    if ($username eq '' or
+        $realname eq '' or
+        $password eq '' or
+        $repeat   eq '' ) {
+
+      $this->{create_account_error} = "All values are required!";
+      $this->{menu_mode} = 'create_user_failure';
+      return;
+    }
+
+    # ensure password == repeat
+    if ($password ne $repeat) {
+      $this->{create_account_error} = "Passwords did not match!";
+      $this->{menu_mode} = 'create_user_failure';
+      return;
+    }
+
+    # encode password
+    my $enc_pass = Posda::Passwords::encode($password);
+
+    # create new user account
+    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+
+    my $stmt = $dbh->prepare(qq{
+      insert into users (user_name, full_name, password)
+      values (?, ?, ?)
+    });
+
+    $stmt->execute($username, $realname, $enc_pass);
+    $stmt->finish;
+
+    # populate with default permissions
+
+    # my $stmt2 = $dbh->prepare(qq{
+    #   insert into user_permissions values (
+    #     (select user_id from users where user_name = ?),
+    #     (select permission_id from permissions where permission_name = 'launch'
+    #         and app_id = (select app_id from apps where app_name = 'DbIf'))
+    #   );
+    # });
+
+    # $stmt2->execute($username);
+    # $stmt2->finish;
+
+
+    $dbh->disconnect;
+
+    $this->{menu_mode} = 'create_user_success';
+  }
+
+  sub CreateAccountSuccess {
+    my($this, $http, $dyn) = @_;
+
+    $http->queue(qq{
+      <p class="alert alert-success">
+        Account created successfully! Use the form above to login.
+      </p>
+    });
+  }
+
+  sub CreateAccountFailure {
+    my($this, $http, $dyn) = @_;
+
+    $http->queue(qq{
+      <p class="alert alert-danger">
+        Account creation failed! $this->{create_account_error}
+      </p>
+    });
+
   }
 
   sub TitleAndInfoResponse{

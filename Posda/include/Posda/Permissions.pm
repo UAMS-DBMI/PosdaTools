@@ -29,7 +29,7 @@ method _init() {
       app_name,
       permission_name
 
-    from user_app_permissions
+    from user_permissions
     natural join users
     natural join apps
     natural join permissions
@@ -51,7 +51,7 @@ method _init() {
   $dbh->disconnect;
 }
 
-method can($app, $permission) {
+method has_permission($app, $permission) {
   DEBUG @_, $self->{username};
   if (defined $self->{permissions}->{$app}->{$permission}) {
     return 1;
@@ -60,10 +60,10 @@ method can($app, $permission) {
   }
 }
 
-method can_partial($app) {
+method has_permission_partial($app) {
   # a simple partial function/closure to bind to a specific app
   return func($perm) {
-    return $self->can($app, $perm);
+    return $self->has_permission($app, $perm);
   }
 }
 

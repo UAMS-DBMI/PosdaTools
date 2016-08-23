@@ -327,6 +327,7 @@ method ActiveQuery($http, $dyn){
     description => {
       caption=> "Description",
       struct => "text",
+      special => "",
     },
     query => {
       caption=> "Query Text",
@@ -336,10 +337,12 @@ method ActiveQuery($http, $dyn){
     schema => {
       caption=> "Schema",
       struct => "text",
+      special => "",
     },
     name => {
       caption=> "Query Name",
       struct => "text",
+      special => "",
     },
     tags => {
       caption => "Tags",

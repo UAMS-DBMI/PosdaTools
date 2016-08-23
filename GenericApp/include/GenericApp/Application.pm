@@ -78,8 +78,7 @@ sub new {
     $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
     $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
   }
-  # if($this->CanDebug){
-  if($this->{can}('debug')){
+  if($this->{user_has_permission}('debug')){
     Posda::HttpApp::DebugWindow->new($sess, "Debug");
   }
   $this->{ExitOnLogout} = 1;
