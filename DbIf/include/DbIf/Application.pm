@@ -843,11 +843,11 @@ method AddNicknames($http, $dyn){
     my $col_n = $nn_types{sop_nn};
     $sop_where = "where sop_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
-      $sop_where .= "$table->{rows}->[$i]->[$col_n]";
+      $sop_where .= "'$table->{rows}->[$i]->[$col_n]'";
       unless($i == $#{$table->{rows}}){ $sop_where .= ", " }
     }
     $sop_where .= ")";
-    $self->NicknamesBySop($sop_where, undef, "sop_nn", $table_n);
+    $self->SeriesStudyBySop($sop_where, "sop_nn", $table_n);
   }
   my $series_where;
   if(exists $nn_types{series_nn}){
@@ -959,7 +959,48 @@ method FileNnsFetched($nn_type, $f_info, $table_n){
       }
       $sop_where .= ")";
       $self->NicknamesBySop(
-        $sop_where, $f_info, \%dig_info, $nn_type, $table_n);
+        $sop_where, {}, $f_info, \%dig_info, $nn_type, $table_n);
+    } else {
+      $self->AutoRefresh;
+      $self->{Mode} = "ERROR";
+      $self->{ErrorInfo} = {
+        status => $status,
+        struct => $struct,
+      };
+    }
+  };
+  return $sub;
+} 
+method SeriesStudyBySop($sop_where, $nn_type, $table_n){
+  my $q = {
+    schema => "posda_files",
+    query => "select\n" .
+      "  distinct series_instance_uid, study_instance_uid, sop_instance_uid\n" .
+      "from\n" .
+      "  file_series natural join file_study natural join file_sop_common\n" .
+      $sop_where,
+    columns => [
+      "sop_instance_uid", "series_instance_uid", "study_instance_uid"
+    ],
+    args => [],
+    bindings => [],
+    name => "get series and study by sops",
+    description => ""
+  };
+  $self->SerializedSubProcess($q, "SubProcessQuery.pl",
+    $self->SeriesAndStudiesFetched($sop_where, $nn_type, $table_n));
+}
+method SeriesAndStudiesFetched($sop_where, $nn_type, $table_n){
+  my $sub = sub {
+    my($status, $struct) = @_;
+    if($status eq "Succeeded" && $struct->{Status} eq "OK"){
+      my %sop_info;
+      for my $i ($struct->{Rows}){
+        $sop_info{$i->[0]}->{series_instance_uid} = $i->[1];
+        $sop_info{$i->[0]}->{study_instance_uid} = $i->[2];
+      }
+      $self->NicknamesBySop(
+        $sop_where, \%sop_info, {}, {}, $nn_type, $table_n);
     } else {
       $self->AutoRefresh;
       $self->{Mode} = "ERROR";
@@ -971,7 +1012,7 @@ method FileNnsFetched($nn_type, $f_info, $table_n){
   };
   return $sub;
 }
-method NicknamesBySop($sop_where, $file_info, $dig_info, $nn_type, $table_n){
+method NicknamesBySop($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $table_n){
   my $q = {
     query => "select\n" .
       "  project_name, site_name, subj_id, sop_nickname, sop_instance_uid\n" .
@@ -985,19 +1026,18 @@ method NicknamesBySop($sop_where, $file_info, $dig_info, $nn_type, $table_n){
     description => "",
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
-    $self->SopNnsFetched($sop_where, $file_info, $dig_info, $nn_type, $table_n)
+    $self->SopNnsFetched($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $table_n)
   );
 }
-method SopNnsFetched($sop_where, $file_info, $dig_info, $nn_type, $table_n){
+method SopNnsFetched($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $table_n){
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
-      my %sop_info;
       for my $i (@{$struct->{Rows}}){
-        $sop_info{$i->[4]}->{project_name} = $i->[0];
-        $sop_info{$i->[4]}->{site_name} = $i->[1];
-        $sop_info{$i->[4]}->{subj_id} = $i->[2];
-        $sop_info{$i->[4]}->{sop_nickname} = $i->[3];
+        $sop_info->{$i->[4]}->{project_name} = $i->[0];
+        $sop_info->{$i->[4]}->{site_name} = $i->[1];
+        $sop_info->{$i->[4]}->{subj_id} = $i->[2];
+        $sop_info->{$i->[4]}->{sop_nickname} = $i->[3];
       }
       my $q = {
         query => "select distinct series_instance_uid,\n" .
@@ -1014,7 +1054,7 @@ method SopNnsFetched($sop_where, $file_info, $dig_info, $nn_type, $table_n){
       };
       $self->SerializedSubProcess($q, "SubProcessQuery.pl",
         $self->SeriesBySopsFetched(
-          \%sop_info ,$file_info, $dig_info, $nn_type, $table_n)
+          $sop_info ,$file_info, $dig_info, $nn_type, $table_n)
       );
     } else {
       $self->AutoRefresh;
@@ -1124,29 +1164,29 @@ method StudiesBySeriesFetched(
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
-    my $study_where = "where study_instance_uid in (";
-    for my $ii (0 .. $#{$struct->{Rows}}){
-      my $i = $struct->{Rows}->[$ii]->[0];
-      $study_where .= "'$i'";
-      unless($ii == $#{$struct->{Rows}}){ $study_where .= ", "}
-      $study_where .= ")";
-      my $q = {
-        schema => "posda_nicknames",
-        query => "select\n" .
-          "  study_instance_uid, project_name, site_name,\n" .
-          "  subj_id, study_nickname\n" .
-          "from study_nickname\n" . $study_where,
-        columns => [ "study_instance_uid", "project_name",
-          "site_name", "subj_id", "study_nickname" ],
-        args => [],
-        bindings => [],
-      };
-      $self->SerializedSubProcess($q, "SubProcessQuery.pl",
-        $self->StudyNnsFetched(
-          $series_info, $sop_info ,$file_info, $dig_info, $nn_type, $table_n
-        )
-      );
-    }
+      my $study_where = "where study_instance_uid in (";
+      for my $ii (0 .. $#{$struct->{Rows}}){
+        my $i = $struct->{Rows}->[$ii]->[0];
+        $study_where .= "'$i'";
+        unless($ii == $#{$struct->{Rows}}){ $study_where .= ", "}
+        $study_where .= ")";
+        my $q = {
+          schema => "posda_nicknames",
+          query => "select\n" .
+            "  study_instance_uid, project_name, site_name,\n" .
+            "  subj_id, study_nickname\n" .
+            "from study_nickname\n" . $study_where,
+          columns => [ "study_instance_uid", "project_name",
+            "site_name", "subj_id", "study_nickname" ],
+          args => [],
+          bindings => [],
+        };
+        $self->SerializedSubProcess($q, "SubProcessQuery.pl",
+          $self->StudyNnsFetched(
+            $series_info, $sop_info ,$file_info, $dig_info, $nn_type, $table_n
+          )
+        );
+      }
     } else {
       $self->AutoRefresh;
       $self->{Mode} = "ERROR";
@@ -1188,6 +1228,7 @@ method StudyNnsFetched(
 method RenderNicknames(
   $study_info, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
 ){
+print "Render Nicknames: $nn_type, $table_n\n";
   my $table = $self->{LoadedTables}->[$table_n];
   my $columns;
   my $first_row;
@@ -1263,6 +1304,71 @@ method RenderNicknames(
       unless(defined $sop) { $sop = "&lt;undef&gt;" }
       $row->[$nn_row] = "$proj//$site//$subj//$study//$series//$sop";
       if($version) { $row->{$nn_row} .= "[$version]" }
+    }
+  } elsif($nn_type eq "sop_nn"){
+print STDERR "Sop info ";
+Debug::GenPrint($dbg, $sop_info, 1);
+print "\n";
+    my $sop_instance_uid_row;
+    my $nn_row;
+    for my $i (0 .. $#{$columns}){
+      if($columns->[$i] eq "sop_instance_uid"){
+        $sop_instance_uid_row = $i;
+      } elsif($columns->[$i] eq "nickname"){
+        $nn_row = $i;
+      }
+    }
+    unless(defined $sop_instance_uid_row) {
+      print STDERR "No sop_instance_uid in this table\n";
+      return;
+    }
+    unless(defined $nn_row){
+      $nn_row = $#{$columns} + 1;
+      $columns->[$#{$columns} + 1] = "nickname";
+    }
+    for my $i ($first_row .. $#{$table->{rows}}){
+      my $sop_instance_uid = $table->{rows}->[$sop_instance_uid_row];
+      my @errors;
+      my($proj, $site, $subj, $study, $series, $sop);
+      if(exists $sop_info->{$sop_instance_uid}){
+        my $sop_nn_info = $sop_info->{$sop_instance_uid};
+      }
+    }
+  } elsif($nn_type eq "series_nn"){
+    my $series_instance_uid_row;
+    my $nn_row;
+    for my $i (0 .. $#{$columns}){
+      if($columns->[$i] eq "series_instance_uid"){
+        $series_instance_uid_row = $i;
+      } elsif($columns->[$i] eq "nickname"){
+        $nn_row = $i;
+      }
+    }
+    unless(defined $series_instance_uid_row) {
+      print STDERR "No series_instance_uid in this table\n";
+      return;
+    }
+    unless(defined $nn_row){
+      $nn_row = $#{$columns} + 1;
+      $columns->[$#{$columns} + 1] = "nickname";
+    }
+  } elsif($nn_type eq "study_nn"){
+    my $study_instance_uid_row;
+    my $nn_row;
+    for my $i (0 .. $#{$columns}){
+      if($columns->[$i] eq "study_instance_uid"){
+        $study_instance_uid_row = $i;
+      } elsif($columns->[$i] eq "nickname"){
+        $nn_row = $i;
+      }
+    }
+    unless(defined $study_instance_uid_row) {
+      print STDERR "No study_instance_uid in this table\n";
+      return;
+    }
+    unless(defined $nn_row){
+      $nn_row = $#{$columns} + 1;
+      $columns->[$#{$columns} + 1] = "nickname";
     }
   }
 }
