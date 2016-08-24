@@ -4,11 +4,6 @@ use JSON;
 package PosdaDB::Queries;
 my %Queries;
 my $Queries = \%Queries;
-sub GetList{
-  my($class) = @_;
-  my @list = sort keys %Queries;
-  return @list;
-};
 sub GetQueryInstance{
   my($class, $name) = @_;
   unless(exists $Queries{$name}) { return undef }
@@ -19,6 +14,7 @@ sub GetQueryInstance{
     args => $Queries{$name}->{args},
     columns => $Queries{$name}->{columns},
     schema => $Queries{$name}->{schema},
+    tags => $Queries{$name}->{tags},
   };
   return bless $this, $class;
 };
@@ -80,9 +76,16 @@ sub Rows{
     &$done_closure();
   }
 }
+#########################
+# Class methods
+sub GetList{
+  my($class) = @_;
+  my @list = sort keys %Queries;
+  return @list;
+};
 sub Freeze{
   my($class, $file_name) = @_;
-  my $struct = { queries => $Queries };
+  my $struct = { queries => \%Queries };
   my $json = JSON->new();
   $json->pretty(1);
   my $fh;
@@ -93,6 +96,24 @@ sub Freeze{
 sub Clear{
   my($class, $file_name) = @_;
   $Queries = {};
+}
+sub GetTags{
+  my($class, $name) = @_;
+  return $Queries->{$name}->{tags};
+}
+sub GetAllTags{
+  my($class) = @_;
+  my %tags;
+  for my $q (keys %$Queries){
+    for my $tag (keys %{$Queries->{$q}->{tags}}){
+      $tags{$tag} = 1;
+    }
+  }
+  return \%tags;
+}
+sub Delete{
+  my($class, $q_name) = @_;
+  delete $Queries->{$q_name};
 }
 sub Load{
   my($class, $file) = @_;
@@ -1158,6 +1179,11 @@ $Queries{GetSlopeIntercept}->{description} = <<EOF;
 Get a Slope, Intercept for a particular file 
 EOF
 $Queries{GetSlopeIntercept}->{args} = [ "file_id" ];
+$Queries{GetSlopeIntercept}->{tags} = {
+  posda_files => 1,
+  slope_intercept => 1,
+  by_file_id => 1,
+};
 $Queries{GetSlopeIntercept}->{schema} = "posda_files";
 $Queries{GetSlopeIntercept}->{columns} = [
  "slope", "intercept", "si_units",
@@ -1175,6 +1201,11 @@ $Queries{GetWinLev}->{description} = <<EOF;
 Get a Window, Level(s) for a particular file 
 EOF
 $Queries{GetWinLev}->{args} = [ "file_id" ];
+$Queries{GetWinLev}->{tags} = {
+  posda_files => 1,
+  window_level => 1,
+  by_file_id => 1,
+};
 $Queries{GetWinLev}->{schema} = "posda_files";
 $Queries{GetWinLev}->{columns} = [
  "window_width", "window_center", "win_lev_desc", "wl_index"
@@ -1190,26 +1221,44 @@ order by wl_index desc;
 EOF
 ##########################################################
 $Queries{DistinctSopsInSeries}->{description} = <<EOF;
-Get Distinct SOPs in Series
+Get Distinct SOPs in Series with number files
+Only visible filess
 EOF
 $Queries{DistinctSopsInSeries}->{args} = [ "series_instance_uid" ];
+$Queries{DistinctSopsInSeries}->{tags} = {
+  posda_files => 1,
+  sops => 1,
+  duplicates => 1,
+  by_series_instance_uid => 1,
+};
 $Queries{DistinctSopsInSeries}->{schema} = "posda_files";
 $Queries{DistinctSopsInSeries}->{columns} = [
- "sop_instance_uid",
+ "sop_instance_uid", "count"
 ];
 $Queries{DistinctSopsInSeries}->{query} = <<EOF;
-select
-  distinct sop_instance_uid
-from
-  file_series natural join file_sop_common
-where
-  series_instance_uid = ?
+select distinct sop_instance_uid, count(*)
+from file_sop_common
+where file_id in (
+  select
+    distinct file_id
+  from
+    file_series natural join ctp_file
+  where
+    series_instance_uid = ? and visibility is null
+)
+group by sop_instance_uid
+order by count desc
 EOF
 ##########################################################
 $Queries{DistinctUnhiddenFilesInSeries}->{description} = <<EOF;
 Get Distinct Unhidden Files in Series
 EOF
 $Queries{DistinctUnhiddenFilesInSeries}->{args} = [ "series_instance_uid" ];
+$Queries{DistinctUnhiddenFilesInSeries}->{tags} = {
+  posda_files => 1,
+  file_ids => 1,
+  by_series_instance_uid => 1,
+};
 $Queries{DistinctUnhiddenFilesInSeries}->{schema} = "posda_files";
 $Queries{DistinctUnhiddenFilesInSeries}->{columns} = [
  "file_id",
@@ -1226,7 +1275,12 @@ EOF
 $Queries{ImageIdByFileId}->{description} = <<EOF;
 Get image_id for file_id 
 EOF
-$Queries{ImageIdByFileId}->{args} = [ "series_instance_uid" ];
+$Queries{ImageIdByFileId}->{args} = [ "file_id" ];
+$Queries{ImageIdByFileId}->{tags} = {
+  posda_files => 1,
+  image_id => 1,
+  by_file_id => 1,
+};
 $Queries{ImageIdByFileId}->{schema} = "posda_files";
 $Queries{ImageIdByFileId}->{columns} = [
  "file_id", "image_id",
@@ -1244,6 +1298,11 @@ $Queries{PixelDataIdByFileId}->{description} = <<EOF;
 Get unique_pixel_data_id for file_id 
 EOF
 $Queries{PixelDataIdByFileId}->{args} = [ "file_id" ];
+$Queries{PixelDataIdByFileId}->{tags} = {
+  posda_files => 1,
+  pixel_data_id => 1,
+  by_file_id => 1,
+};
 $Queries{PixelDataIdByFileId}->{schema} = "posda_files";
 $Queries{PixelDataIdByFileId}->{columns} = [
  "file_id", "image_id", "unique_pixel_data_id"
@@ -1262,6 +1321,12 @@ Get unique_pixel_data_id for file_id
 EOF
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{args} =
   [ "file_id" ];
+$Queries{PixelDataIdByFileIdWithOtherFileId}->{tags} = {
+  posda_files => 1,
+  pixel_data_id => 1,
+  duplicates => 1,
+  by_file_id => 1,
+};
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{schema} = "posda_files";
 $Queries{PixelDataIdByFileIdWithOtherFileId}->{columns} = [
  "file_id", "image_id", "unique_pixel_data_id", "other_file_id"
@@ -1282,18 +1347,23 @@ Get disk space used by collection
 EOF
 $Queries{DiskSpaceByCollection}->{args} =
   [ "collection" ];
+$Queries{DiskSpaceByCollection}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  by_collection => 1,
+};
 $Queries{DiskSpaceByCollection}->{schema} = "posda_files";
 $Queries{DiskSpaceByCollection}->{columns} = [
  "collection", "total_bytes",
 ];
 $Queries{DiskSpaceByCollection}->{query} = <<EOF;
 select
-  distinct project_name as collection, total_bytes
+  distinct project_name as collection, sum(size) as total_bytes
 from
   ctp_file natural join file
 where
   file_id in (
-  select distinct file_id, sum(size) as total_bytes
+  select distinct file_id
   from ctp_file
   where project_name = ?
   )
@@ -1304,6 +1374,12 @@ $Queries{DiskSpaceByCollectionSummary}->{description} = <<EOF;
 Get disk space used for all collections
 EOF
 $Queries{DiskSpaceByCollectionSummary}->{args} = [ ];
+$Queries{DiskSpaceByCollectionSummary}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  by_collection => 1,
+  summary => 1,
+};
 $Queries{DiskSpaceByCollectionSummary}->{schema} = "posda_files";
 $Queries{DiskSpaceByCollectionSummary}->{columns} = [
  "collection", "total_bytes"
@@ -1326,6 +1402,11 @@ $Queries{TotalDiskSpace}->{description} = <<EOF;
 Get total disk space used
 EOF
 $Queries{TotalDiskSpace}->{args} = [ ];
+$Queries{TotalDiskSpace}->{tags} = {
+  posda_files => 1,
+  storage_used => 1,
+  all => 1,
+};
 $Queries{TotalDiskSpace}->{schema} = "posda_files";
 $Queries{TotalDiskSpace}->{columns} = [ "total_bytes" ];
 $Queries{TotalDiskSpace}->{query} = <<EOF;
@@ -1344,6 +1425,12 @@ $Queries{PixelTypesWithSlopeCT}->{description} = <<EOF;
 Get distinct pixel types
 EOF
 $Queries{PixelTypesWithSlopeCT}->{args} = [ ];
+$Queries{PixelTypes}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  slope_intercept => 1,
+  ct => 1,
+};
 $Queries{PixelTypesWithSlopeCT}->{schema} = "posda_files";
 $Queries{PixelTypesWithSlopeCT}->{columns} = [
   "photometric_interpretation",
@@ -1404,6 +1491,11 @@ $Queries{PixelTypes}->{description} = <<EOF;
 Get distinct pixel types
 EOF
 $Queries{PixelTypes}->{args} = [ ];
+$Queries{PixelTypes}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  all => 1,
+};
 $Queries{PixelTypes}->{schema} = "posda_files";
 $Queries{PixelTypes}->{columns} = [
   "photometric_interpretation",
@@ -1453,6 +1545,11 @@ $Queries{PixelTypesWithGeo}->{description} = <<EOF;
 Get distinct pixel types with geometry
 EOF
 $Queries{PixelTypesWithGeo}->{args} = [ ];
+$Queries{PixelTypesWithGeo}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+};
 $Queries{PixelTypesWithGeo}->{schema} = "posda_files";
 $Queries{PixelTypesWithGeo}->{columns} = [
   "photometric_interpretation",
@@ -1483,6 +1580,11 @@ $Queries{SeriesWithRGB}->{description} = <<EOF;
 Get distinct pixel types with geometry and rgb
 EOF
 $Queries{SeriesWithRGB}->{args} = [ ];
+$Queries{SeriesWithRGB}->{tags} = {
+  posda_files => 1,
+  find_series => 1,
+  rgb => 1,
+};
 $Queries{SeriesWithRGB}->{schema} = "posda_files";
 $Queries{SeriesWithRGB}->{columns} = [
   "series_instance_uid"
@@ -1501,6 +1603,12 @@ $Queries{PixelTypesWithGeoRGB}->{description} = <<EOF;
 Get distinct pixel types with geometry and rgb
 EOF
 $Queries{PixelTypesWithGeoRGB}->{args} = [ ];
+$Queries{PixelTypesWithGeoRGB}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+  rgb => 1,
+};
 $Queries{PixelTypesWithGeoRGB}->{schema} = "posda_files";
 $Queries{PixelTypesWithGeoRGB}->{columns} = [
   "photometric_interpretation",
@@ -1534,6 +1642,11 @@ Get pixel types with no geometry
 EOF
 $Queries{PixelTypesWithNoGeo}->{args} = [ ];
 $Queries{PixelTypesWithNoGeo}->{schema} = "posda_files";
+$Queries{PixelTypesWithNoGeo}->{tags} = {
+  posda_files => 1,
+  find_pixel_types => 1,
+  image_geometry => 1,
+};
 $Queries{PixelTypesWithNoGeo}->{columns} = [
   "photometric_interpretation",
   "samples_per_pixel",
@@ -1574,6 +1687,11 @@ $Queries{SeriesNotLikeWithModality}->{columns} = [
    "description",
    "count"
 ];
+$Queries{SeriesNotLikeWithModality}->{tags} = {
+  posda_files => 1,
+  find_series => 1,
+  pattern => 1,
+};
 $Queries{SeriesNotLikeWithModality}->{schema} = "posda_files";
 $Queries{SeriesNotLikeWithModality}->{query} = <<EOF;
 select
@@ -1600,6 +1718,10 @@ $Queries{HideSeriesNotLikeWithModality}->{args} = [
   "site",
   "description_not_matching",
 ];
+$Queries{HideSeriesNotLikeWithModality}->{tags} = {
+  posda_files => 1,
+  update => 1,
+};
 $Queries{HideSeriesNotLikeWithModality}->{schema} = "posda_files";
 $Queries{HideSeriesNotLikeWithModality}->{query} = <<EOF;
 update ctp_file set visibility = 'hidden'
@@ -1628,6 +1750,10 @@ EOF
 ##########################################################
 $Queries{UpdateCountsDb}->{description} = <<EOF;
 EOF
+$Queries{UpdateCountsDb}->{tags} = {
+  posda_counts => 1,
+  insert => 1,
+};
 $Queries{UpdateCountsDb}->{args} = [
   "project_name",
   "site_name",
@@ -1679,18 +1805,54 @@ group by patient_id, patient_import_status
 EOF
 ##########################################################
 $Queries{ActiveQueries}->{description} = <<EOF;
+Show active queries for a database
+Works for PostgreSQL 9.4.5 (Current Mac)
 EOF
+$Queries{ActiveQueries}->{tags} = {
+  postgres_status => 1,
+};
 $Queries{ActiveQueries}->{args} = [
   "db_name"
 ];
 $Queries{ActiveQueries}->{columns} = [
+  "db_name", "pid",
+  "user_id", "user", "waiting",
+  "since_xact_start", "since_query_start",
+  "since_back_end_start", "query"
+];
+$Queries{ActiveQueries}->{schema} = "posda_files";
+$Queries{ActiveQueries}->{query} = <<EOF;
+select
+  datname as db_name, pid as pid,
+  usesysid as user_id, usename as user,
+  waiting, now() - xact_start as since_xact_start,
+  now() - query_start as since_query_start,
+  now() - backend_start as since_back_end_start,
+  query
+from
+  pg_stat_activity
+where
+  datname = ?
+EOF
+##########################################################
+$Queries{ActiveQueriesOld}->{description} = <<EOF;
+Show active queries for a database
+Works for PostgreSQL 8.4.20 (Current Linux)
+EOF
+$Queries{ActiveQueriesOld}->{args} = [
+  "db_name"
+];
+$Queries{ActiveQueriesOld}->{tags} = {
+  postgres_status => 1,
+};
+$Queries{ActiveQueriesOld}->{columns} = [
   "db_name", "proc_pid",
   "user_id", "user", "waiting",
   "since_xact_start", "since_query_start",
   "since_back_end_start", "current_query"
 ];
-$Queries{ActiveQueries}->{schema} = "posda_files";
-$Queries{ActiveQueries}->{query} = <<EOF;
+$Queries{ActiveQueriesOld}->{schema} = "posda_files";
+$Queries{ActiveQueriesOld}->{query} = <<EOF;
 select
   datname as db_name, procpid as pid,
   usesysid as user_id, usename as user,
@@ -1702,5 +1864,27 @@ from
   pg_stat_activity
 where
   datname = ?
+EOF
+##########################################################
+$Queries{StudiesInCollectionSite}->{description} = <<EOF;
+Get Studies in A Collection, Site
+EOF
+$Queries{StudiesInCollectionSite}->{tags} = {
+  find_studies => 1,
+};
+$Queries{StudiesInCollectionSite}->{args} = [
+  "project_name", "site_name"
+];
+$Queries{StudiesInCollectionSite}->{columns} = [
+  "study_instance_uid",
+];
+$Queries{StudiesInCollectionSite}->{schema} = "posda_files";
+$Queries{StudiesInCollectionSite}->{query} = <<EOF;
+select
+  distinct study_instance_uid
+from
+  file_study natural join ctp_file
+where
+  project_name = ? and site_name = ? and visibility is null
 EOF
 1;
