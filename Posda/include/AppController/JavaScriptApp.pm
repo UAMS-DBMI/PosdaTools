@@ -108,7 +108,7 @@ EOF
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
     $this->SetInitialExpertAndDebug("bbennett");
-    if($this->CanDebug){
+    if(1){
       Posda::HttpApp::DebugWindow->new($sess, "Debug");
     }
     $this->{JavascriptRoot} =
@@ -191,7 +191,7 @@ EOF
   }
   sub DebugButton{
     my($this, $http, $dyn) = @_;
-    if($this->CanDebug){
+    if(1){
       $this->RefreshEngine($http, $dyn, qq{
         <button class="btn btn-sm btn-info" 
          onClick="javascript:rt('DebugWindow','Refresh?obj_path=Debug'

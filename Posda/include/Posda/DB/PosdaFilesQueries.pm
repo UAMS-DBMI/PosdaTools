@@ -1288,12 +1288,12 @@ $Queries{DiskSpaceByCollection}->{columns} = [
 ];
 $Queries{DiskSpaceByCollection}->{query} = <<EOF;
 select
-  distinct project_name as collection, sum(size)
+  distinct project_name as collection, total_bytes
 from
   ctp_file natural join file
 where
   file_id in (
-  select distinct file_id
+  select distinct file_id, sum(size) as total_bytes
   from ctp_file
   where project_name = ?
   )
