@@ -497,8 +497,27 @@ method ActiveQuery($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
-method DeleteQuery($http, $dyn){
- PosdaDB::Queries->Delete($dyn->{query_name});
+method DeleteQuery($http,$dyn){
+  $self->{Mode} = "DeleteQueryPending";
+  $self->{QueryPendingDelete} = $dyn->{query_name};
+}
+method DeleteQueryPending($http, $dyn){
+  $self->RefreshEngine($http, $dyn, 
+    "Do you want to delete query named $self->{QueryPendingDelete}?<br>" .
+    '<?dyn="NotSoSimpleButton" op="ReallyDeleteQuery" ' .
+    'caption="Yes, Delete it" ' .
+    'sync="Update();"?><?dyn="NotSoSimpleButton" ' .
+    'op="CancelDeleteQuery" caption="No, don' . "'" . 't delete" ' .
+    'sync="Update();"?>');
+}
+method ReallyDeleteQuery($http, $dyn){
+ PosdaDB::Queries->Delete($self->{QueryPendingDelete});
+ delete $self->{QueryPendingDelete};
+ $self->{Mode} = "ListQueries";
+}
+method CancelDeleteQuery($http, $dyn){
+ delete $self->{QueryPendingDelete};
+ $self->{Mode} = "ListQueries";
 }
 method MakeQuery($http, $dyn){
   my $query = {};
