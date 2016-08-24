@@ -117,12 +117,74 @@ method SpecificInitialize() {
         mode => 'ListQueries',
         sync => 'Update();'
       },
+      {
+        caption => "Upload",
+        op => 'SetMode',
+        mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
+        sync => 'Update();'
+      },
     ],
     Files => [
       {
         caption => "List",
         op => 'SetMode',
         mode => 'ListQueries',
+        sync => 'Update();'
+      },
+      {
+        caption => "Upload",
+        op => 'SetMode',
+        mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
+        sync => 'Update();'
+      },
+    ],
+    TableSelected => [
+      {
+        caption => "List",
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+      {
+        caption => "Upload",
+        op => 'SetMode',
+        mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
         sync => 'Update();'
       },
     ],
@@ -157,12 +219,33 @@ method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
     $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
   } else {
-    $self->NotSoSimpleButtonButton($http, {
-      caption => 'Reset',
-      op => 'SetMode',
-      mode => 'ListQueries',
-      sync => 'Update();'
-    });
+    $self->MakeMenu($http, $dyn, [
+      {
+        caption => 'Reset',
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+      {
+        caption => "Upload",
+        op => 'SetMode',
+        mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
+        sync => 'Update();'
+      },
+    ]
+  );
  }
 }
 method SetMode($http, $dyn){
@@ -181,13 +264,15 @@ my $tag_ops = {
   "Set All Tags" => "SetAllTags",
   "Clear All Tags" => "ClearAllTags",
 };
-my $tag_modes = {
-  "All Queries" => 1, 
-  "Queries With No Tags Set" => 1, 
-  "Queries With Any Selected Tag Set" => 1,
-  "Queries With All Selected Tags Set" => 1,
-  "Queries With Only All Selected Tags Set" => 1,
-};
+my $tag_mode_list = [
+  "Queries With Any Selected Tag Set",
+  "Queries With No Tags Set", 
+  "All Queries", 
+];
+my $tag_modes;
+for my $i (@$tag_mode_list){
+  $tag_modes->{$i} = 1;
+}
 method SetAllTags($http, $dyn){
   for my $t (keys %{$self->{TagsState}}){
     $self->{TagsState}->{$t} = "true";
@@ -206,7 +291,7 @@ method TagSelection($http, $dyn){
   });
   
   unless($self->{TagsFilterDisplay}) {
-    $self->{TagsFilterDisplay} = [sort keys %$tag_modes]->[0];
+    $self->{TagsFilterDisplay} = $tag_mode_list->[0];
   }
   unless(defined $self->{TagsState} && ref($self->{TagsState}) eq "HASH"){
     $self->{TagsState} = {};
@@ -857,25 +942,65 @@ method AddNicknames($http, $dyn){
     my $col_n = $nn_types{series_nn};
     $series_where = "where series_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
-      $series_where .= "$table->{rows}->[$i]->{$col_n}";
+      $series_where .= "'$table->{rows}->[$i]->[$col_n]'";
       unless($i == $#{$table->{rows}}){ $series_where .= ", " }
     }
     $series_where .= ")";
-    $self->NicknamesBySeries($sop_where, undef, undef, "series_nn", $table_n);
+    $self->StudiesBySeries($series_where, "series_nn", $table_n);
   }
   my $study_where;
   if(exists $nn_types{study_nn}){
     my $col_n = $nn_types{study_nn};
     $study_where = "where study_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
-      $study_where .= "$table->{rows}->[$i]->{$col_n}";
-      unless($i == $#{$table->{rows}}){ $study_where .= ", ";
+      $study_where .= "'$table->{rows}->[$i]->[$col_n]'";
+      unless($i == $#{$table->{rows}}){ $study_where .= ",\n" }
     }
     $study_where .= ")";
     $self->NicknamesByStudy(
-      $sop_where, undef, undef, undef, "study_nn", $table_n);
-    }
+      $study_where, "study_nn", $table_n);
   }
+}
+method NicknamesByStudy($study_where, $nn_type, $table_n){
+print STDERR "NicknamesByStudy(study_where, $nn_type, $table_n)\n";
+  my $q = {
+    query => "select * from study_nickname\n" . $study_where,
+    schema => "posda_nicknames",
+    columns => [
+      "study_instance_uid", "project_name", "site_name",
+      "subj_id", "study_nickname"
+    ],
+    args => [],
+    bindings => [],
+    name => "Study nickname by study_uids",
+    description => ""
+  };
+  $self->SerializedSubProcess($q, "SubProcessQuery.pl",
+    $self->StudyNnsFetchedByStudy($nn_type, $table_n));
+}
+method StudyNnsFetchedByStudy($nn_type, $table_n){
+  my $sub = sub {
+    my($status, $struct) = @_;
+print STDERR "StudyNnsFetched::sub($nn_type, $table_n)\n";
+    if($status eq "Succeeded" && $struct->{Status} eq "OK"){
+      my %study_info;
+      for my $i (@{$struct->{Rows}}){
+        $study_info{$i->[0]}->{project_name} = $i->[1];
+        $study_info{$i->[0]}->{site_name} = $i->[2];
+        $study_info{$i->[0]}->{subj_id} = $i->[3];
+        $study_info{$i->[0]}->{study_nickname} = $i->[4];
+      }
+      $self->RenderNicknames(\%study_info, {}, {}, {}, {}, $nn_type, $table_n);
+    } else {
+      $self->AutoRefresh;
+      $self->{Mode} = "ERROR";
+      $self->{ErrorInfo} = {
+        status => $status,
+        struct => $struct,
+      };
+    }
+  };
+  return $sub;
 }
 method NicknamesByFileId($f_where, $nn_type, $table_n){
   my $q = {
@@ -1089,7 +1214,49 @@ method SeriesBySopsFetched(
       }
       $series_where .= ")";
       $self->NicknamesBySeries(
-        $series_where, \%series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n);
+        $series_where, \%series_info, $sop_info, $file_info, 
+        $dig_info, $nn_type, $table_n
+      );
+    } else {
+      $self->AutoRefresh;
+      $self->{Mode} = "ERROR";
+      $self->{ErrorInfo} = {
+        status => $status,
+        struct => $struct,
+      };
+    }
+  };
+  return $sub;
+}
+method StudiesBySeries(
+  $series_where, $nn_type, $table_n
+){
+  my $q = {
+    schema => "posda_files",
+    query => "select distinct series_instance_uid, study_instance_uid\n" .
+      "from file_series natural join file_study\n" . $series_where,
+    columns => ["series_instance_uid", "study_instance_uid" ],
+    args => [],
+    bindings => [],
+    name => "studies by series",
+    description => ""
+  };
+  $self->SerializedSubProcess($q, "SubProcessQuery.pl",
+     $self->StudiesFetchedBySeries(
+       $series_where, $nn_type, $table_n)
+   );
+}
+method StudiesFetchedBySeries($series_where, $nn_type, $table_n){
+  my $sub = sub {
+    my($status, $struct) = @_;
+    if($status eq "Succeeded" && $struct->{Status} eq "OK"){
+      my %series_info;
+      for my $i (@{$struct->{Rows}}){
+        $series_info{$i->[0]}->{study_instance_uid} = $i->[1];
+      }
+      $self->NicknamesBySeries(
+        $series_where, \%series_info, {}, {}, {}, "series_nn", $table_n
+      );
     } else {
       $self->AutoRefresh;
       $self->{Mode} = "ERROR";
@@ -1342,9 +1509,9 @@ print "Render Nicknames: $nn_type, $table_n\n";
       my $series_instance_uid = $sop_nn_info->{series_instance_uid};
       my $study_nn_info = $study_info->{$study_instance_uid};
       my $series_nn_info = $series_info->{$series_instance_uid};
-      my $proj = $study_nn_info->{project_name};
-      my $site = $study_nn_info->{site_name};
-      my $subj = $study_nn_info->{subj_id};
+      $proj = $study_nn_info->{project_name};
+      $site = $study_nn_info->{site_name};
+      $subj = $study_nn_info->{subj_id};
       my $study_nn = $study_nn_info->{study_nickname};
       my $series_nn = $series_nn_info->{series_nickname};
       my $sop_nn = $sop_nn_info->{sop_nickname};
@@ -1371,6 +1538,24 @@ print "Render Nicknames: $nn_type, $table_n\n";
       $nn_row = $#{$columns} + 1;
       $columns->[$#{$columns} + 1] = "nickname";
     }
+    for my $i ($first_row .. $#{$table->{rows}}){
+      my $row = $table->{rows}->[$i];
+      my $series_instance_uid = $row->[$series_instance_uid_row];
+      my $series_nn_info = $series_info->{$series_instance_uid};
+      my $study_instance_uid = $series_nn_info->{study_instance_uid};
+      my $study_nn_info = $study_info->{$study_instance_uid};
+      my $proj = $series_nn_info->{project_name};
+      my $site = $series_nn_info->{site_name};
+      my $subj = $series_nn_info->{subj_id};
+      my $study = $study_nn_info->{study_nickname};
+      my $series = $series_nn_info->{series_nickname};
+      unless(defined($proj)){ $proj = "&lt;undef&gt;" }
+      unless(defined($site)){ $site = "&lt;undef&gt;" }
+      unless(defined($subj)){ $subj = "&lt;undef&gt;" }
+      unless(defined($study)){ $study = "&lt;undef&gt;" }
+      unless(defined($series)){ $series = "&lt;undef&gt;" }
+      $row->[$nn_row] = "$proj//$site//$subj//$study//$series";
+    }
   } elsif($nn_type eq "study_nn"){
     my $study_instance_uid_row;
     my $nn_row;
@@ -1388,6 +1573,20 @@ print "Render Nicknames: $nn_type, $table_n\n";
     unless(defined $nn_row){
       $nn_row = $#{$columns} + 1;
       $columns->[$#{$columns} + 1] = "nickname";
+    }
+    for my $i ($first_row .. $#{$table->{rows}}){
+      my $row = $table->{rows}->[$i];
+      my $study_instance_uid = $row->[$study_instance_uid_row];
+      my $study_nn_info = $study_info->{$study_instance_uid};
+      my $proj = $study_nn_info->{project_name};
+      my $site = $study_nn_info->{site_name};
+      my $subj = $study_nn_info->{subj_id};
+      my $study = $study_nn_info->{study_nickname};
+      unless(defined($proj)){ $proj = "&lt;undef&gt;" }
+      unless(defined($site)){ $site = "&lt;undef&gt;" }
+      unless(defined($subj)){ $subj = "&lt;undef&gt;" }
+      unless(defined($study)){ $study = "&lt;undef&gt;" }
+      $row->[$nn_row] = "$proj//$site//$subj//$study";
     }
   }
 }

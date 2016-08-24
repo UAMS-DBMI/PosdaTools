@@ -1805,6 +1805,8 @@ group by patient_id, patient_import_status
 EOF
 ##########################################################
 $Queries{ActiveQueries}->{description} = <<EOF;
+Show active queries for a database
+Works for PostgreSQL 9.4.5 (Current Mac)
 EOF
 $Queries{ActiveQueries}->{tags} = {
   postgres_status => 1,
@@ -1831,5 +1833,58 @@ from
   pg_stat_activity
 where
   datname = ?
+EOF
+##########################################################
+$Queries{ActiveQueriesOld}->{description} = <<EOF;
+Show active queries for a database
+Works for PostgreSQL 8.4.20 (Current Linux)
+EOF
+$Queries{ActiveQueriesOld}->{args} = [
+  "db_name"
+];
+$Queries{ActiveQueriesOld}->{tags} = {
+  postgres_status => 1,
+};
+$Queries{ActiveQueriesOld}->{columns} = [
+  "db_name", "proc_pid",
+  "user_id", "user", "waiting",
+  "since_xact_start", "since_query_start",
+  "since_back_end_start", "current_query"
+];
+$Queries{ActiveQueriesOld}->{schema} = "posda_files";
+$Queries{ActiveQueriesOld}->{query} = <<EOF;
+select
+  datname as db_name, procpid as pid,
+  usesysid as user_id, usename as user,
+  waiting, now() - xact_start as since_xact_start,
+  now() - query_start as since_query_start,
+  now() - backend_start as since_back_end_start,
+  current_query
+from
+  pg_stat_activity
+where
+  datname = ?
+EOF
+##########################################################
+$Queries{StudiesInCollectionSite}->{description} = <<EOF;
+Get Studies in A Collection, Site
+EOF
+$Queries{StudiesInCollectionSite}->{tags} = {
+  find_studies => 1,
+};
+$Queries{StudiesInCollectionSite}->{args} = [
+  "project_name", "site_name"
+];
+$Queries{StudiesInCollectionSite}->{columns} = [
+  "study_instance_uid",
+];
+$Queries{StudiesInCollectionSite}->{schema} = "posda_files";
+$Queries{StudiesInCollectionSite}->{query} = <<EOF;
+select
+  distinct study_instance_uid
+from
+  file_study natural join ctp_file
+where
+  project_name = ? and site_name = ? and visibility is null
 EOF
 1;
