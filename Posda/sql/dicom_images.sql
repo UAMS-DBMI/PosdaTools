@@ -610,7 +610,9 @@ CREATE TABLE file_ct_image (
     xray_tube_current text,
     exposure text,
     filter_type text,
-    generator_power text
+    generator_power text,
+    convolution_kernal text,
+    table_feed_per_rot text
 );
 
 

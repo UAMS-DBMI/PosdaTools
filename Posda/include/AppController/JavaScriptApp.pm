@@ -108,9 +108,9 @@ EOF
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
     $this->SetInitialExpertAndDebug("bbennett");
-#    if($this->CanDebug){
+    # if(1){
       Posda::HttpApp::DebugWindow->new($sess, "Debug");
-#    }
+    # }
     $this->{JavascriptRoot} =
       $main::HTTP_APP_CONFIG->{config}->{Environment}->{JavascriptRoot};
     $this->QueueJsCmd("Update();");
