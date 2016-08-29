@@ -137,6 +137,26 @@ print STDERR "Ewouldblock\n";
       $queue->queue("Internal error: $message");
       $queue->finish();
   }
+  sub ParseTextPlain {
+    # Possibly accept JSON?
+
+    my($http) = @_;
+    my $length = $http->{header}->{content_length};
+    my $content_type = $http->{header}->{content_type};
+    my $buff;
+    unless(defined($length) && $length > 0) {
+      return undef;
+    }
+    # read it all in at once - there is a limit on this, maybe
+    # look at ParseMultipart for an example of how to handle it
+    my $len_read = read $http->{socket}, $buff, $length;
+    unless($len_read == $length){
+      die "couldn't read data";
+    }
+
+    return $buff;
+
+  }
   sub ParseIncomingForm{
     my($http) = @_;
     my $length = $http->{header}->{content_length};
