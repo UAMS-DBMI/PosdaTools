@@ -381,6 +381,8 @@ method ListQueries($http, $dyn){
         <td>
           <?dyn="NotSoSimpleButton" op="SetActiveQuery" caption="Set Active" query_name="$i" sync="Update();"?>
           <?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" query_name="$i" sync="Update();" class="btn btn-info"?>
+          <?dyn="NotSoSimpleButton" op="SetEditQuery" caption="Edit" query_name="$i" sync="Update();" class="btn btn-info"?>
+          <?dyn="NotSoSimpleButton" op="CloneQuery" caption="Clone" query_name="$i" sync="Update();" class="btn btn-info"?>
         </td>
       </tr>
     });
@@ -389,6 +391,170 @@ method ListQueries($http, $dyn){
 }
 method NewQuery($http, $dyn){
   $http->queue("New Queries Mode");
+}
+method SetEditQuery($http, $dyn){
+  $self->{Mode} = "EditQuery";
+  $self->{Query} = $dyn->{query_name};
+  delete $self->{QueryResults};
+  delete $self->{Input};
+  $self->{LinkedTextField} = $self->{queries};
+  $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
+}
+method EditQuery($http, $dyn){
+  my $descrip = {
+    args => {
+      caption => "Arguments",
+      struct => "array",
+    },
+    columns =>{
+      caption => "Columns Returned",
+      struct => "array",
+    },
+    description => {
+      caption=> "Description",
+      struct => "textarea",
+      rows => 5,
+      cols => 100,
+    },
+    query => {
+      caption=> "Query Text",
+      struct => "textarea",
+      rows => 30,
+      cols => 100,
+    },
+    schema => {
+      caption=> "Schema",
+      struct => "text",
+    },
+    name => {
+      caption=> "Query Name",
+      struct => "text",
+    },
+    tags => {
+      caption => "Tags",
+      struct => "hash key list",
+    },
+  };
+  $self->RefreshEngine($http, $dyn,
+    'Editing Query: ' .
+    '<?dyn="NotSoSimpleButton" ' .
+    'caption="Save" ' .
+    'op="SetMode" ' .
+    'mode="SaveQuery" ' .
+    'sync="Update();" ' .
+    'class="btn btn-primary"?>&nbsp;' .
+    '<?dyn="NotSoSimpleButton" ' .
+    'caption="Cancel" ' .
+    'op="SetMode" ' .
+    'mode="ListQueries" ' .
+    'sync="Update();" ' .
+    'class="btn btn-info"?>&nbsp;' .
+    '<?dyn="NotSoSimpleButton" ' .
+    'caption="Refresh" ' .
+    'op="NoOp" ' .
+    'sync="Update();" ' .
+    'class="btn btn-info"?>'
+  );
+  $http->queue(q{<table class="table">});
+  for my $i (
+    "name", "schema", "description", "tags", "columns", "args", "query"
+  ){
+    my $d = $descrip->{$i};
+    $http->queue(qq{
+      <tr>
+        <td align="right" valign="top">
+          <strong>$d->{caption}</strong>
+        </td>
+        <td align="left" valign = "top">
+    });
+    if($d->{struct} eq "text"){
+      unless(exists $self->{LinkedTextField}->{$i}){
+        $self->{LinkedTextField}->{$i} = $self->{query}->{$i};
+      }
+      $self->RefreshEngine($http, $dyn, 
+        '<?dyn="DelegateEntryBox" ' .
+        'op="AddTextField" ' .
+        "value=\"$self->{query}->{$i}\" ". 
+        "index=\"$i\"" .
+        'sync="Update();"' .
+        '?>');
+    }
+    if($d->{struct} eq "array"){
+      $http->queue(qq{
+        <table class="table table-condensed">
+      });
+      for my $j (@{$self->{query}->{$i}}){
+        $self->RefreshEngine($http, $dyn, "<tr><td>$j</td><td>" .
+          '<?dyn="NotSoSimpleButton" ' .
+          'op="DeleteFromEditList" ' .
+          'caption="del" ' .
+          'name="'. $i .'" ' .
+          'value="' . $j . '"?></td><td>' .
+          '<?dyn="NotSoSimpleButton" ' .
+          'op="MoveEditListElementUp" ' .
+          'caption="up" ' .
+          'name="'. $i .'" ' .
+          'value="' . $j . '"?></td><td>');
+        $self->RefreshEngine($http, $dyn, "</tr>");
+      }
+      $self->RefreshEngine($http, $dyn, "<tr><td>");
+      $self->RefreshEngine($http, $dyn, 
+        '<?dyn="DelegateEntryBox" ' .
+        'op="AddToEditList" ' .
+        'value="" '. 
+        "index=\"$i\"" .
+        'sync="Update();"' .
+        '?>');
+      $self->RefreshEngine($http, $dyn, "</table>");
+    } elsif($d->{struct} eq "hash key list"){
+      my @keys = sort keys %{$self->{query}->{tags}};
+      for my $k (0 .. $#keys){
+        $http->queue("$keys[$k] ");
+        $self->NotSoSimpleButton($http, {
+          caption => "del",
+          op => "DeleteHashKeyList",
+          type => $i,
+          index => $k,
+          value => $keys[$k],
+          sync => "Update();"
+        });
+        $http->queue(",&nbsp;&nbsp;&nbsp;");
+#        unless($k == $#keys){ $http->queue(", ") }
+      }
+      $self->DelegateEntryBox($http, {
+        op => "AddToHashKeyList",
+        index => $i,
+        sync => "Update();"
+      });
+    } elsif($d->{struct} eq "textarea"){
+        $self->DelegateTextArea($http, {
+          id => "$i",
+          op => "TextAreaChanged",
+          value => $self->{query}->{$i},
+          rows => $d->{rows},
+          cols => $d->{cols},
+          sync => "Update();",
+      });
+    }
+    $self->RefreshEngine("</td></tr>");
+  }
+  $self->RefreshEngine($http, $dyn, '</table>');
+}
+method TextAreaChanged($http, $dyn){
+  print STDERR "###################\nIn TextAreaChanged\n";
+  for my $i (keys %$dyn){
+    print STDERR "dyn{$i}: $dyn->{$i}\n";
+  }
+  for my $i (keys %$http){
+    print STDERR "http{$i}: $http->{$i}\n";
+  }
+  for my $i (keys %{$http->{header}}){
+    print STDERR "http{header}->{$i}: $http->{header}->{$i}\n";
+  }
+  my $buff;
+  my $c = read $http->{socket}, $buff, $http->{header}->{content_length};
+  print STDERR "Read $c bytes:\n";
+  print STDERR "$buff#################\n";
 }
 method SetActiveQuery($http, $dyn){
   $self->{Mode} = "ActiveQuery";
@@ -603,6 +769,26 @@ method CreateAndSelectTableFromQuery($query, $struct){
     $self->{SelectedTable} = $index;
   }
 }
+method DownloadTableAsCsv($http, $dyn){
+  my $table = $self->{LoadedTables}->[$dyn->{table}];
+  my $q_name = $table->{query}->{name};
+  $http->DownloadHeader("text/csv", "$q_name.csv");
+  my $cmd = "PerlStructToCsv.pl";
+  Dispatch::LineReader->new_serialized_cmd($cmd,
+    $table, $self->CsvFragment($http, $dyn), $self->CsvComplete);
+}
+method CsvFragment($http, $dyn){
+  my $sub = sub {
+    my($line) = @_;
+    $http->queue("$line\n");
+  };
+  return $sub;
+}
+method CsvComplete{
+  my $sub = sub {
+  };
+  return $sub;
+}
 method TableSelected($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -610,8 +796,14 @@ method TableSelected($http, $dyn){
     my $rows = $table->{rows};
     my $num_rows = @$rows;
     my $at = $table->{at};
-    $http->queue('<div style="background-color: white">' .
-      "Table from query: $query->{name}<br>" .
+    $self->RefreshEngine($http, $dyn,
+      '<div style="background-color: white">' .
+      "Table from query: $query->{name}  " .
+      '<a class="btn btn-sm btn-primary" ' .
+      'href="DownloadTableAsCsv?obj_path=' . $self->{path} . '&table=' .
+      $self->{SelectedTable} . 
+      '\">download</a>' .
+      '<br>' .
       "Description: <pre>$query->{description}</pre>" .
       "Schema: $query->{schema}<br>"
     );
@@ -637,8 +829,11 @@ method TableSelected($http, $dyn){
     for my $r (@$rows){
       $http->queue('<tr>');
       for my $v (@$r){
-        unless(defined($v)){ $v = "&lt;undef&gt;" }
-        $http->queue("<td>$v</td>");
+        unless(defined($v)){ $v = "<undef>" }
+        my $v_esc = $v;
+        $v_esc =~ s/</&lt;/g;
+        $v_esc =~ s/>/&gt;/g;
+        $http->queue("<td>$v_esc</td>");
       }
       $http->queue('</tr>');
     }
@@ -649,7 +844,12 @@ method TableSelected($http, $dyn){
     my $num_rows = @$rows - 1;
     my $at = $table->{at};
     $http->queue('<div style="background-color: white">' .
-      "Table from CSV file: $file<br>"
+      "Table from CSV file: $file   " .
+      '<a class="btn btn-sm btn-primary" ' .
+      'href="DownloadTableAsCsv?obj_path=' . $self->{path} . '&table=' .
+      $self->{SelectedTable} . 
+      '\">download</a>' .
+      '<br>'
     );
     $http->queue("Rows: $num_rows<br>Results:<hr>");
     $http->queue(qq{
@@ -665,8 +865,11 @@ method TableSelected($http, $dyn){
       my $r = $rows->[$ri];
       $http->queue('<tr>');
       for my $v (@$r){
-        unless(defined($v)){ $v = "&lt;undef&gt;" }
-        $http->queue("<td>$v</td>");
+        unless(defined($v)){ $v = "<undef>" }
+        my $v_esc = $v;
+        $v_esc =~ s/</&lt;/g;
+        $v_esc =~ s/>/&gt;/g;
+        $http->queue("<td>$v_esc</td>");
       }
       $http->queue('</tr>');
     }
@@ -881,6 +1084,7 @@ method Tables($http, $dyn){
         sync => "Update();",
     });
     my $can_nickname = 0;
+    my $can_command = 0;
     my $cols;
     if($type eq "FromCsv"){ $cols = $i->{rows}->[0] }
     elsif($type eq "FromQuery"){ $cols = $i->{query}->{columns} }
@@ -891,11 +1095,20 @@ method Tables($http, $dyn){
         $i eq "sop_instance_uid" ||
         $i eq "file_id"
       ){ $can_nickname = 1 }
+      if($i eq "Operation") { $can_command = 1 }
     }
     if($can_nickname){
       $self->NotSoSimpleButton($http, {
           caption => "Add Nicknames",
           op => "AddNicknames",
+          index => $in,
+          sync => "Update();",
+      });
+    }
+    if($can_command){
+      $self->NotSoSimpleButton($http, {
+          caption => "Perform Operations",
+          op => "ExecuteCommand",
           index => $in,
           sync => "Update();",
       });
@@ -910,6 +1123,7 @@ method SelectTable($http, $dyn){
 }
 method AddNicknames($http, $dyn){
   my $table_n = $dyn->{index};
+  $self->{SelectedTable} = $dyn->{index};
   my $table = $self->{LoadedTables}->[$table_n];
   my @cols;
   my $rs;
@@ -1252,9 +1466,15 @@ method StudiesBySeries(
 ){
   my $q = {
     schema => "posda_files",
-    query => "select distinct series_instance_uid, study_instance_uid\n" .
-      "from file_series natural join file_study\n" . $series_where,
-    columns => ["series_instance_uid", "study_instance_uid" ],
+    query => "select\n" .
+      "   distinct series_instance_uid, study_instance_uid,\n" .
+      "   project_name, site_name , patient_id\n" .
+      "from\n" .
+      "  file_series natural join file_study\n" . 
+      "   natural join ctp_file natural join file_patient\n" . 
+      $series_where,
+    columns => ["series_instance_uid", "study_instance_uid",
+      "project_name", "site_name", "patient_id" ],
     args => [],
     bindings => [],
     name => "studies by series",
@@ -1272,6 +1492,9 @@ method StudiesFetchedBySeries($series_where, $nn_type, $table_n){
       my %series_info;
       for my $i (@{$struct->{Rows}}){
         $series_info{$i->[0]}->{study_instance_uid} = $i->[1];
+        $series_info{$i->[0]}->{project_name} = $i->[2];
+        $series_info{$i->[0]}->{site_name} = $i->[3];
+        $series_info{$i->[0]}->{subj_id} = $i->[4];
       }
       $self->NicknamesBySeries(
         $series_where, \%series_info, {}, {}, {}, "series_nn", $table_n
@@ -1358,24 +1581,24 @@ method StudiesBySeriesFetched(
         my $i = $struct->{Rows}->[$ii]->[0];
         $study_where .= "'$i'";
         unless($ii == $#{$struct->{Rows}}){ $study_where .= ", "}
-        $study_where .= ")";
-        my $q = {
-          schema => "posda_nicknames",
-          query => "select\n" .
-            "  study_instance_uid, project_name, site_name,\n" .
-            "  subj_id, study_nickname\n" .
-            "from study_nickname\n" . $study_where,
-          columns => [ "study_instance_uid", "project_name",
-            "site_name", "subj_id", "study_nickname" ],
-          args => [],
-          bindings => [],
-        };
-        $self->SerializedSubProcess($q, "SubProcessQuery.pl",
-          $self->StudyNnsFetched(
-            $series_info, $sop_info ,$file_info, $dig_info, $nn_type, $table_n
-          )
-        );
       }
+      $study_where .= ")";
+      my $q = {
+        schema => "posda_nicknames",
+        query => "select\n" .
+          "  study_instance_uid, project_name, site_name,\n" .
+          "  subj_id, study_nickname\n" .
+          "from study_nickname\n" . $study_where,
+        columns => [ "study_instance_uid", "project_name",
+          "site_name", "subj_id", "study_nickname" ],
+        args => [],
+        bindings => [],
+      };
+      $self->SerializedSubProcess($q, "SubProcessQuery.pl",
+        $self->StudyNnsFetched(
+          $series_info, $sop_info ,$file_info, $dig_info, $nn_type, $table_n
+        )
+      );
     } else {
       $self->AutoRefresh;
       $self->{Mode} = "ERROR";
@@ -1418,6 +1641,19 @@ method RenderNicknames(
   $study_info, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
 ){
 print "Render Nicknames: $nn_type, $table_n\n";
+$self->{DebugNickname} = {
+  study_info => $study_info,
+  series_info => $series_info,
+  sop_info => $sop_info,
+  file_info => $file_info,
+  dig_info => $dig_info,
+  nn_type => $nn_type,
+  table_n => $table_n
+};
+  if($self->{Mode} eq "LookingUpNicknames"){
+    $self->AutoRefresh;
+    $self->{Mode} = "TableSelected";
+  }
   my $table = $self->{LoadedTables}->[$table_n];
   my $columns;
   my $first_row;
@@ -1485,12 +1721,12 @@ print "Render Nicknames: $nn_type, $table_n\n";
         $subj = $study_nn_info->{subj_id};
       }
       $study = $study_nn_info->{study_nickname};
-      unless(defined $proj) { $proj = "&lt;undef&gt;" }
-      unless(defined $site) { $site = "&lt;undef&gt;" }
-      unless(defined $subj) { $subj = "&lt;undef&gt;" }
-      unless(defined $study) { $study = "&lt;undef&gt;" }
-      unless(defined $series) { $series = "&lt;undef&gt;" }
-      unless(defined $sop) { $sop = "&lt;undef&gt;" }
+      unless(defined $proj) { $proj = "<undef>" }
+      unless(defined $site) { $site = "<undef>" }
+      unless(defined $subj) { $subj = "<undef>" }
+      unless(defined $study) { $study = "<undef>" }
+      unless(defined $series) { $series = "<undef>" }
+      unless(defined $sop) { $sop = "<undef>" }
       $row->[$nn_row] = "$proj//$site//$subj//$study//$series//$sop";
       if($version) { $row->{$nn_row} .= "[$version]" }
     }
@@ -1534,9 +1770,9 @@ print "Render Nicknames: $nn_type, $table_n\n";
       my $study_nn = $study_nn_info->{study_nickname};
       my $series_nn = $series_nn_info->{series_nickname};
       my $sop_nn = $sop_nn_info->{sop_nickname};
-      unless(defined $study_nn) { $study_nn = "&ltundef&gt;" }
-      unless(defined $series_nn) { $series_nn = "&ltundef&gt;" }
-      unless(defined $sop_nn) { $sop_nn = "&ltundef&gt;" }
+      unless(defined $study_nn) { $study_nn = "&ltundef>" }
+      unless(defined $series_nn) { $series_nn = "&ltundef>" }
+      unless(defined $sop_nn) { $sop_nn = "&ltundef>" }
       $row->[$nn_row] = "$proj//$site//$subj//$study_nn//$series_nn//$sop_nn";
     }
   } elsif($nn_type eq "series_nn"){
@@ -1568,11 +1804,11 @@ print "Render Nicknames: $nn_type, $table_n\n";
       my $subj = $series_nn_info->{subj_id};
       my $study = $study_nn_info->{study_nickname};
       my $series = $series_nn_info->{series_nickname};
-      unless(defined($proj)){ $proj = "&lt;undef&gt;" }
-      unless(defined($site)){ $site = "&lt;undef&gt;" }
-      unless(defined($subj)){ $subj = "&lt;undef&gt;" }
-      unless(defined($study)){ $study = "&lt;undef&gt;" }
-      unless(defined($series)){ $series = "&lt;undef&gt;" }
+      unless(defined($proj)){ $proj = "<undef>" }
+      unless(defined($site)){ $site = "<undef>" }
+      unless(defined($subj)){ $subj = "<undef>" }
+      unless(defined($study)){ $study = "<undef>" }
+      unless(defined($series)){ $series = "<undef>" }
       $row->[$nn_row] = "$proj//$site//$subj//$study//$series";
     }
   } elsif($nn_type eq "study_nn"){
@@ -1601,10 +1837,10 @@ print "Render Nicknames: $nn_type, $table_n\n";
       my $site = $study_nn_info->{site_name};
       my $subj = $study_nn_info->{subj_id};
       my $study = $study_nn_info->{study_nickname};
-      unless(defined($proj)){ $proj = "&lt;undef&gt;" }
-      unless(defined($site)){ $site = "&lt;undef&gt;" }
-      unless(defined($subj)){ $subj = "&lt;undef&gt;" }
-      unless(defined($study)){ $study = "&lt;undef&gt;" }
+      unless(defined($proj)){ $proj = "<undef>" }
+      unless(defined($site)){ $site = "<undef>" }
+      unless(defined($subj)){ $subj = "<undef>" }
+      unless(defined($study)){ $study = "<undef>" }
       $row->[$nn_row] = "$proj//$site//$subj//$study";
     }
   }

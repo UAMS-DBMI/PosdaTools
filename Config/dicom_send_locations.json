@@ -49,7 +49,7 @@
   },
   "Bill's Posda Mac" : {
     "host" : "144.30.109.157",
-    "port" : "64661",
+    "port" : "64611",
     "calling_ae" : "POSDA",
     "called_ae" : "BBMAC"
   }
