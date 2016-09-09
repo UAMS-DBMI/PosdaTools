@@ -9,5 +9,11 @@
   "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
   "JavascriptRoot" : "POSDA_ROOT/DbIf/javascript",
   "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
-  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData"
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
+  "Commands" : {
+    "SeriesConsistency" : "CheckSeriesConsistency.pl <series_instance_uid>",
+    "StudyConsistency" : "CheckStudyConsistency.pl <study_instance_uid>",
+    "PatConsistency ": "CheckPatConsistency.pl <collection> <patient_id>",
+    "SendSeries" : "SendSeriesFromDb.pl <host> <port> <called> <calling> <series_instance_uid> 1",
+  },
 }
