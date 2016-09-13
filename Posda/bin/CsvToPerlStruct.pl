@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Text::Csv;
+use Text::CSV;
 use Storable qw( store_fd fd_retrieve );
 my $usage = <<EOF;
 CsvToPerlStruct.pl <file>
