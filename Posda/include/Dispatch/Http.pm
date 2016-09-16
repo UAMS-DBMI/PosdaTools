@@ -292,6 +292,9 @@ EOF
   }
   sub DownloadHeader{
     my($http, $mime_type, $file_name) = @_;
+if($http->{header_sent}){
+  die "DownloadHeader called after header sent";
+}
     $file_name =~ s/\s|\&|\#/_/g;
     $http->{output_queue}->queue("HTTP/1.0 200 OK\n");
     $http->{output_queue}->queue("Content-Disposition: " .
