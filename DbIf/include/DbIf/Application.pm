@@ -4,6 +4,7 @@ package DbIf::Application;
 #
 
 use Posda::DB::PosdaFilesQueries;
+use Dispatch::BinFragReader;
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -774,13 +775,13 @@ method DownloadTableAsCsv($http, $dyn){
   my $q_name = $table->{query}->{name};
   $http->DownloadHeader("text/csv", "$q_name.csv");
   my $cmd = "PerlStructToCsv.pl";
-  Dispatch::LineReader->new_serialized_cmd($cmd,
+  Dispatch::BinFragReader->new_serialized_cmd($cmd,
     $table, $self->CsvFragment($http, $dyn), $self->CsvComplete);
 }
 method CsvFragment($http, $dyn){
   my $sub = sub {
-    my($line) = @_;
-    $http->queue("$line\n");
+    my($frag) = @_;
+    $http->queue("$frag");
   };
   return $sub;
 }
