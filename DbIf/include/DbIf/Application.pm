@@ -9,6 +9,8 @@ use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use Storable 'dclone';
 
+use Dispatch::LineReaderWriter;
+
 use GenericApp::Application;
 
 use Posda::Passwords;
@@ -212,6 +214,30 @@ method SpecificInitialize() {
   unless(-d $temp_dir) { die "$temp_dir doesn't exist" }
   $self->{TempDir} = $temp_dir;
   $self->{UploadCount} = 0;
+
+
+  # Build the command list from config file
+  my $command_list = $self->{Environment}->{Commands};
+  my $commands = {};
+  map {
+    my $line = $command_list->{$_};
+    my $cmdline = $line;
+    my $pipe_parms;
+
+    if ($line =~ /(.*)\|(.*)/) { # is it a pipe command?
+      $cmdline = $2;
+      $pipe_parms = $1;
+    }
+
+    $commands->{$_} = { cmdline => $cmdline,
+                        parms => [$cmdline =~ /<([^<>]+)>/g] };
+    if (defined $pipe_parms) {
+      $commands->{$_}->{pipe_parms} = $pipe_parms;
+    }
+  } keys %$command_list;
+
+  $self->{Commands} = $commands;
+
 }
 
 
@@ -950,6 +976,10 @@ method ReadConvertLine($hash){
 method ConvertLinesComplete($hash){
   my $sub = sub {
     push(@{$self->{UploadedFiles}}, $hash);
+    # If the file was a CSV, go ahead and load it as a table now
+    if ($hash->{'mime-type'} eq 'text/csv') {
+      $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
+    }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
   };
   return $sub;
@@ -1011,6 +1041,11 @@ method LoadCsvIntoTable($http, $dyn){
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
   $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
 }
+method LoadCSVIntoTable_NoMode($file) {
+  my $cmd = "CsvToPerlStruct.pl \"$file\"";
+  $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
+}
+
 method CsvLoaded($file){
   my $sub = sub {
     my($status, $struct) = @_;
@@ -1117,6 +1152,244 @@ method Tables($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
+
+func apply_command($command, $colmap, $row) {
+  if (not defined $command) {
+    return undef
+  }
+
+  # build the final line
+  my $final = $command->{cmdline};
+  map {
+    my $parm = $_;
+    my $index_of_parm = $colmap->{$parm};
+    my $new_value = $row->[$index_of_parm];
+
+    $final =~ s/<$parm>/$new_value/g;
+  } @{$command->{parms}};
+
+  return $final;
+}
+
+method ExecuteCommand($http, $dyn) {
+  my $table = $self->{LoadedTables}->[$dyn->{index}];
+
+  # generate a map of column name to col index
+  my $colmap = {};
+  map {
+    my $item = $table->{rows}->[0]->[$_];
+    $colmap->{$item} = $_;
+  } keys @{$table->{rows}->[0]};
+
+  # Test for pipe edge case
+  my $first_row_op = $table->{rows}->[1]->[$colmap->{Operation}];
+  if (defined $self->{Commands}->{$first_row_op}->{pipe_parms}) {
+    my $op = $self->{Commands}->{$first_row_op};
+
+    say "First row is a Pipeop!";
+
+    # get list of columns that are "column vars"
+    my @column_vars = $op->{pipe_parms} =~ /<([^<>]+)>/g;
+
+    # transform column_var columns into lists
+    my $cols = {};
+    for my $col_name (@column_vars) {
+      my $col_idx = $colmap->{$col_name};
+
+      my $col1 = [];
+      for my $row (@{$table->{rows}}) {
+        push @$col1, $row->[$col_idx];
+      }
+      shift @$col1; # kill the first element
+
+      $cols->{$col_name} = $col1;
+    }
+
+    # now generate the cmdline like normal
+    my $final_cmd = apply_command($op, $colmap, $table->{rows}->[1]);
+
+    my @planned_operations;
+    my $first_col_name = [keys %{$cols}]->[0];
+    for my $i (0..$#{$cols->{$first_col_name}}) {
+      my $pipe_parm_format = $op->{pipe_parms};
+      for my $var (@column_vars) {
+        my $v = $cols->{$var}->[$i];
+        $pipe_parm_format =~ s/<$var>/$v/g;
+      }
+      push @planned_operations, $pipe_parm_format;
+    }
+
+    $self->{PlannedOperations} = \@planned_operations;
+    $self->{PlannedPipeOperation} = $final_cmd;
+    $self->{Mode} = 'PipeOperationsSummary';
+    return;
+  }
+
+  # generate summary of commands to be run
+  my @operations = map {
+    my $op = $_->[$colmap->{Operation}];
+    apply_command($self->{Commands}->{$op}, $colmap, $_);
+  } @{$table->{rows}};
+
+  # remove any that failed
+  $self->{PlannedOperations} = [grep { defined $_ } @operations];
+
+  $self->{Mode} = 'OperationsSummary';
+}
+
+method ExecutePlannedOperations($http, $dyn) {
+  $self->{TotalPlannedOperations} = scalar @{$self->{PlannedOperations}};
+  $self->UpdateWaitingOnOps($http, $dyn);
+
+  $self->ExecuteNextOperation();
+}
+method UpdateWaitingOnOps($http, $dyn) {
+  my $total = $self->{TotalPlannedOperations};
+  my $left = scalar @{$self->{PlannedOperations}};
+
+  $self->{RemainingOpCount} = $left;
+
+  $self->{Mode} = 'WaitingOnOperation';
+  $self->AutoRefresh();
+}
+
+method ExecuteNextOperation() {
+  my $operations = $self->{PlannedOperations};
+
+  my $op = shift @$operations;
+
+  if (not defined $op) {
+    say "No ops left, stopping the op train!";
+    $self->{Mode} = 'ResultsAreIn';
+    $self->AutoRefresh();
+    return;
+  }
+
+  Dispatch::LineReader->new_cmd(
+    $op, 
+    func($line) {
+      # save into output buffer
+      push @{$self->{Results}}, $line;
+    },
+    func() {
+      # queue the next one?
+      say "finished op: $op";
+      $self->UpdateWaitingOnOps();
+      $self->ExecuteNextOperation();
+    }
+  );
+
+}
+
+method ExecutePlannedPipeOperations($http, $dyn) {
+  my $cmd = $self->{PlannedPipeOperation};
+  my $stdin = $self->{PlannedOperations};
+
+  Dispatch::LineReaderWriter->write_and_read_all(
+    $cmd,
+    $stdin,
+    func($return) {
+      $self->{Results} = $return;
+      $self->{Mode} = 'ResultsAreIn';
+      $self->AutoRefresh;
+      say "ResultsAreIn!";
+    }
+  );
+
+  $self->{Mode} = 'WaitingOnOperation';
+}
+
+method WaitingOnOperation($http, $dyn) {
+  $http->queue("<p>Waiting on operations to finish...</p>");
+  my $total = $self->{TotalPlannedOperations};
+  my $left = $self->{RemainingOpCount};
+  if (defined $total and defined $left) {
+    $http->queue("<p>Left: $left of: $total</p>");
+  }
+}
+
+method ResultsAreIn($http, $dyn) {
+  $http->queue("<p>resutls are in!</p>");
+  map {
+    $http->queue("<p>$_</p>");
+  } @{$self->{Results}};
+}
+
+method PipeOperationsSummary($http, $dyn) {
+  # display a list of planned operations
+  $http->queue(qq{
+    <h3>Planned Pipe Operation</h3>
+  });
+
+  $self->NotSoSimpleButton($http, {
+      caption => "Execute Planned Operations",
+      op => "ExecutePlannedPipeOperations",
+      sync => "Update();",
+  });
+
+  $http->queue(qq{
+    <p>The command to be executed:</p>
+    <pre>$self->{PlannedPipeOperation}</pre>
+
+    <p>The vlaues to be fed on standard input:</p>
+    <table class="table">
+      <tr>
+        <th>Input</th>
+      </tr>
+  });
+
+  for my $op (@{$self->{PlannedOperations}}) {
+    if (not defined $op) { next }
+    $http->queue(qq{
+      <tr>
+        <td>
+          $op
+        </td>
+      </tr>
+    });
+  }
+
+  $http->queue(qq{
+    </table>
+  });
+
+}
+
+method OperationsSummary($http, $dyn) {
+  # display a list of planned operations
+  $http->queue(qq{
+    <h3>Planned Operations</h3>
+  });
+
+  $self->NotSoSimpleButton($http, {
+      caption => "Execute Planned Operations",
+      op => "ExecutePlannedOperations",
+      sync => "Update();",
+  });
+
+  $http->queue(qq{
+    <table class="table">
+      <tr>
+        <th>Command Line</th>
+      </tr>
+  });
+
+  for my $op (@{$self->{PlannedOperations}}) {
+    if (not defined $op) { next }
+    $http->queue(qq{
+      <tr>
+        <td>
+          $op
+        </td>
+      </tr>
+    });
+  }
+
+  $http->queue(qq{
+    </table>
+  });
+}
+
 method SelectTable($http, $dyn){
   $self->{SelectedTable} = $dyn->{index};
   $self->{Mode} = "TableSelected";
