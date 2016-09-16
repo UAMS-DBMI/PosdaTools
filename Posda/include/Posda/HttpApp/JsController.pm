@@ -150,7 +150,7 @@ function AJAXPostForm(formId){
   xmlhttp.send(params);
   return xmlhttp.responseText;
 }
-function PosdaPostRemoteMethod(url, content, cb){
+function PosdaPostRemoteMethod(meth, content, cb){
   var ajax = new AjaxObj(meth + "?obj_path=" + ObjPath, cb);
   ajax.post(content);
 }
