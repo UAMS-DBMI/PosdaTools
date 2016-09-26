@@ -193,6 +193,7 @@ method SpecificInitialize() {
     ],
   };
   $self->{Mode} = "ListQueries";
+  $self->{Sequence} = 0;
   my $dbif_dir = "$self->{Environment}->{UserInfoDir}/DbIf";
   unless(-d $dbif_dir){
     unless(mkdir $dbif_dir) {
@@ -215,6 +216,7 @@ method SpecificInitialize() {
   unless(-d $temp_dir) { die "$temp_dir doesn't exist" }
   $self->{TempDir} = $temp_dir;
   $self->{UploadCount} = 0;
+  $self->{DbLookUp} = $self->{Environment}->{DbSpec};
 
 
   # Build the command list from config file
@@ -717,6 +719,9 @@ method MakeQuery($http, $dyn){
   for my $i (keys %{$self->{query}}){
     $query->{$i} = $self->{query}->{$i};
   }
+  for my $i (keys %{$self->{DbLookUp}->{$query->{schema}}}){
+    $query->{$i} = $self->{DbLookUp}->{$query->{schema}}->{$i};
+  }
   my @bindings;
   for my $i (@{$self->{query}->{args}}){
     push(@bindings, $self->{Input}->{$i});
@@ -737,6 +742,7 @@ method QueryWait($http, $dyn) {
 }
 
 method QueryEnd($query) {
+  my $start_time = time;
   my $sub = sub {
     my($status, $struct) = @_;
     if($self->{Mode} eq "QueryWait"){
@@ -744,7 +750,8 @@ method QueryEnd($query) {
     }
     if($status = "Succeeded" && $struct->{Status} eq "OK"){
       if($query->{query} =~ /^select/ && exists $struct->{Rows}){
-        return $self->CreateAndSelectTableFromQuery($query, $struct);
+        return $self->CreateAndSelectTableFromQuery($query, $struct,
+          $start_time);
       } elsif(exists $struct->{NumRows}){
         return $self->UpdateInsertCompleted($query, $struct);
       }
@@ -774,11 +781,12 @@ method UpdateInsertCompleted($query, $struct){
     $self->{Mode} eq "UpdateInsertStatus";
   }
 }
-method CreateAndSelectTableFromQuery($query, $struct){
+method CreateAndSelectTableFromQuery($query, $struct, $start_at){
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $new_entry = {
     type => "FromQuery",
-    at => time,
+    at => $start_at,
+    duration => time - $start_at,
     rows => $struct->{Rows},
   };
   my $new_q = {
@@ -1180,7 +1188,7 @@ method ExecuteCommand($http, $dyn) {
   map {
     my $item = $table->{rows}->[0]->[$_];
     $colmap->{$item} = $_;
-  } keys @{$table->{rows}->[0]};
+  } (0 .. $#{$table->{rows}->[0]});
 
   # Test for pipe edge case
   my $first_row_op = $table->{rows}->[1]->[$colmap->{Operation}];
@@ -1310,10 +1318,35 @@ method WaitingOnOperation($http, $dyn) {
 }
 
 method ResultsAreIn($http, $dyn) {
-  $http->queue("<p>resutls are in!</p>");
+  $http->queue("<p>results are in!");
+  $self->NotSoSimpleButton($http, {
+    caption => "Save as CSV",
+    op => "SaveResultsAsCsv",
+    syn => "Update();",
+  });
+  $http->queue("</p>");
   map {
     $http->queue("<p>$_</p>");
   } @{$self->{Results}};
+}
+
+method SaveResultsAsCsv($http, $dyn){
+  my $file = "$self->{TempDir}/OpResults_$self->{Sequence}.csv";
+  $self->{Sequence} += 1;
+  my $length = 0;
+  open my $fh, ">$file" or die "Can't open $file for writing ($!)";
+  for my $line (@{$self->{Results}}){
+    print $fh "$line\n";
+    $length += length("$line\n");
+  }
+  close $fh;
+  my $fdesc = {
+    "Output file" => $file,
+    file_type => "ASCII text",
+    length => $length,
+    "mime-type" => "text/csv",
+  };
+  push @{$self->{UploadedFiles}}, $fdesc;
 }
 
 method PipeOperationsSummary($http, $dyn) {
@@ -1424,6 +1457,7 @@ method AddNicknames($http, $dyn){
   $self->{Mode} = "LookingUpNicknames";
   my $file_where;
   if(exists $nn_types{file_nn}){
+print STDERR "Fetching File NN\n";
     my $col_n = $nn_types{file_nn};
     $file_where = "where file_id in (";
     for my $i ($rs .. $#{$table->{rows}}){
@@ -1435,6 +1469,7 @@ method AddNicknames($http, $dyn){
   }
   my $sop_where;
   if(exists $nn_types{sop_nn}){
+print STDERR "Fetching SOP NN\n";
     my $col_n = $nn_types{sop_nn};
     $sop_where = "where sop_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
@@ -1446,6 +1481,7 @@ method AddNicknames($http, $dyn){
   }
   my $series_where;
   if(exists $nn_types{series_nn}){
+print STDERR "Fetching Series NN\n";
     my $col_n = $nn_types{series_nn};
     $series_where = "where series_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
@@ -1457,6 +1493,7 @@ method AddNicknames($http, $dyn){
   }
   my $study_where;
   if(exists $nn_types{study_nn}){
+print STDERR "Fetching Study NN\n";
     my $col_n = $nn_types{study_nn};
     $study_where = "where study_instance_uid in (";
     for my $i ($rs .. $#{$table->{rows}}){
@@ -1473,6 +1510,7 @@ print STDERR "NicknamesByStudy(study_where, $nn_type, $table_n)\n";
   my $q = {
     query => "select * from study_nickname\n" . $study_where,
     schema => "posda_nicknames",
+    db_type => "postgres",
     columns => [
       "study_instance_uid", "project_name", "site_name",
       "subj_id", "study_nickname"
@@ -1524,6 +1562,7 @@ method NicknamesByFileId($f_where, $nn_type, $table_n){
      args => [ ],
      binding => [ ],
      schema => "posda_files",
+     db_type => "postgres",
      name => "get_file_info",
      description => "",
   };
@@ -1558,6 +1597,7 @@ method FileIdsFetched($nn_type, $table_n){
         args =>[],
         bindings =>[],
         schema => "posda_nicknames",
+        db_type => "postgres",
         name => "get_file_nicknames",
         description => "",
       };
@@ -1609,6 +1649,7 @@ method FileNnsFetched($nn_type, $f_info, $table_n){
 method SeriesStudyBySop($sop_where, $nn_type, $table_n){
   my $q = {
     schema => "posda_files",
+    db_type => "postgres",
     query => "select\n" .
       "  distinct series_instance_uid, study_instance_uid, sop_instance_uid\n" .
       "from\n" .
@@ -1657,6 +1698,7 @@ method NicknamesBySop($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $t
     args =>[],
     bindings =>[],
     schema => "posda_nicknames",
+    db_type => "postgres",
     name => "get_sop_nicknames",
     description => "",
   };
@@ -1684,6 +1726,7 @@ method SopNnsFetched($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $ta
         args => [],
         bindings => [],
         schema => "posda_files",
+        db_type => "postgres",
         name => "get_series_by_sops",
         description => "",
       };
@@ -1738,8 +1781,10 @@ method SeriesBySopsFetched(
 method StudiesBySeries(
   $series_where, $nn_type, $table_n
 ){
+print STDERR "StudiesBySeries($series_where, $nn_type, $table_n)\n";
   my $q = {
     schema => "posda_files",
+    db_type => "postgres",
     query => "select\n" .
       "   distinct series_instance_uid, study_instance_uid,\n" .
       "   project_name, site_name , patient_id\n" .
@@ -1754,6 +1799,7 @@ method StudiesBySeries(
     name => "studies by series",
     description => ""
   };
+print STDERR "Calling Serialized SubProcess\n";
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
      $self->StudiesFetchedBySeries(
        $series_where, $nn_type, $table_n)
@@ -1795,6 +1841,7 @@ method NicknamesBySeries(
     columns => ["project_name", "site_name", "subj_id", "series_nickname",
       "series_instance_uid"],
     schema => "posda_nicknames",
+    db_type => "postgres",
     args => [],
     bindings => [],
     name => "series nicknames",
@@ -1823,6 +1870,7 @@ method SeriesNicknamesFetched(
           $series_where,
         columns => [ "study_instance_uid" ],
         schema => "posda_files",
+        db_type => "postgres",
         args => [],
         bindings => [],
         name => "study from series",
@@ -1859,6 +1907,7 @@ method StudiesBySeriesFetched(
       $study_where .= ")";
       my $q = {
         schema => "posda_nicknames",
+        db_type => "postgres",
         query => "select\n" .
           "  study_instance_uid, project_name, site_name,\n" .
           "  subj_id, study_nickname\n" .
