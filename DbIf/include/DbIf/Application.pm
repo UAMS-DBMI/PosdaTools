@@ -15,7 +15,7 @@ use Dispatch::LineReaderWriter;
 use GenericApp::Application;
 
 use Posda::Passwords;
-use Posda::Config 'Config';
+use Posda::Config ('Config','Database');
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -216,7 +216,7 @@ method SpecificInitialize() {
   unless(-d $temp_dir) { die "$temp_dir doesn't exist" }
   $self->{TempDir} = $temp_dir;
   $self->{UploadCount} = 0;
-  $self->{DbLookUp} = $self->{Environment}->{DbSpec};
+  # $self->{DbLookUp} = $self->{Environment}->{DbSpec};
 
 
   # Build the command list from config file
@@ -719,9 +719,10 @@ method MakeQuery($http, $dyn){
   for my $i (keys %{$self->{query}}){
     $query->{$i} = $self->{query}->{$i};
   }
-  for my $i (keys %{$self->{DbLookUp}->{$query->{schema}}}){
-    $query->{$i} = $self->{DbLookUp}->{$query->{schema}}->{$i};
-  }
+  # for my $i (keys %{$self->{DbLookUp}->{$query->{schema}}}){
+  #   $query->{$i} = $self->{DbLookUp}->{$query->{schema}}->{$i};
+  # }
+  $query->{connect} = Database($query->{schema});
   my @bindings;
   for my $i (@{$self->{query}->{args}}){
     push(@bindings, $self->{Input}->{$i});
@@ -1518,7 +1519,8 @@ print STDERR "NicknamesByStudy(study_where, $nn_type, $table_n)\n";
     args => [],
     bindings => [],
     name => "Study nickname by study_uids",
-    description => ""
+    description => "",
+    connect => Database('posda_nicknames')
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
     $self->StudyNnsFetchedByStudy($nn_type, $table_n));
@@ -1565,6 +1567,7 @@ method NicknamesByFileId($f_where, $nn_type, $table_n){
      db_type => "postgres",
      name => "get_file_info",
      description => "",
+     connect => Database('posda_files')
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
     $self->FileIdsFetched($nn_type, $table_n));
@@ -1600,6 +1603,7 @@ method FileIdsFetched($nn_type, $table_n){
         db_type => "postgres",
         name => "get_file_nicknames",
         description => "",
+        connect => Database('posda_nicknames')
       };
       $self->SerializedSubProcess($q, "SubProcessQuery.pl",
         $self->FileNnsFetched($nn_type, \%file_ids, $table_n));
@@ -1661,7 +1665,8 @@ method SeriesStudyBySop($sop_where, $nn_type, $table_n){
     args => [],
     bindings => [],
     name => "get series and study by sops",
-    description => ""
+    description => "",
+    connect => Database('posda_files')
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
     $self->SeriesAndStudiesFetched($sop_where, $nn_type, $table_n));
@@ -1701,6 +1706,7 @@ method NicknamesBySop($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $t
     db_type => "postgres",
     name => "get_sop_nicknames",
     description => "",
+    connect => Database('posda_nicknames')
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
     $self->SopNnsFetched($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $table_n)
@@ -1729,6 +1735,7 @@ method SopNnsFetched($sop_where, $sop_info, $file_info, $dig_info, $nn_type, $ta
         db_type => "postgres",
         name => "get_series_by_sops",
         description => "",
+        connect => Database('posda_files')
       };
       $self->SerializedSubProcess($q, "SubProcessQuery.pl",
         $self->SeriesBySopsFetched(
@@ -1797,7 +1804,8 @@ print STDERR "StudiesBySeries($series_where, $nn_type, $table_n)\n";
     args => [],
     bindings => [],
     name => "studies by series",
-    description => ""
+    description => "",
+    connect => Database('posda_files')
   };
 print STDERR "Calling Serialized SubProcess\n";
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
@@ -1846,6 +1854,7 @@ method NicknamesBySeries(
     bindings => [],
     name => "series nicknames",
     description => "",
+    connect => Database('posda_nicknames')
   };
   $self->SerializedSubProcess($q, "SubProcessQuery.pl",
     $self->SeriesNicknamesFetched(
@@ -1875,6 +1884,7 @@ method SeriesNicknamesFetched(
         bindings => [],
         name => "study from series",
         description => "",
+        connect => Database('posda_files')
       };
       $self->SerializedSubProcess($q, "SubProcessQuery.pl",
         $self->StudiesBySeriesFetched(
@@ -1916,6 +1926,7 @@ method StudiesBySeriesFetched(
           "site_name", "subj_id", "study_nickname" ],
         args => [],
         bindings => [],
+        connect => Database('posda_nicknames')
       };
       $self->SerializedSubProcess($q, "SubProcessQuery.pl",
         $self->StudyNnsFetched(
