@@ -2,7 +2,7 @@ package Posda::Config;
 
 require Exporter;
 @ISA = 'Exporter';
-@EXPORT_OK = 'Config';
+@EXPORT_OK = ('Config', 'Database');
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -11,6 +11,7 @@ use Env;
 use JSON;
 
 use Posda::DicomSendLocations;
+use Posda::DatabaseConfig;
 
 our $vars = {};
 
@@ -18,6 +19,9 @@ our $vars = {};
 my $loading_rules = {
   dicom_send_locations => sub {
     return Posda::DicomSendLocations::get();
+  },
+  databases => sub {
+    return Posda::DatabaseConfig::get();
   },
   extraction_mgr_port => sub {
     return Config("port") + 2;
@@ -54,6 +58,36 @@ func Config($var) {
     $vars->{$var} = _load($var);
   }
   return $vars->{$var};
+}
+
+my $driver_map = { postgres => 'Pg',
+                   mysql => 'mysql', };
+
+func Database($name) {
+  my $db_info = Config('databases')->{$name};
+
+  if (not defined $db_info) {
+    say STDERR "Invalid database name requested: $name";
+    return 'invalid database name';
+  }
+
+  my $driver = $driver_map->{$db_info->{driver}};
+
+  if (not defined $driver) {
+    say STDERR "Invalid driver specified in database config: $db_info->{driver}";
+    return 'invalid database driver';
+  }
+
+  my $prefix = "dbi:$driver:";
+
+  my @params;
+  for my $k (keys %$db_info) {
+    if ($k ne 'driver') {
+      push @params, "$k=$db_info->{$k}";
+    }
+  }
+
+  return $prefix . join(';', @params);
 }
 
 1;

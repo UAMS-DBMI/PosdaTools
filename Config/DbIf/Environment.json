@@ -13,11 +13,13 @@
   "Commands" : {
     "SeriesConsistency" : "CheckSeriesConsistency.pl <series_instance_uid>",
     "StudyConsistency" : "CheckStudyConsistency.pl <study_instance_uid>",
-    "PatConsistency ": "CheckPatConsistency.pl <collection> <patient_id>",
+    "PatConsistency": "CheckPatConsistency.pl <collection> <patient_id>",
     "SendSeries" : "SendSeriesFromDb.pl <host> <port> <called> <calling> <series_instance_uid> 1",
     "ScanPhi" : "<series_instance_uid>, <signature>|PhiScan.pl posda_files posda_phi <description>",
     "OnlyIn" : "<SeriesInPosda>, <SeriesInIntake>|OnlyIn.pl Posda Intake",
-    "CompareDuplicateSops" : "<sop_instance_uid>|CompareDupSopList.pl"
+    "CompareDuplicateSops" : "<sop_instance_uid>|CompareDupSopList.pl",
+    "TestCommand" : "TestCommand.pl <host> <port> <called> <calling> <series_instance_uid>",
+    "PipeCommand1" : "<vals1>,<vals2>,<vals3>|PipeCommand1.pl <var1> <var2> 1 2 3"
   },
   "DbSpec" : {
     "posda_files" : {

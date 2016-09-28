@@ -1,0 +1,49 @@
+{
+  "posda_auth" : {
+    "database" : "posda_auth",
+    "driver"   : "postgres"
+  },
+  "posda_appstats" : {
+    "database" : "app_stats",
+    "driver"   : "postgres"
+  },
+  "posda_private_tag" : {
+    "database" : "private_tag_kb",
+    "driver"   : "postgres"
+  },
+  "posda_dicom_roots" : {
+    "database" : "dicom_roots",
+    "driver"   : "postgres"
+  },
+  "posda_files" : {
+    "database" : "posda_files",
+    "driver"   : "postgres"
+  },
+  "posda_nicknames" : {
+    "database" : "posda_nicknames",
+    "driver"   : "postgres"
+  },
+  "posda_counts" : {
+    "database" : "posda_counts",
+    "driver"   : "postgres"
+  },
+  "posda_phi" : {
+    "database" : "posda_phi",
+    "driver"   : "postgres"
+  },
+
+  "public" : {
+    "database" : "ncia",
+    "driver"   : "mysql",
+    "host"     : "144.30.1.74",
+    "user"     : "nciauser",
+    "password" : "nciA#112"
+  },
+  "intake" : {
+    "database" : "ncia",
+    "driver"   : "mysql",
+    "host"     : "144.30.1.71",
+    "user"     : "nciauser",
+    "password" : "nciA#112"
+  }
+}

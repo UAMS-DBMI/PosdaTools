@@ -2,6 +2,13 @@
 use strict;
 use JSON;
 package PosdaDB::Queries;
+
+use Posda::Config 'Database';
+use Dispatch::EventHandler;
+use DBI;
+
+use Data::Dumper;
+
 my %Queries;
 my $Queries = \%Queries;
 sub GetQueryInstance{
@@ -15,9 +22,81 @@ sub GetQueryInstance{
     columns => $Queries{$name}->{columns},
     schema => $Queries{$name}->{schema},
     tags => $Queries{$name}->{tags},
+    connect => Database($Queries{$name}->{schema}),
+    async => 0,
   };
   return bless $this, $class;
 };
+
+sub SetAsync {
+  my($this, $async) = @_;
+
+  if (not defined $async) {
+    $async = 1;
+  }
+
+  $this->{async} = $async;
+}
+
+sub RunQuery {
+  my $this = shift;
+
+  if ($this->{async}) {
+    return $this->_RunQueryAsync(@_);
+  } else {
+    return $this->_RunQueryBlocking(@_);
+  }
+}
+
+sub _RunQueryBlocking {
+  print "RunQueryBlocking\n";
+  my($this) = shift;
+  my $row_callback = shift;
+  my $end_callback = shift;
+
+  my $dbh = DBI->connect($this->{connect});
+
+  if (not defined $this->{handle}) {
+    $this->Prepare($dbh);
+  }
+
+  $this->Execute(@_);
+
+  # return the results
+  while(my $h = $this->{handle}->fetchrow_arrayref){
+    &$row_callback($h);
+  }
+  if(ref($end_callback) eq "CODE"){
+    &$end_callback();
+  }
+}
+
+sub _RunQueryAsync {
+  print "RunQueryAsync\n";
+  my($this) = shift;
+  my $row_callback = shift;
+  my $end_callback = shift;
+
+  # Is there a better way to do this? There is no new() on this class
+  my $ev = {};
+  bless $ev, 'Dispatch::EventHandler';
+
+  $this->{bindings} = [@_];
+
+  $ev->SerializedSubProcess(
+    $this, 
+    "SubProcessQuery.pl",
+    sub {
+      my $status = shift;
+      my $result = shift;
+      for my $row (@{$result->{Rows}}) {
+        &$row_callback($row);
+      }
+      &$end_callback();
+    }
+  );
+}
+
 sub GetDescription{
   my($this) = @_;
   return $this->{description};
@@ -58,8 +137,12 @@ sub Execute{
   }
   return $this->{handle}->execute(@_);
 }
+
 sub Rows{
   my($this, $row_closure, $done_closure) = @_;
+  if ($this->{async}) {
+    return undef;
+  }
   unless(exists $this->{handle}){
     die "Rows ($this->{name} has not been prepared";
   }

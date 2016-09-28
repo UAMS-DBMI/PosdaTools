@@ -55,27 +55,7 @@ my $query_spec = fd_retrieve(\*STDIN);
 #print STDERR "query_spec = ";
 #Debug::GenPrint($dbg, $query_spec, 1);
 #print STDERR "\n";
-my $dbh;
-if($query_spec->{db_type} eq "postgres"){
-  my $db_spec = "dbi:Pg:dbname=$query_spec->{schema}";
-print STDERR "DBI->connect($db_spec)\n";
-  $dbh = DBI->connect($db_spec);
-} elsif ($query_spec->{db_type} eq "mysql"){
-  my $db_spec = "dbi:mysql:dbname=$query_spec->{db_name};" .
-    "host=$query_spec->{db_host}";
-  print STDERR "DBI->connect($db_spec,\n" .
-    "    $query_spec->{db_user}, $query_spec->{db_pass});\n";
-  $dbh = DBI->connect($db_spec,
-    $query_spec->{db_user}, $query_spec->{db_pass});
-} elsif (defined $query_spec->{db_type}){
-  die "unknown db_type $query_spec->{db_type}";
-} else {
-  die "No db_type defined";
-}
-unless(defined $dbh) {
-  Error("Connect error ($!): $query_spec->{db_name}::$query_spec->{db_host}" .
-    "::$query_spec->{db_user}");
-}
+my $dbh = DBI->connect($query_spec->{connect});
 unless($#{$query_spec->{args}} == $#{$query_spec->{bindings}}){
   my $required = @{$query_spec->{args}};
   my $supplied = @{$query_spec->{bindings}};
