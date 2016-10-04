@@ -8,7 +8,7 @@ use Dispatch::BinFragReader;
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
-use Storable 'dclone';
+use Storable;
 
 use Dispatch::LineReaderWriter;
 
@@ -26,7 +26,15 @@ my $dbg = sub {print STDERR @_ };
 use vars '@ISA';
 @ISA = ("GenericApp::Application");
 
+func titlize($string) {
+  join(' ', map {ucfirst} split('_', $string));
+}
+
 method SpecificInitialize() {
+  $self->{AllArgs} = {};
+  for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
+    $self->{AllArgs}->{$a} = 1;
+  }
   ### change this to initialize from config
   $self->{MenuByMode} = {
     ListQueries => [
@@ -218,6 +226,12 @@ method SpecificInitialize() {
   $self->{UploadCount} = 0;
   # $self->{DbLookUp} = $self->{Environment}->{DbSpec};
 
+  if (-e "$self->{SavedQueriesDir}/bindingcache.pinfo") {
+    $self->{BindingCache} = 
+      retrieve("$self->{SavedQueriesDir}/bindingcache.pinfo");
+  } else {
+    $self->{BindingCache} = {};
+  }
 
   # Build the command list from config file
   my $command_list = $self->{Environment}->{Commands};
@@ -312,39 +326,50 @@ method ClearAllTags($http, $dyn){
     $self->{TagsState}->{$t} = "false";
   }
 }
+
 method TagSelection($http, $dyn){
-  my $tags = PosdaDB::Queries->GetAllTags;
-  $self->SelectMethodByValue($http, {
-    method => "SetTagsFilter",
-    sync => "Update();"
+  # break the list of tags into groups of 5
+  my @tags = sort keys %{$self->{TagsState}};
+  my @chunks;
+  push @chunks, [ splice @tags, 0, 5 ] while @tags;
+
+  $http->queue(qq{
+    <table class="table table-condensed">
   });
-  
-  unless($self->{TagsFilterDisplay}) {
-    $self->{TagsFilterDisplay} = $tag_mode_list->[0];
-  }
-  unless(defined $self->{TagsState} && ref($self->{TagsState}) eq "HASH"){
-    $self->{TagsState} = {};
-    for my $t (keys %$tags){
-      $self->{TagsState}->{$t} = "false";
+  for my $chunk (@chunks) {
+    $http->queue(qq{<tr>});
+    for my $tag (@$chunk) {
+      my $pretty_tag = titlize($tag);
+
+      my $checked = '';
+      if ($self->{TagsState}->{$tag} eq 'true') {
+        $checked = 'checked';
+      }
+
+      my $new_state = $checked eq 'checked'? 'false':'true';
+      my $extra_class = $checked eq 'checked'? 'active':''; 
+
+      $http->queue(qq{
+        <td>
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default $extra_class"
+              onClick="javascript:PosdaGetRemoteMethod('CheckBoxChange', 'value=$tag&checked=$new_state');Update();"
+            >
+              <input type="checkbox" autocomplete="off" name="$tag" $checked>
+              $pretty_tag
+            </label>
+          </div>
+        </td>
+      });
     }
-  }
-  for my $i ((sort keys %$tag_modes), keys %$tag_ops){
-    $http->queue("<option value=\"$i\"" .
-      ($self->{TagsFilterDisplay} eq $i ?
-        " selected" : "") .
-      ">$i</option>");
-  }
-  $http->queue("</select>");
-  for my $t (sort keys %$tags){
-    $http->queue($self->CheckBox("tags", $t, "CheckBoxChange",
-      $self->{TagsState}->{$t} eq "true", "Update();"));
-    $http->queue(" $t     ");
+    $http->queue(qq{</tr>});
   }
 }
+
 method CheckBoxChange($http, $dyn){
-  $self->AutoRefresh;
   $self->{TagsState}->{$dyn->{value}} = $dyn->{checked};
 }
+
 method SetTagsFilter($http, $dyn){
   my $opt = $dyn->{value};
   if(exists $tag_modes->{$opt}){
@@ -358,7 +383,11 @@ method SetTagsFilter($http, $dyn){
     }
   }
 };
-method TagTest($query_tags, $all_tags){
+method TagTest($query_tags_listref, $all_tags){
+  my $query_tags = {};
+  for my $qt (@$query_tags_listref) {
+    $query_tags->{$qt} = 1;
+  }
   my %selected_tags;
   for my $t (keys %$all_tags){
     if($self->{TagsState}->{$t} eq "true"){ $selected_tags{$t} = 1 }
@@ -392,18 +421,36 @@ method TagTest($query_tags, $all_tags){
   } else { return 1 }
 }
 method ListQueries($http, $dyn){
-  my @q_list = PosdaDB::Queries->GetList;
-  my $tags = PosdaDB::Queries->GetAllTags;
-  
+  my @q_list;
+  # If tags are selected, return only queries with those tags
+
+  if (not defined $self->{TagsState} or ref($self->{TagsState}) ne "HASH"){
+    my $tags = PosdaDB::Queries->GetAllTags();
+    $self->{TagsState} = {};
+    for my $t (@$tags){
+      $self->{TagsState}->{$t} = "false";
+    }
+  }
+
+  # get simple list of selected tags
+  my @selected_tags = grep {
+    $self->{TagsState}->{$_} eq 'true';
+  } keys %{$self->{TagsState}};
+
+  if ($#selected_tags >= 0) {
+    @q_list = @{PosdaDB::Queries->GetQueriesWithTags(\@selected_tags)};
+  } else {
+    @q_list = @{PosdaDB::Queries->GetList()};
+  }
+
+  # Draw the tag list
   $self->RefreshEngine($http, $dyn, qq{
+    <p>Queries</p>
+    <?dyn="TagSelection"?>
     <table class="table table-striped table-condensed">
-    <tr>
-      <th colspan=2>Queries  <?dyn="TagSelection"?></th>
-      <th></th>
-    <tr>
   });
   for my $i (@q_list){
-    unless($self->TagTest(PosdaDB::Queries->GetTags($i), $tags)){ next }
+    # unless($self->TagTest(PosdaDB::Queries->GetTags($i), $tags)){ next }
     $self->RefreshEngine($http, $dyn, qq{
       <tr>
         <td>$i</td>
@@ -593,6 +640,7 @@ method SetActiveQuery($http, $dyn){
   $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
 }
 method ActiveQuery($http, $dyn){
+  DEBUG @_;
   my $descrip = {
     args => {
       caption => "Arguments",
@@ -633,6 +681,7 @@ method ActiveQuery($http, $dyn){
   for my $i (
     "name", "schema", "description", "tags", "columns", "args", "query"
   ){
+    DEBUG "i = $i";
     my $d = $descrip->{$i};
     $http->queue(qq{
       <tr>
@@ -642,6 +691,7 @@ method ActiveQuery($http, $dyn){
         <td align="left" valign = "top">
     });
     if($d->{struct} eq "text"){
+      DEBUG 'text';
       if(
         defined($d->{special}) &&
         $d->{special} eq "pre-formatted"
@@ -652,7 +702,9 @@ method ActiveQuery($http, $dyn){
       }
     }
     if($d->{struct} eq "array"){
+      DEBUG 'array';
       if($d->{special} eq "pre-formatted-list"){
+        DEBUG 'pre-formatted-list';
 
         $http->queue(qq{
           <table class="table table-condensed">
@@ -663,8 +715,13 @@ method ActiveQuery($http, $dyn){
         $self->RefreshEngine($http, $dyn, "</table>");
 
       } elsif($d->{special} eq "form"){
+        DEBUG 'form';
         $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
+          # preload the Input if arg is in cache
+          if (defined $self->{BindingCache}->{$arg}) {
+            $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
+          }
           $self->RefreshEngine($http, $dyn, qq{
             <tr>
               <th style="width:5%">$arg</th>
@@ -682,11 +739,9 @@ method ActiveQuery($http, $dyn){
             class => "btn btn-primary" });
       }
     } elsif($d->{struct} eq "hash key list"){
-      my @keys = sort keys %{$self->{query}->{tags}};
-      for my $k (0 .. $#keys){
-        $http->queue($keys[$k]);
-        unless($k == $#keys){ $http->queue(", ") }
-      }
+      # TODO: This is both not a hash key list, AND it only works
+      # for tags!
+      $http->queue(join(', ', @{$self->{query}->{tags}}));
     }
     $self->RefreshEngine("</td></tr>");
   }
@@ -714,23 +769,40 @@ method CancelDeleteQuery($http, $dyn){
  delete $self->{QueryPendingDelete};
  $self->{Mode} = "ListQueries";
 }
-method MakeQuery($http, $dyn){
-  my $query = {};
-  for my $i (keys %{$self->{query}}){
-    $query->{$i} = $self->{query}->{$i};
-  }
-  # for my $i (keys %{$self->{DbLookUp}->{$query->{schema}}}){
-  #   $query->{$i} = $self->{DbLookUp}->{$query->{schema}}->{$i};
-  # }
-  $query->{connect} = Database($query->{schema});
+
+method GetBindings() {
+  my $bc = $self->{BindingCache};
+
   my @bindings;
   for my $i (@{$self->{query}->{args}}){
+    $bc->{$i} = $self->{Input}->{$i};
     push(@bindings, $self->{Input}->{$i});
   }
-  $query->{bindings} = \@bindings;
+
+  # Save the cache to disk
+  store $bc, "$self->{SavedQueriesDir}/bindingcache.pinfo";
+
+  return \@bindings;
+}
+
+method MakeQuery($http, $dyn){
+  my $query = {};
+
+  $query->{bindings} = $self->GetBindings();
+
   $self->{Mode} = "QueryWait";
-  $self->SerializedSubProcess($query, "SubProcessQuery.pl",
-    $self->QueryEnd($query));
+
+  $self->{query}->SetAsync();
+
+  $self->{query_rows} = [];
+  $self->{query}->RunQuery(
+    func($row) {
+      push @{$self->{query_rows}}, $row;
+    },
+    $self->QueryEnd($query),
+    @{$query->{bindings}}
+  );
+
 }
 
 method QueryWait($http, $dyn) {
@@ -749,23 +821,27 @@ method QueryEnd($query) {
     if($self->{Mode} eq "QueryWait"){
       $self->AutoRefresh;
     }
-    if($status = "Succeeded" && $struct->{Status} eq "OK"){
-      if($query->{query} =~ /^select/ && exists $struct->{Rows}){
-        return $self->CreateAndSelectTableFromQuery($query, $struct,
-          $start_time);
-      } elsif(exists $struct->{NumRows}){
-        return $self->UpdateInsertCompleted($query, $struct);
-      }
-    } else {
-      if($self->{Mode} eq "QueryWait"){
-        $self->{Mode} = "QueryFailed";
-      }
-      unless(exists $self->{FailedQueries}){ $self->{FailedQueries} = [] }
-      push @{$self->{FailedQueries}}, {
-        query => $query,
-        result => $struct
-      };
+    # if($status = "Succeeded" && $struct->{Status} eq "OK"){
+
+    if($self->{query}->{query} =~ /^select/){
+      my $struct = { Rows => $self->{query_rows} };
+
+      return $self->CreateAndSelectTableFromQuery($self->{query}, $struct,
+        $start_time);
+    } elsif(exists $struct->{NumRows}){
+      return $self->UpdateInsertCompleted($query, $struct);
     }
+
+    # } else {
+    #   if($self->{Mode} eq "QueryWait"){
+    #     $self->{Mode} = "QueryFailed";
+    #   }
+    #   unless(exists $self->{FailedQueries}){ $self->{FailedQueries} = [] }
+    #   push @{$self->{FailedQueries}}, {
+    #     query => $query,
+    #     result => $struct
+    #   };
+    # }
   };
   return $sub;
 }
@@ -793,7 +869,11 @@ method CreateAndSelectTableFromQuery($query, $struct, $start_at){
   my $new_q = {
   };
   for my $i (keys %$query){
-    unless($i eq "columns"){ $new_q->{$i} = $query->{$i} }
+    unless($i eq 'columns' 
+        or $i eq 'dbh' # if the handle is included it will fail to Freeze
+    ){ 
+      $new_q->{$i} = $query->{$i};
+    }
   }
   my @cols = @{$query->{columns}};
   $new_q->{columns} = \@cols;
@@ -805,26 +885,57 @@ method CreateAndSelectTableFromQuery($query, $struct, $start_at){
     $self->{SelectedTable} = $index;
   }
 }
+
 method DownloadTableAsCsv($http, $dyn){
   my $table = $self->{LoadedTables}->[$dyn->{table}];
   my $q_name = $table->{query}->{name};
   $http->DownloadHeader("text/csv", "$q_name.csv");
   my $cmd = "PerlStructToCsv.pl";
-  Dispatch::BinFragReader->new_serialized_cmd($cmd,
-    $table, $self->CsvFragment($http, $dyn), $self->CsvComplete);
+  Dispatch::BinFragReader->new_serialized_cmd(
+    $cmd,
+    $table, 
+    func($frag) {
+      $http->queue("$frag");
+    }, 
+    func() {
+      # do nothing, on purpose
+    }
+  );
 }
-method CsvFragment($http, $dyn){
-  my $sub = sub {
-    my($frag) = @_;
-    $http->queue("$frag");
-  };
-  return $sub;
+
+method SetUseAsArg($http, $dyn) {
+  $self->{Mode} = 'UseAsArg';
+  $self->{UseAsArgOps} = $dyn;
 }
-method CsvComplete{
-  my $sub = sub {
-  };
-  return $sub;
+method UseAsArg($http, $dyn) {
+  my $arg_name = $self->{UseAsArgOps}->{arg};
+  my $value = $self->{UseAsArgOps}->{value};
+  $http->queue(qq{
+    <p>Selected argument type: $arg_name</p>
+    <p>Selected argument value: $value</p>
+
+    <p>The following queries can be executed with
+    this as an input:</p>
+    <ul>
+  });
+
+  $self->{BindingCache}->{$arg_name} = $value;
+
+  # present a list of the possible queries here
+  my $queries = PosdaDB::Queries->GetQuerysWithArg($arg_name);
+  for my $q (@$queries) {
+    $http->queue('<li>');
+    $self->NotSoSimpleButtonButton($http, {
+      caption => "$q",
+      op => "SetActiveQuery",
+      query_name => "$q"
+    });
+    $http->queue('</li>');
+  }
+  $http->queue('</ul>');
+
 }
+
 method TableSelected($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -832,17 +943,26 @@ method TableSelected($http, $dyn){
     my $rows = $table->{rows};
     my $num_rows = @$rows;
     my $at = $table->{at};
-    $self->RefreshEngine($http, $dyn,
-      '<div style="background-color: white">' .
-      "Table from query: $query->{name}  " .
-      '<a class="btn btn-sm btn-primary" ' .
-      'href="DownloadTableAsCsv?obj_path=' . $self->{path} . '&table=' .
-      $self->{SelectedTable} . 
-      '\">download</a>' .
-      '<br>' .
-      "Description: <pre>$query->{description}</pre>" .
-      "Schema: $query->{schema}<br>"
-    );
+    $self->RefreshEngine($http, $dyn, qq{
+      <div>
+      <h3>Table from query: $query->{name}</h3>
+      <p>
+        <a class="btn btn-primary" 
+           href="DownloadTableAsCsv?obj_path=$self->{path}&table=$self->{SelectedTable}">
+           Download
+        </a>
+      </p>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Description</div>
+        <div class="panel-body">
+          $query->{description}
+        </div>
+      </div>
+
+      <p>Schema: $query->{schema}</p>
+    });
+
     my $numb = @{$query->{bindings}};
     if($numb > 0){
       $http->queue('Bindings:<ul>');
@@ -852,7 +972,7 @@ method TableSelected($http, $dyn){
       }
       $http->queue('</ul>');
     }
-    $http->queue("Rows: $num_rows<br>Results:<hr>");
+    $http->queue("Rows: $num_rows<hr>");
     $http->queue(qq{
       <table class="table table-striped">
         <tr>
@@ -861,7 +981,8 @@ method TableSelected($http, $dyn){
       $http->queue("<th>$i</th>");
     }
     $http->queue('</tr>');
-  
+
+    my $col_pos = 0;
     for my $r (@$rows){
       $http->queue('<tr>');
       for my $v (@$r){
@@ -869,8 +990,20 @@ method TableSelected($http, $dyn){
         my $v_esc = $v;
         $v_esc =~ s/</&lt;/g;
         $v_esc =~ s/>/&gt;/g;
-        $http->queue("<td>$v_esc</td>");
+        my $cn = $query->{columns}->[$col_pos++];
+        $http->queue("<td>$v_esc");
+        if (defined $self->{AllArgs}->{$cn}) {
+          $self->NotSoSimpleButtonButton($http, {
+              class => "btn btn-xs btn-default",
+              caption => "Use",
+              op => "SetUseAsArg",
+              value => $v_esc,
+              arg => $cn
+          });
+        }
+        $http->queue("</td>");
       }
+      $col_pos = 0;
       $http->queue('</tr>');
     }
     $self->RefreshEngine($http, $dyn, "</table></div>");

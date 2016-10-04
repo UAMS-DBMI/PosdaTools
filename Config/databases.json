@@ -1,4 +1,8 @@
 {
+  "posda_queries" : {
+    "database" : "posda_queries",
+    "driver"   : "postgres"
+  },
   "posda_auth" : {
     "database" : "posda_auth",
     "driver"   : "postgres"
