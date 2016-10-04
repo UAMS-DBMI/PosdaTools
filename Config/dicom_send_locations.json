@@ -52,5 +52,11 @@
     "port" : "64611",
     "calling_ae" : "POSDA",
     "called_ae" : "BBMAC"
+  },
+  "FirstProxy(Osirix)" : {
+    "host" : "localhost",
+    "port" : "64812",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BBOSIRIX"
   }
 }

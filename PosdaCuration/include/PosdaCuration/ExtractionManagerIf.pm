@@ -60,6 +60,20 @@ sub ReleaseLockWithNoEdit{
   push @lines, "Pid: $this->{pid}";
   return  &$do_trans($this, \@lines, $resp_hand);
 }
+sub DiscardExtraction{
+  my($this, $collection, $site, $subject, $resp_hand) = @_;
+  &$check_async($this, $resp_hand);
+  my @lines;
+  push @lines, "DiscardExtraction";
+  push @lines, "Collection: $collection";
+  push @lines, "Site: $site";
+  push @lines, "Subject: $subject";
+  push @lines, "Session: $this->{session}";
+  push @lines, "User: $this->{user}";
+  push @lines, "Pid: $this->{pid}";
+  push @lines, "For: Discard";
+  return  &$do_trans($this, \@lines, $resp_hand);
+}
 sub ApplyEdits{
   my($this, $id, $caption, $cmd_file, $resp_hand) = @_;
   &$check_async($this, $resp_hand);

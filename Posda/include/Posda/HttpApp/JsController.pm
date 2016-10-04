@@ -154,6 +154,10 @@ function PosdaPostRemoteMethod(meth, content, cb){
   var ajax = new AjaxObj(meth + "?obj_path=" + ObjPath, cb);
   ajax.post(content);
 }
+function PosdaNewPostRemoteMethod(url, content, cb){
+  var ajax = new AjaxObj(url,  cb);
+  ajax.post(content);
+}
 function PosdaGetRemoteMethod(meth, args, cb){
   var url = meth + "?obj_path=" + ObjPath;
   if(args != '') url = url + "&" + args;
@@ -263,6 +267,145 @@ sub EntryBox{
     # "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
     # "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
     "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
+    "/>");
+}
+sub DelegateTextArea{
+  my($this, $http, $dyn) = @_;
+  my @parms;
+  my @attrs;
+  my $sync = "function(){}";
+  for my $i (keys %$dyn){
+    if($i eq "op") { next }
+    if($i eq "value") { next }
+    if($i eq "sync") {
+      $sync = "function(){ $dyn->{sync} }";
+      next;
+    }
+    if(
+      $i eq "length" || $i eq "name" || $i eq "rows" || $i eq "cols"
+    ) { 
+      push @attrs, "$i=\"$dyn->{$i}\"";
+      next
+    } else {
+      push @parms, "$i=$dyn->{$i}";
+    }
+  }
+  my $attr_s = "";
+  for my $a (@attrs){
+    $attr_s .= "$a ";
+  }
+  push @parms, "Delegator=$this->{path}";
+  if(exists $dyn->{op}){
+    push @parms, "Delegated=$dyn->{op}";
+  } else {
+    push @parms, "Delegated=StoreLinkedValue";
+  }
+  my $v_string;
+  for my $i (0 .. $#parms){
+    $v_string .= "$parms[$i]&";
+  }
+  my $default;
+  my $value = $dyn->{value};
+  my $op = 
+    "PosdaNewPostRemoteMethod('Delegate?obj_path=' + ObjPath + '&$v_string";
+  $http->queue('<textarea ' . $attr_s .
+    "onblur=\"" . $op . "event=onblur', \$(this).val(), $sync);\"" .
+    "/>$value</textarea>");
+}
+sub LinkedDelegateTextArea{
+  my($this, $http, $dyn) = @_;
+  my @parms;
+  my @attrs;
+  for my $i (keys %$dyn){
+    if($i eq "op") { next }
+    if($i eq "value") { next }
+    if(
+      $i eq "length" || $i eq "name" || $i eq "rows" || $i eq "cols"
+    ) { 
+      push @attrs, "$i=\"$dyn->{$i}\"";
+      next
+    } else {
+      push @parms, "$i=$dyn->{$i}";
+    }
+  }
+  my $attr_s = "";
+  for my $a (@attrs){
+    $attr_s .= "$a ";
+  }
+  push @parms, "Delegator=$this->{path}";
+  if(exists $dyn->{op}){
+    push @parms, "Delegated=$dyn->{op}";
+  } else {
+    push @parms, "Delegated=StoreLinkedValue";
+  }
+  my $v_string;
+  for my $i (0 .. $#parms){
+    $v_string .= "$parms[$i]&";
+  }
+  my $default;
+  my $value = $dyn->{value};
+  my @value = split(/\n/, $value);
+  if(exists $dyn->{index}){
+    $default = $this->{$dyn->{linked}}->{$dyn->{index}};
+  } else {
+    $default = $this->{$dyn->{linked}};
+  }
+  my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
+  $http->queue('<textarea ' .
+    "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\"" .
+    "/>");
+  for my $i (@value){ $http->queue("$i\n") }
+  $http->queue('</textarea>' .
+    '<div id="output_div" style="white-space: pre-wrap"></div>');
+}
+sub DelegateEntryBox{
+  my($this, $http, $dyn) = @_;
+  my @parms;
+  my @attrs;
+  my $sync;
+  for my $i (keys %$dyn){
+    if($i eq "op") { next }
+    if($i eq "value") { next }
+    if($i eq "sync") { $sync = $dyn->{$i}; next }
+    if($i eq "length" || $i eq "name") { 
+      push @attrs, "length=\"$dyn->{length}";
+      next
+    }
+    push @parms, "$i=$dyn->{$i}";
+  }
+  my $attr_s = "";
+  for my $a (@attrs){
+    $attr_s .= " $a";
+  }
+  push @parms, "Delegator=$this->{path}";
+  if(exists $dyn->{op}){
+    push @parms, "Delegated=$dyn->{op}";
+  } else {
+    push @parms, "Delegated=StoreLinkedValue";
+  }
+  my $v_string;
+  for my $i (0 .. $#parms){
+    $v_string .= "$parms[$i]&";
+  }
+  my $default = "";
+  if(defined $dyn->{value}) { $default = $dyn->{value} }
+  my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
+  $http->queue('<input type="text"' .
+    ($default ? " value=\"$default\"" : "") .
+    "onblur=\"" . $op . "event=onblur&amp;value='+this.value);$sync\" " .
+#    "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
+#    "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .
+#    "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
+#    "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
+#    "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
+#    "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
+#    "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);\" " .
+#    "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
+#    "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
+#    "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);\" " .
+#    "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
+#    "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
+#    "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
     "/>");
 }
 sub LinkedDelegateEntryBox{

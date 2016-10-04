@@ -17,6 +17,7 @@
     "SendSeries" : "SendSeriesFromDb.pl <host> <port> <called> <calling> <series_instance_uid> 1",
     "ScanPhi" : "<series_instance_uid>, <signature>|PhiScan.pl posda_files posda_phi <description>",
     "OnlyIn" : "<SeriesInPosda>, <SeriesInIntake>|OnlyIn.pl Posda Intake",
+    "CompareDuplicateSops" : "<sop_instance_uid>|CompareDupSopList.pl"
   },
   "DbSpec" : {
     "posda_files" : {

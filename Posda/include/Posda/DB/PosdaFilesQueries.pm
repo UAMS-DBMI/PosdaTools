@@ -2874,7 +2874,7 @@ $Queries{CountsByCollectionSite}->{columns} = [
   "patient_id", "image_type", "modality", "study_date",
   "study_description", "series_description", "study_instance_uid",
   "series_instance_uid", "manufacturer", "manuf_model_name",
-  "software_versions", "num_files"
+  "software_versions", "num_sops", "num_files"
 ];
 $Queries{CountsByCollectionSite}->{query} = <<EOF;
 select
@@ -2882,10 +2882,12 @@ select
     patient_id, image_type, modality, study_date, study_description,
     series_description, study_instance_uid, series_instance_uid,
     manufacturer, manuf_model_name, software_versions,
+    count(distinct sop_instance_uid) as num_sops,
     count(distinct file_id) as num_files
 from
   ctp_file join file_patient using(file_id)
   join file_series using(file_id)
+  join file_sop_common using(file_id)
   join file_study using(file_id)
   join file_equipment using(file_id)
   left join file_image using(file_id)
@@ -2904,7 +2906,7 @@ order by
 EOF
 ##########################################################
 $Queries{CountsByCollectionSiteSubject}->{description} = <<EOF;
-Counts query by Collection, Site
+Counts query by Collection, Site, Subject
 EOF
 $Queries{CountsByCollectionSiteSubject}->{tags} = {
   counts => 1,
@@ -2917,7 +2919,7 @@ $Queries{CountsByCollectionSiteSubject}->{columns} = [
   "patient_id", "image_type", "dicom_file_type", "modality", "study_date",
   "study_description", "series_description", "study_instance_uid",
   "series_instance_uid", "manufacturer", "manuf_model_name",
-  "software_versions", "num_files"
+  "software_versions", "num_sops", "num_files"
 ];
 $Queries{CountsByCollectionSiteSubject}->{query} = <<EOF;
 select
@@ -2926,10 +2928,12 @@ select
     study_date, study_description,
     series_description, study_instance_uid, series_instance_uid,
     manufacturer, manuf_model_name, software_versions,
+    count(distinct sop_instance_uid) as num_sops,
     count(distinct file_id) as num_files
 from
   ctp_file join file_patient using(file_id)
   join file_series using(file_id)
+  join file_sop_common using(file_id)
   join dicom_file using(file_id)
   join file_study using(file_id)
   join file_equipment using(file_id)
@@ -3332,8 +3336,52 @@ group by
   performed_procedure_step_desc, performed_procedure_step_comments
 EOF
 ##########################################################
+$Queries{SeriesConsistencyExtended}->{description} = <<EOF;
+Check a Series for Consistency (including Image Type)
+EOF
+$Queries{SeriesConsistencyExtended}->{tags} = {
+  by_series => 1,
+  consistency => 1,
+};
+$Queries{SeriesConsistencyExtended}->{args} = [
+  "series_instance_uid"
+];
+$Queries{SeriesConsistencyExtended}->{schema} = "posda_files";
+$Queries{SeriesConsistencyExtended}->{columns} = [
+  "series_instance_uid", "count", "modality", "series_number", 
+  "laterality", "series_date", "image_type",
+  "series_time", "performing_phys", "protocol_name", "series_description",
+  "operators_name", "body_part_examined", "patient_position",
+  "smallest_pixel_value", "largest_pixel_value", "performed_procedure_step_id",
+  "performed_procedure_step_start_date", "performed_procedure_step_start_time",
+  "performed_procedure_step_desc", "performed_procedure_step_comments", 
+];
+$Queries{SeriesConsistencyExtended}->{query} = <<EOF;
+select distinct
+  series_instance_uid, modality, series_number, laterality, series_date,
+  series_time, performing_phys, protocol_name, series_description,
+  operators_name, body_part_examined, patient_position,
+  smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
+  performed_procedure_step_start_date, performed_procedure_step_start_time,
+  performed_procedure_step_desc, performed_procedure_step_comments, image_type,
+  count(*)
+from
+  file_series natural join ctp_file
+  left join file_image using(file_id)
+  left join image using (image_id)
+where series_instance_uid = ? and visibility is null
+group by
+  series_instance_uid, modality, series_number, laterality,
+  series_date, image_type,
+  series_time, performing_phys, protocol_name, series_description,
+  operators_name, body_part_examined, patient_position,
+  smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
+  performed_procedure_step_start_date, performed_procedure_step_start_time,
+  performed_procedure_step_desc, performed_procedure_step_comments
+EOF
+##########################################################
 $Queries{FindInconsistentSeries}->{description} = <<EOF;
-Check a Study for Consistency
+Find Inconsistent Series
 EOF
 $Queries{FindInconsistentSeries}->{tags} = {
   find_series => 1,
@@ -3363,6 +3411,51 @@ select distinct series_instance_uid, count(*) from (
     project_name = ? and visibility is null
   group by
     series_instance_uid, modality, series_number, laterality, series_date,
+    series_time, performing_phys, protocol_name, series_description,
+    operators_name, body_part_examined, patient_position,
+    smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
+    performed_procedure_step_start_date, performed_procedure_step_start_time,
+    performed_procedure_step_desc, performed_procedure_step_comments
+) as foo
+group by series_instance_uid
+) as foo
+where count > 1
+EOF
+##########################################################
+$Queries{FindInconsistentSeriesExtended}->{description} = <<EOF;
+Find Inconsistent Series Extended to include image type
+EOF
+$Queries{FindInconsistentSeriesExtended}->{tags} = {
+  find_series => 1,
+  consistency => 1,
+};
+$Queries{FindInconsistentSeriesExtended}->{args} = [
+  "collection"
+];
+$Queries{FindInconsistentSeriesExtended}->{schema} = "posda_files";
+$Queries{FindInconsistentSeriesExtended}->{columns} = [
+  "series_instance_uid",
+];
+$Queries{FindInconsistentSeriesExtended}->{query} = <<EOF;
+select series_instance_uid from (
+select distinct series_instance_uid, count(*) from (
+  select distinct
+    series_instance_uid, modality, series_number, laterality, series_date,
+    series_time, performing_phys, protocol_name, series_description,
+    operators_name, body_part_examined, patient_position,
+    smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
+    performed_procedure_step_start_date, performed_procedure_step_start_time,
+    performed_procedure_step_desc, performed_procedure_step_comments,
+    image_type, count(*)
+  from
+    file_series natural join ctp_file
+    left join file_image using(file_id)
+    left join image using(image_id)
+  where
+    project_name = ? and visibility is null
+  group by
+    series_instance_uid, image_type,
+    modality, series_number, laterality, series_date,
     series_time, performing_phys, protocol_name, series_description,
     operators_name, body_part_examined, patient_position,
     smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
@@ -4237,6 +4330,41 @@ natural join dicom_send_event
 order by send_started
 EOF
 ##########################################################
+$Queries{SentToIntakeByDateExtended}->{description} = <<EOF;
+List of Files Sent To Intake By Date
+EOF
+$Queries{SentToIntakeByDateExtended}->{tags} = {
+  send_to_intake => 1,
+};
+$Queries{SentToIntakeByDateExtended}->{args} = [
+  "from_date", "to_date"
+];
+$Queries{SentToIntakeByDateExtended}->{schema} = "posda_files";
+$Queries{SentToIntakeByDateExtended}->{columns} = [
+  "send_started", "duration", "series_instance_uid",
+  "destination_host", "destination_port", "to_send",
+  "files_sent", "invoking_user", "reason_for_send"
+];
+$Queries{SentToIntakeByDateExtended}->{query} = <<EOF;
+select
+  series_instance_uid, send_started, send_ended - send_started as duration,
+  destination_host, destination_port,
+  number_of_files as to_send, files_sent,
+  invoking_user, reason_for_send
+from (
+  select
+    distinct dicom_send_event_id,
+    count(distinct file_path) as files_sent
+  from
+    dicom_send_event natural join dicom_file_send
+  where
+    send_started > ? and send_started < ?
+  group by dicom_send_event_id
+) as foo
+natural join dicom_send_event
+order by send_started
+EOF
+##########################################################
 $Queries{AverageSecondsPerFile}->{description} = <<EOF;
 Average Time to send a file between times
 EOF
@@ -4255,6 +4383,69 @@ select avg(seconds_per_file) from (
   select (send_ended - send_started)/number_of_files as seconds_per_file 
   from dicom_send_event where send_ended is not null and number_of_files > 0
   and send_started > ? and send_ended < ?
+) as foo
+EOF
+##########################################################
+$Queries{SendEventsByReason}->{description} = <<EOF;
+List of Send Events By Reason
+EOF
+$Queries{SendEventsByReason}->{tags} = {
+  send_to_intake => 1,
+};
+$Queries{SendEventsByReason}->{args} = [
+  "reason",
+];
+$Queries{SendEventsByReason}->{schema} = "posda_files";
+$Queries{SendEventsByReason}->{columns} = [
+  "send_started", "duration",
+  "destination_host", "destination_port", "to_send",
+  "files_sent", "invoking_user", "reason_for_send"
+];
+$Queries{SendEventsByReason}->{query} = <<EOF;
+select
+  send_started, send_ended - send_started as duration,
+  destination_host, destination_port,
+  number_of_files as to_send, files_sent,
+  invoking_user, reason_for_send
+from (
+  select
+    distinct dicom_send_event_id,
+    count(distinct file_path) as files_sent
+  from
+    dicom_send_event natural join dicom_file_send
+  where
+    reason_for_send = ?
+  group by dicom_send_event_id
+) as foo
+natural join dicom_send_event
+order by send_started
+EOF
+##########################################################
+$Queries{SendEventSummary}->{description} = <<EOF;
+Summary of SendEvents by Reason
+EOF
+$Queries{SendEventSummary}->{tags} = {
+  send_to_intake => 1,
+};
+$Queries{SendEventSummary}->{args} = [
+];
+$Queries{SendEventSummary}->{schema} = "posda_files";
+$Queries{SendEventSummary}->{columns} = [
+  "reason_for_send", "num_events",
+  "files_sent", "earliest_send", "finished",
+  "duration"
+];
+$Queries{SendEventSummary}->{query} = <<EOF;
+select
+  reason_for_send, num_events, files_sent, earliest_send,
+  finished, finished - earliest_send as duration
+from (
+  select
+    distinct reason_for_send, count(*) as num_events, sum(number_of_files) as files_sent,
+    min(send_started) as earliest_send, max(send_ended) as finished
+  from dicom_send_event
+  group by reason_for_send
+  order by earliest_send
 ) as foo
 EOF
 ##########################################################

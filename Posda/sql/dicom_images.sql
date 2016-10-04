@@ -76,6 +76,26 @@ CREATE TABLE submission(
     month text
 );
 
+
+create table dicom_send_event
+(
+  dicom_send_event_id serial not null,
+  destination_host text not null,
+  destination_port text not null,
+  called_ae text not null,
+  calling_ae text not null,
+  send_started timestamp with time zone,
+  send_ended timestamp with time zone,
+  number_of_files integer,
+  invoking_user text,
+  reason_for_send text 
+);
+create table dicom_file_send(
+  dicom_send_event_id integer not null,
+  file_id integer not null,
+  status text
+);
+
 --
 -- Name: file_import; Type: TABLE
 --
@@ -125,6 +145,16 @@ CREATE TABLE ctp_file (
     site_id text,
     visibility text
 );
+
+CREATE TABLE file_visibility_change(
+    file_id integer NOT NULL,
+    user_name text NOT NULL,
+    time_of_change timestamp with time zone,
+    prior_visibility text,
+    new_visibility text,
+    reason_for text
+);
+
 --
 -- Name: dicom_file_errors; Type: TABLE
 --

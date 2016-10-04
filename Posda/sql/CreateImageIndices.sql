@@ -21,3 +21,4 @@ CREATE INDEX file_study_file_id_index ON file_study(file_id);
 CREATE INDEX image_geometry_image_id_index ON image_geometry(image_id);
 CREATE UNIQUE INDEX import_event_import_event_id_idx ON import_event(import_event_id);
 CREATE INDEX import_event_import_time_idx ON import_event(import_time);
+CREATE INDEX file_visibility_change_idx ON file_visibility_change(file_id);

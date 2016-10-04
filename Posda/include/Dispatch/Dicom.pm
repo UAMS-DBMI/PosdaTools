@@ -9,6 +9,8 @@ use File::Find;
 use IO::Socket;
 use Posda::Command;
 use HexDump;
+use Debug;
+my $dbg = sub {print STDERR @_ };
 {
   package Dispatch::Dicom::PdataAssembler;
   sub new {
@@ -161,6 +163,9 @@ use HexDump;
       $this->{connection_callback} = $callback;
     }
     my $a_assoc_rq = Dispatch::Dicom::AssocRq->new_from_descrip($assoc_config);
+#print STDERR "Assoc Request:\n";
+#Debug::GenPrint($dbg, $a_assoc_rq, 1);
+#print STDERR "\n";
     $this->{assoc_rq} = $a_assoc_rq;
     bless $this, $class;
     if($debug){
@@ -171,6 +176,10 @@ use HexDump;
     $this->CreateOutputQueue($this->{socket});
     $this->DebugMsg("Created OutputQueue");
     $this->DebugMsg("queueing assoc_rq");
+#my $encoded_assoc_rq = $this->{assoc_rq}->encode;
+#print STDERR "Encoded AssocRq:\n";
+#HexDump::PrintVax(\*STDERR, $encoded_assoc_rq, 0);
+#    $this->{output_queue}->queue($encoded_assoc_rq);
     $this->{output_queue}->queue($this->{assoc_rq}->encode());
     $this->DebugMsg("queued assoc_rq");
     if($ENV{DEBUG_POSDA}){

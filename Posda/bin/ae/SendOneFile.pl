@@ -15,44 +15,30 @@ use Debug;
 #Posda::Dataset::InitDD();
 my $dbg = sub {print @_ };
 
-unless($#ARGV == 4){ die "usage: $0 <host> <port> <called_ae> <calling_ae> <num_simultaneous>" }
+unless($#ARGV == 4){ die "usage: $0 <host> <port> <called_ae> <calling_ae> <file>" }
 my $host = $ARGV[0];
 my $port = $ARGV[1];
 my $called = $ARGV[2];
 my $calling = $ARGV[3];
-my $num_simul = $ARGV[4];
-
+my $file = $ARGV[4];
 my @files;
-file:
-while(my $line = <STDIN>){
-  chomp $line;
-  if(-f $line) {
-    if(open FILE, "<$line"){
-      my $mh = eval{Posda::Parser::ReadMetaHeader(*FILE)};
-      if($@){
-        print STDERR "No metaheader $line\n$@\n";
-        close FILE;
-        next file;
-      }
-      my $q = {
-        file => $line,
-        abs_stx => $mh->{metaheader}->{"(0002,0002)"},
-        xfr_stx => $mh->{metaheader}->{"(0002,0010)"},
-        sop_cl => $mh->{metaheader}->{"(0002,0002)"},
-        sop_inst => $mh->{metaheader}->{"(0002,0003)"},
-        dataset_offset => $mh->{DataSetStart},
-        dataset_size => $mh->{DataSetSize},
-      };
-      push(@files, $q);
-    }
-  } else {
-    print STDERR "Not found: $line\n";
-  }
+my $fh;
+open($fh, "<$file") or die "Can't open $file";
+my $mh = eval{Posda::Parser::ReadMetaHeader($fh)};
+close($fh);
+if($@){
+  die "$@";
 }
-#print "Files: ";
-#Debug::GenPrint($dbg, \@files, 1);
-#print "\n";
-#exit;
+push(@files, {
+  file => $file,
+  abs_stx => $mh->{metaheader}->{"(0002,0002)"},
+  xfr_stx => $mh->{metaheader}->{"(0002,0010)"},
+  sop_cl => $mh->{metaheader}->{"(0002,0002)"},
+  sop_inst => $mh->{metaheader}->{"(0002,0003)"},
+  dataset_offset => $mh->{DataSetStart},
+  dataset_size => $mh->{DataSetSize},
+});
+file:
 {
   package ListSender;
   use vars qw( @ISA );
@@ -134,5 +120,5 @@ sub MakeDoIt{
   return $foo;
 }
 Dispatch::Select::Background->new(MakeDoIt($host, $port, $called, $calling,
-  \@files, $num_simul))->queue;
+  \@files, 1))->queue;
 Dispatch::Select::Dispatch();

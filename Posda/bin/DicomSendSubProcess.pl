@@ -17,23 +17,25 @@ use Dispatch::Dicom::MessageAssembler;
 use Posda::Command;
 use Storable qw( store retrieve retrieve fd_retrieve store_fd );
 use Debug;
-$| = 1;
 my $dbg = sub { print STDERR @_ };
 my $help = <<EOF;
 Usage: 
-  DicomSendStudyTransaction.pl <host> <port> <called> <calling> <dicom_info> <res> <study>
+  DicomSendTransaction.pl <host> <port> <called> <calling> <dicom_info> <res>
 or
   DicomSendTransaction.pl -h
 
-<dicom_info> is a file containing a serialized perl data structure:
+It expects the following structure on STDIN
 \$hash = {
-  FilesByDigest => {
+  host => <host>,
+  port => <port>,
+  called => <called>,
+  calling => <calling>,
+  FilesFromDigest => {
     <file_digest> => {
        dataset_start_offset => <offset of dataset within file>,
        dataset_size => <size of dataset>,
        xfr_stx => <transfer syntax>,
-       file => <path to file>,
-       study_uid => <study_instance_uid>,
+       file => <path to file>
        ... # lots of other stuff
     },
     ...
@@ -42,15 +44,14 @@ or
     <path to file> => <digest>,
     ...
   },
+  FilesToSend => [
+    <file 1>,
+    ...
+  ],
 };
-<study> is the study instance uid of the study to send.  It is used to filter
-the files in FilesByDigest
-<res> is the path of a file in which to store the results of the send.  It
-collects all of the results of any send for this directory (sends are atomic
-because the directory must be locked for the duration),  <res> is a
-serialized perl array, each entry of which is a hash which represents a send
-event:
-\$event = {
+
+And produces the following structure on STDOUT
+\$results = {
   files_sent => {
     file => <path_to_file>
     xfr_stx => <xfr_stx>,
@@ -108,19 +109,21 @@ event:
   [ error => <error_message>, ]
 };
 EOF
-if($#ARGV != 6 || ($ARGV[0] eq "-h")){
+
+if($#ARGV >= 0){
   print $help;
   exit;
 }
-my $host = $ARGV[0];
-my $port = $ARGV[1];
-my $called = $ARGV[2];
-my $calling = $ARGV[3];
-my $dicom_info_file = $ARGV[4];
-my $results = $ARGV[5];
-my $StudyToSend = $ARGV[6];
-unless(-f $dicom_info_file) { die "file $dicom_info_file doesn't exist" }
-my $dicom_info = Storable::retrieve($dicom_info_file);
+my $results = {};
+sub Error{
+  my($message, $addl) = @_;
+  $results->{Status} = "Error";
+  $results->{message} = $message;
+  if($addl){ $results->{additional_info} = $addl }
+  store_fd($results, \*STDOUT);
+  exit;
+};
+my $Specification = fd_retrieve(\*STDIN);
 ## execution skips around object and function definitions to near bottom...
 {
   package Sender;
@@ -128,76 +131,20 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
   @ISA = ( "Dispatch::EventHandler" );
   my $MsgHandlers;
   sub new {
-    my($class, $host, $port, $called, $calling, $info, $results) = @_;
+    my($class, $spec) = @_;
     my $this = {
-      host => $host,
-      port => $port,
-      called => $called,
-      calling => $calling,
-      info => $info,
+      host => $spec->{host},
+      port => $spec->{port},
+      called => $spec->{called},
+      calling => $spec->{calling},
       StartTime => time,
-      ResultsFile => $results,
     };
     bless $this, $class;
-    $this->Initialize;
-    Dispatch::Select::Background->new($this->StatusReporter)->queue;
+    $this->Initialize($spec);;
     return $this;
   }
-  sub StatusReporter{
-    my($this) = @_;
-    my $sub = sub {
-      my($disp) = @_;
-      # if still InProcess,
-      if($this->{InProcess}){
-        # Report Status on STDOUT
-        $this->ReportStatus;
-        $disp->timer(2);
-        # and do it again in 2 seconds
-      }
-      #otherwise, stop (we're done).
-    };
-    return $sub;
-  }
-  sub ReportStatus{
-    my($this) = @_;
-    # if still InProcess,
-    unless($this->{InProcess}) { return }
-    # Report Status on STDOUT
-    my %statii;
-#    $statii{Status} = $this->{State};
-    my $elapsed = time - $this->{StartTime};
-    $statii{Elapsed} = time - $this->{StartTime};
-    my $files_to_send = @{$this->{FilesToSend}};
-    if($files_to_send){
-      $statii{FilesToSend} = $files_to_send;
-    }
-    my $files_sent = @{$this->{FilesSent}};
-    if($files_sent){
-      $statii{FilesSent} = $files_sent;
-    }
-    my $files_not_sent = @{$this->{FilesNotSent}};
-    if($files_not_sent){
-      $statii{FilesNotSent} = $files_not_sent;
-    }
-    my $files_in_flight = keys %{$this->{FilesInFlight}};
-    if($files_in_flight){
-      $statii{FilesInFlight} = $files_in_flight;
-    }
-    my $files_errors = @{$this->{FilesErrors}};
-    if($files_errors){
-      $statii{FilesErrors} = $files_errors;
-    }
-    if(exists $this->{Error}) {
-      $statii{Error} = $this->{Error};
-    }
-    print "Status=$this->{State}";
-    for my $i (keys %statii){
-      print "&$i=$statii{$i}";
-    }
-    print "\n";
-  }
   sub Initialize{
-    my($this) = @_;
+    my($this, $spec) = @_;
     my $debug = 0;
     $this->{InProcess} = 1;
     my $new_assoc_descrip = {
@@ -217,15 +164,9 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
     $this->{FilesInFlight} = {};
     $this->{FilesErrors} = [];
     my %pcs;
-    file:
-    for my $file (sort keys %{$this->{info}->{FilesToDigest}}){
-      my $dig = $this->{info}->{FilesToDigest}->{$file};
-      my $finfo = $this->{info}->{FilesByDigest}->{$dig};
-      unless($finfo->{study_uid} eq $StudyToSend) {
-#        print STDERR "Study UID: $finfo->{study_uid}\n";
-#        print STDERR "Send  UID: $StudyToSend\n";
-        next file
-      }
+    for my $file (@{$spec->{FilesToSend}}){
+      my $dig = $spec->{FilesToDigest}->{$file};
+      my $finfo = $spec->{FilesFromDigest}->{$dig};
       $MsgHandlers->{$finfo->{sop_class_uid}} = "Dispatch::Dicom::Storage";
       push(@{$this->{FilesToSend}}, {
         file => $file,
@@ -233,10 +174,10 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
         abs_stx => $finfo->{sop_class_uid},
         sop_inst => $finfo->{sop_inst_uid},
         dataset_offset => $finfo->{dataset_start_offset},
-        dataset_size => $finfo->{meta_header}->{DataSetSize},
+        dataset_size => $finfo->{dataset_size},
       });
-      my $abs = $this->{info}->{FilesByDigest}->{$dig}->{sop_class_uid};
-      my $xfr = $this->{info}->{FilesByDigest}->{$dig}->{xfr_stx};
+      my $abs = $finfo->{sop_class_uid};
+      my $xfr = $finfo->{xfr_stx};
       $pcs{$abs}->{$xfr} = 1;
     }
     my $pc_id = 1;
@@ -250,14 +191,6 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
         if($pc_id > 255) { die "Too many proposed presentation contexts" }
       }
     }
-#print STDERR "Host: $this->{host}\n";
-#print STDERR "Port: $this->{port}\n";
-#print STDERR "new_assoc_descrip: ";
-#Debug::GenPrint($dbg, $new_assoc_descrip, 1);
-#print STDERR "\n";
-#print STDERR "message_handlers: ";
-#Debug::GenPrint($dbg, $MsgHandlers, 1);
-#print STDERR "\n";
     my $connection;
     eval {
       $connection = Dispatch::Dicom::Connection->new_connect(
@@ -269,12 +202,8 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
       );
     };
     if($@){
-      #print STDERR "Unable to connect: $@\n";
-      $this->{State} = "Failed";
-      $this->{Error} = "Unable to connect $@";
-      chomp $this->{Error};
-      $this->ReportStatus;
-      exit;
+      print STDERR "Unable to connect: $@\n";
+      Error("Failed", "Unable to connect: $@");
     }
     $connection->SetDisconnectCallback($this->DisconnectCallback);
     $connection->SetReleaseCallback($this->ReleaseCallback);
@@ -360,12 +289,11 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
       if($this->{Association}->ReleaseOK){
         $this->{Association}->Release;
         $this->{State} = "ReleasePending";
-        $this->ReportStatus;
+#        $this->ReportStatus;
         $this->InvokeAfterDelay("ReleaseTimer", 3);
       } else {
         $this->{Status} = "ReleaseRequestFailed";
         $this->{Error} = "Release at end Failed (busy)";
-        $this->ReportStatus;
         $this->FinalizeStatus;
       }
     }
@@ -387,22 +315,7 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
       end_time => time,
       elapsed => time - $this->{StartTime},
     };
-    my $results;
-    if(-f $this->{ResultsFile}){
-      eval {
-        $results = Storable::retrieve($this->{ResultsFile});
-      };
-      if($@){
-        $results = [
-          { error => "Prior results file failed to parse $@" },
-        ];
-      }
-    }
-    if(exists $this->{Error}){
-      $status->{error} = $this->{Error};
-    }
-    push(@{$results}, $status);
-    Storable::store($results, $this->{ResultsFile});
+    Storable::store($results, \*STDOUT);
     exit 0;
   }
   ################ Association Callbacks
@@ -412,7 +325,6 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
       my($con) = @_;
       $this->{State} = "AssociationConnected";
       $this->{association_ac} = $this->{Association}->{assoc_ac};
-      $this->ReportStatus;
       $this->StartSending;
     };
     return $sub;
@@ -427,13 +339,11 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
       } else {
         if($this->{State} eq "ReleasePending"){
           $this->{State} = "ReleaseAcknowledged";
-          $this->ReportStatus;
           $this->FinalizeStatus;
         } else {
           delete $this->{Association};
        }
      }
-     $this->ReportStatus;
     };
     return $sub;
   }
@@ -442,7 +352,6 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
     my $sub = sub {
       my($con) = @_;
       $this->{State} = "PeerRequestedRelease";
-      $this->ReportStatus;
       $this->AbortSending;
     };
     return $sub;
@@ -451,23 +360,21 @@ my $dicom_info = Storable::retrieve($dicom_info_file);
     my($this) = @_;
     $this->{State} = "ReleaseTimerTimeout";
     $this->{Error} = "Peer failed to acknowledge release request in time";
-    $this->ReportStatus;
     $this->FinalizeStatus;
   }
 }
 ###  These routines create closures to queue
 sub MakeSender{
-  my($host, $port, $called, $calling, $dicom_info, $results) = @_;
+  my($spec) = @_;
   my $sub = sub {
     my($disp) = @_;
-    Sender->new($host, $port, $called, $calling, $dicom_info, $results);
+    Sender->new($spec);
   };
   return $sub;
 }
 ####
 ### Execution of main prog continues here
 {
-  Dispatch::Select::Background->new(MakeSender(
-    $host, $port, $called, $calling, $dicom_info, $results))->queue;
+  Dispatch::Select::Background->new(MakeSender($Specification))->queue;
 }
 Dispatch::Select::Dispatch();

@@ -5,7 +5,7 @@ use Posda::Try;
 use Posda::DB::DicomDir;
 use Posda::DB::DicomIod;
 use strict;
-my $usage = "ProcessPosdaFileInDb.pl <db> <chunk_size>\n";
+my $usage = "ProcessPosdaFilesInDb.pl <db> <chunk_size>\n";
 unless($#ARGV == 1) { die $usage }
 my $db = DBI->connect("dbi:Pg:dbname=$ARGV[0]");
 unless($db) { die "couldn't connect to DB: $ARGV[0]" }
@@ -18,7 +18,7 @@ my $q = $db->prepare(
   "  is_dicom_file is null and\n" .
   "  ready_to_process and\n" .
   "  processing_priority is not null\n" .
-  "order by processing_priority\n" .
+  "order by processing_priority, file_id\n" .
   "limit ?"
 );
 unless($ARGV[1] > 0){
@@ -39,8 +39,8 @@ while(my $h = $q->fetchrow_hashref){
     my $ds = $try->{dataset};
     my $xfr_stx = $try->{xfr_stx};
     if(exists $try->{has_meta_header}){
-      $df = $try->{meta_header}->{metaheader};
-      if(defined $df->{"(0002,0001)"}){
+      $df = $try->{meta_header};
+      if(defined $df->{metaheader}->{"(0002,0001)"}){
         InsertMeta($db, $h->{file_id}, $df);
         $has_meta = 1;
       } else {

@@ -6,3 +6,5 @@ nohup.out
 __pycache__
 *.swp
 posda.env
+foo
+foo.*

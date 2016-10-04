@@ -9,12 +9,13 @@
 use strict;
 use Posda::Parser;
 use Posda::Dataset;
+use HexDump;
 use Cwd;
 
 Posda::Dataset::InitDD();
 
 my $usage = sub {
-	print "usage: GetElementValue.pl <file> <ele_sig>\n";
+	print "usage: DumpElementValue.pl <file> <ele_sig>\n";
 	exit(-1);
 };
 unless(
@@ -30,14 +31,14 @@ unless($ds) { die "$file didn't parse into a dataset" }
 my $ele_sig = $ARGV[1];
 my $value = $ds->Get($ele_sig);
 my $type = $Posda::Dataset::DD->get_type_by_sig($ele_sig);
+my $new_value;
 if(ref($value) eq "ARRAY"){
   if($type eq "text"){
-    my $new_value = join("\\", @$value);
-    print "$new_value\n";;
+    $new_value = join("\\", @$value);
   } else {
-    my $new_value = join("", @$value);
-    print "$new_value\n";
+    $new_value = join("", @$value);
   }
 } else {
-  print "$value\n";
+  $new_value = $value;
 }
+HexDump::PrintVax(\*STDOUT, $new_value, 0);

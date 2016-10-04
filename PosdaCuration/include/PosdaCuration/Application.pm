@@ -996,6 +996,7 @@ sub DownloadCounts{
   my $file = $col . "_$site";
   $file =~ s/ /_/g;
   $http->DownloadHeader("text/csv", "$file.csv");
+  print STDERR "DownloadHeader(text/csv, $file.csv)\n";
   $http->queue('"PID","Image Type","Modality",' .
     '"Images","Study Date","Study Description","Series Description",' .
     '"Study Instance Uid","Series Instance UID", "Manufacturer",' .

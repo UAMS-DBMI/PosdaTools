@@ -2,7 +2,7 @@
 use strict;
 use Text::CSV;
 use DBI;
-my $dbh = DBI->connect("DBI:Pg:dbname=dicom_roots", "", "");
+my $dbh = DBI->connect("DBI:Pg:dbname=new_dicom_roots", "", "");
 my $csv = Text::CSV->new({binary => 1});
 my $get_collection_by_code = <<EOF;
   select * from Collection where collection_code = ?
@@ -140,13 +140,14 @@ sub CreateSubmissionEvent{
 # CreateSubmission($col_id, $site_id, $col_name, $site_n, $body_part,
 #     $pat_pre, $acc_type, $data_inc, $extra) = @_;
 # CreateSubmissionEvent($submission_id, $evt_t, $occur, $user, $comment)
-
+print STDERR "About to read file\n";
 while(my $row = $csv->getline(*STDIN)){
+print STDERR "Got a line\n";
   my($one, $submission_begun, $site_code, $collection_code,
     $site_id, $collection, $site, $patient_id_prefix, $body_part_imaged, 
     $access, $date_inc, $comment) = @$row;
   unless($site && $collection){
-    print STDERR "bad line\n";
+    print STDERR "bad line (site: $site, collection: $collection)\n";
     next;
   }
   my $site_h = GetSiteByCode($site_code);

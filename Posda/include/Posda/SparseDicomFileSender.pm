@@ -24,7 +24,7 @@ sub new {
     FilesToSend => $file_list,
   };
   if(defined($f_callback) && ref($f_callback) eq "CODE"){
-    print STDERR "Setting finalize_callback\n";
+#    print STDERR "Setting finalize_callback\n";
     $this->{finalize_callback} = $f_callback;
   }
   bless $this, $class;
@@ -170,10 +170,10 @@ sub Done{
   my($this) = @_;
   if(exists $this->{Association} && $this->{Association}->can("ReleaseOK")){
     if($this->{Association}->ReleaseOK){
-print STDERR "Issuing Release (and setting timer)\n";
+#print STDERR "Issuing Release (and setting timer)\n";
       $this->{Association}->Release;
       $this->{State} = "ReleasePending";
-      $this->InvokeAfterDelay("ReleaseTimer", 3);
+      $this->InvokeAfterDelay("ReleaseTimer", 1);
     } else {
       $this->{Status} = "ReleaseRequestFailed";
       $this->{Error} = "Release at end Failed (busy)";
@@ -183,7 +183,10 @@ print STDERR "Issuing Release (and setting timer)\n";
 }
 sub FinalizeStatus{
   my($this) = @_;
-print STDERR "###\n### In Finalize Status\n###\n";
+  unless(exists $this->{InProcess}){
+#print STDERR "###\n### Already Finaized\n###\n";
+  return;
+}
   delete $this->{InProcess};
   my $status = {
     files_sent => $this->{FilesSent},
@@ -220,9 +223,9 @@ print STDERR "###\n### In Finalize Status\n###\n";
     exists($this->{finalize_callback}) && 
     ref($this->{finalize_callback}) eq "CODE"
   ){
-    print STDERR "Calling finalize_callback\n";
+#    print STDERR "Calling finalize_callback\n";
     my $func = $this->{finalize_callback};
-#    for my $k (keys %$this) { delete $this->{$k} }
+    for my $k (keys %$this) { delete $this->{$k} }
     &$func($status);
   }
 }
@@ -246,8 +249,8 @@ sub DisconnectCallback{
       $status = $con->{Abort}->{mess};
     } else {
       if($this->{State} eq "ReleasePending"){
-print STDERR
-   "Got disconnect callback in ReleasePending state - normal termination";
+#print STDERR
+#   "Got disconnect callback in ReleasePending state - normal termination\n";
         $this->{State} = "ReleaseAcknowledged";
         $this->FinalizeStatus;
       } else {
@@ -268,6 +271,10 @@ sub ReleaseCallback{
 }
 sub ReleaseTimer{
   my($this) = @_;
+  unless(exists $this->{State}){
+#    print STDERR "Release timer after finalization\n";
+    return;
+  }
   if($this->{State} eq "ReleaseAcknowledged") {
     print STDERR "Stale release timer: $this\n";
     return;
@@ -278,6 +285,5 @@ sub ReleaseTimer{
 }
 sub DESTROY{
   my($this) = @_;
-  print STDERR "DESTROY: $this\n";
 }
 1;

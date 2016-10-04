@@ -8,13 +8,38 @@
 #
 use strict;
 use Posda::Try;
+use File::Temp qw/ tempfile /;
 my $file = $ARGV[0];
+sub UncompressGeProtocolDataBlock{
+  my($v) = @_;
+  my($fh, $fname) = tempfile();
+  print $fh $v;
+  close $fh;
+  my $zip_name = File::Temp::tempnam("/tmp", "foo");
+  my $length = length $v;
+  my $new_len = $length - 4;
+  if($new_len <= 0) { return undef }
+  my $cmd1 = "tail -${new_len}c $fname >$zip_name";
+  `$cmd1`;
+  my $unzip_name = File::Temp::tempnam("/tmp", "bar");
+  my $cmd2 = "gzip -dc < $zip_name >$unzip_name";
+  `$cmd2`;
+  my $cmd3 = "cat $unzip_name";
+  my $new_v = `$cmd3`;
+  return $new_v;
+}
 sub MakeEleFun{
   my($file, $values) = @_;
   my $sub = sub {
     my($ele, $n_sig) = @_;
-    if($n_sig eq "(7fe0,0010)") { return }
-    unless($ele->{type} eq "text" || $ele->{type} eq "raw") { return }
+    if($n_sig =~ /\(7fe0,0010\)$/) {
+       $values->{"not scanning pixel data"}->{$n_sig}->{$ele->{VR}} = 1;
+       return;
+    }
+#    unless($ele->{type} eq "text" || $ele->{type} eq "raw") {
+#      $values->{"not scanning $ele->{type}"}->{$n_sig}->{$ele->{VR}} = 1;
+#      return;
+#    }
     my @values;
     if(ref($ele->{value}) eq ""){
       push(@values, $ele->{value});
@@ -23,10 +48,29 @@ sub MakeEleFun{
         push(@values, $v);
       }
     }
+    my $nvalues = @values;
+    if($ele->{VR} eq "DS" && $nvalues > 100){ @values = ($values[0]); }
+    my $num_text_values = 0;
     value:
     for my $v (@values){
-      unless(defined $v) { next value }
-      if($v eq "") { next value }
+      if(ref($v) eq "Posda::Dataset"){
+        $values->{"Posda::Dataset"}->{$n_sig}->{$ele->{VR}} = 1;
+        $num_text_values += 1;
+        next value;
+      }
+      unless(defined $v) {
+        $values->{"<undef>"}->{$n_sig}->{$ele->{VR}} = 1;
+        $num_text_values += 1;
+        next value;
+      }
+      if($v eq "") { 
+        $values->{"<empty>"}->{$n_sig}->{$ele->{VR}} = 1;
+        $num_text_values += 1;
+        next value;
+      }
+      if($n_sig eq '(0025,"GEMS_SERS_01",1b)'){
+        $v = UncompressGeProtocolDataBlock($v);
+      }
       unless($v =~ /^[[:print:][:cntrl:]]+$/){ next value }
 #      if($v =~ /^[0-9\.\+\-Ee ]+$/) { next value }
       if($v =~ /\n/){
@@ -47,9 +91,11 @@ sub MakeEleFun{
               $i =~ s/^\s*//g;
               if($j eq "") { next foo }
               $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
+              $num_text_values += 1;
             }
           } else {
             $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+            $num_text_values += 1;
           }
         }
       } elsif(length($v) > 64) {
@@ -62,6 +108,7 @@ sub MakeEleFun{
           $i =~ s/^\s*//g;
           if($i eq "" ) { next value2 }
           $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+          $num_text_values += 1;
         }
       } else {
         $v =~ tr/\000-\037/ /;
@@ -70,7 +117,11 @@ sub MakeEleFun{
         $v =~ s/^\s*//g;
         if($v eq "") { next value }
         $values->{$v}->{$n_sig}->{$ele->{VR}} = 1;
+        $num_text_values += 1;
       }
+    }
+    if($num_text_values == 0){
+      $values->{"no text value found"}->{$n_sig}->{$ele->{VR}} = 1;
     }
   };
   return $sub;

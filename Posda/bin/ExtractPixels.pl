@@ -66,6 +66,39 @@ if(
     print "File: $fn\n";
   }
 } elsif (
+  $bits_alloc == 16 &&
+  $photometric_interp eq "MONOCHROME2"
+){
+  for my $i (1 .. $number_of_frames){
+    unless($i == 1 && $number_of_frames == 1){ die "Not handling multiframe" }
+    my $fn = "$dir/$file_id.gray";
+    my $length = $size;
+    my $offset = $pix_offset;
+    open my $fh, $file_name or
+      die "ExtractPixel.pl: can't open $file_name ($!)";
+    seek $fh, $offset, 0;
+    my $pixels;
+    my $len = sysread($fh, $pixels, $length);
+    unless($len == $length) {
+      die "ExtractPixel.pl Incomplete read of $file_name: $len vs $length ($!)";
+    }
+    close($fh);
+    my @buff = unpack("v*", $pixels);
+    my @out;
+    unless(defined $rescale_slope) { $rescale_slope = 1 }
+    unless(defined $rescale_intercept) { $rescale_intercept = 0 }
+    for my $i (0 .. $#buff) {
+      $out[$i] = ($buff[$i] * $rescale_slope) + $rescale_intercept;
+      if($out[$i] < 0) { $out[$i] = 0 }
+    }
+    $pixels = pack "v*", @out;
+    open FILE, ">$fn" or die "Error $! on opening of file: $fn";
+    print FILE $pixels or die "Error $! on writing of file: $fn";
+    close FILE or die "Error $! on closing of file: $fn";
+    chmod 0664, "$fn" or print STDERR "Error $! on chmod of file: $fn";
+    print "File: $fn\n";
+  }
+} elsif (
   $bits_alloc == 8 &&
   $photometric_interp eq "RGB" &&
   $samples_per_pixel == 3 &&

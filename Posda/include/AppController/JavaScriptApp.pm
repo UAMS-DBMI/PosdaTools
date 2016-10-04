@@ -625,7 +625,7 @@ EOF
       if(
         exists($this->{RunningApps}->{$i}) &&
         ref($this->{RunningApps}->{$i}) eq "AppController::JsChildProcess" &&
-        $this->{RunningApps}->{State} eq "Error"
+        $this->{RunningApps}->{$i}->{State} eq "Error"
       ){
         $this->{ZombieWannaBe}->{$i} = $this->{RunningApps}->{$i};
         delete $this->{RunningApps}->{$i};

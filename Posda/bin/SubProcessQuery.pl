@@ -18,6 +18,11 @@ QuerySpec = {
   args => [ <arg1_name>, ... ],
   columns => [ <col_1>, ... ],    # if select
   schema => <schema_name>,
+  db_name => <db_name>,
+  db_type => postgres | mysql,
+  [db_host => <host_addr>,]
+  [db_user => <db_user>,]
+  [db_pass => <db_passwd>,]
   query => <query>,
   bindings => [<bind_1>, ... ]
 };
@@ -50,7 +55,27 @@ my $query_spec = fd_retrieve(\*STDIN);
 #print STDERR "query_spec = ";
 #Debug::GenPrint($dbg, $query_spec, 1);
 #print STDERR "\n";
-my $dbh = DBI->connect("dbi:Pg:dbname=$query_spec->{schema};");
+my $dbh;
+if($query_spec->{db_type} eq "postgres"){
+  my $db_spec = "dbi:Pg:dbname=$query_spec->{schema}";
+print STDERR "DBI->connect($db_spec)\n";
+  $dbh = DBI->connect($db_spec);
+} elsif ($query_spec->{db_type} eq "mysql"){
+  my $db_spec = "dbi:mysql:dbname=$query_spec->{db_name};" .
+    "host=$query_spec->{db_host}";
+  print STDERR "DBI->connect($db_spec,\n" .
+    "    $query_spec->{db_user}, $query_spec->{db_pass});\n";
+  $dbh = DBI->connect($db_spec,
+    $query_spec->{db_user}, $query_spec->{db_pass});
+} elsif (defined $query_spec->{db_type}){
+  die "unknown db_type $query_spec->{db_type}";
+} else {
+  die "No db_type defined";
+}
+unless(defined $dbh) {
+  Error("Connect error ($!): $query_spec->{db_name}::$query_spec->{db_host}" .
+    "::$query_spec->{db_user}");
+}
 unless($#{$query_spec->{args}} == $#{$query_spec->{bindings}}){
   my $required = @{$query_spec->{args}};
   my $supplied = @{$query_spec->{bindings}};
@@ -65,7 +90,9 @@ unless($q_result){
   my $err = $q->errstr;
   Error("Can't execute query\n\t$err\nquery:\n$query_spec->{query}");
 }
+print STDERR "Executed Query $query_spec->{name}\n";
 if($query_spec->{query} =~ /^select/){
+print STDERR "Collection rows for select\n";
   my @rows;
   while(my $h = $q->fetchrow_hashref){
     my @r;
@@ -78,6 +105,7 @@ if($query_spec->{query} =~ /^select/){
   $results->{Rows} = \@rows;
   store_fd($results, \*STDOUT);
 } else {
+print STDERR "not a select, not collecting rows\n";
   $results->{Status} = "OK";
   $results->{NumRows} = $q_result;
   store_fd($results, \*STDOUT);
