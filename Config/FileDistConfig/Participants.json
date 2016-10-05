@@ -98,7 +98,7 @@
     },
     "LocalPosda": {
       "host": "localhost",
-      "port": "64611",
+      "port": "64661",
       "Called": "LOCAL_SCP",
       "Calling": "FILE_DIST",
     },
@@ -106,6 +106,13 @@
       "host" : "144.30.109.157",
 //      "host" : "192.168.97.73",
       "port" : "11112",
+      "Calling" : "POSDA",
+      "Called" : "OSIRIX"
+    },
+    "FirstProxy" : {
+      "host" : "localhost",
+//      "host" : "192.168.97.73",
+      "port" : "64812",
       "Calling" : "POSDA",
       "Called" : "OSIRIX"
     },

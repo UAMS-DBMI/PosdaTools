@@ -41,7 +41,7 @@ for my $file_id (@file_ids){
 my $scout;
 for my $iop (keys %Iops){
   my $count = keys %{$Iops{$iop}};
-#print "$count of $iop\n";
+print "$count of $iop\n";
   if($count == 1){
     if(defined $scout) { die "$series doesn't work with this method" }
     $scout = [ keys %{$Iops{$iop}} ]->[0];

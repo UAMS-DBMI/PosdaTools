@@ -19,7 +19,8 @@
     "OnlyIn" : "<SeriesInPosda>, <SeriesInIntake>|OnlyIn.pl Posda Intake",
     "CompareDuplicateSops" : "<sop_instance_uid>|CompareDupSopList.pl",
     "TestCommand" : "TestCommand.pl <host> <port> <called> <calling> <series_instance_uid>",
-    "PipeCommand1" : "<vals1>,<vals2>,<vals3>|PipeCommand1.pl <var1> <var2> 1 2 3"
+    "PipeCommand1" : "<vals1>,<vals2>,<vals3>|PipeCommand1.pl <var1> <var2> 1 2 3",
+    "SymLinkToIntake" : "<PID>, <Modality>, <SopInstance>, <FilePath>|SymLinkToIntake.pl /cache/bbennett/Symlinks"
   },
   "DbSpec" : {
     "posda_files" : {

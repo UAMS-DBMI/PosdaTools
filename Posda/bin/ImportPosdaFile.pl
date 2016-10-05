@@ -6,6 +6,10 @@
 # GNU General Public License, which may be found in the Posda Distribution,
 # or at http://posda.com/License.html
 #
+############
+# Obsolete  -- Don't use
+#
+die "Obsolete - don't use";
 
 use Cwd;
 use Posda::DB::File;

@@ -75,7 +75,14 @@ CREATE TABLE submission(
     month_i int,
     month text
 );
-
+create table dicom_edit_event(
+  dicom_edit_event_id serial not null,
+  from_dicom_file integer not null,
+  to_dicom_file integer not null,
+  edit_desc_file integer not null,
+  when_done timestamp with time zone,
+  performing_user text
+);
 
 create table dicom_send_event
 (
