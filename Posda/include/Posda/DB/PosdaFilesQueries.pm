@@ -255,7 +255,7 @@ method GetQuerysWithArg($class: $arg) {
   # The && operator returns matches that intersect 
   # (special postgres array syntax)
   my $qh = $dbh->prepare(qq{
-    select name 
+    select name, description
     from queries 
     where ? = ANY(args)
   });
@@ -265,9 +265,10 @@ method GetQuerysWithArg($class: $arg) {
   my $results = $qh->fetchall_arrayref();
 
   # convert one-column rows into a simple list
-  return [map {
-   $_->[0];
-  } @$results];
+  # return [map {
+  #  $_->[0];
+  # } @$results];
+  return $results;
 
 }
 

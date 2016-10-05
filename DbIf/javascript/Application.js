@@ -72,3 +72,7 @@ var spinner_opts = {
 , hwaccel: false // Whether to use hardware acceleration
 , position: 'relative' // Element positioning
 };
+
+$(function() {
+  $('[data-toggle="popover"]').popover();
+});

@@ -722,16 +722,23 @@ sub NotSoSimpleButton{
     $class = $dyn->{class};
   }
   my $sync = exists($dyn->{sync}) ? $dyn->{sync} : "";
-  
+
   my $prefix = qq{<input type="button"};
   my $postfix = "";
   if(defined $dyn->{element} and $dyn->{element} eq 'a') {
     $prefix = qq{<a href="#"};
     $postfix = "$dyn->{caption}</a>";
   }
+  my $title = '';
+  if (defined $dyn->{title}) {
+    $title = qq{title="$dyn->{title}"};
+  }
+
 
   my $string = qq{$prefix class="$class"
-    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () { $sync });" value="$dyn->{caption}">$postfix};
+    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () { $sync });" value="$dyn->{caption}"
+    $title
+    >$postfix};
   $http->queue($string);
 }
 sub NotSoSimpleButtonButton{

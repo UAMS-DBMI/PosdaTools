@@ -476,6 +476,22 @@ method SetEditQuery($http, $dyn){
   $self->{LinkedTextField} = $self->{queries};
   $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
 }
+
+method SaveQuery($http, $dyn) {
+  $http->queue("query saved?");
+}
+
+### 
+# Delegated methods
+###
+
+method AddTextField($http, $dyn) {
+  DEBUG Dumper($dyn);
+
+}
+
+### End Delegated Methods
+
 method EditQuery($http, $dyn){
   my $descrip = {
     args => {
@@ -583,7 +599,7 @@ method EditQuery($http, $dyn){
         '?>');
       $self->RefreshEngine($http, $dyn, "</table>");
     } elsif($d->{struct} eq "hash key list"){
-      my @keys = sort keys %{$self->{query}->{tags}};
+      my @keys = sort @{$self->{query}->{tags}};
       for my $k (0 .. $#keys){
         $http->queue("$keys[$k] ");
         $self->NotSoSimpleButton($http, {
@@ -911,29 +927,60 @@ method UseAsArg($http, $dyn) {
   my $arg_name = $self->{UseAsArgOps}->{arg};
   my $value = $self->{UseAsArgOps}->{value};
   $http->queue(qq{
-    <p>Selected argument type: $arg_name</p>
-    <p>Selected argument value: $value</p>
+    <h2>Execute new query using selected argument value</h2>
 
-    <p>The following queries can be executed with
+    <div class="row">
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">Selected argument type</div>
+          <div class="panel-body">
+            $arg_name
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">Selected argument value</div>
+          <div class="panel-body">
+            $value
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="alert alert-info">The following queries can be executed with
     this as an input:</p>
-    <ul>
   });
 
   $self->{BindingCache}->{$arg_name} = $value;
 
   # present a list of the possible queries here
   my $queries = PosdaDB::Queries->GetQuerysWithArg($arg_name);
+  my $menu = [];
+  $http->queue(qq{
+    <div class="list-group">
+  });
   for my $q (@$queries) {
-    $http->queue('<li>');
-    $self->NotSoSimpleButtonButton($http, {
-      caption => "$q",
-      op => "SetActiveQuery",
-      query_name => "$q"
+    my ($name, $desc) = @$q;
+    $http->queue(qq{
+      <a class="list-group-item" href="#"
+        onClick="javascript:PosdaGetRemoteMethod('SetActiveQuery', 'query_name=$name', function () {Update();});"
+      >
+        <h4 class="list-group-item-heading">$name</h4>
+        <p class="list-group-item-text">$desc</p>
+      </a>
     });
-    $http->queue('</li>');
+    # $self->NotSoSimpleButton($http, {
+    #   caption => "$name",
+    #   op => "SetActiveQuery",
+    #   query_name => "$name",
+    #   title => $desc,
+    #   sync => 'Update();'
+    # });
   }
-  $http->queue('</ul>');
-
+  $http->queue(qq{
+    </div>
+  });
 }
 
 method TableSelected($http, $dyn){
@@ -991,15 +1038,20 @@ method TableSelected($http, $dyn){
         $v_esc =~ s/</&lt;/g;
         $v_esc =~ s/>/&gt;/g;
         my $cn = $query->{columns}->[$col_pos++];
-        $http->queue("<td>$v_esc");
+        $http->queue("<td>");
         if (defined $self->{AllArgs}->{$cn}) {
-          $self->NotSoSimpleButtonButton($http, {
-              class => "btn btn-xs btn-default",
-              caption => "Use",
+          $self->NotSoSimpleButton($http, {
+              class => "",
+              caption => "$v_esc",
               op => "SetUseAsArg",
               value => $v_esc,
-              arg => $cn
+              arg => $cn,
+              element => 'a',
+              title => 'Click to use this value as an input to another query',
+              sync => 'Update();'
           });
+        } else {
+          $http->queue($v_esc);
         }
         $http->queue("</td>");
       }
