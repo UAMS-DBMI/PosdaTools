@@ -31,6 +31,7 @@ func titlize($string) {
 }
 
 method SpecificInitialize() {
+  $self->{QueryFilterDisplay} = 1;
   $self->{AllArgs} = {};
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
     $self->{AllArgs}->{$a} = 1;
@@ -327,11 +328,38 @@ method ClearAllTags($http, $dyn){
   }
 }
 
+method ToggleQueryFilter($http, $dyn) {
+  $self->{QueryFilterDisplay} = not $self->{QueryFilterDisplay};
+}
+
 method TagSelection($http, $dyn){
   # break the list of tags into groups of 5
   my @tags = sort keys %{$self->{TagsState}};
   my @chunks;
   push @chunks, [ splice @tags, 0, 5 ] while @tags;
+
+  $self->NotSoSimpleButton($http, {
+    caption => "Toggle Tag List",
+    op => "ToggleQueryFilter",
+    sync => "Update();",
+    class => "btn btn-warning"
+  });
+
+  if (not $self->{QueryFilterDisplay}) {
+    # get list of selected tags
+    my @tags = grep {
+      $self->{TagsState}->{$_} eq 'true';
+    } keys %{$self->{TagsState}};
+
+    my $taglist = join(', ', @tags);
+
+    $http->queue(qq{
+      <p class="alert alert-info">
+        Selected tags: <strong>$taglist</strong>
+      </p>
+    });
+    return;
+  }
 
   $http->queue(qq{
     <table class="table table-condensed">
@@ -364,6 +392,7 @@ method TagSelection($http, $dyn){
     }
     $http->queue(qq{</tr>});
   }
+  $http->queue("</table>");
 }
 
 method CheckBoxChange($http, $dyn){
@@ -446,7 +475,9 @@ method ListQueries($http, $dyn){
   # Draw the tag list
   $self->RefreshEngine($http, $dyn, qq{
     <p>Queries</p>
-    <?dyn="TagSelection"?>
+    <p>
+      <?dyn="TagSelection"?>
+    </p>
     <table class="table table-striped table-condensed">
   });
   for my $i (@q_list){
@@ -487,7 +518,7 @@ method SaveQuery($http, $dyn) {
 
 method AddTextField($http, $dyn) {
   DEBUG Dumper($dyn);
-
+  $self->{query}->{$dyn->{index}} = $dyn->{value};
 }
 
 ### End Delegated Methods
@@ -563,13 +594,9 @@ method EditQuery($http, $dyn){
       unless(exists $self->{LinkedTextField}->{$i}){
         $self->{LinkedTextField}->{$i} = $self->{query}->{$i};
       }
-      $self->RefreshEngine($http, $dyn, 
-        '<?dyn="DelegateEntryBox" ' .
-        'op="AddTextField" ' .
-        "value=\"$self->{query}->{$i}\" ". 
-        "index=\"$i\"" .
-        'sync="Update();"' .
-        '?>');
+      $self->RefreshEngine($http, $dyn, qq{
+        <?dyn="DelegateEntryBox" op="AddTextField" value=\"$self->{query}->{$i}\" index=\"$i\" ?>
+      });
     }
     if($d->{struct} eq "array"){
       $http->queue(qq{
