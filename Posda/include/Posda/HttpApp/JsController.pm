@@ -440,6 +440,7 @@ sub LinkedDelegateEntryBox{
   } else {
     $default = $this->{$dyn->{linked}};
   }
+  $default =~ s/"/&quot;/g;
   my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
   $http->queue('<input type="text"' .
     ($default ? " value=\"$default\"" : "") .
