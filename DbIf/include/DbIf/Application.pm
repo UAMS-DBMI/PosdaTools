@@ -37,6 +37,12 @@ method SpecificInitialize() {
     $self->{AllArgs}->{$a} = 1;
   }
   ### change this to initialize from config
+  my $m_reports = {
+    caption => "Reports",
+    op => 'SetMode',
+    mode => 'Reports',
+    sync => 'Update();'
+  };
   $self->{MenuByMode} = {
     ListQueries => [
       {
@@ -87,6 +93,7 @@ method SpecificInitialize() {
         mode => 'Tables',
         sync => 'Update();'
       },
+      $m_reports,
     ],
     NewQuery => [
       {
@@ -147,6 +154,7 @@ method SpecificInitialize() {
         mode => 'Tables',
         sync => 'Update();'
       },
+      $m_reports,
     ],
     Files => [
       {
@@ -173,6 +181,7 @@ method SpecificInitialize() {
         mode => 'Tables',
         sync => 'Update();'
       },
+      $m_reports,
     ],
     TableSelected => [
       {
@@ -199,7 +208,35 @@ method SpecificInitialize() {
         mode => 'Tables',
         sync => 'Update();'
       },
+      $m_reports,
     ],
+    Default => [
+      {
+        caption => 'Reset',
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+      {
+        caption => "Upload",
+        op => 'SetMode',
+        mode => 'Upload',
+        sync => 'Update();'
+      },
+      {
+        caption => "Files",
+        op => 'SetMode',
+        mode => 'Files',
+        sync => 'Update();'
+      },
+      {
+        caption => "Tables",
+        op => 'SetMode',
+        mode => 'Tables',
+        sync => 'Update();'
+      },
+      $m_reports,
+    ]
   };
   $self->{Mode} = "ListQueries";
   $self->{Sequence} = 0;
@@ -221,6 +258,21 @@ method SpecificInitialize() {
       die "Can't mkdir $self->{SavedQueriesDir}";
     }
   }
+  $self->{PreparedReportsDir} = "$user_dir/PreparedReports";
+  unless(-d $self->{PreparedReportsDir}){
+    unless(mkdir $self->{PreparedReportsDir}){
+      die "Can't mkdir $self->{PreparedReportsDir}";
+    }
+  }
+
+  $self->{PreparedReportsCommonDir} = "$dbif_dir/PreparedReports";
+  unless(-d $self->{PreparedReportsCommonDir}){
+    unless(mkdir $self->{PreparedReportsCommonDir}){
+      die "Can't mkdir $self->{PreparedReportsCommonDir}";
+    }
+  }
+
+
   my $temp_dir = "$self->{Environment}->{LoginTemp}/$self->{session}";
   unless(-d $temp_dir) { die "$temp_dir doesn't exist" }
   $self->{TempDir} = $temp_dir;
@@ -263,33 +315,7 @@ method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
     $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
   } else {
-    $self->MakeMenu($http, $dyn, [
-      {
-        caption => 'Reset',
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Upload",
-        op => 'SetMode',
-        mode => 'Upload',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
-        sync => 'Update();'
-      },
-    ]
-  );
+    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{Default});
  }
 }
 method SetMode($http, $dyn){
@@ -931,8 +957,17 @@ method CreateAndSelectTableFromQuery($query, $struct, $start_at){
 
 method DownloadTableAsCsv($http, $dyn){
   my $table = $self->{LoadedTables}->[$dyn->{table}];
-  my $q_name = $table->{query}->{name};
-  $http->DownloadHeader("text/csv", "$q_name.csv");
+  my $q_name;
+
+  if($table->{type} eq "FromQuery"){
+    $q_name = "$table->{query}->{name}.csv";
+  } elsif ($table->{type} eq "FromCsv") {
+    $q_name = $table->{basename};
+  } else {
+    die "What kind of table is this?!";
+  }
+
+  $http->DownloadHeader("text/csv", "$q_name");
   my $cmd = "PerlStructToCsv.pl";
   Dispatch::BinFragReader->new_serialized_cmd(
     $cmd,
@@ -1277,9 +1312,20 @@ method CsvLoaded($file){
           exists $self->{LoadedTables} &&
           ref($self->{LoadedTables}) eq "ARRAY"
         ){ $self->{LoadedTables} = [] }
+
+        # Get the basename of the file
+        my $basename;
+        my $fn = $file;
+        if($fn =~ /\/([^\/]+)$/){
+          $basename = $1;
+        } else {
+          $basename = $fn;
+        }
+
         push(@{$self->{LoadedTables}}, {
           type => "FromCsv",
           file => $file,
+          basename => $basename,
           at => time,
           rows => $struct->{rows},
         });
@@ -1290,6 +1336,80 @@ method CsvLoaded($file){
   };
   return $sub;
 }
+
+method Reports($http, $dyn) {
+  # load list of reports from the dir
+  my $report_dir = $self->{PreparedReportsDir};
+  my $common_dir = $self->{PreparedReportsCommonDir};
+
+  opendir(my $dh, $report_dir) or die "Can't open report dir: $report_dir";
+  my @files = grep { /^[^\.]/ } readdir($dh); # ignore dots
+  closedir $dh;
+
+  opendir(my $cdh, $common_dir) or die "Can't open report dir: $common_dir";
+  my @common_files = grep { /^[^\.]/ } readdir($cdh); # ignore dots
+  closedir $cdh;
+
+  $http->queue(qq{
+    <h3>Common reports</h3>
+  });
+  for my $f (@common_files) {
+    $http->queue(qq{<p>});
+    $self->NotSoSimpleButton($http, {
+        caption => "$f",
+        op => "LoadPreparedReport",
+        filename => $f,
+        ftype => 'common',
+        sync => "Update();",
+        element => 'a',
+        class => "",
+    });
+    $http->queue(qq{</p>});
+  }
+
+  $http->queue(qq{
+    <h3>Personal (user) reports</h3>
+  });
+  for my $f (@files) {
+    $http->queue(qq{<p>});
+    $self->NotSoSimpleButton($http, {
+        caption => "$f",
+        op => "LoadPreparedReport",
+        filename => $f,
+        ftype => 'personal',
+        sync => "Update();",
+        element => 'a',
+        class => "",
+    });
+    $http->queue(qq{</p>});
+  }
+}
+
+method LoadPreparedReport($http, $dyn) {
+  my $dir;
+  if ($dyn->{ftype} eq 'common') {
+    $dir = $self->{PreparedReportsCommonDir};
+  } elsif ($dyn->{ftype} eq 'personal') {
+    $dir = $self->{PreparedReportsDir};
+  } else {
+    die "Unknown ftyp $dyn->{ftype}";
+  }
+  my $file = "$dir/$dyn->{filename}";
+
+  # couldn't call existing method because we need more control 
+  my $cmd = "CsvToPerlStruct.pl \"$file\"";
+  my $final_callback = $self->CsvLoaded($file);
+  $self->SemiSerializedSubProcess($cmd, func() {
+    &$final_callback(@_);
+    my $index = $#{$self->{LoadedTables}};
+    $self->{SelectedTable} = $index;
+    $self->{Mode} = "TableSelected";
+    $self->AutoRefresh;
+  });
+
+  $self->{Mode} = "QueryWait";
+}
+
 method Tables($http, $dyn){
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $num_tables = @{$self->{LoadedTables}};
@@ -1312,12 +1432,7 @@ method Tables($http, $dyn){
     if($type eq "FromCsv") {
       $type_disp = "From CSV Upload";
       $num_rows = @{$i->{rows}} - 1;
-      my $fn = $i->{file};
-      if($fn =~ /\/([^\/]+)$/){
-        $name = $1;
-      } else {
-        $name = $fn;
-      }
+      $name = $i->{basename};
     } elsif ($type eq "FromQuery"){
       $type_disp = "From DB Query";
       $num_rows = @{$i->{rows}};
