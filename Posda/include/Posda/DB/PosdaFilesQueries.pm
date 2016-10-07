@@ -80,8 +80,6 @@ method SetAsync($async) {
 sub RunQuery {
   my $self = shift;
 
-  say "Async set to: $self->{async}";
-
   if ($self->{async}) {
     return $self->_RunQueryAsync(@_);
   } else {
@@ -90,7 +88,6 @@ sub RunQuery {
 }
 
 sub _RunQueryBlocking {
-  print "RunQueryBlocking\n";
   my($self) = shift;
   my $row_callback = shift;
   my $end_callback = shift;
