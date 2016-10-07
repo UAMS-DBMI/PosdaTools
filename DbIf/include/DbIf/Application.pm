@@ -359,8 +359,10 @@ method ToggleQueryFilter($http, $dyn) {
 }
 
 method TagSelection($http, $dyn){
+  # (case-insenstivie alpha sort)
+  my @tags = sort { "\L$a" cmp "\L$b" } keys %{$self->{TagsState}};
+
   # break the list of tags into groups of 5
-  my @tags = sort keys %{$self->{TagsState}};
   my @chunks;
   push @chunks, [ splice @tags, 0, 5 ] while @tags;
 
