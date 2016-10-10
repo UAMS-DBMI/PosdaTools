@@ -9,6 +9,7 @@ use Dispatch::BinFragReader;
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use Storable;
+use File::Basename 'basename';
 
 use Dispatch::LineReaderWriter;
 
@@ -983,6 +984,48 @@ method DownloadTableAsCsv($http, $dyn){
   );
 }
 
+method StoreQuery($query, $filename) {
+  # my $new_q = {};
+  # for my $i (keys %$query){
+  #   unless($i eq 'columns' 
+  #       or $i eq 'dbh' # if the handle is included it will fail to Freeze
+  #   ){ 
+  #     $new_q->{$i} = $query->{$i};
+  #   }
+  # }
+  DEBUG "Storing query to: $filename";
+  delete $query->{dbh};
+  store $query, $filename;
+}
+method SaveTableAsReport($http, $dyn){
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  my $filename = $dyn->{saveName};
+
+  if($table->{type} eq "FromQuery"){
+    $self->StoreQuery($table->{query},
+     "$self->{PreparedReportsDir}/$filename.query");
+  }
+
+  # TODO: need to find a valid non-conflicting filename here
+
+  my $file = "$self->{PreparedReportsDir}/$filename";
+  DEBUG "Saving to: $file";
+
+  open my $fh, ">$file" or die "Can't open $file for writing ($!)";
+  my $cmd = "PerlStructToCsv.pl";
+  Dispatch::BinFragReader->new_serialized_cmd(
+    $cmd,
+    $table, 
+    func($frag) {
+      print $fh $frag;
+    }, 
+    func() {
+      close $fh;
+      $self->QueueJsCmd("alert('Report saved!');");
+    }
+  );
+}
+
 method SetUseAsArg($http, $dyn) {
   $self->{Mode} = 'UseAsArg';
   $self->{UseAsArgOps} = $dyn;
@@ -1047,6 +1090,51 @@ method UseAsArg($http, $dyn) {
   });
 }
 
+method InsertSaveReportModal($http, $name, $table) {
+  $http->queue(qq{
+    <button type="button" class="btn btn-default"
+            data-toggle="modal" data-target="#saveReportModal">
+      Save as Report
+    </button>
+
+    <div class="modal" id="saveReportModal" tabindex="-1"
+         role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Save as Report</h4>
+          </div>
+          <div class="modal-body">
+          <form id="saveAsReportForm">
+            <div class="form-group">
+              <label for="saveName">Save as</label>
+              <input type="input" class="form-control" 
+                     id="saveName" name="saveName"
+                     value="$name">
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="public"> Save as a Public Report
+              </label>
+            </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+                    data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary"
+                    onClick="javascript:PosdaGetRemoteMethod('SaveTableAsReport', \$('#saveAsReportForm').serialize(), function () {Update();});"
+                    data-dismiss="modal"
+            >Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  });
+
+}
+
 method TableSelected($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -1062,6 +1150,9 @@ method TableSelected($http, $dyn){
            href="DownloadTableAsCsv?obj_path=$self->{path}&table=$self->{SelectedTable}">
            Download
         </a>
+      });
+    $self->InsertSaveReportModal($http, $query->{name});
+    $http->queue(qq{
       </p>
 
       <div class="panel panel-default">
@@ -1128,14 +1219,16 @@ method TableSelected($http, $dyn){
     my $rows = $table->{rows};
     my $num_rows = @$rows - 1;
     my $at = $table->{at};
-    $http->queue('<div style="background-color: white">' .
-      "Table from CSV file: $file   " .
-      '<a class="btn btn-sm btn-primary" ' .
-      'href="DownloadTableAsCsv?obj_path=' . $self->{path} . '&table=' .
-      $self->{SelectedTable} . 
-      '\">download</a>' .
-      '<br>'
-    );
+    $self->RefreshEngine($http, $dyn, qq{
+      <div style="background-color: white">
+      Table from CSV file: $file   
+      <a class="btn btn-sm btn-primary" 
+         href="DownloadTableAsCsv?obj_path=$self->{path}&table=$self->{SelectedTable}">Download</a>
+     });
+    $self->InsertSaveReportModal($http, basename($file));
+    $http->queue(qq{
+      <br>
+    });
     $http->queue("Rows: $num_rows<br>Results:<hr>");
     $http->queue(qq{
       <table class="table table-striped">
@@ -1324,13 +1417,31 @@ method CsvLoaded($file){
           $basename = $fn;
         }
 
-        push(@{$self->{LoadedTables}}, {
+        # test if there is a query file to load
+        my $queryfile = "$file.query";
+        my $query;
+
+        # if $queryfile exists, load it
+        if (-e $queryfile) {
+          $query = retrieve $queryfile;
+        }
+
+        my $new_table_entry = {
           type => "FromCsv",
           file => $file,
           basename => $basename,
           at => time,
           rows => $struct->{rows},
-        });
+        };
+
+        if (defined $query) {
+          $new_table_entry->{query} = $query;
+          $new_table_entry->{type} = "FromQuery";
+          #delete the first row, as it is query headers
+          delete $new_table_entry->{rows}->[0];
+        }
+
+        push(@{$self->{LoadedTables}}, $new_table_entry);
       } else {
       }
     } else {
@@ -1345,12 +1456,17 @@ method Reports($http, $dyn) {
   my $common_dir = $self->{PreparedReportsCommonDir};
 
   opendir(my $dh, $report_dir) or die "Can't open report dir: $report_dir";
-  my @files = grep { /^[^\.]/ } readdir($dh); # ignore dots
+  my @files = grep { 
+    /^[^\.]/ and not /\.query$/
+  } readdir($dh); # ignore dots
   closedir $dh;
 
   opendir(my $cdh, $common_dir) or die "Can't open report dir: $common_dir";
   my @common_files = grep { /^[^\.]/ } readdir($cdh); # ignore dots
   closedir $cdh;
+
+
+
 
   $http->queue(qq{
     <h3>Common reports</h3>
@@ -1371,9 +1487,18 @@ method Reports($http, $dyn) {
 
   $http->queue(qq{
     <h3>Personal (user) reports</h3>
+    <table class="table">
+    <tr>
+      <th>Filename</th>
+      <th>Type</th>
+      <th>Bytes</th>
+    </tr>
   });
   for my $f (@files) {
-    $http->queue(qq{<p>});
+    my $filename = "$report_dir/$f";
+    my $type = (-e "$filename.query")?"Query":"CSV";
+    my $size = (stat($filename))[7];
+    $http->queue(qq{<tr><td>});
     $self->NotSoSimpleButton($http, {
         caption => "$f",
         op => "LoadPreparedReport",
@@ -1383,8 +1508,16 @@ method Reports($http, $dyn) {
         element => 'a',
         class => "",
     });
-    $http->queue(qq{</p>});
+    $http->queue(qq{
+        </td>
+        <td>$type</td>
+        <td>$size</td>
+      </tr>});
   }
+  $http->queue(qq{
+    </table>
+  });
+
 }
 
 method LoadPreparedReport($http, $dyn) {
