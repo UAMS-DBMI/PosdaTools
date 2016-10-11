@@ -12,12 +12,22 @@ use Dispatch::EventHandler;
 use Data::Dumper;
 
 my $db_handle;
+my $db_handle_cache = {};
 
 sub _get_handle {
   if (not defined $db_handle) {
     $db_handle = DBI->connect(Database('posda_queries'));
   }
   return $db_handle;
+}
+
+func _get_handle_main($connect) {
+  if (not defined $db_handle_cache->{$connect}) {
+    $db_handle_cache->{$connect} = DBI->connect($connect)
+      or die "Could not connect to DB with connect string: $connect";
+  }
+
+  return $db_handle_cache->{$connect};
 }
 
 method GetQueryInstance($class: $name) {
@@ -92,7 +102,7 @@ sub _RunQueryBlocking {
   my $row_callback = shift;
   my $end_callback = shift;
 
-  my $dbh = DBI->connect($self->{connect});
+  my $dbh = _get_handle_main($self->{connect});
 
   if (not defined $self->{handle}) {
     $self->Prepare($dbh);
