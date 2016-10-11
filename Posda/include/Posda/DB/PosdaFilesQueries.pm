@@ -87,6 +87,16 @@ method SetAsync($async) {
   $self->{async} = $async;
 }
 
+# Execute the query
+# Call signature is:
+#   RunQuery($row_callback, $end_callback, @bind_variables);
+# 
+# The query is executed sync or async depending on the setting,
+# and $row_callback is called for each row returned. $end_callback
+# is called after all rows have been processed.
+#
+# If the query is an INSERT or UPDATE, $row_callback is called 
+# one time, and passed [$row_count_affected].
 sub RunQuery {
   my $self = shift;
 
@@ -108,11 +118,17 @@ sub _RunQueryBlocking {
     $self->Prepare($dbh);
   }
 
-  $self->Execute(@_);
+  my $select = ($self->{query} =~ /^select/i)? 1:0;
 
-  # return the results
-  while(my $h = $self->{handle}->fetchrow_arrayref){
-    &$row_callback($h);
+  my $rows_affected = $self->Execute(@_);
+
+  if ($select) {
+    # return the results
+    while(my $h = $self->{handle}->fetchrow_arrayref){
+      &$row_callback($h);
+    }
+  } else {
+    &$row_callback([$rows_affected]);
   }
   if(ref($end_callback) eq "CODE"){
     &$end_callback();
