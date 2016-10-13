@@ -999,16 +999,22 @@ method StoreQuery($query, $filename) {
 }
 method SaveTableAsReport($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  my $dir = $self->{PreparedReportsDir};
+  my $public = $dyn->{public};
+  if (defined $public) {
+    DEBUG "Saving to public!";
+    $dir = $self->{PreparedReportsCommonDir};
+  }
   my $filename = $dyn->{saveName};
 
   if($table->{type} eq "FromQuery"){
     $self->StoreQuery($table->{query},
-     "$self->{PreparedReportsDir}/$filename.query");
+     "$dir/$filename.query");
   }
 
   # TODO: need to find a valid non-conflicting filename here
 
-  my $file = "$self->{PreparedReportsDir}/$filename";
+  my $file = "$dir/$filename";
   DEBUG "Saving to: $file";
 
   open my $fh, ">$file" or die "Can't open $file for writing ($!)";
@@ -1151,7 +1157,7 @@ method TableSelected($http, $dyn){
            Download
         </a>
       });
-    $self->InsertSaveReportModal($http, $query->{name});
+    $self->InsertSaveReportModal($http, "$query->{name}.csv");
     $http->queue(qq{
       </p>
 
@@ -1462,17 +1468,28 @@ method Reports($http, $dyn) {
   closedir $dh;
 
   opendir(my $cdh, $common_dir) or die "Can't open report dir: $common_dir";
-  my @common_files = grep { /^[^\.]/ } readdir($cdh); # ignore dots
+  my @common_files = grep { 
+    /^[^\.]/ and not /\.query$/
+  } readdir($cdh); # ignore dots
   closedir $cdh;
-
-
-
 
   $http->queue(qq{
     <h3>Common reports</h3>
+    <table class="table">
+    <tr>
+      <th>Filename</th>
+      <th>Type</th>
+      <th>Bytes</th>
+    </tr>
   });
   for my $f (@common_files) {
-    $http->queue(qq{<p>});
+    my $filename = "$common_dir/$f";
+    my $type = (-e "$filename.query")?"Query":"CSV";
+    my $size = (stat($filename))[7];
+    $http->queue(qq{
+      <tr>
+      <td>
+    });
     $self->NotSoSimpleButton($http, {
         caption => "$f",
         op => "LoadPreparedReport",
@@ -1482,8 +1499,16 @@ method Reports($http, $dyn) {
         element => 'a',
         class => "",
     });
-    $http->queue(qq{</p>});
+    $http->queue(qq{
+        </td>
+        <td>$type</td>
+        <td>$size</td>
+      </tr>
+    });
   }
+  $http->queue(qq{
+    </table>
+  });
 
   $http->queue(qq{
     <h3>Personal (user) reports</h3>
