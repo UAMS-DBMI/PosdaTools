@@ -362,7 +362,7 @@ sub DelegateEntryBox{
   my($this, $http, $dyn) = @_;
   my @parms;
   my @attrs;
-  my $sync;
+  my $sync = '';
   for my $i (keys %$dyn){
     if($i eq "op") { next }
     if($i eq "value") { next }
@@ -703,6 +703,29 @@ sub SimpleButton{
     '});" value="' .  $dyn->{caption} . '">';
   $http->queue($string);
 }
+
+# A button that submits the value from another element, to the given op.
+# Requires jQuery. Will work on any element that implements .val() (js).
+# Originally written for reading values from input text boxes
+sub SubmitValueButton {
+  my($this, $http, $dyn) = @_;
+
+  my $id = $dyn->{element_id} or die "No element_id specified";
+  my $op = $dyn->{op} or die "No op specified";
+  my $caption = $dyn->{caption} or die "No caption specified";
+  my $extra = ($dyn->{extra} or '');
+  my $class = ($dyn->{class} or 'btn btn-default');
+
+  my $string = qq{
+    <input class="$class" 
+           type="submit"
+           onClick="javascript:PosdaGetRemoteMethod('$op', 'value=' + \$('#$id').val() + '&extra=$extra', function(){Update();})"
+           value="$caption"
+    >
+  };
+  $http->queue($string);
+}
+
 sub NotSoSimpleButton{
   my($this, $http, $dyn)  = @_;
   my @parms;

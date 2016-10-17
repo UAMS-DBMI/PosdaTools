@@ -496,9 +496,9 @@ method ListQueries($http, $dyn){
   } keys %{$self->{TagsState}};
 
   if ($#selected_tags >= 0) {
-    @q_list = @{PosdaDB::Queries->GetQueriesWithTags(\@selected_tags)};
+    @q_list = sort @{PosdaDB::Queries->GetQueriesWithTags(\@selected_tags)};
   } else {
-    @q_list = @{PosdaDB::Queries->GetList()};
+    @q_list = sort @{PosdaDB::Queries->GetList()};
   }
 
   # Draw the tag list
@@ -538,15 +538,141 @@ method SetEditQuery($http, $dyn){
 }
 
 method SaveQuery($http, $dyn) {
-  $http->queue("query saved?");
+  $self->{query}->Save();
+  $http->queue(qq{
+    <p class="alert alert-info">
+      Query saved. Click Reset to return to the list.
+    </p>
+  });
+}
+
+method CloneQuery($http, $dyn) {
+  $self->{Mode} = 'RenderCloneQuery';
+  $self->{clone_query} = $dyn->{query_name};
+}
+
+method RenderCloneQuery($http, $dyn) {
+  $http->queue(qq{
+    <h3>Clone Query: $self->{clone_query}</h3>
+    <div class="col-md-4">
+      <p class="alert alert-warning">
+        Every query must have a unique name.
+      </p>
+      <div class="form-group">
+        <label>Name for new query:</label>
+        <input class="form-control" id="newName" value="$self->{clone_query}">
+      </div>
+  });
+  $self->NotSoSimpleButtonButton($http, {
+      caption => 'Cancel',
+      op => 'SetMode',
+      mode => 'ListQueries'
+  });
+  $self->SubmitValueButton($http, {
+      caption => 'Save',
+      element_id => 'newName',
+      op => 'SaveCloneQuery',
+      class => 'btn btn-primary',
+      #extra => $extra
+  });
+
+  $http->queue(qq{
+    </div>
+  });
+}
+
+method SaveCloneQuery($http, $dyn) {
+  my $new_name = $dyn->{value};
+  my $old_name = $self->{clone_query};
+
+  PosdaDB::Queries::Clone($old_name, $new_name);
+  $self->{Mode} = 'ListQueries';
+}
+
+method SmallInputBoxWithAddButton($http, $dyn) {
+  my $id = $dyn->{id};
+  my $op = $dyn->{op};
+  my $extra = $dyn->{extra};
+
+  $http->queue(qq{
+    <form onSubmit="return false;" class="input-group col-md-4">
+      <input id="$id" type="input" class="form-control">
+      <span class="input-group-btn">
+  });
+  $self->SubmitValueButton($http, {
+      caption => 'Add',
+      element_id => $id,
+      op => $op,
+      extra => $extra
+  });
+  $http->queue(qq{
+      </span>
+    </form>
+  });
 }
 
 ### 
 # Delegated methods
 ###
 
-method AddTextField($http, $dyn) {
+method DeleteHashKeyList($http, $dyn) {
   DEBUG Dumper($dyn);
+  my $type = $dyn->{type};
+  my $index = $dyn->{index};
+
+  splice @{$self->{query}->{$type}}, $index, 1;
+}
+method AddToHashKeyList($http, $dyn) {
+  push @{$self->{query}->{tags}}, $dyn->{value};
+}
+
+method AddToEditList($http, $dyn) {
+  my $source = $dyn->{extra};
+  my $value = $dyn->{value};
+
+  DEBUG "Adding '$value' to $source";
+
+  push @{$self->{query}->{$source}}, $value;
+}
+
+method DeleteFromEditList($http, $dyn) {
+  my $source = $dyn->{name};
+  my $value = $dyn->{value};
+
+  DEBUG "Deleting '$value' from $source";
+
+  my @idx = grep {
+    $self->{query}->{$source}->[$_] eq $value
+  } 0..$#{$self->{query}->{$source}};
+
+  splice @{$self->{query}->{$source}}, $idx[0], 1;
+
+}
+
+method MoveEditListElementUp($http, $dyn) {
+  my $source = $dyn->{name};
+  my $value = $dyn->{value};
+
+  # find the index of the element to move
+  my @idx = grep {
+    $self->{query}->{$source}->[$_] eq $value
+  } 0..$#{$self->{query}->{$source}};
+
+  my $index = $idx[0];
+
+  if ($index < 1) {
+    # can't help you!
+    return;
+  }
+
+  my $new_index = $index - 1;
+  my $temp_val = $self->{query}->{$source}->[$new_index];
+  $self->{query}->{$source}->[$new_index] = $self->{query}->{$source}->[$index];
+  $self->{query}->{$source}->[$index] = $temp_val;
+
+}
+
+method AddTextField($http, $dyn) {
   $self->{query}->{$dyn->{index}} = $dyn->{value};
 }
 
@@ -584,7 +710,8 @@ method EditQuery($http, $dyn){
     },
     tags => {
       caption => "Tags",
-      struct => "hash key list",
+      # struct => "hash key list",
+      struct => "array",
     },
   };
   $self->RefreshEngine($http, $dyn,
@@ -619,60 +746,83 @@ method EditQuery($http, $dyn){
         </td>
         <td align="left" valign = "top">
     });
+
     if($d->{struct} eq "text"){
       unless(exists $self->{LinkedTextField}->{$i}){
         $self->{LinkedTextField}->{$i} = $self->{query}->{$i};
       }
-      $self->RefreshEngine($http, $dyn, qq{
-        <?dyn="DelegateEntryBox" op="AddTextField" value=\"$self->{query}->{$i}\" index=\"$i\" ?>
+      $self->DelegateEntryBox($http, {
+          op => 'AddTextField',
+          value => $self->{query}->{$i},
+          index => $i,
       });
     }
+
     if($d->{struct} eq "array"){
       $http->queue(qq{
         <table class="table table-condensed">
       });
       for my $j (@{$self->{query}->{$i}}){
-        $self->RefreshEngine($http, $dyn, "<tr><td>$j</td><td>" .
-          '<?dyn="NotSoSimpleButton" ' .
-          'op="DeleteFromEditList" ' .
-          'caption="del" ' .
-          'name="'. $i .'" ' .
-          'value="' . $j . '"?></td><td>' .
-          '<?dyn="NotSoSimpleButton" ' .
-          'op="MoveEditListElementUp" ' .
-          'caption="up" ' .
-          'name="'. $i .'" ' .
-          'value="' . $j . '"?></td><td>');
-        $self->RefreshEngine($http, $dyn, "</tr>");
+        $http->queue(qq{ <tr><td>$j</td><td> });
+        $self->NotSoSimpleButton($http, {
+            op => 'DeleteFromEditList',
+            caption => 'del',
+            name => $i,
+            value => $j,
+            sync => 'Update();'
+        });
+        $http->queue(qq{ </td><td> });
+        $self->NotSoSimpleButton($http, {
+            op => 'MoveEditListElementUp',
+            caption => 'up',
+            name => $i,
+            value => $j,
+            sync => 'Update();'
+        });
+        $http->queue(qq{ </td><td> </tr> });
       }
-      $self->RefreshEngine($http, $dyn, "<tr><td>");
-      $self->RefreshEngine($http, $dyn, 
-        '<?dyn="DelegateEntryBox" ' .
-        'op="AddToEditList" ' .
-        'value="" '. 
-        "index=\"$i\"" .
-        'sync="Update();"' .
-        '?>');
-      $self->RefreshEngine($http, $dyn, "</table>");
+      $http->queue("<tr><td>");
+      $http->queue("</table>");
+      $self->SmallInputBoxWithAddButton($http, {
+        id => "new$i",
+        op => 'AddToEditList',
+        extra => $i
+      });
     } elsif($d->{struct} eq "hash key list"){
+      # TODO: This really only works for tags, not for generic 'hash key list'!
       my @keys = sort @{$self->{query}->{tags}};
+      $self->{query}->{tags} = \@keys; # Save it back so indexes make sense!
+
+      $http->queue(qq{
+        <table class="table table-condensed">
+      });
       for my $k (0 .. $#keys){
-        $http->queue("$keys[$k] ");
+        $http->queue(qq{
+          <tr>
+            <td>$keys[$k]</td>
+            <td>
+        });
         $self->NotSoSimpleButton($http, {
           caption => "del",
+          class => "btn btn-danger",
           op => "DeleteHashKeyList",
           type => $i,
           index => $k,
           value => $keys[$k],
           sync => "Update();"
         });
-        $http->queue(",&nbsp;&nbsp;&nbsp;");
-#        unless($k == $#keys){ $http->queue(", ") }
+        $http->queue(qq{
+            </td>
+          </tr>
+        });
       }
-      $self->DelegateEntryBox($http, {
-        op => "AddToHashKeyList",
-        index => $i,
-        sync => "Update();"
+      $http->queue(qq{
+        </table>
+      });
+      $self->SmallInputBoxWithAddButton($http, {
+        id => 'newTag',
+        op => 'AddToHashKeyList',
+        extra => $i
       });
     } elsif($d->{struct} eq "textarea"){
         $self->DelegateTextArea($http, {
@@ -680,30 +830,25 @@ method EditQuery($http, $dyn){
           op => "TextAreaChanged",
           value => $self->{query}->{$i},
           rows => $d->{rows},
-          cols => $d->{cols},
-          sync => "Update();",
+          cols => $d->{cols}
       });
     }
     $self->RefreshEngine("</td></tr>");
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
+
+# do we really need to handle this with a post?
 method TextAreaChanged($http, $dyn){
-  print STDERR "###################\nIn TextAreaChanged\n";
-  for my $i (keys %$dyn){
-    print STDERR "dyn{$i}: $dyn->{$i}\n";
-  }
-  for my $i (keys %$http){
-    print STDERR "http{$i}: $http->{$i}\n";
-  }
-  for my $i (keys %{$http->{header}}){
-    print STDERR "http{header}->{$i}: $http->{header}->{$i}\n";
-  }
+  DEBUG Dumper($dyn);
+  # Read the POST data (this method needs to be POSTed to!)
   my $buff;
   my $c = read $http->{socket}, $buff, $http->{header}->{content_length};
-  print STDERR "Read $c bytes:\n";
-  print STDERR "$buff#################\n";
+
+  $self->{query}->{$dyn->{id}} = $buff;
+  DEBUG $buff;
 }
+
 method SetActiveQuery($http, $dyn){
   $self->{Mode} = "ActiveQuery";
   $self->{Query} = $dyn->{query_name};
@@ -824,16 +969,17 @@ method DeleteQuery($http,$dyn){
   $self->{QueryPendingDelete} = $dyn->{query_name};
 }
 method DeleteQueryPending($http, $dyn){
-  $self->RefreshEngine($http, $dyn, 
-    "Do you want to delete query named $self->{QueryPendingDelete}?<br>" .
-    '<?dyn="NotSoSimpleButton" op="ReallyDeleteQuery" ' .
-    'caption="Yes, Delete it" ' .
-    'sync="Update();"?><?dyn="NotSoSimpleButton" ' .
-    'op="CancelDeleteQuery" caption="No, don' . "'" . 't delete" ' .
-    'sync="Update();"?>');
+  $self->RefreshEngine($http, $dyn, qq{
+    <p>
+      Do you want to delete query named $self->{QueryPendingDelete}?
+    </p>
+
+    <?dyn="NotSoSimpleButton" op="ReallyDeleteQuery" caption="Yes, Delete it" sync="Update();"?>
+    <?dyn="NotSoSimpleButton" op="CancelDeleteQuery" caption="No, don't delete" sync="Update();"?>
+  });
 }
 method ReallyDeleteQuery($http, $dyn){
- PosdaDB::Queries->Delete($self->{QueryPendingDelete});
+ PosdaDB::Queries::Delete($self->{QueryPendingDelete});
  delete $self->{QueryPendingDelete};
  $self->{Mode} = "ListQueries";
 }
