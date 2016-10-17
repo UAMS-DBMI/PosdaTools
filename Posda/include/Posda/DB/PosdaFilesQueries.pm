@@ -9,6 +9,7 @@ use DBI;
 use Posda::Config 'Database';
 use Dispatch::EventHandler;
 
+use Posda::DebugLog 'on';
 use Data::Dumper;
 
 my $db_handle;
@@ -52,6 +53,50 @@ method new($class: $name, $async) {
 
 method MakeStorable() {
   $self->{dbh} = undef;
+}
+
+method Save() {
+  DEBUG "Saving query...";
+  my $query = qq{
+    update queries
+    set 
+        query = ?,
+        args = ?,
+        columns = ?,
+        tags = ?,
+        schema = ?,
+        description = ?
+    where name = ?
+
+  };
+  my $qh = $db_handle->prepare($query);
+  $qh->execute($self->{query},
+               $self->{args},
+               $self->{columns},
+               $self->{tags},
+               $self->{schema},
+               $self->{description},
+               $self->{name});
+}
+
+func Clone($source_name, $dest_name) {
+  my $qh = $db_handle->prepare(qq{
+    insert into queries
+    select ?, query, args, columns, tags, schema, description
+    from queries
+    where name = ?
+  });
+
+  $qh->execute($dest_name, $source_name);
+
+}
+
+func Delete($name) {
+  my $qh = $db_handle->prepare(qq{
+    delete from queries where name = ?
+  });
+
+  $qh->execute($name);
 }
 
 method _load_query($name) {
