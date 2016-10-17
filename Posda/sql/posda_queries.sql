@@ -1,5 +1,5 @@
 create table queries (
-	name	text,
+	name	text primary key,
 	query	text,
 	args	text[],
 	columns	text[],
