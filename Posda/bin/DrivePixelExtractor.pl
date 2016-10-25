@@ -1,10 +1,19 @@
 #!/usr/bin/perl -w
-use strict;
+# TODO TODO  TODO TODO  TODO TODO  TODO TODO  TODO TODO  TODO TODO 
+# Rename this to something else, don't commit with this name!
+# TODO TODO  TODO TODO  TODO TODO  TODO TODO  TODO TODO  TODO TODO 
+use Modern::Perl;
+
 my $usage = <<EOF;
-DrivePixelExtractor.pl <db> <series> <dir>
+DrivePixelExtractor.pl <series> <dir>
 EOF
-open FILES, "GetPixelRenderingInfoForSeries.pl $ARGV[0] $ARGV[1]|" or
+
+my $series = $ARGV[0];
+my $output_dir = $ARGV[1];
+
+open FILES, "GetPixelRenderingInfoForSeries.pl junk $series|" or
   die "Can't get pixel rendering info";
+
 my $total = 0;
 my $num_bad = 0;
 line:
@@ -28,40 +37,42 @@ while(my $line = <FILES>){
   for my $i (0 .. 17){
     $cmd1 .= " \"$args[$i]\"";
   }
-  $cmd1 .= " \"$ARGV[2]\"";
+  $cmd1 .= " \"$output_dir\"";
+
   open CMD1, "$cmd1|";
   my $line = <CMD1>;
+
   chomp $line;
   unless($line =~ /File:\s*(.*)/) { die "bad line: $line" }
   my $file = $1;
   if($file =~ /\.gray/){
-    my $cmd2 = "convert -endian LSB -size ${rows}x${cols} -depth 16 $file -level 0,1000 $ARGV[2]/$file_id.png";
+    my $cmd2 = "convert -endian LSB -size ${rows}x${cols} -depth 16 $file -level 0,1000 $output_dir/$file_id.png";
     `$cmd2`;
     `rm $file`;
   } else {
-    my $cmd2 = "convert  -size ${rows}x${cols} -depth 8 $file $ARGV[2]/$file_id.png";
+    my $cmd2 = "convert  -size ${rows}x${cols} -depth 8 $file $output_dir/$file_id.png";
     `$cmd2`;
-#    `rm $file`;
+     `rm $file`;
   }
-  open FOO, "tesseract $ARGV[2]/$file_id.png stdout|" or die "foo";
-  my $is_bad;
-  while(my $line = <FOO>){
-    chomp $line;
-    unless($line =~ /^\s*$/){
-#      print "Line: \"$line\"\n";
-      unless($is_bad){
-#        print "$file_id has PHI\n";
-        $is_bad = 1;
-        $num_bad += 1;
-      }
-    }
-  }
-  if($is_bad) { print "$file_id has PHI\n" }
-  else { print "$file_id has no PHI\n"}
-#  `rm $ARGV[2]/$file_id.png`;
+  # open FOO, "tesseract $output_dir/$file_id.png stdout|" or die "foo";
+  # my $is_bad;
+  # while(my $line = <FOO>){
+  #   chomp $line;
+  #   unless($line =~ /^\s*$/){
+# #      print "Line: \"$line\"\n";
+  #     unless($is_bad){
+# #        print "$file_id has PHI\n";
+  #       $is_bad = 1;
+  #       $num_bad += 1;
+  #     }
+  #   }
+  # }
+  # if($is_bad) { print "$file_id has PHI\n" }
+  # else { print "$file_id has no PHI\n"}
+#  `rm $output_dir/$file_id.png`;
 }
-if ($num_bad > 0){
-  print "Series $ARGV[1] has $num_bad (of $total) images with indicated PHI\n";
-} else {
-  print "Series $ARGV[1] has none of $total) images with indicated PHI\n";
-}
+# if ($num_bad > 0){
+#   print "Series $series has $num_bad (of $total) images with indicated PHI\n";
+# } else {
+#   print "Series $series has none of $total) images with indicated PHI\n";
+# }

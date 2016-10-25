@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
-use strict;
+use Modern::Perl;
+
 my $usage = <<EOF;
 ExtractPixels.pl <file_id> <file_name> <offset> <size> <bits_stored> \\
  <bits_allocated> <pixel_representation> <number_frames> <samples_per_pixel> \\
@@ -8,6 +9,8 @@ ExtractPixels.pl <file_id> <file_name> <offset> <size> <bits_stored> \\
  <intercept> <window_center> <window_depth> <dir>
 EOF
 unless($#ARGV == 18) { die $usage}
+
+
 my $file_id = shift @ARGV;                    # 0
 my $file_name = shift @ARGV;                  # 1
 my $pix_offset = shift @ARGV;                 # 2
@@ -35,6 +38,7 @@ if(
   $photometric_interp eq "MONOCHROME2" &&
   $modality eq "CT"
 ){
+  # print "Monocrhome CT Mode\n";
   for my $i (1 .. $number_of_frames){
     unless($i == 1 && $number_of_frames == 1){ die "Not handling multiframe" }
     my $fn = "$dir/$file_id.gray";
@@ -69,6 +73,7 @@ if(
   $bits_alloc == 16 &&
   $photometric_interp eq "MONOCHROME2"
 ){
+  # print "Monocrhome UNK Mode\n";
   for my $i (1 .. $number_of_frames){
     unless($i == 1 && $number_of_frames == 1){ die "Not handling multiframe" }
     my $fn = "$dir/$file_id.gray";
@@ -104,6 +109,7 @@ if(
   $samples_per_pixel == 3 &&
   $planar_configuration == 0
 ){
+  # print "RGB 8 bit mode\n";
   for my $i (1 .. $number_of_frames){
     unless($i == 1 && $number_of_frames == 1){ die "Not handling multiframe" }
     my $fn = "$dir/$file_id.rgb";
@@ -152,5 +158,7 @@ if(
     chmod 0664, "$fn" or print STDERR "Error $! on chmod of file: $fn";
     print "File: $fn\n";
   }
+} else {
+  print "No mode chosen, aborting?\n";
 }
 
