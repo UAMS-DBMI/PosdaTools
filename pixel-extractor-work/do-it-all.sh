@@ -6,6 +6,7 @@ TMP=/tmp/pixel_make/drive/$SERIES
 mkdir -p $TMP
 
 DrivePixelExtractor.pl $SERIES $TMP
-./make.sh $SERIES
+#./make.sh $SERIES
 
-rm -rf $TMP
+#rm -rf $TMP
+echo $TMP

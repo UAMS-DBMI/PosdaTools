@@ -1,0 +1,14 @@
+{
+  "ApplicationInitClass" : "SeriesProjection::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
+  "ApplicationName" : "SeriesProjection",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
+  "JavascriptRoot" : "POSDA_ROOT/UserAdmin/javascript",
+  "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
+  "TempPNGStorage": "POSDA_ROOT/HttpRoot/http_root/pngs"
+}

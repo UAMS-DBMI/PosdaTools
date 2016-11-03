@@ -13,4 +13,4 @@ for i in $OPS; do
 done
 
 convert $TMP/*.png +append $1.png
-rm -rf $TMP/
+#rm -rf $TMP/
