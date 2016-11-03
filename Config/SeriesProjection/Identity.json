@@ -1,0 +1,14 @@
+{
+  "Greeting": { },
+  "HostName": "POSDA_EXTERNAL_HOSTNAME",
+  "Title": "Series Projection Visual Inspection",
+  "LoginTitle": "Login for Generic Application",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 600,
+  "width": 900,
+  "menu_width": 100,
+  "content_width": 800
+}
