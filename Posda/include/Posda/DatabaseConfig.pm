@@ -18,7 +18,7 @@ func get() {
 
 func _load() {
   local $/;
-  open( my $fh, '<', '/home/posda/PosdaTools/Config/databases.json');
+  open( my $fh, '<', $ENV{POSDA_DATABASE_CONFIG});
   my $json_text = <$fh>;
   my $data = decode_json($json_text);
 

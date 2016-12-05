@@ -15,10 +15,6 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
---
--- Name: pt; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
 CREATE TABLE pt (
     pt_id integer NOT NULL,
     pt_signature text NOT NULL,
@@ -35,9 +31,6 @@ CREATE TABLE pt (
 );
 
 
---
--- Name: pt_dcmtk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
 
 CREATE TABLE pt_dcmtk (
     pt_dcmtk_is_repeating boolean,
@@ -50,9 +43,7 @@ CREATE TABLE pt_dcmtk (
 );
 
 
---
--- Name: pt_dicom3; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
+
 
 CREATE TABLE pt_dicom3 (
     pt_dicom3_is_repeating boolean,
@@ -71,10 +62,6 @@ CREATE TABLE pt_dicom3 (
 );
 
 
---
--- Name: pt_gdcm; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
 CREATE TABLE pt_gdcm (
     pt_gdcm_is_repeating boolean,
     pt_id integer,
@@ -86,9 +73,6 @@ CREATE TABLE pt_gdcm (
 );
 
 
---
--- Name: pt_observation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
 
 CREATE TABLE pt_observation (
     pt_id integer NOT NULL,
@@ -99,9 +83,6 @@ CREATE TABLE pt_observation (
 );
 
 
---
--- Name: pt_pt_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE pt_pt_id_seq
     START WITH 1
@@ -111,16 +92,9 @@ CREATE SEQUENCE pt_pt_id_seq
     CACHE 1;
 
 
---
--- Name: pt_pt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
 
 ALTER SEQUENCE pt_pt_id_seq OWNED BY pt.pt_id;
 
-
---
--- Name: pt_wustl; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
 
 CREATE TABLE pt_wustl (
     pt_id integer,
@@ -138,9 +112,6 @@ CREATE TABLE pt_wustl (
 );
 
 
---
--- Name: ptrg; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
 
 CREATE TABLE ptrg (
     ptrg_id integer NOT NULL,
@@ -160,9 +131,6 @@ CREATE TABLE ptrg (
 );
 
 
---
--- Name: ptrg_observation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
 
 CREATE TABLE ptrg_observation (
     ptrg_id integer NOT NULL,
@@ -173,9 +141,6 @@ CREATE TABLE ptrg_observation (
 );
 
 
---
--- Name: ptrg_ptrg_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE ptrg_ptrg_id_seq
     START WITH 1
@@ -185,38 +150,20 @@ CREATE SEQUENCE ptrg_ptrg_id_seq
     CACHE 1;
 
 
---
--- Name: ptrg_ptrg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
 
 ALTER SEQUENCE ptrg_ptrg_id_seq OWNED BY ptrg.ptrg_id;
 
 
---
--- Name: pt_id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY pt ALTER COLUMN pt_id SET DEFAULT nextval('pt_pt_id_seq'::regclass);
 
 
---
--- Name: ptrg_id; Type: DEFAULT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY ptrg ALTER COLUMN ptrg_id SET DEFAULT nextval('ptrg_ptrg_id_seq'::regclass);
 
 
---
--- Name: pt_pt_signature_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
 ALTER TABLE ONLY pt
     ADD CONSTRAINT pt_pt_signature_key UNIQUE (pt_signature);
 
-
---
--- Name: ptrg_ptrg_signature_masked_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
 
 ALTER TABLE ONLY ptrg
     ADD CONSTRAINT ptrg_ptrg_signature_masked_key UNIQUE (ptrg_signature_masked);

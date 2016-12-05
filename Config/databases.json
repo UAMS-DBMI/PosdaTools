@@ -1,47 +1,85 @@
 {
   "posda_queries" : {
-    "database" : "posda_queries",
-    "driver"   : "postgres"
+    "database" : "N_posda_queries",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_queries.sql",
+      "Posda/sql/posda_queries_data.sql"
+    ]
   },
   "posda_auth" : {
-    "database" : "posda_auth",
-    "driver"   : "postgres"
+    "database" : "N_posda_auth",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_auth.sql",
+      "Posda/sql/posda_auth_setup.sql"
+    ]
   },
   "posda_appstats" : {
-    "database" : "app_stats",
-    "driver"   : "postgres"
+    "database" : "N_posda_appstats",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_appstats.sql"
+    ]
+
   },
   "posda_private_tag" : {
-    "database" : "private_tag_kb",
-    "driver"   : "postgres"
+    "database" : "N_private_tag_kb",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/private_tag_kb.sql",
+      "Posda/sql/private_tag_kb_data.sql"
+    ]
   },
   "posda_public_tag" : {
-    "database" : "public_tag_disposition",
-    "driver"   : "postgres"
+    "database" : "N_public_tag_disposition",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/public_tag_disposition.sql"
+    ]
   },
   "posda_dicom_roots" : {
-    "database" : "dicom_roots",
-    "driver"   : "postgres"
+    "database" : "N_dicom_roots",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/dicom_roots.sql"
+    ]
   },
   "posda_files" : {
-    "database" : "posda_files",
-    "driver"   : "postgres"
+    "database" : "N_posda_files",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_files.sql"
+    ]
   },
   "posda_nicknames" : {
-    "database" : "posda_nicknames",
-    "driver"   : "postgres"
+    "database" : "N_posda_nicknames",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_nicknames.sql"
+    ]
   },
   "posda_counts" : {
-    "database" : "posda_counts",
-    "driver"   : "postgres"
+    "database" : "N_posda_counts",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_counts.sql"
+    ]
   },
   "posda_phi" : {
-    "database" : "posda_phi",
-    "driver"   : "postgres"
+    "database" : "N_posda_phi",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_phi.sql"
+    ]
   },
   "posda_backlog" : {
-    "database" : "posda_backlog",
-    "driver"   : "postgres"
+    "database" : "N_posda_backlog",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_backlog.sql"
+    ]
+
   },
   "public" : {
     "database" : "ncia",
@@ -56,9 +94,5 @@
     "host"     : "144.30.1.71",
     "user"     : "nciauser",
     "password" : "nciA#112"
-  },
-  "backlog" : {
-    "database" : "posda_backlog",
-    "driver"   : "postgres"
   }
 }

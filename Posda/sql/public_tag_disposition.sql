@@ -16,25 +16,22 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: queries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: public_tag_disposition; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE queries (
+CREATE TABLE public_tag_disposition (
+    tag_name text,
     name text,
-    query text,
-    args text[],
-    columns text[],
-    tags text[],
-    schema text,
-    description text
+    disposition text
 );
 
 
 --
--- Name: queries_name_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: public_tag_disposition_tag_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX queries_name_index ON queries USING btree (name);
+ALTER TABLE ONLY public_tag_disposition
+    ADD CONSTRAINT public_tag_disposition_tag_name_key UNIQUE (tag_name);
 
 
 --

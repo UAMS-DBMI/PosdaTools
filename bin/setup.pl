@@ -74,30 +74,49 @@ say "\nCreating cache directory structure... " .
     "(if it already exists, nothing is done)";
 create_cache_dirs();
 
-say "\nCreating databases...";
-`./bin/create_databases.sh`;
 
-say "\nTesting database connection...";
-my $dbs = [
-  ['authentication', Config('auth_db_name')],
-  ['files', Config('files_db_name')],
-  ['nicknames', Config('nicknames_db_name')],
-  ['app status', Config('appstats_db_name')],
-  ['DICOM roots', Config('dicom_roots_db_name')],
-  ['private_tag_kb', Config('private_tag_db_name')],
-];
+
+say "\nCreating databases...";
+
+my $db_list = Config('databases');
+
+# loop over each entry, pull out the ones with an init
+for my $db (keys %$db_list) {
+  if (defined %{$db_list}->{$db}->{init}) {
+    my @files = @{%{$db_list}->{$db}->{init}};
+    my $db_name = %{$db_list}->{$db}->{database};
+    my $driver = %{$db_list}->{$db}->{driver};
+
+    `createdb $db_name`;
+    if ($? == 0) {
+      for my $file (@files) {
+        say `psql $db_name < $file`;
+      }
+    } else {
+      say "Skipped init files for already-existing database $name";
+    }
+  }
+}
+
+say "\nTesting database connections...";
 
 map {
-  my ($name, $dbname) = @$_;
+  my $name = $_;
+  my $dbname = %{$db_list}->{$name}->{database};
+  my $driver = %{$db_list}->{$name}->{driver};
 
-  my $dbh = DBI->connect("DBI:Pg:database=$dbname");
+  if ($driver eq 'postgres') {
+    my $dbh = DBI->connect("DBI:Pg:database=$dbname");
 
-  if (not defined $dbh) {
-    say "Failed to connect to $name database! See previous errors for details.";
-    die $fatal_msg;
+    if (not defined $dbh) {
+      say "Failed to connect to $name database! See previous errors for details.";
+      die $fatal_msg;
+    } else {
+      say "Connection successful: $dbname ($name)";
+    }
   } else {
-    say "Connection successful: $dbname ($name)";
+    say "Skipped testing non-postgres database $name.";
   }
-} @$dbs;
+} keys %$db_list;
 
 say "\nSetup completed successfully.";
