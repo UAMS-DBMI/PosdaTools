@@ -12,21 +12,21 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- Name: pt_pt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: pt_pt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bbennett
 --
 
 SELECT pg_catalog.setval('pt_pt_id_seq', 11166, true);
 
 
 --
--- Name: ptrg_ptrg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: ptrg_ptrg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bbennett
 --
 
 SELECT pg_catalog.setval('ptrg_ptrg_id_seq', 27, true);
 
 
 --
--- Data for Name: pt; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt (pt_id, pt_signature, pt_short_signature, pt_owner, pt_group, pt_element, pt_is_specific_to_block, pt_specific_block, pt_consensus_vr, pt_consensus_vm, pt_consensus_name, pt_consensus_disposition) FROM stdin;
@@ -212,7 +212,6 @@ COPY pt (pt_id, pt_signature, pt_short_signature, pt_owner, pt_group, pt_element
 179	(0019,"FDMS 1.0",81)	(0019,"FDMS 1.0",81)	FDMS 1.0	25	129	f	\N	IS	1	ReadingSensitivityCenter	K
 182	(0021,"FDMS 1.0",10)	(0021,"FDMS 1.0",10)	FDMS 1.0	33	16	f	\N	CS	1	FCRImageID	X
 183	(0021,"FDMS 1.0",30)	(0021,"FDMS 1.0",30)	FDMS 1.0	33	48	f	\N	CS	1	SetNo	X
-10743	(0043,"GEMS_PARM_01",a8)	(0043,"GEMS_PARM_01",a8)	GEMS_PARM_01	67	168	f	\N	DS	3	Dual Drive Mode, Amplitude Attentuation and Phase Offset	K
 187	(0023,"FDMS 1.0",10)	(0023,"FDMS 1.0",10)	FDMS 1.0	35	16	f	\N	SQ	1	Unknown	\N
 188	(0023,"FDMS 1.0",20)	(0023,"FDMS 1.0",20)	FDMS 1.0	35	32	f	\N	SQ	1	Unknown	\N
 189	(0023,"FDMS 1.0",30)	(0023,"FDMS 1.0",30)	FDMS 1.0	35	48	f	\N	SQ	1	Unknown	\N
@@ -10652,6 +10651,7 @@ COPY pt (pt_id, pt_signature, pt_short_signature, pt_owner, pt_group, pt_element
 10740	(0043,"GEMS_PARM_01",a5)	(0043,"GEMS_PARM_01",a5)	GEMS_PARM_01	67	165	f	\N	IS	1	Duration of the label or control pulse	K
 10741	(0043,"GEMS_PARM_01",a6)	(0043,"GEMS_PARM_01",a6)	GEMS_PARM_01	67	166	f	\N	DS	1	Offset frequency value for FastB1map	K
 10742	(0043,"GEMS_PARM_01",a7)	(0043,"GEMS_PARM_01",a7)	GEMS_PARM_01	67	167	f	\N	DS	1	Motion Encoding Factor	K
+10743	(0043,"GEMS_PARM_01",a8)	(0043,"GEMS_PARM_01",a8)	GEMS_PARM_01	67	168	f	\N	DS	3	"Dual Drive Mode, Amplitude Attentuation and Phase Offset"	K
 10744	(0043,"GE_YMS_NJ001",12)	(0043,"GE_YMS_NJ001",12)	GE_YMS_NJ001	67	18	f	\N	SS	3	X-Ray Chain	KB
 10745	(0043,"GE_YMS_NJ001",1e)	(0043,"GE_YMS_NJ001",1e)	GE_YMS_NJ001	67	30	f	\N	DS	1	Delta start time [msec]	KB
 10746	(0043,"GE_YMS_NJ001",35)	(0043,"GE_YMS_NJ001",35)	GE_YMS_NJ001	67	53	f	\N	US	1	Infant Indicator	X
@@ -11200,7 +11200,7 @@ COPY pt (pt_id, pt_signature, pt_short_signature, pt_owner, pt_group, pt_element
 
 
 --
--- Data for Name: pt_dcmtk; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt_dcmtk; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt_dcmtk (pt_dcmtk_is_repeating, pt_id, ptrg_id, pt_dcmtk_signature, pt_dcmtk_vr, pt_dcmtk_vm, pt_dcmtk_name) FROM stdin;
@@ -13960,7 +13960,7 @@ f	2722	\N	(7ff1,"TOSHIBA_MEC_CT_1.0",0d)	US	1-n	Unknown
 
 
 --
--- Data for Name: pt_dicom3; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt_dicom3; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt_dicom3 (pt_dicom3_is_repeating, pt_id, ptrg_id, pt_dicom3_tag, pt_dicom3_vr, pt_dicom3_vm, pt_dicom3_name, pt_dicom3_keyword, pt_dicom3_owner, pt_dicom3_vers, pt_dicom3_comment, pt_dicom3_assumption, pt_dicom3_private_block) FROM stdin;
@@ -24445,7 +24445,7 @@ f	2696	\N	(7ff1,0010)	US	1-n	Unknown	Unknown	TOSHIBA_MEC_1.0	TSH	\N	\N	\N
 
 
 --
--- Data for Name: pt_gdcm; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt_gdcm; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt_gdcm (pt_gdcm_is_repeating, pt_id, ptrg_id, pt_gdcm_signature, pt_gdcm_vr, pt_gdcm_vm, pt_gdcm_name) FROM stdin;
@@ -24453,7 +24453,7 @@ COPY pt_gdcm (pt_gdcm_is_repeating, pt_id, ptrg_id, pt_gdcm_signature, pt_gdcm_v
 
 
 --
--- Data for Name: pt_observation; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt_observation; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt_observation (pt_id, pt_obs_observer, pt_obs_value, pt_obs_comment, pt_obs_time) FROM stdin;
@@ -24461,7 +24461,7 @@ COPY pt_observation (pt_id, pt_obs_observer, pt_obs_value, pt_obs_comment, pt_ob
 
 
 --
--- Data for Name: pt_wustl; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: pt_wustl; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY pt_wustl (pt_id, pt_wustl_vr, pt_wustl_vm, pt_wustl_vm_second, pt_wustl_name, pt_wustl_name_second, pt_wustl_disposition, pt_wustl_disposition_second, pt_wustl_is_specific_to_block, pt_wustl_private_block, pt_wustl_signature, pt_wustl_device_sig) FROM stdin;
@@ -26430,7 +26430,7 @@ COPY pt_wustl (pt_id, pt_wustl_vr, pt_wustl_vm, pt_wustl_vm_second, pt_wustl_nam
 
 
 --
--- Data for Name: ptrg; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: ptrg; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY ptrg (ptrg_id, ptrg_signature_masked, ptrg_owner, ptrg_base_grp, ptrg_grp_mask, ptrg_grp_ext_mask, ptrg_grp_ext_shift, ptrg_element, ptrg_is_specific_to_block, ptrg_specific_block, ptrg_consensus_vr, ptrg_consensus_vm, ptrg_consensus_name, ptrg_consensus_disposition) FROM stdin;
@@ -26465,7 +26465,7 @@ COPY ptrg (ptrg_id, ptrg_signature_masked, ptrg_owner, ptrg_base_grp, ptrg_grp_m
 
 
 --
--- Data for Name: ptrg_observation; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: ptrg_observation; Type: TABLE DATA; Schema: public; Owner: bbennett
 --
 
 COPY ptrg_observation (ptrg_id, ptrg_obs_observer, ptrg_obs_value, ptrg_obs_comment, ptrg_obs_time) FROM stdin;
