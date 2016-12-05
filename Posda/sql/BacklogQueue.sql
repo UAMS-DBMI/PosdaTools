@@ -1,6 +1,6 @@
 create table request(
   request_id serial,
-  submitter_id integer not null ,
+  submitter_id integer not null,
   received_file_path text,
   copied_file_path text,
   file_copied boolean,

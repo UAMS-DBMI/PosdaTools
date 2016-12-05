@@ -3270,29 +3270,57 @@ sub DXImage{
 }
 sub CTImage{
   my($db, $ds, $id, $hist, $errors) = @_;
-  my $patient_parms = {
+  my $ct_parms = {
    kvp => "(0018,0060)",
-   scan_o => "(0018,0022)",
-   dcd => "(0018,0090)",
-   dcc => "(0018,0090)",
-   rcd => "(0018,1100)",
-   rtc => "(0018,9318)",
+   instance_number => "(0020,0013)",
+   scan_options => "(0018,0022)",
+   data_collection_diameter => "(0018,0090)",
+   reconstruction_diameter => "(0018,1100)",
+   dist_source_to_pat => "(0018,1111)",
+   dist_source_to_detect => "(0018,1110)",
+   gantry_tilt => "(0018,1120)",
+   rotation_dir => "(0018,1140)",
+   exposure_time  => "(0018,1150)",
+   exposure  => "(0018,1155)",
+   xray_tube_current  => "(0018,1151)",
+   filter_type  => "(0018,1160)",
+   generator_power  => "(0018,1170)",
+   convolution_kernal  => "(0018,1210)",
+   table_feed_per_rot  => "(0018,9310)",
   };
   my $ModList = {
-    scan_o => "MultiText",
-    dcc => "MultiText",
+    scan_options => "MultiText",
+    convolution_kernal => "MultiText",
   };
-  my $ins = $db->prepare(
+  my $parms = GetAttrs($ds, $ct_parms, $ModList, $errors);
+  my $ins_ct_img = $db->prepare(
     "insert into file_ct_image(\n" .
-    "  kvp, scan_options, data_collection_diameter,\n" .
-    "  reconstruction_diameter\n" .
+    "  file_id, kvp, instance_number,\n" .
+    "  scan_options, data_collection_diameter, reconstruction_diameter,\n" .
+    "  dist_source_to_pat, dist_source_to_detect,\n" .
+    "  gantry_tilt, rotation_dir, exposure_time, exposure,\n" .
+    "  xray_tube_current, filter_type, generator_power,\n" .
+    "  convolution_kernal, table_feed_per_rot\n" .
     ") values (\n" .
     "  ?, ?, ?,\n" .
-    "  ?\n" .
+    "  ?, ?, ?,\n" .
+    "  ?, ?,\n" .
+    "  ?, ?, ?, ?,\n" .
+    "  ?, ?, ?,\n" .
+    "  ?, ?\n" .
     ");"
-     
   );
-#  print "CTImage Module not yet implemented\n";
+  $ins_ct_img->execute(
+    $id, $parms->{kvp}, $parms->{instance_number},
+    $parms->{scan_options}, $parms->{data_collection_diameter},
+      $parms->{reconstruction_diameter},
+    $parms->{dist_source_to_pat}, $parms->{dist_source_to_detect},
+    $parms->{gantry_tilt}, $parms->{rotation_dir},
+      $parms->{exposure_time}, $parms->{exposure},
+    $parms->{xray_tube_current}, $parms->{filter_type},
+      $parms->{generator_power},
+    $parms->{convolution_kernal}, $parms->{table_feed_per_rot}
+  );
 }
 sub RTDose{
   my($db, $ds, $id, $hist, $errors) = @_;

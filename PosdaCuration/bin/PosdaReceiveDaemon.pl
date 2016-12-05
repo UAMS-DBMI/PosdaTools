@@ -28,12 +28,12 @@ my $ins_req = $dbh->prepare(
   "  submitter_id, received_file_path, copied_file_path,\n" .
   "  file_copied, copy_error, copy_path, file_digest,\n" .
   "  file_in_posda, import_error, time_received,\n" .
-  "  time_copied, time_entered\n" .
+  "  time_copied, time_entered, size\n" .
   ") values (\n" .
   "  ?, ?, null,\n" .
   "  false, false, null, ?,\n" .
   "  false, false, ?,\n" .
-  "  null, null\n" .
+  "  null, null, ?\n" .
   ")"
 );
 
@@ -43,6 +43,7 @@ my $root = $ARGV[2];
 
 #fork and exit;
 my $server = IO::Socket::INET->new(
+  LocalAddr => '144.30.5.92',
   Listen => 1024,
   LocalPort => $port,
   Proto => 'tcp',
@@ -81,7 +82,8 @@ while(1){
   my $err_message = "";
   for my $i (
     "command", "relativepath", "digest",
-    "collection", "site", "subject", "receive_date"
+    "collection", "site", "subject", "receive_date",
+    "size"
   ){
     unless(exists $hash{$i}){
       $err_message .= "no key ($i) found in request; "
@@ -115,7 +117,7 @@ while(1){
   }
   if(
     InsertRequest($submitter_id, $queued_file, $hash{digest},
-      $hash{receive_date})
+      $hash{receive_date}, $hash{size})
   ){
     print $client ("status: OK\n\n");
     close $client;
@@ -145,6 +147,6 @@ sub GetSubmitterId{
   return $hid->{currval}, undef;
 }
 sub InsertRequest{
-  my($submitter, $file, $digest, $data) = @_;
-  return $ins_req->execute($submitter, $file, $digest, $data);
+  my($submitter, $file, $digest, $data, $size) = @_;
+  return $ins_req->execute($submitter, $file, $digest, $data, $size);
 };

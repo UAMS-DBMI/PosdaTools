@@ -122,6 +122,8 @@ while(my $h = $q->fetchrow_hashref){
 my $q1 = $db->prepare(
   "select count(*) from file\n" .
   "where is_dicom_file is null and\n" .
+  "  processing_priority is not null and\n" .
+  "  ready_to_process and\n" .
   "  processing_priority is not null\n"
 );
 $q1->execute;

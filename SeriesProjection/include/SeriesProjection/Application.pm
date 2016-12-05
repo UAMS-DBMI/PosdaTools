@@ -69,25 +69,73 @@ method GetNextFileForReview() {
   # get the next item to display
   my $dbh = $self->{dbh};
 
-  my $iec_id = [$dbh->selectall_arrayref(qq{
-    -- Get one SEC id off the done list
-    select image_equivalence_class_id
+  my $sql;
 
-    from image_equivalence_class 
-    natural join image_equivalence_class_input_image 
-    natural join ctp_file 
+  if ($self->{ReviewMode} eq 'unreviewed') {
+    $sql = qq{
+      -- Get one SEC id off the done list
+      select image_equivalence_class_id
+
+      from image_equivalence_class 
+      natural join image_equivalence_class_input_image 
+      natural join ctp_file 
 
 
-    where processing_status = 'ReadyToReview'
-      and project_name = ?
-      and site_name = ?
-    limit 1
-  }, {}, ($self->{SelectedCollection}, $self->{SelectedSite}))]->[0]->[0]->[0];
+      where processing_status = 'ReadyToReview'
+        and project_name = ?
+        and site_name = ?
+      limit 1
+    };
+  } else {
+    return $self->GetNextReviewedFileForReview($self->{ReviewMode});
+  }
+
+
+  my $iec_id = [$dbh->selectall_arrayref($sql, 
+      {}, ($self->{SelectedCollection}, $self->{SelectedSite}))]->[0]->[0]->[0];
+
 
   DEBUG $iec_id;
 
   $self->{CurrentIEC} = $iec_id;
   $self->LoadDataForIEC($iec_id);
+}
+
+# Cannot rely on the same method as unreviewed because we
+# are not changing the processing_status. Must use a seperate curosr
+# for tracking this.
+method GetNextReviewedFileForReview($review_status) {
+  if (not defined $self->{GoodReviewCursor}) {
+    DEBUG "Running Query";
+    my $sth = $self->{dbh}->prepare(qq{
+      select distinct image_equivalence_class_id
+
+      from image_equivalence_class 
+      natural join image_equivalence_class_input_image 
+      natural join ctp_file 
+
+      where processing_status = 'Reviewed'
+        and review_status = ?
+        and project_name = ?
+        and site_name = ?
+    });
+
+    $sth->execute($review_status, 
+                  $self->{SelectedCollection},
+                  $self->{SelectedSite});
+
+    $self->{GoodReviewCursor} = $sth;
+  }
+
+
+  my $row = $self->{GoodReviewCursor}->fetchrow_arrayref();
+  my $iec = $row->[0];
+
+  DEBUG Dumper($iec);
+
+  $self->{CurrentIEC} = $iec;
+  $self->LoadDataForIEC($iec);
+
 }
 
 method LoadDataForIEC($iec_id) {
@@ -145,27 +193,33 @@ method LoadDataForIEC($iec_id) {
 method MenuResponse($http, $dyn) {
   $self->MakeMenu($http, $dyn,
     [
-      { type => "host_link_sync",
-        caption => "Good",
-        method => "SetGood",
+      { caption => "Start Over",
+        op => "StartOver",
+        sync => "Update();",
+        class => "btn btn-primary"
+      },
+      { caption => "Good",
+        op => "SetGood",
         sync => "Update();",
       },
-      { type => "host_link_sync",
-        caption => "Bad",
-        method => "SetBad",
+      { caption => "Bad",
+        op => "SetBad",
         sync => "Update();",
       },
-      { type => "host_link_sync",
-        caption => "Broken",
-        method => "SetBroken",
+      { caption => "Broken",
+        op => "SetBroken",
         sync => "Update();",
       },
-      { type => "host_link_sync",
-        caption => "Go Back",
-        method => "WeHaveToGoBack",
+      { caption => "Go Back",
+        op => "WeHaveToGoBack",
         sync => "Update();",
       },
     ]);
+}
+
+method StartOver($http, $dyn) {
+  delete $self->{GoodReviewCursor};
+  $self->SetMode(0, {mode => 'Welcome'});
 }
 
 method ContentResponse($http, $dyn) {
@@ -175,14 +229,183 @@ method ContentResponse($http, $dyn) {
   }
 }
 
+method SetMode($http, $dyn) {
+  DEBUG Dumper($dyn);
+  $self->{Mode} = $dyn->{mode};
+}
+
 method Welcome($http, $dyn) {
+  $http->queue(qq{
+    <p>
+      Select a mode.
+    </p>
+  });
+  $self->MakeMenu($http, $dyn,
+    [
+      { caption => "Review Unreviewed Series",
+        op => "SetMode",
+        mode => "Welcome2",
+        sync => "Update();",
+        class => "btn btn-primary"
+      },
+      { caption => "Review Good Series",
+        op => "SetMode",
+        mode => "ReviewGoodSeries",
+        sync => "Update();",
+      },
+      { caption => "Review Bad Series",
+        op => "SetMode",
+        mode => "ReviewBadSeries",
+        sync => "Update();",
+      },
+      { caption => "Review Broken Series",
+        op => "SetMode",
+        mode => "ReviewBrokenSeries",
+        sync => "Update();",
+      },
+    ]);
+}
+method ReviewGoodSeries($http, $dyn) {
+  $self->{ReviewMode} = 'Good';
+  return $self->ReviewReviewedSeries($http, $dyn);
+}
+method ReviewBadSeries($http, $dyn) {
+  $self->{ReviewMode} = 'Bad';
+  return $self->ReviewReviewedSeries($http, $dyn);
+}
+method ReviewBrokenSeries($http, $dyn) {
+  $self->{ReviewMode} = 'Broken';
+  return $self->ReviewReviewedSeries($http, $dyn);
+}
+method ReviewReviewedSeries($http, $dyn) {
+
+  # get the list of available project/site combos
+  my $available = [$self->{dbh}->selectall_arrayref(qq{
+    select 
+      project_name,
+      site_name,
+      count(distinct image_equivalence_class_id)
+
+    from 
+      image_equivalence_class 
+      natural join image_equivalence_class_input_image 
+      natural join ctp_file 
+
+    where processing_status = 'Reviewed' 
+      and review_status = '$self->{ReviewMode}'
+    group by project_name, site_name
+    order by count desc
+  })]->[0];
+
+  my @options = map {
+    ["$_->[0]/$_->[1] ($_->[2])", $_->[0], $_->[1]]
+  } @$available;
+
+
   $http->queue(qq{
     <div class="col-md-4">
 
-    <p>
+    <p class="alert alert-info">
       Choose a collection and site to begin review.
     </p>
   });
+
+  $http->queue(qq{
+    <div class="btn-group-vertical" style="margin-bottom: 10px" role="group">
+  });
+  for my $o (@options) {
+    my ($display, $proj, $site) = @$o;
+    $self->NotSoSimpleButtonButton($http, {
+      caption => $display,
+      op => 'SelectCollection',
+      collection => $proj,
+      site => $site
+    });
+  }
+  $http->queue(qq{
+    </div>
+
+    <p class="alert alert-info">
+      Or enter the Collection and Site manually:
+    </p>
+  });
+
+
+
+  $self->SimpleJQueryForm($http, {
+      op => 'SelectCollection'
+  });
+  $http->queue(qq{
+    <div class="form-group">
+      <label for="collection">Collection</label>
+      <input name="collection" id="collection" class="form-control" type="text">
+    </div>
+    <div class="form-group">
+      <label for="site">Site</label>
+      <input name="site" id="site" class="form-control" type="text">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    </div>
+
+  });
+}
+
+method Welcome2($http, $dyn) {
+  $self->{ReviewMode} = 'unreviewed';
+  # get the list of available project/site combos
+  my $available = [$self->{dbh}->selectall_arrayref(qq{
+    select 
+      project_name,
+      site_name,
+      count(distinct image_equivalence_class_id)
+
+    from 
+      image_equivalence_class 
+      natural join image_equivalence_class_input_image 
+      natural join ctp_file 
+
+    where processing_status = 'ReadyToReview' 
+    group by project_name, site_name
+    order by count desc
+  })]->[0];
+
+  my @options = map {
+    ["$_->[0]/$_->[1] ($_->[2])", $_->[0], $_->[1]]
+  } @$available;
+
+
+  $http->queue(qq{
+    <div class="col-md-4">
+
+    <p class="alert alert-info">
+      Choose a collection and site to begin review.
+    </p>
+  });
+
+  $http->queue(qq{
+    <div class="btn-group-vertical" style="margin-bottom: 10px" role="group">
+  });
+  for my $o (@options) {
+    my ($display, $proj, $site) = @$o;
+    $self->NotSoSimpleButtonButton($http, {
+      caption => $display,
+      op => 'SelectCollection',
+      collection => $proj,
+      site => $site
+    });
+  }
+  $http->queue(qq{
+    </div>
+
+    <p class="alert alert-info">
+      Or enter the Collection and Site manually:
+    </p>
+  });
+
+
+
   $self->SimpleJQueryForm($http, {
       op => 'SelectCollection'
   });
@@ -281,6 +504,34 @@ method RenderCurrentSeries($http, $dyn) {
 
     return;
   }
+
+  if ($self->{ReviewMode} eq 'Good') {
+    $http->queue(qq{
+      <p class="alert alert-warning">
+        You are viewing Series that have previously been marked as 
+        <strong>GOOD</strong>. Use the "Good" button to move forward.
+      </p>
+    });
+  }
+  if ($self->{ReviewMode} eq 'Bad') {
+    $http->queue(qq{
+      <p class="alert alert-warning">
+        You are viewing Series that have previously been marked as 
+        <strong>BAD</strong>. Use the "Bad" button to move forward, or 
+        choose another button to reclassify.
+      </p>
+    });
+  }
+  if ($self->{ReviewMode} eq 'Broken') {
+    $http->queue(qq{
+      <p class="alert alert-warning">
+        You are viewing Series that have previously been marked as 
+        <strong>BROKEN</strong>. Use the "Broken" button to move forward, or 
+        choose another button to reclassify.
+      </p>
+    });
+  }
+
   my ($filename, $file_id, $series_uid) = @{$self->{CurrentFile}};
   my ($image_type, $modality, $series_desc, $series_extra) = @{$self->{CurrentFileExtInfo}};
   my $file_count = $#{$self->{DicomFiles}} + 1;
@@ -320,7 +571,7 @@ method RenderCurrentSeries($http, $dyn) {
       </tr>
     </table>
 
-    <img style="background-image: url('/checkered.png');" 
+    <img style="background-image: url('/checker.svg'); background-size: 40px 40px" 
          src="GetFile?obj_path=SeriesProjection&type=png&file_id=$file_id&path=$filename">
   });
 

@@ -40,21 +40,19 @@ $Hash{FilesByDigest} = {};
 $Hash{FilesToDigest} = {};
 my $add_file = sub {
   my($row) = @_;
-  $Hash{FilesToDigest}->{$row->{path}} = $row->{digest};
-  push @{$Hash{FilesToSend}}, $row->{path};
+  $Hash{FilesToDigest}->{$row->[1]} = $row->[7];
+  push @{$Hash{FilesToSend}}, $row->[1];
   my $file_desc = {
-    dataset_start_offset => $row->{data_set_start},
-    dataset_size => $row->{data_set_size},
-    xfr_stx => $row->{xfer_syntax},
-    file => $row->{path},
-    sop_class_uid => $row->{sop_class_uid},
-    sop_inst_uid => $row->{sop_instance_uid},
+    dataset_start_offset => $row->[5],
+    dataset_size => $row->[4],
+    xfr_stx => $row->[2],
+    file => $row->[1],
+    sop_class_uid => $row->[3],
+    sop_inst_uid => $row->[6],
   };
-  $Hash{FilesFromDigest}->{$row->{digest}} = $file_desc;
+  $Hash{FilesFromDigest}->{$row->[7]} = $file_desc;
 };
-$q_inst->Prepare($dbh);
-$q_inst->Execute($series_instance_uid);
-$q_inst->Rows($add_file);
+$q_inst->RunQuery($add_file, sub {}, $series_instance_uid);
 #print STDERR "Specification: ";
 #Debug::GenPrint($dbg, \%Hash, 1);
 #print STDERR "\n";

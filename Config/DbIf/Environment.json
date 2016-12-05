@@ -14,13 +14,22 @@
     "SeriesConsistency" : "CheckSeriesConsistency.pl <series_instance_uid>",
     "StudyConsistency" : "CheckStudyConsistency.pl <study_instance_uid>",
     "PatConsistency": "CheckPatConsistency.pl <collection> <patient_id>",
-    "SendSeries" : "SendSeriesFromDb.pl <host> <port> <called> <calling> <series_instance_uid> 1",
-    "ScanPhi" : "<series_instance_uid>, <signature>|PhiScan.pl posda_files posda_phi <description>",
+    "SendSeriesToDestination" : "<series_instance_uid> |SendSetOfSeriesToDestination.pl <host> <port> <called> <calling> <user> \"<reason>\"",
+    "ScanPhi" : "<series_instance_uid>, <signature>|PhiScan.pl <type> \"<description>\"",
     "OnlyIn" : "<SeriesInPosda>, <SeriesInIntake>|OnlyIn.pl Posda Intake",
     "CompareDuplicateSops" : "<sop_instance_uid>|CompareDupSopList.pl",
     "TestCommand" : "TestCommand.pl <host> <port> <called> <calling> <series_instance_uid>",
     "PipeCommand1" : "<vals1>,<vals2>,<vals3>|PipeCommand1.pl <var1> <var2> 1 2 3",
-    "SymLinkToIntake" : "<PID>, <Modality>, <SopInstance>, <FilePath>|SymLinkToIntake.pl /cache/bbennett/Symlinks"
+    "SymLinkToIntake" : "<PID>, <Modality>, <SopInstance>, <FilePath>|SymLinkToIntake.pl /cache/bbennett/Symlinks",
+    "LinkDirectory" : "<path>, <sop_instance_uid>|MakeLinkedDirectory.pl <target_dir>",
+    "AddInitialStatus" : "<patient_id>, <status>|PopulatePatStat.pl",
+    "ChangePatientStatus" : "<patient_id>, <old_status>, <new_status>|UpdatePatStat.pl <who> \"<why>\"",
+    "UpdateKnowledgeBase" : "<Tag>^<VR>^<Disposition>^<NameChain>|UpdateKnowledgeBase.pl <who> \"<why>\"",
+    "LinkFileHierarchy" : "<patient_id>  <study_instance_uid> <series_instance_uid>|LinkFileHierarchy.pl <Destination>",
+    "ApplyPrivateDisposition" : "<patient_id>&<study_instance_uid>&<series_instance_uid>|CsvApplyPrivateDisposition.pl <dest_dir> <uid_root> <offset> <low_date> <high_date>",
+    "ApplyPublicPrivateDisposition" : "<patient_id>&<study_instance_uid>&<series_instance_uid>|CsvApplyPublicAndPrivateDisposition.pl <dest_dir> <uid_root> <offset> <low_date> <high_date> <sop_class_uid> \"<name>\"",
+    "HideSeriesWithStatus" : "<series_instance_uid>|HideBatchSeriesWithStatus.pl <who> \"<why>\"",
+    "CreatePublicDispositionTable" : "<Tag>^<VR>^<Disposition>^<NameChain>|CreatePublicDispositionTable.pl <sop_class_uid> \"<Description>\" <who>"
   },
   "DbSpec" : {
     "posda_files" : {
@@ -44,14 +53,14 @@
       "db_type" : "mysql",
       "db_host" : "144.30.1.74",
       "db_user" : "nciauser",
-      "db_pass" : "nciA#112"
+      "db_pass" : "nciA112#"
     },
     "intake" : {
       "db_name" : "ncia",
       "db_type" : "mysql",
       "db_host" : "144.30.1.71",
       "db_user" : "nciauser",
-      "db_pass" : "nciA#112"
+      "db_pass" : "nciA112#"
     },
   },
 }

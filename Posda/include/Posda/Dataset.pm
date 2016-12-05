@@ -2297,8 +2297,9 @@ sub NewSearch{
       $index_list->{$index} = $which;
       unless($this->{$grp}->{private}->{$owner}->{$ele}->{VR} eq "SQ"){
         die sprintf(
-           "indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]",
-           $grp, $ele);
+           "indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]" .
+           "  (%s)",
+           $grp, $ele, $remain);
       }
       my $obj_list = $this->{$grp}->{private}->{$owner}->{$ele}->{value};
       for my $i (0 .. $#{$obj_list}){
@@ -2471,7 +2472,7 @@ sub Search{
       print STDERR "\tline $line of $file\n";
     }
 
-    die "bad pattern";
+    die "bad pattern ($pat)";
   }
 }
 sub Substitute{

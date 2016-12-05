@@ -15,6 +15,10 @@
     "database" : "private_tag_kb",
     "driver"   : "postgres"
   },
+  "posda_public_tag" : {
+    "database" : "public_tag_disposition",
+    "driver"   : "postgres"
+  },
   "posda_dicom_roots" : {
     "database" : "dicom_roots",
     "driver"   : "postgres"
@@ -35,11 +39,14 @@
     "database" : "posda_phi",
     "driver"   : "postgres"
   },
-
+  "posda_backlog" : {
+    "database" : "posda_backlog",
+    "driver"   : "postgres"
+  },
   "public" : {
     "database" : "ncia",
     "driver"   : "mysql",
-    "host"     : "144.30.1.74",
+    "host"     : "tcia-public-rh-1.ad.uams.edu",
     "user"     : "nciauser",
     "password" : "nciA#112"
   },
@@ -49,5 +56,9 @@
     "host"     : "144.30.1.71",
     "user"     : "nciauser",
     "password" : "nciA#112"
+  },
+  "backlog" : {
+    "database" : "posda_backlog",
+    "driver"   : "postgres"
   }
 }

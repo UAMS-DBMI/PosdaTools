@@ -490,6 +490,18 @@ CREATE TABLE file_for (
     position_ref_indicator text
 );
 
+CREATE TABLE patient_import_status(
+    patient_id text NOT NULL UNIQUE,
+    patient_import_status text
+);
+CREATE TABLE patient_import_status_change(
+    patient_id text NOT NULL,
+    when_pat_stat_changed timestamp with time zone,
+    pat_stat_change_who text,
+    pat_stat_change_why text,
+    old_pat_status text,
+    new_pat_status text
+);
 --
 -- Name: file_patient; Type: TABLE
 --
@@ -1424,4 +1436,38 @@ CREATE TABLE rt_dvh_protocol_case_roi(
 CREATE TABLE rt_dvh_available_rois (
     rt_dvh_dvh_id integer NOT NULL,
     available_rois TEXT
+);
+--
+--  One row for each equivalence class
+--  Processing_status:
+--    Preparing: script is breaking up series
+--       into equivalence classes and building
+--       lists of CT file_id's
+--    ReadyToProcess: script is completed and
+--       ready for projections to be computed
+--    ReadyToReview: projections are completed
+--       and are ready for review.  This is
+--       final state. On entry, review_status is
+--       set to ready.
+--    ProcessingError: Unable to compute projections
+--       for some reason.  Investigate, fix script
+--       and change to ReadyToProcess.
+--  Review_status:
+--    For use by Review UI
+--
+create table image_equivalence_class(
+  image_equivalence_class_id serial,
+  series_instance_uid text not null,
+  equivalence_class_number integer,
+  processing_status text,
+  review_status text
+);
+create table image_equivalence_class_input_image(
+  image_equivalence_class_id integer not null,
+  file_id integer not null
+);
+create table image_equivalence_class_out_image(
+  image_equivalence_class_id integer not null,
+  projection_type text not null,
+  file_id integer not null
 );

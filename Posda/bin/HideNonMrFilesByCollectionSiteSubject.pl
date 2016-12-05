@@ -2,7 +2,7 @@
 use strict;
 use DBI;
 use Posda::Config 'Config';
-my $usage = "usage: HideNonMrFilesByCollectionSiteSubject.pl <collection> <site><subject> <user> <reason>\n";
+my $usage = "usage: HideNonMrFilesByCollectionSiteSubject.pl <collection> <site> <subject> <user> <reason>\n";
 unless($#ARGV == 4) { die $usage }
 my $dbh = DBI->connect("DBI:Pg:database=${\Config('files_db_name')}");
 my $get_file = <<EOF;

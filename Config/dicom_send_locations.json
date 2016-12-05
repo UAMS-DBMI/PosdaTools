@@ -18,8 +18,8 @@
     "called_ae" : "JOSEPH"
   },
   "Beast" : {
-    "host" : "144.30.108.235",
-    "port" : "64661",
+    "host" : "144.30.111.143",
+    "port" : "64611",
     "calling_ae" : "POSDA",
     "called_ae" : "BEAST"
   },

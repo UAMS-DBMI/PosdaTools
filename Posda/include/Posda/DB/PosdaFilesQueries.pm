@@ -106,7 +106,10 @@ method _load_query($name) {
     where name = ?
   });
 
-  $qh->execute($name);
+  my $rows = $qh->execute($name);
+  unless($rows > 0){
+    die "############\nQuery: $name isn't defined\n#########";
+  }
 
   my ($name_, $query, $args, 
       $columns, $tags, $schema, $description) = @{$qh->fetchrow_arrayref()};

@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
-use DBI;
-my $dbh = DBI->connect("DBI:Pg:dbname=posda_files", "", "");
-my $ins = $dbh->prepare("insert into patient_import_status(patient_id, patient_import_status) values (?, ?)");
+use Posda::DB::PosdaFilesQueries;
+my $ins = PosdaDB::Queries->GetQueryInstance("InsertInitialPatientStatus");
+my $nop = sub { };
 while(my $line = <STDIN>){
   chomp $line;
-  my($pat_id, $status) = split(/ /, $line);
-  $ins->execute($pat_id, $status);
+  my($pat_id, $status) = split(/\s*,\s*/, $line);
+  $ins->RunQuery($nop, $nop, $pat_id, $status);
+  print "set status of $pat_id to '$status'\n";
 }

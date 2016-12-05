@@ -704,6 +704,29 @@ sub SimpleButton{
   $http->queue($string);
 }
 
+# Create a form that when submitted will call an operation
+# (via PosdaGetRemoteMethod) and pass a serialized version
+# of itself.
+#
+# This requires JQuery.
+#
+# op must be specified.
+# You must close the <form> tag yourself, and you must provide
+# a submit button. NOTE: The JQuery seralize() method will
+# ONLY seralize inputs that name a 'name' attribute. Make sure you
+# give your elements a name (and not just an id) or no data will be
+# sent to the method!
+method SimpleJQueryForm($http, $dyn) {
+  my $class = ($dyn->{class} or 'form');
+  my $id = ($dyn->{id} or 'SimpleJQueryForm');
+  my $op = ($dyn->{op} or die 'op required');
+
+  $http->queue(qq{
+    <form class="$class" id="$id"
+          onSubmit="PosdaGetRemoteMethod('$op', \$('#$id').serialize(), function(){Update();});return false;">
+  });
+}
+
 # A button that submits the value from another element, to the given op.
 # Requires jQuery. Will work on any element that implements .val() (js).
 # Originally written for reading values from input text boxes
@@ -824,7 +847,13 @@ sub MakeMenu{
     if(not defined $m->{condition} or $m->{condition}){
       if (not defined $m->{type} or $m->{type} eq "button") {
         my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
-        $m->{class} = 'list-group-item';
+        #$m->{class} = 'list-group-item';
+        if (not defined $m->{class}) {
+          $m->{class} = 'btn btn-default';
+        }
+        if (defined $m->{extra_class}) {
+          $m->{class} = "$m->{class} $m->{extra_class}";
+        }
         $m->{element} = 'a';
         $this->NotSoSimpleButton($http, $m);
       } elsif ($m->{type} eq "host_link"){

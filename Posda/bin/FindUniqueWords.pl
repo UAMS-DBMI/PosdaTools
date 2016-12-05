@@ -99,16 +99,43 @@ sub MakeEleFun{
           }
         }
       } elsif(length($v) > 64) {
-        my @values = split(/\s*/, $v);
+        my @values = split(/[\s,]+/, $v);
         value2:
         for my $i (@values){
-          $i =~ tr/\000-\037/ /;
-          $i =~ s/\|/ /g;
-          $i =~ s/\s*$//g;
-          $i =~ s/^\s*//g;
-          if($i eq "" ) { next value2 }
-          $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
-          $num_text_values += 1;
+          if(length($i) > 64){
+            my $remain = $i;
+            value3:
+            while($remain =~ /^(.....................)(.*)$/){
+              my $j = $1;
+              $remain = $2;
+              $j =~ tr/\000-\037/ /;
+              $j =~ s/\|/ /g;
+              $j =~ s/\s*$//g;
+              $j =~ s/^\s*//g;
+              if($j eq "" ) { next value3 }
+              $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
+              $num_text_values += 1;
+            }
+            if($remain){
+              my $j = $remain;
+              $j =~ tr/\000-\037/ /;
+              $j =~ s/\|/ /g;
+              $j =~ s/\s*$//g;
+              $j =~ s/^\s*//g;
+              unless($j eq "" ) {
+                $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
+                $num_text_values += 1;
+              }
+            }
+          } else {
+            $i =~ tr/\000-\037/ /;
+            $i =~ s/\|/ /g;
+            $i =~ s/\s*$//g;
+            $i =~ s/^\s*//g;
+            if($i eq "" ) { next value2 }
+            $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+            $num_text_values += 1;
+          }
         }
       } else {
         $v =~ tr/\000-\037/ /;
