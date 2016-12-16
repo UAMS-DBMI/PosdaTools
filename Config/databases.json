@@ -74,7 +74,7 @@
     ]
   },
   "posda_backlog" : {
-    "database" : "N_posda_backlog",
+    "database" : "n_posda_backlog",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_backlog.sql"

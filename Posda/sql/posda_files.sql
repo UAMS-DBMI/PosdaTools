@@ -724,7 +724,7 @@ CREATE TABLE file (
 
 CREATE TABLE file_ct_image (
     file_id integer NOT NULL,
-    kvp text NOT NULL,
+    kvp text,
     instance_number text,
     scan_options text,
     data_collection_diameter text,
@@ -1430,6 +1430,19 @@ CREATE TABLE image_slope_intercept (
 CREATE TABLE image_window_level (
     window_level_id integer NOT NULL,
     image_id integer NOT NULL
+);
+
+
+--
+-- Name: import_control; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE import_control (
+    status text,
+    processor_pid integer,
+    idle_seconds integer,
+    pending_change_request text,
+    files_per_round integer
 );
 
 

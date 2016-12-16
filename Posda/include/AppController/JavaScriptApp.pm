@@ -25,7 +25,7 @@ use Posda::DebugLog 'off';
 {
   package AppController::JavaScriptApp;
 
-  use Posda::Config 'Config';
+  use Posda::Config ('Config', 'Database');
   use Posda::Passwords;
   use DBI;
 
@@ -420,7 +420,7 @@ EOF
     my $enc_pass = Posda::Passwords::encode($password);
 
     # create new user account
-    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+    my $dbh = DBI->connect(Database('posda_auth'));
 
     my $stmt = $dbh->prepare(qq{
       insert into users (user_name, full_name, password)
@@ -1087,7 +1087,7 @@ EOF
       return;
     }
 
-    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+    my $dbh = DBI->connect(Database('posda_auth'));
 
     # verify current pass
     my $stmt = $dbh->prepare(qq{

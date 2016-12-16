@@ -29,7 +29,8 @@
     "ApplyPrivateDisposition" : "<patient_id>&<study_instance_uid>&<series_instance_uid>|CsvApplyPrivateDisposition.pl <dest_dir> <uid_root> <offset> <low_date> <high_date>",
     "ApplyPublicPrivateDisposition" : "<patient_id>&<study_instance_uid>&<series_instance_uid>|CsvApplyPublicAndPrivateDisposition.pl <dest_dir> <uid_root> <offset> <low_date> <high_date> <sop_class_uid> \"<name>\"",
     "HideSeriesWithStatus" : "<series_instance_uid>|HideBatchSeriesWithStatus.pl <who> \"<why>\"",
-    "CreatePublicDispositionTable" : "<Tag>^<VR>^<Disposition>^<NameChain>|CreatePublicDispositionTable.pl <sop_class_uid> \"<Description>\" <who>"
+    "CreatePublicDispositionTable" : "<Tag>^<VR>^<Disposition>^<NameChain>|CreatePublicDispositionTable.pl <sop_class_uid> \"<Description>\" <who>",
+    "UpdateCollectionPrio" : "<collection>&<priority>|UpdateBacklogPriorities.pl"
   },
   "DbSpec" : {
     "posda_files" : {

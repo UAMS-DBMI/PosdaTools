@@ -7,7 +7,7 @@ use Debug;
   use Storable qw( store retrieve store_fd fd_retrieve );
   use Posda::Permissions;
   use Posda::Passwords;
-  use Posda::Config 'Config';
+  use Posda::Config ('Config', 'Database');
   use Posda::DebugLog 'on';
   use Data::Dumper;
 
@@ -66,7 +66,7 @@ use Debug;
     
     # login
 
-    my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+    my $dbh = DBI->connect(Database('posda_auth'));
     my $stmt = $dbh->prepare(qq{
       select password
       from users
