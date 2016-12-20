@@ -1,0 +1,7 @@
+<div *ngIf="projectList">
+  <li *ngFor="let a of projectList">
+    <a (click)="choose(a)" href="#">
+      {{a.Project_name}} - {{a.Site_name}} ({{a.Count}})
+    </a>
+  </li>
+</div>

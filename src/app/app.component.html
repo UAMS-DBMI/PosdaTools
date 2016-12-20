@@ -1,3 +1,27 @@
-<h1>
-  {{title}}
-</h1>
+<h1>Kaleidoscope</h1>
+
+<ol>
+	<li>
+		<a (click)="initialized=false" href="">Home</a>
+	</li>
+</ol>
+
+<p>IECs reviewed so far this session: {{currentIecOffset}}</p>
+
+<p>
+<button (click)="markGood()" [disabled]="disableButtons()">Good</button>
+<button (click)="markBad()" [disabled]="disableButtons()">Bad</button>
+<button (click)="markUgly()" [disabled]="disableButtons()">Ugly</button>
+</p>
+
+
+<button (click)="moveBackward()">Go Back</button>
+<p><button (click)="printAll()">Print debug info</button></p>
+
+<!-- <div id="router-outlet">
+	<router-outlet (onProjectChosen)="choose($event)"></router-outlet>
+</div> -->
+
+<app-component1 *ngIf="!initialized" (onProjectChosen)="choose($event)"></app-component1>
+
+<app-series-component [iec]="currentIec" *ngIf="initialized"></app-series-component>

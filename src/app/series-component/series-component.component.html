@@ -1,0 +1,27 @@
+<p>
+    <label>Current selection:</label>
+</p>
+
+<div *ngIf="series">
+  <table>
+    <tr>
+      <td>IEC</td>
+      <td>{{series.Image_equivalence_class_id}}</td>
+    </tr>
+    <tr>
+      <td>Current review status</td>
+      <td>{{series.Review_status}}</td>
+    </tr>
+    <tr>
+      <td>Series Instance UID</td>
+      <td>{{series.Series_instance_uid}}</td>
+    </tr>
+    <tr>
+      <td>Path</td>
+      <td>{{series.Path}}</td>
+    </tr>
+  </table>
+
+  <img *ngIf="series.Test_field"
+       [src]="'data:image/png;base64,'+series.Test_field" />
+</div>
