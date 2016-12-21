@@ -1120,11 +1120,24 @@ method ActiveQuery($http, $dyn){
           });
         }
         $http->queue('</table>');
-        $self->NotSoSimpleButton($http,
-          { caption => "Query Database",
+        $http->queue('<p>');
+        $self->NotSoSimpleButton($http, { 
+            caption => "Query and Display Results",
             op => "MakeQuery",
             sync => "Update();",
-            class => "btn btn-primary" });
+            class => "btn btn-primary",
+            then => "results"
+        });
+        $http->queue('</p>');
+        $http->queue('<p>');
+        $self->NotSoSimpleButton($http, { 
+            caption => "Query and Go to Tables",
+            op => "MakeQuery",
+            sync => "Update();",
+            class => "btn btn-default",
+            then => "tables"
+        });
+        $http->queue('</p>');
       }
     } elsif($d->{struct} eq "hash key list"){
       # TODO: This is both not a hash key list, AND it only works
@@ -1183,6 +1196,7 @@ method MakeQuery($http, $dyn){
   }
 
   my $query = {};
+  my $then = $dyn->{then};
 
   $query->{bindings} = $self->GetBindings();
 
@@ -1195,7 +1209,7 @@ method MakeQuery($http, $dyn){
     func($row) {
       push @{$self->{query_rows}}, $row;
     },
-    $self->QueryEnd($query),
+    $self->QueryEnd($query, $then),
     func($message) {
       $self->{Mode} = "QueryError";
       $self->{ErrorMessage} = $message;
@@ -1235,7 +1249,7 @@ method QueryWait($http, $dyn) {
   });
 }
 
-method QueryEnd($query) {
+method QueryEnd($query, $then) {
   my $start_time = time;
   my $sub = sub {
     my($status, $struct) = @_;
@@ -1247,8 +1261,12 @@ method QueryEnd($query) {
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
 
-      return $self->CreateAndSelectTableFromQuery($self->{query}, $struct,
-        $start_time);
+      if ($then eq 'results') {
+        return $self->CreateAndSelectTableFromQuery($self->{query}, $struct, $start_time);
+      } else {
+        $self->CreateTableFromQuery($self->{query}, $struct, $start_time);
+        $self->{Mode} = "Tables";
+      }
     } elsif(exists $struct->{NumRows}){
       return $self->UpdateInsertCompleted($query, $struct);
     }
@@ -1279,7 +1297,8 @@ method UpdateInsertCompleted($query, $struct){
     $self->{Mode} eq "UpdateInsertStatus";
   }
 }
-method CreateAndSelectTableFromQuery($query, $struct, $start_at){
+
+method CreateTableFromQuery($query, $struct, $start_at) {
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $new_entry = {
     type => "FromQuery",
@@ -1300,11 +1319,69 @@ method CreateAndSelectTableFromQuery($query, $struct, $start_at){
   $new_q->{columns} = \@cols;
   $new_entry->{query} = $new_q;
   push(@{$self->{LoadedTables}}, $new_entry);
+
+}
+method SelectNewestTable() {
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
     $self->{Mode} = "TableSelected";
     $self->{SelectedTable} = $index;
   }
+}
+
+method CreateAndSelectTableFromQuery($query, $struct, $start_at){
+	$self->CreateTableFromQuery($query, $struct, $start_at);
+	$self->SelectNewestTable();
+}
+
+method DownloadPreparedReport($http, $dyn) {
+  my $filename = $dyn->{filename};
+  my $shortname = $dyn->{shortname};
+
+  DEBUG $filename;
+
+  my $fh;
+  if(open $fh, $filename) {
+    $http->DownloadHeader("text/csv", $shortname);
+    Dispatch::Select::Socket->new(
+      $self->SendFile($http),
+    $fh)->Add("reader");
+  }
+
+}
+
+sub WaitHttpReady{
+  my($this, $disp, $buff, $http) = @_;
+  my $sub = sub {
+    my($event) = @_;
+    #print STDERR "UnThrottling tar\n";
+    $http->queue($buff);
+    $disp->Add("reader");
+  };
+  return $sub;
+}
+sub SendFile{
+  my($this, $http) = @_;
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    my $buff;
+    my $count = sysread($sock, $buff, 10240);
+    if($count <= 0){
+      $disp->Remove;
+      return;
+    }
+    if($http->ready_out){
+      $http->queue($buff);
+    } else {
+      #print STDERR "Throttling tar\n";
+      $disp->Remove("reader");
+      my $event = Dispatch::Select::Event->new(
+        Dispatch::Select::Background->new(
+          $this->WaitHttpReady($disp, $buff, $http)));
+      $http->wait_output($event);
+    }
+  };
+  return $sub;
 }
 
 method DownloadTableAsCsv($http, $dyn){
@@ -1835,6 +1912,7 @@ method Reports($http, $dyn) {
       <th>Filename</th>
       <th>Type</th>
       <th>Bytes</th>
+      <th>Download</th>
     </tr>
   });
   for my $f (@common_files) {
@@ -1858,6 +1936,12 @@ method Reports($http, $dyn) {
         </td>
         <td>$type</td>
         <td>$size</td>
+        <td>
+        <a class="btn btn-primary" 
+           href="DownloadPreparedReport?obj_path=$self->{path}&filename=$filename&shortname=$f">
+           ⬇
+        </a>
+      </td>
       </tr>
     });
   }
@@ -1969,6 +2053,12 @@ method Tables($http, $dyn){
         op => "SelectTable",
         index => $in,
         sync => "Update();",
+    });
+    $http->queue(qq{
+        <a class="btn btn-primary" 
+           href="DownloadTableAsCsv?obj_path=$self->{path}&table=$in">
+           Download
+        </a>
     });
     my $can_nickname = 0;
     my $can_command = 0;
