@@ -541,8 +541,13 @@ method SaveQuery($http, $dyn) {
   $self->{query}->Save();
   $http->queue(qq{
     <p class="alert alert-info">
-      Query saved. Click Reset to return to the list.
+      Query saved.
     </p>
+  });
+  $self->NotSoSimpleButton($http, {
+    caption => "Return to query",
+    op => "ResetQuery",
+    sync => 'Update();'
   });
 }
 
@@ -898,7 +903,7 @@ method ActiveQuery($http, $dyn){
   for my $i (
     "name", "schema", "description", "tags", "columns", "args", "query"
   ){
-    DEBUG "i = $i";
+    #DEBUG "i = $i";
     my $d = $descrip->{$i};
     $http->queue(qq{
       <tr>
@@ -908,7 +913,7 @@ method ActiveQuery($http, $dyn){
         <td align="left" valign = "top">
     });
     if($d->{struct} eq "text"){
-      DEBUG 'text';
+      #DEBUG 'text';
       if(
         defined($d->{special}) &&
         $d->{special} eq "pre-formatted"
@@ -919,9 +924,9 @@ method ActiveQuery($http, $dyn){
       }
     }
     if($d->{struct} eq "array"){
-      DEBUG 'array';
+      #DEBUG 'array';
       if($d->{special} eq "pre-formatted-list"){
-        DEBUG 'pre-formatted-list';
+        #DEBUG 'pre-formatted-list';
 
         $http->queue(qq{
           <table class="table table-condensed">
@@ -932,7 +937,7 @@ method ActiveQuery($http, $dyn){
         $self->RefreshEngine($http, $dyn, "</table>");
 
       } elsif($d->{special} eq "form"){
-        DEBUG 'form';
+        #DEBUG 'form';
         $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
           # preload the Input if arg is in cache
@@ -1004,6 +1009,13 @@ method GetBindings() {
 }
 
 method MakeQuery($http, $dyn){
+  # ensure the schema is valid
+  if ($self->{query}->{connect} eq 'invalid database name') {
+    $self->{ErrorMessage} = 'Requested schema does not exist!';
+    $self->{Mode} = 'QueryError';
+    return;
+  }
+
   my $query = {};
 
   $query->{bindings} = $self->GetBindings();
@@ -1045,7 +1057,7 @@ method QueryError($http, $dyn) {
 }
 
 method ResetQuery($http, $dyn) {
-  $self->{Mode} = "ActiveQuery";
+  $self->SetActiveQuery($http, {query_name => $self->{Query}});
 }
 
 method QueryWait($http, $dyn) {
