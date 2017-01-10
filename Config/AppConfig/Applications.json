@@ -231,7 +231,7 @@
     "DicomReceiver": {
        "ObjClass": "Posda::Receiver",
        "CreationArgs": [
-         64611,
+         POSDA_RECIEVER_PORT,
          ["Config", "DicomReceiver"],
          "POSDA_CACHE_ROOT/DicomReceiver",
        ],
@@ -239,7 +239,7 @@
     "ExtractionManager": {
        "ObjClass": "TciaCuration::ExtractionManager",
        "CreationArgs": [
-         64612,
+         POSDA_EXTRACTION_PORT,
          ["Config", "ExtractionManager"],
          "POSDA_CACHE_ROOT/Data/HierarchicalExtractions",
        ],
