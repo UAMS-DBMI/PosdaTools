@@ -1018,9 +1018,34 @@ method MakeQuery($http, $dyn){
       push @{$self->{query_rows}}, $row;
     },
     $self->QueryEnd($query),
+    func($message) {
+      $self->{Mode} = "QueryError";
+      $self->{ErrorMessage} = $message;
+      $self->AutoRefresh;
+    },
     @{$query->{bindings}}
   );
 
+}
+
+method QueryError($http, $dyn) {
+  $http->queue(qq{
+    <div>
+      <p class="alert alert-danger">Error executing query!</p>
+      <p>Query that was executing: $self->{Query}</p>
+      <pre>$self->{ErrorMessage}</pre>
+    </div>
+  });
+
+  $self->NotSoSimpleButton($http, {
+    caption => "Return to query",
+    op => "ResetQuery",
+    sync => 'Update();'
+  });
+}
+
+method ResetQuery($http, $dyn) {
+  $self->{Mode} = "ActiveQuery";
 }
 
 method QueryWait($http, $dyn) {

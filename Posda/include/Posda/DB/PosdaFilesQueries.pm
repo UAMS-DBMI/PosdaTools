@@ -188,6 +188,22 @@ sub _RunQueryAsync {
   my($self) = shift;
   my $row_callback = shift;
   my $end_callback = shift;
+  my $error_callback = shift;
+
+  # error_callback might actually be the first bind variable, or
+  # even undef. If it's not code put it back!
+
+  if (ref($error_callback) ne 'CODE') {
+    if (defined $error_callback) {
+      unshift @_, $error_callback;
+    }
+
+    $error_callback = sub {
+      my $message = shift;
+      print STDERR "Error in query, but no error_callback passed!\n$message\n";
+    }
+  }
+
 
   # Is there a better way to do this? There is no new() on this class
   my $ev = {};
@@ -212,10 +228,14 @@ sub _RunQueryAsync {
     sub {
       my $status = shift;
       my $result = shift;
-      for my $row (@{$result->{Rows}}) {
-        &$row_callback($row);
+      if ($result->{Status} eq 'Error') {
+        &$error_callback($result->{Message});
+      } else {
+        for my $row (@{$result->{Rows}}) {
+          &$row_callback($row);
+        }
+        &$end_callback();
       }
-      &$end_callback();
     }
   );
 }
