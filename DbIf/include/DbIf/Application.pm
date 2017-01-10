@@ -1341,6 +1341,12 @@ method TableSelected($http, $dyn){
         </a>
       });
     $self->InsertSaveReportModal($http, "$query->{name}.csv");
+    $self->NotSoSimpleButton($http, {
+      caption => "Return to Query",
+      op => "SetActiveQuery",
+      query_name => $query->{name},
+      sync => 'Update();'
+    });
     $http->queue(qq{
       </p>
 
