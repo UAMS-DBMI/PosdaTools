@@ -14,43 +14,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
-SET search_path = public, pg_catalog;
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: queries; Type: TABLE; Schema: public; Owner: quasar
---
-
-CREATE TABLE queries (
-    name text NOT NULL,
-    query text,
-    args text[],
-    columns text[],
-    tags text[],
-    schema text,
-    description text
-);
-
-
-ALTER TABLE queries OWNER TO quasar;
-
---
 -- Data for Name: queries; Type: TABLE DATA; Schema: public; Owner: quasar
 --
 
@@ -214,15 +177,6 @@ ValuesByVrWithTagAndCount	select distinct value, element_signature, num_files fr
 WhereSeriesSits	select distinct\n  project_name as collection,\n  site_name as site,\n  patient_id,\n  study_instance_uid,\n  series_instance_uid,\n  count(distinct file_id) as num_files\nfrom\n  file_patient natural join\n  file_study natural join\n  file_series natural join\n  ctp_file\nwhere file_id in (\n  select\n    distinct file_id\n  from\n    file_series natural join ctp_file\n  where\n    series_instance_uid = ? and visibility is null\n)\ngroup by\n  project_name, site_name, patient_id,\n  study_instance_uid, series_instance_uid\norder by\n  project_name, site_name, patient_id,\n  study_instance_uid, series_instance_uid\n	{series_instance_uid}	{collection,site,patient_id,study_instance_uid,series_instance_uid,num_files}	{by_series_instance_uid,posda_files,sops}	posda_files	Get Collection, Site, Patient, Study Hierarchy in which series resides\n
 PixelInfoBySeries	select\n  f.file_id as file_id, \n  root_path || '/' || rel_path as file,\n  file_offset, \n  size, \n  bits_stored, \n  bits_allocated, \n  pixel_representation, \n  number_of_frames,\n  samples_per_pixel, \n  pixel_rows, \n  pixel_columns, \n  photometric_interpretation,\n  planar_configuration,\n  modality\nfrom\n  file_image f natural join image natural join unique_pixel_data\n  natural join file_series\n  join pixel_location pl using(unique_pixel_data_id), \n  file_location fl natural join file_storage_root\nwhere\n  pl.file_id = fl.file_id\n  and f.file_id = pl.file_id\n  and f.file_id in (\n  select distinct file_id\n  from file_series natural join ctp_file\n  where series_instance_uid = ? and visibility is null\n)	{series_instance_uid}	{file_id,file,file_offset,size,bits_stored,bits_allocated,pixel_representation,number_of_frames,samples_per_pixel,pixel_rows,pixel_columns,photometric_interpretation,planar_configuration,modality}	{}	posda_files	Get pixel descriptors for all files in a series\n
 \.
-
-
---
--- Name: queries_pkey; Type: CONSTRAINT; Schema: public; Owner: quasar
---
-
-ALTER TABLE ONLY queries
-    ADD CONSTRAINT queries_pkey PRIMARY KEY (name);
-
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
