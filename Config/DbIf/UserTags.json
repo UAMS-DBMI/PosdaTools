@@ -1,0 +1,16 @@
+{
+  "quasar": {
+    "superuser": 1,
+    "groups": [
+      "BigSet1",
+      "Test2"
+    ]
+  },
+  "bbennett": {
+    "superuser": 1,
+    "groups": [
+      "BigSet1",
+      "Test2"
+    ]
+  }
+}

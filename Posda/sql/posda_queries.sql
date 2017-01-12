@@ -20,7 +20,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE queries (
-    name text,
+    name text PRIMARY KEY,
     query text,
     args text[],
     columns text[],
@@ -30,14 +30,8 @@ CREATE TABLE queries (
 );
 
 
---
--- Name: queries_name_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX queries_name_index ON queries USING btree (name);
-
-
---
--- PostgreSQL database dump complete
---
+CREATE TABLE query_tag_filter (
+    filter_name text PRIMARY KEY,
+    tags_enabled text[]
+);
 

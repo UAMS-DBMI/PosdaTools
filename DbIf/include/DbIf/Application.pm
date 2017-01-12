@@ -17,6 +17,7 @@ use GenericApp::Application;
 
 use Posda::Passwords;
 use Posda::Config ('Config','Database');
+use Posda::ConfigRead;
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -309,6 +310,34 @@ method SpecificInitialize() {
 
   $self->{Commands} = $commands;
 
+  $self->ConfigureTagGroups();
+}
+
+method ConfigureTagGroups() {
+  $self->{HTTP_APP_CONFIG} = $main::HTTP_APP_CONFIG;
+  $self->{USER_TAGS} = $main::HTTP_APP_CONFIG->{config}->{'UserTags'};
+  my $user_tags = $self->{USER_TAGS}->{$self->get_user()};
+  $self->{CurrentUserTags} = $user_tags;
+
+  # $self->{TagGroups} = $self->{CurrentUserTags}->{groups};
+  # Select only the tag groups the user has access to
+  my $all_tag_groups = $main::HTTP_APP_CONFIG->{config}->{TagGroups};
+
+  $self->{TagGroups} = {};
+
+  for my $tag (@{$self->{CurrentUserTags}->{groups}}) {
+    $self->{TagGroups}->{$tag} = $all_tag_groups->{$tag};
+  }
+
+  if ($user_tags->{superuser}) {
+    $self->{TagGroups}->{'.Unlimited'} = 1;
+  }
+  $self->{TagGroups}->{'.Show No Tags'} = 1;
+
+
+  # just pick the first one
+  $self->{SelectedTagGroup} = [sort keys %{$self->{TagGroups}}]->[0];
+
 }
 
 
@@ -359,22 +388,57 @@ method ToggleQueryFilter($http, $dyn) {
   $self->{QueryFilterDisplay} = not $self->{QueryFilterDisplay};
 }
 
+method TagGroupSelector($http, $dyn) {
+  $self->SelectByValue($http, {
+    op => 'SetGroupSelector',
+  });
+
+  my $selected;
+  for my $tg (sort keys %{$self->{TagGroups}}) {
+    if ($self->{SelectedTagGroup} eq $tg) {
+      $selected = q{selected="selected"};
+    } else {
+      $selected = '';
+    }
+    $http->queue(qq{<option value="$tg" $selected>$tg</option>});
+  }
+
+  $http->queue('</select>');
+}
+
+method SetGroupSelector($http, $dyn){
+  my $value = $dyn->{value};
+  $self->{SelectedTagGroup} = $value;
+
+  my $group = $self->{TagGroups}->{$value};
+  say "Selected group: $value";
+  say Dumper($group);
+
+}
+
 method TagSelection($http, $dyn){
   # (case-insenstivie alpha sort)
   my @tags = sort { "\L$a" cmp "\L$b" } keys %{$self->{TagsState}};
+
+  if ($self->{SelectedTagGroup} eq '.Show No Tags') {
+    @tags = ();
+  } elsif ($self->{SelectedTagGroup} ne '.Unlimited') {
+    @tags = grep { $self->{TagGroups}->{$self->{SelectedTagGroup}}->{$_} } @tags;
+  }
 
   # break the list of tags into groups of 5
   my @chunks;
   push @chunks, [ splice @tags, 0, 5 ] while @tags;
 
-  $self->NotSoSimpleButton($http, {
-    caption => "Toggle Tag List",
-    op => "ToggleQueryFilter",
-    sync => "Update();",
-    class => "btn btn-warning"
-  });
+  # $self->NotSoSimpleButton($http, {
+  #   caption => "Toggle Tag List",
+  #   op => "ToggleQueryFilter",
+  #   sync => "Update();",
+  #   class => "btn btn-warning"
+  # });
 
-  if (not $self->{QueryFilterDisplay}) {
+  # display the list of selected filters, if requested
+  # if (not $self->{QueryFilterDisplay}) {
     # get list of selected tags
     my @tags = grep {
       $self->{TagsState}->{$_} eq 'true';
@@ -387,8 +451,8 @@ method TagSelection($http, $dyn){
         Selected tags: <strong>$taglist</strong>
       </p>
     });
-    return;
-  }
+    # return;
+  # }
 
   $http->queue(qq{
     <table class="table table-condensed">
@@ -497,7 +561,7 @@ method ListQueries($http, $dyn){
 
   if ($#selected_tags >= 0) {
     @q_list = sort @{PosdaDB::Queries->GetQueriesWithTags(\@selected_tags)};
-  } else {
+  } elsif ($self->{SelectedTagGroup} eq '.Unlimited') {
     @q_list = sort @{PosdaDB::Queries->GetList()};
   }
 
@@ -505,6 +569,7 @@ method ListQueries($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
     <p>Queries</p>
     <p>
+      <?dyn="TagGroupSelector"?>
       <?dyn="TagSelection"?>
     </p>
     <table class="table table-striped table-condensed">
