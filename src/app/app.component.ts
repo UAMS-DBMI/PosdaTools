@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SeriesService } from './series.service';
 import { EquivalenceClassMap } from './equivalence-class-map';
 import { Project } from './project';
+import { ErrorService } from './errors';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent {
 
   constructor(
     private service: SeriesService,
+	private errorS: ErrorService,
     // private route: ActivatedRoute,
     // private router: Router,
   ) {
@@ -122,6 +124,8 @@ export class AppComponent {
     }
   }
   printAll() {
+  	this.errorS.announceError("Test error", "There is an error", 2);	
+  	this.errorS.announceError("Test error", "This is another error", 1);	
     console.log("Currently loaded IECs are as follows:");
     for (let s of this.iecList) {
       console.log(s.Image_equivalence_class_id);

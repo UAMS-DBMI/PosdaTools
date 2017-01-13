@@ -10,6 +10,7 @@ import { SeriesComponentComponent } from './series-component/series-component.co
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 
 import { SeriesService } from './series.service';
+import { ErrorService, ErrorComponent } from './errors';
 
 
 // const appRoutes: Routes = [
@@ -24,7 +25,8 @@ import { SeriesService } from './series.service';
     AppComponent,
     Component1Component,
     SeriesComponentComponent,
-    PageNotFoundComponentComponent
+	PageNotFoundComponentComponent,
+	ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,7 @@ import { SeriesService } from './series.service';
 	HttpModule,
 	// RouterModule.forRoot(appRoutes)
   ],
-  providers: [SeriesService],
+  providers: [SeriesService, ErrorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
