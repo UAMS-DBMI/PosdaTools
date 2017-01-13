@@ -18,6 +18,7 @@ use GenericApp::Application;
 use Posda::Passwords;
 use Posda::Config ('Config','Database');
 use Posda::ConfigRead;
+use DBI;
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -108,26 +109,6 @@ method SpecificInitialize() {
         caption => "Save",
         op => 'SetMode',
         mode => 'SaveQuery',
-        sync => 'Update();'
-      },
-    ],
-    ActiveQuery => [
-      {
-        caption => "List",
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Edit",
-        op => 'SetMode',
-        mode => 'EditQuery',
-        sync => 'Update();'
-      },
-      {
-        caption => "Clone",
-        op => 'SetMode',
-        mode => 'CloneQuery',
         sync => 'Update();'
       },
     ],
@@ -240,6 +221,39 @@ method SpecificInitialize() {
       $m_reports,
     ]
   };
+
+  if ($self->{user_has_permission}('superuser')) {
+    $self->{MenuByMode}->{ActiveQuery} = [
+      {
+        caption => "List",
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+      {
+        caption => "Edit",
+        op => 'SetMode',
+        mode => 'EditQuery',
+        sync => 'Update();'
+      },
+      {
+        caption => "Clone",
+        op => 'SetMode',
+        mode => 'CloneQuery',
+        sync => 'Update();'
+      },
+    ];
+  } else {
+    $self->{MenuByMode}->{ActiveQuery} = [
+      {
+        caption => "List",
+        op => 'SetMode',
+        mode => 'ListQueries',
+        sync => 'Update();'
+      },
+    ];
+  }
+
   $self->{Mode} = "ListQueries";
   $self->{Sequence} = 0;
   my $dbif_dir = "$self->{Environment}->{UserInfoDir}/DbIf";
@@ -315,21 +329,49 @@ method SpecificInitialize() {
 
 method ConfigureTagGroups() {
   $self->{HTTP_APP_CONFIG} = $main::HTTP_APP_CONFIG;
-  $self->{USER_TAGS} = $main::HTTP_APP_CONFIG->{config}->{'UserTags'};
-  my $user_tags = $self->{USER_TAGS}->{$self->get_user()};
-  $self->{CurrentUserTags} = $user_tags;
 
-  # $self->{TagGroups} = $self->{CurrentUserTags}->{groups};
-  # Select only the tag groups the user has access to
-  my $all_tag_groups = $main::HTTP_APP_CONFIG->{config}->{TagGroups};
+  # Load the list of tag groups from the database
+  my $db_handle = DBI->connect(Database('posda_queries'));
+
+  my $qh = $db_handle->prepare(qq{
+    select *
+    from query_tag_filter
+  });
+
+  $qh->execute();
+  my $rows = $qh->fetchall_arrayref();
+
+
+  my %ht = map {
+    $_->[0] => {map {
+      $_ => 1
+    } @{$_->[1]}}
+  } @$rows;
+
+  # DEBUG Dumper(\%ht);
+
+  my $all_tag_groups = \%ht;
+
+  $db_handle->disconnect();
+
 
   $self->{TagGroups} = {};
 
-  for my $tag (@{$self->{CurrentUserTags}->{groups}}) {
-    $self->{TagGroups}->{$tag} = $all_tag_groups->{$tag};
+  for my $tag (keys %ht) {
+    if ($self->{user_has_permission}($tag)) {
+      $self->{TagGroups}->{$tag} = $ht{$tag};
+    }
   }
 
-  if ($user_tags->{superuser}) {
+  # titlize only after we have picked the correct ones
+  my $titlized = {};
+  for my $tag (keys %{$self->{TagGroups}}) {
+    $titlized->{titlize($tag)} = $self->{TagGroups}->{$tag};
+  }
+
+  $self->{TagGroups} = $titlized;
+
+  if ($self->{user_has_permission}('superuser')) {
     $self->{TagGroups}->{'.Unlimited'} = 1;
   }
   $self->{TagGroups}->{'.Show No Tags'} = 1;
@@ -339,7 +381,6 @@ method ConfigureTagGroups() {
   $self->{SelectedTagGroup} = [sort keys %{$self->{TagGroups}}]->[0];
 
 }
-
 
 method MenuResponse($http, $dyn) {
   if(exists $self->{MenuByMode}->{$self->{Mode}}){
@@ -411,8 +452,8 @@ method SetGroupSelector($http, $dyn){
   $self->{SelectedTagGroup} = $value;
 
   my $group = $self->{TagGroups}->{$value};
-  say "Selected group: $value";
-  say Dumper($group);
+  DEBUG "Selected group: $value";
+  # DEBUG Dumper($group);
 
 }
 
@@ -440,7 +481,7 @@ method TagSelection($http, $dyn){
   # display the list of selected filters, if requested
   # if (not $self->{QueryFilterDisplay}) {
     # get list of selected tags
-    my @tags = grep {
+    @tags = grep {
       $self->{TagsState}->{$_} eq 'true';
     } keys %{$self->{TagsState}};
 
@@ -581,14 +622,37 @@ method ListQueries($http, $dyn){
         <td>$i</td>
         <td>
           <?dyn="NotSoSimpleButton" op="SetActiveQuery" caption="Set Active" query_name="$i" sync="Update();"?>
-          <?dyn="NotSoSimpleButton" op="DeleteQuery" caption="Delete" query_name="$i" sync="Update();" class="btn btn-info"?>
-          <?dyn="NotSoSimpleButton" op="SetEditQuery" caption="Edit" query_name="$i" sync="Update();" class="btn btn-info"?>
-          <?dyn="NotSoSimpleButton" op="CloneQuery" caption="Clone" query_name="$i" sync="Update();" class="btn btn-info"?>
+          <?dyn="DrawQueryModificationButtons" query_name="$i"?>
         </td>
       </tr>
     });
   }
   $self->RefreshEngine($http, $dyn, "</table>")
+}
+method DrawQueryModificationButtons($http, $dyn) {
+  if ($self->{user_has_permission}('superuser')) {
+    $self->NotSoSimpleButton($http, {
+      op => 'DeleteQuery',
+      caption => 'Delete',
+      query_name => $dyn->{query_name},
+      sync => 'Update();',
+      class => 'btn btn-info',
+    });
+    $self->NotSoSimpleButton($http, {
+      op => 'SetEditQuery',
+      caption => 'Edit',
+      query_name => $dyn->{query_name},
+      sync => 'Update();',
+      class => 'btn btn-info',
+    });
+    $self->NotSoSimpleButton($http, {
+      op => 'CloneQuery',
+      caption => 'Clone',
+      query_name => $dyn->{query_name},
+      sync => 'Update();',
+      class => 'btn btn-info',
+    });
+  }
 }
 method NewQuery($http, $dyn){
   $http->queue("New Queries Mode");
