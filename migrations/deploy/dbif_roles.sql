@@ -1,3 +1,7 @@
+-- Deploy posda:dbif_roles to pg
+
+BEGIN;
+
 delete from permissions
 where app_id = (select app_id from apps where app_name = 'DbIf')
   and permission_name = 'update';
@@ -19,3 +23,5 @@ insert into permissions (app_id, permission_name) values
 ((select app_id from apps where app_name = 'DbIf'), 'monthly_report_queries'),
 ((select app_id from apps where app_name = 'DbIf'), 'superuser')
 ;
+
+COMMIT;
