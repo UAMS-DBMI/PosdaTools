@@ -23,6 +23,8 @@ use DBI;
 use Posda::DebugLog 'on';
 use Data::Dumper;
 
+use HTML::Entities;
+
 use Debug;
 my $dbg = sub {print STDERR @_ };
 
@@ -627,8 +629,50 @@ method ListQueries($http, $dyn){
       </tr>
     });
   }
-  $self->RefreshEngine($http, $dyn, "</table>")
+  $self->RefreshEngine($http, $dyn, "</table>");
+  $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
 }
+
+method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
+  my @q_list = sort @{PosdaDB::Queries->GetOperationsWithTags($selected_tags)};
+  $http->queue(qq{
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        Spreadsheet Operations associated with the selected tags
+      </div>
+
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <th>Command Line</th>
+            <th>Input Format</th>
+          </tr>
+  });
+  for my $row (@q_list) {
+    my ($name, $cmdline, $op_type, $input_fmt, $tags) = @$row;
+
+    # Escape html codes
+    $name = encode_entities($name);
+    $cmdline = encode_entities($cmdline);
+    $op_type = encode_entities($op_type);
+    $input_fmt = encode_entities($input_fmt);
+
+    $http->queue(qq{
+      <tr>
+        <td>$name</td>
+        <td>$cmdline</td>
+        <td>$input_fmt</td>
+      </tr>
+    });
+
+  }
+  $http->queue(qq{
+        </table>
+    </div>
+  });
+}
+
+
 method DrawQueryModificationButtons($http, $dyn) {
   if ($self->{user_has_permission}('superuser')) {
     $self->NotSoSimpleButton($http, {

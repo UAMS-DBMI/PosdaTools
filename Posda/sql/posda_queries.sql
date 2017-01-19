@@ -35,3 +35,11 @@ CREATE TABLE query_tag_filter (
     tags_enabled text[]
 );
 
+
+CREATE TABLE spreadsheet_operation (
+    operation_name text NOT NULL PRIMARY KEY,
+    command_line text,
+    operation_type text,
+    input_line_format text,
+    tags text[]
+);
