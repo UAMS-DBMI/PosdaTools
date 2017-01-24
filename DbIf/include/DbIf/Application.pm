@@ -304,25 +304,18 @@ method SpecificInitialize() {
     $self->{BindingCache} = {};
   }
 
-  # Build the command list from config file
-  my $command_list = $self->{Environment}->{Commands};
+  # Build the command list from database
   my $commands = {};
   map {
-    my $line = $command_list->{$_};
-    my $cmdline = $line;
-    my $pipe_parms;
+    my ($name, $cmdline, $type, $input_line, $tags) = @$_;
 
-    if ($line =~ /(.*)\|(.*)/) { # is it a pipe command?
-      $cmdline = $2;
-      $pipe_parms = $1;
+    $commands->{$name} = { cmdline => $cmdline,
+                           parms => [$cmdline =~ /<([^<>]+)>/g] };
+    if (defined $input_line) {
+      $commands->{$name}->{pipe_parms} = $input_line;
     }
 
-    $commands->{$_} = { cmdline => $cmdline,
-                        parms => [$cmdline =~ /<([^<>]+)>/g] };
-    if (defined $pipe_parms) {
-      $commands->{$_}->{pipe_parms} = $pipe_parms;
-    }
-  } keys %$command_list;
+  } sort @{PosdaDB::Queries->GetOperations()};
 
   $self->{Commands} = $commands;
 

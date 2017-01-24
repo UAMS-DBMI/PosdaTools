@@ -349,7 +349,22 @@ method GetOperationsWithTags($class: $tags) {
   return $results;
 
 }
+method GetOperations($class:) {
 
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    select * 
+    from spreadsheet_operation 
+  });
+
+  $qh->execute();
+
+  my $results = $qh->fetchall_arrayref();
+
+  return $results;
+
+}
 # sub Freeze{
 #   my($class, $file_name) = @_;
 #   my $struct = { queries => \%Queries };
