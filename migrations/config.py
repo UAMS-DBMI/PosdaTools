@@ -4,6 +4,10 @@ environments = {
 }
 
 targets = [
-    'test_db',
-    'test_db2',
+    'posda_queries',
+    'posda_files',
+    'posda_auth',
+    'posda_nicknames',
+    'private_tag_kb',
+    'dicom_roots',
 ]

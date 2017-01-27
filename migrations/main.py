@@ -72,11 +72,12 @@ def get_remote_version(conn):
     try:
         cur.execute("select version from db_version.version")
     except psycopg2.ProgrammingError as e:
-        if e.pgcode == '42P01':
+        if e.pgcode == '42P01' or e.pgcode == '3F000':
             conn.rollback()
             initalize_db(conn)
             return 0
         else:
+            print(e.pgcode)
             raise
 
     return cur.fetchone()[0]
@@ -116,8 +117,40 @@ def migrate(env_name):
         except MigrationFailedError:
             print(f"Skipping remaining migrations for {t}.")
 
+def status(env_name):
+    env = config.environments[env_name]
+
+    for target in config.targets:
+        plan = load_plan(os.path.join(target, f"{target}.plan"))
+        conn = psycopg2.connect(f"dbname={target} host={env['hostname']}")
+
+        local_version = get_local_version(plan)
+        db_version = get_remote_version(conn)
+
+        conn.close()
+
+        print(f"""Target: {target}
+Database version: {db_version}
+Plan version: {local_version}
+""")
+
+def force(version, env_name, target):
+    print(f"Forcing {target} to version {version}, in {env_name}")
+
+    env = config.environments[env_name]
+    conn = psycopg2.connect(f"dbname={target} host={env['hostname']}")
+    cur = conn.cursor()
+
+    cur.execute(f"update db_version.version set version = {version}")
+    conn.commit()
+
+    conn.close()
 
 def main():
+    if len(sys.argv) <= 1:
+        print(f"Usage: {sys.argv[0]} COMMAND\n"
+               "Where command is one of: init, migrate, status, force")
+        return
     command = sys.argv[1]
 
     if command.lower() == 'init':
@@ -125,6 +158,14 @@ def main():
 
     if command.lower() == 'migrate':
         return migrate(sys.argv[2])
+
+    if command.lower() == 'force':
+        return force(*sys.argv[2:5])
+
+    if command.lower() == 'status':
+        return status(sys.argv[2])
+
+    print("Command not recognized!")
 
 
 if __name__ == '__main__':
