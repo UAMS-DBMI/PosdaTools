@@ -513,7 +513,7 @@ EOF
   sub ReadConfig{
     my($this) = @_;
     my $ConfigTree = $main::HTTP_APP_CONFIG->{config};
-    $this->{SocketPool} = $ConfigTree->{Applications}->{SocketPool};
+    $this->{SocketPool} = Config('port_pool');
     $this->{Apps} = $ConfigTree->{Applications}->{Apps};
     $this->{BomDirs} = $ConfigTree->{Applications}->{BomDirs};
     $this->{Capabilities} = $ConfigTree->{Capabilities};

@@ -23,6 +23,8 @@ use DBI;
 use Posda::DebugLog 'on';
 use Data::Dumper;
 
+use HTML::Entities;
+
 use Debug;
 my $dbg = sub {print STDERR @_ };
 
@@ -48,36 +50,6 @@ method SpecificInitialize() {
   };
   $self->{MenuByMode} = {
     ListQueries => [
-      {
-        caption => "New",
-        op => 'SetMode',
-        mode => 'NewQuery',
-        sync => 'Update();'
-      },
-      {
-        caption => "Freeze",
-        op => 'SetMode',
-        mode => 'Freeze',
-        sync => 'Update();'
-      },
-      {
-        caption => "Load",
-        op => 'SetMode',
-        mode => 'Load',
-        sync => 'Update();'
-      },
-      {
-        caption => "Merge",
-        op => 'SetMode',
-        mode => 'Merge',
-        sync => 'Update();'
-      },
-      {
-        caption => "Clear",
-        op => 'SetMode',
-        mode => 'Clear',
-        sync => 'Update();'
-      },
       {
         caption => "Upload",
         op => 'SetMode',
@@ -195,7 +167,7 @@ method SpecificInitialize() {
     ],
     Default => [
       {
-        caption => 'Reset',
+        caption => 'List',
         op => 'SetMode',
         mode => 'ListQueries',
         sync => 'Update();'
@@ -302,25 +274,18 @@ method SpecificInitialize() {
     $self->{BindingCache} = {};
   }
 
-  # Build the command list from config file
-  my $command_list = $self->{Environment}->{Commands};
+  # Build the command list from database
   my $commands = {};
   map {
-    my $line = $command_list->{$_};
-    my $cmdline = $line;
-    my $pipe_parms;
+    my ($name, $cmdline, $type, $input_line, $tags) = @$_;
 
-    if ($line =~ /(.*)\|(.*)/) { # is it a pipe command?
-      $cmdline = $2;
-      $pipe_parms = $1;
+    $commands->{$name} = { cmdline => $cmdline,
+                           parms => [$cmdline =~ /<([^<>]+)>/g] };
+    if (defined $input_line) {
+      $commands->{$name}->{pipe_parms} = $input_line;
     }
 
-    $commands->{$_} = { cmdline => $cmdline,
-                        parms => [$cmdline =~ /<([^<>]+)>/g] };
-    if (defined $pipe_parms) {
-      $commands->{$_}->{pipe_parms} = $pipe_parms;
-    }
-  } keys %$command_list;
+  } sort @{PosdaDB::Queries->GetOperations()};
 
   $self->{Commands} = $commands;
 
@@ -628,31 +593,6 @@ method ListQueries($http, $dyn){
     });
   }
   $self->RefreshEngine($http, $dyn, "</table>")
-}
-method DrawQueryModificationButtons($http, $dyn) {
-  if ($self->{user_has_permission}('superuser')) {
-    $self->NotSoSimpleButton($http, {
-      op => 'DeleteQuery',
-      caption => 'Delete',
-      query_name => $dyn->{query_name},
-      sync => 'Update();',
-      class => 'btn btn-info',
-    });
-    $self->NotSoSimpleButton($http, {
-      op => 'SetEditQuery',
-      caption => 'Edit',
-      query_name => $dyn->{query_name},
-      sync => 'Update();',
-      class => 'btn btn-info',
-    });
-    $self->NotSoSimpleButton($http, {
-      op => 'CloneQuery',
-      caption => 'Clone',
-      query_name => $dyn->{query_name},
-      sync => 'Update();',
-      class => 'btn btn-info',
-    });
-  }
 }
 method NewQuery($http, $dyn){
   $http->queue("New Queries Mode");
@@ -1083,11 +1023,24 @@ method ActiveQuery($http, $dyn){
           });
         }
         $http->queue('</table>');
-        $self->NotSoSimpleButton($http,
-          { caption => "Query Database",
+        $http->queue('<p>');
+        $self->NotSoSimpleButton($http, { 
+            caption => "Query and Display Results",
             op => "MakeQuery",
             sync => "Update();",
-            class => "btn btn-primary" });
+            class => "btn btn-primary",
+            then => "results"
+        });
+        $http->queue('</p>');
+        $http->queue('<p>');
+        $self->NotSoSimpleButton($http, { 
+            caption => "Query and Go to Tables",
+            op => "MakeQuery",
+            sync => "Update();",
+            class => "btn btn-default",
+            then => "tables"
+        });
+        $http->queue('</p>');
       }
     } elsif($d->{struct} eq "hash key list"){
       # TODO: This is both not a hash key list, AND it only works
@@ -1146,6 +1099,7 @@ method MakeQuery($http, $dyn){
   }
 
   my $query = {};
+  my $then = $dyn->{then};
 
   $query->{bindings} = $self->GetBindings();
 
@@ -1158,7 +1112,7 @@ method MakeQuery($http, $dyn){
     func($row) {
       push @{$self->{query_rows}}, $row;
     },
-    $self->QueryEnd($query),
+    $self->QueryEnd($query, $then),
     func($message) {
       $self->{Mode} = "QueryError";
       $self->{ErrorMessage} = $message;
@@ -1198,7 +1152,7 @@ method QueryWait($http, $dyn) {
   });
 }
 
-method QueryEnd($query) {
+method QueryEnd($query, $then) {
   my $start_time = time;
   my $sub = sub {
     my($status, $struct) = @_;
@@ -1210,8 +1164,12 @@ method QueryEnd($query) {
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
 
-      return $self->CreateAndSelectTableFromQuery($self->{query}, $struct,
-        $start_time);
+      if ($then eq 'results') {
+        return $self->CreateAndSelectTableFromQuery($self->{query}, $struct, $start_time);
+      } else {
+        $self->CreateTableFromQuery($self->{query}, $struct, $start_time);
+        $self->{Mode} = "Tables";
+      }
     } elsif(exists $struct->{NumRows}){
       return $self->UpdateInsertCompleted($query, $struct);
     }
@@ -1242,7 +1200,8 @@ method UpdateInsertCompleted($query, $struct){
     $self->{Mode} eq "UpdateInsertStatus";
   }
 }
-method CreateAndSelectTableFromQuery($query, $struct, $start_at){
+
+method CreateTableFromQuery($query, $struct, $start_at) {
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $new_entry = {
     type => "FromQuery",
@@ -1263,11 +1222,69 @@ method CreateAndSelectTableFromQuery($query, $struct, $start_at){
   $new_q->{columns} = \@cols;
   $new_entry->{query} = $new_q;
   push(@{$self->{LoadedTables}}, $new_entry);
+
+}
+method SelectNewestTable() {
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
     $self->{Mode} = "TableSelected";
     $self->{SelectedTable} = $index;
   }
+}
+
+method CreateAndSelectTableFromQuery($query, $struct, $start_at){
+	$self->CreateTableFromQuery($query, $struct, $start_at);
+	$self->SelectNewestTable();
+}
+
+method DownloadPreparedReport($http, $dyn) {
+  my $filename = $dyn->{filename};
+  my $shortname = $dyn->{shortname};
+
+  DEBUG $filename;
+
+  my $fh;
+  if(open $fh, $filename) {
+    $http->DownloadHeader("text/csv", $shortname);
+    Dispatch::Select::Socket->new(
+      $self->SendFile($http),
+    $fh)->Add("reader");
+  }
+
+}
+
+sub WaitHttpReady{
+  my($this, $disp, $buff, $http) = @_;
+  my $sub = sub {
+    my($event) = @_;
+    #print STDERR "UnThrottling tar\n";
+    $http->queue($buff);
+    $disp->Add("reader");
+  };
+  return $sub;
+}
+sub SendFile{
+  my($this, $http) = @_;
+  my $sub = sub {
+    my($disp, $sock) = @_;
+    my $buff;
+    my $count = sysread($sock, $buff, 10240);
+    if($count <= 0){
+      $disp->Remove;
+      return;
+    }
+    if($http->ready_out){
+      $http->queue($buff);
+    } else {
+      #print STDERR "Throttling tar\n";
+      $disp->Remove("reader");
+      my $event = Dispatch::Select::Event->new(
+        Dispatch::Select::Background->new(
+          $this->WaitHttpReady($disp, $buff, $http)));
+      $http->wait_output($event);
+    }
+  };
+  return $sub;
 }
 
 method DownloadTableAsCsv($http, $dyn){
@@ -1798,6 +1815,7 @@ method Reports($http, $dyn) {
       <th>Filename</th>
       <th>Type</th>
       <th>Bytes</th>
+      <th>Download</th>
     </tr>
   });
   for my $f (@common_files) {
@@ -1821,6 +1839,12 @@ method Reports($http, $dyn) {
         </td>
         <td>$type</td>
         <td>$size</td>
+        <td>
+        <a class="btn btn-primary" 
+           href="DownloadPreparedReport?obj_path=$self->{path}&filename=$filename&shortname=$f">
+           ⬇
+        </a>
+      </td>
       </tr>
     });
   }

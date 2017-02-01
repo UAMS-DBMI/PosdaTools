@@ -154,11 +154,13 @@ EOF
   package AppController::Start::Content;
   use vars qw( @ISA );
   @ISA = ("Posda::HttpApp::GenericIframe");
+
+  use Posda::Config 'Config';
+
   sub new{
     my($class, $sess, $path) = @_;
     my $this = Posda::HttpApp::GenericIframe::new($class, $sess, $path);
-    $this->{SocketPool} = 
-      $main::HTTP_APP_CONFIG->{config}->{Applications}->{SocketPool};
+    $this->{SocketPool} = Config('port_pool');
     $this->{Apps} = 
       $main::HTTP_APP_CONFIG->{config}->{Applications}->{Apps};
     $this->{RunningApps} = {};

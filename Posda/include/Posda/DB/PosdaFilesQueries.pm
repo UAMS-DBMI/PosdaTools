@@ -326,6 +326,45 @@ method GetQueriesWithTags($class: $tags) {
 
 }
 
+method GetOperationsWithTags($class: $tags) {
+  # TODO: if $tags not arrayref error
+
+  my $dbh = _get_handle();
+  # The && operator returns matches that intersect 
+  # (special postgres array syntax)
+  my $qh = $dbh->prepare(qq{
+    select * 
+    from spreadsheet_operation 
+    where tags && ?;
+  });
+
+  $qh->execute($tags);
+
+  my $results = $qh->fetchall_arrayref();
+
+  # convert one-column rows into a simple list
+  # return [map {
+  #  $_->[0];
+  # } @$results];
+  return $results;
+
+}
+method GetOperations($class:) {
+
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    select * 
+    from spreadsheet_operation 
+  });
+
+  $qh->execute();
+
+  my $results = $qh->fetchall_arrayref();
+
+  return $results;
+
+}
 # sub Freeze{
 #   my($class, $file_name) = @_;
 #   my $struct = { queries => \%Queries };

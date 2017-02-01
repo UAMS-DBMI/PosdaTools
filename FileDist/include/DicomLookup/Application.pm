@@ -14,8 +14,11 @@ my $header = <<EOF;
     </td>
     <td valign="top">
       <h2><?dyn="title"?></h2>
+      <p>
       Enter search value:
       <?dyn="InputChangeNoReload" op="SetSearchString" field="SearchString"?>
+      </p>
+      <p>Note: Search is in the format: (xxxx,xxxx)</p>
       </td>
     <td valign="top" align="right" width="180" height="120">
 <?dyn="iframe" height="0" width="0" style="visibility:hidden;display:none" child_path="Controller"?>
