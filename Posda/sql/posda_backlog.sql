@@ -60,7 +60,8 @@ CREATE TABLE request (
     time_received timestamp without time zone,
     time_copied timestamp without time zone,
     time_entered timestamp without time zone,
-    size integer
+    size integer,
+    posda_file_id integer
 );
 
 
@@ -92,6 +93,65 @@ CREATE SEQUENCE request_request_id_seq
 --
 
 ALTER SEQUENCE request_request_id_seq OWNED BY request.request_id;
+
+
+--
+-- Name: round; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE round (
+    round_id integer NOT NULL,
+    round_start timestamp without time zone,
+    round_end timestamp without time zone,
+    round_created timestamp without time zone,
+    round_aborted timestamp without time zone,
+    wait_count integer,
+    process_count integer
+);
+
+
+--
+-- Name: round_collection; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE round_collection (
+    round_id integer NOT NULL,
+    collection text NOT NULL,
+    num_entered integer,
+    num_failed integer,
+    num_dups integer
+);
+
+
+--
+-- Name: round_counts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE round_counts (
+    round_id integer NOT NULL,
+    collection text NOT NULL,
+    num_requests integer,
+    priority integer
+);
+
+
+--
+-- Name: round_round_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE round_round_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: round_round_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE round_round_id_seq OWNED BY round.round_id;
 
 
 --
@@ -131,6 +191,13 @@ ALTER SEQUENCE submitter_submitter_id_seq OWNED BY submitter.submitter_id;
 --
 
 ALTER TABLE ONLY request ALTER COLUMN request_id SET DEFAULT nextval('request_request_id_seq'::regclass);
+
+
+--
+-- Name: round_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY round ALTER COLUMN round_id SET DEFAULT nextval('round_round_id_seq'::regclass);
 
 
 --

@@ -82,7 +82,7 @@ func Database($name) {
 
   my @params;
   for my $k (keys %$db_info) {
-    if ($k ne 'driver') {
+    if ($k ne 'driver' and $k ne 'init') {
       push @params, "$k=$db_info->{$k}";
     }
   }

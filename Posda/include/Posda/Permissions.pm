@@ -4,7 +4,7 @@ use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use autodie;
 
-use Posda::Config 'Config';
+use Posda::Config 'Database';
 use Posda::DebugLog 'off';
 use Data::Dumper;
 
@@ -22,7 +22,7 @@ method new($class: $username) {
 method _init() {
   DEBUG 1;
   # Connect to DB, load all permission data for this user
-  my $dbh = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+  my $dbh = DBI->connect(Database('posda_auth'));
   my $stmt = $dbh->prepare(qq{
     select
       user_name,

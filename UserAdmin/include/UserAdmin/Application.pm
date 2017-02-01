@@ -13,14 +13,14 @@ use Storable 'dclone';
 use GenericApp::Application;
 
 use Posda::Passwords;
-use Posda::Config 'Config';
+use Posda::Config 'Database';
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
 
 
 method SpecificInitialize() {
-  $self->{dbh} = DBI->connect("DBI:Pg:database=${\Config('auth_db_name')}");
+  $self->{dbh} = DBI->connect(Database('posda_auth'));
   $self->{AllPermissions} = $self->GetAllPermissionList();
   $self->{AppPermMap} = $self->GetAppPermMap();
 
