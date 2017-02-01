@@ -51,36 +51,6 @@ method SpecificInitialize() {
   $self->{MenuByMode} = {
     ListQueries => [
       {
-        caption => "New",
-        op => 'SetMode',
-        mode => 'NewQuery',
-        sync => 'Update();'
-      },
-      {
-        caption => "Freeze",
-        op => 'SetMode',
-        mode => 'Freeze',
-        sync => 'Update();'
-      },
-      {
-        caption => "Load",
-        op => 'SetMode',
-        mode => 'Load',
-        sync => 'Update();'
-      },
-      {
-        caption => "Merge",
-        op => 'SetMode',
-        mode => 'Merge',
-        sync => 'Update();'
-      },
-      {
-        caption => "Clear",
-        op => 'SetMode',
-        mode => 'Clear',
-        sync => 'Update();'
-      },
-      {
         caption => "Upload",
         op => 'SetMode',
         mode => 'Upload',
@@ -197,7 +167,7 @@ method SpecificInitialize() {
     ],
     Default => [
       {
-        caption => 'Reset',
+        caption => 'List',
         op => 'SetMode',
         mode => 'ListQueries',
         sync => 'Update();'
