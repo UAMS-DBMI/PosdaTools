@@ -25,6 +25,8 @@ use Data::Dumper;
 
 use HTML::Entities;
 
+use Posda::PopupWindowTest;
+
 use Debug;
 my $dbg = sub {print STDERR @_ };
 
@@ -35,7 +37,13 @@ func titlize($string) {
   join(' ', map {ucfirst} split('_', $string));
 }
 
-method SpecificInitialize() {
+method SpecificInitialize($session) {
+
+  # my $child_path = $self->child_path("TestPopup");
+  # my $child_obj = Posda::PopupWindowTest->new($self->{session}, $child_path);
+  # $self->{popup} = $child_obj;
+
+
   $self->{QueryFilterDisplay} = 1;
   $self->{AllArgs} = {};
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
@@ -594,6 +602,22 @@ method ListQueries($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, "</table>");
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
+  $self->DrawPopupTests($http, $dyn);
+}
+
+method DrawPopupTests($http, $dyn) {
+  $self->NotSoSimpleButton($http, {
+    op => 'OpenPopupTest',
+    caption => 'Test Popup',
+    sync => 'Update();',
+  });
+}
+method OpenPopupTest($http, $dyn) {
+  my $child_path = $self->child_path("TestPopup$dyn->{sop}");
+  my $child_obj = Posda::PopupWindowTest->new($self->{session}, 
+                                              $child_path, $dyn->{sop});
+  $self->{popup} = $child_obj;
+  $self->StartJsChildWindow($self->{popup});
 }
 
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
@@ -1615,6 +1639,14 @@ method TableSelected($http, $dyn){
           });
         } else {
           $http->queue($v_esc);
+        }
+        if ($cn eq "sop_instance_uid") {
+          $self->NotSoSimpleButton($http, {
+              caption => "View",
+              op => "OpenPopupTest",
+              sop => "$v_esc",
+              sync => 'Update();'
+          });
         }
         $http->queue("</td>");
       }

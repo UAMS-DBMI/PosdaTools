@@ -2388,8 +2388,6 @@ sub DebugButton{
        onClick="javascript:rt('DebugWindow',
        'Refresh?obj_path=Debug',1600,1200,0);">Debug</span>
     });
-  } else {
-    print STDERR "Can't debug\n";
   }
 }
 sub Debug{
