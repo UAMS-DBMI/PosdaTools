@@ -8,3 +8,5 @@ __pycache__
 posda.env
 foo
 foo.*
+Posda/bin/extract
+Posda/bin/sproject
