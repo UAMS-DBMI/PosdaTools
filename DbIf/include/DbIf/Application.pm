@@ -25,7 +25,7 @@ use Data::Dumper;
 
 use HTML::Entities;
 
-use Posda::PopupWindowTest;
+use Posda::PopupImageViewer;
 
 use Debug;
 my $dbg = sub {print STDERR @_ };
@@ -602,19 +602,11 @@ method ListQueries($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, "</table>");
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
-  $self->DrawPopupTests($http, $dyn);
 }
 
-method DrawPopupTests($http, $dyn) {
-  $self->NotSoSimpleButton($http, {
-    op => 'OpenPopupTest',
-    caption => 'Test Popup',
-    sync => 'Update();',
-  });
-}
 method OpenPopupTest($http, $dyn) {
   my $child_path = $self->child_path("TestPopup$dyn->{sop}");
-  my $child_obj = Posda::PopupWindowTest->new($self->{session}, 
+  my $child_obj = Posda::PopupImageViewer->new($self->{session}, 
                                               $child_path, $dyn->{sop});
   $self->{popup} = $child_obj;
   $self->StartJsChildWindow($self->{popup});
@@ -1640,6 +1632,7 @@ method TableSelected($http, $dyn){
         } else {
           $http->queue($v_esc);
         }
+        # TODO: This should be configurable!
         if ($cn eq "sop_instance_uid") {
           $self->NotSoSimpleButton($http, {
               caption => "View",

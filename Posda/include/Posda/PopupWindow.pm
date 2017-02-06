@@ -34,8 +34,8 @@ method new($class: $sess, $path, $parameters) {
   $self->{expander} = $expander;
 
   $self->{title} = "Test Popup Window";
-  $self->{height} = 10;
-  $self->{width} = 10;
+  $self->{height} = 800;
+  $self->{width} = 800;
   $self->{menu_width} = 5;
   $self->{content_width} = 5;
 
