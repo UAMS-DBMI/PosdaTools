@@ -18,17 +18,7 @@ use vars qw( @ISA );
 
 my $db_handle;
 
-method SpecificInitialize($params) {
-  $self->{title} = "Popup Image Viewer";
-  # Determine temp dir
-  $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
-
-
-  my $sop_uid = $params;
-  $self->{sop_uid} = $sop_uid;
-
-  $db_handle = DBI->connect(Database('posda_files'));
-
+method LoadFromSOP($db_handle, $sop) {
   my $qh = $db_handle->prepare(qq{
     select distinct
         root_path || '/' || rel_path as file, 
@@ -72,12 +62,91 @@ method SpecificInitialize($params) {
 
   });
 
-  $qh->execute($sop_uid);
+  $qh->execute($sop);
   my $rows = $qh->fetchrow_arrayref();
 
   # say Dumper($rows);
 
+  return $rows;
+
+}
+method LoadFromFID($db_handle, $fid) {
+  my $qh = $db_handle->prepare(qq{
+    select distinct
+        root_path || '/' || rel_path as file, 
+        file_offset, 
+        size, 
+        bits_stored, 
+        bits_allocated, 
+        pixel_representation, 
+        number_of_frames,
+        samples_per_pixel, 
+        pixel_columns, 
+        pixel_rows, 
+        photometric_interpretation,
+
+        slope,
+        intercept,
+
+        window_width,
+        window_center,
+        pixel_pad,
+
+        series_instance_uid
+    from
+        file_sop_common
+        natural join file_image
+        natural join image 
+        natural join unique_pixel_data 
+        natural join pixel_location
+        natural join file_location 
+        natural join file_storage_root
+        natural join file_series
+        natural join file_equipment
+
+        natural left join file_slope_intercept
+        natural left join slope_intercept
+
+        natural left join file_win_lev
+        natural left join window_level
+
+    where file_id = ?
+
+  });
+
+  $qh->execute($fid);
+  my $rows = $qh->fetchrow_arrayref();
+
+  # say Dumper($rows);
+
+  return $rows;
+
+}
+
+method SpecificInitialize($params) {
+  $self->{title} = "Popup Image Viewer";
+  # Determine temp dir
+  $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
+
+
+  $db_handle = DBI->connect(Database('posda_files'));
+
+  my $rows;
+
+  if (defined $params->{sop_uid}) {
+    my $sop_uid = $params->{sop_uid};
+    $self->{sop_uid} = $sop_uid;
+
+    $rows = $self->LoadFromSOP($db_handle, $sop_uid)
+  } else {
+    $rows = $self->LoadFromFID($db_handle, $params->{file_id})
+  }
+
   $self->{row} = $rows;
+  if (not defined $rows) {
+    $self->QueueJsCmd("alert('Error loading file details');");
+    return;
+  }
 
   # break into usable bits
   my ($filename, $offset, $size, 
