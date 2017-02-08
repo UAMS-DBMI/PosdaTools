@@ -26,6 +26,7 @@ use Data::Dumper;
 use HTML::Entities;
 
 use Posda::PopupImageViewer;
+use Posda::PopupCompare;
 
 use Debug;
 my $dbg = sub {print STDERR @_ };
@@ -607,9 +608,15 @@ method ListQueries($http, $dyn){
 method OpenPopupTest($http, $dyn) {
   my $child_path = $self->child_path("TestPopup$dyn->{sop}");
   my $child_obj = Posda::PopupImageViewer->new($self->{session}, 
-                                              $child_path, $dyn->{sop});
+                                              $child_path, {sop_uid => $dyn->{sop}});
   $self->{popup} = $child_obj;
   $self->StartJsChildWindow($self->{popup});
+}
+method OpenComparePopup($http, $dyn) {
+  my $child_path = $self->child_path("PopupCompare_$dyn->{sop}");
+  my $child_obj = Posda::PopupCompare->new($self->{session}, 
+                                              $child_path, $dyn->{sop});
+  $self->StartJsChildWindow($child_obj);
 }
 
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
@@ -1640,6 +1647,15 @@ method TableSelected($http, $dyn){
               sop => "$v_esc",
               sync => 'Update();'
           });
+          if (defined $query->{name} and 
+              $query->{name} eq 'DuplicateSOPInstanceUIDs') {
+            $self->NotSoSimpleButton($http, {
+                caption => "Compare",
+                op => "OpenComparePopup",
+                sop => "$v_esc",
+                sync => 'Update();'
+            });
+          }
         }
         $http->queue("</td>");
       }
