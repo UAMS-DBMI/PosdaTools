@@ -40,7 +40,7 @@ method GetQueryInstanceAsync($class: $name) {
 
 method new($class: $name, $async) {
   my $self = {
-    dbh => DBI->connect(Database('posda_queries')),
+    dbh => undef,
     async => $async
   };
 
@@ -56,6 +56,7 @@ method MakeStorable() {
 }
 
 method Save() {
+  my $dbh = _get_handle();
   DEBUG "Saving query...";
   my $query = qq{
     update queries
@@ -69,7 +70,7 @@ method Save() {
     where name = ?
 
   };
-  my $qh = $db_handle->prepare($query);
+  my $qh = $dbh->prepare($query);
   $qh->execute($self->{query},
                $self->{args},
                $self->{columns},
@@ -80,7 +81,8 @@ method Save() {
 }
 
 func Clone($source_name, $dest_name) {
-  my $qh = $db_handle->prepare(qq{
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
     insert into queries
     select ?, query, args, columns, tags, schema, description
     from queries
@@ -92,7 +94,8 @@ func Clone($source_name, $dest_name) {
 }
 
 func Delete($name) {
-  my $qh = $db_handle->prepare(qq{
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
     delete from queries where name = ?
   });
 
@@ -100,7 +103,8 @@ func Delete($name) {
 }
 
 method _load_query($name) {
-  my $qh = $self->{dbh}->prepare(qq{
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
     select * 
     from queries
     where name = ?
