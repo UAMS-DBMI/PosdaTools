@@ -605,12 +605,11 @@ method ListQueries($http, $dyn){
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
 }
 
-method OpenPopupTest($http, $dyn) {
-  my $child_path = $self->child_path("TestPopup$dyn->{sop}");
+method OpenViewPopup($http, $dyn) {
+  my $child_path = $self->child_path("TestPopup$dyn->{file_id}");
   my $child_obj = Posda::PopupImageViewer->new($self->{session}, 
-                                              $child_path, {sop_uid => $dyn->{sop}});
-  $self->{popup} = $child_obj;
-  $self->StartJsChildWindow($self->{popup});
+                                              $child_path, {file_id => $dyn->{file_id}});
+  $self->StartJsChildWindow($child_obj);
 }
 method OpenComparePopup($http, $dyn) {
   my $child_path = $self->child_path("PopupCompare_$dyn->{sop}");
@@ -1640,15 +1639,18 @@ method TableSelected($http, $dyn){
           $http->queue($v_esc);
         }
         # TODO: This should be configurable!
-        if ($cn eq "sop_instance_uid") {
+        if ($cn eq "file_id") {
           $self->NotSoSimpleButton($http, {
               caption => "View",
-              op => "OpenPopupTest",
-              sop => "$v_esc",
+              op => "OpenViewPopup",
+              file_id => "$v_esc",
               sync => 'Update();'
           });
+        }
+
+        if ($cn eq "sop_instance_uid") {
           if (defined $query->{name} and 
-              $query->{name} eq 'DuplicateSOPInstanceUIDs') {
+              $query->{name} =~ /duplicate/i) {
             $self->NotSoSimpleButton($http, {
                 caption => "Compare",
                 op => "OpenComparePopup",
