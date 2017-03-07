@@ -28,6 +28,8 @@ use HTML::Entities;
 use Posda::PopupImageViewer;
 use Posda::PopupCompare;
 
+use DbIf::PopupHelp;
+
 use Debug;
 my $dbg = sub {print STDERR @_ };
 
@@ -613,7 +615,7 @@ method OpenComparePopup($http, $dyn) {
 }
 
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
-  my @q_list = sort @{PosdaDB::Queries->GetOperationsWithTags($selected_tags)};
+  my @q_list = @{PosdaDB::Queries->GetOperationsWithTags($selected_tags)};
   $http->queue(qq{
     <div class="panel panel-info">
       <div class="panel-heading">
@@ -625,10 +627,17 @@ method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
             <th>Name</th>
             <th>Command Line</th>
             <th>Input Format</th>
+            <th>Help</th>
           </tr>
   });
+  $self->{spreadsheet_op_list} = {};
   for my $row (@q_list) {
     my ($name, $cmdline, $op_type, $input_fmt, $tags) = @$row;
+    $self->{spreadsheet_op_list}->{$name} = $row;
+
+    if (not defined $input_fmt) {
+      $input_fmt = '';
+    }
 
     # Escape html codes
     $name = encode_entities($name);
@@ -636,11 +645,12 @@ method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
     $op_type = encode_entities($op_type);
     $input_fmt = encode_entities($input_fmt);
 
-    $http->queue(qq{
+    $self->RefreshEngine($http, $dyn, qq{
       <tr>
         <td>$name</td>
         <td>$cmdline</td>
         <td>$input_fmt</td>
+        <td><?dyn="NotSoSimpleButton" op="OpHelp" caption="H" cmd="$name" sync="Update();"?></td>
       </tr>
     });
 
@@ -651,6 +661,16 @@ method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
   });
 }
 
+method OpHelp($http, $dyn) {
+
+  my $details = $self->{spreadsheet_op_list}->{$dyn->{cmd}};
+
+
+  my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
+  my $child_obj = DbIf::PopupHelp->new($self->{session}, 
+                                              $child_path, $details);
+  $self->StartJsChildWindow($child_obj);
+}
 
 method DrawQueryModificationButtons($http, $dyn) {
   if ($self->{user_has_permission}('superuser')) {
