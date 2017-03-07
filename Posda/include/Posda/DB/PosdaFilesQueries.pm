@@ -339,7 +339,8 @@ method GetOperationsWithTags($class: $tags) {
   my $qh = $dbh->prepare(qq{
     select * 
     from spreadsheet_operation 
-    where tags && ?;
+    where tags && ?
+    order by operation_name
   });
 
   $qh->execute($tags);
