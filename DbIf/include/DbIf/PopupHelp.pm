@@ -82,7 +82,7 @@ method ContentResponse($http, $dyn) {
       $http->queue("Command produced no output! Perhaps you should ask the author to write a -h response?");
     }
     for my $line (@{$self->{lines}}) {
-      $http->queue("$line\n");
+      $http->queue(encode_entities("$line\n"));
     }
     $http->queue("</pre>");
   } else {
