@@ -26,7 +26,7 @@ method SpecificInitialize($params) {
   # Determine temp dir
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
 
-  my $sop_uid = $params;
+  my $sop_uid = $params->{sop_instance_uid};
   $self->{sop_uid} = $sop_uid;
 
   # get the list of files with this SOP

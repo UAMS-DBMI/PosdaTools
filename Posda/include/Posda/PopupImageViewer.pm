@@ -133,8 +133,8 @@ method SpecificInitialize($params) {
 
   my $rows;
 
-  if (defined $params->{sop_uid}) {
-    my $sop_uid = $params->{sop_uid};
+  if (defined $params->{sop_instance_uid}) {
+    my $sop_uid = $params->{sop_instance_uid};
     $self->{sop_uid} = $sop_uid;
 
     $rows = $self->LoadFromSOP($db_handle, $sop_uid)

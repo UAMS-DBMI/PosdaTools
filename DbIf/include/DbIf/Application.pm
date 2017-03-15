@@ -620,6 +620,30 @@ method OpenComparePopup($http, $dyn) {
   $self->StartJsChildWindow($child_obj);
 }
 
+method OpenDynamicPopup($http, $dyn) {
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  if($table->{type} eq "FromQuery"){
+    my $cols = $table->{query}->{columns};
+    my $rows = $table->{rows};
+    my $row = $rows->[$dyn->{row}];
+
+    # build hash for popup constructor
+    my $h = {};
+    for my $i (0 .. $#{$row}) {
+      $h->{$cols->[$i]} = $row->[$i];
+    }
+
+    my $class = $dyn->{class_};
+    say STDERR "OpenDynamicPopup, executing $class using params:";
+    print STDERR Dumper($h);
+
+    my $child_path = $self->child_path("$dyn->{class_}_Row$dyn->{row}");
+    my $child_obj = $class->new($self->{session}, 
+                                $child_path, $h);
+    $self->StartJsChildWindow($child_obj);
+  }
+}
+
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
   my @q_list = @{PosdaDB::Queries->GetOperationsWithTags($selected_tags)};
   $http->queue(qq{
@@ -1586,6 +1610,23 @@ method TableSelected($http, $dyn){
     my $rows = $table->{rows};
     my $num_rows = @$rows;
     my $at = $table->{at};
+
+    my $query_name = $query->{name};
+    my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
+    # print STDERR Dumper($popups);
+
+    # Process popups into a usable hash
+    my $popup_hash = {};
+    map {
+      my ($id, $query, $class, $col, $is_full_table, $name) = @$_;
+      if (defined $col) {
+        $popup_hash->{$col} = {class => $class, name => $name};
+      }
+    } @$popups;
+
+    # print STDERR Dumper($popup_hash);
+
+
     $self->RefreshEngine($http, $dyn, qq{
       <div>
       <h3>Table from query: $query->{name}</h3>
@@ -1635,7 +1676,8 @@ method TableSelected($http, $dyn){
     $http->queue('</tr>');
 
     my $col_pos = 0;
-    for my $r (@$rows){
+    for my $row_index (0 .. $#{$rows}) {
+      my $r = $rows->[$row_index];
       $http->queue('<tr>');
       for my $v (@$r){
         unless(defined($v)){ $v = "<undef>" }
@@ -1658,27 +1700,17 @@ method TableSelected($http, $dyn){
         } else {
           $http->queue($v_esc);
         }
-        # TODO: This should be configurable!
-        if ($cn eq "file_id") {
+        if (defined $popup_hash->{$cn}) {
+          my $popup_details = $popup_hash->{$cn};
           $self->NotSoSimpleButton($http, {
-              caption => "View",
-              op => "OpenViewPopup",
-              file_id => "$v_esc",
+              caption => "$popup_details->{name}",
+              op => "OpenDynamicPopup",
+              row => "$row_index",
+              class_ => "$popup_details->{class}",
               sync => 'Update();'
           });
         }
 
-        if ($cn eq "sop_instance_uid") {
-          if (defined $query->{name} and 
-              $query->{name} =~ /duplicate/i) {
-            $self->NotSoSimpleButton($http, {
-                caption => "Compare",
-                op => "OpenComparePopup",
-                sop => "$v_esc",
-                sync => 'Update();'
-            });
-          }
-        }
         $http->queue("</td>");
       }
       $col_pos = 0;
