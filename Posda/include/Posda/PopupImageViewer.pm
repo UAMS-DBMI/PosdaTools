@@ -131,19 +131,19 @@ method SpecificInitialize($params) {
 
   $db_handle = DBI->connect(Database('posda_files'));
 
-  my $rows;
+  my $rows_;
 
   if (defined $params->{sop_instance_uid}) {
     my $sop_uid = $params->{sop_instance_uid};
     $self->{sop_uid} = $sop_uid;
 
-    $rows = $self->LoadFromSOP($db_handle, $sop_uid)
+    $rows_ = $self->LoadFromSOP($db_handle, $sop_uid)
   } else {
-    $rows = $self->LoadFromFID($db_handle, $params->{file_id})
+    $rows_ = $self->LoadFromFID($db_handle, $params->{file_id})
   }
 
-  $self->{row} = $rows;
-  if (not defined $rows) {
+  $self->{row} = $rows_;
+  if (not defined $rows_) {
     $self->QueueJsCmd("alert('Error loading file details');");
     return;
   }
