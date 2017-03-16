@@ -27,6 +27,7 @@ use HTML::Entities;
 
 use Posda::PopupImageViewer;
 use Posda::PopupCompare;
+use Posda::PopupCompareFiles;
 
 use DbIf::PopupHelp;
 
@@ -41,11 +42,6 @@ func titlize($string) {
 }
 
 method SpecificInitialize($session) {
-
-  # my $child_path = $self->child_path("TestPopup");
-  # my $child_obj = Posda::PopupWindowTest->new($self->{session}, $child_path);
-  # $self->{popup} = $child_obj;
-
 
   $self->{QueryFilterDisplay} = 1;
   $self->{AllArgs} = {};
@@ -607,19 +603,6 @@ method ListQueries($http, $dyn){
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
 }
 
-method OpenViewPopup($http, $dyn) {
-  my $child_path = $self->child_path("TestPopup$dyn->{file_id}");
-  my $child_obj = Posda::PopupImageViewer->new($self->{session}, 
-                                              $child_path, {file_id => $dyn->{file_id}});
-  $self->StartJsChildWindow($child_obj);
-}
-method OpenComparePopup($http, $dyn) {
-  my $child_path = $self->child_path("PopupCompare_$dyn->{sop}");
-  my $child_obj = Posda::PopupCompare->new($self->{session}, 
-                                              $child_path, $dyn->{sop});
-  $self->StartJsChildWindow($child_obj);
-}
-
 method OpenDynamicPopup($http, $dyn) {
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -634,14 +617,37 @@ method OpenDynamicPopup($http, $dyn) {
     }
 
     my $class = $dyn->{class_};
-    say STDERR "OpenDynamicPopup, executing $class using params:";
-    print STDERR Dumper($h);
+    my $row_id = $dyn->{row};
 
-    my $child_path = $self->child_path("$dyn->{class_}_Row$dyn->{row}");
-    my $child_obj = $class->new($self->{session}, 
-                                $child_path, $h);
-    $self->StartJsChildWindow($child_obj);
+    $self->OpenPopup($class, "${class}_Row$row_id", $h);
+  } elsif ($table->{type} eq 'FromCsv') {
+
+    my $file = $table->{file};
+    my $rows = $table->{rows};
+    my $row = $rows->[$dyn->{row}];
+    my $cols = $rows->[0]; # column names in first row
+
+    # build hash for popup constructor
+    my $h = {};
+    for my $i (0 .. $#{$row}) {
+      $h->{$cols->[$i]} = $row->[$i];
+    }
+
+    my $class = $dyn->{class_};
+    my $row_id = $dyn->{row};
+
+    $self->OpenPopup($class, "${class}_Row$row_id", $h);
   }
+}
+
+method OpenPopup($class, $name, $params) {
+    say STDERR "OpenDynamicPopup, executing $class using params:";
+    print STDERR Dumper($params);
+
+    my $child_path = $self->child_path($name);
+    my $child_obj = $class->new($self->{session}, 
+                                $child_path, $params);
+    $self->StartJsChildWindow($child_obj);
 }
 
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
@@ -1603,6 +1609,27 @@ method InsertSaveReportModal($http, $name, $table) {
 
 }
 
+func get_popup_hash($query_name) {
+    my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
+
+    # Process popups into a usable hash
+    my $popup_hash = {};
+    map {
+      my ($id, $query, $class, $col, $is_full_table, $name) = @$_;
+      if ($is_full_table == 1) {
+        $popup_hash->{table_level_popup} = {class => $class, name => $name};
+      } else {
+        if (defined $col) {
+          $popup_hash->{$col} = {class => $class, name => $name};
+        } else {
+          $popup_hash->{row_level_popup} = {class => $class, name => $name};
+        }
+      }
+    } @$popups;
+
+    return $popup_hash;
+}
+
 method TableSelected($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -1611,20 +1638,7 @@ method TableSelected($http, $dyn){
     my $num_rows = @$rows;
     my $at = $table->{at};
 
-    my $query_name = $query->{name};
-    my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
-    # print STDERR Dumper($popups);
-
-    # Process popups into a usable hash
-    my $popup_hash = {};
-    map {
-      my ($id, $query, $class, $col, $is_full_table, $name) = @$_;
-      if (defined $col) {
-        $popup_hash->{$col} = {class => $class, name => $name};
-      }
-    } @$popups;
-
-    # print STDERR Dumper($popup_hash);
+    my $popup_hash = get_popup_hash($query->{name});
 
 
     $self->RefreshEngine($http, $dyn, qq{
@@ -1714,6 +1728,19 @@ method TableSelected($http, $dyn){
         $http->queue("</td>");
       }
       $col_pos = 0;
+      if (defined $popup_hash->{row_level_popup}) {
+        my $popup_details = $popup_hash->{row_level_popup};
+
+        $http->queue('<td>');
+        $self->NotSoSimpleButton($http, {
+            caption => "$popup_details->{name}",
+            op => "OpenDynamicPopup",
+            row => "$row_index",
+            class_ => "$popup_details->{class}",
+            sync => 'Update();'
+        });
+        $http->queue('</td>');
+      }
       $http->queue('</tr>');
     }
     $self->RefreshEngine($http, $dyn, "</table></div>");
@@ -1722,6 +1749,9 @@ method TableSelected($http, $dyn){
     my $rows = $table->{rows};
     my $num_rows = @$rows - 1;
     my $at = $table->{at};
+
+    my $popup_hash = get_popup_hash(basename($file));
+
     $self->RefreshEngine($http, $dyn, qq{
       <div style="background-color: white">
       Table from CSV file: $file   
@@ -1745,12 +1775,39 @@ method TableSelected($http, $dyn){
     for my $ri (1 .. $#{$rows}){
       my $r = $rows->[$ri];
       $http->queue('<tr>');
+      my $col_idx = 0;
       for my $v (@$r){
+        my $cn = $rows->[0]->[$col_idx++];
         unless(defined($v)){ $v = "<undef>" }
         my $v_esc = $v;
         $v_esc =~ s/</&lt;/g;
         $v_esc =~ s/>/&gt;/g;
-        $http->queue("<td>$v_esc</td>");
+        $http->queue("<td>$v_esc");
+
+        if (defined $popup_hash->{$cn}) {
+          my $popup_details = $popup_hash->{$cn};
+          $self->NotSoSimpleButton($http, {
+              caption => "$popup_details->{name}",
+              op => "OpenDynamicPopup",
+              row => "$ri",
+              class_ => "$popup_details->{class}",
+              sync => 'Update();'
+          });
+        }
+        $http->queue("</td>");
+      }
+      if (defined $popup_hash->{row_level_popup}) {
+        my $popup_details = $popup_hash->{row_level_popup};
+
+        $http->queue('<td>');
+        $self->NotSoSimpleButton($http, {
+            caption => "$popup_details->{name}",
+            op => "OpenDynamicPopup",
+            row => "$ri",
+            class_ => "$popup_details->{class}",
+            sync => 'Update();'
+        });
+        $http->queue('</td>');
       }
       $http->queue('</tr>');
     }
