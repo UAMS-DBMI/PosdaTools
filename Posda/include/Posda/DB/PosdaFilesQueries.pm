@@ -371,13 +371,19 @@ method GetOperations($class:) {
 
 }
 
-method GetPopupsForQuery($class: $query_name) {
+method GetPopupsForQuery($query_name) {
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
-    select *
+    select
+      popup_button_id,
+      name,
+      object_class,
+      btn_col,
+      is_full_table,
+      btn_name
     from popup_buttons
-    where name = ?
+    where ? like name
   });
 
   $qh->execute($query_name);
