@@ -370,6 +370,29 @@ method GetOperations($class:) {
   return $results;
 
 }
+
+method GetPopupsForQuery($query_name) {
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    select
+      popup_button_id,
+      name,
+      object_class,
+      btn_col,
+      is_full_table,
+      btn_name
+    from popup_buttons
+    where ? like name
+  });
+
+  $qh->execute($query_name);
+
+  my $results = $qh->fetchall_arrayref();
+
+  return $results;
+}
+
 # sub Freeze{
 #   my($class, $file_name) = @_;
 #   my $struct = { queries => \%Queries };

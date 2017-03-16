@@ -24,3 +24,19 @@ CREATE TABLE spreadsheet_operation (
     input_line_format text,
     tags text[]
 );
+
+CREATE TABLE popup_buttons (
+    popup_button_id integer NOT NULL,
+    name text,
+    object_class text,
+    btn_col text,
+    is_full_table boolean,
+    btn_name text
+);
+
+CREATE SEQUENCE popup_buttons_popup_button_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
