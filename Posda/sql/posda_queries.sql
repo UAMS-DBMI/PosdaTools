@@ -49,7 +49,8 @@ CREATE TABLE popup_buttons (
     name text,
     object_class text,
     btn_col text,
-    is_full_table boolean
+    is_full_table boolean,
+    btn_name text
 );
 
 CREATE SEQUENCE popup_buttons_popup_button_id_seq
