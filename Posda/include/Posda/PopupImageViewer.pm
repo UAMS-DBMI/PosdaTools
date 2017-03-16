@@ -200,6 +200,8 @@ method ContentResponse($http, $dyn) {
            min="-100" max="1024" value="$self->{image_params}->{center}"
            onchange="PosdaGetRemoteMethod('SetCenter', 'val=' + this.value, function() { Update(); })">
 
+    <p>Width: $self->{image_params}->{width}</p>
+    <p>Center $self->{image_params}->{center}</p>
     <p>SOP UID: $self->{sop_uid}<p>
     <p>Filename: $self->{image_params}->{filename}</p>
     <p>Resolution $self->{image_params}->{cols}x$self->{image_params}->{rows}</p>
