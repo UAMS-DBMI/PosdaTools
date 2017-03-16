@@ -14,7 +14,13 @@ def init():
     # make dirs for each target
     # make plan files for each target
 
-    for target in config.targets:
+    all_targets = []
+
+    # build common target list
+    for env, e_details in config.t_env.items():
+        all_targets.extend(e_details['targets'].keys())
+
+    for target in set(all_targets):
         try:
             os.mkdir(target)
         except FileExistsError:
@@ -83,9 +89,10 @@ def get_remote_version(conn):
     return cur.fetchone()[0]
 
 def process_one(env, target):
-    print(f"\nApplying migrations to target: {target}")
+    target_db = env['targets'][target]
+    print(f"\nApplying migrations to target: {target} ({target_db})")
     plan = load_plan(os.path.join(target, f"{target}.plan"))
-    conn = psycopg2.connect(f"dbname={target} host={env['hostname']}")
+    conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
 
     # determine the latest local version
     local_version = get_local_version(plan)
@@ -108,28 +115,34 @@ def process_one(env, target):
 
     conn.close()
 
-def migrate(env_name):
-    env = config.environments[env_name]
+def migrate(env_name, target=None):
+    env = config.t_env[env_name]
 
-    for t in config.targets:
+    targets = []
+    if target is None:
+        targets = env['targets'].keys()
+    else:
+        targets = [target]
+
+    for t in targets:
         try:
             process_one(env, t)
         except MigrationFailedError:
             print(f"Skipping remaining migrations for {t}.")
 
 def status(env_name):
-    env = config.environments[env_name]
+    env = config.t_env[env_name]
 
-    for target in config.targets:
+    for target, target_db in env['targets'].items():
         plan = load_plan(os.path.join(target, f"{target}.plan"))
-        conn = psycopg2.connect(f"dbname={target} host={env['hostname']}")
+        conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
 
         local_version = get_local_version(plan)
         db_version = get_remote_version(conn)
 
         conn.close()
 
-        print(f"""Target: {target}
+        print(f"""Target: {target} ({target_db})
 Database version: {db_version}
 Plan version: {local_version}
 """)
@@ -137,8 +150,10 @@ Plan version: {local_version}
 def force(version, env_name, target):
     print(f"Forcing {target} to version {version}, in {env_name}")
 
-    env = config.environments[env_name]
-    conn = psycopg2.connect(f"dbname={target} host={env['hostname']}")
+    env = config.t_env[env_name]
+    target_db = env['targets'][target]
+
+    conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
     cur = conn.cursor()
 
     cur.execute(f"update db_version.version set version = {version}")
@@ -157,7 +172,7 @@ def main():
         return init()
 
     if command.lower() == 'migrate':
-        return migrate(sys.argv[2])
+        return migrate(*sys.argv[2:])
 
     if command.lower() == 'force':
         return force(*sys.argv[2:5])
