@@ -6,10 +6,11 @@ use Storable qw( store retrieve store_fd fd_retrieve );
 
 use Posda::Permissions;
 use Posda::Passwords;
+use Posda::Auth;
 
 use Posda::Config ('Config', 'Database');
 
-sub LoginResponse{
+sub LoginResponse {
   my($this, $http, $dyn) = @_;
   my $user = $this->get_user;
   if($user) {
@@ -51,34 +52,18 @@ sub LoginResponse{
     });
   }
 }
-sub AppControllerLogout{
+sub AppControllerLogout {
   my($this, $http, $dyn) = @_;
   $this->RevokeLogin;
   $this->AutoRefresh;
 }
-sub AppControllerLogin{
+sub AppControllerLogin {
   my($this, $http, $dyn) = @_;
   print STDERR "Login attempt for: $dyn->{name}\n";
   my $passwd = $dyn->{password};
   my $user = $dyn->{name};
-  
-  # login
 
-  my $dbh = DBI->connect(Database('posda_auth'));
-  my $stmt = $dbh->prepare(qq{
-    select password
-    from users
-    where user_name = ?
-  });
-
-  $stmt->execute(($user));
-  my $row = $stmt->fetchrow_arrayref();
-  my $correct_pass = $row->[0];
-
-  $stmt->finish;
-  $dbh->disconnect;
-
-  if ($this->CheckPassword($correct_pass, $passwd)) {
+  if (Posda::Auth::is_authorized($user, $passwd)) {
     print STDERR "Login succeeded.\n";
     $this->SetUserPrivs($user);
     $this->AutoRefresh;
@@ -86,12 +71,13 @@ sub AppControllerLogin{
     print STDERR "Login failed!\n";
     $this->QueueJsCmd("alert('Incorrect login!')");
   }
+
 }
 sub CheckPassword {
   my ($this, $correct, $candidate) = @_;
   return Posda::Passwords::is_valid($correct, $candidate);
 }
-sub DbFileValidation{
+sub DbFileValidation {
   my($this, $user, $password, $file) = @_;
   open my $fh, "<$file" or return undef;
   my %logins;
@@ -107,7 +93,7 @@ sub DbFileValidation{
   ){ return undef }
   return 1;
 }
-sub SetUserPrivs{
+sub SetUserPrivs {
   my($this, $user) = @_;
   my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
   $sess->{AuthUser} = $user;
@@ -118,7 +104,7 @@ sub SetUserPrivs{
   $sess->{Privileges}->{capability} = $cap_config->{$user};
   $this->{capability} = $cap_config->{$user};
 }
-sub RevokeLogin{
+sub RevokeLogin {
   my($this) = @_;
   my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
   delete $sess->{AuthUser};
@@ -133,7 +119,7 @@ sub RevokeLogin{
   }
   $this->AutoRefresh;
 }
-sub DbValidation{
+sub DbValidation {
   my($this, $user, $passwd) = @_;
   my $db_host =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{AuthenticationDbHost};
