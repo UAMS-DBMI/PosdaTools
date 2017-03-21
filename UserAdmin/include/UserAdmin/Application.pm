@@ -13,7 +13,7 @@ use Storable 'dclone';
 use GenericApp::Application;
 
 use Posda::Passwords;
-use Posda::Config 'Database';
+use Posda::Config ('Config', 'Database');
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -191,20 +191,40 @@ method RenderUserList($http, $dyn) {
     });
   } @$users;
 
+  my $auth_type = Config('auth_type');
+  my $extra_msg = '';
+  if ($auth_type eq 'ldap') {
+    $extra_msg = qq{
+      <p class="alert alert-info">
+        LDAP authentication is enabled, but you must create a user with
+        the same name here in order to assign permissions.
+      </p>
+    };
+  }
+
   $http->queue(qq{
     </table>
 
     <hr>
     <h4>Add new user</h4>
+    $extra_msg
     <form class="form-inline" id="NewUserForm"
           onSubmit="PosdaGetRemoteMethod('CreateNewUser', \$('#NewUserForm').serialize(), function(){Update();});return false;">
         <input class="form-control" 
                autocomplete="off"
                type="text" name="NewUserName" placeholder="Username">
-        <input class="form-control" 
-               autocomplete="off"
-               type="password" name="NewUserPass" placeholder="Password">
-        <button type="submit" class="btn btn-default">Create</button>
+
+  });
+
+  if ($auth_type eq 'database') {
+    $http->queue(qq{
+          <input class="form-control" 
+                 autocomplete="off"
+                 type="password" name="NewUserPass" placeholder="Password">
+    });
+  }
+  $http->queue(qq{
+      <button type="submit" class="btn btn-default">Create</button>
     </form>
   });
 
@@ -267,23 +287,35 @@ method RenderAssignPerms($http, $dyn) {
     <input id="UpdateFormSubmit" class="btn btn-primary" type="submit" value="Assign Permissions">
     </form>
 
-
     <hr>
     <h4>Password</h4>
-    <div class="alert alert-info">
-      Passwords are stored in a hashed format, and therefore cannot be 
-      displayed. You may change the user's password here at any time.
-    </div>
-    <form id="ChangePasswordForm" class="form-inline" 
-          onSubmit="PosdaGetRemoteMethod('UpdatePassword', \$('#ChangePasswordForm').serialize(), function(){Update();});return false;">
-      <input class="form-control" 
-             autocomplete="off"
-             type="password" name="NewUserPass" placeholder="New Password">
-
-      <input id="ChangePasswordFormSubmit" 
-             class="btn btn-warning" type="submit" value="Change Password">
-    </form>
   });
+
+  if (Config('auth_type') eq 'ldap') {
+    $http->queue(qq{
+        <p class="alert alert-danger">
+          This Posda instance is configured to use LDAP authentication,
+          therefore password management is disabled. You will need to change
+          your LDAP password using some other means.
+        </p>
+    });
+  } else {
+    $http->queue(qq{
+      <div class="alert alert-info">
+        Passwords are stored in a hashed format, and therefore cannot be 
+        displayed. You may change the user's password here at any time.
+      </div>
+      <form id="ChangePasswordForm" class="form-inline" 
+            onSubmit="PosdaGetRemoteMethod('UpdatePassword', \$('#ChangePasswordForm').serialize(), function(){Update();});return false;">
+        <input class="form-control" 
+               autocomplete="off"
+               type="password" name="NewUserPass" placeholder="New Password">
+
+        <input id="ChangePasswordFormSubmit" 
+               class="btn btn-warning" type="submit" value="Change Password">
+      </form>
+    });
+  }
 }
 method UpdatePassword($http, $dyn) {
   my $user = $self->{SelectedUsername};
@@ -346,7 +378,7 @@ method UpdateSelection($http, $dyn) {
 
 method CreateNewUser($http, $dyn) {
   my $name = $dyn->{NewUserName};
-  my $pass = $dyn->{NewUserPass};
+  my $pass = $dyn->{NewUserPass} or 'no_pass';
 
   my $enc_pass = Posda::Passwords::encode($pass);
   DEBUG "$name, $pass, $enc_pass";
