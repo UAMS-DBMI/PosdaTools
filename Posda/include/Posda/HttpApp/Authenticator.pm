@@ -73,10 +73,6 @@ sub AppControllerLogin {
   }
 
 }
-sub CheckPassword {
-  my ($this, $correct, $candidate) = @_;
-  return Posda::Passwords::is_valid($correct, $candidate);
-}
 sub DbFileValidation {
   my($this, $user, $password, $file) = @_;
   open my $fh, "<$file" or return undef;

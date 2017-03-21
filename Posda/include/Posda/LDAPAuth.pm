@@ -3,12 +3,15 @@ package Posda::LDAPAuth;
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
 
+use Posda::Config 'Config';
+
 use Net::LDAP;
 
 # TODO: This needs to be moved to a configuration file
-my $LDAP_URL = 'tcia-ldap-2-red:1389';
-my $LDAP_BASE = 'dc=cancerimagingarchive,dc=net';
-my $LDAP_FILTER = '(cn=$username)';
+my $LDAP_URL = Config('ldap_url');
+my $LDAP_BASE = Config('ldap_base');
+my $LDAP_FILTER = Config('ldap_filter');
+my $LDAP_DEBUG = Config('ldap_debug');
 
 # Test if the given username/password is valid, using LDAP
 # Returns 0 if either value is incorrect, 1 if correct.
