@@ -1032,6 +1032,19 @@ EOF
   }
   sub PasswordContent{
     my($this, $http, $dyn) = @_;
+    my $auth_type = Config('auth_type');
+
+    if ($auth_type eq 'ldap') {
+      $http->queue(qq{
+        <p class="alert alert-danger">
+          This Posda instance is configured to use LDAP authentication,
+          therefore password management is disabled. You will need to change
+          your LDAP password using some other means.
+        </p>
+      });
+
+      return;
+    }
 
     $this->{user} = $this->get_user;
 
