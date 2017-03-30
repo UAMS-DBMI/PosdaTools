@@ -22,6 +22,6 @@
     </tr>
   </table>
 
-  <img *ngIf="series.Test_field"
-       [src]="'data:image/png;base64,'+series.Test_field" />
+  <img *ngIf="series.path"
+       [src]="'/api/img?path=' + series.path" />
 </div>

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3.6
 import logging
 from sanic import Sanic
-from sanic.response import json, text
+from sanic.response import json, text, HTTPResponse
+import aiofiles
 
 import asyncpg
 
@@ -223,11 +224,23 @@ async def get_reviewed_data(state, after, collection, site):
 
     return records
 
-# @app.route("/test")
-# def slash_test(request):
-#     return json({"args": request.args,
-#                  "url": request.url,
-#                  "query_string": request.query_string})
+@app.route("/api/img")
+async def image_from_id(request):
+    path = request.args['path'][0]
+    async with aiofiles.open(path, 'rb') as f:
+        data = await f.read()
+
+    return HTTPResponse(status=200,
+                        headers=None,
+                        content_type="image/jpeg",
+                        body_bytes=data)
+
+
+@app.route("/test")
+def slash_test(request):
+    return json({"args": request.args,
+                 "url": request.url,
+                 "query_string": request.query_string})
 
 # @app.route("/save", methods=["POST"])
 # def save(request):
