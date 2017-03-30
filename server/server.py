@@ -16,6 +16,35 @@ async def connect_to_db(sanic, loop):
                                      host='tcia-utilities', 
                                      loop=loop)
 
+@app.route("/api/details/<iec>")
+async def get_details(request, iec):
+    query = """
+    select
+            image_equivalence_class_id,
+            series_instance_uid,
+            equivalence_class_number,
+            processing_status,
+            review_status,
+            projection_type,
+            file_id,
+            root_path || '/' || rel_path as path
+
+    from image_equivalence_class
+
+    natural join image_equivalence_class_out_image
+    natural join file_location
+    natural join file_storage_root
+
+    where image_equivalence_class_id = $1
+    """
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, int(iec))
+    await pool.release(conn)
+
+    return json(dict(records[0]))
+
+
 @app.route("/api/projects/<state>")
 async def get_projects(request, state):
     logging.debug(f"State: {state}")
@@ -194,17 +223,17 @@ async def get_reviewed_data(state, after, collection, site):
 
     return records
 
-@app.route("/test")
-def slash_test(request):
-    return json({"args": request.args,
-                 "url": request.url,
-                 "query_string": request.query_string})
+# @app.route("/test")
+# def slash_test(request):
+#     return json({"args": request.args,
+#                  "url": request.url,
+#                  "query_string": request.query_string})
 
-@app.route("/save", methods=["POST"])
-def save(request):
-    return json(request.json)
+# @app.route("/save", methods=["POST"])
+# def save(request):
+#     return json(request.json)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    app.run(host="0.0.0.0", port=8129, after_start=connect_to_db, debug=True)
+    app.run(host="0.0.0.0", port=8089, after_start=connect_to_db, debug=True)
