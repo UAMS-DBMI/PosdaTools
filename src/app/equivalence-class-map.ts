@@ -1,11 +1,11 @@
 export interface EquivalenceClassMap {
-	Image_equivalence_class_id: number;
-	Series_instance_uid: string;
-	Equivalence_class_number: number;
-	Processing_status: string;
-	Review_status: string;
-	Projection_type: string;
-	File_id: number;
-	Path: string;
-	Test_field: string;
+	image_equivalence_class_id: number;
+	series_instance_uid: string;
+	equivalence_class_number: number;
+	processing_status: string;
+	review_status: string;
+	projection_type: string;
+	file_id: number;
+	path: string;
+	test_field: string;
 }

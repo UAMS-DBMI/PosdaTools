@@ -1,5 +1,5 @@
 export interface Project {
-  Project_name: string;
-  Site_name: string;
-  Count: number;
+  project_name: string;
+  site_name: string;
+  count: number;
 }

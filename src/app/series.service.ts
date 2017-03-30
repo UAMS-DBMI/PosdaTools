@@ -22,16 +22,16 @@ export class SeriesService {
 
 
   getSeries(iec: number): Observable<any> {
-	  return this.http.get(this.url + '/details/' + iec).map(res => res.json());
+      return this.http.get(this.url + '/details/' + iec).map(res => res.json());
   }
 
   getAllUnreviewed(after: number = 0): Observable<EquivalenceClassMap[]> {
-	  return this.http.get(`${this.url}/set/good?project=${this.selectedProject.Project_name}`
-      + `&site=${this.selectedProject.Site_name}&after=${after}`).map(res => res.json());
+      return this.http.get(`${this.url}/set/good?project=${this.selectedProject.project_name}`
+      + `&site=${this.selectedProject.site_name}&after=${after}`).map(res => res.json());
   }
 
   getAvailableProjects(type: string) {
-	  return this.http.get(this.url + '/projects/' + type)
+      return this.http.get(this.url + '/projects/' + type)
       .map(res => res.json());
   }
 

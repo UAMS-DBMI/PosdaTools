@@ -51,7 +51,7 @@ export class AppComponent {
   }
 
   getCurrentIec(offset: number): number {
-      return this.iecList[offset].Image_equivalence_class_id;
+      return this.iecList[offset].image_equivalence_class_id;
   }
 
   markGood() {
@@ -77,7 +77,7 @@ export class AppComponent {
     this.dataLoading = true;
 
     var currentIec: number = this.getCurrentIec(this.currentIecOffset);
-    var maxIec: number = this.iecList[this.iecList.length-1].Image_equivalence_class_id;
+    var maxIec: number = this.iecList[this.iecList.length-1].image_equivalence_class_id;
 
     if (this.currentIecOffset >= this.iecList.length - 3) {
       this.service.getAllUnreviewed(maxIec).subscribe(
@@ -106,7 +106,7 @@ export class AppComponent {
     this.debugPrint();
     this.currentIec = currentIec;
     // this.service.getSeries(currentIec).subscribe(
-    //   series => console.log(series.Image_equivalence_class_id)
+    //   series => console.log(series.image_equivalence_class_id)
     // );
     // this.router.navigate(['/iec', currentIec]);
   }
@@ -128,7 +128,7 @@ export class AppComponent {
   	this.errorS.announceError("Test error", "This is another error", 1);	
     console.log("Currently loaded IECs are as follows:");
     for (let s of this.iecList) {
-      console.log(s.Image_equivalence_class_id);
+      console.log(s.image_equivalence_class_id);
     }
   }
 
