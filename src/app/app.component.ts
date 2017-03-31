@@ -22,7 +22,7 @@ export class AppComponent {
 
   constructor(
     private service: SeriesService,
-	private errorS: ErrorService,
+    private errorS: ErrorService,
     // private route: ActivatedRoute,
     // private router: Router,
   ) {
@@ -39,15 +39,22 @@ export class AppComponent {
   }
 
   choose(a: Project) {
-    console.log(a);
+    // console.log(a);
     this.service.selectedProject = a;
     // load images and route to series-component
-	  this.service.getAllUnreviewed()
-	  	.subscribe(things => {
+    this.service.getAllUnreviewed()
+      .subscribe(things => {
         this.iecList = things;
         this.initialized = true;
         this.updateDisplay(this.getCurrentIec(this.currentIecOffset));
       });
+  }
+
+  reset() {
+    console.log("resetting");
+    this.initialized = false;
+    this.iecList = null;
+    this.currentIecOffset = 0;
   }
 
   getCurrentIec(offset: number): number {
@@ -124,11 +131,18 @@ export class AppComponent {
     }
   }
   printAll() {
-  	this.errorS.announceError("Test error", "There is an error", 2);	
-  	this.errorS.announceError("Test error", "This is another error", 1);	
+    this.errorS.announceError("Test error", "There is an error", 2);  
+    this.errorS.announceError("Test error", "This is another error", 1);  
     console.log("Currently loaded IECs are as follows:");
     for (let s of this.iecList) {
       console.log(s.image_equivalence_class_id);
+    }
+  }
+
+  navigate(where: String) {
+    console.log("navigate() called");
+    if (where == "home") {
+      this.reset();
     }
   }
 

@@ -1,9 +1,9 @@
-<p>
-    <label>Current selection:</label>
-</p>
-
 <div *ngIf="series">
-  <table>
+
+  <img *ngIf="series.path"
+       [src]="'/api/img?path=' + series.path" />
+
+  <table class="table">
     <tr>
       <td>IEC</td>
       <td>{{series.image_equivalence_class_id}}</td>
@@ -21,7 +21,4 @@
       <td>{{series.path}}</td>
     </tr>
   </table>
-
-  <img *ngIf="series.path"
-       [src]="'/api/img?path=' + series.path" />
 </div>

@@ -1,28 +1,54 @@
-<h1>Kaleidoscope</h1>
+<app-nav
+  (onNavigation)="navigate($event)">
+</app-nav>
 
-<app-error></app-error>
-<ol>
-	<li>
-		<a (click)="initialized=false" href="#">Home</a>
-	</li>
-</ol>
+<div class="container">
+  <div class="row">
+    <div class="col">
 
-<p>IECs reviewed so far this session: {{currentIecOffset}}</p>
+      <app-error></app-error>
 
-<p>
-<button (click)="markGood()" [disabled]="disableButtons()">Good</button>
-<button (click)="markBad()" [disabled]="disableButtons()">Bad</button>
-<button (click)="markUgly()" [disabled]="disableButtons()">Ugly</button>
-</p>
+      <div *ngIf="initialized">
+        <p>IECs reviewed so far this session: {{currentIecOffset}}</p>
 
+        <p>
+          <button class="btn btn-success" 
+                  (click)="markGood()" 
+                  [disabled]="disableButtons()">Good</button>
+          <button class="btn btn-danger"
+                  (click)="markBad()" 
+                  [disabled]="disableButtons()">Bad</button>
+          <button class="btn btn-warning"
+                  (click)="markUgly()" 
+                  [disabled]="disableButtons()">Ugly</button>
+        </p>
 
-<button (click)="moveBackward()">Go Back</button>
-<p><button (click)="printAll()">Print debug info</button></p>
+        <p>
+          <button class="btn btn-primary" 
+                  (click)="moveBackward()">
+            Go Back
+          </button>
+        </p>
+      </div>
 
-<!-- <div id="router-outlet">
-	<router-outlet (onProjectChosen)="choose($event)"></router-outlet>
-</div> -->
+      <!-- rename to 'controls' -->
+      <app-component1 
+        *ngIf="!initialized" 
+        (onProjectChosen)="choose($event)">
+      </app-component1>
 
-<app-component1 *ngIf="!initialized" (onProjectChosen)="choose($event)"></app-component1>
+      <!-- rename to ??? 'display'? 'image'? -->
+      <app-series-component 
+        [iec]="currentIec" 
+        *ngIf="initialized">
+      </app-series-component>
 
-<app-series-component [iec]="currentIec" *ngIf="initialized"></app-series-component>
+      <p *ngIf="initialized">
+        <button class="btn btn-secondary" 
+                (click)="printAll()">
+          Print debug info
+        </button>
+      </p>
+    </div>
+  </div>
+</div>

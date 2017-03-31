@@ -11,12 +11,13 @@ import { PageNotFoundComponentComponent } from './page-not-found-component/page-
 
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
+import { NavComponent } from './nav/nav.component';
 
 
 // const appRoutes: Routes = [
-// 	{ path: 'iec/:id', component: SeriesComponentComponent },
-// 	{ path: '', component: Component1Component },
-// 	{ path: '**', component: PageNotFoundComponentComponent },
+//  { path: 'iec/:id', component: SeriesComponentComponent },
+//  { path: '', component: Component1Component },
+//  { path: '**', component: PageNotFoundComponentComponent },
 // ];
 
 
@@ -25,14 +26,15 @@ import { ErrorService, ErrorComponent } from './errors';
     AppComponent,
     Component1Component,
     SeriesComponentComponent,
-	PageNotFoundComponentComponent,
-	ErrorComponent
+  PageNotFoundComponentComponent,
+  ErrorComponent,
+  NavComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-	HttpModule,
-	// RouterModule.forRoot(appRoutes)
+  HttpModule,
+  // RouterModule.forRoot(appRoutes)
   ],
   providers: [SeriesService, ErrorService],
   bootstrap: [AppComponent]
