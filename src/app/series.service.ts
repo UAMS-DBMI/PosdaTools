@@ -35,4 +35,23 @@ export class SeriesService {
       .map(res => res.json());
   }
 
+  private mark(iec: number, state: String): void {
+    console.log("SeriesService.mark()");
+    this.http.post('api/save', { iec, state })
+      .map(res => res.json())
+      .subscribe(resp => console.log("marked"));
+  }
+
+  public markGood(iec: number): void {
+    this.mark(iec, "good");
+  }
+
+  public markBad(iec: number): void {
+    this.mark(iec, "bad");
+  }
+
+  public markUgly(iec: number): void {
+    this.mark(iec, "ugly");
+  }
+
 }

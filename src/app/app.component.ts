@@ -46,7 +46,7 @@ export class AppComponent {
       .subscribe(things => {
         this.iecList = things;
         this.initialized = true;
-        this.updateDisplay(this.getCurrentIec(this.currentIecOffset));
+        this.updateDisplay(this.getCurrentIec());
       });
   }
 
@@ -57,23 +57,26 @@ export class AppComponent {
     this.currentIecOffset = 0;
   }
 
-  getCurrentIec(offset: number): number {
-      return this.iecList[offset].image_equivalence_class_id;
+  getCurrentIec(offset: number = 0): number {
+      return this.iecList[this.currentIecOffset].image_equivalence_class_id;
   }
 
   markGood() {
+    this.service.markGood(this.getCurrentIec());
     this.moveForward();
   }
   markBad() {
+    this.service.markBad(this.getCurrentIec());
     this.moveForward();
   }
   markUgly() {
+    this.service.markUgly(this.getCurrentIec());
     this.moveForward();
   }
   moveBackward() {
     if (this.currentIecOffset > 0) {
       this.currentIecOffset -= 1;
-      this.updateDisplay(this.getCurrentIec(this.currentIecOffset));
+      this.updateDisplay(this.getCurrentIec());
     }
   }
   fetchMoreData() {
@@ -83,7 +86,7 @@ export class AppComponent {
 
     this.dataLoading = true;
 
-    var currentIec: number = this.getCurrentIec(this.currentIecOffset);
+    var currentIec: number = this.getCurrentIec();
     var maxIec: number = this.iecList[this.iecList.length-1].image_equivalence_class_id;
 
     if (this.currentIecOffset >= this.iecList.length - 3) {
@@ -100,7 +103,7 @@ export class AppComponent {
     // load the next IEC into the viewer component
 
     this.currentIecOffset += 1;
-    var currentIec: number = this.getCurrentIec(this.currentIecOffset);
+    var currentIec: number = this.getCurrentIec();
 
     if (this.currentIecOffset >= this.iecList.length - 3) {
       this.fetchMoreData();
@@ -139,7 +142,7 @@ export class AppComponent {
     }
   }
 
-  navigate(where: String) {
+  navigate(where: String): void {
     console.log("navigate() called");
     if (where == "home") {
       this.reset();

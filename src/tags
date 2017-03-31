@@ -1,0 +1,416 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AppComponent	app/app.component.spec.ts	/^        AppComponent$/;"	m
+AppComponent	app/app.component.ts	/^export class AppComponent {$/;"	c
+AppComponent	app/app.module.ts	/^    AppComponent,$/;"	m
+AppModule	app/app.module.ts	/^export class AppModule { }$/;"	c
+BrowserDynamicTestingModule	test.ts	/^  BrowserDynamicTestingModule,$/;"	m
+BrowserModule	app/app.module.ts	/^    BrowserModule,$/;"	m
+CommonModule	app/main-module/main-module.module.ts	/^    CommonModule$/;"	m
+Component1Component	app/app.module.ts	/^    Component1Component,$/;"	m
+Component1Component	app/component1/component1.component.ts	/^export class Component1Component implements OnInit {$/;"	c
+EquivalenceClassMap	app/equivalence-class-map.ts	/^export interface EquivalenceClassMap {$/;"	i
+Error	app/errors.ts	/^export interface Error {$/;"	i
+ErrorComponent	app/app.module.ts	/^  ErrorComponent,$/;"	m
+ErrorComponent	app/errors.ts	/^export class ErrorComponent {$/;"	c
+ErrorService	app/errors.ts	/^export class ErrorService {$/;"	c
+FormsModule	app/app.module.ts	/^    FormsModule,$/;"	m
+HttpModule	app/app.module.ts	/^  HttpModule,$/;"	m
+MainModuleComponent	app/main-module/main-module.component.ts	/^export class MainModuleComponent implements OnInit {$/;"	c
+MainModuleModule	app/main-module/main-module.module.ts	/^export class MainModuleModule { }$/;"	c
+NavComponent	app/app.module.ts	/^  NavComponent$/;"	m
+NavComponent	app/nav/nav.component.ts	/^export class NavComponent implements OnInit {$/;"	c
+PageNotFoundComponentComponent	app/app.module.ts	/^  PageNotFoundComponentComponent,$/;"	m
+PageNotFoundComponentComponent	app/page-not-found-component/page-not-found-component.component.ts	/^export class PageNotFoundComponentComponent implements OnInit {$/;"	c
+Project	app/project.ts	/^export interface Project {$/;"	i
+SeriesComponentComponent	app/app.module.ts	/^    SeriesComponentComponent,$/;"	m
+SeriesComponentComponent	app/series-component/series-component.component.ts	/^export class SeriesComponentComponent implements OnInit {$/;"	c
+SeriesService	app/series.service.ts	/^export class SeriesService {$/;"	c
+TestBed	app/app.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/component1/component1.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/main-module/main-module.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/nav/nav.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/page-not-found-component/page-not-found-component.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/series-component/series-component.component.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+TestBed	app/series.service.spec.ts	/^    TestBed.configureTestingModule({$/;"	m
+__karma__	test.ts	/^__karma__.loaded = function () {};$/;"	m
+__karma__	test.ts	/^__karma__.start();$/;"	m
+_errorService	app/errors.ts	/^      _errorService.errorAnnounced$.subscribe($/;"	m
+aria	app/errors.ts	/^            aria-label="Close"$/;"	m
+beforeEach	app/app.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/component1/component1.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/component1/component1.component.spec.ts	/^  beforeEach(async(() => {$/;"	m
+beforeEach	app/main-module/main-module.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/main-module/main-module.component.spec.ts	/^  beforeEach(async(() => {$/;"	m
+beforeEach	app/nav/nav.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/nav/nav.component.spec.ts	/^  beforeEach(async(() => {$/;"	m
+beforeEach	app/page-not-found-component/page-not-found-component.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/page-not-found-component/page-not-found-component.component.spec.ts	/^  beforeEach(async(() => {$/;"	m
+beforeEach	app/series-component/series-component.component.spec.ts	/^  beforeEach(() => {$/;"	m
+beforeEach	app/series-component/series-component.component.spec.ts	/^  beforeEach(async(() => {$/;"	m
+beforeEach	app/series.service.spec.ts	/^  beforeEach(() => {$/;"	m
+bootstrap	app/app.module.ts	/^  bootstrap: [AppComponent]$/;"	m
+choose	app/app.component.ts	/^  choose(a: Project) {$/;"	m
+choose	app/component1/component1.component.ts	/^  choose(a: Project) {$/;"	m
+class	app/app.component.ts	/^export class AppComponent {$/;"	m
+class	app/app.module.ts	/^export class AppModule { }$/;"	m
+class	app/component1/component1.component.ts	/^export class Component1Component implements OnInit {$/;"	m
+class	app/errors.ts	/^            class="close"$/;"	m
+class	app/errors.ts	/^     class="alert"$/;"	m
+class	app/errors.ts	/^export class ErrorComponent {$/;"	m
+class	app/errors.ts	/^export class ErrorService {$/;"	m
+class	app/main-module/main-module.component.ts	/^export class MainModuleComponent implements OnInit {$/;"	m
+class	app/main-module/main-module.module.ts	/^export class MainModuleModule { }$/;"	m
+class	app/nav/nav.component.ts	/^export class NavComponent implements OnInit {$/;"	m
+class	app/page-not-found-component/page-not-found-component.component.ts	/^export class PageNotFoundComponentComponent implements OnInit {$/;"	m
+class	app/series-component/series-component.component.ts	/^export class SeriesComponentComponent implements OnInit {$/;"	m
+class	app/series.service.ts	/^export class SeriesService {$/;"	m
+component	app/component1/component1.component.spec.ts	/^    component = fixture.componentInstance;$/;"	m
+component	app/main-module/main-module.component.spec.ts	/^    component = fixture.componentInstance;$/;"	m
+component	app/nav/nav.component.spec.ts	/^    component = fixture.componentInstance;$/;"	m
+component	app/page-not-found-component/page-not-found-component.component.spec.ts	/^    component = fixture.componentInstance;$/;"	m
+component	app/series-component/series-component.component.spec.ts	/^    component = fixture.componentInstance;$/;"	m
+console	app/app.component.ts	/^      console.log(s.image_equivalence_class_id);$/;"	m
+console	app/app.component.ts	/^    console.log("Current iecList Length: ", this.iecList.length);$/;"	m
+console	app/app.component.ts	/^    console.log("Current offset: ", this.currentIecOffset);$/;"	m
+console	app/app.component.ts	/^    console.log("Currently loaded IECs are as follows:");$/;"	m
+console	app/app.component.ts	/^    console.log("navigate() called");$/;"	m
+console	app/app.component.ts	/^    console.log("resetting");$/;"	m
+console	app/component1/component1.component.ts	/^    console.log(a);$/;"	m
+console	app/errors.ts	/^      console.log('es init');$/;"	m
+console	app/nav/nav.component.ts	/^    console.log("emitting onNavigation => 'home'");$/;"	m
+console	app/series-component/series-component.component.ts	/^    console.log("was given IEC: ", iec);$/;"	m
+const	environments/environment.prod.ts	/^export const environment = {$/;"	m
+const	environments/environment.ts	/^export const environment = {$/;"	m
+constructor	app/app.component.ts	/^  constructor($/;"	m
+constructor	app/component1/component1.component.ts	/^  constructor(private service: SeriesService) { }$/;"	m
+constructor	app/errors.ts	/^  constructor() {$/;"	m
+constructor	app/errors.ts	/^  constructor(private _errorService: ErrorService) {$/;"	m
+constructor	app/main-module/main-module.component.ts	/^  constructor() { }$/;"	m
+constructor	app/nav/nav.component.ts	/^  constructor() { }$/;"	m
+constructor	app/page-not-found-component/page-not-found-component.component.ts	/^  constructor() { }$/;"	m
+constructor	app/series-component/series-component.component.ts	/^  constructor($/;"	m
+constructor	app/series.service.ts	/^  constructor(private http: Http) { }$/;"	m
+context	test.ts	/^context.keys().map(context);$/;"	m
+count	app/project.ts	/^  count: number;$/;"	m
+currentIec	app/app.component.ts	/^  currentIec: number;$/;"	m
+currentIecOffset	app/app.component.ts	/^  currentIecOffset: number;$/;"	m
+dataLoading	app/app.component.ts	/^  dataLoading: boolean;$/;"	m
+debugPrint	app/app.component.ts	/^  debugPrint() {$/;"	m
+declarations	app/app.component.spec.ts	/^      declarations: [$/;"	m
+declarations	app/app.module.ts	/^  declarations: [$/;"	m
+declarations	app/component1/component1.component.spec.ts	/^      declarations: [ Component1Component ]$/;"	m
+declarations	app/main-module/main-module.component.spec.ts	/^      declarations: [ MainModuleComponent ]$/;"	m
+declarations	app/main-module/main-module.module.ts	/^  declarations: [MainModuleComponent]$/;"	m
+declarations	app/nav/nav.component.spec.ts	/^      declarations: [ NavComponent ]$/;"	m
+declarations	app/page-not-found-component/page-not-found-component.component.spec.ts	/^      declarations: [ PageNotFoundComponentComponent ]$/;"	m
+declarations	app/series-component/series-component.component.spec.ts	/^      declarations: [ SeriesComponentComponent ]$/;"	m
+declare	test.ts	/^declare var __karma__: any;$/;"	m
+declare	test.ts	/^declare var require: any;$/;"	m
+describe	app/app.component.spec.ts	/^describe('AppComponent', () => {$/;"	m
+describe	app/component1/component1.component.spec.ts	/^describe('Component1Component', () => {$/;"	m
+describe	app/main-module/main-module.component.spec.ts	/^describe('MainModuleComponent', () => {$/;"	m
+describe	app/nav/nav.component.spec.ts	/^describe('NavComponent', () => {$/;"	m
+describe	app/page-not-found-component/page-not-found-component.component.spec.ts	/^describe('PageNotFoundComponentComponent', () => {$/;"	m
+describe	app/series-component/series-component.component.spec.ts	/^describe('SeriesComponentComponent', () => {$/;"	m
+describe	app/series.service.spec.ts	/^describe('SeriesService', () => {$/;"	m
+description	app/errors.ts	/^          description: description,$/;"	m
+description	app/errors.ts	/^    description?: string;$/;"	m
+disableButtons	app/app.component.ts	/^  disableButtons(): boolean {$/;"	m
+dismiss	app/errors.ts	/^  dismiss(error: Error){$/;"	m
+enableProdMode	main.ts	/^  enableProdMode();$/;"	m
+equivalence_class_number	app/equivalence-class-map.ts	/^	equivalence_class_number: number;$/;"	m
+error	app/errors.ts	/^          error => this.errors.push(error)$/;"	m
+errorAnnounced	app/errors.ts	/^  errorAnnounced$ = this.errorAnnounceSource.asObservable();$/;"	m
+expect	app/app.component.spec.ts	/^    expect(app).toBeTruthy();$/;"	m
+expect	app/app.component.spec.ts	/^    expect(app.title).toEqual('app works!');$/;"	m
+expect	app/app.component.spec.ts	/^    expect(compiled.querySelector('h1').textContent).toContain('app works!');$/;"	m
+expect	app/component1/component1.component.spec.ts	/^    expect(component).toBeTruthy();$/;"	m
+expect	app/main-module/main-module.component.spec.ts	/^    expect(component).toBeTruthy();$/;"	m
+expect	app/nav/nav.component.spec.ts	/^    expect(component).toBeTruthy();$/;"	m
+expect	app/page-not-found-component/page-not-found-component.component.spec.ts	/^    expect(component).toBeTruthy();$/;"	m
+expect	app/series-component/series-component.component.spec.ts	/^    expect(component).toBeTruthy();$/;"	m
+expect	app/series.service.spec.ts	/^    expect(service).toBeTruthy();$/;"	m
+export	app/index.ts	/^export * from '.\/app.component';$/;"	m
+export	app/index.ts	/^export * from '.\/app.module';$/;"	m
+fetchMoreData	app/app.component.ts	/^  fetchMoreData() {$/;"	m
+file_id	app/equivalence-class-map.ts	/^	file_id: number;$/;"	m
+fixture	app/app.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+fixture	app/component1/component1.component.spec.ts	/^    fixture = TestBed.createComponent(Component1Component);$/;"	m
+fixture	app/component1/component1.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+fixture	app/main-module/main-module.component.spec.ts	/^    fixture = TestBed.createComponent(MainModuleComponent);$/;"	m
+fixture	app/main-module/main-module.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+fixture	app/nav/nav.component.spec.ts	/^    fixture = TestBed.createComponent(NavComponent);$/;"	m
+fixture	app/nav/nav.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+fixture	app/page-not-found-component/page-not-found-component.component.spec.ts	/^    fixture = TestBed.createComponent(PageNotFoundComponentComponent);$/;"	m
+fixture	app/page-not-found-component/page-not-found-component.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+fixture	app/series-component/series-component.component.spec.ts	/^    fixture = TestBed.createComponent(SeriesComponentComponent);$/;"	m
+fixture	app/series-component/series-component.component.spec.ts	/^    fixture.detectChanges();$/;"	m
+for	app/app.component.ts	/^    for (let s of this.iecList) {$/;"	m
+getAllUnreviewed	app/series.service.ts	/^  getAllUnreviewed(after: number = 0): Observable<EquivalenceClassMap[]> {$/;"	m
+getAvailableProjects	app/series.service.ts	/^  getAvailableProjects(type: string) {$/;"	m
+getCurrentIec	app/app.component.ts	/^  getCurrentIec(offset: number): number {$/;"	m
+getSeries	app/series.service.ts	/^  getSeries(iec: number): Observable<any> {$/;"	m
+getSeverityClass	app/errors.ts	/^  getSeverityClass(severity: number){$/;"	m
+getTestBed	test.ts	/^getTestBed().initTestEnvironment($/;"	m
+home	app/nav/nav.component.ts	/^  home() {$/;"	m
+iecList	app/app.component.ts	/^  iecList: EquivalenceClassMap[];$/;"	m
+if	app/app.component.ts	/^    if (this.currentIecOffset > 0) {$/;"	m
+if	app/app.component.ts	/^    if (this.currentIecOffset >= this.iecList.length - 3) {$/;"	m
+if	app/app.component.ts	/^    if (this.dataLoading) {$/;"	m
+if	app/app.component.ts	/^    if (this.iecList && this.currentIecOffset < this.iecList.length-1) {$/;"	m
+if	app/app.component.ts	/^    if (where == "home") {$/;"	m
+if	app/errors.ts	/^      if(i > -1){$/;"	m
+if	app/errors.ts	/^      if(severity < 1){$/;"	m
+if	main.ts	/^if (environment.production) {$/;"	m
+image_equivalence_class_id	app/equivalence-class-map.ts	/^	image_equivalence_class_id: number;$/;"	m
+import	app/app.component.spec.ts	/^import { AppComponent } from '.\/app.component';$/;"	m
+import	app/app.component.spec.ts	/^import { TestBed, async } from '@angular\/core\/testing';$/;"	m
+import	app/app.component.ts	/^import { Component } from '@angular\/core';$/;"	m
+import	app/app.component.ts	/^import { EquivalenceClassMap } from '.\/equivalence-class-map';$/;"	m
+import	app/app.component.ts	/^import { ErrorService } from '.\/errors';$/;"	m
+import	app/app.component.ts	/^import { Project } from '.\/project';$/;"	m
+import	app/app.component.ts	/^import { Router, ActivatedRoute, Params } from '@angular\/router';$/;"	m
+import	app/app.component.ts	/^import { SeriesService } from '.\/series.service';$/;"	m
+import	app/app.module.ts	/^import { AppComponent } from '.\/app.component';$/;"	m
+import	app/app.module.ts	/^import { BrowserModule } from '@angular\/platform-browser';$/;"	m
+import	app/app.module.ts	/^import { Component1Component } from '.\/component1\/component1.component';$/;"	m
+import	app/app.module.ts	/^import { ErrorService, ErrorComponent } from '.\/errors';$/;"	m
+import	app/app.module.ts	/^import { FormsModule } from '@angular\/forms';$/;"	m
+import	app/app.module.ts	/^import { HttpModule } from '@angular\/http';$/;"	m
+import	app/app.module.ts	/^import { NavComponent } from '.\/nav\/nav.component';$/;"	m
+import	app/app.module.ts	/^import { NgModule } from '@angular\/core';$/;"	m
+import	app/app.module.ts	/^import { PageNotFoundComponentComponent } from '.\/page-not-found-component\/page-not-found-component.component';$/;"	m
+import	app/app.module.ts	/^import { RouterModule, Routes } from '@angular\/router';$/;"	m
+import	app/app.module.ts	/^import { SeriesComponentComponent } from '.\/series-component\/series-component.component';$/;"	m
+import	app/app.module.ts	/^import { SeriesService } from '.\/series.service';$/;"	m
+import	app/component1/component1.component.spec.ts	/^import { By } from '@angular\/platform-browser';$/;"	m
+import	app/component1/component1.component.spec.ts	/^import { Component1Component } from '.\/component1.component';$/;"	m
+import	app/component1/component1.component.spec.ts	/^import { DebugElement } from '@angular\/core';$/;"	m
+import	app/component1/component1.component.spec.ts	/^import { async, ComponentFixture, TestBed } from '@angular\/core\/testing';$/;"	m
+import	app/component1/component1.component.ts	/^import { Component, EventEmitter, Output, OnInit } from '@angular\/core';$/;"	m
+import	app/component1/component1.component.ts	/^import { EquivalenceClassMap } from '..\/equivalence-class-map';$/;"	m
+import	app/component1/component1.component.ts	/^import { Project } from '..\/project';$/;"	m
+import	app/component1/component1.component.ts	/^import { SeriesService } from '..\/series.service';$/;"	m
+import	app/errors.ts	/^import { Component } from '@angular\/core';$/;"	m
+import	app/errors.ts	/^import { Injectable } from '@angular\/core';$/;"	m
+import	app/errors.ts	/^import { Subject } from 'rxjs\/Subject';$/;"	m
+import	app/main-module/main-module.component.spec.ts	/^import { By } from '@angular\/platform-browser';$/;"	m
+import	app/main-module/main-module.component.spec.ts	/^import { DebugElement } from '@angular\/core';$/;"	m
+import	app/main-module/main-module.component.spec.ts	/^import { MainModuleComponent } from '.\/main-module.component';$/;"	m
+import	app/main-module/main-module.component.spec.ts	/^import { async, ComponentFixture, TestBed } from '@angular\/core\/testing';$/;"	m
+import	app/main-module/main-module.component.ts	/^import { Component, OnInit } from '@angular\/core';$/;"	m
+import	app/main-module/main-module.module.ts	/^import { CommonModule } from '@angular\/common';$/;"	m
+import	app/main-module/main-module.module.ts	/^import { MainModuleComponent } from '.\/main-module.component';$/;"	m
+import	app/main-module/main-module.module.ts	/^import { NgModule } from '@angular\/core';$/;"	m
+import	app/nav/nav.component.spec.ts	/^import { NavComponent } from '.\/nav.component';$/;"	m
+import	app/nav/nav.component.spec.ts	/^import { async, ComponentFixture, TestBed } from '@angular\/core\/testing';$/;"	m
+import	app/nav/nav.component.ts	/^import { Component, EventEmitter, Output, OnInit } from '@angular\/core';$/;"	m
+import	app/page-not-found-component/page-not-found-component.component.spec.ts	/^import { By } from '@angular\/platform-browser';$/;"	m
+import	app/page-not-found-component/page-not-found-component.component.spec.ts	/^import { DebugElement } from '@angular\/core';$/;"	m
+import	app/page-not-found-component/page-not-found-component.component.spec.ts	/^import { PageNotFoundComponentComponent } from '.\/page-not-found-component.component';$/;"	m
+import	app/page-not-found-component/page-not-found-component.component.spec.ts	/^import { async, ComponentFixture, TestBed } from '@angular\/core\/testing';$/;"	m
+import	app/page-not-found-component/page-not-found-component.component.ts	/^import { Component, OnInit } from '@angular\/core';$/;"	m
+import	app/series-component/series-component.component.spec.ts	/^import { By } from '@angular\/platform-browser';$/;"	m
+import	app/series-component/series-component.component.spec.ts	/^import { DebugElement } from '@angular\/core';$/;"	m
+import	app/series-component/series-component.component.spec.ts	/^import { SeriesComponentComponent } from '.\/series-component.component';$/;"	m
+import	app/series-component/series-component.component.spec.ts	/^import { async, ComponentFixture, TestBed } from '@angular\/core\/testing';$/;"	m
+import	app/series-component/series-component.component.ts	/^import 'rxjs\/add\/operator\/switchMap';$/;"	m
+import	app/series-component/series-component.component.ts	/^import { Component, Input, OnInit } from '@angular\/core';$/;"	m
+import	app/series-component/series-component.component.ts	/^import { EquivalenceClassMap } from '..\/equivalence-class-map';$/;"	m
+import	app/series-component/series-component.component.ts	/^import { Router, ActivatedRoute, Params } from '@angular\/router';$/;"	m
+import	app/series-component/series-component.component.ts	/^import { SeriesService } from '..\/series.service';$/;"	m
+import	app/series.service.spec.ts	/^import { SeriesService } from '.\/series.service';$/;"	m
+import	app/series.service.spec.ts	/^import { TestBed, async, inject } from '@angular\/core\/testing';$/;"	m
+import	app/series.service.ts	/^import 'rxjs\/add\/operator\/map';$/;"	m
+import	app/series.service.ts	/^import { EquivalenceClassMap } from '.\/equivalence-class-map';$/;"	m
+import	app/series.service.ts	/^import { Http, Response} from '@angular\/http';$/;"	m
+import	app/series.service.ts	/^import { Injectable } from '@angular\/core';$/;"	m
+import	app/series.service.ts	/^import { Observable } from 'rxjs\/Observable';$/;"	m
+import	app/series.service.ts	/^import { Project } from '.\/project';$/;"	m
+import	main.ts	/^import '.\/polyfills.ts';$/;"	m
+import	main.ts	/^import { AppModule } from '.\/app\/';$/;"	m
+import	main.ts	/^import { enableProdMode } from '@angular\/core';$/;"	m
+import	main.ts	/^import { environment } from '.\/environments\/environment';$/;"	m
+import	main.ts	/^import { platformBrowserDynamic } from '@angular\/platform-browser-dynamic';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/array';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/date';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/function';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/map';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/math';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/number';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/object';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/parse-float';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/parse-int';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/reflect';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/regexp';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/set';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/string';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es6\/symbol';$/;"	m
+import	polyfills.ts	/^import 'core-js\/es7\/reflect';$/;"	m
+import	polyfills.ts	/^import 'zone.js\/dist\/zone';$/;"	m
+import	test.ts	/^import '.\/polyfills.ts';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/async-test';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/fake-async-test';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/jasmine-patch';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/long-stack-trace-zone';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/proxy.js';$/;"	m
+import	test.ts	/^import 'zone.js\/dist\/sync-test';$/;"	m
+import	test.ts	/^import { getTestBed } from '@angular\/core\/testing';$/;"	m
+import	test.ts	/^import {$/;"	m
+imports	app/app.module.ts	/^  imports: [$/;"	m
+imports	app/main-module/main-module.module.ts	/^  imports: [$/;"	m
+initialized	app/app.component.ts	/^  initialized: boolean;$/;"	m
+interface	app/equivalence-class-map.ts	/^export interface EquivalenceClassMap {$/;"	m
+interface	app/errors.ts	/^export interface Error {$/;"	m
+interface	app/project.ts	/^export interface Project {$/;"	m
+it	app/app.component.spec.ts	/^  it('should create the app', async(() => {$/;"	m
+it	app/app.component.spec.ts	/^  it('should render title in a h1 tag', async(() => {$/;"	m
+it	app/app.component.spec.ts	/^  it(`should have as title 'app works!'`, async(() => {$/;"	m
+it	app/component1/component1.component.spec.ts	/^  it('should create', () => {$/;"	m
+it	app/main-module/main-module.component.spec.ts	/^  it('should create', () => {$/;"	m
+it	app/nav/nav.component.spec.ts	/^  it('should create', () => {$/;"	m
+it	app/page-not-found-component/page-not-found-component.component.spec.ts	/^  it('should create', () => {$/;"	m
+it	app/series-component/series-component.component.spec.ts	/^  it('should create', () => {$/;"	m
+it	app/series.service.spec.ts	/^  it('should ...', inject([SeriesService], (service: SeriesService) => {$/;"	m
+items	app/app.component.ts	/^      items => this.projectList = items$/;"	m
+items	app/component1/component1.component.ts	/^      items => this.projectList = items$/;"	m
+let	app/app.component.spec.ts	/^    let app = fixture.debugElement.componentInstance;$/;"	m
+let	app/app.component.spec.ts	/^    let compiled = fixture.debugElement.nativeElement;$/;"	m
+let	app/app.component.spec.ts	/^    let fixture = TestBed.createComponent(AppComponent);$/;"	m
+let	app/component1/component1.component.spec.ts	/^  let component: Component1Component;$/;"	m
+let	app/component1/component1.component.spec.ts	/^  let fixture: ComponentFixture<Component1Component>;$/;"	m
+let	app/errors.ts	/^      let error = {$/;"	m
+let	app/errors.ts	/^      let i = this.errors.indexOf(error)$/;"	m
+let	app/main-module/main-module.component.spec.ts	/^  let component: MainModuleComponent;$/;"	m
+let	app/main-module/main-module.component.spec.ts	/^  let fixture: ComponentFixture<MainModuleComponent>;$/;"	m
+let	app/nav/nav.component.spec.ts	/^  let component: NavComponent;$/;"	m
+let	app/nav/nav.component.spec.ts	/^  let fixture: ComponentFixture<NavComponent>;$/;"	m
+let	app/page-not-found-component/page-not-found-component.component.spec.ts	/^  let component: PageNotFoundComponentComponent;$/;"	m
+let	app/page-not-found-component/page-not-found-component.component.spec.ts	/^  let fixture: ComponentFixture<PageNotFoundComponentComponent>;$/;"	m
+let	app/series-component/series-component.component.spec.ts	/^  let component: SeriesComponentComponent;$/;"	m
+let	app/series-component/series-component.component.spec.ts	/^  let fixture: ComponentFixture<SeriesComponentComponent>;$/;"	m
+let	test.ts	/^let context = require.context('.\/', true, \/\\.spec\\.ts\/);$/;"	m
+loadIEC	app/series-component/series-component.component.ts	/^  loadIEC(iec: number) {$/;"	m
+markBad	app/app.component.ts	/^  markBad() {$/;"	m
+markGood	app/app.component.ts	/^  markGood() {$/;"	m
+markUgly	app/app.component.ts	/^  markUgly() {$/;"	m
+moveBackward	app/app.component.ts	/^  moveBackward() {$/;"	m
+moveForward	app/app.component.ts	/^  moveForward() {$/;"	m
+navigate	app/app.component.ts	/^  navigate(where: String): void {$/;"	m
+newList	app/app.component.ts	/^        newList => {$/;"	m
+ngOnInit	app/app.component.ts	/^  ngOnInit() {$/;"	m
+ngOnInit	app/component1/component1.component.ts	/^  ngOnInit() {$/;"	m
+ngOnInit	app/main-module/main-module.component.ts	/^  ngOnInit() {$/;"	m
+ngOnInit	app/nav/nav.component.ts	/^  ngOnInit() {$/;"	m
+ngOnInit	app/page-not-found-component/page-not-found-component.component.ts	/^  ngOnInit() {$/;"	m
+ngOnInit	app/series-component/series-component.component.ts	/^  ngOnInit() {$/;"	m
+path	app/equivalence-class-map.ts	/^	path: string;$/;"	m
+platformBrowserDynamic	main.ts	/^platformBrowserDynamic().bootstrapModule(AppModule);$/;"	m
+platformBrowserDynamicTesting	test.ts	/^  platformBrowserDynamicTesting$/;"	m
+platformBrowserDynamicTesting	test.ts	/^  platformBrowserDynamicTesting()$/;"	m
+printAll	app/app.component.ts	/^  printAll() {$/;"	m
+private	app/app.component.ts	/^    private errorS: ErrorService,$/;"	m
+private	app/app.component.ts	/^    private service: SeriesService,$/;"	m
+private	app/errors.ts	/^  private errorAnnounceSource = new Subject<Error>();$/;"	m
+private	app/series-component/series-component.component.ts	/^    private service: SeriesService$/;"	m
+private	app/series.service.ts	/^  private url = 'api';$/;"	m
+processing_status	app/equivalence-class-map.ts	/^	processing_status: string;$/;"	m
+production	environments/environment.prod.ts	/^  production: true$/;"	m
+production	environments/environment.ts	/^  production: false$/;"	m
+projectList	app/app.component.ts	/^  projectList: Project[];$/;"	m
+projectList	app/component1/component1.component.ts	/^  projectList: Object[];$/;"	m
+project_name	app/project.ts	/^  project_name: string;$/;"	m
+projection_type	app/equivalence-class-map.ts	/^	projection_type: string;$/;"	m
+providers	app/app.module.ts	/^  providers: [SeriesService, ErrorService],$/;"	m
+providers	app/series.service.spec.ts	/^      providers: [SeriesService]$/;"	m
+public	app/errors.ts	/^  public announceError(title: string, description: string, severity: number){$/;"	m
+public	app/errors.ts	/^  public errors: Error[] = [];$/;"	m
+public	app/series-component/series-component.component.ts	/^  public series: EquivalenceClassMap;$/;"	m
+public	app/series.service.ts	/^  public currentIec: number;$/;"	m
+public	app/series.service.ts	/^  public iecList: EquivalenceClassMap[];$/;"	m
+public	app/series.service.ts	/^  public selectedProject: Project;$/;"	m
+reset	app/app.component.ts	/^  reset() {$/;"	m
+return	app/app.component.ts	/^      return false$/;"	m
+return	app/app.component.ts	/^      return this.iecList[offset].image_equivalence_class_id;$/;"	m
+return	app/app.component.ts	/^      return true;$/;"	m
+return	app/app.component.ts	/^      return;$/;"	m
+return	app/errors.ts	/^          return "alert-danger";$/;"	m
+return	app/errors.ts	/^          return "alert-info";$/;"	m
+return	app/errors.ts	/^          return "alert-success";$/;"	m
+return	app/errors.ts	/^          return "alert-warning";$/;"	m
+return	app/errors.ts	/^      return "alert-info";$/;"	m
+return	app/series.service.ts	/^      return this.http.get(`${this.url}\/set\/good?project=${this.selectedProject.project_name}`$/;"	m
+return	app/series.service.ts	/^      return this.http.get(this.url + '\/details\/' + iec).map(res => res.json());$/;"	m
+return	app/series.service.ts	/^      return this.http.get(this.url + '\/projects\/' + type)$/;"	m
+review_status	app/equivalence-class-map.ts	/^	review_status: string;$/;"	m
+role	app/errors.ts	/^     role="alert">$/;"	m
+selector	app/app.component.ts	/^  selector: 'app-root',$/;"	m
+selector	app/component1/component1.component.ts	/^  selector: 'app-component1',$/;"	m
+selector	app/errors.ts	/^  selector: 'app-error',$/;"	m
+selector	app/main-module/main-module.component.ts	/^  selector: 'app-main-module',$/;"	m
+selector	app/nav/nav.component.ts	/^  selector: 'app-nav',$/;"	m
+selector	app/page-not-found-component/page-not-found-component.component.ts	/^  selector: 'app-page-not-found-component',$/;"	m
+selector	app/series-component/series-component.component.ts	/^  selector: 'app-series-component',$/;"	m
+series	app/series-component/series-component.component.ts	/^        series => this.series = series$/;"	m
+series_instance_uid	app/equivalence-class-map.ts	/^	series_instance_uid: string;$/;"	m
+set	app/series-component/series-component.component.ts	/^  set iec(iec: number) {$/;"	m
+severity	app/errors.ts	/^          severity: severity$/;"	m
+severity	app/errors.ts	/^    severity?: number;$/;"	m
+site_name	app/project.ts	/^  site_name: string;$/;"	m
+styleUrls	app/app.component.ts	/^  styleUrls: ['.\/app.component.css']$/;"	m
+styleUrls	app/component1/component1.component.ts	/^  styleUrls: ['.\/component1.component.css']$/;"	m
+styleUrls	app/main-module/main-module.component.ts	/^  styleUrls: ['.\/main-module.component.css']$/;"	m
+styleUrls	app/nav/nav.component.ts	/^  styleUrls: ['.\/nav.component.css']$/;"	m
+styleUrls	app/page-not-found-component/page-not-found-component.component.ts	/^  styleUrls: ['.\/page-not-found-component.component.css']$/;"	m
+styleUrls	app/series-component/series-component.component.ts	/^  styleUrls: ['.\/series-component.component.css']$/;"	m
+template	app/errors.ts	/^  template: `<div *ngFor="let error of errors"$/;"	m
+templateUrl	app/app.component.ts	/^  templateUrl: '.\/app.component.html',$/;"	m
+templateUrl	app/component1/component1.component.ts	/^  templateUrl: '.\/component1.component.html',$/;"	m
+templateUrl	app/main-module/main-module.component.ts	/^  templateUrl: '.\/main-module.component.html',$/;"	m
+templateUrl	app/nav/nav.component.ts	/^  templateUrl: '.\/nav.component.html',$/;"	m
+templateUrl	app/page-not-found-component/page-not-found-component.component.ts	/^  templateUrl: '.\/page-not-found-component.component.html',$/;"	m
+templateUrl	app/series-component/series-component.component.ts	/^  templateUrl: '.\/series-component.component.html',$/;"	m
+testSeries	app/app.component.ts	/^  testSeries: EquivalenceClassMap[];$/;"	m
+test_field	app/equivalence-class-map.ts	/^	test_field: string;$/;"	m
+this	app/app.component.ts	/^          this.dataLoading = false;$/;"	m
+this	app/app.component.ts	/^          this.iecList = this.iecList.concat(newList);$/;"	m
+this	app/app.component.ts	/^        this.iecList = things;$/;"	m
+this	app/app.component.ts	/^        this.initialized = true;$/;"	m
+this	app/app.component.ts	/^        this.updateDisplay(this.getCurrentIec(this.currentIecOffset));$/;"	m
+this	app/app.component.ts	/^      this.currentIecOffset -= 1;$/;"	m
+this	app/app.component.ts	/^      this.fetchMoreData();$/;"	m
+this	app/app.component.ts	/^      this.reset();$/;"	m
+this	app/app.component.ts	/^      this.service.getAllUnreviewed(maxIec).subscribe($/;"	m
+this	app/app.component.ts	/^      this.updateDisplay(this.getCurrentIec(this.currentIecOffset));$/;"	m
+this	app/app.component.ts	/^    this.currentIec = currentIec;$/;"	m
+this	app/app.component.ts	/^    this.currentIecOffset += 1;$/;"	m
+this	app/app.component.ts	/^    this.currentIecOffset = 0;$/;"	m
+this	app/app.component.ts	/^    this.dataLoading = false;$/;"	m
+this	app/app.component.ts	/^    this.dataLoading = true;$/;"	m
+this	app/app.component.ts	/^    this.debugPrint();$/;"	m
+this	app/app.component.ts	/^    this.errorS.announceError("Test error", "There is an error", 2);  $/;"	m
+this	app/app.component.ts	/^    this.errorS.announceError("Test error", "This is another error", 1);  $/;"	m
+this	app/app.component.ts	/^    this.iecList = null;$/;"	m
+this	app/app.component.ts	/^    this.initialized = false;$/;"	m
+this	app/app.component.ts	/^    this.moveForward();$/;"	m
+this	app/app.component.ts	/^    this.service.getAllUnreviewed()$/;"	m
+this	app/app.component.ts	/^    this.service.getAvailableProjects("good").subscribe($/;"	m
+this	app/app.component.ts	/^    this.service.selectedProject = a;$/;"	m
+this	app/app.component.ts	/^    this.updateDisplay(currentIec);$/;"	m
+this	app/component1/component1.component.ts	/^    this.onProjectChosen.emit(a);$/;"	m
+this	app/component1/component1.component.ts	/^    this.service.getAvailableProjects("good").subscribe($/;"	m
+this	app/errors.ts	/^          this.errors.splice(i, 1);$/;"	m
+this	app/errors.ts	/^      this.errorAnnounceSource.next(error);$/;"	m
+this	app/nav/nav.component.ts	/^    this.onNavigation.emit('home');$/;"	m
+this	app/series-component/series-component.component.ts	/^    this.loadIEC(iec);  $/;"	m
+this	app/series-component/series-component.component.ts	/^    this.service.getSeries(iec)$/;"	m
+title	app/errors.ts	/^          title: title,$/;"	m
+title	app/errors.ts	/^    title?: string;$/;"	m
+updateDisplay	app/app.component.ts	/^  updateDisplay(currentIec: number) {$/;"	m
+var	app/app.component.ts	/^    var currentIec: number = this.getCurrentIec(this.currentIecOffset);$/;"	m
+var	app/app.component.ts	/^    var maxIec: number = this.iecList[this.iecList.length-1].image_equivalence_class_id;$/;"	m

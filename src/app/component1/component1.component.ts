@@ -22,7 +22,7 @@ export class Component1Component implements OnInit {
     );
   }
 
-  choose(a: Project) {
+  choose(a: Project): void {
     console.log(a);
     this.onProjectChosen.emit(a);
   }

@@ -242,9 +242,10 @@ def slash_test(request):
                  "url": request.url,
                  "query_string": request.query_string})
 
-# @app.route("/save", methods=["POST"])
-# def save(request):
-#     return json(request.json)
+@app.route("/api/save", methods=["POST"])
+def save(request):
+    print(request.json)
+    return json(request.json)
 
 
 if __name__ == "__main__":
