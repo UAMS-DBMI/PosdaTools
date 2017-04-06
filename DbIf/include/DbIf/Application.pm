@@ -1241,6 +1241,7 @@ method MakeQuery($http, $dyn){
   my $then = $dyn->{then};
 
   $query->{bindings} = $self->GetBindings();
+  $query->{name} = $self->{Query};
 
   $self->{Mode} = "QueryWait";
 
@@ -1294,11 +1295,9 @@ method QueryWait($http, $dyn) {
 method QueryEnd($query, $then) {
   my $start_time = time;
   my $sub = sub {
-    my($status, $struct) = @_;
     if($self->{Mode} eq "QueryWait"){
       $self->AutoRefresh;
     }
-    # if($status = "Succeeded" && $struct->{Status} eq "OK"){
 
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
@@ -1309,8 +1308,9 @@ method QueryEnd($query, $then) {
         $self->CreateTableFromQuery($self->{query}, $struct, $start_time);
         $self->{Mode} = "Tables";
       }
-    } elsif(exists $struct->{NumRows}){
-      return $self->UpdateInsertCompleted($query, $struct);
+    } else {
+      print STDERR "UpdateInsertCompleted!\n";
+      return $self->UpdateInsertCompleted($query, $self->{query_rows});
     }
 
     # } else {
@@ -1336,7 +1336,7 @@ method UpdateInsertCompleted($query, $struct){
   my $index = $#{$self->{CompletedUpdatesAndInserts}};
   if($self->{Mode} eq "QueryWait"){
     $self->{SelectedUpdateInsert} = $index;
-    $self->{Mode} eq "UpdateInsertStatus";
+    $self->{Mode} = "UpdateInsertStatus";
   }
 }
 
@@ -1815,6 +1815,18 @@ method TableSelected($http, $dyn){
   }
 }
 method UpdateInsertStatus($http, $dyn){
+  my $index = $self->{SelectedUpdateInsert};
+  my $update_struct = $self->{CompletedUpdatesAndInserts}->[$index];
+
+  my $result_count = $update_struct->{results}->[0];
+  my $query_name = $update_struct->{query}->{name};
+
+  $http->queue(qq{
+    <p class="alert alert-success">
+      UPDATE or INSERT query succeeded: $query_name. 
+      $result_count rows were affected.
+    </p>
+  });
 }
 method UpdatesInserts($http, $dyn){
 }
