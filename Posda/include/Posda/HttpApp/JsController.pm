@@ -10,6 +10,7 @@ use Posda::HttpApp::HttpObj;
 use IO::Socket::INET;
 
 use Posda::DebugLog 'on';
+use Data::Dumper;
 
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpObj" );
@@ -450,7 +451,7 @@ sub LinkedDelegateEntryBox{
     "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
     "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
     "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
-    "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
+    # "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
     "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);\" " .
     "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
     "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
