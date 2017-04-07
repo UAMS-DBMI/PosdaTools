@@ -141,11 +141,17 @@ method SetAsync($async) {
 
 # Execute the query
 # Call signature is:
-#   RunQuery($row_callback, $end_callback, @bind_variables);
+#   RunQuery($row_callback, $end_callback, $err_callback, @bind_variables);
 # 
 # The query is executed sync or async depending on the setting,
 # and $row_callback is called for each row returned. $end_callback
 # is called after all rows have been processed.
+#
+# If there is an error, $err_callback is called and passed the error
+# message. 
+#
+# NOTE: $err_callback is technically optional, but this behavior may
+# be deprecated in the future.
 #
 # If the query is an INSERT or UPDATE, $row_callback is called 
 # one time, and passed [$row_count_affected].
@@ -235,8 +241,12 @@ sub _RunQueryAsync {
       if ($result->{Status} eq 'Error') {
         &$error_callback($result->{Message});
       } else {
-        for my $row (@{$result->{Rows}}) {
-          &$row_callback($row);
+        if (defined $result->{NumRows}) {
+          &$row_callback($result->{NumRows});
+        } else {
+          for my $row (@{$result->{Rows}}) {
+            &$row_callback($row);
+          }
         }
         &$end_callback();
       }

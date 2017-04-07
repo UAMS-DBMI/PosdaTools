@@ -10,6 +10,7 @@ use Modern::Perl '2010';
 use Method::Signatures::Simple;
 use Storable;
 use File::Basename 'basename';
+use DateTime;
 
 use Dispatch::LineReaderWriter;
 
@@ -1071,6 +1072,7 @@ method SetActiveQuery($http, $dyn){
 }
 method ActiveQuery($http, $dyn){
   DEBUG @_;
+  my $from_seen = 0;
   my $descrip = {
     args => {
       caption => "Arguments",
@@ -1149,7 +1151,8 @@ method ActiveQuery($http, $dyn){
         $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
           # preload the Input if arg is in cache
-          if (defined $self->{BindingCache}->{$arg}) {
+          if (defined $self->{BindingCache}->{$arg} and 
+              not defined $self->{Input}->{$arg}) {
             $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
           }
           $self->RefreshEngine($http, $dyn, qq{
@@ -1160,6 +1163,12 @@ method ActiveQuery($http, $dyn){
               </td>
             </tr>
           });
+          if ($arg eq 'from') {
+            $from_seen = 1;
+          }
+          if ($arg eq 'to' and $from_seen == 1) {
+            $self->DrawWidgetFromTo($http, $dyn);
+          }
         }
         $http->queue('</table>');
         $http->queue('<p>');
@@ -1190,6 +1199,47 @@ method ActiveQuery($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
+
+method DrawWidgetFromTo($http, $dyn) {
+  $self->RefreshEngine($http, $dyn, qq{
+    <tr>
+      <th style="width:5%">quick options</th>
+      <td>
+        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="today" caption="Today" class="btn btn-warning"?>
+        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="yesterday" caption="Yesterday" class="btn btn-warning"?>
+        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="lastweek" caption="Last 7 Days" class="btn btn-warning"?>
+        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="lastmonth" caption="Last 30 Days" class="btn btn-warning"?>
+      </td>
+    </tr>
+  });
+}
+method SetWidgetFromTo($http, $dyn) {
+  my $val = $dyn->{val};
+  if ($val eq "today") {
+    my $today = DateTime->now->date;
+    $self->{Input}->{from} = $today;
+    $self->{Input}->{to} = $today;
+  }
+  if ($val eq "yesterday") {
+    my $yesterday = DateTime->now->subtract(days => 1)->date;
+    $self->{Input}->{from} = $yesterday;
+    $self->{Input}->{to} = $yesterday;
+  }
+  if ($val eq "lastweek") {
+    my $today = DateTime->now->date;
+    my $lastweek = DateTime->now->subtract(weeks => 1)->date;
+    $self->{Input}->{from} = $lastweek;
+    $self->{Input}->{to} = $today;
+  }
+  if ($val eq "lastmonth") {
+    my $today = DateTime->now->date;
+    my $lastmonth = DateTime->now->subtract(months => 1)->date;
+    $self->{Input}->{from} = $lastmonth;
+    $self->{Input}->{to} = $today;
+  }
+}
+
+
 method DeleteQuery($http,$dyn){
   $self->{Mode} = "DeleteQueryPending";
   $self->{QueryPendingDelete} = $dyn->{query_name};
@@ -1241,6 +1291,7 @@ method MakeQuery($http, $dyn){
   my $then = $dyn->{then};
 
   $query->{bindings} = $self->GetBindings();
+  $query->{name} = $self->{Query};
 
   $self->{Mode} = "QueryWait";
 
@@ -1294,11 +1345,9 @@ method QueryWait($http, $dyn) {
 method QueryEnd($query, $then) {
   my $start_time = time;
   my $sub = sub {
-    my($status, $struct) = @_;
     if($self->{Mode} eq "QueryWait"){
       $self->AutoRefresh;
     }
-    # if($status = "Succeeded" && $struct->{Status} eq "OK"){
 
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
@@ -1309,8 +1358,9 @@ method QueryEnd($query, $then) {
         $self->CreateTableFromQuery($self->{query}, $struct, $start_time);
         $self->{Mode} = "Tables";
       }
-    } elsif(exists $struct->{NumRows}){
-      return $self->UpdateInsertCompleted($query, $struct);
+    } else {
+      print STDERR "UpdateInsertCompleted!\n";
+      return $self->UpdateInsertCompleted($query, $self->{query_rows});
     }
 
     # } else {
@@ -1336,7 +1386,7 @@ method UpdateInsertCompleted($query, $struct){
   my $index = $#{$self->{CompletedUpdatesAndInserts}};
   if($self->{Mode} eq "QueryWait"){
     $self->{SelectedUpdateInsert} = $index;
-    $self->{Mode} eq "UpdateInsertStatus";
+    $self->{Mode} = "UpdateInsertStatus";
   }
 }
 
@@ -1815,6 +1865,18 @@ method TableSelected($http, $dyn){
   }
 }
 method UpdateInsertStatus($http, $dyn){
+  my $index = $self->{SelectedUpdateInsert};
+  my $update_struct = $self->{CompletedUpdatesAndInserts}->[$index];
+
+  my $result_count = $update_struct->{results}->[0];
+  my $query_name = $update_struct->{query}->{name};
+
+  $http->queue(qq{
+    <p class="alert alert-success">
+      UPDATE or INSERT query succeeded: $query_name. 
+      $result_count rows were affected.
+    </p>
+  });
 }
 method UpdatesInserts($http, $dyn){
 }
