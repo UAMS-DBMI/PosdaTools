@@ -571,7 +571,7 @@ method RenderCurrentSeries($http, $dyn) {
       </tr>
     </table>
 
-    <img style="background-image: url('/checker.svg'); background-size: 40px 40px" 
+    <img style="background-image: url('/checker.svg'); background-size: 40px 40px; min-width: 1050px" 
          src="GetFile?obj_path=SeriesProjection&type=png&file_id=$file_id&path=$filename">
   });
 
