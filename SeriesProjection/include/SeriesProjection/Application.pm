@@ -139,6 +139,7 @@ method GetNextReviewedFileForReview($review_status) {
 }
 
 method LoadDataForIEC($iec_id) {
+  DEBUG $iec_id;
   my $dbh = $self->{dbh};
 
   my $file = [$dbh->selectall_arrayref(qq{
@@ -173,6 +174,9 @@ method LoadDataForIEC($iec_id) {
   }, {}, $iec_id)]->[0]->[0];
   
   $self->{CurrentFileExtInfo} = $series_info;
+  if (not defined $self->{CurrentFileExtInfo}) {
+    $self->{CurrentFileExtInfo} = [];
+  }
 
   my $dicom_files = [$dbh->selectall_arrayref(qq{
       select root_path || '/' || rel_path
@@ -460,9 +464,11 @@ method SetGood($http, $dyn) {
   $dbh->do(qq{
     update image_equivalence_class
     set processing_status = 'Reviewed',
-        review_status = 'Good'
+        review_status = 'Good',
+        update_user = ?,
+        update_date = now()
     where image_equivalence_class_id = ?
-  }, {}, $self->{CurrentIEC});
+  }, {}, $self->{user}, $self->{CurrentIEC});
 
   $self->GetNextFileForReview();
   $self->AutoRefresh;
@@ -473,9 +479,11 @@ method SetBad($http, $dyn) {
   $dbh->do(qq{
     update image_equivalence_class
     set processing_status = 'Reviewed',
-        review_status = 'Bad'
+        review_status = 'Bad',
+        update_user = ?,
+        update_date = now()
     where image_equivalence_class_id = ?
-  }, {}, $self->{CurrentIEC});
+  }, {}, $self->{user}, $self->{CurrentIEC});
 
   $self->GetNextFileForReview();
   $self->AutoRefresh;
@@ -486,9 +494,11 @@ method SetBroken($http, $dyn) {
   $dbh->do(qq{
     update image_equivalence_class
     set processing_status = 'Reviewed',
-        review_status = 'Broken'
+        review_status = 'Broken',
+        update_user = ?,
+        update_date = now()
     where image_equivalence_class_id = ?
-  }, {}, $self->{CurrentIEC});
+  }, {}, $self->{user}, $self->{CurrentIEC});
 
   $self->GetNextFileForReview();
   $self->AutoRefresh;
