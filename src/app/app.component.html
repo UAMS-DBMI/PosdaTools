@@ -29,6 +29,7 @@
             Go Back
           </button>
           <button class="btn btn-primary" 
+                  [disabled]="disableButtons()"
                   (click)="moveForward()">
             Skip Forward
           </button>

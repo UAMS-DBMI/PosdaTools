@@ -3,19 +3,52 @@ import logging
 from sanic import Sanic
 from sanic.response import json, text, HTTPResponse
 import aiofiles
+import uuid
+import asyncio
+import uvloop
+import datetime
 
 import asyncpg
+
+LOGIN_TIMEOUT = datetime.timedelta(seconds=5*60)
+
+sessions = {} # token => username
 
 app = Sanic()
 
 pool = None
+eventloop = None
 
+class User(object):
+    def __init__(self, name):
+        self.name = name
+        self.token = uuid.uuid4().hex
+        self.touch()
+
+    def age(self):
+        return datetime.datetime.now() - self.last_updated
+
+    def is_elderly(self):
+        pass
+
+    def touch(self):
+        self.last_updated = datetime.datetime.now()
+
+    def __str__(self):
+        return f"<User: {self.name}, {self.age()}, {self.token}>"
+
+    def __unicode__(self):
+        return self.str()
+
+
+@app.listener("before_server_start")
 async def connect_to_db(sanic, loop):
     global pool
-    pool = await asyncpg.create_pool(database='posda_files', 
+    pool = await asyncpg.create_pool(database='N_posda_files', 
                                      user='postgres',
                                      host='tcia-utilities', 
                                      loop=loop)
+    loop.create_task(user_watch())
 
 @app.route("/api/details/<iec>")
 async def get_details(request, iec):
@@ -111,7 +144,7 @@ order by count desc
 
 @app.route("/api/set/<state>")
 async def get_set(request, state):
-    after = int(request.args.get('after') or 0)
+    after = int(request.args.get('offset') or 0)
     collection = request.args.get('collection')
     site = request.args.get('site')
 
@@ -169,8 +202,6 @@ async def get_ugly_data(after, collection, site):
     return await get_reviewed_data('Broken', after, collection, site)
 
 async def get_reviewed_data(state, after, collection, site):
-    # TODO: This is currently ignoring collection and site!
-
     where_text = ""
 
     if collection is not None:
@@ -209,14 +240,16 @@ async def get_reviewed_data(state, after, collection, site):
 
         {join_text}
 
-        where I.image_equivalence_class_id > $1
-          and processing_status = 'Reviewed'
+        where processing_status = 'Reviewed'
           and review_status = '{state}'
 
           {where_text}
 
+        offset $1
         limit 10
     """
+
+    print(query)
 
     conn = await pool.acquire()
     records = await conn.fetch(query, after)
@@ -236,18 +269,78 @@ async def image_from_id(request):
                         body_bytes=data)
 
 
-@app.route("/test")
+@app.route("/api/new_token/<user>")
+async def new_token(request, user):
+    user_obj = User(user)
+    sessions[user_obj.token] = user_obj
+    logging.debug(f"Creating new session for {user_obj.name}: {user_obj.token}")
+
+    return json({'token': user_obj.token})
+
+
+@app.route("/test", methods=["GET", "POST"])
 def slash_test(request):
     return json({"args": request.args,
                  "url": request.url,
+                 "headers": request.headers,
                  "query_string": request.query_string})
+
+@app.middleware('request')
+async def login_check(request):
+    print(f"### {request.url}?{request.query_string}")
+    if 'new_token' in request.url:
+        return None
+
+    # get token from args, or from json body
+    token = request.args.get('token', None)
+    if token is not None:
+        print("Token from get: ", token)
+    else:
+        # try to find it in the request body
+        try:
+            details = request.json
+            token = details['token']
+            print("Token from json: ", token)
+        except Exception as e:
+            print(e)
+            return text("not logged in", status=404)
+
+    try:
+        user = sessions[token]
+        user.touch()
+        request.headers["user"] = user
+        return None
+    except KeyError:
+        return text("not logged in", status=404)
+
 
 @app.route("/api/save", methods=["POST"])
 def save(request):
-    print(request.json)
+    details = request.json
+    print(details)
     return json(request.json)
 
 
+async def user_watch():
+    await asyncio.sleep(10)
+    logging.debug("Checking logins...")
+
+    to_delete = []
+    for t in sessions:
+        user = sessions[t]
+        if user.age() > LOGIN_TIMEOUT:
+            print(f"Dropping login session for user: {user.name}")
+            to_delete.append(t)
+
+    for t in to_delete:
+        del sessions[t]
+
+    # put ourselves back on the queue
+    asyncio.get_event_loop().create_task(user_watch())
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    app.run(host="0.0.0.0", port=8089, after_start=connect_to_db, debug=True)
+    logging.info("Starting up...")
+
+
+    app.run(host="0.0.0.0", port=8089, debug=True)

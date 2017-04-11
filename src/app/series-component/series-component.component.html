@@ -1,7 +1,7 @@
 <div *ngIf="series">
 
   <img *ngIf="series.path"
-       [src]="'/api/img?path=' + series.path" />
+       [src]="'/api/img?path=' + series.path + '&token=' + service.token" />
 
   <table class="table">
     <tr>

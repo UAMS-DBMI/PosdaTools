@@ -32,22 +32,40 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.attemptLogin(window.location.search);
 
     this.service.getAvailableProjects("good").subscribe(
-      items => this.projectList = items
+        items => this.projectList = items,
+        error => this.handleError(error)
     );
+  }
+
+  private handleError(error) {
+      this.errorS.announceError("Server Error", 
+          "Error communicating with server. Maybe you have been logged out?", 2);  
+  }
+
+  private attemptLogin(search: string) {
+    var token: string;
+    var parts: string[];
+    parts = search.split('=');
+    if (parts[0] == '?token') {
+      token = parts[1];
+      console.log(token);
+      this.service.setToken(token);
+    }
   }
 
   choose(a: Project) {
     // console.log(a);
     this.service.selectedProject = a;
     // load images and route to series-component
-    this.service.getAllUnreviewed()
-      .subscribe(things => {
-        this.iecList = things;
-        this.initialized = true;
-        this.updateDisplay(this.getCurrentIec());
-      });
+    this.service.getAllUnreviewed().subscribe(
+        things => {
+            this.iecList = things;
+            this.initialized = true;
+            this.updateDisplay(this.getCurrentIec());
+        }, error => this.handleError(error));
   }
 
   reset() {
@@ -62,15 +80,24 @@ export class AppComponent {
   }
 
   markGood() {
-    this.service.markGood(this.getCurrentIec());
+    this.service.markGood(this.getCurrentIec()).subscribe(
+      resp => console.log("marked good confirmed"),
+      error => this.handleError(error)
+    );
     this.moveForward();
   }
   markBad() {
-    this.service.markBad(this.getCurrentIec());
+    this.service.markBad(this.getCurrentIec()).subscribe(
+      resp => console.log("marked bad confirmed"),
+      error => this.handleError(error)
+    );
     this.moveForward();
   }
   markUgly() {
-    this.service.markUgly(this.getCurrentIec());
+    this.service.markUgly(this.getCurrentIec()).subscribe(
+      resp => console.log("marked ugly confirmed"),
+      error => this.handleError(error)
+    );
     this.moveForward();
   }
   moveBackward() {
@@ -87,15 +114,15 @@ export class AppComponent {
     this.dataLoading = true;
 
     var currentIec: number = this.getCurrentIec();
-    var maxIec: number = this.iecList[this.iecList.length-1].image_equivalence_class_id;
 
     if (this.currentIecOffset >= this.iecList.length - 3) {
-      this.service.getAllUnreviewed(maxIec).subscribe(
+      this.service.getAllUnreviewed(this.iecList.length).subscribe(
         newList => {
           this.iecList = this.iecList.concat(newList);
           this.dataLoading = false;
-        }
-      )
+        },
+        error => this.handleError(error)
+      );
     }
 
   }
@@ -115,10 +142,6 @@ export class AppComponent {
   updateDisplay(currentIec: number) {
     this.debugPrint();
     this.currentIec = currentIec;
-    // this.service.getSeries(currentIec).subscribe(
-    //   series => console.log(series.image_equivalence_class_id)
-    // );
-    // this.router.navigate(['/iec', currentIec]);
   }
 
   debugPrint() {

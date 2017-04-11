@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response} from '@angular/http';
+import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -16,42 +16,72 @@ export class SeriesService {
   public iecList: EquivalenceClassMap[];
 
   public selectedProject: Project;
+  public token: string;
+
+  private options = new RequestOptions();
 
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) { 
+    this.loadToken();
+  }
 
+  loadToken() {
+    this.token = localStorage.getItem('token');
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    localStorage.setItem('token', token);
+  }
 
   getSeries(iec: number): Observable<any> {
-      return this.http.get(this.url + '/details/' + iec).map(res => res.json());
+      let params: URLSearchParams = new URLSearchParams();
+      params.set("token", this.token);
+      this.options.search = params;
+
+      let url = this.url + '/details/' + iec;
+      return this.http.get(url, this.options).map(res => res.json());
   }
 
-  getAllUnreviewed(after: number = 0): Observable<EquivalenceClassMap[]> {
-      return this.http.get(`${this.url}/set/good?project=${this.selectedProject.project_name}`
-      + `&site=${this.selectedProject.site_name}&after=${after}`).map(res => res.json());
+  getAllUnreviewed(offset: number = 0): Observable<EquivalenceClassMap[]> {
+      let params: URLSearchParams = new URLSearchParams();
+      params.set("project", this.selectedProject.project_name);
+      params.set("site", this.selectedProject.site_name);
+      params.set("offset", String(offset));
+      params.set("token", this.token);
+      this.options.search = params;
+
+      let url = this.url + '/set/good';
+
+      return this.http.get(url, this.options).map(res => res.json());
   }
 
-  getAvailableProjects(type: string) {
-      return this.http.get(this.url + '/projects/' + type)
+  getAvailableProjects(type: string): Observable<any> {
+      let params: URLSearchParams = new URLSearchParams();
+      params.set("token", this.token);
+      this.options.search = params;
+
+      let url = this.url + '/projects/' + type;
+      return this.http.get(url, this.options)
       .map(res => res.json());
   }
 
-  private mark(iec: number, state: String): void {
+  private mark(iec: number, state: string): Observable<any> {
     console.log("SeriesService.mark()");
-    this.http.post('api/save', { iec, state })
-      .map(res => res.json())
-      .subscribe(resp => console.log("marked"));
+    return this.http.post('api/save', { iec, state, 'token': this.token })
+      .map(res => res.json());
   }
 
-  public markGood(iec: number): void {
-    this.mark(iec, "good");
+  public markGood(iec: number): Observable<any> {
+    return this.mark(iec, "good");
   }
 
-  public markBad(iec: number): void {
-    this.mark(iec, "bad");
+  public markBad(iec: number): Observable<any> {
+    return this.mark(iec, "bad");
   }
 
-  public markUgly(iec: number): void {
-    this.mark(iec, "ugly");
+  public markUgly(iec: number): Observable<any> {
+    return this.mark(iec, "ugly");
   }
 
 }
