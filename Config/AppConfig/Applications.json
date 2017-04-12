@@ -72,7 +72,7 @@
     },
     "SeriesProjection": {
       "Directory": "POSDA_ROOT/Config/SeriesProjection",
-      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Application" : "kaleidoscope.pl <host> <port> <dir> <color> <user>",
       "Description" : "Series Projection Inspection",
       "WindowName" : "_new",
       "interactive": 1,
