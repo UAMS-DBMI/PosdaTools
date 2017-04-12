@@ -37,11 +37,11 @@
         </p>
       </div>
 
-      <!-- rename to 'controls' -->
-      <app-component1 
+      <!-- rename to 'mode-select' -->
+      <app-mode-select
         *ngIf="!initialized" 
         (onProjectChosen)="choose($event)">
-      </app-component1>
+      </app-mode-select>
 
       <!-- rename to ??? 'display'? 'image'? -->
       <app-series-component 

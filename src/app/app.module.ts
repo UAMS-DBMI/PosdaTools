@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { Component1Component } from './component1/component1.component';
+import { ModeSelectComponent } from './mode-select/mode-select.component';
 import { SeriesComponentComponent } from './series-component/series-component.component';
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
@@ -14,7 +14,7 @@ import { NavComponent } from './nav/nav.component';
 @NgModule({
   declarations: [
     AppComponent,
-    Component1Component,
+    ModeSelectComponent,
     SeriesComponentComponent,
   ErrorComponent,
   NavComponent

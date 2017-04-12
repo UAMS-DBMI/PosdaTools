@@ -6,11 +6,11 @@ import { Project } from '../project';
 import { ErrorService } from '../errors';
 
 @Component({
-  selector: 'app-component1',
-  templateUrl: './component1.component.html',
-  styleUrls: ['./component1.component.css']
+  selector: 'app-mode-select',
+  templateUrl: './mode-select.component.html',
+  styleUrls: ['./mode-select.component.css']
 })
-export class Component1Component implements OnInit {
+export class ModeSelectComponent implements OnInit {
   @Output() onProjectChosen = new EventEmitter<Project>();
   projectList: Object[];
   private mode: string;
