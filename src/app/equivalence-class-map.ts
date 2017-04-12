@@ -7,5 +7,7 @@ export interface EquivalenceClassMap {
 	projection_type: string;
 	file_id: number;
 	path: string;
-	test_field: string;
+	update_user: string;
+	update_date: string;
+	file_count: number;
 }

@@ -61,7 +61,14 @@ async def get_details(request, iec):
             review_status,
             projection_type,
             file_id,
-            root_path || '/' || rel_path as path
+            root_path || '/' || rel_path as path,
+            update_user,
+            to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
+            (select count(file_id)
+             from image_equivalence_class_input_image i
+             where i.image_equivalence_class_id = 
+                   image_equivalence_class.image_equivalence_class_id) as file_count
+
 
     from image_equivalence_class
 

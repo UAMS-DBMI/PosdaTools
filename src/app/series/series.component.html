@@ -9,8 +9,16 @@
       <td>{{series.image_equivalence_class_id}}</td>
     </tr>
     <tr>
+      <td>Images in series</td>
+      <td>{{series.file_count}}</td>
+    </tr>
+    <tr *ngIf="series.review_status">
       <td>Current review status</td>
       <td>{{series.review_status}}</td>
+    </tr>
+    <tr *ngIf="series.update_user">
+      <td>Status set by user</td>
+	  <td>{{series.update_user}} at {{series.update_date}}</td>
     </tr>
     <tr>
       <td>Series Instance UID</td>
