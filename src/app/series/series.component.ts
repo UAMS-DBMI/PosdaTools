@@ -7,11 +7,11 @@ import { EquivalenceClassMap } from '../equivalence-class-map';
 import 'rxjs/add/operator/switchMap';
 
 @Component({
-  selector: 'app-series-component',
-  templateUrl: './series-component.component.html',
-  styleUrls: ['./series-component.component.css']
+  selector: 'app-series',
+  templateUrl: './series.component.html',
+  styleUrls: ['./series.component.css']
 })
-export class SeriesComponentComponent implements OnInit {
+export class SeriesComponent implements OnInit {
   @Input()
   set iec(iec: number) {
     console.log("was given IEC: ", iec);

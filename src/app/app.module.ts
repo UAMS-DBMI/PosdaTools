@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { ModeSelectComponent } from './mode-select/mode-select.component';
-import { SeriesComponentComponent } from './series-component/series-component.component';
+import { SeriesComponent} from './series/series.component';
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
 import { NavComponent } from './nav/nav.component';
@@ -15,7 +15,7 @@ import { NavComponent } from './nav/nav.component';
   declarations: [
     AppComponent,
     ModeSelectComponent,
-    SeriesComponentComponent,
+    SeriesComponent,
   ErrorComponent,
   NavComponent
   ],
