@@ -37,13 +37,11 @@
         </p>
       </div>
 
-      <!-- rename to 'mode-select' -->
       <app-mode-select
         *ngIf="!initialized" 
         (onProjectChosen)="choose($event)">
       </app-mode-select>
 
-      <!-- rename to ??? 'display'? 'image'? -->
       <app-series
         [iec]="currentIec" 
         *ngIf="initialized">
