@@ -1,7 +1,24 @@
-<p>
-  Select a Project/Site from the list below.
-</p>
+<p>Select operating mode</p>
+<button class="btn btn-primary"
+    [class.active]="mode == 'unreviewed'"
+    (click)="setMode('unreviewed')"
+    >Unreviewed</button>
+<button class="btn btn-primary"
+    [class.active]="mode == 'good'"
+    (click)="setMode('good')"
+    >Good</button>
+<button class="btn btn-primary"
+    [class.active]="mode == 'bad'"
+    (click)="setMode('bad')"
+    >Bad</button>
+<button class="btn btn-primary"
+    [class.active]="mode == 'ugly'"
+    (click)="setMode('ugly')"
+    >Ugly</button>
 <div *ngIf="projectList">
+    <p>
+      Select a Project/Site from the list below.
+    </p>
   <li *ngFor="let a of projectList">
     <a (click)="choose(a)" href="javascript:void(0)">
       {{a.project_name}} - {{a.site_name}} ({{a.count}})

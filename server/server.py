@@ -10,7 +10,7 @@ import datetime
 
 import asyncpg
 
-LOGIN_TIMEOUT = datetime.timedelta(seconds=5*60)
+LOGIN_TIMEOUT = datetime.timedelta(seconds=20*60)
 
 sessions = {} # token => username
 
@@ -86,7 +86,7 @@ async def get_projects(request, state):
         'unreviewed': ('ReadyToReview', ""),
         'good':       ('Reviewed', "and review_status='Good'"),
         'bad':        ('Reviewed', "and review_status='Bad'"),
-        'ugly':       ('Reviewed', "and review_status='Ugly'"),
+        'ugly':       ('Reviewed', "and review_status='Broken'"),
     }[state.lower()]
 
     query = f"""
@@ -249,7 +249,7 @@ async def get_reviewed_data(state, after, collection, site):
         limit 10
     """
 
-    print(query)
+    # print(query)
 
     conn = await pool.acquire()
     records = await conn.fetch(query, after)
@@ -287,22 +287,23 @@ def slash_test(request):
 
 @app.middleware('request')
 async def login_check(request):
-    print(f"### {request.url}?{request.query_string}")
+    logging.debug(f"### {request.url}?{request.query_string}")
     if 'new_token' in request.url:
         return None
 
     # get token from args, or from json body
     token = request.args.get('token', None)
     if token is not None:
-        print("Token from get: ", token)
+        # print("Token from get: ", token)
+        pass
     else:
         # try to find it in the request body
         try:
             details = request.json
             token = details['token']
-            print("Token from json: ", token)
+            # logging.debug("Token from json: ", token)
         except Exception as e:
-            print(e)
+            logging.debug("Rejecting request because no token")
             return text("not logged in", status=404)
 
     try:
@@ -311,25 +312,46 @@ async def login_check(request):
         request.headers["user"] = user
         return None
     except KeyError:
+        logging.debug("Rejecting request because invalid token")
         return text("not logged in", status=404)
 
 
 @app.route("/api/save", methods=["POST"])
-def save(request):
+async def save(request):
+    user = request.headers['user'] # was injected by login middleware
     details = request.json
-    print(details)
-    return json(request.json)
+    iec = details['iec']
+    state = details['state'].title()
 
+    logging.debug(f"Setting {iec} to {state}, by {user.name}")
+
+    # TODO: There is a problem with conn.execute() and bind vars
+    #       in version 0.5.1 of asyncpg, which we are currently
+    #       pinned to because of using old postgres 8!
+    query = f"""
+        update image_equivalence_class
+        set processing_status = 'Reviewed',
+            review_status = '{state}',
+            update_user = '{user.name}',
+            update_date = now()
+        where image_equivalence_class_id = {iec}
+    """
+    conn = await pool.acquire()
+    records = await conn.execute(query)
+    logging.debug(f"Updated {records} rows?")
+    await pool.release(conn)
+
+    return json({'status': 'success'})
 
 async def user_watch():
     await asyncio.sleep(10)
-    logging.debug("Checking logins...")
+    # logging.debug("Checking logins...")
 
     to_delete = []
     for t in sessions:
         user = sessions[t]
         if user.age() > LOGIN_TIMEOUT:
-            print(f"Dropping login session for user: {user.name}")
+            logging.debug(f"Dropping login session for user: {user.name}")
             to_delete.append(t)
 
     for t in to_delete:

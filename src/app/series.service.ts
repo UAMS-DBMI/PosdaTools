@@ -17,6 +17,7 @@ export class SeriesService {
 
   public selectedProject: Project;
   public token: string;
+  public mode: string;
 
   private options = new RequestOptions();
 
@@ -51,7 +52,7 @@ export class SeriesService {
       params.set("token", this.token);
       this.options.search = params;
 
-      let url = this.url + '/set/good';
+      let url = this.url + '/set/' + this.mode;
 
       return this.http.get(url, this.options).map(res => res.json());
   }
@@ -81,7 +82,7 @@ export class SeriesService {
   }
 
   public markUgly(iec: number): Observable<any> {
-    return this.mark(iec, "ugly");
+    return this.mark(iec, "broken");
   }
 
 }

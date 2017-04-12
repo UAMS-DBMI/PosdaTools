@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
 import { Project } from '../project';
+import { ErrorService } from '../errors';
 
 @Component({
   selector: 'app-component1',
@@ -12,13 +13,24 @@ import { Project } from '../project';
 export class Component1Component implements OnInit {
   @Output() onProjectChosen = new EventEmitter<Project>();
   projectList: Object[];
+  private mode: string;
 
-  constructor(private service: SeriesService) { }
+  constructor(
+    private service: SeriesService,
+    private errorS: ErrorService,
+  ) { }
 
   ngOnInit() {
     // get the list of possible projects
-    this.service.getAvailableProjects("good").subscribe(
-      items => this.projectList = items
+  }
+
+  private setMode(mode: string): void {
+    this.mode = mode;
+    console.log("Setting mode: ", mode);
+    this.service.mode = mode;
+    this.service.getAvailableProjects(mode).subscribe(
+        items => this.projectList = items,
+        error => this.errorS.announceError("Server Error", "Logged out?", 2)
     );
   }
 
