@@ -31,7 +31,6 @@ export class ErrorService {
 @Component({
   selector: 'app-error',
   template: `<div *ngFor="let error of errors"
-     class="alert"
      [class]="getSeverityClass(error.severity)"
      role="alert">
     <strong>{{error.title}}</strong>
@@ -53,15 +52,15 @@ export class ErrorComponent {
 
   getSeverityClass(severity: number){
       if(severity < 1){
-          return "alert-success";
+          return "alert alert-success";
       } else if(severity === 1){
-          return "alert-info";
+          return "alert alert-info";
       } else if(severity === 2){
-          return "alert-warning";
+          return "alert alert-warning";
       } else if(severity > 2){
-          return "alert-danger";
+          return "alert alert-danger";
       }
-      return "alert-info";
+      return "alert alert-info";
   }
 
   dismiss(error: Error){

@@ -17,6 +17,7 @@ export class AppComponent {
   currentIecOffset: number;
   dataLoading: boolean;
   initialized: boolean;
+  loggedOut: boolean = false;
   projectList: Project[];
   currentIec: number;
 
@@ -43,6 +44,7 @@ export class AppComponent {
   private handleError(error) {
       this.errorS.announceError("Server Error", 
           "Error communicating with server. Maybe you have been logged out?", 2);  
+      this.loggedOut = true;
   }
 
   private attemptLogin(search: string) {

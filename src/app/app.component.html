@@ -2,9 +2,10 @@
   (onNavigation)="navigate($event)">
 </app-nav>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="col">
+    <div *ngIf="!loggedOut">
 
       <app-error></app-error>
 
@@ -48,12 +49,18 @@
         *ngIf="initialized">
       </app-series-component>
 
-      <p *ngIf="initialized">
-        <button class="btn btn-secondary" 
-                (click)="printAll()">
-          Print debug info
-        </button>
-      </p>
+      <!-- <p *ngIf="initialized"> -->
+      <!--   <button class="btn btn-secondary" --> 
+      <!--           (click)="printAll()"> -->
+      <!--     Print debug info -->
+      <!--   </button> -->
+      <!-- </p> -->
+    </div>
+    <div *ngIf="loggedOut">
+        <p class="alert alert-danger">
+            You are not logged in!
+        </p>
     </div>
   </div>
+</div>
 </div>
