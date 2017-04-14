@@ -1,0 +1,15 @@
+canvas {
+	/* border: 1px solid black; */
+}
+.zoom {
+	transform: scale(4, 4);
+	image-rendering: pixelated;
+}
+
+.slider-wide {
+	width: 100%;
+}
+.slider-tall {
+	height: 512px;
+	float: right;
+}

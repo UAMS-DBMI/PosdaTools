@@ -1,0 +1,24 @@
+<p>
+	<button md-raised-button (click)="reset()">Reset</button>
+</p>
+
+<md-card [style.width]="width + 50 + 'px'">
+	<div #zoomdiv [class.zoom]="zoom_state">
+		<canvas #canvas [height]="height" [width]="width"></canvas>
+		<md-slider #wwidth vertical thumbLabel
+			class="slider-tall"
+			min="-1000"
+			max="1000"
+			[value]="w_width"
+			(input)="onChangeWidth($event)"
+		></md-slider>
+	</div>
+	<md-slider #wcenter thumbLabel
+		class="slider-wide" 
+		min="-1000" 
+		max="1000"
+  		[value]="w_center"
+  		(input)="onChangeCenter($event)"
+	></md-slider>
+</md-card>
+
