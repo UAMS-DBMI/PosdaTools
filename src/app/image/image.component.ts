@@ -16,6 +16,9 @@ export class ImageComponent implements OnInit {
 	private w_width: number = 400;
 	private w_center: number = 40;
 
+	private mouse_down: boolean = false;
+	private init_mouse_coords: number[] = [0, 0];
+
 
   // private width: number = 512;
   // private height: number = 512;
@@ -105,5 +108,25 @@ export class ImageComponent implements OnInit {
 	onChangeWidth(event: any) {
 		this.w_width = event.value;
 		this.draw();
+	}
+
+	onMouseDown(event: any): void {
+		this.mouse_down = true;
+		this.init_mouse_coords = [event.screenX, event.screenY];
+	}
+	onMouseUp(event: any): void {
+		this.mouse_down = false;
+	}
+	onMouseMove(event: any): void {
+		if (this.mouse_down) {
+			let delta_x = event.screenX - this.init_mouse_coords[0];
+			let delta_y = event.screenY - this.init_mouse_coords[1];
+			
+			this.init_mouse_coords = [event.screenX, event.screenY];
+
+			this.w_center += (delta_x * 2);
+			this.w_width -= (delta_y * 2);
+			this.draw();
+		}
 	}
 }

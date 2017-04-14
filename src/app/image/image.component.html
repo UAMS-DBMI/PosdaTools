@@ -4,7 +4,13 @@
 
 <md-card [style.width]="width + 50 + 'px'">
 	<div #zoomdiv [class.zoom]="zoom_state">
-		<canvas #canvas [height]="height" [width]="width"></canvas>
+		<canvas #canvas 
+			[height]="height" 
+			[width]="width"
+			(mousemove)="onMouseMove($event)"
+			(mousedown)="onMouseDown($event)"
+			(mouseup)="onMouseUp($event)"
+		></canvas>
 		<md-slider #wwidth vertical thumbLabel
 			class="slider-tall"
 			min="-1000"
