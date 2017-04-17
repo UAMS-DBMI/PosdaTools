@@ -11,18 +11,30 @@ import { ImageComponent } from './image/image.component';
 import 'hammerjs';
 import { SeriesComponent } from './series/series.component';
 
+import { RouterModule, Routes } from '@angular/router';
+import { WelcomeComponent } from './welcome/welcome.component';
+
+
+const appRoutes: Routes = [
+  { path: 'series/:uid', component: SeriesComponent },
+  { path: '**', component: WelcomeComponent },
+];
+
+
 @NgModule({
   declarations: [
     AppComponent,
     ImageComponent,
-    SeriesComponent
+    SeriesComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-	HttpModule,
-	BrowserAnimationsModule,
-	MaterialModule
+    HttpModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]

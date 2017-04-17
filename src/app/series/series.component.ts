@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-series',
@@ -13,10 +14,16 @@ export class SeriesComponent implements OnInit {
   private current_file_id: number;
   private length: number = 500;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, 
+              private route: ActivatedRoute,
+              private router: Router
+              ) { }
 
   ngOnInit() {
-    this.http.get("/api/series_info/" + this.series_instance_uid).subscribe(
+    let uid = this.route.snapshot.params['uid'];
+    this.series_instance_uid = uid;
+
+    this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
       res => this.handleResponse(res.json())
     );
   }

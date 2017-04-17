@@ -48,8 +48,8 @@ export class ImageComponent implements OnInit {
       return;
 
     this.last_file_id = this.file_id;
-    console.log("ngOnChanges called, file_id is", this.file_id);
-    this.http.get("/api/details/" + this.file_id, { responseType: ResponseContentType.ArrayBuffer }).subscribe(
+    // console.log("ngOnChanges called, file_id is", this.file_id);
+    this.http.get("/vapi/details/" + this.file_id, { responseType: ResponseContentType.ArrayBuffer }).subscribe(
       data => { 
         this.image = data.arrayBuffer();
         this.processHeaders(data.headers);
@@ -68,7 +68,7 @@ export class ImageComponent implements OnInit {
     this.intercept = Number(headers.get('q-dicom-intercept')); 
     this.pixel_pad = Number(headers.get('q-dicom-pixel-pad')); 
 
-    console.log(headers);
+    // console.log(headers);
   }
 
   draw(): void {

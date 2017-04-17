@@ -30,7 +30,7 @@ async def connect_to_db(sanic, loop):
                                      loop=loop)
     # loop.create_task(user_watch())
 
-@app.route("/api/series_info/<series>")
+@app.route("/vapi/series_info/<series>")
 async def get_series_info(request, series):
 
     query = """
@@ -49,7 +49,7 @@ async def get_series_info(request, series):
 
     return json({"file_ids": [i[0] for i in records]})
 
-@app.route("/api/details/<file_id>")
+@app.route("/vapi/details/<file_id>")
 async def get_image(request, file_id):
 
     query = """
@@ -124,7 +124,7 @@ async def get_image(request, file_id):
                         body_bytes=data)
 
 
-@app.route("/api/none/<iec>")
+@app.route("/vapi/none/<iec>")
 async def get_details(request, iec):
     query = """
     select
