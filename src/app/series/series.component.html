@@ -1,0 +1,10 @@
+<md-slider #series_position thumbLabel
+  class="slider"
+  min="0"
+  [max]="length"
+  (input)="onChange($event)"
+></md-slider>
+
+<p>Current id: {{current_file_id}}</p>
+
+<app-image [height]="512" [width]="512" [file_id]="current_file_id"></app-image>

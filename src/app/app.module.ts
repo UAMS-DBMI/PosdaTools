@@ -9,11 +9,13 @@ import { AppComponent } from './app.component';
 import { ImageComponent } from './image/image.component';
 
 import 'hammerjs';
+import { SeriesComponent } from './series/series.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ImageComponent
+    ImageComponent,
+    SeriesComponent
   ],
   imports: [
     BrowserModule,

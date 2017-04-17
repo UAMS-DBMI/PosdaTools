@@ -1,8 +1,10 @@
-<p>
-	<button md-raised-button (click)="reset()">Reset</button>
-</p>
 
 <md-card [style.width]="width + 50 + 'px'">
+<p>
+	<button md-raised-button (click)="reset()">Reset</button>
+	<button md-raised-button (click)="winlev('bone')">Bone</button>
+	<button md-raised-button (click)="winlev('soft-tissue')">Soft Tissue</button>
+</p>
 	<div #zoomdiv [class.zoom]="zoom_state">
 		<canvas #canvas 
 			[height]="height" 
