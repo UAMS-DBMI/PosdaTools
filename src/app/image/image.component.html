@@ -1,11 +1,12 @@
 <div id="container">
-  <div [style.width]="width + 50 + 'px'" [style.height]="height + 50 + 'px'">
+  <div style="width: 562px; height: 562px;">
   <canvas #canvas 
-    [height]="height" 
-    [width]="width"
+    [height]="512" 
+    [width]="512"
     (mousemove)="onMouseMove($event)"
     (mousedown)="onMouseDown($event)"
     (mouseup)="onMouseUp($event)"
+    (mousewheel)="onMouseWheel($event)"
   ></canvas>
   <md-slider #wwidth vertical thumbLabel
     class="slider-tall"
@@ -27,8 +28,7 @@
     <button md-raised-button (click)="reset()">Reset</button>
     <button md-raised-button (click)="winlev('bone')">Bone</button>
     <button md-raised-button (click)="winlev('soft-tissue')">Soft Tissue</button>
-    <button md-raised-button (click)="zoomIn()">Zoom In</button>
-    <button md-raised-button (click)="zoomOut()">Zoom Out</button>
+    <button md-raised-button (click)="resetZoom()">Reset Zoom</button>
   </p>
   </div>
 </div>

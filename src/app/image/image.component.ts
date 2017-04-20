@@ -47,6 +47,7 @@ export class ImageComponent implements OnInit {
 
 
   private canvas: any;
+  private context: any;
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
@@ -68,6 +69,9 @@ export class ImageComponent implements OnInit {
 
   ngAfterViewInit() {
     this.canvas = this.canvasRef.nativeElement;
+    this.context = this.canvas.getContext('2d');
+    // Do not smooth scaled images on the canvas
+    this.context.imageSmoothingEnabled = false;
   }
 
   ngOnChanges(changes) {
@@ -81,8 +85,13 @@ export class ImageComponent implements OnInit {
   loadFile(): void {
     this.service.getFile(this.file_id).subscribe(
       res => {
-        this.current_image = res;
-        this.draw();
+        if (this.current_image == undefined) {
+          this.current_image = res;
+          this.resetZoom();
+        } else {
+          this.current_image = res;
+          this.draw();
+        }
       }
     );
 
@@ -132,8 +141,7 @@ export class ImageComponent implements OnInit {
   }
 
   drawMono(image: any) {
-    const c = this.canvas.getContext('2d');
-    c.imageSmoothingEnabled = false;
+    let c = this.context;
     var test8 = new Uint8ClampedArray(image.length * 4); // length in bytes 
 
     for (var i = 0; i < image.length; i++) {
@@ -155,12 +163,18 @@ export class ImageComponent implements OnInit {
      * and do automatic scaling.
      */
     createImageBitmap(newImageData).then(img => {
-      if (this.zoom_level > 1) {
-        c.clearRect(0, 0, this.width, this.height);
-      }
+      c.clearRect(0, 0, this.canvas.width, this.canvas.height);
       c.drawImage(img, this.offset.x, this.offset.y, 
                   this.current_image.width * this.zoom_level, 
                   this.current_image.height * this.zoom_level);
+
+      // alternate method of applying the scale and translation
+      // don't think this is any faster/slower
+      // c.save();
+      // c.scale(this.zoom_level, this.zoom_level);
+      // c.translate(this.offset.x, this.offset.y);
+      // c.drawImage(img, 0, 0);
+      // c.restore();
     });
   }
 
@@ -199,48 +213,61 @@ export class ImageComponent implements OnInit {
     this.mouse_down = false;
   }
   onMouseMove(event: any): void {
-    if (this.mouse_down) {
-
-
-      if (this.w_center_override == undefined) {
-        this.w_center_override = this.w_center;
-      }
-      if (this.w_width_override == undefined) {
-        this.w_width_override = this.w_width;
-      }
-
-
+    if (event.buttons > 0) {
       let delta_x = event.screenX - this.init_mouse_coords[0];
       let delta_y = event.screenY - this.init_mouse_coords[1];
 
       this.init_mouse_coords = [event.screenX, event.screenY];
 
+      if (event.shiftKey) {
+        // Adjust window/level when holding shift
 
-      if (this.zoom_level > 1) {
+        if (this.w_center_override == undefined) {
+          this.w_center_override = this.w_center;
+        }
+        if (this.w_width_override == undefined) {
+          this.w_width_override = this.w_width;
+        }
+
+        this.w_center_override += (delta_x * 2);
+        this.w_width_override -= (delta_y * 2);
+      } else {
+        // pan otherwise
         this.offset.x += delta_x;
         this.offset.y += delta_y;
-        this.draw();
-        return;
       }
 
-      this.w_center_override += (delta_x * 2);
-      this.w_width_override -= (delta_y * 2);
       this.draw();
     }
   }
 
-  zoomIn(): void {
-    this.zoom_level += 1;
-    this.draw();
-  }
+  onMouseWheel(event: any): void {
+    console.log(event.deltaY);
+    if (event.deltaY < 0) {
+      this.zoom_level += 0.5;
+      this.offset.x -= this.current_image.width * 0.25;
+      this.offset.y -= this.current_image.height * 0.25;
+    } else {
+      this.zoom_level -= 0.5;
+      this.offset.x += this.current_image.width * 0.25;
+      this.offset.y += this.current_image.height * 0.25;
+    }
 
-  zoomOut(): void {
-    this.zoom_level -= 1;
     if (this.zoom_level < 1) {
       this.zoom_level = 1;
     }
-    this.offset = { x: 0, y: 0 };
-    this.draw();
 
+    if (this.zoom_level == 1) {
+      this.offset = { x: 0, y: 0 };
+    }
+
+    this.draw();
+  }
+
+  resetZoom(): void {
+    this.zoom_level = 1;
+    this.offset = { x: (512/2) - (this.current_image.width / 2), 
+                    y: (512/2) - (this.current_image.height / 2) };
+    this.draw();
   }
 }
