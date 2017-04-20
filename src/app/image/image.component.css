@@ -10,6 +10,15 @@ canvas {
 	width: 100%;
 }
 .slider-tall {
-	height: 512px;
+	height: 100%;
 	float: right;
+}
+#container {
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+}
+
+#zoomdiv {
+  display: inline;
 }
