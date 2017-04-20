@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { Image } from '../image';
 
@@ -50,9 +51,20 @@ export class ImageComponent implements OnInit {
   private offset: Point = { x: 0, y: 0 };
 
 
-  constructor(private http: Http, private service: FileService) { }
+  constructor(
+    private http: Http, 
+    private service: FileService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    let file_id = this.route.snapshot.params['file_id'];
+    if (file_id != undefined) {
+      this.file_id = file_id;
+      this.loadFile();
+    }
+  }
 
   ngAfterViewInit() {
     this.canvas = this.canvasRef.nativeElement;
@@ -63,13 +75,17 @@ export class ImageComponent implements OnInit {
       return;
 
     this.last_file_id = this.file_id;
+    this.loadFile();
+  }
 
+  loadFile(): void {
     this.service.getFile(this.file_id).subscribe(
       res => {
         this.current_image = res;
         this.draw();
       }
     );
+
   }
 
   draw(): void {
@@ -131,6 +147,13 @@ export class ImageComponent implements OnInit {
     var newImageData = c.createImageData(this.width, this.height);
     newImageData.data.set(test8);
 
+    /*
+     * We could use c.putImageData here, however it does not 
+     * support scaling. By converting the ImageData into an
+     * ImageBitmap (via the extern function createImageBitmap, see 
+     * definition at the top of this file), we can use c.drawImage
+     * and do automatic scaling.
+     */
     createImageBitmap(newImageData).then(img => {
       if (this.zoom_level > 1) {
         c.clearRect(0, 0, this.width, this.height);
@@ -139,8 +162,6 @@ export class ImageComponent implements OnInit {
                   this.current_image.width * this.zoom_level, 
                   this.current_image.height * this.zoom_level);
     });
-
-    // c.putImageData(newImageData, 0, 0);
   }
 
   reset(): void {
@@ -206,15 +227,6 @@ export class ImageComponent implements OnInit {
       this.w_width_override -= (delta_y * 2);
       this.draw();
     }
-  }
-
-  testButton() {
-  this.service.getFile(3410753).subscribe(
-    res => {
-      console.log("called");
-      console.log(res);
-    }
-  );
   }
 
   zoomIn(): void {

@@ -18,6 +18,7 @@ import { FileService } from './file.service';
 
 const appRoutes: Routes = [
   { path: 'series/:uid', component: SeriesComponent },
+  { path: 'file/:file_id', component: ImageComponent },
   { path: '**', component: WelcomeComponent },
 ];
 

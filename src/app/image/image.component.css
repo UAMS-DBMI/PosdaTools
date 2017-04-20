@@ -1,22 +1,23 @@
 canvas {
-	/* border: 1px solid black; */
+  /* border: 1px solid black; */
 }
 .zoom {
-	transform: scale(4, 4);
-	image-rendering: pixelated;
+  transform: scale(4, 4);
+  image-rendering: pixelated;
 }
 
-.slider-wide {
-	width: 100%;
-}
+/* .slider-wide { */
+/*   width: 80%; */
+/* } */
 .slider-tall {
-	height: 100%;
-	float: right;
+  /* height: 100%; */
+  float: right;
 }
 #container {
   /* border: 1px solid black; */
   display: flex;
   justify-content: center;
+  margin-top: 10px;
 }
 
 #zoomdiv {

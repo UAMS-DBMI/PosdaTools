@@ -9,6 +9,7 @@
   ></canvas>
   <md-slider #wwidth vertical thumbLabel
     class="slider-tall"
+    [style.height]="width + 'px'"
     min="-1000"
     max="1000"
     [value]="w_width"
@@ -16,6 +17,7 @@
   ></md-slider>
   <md-slider #wcenter thumbLabel
     class="slider-wide" 
+    [style.width]="width + 'px'"
     min="-1000" 
     max="1000"
       [value]="w_center"
