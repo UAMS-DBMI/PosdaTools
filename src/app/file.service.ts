@@ -29,10 +29,10 @@ export class FileService {
     let img = {
       height : Number(headers.get('q-dicom-rows')),
       width : Number(headers.get('q-dicom-cols')),
-      window_width : Number(headers.get('q-dicom-window-width')),
-      window_center : Number(headers.get('q-dicom-window-center')),
-      slope : Number(headers.get('q-dicom-slope')), 
-      intercept : Number(headers.get('q-dicom-intercept')),
+      window_width : Number(headers.get('q-dicom-window-width')) || 2000,
+      window_center : Number(headers.get('q-dicom-window-center')) || 300,
+      slope : Number(headers.get('q-dicom-slope')) || 1, 
+      intercept : Number(headers.get('q-dicom-intercept')) || 0,
       pixel_pad : Number(headers.get('q-dicom-pixel-pad'))
     };
 

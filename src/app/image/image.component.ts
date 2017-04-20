@@ -249,17 +249,14 @@ export class ImageComponent implements OnInit {
       this.offset.y -= this.current_image.height * 0.25;
     } else {
       this.zoom_level -= 0.5;
-      this.offset.x += this.current_image.width * 0.25;
-      this.offset.y += this.current_image.height * 0.25;
+      if (this.zoom_level < 1) {
+        this.zoom_level = 1;
+      } else {
+        this.offset.x += this.current_image.width * 0.25;
+        this.offset.y += this.current_image.height * 0.25;
+      }
     }
 
-    if (this.zoom_level < 1) {
-      this.zoom_level = 1;
-    }
-
-    if (this.zoom_level == 1) {
-      this.offset = { x: 0, y: 0 };
-    }
 
     this.draw();
   }
