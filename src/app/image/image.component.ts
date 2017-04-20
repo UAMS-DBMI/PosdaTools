@@ -71,7 +71,7 @@ export class ImageComponent implements OnInit {
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d');
     // Do not smooth scaled images on the canvas
-    this.context.imageSmoothingEnabled = false;
+    this.context.imageSmoothingEnabled = true;
   }
 
   ngOnChanges(changes) {

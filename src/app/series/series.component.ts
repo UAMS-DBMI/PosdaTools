@@ -54,6 +54,14 @@ export class SeriesComponent implements OnInit {
     this.current_file_id = this.file_ids[this.current_offset];
   }
 
+  movePrevious(): void {
+    this.current_offset -= 1;
+    if (this.current_offset < 0) {
+      this.current_offset = this.length;
+    }
+    this.current_file_id = this.file_ids[this.current_offset];
+  }
+
   play(): void {
     let timer = Observable.timer(1, 100);
     this.timerSub = timer.subscribe(t => {
