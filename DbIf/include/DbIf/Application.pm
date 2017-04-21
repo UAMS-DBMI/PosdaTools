@@ -617,10 +617,12 @@ method OpenDynamicPopup($http, $dyn) {
       $h->{$cols->[$i]} = $row->[$i];
     }
 
+    my $unique_val = "$h";
+
     my $class = $dyn->{class_};
     my $row_id = $dyn->{row};
 
-    $self->OpenPopup($class, "${class}_Row$row_id", $h);
+    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
   } elsif ($table->{type} eq 'FromCsv') {
 
     my $file = $table->{file};
@@ -633,11 +635,12 @@ method OpenDynamicPopup($http, $dyn) {
     for my $i (0 .. $#{$row}) {
       $h->{$cols->[$i]} = $row->[$i];
     }
+    my $unique_val = "$h";
 
     my $class = $dyn->{class_};
     my $row_id = $dyn->{row};
 
-    $self->OpenPopup($class, "${class}_Row$row_id", $h);
+    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
   }
 }
 
