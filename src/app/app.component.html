@@ -37,6 +37,7 @@
         </p>
       </div>
 
+      <div [ngBusy]="busy"></div>
       <app-mode-select
         *ngIf="!initialized" 
         (onProjectChosen)="choose($event)">

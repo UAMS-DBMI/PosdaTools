@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^4.0.1",
     "@angular/platform-server": "^4.0.1",
     "@angular/router": "^4.0.1",
+    "angular2-busy": "^2.0.4",
     "bootstrap": "4.0.0-alpha.6",
     "core-js": "^2.4.1",
     "rxjs": "^5.0.1",

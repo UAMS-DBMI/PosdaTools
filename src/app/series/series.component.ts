@@ -4,7 +4,6 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
 
-import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-series',
@@ -25,11 +24,6 @@ export class SeriesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.route.params
-    //   .switchMap((params: Params) => this.service.getSeries(+params['id']))
-	  // .subscribe(series => {
-		//   this.series = series;
-	  // });
   }
   loadIEC(iec: number) {
     this.service.getSeries(iec)

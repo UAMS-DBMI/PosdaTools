@@ -6,6 +6,8 @@ import { EquivalenceClassMap } from './equivalence-class-map';
 import { Project } from './project';
 import { ErrorService } from './errors';
 
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,6 +22,8 @@ export class AppComponent {
   loggedOut: boolean = false;
   projectList: Project[];
   currentIec: number;
+
+  public busy: Subscription;
 
   constructor(
     private service: SeriesService,
@@ -64,7 +68,7 @@ export class AppComponent {
     // console.log(a);
     this.service.selectedProject = a;
     // load images and route to series-component
-    this.service.getAllUnreviewed().subscribe(
+    this.busy = this.service.getAllUnreviewed().subscribe(
         things => {
             this.iecList = things;
             this.initialized = true;

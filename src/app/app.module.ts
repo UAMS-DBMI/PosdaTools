@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -10,19 +11,22 @@ import { SeriesComponent} from './series/series.component';
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
 import { NavComponent } from './nav/nav.component';
+import { BusyModule } from 'angular2-busy';
 
 @NgModule({
   declarations: [
     AppComponent,
     ModeSelectComponent,
     SeriesComponent,
-  ErrorComponent,
-  NavComponent
+    ErrorComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-  HttpModule,
+    HttpModule,
+    BusyModule,
+    BrowserAnimationsModule
   // RouterModule.forRoot(appRoutes)
   ],
   providers: [SeriesService, ErrorService],
