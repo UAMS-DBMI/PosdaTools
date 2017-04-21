@@ -13,7 +13,7 @@ import { ErrorService } from '../errors';
 export class ModeSelectComponent implements OnInit {
   @Output() onProjectChosen = new EventEmitter<Project>();
   projectList: Object[];
-  private mode: string;
+  public mode: string;
 
   constructor(
     private service: SeriesService,
@@ -24,7 +24,7 @@ export class ModeSelectComponent implements OnInit {
     // get the list of possible projects
   }
 
-  private setMode(mode: string): void {
+  public setMode(mode: string): void {
     this.mode = mode;
     console.log("Setting mode: ", mode);
     this.service.mode = mode;

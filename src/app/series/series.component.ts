@@ -34,7 +34,14 @@ export class SeriesComponent implements OnInit {
   loadIEC(iec: number) {
     this.service.getSeries(iec)
   	  .subscribe(
-        series => this.series = series
-      );
+      series => { 
+        this.series = series;
+        console.log(this.series);
+      });
+  }
+  openPopup(): void {
+  	window.open("/viewer/series/" + this.series.series_instance_uid,
+                "Series Viewer", "height=600,width=600");
+
   }
 }

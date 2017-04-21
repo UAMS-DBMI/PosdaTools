@@ -12,6 +12,14 @@
       <td>Images in series</td>
       <td>{{series.file_count}}</td>
     </tr>
+    <tr>
+      <td>Patient ID</td>
+      <td>{{series.patient_name}}</td>
+    </tr>
+    <tr>
+      <td>Body part examined</td>
+      <td>{{series.body_part_examined}}</td>
+    </tr>
     <tr *ngIf="series.review_status">
       <td>Current review status</td>
       <td>{{series.review_status}}</td>
@@ -22,7 +30,11 @@
     </tr>
     <tr>
       <td>Series Instance UID</td>
-      <td>{{series.series_instance_uid}}</td>
+	  <td>
+      {{series.series_instance_uid}}
+      <button class="btn btn-primary" 
+              (click)="openPopup()">Open in Quince</button>
+    </td>
     </tr>
     <tr>
       <td>Path</td>

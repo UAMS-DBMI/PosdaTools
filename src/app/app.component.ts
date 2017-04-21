@@ -42,6 +42,8 @@ export class AppComponent {
   }
 
   private handleError(error) {
+      console.log("Error follows");
+	  console.log(error);
       this.errorS.announceError("Server Error", 
           "Error communicating with server. Maybe you have been logged out?", 2);  
       this.loggedOut = true;

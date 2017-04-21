@@ -10,6 +10,8 @@ import datetime
 
 import asyncpg
 
+DEBUG=True
+
 LOGIN_TIMEOUT = datetime.timedelta(seconds=20*60)
 
 sessions = {} # token => username
@@ -67,7 +69,14 @@ async def get_details(request, iec):
             (select count(file_id)
              from image_equivalence_class_input_image i
              where i.image_equivalence_class_id = 
-                   image_equivalence_class.image_equivalence_class_id) as file_count
+                   image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+             (select patient_name 
+              from file_patient 
+              natural join file_series 
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
 
 
     from image_equivalence_class
@@ -294,6 +303,8 @@ def slash_test(request):
 
 @app.middleware('request')
 async def login_check(request):
+    if DEBUG:
+        return None
     logging.debug(f"### {request.url}?{request.query_string}")
     if 'new_token' in request.url:
         return None
@@ -372,4 +383,4 @@ if __name__ == "__main__":
     logging.info("Starting up...")
 
 
-    app.run(host="0.0.0.0", port=8089, debug=True)
+    app.run(host="0.0.0.0", port=8089, debug=DEBUG)

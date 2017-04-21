@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SeriesService {
-  private url = 'api';
+  private url = '/api';
 
   public currentIec: number;
   public iecList: EquivalenceClassMap[];
@@ -69,7 +69,8 @@ export class SeriesService {
 
   private mark(iec: number, state: string): Observable<any> {
     console.log("SeriesService.mark()");
-    return this.http.post('api/save', { iec, state, 'token': this.token })
+    let url = this.url + '/save';
+    return this.http.post(url, { iec, state, 'token': this.token })
       .map(res => res.json());
   }
 

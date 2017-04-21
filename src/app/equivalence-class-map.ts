@@ -10,4 +10,6 @@ export interface EquivalenceClassMap {
 	update_user: string;
 	update_date: string;
 	file_count: number;
+  body_part_examined: string;
+  patient_id: string;
 }
