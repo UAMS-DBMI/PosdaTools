@@ -15,7 +15,7 @@ export class SeriesComponent implements OnInit {
   public current_file_id: number;
   public length: number = 500;
 
-  private timerSub: any;
+  private timerSub: any = undefined;
 
   constructor(private http: Http, 
               private route: ActivatedRoute,
@@ -63,13 +63,18 @@ export class SeriesComponent implements OnInit {
   }
 
   play(): void {
-    let timer = Observable.timer(1, 100);
-    this.timerSub = timer.subscribe(t => {
-      this.moveNext();
-    });
+    if (this.timerSub == undefined) {
+      let timer = Observable.timer(1, 100);
+      this.timerSub = timer.subscribe(t => {
+        this.moveNext();
+      });
+    }
   }
 
   stop(): void {
-    this.timerSub.unsubscribe();
+    if (this.timerSub != undefined) {
+      this.timerSub.unsubscribe();
+      this.timerSub = undefined;
+    }
   }
 }

@@ -1,19 +1,15 @@
 canvas {
   /* border: 1px solid black; */
 }
-.zoom {
-  transform: scale(4, 4);
-}
 
-/* .slider-wide { */
-/*   width: 80%; */
-/* } */
 .slider-tall {
-  /* height: 100%; */
   float: right;
+  height: 512px;
+}
+.slider-wide {
+  width: 512px;
 }
 #container {
-  /* border: 1px solid black; */
   display: flex;
   justify-content: center;
   margin-top: 10px;

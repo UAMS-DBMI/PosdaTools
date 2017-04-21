@@ -184,14 +184,9 @@ export class ImageComponent implements OnInit {
     this.draw();
   }
 
-  winlev(preset: string): void {
-    if (preset == 'bone') {
-      this.w_width_override = 2000;
-      this.w_center_override = 300;
-    } else if (preset == 'soft-tissue') {
-      this.w_width_override = 470;
-      this.w_center_override = 20;
-    }
+  winlev(width: number, center: number): void {
+    this.w_width_override = width;
+    this.w_center_override = center;
 
     this.draw();
   }
@@ -242,7 +237,6 @@ export class ImageComponent implements OnInit {
   }
 
   onMouseWheel(event: any): void {
-    console.log(event.deltaY);
     if (event.deltaY < 0) {
       this.zoom_level += 0.5;
       this.offset.x -= this.current_image.width * 0.25;
@@ -266,5 +260,28 @@ export class ImageComponent implements OnInit {
     this.offset = { x: (512/2) - (this.current_image.width / 2), 
                     y: (512/2) - (this.current_image.height / 2) };
     this.draw();
+  }
+
+  public getWindowCenter(): number {
+    if (this.w_center_override != undefined) {
+      return this.w_center_override;
+    }
+    if (this.current_image !== undefined) {
+      return this.current_image.window_center;
+    } else {
+      return 0;
+    }
+  }
+
+  public getWindowWidth(): number {
+    if (this.w_width_override != undefined) {
+      return this.w_width_override;
+    }
+
+    if (this.current_image !== undefined) {
+      return this.current_image.window_width;
+    } else {
+      return 0;
+    }
   }
 }

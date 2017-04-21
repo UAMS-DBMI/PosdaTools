@@ -10,24 +10,38 @@
   ></canvas>
   <md-slider #wwidth vertical thumbLabel
     class="slider-tall"
-    [style.height]="width + 'px'"
     min="-1000"
     max="1000"
-    [value]="w_width"
+    [value]="getWindowWidth()"
     (input)="onChangeWidth($event)"
   ></md-slider>
   <md-slider #wcenter thumbLabel
     class="slider-wide" 
-    [style.width]="width + 'px'"
     min="-1000" 
     max="1000"
-      [value]="w_center"
+      [value]="getWindowCenter()"
       (input)="onChangeCenter($event)"
   ></md-slider>
   <p>
-    <button md-raised-button (click)="reset()">Reset</button>
-    <button md-raised-button (click)="winlev('bone')">Bone</button>
-    <button md-raised-button (click)="winlev('soft-tissue')">Soft Tissue</button>
+    <md-menu #appMenu="mdMenu">
+      <button md-menu-item (click)="winlev(2000, 300)">Bone</button>
+      <button md-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
+
+      <button md-menu-item (click)="winlev(350, 50)">Abdomen</button>
+      <button md-menu-item (click)="winlev(450, 50)">Pelvis</button>
+      <button md-menu-item (click)="winlev(350, 50)">Mediastinum</button>
+      <button md-menu-item (click)="winlev(1600, -600)">Lung</button>
+      <button md-menu-item (click)="winlev(4000, 400)">Sinus</button>
+      <button md-menu-item (click)="winlev(180, 80)">Larynx</button>
+      <button md-menu-item (click)="winlev(120, 40)">Brain Posterior</button>
+      <button md-menu-item (click)="winlev(80, 40)">Brain</button>
+      <button md-menu-item (click)="winlev(600, 250)">MR</button>
+      <button md-menu-item (click)="winlev(255, 128)">Ultrasound</button>
+    </md-menu>
+    <button md-raised-button [mdMenuTriggerFor]="appMenu">
+      Presets
+    </button>
+    <button md-raised-button (click)="reset()">Reset Window/Level</button>
     <button md-raised-button (click)="resetZoom()">Reset Zoom</button>
   </p>
   </div>

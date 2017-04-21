@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-scp dist/* tcia-utilities:/home/kaleidoscope/viewer/
+scp -r dist/* tcia-utilities:/home/kaleidoscope/viewer/
