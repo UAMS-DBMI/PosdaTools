@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.6
+import sys
 import logging
 from sanic import Sanic
 from sanic.response import json, text, HTTPResponse
@@ -19,6 +20,7 @@ app = Sanic()
 pool = None
 eventloop = None
 
+DEBUG = False
 
 
 @app.listener("before_server_start")
@@ -174,7 +176,13 @@ def slash_test(request):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    if len(sys.argv) > 1 and sys.argv[1].lower() == 'debug':
+        DEBUG = True
+
+    if DEBUG:
+        logging.basicConfig(level=logging.DEBUG)
+    else :
+        logging.basicConfig(level=logging.ERROR)
     logging.info("Starting up...")
 
-    app.run(host="0.0.0.0", port=8088, debug=True)
+    app.run(host="0.0.0.0", port=8088, debug=DEBUG)
