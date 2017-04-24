@@ -105,7 +105,7 @@ async def get_image(request, file_id):
         logging.debug(f"parameter file_id was: {file_id}")
         return json({'error': 'no records returned'}, status=404)
 
-    print(record['file'])
+    logging.debug(record['file'])
 
 
     path = record['file']
