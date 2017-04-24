@@ -38,7 +38,9 @@ async def get_series_info(request, series):
         from 
             file_series 
             natural join file_sop_common
+            natural join ctp_file
         where series_instance_uid = $1
+          and visibility is null
         order by
             instance_number::int
     """
@@ -93,13 +95,15 @@ async def get_image(request, file_id):
     records = await conn.fetch(query, int(file_id))
     await pool.release(conn)
 
-    record = records[0]
-    print(record['file'])
+    try:
+        record = records[0]
+    except IndexError:
+        logging.debug("Query returned no results. Query follows:")
+        logging.debug(query)
+        logging.debug(f"parameter file_id was: {file_id}")
+        return json({'error': 'no records returned'}, status=404)
 
-# <Record file='/mnt/public-nfs/posda/storage/b0/9c/db/b09cdb23153374e5b088ddc443f02e3a' file_o
-# ffset=6620 size=32768 bits_stored=16 bits_allocated=16 pixel_representation=1 pixel_columns=1
-# 28 pixel_rows=128 photometric_interpretation='MONOCHROME2' slope='0.00810581' intercept='0' w
-# indow_width=None window_center=None pixel_pad=None>
+    print(record['file'])
 
 
     path = record['file']
@@ -173,4 +177,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     logging.info("Starting up...")
 
-    app.run(host="0.0.0.0", port=8089, debug=True)
+    app.run(host="0.0.0.0", port=8088, debug=True)

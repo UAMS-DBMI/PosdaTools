@@ -31,4 +31,4 @@ from
     natural left join file_win_lev
     natural left join window_level
 
-where file_image.file_id = 3410601
+where file_image.file_id = 2743090

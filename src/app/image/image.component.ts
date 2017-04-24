@@ -92,9 +92,21 @@ export class ImageComponent implements OnInit {
           this.current_image = res;
           this.draw();
         }
+      },
+      error => {
+        this.drawError();
       }
     );
 
+  }
+
+  drawError(): void {
+    let c = this.context;
+    c.font = '48px serif';
+    c.fillStyle = 'red';
+    c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // manually centered
+    c.fillText('No Pixel Data', 100, 270);
   }
 
   draw(): void {
@@ -125,7 +137,7 @@ export class ImageComponent implements OnInit {
     let w_top = w_center + (w_width / 2);
 
     // window/level into 8bit array
-    for (var i = 0; i < source.length; i++) {
+    for (let i = 0; i < source.length; i++) {
       let val = (source[i] * slope) + intercept;
       if (val <= w_bottom) {
         image[i] = 0;
@@ -142,9 +154,9 @@ export class ImageComponent implements OnInit {
 
   drawMono(image: any) {
     let c = this.context;
-    var test8 = new Uint8ClampedArray(image.length * 4); // length in bytes 
+    let test8 = new Uint8ClampedArray(image.length * 4); // length in bytes 
 
-    for (var i = 0; i < image.length; i++) {
+    for (let i = 0; i < image.length; i++) {
       let j = i * 4;
       test8[j] = image[i];
       test8[j+1] = image[i];
@@ -152,7 +164,7 @@ export class ImageComponent implements OnInit {
       test8[j+3] = 255; // alpha
     }
 
-    var newImageData = c.createImageData(this.width, this.height);
+    let newImageData = c.createImageData(this.width, this.height);
     newImageData.data.set(test8);
 
     /*
