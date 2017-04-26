@@ -33,6 +33,12 @@ export class FileService {
     );
   }
 
+  getDump(file_id: number): Observable<any> {
+    return this.http.get("/vapi/dump/" + file_id).map(
+      res => res.text()
+    );
+  }
+
   processHeaders(headers: any): Image {
     let img = {
       height : Number(headers.get('q-dicom-rows')),

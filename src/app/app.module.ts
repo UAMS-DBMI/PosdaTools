@@ -15,6 +15,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FileService } from './file.service';
 import { DetailsComponent } from './details/details.component';
+import { DumpComponent } from './dump/dump.component';
 
 
 const appRoutes: Routes = [
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     ImageComponent,
     SeriesComponent,
     WelcomeComponent,
-    DetailsComponent
+    DetailsComponent,
+    DumpComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,6 @@ const appRoutes: Routes = [
   ],
   providers: [FileService],
   bootstrap: [AppComponent],
-  entryComponents: [DetailsComponent]
+  entryComponents: [DetailsComponent, DumpComponent]
 })
 export class AppModule { }

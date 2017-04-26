@@ -5,6 +5,7 @@ import { FileService } from '../file.service';
 import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
 import { MdDialog } from '@angular/material';
+import { DumpComponent } from '../dump/dump.component';
 
 
 // extern def of this built-in js func
@@ -307,6 +308,12 @@ export class ImageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
     });
-
+  }
+  public openDump(): void {
+    let dialogRef = this.dialog.open(DumpComponent, {
+      height: '90%',
+      width: '75%',
+      data: this.file_id
+    });
   }
 }
