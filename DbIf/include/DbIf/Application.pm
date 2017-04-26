@@ -328,9 +328,9 @@ method ConfigureTagGroups() {
   $self->{TagGroups} = {};
 
   for my $tag (keys %ht) {
-    if ($self->{user_has_permission}($tag)) {
+    # if ($self->{user_has_permission}($tag)) {
       $self->{TagGroups}->{$tag} = $ht{$tag};
-    }
+    # }
   }
 
   # titlize only after we have picked the correct ones
@@ -462,6 +462,12 @@ method TagSelection($http, $dyn){
     $http->queue(qq{
       <p class="alert alert-info">
         Selected tags: <strong>$taglist</strong>
+    });
+    $self->NotSoSimpleButtonButton($http, {
+      caption => "Clear Selection",
+      op => "ClearAllSelections"
+    });
+    $http->queue(qq{
       </p>
     });
     # return;
@@ -499,6 +505,12 @@ method TagSelection($http, $dyn){
     $http->queue(qq{</tr>});
   }
   $http->queue("</table>");
+}
+
+method ClearAllSelections($http, $dyn) {
+  for my $tag (keys %{$self->{TagsState}}) {
+    $self->{TagsState}->{$tag} = "false";
+  }
 }
 
 method CheckBoxChange($http, $dyn){
@@ -605,8 +617,14 @@ method ListQueries($http, $dyn){
 }
 
 method DrawTabs($http, $dyn) {
-  my $tabs = PosdaDB::Queries->GetTabs();
-  # DEBUG Dumper($tabs);
+  my $raw_tabs = PosdaDB::Queries->GetTabs();
+  my $tabs = [];
+
+  for my $tab (@$raw_tabs) {
+    if ($self->{user_has_permission}($tab->{query_tab_name})) {
+      push @$tabs, $tab;
+    }
+  }
 
   # select the first tab as the default
   if (not defined $self->{SelectedTab}) {
