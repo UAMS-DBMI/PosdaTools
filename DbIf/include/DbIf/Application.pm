@@ -1,7 +1,4 @@
 package DbIf::Application;
-#
-# A User Admin application
-#
 
 use Posda::DB::PosdaFilesQueries;
 use Dispatch::BinFragReader;
@@ -337,12 +334,12 @@ method ConfigureTagGroups() {
   }
 
   # titlize only after we have picked the correct ones
-  my $titlized = {};
-  for my $tag (keys %{$self->{TagGroups}}) {
-    $titlized->{titlize($tag)} = $self->{TagGroups}->{$tag};
-  }
+  # my $titlized = {};
+  # for my $tag (keys %{$self->{TagGroups}}) {
+  #   $titlized->{titlize($tag)} = $self->{TagGroups}->{$tag};
+  # }
 
-  $self->{TagGroups} = $titlized;
+  # $self->{TagGroups} = $titlized;
 
   if ($self->{user_has_permission}('superuser')) {
     $self->{TagGroups}->{'.Unlimited'} = 1;
@@ -408,13 +405,15 @@ method TagGroupSelector($http, $dyn) {
   });
 
   my $selected;
-  for my $tg (sort keys %{$self->{TagGroups}}) {
+  # for my $tg (sort keys %{$self->{TagGroups}}) {
+  for my $tg (@{$self->{AllowedFilters}}) {
     if ($self->{SelectedTagGroup} eq $tg) {
       $selected = q{selected="selected"};
     } else {
       $selected = '';
     }
-    $http->queue(qq{<option value="$tg" $selected>$tg</option>});
+    my $tg_name = titlize($tg);
+    $http->queue(qq{<option value="$tg" $selected>$tg_name</option>});
   }
 
   $http->queue('</select>');
@@ -579,9 +578,10 @@ method ListQueries($http, $dyn){
     @q_list = sort @{PosdaDB::Queries->GetList()};
   }
 
-  # Draw the tag list
+
+  $self->DrawTabs($http, $dyn);
   $self->RefreshEngine($http, $dyn, qq{
-    <p>Queries</p>
+    <p></p>
     <p>
       <?dyn="TagGroupSelector"?>
       <?dyn="TagSelection"?>
@@ -602,6 +602,54 @@ method ListQueries($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, "</table>");
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
+}
+
+method DrawTabs($http, $dyn) {
+  my $tabs = PosdaDB::Queries->GetTabs();
+  # DEBUG Dumper($tabs);
+
+  # select the first tab as the default
+  if (not defined $self->{SelectedTab}) {
+    $self->SwitchToTab($http, { tab =>  $tabs->[0]->{query_tab_name} });
+  }
+
+  $http->queue(qq{
+    <ul class="nav nav-tabs">
+  });
+  for my $tab (@{$tabs}) {
+    my $tabname = titlize($tab->{query_tab_name});
+    my $class = '';
+    if ($self->{SelectedTab} eq $tab->{query_tab_name}) {
+      $class = "active";
+    }
+    $http->queue(qq{ <li role="presentation" class="$class"> });
+
+    $self->NotSoSimpleButton($http, {
+      caption => $tabname,
+      op => "SwitchToTab",
+      tab => $tab->{query_tab_name},
+      class => '',
+      element => "a",
+      sync => 'Update();',
+      title => $tab->{query_tab_description}
+    });
+
+    $http->queue(qq{ </li> });
+  }
+  $http->queue(qq{ </ul> });
+}
+
+method SwitchToTab($http, $dyn) {
+  DEBUG "Switching to tab: $dyn->{tab}";
+  $self->{SelectedTab} = $dyn->{tab};
+
+  my $filters = PosdaDB::Queries->GetTabFilters($dyn->{tab});
+  my @allowed_filters = map { $_->{filter_name} } @$filters;
+  $self->{AllowedFilters} = \@allowed_filters;
+  # DEBUG Dumper(\@allowed_filters);
+
+  # select the first one
+  $self->SetGroupSelector($http, { value => $allowed_filters[0] });
 }
 
 method OpenDynamicPopup($http, $dyn) {
