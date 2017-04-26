@@ -18,3 +18,8 @@ canvas {
 #zoomdiv {
   display: inline;
 }
+
+.buttons {
+  display: flex; 
+  justify-content: space-around;
+}

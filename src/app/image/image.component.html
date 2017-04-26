@@ -22,7 +22,6 @@
       [value]="getWindowCenter()"
       (input)="onChangeCenter($event)"
   ></md-slider>
-  <div>
     <md-menu #appMenu="mdMenu">
       <button md-menu-item (click)="winlev(2000, 300)">Bone</button>
       <button md-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
@@ -38,6 +37,7 @@
       <button md-menu-item (click)="winlev(600, 250)">MR</button>
       <button md-menu-item (click)="winlev(255, 128)">Ultrasound</button>
     </md-menu>
+  <div class="buttons">
     <button md-raised-button [mdMenuTriggerFor]="appMenu">
       Presets
     </button>
