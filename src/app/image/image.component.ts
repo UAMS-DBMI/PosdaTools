@@ -3,6 +3,8 @@ import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { Image } from '../image';
+import { DetailsComponent } from '../details/details.component';
+import { MdDialog } from '@angular/material';
 
 
 // extern def of this built-in js func
@@ -56,7 +58,8 @@ export class ImageComponent implements OnInit {
     private http: Http, 
     private service: FileService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MdDialog
   ) { }
 
   ngOnInit() { 
@@ -295,5 +298,15 @@ export class ImageComponent implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  public openDetails(): void {
+    let dialogRef = this.dialog.open(DetailsComponent, {
+      data: this.file_id
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
+
   }
 }

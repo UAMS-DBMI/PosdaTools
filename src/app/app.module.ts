@@ -14,6 +14,7 @@ import { SeriesComponent } from './series/series.component';
 import { RouterModule, Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FileService } from './file.service';
+import { DetailsComponent } from './details/details.component';
 
 
 const appRoutes: Routes = [
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
     AppComponent,
     ImageComponent,
     SeriesComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    DetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +41,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
   ],
   providers: [FileService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DetailsComponent]
 })
 export class AppModule { }

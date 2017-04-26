@@ -22,7 +22,7 @@
       [value]="getWindowCenter()"
       (input)="onChangeCenter($event)"
   ></md-slider>
-  <p>
+  <div>
     <md-menu #appMenu="mdMenu">
       <button md-menu-item (click)="winlev(2000, 300)">Bone</button>
       <button md-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
@@ -43,6 +43,7 @@
     </button>
     <button md-raised-button (click)="reset()">Reset Window/Level</button>
     <button md-raised-button (click)="resetZoom()">Reset Zoom</button>
-  </p>
+    <button md-raised-button (click)="openDetails()">Details</button>
+  </div>
   </div>
 </div>

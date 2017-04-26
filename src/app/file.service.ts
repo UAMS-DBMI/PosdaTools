@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { Image } from './image';
 import { Observable } from 'rxjs';
+import { ImageDetails } from './image-details';
 
 @Injectable()
 export class FileService {
@@ -23,6 +24,13 @@ export class FileService {
       ).publishReplay(1).refCount();
     }
     return this.map[file_id];
+  }
+
+
+  getDetails(file_id: number): Observable<ImageDetails> {
+    return this.http.get("/vapi/extra_details/" + file_id).map(
+      res => res.json()
+    );
   }
 
   processHeaders(headers: any): Image {
