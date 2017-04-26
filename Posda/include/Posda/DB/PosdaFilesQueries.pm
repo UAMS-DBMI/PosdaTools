@@ -297,6 +297,49 @@ sub Execute{
 
 #########################
 # Class methods
+method GetTabs($class:){
+
+  # TODO: Add some type of caching to this method!
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select 
+      query_tab_name,
+      query_tab_description,
+      defines_dropdown,
+      sort_order,
+      defines_search_engine
+    from query_tabs
+    order by sort_order
+  });
+
+  $qh->execute();
+
+  my $results = $qh->fetchall_arrayref({});
+
+  return $results;
+};
+
+method GetTabFilters($class: $tab) {
+  # TODO: Add some type of caching to this method!
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select 
+      filter_name,
+      sort_order
+    from query_tabs_query_tag_filter
+    where query_tab_name = ?
+    order by sort_order
+  });
+
+  $qh->execute($tab);
+
+  my $results = $qh->fetchall_arrayref({});
+
+  return $results;
+
+}
 
 method GetList($class:){
 
