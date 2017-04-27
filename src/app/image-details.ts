@@ -17,4 +17,5 @@ export interface ImageDetails {
   sop_instance_uid: string;
   window_center: number;
   window_width: number;
+  modality: string;
 }

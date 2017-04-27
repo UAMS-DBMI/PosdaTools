@@ -81,7 +81,8 @@ async def get_series_info(request, file_id):
             project_name,
             site_name,
             sop_instance_uid,
-            series_instance_uid
+            series_instance_uid,
+            modality
 
         from
             file_image
