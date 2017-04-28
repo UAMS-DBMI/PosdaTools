@@ -104,13 +104,19 @@ export class ImageComponent implements OnInit {
 
   }
 
-  drawError(): void {
+  drawError(type: number = 0): void {
     let c = this.context;
     c.font = '48px serif';
     c.fillStyle = 'red';
     c.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // manually centered
-    c.fillText('No Pixel Data', 100, 270);
+    if (type == 0) {
+      c.fillText('No Pixel Data', 100, 270);
+    }
+    if (type == 1) {
+      c.fillText('Error drawing data', 90, 270);
+    }
+
   }
 
   draw(): void {
@@ -153,7 +159,12 @@ export class ImageComponent implements OnInit {
     }
 
     // width and height should be passed back from the REST endpoint
-    this.drawMono(image);
+    try {
+      this.drawMono(image);
+    } catch (e) {
+      console.log(e);
+      this.drawError(1);
+    }
   }
 
   drawMono(image: any) {

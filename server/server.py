@@ -82,7 +82,9 @@ async def get_series_info(request, file_id):
             site_name,
             sop_instance_uid,
             series_instance_uid,
-            modality
+            modality,
+            body_part_examined,
+            series_description
 
         from
             file_image

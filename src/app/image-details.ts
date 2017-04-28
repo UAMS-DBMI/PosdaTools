@@ -18,4 +18,6 @@ export interface ImageDetails {
   window_center: number;
   window_width: number;
   modality: string;
+  body_part_examined: string;
+  series_description: string;
 }
