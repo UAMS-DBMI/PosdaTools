@@ -12,7 +12,7 @@ import asyncpg
 
 DEBUG=True
 
-LOGIN_TIMEOUT = datetime.timedelta(seconds=20*60)
+LOGIN_TIMEOUT = datetime.timedelta(seconds=2*60*60) # 2 hours
 
 sessions = {} # token => username
 
@@ -161,7 +161,7 @@ order by count desc
 @app.route("/api/set/<state>")
 async def get_set(request, state):
     after = int(request.args.get('offset') or 0)
-    collection = request.args.get('collection')
+    collection = request.args.get('project')
     site = request.args.get('site')
 
     logging.debug(f"get_set:state={state},site={site},collection={collection}")
@@ -173,7 +173,10 @@ async def get_set(request, state):
         'ugly': get_ugly_data,
     }[state.lower()]
 
+    logging.debug(f"handler chosen: {handler}")
+
     records = await handler(after, collection, site)
+    logging.debug("get_set:request handled, emitting response now")
 
     return json([dict(i.items()) for i in records])
 
@@ -226,46 +229,66 @@ async def get_reviewed_data(state, after, collection, site):
     if site is not None:
         where_text += f"and site_name = '{site}' "
 
-
-    if len(where_text) > 0:
-        join_text = """
-            join image_equivalence_class_input_image II
-              on II.image_equivalence_class_id = I.image_equivalence_class_id
-            join ctp_file on ctp_file.file_id = II.file_id
-        """
-    else:
-        join_text = ""
-
-
     query = f"""
-        select distinct
-          I.image_equivalence_class_id,
-          series_instance_uid,
-          equivalence_class_number,
-          processing_status,
-          review_status,
-          projection_type,
-          image_equivalence_class_out_image.file_id,
-          root_path || '/' || rel_path as path
+select 
+  image_equivalence_class_id,
+  series_instance_uid,
+  equivalence_class_number,
+  processing_status,
+  review_status,
+  projection_type,
+  image_equivalence_class_out_image.file_id,
+  root_path || '/' || rel_path as path
+from (
+  /* 
+    Acquire the project_name and site_name associated with each IEC
+    by looking only at the first file_id of it's input image set.
+    This is pretty ugly, but is more than 100x faster than other
+    solutions.
 
-        from image_equivalence_class I
+    It could probably be sped up even more by storing project/site name
+    at the IEC level (say, in image_equivalence_class table)
+    Quasar, 2017-04-27
+  */
+  select 
+    image_equivalence_class_id,
+    (select project_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) 
+    ) project_name,
+    (select site_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) 
+    ) site_name,
+    processing_status
 
-        natural join image_equivalence_class_out_image
-        natural join file_location
-        natural join file_storage_root
+  from image_equivalence_class iec
 
-        {join_text}
+  where processing_status = 'Reviewed' 
+    and review_status = '{state}'
+) iecs
+natural join image_equivalence_class
+natural join image_equivalence_class_out_image
+natural join file_location
+natural join file_storage_root
 
-        where processing_status = 'Reviewed'
-          and review_status = '{state}'
+where 1 = 1
+{where_text}
 
-          {where_text}
-
-        offset $1
-        limit 10
+offset $1
+limit 10
     """
 
     # print(query)
+    logging.debug(query)
 
     conn = await pool.acquire()
     records = await conn.fetch(query, after)

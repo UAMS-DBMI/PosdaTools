@@ -17,11 +17,11 @@ export class AppComponent {
   testSeries: EquivalenceClassMap[];
   iecList: EquivalenceClassMap[];
   currentIecOffset: number;
-  dataLoading: boolean;
   initialized: boolean;
   loggedOut: boolean = false;
   projectList: Project[];
   currentIec: number;
+  public endOfData: boolean = false;
 
   public busy: Subscription;
 
@@ -32,7 +32,6 @@ export class AppComponent {
     // private router: Router,
   ) {
     this.currentIecOffset = 0;
-    this.dataLoading = false;
     this.initialized = false;
   }
 
@@ -73,6 +72,7 @@ export class AppComponent {
             this.iecList = things;
             this.initialized = true;
             this.updateDisplay(this.getCurrentIec());
+            this.endOfData = false;
         }, error => this.handleError(error));
   }
 
@@ -84,7 +84,10 @@ export class AppComponent {
   }
 
   getCurrentIec(offset: number = 0): number {
-      return this.iecList[this.currentIecOffset].image_equivalence_class_id;
+    if (this.currentIecOffset > this.iecList.length - 1) {
+      return -1;
+    }
+    return this.iecList[this.currentIecOffset].image_equivalence_class_id;
   }
 
   markGood() {
@@ -115,23 +118,17 @@ export class AppComponent {
     }
   }
   fetchMoreData() {
-    if (this.dataLoading) {
-      return;
-    }
-
-    this.dataLoading = true;
-
     var currentIec: number = this.getCurrentIec();
 
-    if (this.currentIecOffset >= this.iecList.length - 3) {
-      this.service.getAllUnreviewed(this.iecList.length).subscribe(
-        newList => {
-          this.iecList = this.iecList.concat(newList);
-          this.dataLoading = false;
-        },
-        error => this.handleError(error)
-      );
-    }
+    this.busy = this.service.getAllUnreviewed(this.iecList.length).subscribe(
+      newList => {
+        this.iecList = this.iecList.concat(newList);
+        if (newList.length == 0) {
+          this.endOfData = true;
+        }
+      },
+      error => this.handleError(error)
+    );
 
   }
   moveForward() {
@@ -140,7 +137,12 @@ export class AppComponent {
     this.currentIecOffset += 1;
     var currentIec: number = this.getCurrentIec();
 
-    if (this.currentIecOffset >= this.iecList.length - 3) {
+    if (currentIec == -1) {
+      this.endOfData = true;
+      return;
+    }
+
+    if (this.currentIecOffset >= this.iecList.length - 1) {
       this.fetchMoreData();
     }
 
@@ -158,10 +160,14 @@ export class AppComponent {
   }
 
   disableButtons(): boolean {
-    if (this.iecList && this.currentIecOffset < this.iecList.length-1) {
-      return false
-    } else {
+    if (!this.iecList) {
       return true;
+    }
+
+    if (this.endOfData && this.currentIecOffset >= this.iecList.length-1) {
+      return true;
+    } else {
+      return false;
     }
   }
   printAll() {
