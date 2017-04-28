@@ -119,8 +119,8 @@ export class ImageComponent implements OnInit {
 
   }
 
-  draw(): void {
 
+  applySlopeInterceptWinLev(): Uint8Array {
     this.height = this.current_image.height;
     this.width = this.current_image.width;
 
@@ -158,20 +158,56 @@ export class ImageComponent implements OnInit {
       }
     }
 
+    return image;
+  }
+
+  draw(): void {
+
     // width and height should be passed back from the REST endpoint
     try {
-      this.drawMono(image);
+      if (this.current_image.photometric_interpretation == 'RGB') {
+        // make an image without winlev
+        let image = new Uint8Array(this.current_image.pixel_data);
+        this.drawRGB(image);
+      } else {
+        let image = this.applySlopeInterceptWinLev();
+        this.drawMono(image);
+      }
     } catch (e) {
       console.log(e);
+      console.log(this.current_image);
       this.drawError(1);
     }
   }
 
+  drawRGB(image: Uint8Array) {
+    // console.log(this.current_image.planar_configuration);
+    let c = this.context;
+    let expected_length =  // Expected output length in bytes
+      this.current_image.width * this.current_image.height 
+      * 4; // 4 planes, RGBA
+
+    let test8 = new Uint8ClampedArray(expected_length); // length in bytes 
+
+    for (let i = 0; i < image.length; i+=3) {
+      let j = (i/3) * 4;
+      test8[j] = image[i];
+      test8[j+1] = image[i+1];
+      test8[j+2] = image[i+2];
+      test8[j+3] = 255; // alpha
+    }
+
+    this.drawFinalImage(test8);
+  }
+
   drawMono(image: any) {
     let c = this.context;
-    let test8 = new Uint8ClampedArray(image.length * 4); // length in bytes 
+    let expected_length = this.current_image.width * this.current_image.height * 4;
 
-    for (let i = 0; i < image.length; i++) {
+    let test8 = new Uint8ClampedArray(expected_length); // length in bytes 
+
+
+    for (let i = 0; i < expected_length; i++) {
       let j = i * 4;
       test8[j] = image[i];
       test8[j+1] = image[i];
@@ -195,15 +231,34 @@ export class ImageComponent implements OnInit {
                   this.current_image.width * this.zoom_level, 
                   this.current_image.height * this.zoom_level);
 
-      // alternate method of applying the scale and translation
-      // don't think this is any faster/slower
-      // c.save();
-      // c.scale(this.zoom_level, this.zoom_level);
-      // c.translate(this.offset.x, this.offset.y);
-      // c.drawImage(img, 0, 0);
-      // c.restore();
     });
   }
+
+
+  drawFinalImage(image: Uint8ClampedArray) {
+    let c = this.context;
+    let newImageData = c.createImageData(
+      this.current_image.width, this.current_image.height);
+    newImageData.data.set(image);
+
+    /*
+     * We could use c.putImageData here, however it does not 
+     * support scaling. By converting the ImageData into an
+     * ImageBitmap (via the extern function createImageBitmap, see 
+     * definition at the top of this file), we can use c.drawImage
+     * and do automatic scaling.
+     */
+    createImageBitmap(newImageData).then(img => {
+      c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      c.drawImage(img, this.offset.x, this.offset.y, 
+                  this.current_image.width * this.zoom_level, 
+                  this.current_image.height * this.zoom_level);
+    });
+
+  }
+
+
+
 
   reset(): void {
     this.w_width_override = undefined;

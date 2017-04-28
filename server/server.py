@@ -154,7 +154,9 @@ async def get_image(request, file_id):
 
             window_width,
             window_center,
-            pixel_pad
+            pixel_pad,
+            samples_per_pixel,
+            planar_configuration
 
         from
             file_image
@@ -206,6 +208,9 @@ async def get_image(request, file_id):
                                  'Q-DICOM-Window-Center': record['window_center'],
                                  'Q-DICOM-Window-Width': record['window_width'],
                                  'Q-DICOM-Pixel-Pad': record['pixel_pad'],
+                                 'Q-DICOM-Samples-Per-Pixel': record['samples_per_pixel'],
+                                 'Q-DICOM-PhotoRep': record['photometric_interpretation'],
+                                 'Q-DICOM-Planar-Config': record['planar_configuration'],
                                  },
                         content_type="application/octet-stream",
                         body_bytes=data)
