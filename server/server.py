@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.6
+import sys
 import logging
 from sanic import Sanic
 from sanic.response import json, text, HTTPResponse
@@ -10,7 +11,7 @@ import datetime
 
 import asyncpg
 
-DEBUG=True
+DEBUG=False
 
 LOGIN_TIMEOUT = datetime.timedelta(seconds=2*60*60) # 2 hours
 
@@ -181,28 +182,69 @@ async def get_set(request, state):
     return json([dict(i.items()) for i in records])
 
 async def get_unreviewed_data(after, collection, site):
-    # TODO: This is currently ignoring collection and site!
-    query = """
-    select
-            image_equivalence_class_id,
-            series_instance_uid,
-            equivalence_class_number,
-            processing_status,
-            review_status,
-            projection_type,
-            file_id,
-            root_path || '/' || rel_path as path
+    where_text = ""
 
-    from image_equivalence_class
+    if collection is not None:
+        where_text += f"and project_name = '{collection}' "
 
-    natural join image_equivalence_class_out_image
-    natural join file_location
-    natural join file_storage_root
+    if site is not None:
+        where_text += f"and site_name = '{site}' "
 
-    where processing_status = 'ReadyToReview'
-    and image_equivalence_class_id > $1
+    query = f"""
+select 
+  image_equivalence_class_id,
+  series_instance_uid,
+  equivalence_class_number,
+  processing_status,
+  review_status,
+  projection_type,
+  image_equivalence_class_out_image.file_id,
+  root_path || '/' || rel_path as path
+from (
+  /* 
+    Acquire the project_name and site_name associated with each IEC
+    by looking only at the first file_id of it's input image set.
+    This is pretty ugly, but is more than 100x faster than other
+    solutions.
 
-    limit 10
+    It could probably be sped up even more by storing project/site name
+    at the IEC level (say, in image_equivalence_class table)
+    Quasar, 2017-04-27
+  */
+  select 
+    image_equivalence_class_id,
+    (select project_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) 
+    ) project_name,
+    (select site_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) 
+    ) site_name,
+    processing_status
+
+  from image_equivalence_class iec
+
+  where processing_status = 'ReadyToReview' 
+) iecs
+natural join image_equivalence_class
+natural join image_equivalence_class_out_image
+natural join file_location
+natural join file_storage_root
+
+where 1 = 1
+{where_text}
+
+offset $1
+limit 10
     """
 
     conn = await pool.acquire()
@@ -402,7 +444,14 @@ async def user_watch():
     asyncio.get_event_loop().create_task(user_watch())
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    if len(sys.argv) > 1 and sys.argv[1].lower() == 'debug':
+        DEBUG = True
+
+    if DEBUG:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.ERROR)
+
     logging.info("Starting up...")
 
 
