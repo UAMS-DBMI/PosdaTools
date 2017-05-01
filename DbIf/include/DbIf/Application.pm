@@ -1,5 +1,7 @@
 package DbIf::Application;
 
+my $quince_url = "http://tcia-utilities/viewer";
+
 use Posda::DB::PosdaFilesQueries;
 use Dispatch::BinFragReader;
 
@@ -714,10 +716,33 @@ method OpenPopup($class, $name, $params) {
     say STDERR "OpenDynamicPopup, executing $class using params:";
     print STDERR Dumper($params);
 
+
+    # if Quince, do it differently:
+    if ($class eq 'Quince') {
+      $self->OpenQuince($name, $params);
+      return;
+    }
+
     my $child_path = $self->child_path($name);
     my $child_obj = $class->new($self->{session}, 
                                 $child_path, $params);
     $self->StartJsChildWindow($child_obj);
+}
+
+method OpenQuince($name, $params) {
+  my $mode;
+  my $val;
+
+  if (defined $params->{file_id}) {
+    $mode = 'file';
+    $val = $params->{file_id};
+  } elsif (defined $params->{series_instance_uid}) {
+    $mode = 'series';
+    $val = $params->{series_instance_uid};
+  }
+
+  my $cmd = "rt('$name', '$quince_url/$mode/$val', 600, 800, 0);";
+  $self->QueueJsCmd($cmd);
 }
 
 method DrawSpreadsheetOperationList($http, $dyn, $selected_tags) {
