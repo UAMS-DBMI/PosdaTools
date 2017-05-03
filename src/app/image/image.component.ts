@@ -182,56 +182,69 @@ export class ImageComponent implements OnInit {
 
   drawRGB(image: Uint8Array) {
     // console.log(this.current_image.planar_configuration);
+    if (this.current_image.planar_configuration == 1) {
+      return this.drawRRGGBB(image);
+    }
+
     let c = this.context;
     let expected_length =  // Expected output length in bytes
       this.current_image.width * this.current_image.height 
       * 4; // 4 planes, RGBA
 
-    let test8 = new Uint8ClampedArray(expected_length); // length in bytes 
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
 
     for (let i = 0; i < image.length; i+=3) {
       let j = (i/3) * 4;
-      test8[j] = image[i];
-      test8[j+1] = image[i+1];
-      test8[j+2] = image[i+2];
-      test8[j+3] = 255; // alpha
+      output_image[j] = image[i];
+      output_image[j+1] = image[i+1];
+      output_image[j+2] = image[i+2];
+      output_image[j+3] = 255; // alpha
     }
 
-    this.drawFinalImage(test8);
+    this.drawFinalImage(output_image);
+  }
+
+  drawRRGGBB(image: Uint8Array) {
+    let c = this.context;
+    let expected_length =  // Expected output length in bytes
+      this.current_image.width * this.current_image.height 
+      * 4; // 4 planes, RGBA
+
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
+
+    // offset of each plane
+    let R = 0;
+    let G = image.length / 3;
+    let B = G * 2;
+
+    for (let i = 0; i < image.length / 3; i++) {
+      let j = i * 4;
+      output_image[j] = image[R + i];
+      output_image[j+1] = image[G + i];
+      output_image[j+2] = image[B + i];
+      output_image[j+3] = 255; // alpha
+    }
+
+    this.drawFinalImage(output_image);
+
   }
 
   drawMono(image: any) {
     let c = this.context;
     let expected_length = this.current_image.width * this.current_image.height * 4;
 
-    let test8 = new Uint8ClampedArray(expected_length); // length in bytes 
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
 
 
     for (let i = 0; i < expected_length; i++) {
       let j = i * 4;
-      test8[j] = image[i];
-      test8[j+1] = image[i];
-      test8[j+2] = image[i];
-      test8[j+3] = 255; // alpha
+      output_image[j] = image[i];
+      output_image[j+1] = image[i];
+      output_image[j+2] = image[i];
+      output_image[j+3] = 255; // alpha
     }
 
-    let newImageData = c.createImageData(this.width, this.height);
-    newImageData.data.set(test8);
-
-    /*
-     * We could use c.putImageData here, however it does not 
-     * support scaling. By converting the ImageData into an
-     * ImageBitmap (via the extern function createImageBitmap, see 
-     * definition at the top of this file), we can use c.drawImage
-     * and do automatic scaling.
-     */
-    createImageBitmap(newImageData).then(img => {
-      c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      c.drawImage(img, this.offset.x, this.offset.y, 
-                  this.current_image.width * this.zoom_level, 
-                  this.current_image.height * this.zoom_level);
-
-    });
+    this.drawFinalImage(output_image);
   }
 
 
@@ -256,9 +269,6 @@ export class ImageComponent implements OnInit {
     });
 
   }
-
-
-
 
   reset(): void {
     this.w_width_override = undefined;
