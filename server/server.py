@@ -35,6 +35,7 @@ async def connect_to_db(sanic, loop):
 @app.route("/vapi/dump/<file_id:int>")
 async def dump_dicom(request, file_id):
     # get the filename from the database
+    logging.debug(f"Generating dump for {file_id}")
     query = """
         select root_path || '/' || rel_path as file
         from
@@ -48,12 +49,16 @@ async def dump_dicom(request, file_id):
     await pool.release(conn)
 
     file = records[0]['file']
+    logging.debug(file)
 
     create = asyncio.create_subprocess_exec("./dicom_dump.sh", file, stdout=asyncio.subprocess.PIPE)
     proc = await create
+    logging.debug("process created, about to wait on it")
 
-    await proc.wait() # wait for it to end
+    #await proc.wait() # wait for it to end
+    logging.debug("process ended, getting data")
     data = await proc.stdout.read() # read entire output
+    logging.debug("data got, returning it")
     return text(data.decode('utf8'))
 
 @app.route("/vapi/extra_details/<file_id:int>")
