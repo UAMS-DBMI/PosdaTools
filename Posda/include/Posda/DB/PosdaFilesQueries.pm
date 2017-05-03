@@ -297,6 +297,48 @@ sub Execute{
 
 #########################
 # Class methods
+#
+
+method GetChainedQueries($class: $query) {
+
+  # TODO: Add some type of caching to this method!
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select caption, chained_query_id, to_query
+    from chained_query 
+    where from_query = ?
+  });
+
+  $qh->execute($query);
+
+  my $results = $qh->fetchall_arrayref({});
+
+  return $results;
+};
+
+method GetChainedQueryDetails($class: $chained_query_id) {
+
+  # TODO: Add some type of caching to this method!
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select
+      from_column_name,
+      to_parameter_name
+    from chained_query_cols_to_params
+    where chained_query_id = ?
+  });
+
+  $qh->execute($chained_query_id);
+
+  my $results = $qh->fetchall_arrayref({});
+
+  return $results;
+}
+
+
+
 method GetTabs($class:){
 
   # TODO: Add some type of caching to this method!
