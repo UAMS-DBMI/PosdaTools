@@ -1783,7 +1783,7 @@ method TableSelected($http, $dyn){
     my $at = $table->{at};
 
     my $popup_hash = get_popup_hash($query->{name});
-
+    my $chained_queries = PosdaDB::Queries->GetChainedQueries($query->{name});
 
     $self->RefreshEngine($http, $dyn, qq{
       <div>
@@ -1830,6 +1830,9 @@ method TableSelected($http, $dyn){
     });
     for my $i (@{$query->{columns}}){
       $http->queue("<th>$i</th>");
+    }
+    if ($#{$chained_queries} > -1) {
+      $http->queue("<th>Chained</th>");
     }
     $http->queue('</tr>');
 
@@ -1884,6 +1887,20 @@ method TableSelected($http, $dyn){
             sync => 'Update();'
         });
         $http->queue('</td>');
+      }
+      if (defined $chained_queries) {
+        for my $q (@$chained_queries) {
+          $http->queue('<td>');
+          $self->NotSoSimpleButton($http, {
+              caption => "$q->{caption}",
+              op => "OpenChainedQuery",
+              row => "$row_index",
+              chained_query_id => "$q->{chained_query_id}",
+              to_query => "$q->{to_query}",
+              sync => 'Update();'
+          });
+          $http->queue('</td>');
+        }
       }
       $http->queue('</tr>');
     }
@@ -1958,6 +1975,52 @@ method TableSelected($http, $dyn){
     $self->RefreshEngine($http, $dyn, "</table></div>");
   }
 }
+
+method OpenChainedQuery($http, $dyn) {
+  my $id = $dyn->{chained_query_id};
+  my $query_name = $dyn->{to_query};
+
+  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
+  # DEBUG Dumper($details);
+
+  # get the row as a hash?
+  my $h = {};
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  if($table->{type} eq "FromQuery"){
+    my $cols = $table->{query}->{columns};
+    my $rows = $table->{rows};
+    my $row = $rows->[$dyn->{row}];
+
+    # build hash for popup constructor
+    for my $i (0 .. $#{$row}) {
+      $h->{$cols->[$i]} = $row->[$i];
+    }
+
+  } elsif ($table->{type} eq 'FromCsv') {
+
+    my $file = $table->{file};
+    my $rows = $table->{rows};
+    my $row = $rows->[$dyn->{row}];
+    my $cols = $rows->[0]; # column names in first row
+
+    # build hash for popup constructor
+    for my $i (0 .. $#{$row}) {
+      $h->{$cols->[$i]} = $row->[$i];
+    }
+  }
+
+  # DEBUG Dumper($h);
+  # $h now holds the values of the row as a hash
+  for my $param (@$details) {
+    $self->{BindingCache}->{$param->{to_parameter_name}} =
+      $h->{$param->{from_column_name}};
+  }
+  $self->SetActiveQuery($http, {
+    query_name => "$query_name",
+  });
+}
+
+
 method UpdateInsertStatus($http, $dyn){
   my $index = $self->{SelectedUpdateInsert};
   my $update_struct = $self->{CompletedUpdatesAndInserts}->[$index];
