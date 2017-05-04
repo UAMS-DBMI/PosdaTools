@@ -20,6 +20,7 @@ import { DumpComponent } from './dump/dump.component';
 
 const appRoutes: Routes = [
   { path: 'series/:uid', component: SeriesComponent },
+  { path: 'iec/:iec', component: SeriesComponent },
   { path: 'file/:file_id', component: ImageComponent },
   { path: '**', component: WelcomeComponent },
 ];

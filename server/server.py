@@ -118,6 +118,27 @@ async def get_series_info(request, file_id):
 
     return json(dict(records[0]))
 
+@app.route("/vapi/iec_info/<iec:int>")
+async def get_iec_info(request, iec):
+
+    query = """
+    select 
+        file_id 
+    from 
+        image_equivalence_class_input_image 
+        natural join file_sop_common 
+    where 
+        image_equivalence_class_id = $1
+    order by 
+        instance_number::int;
+    """
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, iec)
+    await pool.release(conn)
+
+    return json({"file_ids": [i[0] for i in records]})
+
 @app.route("/vapi/series_info/<series>")
 async def get_series_info(request, series):
 

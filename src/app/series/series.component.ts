@@ -26,9 +26,16 @@ export class SeriesComponent implements OnInit {
     let uid = this.route.snapshot.params['uid'];
     this.series_instance_uid = uid;
 
-    this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
-      res => this.handleResponse(res.json())
-    );
+    if (uid === undefined) {
+      let iec = this.route.snapshot.params['iec'];
+      this.http.get("/vapi/iec_info/" + iec).subscribe(
+        res => this.handleResponse(res.json())
+      );
+    } else {
+      this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
+        res => this.handleResponse(res.json())
+      );
+    }
   }
 
   handleResponse(data: any): void {
