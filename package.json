@@ -1,0 +1,25 @@
+{
+  "name": "node-canvas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/ts-node -- ./index.ts",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^1.6.5",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.16",
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.0.3",
+    "typescript": "^2.3.2",
+    "typings": "^2.1.1"
+  }
+}
