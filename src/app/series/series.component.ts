@@ -38,4 +38,8 @@ export class SeriesComponent implements OnInit {
                 "Series Viewer", "height=600,width=600");
 
   }
+  openPopupIec(): void {
+  	window.open("/viewer/iec/" + this.series.image_equivalence_class_id,
+                "Series Viewer", "height=600,width=600");
+  }
 }
