@@ -130,7 +130,12 @@ async def get_iec_info(request, iec):
     where 
         image_equivalence_class_id = $1
     order by 
-        instance_number::int;
+        -- sometimes instance_number is empty string or null
+        case instance_number 
+            when '' then '0' 
+            when null then '0'
+            else instance_number 
+        end::int
     """
 
     conn = await pool.acquire()
@@ -151,7 +156,12 @@ async def get_series_info(request, series):
         where series_instance_uid = $1
           and visibility is null
         order by
-            instance_number::int
+            -- sometimes instance_number is empty string or null
+            case instance_number 
+                when '' then '0' 
+                when null then '0'
+                else instance_number 
+            end::int
     """
 
     conn = await pool.acquire()
