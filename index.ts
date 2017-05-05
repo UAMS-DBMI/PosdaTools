@@ -1,4 +1,5 @@
 const request = require('request');
+const rp = require('request-promise');
 const Canvas = require('canvas');
 const fs = require('fs');
 const winston = require('winston');
@@ -9,9 +10,9 @@ import { Image } from './image';
 
 // Function found at https://gist.github.com/miguelmota/5b06ae5698877322d0ca
 // This is kind of bull, but it's how you have to do it...
-function toArrayBuffer(buffer) {
-    var ab = new ArrayBuffer(buffer.length);
-    var view = new Uint8Array(ab);
+function toArrayBuffer(buffer: Buffer): ArrayBuffer {
+    var ab: ArrayBuffer = new ArrayBuffer(buffer.length);
+    var view: Uint8Array = new Uint8Array(ab);
     for (var i = 0; i < buffer.length; ++i) {
         view[i] = buffer[i];
     }
@@ -55,10 +56,12 @@ class K {
 
 
     applySlopeInterceptWinLev(): Uint8Array {
-      let data = this.current_image.pixel_data;
       // In order to convert the data into a proper Uint16Array (with
       // two bytes per element) we have to force it into an ArrayBuffer first
-      let source = new Uint16Array(toArrayBuffer(data)); // load bytes in array
+
+      let source: Uint16Array = new Uint16Array(
+        // force to be only ArrayBuffer, rather than <ArrayBuffer | undefined>
+        <ArrayBuffer>this.current_image.pixel_data);
       let image = new Uint8Array(source.length);
 
       let slope = this.current_image.slope;
@@ -90,7 +93,7 @@ class K {
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
         // make an image without winlev
-        let image = new Uint8Array(this.current_image.pixel_data);
+        let image = new Uint8Array(<ArrayBuffer>this.current_image.pixel_data);
         this.drawRGB(image);
       } else {
         let image = this.applySlopeInterceptWinLev();
@@ -178,7 +181,7 @@ class K {
 
     let stream: any = canvas.pngStream();
     let out: any = fs.createWriteStream(name);
-    stream.on('data', (chunk) => out.write(chunk));
+    stream.on('data', (chunk: any) => out.write(chunk));
     stream.on('end', () => console.log('png written'));
   }
   main() {
@@ -188,11 +191,11 @@ class K {
       encoding: null // magic param to get binary back (as a Buffer, supposedly)
     };
 
-    request(options, (error, response, body) => {
+    request(options, (error: any, response: any, body: Buffer) => {
       // console.log(response.arrayBuffer);
       // console.log(body);
       this.current_image = this.processHeaders(response.headers);
-      this.current_image.pixel_data = new Buffer(body);
+      this.current_image.pixel_data = toArrayBuffer(body);
 
       // apply slope/intercept if needed here
 
@@ -206,12 +209,20 @@ class K {
 
   test() {
     // get a series
-    request('http://localhost:4200/vapi/series_info/1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315', (error, response, body) => {
+    request('http://localhost:4200/vapi/series_info/1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315', (error: any, response: any, body: string) => {
       let json_body: any = JSON.parse(body);
       this.files_to_get = json_body.file_ids;
       winston.log('info', 'Got list of files: ', this.files_to_get.length);
 
       this.getNextImage();
+    });
+  }
+
+  test2() {
+    let urls = ['http://google.com', 'http://www.example.com'];
+    let promises = urls.map(url => rp(url));
+    Promise.all(promises).then((data) => {
+      console.log('all done?');
     });
   }
 
@@ -228,9 +239,9 @@ class K {
       encoding: null // magic param to get binary back (as a Buffer, supposedly)
     };
 
-    request(options, (error, response, body) => {
+    request(options, (error: any, response: any, body: Buffer) => {
       this.current_image = this.processHeaders(response.headers);
-      this.current_image.pixel_data = new Buffer(body);
+      this.current_image.pixel_data = toArrayBuffer(body);
       this.file_id = id;
       this.draw();
 

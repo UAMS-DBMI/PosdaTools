@@ -1,4 +1,4 @@
-all: index.js clean run open
+all: build clean run open
 
 clean:
 	rm -f *.png
@@ -6,7 +6,8 @@ clean:
 run:
 	node index.js
 
-index.js: index.ts
-	./node_modules/.bin/tsc ./index.ts
+build:
+	./node_modules/.bin/tsc
+
 open:
 	chromium *.png

@@ -12,8 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/core-js": "^0.9.41",
     "canvas": "^1.6.5",
     "request": "^2.81.0",
+    "request-promise": "^4.2.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
