@@ -1,5 +1,8 @@
 const request = require('request');
 const Canvas = require('canvas');
+const fs = require('fs');
+const winston = require('winston');
+winston.level = 'debug';
 
 import { Image } from './image';
 
@@ -17,12 +20,18 @@ function toArrayBuffer(buffer) {
 
 class K {
 
-  CImage: any = Canvas.Image;
-  canvas: any = new Canvas();
-  c: any = this.canvas.getContext('2d');
-  context: any = this.c;
+  // canvas: any = new Canvas();
+  // c: any = this.canvas.getContext('2d');
+  // context: any = this.c;
+
+  files_to_get: any;
+  file_id: number;
 
   current_image: Image;
+
+  maximum_projection: Uint8ClampedArray;
+  minimum_projection: Uint8ClampedArray;
+
 
   constructor() {}
 
@@ -77,10 +86,6 @@ class K {
     }
 
   draw(): void {
-    if (this.canvas.width == 0) {
-      this.canvas.width = this.current_image.width;
-      this.canvas.height = this.current_image.height;
-    }
 
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
@@ -97,31 +102,8 @@ class K {
     }
   }
 
-  main() {
-
-    let options: any = {
-      url: 'http://localhost:4200/vapi/details/3899094',
-      encoding: null // magic param to get binary back (as a Buffer, supposedly)
-    };
-
-    request(options, (error, response, body) => {
-      // console.log(response.arrayBuffer);
-      // console.log(body);
-      this.current_image = this.processHeaders(response.headers);
-      this.current_image.pixel_data = new Buffer(body);
-
-      // apply slope/intercept if needed here
-
-      // let image: Uint8Array = new Uint8Array(this.applySlopeInterceptWinLev());
-      // let image: Uint8Array = new Uint8Array(new Buffer(body));
-
-      // this.drawRGB(image);
-      this.draw();
-    });
-  }
 
   drawMono(image: Uint8Array) {
-    let c = this.context;
     let expected_length = this.current_image.width * this.current_image.height * 4;
 
     let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
@@ -159,16 +141,106 @@ class K {
   }
 
   drawFinalImage(image: Uint8ClampedArray) {
-    let newImageData = this.c.createImageData(
+    if (this.maximum_projection === undefined) {
+      this.maximum_projection = image.slice();
+    }
+    if (this.minimum_projection === undefined) {
+      this.minimum_projection = image.slice();
+    }
+
+    for (let i = 0; i < image.length; ++i) {
+      if (image[i] > this.maximum_projection[i]) {
+        this.maximum_projection[i] = image[i];
+      }
+      if (image[i] < this.minimum_projection[i]) {
+        this.minimum_projection[i] = image[i];
+      }
+    }
+
+  }
+
+  drawFinalImage_orig(image: Uint8ClampedArray, name: string) {
+    let canvas: any = new Canvas();
+    let c: any = canvas.getContext('2d');
+
+    winston.log('debug', 'Setting canvas dim');
+    // TODO: this should not be global (current_image) in this case
+    canvas.width = this.current_image.width;
+    canvas.height = this.current_image.height;
+
+    let newImageData = c.createImageData(
       this.current_image.width, this.current_image.height);
     newImageData.data.set(image);
 
-    this.c.putImageData(newImageData, 0, 0);
+    c.putImageData(newImageData, 0, 0);
 
-    console.log('<img src="' + this.canvas.toDataURL() + '" />');
+    // console.log('<img src="' + this.canvas.toDataURL() + '" />');
+
+    let stream: any = canvas.pngStream();
+    let out: any = fs.createWriteStream(name);
+    stream.on('data', (chunk) => out.write(chunk));
+    stream.on('end', () => console.log('png written'));
+  }
+  main() {
+
+    let options: any = {
+      url: 'http://localhost:4200/vapi/details/3899094',
+      encoding: null // magic param to get binary back (as a Buffer, supposedly)
+    };
+
+    request(options, (error, response, body) => {
+      // console.log(response.arrayBuffer);
+      // console.log(body);
+      this.current_image = this.processHeaders(response.headers);
+      this.current_image.pixel_data = new Buffer(body);
+
+      // apply slope/intercept if needed here
+
+      // let image: Uint8Array = new Uint8Array(this.applySlopeInterceptWinLev());
+      // let image: Uint8Array = new Uint8Array(new Buffer(body));
+
+      // this.drawRGB(image);
+      this.draw();
+    });
+  }
+
+  test() {
+    // get a series
+    request('http://localhost:4200/vapi/series_info/1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315', (error, response, body) => {
+      let json_body: any = JSON.parse(body);
+      this.files_to_get = json_body.file_ids;
+      winston.log('info', 'Got list of files: ', this.files_to_get.length);
+
+      this.getNextImage();
+    });
+  }
+
+  getNextImage() {
+    let id: number = this.files_to_get.pop();
+    if (id === undefined) {
+      this.drawFinalImage_orig(this.maximum_projection, 'max.png');
+      this.drawFinalImage_orig(this.minimum_projection, 'min.png');
+      return;
+    }
+
+    let options: any = {
+      url: 'http://localhost:4200/vapi/details/' + id,
+      encoding: null // magic param to get binary back (as a Buffer, supposedly)
+    };
+
+    request(options, (error, response, body) => {
+      this.current_image = this.processHeaders(response.headers);
+      this.current_image.pixel_data = new Buffer(body);
+      this.file_id = id;
+      this.draw();
+
+      console.log('got an image: ' + id);
+      this.getNextImage();
+    });
   }
 }
 
 
 let k = new K();
-k.main();
+// k.main();
+k.test();

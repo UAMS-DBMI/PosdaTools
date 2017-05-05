@@ -2,6 +2,9 @@
 exports.__esModule = true;
 var request = require('request');
 var Canvas = require('canvas');
+var fs = require('fs');
+var winston = require('winston');
+winston.level = 'debug';
 // Function found at https://gist.github.com/miguelmota/5b06ae5698877322d0ca
 // This is kind of bull, but it's how you have to do it...
 function toArrayBuffer(buffer) {
@@ -14,10 +17,6 @@ function toArrayBuffer(buffer) {
 }
 var K = (function () {
     function K() {
-        this.CImage = Canvas.Image;
-        this.canvas = new Canvas();
-        this.c = this.canvas.getContext('2d');
-        this.context = this.c;
     }
     K.prototype.processHeaders = function (headers) {
         var img = {
@@ -46,16 +45,8 @@ var K = (function () {
         var w_width = this.current_image.window_width;
         var w_center = this.current_image.window_center;
         var ppad = this.current_image.pixel_pad;
-        // console.log(source);
-        // console.log(this.current_image);
-        // console.log(slope);
-        // console.log(intercept);
-        // console.log(w_width);
-        // console.log(w_center);
         var w_bottom = w_center - (w_width / 2);
         var w_top = w_center + (w_width / 2);
-        // console.log(w_bottom);
-        // console.log(w_top);
         // window/level into 8bit array
         for (var i = 0; i < source.length; i++) {
             var val = (source[i] * slope) + intercept;
@@ -72,10 +63,6 @@ var K = (function () {
         return image;
     };
     K.prototype.draw = function () {
-        if (this.canvas.width == 0) {
-            this.canvas.width = this.current_image.width;
-            this.canvas.height = this.current_image.height;
-        }
         try {
             if (this.current_image.photometric_interpretation == 'RGB') {
                 // make an image without winlev
@@ -92,26 +79,7 @@ var K = (function () {
             console.log(this.current_image);
         }
     };
-    K.prototype.main = function () {
-        var _this = this;
-        var options = {
-            url: 'http://localhost:4200/vapi/details/3899094',
-            encoding: null // magic param to get binary back (as a Buffer, supposedly)
-        };
-        request(options, function (error, response, body) {
-            // console.log(response.arrayBuffer);
-            // console.log(body);
-            _this.current_image = _this.processHeaders(response.headers);
-            _this.current_image.pixel_data = new Buffer(body);
-            // apply slope/intercept if needed here
-            // let image: Uint8Array = new Uint8Array(this.applySlopeInterceptWinLev());
-            // let image: Uint8Array = new Uint8Array(new Buffer(body));
-            // this.drawRGB(image);
-            _this.draw();
-        });
-    };
     K.prototype.drawMono = function (image) {
-        var c = this.context;
         var expected_length = this.current_image.width * this.current_image.height * 4;
         var output_image = new Uint8ClampedArray(expected_length); // length in bytes 
         for (var i = 0; i < expected_length; i++) {
@@ -137,12 +105,88 @@ var K = (function () {
         this.drawFinalImage(output_image);
     };
     K.prototype.drawFinalImage = function (image) {
-        var newImageData = this.c.createImageData(this.current_image.width, this.current_image.height);
+        if (this.maximum_projection === undefined) {
+            this.maximum_projection = image.slice();
+        }
+        if (this.minimum_projection === undefined) {
+            this.minimum_projection = image.slice();
+        }
+        for (var i = 0; i < image.length; ++i) {
+            if (image[i] > this.maximum_projection[i]) {
+                this.maximum_projection[i] = image[i];
+            }
+            if (image[i] < this.minimum_projection[i]) {
+                this.minimum_projection[i] = image[i];
+            }
+        }
+    };
+    K.prototype.drawFinalImage_orig = function (image, name) {
+        var canvas = new Canvas();
+        var c = canvas.getContext('2d');
+        winston.log('debug', 'Setting canvas dim');
+        // TODO: this should not be global (current_image) in this case
+        canvas.width = this.current_image.width;
+        canvas.height = this.current_image.height;
+        var newImageData = c.createImageData(this.current_image.width, this.current_image.height);
         newImageData.data.set(image);
-        this.c.putImageData(newImageData, 0, 0);
-        console.log('<img src="' + this.canvas.toDataURL() + '" />');
+        c.putImageData(newImageData, 0, 0);
+        // console.log('<img src="' + this.canvas.toDataURL() + '" />');
+        var stream = canvas.pngStream();
+        var out = fs.createWriteStream(name);
+        stream.on('data', function (chunk) { return out.write(chunk); });
+        stream.on('end', function () { return console.log('png written'); });
+    };
+    K.prototype.main = function () {
+        var _this = this;
+        var options = {
+            url: 'http://localhost:4200/vapi/details/3899094',
+            encoding: null // magic param to get binary back (as a Buffer, supposedly)
+        };
+        request(options, function (error, response, body) {
+            // console.log(response.arrayBuffer);
+            // console.log(body);
+            _this.current_image = _this.processHeaders(response.headers);
+            _this.current_image.pixel_data = new Buffer(body);
+            // apply slope/intercept if needed here
+            // let image: Uint8Array = new Uint8Array(this.applySlopeInterceptWinLev());
+            // let image: Uint8Array = new Uint8Array(new Buffer(body));
+            // this.drawRGB(image);
+            _this.draw();
+        });
+    };
+    K.prototype.test = function () {
+        var _this = this;
+        // get a series
+        request('http://localhost:4200/vapi/series_info/1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315', function (error, response, body) {
+            var json_body = JSON.parse(body);
+            _this.files_to_get = json_body.file_ids;
+            winston.log('info', 'Got list of files: ', _this.files_to_get.length);
+            _this.getNextImage();
+        });
+    };
+    K.prototype.getNextImage = function () {
+        var _this = this;
+        var id = this.files_to_get.pop();
+        if (id === undefined) {
+            this.drawFinalImage_orig(this.maximum_projection, 'max.png');
+            this.drawFinalImage_orig(this.minimum_projection, 'min.png');
+            return;
+        }
+        var options = {
+            url: 'http://localhost:4200/vapi/details/' + id,
+            encoding: null // magic param to get binary back (as a Buffer, supposedly)
+        };
+        request(options, function (error, response, body) {
+            _this.current_image = _this.processHeaders(response.headers);
+            _this.current_image.pixel_data = new Buffer(body);
+            _this.file_id = id;
+            _this.draw();
+            console.log('got an image: ' + id);
+            _this.getNextImage();
+        });
     };
     return K;
 }());
 var k = new K();
-k.main();
+// k.main();
+k.test();
