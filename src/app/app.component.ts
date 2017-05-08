@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SeriesService } from './series.service';
@@ -33,6 +33,30 @@ export class AppComponent {
   ) {
     this.currentIecOffset = 0;
     this.initialized = false;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (!this.initialized) {
+      return;
+    }
+
+    if (event.key == '1' || event.key == 'g') {
+      this.markGood();
+    }
+    if (event.key == '2' || event.key == 'b') {
+      this.markBad();
+    }
+    if (event.key == '3' || event.key == 'u') {
+      this.markUgly();
+    }
+    if (event.key == 'ArrowRight') {
+      this.moveForward();
+    }
+    if (event.key == 'ArrowLeft') {
+      this.moveBackward();
+    }
+
   }
 
   ngOnInit() {
