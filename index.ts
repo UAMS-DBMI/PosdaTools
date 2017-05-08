@@ -235,30 +235,12 @@ class K {
 // let k = new K();
 // k.main();
 
-
-const pg = require('pg');
-const connectionSTring = process.env.DATABASE_URL || 'postgres://localhost/slackup';
-const client = new pg.Client(connectionSTring);
+const pgp = require('pg-promise')();
+let db = pgp('postgres://localhost/slackup');
 
 
-function getRows() {
-  return new Promise((accept, reject) => {
-    let results: any[] = [];
-    client.connect();
-    const query = client.query('select * from archive_channel');
-    query.on('row', (row: any) => {
-      results.push(row);
-    });
-    query.on('end', () => { 
-      winston.log('info', 'query returned');
-      client.end(); 
-      accept(results);
-    });
-  });
-}
-
-
-getRows().then((results: any[]) => {
-  console.log('results are in!');
-  console.log(results);
+db.query('select * from archive_channel').then((result: any) => {
+  console.log(result);
+  pgp.end(); // end connection pool and exit
 });
+
