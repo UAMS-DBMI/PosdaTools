@@ -21,10 +21,6 @@ function toArrayBuffer(buffer: Buffer): ArrayBuffer {
 
 class K {
 
-  // canvas: any = new Canvas();
-  // c: any = this.canvas.getContext('2d');
-  // context: any = this.c;
-
   files_to_get: any;
   file_id: number;
 
@@ -143,12 +139,23 @@ class K {
     this.drawFinalImage(output_image);
   }
 
+  makeWhiteImage(width: number, height: number): Uint8ClampedArray {
+    let img: Uint8ClampedArray = new Uint8ClampedArray(width * height * 4);
+    return img.fill(255);
+  }
+  makeBlack(width: number, height: number): Uint8ClampedArray {
+    let img: Uint8ClampedArray = new Uint8ClampedArray(width * height * 4);
+    return img.fill(0);
+  }
+
   drawFinalImage(image: Uint8ClampedArray) {
     if (this.maximum_projection === undefined) {
-      this.maximum_projection = image.slice();
+      this.maximum_projection = this.makeBlack(this.current_image.width,
+                                               this.current_image.height);
     }
     if (this.minimum_projection === undefined) {
-      this.minimum_projection = image.slice();
+      this.minimum_projection = this.makeWhiteImage(this.current_image.width,
+                                                    this.current_image.height);
     }
 
     for (let i = 0; i < image.length; ++i) {
@@ -168,7 +175,7 @@ class K {
 
     winston.log('debug', 'Setting canvas dim');
     // TODO: this should not be global (current_image) in this case
-    canvas.width = this.current_image.width;
+    canvas.width = this.current_image.width * 2;
     canvas.height = this.current_image.height;
 
     let newImageData = c.createImageData(
@@ -184,74 +191,46 @@ class K {
     stream.on('data', (chunk: any) => out.write(chunk));
     stream.on('end', () => console.log('png written'));
   }
+
   main() {
+    let url = 'http://localhost:4200/vapi/iec_info/2372'; 
+    let detail_url = 'http://localhost:4200/vapi/details/';
 
-    let options: any = {
-      url: 'http://localhost:4200/vapi/details/3899094',
-      encoding: null // magic param to get binary back (as a Buffer, supposedly)
-    };
-
-    request(options, (error: any, response: any, body: Buffer) => {
-      // console.log(response.arrayBuffer);
-      // console.log(body);
-      this.current_image = this.processHeaders(response.headers);
-      this.current_image.pixel_data = toArrayBuffer(body);
-
-      // apply slope/intercept if needed here
-
-      // let image: Uint8Array = new Uint8Array(this.applySlopeInterceptWinLev());
-      // let image: Uint8Array = new Uint8Array(new Buffer(body));
-
-      // this.drawRGB(image);
-      this.draw();
-    });
-  }
-
-  test() {
-    // get a series
-    request('http://localhost:4200/vapi/series_info/1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315', (error: any, response: any, body: string) => {
+    rp(url).then((body: string) => {
       let json_body: any = JSON.parse(body);
-      this.files_to_get = json_body.file_ids;
-      winston.log('info', 'Got list of files: ', this.files_to_get.length);
+      console.log(json_body);
 
-      this.getNextImage();
-    });
+      let promises = json_body.file_ids.map(this.getAnImage, this);
+      Promise.all(promises).then((data) => {
+        winston.log('debug', 'All files downloaded, writing pngs');
+        this.drawFinalImage_orig(this.maximum_projection, 'max.png');
+        this.drawFinalImage_orig(this.minimum_projection, 'min.png');
+      });
+    })
   }
 
-  test2() {
-    let urls = ['http://google.com', 'http://www.example.com'];
-    let promises = urls.map(url => rp(url));
-    Promise.all(promises).then((data) => {
-      console.log('all done?');
-    });
-  }
+  getAnImage(file_id: number) {
+    let url = 'http://localhost:4200/vapi/details/' + file_id;
+    return new Promise((accept, reject) => {
+      let options: any = {
+        url: url,
+        encoding: null // magic param to get binary back (as a Buffer, supposedly)
+      };
+      winston.log('debug', 'About to get file ' + file_id);
+      request(options, (error: any, response: any, body: Buffer) => {
+        winston.log('debug', 'About to process file ' + file_id);
+        this.current_image = this.processHeaders(response.headers);
+        this.current_image.pixel_data = toArrayBuffer(body);
+        this.file_id = file_id;
+        this.draw();
 
-  getNextImage() {
-    let id: number = this.files_to_get.pop();
-    if (id === undefined) {
-      this.drawFinalImage_orig(this.maximum_projection, 'max.png');
-      this.drawFinalImage_orig(this.minimum_projection, 'min.png');
-      return;
-    }
-
-    let options: any = {
-      url: 'http://localhost:4200/vapi/details/' + id,
-      encoding: null // magic param to get binary back (as a Buffer, supposedly)
-    };
-
-    request(options, (error: any, response: any, body: Buffer) => {
-      this.current_image = this.processHeaders(response.headers);
-      this.current_image.pixel_data = toArrayBuffer(body);
-      this.file_id = id;
-      this.draw();
-
-      console.log('got an image: ' + id);
-      this.getNextImage();
+        winston.log('debug', 'Finished processing image: ' + file_id);
+        accept();
+      });
     });
   }
 }
 
 
 let k = new K();
-// k.main();
-k.test();
+k.main();
