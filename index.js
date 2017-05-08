@@ -179,5 +179,27 @@ class K {
         });
     }
 }
-let k = new K();
-k.main();
+// let k = new K();
+// k.main();
+const pg = require('pg');
+const connectionSTring = process.env.DATABASE_URL || 'postgres://localhost/slackup';
+const client = new pg.Client(connectionSTring);
+function getRows() {
+    return new Promise((accept, reject) => {
+        let results = [];
+        client.connect();
+        const query = client.query('select * from archive_channel');
+        query.on('row', (row) => {
+            results.push(row);
+        });
+        query.on('end', () => {
+            winston.log('info', 'query returned');
+            client.end();
+            accept(results);
+        });
+    });
+}
+getRows().then((results) => {
+    console.log('results are in!');
+    console.log(results);
+});
