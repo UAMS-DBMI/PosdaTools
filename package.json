@@ -13,9 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "canvas": "^1.6.5",
+    "fs-extra": "^3.0.1",
+    "md5-file": "^3.1.1",
+    "pg-native": "^1.10.1",
     "pg-promise": "^5.6.7",
+    "progress": "^2.0.0",
+    "promise-limit": "^2.4.0",
     "request": "^2.81.0",
-    "request-promise": "^4.2.0",
+    "request-promise-native": "^1.0.4",
     "winston": "^2.3.1"
   },
   "devDependencies": {

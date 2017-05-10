@@ -1,12 +1,33 @@
-const request = require('request');
-const rp = require('request-promise');
+const rp = require('request-promise-native');
+const pg = require('pg-native');
 const Canvas = require('canvas');
 const fs = require('fs');
 const winston = require('winston');
-winston.level = 'debug';
+const promiseLimit = require('promise-limit');
+const ProgressBar = require('progress');
+
+winston.level = 'error';
+
+
+const API_URL = 'http://tcia-utilities/vapi';
 
 import { Image } from './image';
 
+import { finishImage } from './finish';
+
+var images_to_get: number = 0;
+var bar = new ProgressBar(':bar ETA :eta s', 
+{ 
+  total: 1, 
+  width: 70,
+  head: '>'
+});
+
+
+interface OutputImage {
+  pixels: Uint8ClampedArray;
+  count: number;
+};
 
 // Function found at https://gist.github.com/miguelmota/5b06ae5698877322d0ca
 // This is kind of bull, but it's how you have to do it...
@@ -26,11 +47,16 @@ class K {
 
   current_image: Image;
 
-  maximum_projection: Uint8ClampedArray;
-  minimum_projection: Uint8ClampedArray;
+  maximum_projection: OutputImage;
+  minimum_projection: OutputImage;
+  mean_projection: OutputImage;
+
+  db: any;
 
 
-  constructor() {}
+  constructor(db: any) {
+    this.db = db;
+  }
 
   processHeaders(headers: any): Image {
       let img = {
@@ -120,7 +146,9 @@ class K {
   }
 
   drawRGB(image: Uint8Array) {
-
+    if (this.current_image.planar_configuration == 1) {
+      return this.drawRRGGBB(image);
+    }
 
     let expected_length =  // Expected output length in bytes
       this.current_image.width * this.current_image.height 
@@ -139,13 +167,39 @@ class K {
     this.drawFinalImage(output_image);
   }
 
-  makeWhiteImage(width: number, height: number): Uint8ClampedArray {
-    let img: Uint8ClampedArray = new Uint8ClampedArray(width * height * 4);
-    return img.fill(255);
+  drawRRGGBB(image: Uint8Array) {
+    let expected_length =  // Expected output length in bytes
+      this.current_image.width * this.current_image.height 
+      * 4; // 4 planes, RGBA
+
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
+
+    // offset of each plane
+    let R = 0;
+    let G = image.length / 3;
+    let B = G * 2;
+
+    for (let i = 0; i < image.length / 3; i++) {
+      let j = i * 4;
+      output_image[j] = image[R + i];
+      output_image[j+1] = image[G + i];
+      output_image[j+2] = image[B + i];
+      output_image[j+3] = 255; // alpha
+    }
+
+    this.drawFinalImage(output_image);
+
   }
-  makeBlack(width: number, height: number): Uint8ClampedArray {
+
+  makeWhiteImage(width: number, height: number): OutputImage {
     let img: Uint8ClampedArray = new Uint8ClampedArray(width * height * 4);
-    return img.fill(0);
+    img.fill(255);
+    return { pixels: img, count: 0 };
+  }
+  makeBlack(width: number, height: number): OutputImage {
+    let img: Uint8ClampedArray = new Uint8ClampedArray(width * height * 4);
+    img.fill(0);
+    return { pixels: img, count: 0 };
   }
 
   drawFinalImage(image: Uint8ClampedArray) {
@@ -157,74 +211,111 @@ class K {
       this.minimum_projection = this.makeWhiteImage(this.current_image.width,
                                                     this.current_image.height);
     }
-
-    for (let i = 0; i < image.length; ++i) {
-      if (image[i] > this.maximum_projection[i]) {
-        this.maximum_projection[i] = image[i];
-      }
-      if (image[i] < this.minimum_projection[i]) {
-        this.minimum_projection[i] = image[i];
-      }
+    if (this.mean_projection === undefined) {
+      this.mean_projection = { pixels: image.slice(), count: 1 };
     }
 
+
+    for (let i = 0; i < image.length; ++i) {
+      if (image[i] > this.maximum_projection.pixels[i]) {
+        this.maximum_projection.pixels[i] = image[i];
+      }
+      if (image[i] < this.minimum_projection.pixels[i]) {
+        this.minimum_projection.pixels[i] = image[i];
+      }
+
+      this.mean_projection.pixels[i] = ((this.mean_projection.pixels[i] * (this.mean_projection.count - 1)) + image[i]) / this.mean_projection.count;
+    }
+
+    this.maximum_projection.count++;
+    this.minimum_projection.count++;
+    this.mean_projection.count++;
   }
 
-  drawFinalImage_orig(image: Uint8ClampedArray, name: string) {
+  writePng(max: OutputImage, min: OutputImage, mean: OutputImage, name: string) {
     let canvas: any = new Canvas();
     let c: any = canvas.getContext('2d');
 
     winston.log('debug', 'Setting canvas dim');
-    // TODO: this should not be global (current_image) in this case
-    canvas.width = this.current_image.width * 2;
+    canvas.width = this.current_image.width * 3;
     canvas.height = this.current_image.height;
 
-    let newImageData = c.createImageData(
+    let maxImageData = c.createImageData(
       this.current_image.width, this.current_image.height);
-    newImageData.data.set(image);
+    maxImageData.data.set(max.pixels);
 
-    c.putImageData(newImageData, 0, 0);
+    let minImageData = c.createImageData(
+      this.current_image.width, this.current_image.height);
+    minImageData.data.set(min.pixels);
 
-    // console.log('<img src="' + this.canvas.toDataURL() + '" />');
+    let meanImageData = c.createImageData(
+      this.current_image.width, this.current_image.height);
+    meanImageData.data.set(mean.pixels);
+
+    c.putImageData(maxImageData, 0, 0);
+    c.putImageData(meanImageData, this.current_image.width, 0);
+    c.putImageData(minImageData, this.current_image.width * 2, 0);
+
 
     let stream: any = canvas.pngStream();
     let out: any = fs.createWriteStream(name);
     stream.on('data', (chunk: any) => out.write(chunk));
-    stream.on('end', () => console.log('png written'));
+    stream.on('end', () => winston.log('info', 'png written: ' + name));
   }
 
-  main() {
-    let url = 'http://localhost:4200/vapi/iec_info/2372'; 
-    let detail_url = 'http://localhost:4200/vapi/details/';
+  main(iec: number): Promise<any> {
+    let url = API_URL + '/iec_info/' + iec;
+    let detail_url = API_URL + '/details/';
 
-    rp(url).then((body: string) => {
-      let json_body: any = JSON.parse(body);
-      console.log(json_body);
+    return new Promise((accept, reject) => {
+      rp(url).then((body: string) => {
+        let json_body: any = JSON.parse(body);
+        let file_ids = json_body.file_ids;
 
-      let promises = json_body.file_ids.map(this.getAnImage, this);
-      Promise.all(promises).then((data) => {
-        winston.log('debug', 'All files downloaded, writing pngs');
-        this.drawFinalImage_orig(this.maximum_projection, 'max.png');
-        this.drawFinalImage_orig(this.minimum_projection, 'min.png');
+        // console.log(json_body);
+        winston.log('info', 'Images in this IEC: ' + file_ids.length);
+        images_to_get += file_ids.length;
+        bar.total = images_to_get;
+
+
+        let limit = promiseLimit(5);
+
+        // let promises = file_ids.map(this.getAnImage, this);
+        let promises = file_ids.map((id: number) => {
+          return limit(() => this.getAnImage(id));
+        }, this);
+
+        Promise.all(promises).then((data) => {
+          winston.log('debug', 'All files downloaded, writing pngs');
+          let filename = 'out_' + iec + '.png';
+          this.writePng(this.maximum_projection, this.minimum_projection,
+            this.mean_projection,
+            filename);
+            finishImage(filename, iec);
+            accept();
+        });
       });
-    })
+    });
   }
 
   getAnImage(file_id: number) {
-    let url = 'http://localhost:4200/vapi/details/' + file_id;
+    let url = API_URL + '/details/' + file_id;
     return new Promise((accept, reject) => {
       let options: any = {
         url: url,
-        encoding: null // magic param to get binary back (as a Buffer, supposedly)
+        encoding: null, // magic param to get binary back (as a Buffer, supposedly)
+        resolveWithFullResponse: true
       };
       winston.log('debug', 'About to get file ' + file_id);
-      request(options, (error: any, response: any, body: Buffer) => {
+      rp(options).then((response: any) => {
         winston.log('debug', 'About to process file ' + file_id);
         this.current_image = this.processHeaders(response.headers);
-        this.current_image.pixel_data = toArrayBuffer(body);
+        this.current_image.pixel_data = toArrayBuffer(response.body);
         this.file_id = file_id;
         this.draw();
 
         winston.log('debug', 'Finished processing image: ' + file_id);
+        bar.tick();
         accept();
       });
     });
@@ -233,14 +324,36 @@ class K {
 
 
 // let k = new K();
-// k.main();
+// k.main(2372);
 
-const pgp = require('pg-promise')();
-let db = pgp('postgres://localhost/slackup');
+let client = new pg();
+client.connectSync('postgres://tcia-utilities/N_posda_files');
 
+function doOne() {
+  let query = `
+    update image_equivalence_class i
+    set processing_status = 'in-progress'
+    where i.image_equivalence_class_id in (
+      select image_equivalence_class_id
+      from image_equivalence_class
+      where processing_status = 'QTest1'
+      limit 5
+    )
+    returning i.*
+  `;
 
-db.query('select * from archive_channel').then((result: any) => {
-  console.log(result);
-  pgp.end(); // end connection pool and exit
-});
+  let result = client.querySync(query);
 
+  if (result.length < 1) {
+    console.log('No work to do, sleeping for 5 seconds...');
+    setTimeout(() => {}, 5000); // cause node to stay open
+  } else {
+    console.log("Generating images for " + result.length + " IECs...");
+  }
+  let jobs = result.map((element: any) => {
+    return (new K(client)).main(element.image_equivalence_class_id);
+  });
+  Promise.all(jobs).then(() => client.end());
+}
+
+doOne();

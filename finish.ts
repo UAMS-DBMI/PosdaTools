@@ -6,8 +6,8 @@ const pg = require('pg-native');
 
 const DIR = 'dicom';
 
-function makeDirs(targetDir) {
-  targetDir.split('/').forEach((dir, index, splits) => {
+function makeDirs(targetDir: string) {
+  targetDir.split('/').forEach((dir: any, index: any, splits: any) => {
     const parent = splits.slice(0, index).join('/');
     const dirPath = path.resolve(parent, dir);
     if (!fs.existsSync(dirPath)) {
@@ -16,7 +16,7 @@ function makeDirs(targetDir) {
   });
 }
 
-function placeFileAndGetMd5(filename, root) {
+function placeFileAndGetMd5(filename: string, root: string) {
   let hash = md5File.sync(filename);
   console.log(hash);
 
@@ -36,11 +36,11 @@ function placeFileAndGetMd5(filename, root) {
 }
 
 
-function finishImage(filename, iec) {
+export function finishImage(filename: string, iec: number) {
   let details = placeFileAndGetMd5(filename, DIR);
 
   let client = new pg();
-  client.connectSync('postgres://localhost/posda_files');
+  client.connectSync('postgres://tcia-utilities/N_posda_files');
 
   let rows = client.querySync(`
     insert into file
@@ -63,7 +63,10 @@ function finishImage(filename, iec) {
     [iec, 'combined', new_file_id]
   );
 
+  client.querySync(
+    "update image_equivalence_class set processing_status = 'QTest2' where image_equivalence_class_id = $1",
+    [iec]
+  );
+
   console.log(new_file_id);
 }
-
-finishImage('out_1.png', 999);
