@@ -4,7 +4,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const pg = require('pg-promise')();
 
-const DIR = 'dicom';
+const DIR = '/mnt/public-nfs/posda/storage';
 
 function makeDirs(targetDir: string) {
   targetDir.split('/').forEach((dir: any, index: any, splits: any) => {
@@ -30,14 +30,19 @@ function placeFileAndGetMd5(filename: string, root: string) {
     makeDirs(output_dir);
   }
 
+  let size = fs.statSync(filename).size; // stat before copy
   fse.copySync(filename, output_filename);
 
-  return { hash: hash, rel_path: rel_path, size: fs.statSync(output_filename).size };
+  return { hash: hash, rel_path: rel_path, size: size };
 }
 
 
 export async function finishImage(client: any, filename: string, iec: number) {
   let details = placeFileAndGetMd5(filename, DIR);
+  if (details.size == 0) {
+    console.log('File was 0 size when we statd it, aborting!');
+    return;
+  }
 
   let rows = await client.query(`
     insert into file

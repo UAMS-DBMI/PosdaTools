@@ -13,7 +13,7 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 const pg = require('pg-promise')();
-const DIR = 'dicom';
+const DIR = '/mnt/public-nfs/posda/storage';
 function makeDirs(targetDir) {
     targetDir.split('/').forEach((dir, index, splits) => {
         const parent = splits.slice(0, index).join('/');
@@ -33,12 +33,17 @@ function placeFileAndGetMd5(filename, root) {
     if (!fs.existsSync(output_dir)) {
         makeDirs(output_dir);
     }
+    let size = fs.statSync(filename).size; // stat before copy
     fse.copySync(filename, output_filename);
-    return { hash: hash, rel_path: rel_path, size: fs.statSync(output_filename).size };
+    return { hash: hash, rel_path: rel_path, size: size };
 }
 function finishImage(client, filename, iec) {
     return __awaiter(this, void 0, void 0, function* () {
         let details = placeFileAndGetMd5(filename, DIR);
+        if (details.size == 0) {
+            console.log('File was 0 size when we statd it, aborting!');
+            return;
+        }
         let rows = yield client.query(`
     insert into file
     (digest, size, is_dicom_file, file_type,

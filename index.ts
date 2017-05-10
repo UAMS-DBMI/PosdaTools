@@ -232,7 +232,7 @@ class K {
     this.mean_projection.count++;
   }
 
-  writePng(max: OutputImage, min: OutputImage, mean: OutputImage, name: string) {
+  async writePng(max: OutputImage, min: OutputImage, mean: OutputImage, name: string) {
     let canvas: any = new Canvas();
     let c: any = canvas.getContext('2d');
 
@@ -256,14 +256,17 @@ class K {
     c.putImageData(meanImageData, this.current_image.width, 0);
     c.putImageData(minImageData, this.current_image.width * 2, 0);
 
-
-    let stream: any = canvas.pngStream();
-    let out: any = fs.createWriteStream(name);
-    stream.on('data', (chunk: any) => out.write(chunk));
-    stream.on('end', () => winston.log('info', 'png written: ' + name));
+    await new Promise((accept, reject) => {
+      let stream: any = canvas.pngStream();
+      let out: any = fs.createWriteStream(name, { autoClose: true });
+      stream.on('data', (chunk: any) => out.write(chunk));
+      stream.on('end', () => { out.end();} );
+      out.on('finish', () => { accept(); });
+    });
   }
 
   async main(iec: number): Promise<any> {
+    console.log('IEC: ' + iec);
     let url = API_URL + '/iec_info/' + iec;
     let detail_url = API_URL + '/details/';
 
@@ -272,7 +275,6 @@ class K {
         let json_body: any = JSON.parse(body);
         let file_ids = json_body.file_ids;
 
-        // console.log(json_body);
         winston.log('info', 'Images in this IEC: ' + file_ids.length);
         images_to_get += file_ids.length;
         bar.total = images_to_get;
@@ -288,11 +290,10 @@ class K {
         Promise.all(promises).then(async (data) => {
           winston.log('debug', 'All files downloaded, writing pngs');
           let filename = 'out_' + iec + '.png';
-          this.writePng(this.maximum_projection, this.minimum_projection,
-            this.mean_projection,
-            filename);
-            await finishImage(this.db, filename, iec);
-            accept();
+          await this.writePng(this.maximum_projection, this.minimum_projection,
+            this.mean_projection, filename);
+          await finishImage(this.db, filename, iec);
+          accept();
         });
       });
     });

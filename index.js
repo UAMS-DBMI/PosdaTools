@@ -180,34 +180,39 @@ class K {
         this.mean_projection.count++;
     }
     writePng(max, min, mean, name) {
-        let canvas = new Canvas();
-        let c = canvas.getContext('2d');
-        winston.log('debug', 'Setting canvas dim');
-        canvas.width = this.current_image.width * 3;
-        canvas.height = this.current_image.height;
-        let maxImageData = c.createImageData(this.current_image.width, this.current_image.height);
-        maxImageData.data.set(max.pixels);
-        let minImageData = c.createImageData(this.current_image.width, this.current_image.height);
-        minImageData.data.set(min.pixels);
-        let meanImageData = c.createImageData(this.current_image.width, this.current_image.height);
-        meanImageData.data.set(mean.pixels);
-        c.putImageData(maxImageData, 0, 0);
-        c.putImageData(meanImageData, this.current_image.width, 0);
-        c.putImageData(minImageData, this.current_image.width * 2, 0);
-        let stream = canvas.pngStream();
-        let out = fs.createWriteStream(name);
-        stream.on('data', (chunk) => out.write(chunk));
-        stream.on('end', () => winston.log('info', 'png written: ' + name));
+        return __awaiter(this, void 0, void 0, function* () {
+            let canvas = new Canvas();
+            let c = canvas.getContext('2d');
+            winston.log('debug', 'Setting canvas dim');
+            canvas.width = this.current_image.width * 3;
+            canvas.height = this.current_image.height;
+            let maxImageData = c.createImageData(this.current_image.width, this.current_image.height);
+            maxImageData.data.set(max.pixels);
+            let minImageData = c.createImageData(this.current_image.width, this.current_image.height);
+            minImageData.data.set(min.pixels);
+            let meanImageData = c.createImageData(this.current_image.width, this.current_image.height);
+            meanImageData.data.set(mean.pixels);
+            c.putImageData(maxImageData, 0, 0);
+            c.putImageData(meanImageData, this.current_image.width, 0);
+            c.putImageData(minImageData, this.current_image.width * 2, 0);
+            yield new Promise((accept, reject) => {
+                let stream = canvas.pngStream();
+                let out = fs.createWriteStream(name, { autoClose: true });
+                stream.on('data', (chunk) => out.write(chunk));
+                stream.on('end', () => { out.end(); });
+                out.on('finish', () => { accept(); });
+            });
+        });
     }
     main(iec) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('IEC: ' + iec);
             let url = API_URL + '/iec_info/' + iec;
             let detail_url = API_URL + '/details/';
             return new Promise((accept, reject) => {
                 rp(url).then((body) => {
                     let json_body = JSON.parse(body);
                     let file_ids = json_body.file_ids;
-                    // console.log(json_body);
                     winston.log('info', 'Images in this IEC: ' + file_ids.length);
                     images_to_get += file_ids.length;
                     bar.total = images_to_get;
@@ -219,7 +224,7 @@ class K {
                     Promise.all(promises).then((data) => __awaiter(this, void 0, void 0, function* () {
                         winston.log('debug', 'All files downloaded, writing pngs');
                         let filename = 'out_' + iec + '.png';
-                        this.writePng(this.maximum_projection, this.minimum_projection, this.mean_projection, filename);
+                        yield this.writePng(this.maximum_projection, this.minimum_projection, this.mean_projection, filename);
                         yield finish_1.finishImage(this.db, filename, iec);
                         accept();
                     }));
