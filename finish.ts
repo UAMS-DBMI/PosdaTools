@@ -2,7 +2,7 @@ const md5File = require('md5-file');
 const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
-const pg = require('pg-native');
+const pg = require('pg-promise')();
 
 const DIR = 'dicom';
 
@@ -36,13 +36,10 @@ function placeFileAndGetMd5(filename: string, root: string) {
 }
 
 
-export function finishImage(filename: string, iec: number) {
+export async function finishImage(client: any, filename: string, iec: number) {
   let details = placeFileAndGetMd5(filename, DIR);
 
-  let client = new pg();
-  client.connectSync('postgres://tcia-utilities/N_posda_files');
-
-  let rows = client.querySync(`
+  let rows = await client.query(`
     insert into file
     (digest, size, is_dicom_file, file_type,
      processing_priority, ready_to_process)
@@ -53,20 +50,22 @@ export function finishImage(filename: string, iec: number) {
 
   let new_file_id = rows[0].file_id;
 
-  client.querySync(
+  await client.query(
     "insert into file_location values ($1, $2, $3, $4)",
     [new_file_id, 1, details.rel_path, null]
   );
 
-  client.querySync(
+  await client.query(
     "insert into image_equivalence_class_out_image values ($1, $2, $3)",
     [iec, 'combined', new_file_id]
   );
 
-  client.querySync(
+  await client.query(
     "update image_equivalence_class set processing_status = 'QTest2' where image_equivalence_class_id = $1",
     [iec]
   );
 
   console.log(new_file_id);
 }
+
+// finishImage('test.png', 999);

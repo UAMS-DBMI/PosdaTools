@@ -1,5 +1,5 @@
 const rp = require('request-promise-native');
-const pg = require('pg-native');
+const pg = require('pg-promise')();
 const Canvas = require('canvas');
 const fs = require('fs');
 const winston = require('winston');
@@ -263,7 +263,7 @@ class K {
     stream.on('end', () => winston.log('info', 'png written: ' + name));
   }
 
-  main(iec: number): Promise<any> {
+  async main(iec: number): Promise<any> {
     let url = API_URL + '/iec_info/' + iec;
     let detail_url = API_URL + '/details/';
 
@@ -285,13 +285,13 @@ class K {
           return limit(() => this.getAnImage(id));
         }, this);
 
-        Promise.all(promises).then((data) => {
+        Promise.all(promises).then(async (data) => {
           winston.log('debug', 'All files downloaded, writing pngs');
           let filename = 'out_' + iec + '.png';
           this.writePng(this.maximum_projection, this.minimum_projection,
             this.mean_projection,
             filename);
-            finishImage(filename, iec);
+            await finishImage(this.db, filename, iec);
             accept();
         });
       });
@@ -326,10 +326,9 @@ class K {
 // let k = new K();
 // k.main(2372);
 
-let client = new pg();
-client.connectSync('postgres://tcia-utilities/N_posda_files');
+let client = pg('postgres://tcia-utilities/N_posda_files');
 
-function doOne() {
+async function doOne() {
   let query = `
     update image_equivalence_class i
     set processing_status = 'in-progress'
@@ -342,7 +341,7 @@ function doOne() {
     returning i.*
   `;
 
-  let result = client.querySync(query);
+  let result = await client.query(query);
 
   if (result.length < 1) {
     console.log('No work to do, sleeping for 5 seconds...');
@@ -353,7 +352,7 @@ function doOne() {
   let jobs = result.map((element: any) => {
     return (new K(client)).main(element.image_equivalence_class_id);
   });
-  Promise.all(jobs).then(() => client.end());
+  Promise.all(jobs).then(() => pg.end());
 }
 
 doOne();
