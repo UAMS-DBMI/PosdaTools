@@ -12,6 +12,10 @@ import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
 import { NavComponent } from './nav/nav.component';
 import { BusyModule } from 'angular2-busy';
+import { ProjectSelectComponent } from './project-select/project-select.component';
+import { ProjectionComponent } from './projection/projection.component';
+import { NavControlComponent } from './nav-control/nav-control.component';
+import { MarkControlComponent } from './mark-control/mark-control.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,11 @@ import { BusyModule } from 'angular2-busy';
     ModeSelectComponent,
     SeriesComponent,
     ErrorComponent,
-    NavComponent
+    NavComponent,
+    ProjectSelectComponent,
+    ProjectionComponent,
+    NavControlComponent,
+    MarkControlComponent
   ],
   imports: [
     BrowserModule,
