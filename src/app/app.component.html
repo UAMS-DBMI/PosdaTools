@@ -1,5 +1,5 @@
 <app-nav
-  (onNavigation)="navigate($event)"
+  (onNavigation)="onNavigation($event)"
   [mode]="mode"
   [project]="project"
 ></app-nav>
@@ -7,7 +7,6 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-
       <app-error></app-error>
 
       <app-mode-select
@@ -22,57 +21,6 @@
          [project]="project"
          [mode]="mode"
         ></app-nav-control>
-
-
-    <!-- <div *ngIf="!loggedOut"> -->
-
-    <!--   <app-error></app-error> -->
-
-    <!--   <div *ngIf="initialized"> -->
-    <!--     <p>IECs reviewed so far this session: {{currentIecOffset}}</p> -->
-
-    <!--     <p> -->
-    <!--       <button class="btn btn-success" --> 
-    <!--               (click)="markGood()" --> 
-    <!--               >Good</button> -->
-    <!--       <button class="btn btn-danger" -->
-    <!--               (click)="markBad()" --> 
-    <!--               >Bad</button> -->
-    <!--       <button class="btn btn-warning" -->
-    <!--               (click)="markUgly()" --> 
-    <!--               >Ugly</button> -->
-    <!--     </p> -->
-
-    <!--     <p> -->
-    <!--       <button class="btn btn-primary" --> 
-    <!--               (click)="moveBackward()"> -->
-    <!--         Go Back -->
-    <!--       </button> -->
-    <!--       <button class="btn btn-primary" --> 
-    <!--               [disabled]="disableButtons()" -->
-    <!--               (click)="moveForward()"> -->
-    <!--         Skip Forward -->
-    <!--       </button> -->
-    <!--     </p> -->
-    <!--   </div> -->
-
-    <!--   <div [ngBusy]="busy"></div> -->
-    <!--   <app-mode-select -->
-    <!--     *ngIf="!initialized" --> 
-    <!--     (onProjectChosen)="choose($event)"> -->
-    <!--   </app-mode-select> -->
-
-    <!--   <app-projection -->
-    <!--     [iec]="currentIec" --> 
-    <!--     *ngIf="initialized"> -->
-    <!--   </app-projection> -->
-
-    <!-- </div> -->
-    <!-- <div *ngIf="loggedOut"> -->
-    <!--     <p class="alert alert-danger"> -->
-    <!--         You are not logged in! -->
-    <!--     </p> -->
-    <!-- </div> -->
+    </div>
   </div>
-</div>
 </div>

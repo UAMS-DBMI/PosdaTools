@@ -19,20 +19,14 @@ export class AppComponent {
 
 
   // mostly old stuff below here
-  iecList: EquivalenceClassMap[];
-  currentIecOffset: number;
   loggedOut: boolean = false;
-  currentIec: number;
-  public endOfData: boolean = false;
 
   public busy: Subscription;
 
   constructor(
     private service: SeriesService,
     private errorS: ErrorService,
-  ) {
-    this.currentIecOffset = 0;
-  }
+  ) { }
 
   ngOnInit() {
     this.attemptLogin(window.location.search);
@@ -57,58 +51,9 @@ export class AppComponent {
     }
   }
 
-
-  getCurrentIec(offset: number = 0): number {
-    if (this.currentIecOffset > this.iecList.length - 1) {
-      return -1;
-    }
-    return this.iecList[this.currentIecOffset].image_equivalence_class_id;
-  }
-
-  moveBackward() {
-    if (this.currentIecOffset > 0) {
-      this.currentIecOffset -= 1;
-      // this.updateDisplay(this.getCurrentIec());
-    }
-  }
-  fetchMoreData() {
-    var currentIec: number = this.getCurrentIec();
-
-    this.busy = this.service.getAllUnreviewed(this.iecList.length).subscribe(
-      newList => {
-        this.iecList = this.iecList.concat(newList);
-        if (newList.length == 0) {
-          this.endOfData = true;
-        }
-      },
-      error => this.handleError(error)
-    );
-
-  }
-  moveForward() {
-    // load the next IEC into the viewer component
-
-    this.currentIecOffset += 1;
-    var currentIec: number = this.getCurrentIec();
-
-    if (currentIec == -1) {
-      this.endOfData = true;
-      return;
-    }
-
-    if (this.currentIecOffset >= this.iecList.length - 1) {
-      this.fetchMoreData();
-    }
-
-    // this.updateDisplay(currentIec);
-  }
-
-
-  // --------------------- new / keep -----------------
-  
   // TODO: rename this to onNavigation?
-  navigate(where: string): void {
-    console.log("navigate() called");
+  onNavigation(where: string): void {
+    console.log("onNavigation() called");
     if (where == "home") {
       this.project = undefined;
       this.mode = undefined;
@@ -118,12 +63,9 @@ export class AppComponent {
   onModeChosen(mode: string) {
     console.log('from app.component, mode chosen: ', mode);
     this.mode = mode;
-    // TODO: update nav-bar's known mode; actually just make nav-bar take mode as an input
   }
 
   onProjectChosen(project: Project) {
-    // TODO: update nav-bar's known project, make nav-bar take project as an input
-
     console.log('from app.component, project chosen: ', project);
 
     this.project = project;
