@@ -57,7 +57,7 @@ export async function finishImage(client: any, filename: string, iec: number) {
 
   await client.query(
     "insert into file_location values ($1, $2, $3, $4)",
-    [new_file_id, 1, details.rel_path, null]
+    [new_file_id, 2, details.rel_path, null]
   );
 
   await client.query(
@@ -66,7 +66,7 @@ export async function finishImage(client: any, filename: string, iec: number) {
   );
 
   await client.query(
-    "update image_equivalence_class set processing_status = 'QTest2' where image_equivalence_class_id = $1",
+    "update image_equivalence_class set processing_status = 'ReadyToReview' where image_equivalence_class_id = $1",
     [iec]
   );
 

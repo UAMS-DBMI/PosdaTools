@@ -11,3 +11,6 @@ build:
 
 open:
 	chromium *.png
+
+run_forever:
+	while true; do node index.js; done

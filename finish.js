@@ -52,9 +52,9 @@ function finishImage(client, filename, iec) {
     returning file_id
   `, [details.hash, details.size, false, 'series projection', 1, true]);
         let new_file_id = rows[0].file_id;
-        yield client.query("insert into file_location values ($1, $2, $3, $4)", [new_file_id, 1, details.rel_path, null]);
+        yield client.query("insert into file_location values ($1, $2, $3, $4)", [new_file_id, 2, details.rel_path, null]);
         yield client.query("insert into image_equivalence_class_out_image values ($1, $2, $3)", [iec, 'combined', new_file_id]);
-        yield client.query("update image_equivalence_class set processing_status = 'QTest2' where image_equivalence_class_id = $1", [iec]);
+        yield client.query("update image_equivalence_class set processing_status = 'ReadyToReview' where image_equivalence_class_id = $1", [iec]);
         console.log(new_file_id);
     });
 }
