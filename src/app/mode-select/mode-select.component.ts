@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 
-import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
 import { Project } from '../project';
 import { ErrorService } from '../errors';
 
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mode-select',
@@ -14,32 +12,17 @@ import { Subscription } from 'rxjs';
 })
 export class ModeSelectComponent implements OnInit {
   @Output() onProjectChosen = new EventEmitter<Project>();
-  projectList: Object[];
+  @Output() onModeChosen = new EventEmitter<string>();
   public mode: string;
-  public busy: Subscription;
 
   constructor(
-    private service: SeriesService,
     private errorS: ErrorService,
   ) { }
 
-  ngOnInit() {
-    // get the list of possible projects
-  }
+  ngOnInit() { }
 
   public setMode(mode: string): void {
     this.mode = mode;
-    console.log("Setting mode: ", mode);
-    this.service.mode = mode;
-    this.busy = this.service.getAvailableProjects(mode).subscribe(
-        items => this.projectList = items,
-        error => this.errorS.announceError("Server Error", "Logged out?", 2)
-    );
+    this.onModeChosen.emit(mode);
   }
-
-  choose(a: Project): void {
-    console.log(a);
-    this.onProjectChosen.emit(a);
-  }
-
 }

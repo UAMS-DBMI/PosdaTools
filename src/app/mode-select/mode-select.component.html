@@ -1,4 +1,3 @@
-<div [ngBusy]="busy"></div>
 <p>Select operating mode</p>
 <button class="btn btn-outline-primary"
     [class.active]="mode == 'unreviewed'"
@@ -16,13 +15,5 @@
     [class.active]="mode == 'ugly'"
     (click)="setMode('ugly')"
     >Ugly</button>
-<div *ngIf="projectList">
-    <p>
-      Select a Project/Site from the list below.
-    </p>
-  <li *ngFor="let a of projectList">
-    <a (click)="choose(a)" href="javascript:void(0)">
-      {{a.project_name}} - {{a.site_name}} ({{a.count}})
-    </a>
-  </li>
-</div>
+
+<app-project-select [mode]="mode" (onProjectChosen)="onProjectChosen.emit($event)"></app-project-select>

@@ -1,65 +1,78 @@
 <app-nav
-  (onNavigation)="navigate($event)">
-</app-nav>
+  (onNavigation)="navigate($event)"
+  [mode]="mode"
+  [project]="project"
+></app-nav>
 
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-    <div *ngIf="!loggedOut">
 
       <app-error></app-error>
 
-      <div *ngIf="initialized">
-        <p>IECs reviewed so far this session: {{currentIecOffset}}</p>
-
-        <p>
-          <button class="btn btn-success" 
-                  (click)="markGood()" 
-                  >Good</button>
-          <button class="btn btn-danger"
-                  (click)="markBad()" 
-                  >Bad</button>
-          <button class="btn btn-warning"
-                  (click)="markUgly()" 
-                  >Ugly</button>
-        </p>
-
-        <p>
-          <button class="btn btn-primary" 
-                  (click)="moveBackward()">
-            Go Back
-          </button>
-          <button class="btn btn-primary" 
-                  [disabled]="disableButtons()"
-                  (click)="moveForward()">
-            Skip Forward
-          </button>
-        </p>
-      </div>
-
-      <div [ngBusy]="busy"></div>
       <app-mode-select
-        *ngIf="!initialized" 
-        (onProjectChosen)="choose($event)">
+        *ngIf="!project"
+        (onProjectChosen)="onProjectChosen($event)"
+        (onModeChosen)="onModeChosen($event)"
+        >
       </app-mode-select>
 
-      <app-series
-        [iec]="currentIec" 
-        *ngIf="initialized">
-      </app-series>
+      <app-nav-control
+         *ngIf="project"
+         [project]="project"
+         [mode]="mode"
+        ></app-nav-control>
 
-      <!-- <p *ngIf="initialized"> -->
-      <!--   <button class="btn btn-secondary" --> 
-      <!--           (click)="printAll()"> -->
-      <!--     Print debug info -->
-      <!--   </button> -->
-      <!-- </p> -->
-    </div>
-    <div *ngIf="loggedOut">
-        <p class="alert alert-danger">
-            You are not logged in!
-        </p>
-    </div>
+
+    <!-- <div *ngIf="!loggedOut"> -->
+
+    <!--   <app-error></app-error> -->
+
+    <!--   <div *ngIf="initialized"> -->
+    <!--     <p>IECs reviewed so far this session: {{currentIecOffset}}</p> -->
+
+    <!--     <p> -->
+    <!--       <button class="btn btn-success" --> 
+    <!--               (click)="markGood()" --> 
+    <!--               >Good</button> -->
+    <!--       <button class="btn btn-danger" -->
+    <!--               (click)="markBad()" --> 
+    <!--               >Bad</button> -->
+    <!--       <button class="btn btn-warning" -->
+    <!--               (click)="markUgly()" --> 
+    <!--               >Ugly</button> -->
+    <!--     </p> -->
+
+    <!--     <p> -->
+    <!--       <button class="btn btn-primary" --> 
+    <!--               (click)="moveBackward()"> -->
+    <!--         Go Back -->
+    <!--       </button> -->
+    <!--       <button class="btn btn-primary" --> 
+    <!--               [disabled]="disableButtons()" -->
+    <!--               (click)="moveForward()"> -->
+    <!--         Skip Forward -->
+    <!--       </button> -->
+    <!--     </p> -->
+    <!--   </div> -->
+
+    <!--   <div [ngBusy]="busy"></div> -->
+    <!--   <app-mode-select -->
+    <!--     *ngIf="!initialized" --> 
+    <!--     (onProjectChosen)="choose($event)"> -->
+    <!--   </app-mode-select> -->
+
+    <!--   <app-projection -->
+    <!--     [iec]="currentIec" --> 
+    <!--     *ngIf="initialized"> -->
+    <!--   </app-projection> -->
+
+    <!-- </div> -->
+    <!-- <div *ngIf="loggedOut"> -->
+    <!--     <p class="alert alert-danger"> -->
+    <!--         You are not logged in! -->
+    <!--     </p> -->
+    <!-- </div> -->
   </div>
 </div>
 </div>

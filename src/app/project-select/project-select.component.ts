@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+
+import { SeriesService } from '../series.service';
+import { EquivalenceClassMap } from '../equivalence-class-map';
+import { Project } from '../project';
+import { ErrorService } from '../errors';
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-project-select',
@@ -6,10 +13,33 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./project-select.component.css']
 })
 export class ProjectSelectComponent implements OnInit {
+  @Input() public mode: string;
+  @Output() onProjectChosen = new EventEmitter<Project>();
 
-  constructor() { }
+  projectList: Project[];
+  public busy: Subscription;
+
+  constructor(
+    private service: SeriesService,
+    private errorS: ErrorService,
+  ) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+    this.service.mode = this.mode;
+    if (this.mode !== undefined) {
+      this.busy = this.service.getAvailableProjects(this.mode).subscribe(
+          items => this.projectList = items,
+          error => this.errorS.announceError("Server Error", "Logged out?", 2)
+      );
+    }
+  }
+
+  choose(a: Project): void {
+    // console.log(a);
+    this.onProjectChosen.emit(a);
   }
 
 }

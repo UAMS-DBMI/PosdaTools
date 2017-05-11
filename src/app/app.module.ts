@@ -7,10 +7,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { ModeSelectComponent } from './mode-select/mode-select.component';
-import { SeriesComponent} from './series/series.component';
+// import { SeriesComponent} from './series/series.component';
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
-import { NavComponent } from './nav/nav.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { BusyModule } from 'angular2-busy';
 import { ProjectSelectComponent } from './project-select/project-select.component';
 import { ProjectionComponent } from './projection/projection.component';
@@ -21,9 +21,8 @@ import { MarkControlComponent } from './mark-control/mark-control.component';
   declarations: [
     AppComponent,
     ModeSelectComponent,
-    SeriesComponent,
     ErrorComponent,
-    NavComponent,
+    NavBarComponent,
     ProjectSelectComponent,
     ProjectionComponent,
     NavControlComponent,
@@ -35,7 +34,6 @@ import { MarkControlComponent } from './mark-control/mark-control.component';
     HttpModule,
     BusyModule,
     BrowserAnimationsModule
-  // RouterModule.forRoot(appRoutes)
   ],
   providers: [SeriesService, ErrorService],
   bootstrap: [AppComponent]

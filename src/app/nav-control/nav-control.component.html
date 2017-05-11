@@ -1,3 +1,20 @@
 <p>
-  nav-control works!
+  <button class="btn btn-primary" 
+          (click)="moveBackward()">
+    Go Back
+  </button>
+  <button class="btn btn-primary" 
+          (click)="moveForward()">
+    Skip Forward
+  </button>
 </p>
+
+<app-mark-control
+  *ngIf="iec"
+  [iec]="iec.image_equivalence_class_id"
+  (onMark)="onMark($event)"
+></app-mark-control>
+<app-projection
+  *ngIf="iec"
+  [series]="iec"
+></app-projection>

@@ -14,12 +14,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  testSeries: EquivalenceClassMap[];
+  mode: string;
+  project: Project;
+
+
+  // mostly old stuff below here
   iecList: EquivalenceClassMap[];
   currentIecOffset: number;
-  initialized: boolean;
   loggedOut: boolean = false;
-  projectList: Project[];
   currentIec: number;
   public endOfData: boolean = false;
 
@@ -28,44 +30,12 @@ export class AppComponent {
   constructor(
     private service: SeriesService,
     private errorS: ErrorService,
-    // private route: ActivatedRoute,
-    // private router: Router,
   ) {
     this.currentIecOffset = 0;
-    this.initialized = false;
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (!this.initialized) {
-      return;
-    }
-
-    if (event.key == '1' || event.key == 'g') {
-      this.markGood();
-    }
-    if (event.key == '2' || event.key == 'b') {
-      this.markBad();
-    }
-    if (event.key == '3' || event.key == 'u') {
-      this.markUgly();
-    }
-    if (event.key == 'ArrowRight') {
-      this.moveForward();
-    }
-    if (event.key == 'ArrowLeft') {
-      this.moveBackward();
-    }
-
   }
 
   ngOnInit() {
     this.attemptLogin(window.location.search);
-
-    this.service.getAvailableProjects("good").subscribe(
-        items => this.projectList = items,
-        error => this.handleError(error)
-    );
   }
 
   private handleError(error) {
@@ -87,25 +57,6 @@ export class AppComponent {
     }
   }
 
-  choose(a: Project) {
-    // console.log(a);
-    this.service.selectedProject = a;
-    // load images and route to series-component
-    this.busy = this.service.getAllUnreviewed().subscribe(
-        things => {
-            this.iecList = things;
-            this.initialized = true;
-            this.updateDisplay(this.getCurrentIec());
-            this.endOfData = false;
-        }, error => this.handleError(error));
-  }
-
-  reset() {
-    console.log("resetting");
-    this.initialized = false;
-    this.iecList = null;
-    this.currentIecOffset = 0;
-  }
 
   getCurrentIec(offset: number = 0): number {
     if (this.currentIecOffset > this.iecList.length - 1) {
@@ -114,31 +65,10 @@ export class AppComponent {
     return this.iecList[this.currentIecOffset].image_equivalence_class_id;
   }
 
-  markGood() {
-    this.service.markGood(this.getCurrentIec()).subscribe(
-      resp => console.log("marked good confirmed"),
-      error => this.handleError(error)
-    );
-    this.moveForward();
-  }
-  markBad() {
-    this.service.markBad(this.getCurrentIec()).subscribe(
-      resp => console.log("marked bad confirmed"),
-      error => this.handleError(error)
-    );
-    this.moveForward();
-  }
-  markUgly() {
-    this.service.markUgly(this.getCurrentIec()).subscribe(
-      resp => console.log("marked ugly confirmed"),
-      error => this.handleError(error)
-    );
-    this.moveForward();
-  }
   moveBackward() {
     if (this.currentIecOffset > 0) {
       this.currentIecOffset -= 1;
-      this.updateDisplay(this.getCurrentIec());
+      // this.updateDisplay(this.getCurrentIec());
     }
   }
   fetchMoreData() {
@@ -170,44 +100,34 @@ export class AppComponent {
       this.fetchMoreData();
     }
 
-    this.updateDisplay(currentIec);
+    // this.updateDisplay(currentIec);
   }
 
-  updateDisplay(currentIec: number) {
-    this.debugPrint();
-    this.currentIec = currentIec;
-  }
 
-  debugPrint() {
-    console.log("Current iecList Length: ", this.iecList.length);
-    console.log("Current offset: ", this.currentIecOffset);
-  }
-
-  disableButtons(): boolean {
-    if (!this.iecList) {
-      return true;
-    }
-
-    if (this.endOfData && this.currentIecOffset >= this.iecList.length-1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  printAll() {
-    this.errorS.announceError("Test error", "There is an error", 2);  
-    this.errorS.announceError("Test error", "This is another error", 1);  
-    console.log("Currently loaded IECs are as follows:");
-    for (let s of this.iecList) {
-      console.log(s.image_equivalence_class_id);
-    }
-  }
-
-  navigate(where: String): void {
+  // --------------------- new / keep -----------------
+  
+  // TODO: rename this to onNavigation?
+  navigate(where: string): void {
     console.log("navigate() called");
     if (where == "home") {
-      this.reset();
+      this.project = undefined;
+      this.mode = undefined;
     }
+  }
+
+  onModeChosen(mode: string) {
+    console.log('from app.component, mode chosen: ', mode);
+    this.mode = mode;
+    // TODO: update nav-bar's known mode; actually just make nav-bar take mode as an input
+  }
+
+  onProjectChosen(project: Project) {
+    // TODO: update nav-bar's known project, make nav-bar take project as an input
+
+    console.log('from app.component, project chosen: ', project);
+
+    this.project = project;
+    this.service.selectedProject = project;
   }
 
 }

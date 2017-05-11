@@ -16,5 +16,13 @@
       <!--   <a class="nav-link disabled" href="#">Disabled</a> -->
       <!-- </li> -->
     </ul>
+    <ul class="navbar-nav mr-auto">
+      <li *ngIf="mode" class="nav-item active">
+        <p>Mode: {{mode}}</p>
+      </li>
+      <li *ngIf="project" class="nav-item active">
+        <p>Project: {{project.project_name}} / {{project.site_name}}</p>
+      </li>
+    </ul>
   </div>
 </nav>

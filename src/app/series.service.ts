@@ -35,7 +35,7 @@ export class SeriesService {
     localStorage.setItem('token', token);
   }
 
-  getSeries(iec: number): Observable<any> {
+  getSeries(iec: number): Observable<EquivalenceClassMap> {
       let params: URLSearchParams = new URLSearchParams();
       params.set("token", this.token);
       this.options.search = params;
@@ -56,6 +56,26 @@ export class SeriesService {
 
       return this.http.get(url, this.options).map(res => res.json());
   }
+
+  getNextUnreviewed(after: EquivalenceClassMap): Observable<EquivalenceClassMap> {
+      let offset: number = 0;
+      if (after !== undefined) {
+        offset = after.image_equivalence_class_id;
+      }
+
+      let params: URLSearchParams = new URLSearchParams();
+      params.set("project", this.selectedProject.project_name);
+      params.set("site", this.selectedProject.site_name);
+      params.set("offset", String(offset));
+      params.set("token", this.token);
+      this.options.search = params;
+
+      let url = this.url + '/set/' + this.mode;
+
+      return this.http.get(url, this.options).map(res => res.json());
+  }
+
+
 
   getAvailableProjects(type: string): Observable<any> {
       let params: URLSearchParams = new URLSearchParams();

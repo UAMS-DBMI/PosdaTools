@@ -1,0 +1,6 @@
+img {
+    min-width: 100%;
+    max-width: 100%;
+    background-image: url('/assets/checker.svg');
+    background-size: 40px 40px;
+}

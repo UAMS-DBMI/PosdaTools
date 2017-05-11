@@ -199,7 +199,18 @@ select
   review_status,
   projection_type,
   image_equivalence_class_out_image.file_id,
-  root_path || '/' || rel_path as path
+  root_path || '/' || rel_path as path,
+            (select count(file_id)
+             from image_equivalence_class_input_image i
+             where i.image_equivalence_class_id = 
+                   image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+             (select patient_name 
+              from file_patient 
+              natural join file_series 
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
 from (
   /* 
     Acquire the project_name and site_name associated with each IEC
@@ -234,6 +245,7 @@ from (
   from image_equivalence_class iec
 
   where processing_status = 'ReadyToReview' 
+  order by image_equivalence_class_id
 ) iecs
 natural join image_equivalence_class
 natural join image_equivalence_class_out_image
@@ -241,10 +253,10 @@ natural join file_location
 natural join file_storage_root
 
 where 1 = 1
+  and image_equivalence_class_id > $1
 {where_text}
 
-offset $1
-limit 10
+limit 1
     """
 
     conn = await pool.acquire()
@@ -280,7 +292,18 @@ select
   review_status,
   projection_type,
   image_equivalence_class_out_image.file_id,
-  root_path || '/' || rel_path as path
+  root_path || '/' || rel_path as path,
+            (select count(file_id)
+             from image_equivalence_class_input_image i
+             where i.image_equivalence_class_id = 
+                   image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+             (select patient_name 
+              from file_patient 
+              natural join file_series 
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
 from (
   /* 
     Acquire the project_name and site_name associated with each IEC
@@ -316,6 +339,7 @@ from (
 
   where processing_status = 'Reviewed' 
     and review_status = '{state}'
+  order by image_equivalence_class_id
 ) iecs
 natural join image_equivalence_class
 natural join image_equivalence_class_out_image
@@ -323,10 +347,10 @@ natural join file_location
 natural join file_storage_root
 
 where 1 = 1
+  and image_equivalence_class_id > $1
 {where_text}
 
-offset $1
-limit 10
+limit 1
     """
 
     # print(query)
@@ -369,6 +393,7 @@ def slash_test(request):
 @app.middleware('request')
 async def login_check(request):
     if DEBUG:
+        request.headers["user"] = User('quasarj')
         return None
     logging.debug(f"### {request.url}?{request.query_string}")
     if 'new_token' in request.url:
