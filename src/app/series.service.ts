@@ -87,23 +87,10 @@ export class SeriesService {
       .map(res => res.json());
   }
 
-  private mark(iec: number, state: string): Observable<any> {
+  mark(iec: number, state: string): Observable<any> {
     console.log("SeriesService.mark()");
     let url = this.url + '/save';
     return this.http.post(url, { iec, state, 'token': this.token })
       .map(res => res.json());
   }
-
-  public markGood(iec: number): Observable<any> {
-    return this.mark(iec, "good");
-  }
-
-  public markBad(iec: number): Observable<any> {
-    return this.mark(iec, "bad");
-  }
-
-  public markUgly(iec: number): Observable<any> {
-    return this.mark(iec, "broken");
-  }
-
 }

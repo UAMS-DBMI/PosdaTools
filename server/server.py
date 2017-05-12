@@ -103,7 +103,9 @@ async def get_projects(request, state):
         'unreviewed': ('ReadyToReview', ""),
         'good':       ('Reviewed', "and review_status='Good'"),
         'bad':        ('Reviewed', "and review_status='Bad'"),
-        'ugly':       ('Reviewed', "and review_status='Broken'"),
+        'blank':       ('Reviewed', "and review_status='Blank'"),
+        'scout':       ('Reviewed', "and review_status='Scout'"),
+        'other':       ('Reviewed', "and review_status='Other'"),
     }[state.lower()]
 
     query = f"""
@@ -171,7 +173,9 @@ async def get_set(request, state):
         'unreviewed': get_unreviewed_data,
         'good': get_good_data,
         'bad': get_bad_data,
-        'ugly': get_ugly_data,
+        'blank': get_blank_data,
+        'scout': get_scout_data,
+        'other': get_other_data,
     }[state.lower()]
 
     logging.debug(f"handler chosen: {handler}")
@@ -271,8 +275,12 @@ async def get_good_data(after, collection, site):
 async def get_bad_data(after, collection, site):
     return await get_reviewed_data('Bad', after, collection, site)
 
-async def get_ugly_data(after, collection, site):
-    return await get_reviewed_data('Broken', after, collection, site)
+async def get_blank_data(after, collection, site):
+    return await get_reviewed_data('Blank', after, collection, site)
+async def get_scout_data(after, collection, site):
+    return await get_reviewed_data('Scout', after, collection, site)
+async def get_other_data(after, collection, site):
+    return await get_reviewed_data('Other', after, collection, site)
 
 async def get_reviewed_data(state, after, collection, site):
     where_text = ""

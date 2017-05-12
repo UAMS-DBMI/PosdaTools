@@ -1,11 +1,17 @@
 <p>
   <button class="btn btn-success" 
-          (click)="markGood()" 
+          (click)="mark('good')" 
           >Good</button>
   <button class="btn btn-danger"
-          (click)="markBad()" 
+          (click)="mark('bad')" 
           >Bad</button>
   <button class="btn btn-warning"
-          (click)="markUgly()" 
-          >Ugly</button>
+          (click)="mark('blank')" 
+          >Blank</button>
+  <button class="btn btn-warning"
+          (click)="mark('scout')" 
+          >Scout</button>
+  <button class="btn btn-warning"
+          (click)="mark('other')" 
+          >Other</button>
 </p>

@@ -12,8 +12,16 @@
     (click)="setMode('bad')"
     >Bad</button>
 <button class="btn btn-outline-warning"
-    [class.active]="mode == 'ugly'"
-    (click)="setMode('ugly')"
-    >Ugly</button>
+    [class.active]="mode == 'blank'"
+    (click)="setMode('blank')"
+    >Blank</button>
+<button class="btn btn-outline-warning"
+    [class.active]="mode == 'scout'"
+    (click)="setMode('scout')"
+    >Scout</button>
+<button class="btn btn-outline-warning"
+    [class.active]="mode == 'other'"
+    (click)="setMode('other')"
+    >Other</button>
 
 <app-project-select [mode]="mode" (onProjectChosen)="onProjectChosen.emit($event)"></app-project-select>

@@ -21,24 +21,9 @@ export class MarkControlComponent implements OnInit {
   ngOnInit() {
   }
 
-  markGood() {
-    this.service.markGood(this.iec).subscribe(
-      resp => console.log("marked good confirmed"),
-      error => this.handleError(error)
-    );
-    this.onMark.emit();
-  }
-
-  markBad() {
-    this.service.markBad(this.iec).subscribe(
-      resp => console.log("marked bad confirmed"),
-      error => this.handleError(error)
-    );
-    this.onMark.emit();
-  }
-  markUgly() {
-    this.service.markUgly(this.iec).subscribe(
-      resp => console.log("marked ugly confirmed"),
+  mark(state: string) {
+    this.service.mark(this.iec, state).subscribe(
+      resp => console.log("marked " + state + " confirmed"),
       error => this.handleError(error)
     );
     this.onMark.emit();
@@ -51,13 +36,19 @@ export class MarkControlComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key == '1' || event.key == 'g') {
-      this.markGood();
+      this.mark('good');
     }
     if (event.key == '2' || event.key == 'b') {
-      this.markBad();
+      this.mark('bad');
     }
-    if (event.key == '3' || event.key == 'u') {
-      this.markUgly();
+    if (event.key == '3' || event.key == 'l') {
+      this.mark('blank');
+    }
+    if (event.key == '4' || event.key == 's') {
+      this.mark('scout');
+    }
+    if (event.key == '3' || event.key == 'o') {
+      this.mark('other');
     }
   }
 }
