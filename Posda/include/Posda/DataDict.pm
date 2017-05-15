@@ -33535,7 +33535,7 @@ my $PvtDict = {
         "Name" => "Edge Enhancement Weight",
       },
       "12" => {
-        "VM" => "1",
+        "VM" => "2",
         "VR" => "DS",
         "ele" => "0c",
         "group" => "01f1",

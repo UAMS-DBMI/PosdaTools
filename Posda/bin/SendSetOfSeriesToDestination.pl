@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 my $usage = <<EOF;
-SendSetOfSeriesToDestination.pl <dicom_host> <port> <called> <calling> <who> <wjy>
+SendSetOfSeriesToDestination.pl <dicom_host> <port> <called> <calling> <who> <why>
   expects list of series on stdin
 EOF
 unless($#ARGV == 5) { die $usage }

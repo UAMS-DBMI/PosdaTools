@@ -18,6 +18,6 @@ my $resp = decode_json($client->responseContent());
 my $token = $resp->{token};
 
 
-print "Redirect to http://tcia-utilities/?token=$token\n";
+print "Redirect to http://tcia-utilities/k/?token=$token\n";
 
 sleep 20;

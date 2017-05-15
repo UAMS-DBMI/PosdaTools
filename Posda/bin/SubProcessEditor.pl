@@ -89,12 +89,20 @@ if($#ARGV == 0 && ($ARGV[0] eq "-h")){
 my $results = {};
 sub Error{
   my($message, $addl) = @_;
+print STDERR "#################\n" .
+  "Error: $message\n" .
+  "#################\n";
   $results->{Status} = "Error";
   $results->{message} = $message;
   if($addl){ $results->{additional_info} = $addl }
   store_fd($results, \*STDOUT);
   exit;
 }
+my $buff;
+#my $count = sysread(STDIN, $buff, 65535);
+#unless(defined $count) { print STDERR "Child read error: $!\n" }
+#print STDERR "read $count bytes\n";
+#exit;
 my $edits = fd_retrieve(\*STDIN);
 unless(exists $edits->{from_file}){ Error("No from_file in edits") }
 unless(-f $edits->{from_file}){ Error("file not found: $edits->{from_file}") }

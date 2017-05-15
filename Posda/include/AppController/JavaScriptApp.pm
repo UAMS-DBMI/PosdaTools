@@ -287,6 +287,7 @@ EOF
     if($dyn->{mode} eq "dicom_receiver"){
       unless($this->{ReceiverNotifications}){
         my $obj = $this->{StaticObjs}->{DicomReceiver};
+        if(ref($obj) eq "HASH") { $obj = undef }
         if($obj && $obj->can("NotificationRegistration")){
           $this->{ReceiverNotifications} = 1;
           $obj->NotificationRegistration($this->ReceiverNotification);
