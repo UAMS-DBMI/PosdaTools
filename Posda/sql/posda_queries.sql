@@ -2,148 +2,47 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.5.7
-
 SET statement_timeout = 0;
-SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
-SET row_security = off;
 
---
--- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA db_version;
-
-
-SET search_path = db_version, pg_catalog;
+SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: version; Type: TABLE; Schema: db_version; Owner: -
+-- Name: queries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE version (
-    version integer
+CREATE TABLE queries (
+    name text PRIMARY KEY,
+    query text,
+    args text[],
+    columns text[],
+    tags text[],
+    schema text,
+    description text
 );
 
 
-SET search_path = public, pg_catalog;
-
---
--- Name: background_subprocess; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE background_subprocess (
-    background_subprocess_id integer NOT NULL,
-    subprocess_invocation_id integer,
-    input_rows_processed integer,
-    command_executed text,
-    foreground_pid integer,
-    background_pid integer,
-    when_script_started timestamp with time zone,
-    when_background_entered timestamp with time zone,
-    when_script_ended timestamp with time zone,
-    user_to_notify text,
-    process_error text
+CREATE TABLE query_tag_filter (
+    filter_name text PRIMARY KEY,
+    tags_enabled text[]
 );
 
 
---
--- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE background_subprocess_background_subprocess_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE background_subprocess_background_subprocess_id_seq OWNED BY background_subprocess.background_subprocess_id;
-
-
---
--- Name: background_subprocess_params; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE background_subprocess_params (
-    background_subprocess_id integer NOT NULL,
-    param_index integer,
-    param_value text
+CREATE TABLE spreadsheet_operation (
+    operation_name text NOT NULL PRIMARY KEY,
+    command_line text,
+    operation_type text,
+    input_line_format text,
+    tags text[]
 );
-
-
---
--- Name: chained_query; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE chained_query (
-    chained_query_id integer NOT NULL,
-    from_query text NOT NULL,
-    to_query text NOT NULL,
-    caption text
-);
-
-
---
--- Name: chained_query_chained_query_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE chained_query_chained_query_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: chained_query_chained_query_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE chained_query_chained_query_id_seq OWNED BY chained_query.chained_query_id;
-
-
---
--- Name: chained_query_cols_to_params; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE chained_query_cols_to_params (
-    chained_query_id integer NOT NULL,
-    from_column_name text NOT NULL,
-    to_parameter_name text NOT NULL
-);
-
-
---
--- Name: dbif_query_args; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE dbif_query_args (
-    query_invoked_by_dbif_id integer NOT NULL,
-    arg_index integer,
-    arg_name text,
-    arg_value text
-);
-
-
---
--- Name: popup_buttons; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE popup_buttons (
     popup_button_id integer NOT NULL,
@@ -154,331 +53,9 @@ CREATE TABLE popup_buttons (
     btn_name text
 );
 
-
---
--- Name: popup_buttons_popup_button_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE popup_buttons_popup_button_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE popup_buttons_popup_button_id_seq1
-    START WITH 1
-    INCREMENT BY 1
     NO MINVALUE
-    NO MAXVALUE
     CACHE 1;
-
-
---
--- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE popup_buttons_popup_button_id_seq1 OWNED BY popup_buttons.popup_button_id;
-
-
---
--- Name: queries; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE queries (
-    name text,
-    query text,
-    args text[],
-    columns text[],
-    tags text[],
-    schema text,
-    description text
-);
-
-
---
--- Name: query_invoked_by_dbif; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE query_invoked_by_dbif (
-    query_invoked_by_dbif_id integer NOT NULL,
-    query_name text,
-    invoking_user text,
-    query_start_time timestamp with time zone,
-    query_end_time timestamp with time zone,
-    number_of_rows integer
-);
-
-
---
--- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE query_invoked_by_dbif_query_invoked_by_dbif_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED BY query_invoked_by_dbif.query_invoked_by_dbif_id;
-
-
---
--- Name: query_tabs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE query_tabs (
-    query_tab_name text,
-    query_tab_description text,
-    defines_dropdown boolean,
-    sort_order integer,
-    defines_search_engine boolean
-);
-
-
---
--- Name: query_tabs_query_tag_filter; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE query_tabs_query_tag_filter (
-    query_tab_name text NOT NULL,
-    filter_name text NOT NULL,
-    sort_order integer NOT NULL
-);
-
-
---
--- Name: query_tag_filter; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE query_tag_filter (
-    filter_name text,
-    tags_enabled text[]
-);
-
-
---
--- Name: report_inserted; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE report_inserted (
-    report_inserted_id integer NOT NULL,
-    report_file_in_posda integer,
-    report_rows_generated integer
-);
-
-
---
--- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE report_inserted_report_inserted_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE report_inserted_report_inserted_id_seq OWNED BY report_inserted.report_inserted_id;
-
-
---
--- Name: spreadsheet_operation; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE spreadsheet_operation (
-    operation_name text NOT NULL,
-    command_line text,
-    operation_type text,
-    input_line_format text,
-    tags text[]
-);
-
-
---
--- Name: spreadsheet_uploaded; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE spreadsheet_uploaded (
-    spreadsheet_uploaded_id integer NOT NULL,
-    time_uploaded timestamp with time zone,
-    is_executable boolean,
-    uploading_user text,
-    file_id_in_posda integer,
-    number_rows integer
-);
-
-
---
--- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE spreadsheet_uploaded_spreadsheet_uploaded_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE spreadsheet_uploaded_spreadsheet_uploaded_id_seq OWNED BY spreadsheet_uploaded.spreadsheet_uploaded_id;
-
-
---
--- Name: subprocess_invocation; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE subprocess_invocation (
-    subprocess_invocation_id integer NOT NULL,
-    from_spreadsheet boolean,
-    from_button boolean,
-    spreadsheet_uploaded_id integer,
-    button_name text,
-    command_line text,
-    process_pid integer,
-    invoking_user text,
-    when_invoked timestamp with time zone
-);
-
-
---
--- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE subprocess_invocation_subprocess_invocation_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE subprocess_invocation_subprocess_invocation_id_seq OWNED BY subprocess_invocation.subprocess_invocation_id;
-
-
---
--- Name: subprocess_lines; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE subprocess_lines (
-    subprocess_launched_id integer NOT NULL,
-    line_number integer,
-    line text
-);
-
-
---
--- Name: background_subprocess_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY background_subprocess ALTER COLUMN background_subprocess_id SET DEFAULT nextval('background_subprocess_background_subprocess_id_seq'::regclass);
-
-
---
--- Name: chained_query_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY chained_query ALTER COLUMN chained_query_id SET DEFAULT nextval('chained_query_chained_query_id_seq'::regclass);
-
-
---
--- Name: popup_button_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY popup_buttons ALTER COLUMN popup_button_id SET DEFAULT nextval('popup_buttons_popup_button_id_seq1'::regclass);
-
-
---
--- Name: query_invoked_by_dbif_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY query_invoked_by_dbif ALTER COLUMN query_invoked_by_dbif_id SET DEFAULT nextval('query_invoked_by_dbif_query_invoked_by_dbif_id_seq'::regclass);
-
-
---
--- Name: report_inserted_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY report_inserted ALTER COLUMN report_inserted_id SET DEFAULT nextval('report_inserted_report_inserted_id_seq'::regclass);
-
-
---
--- Name: spreadsheet_uploaded_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY spreadsheet_uploaded ALTER COLUMN spreadsheet_uploaded_id SET DEFAULT nextval('spreadsheet_uploaded_spreadsheet_uploaded_id_seq'::regclass);
-
-
---
--- Name: subprocess_invocation_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY subprocess_invocation ALTER COLUMN subprocess_invocation_id SET DEFAULT nextval('subprocess_invocation_subprocess_invocation_id_seq'::regclass);
-
-
---
--- Name: popup_buttons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY popup_buttons
-    ADD CONSTRAINT popup_buttons_pkey PRIMARY KEY (popup_button_id);
-
-
---
--- Name: query_tabs_query_tab_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY query_tabs
-    ADD CONSTRAINT query_tabs_query_tab_name_key UNIQUE (query_tab_name);
-
-
---
--- Name: spreadsheet_operation_operation_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY spreadsheet_operation
-    ADD CONSTRAINT spreadsheet_operation_operation_name_key UNIQUE (operation_name);
-
-
---
--- Name: queries_name_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX queries_name_index ON queries USING btree (name);
-
-
---
--- Name: query_by_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX query_by_user_index ON query_invoked_by_dbif USING btree (invoking_user);
-
-
---
--- PostgreSQL database dump complete
---
-

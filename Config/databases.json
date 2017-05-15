@@ -71,6 +71,13 @@
       "Posda/sql/dicom_dd.sql"
     ]
   },
+  "dicom_dd" : {
+    "database" : "dicom_dd",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/dicom_dd.sql"
+    ]
+  },
   "posda_files" : {
     "database" : "posda_files",
     "driver"   : "postgres",
@@ -128,6 +135,13 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/N_private_tag_kb.sql"
+    ]
+  },
+  "posda_phi_simple" : {
+    "database" : "N_posda_phi_simple",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_simple_phi.sql"
     ]
   },
   "posda_backlog" : {

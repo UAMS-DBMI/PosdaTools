@@ -18,6 +18,6 @@ my $resp = decode_json($client->responseContent());
 my $token = $resp->{token};
 
 
-print "Redirect to http://localhost/k/?token=$token\n";
+print "Redirect to http://tcia-posda-rh-1.ad.uams.edu/k/?token=$token\n";
 
 sleep 20;
