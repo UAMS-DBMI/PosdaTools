@@ -141,6 +141,8 @@ sub FileIsReady{
   );
   $q->execute($file_id);
 }
+#################################################################
+#  Initialization  First phase of processing
 my $usage = "Usage: $0 <db_name> <comment>";
 unless ($#ARGV == 1) {die $usage;}
 my $db_name = $ARGV[0];

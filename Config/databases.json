@@ -45,6 +45,13 @@
       "Posda/sql/dicom_roots.sql"
     ]
   },
+  "dicom_dd" : {
+    "database" : "dicom_dd",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/dicom_dd.sql"
+    ]
+  },
   "posda_files" : {
     "database" : "posda_files",
     "driver"   : "postgres",
@@ -73,6 +80,13 @@
       "Posda/sql/posda_phi.sql"
     ]
   },
+  "posda_phi_simple" : {
+    "database" : "N_posda_phi_simple",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/posda_simple_phi.sql"
+    ]
+  },
   "posda_backlog" : {
     "database" : "posda_backlog",
     "driver"   : "postgres",
@@ -92,6 +106,13 @@
     "database" : "ncia",
     "driver"   : "mysql",
     "host"     : "144.30.1.71",
+    "user"     : "nciauser",
+    "password" : "nciA#112"
+  },
+  "nlst" : {
+    "database" : "ncia",
+    "driver"   : "mysql",
+    "host"     : "144.30.5.97",
     "user"     : "nciauser",
     "password" : "nciA#112"
   }

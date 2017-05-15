@@ -800,7 +800,12 @@ unless(defined $file_name) {
     dataset_digest => $try->{dataset_digest},
   };
   my $pix_desc = $ds->GetEle("(7fe0,0010)");
-  if(defined $pix_desc){
+  if(
+    defined($pix_desc) &&
+    ref($pix_desc) eq "HASH" &&
+    defined ($pix_desc->{file_pos}) &&
+    defined ($pix_desc->{ele_len_in_file})
+  ){
     my $pos = $pix_desc->{file_pos};
     my $len = $pix_desc->{ele_len_in_file};
     my $command = "PixelDigest.pl \"$file_name\" $pos $len";

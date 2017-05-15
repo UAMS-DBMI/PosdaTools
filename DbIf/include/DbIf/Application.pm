@@ -28,6 +28,7 @@ use HTML::Entities;
 use Posda::PopupImageViewer;
 use Posda::PopupCompare;
 use Posda::PopupCompareFiles;
+use Posda::PopupCompareFilesPath;
 
 use DbIf::PopupHelp;
 use Posda::QueryLog;
@@ -427,7 +428,7 @@ method SetGroupSelector($http, $dyn){
   $self->{SelectedTagGroup} = $value;
 
   my $group = $self->{TagGroups}->{$value};
-  DEBUG "Selected group: $value";
+#  DEBUG "Selected group: $value";
   # DEBUG Dumper($group);
 
 }
@@ -1166,7 +1167,7 @@ method SetActiveQuery($http, $dyn){
   $self->{query} = PosdaDB::Queries->GetQueryInstance($dyn->{query_name});
 }
 method ActiveQuery($http, $dyn){
-  DEBUG @_;
+#  DEBUG @_;
   my $from_seen = 0;
   my $descrip = {
     args => {
@@ -2111,7 +2112,10 @@ method ConvertLinesComplete($hash){
   my $sub = sub {
     push(@{$self->{UploadedFiles}}, $hash);
     # If the file was a CSV, go ahead and load it as a table now
-    if ($hash->{'mime-type'} eq 'text/csv') {
+    if (
+      $hash->{'mime-type'} eq 'text/csv' ||
+      $hash->{'mime-type'} eq 'application/vnd.ms-excel'
+    ) {
       $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
     }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
@@ -2259,7 +2263,7 @@ method Reports($http, $dyn) {
       <th>Download</th>
     </tr>
   });
-  for my $f (@common_files) {
+  for my $f (sort @common_files) {
     my $filename = "$common_dir/$f";
     my $type = (-e "$filename.query")?"Query":"CSV";
     my $size = (stat($filename))[7];
@@ -2571,6 +2575,7 @@ method ExecutePlannedPipeOperations($http, $dyn) {
   my $cmd = $self->{PlannedPipeOperation};
   my $stdin = $self->{PlannedOperations};
 
+
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd,
     $stdin,
@@ -2642,7 +2647,7 @@ method PipeOperationsSummary($http, $dyn) {
     <p>The command to be executed:</p>
     <pre>$self->{PlannedPipeOperation}</pre>
 
-    <p>The vlaues to be fed on standard input:</p>
+    <p>The values to be fed on standard input:</p>
     <table class="table">
       <tr>
         <th>Input</th>

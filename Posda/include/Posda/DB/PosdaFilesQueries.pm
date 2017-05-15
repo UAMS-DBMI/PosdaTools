@@ -194,7 +194,6 @@ sub _RunQueryBlocking {
 }
 
 sub _RunQueryAsync {
-  print "RunQueryAsync\n";
   my($self) = shift;
   my $row_callback = shift;
   my $end_callback = shift;
@@ -231,7 +230,6 @@ sub _RunQueryAsync {
     bindings => $self->{bindings},
     name => $self->{name},
   };
-
   $ev->SerializedSubProcess(
     $parameters, 
     "SubProcessQuery.pl",
@@ -292,6 +290,7 @@ sub Execute{
     my $sup = $#_;
     die "arg mismatch ($this->{name}): $sup vs $req";
   }
+#  print STDERR "Execute $this->{name}:\n";
   return $this->{handle}->execute(@_);
 }
 

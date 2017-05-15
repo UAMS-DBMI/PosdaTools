@@ -11,6 +11,7 @@ use Method::Signatures::Simple;
 use Socket;
 use Dispatch::Select;
 use File::Path;
+#use HexDump;
 use Fcntl qw( :flock :DEFAULT F_GETFL F_SETFL O_NONBLOCK );
 use Storable qw( store_fd fd_retrieve nfreeze thaw);
 use JSON;
@@ -73,6 +74,8 @@ sub ReadWriteChild{
   }
   if($child_pid == 0){
     close $child;
+    close STDIN;
+    close STDOUT;
     # these dies are not methods because they are in the child:
     unless(open STDIN, "<&", $parent){die "Redirect of STDIN failed: $!"}
     unless(open STDOUT, ">&", $parent){die "Redirect of STDOUT failed: $!"}
@@ -283,6 +286,7 @@ sub SerializedSubProcess{
 #  $serialized_args = "pst0" . $serialized_args;
   my $serialized_args = &Storable::freeze($args);
   $serialized_args = "pst0" . $serialized_args;
+
   my($fh, $pid) = $this->ReadWriteChild($command);
   Dispatch::Select::Socket->new($this->WriteSerializedData($serialized_args,
     $finished, $pid), $fh)->Add("writer");
@@ -334,16 +338,13 @@ sub ReadSerializedResponse{
     if($count <= 0){
       my $result;
       my $text_len = length $text;
-#      print STDERR "text len: $text_len\n";
       my $res_text;
       if($text =~ /^pst0(.*)$/s){
-#        print STDERR "Discarding a pst0 from result text\n";
         $res_text = $1;
       } else {
         $res_text = $text;
       }
       my $res_length = length $res_text;
-#      print STDERR "Length of response text: $res_length\n";
       eval{
         $result = &Storable::thaw($res_text);
       };
