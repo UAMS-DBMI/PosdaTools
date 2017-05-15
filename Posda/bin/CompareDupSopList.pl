@@ -2,7 +2,7 @@
 use strict;
 use File::Temp qw/ tempfile /;
 use DBI;
-my $dbh = DBI->connect("dbi:Pg:dbname=posda_files");
+my $dbh = DBI->connect("dbi:Pg:dbname=N_posda_files");
 my $get_files = $dbh->prepare(
   "select distinct file_id, root_path || '/' || rel_path as path\n" .    
   "from file_storage_root natural join file_location\n" .

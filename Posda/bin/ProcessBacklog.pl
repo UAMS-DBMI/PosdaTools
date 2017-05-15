@@ -63,6 +63,11 @@ sub Loop{
       }
       InitUndefinedCounts();
       my($round_id, $round_desc) = CalcRound($num_files_per_round);
+      unless(defined $round_desc){
+        print STDERR "No requests to process (wait a minute)\n";
+        sleep 60;
+        next main;
+      }
       my $tot_files = 0;
       print STDERR "Round: $round_id\n";
       for my $coll (keys %$round_desc){
@@ -142,7 +147,7 @@ sub InitUndefinedCounts{
     sub {
       my($row) = @_;
       my $collection = $row->[0];
-      $ins_coll_count->RunQuery(sub{}, sub {}, $collection, 0);
+      $ins_coll_count->RunQuery(sub{}, sub {}, $collection, 1);
     }, sub {}
   );
 }
@@ -186,6 +191,9 @@ sub CalcRound{
     $tot_files += $priority;
     $CollectionFiles{$collection} = $priority;
   }, sub {});
+  if($tot_files == 0){
+    return ($id, undef);
+  }
   $scale_factor = $num_files / $tot_files;
   my $new_tot = 0;
   for my $k (keys %CollectionFiles){

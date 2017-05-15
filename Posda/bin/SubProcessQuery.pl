@@ -70,9 +70,7 @@ unless($q_result){
   my $err = $q->errstr;
   Error("Can't execute query\n\t$err\nquery:\n$query_spec->{query}");
 }
-print STDERR "Executed Query $query_spec->{name}\n";
 if($query_spec->{query} =~ /^select/){
-print STDERR "Collection rows for select\n";
   my @rows;
   while(my $h = $q->fetchrow_hashref){
     my @r;
@@ -85,7 +83,6 @@ print STDERR "Collection rows for select\n";
   $results->{Rows} = \@rows;
   store_fd($results, \*STDOUT);
 } else {
-print STDERR "not a select, not collecting rows\n";
   $results->{Status} = "OK";
   $results->{NumRows} = $q_result;
   store_fd($results, \*STDOUT);

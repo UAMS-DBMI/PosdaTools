@@ -152,7 +152,7 @@ method SpecificInitialize($params) {
   my ($filename, $offset, $size, 
       $bits_stored, $bits_allocated, 
       $pix_rep, $frames, $samples_per_pixel, 
-      $rows, $cols, $photo_interp, $slope, 
+      $prows, $cols, $photo_interp, $slope, 
       $intercept, $width, $center, $pad_value) = @{$self->{row}};
 
   # fill in defaults
@@ -171,7 +171,7 @@ method SpecificInitialize($params) {
     frames           => $frames,
     samples_per_pixel=> $samples_per_pixel,
     cols             => $cols,
-    rows             => $rows,
+    rows             => $prows,
     photo_interp     => $photo_interp,
     slope            => $slope,
     intercept        => $intercept,

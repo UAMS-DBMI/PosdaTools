@@ -1,25 +1,35 @@
 {
   ".Unlimited": 1,
   ".Show No Tags": 1,
-  "Test1": {"AllCollections": 1, "File Ids": 1, "Insert": 1},
-  "Test2": {"File Ids": 1, "Insert": 1},
-  "Test3": {"Insert": 1},
-  "Test4": {"AllCollections": 1, "File Ids": 1},
-  "BigSet1": {
-    "all": 1,
-    "AllCollections": 1,
-    "by_study": 1,
-    "duplicates": 1,
-    "image_id": 1,
-    "Kirk": 1,
-    "send_to_intake": 1,
-    "totals": 1,
-    "update": 1,
-    "summary": 1,
-    "tag_usage": 1,
-    "symlink": 1,
-    "window_level": 1,
-    "insert": 1,
-    "counts": 1
+  "view_posda_backlog": {
+    "backlog_round_history" : 1,
+    "backlog_status" : 1,
+    "backlog_analysis_reporting_tools" : 1,
+  },
+  "manage_posda_backlog": {
+  },
+  "downloads_by_date": {
+  },
+  "duplicate_sop_evaluation": {
+  },
+  "duplicate_sop_resolution": {
+  },
+  "counts_patient_status": {
+  },
+  "consistency_check": {
+  },
+  "linkage_check": {
+  },
+  "visual_review_scheduling": {
+  },
+  "visual_review_tracking_processing": {
+  },
+  "phi_review": {
+  },
+  "dicom_batch_file_editing": {
+  },
+  "send_data_via_dicom": {
+  },
+  "monthly_report_queries": {
   }
 }

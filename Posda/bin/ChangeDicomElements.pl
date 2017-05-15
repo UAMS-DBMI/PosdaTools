@@ -12,6 +12,7 @@ use Posda::Parser;
 use Posda::Dataset;
 
 my $usage = "usage: $0 <source> <destination> [<tag value> ...]";
+unless($#ARGV > 1) {die "$usage\n"}
 
 Posda::Dataset::InitDD();
 

@@ -10,7 +10,7 @@ use strict;
 use Storable qw( fd_retrieve );
 use Debug;
 my $dbg = sub {print @_};
-my $parsed_dir = "/Users/bbennett/FileDistApp/ParsedDicom";
+my $parsed_dir = "$ENV{POSDA_ROOT}/ParsedDicom";
 my $file_1 = "part06/part06.xml.perl";
 my $xml_id_1 = "table_6-1";
 my $xml_id_2 = "table_7-1";

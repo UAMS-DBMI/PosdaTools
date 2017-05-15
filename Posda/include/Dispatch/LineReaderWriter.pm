@@ -14,7 +14,6 @@ func write_and_read_all($class: $cmd, $data, $finished_callback) {
   my $handler = bless {}, 'Dispatch::EventHandler';
 
   my($fh, $pid) = $handler->ReadWriteChild($cmd);
-
   Dispatch::Select::Socket->new(
     func($dispatch, $sock) {
       if (my $line = shift @$data) {
