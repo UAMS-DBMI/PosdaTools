@@ -116,8 +116,10 @@ function edit {
 
 }
 
-clear
 posda_setup
-print_report
-penv
-help
+if [ "$1" != "script" ]; then
+    clear
+    print_report
+    penv
+    help
+fi
