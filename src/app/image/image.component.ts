@@ -131,6 +131,12 @@ export class ImageComponent implements OnInit {
 
     // test values ---------
     let slope = this.current_image.slope;
+
+    //TODO: Temp fix for PET images with crazy small slopes
+    if (slope < 0.001) {
+      slope = 1;
+    }
+
     let intercept = this.current_image.intercept;
     let w_width = this.current_image.window_width;
     let w_center = this.current_image.window_center;
