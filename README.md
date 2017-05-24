@@ -29,10 +29,12 @@ curation of DICOM datasets.
   * Net::LDAP
   * DateTime
 * python >= 3.6
+* python modules (from pip):
   * Sanic 0.4.1
   * Asyncpg 0.5.1
 * Node.js >= 7.0
-  * npm >= 4.0
+* npm >= 4.0
+* npm modules:
   * Angular 4.0.1
   * angular2-busy 2.0.4
   * bootstrap 4.0.0-alpha.6
