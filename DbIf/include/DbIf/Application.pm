@@ -30,6 +30,7 @@ use Posda::PopupCompare;
 use Posda::PopupCompareFiles;
 
 use DbIf::PopupHelp;
+use Posda::QueryLog;
 
 use Debug;
 my $dbg = sub {print STDERR @_ };
@@ -1442,6 +1443,8 @@ method QueryEnd($query, $then) {
     if($self->{Mode} eq "QueryWait"){
       $self->AutoRefresh;
     }
+    my $end_time = time;
+    Posda::QueryLog::query_invoked($self->{query}, $self->get_user, $start_time, $end_time, $#{$self->{query_rows}} + 1);
 
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
