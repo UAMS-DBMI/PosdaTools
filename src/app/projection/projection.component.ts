@@ -20,12 +20,12 @@ export class ProjectionComponent implements OnInit {
   }
   openPopup(): void {
   	window.open("/viewer/series/" + this.series.series_instance_uid,
-                "Series Viewer", "height=600,width=600");
+                "Series Viewer", "height=900,width=600");
 
   }
   openPopupIec(): void {
   	window.open("/viewer/iec/" + this.series.image_equivalence_class_id,
-                "Series Viewer", "height=600,width=600");
+                "Series Viewer", "height=900,width=600");
   }
 
 }
