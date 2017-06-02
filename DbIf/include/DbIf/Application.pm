@@ -1387,6 +1387,7 @@ method MakeQuery($http, $dyn){
   my $then = $dyn->{then};
 
   $query->{bindings} = $self->GetBindings();
+  $self->{query}->{bindings} = $query->{bindings};
   $query->{name} = $self->{Query};
 
   $self->{Mode} = "QueryWait";
@@ -1394,11 +1395,14 @@ method MakeQuery($http, $dyn){
   $self->{query}->SetAsync();
 
   $self->{query_rows} = [];
+
+  my $invoked_id = Posda::QueryLog::query_invoked($self->{query}, $self->get_user);
+
   $self->{query}->RunQuery(
     func($row) {
       push @{$self->{query_rows}}, $row;
     },
-    $self->QueryEnd($query, $then),
+    $self->QueryEnd($query, $then, $invoked_id),
     func($message) {
       $self->{Mode} = "QueryError";
       $self->{ErrorMessage} = $message;
@@ -1438,14 +1442,13 @@ method QueryWait($http, $dyn) {
   });
 }
 
-method QueryEnd($query, $then) {
+method QueryEnd($query, $then, $invoked_id) {
   my $start_time = time;
   my $sub = sub {
     if($self->{Mode} eq "QueryWait"){
       $self->AutoRefresh;
     }
-    my $end_time = time;
-    Posda::QueryLog::query_invoked($self->{query}, $self->get_user, $start_time, $end_time, $#{$self->{query_rows}} + 1);
+    Posda::QueryLog::query_finished($invoked_id, $#{$self->{query_rows}} + 1);
 
     if($self->{query}->{query} =~ /^select/){
       my $struct = { Rows => $self->{query_rows} };
