@@ -33,6 +33,8 @@ use Posda::PopupCompareFilesPath;
 use DbIf::PopupHelp;
 use Posda::QueryLog;
 
+use Text::Markdown 'markdown';
+
 use Debug;
 my $dbg = sub {print STDERR @_ };
 
@@ -1183,7 +1185,7 @@ method ActiveQuery($http, $dyn){
     description => {
       caption=> "Description",
       struct => "text",
-      special => "",
+      special => "markdown",
     },
     query => {
       caption=> "Query Text",
@@ -1220,13 +1222,13 @@ method ActiveQuery($http, $dyn){
     });
     if($d->{struct} eq "text"){
       #DEBUG 'text';
-      if(
-        defined($d->{special}) &&
-        $d->{special} eq "pre-formatted"
-      ){
-         $self->RefreshEngine($http, $dyn, "<pre><code class=\"sql\">$self->{query}->{$i}</code></pre>")
+      if( defined($d->{special}) && $d->{special} eq "pre-formatted"){
+         $self->RefreshEngine($http, $dyn, 
+           "<pre><code class=\"sql\">$self->{query}->{$i}</code></pre>");
+      } elsif (defined $d->{special} && $d->{special} eq "markdown") {
+         $self->RefreshEngine($http, $dyn, markdown($self->{query}->{$i}));
       } else {
-         $self->RefreshEngine($http, $dyn, "$self->{query}->{$i}")
+         $self->RefreshEngine($http, $dyn, "$self->{query}->{$i}");
       }
     }
     if($d->{struct} eq "array"){
