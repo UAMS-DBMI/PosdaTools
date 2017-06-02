@@ -1812,13 +1812,14 @@ method TableSelected($http, $dyn){
       query_name => $query->{name},
       sync => 'Update();'
     });
+    my $desc_html = markdown($query->{description});
     $http->queue(qq{
       </p>
 
       <div class="panel panel-default">
         <div class="panel-heading">Description</div>
         <div class="panel-body">
-          $query->{description}
+          $desc_html
         </div>
       </div>
 
