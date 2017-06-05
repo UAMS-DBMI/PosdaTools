@@ -679,10 +679,11 @@ method SwitchToTab($http, $dyn) {
 method OpenTableLevelPopup($http, $dyn) {
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
 
-  my $unique_val = "$table";
+  my $parms = { table => $table, button => $dyn->{cap_}};
+  my $unique_val = "$parms";
 
   my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable$unique_val", $table);
+  $self->OpenPopup($class, "${class}_FullTable$unique_val", $parms);
 }
 
 method OpenDynamicPopup($http, $dyn) {
@@ -1853,6 +1854,7 @@ method TableSelected($http, $dyn){
           caption => "$tlp->{name}",
           op => "OpenTableLevelPopup",
           class_ => "$tlp->{class}",
+          cap_ => "$tlp->{name}",
           sync => 'Update();'
       });
       $http->queue("</p>");
