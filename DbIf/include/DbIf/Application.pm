@@ -676,6 +676,15 @@ method SwitchToTab($http, $dyn) {
   $self->SetGroupSelector($http, { value => $allowed_filters[0] });
 }
 
+method OpenTableLevelPopup($http, $dyn) {
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+
+  my $unique_val = "$table";
+
+  my $class = $dyn->{class_};
+  $self->OpenPopup($class, "${class}_FullTable$unique_val", $table);
+}
+
 method OpenDynamicPopup($http, $dyn) {
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -1836,6 +1845,18 @@ method TableSelected($http, $dyn){
       $http->queue('</ul>');
     }
     $http->queue("Rows: $num_rows<hr>");
+    # 
+    if (defined $popup_hash->{table_level_popup}) {
+      my $tlp = $popup_hash->{table_level_popup};
+      $http->queue("<p>");
+      $self->NotSoSimpleButton($http, {
+          caption => "$tlp->{name}",
+          op => "OpenTableLevelPopup",
+          class_ => "$tlp->{class}",
+          sync => 'Update();'
+      });
+      $http->queue("</p>");
+    }
     $http->queue(qq{
       <table class="table table-striped">
         <tr>
