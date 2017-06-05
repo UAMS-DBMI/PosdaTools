@@ -370,6 +370,9 @@ method SetMode($http, $dyn){
 }
 
 method ContentResponse($http, $dyn) {
+  # TODO: DrawHistory would preferrably be above the title on the page
+  $self->DrawHistory($http, $dyn);
+
   if ($self->can($self->{Mode})) {
     my $meth = $self->{Mode};
     $self->$meth($http, $dyn);
@@ -403,6 +406,60 @@ method ClearAllTags($http, $dyn){
 
 method ToggleQueryFilter($http, $dyn) {
   $self->{QueryFilterDisplay} = not $self->{QueryFilterDisplay};
+}
+
+method SetHistorySelection($http, $dyn) {
+  $self->SelectTable($http, { index => $dyn->{value} });
+}
+method GetLoadedTables() {
+  my @tables;
+  for my $in(0 .. $#{$self->{LoadedTables}}){
+    my $i = $self->{LoadedTables}->[$in];
+    my $type = $i->{type};
+    my $type_disp;
+    my $num_rows;
+    my $name;
+    if($type eq "FromCsv") {
+      $type_disp = "From CSV Upload";
+      $num_rows = @{$i->{rows}} - 1;
+      $name = $i->{basename};
+    } elsif ($type eq "FromQuery"){
+      $type_disp = "From DB Query";
+      $num_rows = @{$i->{rows}};
+      $name = "$i->{query}->{schema}:$i->{query}->{name}(";
+      for my $bi (0 .. $#{$i->{query}->{bindings}}){
+        my $b = $i->{query}->{bindings}->[$bi];
+        $name .= "\"$b\"";
+        unless($bi == $#{$i->{query}->{bindings}}){
+          $name .= ", ";
+        }
+      }
+      $name .= ")";
+    }
+    push @tables, $name;
+  }
+
+  return @tables;
+}
+
+method DrawHistory($http, $dyn) {
+  my @tables = $self->GetLoadedTables();
+
+  $self->SelectByValue($http, {
+    op => 'SetHistorySelection',
+  });
+
+  $http->queue(qq{<option value="">---History---</option>});
+
+  for my $ti (@{$self->{TableHistory}}) {
+    my $table = $tables[$ti];
+    $http->queue(qq{<option value="$ti">$table</option>});
+  }
+
+  $http->queue(qq{
+    </select>
+    <p></p>
+  });
 }
 
 method TagGroupSelector($http, $dyn) {
@@ -595,6 +652,7 @@ method ListQueries($http, $dyn){
   } elsif ($self->{SelectedTagGroup} eq '.Unlimited') {
     @q_list = sort @{PosdaDB::Queries->GetList()};
   }
+
 
 
   $self->DrawTabs($http, $dyn);
@@ -1531,8 +1589,7 @@ method CreateTableFromQuery($query, $struct, $start_at) {
 method SelectNewestTable() {
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
-    $self->{Mode} = "TableSelected";
-    $self->{SelectedTable} = $index;
+    $self->SelectTable({}, { index => $index });
   }
 }
 
@@ -2739,8 +2796,30 @@ method OperationsSummary($http, $dyn) {
 
 method SelectTable($http, $dyn){
   $self->{SelectedTable} = $dyn->{index};
+  # push new table onto the history stack
+  $self->PushToHistory($dyn->{index});
   $self->{Mode} = "TableSelected";
 }
+method PushToHistory($index) {
+  DEBUG $index;
+  if (not defined $self->{TableHistory}) {
+    $self->{TableHistory} = [];
+  }
+
+  # if the given index is already in the list, delete it
+  my @del_indexes = grep { 
+    $self->{TableHistory}->[$_] eq $index 
+  } 0 .. $#{$self->{TableHistory}};
+  # this will really only ever return 1 item
+  # so this for loop is safe, even though splice changes the array!
+  for my $idx (@del_indexes) {
+    splice(@{$self->{TableHistory}}, $idx, 1);
+  }
+
+  # then add it at the top
+  unshift @{$self->{TableHistory}}, $index;
+}
+
 method AddNicknames($http, $dyn){
   my $table_n = $dyn->{index};
   $self->{SelectedTable} = $dyn->{index};
