@@ -82,10 +82,10 @@ my $db_list = Config('databases');
 
 # loop over each entry, pull out the ones with an init
 for my $db (keys %$db_list) {
-  if (defined %{$db_list}->{$db}->{init}) {
-    my @files = @{%{$db_list}->{$db}->{init}};
-    my $db_name = %{$db_list}->{$db}->{database};
-    my $driver = %{$db_list}->{$db}->{driver};
+  if (defined $db_list->{$db}->{init}) {
+    my @files = @{$db_list->{$db}->{init}};
+    my $db_name = $db_list->{$db}->{database};
+    my $driver = $db_list->{$db}->{driver};
 
     `createdb $db_name`;
     if ($? == 0) {
@@ -102,8 +102,8 @@ say "\nTesting database connections...";
 
 map {
   my $name = $_;
-  my $dbname = %{$db_list}->{$name}->{database};
-  my $driver = %{$db_list}->{$name}->{driver};
+  my $dbname = $db_list->{$name}->{database};
+  my $driver = $db_list->{$name}->{driver};
 
   if ($driver eq 'postgres') {
     my $dbh = DBI->connect("DBI:Pg:database=$dbname");

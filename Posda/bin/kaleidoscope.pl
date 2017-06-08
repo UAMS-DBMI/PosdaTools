@@ -13,11 +13,11 @@ my $user = $ARGV[4];
 
 
 my $client = REST::Client->new();
-$client->GET("http://tcia-utilities/api/new_token/$user");
+$client->GET("http://localhost/api/new_token/$user");
 my $resp = decode_json($client->responseContent());
 my $token = $resp->{token};
 
 
-print "Redirect to http://tcia-utilities/k/?token=$token\n";
+print "Redirect to http://localhost/k/?token=$token\n";
 
 sleep 20;
