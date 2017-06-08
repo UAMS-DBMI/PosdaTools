@@ -26,9 +26,9 @@ DEBUG = False
 @app.listener("before_server_start")
 async def connect_to_db(sanic, loop):
     global pool
-    pool = await asyncpg.create_pool(database='N_posda_files', 
+    pool = await asyncpg.create_pool(database='posda_files', 
                                      user='postgres',
-                                     host='tcia-utilities', 
+                                     host='localhost', 
                                      loop=loop)
     # loop.create_task(user_watch())
 
