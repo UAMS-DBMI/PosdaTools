@@ -98,15 +98,6 @@
     },
   },
   "StaticObjs": {
-    "AppTracker": {
-       "ObjClass": "AppController::AppTracker",
-       "CreationArgs": [
-         "app_stats",
-         "10",
-         "posda_files",
-         "Testing Application Server",
-       ],
-    },
   },
   "BomDirs": {
     "Posda": "POSDA_ROOT/Posda",
