@@ -11,21 +11,27 @@ echo "If you wish to continue, press enter now. If you have a doubt, press Contr
 
 read 
 
+APT="sudo apt-get install -y"
+CPAN="sudo cpanm --notest"
+
 sudo apt-get update
-sudo apt-get install -y postgresql-9.5 postgresql-server-dev-9.5 postgresql-client-9.5
-sudo apt-get install -y libmodern-perl-perl libmethod-signatures-simple-perl libdbd-pg-perl libjson-perl libswitch-perl libdata-uuid-perl libtext-diff-perl libterm-readkey-perl libnet-ldap-perl libdatetime-perl
+$APT build-essential zlib1g-dev libssl-dev
+$APT postgresql-9.5 postgresql-server-dev-9.5 postgresql-client-9.5
+$APT libmodern-perl-perl libmethod-signatures-simple-perl libdbd-pg-perl libjson-perl libswitch-perl libdata-uuid-perl libtext-diff-perl libterm-readkey-perl cpanminus libdatetime-perl libnet-ldap-perl
+
+$CPAN REST::Client
 
 echo
 echo "=========================================="
 echo
 
-echo "Adding the current user as a postgres superuser"
-sudo -u postgres createuser -s $(whoami)
+# echo "Adding the current user as a postgres superuser"
+# sudo -u postgres createuser -s $(whoami)
 
 # execute the actual setup script now
-./setup.sh
+# ./setup.sh
 
-echo "Removing this user from the sudo group"
-sudo deluser $(whoami) sudo
+# echo "Removing this user from the sudo group"
+# sudo deluser $(whoami) sudo
 
-echo "Everything should be ready to go now!"
+# echo "Everything should be ready to go now!"
