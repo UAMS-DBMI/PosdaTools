@@ -1,0 +1,11 @@
+truncate table element_signature;
+truncate table element_signature_change;
+truncate table equipment_signature;
+truncate table private_disposition_interpretation;
+truncate table public_disposition;
+truncate table public_disposition_interpretation;
+truncate table scan_element;
+truncate table scan_event;
+truncate table seen_value;
+truncate table sequence_index;
+truncate table series_scan;
