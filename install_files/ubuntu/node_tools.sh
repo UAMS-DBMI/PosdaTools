@@ -16,3 +16,8 @@ cd kaleidoscope/server
 sudo /opt/python36/bin/pip3 install -r requirements.txt
 cd ..
 npm install
+
+cd ~/
+git clone https://quasarj@code.imphub.org/scm/pt/kaleidoscope-base.git
+cd kaleidoscope-base
+npm install
