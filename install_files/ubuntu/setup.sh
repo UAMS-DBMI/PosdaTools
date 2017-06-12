@@ -25,11 +25,11 @@ echo
 echo "=========================================="
 echo
 
-# echo "Adding the current user as a postgres superuser"
-# sudo -u postgres createuser -s $(whoami)
+echo "Adding the current user as a postgres superuser"
+sudo -u postgres createuser -s $(whoami)
 
-# execute the actual setup script now
-# ./setup.sh
+./python.sh
+./node.sh
 
 # echo "Removing this user from the sudo group"
 # sudo deluser $(whoami) sudo
