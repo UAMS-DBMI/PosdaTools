@@ -31,6 +31,7 @@ echo "Adding the current user as a postgres superuser"
 sudo -u postgres createuser -s $(whoami)
 
 ./python.sh
+./nginx.sh
 ./node.sh
 ./posda.sh
 ./service_files.sh
