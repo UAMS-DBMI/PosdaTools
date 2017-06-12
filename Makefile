@@ -8,7 +8,7 @@ deploy:
 	scp -r dist/* tcia-utilities:/home/kaleidoscope/viewer/
 
 localdeploy:
-	cp -r dist/* /home/www/kaleidoscope/
+	cp -r dist/* /home/www/quince/
 
 serve:
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
