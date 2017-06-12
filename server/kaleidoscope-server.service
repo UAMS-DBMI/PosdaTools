@@ -1,0 +1,14 @@
+[Unit]
+Description=Kaleidoscope Server
+After=network.target posda.service
+
+[Service]
+User=posda
+Group=posda
+WorkingDirectory=/home/posda/kaleidoscope/server
+ExecStart=/opt/python36/bin/python3.6 /home/posda/kaleidoscope/server/server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
