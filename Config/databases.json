@@ -69,7 +69,8 @@
     "database" : "posda_files",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/posda_files.sql"
+      "Posda/sql/posda_files.sql",
+      "Posda/sql/posda_files_data.sql"
     ],
     "reset"    : [
       "Posda/sql/reset/posda_files.sql"
@@ -113,7 +114,8 @@
     "database" : "posda_backlog",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/posda_backlog.sql"
+      "Posda/sql/posda_backlog.sql",
+      "Posda/sql/posda_backlog_data.sql"
     ],
     "reset"    : [
       "Posda/sql/reset/posda_backlog.sql"
