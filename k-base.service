@@ -1,0 +1,14 @@
+[Unit]
+Description=Kaleidoscope-base Service
+After=network.target posda.service
+
+[Service]
+User=posda
+Group=posda
+WorkingDirectory=/home/posda/kaleidoscope-base
+ExecStart=/home/posda/.nvm/versions/node/v8.1.0/bin/npm /home/posda/kaleidoscope-base/index.js
+Restart=always
+RestartSec=0
+
+[Install]
+WantedBy=multi-user.target
