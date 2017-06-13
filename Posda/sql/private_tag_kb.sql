@@ -2,21 +2,44 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 8.4.20
+-- Dumped by pg_dump version 9.5.7
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
+SET row_security = off;
 
-SET search_path = public, pg_catalog;
+--
+-- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA db_version;
+
+
+SET search_path = db_version, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: pt; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: version; Type: TABLE; Schema: db_version; Owner: -
+--
+
+CREATE TABLE version (
+    version integer
+);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: pt; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt (
@@ -36,7 +59,7 @@ CREATE TABLE pt (
 
 
 --
--- Name: pt_dcmtk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_dcmtk; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt_dcmtk (
@@ -51,7 +74,7 @@ CREATE TABLE pt_dcmtk (
 
 
 --
--- Name: pt_dicom3; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_dicom3; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt_dicom3 (
@@ -72,7 +95,7 @@ CREATE TABLE pt_dicom3 (
 
 
 --
--- Name: pt_gdcm; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_gdcm; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt_gdcm (
@@ -87,7 +110,7 @@ CREATE TABLE pt_gdcm (
 
 
 --
--- Name: pt_observation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_observation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt_observation (
@@ -106,8 +129,8 @@ CREATE TABLE pt_observation (
 CREATE SEQUENCE pt_pt_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -119,7 +142,7 @@ ALTER SEQUENCE pt_pt_id_seq OWNED BY pt.pt_id;
 
 
 --
--- Name: pt_wustl; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_wustl; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pt_wustl (
@@ -139,7 +162,7 @@ CREATE TABLE pt_wustl (
 
 
 --
--- Name: ptrg; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ptrg; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ptrg (
@@ -161,7 +184,7 @@ CREATE TABLE ptrg (
 
 
 --
--- Name: ptrg_observation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ptrg_observation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ptrg_observation (
@@ -180,8 +203,8 @@ CREATE TABLE ptrg_observation (
 CREATE SEQUENCE ptrg_ptrg_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -207,7 +230,7 @@ ALTER TABLE ONLY ptrg ALTER COLUMN ptrg_id SET DEFAULT nextval('ptrg_ptrg_id_seq
 
 
 --
--- Name: pt_pt_signature_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pt_pt_signature_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY pt
@@ -215,7 +238,7 @@ ALTER TABLE ONLY pt
 
 
 --
--- Name: ptrg_ptrg_signature_masked_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: ptrg_ptrg_signature_masked_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ptrg

@@ -2,21 +2,82 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 8.4.20
+-- Dumped by pg_dump version 9.5.7
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
+SET row_security = off;
 
-SET search_path = public, pg_catalog;
+--
+-- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA db_version;
+
+
+--
+-- Name: quasar; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA quasar;
+
+
+SET search_path = db_version, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: association; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: version; Type: TABLE; Schema: db_version; Owner: -
+--
+
+CREATE TABLE version (
+    version integer
+);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: adverse_file_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE adverse_file_event (
+    adverse_file_event_id integer NOT NULL,
+    file_id integer NOT NULL,
+    event_description text,
+    when_occured timestamp with time zone
+);
+
+
+--
+-- Name: adverse_file_event_adverse_file_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE adverse_file_event_adverse_file_event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: adverse_file_event_adverse_file_event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE adverse_file_event_adverse_file_event_id_seq OWNED BY adverse_file_event.adverse_file_event_id;
+
+
+--
+-- Name: association; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association (
@@ -38,8 +99,8 @@ CREATE TABLE association (
 CREATE SEQUENCE association_association_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -51,7 +112,7 @@ ALTER SEQUENCE association_association_id_seq OWNED BY association.association_i
 
 
 --
--- Name: association_errors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: association_errors; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association_errors (
@@ -62,7 +123,7 @@ CREATE TABLE association_errors (
 
 
 --
--- Name: association_file; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: association_file; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association_file (
@@ -77,7 +138,7 @@ CREATE TABLE association_file (
 
 
 --
--- Name: association_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: association_import; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association_import (
@@ -87,7 +148,7 @@ CREATE TABLE association_import (
 
 
 --
--- Name: association_pc; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: association_pc; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association_pc (
@@ -107,8 +168,8 @@ CREATE TABLE association_pc (
 CREATE SEQUENCE association_pc_association_pc_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -120,7 +181,7 @@ ALTER SEQUENCE association_pc_association_pc_id_seq OWNED BY association_pc.asso
 
 
 --
--- Name: association_pc_proposed_ts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: association_pc_proposed_ts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE association_pc_proposed_ts (
@@ -130,7 +191,7 @@ CREATE TABLE association_pc_proposed_ts (
 
 
 --
--- Name: beam_applicator; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_applicator; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_applicator (
@@ -144,7 +205,7 @@ CREATE TABLE beam_applicator (
 
 
 --
--- Name: beam_block; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_block; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_block (
@@ -167,7 +228,7 @@ CREATE TABLE beam_block (
 
 
 --
--- Name: beam_bolus; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_bolus; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_bolus (
@@ -181,7 +242,7 @@ CREATE TABLE beam_bolus (
 
 
 --
--- Name: beam_compensator; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_compensator; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_compensator (
@@ -207,7 +268,7 @@ CREATE TABLE beam_compensator (
 
 
 --
--- Name: beam_control_point; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_control_point; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_control_point (
@@ -242,7 +303,7 @@ CREATE TABLE beam_control_point (
 
 
 --
--- Name: beam_general_accessory; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_general_accessory; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_general_accessory (
@@ -257,7 +318,7 @@ CREATE TABLE beam_general_accessory (
 
 
 --
--- Name: beam_limiting_device; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_limiting_device; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_limiting_device (
@@ -271,7 +332,7 @@ CREATE TABLE beam_limiting_device (
 
 
 --
--- Name: beam_wedge; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_wedge; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE beam_wedge (
@@ -289,7 +350,7 @@ CREATE TABLE beam_wedge (
 
 
 --
--- Name: contour_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: contour_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE contour_image (
@@ -301,7 +362,7 @@ CREATE TABLE contour_image (
 
 
 --
--- Name: control_point_bld_position; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: control_point_bld_position; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE control_point_bld_position (
@@ -314,7 +375,7 @@ CREATE TABLE control_point_bld_position (
 
 
 --
--- Name: control_point_dose_reference; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: control_point_dose_reference; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE control_point_dose_reference (
@@ -327,7 +388,7 @@ CREATE TABLE control_point_dose_reference (
 
 
 --
--- Name: control_point_reference_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: control_point_reference_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE control_point_reference_dose (
@@ -340,7 +401,7 @@ CREATE TABLE control_point_reference_dose (
 
 
 --
--- Name: control_point_wedge_position; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: control_point_wedge_position; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE control_point_wedge_position (
@@ -353,7 +414,7 @@ CREATE TABLE control_point_wedge_position (
 
 
 --
--- Name: ctp_file; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_file; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ctp_file (
@@ -367,7 +428,7 @@ CREATE TABLE ctp_file (
 
 
 --
--- Name: ctp_filex; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_filex; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ctp_filex (
@@ -381,7 +442,7 @@ CREATE TABLE ctp_filex (
 
 
 --
--- Name: ctp_upload_event; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_upload_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ctp_upload_event (
@@ -391,7 +452,7 @@ CREATE TABLE ctp_upload_event (
 
 
 --
--- Name: dicom_dir; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_dir; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_dir (
@@ -403,7 +464,7 @@ CREATE TABLE dicom_dir (
 
 
 --
--- Name: dicom_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_dir_rec (
@@ -425,8 +486,8 @@ CREATE TABLE dicom_dir_rec (
 CREATE SEQUENCE dicom_dir_rec_dicom_dir_rec_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -438,16 +499,30 @@ ALTER SEQUENCE dicom_dir_rec_dicom_dir_rec_id_seq OWNED BY dicom_dir_rec.dicom_d
 
 
 --
--- Name: dicom_edit_event; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_edit_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_edit_event (
     dicom_edit_event_id integer NOT NULL,
-    from_dicom_file integer NOT NULL,
-    to_dicom_file integer NOT NULL,
-    edit_desc_file integer NOT NULL,
-    when_done timestamp with time zone,
-    performing_user text
+    edit_desc_file integer,
+    time_started timestamp with time zone,
+    time_completed timestamp with time zone,
+    report_file integer,
+    notification_sent text,
+    num_files integer,
+    edits_done integer,
+    process_id integer,
+    edit_comment text
+);
+
+
+--
+-- Name: dicom_edit_event_adverse_file_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dicom_edit_event_adverse_file_event (
+    dicom_edit_event_id integer NOT NULL,
+    adverse_file_event_id integer NOT NULL
 );
 
 
@@ -458,8 +533,8 @@ CREATE TABLE dicom_edit_event (
 CREATE SEQUENCE dicom_edit_event_dicom_edit_event_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -471,7 +546,7 @@ ALTER SEQUENCE dicom_edit_event_dicom_edit_event_id_seq OWNED BY dicom_edit_even
 
 
 --
--- Name: dicom_file; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_file; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_file (
@@ -486,7 +561,18 @@ CREATE TABLE dicom_file (
 
 
 --
--- Name: dicom_file_errors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_file_edit; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dicom_file_edit (
+    dicom_edit_event_id integer NOT NULL,
+    from_file_digest text NOT NULL,
+    to_file_digest text NOT NULL
+);
+
+
+--
+-- Name: dicom_file_errors; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_file_errors (
@@ -496,7 +582,7 @@ CREATE TABLE dicom_file_errors (
 
 
 --
--- Name: dicom_file_send; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_file_send; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_file_send (
@@ -508,7 +594,7 @@ CREATE TABLE dicom_file_send (
 
 
 --
--- Name: dicom_icon_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_icon_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_icon_image (
@@ -519,7 +605,7 @@ CREATE TABLE dicom_icon_image (
 
 
 --
--- Name: dicom_image_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_image_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_image_dir_rec (
@@ -531,7 +617,7 @@ CREATE TABLE dicom_image_dir_rec (
 
 
 --
--- Name: dicom_patient_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_patient_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_patient_dir_rec (
@@ -544,7 +630,7 @@ CREATE TABLE dicom_patient_dir_rec (
 
 
 --
--- Name: dicom_process_errors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_process_errors; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_process_errors (
@@ -554,7 +640,7 @@ CREATE TABLE dicom_process_errors (
 
 
 --
--- Name: dicom_rt_dose_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_rt_dose_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_rt_dose_dir_rec (
@@ -568,7 +654,7 @@ CREATE TABLE dicom_rt_dose_dir_rec (
 
 
 --
--- Name: dicom_rt_plan_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_rt_plan_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_rt_plan_dir_rec (
@@ -583,7 +669,7 @@ CREATE TABLE dicom_rt_plan_dir_rec (
 
 
 --
--- Name: dicom_rt_structure_set_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_rt_structure_set_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_rt_structure_set_dir_rec (
@@ -598,7 +684,7 @@ CREATE TABLE dicom_rt_structure_set_dir_rec (
 
 
 --
--- Name: dicom_rt_treatment_rec_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_rt_treatment_rec_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_rt_treatment_rec_dir_rec (
@@ -612,7 +698,7 @@ CREATE TABLE dicom_rt_treatment_rec_dir_rec (
 
 
 --
--- Name: dicom_send_event; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_send_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_send_event (
@@ -638,8 +724,8 @@ CREATE TABLE dicom_send_event (
 CREATE SEQUENCE dicom_send_event_dicom_send_event_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -651,7 +737,7 @@ ALTER SEQUENCE dicom_send_event_dicom_send_event_id_seq OWNED BY dicom_send_even
 
 
 --
--- Name: dicom_series_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_series_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_series_dir_rec (
@@ -665,7 +751,7 @@ CREATE TABLE dicom_series_dir_rec (
 
 
 --
--- Name: dicom_study_dir_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_study_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dicom_study_dir_rec (
@@ -682,7 +768,37 @@ CREATE TABLE dicom_study_dir_rec (
 
 
 --
--- Name: dose_referenced_from_beam; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: distinguished_pixel_digest_pixel_value; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE distinguished_pixel_digest_pixel_value (
+    pixel_digest text NOT NULL,
+    pixel_value integer NOT NULL,
+    num_occurances integer NOT NULL
+);
+
+
+--
+-- Name: distinguished_pixel_digests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE distinguished_pixel_digests (
+    pixel_digest text NOT NULL,
+    type_of_pixel_data text,
+    sample_per_pixel integer,
+    number_of_frames integer,
+    pixel_rows integer,
+    pixel_columns integer,
+    bits_stored integer,
+    bits_allocated integer,
+    high_bit integer,
+    pixel_mask integer,
+    num_distinct_pixel_values integer
+);
+
+
+--
+-- Name: dose_referenced_from_beam; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dose_referenced_from_beam (
@@ -694,7 +810,7 @@ CREATE TABLE dose_referenced_from_beam (
 
 
 --
--- Name: dose_referenced_from_plan; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dose_referenced_from_plan; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE dose_referenced_from_plan (
@@ -704,7 +820,7 @@ CREATE TABLE dose_referenced_from_plan (
 
 
 --
--- Name: file; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file (
@@ -719,7 +835,7 @@ CREATE TABLE file (
 
 
 --
--- Name: file_ct_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_ct_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_ct_image (
@@ -745,7 +861,7 @@ CREATE TABLE file_ct_image (
 
 
 --
--- Name: file_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_dose (
@@ -755,7 +871,7 @@ CREATE TABLE file_dose (
 
 
 --
--- Name: file_ele_ref; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_ele_ref; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_ele_ref (
@@ -772,8 +888,8 @@ CREATE TABLE file_ele_ref (
 CREATE SEQUENCE file_ele_ref_file_ele_ref_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -785,7 +901,7 @@ ALTER SEQUENCE file_ele_ref_file_ele_ref_id_seq OWNED BY file_ele_ref.file_ele_r
 
 
 --
--- Name: file_ele_ref_text_value; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_ele_ref_text_value; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_ele_ref_text_value (
@@ -795,7 +911,7 @@ CREATE TABLE file_ele_ref_text_value (
 
 
 --
--- Name: file_equipment; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_equipment; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_equipment (
@@ -822,8 +938,8 @@ CREATE TABLE file_equipment (
 CREATE SEQUENCE file_file_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -835,7 +951,7 @@ ALTER SEQUENCE file_file_id_seq OWNED BY file.file_id;
 
 
 --
--- Name: file_for; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_for; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_for (
@@ -846,7 +962,7 @@ CREATE TABLE file_for (
 
 
 --
--- Name: file_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_image (
@@ -858,7 +974,7 @@ CREATE TABLE file_image (
 
 
 --
--- Name: file_image_geometry; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image_geometry; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_image_geometry (
@@ -868,7 +984,7 @@ CREATE TABLE file_image_geometry (
 
 
 --
--- Name: file_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_import (
@@ -881,7 +997,7 @@ CREATE TABLE file_import (
 
 
 --
--- Name: file_import_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_series; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_import_series (
@@ -900,8 +1016,8 @@ CREATE TABLE file_import_series (
 CREATE SEQUENCE file_import_series_file_import_series_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -913,7 +1029,7 @@ ALTER SEQUENCE file_import_series_file_import_series_id_seq OWNED BY file_import
 
 
 --
--- Name: file_import_study; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_study; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_import_study (
@@ -931,8 +1047,8 @@ CREATE TABLE file_import_study (
 CREATE SEQUENCE file_import_study_file_import_study_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -944,7 +1060,7 @@ ALTER SEQUENCE file_import_study_file_import_study_id_seq OWNED BY file_import_s
 
 
 --
--- Name: file_location; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_location; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_location (
@@ -956,7 +1072,7 @@ CREATE TABLE file_location (
 
 
 --
--- Name: file_locationx; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_locationx; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_locationx (
@@ -968,7 +1084,7 @@ CREATE TABLE file_locationx (
 
 
 --
--- Name: file_meta; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_meta; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_meta (
@@ -988,7 +1104,7 @@ CREATE TABLE file_meta (
 
 
 --
--- Name: file_patient; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_patient; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_patient (
@@ -1007,7 +1123,7 @@ CREATE TABLE file_patient (
 
 
 --
--- Name: file_plan; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_plan; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_plan (
@@ -1017,7 +1133,24 @@ CREATE TABLE file_plan (
 
 
 --
--- Name: file_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_roi_image_linkage; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE file_roi_image_linkage (
+    file_id integer NOT NULL,
+    roi_id integer NOT NULL,
+    linked_sop_instance_uid text NOT NULL,
+    linked_sop_class_uid text NOT NULL,
+    contour_file_offset integer NOT NULL,
+    contour_length integer NOT NULL,
+    contour_digest text NOT NULL,
+    num_points integer NOT NULL,
+    contour_type text NOT NULL
+);
+
+
+--
+-- Name: file_series; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_series (
@@ -1040,12 +1173,13 @@ CREATE TABLE file_series (
     performed_procedure_step_start_date date,
     performed_procedure_step_start_time time without time zone,
     performed_procedure_step_desc text,
-    performed_procedure_step_comments text
+    performed_procedure_step_comments text,
+    date_fixed boolean
 );
 
 
 --
--- Name: file_slope_intercept; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_slope_intercept; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_slope_intercept (
@@ -1055,7 +1189,7 @@ CREATE TABLE file_slope_intercept (
 
 
 --
--- Name: file_sop_common; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_sop_common; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_sop_common (
@@ -1078,7 +1212,7 @@ CREATE TABLE file_sop_common (
 
 
 --
--- Name: file_storage_root; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_storage_root; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_storage_root (
@@ -1096,8 +1230,8 @@ CREATE TABLE file_storage_root (
 CREATE SEQUENCE file_storage_root_file_storage_root_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1109,7 +1243,7 @@ ALTER SEQUENCE file_storage_root_file_storage_root_id_seq OWNED BY file_storage_
 
 
 --
--- Name: file_structure_set; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_structure_set; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_structure_set (
@@ -1120,7 +1254,7 @@ CREATE TABLE file_structure_set (
 
 
 --
--- Name: file_study; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_study; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_study (
@@ -1139,7 +1273,7 @@ CREATE TABLE file_study (
 
 
 --
--- Name: file_visibility_change; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_visibility_change; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_visibility_change (
@@ -1153,7 +1287,7 @@ CREATE TABLE file_visibility_change (
 
 
 --
--- Name: file_win_lev; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: file_win_lev; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_win_lev (
@@ -1164,7 +1298,7 @@ CREATE TABLE file_win_lev (
 
 
 --
--- Name: for_registration; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: for_registration; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE for_registration (
@@ -1181,11 +1315,11 @@ CREATE TABLE for_registration (
 --
 
 CREATE VIEW foreign_keys_view AS
-    SELECT tc.table_name, kcu.column_name, ccu.table_name AS foreign_table_name, ccu.column_name AS foreign_column_name FROM ((information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON (((tc.constraint_name)::text = (kcu.constraint_name)::text))) JOIN information_schema.constraint_column_usage ccu ON (((ccu.constraint_name)::text = (tc.constraint_name)::text))) WHERE ((tc.constraint_type)::text = 'FOREIGN KEY'::text);
+SELECT tc.table_name, kcu.column_name, ccu.table_name AS foreign_table_name, ccu.column_name AS foreign_column_name FROM ((information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON (((tc.constraint_name)::text = (kcu.constraint_name)::text))) JOIN information_schema.constraint_column_usage ccu ON (((ccu.constraint_name)::text = (tc.constraint_name)::text))) WHERE ((tc.constraint_type)::text = 'FOREIGN KEY'::text);
 
 
 --
--- Name: fraction_reference_beam; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_beam; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE fraction_reference_beam (
@@ -1202,7 +1336,7 @@ CREATE TABLE fraction_reference_beam (
 
 
 --
--- Name: fraction_reference_brachy; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_brachy; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE fraction_reference_brachy (
@@ -1215,7 +1349,7 @@ CREATE TABLE fraction_reference_brachy (
 
 
 --
--- Name: fraction_reference_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE fraction_reference_dose (
@@ -1237,7 +1371,7 @@ CREATE TABLE fraction_reference_dose (
 
 
 --
--- Name: fraction_related_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_related_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE fraction_related_dose (
@@ -1249,7 +1383,7 @@ CREATE TABLE fraction_related_dose (
 
 
 --
--- Name: image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image (
@@ -1273,7 +1407,7 @@ CREATE TABLE image (
 
 
 --
--- Name: image_equivalence_class; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_equivalence_class (
@@ -1281,7 +1415,9 @@ CREATE TABLE image_equivalence_class (
     series_instance_uid text NOT NULL,
     equivalence_class_number integer,
     processing_status text,
-    review_status text
+    review_status text,
+    update_user text,
+    update_date timestamp without time zone
 );
 
 
@@ -1292,8 +1428,8 @@ CREATE TABLE image_equivalence_class (
 CREATE SEQUENCE image_equivalence_class_image_equivalence_class_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1305,7 +1441,7 @@ ALTER SEQUENCE image_equivalence_class_image_equivalence_class_id_seq OWNED BY i
 
 
 --
--- Name: image_equivalence_class_input_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_input_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_equivalence_class_input_image (
@@ -1315,7 +1451,7 @@ CREATE TABLE image_equivalence_class_input_image (
 
 
 --
--- Name: image_equivalence_class_out_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_out_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_equivalence_class_out_image (
@@ -1326,7 +1462,7 @@ CREATE TABLE image_equivalence_class_out_image (
 
 
 --
--- Name: image_frame_offset; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_frame_offset; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_frame_offset (
@@ -1337,7 +1473,7 @@ CREATE TABLE image_frame_offset (
 
 
 --
--- Name: image_geometry; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_geometry; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_geometry (
@@ -1367,8 +1503,8 @@ CREATE TABLE image_geometry (
 CREATE SEQUENCE image_geometry_image_geometry_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1386,8 +1522,8 @@ ALTER SEQUENCE image_geometry_image_geometry_id_seq OWNED BY image_geometry.imag
 CREATE SEQUENCE image_image_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1399,7 +1535,7 @@ ALTER SEQUENCE image_image_id_seq OWNED BY image.image_id;
 
 
 --
--- Name: image_referenced_from_beam; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_referenced_from_beam; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_referenced_from_beam (
@@ -1414,7 +1550,7 @@ CREATE TABLE image_referenced_from_beam (
 
 
 --
--- Name: image_slope_intercept; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_slope_intercept; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_slope_intercept (
@@ -1424,7 +1560,7 @@ CREATE TABLE image_slope_intercept (
 
 
 --
--- Name: image_window_level; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_window_level; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_window_level (
@@ -1434,7 +1570,7 @@ CREATE TABLE image_window_level (
 
 
 --
--- Name: import_control; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: import_control; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE import_control (
@@ -1447,7 +1583,7 @@ CREATE TABLE import_control (
 
 
 --
--- Name: import_ct_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: import_ct_series; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE import_ct_series (
@@ -1473,7 +1609,7 @@ CREATE TABLE import_ct_series (
 
 
 --
--- Name: import_event; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: import_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE import_event (
@@ -1495,8 +1631,8 @@ CREATE TABLE import_event (
 CREATE SEQUENCE import_event_import_event_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1508,7 +1644,7 @@ ALTER SEQUENCE import_event_import_event_id_seq OWNED BY import_event.import_eve
 
 
 --
--- Name: missing_files; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: missing_files; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE missing_files (
@@ -1518,7 +1654,7 @@ CREATE TABLE missing_files (
 
 
 --
--- Name: missing_from_db; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: missing_from_db; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE missing_from_db (
@@ -1528,7 +1664,7 @@ CREATE TABLE missing_from_db (
 
 
 --
--- Name: missing_from_fs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: missing_from_fs; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE missing_from_fs (
@@ -1539,7 +1675,7 @@ CREATE TABLE missing_from_fs (
 
 
 --
--- Name: patient_import_status; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: patient_import_status; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE patient_import_status (
@@ -1549,7 +1685,7 @@ CREATE TABLE patient_import_status (
 
 
 --
--- Name: patient_import_status_change; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: patient_import_status_change; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE patient_import_status_change (
@@ -1563,7 +1699,7 @@ CREATE TABLE patient_import_status_change (
 
 
 --
--- Name: pixel_location; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pixel_location; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pixel_location (
@@ -1574,7 +1710,7 @@ CREATE TABLE pixel_location (
 
 
 --
--- Name: plan; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: plan; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE plan (
@@ -1601,8 +1737,8 @@ CREATE TABLE plan (
 CREATE SEQUENCE plan_plan_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1614,7 +1750,7 @@ ALTER SEQUENCE plan_plan_id_seq OWNED BY plan.plan_id;
 
 
 --
--- Name: plan_related_plans; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: plan_related_plans; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE plan_related_plans (
@@ -1625,7 +1761,7 @@ CREATE TABLE plan_related_plans (
 
 
 --
--- Name: planned_verification_images; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: planned_verification_images; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE planned_verification_images (
@@ -1645,7 +1781,7 @@ CREATE TABLE planned_verification_images (
 
 
 --
--- Name: related_roi_observations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: related_roi_observations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE related_roi_observations (
@@ -1655,7 +1791,7 @@ CREATE TABLE related_roi_observations (
 
 
 --
--- Name: roi; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi (
@@ -1668,12 +1804,21 @@ CREATE TABLE roi (
     roi_volume text,
     gen_alg text,
     gen_desc text,
-    roi_color text
+    roi_color text,
+    max_x double precision,
+    max_y double precision,
+    max_z double precision,
+    min_x double precision,
+    min_y double precision,
+    min_z double precision,
+    roi_interpreted_type text,
+    roi_obser_desc text,
+    roi_obser_label text
 );
 
 
 --
--- Name: roi_contour; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_contour; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi_contour (
@@ -1696,8 +1841,8 @@ CREATE TABLE roi_contour (
 CREATE SEQUENCE roi_contour_roi_contour_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1709,7 +1854,7 @@ ALTER SEQUENCE roi_contour_roi_contour_id_seq OWNED BY roi_contour.roi_contour_i
 
 
 --
--- Name: roi_elemental_composition; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_elemental_composition; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi_elemental_composition (
@@ -1720,7 +1865,7 @@ CREATE TABLE roi_elemental_composition (
 
 
 --
--- Name: roi_observation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_observation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi_observation (
@@ -1742,8 +1887,8 @@ CREATE TABLE roi_observation (
 CREATE SEQUENCE roi_observation_roi_observation_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1755,7 +1900,7 @@ ALTER SEQUENCE roi_observation_roi_observation_id_seq OWNED BY roi_observation.r
 
 
 --
--- Name: roi_physical_properties; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_physical_properties; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi_physical_properties (
@@ -1773,8 +1918,8 @@ CREATE TABLE roi_physical_properties (
 CREATE SEQUENCE roi_physical_properties_roi_phyical_properties_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1786,7 +1931,7 @@ ALTER SEQUENCE roi_physical_properties_roi_phyical_properties_id_seq OWNED BY ro
 
 
 --
--- Name: roi_related_roi; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_related_roi; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE roi_related_roi (
@@ -1803,8 +1948,8 @@ CREATE TABLE roi_related_roi (
 CREATE SEQUENCE roi_roi_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1816,7 +1961,7 @@ ALTER SEQUENCE roi_roi_id_seq OWNED BY roi.roi_id;
 
 
 --
--- Name: rt_beam; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_beam (
@@ -1851,7 +1996,7 @@ CREATE TABLE rt_beam (
 
 
 --
--- Name: rt_beam_limit_dev_tolerance; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_limit_dev_tolerance; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_beam_limit_dev_tolerance (
@@ -1863,7 +2008,7 @@ CREATE TABLE rt_beam_limit_dev_tolerance (
 
 
 --
--- Name: rt_beam_tolerance_table; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_tolerance_table; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_beam_tolerance_table (
@@ -1884,7 +2029,7 @@ CREATE TABLE rt_beam_tolerance_table (
 
 
 --
--- Name: rt_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dose (
@@ -1902,7 +2047,7 @@ CREATE TABLE rt_dose (
 
 
 --
--- Name: rt_dose_gfov; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_gfov; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dose_gfov (
@@ -1913,7 +2058,7 @@ CREATE TABLE rt_dose_gfov (
 
 
 --
--- Name: rt_dose_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dose_image (
@@ -1927,7 +2072,7 @@ CREATE TABLE rt_dose_image (
 
 
 --
--- Name: rt_dose_ref_beam; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_ref_beam; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dose_ref_beam (
@@ -1940,7 +2085,7 @@ CREATE TABLE rt_dose_ref_beam (
 
 
 --
--- Name: rt_dose_ref_brachy; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_ref_brachy; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dose_ref_brachy (
@@ -1956,8 +2101,8 @@ CREATE TABLE rt_dose_ref_brachy (
 CREATE SEQUENCE rt_dose_rt_dose_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1969,7 +2114,7 @@ ALTER SEQUENCE rt_dose_rt_dose_id_seq OWNED BY rt_dose.rt_dose_id;
 
 
 --
--- Name: rt_dvh; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh (
@@ -1983,7 +2128,7 @@ CREATE TABLE rt_dvh (
 
 
 --
--- Name: rt_dvh_available_rois; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_available_rois; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_available_rois (
@@ -1993,7 +2138,7 @@ CREATE TABLE rt_dvh_available_rois (
 
 
 --
--- Name: rt_dvh_dvh; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_dvh; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_dvh (
@@ -2025,7 +2170,7 @@ CREATE TABLE rt_dvh_dvh (
 
 
 --
--- Name: rt_dvh_dvh_data; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_dvh_data; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_dvh_data (
@@ -2036,7 +2181,7 @@ CREATE TABLE rt_dvh_dvh_data (
 
 
 --
--- Name: rt_dvh_dvh_dose_bins; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_dvh_dose_bins; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_dvh_dose_bins (
@@ -2049,7 +2194,7 @@ CREATE TABLE rt_dvh_dvh_dose_bins (
 
 
 --
--- Name: rt_dvh_dvh_roi; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_dvh_roi; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_dvh_roi (
@@ -2066,8 +2211,8 @@ CREATE TABLE rt_dvh_dvh_roi (
 CREATE SEQUENCE rt_dvh_dvh_rt_dvh_dvh_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2079,7 +2224,7 @@ ALTER SEQUENCE rt_dvh_dvh_rt_dvh_dvh_id_seq OWNED BY rt_dvh_dvh.rt_dvh_dvh_id;
 
 
 --
--- Name: rt_dvh_protocol_case_roi; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_protocol_case_roi; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_protocol_case_roi (
@@ -2093,7 +2238,7 @@ CREATE TABLE rt_dvh_protocol_case_roi (
 
 
 --
--- Name: rt_dvh_rt_dose; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_rt_dose; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_dvh_rt_dose (
@@ -2109,8 +2254,8 @@ CREATE TABLE rt_dvh_rt_dose (
 CREATE SEQUENCE rt_dvh_rt_dvh_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2122,7 +2267,7 @@ ALTER SEQUENCE rt_dvh_rt_dvh_id_seq OWNED BY rt_dvh.rt_dvh_id;
 
 
 --
--- Name: rt_plan_fraction_group; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_fraction_group; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_fraction_group (
@@ -2139,7 +2284,7 @@ CREATE TABLE rt_plan_fraction_group (
 
 
 --
--- Name: rt_plan_patient_setup; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_patient_setup; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_patient_setup (
@@ -2157,7 +2302,7 @@ CREATE TABLE rt_plan_patient_setup (
 
 
 --
--- Name: rt_plan_respiratory_motion_comp; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_respiratory_motion_comp; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_respiratory_motion_comp (
@@ -2172,7 +2317,7 @@ CREATE TABLE rt_plan_respiratory_motion_comp (
 
 
 --
--- Name: rt_plan_setup_device; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_setup_device; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_setup_device (
@@ -2187,7 +2332,7 @@ CREATE TABLE rt_plan_setup_device (
 
 
 --
--- Name: rt_plan_setup_fixation_device; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_setup_fixation_device; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_setup_fixation_device (
@@ -2204,7 +2349,7 @@ CREATE TABLE rt_plan_setup_fixation_device (
 
 
 --
--- Name: rt_plan_setup_image; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_setup_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_setup_image (
@@ -2217,7 +2362,7 @@ CREATE TABLE rt_plan_setup_image (
 
 
 --
--- Name: rt_plan_setup_shielding_device; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_setup_shielding_device; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_plan_setup_shielding_device (
@@ -2231,7 +2376,7 @@ CREATE TABLE rt_plan_setup_shielding_device (
 
 
 --
--- Name: rt_prescription; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_prescription; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_prescription (
@@ -2242,7 +2387,7 @@ CREATE TABLE rt_prescription (
 
 
 --
--- Name: rt_prescription_dose_ref; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_prescription_dose_ref; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE rt_prescription_dose_ref (
@@ -2275,8 +2420,8 @@ CREATE TABLE rt_prescription_dose_ref (
 CREATE SEQUENCE rt_prescription_rt_prescription_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2288,7 +2433,7 @@ ALTER SEQUENCE rt_prescription_rt_prescription_id_seq OWNED BY rt_prescription.r
 
 
 --
--- Name: slope_intercept; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: slope_intercept; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE slope_intercept (
@@ -2308,8 +2453,8 @@ CREATE TABLE slope_intercept (
 CREATE SEQUENCE slope_intercept_slope_intercept_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2321,7 +2466,7 @@ ALTER SEQUENCE slope_intercept_slope_intercept_id_seq OWNED BY slope_intercept.s
 
 
 --
--- Name: ss_for; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ss_for; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ss_for (
@@ -2338,8 +2483,8 @@ CREATE TABLE ss_for (
 CREATE SEQUENCE ss_for_ss_for_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2351,7 +2496,7 @@ ALTER SEQUENCE ss_for_ss_for_id_seq OWNED BY ss_for.ss_for_id;
 
 
 --
--- Name: ss_volume; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ss_volume; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ss_volume (
@@ -2364,7 +2509,7 @@ CREATE TABLE ss_volume (
 
 
 --
--- Name: structure_set; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: structure_set; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE structure_set (
@@ -2384,8 +2529,8 @@ CREATE TABLE structure_set (
 CREATE SEQUENCE structure_set_structure_set_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2397,7 +2542,7 @@ ALTER SEQUENCE structure_set_structure_set_id_seq OWNED BY structure_set.structu
 
 
 --
--- Name: submission; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: submission; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE submission (
@@ -2410,7 +2555,7 @@ CREATE TABLE submission (
 
 
 --
--- Name: unique_pixel_data; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_pixel_data; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE unique_pixel_data (
@@ -2427,8 +2572,8 @@ CREATE TABLE unique_pixel_data (
 CREATE SEQUENCE unique_pixel_data_unique_pixel_data_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2440,7 +2585,7 @@ ALTER SEQUENCE unique_pixel_data_unique_pixel_data_id_seq OWNED BY unique_pixel_
 
 
 --
--- Name: window_level; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: window_level; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE window_level (
@@ -2458,8 +2603,8 @@ CREATE TABLE window_level (
 CREATE SEQUENCE window_level_window_level_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -2468,6 +2613,26 @@ CREATE SEQUENCE window_level_window_level_id_seq
 --
 
 ALTER SEQUENCE window_level_window_level_id_seq OWNED BY window_level.window_level_id;
+
+
+SET search_path = quasar, pg_catalog;
+
+--
+-- Name: temp; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE temp (
+    file_id integer
+);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: adverse_file_event_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY adverse_file_event ALTER COLUMN adverse_file_event_id SET DEFAULT nextval('adverse_file_event_adverse_file_event_id_seq'::regclass);
 
 
 --
@@ -2667,7 +2832,15 @@ ALTER TABLE ONLY window_level ALTER COLUMN window_level_id SET DEFAULT nextval('
 
 
 --
--- Name: patient_import_status_patient_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: distinguished_pixel_digests_pixel_digest_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY distinguished_pixel_digests
+    ADD CONSTRAINT distinguished_pixel_digests_pixel_digest_key UNIQUE (pixel_digest);
+
+
+--
+-- Name: patient_import_status_patient_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY patient_import_status
@@ -2675,672 +2848,686 @@ ALTER TABLE ONLY patient_import_status
 
 
 --
--- Name: assocation_import_event_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: assocation_import_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX assocation_import_event_id_idx ON association_import USING btree (import_event_id);
 
 
 --
--- Name: assocation_import_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: assocation_import_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX assocation_import_id ON association_import USING btree (association_id);
 
 
 --
--- Name: association_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: association_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX association_pk ON association USING btree (association_id);
 
 
 --
--- Name: beam_applicator_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_applicator_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX beam_applicator_plan_idx ON beam_applicator USING btree (plan_id, beam_number, applicator_id);
 
 
 --
--- Name: beam_block_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_block_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX beam_block_idx ON beam_block USING btree (plan_id, beam_number, block_number);
 
 
 --
--- Name: beam_control_point_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_control_point_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX beam_control_point_idx ON beam_control_point USING btree (plan_id, beam_number, control_point_index);
 
 
 --
--- Name: beam_limiting_device_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: beam_limiting_device_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX beam_limiting_device_idx ON beam_limiting_device USING btree (plan_id, beam_number);
 
 
 --
--- Name: contour_image_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: contour_image_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX contour_image_id_idx ON contour_image USING btree (roi_contour_id);
 
 
 --
--- Name: control_point_bld_position_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: control_point_bld_position_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX control_point_bld_position_idx ON control_point_bld_position USING btree (plan_id, beam_number, control_point_index);
 
 
 --
--- Name: ctp_file_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_file_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ctp_file_file_id_index ON ctp_file USING btree (file_id);
 
 
 --
--- Name: ctp_proj_site_file_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_proj_site_file_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ctp_proj_site_file_index ON ctp_file USING btree (file_id, project_name, site_name);
 
 
 --
--- Name: ctp_proj_site_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_proj_site_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ctp_proj_site_index ON ctp_file USING btree (project_name, site_name);
 
 
 --
--- Name: ctp_upload_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ctp_upload_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX ctp_upload_index ON ctp_upload_event USING btree (file_id, rcv_timestamp);
 
 
 --
--- Name: dicom_edit_event_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX dicom_edit_event_pk ON dicom_edit_event USING btree (dicom_edit_event_id);
-
-
---
--- Name: dicom_file_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_file_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dicom_file_file_id_index ON dicom_file USING btree (file_id);
 
 
 --
--- Name: dicom_file_send_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_file_send_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dicom_file_send_idx ON dicom_file_send USING btree (dicom_send_event_id);
 
 
 --
--- Name: dicom_process_errors_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_process_errors_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dicom_process_errors_file_id_idx ON dicom_process_errors USING btree (file_id);
 
 
 --
--- Name: dicom_send_event_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dicom_send_event_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX dicom_send_event_pk ON dicom_send_event USING btree (dicom_send_event_id);
 
 
 --
--- Name: file_ct_image_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_ct_image_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_ct_image_file_id_index ON file_ct_image USING btree (file_id);
 
 
 --
--- Name: file_dose_file_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_dose_file_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_dose_file_idx ON file_dose USING btree (file_id);
 
 
 --
--- Name: file_dose_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_dose_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_dose_idx ON file_dose USING btree (rt_dose_id);
 
 
 --
--- Name: file_ele_ref_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_ele_ref_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_ele_ref_pk ON file_ele_ref USING btree (file_ele_ref_id);
 
 
 --
--- Name: file_equipment_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_equipment_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_equipment_file_id_idx ON file_equipment USING btree (file_id);
 
 
 --
--- Name: file_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_file_id_idx ON file USING btree (file_id);
 
 
 --
--- Name: file_for_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_for_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_for_file_id_idx ON file_for USING btree (file_id);
 
 
 --
--- Name: file_image_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_image_file_id_index ON file_image USING btree (file_id);
 
 
 --
--- Name: file_image_geometry_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image_geometry_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_image_geometry_file_id_idx ON file_image_geometry USING btree (file_id);
 
 
 --
--- Name: file_image_geometry_image_geometry_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image_geometry_image_geometry_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_image_geometry_image_geometry_id_idx ON file_image_geometry USING btree (image_geometry_id);
 
 
 --
--- Name: file_image_image_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_image_image_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_image_image_id_idx ON file_image USING btree (image_id);
 
 
 --
--- Name: file_import_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_import_file_id_idx ON file_import USING btree (file_id);
 
 
 --
--- Name: file_import_import_event_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_import_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_import_import_event_id_idx ON file_import USING btree (import_event_id);
 
 
 --
--- Name: file_import_series_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_series_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_import_series_file_id_idx ON file_import_series USING btree (file_id);
 
 
 --
--- Name: file_import_series_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_import_series_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_import_series_pk ON file_import_series USING btree (file_import_series_id);
 
 
 --
--- Name: file_location_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_location_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_location_file_id_idx ON file_location USING btree (file_id);
 
 
 --
--- Name: file_meta_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_meta_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_meta_file_id_idx ON file_meta USING btree (file_id);
 
 
 --
--- Name: file_patient_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_patient_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_patient_file_id_index ON file_patient USING btree (file_id);
 
 
 --
--- Name: file_plan_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_patient_patient_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_patient_patient_id_index ON file_patient USING btree (patient_id);
+
+
+--
+-- Name: file_plan_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_plan_file_id_idx ON file_plan USING btree (file_id);
 
 
 --
--- Name: file_plan_plan_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_plan_plan_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_plan_plan_id_idx ON file_plan USING btree (plan_id);
 
 
 --
--- Name: file_series_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_series_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_series_file_id_index ON file_series USING btree (file_id);
 
 
 --
--- Name: file_series_uid_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_series_uid_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_series_uid_idx ON file_series USING btree (series_instance_uid);
 
 
 --
--- Name: file_slope_intercept_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_slope_intercept_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_slope_intercept_file_id_idx ON file_slope_intercept USING btree (file_id);
 
 
 --
--- Name: file_slope_intercept_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_slope_intercept_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_slope_intercept_id_idx ON file_slope_intercept USING btree (slope_intercept_id);
 
 
 --
--- Name: file_sop_common_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_sop_common_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_sop_common_file_id_idx ON file_sop_common USING btree (file_id);
 
 
 --
--- Name: file_sop_common_sop_instance_uid_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_sop_common_sop_instance_uid_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_sop_common_sop_instance_uid_index ON file_sop_common USING btree (sop_instance_uid);
 
 
 --
--- Name: file_storage_root_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_storage_root_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_storage_root_pk ON file_storage_root USING btree (file_storage_root_id);
 
 
 --
--- Name: file_structure_set_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_structure_set_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_structure_set_idx ON file_structure_set USING btree (file_id, structure_set_id);
 
 
 --
--- Name: file_study_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_study_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_study_file_id_index ON file_study USING btree (file_id);
 
 
 --
--- Name: file_visibility_change_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_visibility_change_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_visibility_change_idx ON file_visibility_change USING btree (file_id);
 
 
 --
--- Name: file_win_lev_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_win_lev_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_win_lev_file_id_idx ON file_win_lev USING btree (file_id);
 
 
 --
--- Name: file_win_level_wl_index_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file_win_level_wl_index_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file_win_level_wl_index_idx ON file_win_lev USING btree (wl_index);
 
 
 --
--- Name: fraction_reference_beam_beam_number; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_beam_beam_number; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fraction_reference_beam_beam_number ON fraction_reference_beam USING btree (beam_number);
 
 
 --
--- Name: fraction_reference_beam_fraction_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_beam_fraction_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fraction_reference_beam_fraction_idx ON fraction_reference_beam USING btree (fraction_group_number);
 
 
 --
--- Name: fraction_reference_beam_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: fraction_reference_beam_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fraction_reference_beam_plan_idx ON fraction_reference_beam USING btree (plan_id);
 
 
 --
--- Name: image_equivalence_class_input_image_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_input_image_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_equivalence_class_input_image_file_id_idx ON image_equivalence_class_input_image USING btree (file_id);
 
 
 --
--- Name: image_equivalence_class_input_image_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_input_image_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_equivalence_class_input_image_id_idx ON image_equivalence_class_input_image USING btree (image_equivalence_class_id);
 
 
 --
--- Name: image_equivalence_class_out_image_file_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_out_image_file_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_equivalence_class_out_image_file_idx ON image_equivalence_class_out_image USING btree (file_id);
 
 
 --
--- Name: image_equivalence_class_out_image_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_out_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_equivalence_class_out_image_idx ON image_equivalence_class_out_image USING btree (image_equivalence_class_id);
 
 
 --
--- Name: image_equivalence_class_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_equivalence_class_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX image_equivalence_class_pk ON image_equivalence_class USING btree (image_equivalence_class_id);
 
 
 --
--- Name: image_geometry_image_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_geometry_image_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_geometry_image_id_index ON image_geometry USING btree (image_id);
 
 
 --
--- Name: image_geometry_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_geometry_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX image_geometry_pk ON image_geometry USING btree (image_geometry_id);
 
 
 --
--- Name: image_image_id_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_image_id_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX image_image_id_pk ON image USING btree (image_id);
 
 
 --
--- Name: image_slope_intercept_image_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_slope_intercept_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_slope_intercept_image_idx ON image_slope_intercept USING btree (image_id);
 
 
 --
--- Name: image_slope_intercept_slope_intercept_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_slope_intercept_slope_intercept_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_slope_intercept_slope_intercept_idx ON image_slope_intercept USING btree (slope_intercept_id);
 
 
 --
--- Name: image_window_level_image_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_window_level_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_window_level_image_idx ON image_window_level USING btree (image_id);
 
 
 --
--- Name: image_window_level_window_level_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: image_window_level_window_level_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX image_window_level_window_level_idx ON image_window_level USING btree (window_level_id);
 
 
 --
--- Name: import_event_import_event_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: import_event_import_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX import_event_import_event_id_idx ON import_event USING btree (import_event_id);
 
 
 --
--- Name: import_event_import_time_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: import_event_import_time_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX import_event_import_time_idx ON import_event USING btree (import_time);
 
 
 --
--- Name: pixel_location_file_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: pixel_location_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX pixel_location_file_id_idx ON pixel_location USING btree (file_id);
 
 
 --
--- Name: pixel_location_unique_pixel_data_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: pixel_location_unique_pixel_data_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX pixel_location_unique_pixel_data_id_idx ON pixel_location USING btree (unique_pixel_data_id);
 
 
 --
--- Name: plan_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: plan_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX plan_pk ON plan USING btree (plan_id);
 
 
 --
--- Name: roi_contour_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_contour_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX roi_contour_idx ON roi_contour USING btree (roi_id);
 
 
 --
--- Name: roi_contour_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_contour_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX roi_contour_pk ON roi_contour USING btree (roi_contour_id);
 
 
 --
--- Name: roi_observation_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_observation_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX roi_observation_id_idx ON roi_observation USING btree (roi_id);
 
 
 --
--- Name: roi_observation_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_observation_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX roi_observation_pk ON roi_observation USING btree (roi_observation_id);
 
 
 --
--- Name: roi_physical_properties_observation_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_physical_properties_observation_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX roi_physical_properties_observation_idx ON roi_physical_properties USING btree (roi_observation_id);
 
 
 --
--- Name: roi_physical_properties_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_physical_properties_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX roi_physical_properties_pk ON roi_physical_properties USING btree (roi_phyical_properties_id);
 
 
 --
--- Name: roi_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX roi_pk ON roi USING btree (roi_id);
 
 
 --
--- Name: roi_structure_set_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: roi_structure_set_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX roi_structure_set_idx ON roi USING btree (structure_set_id);
 
 
 --
--- Name: rt_beam_number_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_number_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_beam_number_idx ON rt_beam USING btree (beam_number);
 
 
 --
--- Name: rt_beam_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_beam_plan_idx ON rt_beam USING btree (plan_id);
 
 
 --
--- Name: rt_beam_tolerance_table_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_tolerance_table_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_beam_tolerance_table_plan_idx ON rt_beam_tolerance_table USING btree (plan_id);
 
 
 --
--- Name: rt_beam_tolerance_table_table_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_beam_tolerance_table_table_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_beam_tolerance_table_table_idx ON rt_beam_tolerance_table USING btree (tolerance_table_number);
 
 
 --
--- Name: rt_dose_image_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_dose_image_idx ON rt_dose_image USING btree (rt_dose_id);
 
 
 --
--- Name: rt_dose_image_image_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_image_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_dose_image_image_idx ON rt_dose_image USING btree (image_id);
 
 
 --
--- Name: rt_dose_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dose_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX rt_dose_pk ON rt_dose USING btree (rt_dose_id);
 
 
 --
--- Name: rt_dvh_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_dvh_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX rt_dvh_pk ON rt_dvh USING btree (rt_dvh_id);
 
 
 --
--- Name: rt_plan_fraction_group_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_fraction_group_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_plan_fraction_group_idx ON rt_plan_fraction_group USING btree (plan_id);
 
 
 --
--- Name: rt_plan_patient_setup_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_plan_patient_setup_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_plan_patient_setup_plan_idx ON rt_plan_patient_setup USING btree (plan_id);
 
 
 --
--- Name: rt_prescription_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_prescription_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX rt_prescription_pk ON rt_prescription USING btree (rt_prescription_id);
 
 
 --
--- Name: rt_prescription_plan_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: rt_prescription_plan_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX rt_prescription_plan_idx ON rt_prescription USING btree (plan_id);
 
 
 --
--- Name: slope_intercept_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: slope_intercept_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX slope_intercept_pk ON slope_intercept USING btree (slope_intercept_id);
 
 
 --
--- Name: ss_for_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ss_for_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX ss_for_pk ON ss_for USING btree (ss_for_id);
 
 
 --
--- Name: ss_volume_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ss_volume_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ss_volume_id_idx ON ss_volume USING btree (ss_for_id);
 
 
 --
--- Name: structure_set_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: structure_set_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX structure_set_pk ON structure_set USING btree (structure_set_id);
 
 
 --
--- Name: unique_pixel_data_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_pixel_data_digest; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX unique_pixel_data_digest ON unique_pixel_data USING btree (digest);
+
+
+--
+-- Name: unique_pixel_data_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_pixel_data_pk ON unique_pixel_data USING btree (unique_pixel_data_id);
 
 
 --
--- Name: window_level_pk; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_pixel_date_image; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX unique_pixel_date_image ON image USING btree (unique_pixel_data_id);
+
+
+--
+-- Name: window_level_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX window_level_pk ON window_level USING btree (window_level_id);
