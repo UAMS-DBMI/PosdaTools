@@ -10,4 +10,5 @@ sudo systemctl enable posda --now
 sudo systemctl enable posda-backlog --now
 sudo systemctl enable posda-file-process --now
 sudo systemctl enable quince-server --now
+sudo systemctl enable kaleidoscope-server --now
 sudo systemctl enable k-base --now
