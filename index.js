@@ -16,6 +16,10 @@ const winston = require('winston');
 const promiseLimit = require('promise-limit');
 const ProgressBar = require('progress');
 winston.level = 'error';
+/*
+  Force the pg-promise library to support postgress peer auth,
+  by changing the default host to the local unix socket.
+*/
 pg.pg.defaults.host = '/var/run/postgresql';
 const API_URL = 'http://localhost/vapi';
 const finish_1 = require("./finish");

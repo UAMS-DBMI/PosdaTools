@@ -4,7 +4,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const pg = require('pg-promise')();
 
-const DIR = '/mnt/public-nfs/posda/storage';
+const DIR = '/home/posda/cache/k-storage';
 
 function makeDirs(targetDir: string) {
   targetDir.split('/').forEach((dir: any, index: any, splits: any) => {
