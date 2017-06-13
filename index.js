@@ -16,7 +16,8 @@ const winston = require('winston');
 const promiseLimit = require('promise-limit');
 const ProgressBar = require('progress');
 winston.level = 'error';
-const API_URL = 'http://tcia-utilities/vapi';
+pg.pg.defaults.host = '/var/run/postgresql';
+const API_URL = 'http://localhost/vapi';
 const finish_1 = require("./finish");
 var images_to_get = 0;
 var bar = new ProgressBar(':bar ETA :eta s', {
@@ -256,7 +257,7 @@ class K {
 }
 // let k = new K();
 // k.main(2372);
-let client = pg('postgres://tcia-utilities/N_posda_files');
+let client = pg("postgres://@/posda_files");
 function doOne() {
     return __awaiter(this, void 0, void 0, function* () {
         let query = `

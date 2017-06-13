@@ -8,8 +8,14 @@ const ProgressBar = require('progress');
 
 winston.level = 'error';
 
+/* 
+  Force the pg-promise library to support postgress peer auth,
+  by changing the default host to the local unix socket.
+*/
+pg.pg.defaults.host = '/var/run/postgresql';
 
-const API_URL = 'http://tcia-utilities/vapi';
+
+const API_URL = 'http://localhost/vapi';
 
 import { Image } from './image';
 
@@ -327,7 +333,7 @@ class K {
 // let k = new K();
 // k.main(2372);
 
-let client = pg('postgres://tcia-utilities/N_posda_files');
+let client = pg("postgres://@/posda_files");
 
 async function doOne() {
   let query = `
