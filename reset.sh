@@ -24,8 +24,10 @@ warning() {
 }
 
 main() {
+    stop_services;
     clear_cache;
     clear_databases;
+    start_services;
 
 }
 clear_databases() {
@@ -36,7 +38,20 @@ clear_databases() {
 clear_cache() {
     echo "Deleting all files in cache...";
     find $POSDA_CACHE_ROOT -type f -delete
+    rm /home/posda/FilesAlreadySeen
     echo "Done."
+}
+
+stop_services() {
+    sudo systemctl stop posda-backlog
+    sudo systemctl stop posda-file-process
+    sudo systemctl stop posda
+}
+
+start_services() {
+    sudo systemctl start posda
+    sudo systemctl start posda-file-process
+    sudo systemctl start posda-backlog
 }
 
 
