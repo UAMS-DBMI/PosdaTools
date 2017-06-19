@@ -37,9 +37,11 @@ sudo -u postgres createuser -s $(whoami)
 ./service_files.sh
 
 mkdir ~/Intake
+mkdir ~/cache/k-storage
 psql posda_files <<END
 	insert into file_storage_root
 	values (1, '/home/posda/Intake', true, 'default import path');
+	values (2, '/home/posda/cache/k-storage', true, 'k-base generated');
 END
 
 # echo "Removing this user from the sudo group"
