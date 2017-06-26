@@ -1469,6 +1469,7 @@ method MakeQuery($http, $dyn){
   $self->{query_rows} = [];
 
   my $invoked_id = Posda::QueryLog::query_invoked($self->{query}, $self->get_user);
+  $self->{query}->{invoked_id} = $invoked_id;
 
   $self->{query}->RunQuery(
     func($row) {
