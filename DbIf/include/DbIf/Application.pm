@@ -295,7 +295,7 @@ method SpecificInitialize($session) {
     if (defined $input_line) {
       $commands->{$name}->{pipe_parms} = $input_line;
     }
-
+    $commands->{$name}->{type} = $type;
   } sort @{PosdaDB::Queries->GetOperations()};
 
   $self->{Commands} = $commands;
@@ -2540,10 +2540,12 @@ func apply_command($command, $colmap, $row) {
   my $final = $command->{cmdline};
   map {
     my $parm = $_;
-    my $index_of_parm = $colmap->{$parm};
-    my $new_value = $row->[$index_of_parm];
+    if (not $parm =~ /\?/) {
+      my $index_of_parm = $colmap->{$parm};
+      my $new_value = $row->[$index_of_parm];
 
-    $final =~ s/<$parm>/$new_value/g;
+      $final =~ s/<$parm>/$new_value/g;
+    }
   } @{$command->{parms}};
 
   return $final;
@@ -2599,6 +2601,7 @@ method ExecuteCommand($http, $dyn) {
 
     $self->{PlannedOperations} = \@planned_operations;
     $self->{PlannedPipeOperation} = $final_cmd;
+    $self->{PlannedPipeOp} = $op;
     $self->{Mode} = 'PipeOperationsSummary';
     return;
   }
@@ -2660,6 +2663,14 @@ method ExecuteNextOperation() {
 }
 
 method ExecutePlannedPipeOperations($http, $dyn) {
+  # TODO: determine if this is a background_process?
+  #
+  #
+  #
+  #
+
+
+
   my $cmd = $self->{PlannedPipeOperation};
   my $stdin = $self->{PlannedOperations};
 
@@ -2731,9 +2742,10 @@ method PipeOperationsSummary($http, $dyn) {
       sync => "Update();",
   });
 
+  my $cmd_html = encode_entities($self->{PlannedPipeOperation});
   $http->queue(qq{
     <p>The command to be executed:</p>
-    <pre>$self->{PlannedPipeOperation}</pre>
+    <pre>$cmd_html</pre>
 
     <p>The values to be fed on standard input:</p>
     <table class="table">
