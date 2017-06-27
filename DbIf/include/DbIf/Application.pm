@@ -2016,6 +2016,10 @@ method TableSelected($http, $dyn){
     $http->queue(qq{
       <br>
     });
+    $http->queue(qq{
+      File_id: $table->{posda_file_id}<br>
+      Spreadsheet_uploaded_id: $table->{spreadsheet_uploaded_id}<br>
+    });
     $http->queue("Rows: $num_rows<br>Results:<hr>");
     $http->queue(qq{
       <table class="table table-striped">
@@ -2131,16 +2135,17 @@ method UpdateInsertStatus($http, $dyn){
 method UpdatesInserts($http, $dyn){
 }
 #############################
-my $f_form = '
-<form action="<?dyn="StoreFileUri"?>"
-enctype="multipart/form-data" method="POST" class="dropzone">
-</form>';
 method Upload($http, $dyn){
-  $self->RefreshEngine($http, $dyn, $f_form);
+  $self->RefreshEngine($http, $dyn, qq{
+  <form action="<?dyn="StoreFileUri"?>"
+    enctype="multipart/form-data" method="POST" class="dropzone">
+  </form>
+  });
 }
 method StoreFileUri($http, $dyn){
   $http->queue("StoreFile?obj_path=$self->{path}");
 }
+
 method StoreFile($http, $dyn){
   my $method = $http->{method};
   my $content_type = $http->{header}->{content_type};
@@ -2155,6 +2160,7 @@ method StoreFile($http, $dyn){
      "$self->{TempDir}/$self->{UploadCount}");
   &{$self->UploadDone($http, $dyn)}($file);
 }
+
 method UploadDone($http, $dyn){
   my $sub = sub {
     my($file) = @_;
@@ -2315,6 +2321,25 @@ method CsvLoaded($file){
           #delete the first row, as it is query headers
           delete $new_table_entry->{rows}->[0];
         }
+
+        # import the new file into posda
+        Dispatch::LineReaderWriter->write_and_read_all(
+          "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" \"DbIf file upload\"",
+          [""],
+          func($return) {
+            for my $i (@$return) {
+              if ($i =~ /File id: (.*)/) {
+                $new_table_entry->{posda_file_id} = $1;
+                # record upload event
+                my $upload_id = PosdaDB::Queries::record_spreadsheet_upload(
+                  0, $self->get_user, $1, $#{$new_table_entry->{rows}});
+                $new_table_entry->{spreadsheet_uploaded_id} = $upload_id;
+              } else {
+                say STDERR "Error inserting file into posda! $i";
+              }
+            }
+          }
+        );
 
         push(@{$self->{LoadedTables}}, $new_table_entry);
       } else {
@@ -2664,13 +2689,14 @@ method ExecuteNextOperation() {
 }
 
 method ExecutePlannedPipeOperations($http, $dyn) {
-  # TODO: determine if this is a background_process?
-  #
-  #
-  #
-  #
+  if ($self->{PlannedPipeOp}->{type} eq 'background_process') {
+    # TODO: setup the requisite stuff
+    say STDERR "This is a background process! Doing the bp stuff...";
 
+    # create row in subprocess_invocation table
+    # write any output from this command to subprocess_lines table
 
+  }
 
   my $cmd = $self->{PlannedPipeOperation};
   my $stdin = $self->{PlannedOperations};

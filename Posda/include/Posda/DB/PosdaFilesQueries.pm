@@ -298,6 +298,23 @@ sub Execute{
 # Class methods
 #
 
+func record_spreadsheet_upload($is_executable, $user, $file_id, $rowcount) {
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    insert into spreadsheet_uploaded
+    (time_uploaded, is_executable, uploading_user, file_id_in_posda, number_rows)
+    values (now(), ?, ?, ?, ?)
+    returning spreadsheet_uploaded_id
+  });
+  $qh->execute($is_executable, $user, $file_id, $rowcount);
+  my $results = $qh->fetchall_arrayref();
+
+  return $results->[0]->[0];
+
+}
+
+
 method GetChainedQueries($class: $query) {
 
   # TODO: Add some type of caching to this method!
