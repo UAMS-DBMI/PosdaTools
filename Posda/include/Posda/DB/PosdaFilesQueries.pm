@@ -15,6 +15,15 @@ use Data::Dumper;
 my $db_handle;
 my $db_handle_cache = {};
 
+method reset_db_handles{
+  for my $i (keys %$db_handle_cache){
+    $db_handle_cache->{$i}->disconnect;
+    delete $db_handle_cache->{$i};
+    $db_handle->disconnect;
+    $db_handle = undef;
+  }
+}
+
 sub _get_handle {
   if (not defined $db_handle) {
     $db_handle = DBI->connect(Database('posda_queries'));
