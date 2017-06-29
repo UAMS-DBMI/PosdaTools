@@ -33,7 +33,7 @@ func write_and_read_all($class: $cmd, $data, $finished_callback) {
       push @results, $line;
     },
     func() {
-      ($finished_callback)->(\@results);
+      ($finished_callback)->(\@results, $pid);
     }, 
     $pid
   );

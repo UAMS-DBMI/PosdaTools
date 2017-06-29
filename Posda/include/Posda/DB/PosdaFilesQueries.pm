@@ -323,6 +323,52 @@ func record_spreadsheet_upload($is_executable, $user, $file_id, $rowcount) {
 
 }
 
+func invoke_subprocess(
+  $from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
+  $query_invoked_by_dbif_id, $button_name, $command_line, $user
+) {
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    insert into subprocess_invocation
+    (from_spreadsheet, from_button, spreadsheet_uploaded_id, 
+     query_invoked_by_dbif_id, button_name, command_line, 
+     invoking_user, when_invoked)
+    values (?, ?, ?, ?, ?, ?, ?, now())
+    returning subprocess_invocation_id
+  });
+  $qh->execute($from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
+    $query_invoked_by_dbif_id, $button_name, $command_line, $user);
+  my $results = $qh->fetchall_arrayref();
+
+  return $results->[0]->[0];
+}
+
+func set_subprocess_pid($subprocess_invocation_id, $pid) {
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    update subprocess_invocation
+    set process_pid = ?
+    where subprocess_invocation_id = ?
+  });
+
+  $qh->execute($pid, $subprocess_invocation_id);
+}
+
+func record_subprocess_lines($subprocess_invocation_id, $lines) {
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    insert into subprocess_lines
+    values (?, ?, ?)
+  });
+  my $line_no = 0;
+  for my $line (@$lines) {
+    $qh->execute($subprocess_invocation_id, $line_no++, $line);
+  }
+}
+
 
 method GetChainedQueries($class: $query) {
 

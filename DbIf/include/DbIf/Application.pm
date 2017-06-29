@@ -2689,27 +2689,43 @@ method ExecuteNextOperation() {
 }
 
 method ExecutePlannedPipeOperations($http, $dyn) {
-  if ($self->{PlannedPipeOp}->{type} eq 'background_process') {
-    # TODO: setup the requisite stuff
-    say STDERR "This is a background process! Doing the bp stuff...";
-
-    # create row in subprocess_invocation table
-    # write any output from this command to subprocess_lines table
-
-  }
+  my $table = $self->{LoadedTables}->[$self->{SelectTable}];
 
   my $cmd = $self->{PlannedPipeOperation};
   my $stdin = $self->{PlannedOperations};
 
+  my $subprocess_invocation_id;
+
+  if ($self->{PlannedPipeOp}->{type} eq 'background_process') {
+    say STDERR "This is a background process! Doing the bp stuff...";
+
+
+    $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
+      1, 0, $table->{spreadsheet_uploaded_id}, undef, undef,
+      $cmd, $self->get_user);
+    # set the bkgrnd_id field
+    $cmd =~ s/<\?bkgrnd_id\?>/$subprocess_invocation_id/;
+  }
 
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd,
     $stdin,
-    func($return) {
+    func($return, $pid) {
       $self->{Results} = $return;
       $self->{Mode} = 'ResultsAreIn';
       $self->AutoRefresh;
       say "ResultsAreIn!";
+
+      if (defined $subprocess_invocation_id) {
+        # TODO: Is this really useful? the way write_and_read_all()
+        # works, the subprocess should always be dead by the time
+        # we get here. This is in the spec, but maybe it should be
+        # modified? 
+        PosdaDB::Queries::set_subprocess_pid(
+          $subprocess_invocation_id, $pid);
+        PosdaDB::Queries::record_subprocess_lines(
+          $subprocess_invocation_id, $return);
+      }
     }
   );
 
