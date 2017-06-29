@@ -109,8 +109,7 @@ if($@){
   );
   die "Script errored with update to table ($@)";
 }
-#unless(open EMAIL, "|tee /tmp/EMAIL -s \"Posda Job Complete\" $notify"){
-unless(open EMAIL, "|tee /tmp/EMAIL"){
+unless(open EMAIL, "|mail -s \"Posda Job Complete\" $notify"){
   my $error = "can't open pipe ($!) to mail $notify";
   $add_bgrnd_sub_error->RunQuery(sub{},sub{},
     $error, $bkgrnd_id
