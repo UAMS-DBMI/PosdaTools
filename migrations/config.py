@@ -1,6 +1,5 @@
 environments = {
     "dev": {"hostname": "localhost"},
-    "prod": {"hostname": "tcia-utilities"},
 }
 
 targets = [

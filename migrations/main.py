@@ -88,11 +88,18 @@ def get_remote_version(conn):
 
     return cur.fetchone()[0]
 
+def connect(target_db, hostname):
+    if hostname != 'localhost':
+        return psycopg2.connect(f"dbname={target_db} host={hostname}")
+    else:
+        return psycopg2.connect(f"dbname={target_db}")
+
+
 def process_one(env, target):
     target_db = env['targets'][target]
     print(f"\nApplying migrations to target: {target} ({target_db})")
     plan = load_plan(os.path.join(target, f"{target}.plan"))
-    conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
+    conn = connect(target_db, env['hostname'])
 
     # determine the latest local version
     local_version = get_local_version(plan)
@@ -135,7 +142,7 @@ def status(env_name):
 
     for target, target_db in env['targets'].items():
         plan = load_plan(os.path.join(target, f"{target}.plan"))
-        conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
+        conn = connect(target_db, env['hostname'])
 
         local_version = get_local_version(plan)
         db_version = get_remote_version(conn)
@@ -153,7 +160,7 @@ def force(version, env_name, target):
     env = config.t_env[env_name]
     target_db = env['targets'][target]
 
-    conn = psycopg2.connect(f"dbname={target_db} host={env['hostname']}")
+    conn = connect(target_db, env['hostname'])
     cur = conn.cursor()
 
     cur.execute(f"update db_version.version set version = {version}")

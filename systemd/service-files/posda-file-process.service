@@ -1,0 +1,13 @@
+[Unit]
+Description=Posda File Process Service
+After=posda.service
+
+[Service]
+User=posda
+Group=posda
+WorkingDirectory=/home/posda/posdatools/systemd
+ExecStart=/home/posda/posdatools/systemd/run_in_posda_env.sh systemd/start_PosdaFileProcessDaemon.pl
+ExecStop=/home/posda/posdatools/systemd/run_in_posda_env.sh systemd/stop_PosdaFileProcessDaemon.pl
+
+[Install]
+WantedBy=multi-user.target

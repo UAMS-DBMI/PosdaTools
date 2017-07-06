@@ -5,14 +5,19 @@
     "init"     : [
       "Posda/sql/posda_queries.sql",
       "Posda/sql/posda_queries_data.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_queries.sql"
     ]
   },
   "posda_auth" : {
     "database" : "posda_auth",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/posda_auth.sql",
       "Posda/sql/posda_auth_setup.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_auth.sql"
     ]
   },
   "posda_appstats" : {
@@ -20,6 +25,9 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_appstats.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_appstats.sql"
     ]
 
   },
@@ -29,6 +37,9 @@
     "init"     : [
       "Posda/sql/private_tag_kb.sql",
       "Posda/sql/private_tag_kb_data.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_private_tag.sql"
     ]
   },
   "posda_public_tag" : {
@@ -36,14 +47,22 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/public_tag_disposition.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_public_tag.sql"
     ]
+
   },
   "posda_dicom_roots" : {
     "database" : "dicom_roots",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/dicom_roots.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_dicom_roots.sql"
     ]
+
   },
   "dicom_dd" : {
     "database" : "dicom_dd",
@@ -56,29 +75,46 @@
     "database" : "posda_files",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/posda_files.sql"
+      "Posda/sql/posda_files.sql",
+      "Posda/sql/posda_files_data.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_files.sql"
     ]
+
   },
   "posda_nicknames" : {
     "database" : "posda_nicknames",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_nicknames.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_nicknames.sql"
     ]
+
   },
   "posda_counts" : {
     "database" : "posda_counts",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_counts.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_counts.sql"
     ]
+
   },
   "posda_phi" : {
     "database" : "posda_phi",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_phi.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_phi.sql"
     ]
+
   },
   "posda_phi_simple" : {
     "database" : "N_posda_phi_simple",
@@ -91,9 +127,12 @@
     "database" : "posda_backlog",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/posda_backlog.sql"
+      "Posda/sql/posda_backlog.sql",
+      "Posda/sql/posda_backlog_data.sql"
+    ],
+    "reset"    : [
+      "Posda/sql/reset/posda_backlog.sql"
     ]
-
   },
   "public" : {
     "database" : "ncia",

@@ -2,12 +2,17 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 8.4.20
+-- Dumped by pg_dump version 9.5.7
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
+SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
@@ -16,7 +21,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: collection_count_per_round; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: collection_count_per_round; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE collection_count_per_round (
@@ -26,7 +31,7 @@ CREATE TABLE collection_count_per_round (
 
 
 --
--- Name: control_status; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: control_status; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE control_status (
@@ -43,7 +48,7 @@ CREATE TABLE control_status (
 
 
 --
--- Name: request; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: request; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE request (
@@ -66,7 +71,7 @@ CREATE TABLE request (
 
 
 --
--- Name: request_error; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: request_error; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE request_error (
@@ -83,8 +88,8 @@ CREATE TABLE request_error (
 CREATE SEQUENCE request_request_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -96,7 +101,7 @@ ALTER SEQUENCE request_request_id_seq OWNED BY request.request_id;
 
 
 --
--- Name: round; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: round; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE round (
@@ -111,7 +116,7 @@ CREATE TABLE round (
 
 
 --
--- Name: round_collection; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: round_collection; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE round_collection (
@@ -124,7 +129,7 @@ CREATE TABLE round_collection (
 
 
 --
--- Name: round_counts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: round_counts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE round_counts (
@@ -142,8 +147,8 @@ CREATE TABLE round_counts (
 CREATE SEQUENCE round_round_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -155,7 +160,7 @@ ALTER SEQUENCE round_round_id_seq OWNED BY round.round_id;
 
 
 --
--- Name: submitter; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: submitter; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE submitter (
@@ -174,8 +179,8 @@ CREATE TABLE submitter (
 CREATE SEQUENCE submitter_submitter_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -208,7 +213,7 @@ ALTER TABLE ONLY submitter ALTER COLUMN submitter_id SET DEFAULT nextval('submit
 
 
 --
--- Name: collection_count_per_round_collection_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: collection_count_per_round_collection_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_count_per_round
@@ -216,14 +221,14 @@ ALTER TABLE ONLY collection_count_per_round
 
 
 --
--- Name: request_lookup; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: request_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX request_lookup ON request USING btree (submitter_id, file_in_posda, file_copied, copy_error, import_error);
 
 
 --
--- Name: submitter_lookup; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: submitter_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX submitter_lookup ON submitter USING btree (collection, site, subj);

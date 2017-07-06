@@ -1,3 +1,3 @@
 [submodule "Posda/c_source/sproject"]
 	path = Posda/c_source/sproject
-	url = ssh://git@imphub:7999/pt/sproject.git
+	url = https://code.imphub.org/scm/pt/sproject.git

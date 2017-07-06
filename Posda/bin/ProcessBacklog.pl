@@ -65,7 +65,7 @@ sub Loop{
       my($round_id, $round_desc) = CalcRound($num_files_per_round);
       unless(defined $round_desc){
         print STDERR "No requests to process (wait a minute)\n";
-        sleep 60;
+        sleep 10;
         next main;
       }
       my $tot_files = 0;
@@ -181,6 +181,7 @@ sub CalcRound{
     },
     sub { });
   my($tot_files, $scale_factor, %CollectionFiles);
+  $tot_files = 0;
   $get_backlog_summary->RunQuery(
   sub {
     my($row) = @_;

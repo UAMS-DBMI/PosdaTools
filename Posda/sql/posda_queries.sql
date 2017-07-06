@@ -3,11 +3,10 @@
 --
 
 -- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.6.3
+-- Dumped by pg_dump version 9.5.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
@@ -16,28 +15,10 @@ SET escape_string_warning = off;
 SET row_security = off;
 
 --
--- Name: db_version; Type: SCHEMA; Schema: -; Owner: quasar
+-- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA db_version;
-
-
-ALTER SCHEMA db_version OWNER TO quasar;
-
---
--- Name: sqitch; Type: SCHEMA; Schema: -; Owner: quasar
---
-
-CREATE SCHEMA sqitch;
-
-
-ALTER SCHEMA sqitch OWNER TO quasar;
-
---
--- Name: SCHEMA sqitch; Type: COMMENT; Schema: -; Owner: quasar
---
-
-COMMENT ON SCHEMA sqitch IS 'Sqitch database deployment metadata v1.0.';
 
 
 SET search_path = db_version, pg_catalog;
@@ -47,7 +28,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: version; Type: TABLE; Schema: db_version; Owner: quasar
+-- Name: version; Type: TABLE; Schema: db_version; Owner: -
 --
 
 CREATE TABLE version (
@@ -55,12 +36,113 @@ CREATE TABLE version (
 );
 
 
-ALTER TABLE version OWNER TO quasar;
-
 SET search_path = public, pg_catalog;
 
 --
--- Name: popup_buttons; Type: TABLE; Schema: public; Owner: quasar
+-- Name: background_subprocess; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE background_subprocess (
+    background_subprocess_id integer NOT NULL,
+    subprocess_invocation_id integer,
+    input_rows_processed integer,
+    command_executed text,
+    foreground_pid integer,
+    background_pid integer,
+    when_script_started timestamp with time zone,
+    when_background_entered timestamp with time zone,
+    when_script_ended timestamp with time zone,
+    user_to_notify text,
+    process_error text
+);
+
+
+--
+-- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE background_subprocess_background_subprocess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE background_subprocess_background_subprocess_id_seq OWNED BY background_subprocess.background_subprocess_id;
+
+
+--
+-- Name: background_subprocess_params; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE background_subprocess_params (
+    background_subprocess_id integer NOT NULL,
+    param_index integer,
+    param_value text
+);
+
+
+--
+-- Name: chained_query; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE chained_query (
+    chained_query_id integer NOT NULL,
+    from_query text NOT NULL,
+    to_query text NOT NULL,
+    caption text
+);
+
+
+--
+-- Name: chained_query_chained_query_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE chained_query_chained_query_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chained_query_chained_query_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE chained_query_chained_query_id_seq OWNED BY chained_query.chained_query_id;
+
+
+--
+-- Name: chained_query_cols_to_params; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE chained_query_cols_to_params (
+    chained_query_id integer NOT NULL,
+    from_column_name text NOT NULL,
+    to_parameter_name text NOT NULL
+);
+
+
+--
+-- Name: dbif_query_args; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dbif_query_args (
+    query_invoked_by_dbif_id integer NOT NULL,
+    arg_index integer,
+    arg_name text,
+    arg_value text
+);
+
+
+--
+-- Name: popup_buttons; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE popup_buttons (
@@ -73,10 +155,8 @@ CREATE TABLE popup_buttons (
 );
 
 
-ALTER TABLE popup_buttons OWNER TO quasar;
-
 --
--- Name: popup_buttons_popup_button_id_seq; Type: SEQUENCE; Schema: public; Owner: quasar
+-- Name: popup_buttons_popup_button_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE popup_buttons_popup_button_id_seq
@@ -87,10 +167,27 @@ CREATE SEQUENCE popup_buttons_popup_button_id_seq
     CACHE 1;
 
 
-ALTER TABLE popup_buttons_popup_button_id_seq OWNER TO quasar;
+--
+-- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE popup_buttons_popup_button_id_seq1
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 
 --
--- Name: queries; Type: TABLE; Schema: public; Owner: posda
+-- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE popup_buttons_popup_button_id_seq1 OWNED BY popup_buttons.popup_button_id;
+
+
+--
+-- Name: queries; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE queries (
@@ -104,10 +201,65 @@ CREATE TABLE queries (
 );
 
 
-ALTER TABLE queries OWNER TO posda;
+--
+-- Name: query_invoked_by_dbif; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE query_invoked_by_dbif (
+    query_invoked_by_dbif_id integer NOT NULL,
+    query_name text,
+    invoking_user text,
+    query_start_time timestamp with time zone,
+    query_end_time timestamp with time zone,
+    number_of_rows integer
+);
+
 
 --
--- Name: query_tag_filter; Type: TABLE; Schema: public; Owner: posda
+-- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE query_invoked_by_dbif_query_invoked_by_dbif_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED BY query_invoked_by_dbif.query_invoked_by_dbif_id;
+
+
+--
+-- Name: query_tabs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE query_tabs (
+    query_tab_name text,
+    query_tab_description text,
+    defines_dropdown boolean,
+    sort_order integer,
+    defines_search_engine boolean
+);
+
+
+--
+-- Name: query_tabs_query_tag_filter; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE query_tabs_query_tag_filter (
+    query_tab_name text NOT NULL,
+    filter_name text NOT NULL,
+    sort_order integer NOT NULL
+);
+
+
+--
+-- Name: query_tag_filter; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE query_tag_filter (
@@ -116,10 +268,38 @@ CREATE TABLE query_tag_filter (
 );
 
 
-ALTER TABLE query_tag_filter OWNER TO posda;
+--
+-- Name: report_inserted; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE report_inserted (
+    report_inserted_id integer NOT NULL,
+    report_file_in_posda integer,
+    report_rows_generated integer
+);
+
 
 --
--- Name: spreadsheet_operation; Type: TABLE; Schema: public; Owner: posda
+-- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE report_inserted_report_inserted_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE report_inserted_report_inserted_id_seq OWNED BY report_inserted.report_inserted_id;
+
+
+--
+-- Name: spreadsheet_operation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE spreadsheet_operation (
@@ -131,645 +311,171 @@ CREATE TABLE spreadsheet_operation (
 );
 
 
-ALTER TABLE spreadsheet_operation OWNER TO posda;
-
-SET search_path = sqitch, pg_catalog;
-
 --
--- Name: changes; Type: TABLE; Schema: sqitch; Owner: quasar
+-- Name: spreadsheet_uploaded; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE changes (
-    change_id text NOT NULL,
-    script_hash text,
-    change text NOT NULL,
-    project text NOT NULL,
-    note text DEFAULT ''::text NOT NULL,
-    committed_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
-    committer_name text NOT NULL,
-    committer_email text NOT NULL,
-    planned_at timestamp with time zone NOT NULL,
-    planner_name text NOT NULL,
-    planner_email text NOT NULL
+CREATE TABLE spreadsheet_uploaded (
+    spreadsheet_uploaded_id integer NOT NULL,
+    time_uploaded timestamp with time zone,
+    is_executable boolean,
+    uploading_user text,
+    file_id_in_posda integer,
+    number_rows integer
 );
 
 
-ALTER TABLE changes OWNER TO quasar;
-
 --
--- Name: TABLE changes; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE changes IS 'Tracks the changes currently deployed to the database.';
-
-
---
--- Name: COLUMN changes.change_id; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.change_id IS 'Change primary key.';
+CREATE SEQUENCE spreadsheet_uploaded_spreadsheet_uploaded_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
--- Name: COLUMN changes.script_hash; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN changes.script_hash IS 'Deploy script SHA-1 hash.';
-
-
---
--- Name: COLUMN changes.change; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.change IS 'Name of a deployed change.';
+ALTER SEQUENCE spreadsheet_uploaded_spreadsheet_uploaded_id_seq OWNED BY spreadsheet_uploaded.spreadsheet_uploaded_id;
 
 
 --
--- Name: COLUMN changes.project; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: subprocess_invocation; Type: TABLE; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN changes.project IS 'Name of the Sqitch project to which the change belongs.';
-
-
---
--- Name: COLUMN changes.note; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.note IS 'Description of the change.';
-
-
---
--- Name: COLUMN changes.committed_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.committed_at IS 'Date the change was deployed.';
-
-
---
--- Name: COLUMN changes.committer_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.committer_name IS 'Name of the user who deployed the change.';
-
-
---
--- Name: COLUMN changes.committer_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.committer_email IS 'Email address of the user who deployed the change.';
-
-
---
--- Name: COLUMN changes.planned_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.planned_at IS 'Date the change was added to the plan.';
-
-
---
--- Name: COLUMN changes.planner_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.planner_name IS 'Name of the user who planed the change.';
-
-
---
--- Name: COLUMN changes.planner_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN changes.planner_email IS 'Email address of the user who planned the change.';
-
-
---
--- Name: dependencies; Type: TABLE; Schema: sqitch; Owner: quasar
---
-
-CREATE TABLE dependencies (
-    change_id text NOT NULL,
-    type text NOT NULL,
-    dependency text NOT NULL,
-    dependency_id text,
-    CONSTRAINT dependencies_check CHECK ((((type = 'require'::text) AND (dependency_id IS NOT NULL)) OR ((type = 'conflict'::text) AND (dependency_id IS NULL))))
+CREATE TABLE subprocess_invocation (
+    subprocess_invocation_id integer NOT NULL,
+    from_spreadsheet boolean,
+    from_button boolean,
+    spreadsheet_uploaded_id integer,
+    button_name text,
+    command_line text,
+    process_pid integer,
+    invoking_user text,
+    when_invoked timestamp with time zone
 );
 
 
-ALTER TABLE dependencies OWNER TO quasar;
-
 --
--- Name: TABLE dependencies; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE dependencies IS 'Tracks the currently satisfied dependencies.';
-
-
---
--- Name: COLUMN dependencies.change_id; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN dependencies.change_id IS 'ID of the depending change.';
+CREATE SEQUENCE subprocess_invocation_subprocess_invocation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
--- Name: COLUMN dependencies.type; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN dependencies.type IS 'Type of dependency.';
-
-
---
--- Name: COLUMN dependencies.dependency; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN dependencies.dependency IS 'Dependency name.';
+ALTER SEQUENCE subprocess_invocation_subprocess_invocation_id_seq OWNED BY subprocess_invocation.subprocess_invocation_id;
 
 
 --
--- Name: COLUMN dependencies.dependency_id; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: subprocess_lines; Type: TABLE; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN dependencies.dependency_id IS 'Change ID the dependency resolves to.';
-
-
---
--- Name: events; Type: TABLE; Schema: sqitch; Owner: quasar
---
-
-CREATE TABLE events (
-    event text NOT NULL,
-    change_id text NOT NULL,
-    change text NOT NULL,
-    project text NOT NULL,
-    note text DEFAULT ''::text NOT NULL,
-    requires text[] DEFAULT '{}'::text[] NOT NULL,
-    conflicts text[] DEFAULT '{}'::text[] NOT NULL,
-    tags text[] DEFAULT '{}'::text[] NOT NULL,
-    committed_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
-    committer_name text NOT NULL,
-    committer_email text NOT NULL,
-    planned_at timestamp with time zone NOT NULL,
-    planner_name text NOT NULL,
-    planner_email text NOT NULL,
-    CONSTRAINT events_event_check CHECK ((event = ANY (ARRAY['deploy'::text, 'revert'::text, 'fail'::text, 'merge'::text])))
+CREATE TABLE subprocess_lines (
+    subprocess_launched_id integer NOT NULL,
+    line_number integer,
+    line text
 );
 
 
-ALTER TABLE events OWNER TO quasar;
-
---
--- Name: TABLE events; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON TABLE events IS 'Contains full history of all deployment events.';
-
-
---
--- Name: COLUMN events.event; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.event IS 'Type of event.';
-
-
---
--- Name: COLUMN events.change_id; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.change_id IS 'Change ID.';
-
-
---
--- Name: COLUMN events.change; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.change IS 'Change name.';
-
-
---
--- Name: COLUMN events.project; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.project IS 'Name of the Sqitch project to which the change belongs.';
-
-
---
--- Name: COLUMN events.note; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.note IS 'Description of the change.';
-
-
---
--- Name: COLUMN events.requires; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.requires IS 'Array of the names of required changes.';
-
-
---
--- Name: COLUMN events.conflicts; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.conflicts IS 'Array of the names of conflicting changes.';
-
-
---
--- Name: COLUMN events.tags; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.tags IS 'Tags associated with the change.';
-
-
---
--- Name: COLUMN events.committed_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.committed_at IS 'Date the event was committed.';
-
-
---
--- Name: COLUMN events.committer_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.committer_name IS 'Name of the user who committed the event.';
-
-
---
--- Name: COLUMN events.committer_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.committer_email IS 'Email address of the user who committed the event.';
-
-
---
--- Name: COLUMN events.planned_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.planned_at IS 'Date the event was added to the plan.';
-
-
---
--- Name: COLUMN events.planner_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.planner_name IS 'Name of the user who planed the change.';
-
-
---
--- Name: COLUMN events.planner_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN events.planner_email IS 'Email address of the user who plan planned the change.';
-
-
---
--- Name: projects; Type: TABLE; Schema: sqitch; Owner: quasar
---
-
-CREATE TABLE projects (
-    project text NOT NULL,
-    uri text,
-    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
-    creator_name text NOT NULL,
-    creator_email text NOT NULL
-);
-
-
-ALTER TABLE projects OWNER TO quasar;
-
---
--- Name: TABLE projects; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON TABLE projects IS 'Sqitch projects deployed to this database.';
-
-
---
--- Name: COLUMN projects.project; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN projects.project IS 'Unique Name of a project.';
-
-
---
--- Name: COLUMN projects.uri; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN projects.uri IS 'Optional project URI';
-
-
---
--- Name: COLUMN projects.created_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN projects.created_at IS 'Date the project was added to the database.';
-
-
 --
--- Name: COLUMN projects.creator_name; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: background_subprocess_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN projects.creator_name IS 'Name of the user who added the project.';
+ALTER TABLE ONLY background_subprocess ALTER COLUMN background_subprocess_id SET DEFAULT nextval('background_subprocess_background_subprocess_id_seq'::regclass);
 
 
 --
--- Name: COLUMN projects.creator_email; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: chained_query_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN projects.creator_email IS 'Email address of the user who added the project.';
+ALTER TABLE ONLY chained_query ALTER COLUMN chained_query_id SET DEFAULT nextval('chained_query_chained_query_id_seq'::regclass);
 
 
 --
--- Name: releases; Type: TABLE; Schema: sqitch; Owner: quasar
+-- Name: popup_button_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-CREATE TABLE releases (
-    version real NOT NULL,
-    installed_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
-    installer_name text NOT NULL,
-    installer_email text NOT NULL
-);
+ALTER TABLE ONLY popup_buttons ALTER COLUMN popup_button_id SET DEFAULT nextval('popup_buttons_popup_button_id_seq1'::regclass);
 
 
-ALTER TABLE releases OWNER TO quasar;
-
---
--- Name: TABLE releases; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON TABLE releases IS 'Sqitch registry releases.';
-
-
---
--- Name: COLUMN releases.version; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN releases.version IS 'Version of the Sqitch registry.';
-
-
---
--- Name: COLUMN releases.installed_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN releases.installed_at IS 'Date the registry release was installed.';
-
-
---
--- Name: COLUMN releases.installer_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN releases.installer_name IS 'Name of the user who installed the registry release.';
-
-
---
--- Name: COLUMN releases.installer_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN releases.installer_email IS 'Email address of the user who installed the registry release.';
-
-
---
--- Name: tags; Type: TABLE; Schema: sqitch; Owner: quasar
---
-
-CREATE TABLE tags (
-    tag_id text NOT NULL,
-    tag text NOT NULL,
-    project text NOT NULL,
-    change_id text NOT NULL,
-    note text DEFAULT ''::text NOT NULL,
-    committed_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
-    committer_name text NOT NULL,
-    committer_email text NOT NULL,
-    planned_at timestamp with time zone NOT NULL,
-    planner_name text NOT NULL,
-    planner_email text NOT NULL
-);
-
-
-ALTER TABLE tags OWNER TO quasar;
-
---
--- Name: TABLE tags; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON TABLE tags IS 'Tracks the tags currently applied to the database.';
-
-
---
--- Name: COLUMN tags.tag_id; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.tag_id IS 'Tag primary key.';
-
-
---
--- Name: COLUMN tags.tag; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.tag IS 'Project-unique tag name.';
-
-
---
--- Name: COLUMN tags.project; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.project IS 'Name of the Sqitch project to which the tag belongs.';
-
-
---
--- Name: COLUMN tags.change_id; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.change_id IS 'ID of last change deployed before the tag was applied.';
-
-
---
--- Name: COLUMN tags.note; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.note IS 'Description of the tag.';
-
-
---
--- Name: COLUMN tags.committed_at; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.committed_at IS 'Date the tag was applied to the database.';
-
-
---
--- Name: COLUMN tags.committer_name; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.committer_name IS 'Name of the user who applied the tag.';
-
-
---
--- Name: COLUMN tags.committer_email; Type: COMMENT; Schema: sqitch; Owner: quasar
---
-
-COMMENT ON COLUMN tags.committer_email IS 'Email address of the user who applied the tag.';
-
-
 --
--- Name: COLUMN tags.planned_at; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: query_invoked_by_dbif_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN tags.planned_at IS 'Date the tag was added to the plan.';
+ALTER TABLE ONLY query_invoked_by_dbif ALTER COLUMN query_invoked_by_dbif_id SET DEFAULT nextval('query_invoked_by_dbif_query_invoked_by_dbif_id_seq'::regclass);
 
 
 --
--- Name: COLUMN tags.planner_name; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: report_inserted_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN tags.planner_name IS 'Name of the user who planed the tag.';
+ALTER TABLE ONLY report_inserted ALTER COLUMN report_inserted_id SET DEFAULT nextval('report_inserted_report_inserted_id_seq'::regclass);
 
 
 --
--- Name: COLUMN tags.planner_email; Type: COMMENT; Schema: sqitch; Owner: quasar
+-- Name: spreadsheet_uploaded_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN tags.planner_email IS 'Email address of the user who planned the tag.';
+ALTER TABLE ONLY spreadsheet_uploaded ALTER COLUMN spreadsheet_uploaded_id SET DEFAULT nextval('spreadsheet_uploaded_spreadsheet_uploaded_id_seq'::regclass);
 
 
 --
--- Name: changes changes_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
+-- Name: subprocess_invocation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY changes
-    ADD CONSTRAINT changes_pkey PRIMARY KEY (change_id);
+ALTER TABLE ONLY subprocess_invocation ALTER COLUMN subprocess_invocation_id SET DEFAULT nextval('subprocess_invocation_subprocess_invocation_id_seq'::regclass);
 
 
 --
--- Name: changes changes_project_key; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
+-- Name: popup_buttons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY changes
-    ADD CONSTRAINT changes_project_key UNIQUE (project, script_hash);
+ALTER TABLE ONLY popup_buttons
+    ADD CONSTRAINT popup_buttons_pkey PRIMARY KEY (popup_button_id);
 
 
 --
--- Name: dependencies dependencies_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
+-- Name: query_tabs_query_tab_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY dependencies
-    ADD CONSTRAINT dependencies_pkey PRIMARY KEY (change_id, dependency);
+ALTER TABLE ONLY query_tabs
+    ADD CONSTRAINT query_tabs_query_tab_name_key UNIQUE (query_tab_name);
 
 
 --
--- Name: events events_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
+-- Name: spreadsheet_operation_operation_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (change_id, committed_at);
-
-
---
--- Name: projects projects_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_pkey PRIMARY KEY (project);
-
-
---
--- Name: projects projects_uri_key; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT projects_uri_key UNIQUE (uri);
-
-
---
--- Name: releases releases_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY releases
-    ADD CONSTRAINT releases_pkey PRIMARY KEY (version);
-
-
---
--- Name: tags tags_pkey; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_pkey PRIMARY KEY (tag_id);
-
-
---
--- Name: tags tags_project_key; Type: CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_project_key UNIQUE (project, tag);
 
+ALTER TABLE ONLY spreadsheet_operation
+    ADD CONSTRAINT spreadsheet_operation_operation_name_key UNIQUE (operation_name);
 
-SET search_path = public, pg_catalog;
 
 --
--- Name: queries_name_index; Type: INDEX; Schema: public; Owner: posda
+-- Name: queries_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX queries_name_index ON queries USING btree (name);
 
 
-SET search_path = sqitch, pg_catalog;
-
 --
--- Name: changes changes_project_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
+-- Name: query_by_user_index; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY changes
-    ADD CONSTRAINT changes_project_fkey FOREIGN KEY (project) REFERENCES projects(project) ON UPDATE CASCADE;
-
-
---
--- Name: dependencies dependencies_change_id_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY dependencies
-    ADD CONSTRAINT dependencies_change_id_fkey FOREIGN KEY (change_id) REFERENCES changes(change_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: dependencies dependencies_dependency_id_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY dependencies
-    ADD CONSTRAINT dependencies_dependency_id_fkey FOREIGN KEY (dependency_id) REFERENCES changes(change_id) ON UPDATE CASCADE;
-
-
---
--- Name: events events_project_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_project_fkey FOREIGN KEY (project) REFERENCES projects(project) ON UPDATE CASCADE;
-
-
---
--- Name: tags tags_change_id_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_change_id_fkey FOREIGN KEY (change_id) REFERENCES changes(change_id) ON UPDATE CASCADE;
-
-
---
--- Name: tags tags_project_fkey; Type: FK CONSTRAINT; Schema: sqitch; Owner: quasar
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_project_fkey FOREIGN KEY (project) REFERENCES projects(project) ON UPDATE CASCADE;
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+CREATE INDEX query_by_user_index ON query_invoked_by_dbif USING btree (invoking_user);
 
 
 --
