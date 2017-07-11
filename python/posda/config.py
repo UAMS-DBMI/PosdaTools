@@ -12,6 +12,15 @@ DEBUG = True
 DB_CONFIG = None
 POOL = {}
 
+def flush_pool():
+    global POOL
+    for i, conn in POOL.items():
+        try:
+            conn.close()
+        except:
+            pass
+    POOL = {}
+
 
 class Config(object):
     """Class that represents the current configuration state of Posda"""

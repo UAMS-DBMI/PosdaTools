@@ -9,3 +9,10 @@ def printe(*args, **kwargs):
     """Print to standard error"""
     print(*args, **kwargs, file=sys.stderr)
 
+
+def get_stdin_input():
+    lines = []
+    for row in sys.stdin:
+        lines.append(row.strip())
+
+    return lines

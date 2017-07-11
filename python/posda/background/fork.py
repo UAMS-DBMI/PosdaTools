@@ -1,6 +1,8 @@
 import sys
 import os
 
+from ..config import flush_pool
+
 def close_file_descriptors():
   import resource
   maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
@@ -30,6 +32,9 @@ def fork_and_exit():
 
     os.setsid() # begin new session/process group
     child_pid = os.getpid() # get the actual child_pid
+
+    # close db connections!
+    flush_pool()
 
     close_file_descriptors()
 
