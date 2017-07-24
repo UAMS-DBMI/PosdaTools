@@ -117,10 +117,17 @@
 
   },
   "posda_phi_simple" : {
-    "database" : "N_posda_phi_simple",
+    "database" : "posda_phi_simple",
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_simple_phi.sql"
+    ]
+  },
+  "private_tag_kb" : {
+    "database" : "N_private_tag_kb",
+    "driver"   : "postgres",
+    "init"     : [
+      "Posda/sql/N_private_tag_kb.sql"
     ]
   },
   "posda_backlog" : {

@@ -47,6 +47,7 @@ sub TryNextSocket{
   if($now - $this->{StartTime} > 20){
     print STDERR "Hmmm.  Long time before I noticed this failure.  ".
       "Better give up.";
+    $this->ChildFinished;
     return;
   }
   my $next_socket = shift(@{$this->{socket_list}});

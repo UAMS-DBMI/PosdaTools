@@ -1,9 +1,14 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+#use HexDump;
 my $driver_query = PosdaDB::Queries->GetQueryInstance("FindDuplicatedPixelDigests");
 my $check_query = PosdaDB::Queries->GetQueryInstance("SeeIfDigestIsAlreadyKnownDistinguished");
 my $get_pix_desc = PosdaDB::Queries->GetQueryInstance("GetPixelDescriptorByDigest");
+my $insert_distinguished =
+  PosdaDB::Queries->GetQueryInstance("InsertDistinguishedDigest");
+my $insert_distinguished_value =
+  PosdaDB::Queries->GetQueryInstance("InsertDistinguishedValue");
 my @digests;
 my %NumDups;
 $driver_query->RunQuery(
@@ -155,7 +160,7 @@ for my $dig (@digests){
     my @pixels;
     my $unpacker;
     if($word_len == 16){
-      $unpacker = "W$pix_len";
+      $unpacker = "S$pix_len";
     } elsif($word_len == 8){
       $unpacker = "C$pix_len";
     } elsif($word_len == 32){
@@ -178,10 +183,7 @@ for my $dig (@digests){
       }
     }
     my $num_values = keys %Values;
-    if(
-      $num_values <= 3 &&
-      $num_values > 1
-    ){
+    if ($num_values ==  1){
       print "#########\n";
       print "$dig ($NumDups{$dig}):\n";
       print "\tpath: $file_path\n" .
@@ -200,8 +202,85 @@ for my $dig (@digests){
       for my $i (sort { $Values{$a} <=> $Values{$b} } keys %Values){
         print "\t$i: $Values{$i}\n";
       }
+      $insert_distinguished->RunQuery(
+        sub{}, sub {},
+        $dig,
+        "blank image",
+        $query_desc{samples_per_pixel},
+        $query_desc{number_of_frames},
+        $query_desc{pixel_rows},
+        $query_desc{pixel_columns},
+        $query_desc{bits_stored},
+        $query_desc{bits_allocated},
+        $query_desc{high_bit},
+        $mask,
+        1
+      );
+      my $the_value = [keys %Values]->[0];
+      $insert_distinguished_value->RunQuery(
+        sub{}, sub {},
+        $dig, $the_value, $Values{$the_value}
+      );
+    } elsif(
+      $num_values <= 3 && $query_desc{samples_per_pixel} == 3
+    ) {
+      my @values = keys %Values;
+      if(
+        $Values{$values[0]} == $Values{$values[0]} &&
+        $Values{$values[1]} == $Values{$values[2]}
+      ){
+        print "#########\n";
+        print "$dig ($NumDups{$dig}):\n";
+        print "\tpath: $file_path\n" .
+          "\twhence: $seek_whence\n" .
+          "\tlength: $pix_len\n" .
+          "\tpix_len: $word_len\n" .
+          "\tmask: $mask\n" .
+          "\trows: $query_desc{pixel_rows}\n" .
+          "\tcols: $query_desc{pixel_columns}\n" .
+          "\tbits: $query_desc{bits_allocated}\n" .
+          "\tstore: $query_desc{bits_stored}\n" .
+          "\thigh: $query_desc{high_bit}\n" .
+          "\tsamp: $query_desc{samples_per_pixel}\n" .
+          "\tframes: $query_desc{number_of_frames}\n";
+        print "$num_values distinct values found\n";
+        for my $i (sort { $Values{$a} <=> $Values{$b} } keys %Values){
+          print "\t$i: $Values{$i}\n";
+        }
+        $insert_distinguished->RunQuery(
+          sub{}, sub {},
+          $dig,
+          "blank image",
+          $query_desc{samples_per_pixel},
+          $query_desc{number_of_frames},
+          $query_desc{pixel_rows},
+          $query_desc{pixel_columns},
+          $query_desc{bits_stored},
+          $query_desc{bits_allocated},
+          $query_desc{high_bit},
+          $mask,
+          3
+        );
+        for my $the_value (@values){
+          $insert_distinguished_value->RunQuery(
+            sub{}, sub {},
+            $dig, $the_value, $Values{$the_value}
+          );
+        }
+      } else {
+        print "****************\n";
+        print "Values: $values[0] ($Values{$values[0]}), " .
+          "$values[1] ($Values{$values[1]}), " .
+          "$values[2] ($Values{$values[2]})\n";
+      }
     } else {
-#      print "$dig ($NumDups{$dig}): not distinguished\n";
+      print "$dig ($NumDups{$dig}): not distinguished ($num_values)\n";
+      if($num_values <= 10){
+        my @values = keys %Values;
+        for my $i (sort {$Values{$a} <=> $Values{$b} } @values){
+          print "\tvalue: $i ($Values{$i})\n";
+        }
+      }
     }
   }
 }

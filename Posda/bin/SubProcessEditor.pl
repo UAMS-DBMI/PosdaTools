@@ -181,9 +181,12 @@ my $edit_function = sub {
   # full_ele_substitutions
   for my $s (keys %{$edits->{full_ele_substitutions}}){
     if($sig eq $s){
-      if($ele->{value} eq $s){
-        $ele->{value} = $edits->{full_ele_substitutions}->{$s};
-        $results->{short_ele_substitutions} += 1;
+      for my $v (keys %{$edits->{full_ele_substitutions}->{$s}}){
+        if($v eq $ele->{value}){
+          $ele->{value} =
+            $edits->{full_ele_substitutions}->{$s}->{$v};
+          $results->{short_ele_substitutions} += 1;
+        }
       }
     }
   }

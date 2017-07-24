@@ -116,6 +116,10 @@ function edit {
 
 }
 
+set -o vi
+alias vi=vim
+export EDITOR=vim
+
 posda_setup
 if [ "$1" != "script" ]; then
     clear

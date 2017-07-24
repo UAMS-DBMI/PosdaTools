@@ -33,12 +33,14 @@ method SpecificInitialize($params) {
   $db_handle = DBI->connect(Database('posda_files'));
 
   my $qh = $db_handle->prepare(qq{
-    select file_id, series_instance_uid, root_path || '/' || rel_path
+    select distinct file_id, series_instance_uid, root_path || '/' || rel_path
     from file_sop_common 
     natural join file_series 
     natural join file_location
     natural join file_storage_root
-    where sop_instance_uid = ?;
+    natural join ctp_file
+    where sop_instance_uid = ? and 
+    visibility is null;
   });
 
   $qh->execute($sop_uid);

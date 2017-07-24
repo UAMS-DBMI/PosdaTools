@@ -66,3 +66,12 @@ class Query(object):
                 cur.execute(self.query, args)
                 for row in cur:
                     yield row
+
+    def get_single_value(self, *args, **kwargs):
+        """Return the first value in the first row of the Query.
+
+        This is a convenience method for queries that only
+        return a single value
+        """
+        for row in self.run(*args, **kwargs):
+            return row[0]
