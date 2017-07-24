@@ -1840,7 +1840,10 @@ func get_popup_hash($query_name) {
     map {
       my ($id, $query, $class, $col, $is_full_table, $name) = @$_;
       if ($is_full_table == 1) {
-        $popup_hash->{table_level_popup} = {class => $class, name => $name};
+        unless(exists $popup_hash->{table_level_popup}){
+          $popup_hash->{table_level_popup} = [];
+        }
+        push @{$popup_hash->{table_level_popup}}, {class => $class, name => $name};
       } else {
         if (defined $col) {
           $popup_hash->{$col} = {class => $class, name => $name};
@@ -1906,15 +1909,17 @@ method TableSelected($http, $dyn){
     $http->queue("Rows: $num_rows<hr>");
     # 
     if (defined $popup_hash->{table_level_popup}) {
-      my $tlp = $popup_hash->{table_level_popup};
+#      my $tlp = $popup_hash->{table_level_popup};
       $http->queue("<p>");
-      $self->NotSoSimpleButton($http, {
-          caption => "$tlp->{name}",
-          op => "OpenTableLevelPopup",
-          class_ => "$tlp->{class}",
-          cap_ => "$tlp->{name}",
-          sync => 'Update();'
-      });
+      for my $tlp (@{$popup_hash->{table_level_popup}}){
+        $self->NotSoSimpleButton($http, {
+            caption => "$tlp->{name}",
+            op => "OpenTableLevelPopup",
+            class_ => "$tlp->{class}",
+            cap_ => "$tlp->{name}",
+            sync => 'Update();'
+        });
+      }
       $http->queue("</p>");
     }
     $http->queue(qq{

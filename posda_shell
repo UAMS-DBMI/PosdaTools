@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
 bash --rcfile bin/shell_library.sh
-set -o vi

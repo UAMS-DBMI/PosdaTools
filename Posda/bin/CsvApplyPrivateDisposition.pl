@@ -71,8 +71,36 @@ for my $patient_id (sort keys %Patients){
     }
   }
 }
-open SCRIPT, "|/bin/sh";
-for my $cmd (@cmds){
-  print STDERR "Running cmd: $cmd\n";
-  print SCRIPT "$cmd\n";
+#open SCRIPT, "|/bin/sh";
+#for my $cmd (@cmds){
+#  print STDERR "Running cmd: $cmd\n";
+#  print SCRIPT "$cmd\n";
+#}
+open SCRIPT1, "|/bin/sh";
+open SCRIPT2, "|/bin/sh";
+open SCRIPT3, "|/bin/sh";
+open SCRIPT4, "|/bin/sh";
+open SCRIPT5, "|/bin/sh";
+command:
+while(1){
+  my $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print STDERR "1. Running cmd: $cmd\n";
+  print SCRIPT1 "$cmd\n";
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print STDERR "2. Running cmd: $cmd\n";
+  print SCRIPT2 "$cmd\n";
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print STDERR "3. Running cmd: $cmd\n";
+  print SCRIPT3 "$cmd\n";
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print STDERR "4. Running cmd: $cmd\n";
+  print SCRIPT4 "$cmd\n";
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print STDERR "5. Running cmd: $cmd\n";
+  print SCRIPT5 "$cmd\n";
 }

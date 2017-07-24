@@ -37,6 +37,7 @@ Queries used to implement background processor protocol:
   AddBackgroundTimeAndRowsToBackgroundProcess
   AddBackgroundError 
   CreateBackgroundSubprocessParam
+  CreateBackgroundInputLine
   AddCompletionTimeToBackgroundSubprocess
 EOF
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
@@ -67,10 +68,20 @@ unless(defined $bkgrnd_id){
   print "$error\n";
   die $error;
 }
+my $q3 = PosdaDB::Queries->GetQueryInstance(
+  "CreateBackgroundSubprocessParam");
+for my $i (0 .. $#ARGV){
+  $q3->RunQuery(sub {}, sub {}, $bkgrnd_id, $i, $ARGV[$i]);
+}
+my $q4 = PosdaDB::Queries->GetQueryInstance(
+  "CreateBackgroundInputLine");
+my $line_no = 0;
 my @Series;
 while(my $line = <STDIN>){
+  $line_no += 1;
   chomp $line;
   push @Series, $line;
+  $q4->RunQuery(sub{}, sub{}, $bkgrnd_id, $line_no, $line);
 }
 my $num_series = @Series;
 my $num_lines = $num_series;

@@ -110,8 +110,12 @@ function edit {
 
 }
 
+set -o vi
+alias vi=vim
+
 clear
 posda_setup
 print_report
 penv
 help
+

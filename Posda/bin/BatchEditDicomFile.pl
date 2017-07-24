@@ -8,7 +8,7 @@ use Digest::MD5;
 use FileHandle;
 use Storable qw( store retrieve fd_retrieve store_fd );
 use Debug;
-my $dbg = sub { print @_ };
+my $dbg = sub { print STDERR @_ };
 my $usage = <<EOF;
 Usage:
 BatchEditDicomFile.pl <report_path> <dest_root> <who> <edit_desciption> <notify>
@@ -359,6 +359,9 @@ $stdout = fileno(STDOUT);
       my $next_struct = $this->{sop_hash}->{$next_sop};
       $this->{sops_in_process}->{$next_sop} = $next_struct;
       delete $this->{sop_hash}->{$next_sop};
+#      $this->{email}->print("\n#################\nScheduling Edit for: ");
+#      Debug::GenPrint($this->MailPrinter, $next_struct, 1);
+#      $this->{email}->print("\n############\n");
       $this->SerializedSubProcess($next_struct, "SubProcessEditor.pl",
         $this->WhenEditDone($next_sop, $next_struct));
       $num_in_process = keys %{$this->{sops_in_process}};
@@ -373,6 +376,11 @@ $stdout = fileno(STDOUT);
       $this->{email}->print("$num_edited edited, $num_failed failed in " .
         "$elapsed seconds\n");
     }
+  }
+  sub MailPrinter{
+    my($this) = @_;
+    my $sub = sub { $this->{email}->print(@_) };
+    return $sub;
   }
   sub WhenEditDone{
     my($this, $sop, $struct) = @_;
