@@ -134,7 +134,7 @@ from (
           select file_id
           from image_equivalence_class_input_image i
           where i.image_equivalence_class_id = iec.image_equivalence_class_id
-          limit 1) 
+          limit 1) limit 1
         ) project_name,
         (select site_name from ctp_file
           where ctp_file.file_id =
@@ -142,7 +142,7 @@ from (
           select file_id
           from image_equivalence_class_input_image i
           where i.image_equivalence_class_id = iec.image_equivalence_class_id
-          limit 1) 
+          limit 1) limit 1
         ) site_name
 
   from image_equivalence_class iec
@@ -234,7 +234,7 @@ from (
       select file_id
       from image_equivalence_class_input_image i
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
-      limit 1) 
+      limit 1) limit 1
     ) project_name,
     (select site_name from ctp_file
       where ctp_file.file_id =
@@ -242,7 +242,7 @@ from (
       select file_id
       from image_equivalence_class_input_image i
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
-      limit 1) 
+      limit 1) limit 1
     ) site_name,
     processing_status
 
