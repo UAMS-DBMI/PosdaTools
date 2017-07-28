@@ -61,7 +61,7 @@ sub AppControllerLogin {
   my($this, $http, $dyn) = @_;
   print STDERR "Login attempt for: $dyn->{name}\n";
   my $passwd = $dyn->{password};
-  my $user = $dyn->{name};
+  my $user = lc($dyn->{name});
 
   if (Posda::Auth::is_authorized($user, $passwd)) {
     print STDERR "Login succeeded.\n";
