@@ -72,10 +72,10 @@ async def get_details(request, iec):
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_name 
+             (select patient_id 
               from file_patient 
               natural join file_series 
-              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 
 
     from image_equivalence_class
@@ -209,10 +209,10 @@ select
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_name 
+             (select patient_id 
               from file_patient 
               natural join file_series 
-              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 from (
   /* 
     Acquire the project_name and site_name associated with each IEC
@@ -306,10 +306,10 @@ select
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_name 
+             (select patient_id 
               from file_patient 
               natural join file_series 
-              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_name
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 from (
   /* 
     Acquire the project_name and site_name associated with each IEC
