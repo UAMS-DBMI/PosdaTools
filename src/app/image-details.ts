@@ -20,4 +20,5 @@ export interface ImageDetails {
   modality: string;
   body_part_examined: string;
   series_description: string;
+  patienet_id: string;
 }
