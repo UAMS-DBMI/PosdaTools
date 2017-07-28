@@ -2,12 +2,17 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 8.4.20
+-- Dumped by pg_dump version 9.5.7
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
+SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
@@ -16,7 +21,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: element_signature; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: element_signature; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE element_signature (
@@ -30,7 +35,7 @@ CREATE TABLE element_signature (
 
 
 --
--- Name: element_signature_change; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: element_signature_change; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE element_signature_change (
@@ -52,8 +57,8 @@ CREATE TABLE element_signature_change (
 CREATE SEQUENCE element_signature_element_signature_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -65,7 +70,7 @@ ALTER SEQUENCE element_signature_element_signature_id_seq OWNED BY element_signa
 
 
 --
--- Name: equipment_signature; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: equipment_signature; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE equipment_signature (
@@ -81,8 +86,8 @@ CREATE TABLE equipment_signature (
 CREATE SEQUENCE equipment_signature_equipment_signature_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -94,7 +99,7 @@ ALTER SEQUENCE equipment_signature_equipment_signature_id_seq OWNED BY equipment
 
 
 --
--- Name: private_disposition_interpretation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: private_disposition_interpretation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE private_disposition_interpretation (
@@ -104,7 +109,7 @@ CREATE TABLE private_disposition_interpretation (
 
 
 --
--- Name: public_disposition; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: public_disposition; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public_disposition (
@@ -116,7 +121,7 @@ CREATE TABLE public_disposition (
 
 
 --
--- Name: public_disposition_interpretation; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: public_disposition_interpretation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public_disposition_interpretation (
@@ -126,7 +131,7 @@ CREATE TABLE public_disposition_interpretation (
 
 
 --
--- Name: scan_element; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: scan_element; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE scan_element (
@@ -144,8 +149,8 @@ CREATE TABLE scan_element (
 CREATE SEQUENCE scan_element_scan_element_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -157,7 +162,7 @@ ALTER SEQUENCE scan_element_scan_element_id_seq OWNED BY scan_element.scan_eleme
 
 
 --
--- Name: scan_event; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: scan_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE scan_event (
@@ -178,8 +183,8 @@ CREATE TABLE scan_event (
 CREATE SEQUENCE scan_event_scan_event_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -191,7 +196,7 @@ ALTER SEQUENCE scan_event_scan_event_id_seq OWNED BY scan_event.scan_event_id;
 
 
 --
--- Name: seen_value; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: seen_value; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE seen_value (
@@ -207,8 +212,8 @@ CREATE TABLE seen_value (
 CREATE SEQUENCE seen_value_seen_value_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -220,7 +225,7 @@ ALTER SEQUENCE seen_value_seen_value_id_seq OWNED BY seen_value.seen_value_id;
 
 
 --
--- Name: sequence_index; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: sequence_index; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE sequence_index (
@@ -231,7 +236,7 @@ CREATE TABLE sequence_index (
 
 
 --
--- Name: series_scan; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: series_scan; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE series_scan (
@@ -251,8 +256,8 @@ CREATE TABLE series_scan (
 CREATE SEQUENCE series_scan_series_scan_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -306,7 +311,7 @@ ALTER TABLE ONLY series_scan ALTER COLUMN series_scan_id SET DEFAULT nextval('se
 
 
 --
--- Name: private_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: private_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY private_disposition_interpretation
@@ -314,7 +319,7 @@ ALTER TABLE ONLY private_disposition_interpretation
 
 
 --
--- Name: public_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: public_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public_disposition_interpretation
@@ -322,49 +327,49 @@ ALTER TABLE ONLY public_disposition_interpretation
 
 
 --
--- Name: ele_signature_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: ele_signature_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX ele_signature_index ON element_signature USING btree (element_signature, vr);
 
 
 --
--- Name: scan_element_element_signature_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: scan_element_element_signature_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX scan_element_element_signature_id_index ON scan_element USING btree (element_signature_id);
 
 
 --
--- Name: scan_element_series_scan_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: scan_element_series_scan_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX scan_element_series_scan_id_index ON scan_element USING btree (series_scan_id);
 
 
 --
--- Name: series_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: series_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX series_index ON series_scan USING btree (series_instance_uid, scan_event_id);
 
 
 --
--- Name: series_scan_equipment_signature_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: series_scan_equipment_signature_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX series_scan_equipment_signature_id_index ON series_scan USING btree (equipment_signature_id);
 
 
 --
--- Name: series_scan_scan_event_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: series_scan_scan_event_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX series_scan_scan_event_id_index ON series_scan USING btree (scan_event_id);
 
 
 --
--- Name: value_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: value_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX value_index ON seen_value USING btree (value);

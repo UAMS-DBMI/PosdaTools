@@ -61,6 +61,12 @@ function start {
   export POSDA_PID=$!
 }
 
+function start_foreground {
+  echo "Starting Posda in the foreground..."
+
+  AppController.pl localhost $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
+}
+
 function stop {
   if [ -z "$POSDA_PID" ]; then
     echo \$POSDA_PID is not set. Are you sure the server is running?
@@ -112,10 +118,12 @@ function edit {
 
 set -o vi
 alias vi=vim
+export EDITOR=vim
 
-clear
 posda_setup
-print_report
-penv
-help
-
+if [ "$1" != "script" ]; then
+    clear
+    print_report
+    penv
+    help
+fi

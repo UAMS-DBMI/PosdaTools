@@ -26,7 +26,7 @@ use Data::Dumper;
 use HTML::Entities;
 
 use Posda::PopupImageViewer;
-use Posda::PopupCompare;
+#use Posda::PopupCompare;
 use Posda::PopupCompareFiles;
 use Posda::PopupCompareFilesPath;
 
@@ -792,6 +792,13 @@ method OpenPopup($class, $name, $params) {
     # if Quince, do it differently:
     if ($class eq 'Quince') {
       $self->OpenQuince($name, $params);
+      return;
+    }
+
+
+    eval "require $class";
+    if($@){
+      print STDERR "Class failed to compile\n\t$@\n";
       return;
     }
 

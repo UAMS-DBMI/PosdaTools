@@ -1,0 +1,14 @@
+[Unit]
+Description=Perl Open Source DICOM Archive
+After=network.target
+
+[Service]
+User=posda
+Group=posda
+ExecStart=/home/posda/posdatools/posda_start.sh
+WorkingDirectory=/home/posda/posdatools
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

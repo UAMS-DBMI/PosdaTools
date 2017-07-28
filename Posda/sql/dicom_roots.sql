@@ -2,21 +2,44 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 8.4.20
+-- Dumped by pg_dump version 9.5.7
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
+SET row_security = off;
 
-SET search_path = public, pg_catalog;
+--
+-- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA db_version;
+
+
+SET search_path = db_version, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: collection; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: version; Type: TABLE; Schema: db_version; Owner: -
+--
+
+CREATE TABLE version (
+    version integer
+);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: collection; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE collection (
@@ -32,8 +55,8 @@ CREATE TABLE collection (
 CREATE SEQUENCE collection_collection_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -45,7 +68,7 @@ ALTER SEQUENCE collection_collection_id_seq OWNED BY collection.collection_id;
 
 
 --
--- Name: site; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: site; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE site (
@@ -61,8 +84,8 @@ CREATE TABLE site (
 CREATE SEQUENCE site_site_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -74,7 +97,7 @@ ALTER SEQUENCE site_site_id_seq OWNED BY site.site_id;
 
 
 --
--- Name: submission; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: submission; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE submission (
@@ -98,8 +121,8 @@ CREATE TABLE submission (
 CREATE SEQUENCE submission_submission_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -111,7 +134,7 @@ ALTER SEQUENCE submission_submission_id_seq OWNED BY submission.submission_id;
 
 
 --
--- Name: submissionevent; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: submissionevent; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE submissionevent (
@@ -145,7 +168,7 @@ ALTER TABLE ONLY submission ALTER COLUMN submission_id SET DEFAULT nextval('subm
 
 
 --
--- Name: collection_collection_code_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: collection_collection_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection
@@ -153,7 +176,7 @@ ALTER TABLE ONLY collection
 
 
 --
--- Name: site_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: site_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY site

@@ -43,7 +43,7 @@ my $root = $ARGV[2];
 
 #fork and exit;
 my $server = IO::Socket::INET->new(
-  LocalAddr => '144.30.5.92',
+  LocalAddr => '127.0.0.1',
   Listen => 1024,
   LocalPort => $port,
   Proto => 'tcp',
