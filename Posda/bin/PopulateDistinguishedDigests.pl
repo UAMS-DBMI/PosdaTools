@@ -161,6 +161,7 @@ for my $dig (@digests){
     my $unpacker;
     if($word_len == 16){
       $unpacker = "S$pix_len";
+      $unpacker = "W$pix_len";
     } elsif($word_len == 8){
       $unpacker = "C$pix_len";
     } elsif($word_len == 32){
