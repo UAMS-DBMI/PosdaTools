@@ -22,6 +22,10 @@ $APT libmodern-perl-perl libmethod-signatures-simple-perl libdbd-pg-perl libjson
 
 
 $CPAN REST::Client
+$CPAN Time::Piece
+$CPAN Text::CSV
+$CPAN Text::Markdown
+
 
 echo
 echo "=========================================="
