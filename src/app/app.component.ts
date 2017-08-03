@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs';
 export class AppComponent {
   mode: string;
   project: Project;
+  // TODO: set this to false by default!
+  admin: boolean = true;
 
 
   // mostly old stuff below here
@@ -51,12 +53,17 @@ export class AppComponent {
     }
   }
 
-  // TODO: rename this to onNavigation?
   onNavigation(where: string): void {
     console.log("onNavigation() called");
     if (where == "home") {
       this.project = undefined;
       this.mode = undefined;
+      this.admin = false;
+    }
+    if (where == "admin") {
+      this.project = undefined;
+      this.mode = undefined;
+      this.admin = true;
     }
   }
 

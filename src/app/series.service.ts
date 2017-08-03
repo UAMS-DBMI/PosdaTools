@@ -75,8 +75,6 @@ export class SeriesService {
       return this.http.get(url, this.options).map(res => res.json());
   }
 
-
-
   getAvailableProjects(type: string): Observable<any> {
       let params: URLSearchParams = new URLSearchParams();
       params.set("token", this.token);
@@ -87,10 +85,57 @@ export class SeriesService {
       .map(res => res.json());
   }
 
+  getPatients(state: string, project: Project) {
+      let params: URLSearchParams = new URLSearchParams();
+      params.set("token", this.token);
+      this.options.search = params;
+
+    let url = this.url + '/patients/' + project.project_name + '/' + project.site_name + '/' + state;;
+      return this.http.get(url, this.options)
+      .map(res => res.json());
+  }
+
   mark(iec: number, state: string): Observable<any> {
     console.log("SeriesService.mark()");
     let url = this.url + '/save';
     return this.http.post(url, { iec, state, 'token': this.token })
+      .map(res => res.json());
+  }
+
+  hideProject(project: Project) {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set("token", this.token);
+    this.options.search = params;
+
+    let url = this.url + '/hide/collection/' + project.project_name + '/' + project.site_name;
+      return this.http.get(url, this.options)
+      .map(res => res.json());
+  }
+  hidePatient(project: Project, patient: string) {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set("token", this.token);
+    this.options.search = params;
+
+    let url = this.url + '/hide/patient/' + project.project_name + '/' + project.site_name + '/' + patient;
+      return this.http.get(url, this.options)
+      .map(res => res.json());
+  }
+  unhideProject(project: Project) {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set("token", this.token);
+    this.options.search = params;
+
+    let url = this.url + '/unhide/collection/' + project.project_name + '/' + project.site_name;
+      return this.http.get(url, this.options)
+      .map(res => res.json());
+  }
+  unhidePatient(project: Project, patient: string) {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set("token", this.token);
+    this.options.search = params;
+
+    let url = this.url + '/unhide/patient/' + project.project_name + '/' + project.site_name + '/' + patient;
+      return this.http.get(url, this.options)
       .map(res => res.json());
   }
 }

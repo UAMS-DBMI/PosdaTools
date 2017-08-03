@@ -1,0 +1,33 @@
+<div [ngBusy]="busy"></div>
+
+<a *ngIf="!open && !hidden" href="javascript:" (click)="onClick()" class="list-group-item list-group-item-action flex-column align-items-start m-1">
+  <div class="d-flex w-100 justify-content-between align-items-center">
+    <h5 class="">{{project.project_name}}|{{project.site_name}}</h5>
+    <span class="badge badge-default">{{project.count}}</span>
+  </div>
+</a>
+
+<div *ngIf="open && !hidden" class="list-group-item flex-column align-items-start m-1">
+  <div class="d-flex w-100 justify-content-between align-items-center">
+    <h5 class="">{{project.project_name}}|{{project.site_name}}</h5>
+    <span class="badge badge-default">{{project.count}}</span>
+  </div>
+  <div>
+    <app-hide-button 
+      [what]="project.project_name + '|' + project.site_name"
+      [message]="mode + ' all records for '"
+      (onConfirm)="onConfirm($event)"
+    ></app-hide-button>
+    <p class="m-1">Or, select a patient to hide records for that patient alone</p>
+    <ul>
+        <li *ngFor="let patient of patients">
+            <app-hide-button 
+              [what]="patient"
+              [type]="'btn-secondary'"
+              [message]="mode + ' all records for '"
+              (onConfirm)="onConfirmPatient($event)"
+            ></app-hide-button>
+        </li>
+    </ul>
+  </div>
+</div>

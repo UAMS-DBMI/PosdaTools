@@ -16,6 +16,9 @@ import { ProjectSelectComponent } from './project-select/project-select.componen
 import { ProjectionComponent } from './projection/projection.component';
 import { NavControlComponent } from './nav-control/nav-control.component';
 import { MarkControlComponent } from './mark-control/mark-control.component';
+import { AdminComponent } from './admin/admin.component';
+import { HideboxComponent } from './hidebox/hidebox.component';
+import { HideButtonComponent } from './hide-button/hide-button.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { MarkControlComponent } from './mark-control/mark-control.component';
     ProjectSelectComponent,
     ProjectionComponent,
     NavControlComponent,
-    MarkControlComponent
+    MarkControlComponent,
+    AdminComponent,
+    HideboxComponent,
+    HideButtonComponent
   ],
   imports: [
     BrowserModule,

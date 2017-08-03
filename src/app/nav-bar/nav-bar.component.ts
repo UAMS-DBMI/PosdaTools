@@ -20,5 +20,9 @@ export class NavBarComponent implements OnInit {
     this.onNavigation.emit('home');
     console.log("emitting onNavigation => 'home'");
   }
+  admin() {
+    this.onNavigation.emit('admin');
+    console.log("emitting onNavigation => 'admin'");
+  }
 
 }

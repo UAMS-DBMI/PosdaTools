@@ -8,6 +8,7 @@ import uuid
 import asyncio
 import uvloop
 import datetime
+from urllib.parse import unquote
 
 import asyncpg
 
@@ -93,17 +94,192 @@ async def get_details(request, iec):
 
     return json(dict(records[0]))
 
+@app.route("/api/hide/collection/<collection>/<site>")
+async def hide_collection(request, collection, site):
+    collection = unquote(collection)
+    site = unquote(site)
+
+    # TODO: record this action in an audit log! that's why we got username
+    user = request.headers['user'] # was injected by login middleware
+    logging.debug(f"Hiding: {collection}|{site}")
+
+    query = f"""
+        insert into log_iec_hide (user_name, project, site, hidden) 
+        values ('{user.name}', '{collection}', '{site}', true);
+
+        update image_equivalence_class
+        set hidden = true
+        where image_equivalence_class_id in (
+            select image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            natural join ctp_file
+            where project_name = '{collection}'
+              and site_name = '{site}'
+        )
+    """
+    conn = await pool.acquire()
+    records = await conn.execute(query)
+    logging.debug(f"Updated {records} rows?")
+    await pool.release(conn)
+
+    return json({'status': 'success'})
+
+@app.route("/api/unhide/collection/<collection>/<site>")
+async def unhide_collection(request, collection, site):
+    collection = unquote(collection)
+    site = unquote(site)
+    # TODO: record this action in an audit log! that's why we got username
+    user = request.headers['user'] # was injected by login middleware
+    logging.debug(f"Unhiding: {collection}|{site}")
+
+    query = f"""
+        insert into log_iec_hide (user_name, project, site, hidden) 
+        values ('{user.name}', '{collection}', '{site}', false);
+
+        update image_equivalence_class
+        set hidden = false
+        where image_equivalence_class_id in (
+            select image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            natural join ctp_file
+            where project_name = '{collection}'
+              and site_name = '{site}'
+        )
+    """
+    conn = await pool.acquire()
+    records = await conn.execute(query)
+    logging.debug(f"Updated {records} rows?")
+    await pool.release(conn)
+
+    return json({'status': 'success'})
+
+@app.route("/api/hide/patient/<collection>/<site>/<patient>")
+async def hide_patient(request, collection, site, patient):
+    collection = unquote(collection)
+    site = unquote(site)
+    patient = unquote(patient)
+
+    user = request.headers['user'] # was injected by login middleware
+    logging.debug(f"Hiding: {collection}|{site}[{patient}]")
+
+    query = f"""
+        insert into log_iec_hide (user_name, project, site, patient, hidden) 
+        values ('{user.name}', '{collection}', '{site}', '{patient}', true);
+
+        update image_equivalence_class
+        set hidden = true
+        where image_equivalence_class_id in (
+            select image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            natural join ctp_file
+            natural join file_patient
+            where project_name = '{collection}'
+              and site_name = '{site}'
+              and patient_id = '{patient}'
+        )
+    """
+    conn = await pool.acquire()
+    records = await conn.execute(query)
+    logging.debug(f"Updated {records} rows?")
+    await pool.release(conn)
+
+    return json({'status': 'success'})
+
+
+@app.route("/api/unhide/patient/<collection>/<site>/<patient>")
+async def unhide_patient(request, collection, site, patient):
+    collection = unquote(collection)
+    site = unquote(site)
+    patient = unquote(patient)
+
+    user = request.headers['user'] # was injected by login middleware
+    logging.debug(f"Hiding: {collection}|{site}[{patient}]")
+
+    query = f"""
+        insert into log_iec_hide (user_name, project, site, patient, hidden) 
+        values ('{user.name}', '{collection}', '{site}', '{patient}', false);
+
+        update image_equivalence_class
+        set hidden = false
+        where image_equivalence_class_id in (
+            select image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            natural join ctp_file
+            natural join file_patient
+            where project_name = '{collection}'
+              and site_name = '{site}'
+              and patient_id = '{patient}'
+        )
+    """
+    conn = await pool.acquire()
+    records = await conn.execute(query)
+    logging.debug(f"Updated {records} rows?")
+    await pool.release(conn)
+
+    return json({'status': 'success'})
+
+@app.route("/api/patients/<collection>/<site>/<state>")
+async def get_patients(request, collection, site, state):
+
+    collection = unquote(collection)
+    site = unquote(site)
+
+    logging.debug(f"State: {state} {collection}|{site}")
+    where_clause = {
+        'hidden':       ("hidden"),
+        'unhidden':       ("not hidden"),
+    }[state.lower()]
+
+    query = f"""
+        select distinct patient_id
+        from ctp_file
+        natural join file_patient
+        natural join image_equivalence_class
+        natural join image_equivalence_class_input_image
+        where {where_clause}
+          and project_name = $1
+          and site_name = $2
+    """
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, collection, site)
+    await pool.release(conn)
+
+    return json([i[0] for i in records])
+
 
 @app.route("/api/projects/<state>")
 async def get_projects(request, state):
     logging.debug(f"State: {state}")
-    processing_status, where_clause = {
-        'unreviewed': ('ReadyToReview', ""),
-        'good':       ('Reviewed', "and review_status='Good'"),
-        'bad':        ('Reviewed', "and review_status='Bad'"),
-        'blank':       ('Reviewed', "and review_status='Blank'"),
-        'scout':       ('Reviewed', "and review_status='Scout'"),
-        'other':       ('Reviewed', "and review_status='Other'"),
+    where_clause = {
+        'unreviewed': "not hidden and processing_status = 'ReadyToReview'",
+        'good':       ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Good'"),
+
+        'bad':       ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Bad'"),
+
+        'blank':       ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Blank'"),
+
+        'scout':       ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Scout'"),
+
+        'other':       ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Other'"),
+
+        'hidden':       ("hidden"),
+        'unhidden':       ("not hidden"),
+
     }[state.lower()]
 
     query = f"""
@@ -145,8 +321,7 @@ from (
 
   from image_equivalence_class iec
 
-  where processing_status = '{processing_status}' 
-  {where_clause}
+  where {where_clause}
 ) a
 group by project_name, site_name
 order by count desc
@@ -246,7 +421,8 @@ from (
 
   from image_equivalence_class iec
 
-  where processing_status = 'ReadyToReview' 
+  where not hidden
+    and processing_status = 'ReadyToReview' 
   order by image_equivalence_class_id
 ) iecs
 natural join image_equivalence_class
@@ -343,7 +519,8 @@ from (
 
   from image_equivalence_class iec
 
-  where processing_status = 'Reviewed' 
+  where not hidden
+    and processing_status = 'Reviewed' 
     and review_status = '{state}'
   order by image_equivalence_class_id
 ) iecs
