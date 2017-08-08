@@ -116,6 +116,10 @@ export class ImageComponent implements OnInit {
     if (type == 1) {
       c.fillText('Error drawing data', 90, 270);
     }
+    if (type == 2) {
+      c.fillText('Image too large', 90, 270);
+      c.fillText('Check Details', 100, 370);
+    }
 
   }
 
@@ -170,6 +174,10 @@ export class ImageComponent implements OnInit {
   draw(): void {
 
     // width and height should be passed back from the REST endpoint
+    if (this.current_image.width > 1000 || this.current_image.height > 1000) {
+      this.drawError(2);
+      return;
+    }
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
         // make an image without winlev
@@ -242,7 +250,7 @@ export class ImageComponent implements OnInit {
     let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
 
 
-    for (let i = 0; i < expected_length; i++) {
+    for (let i = 0; i < image.length; i++) {
       let j = i * 4;
       output_image[j] = image[i];
       output_image[j+1] = image[i];
@@ -335,20 +343,17 @@ export class ImageComponent implements OnInit {
   }
 
   onMouseWheel(event: any): void {
-    if (event.deltaY < 0) {
-      this.zoom_level += 0.5;
-      this.offset.x -= this.current_image.width * 0.25;
-      this.offset.y -= this.current_image.height * 0.25;
-    } else {
-      this.zoom_level -= 0.5;
-      if (this.zoom_level < 1) {
-        this.zoom_level = 1;
-      } else {
-        this.offset.x += this.current_image.width * 0.25;
-        this.offset.y += this.current_image.height * 0.25;
-      }
-    }
+    // console.log(event);
 
+    // offsetX, offsetY have mouse cursor position
+    // We want to anchor on this point, zoom around it..
+
+
+    if (event.deltaY < 0) {
+      this.zoom_level *= 1.2;
+    } else {
+      this.zoom_level *= 0.8;
+    }
 
     this.draw();
   }
