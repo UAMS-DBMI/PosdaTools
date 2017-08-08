@@ -16,8 +16,7 @@ import { Subscription } from 'rxjs';
 export class AppComponent {
   mode: string;
   project: Project;
-  // TODO: set this to false by default!
-  admin: boolean = true;
+  admin: boolean = false;
 
 
   // mostly old stuff below here
