@@ -785,8 +785,8 @@ method OpenDynamicPopup($http, $dyn) {
 }
 
 method OpenPopup($class, $name, $params) {
-    say STDERR "OpenDynamicPopup, executing $class using params:";
-    print STDERR Dumper($params);
+#    say STDERR "OpenDynamicPopup, executing $class using params:";
+#    print STDERR Dumper($params);
 
 
     # if Quince, do it differently:
