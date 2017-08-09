@@ -343,16 +343,20 @@ export class ImageComponent implements OnInit {
   }
 
   onMouseWheel(event: any): void {
-    // console.log(event);
-
-    // offsetX, offsetY have mouse cursor position
-    // We want to anchor on this point, zoom around it..
-
-
     if (event.deltaY < 0) {
+      let old_zoom = this.zoom_level;
       this.zoom_level *= 1.2;
+
+      let factor = 1 - this.zoom_level / old_zoom;
+      this.offset.x += (event.offsetX - this.offset.x) * factor;
+      this.offset.y += (event.offsetY - this.offset.y) * factor;
     } else {
+      let old_zoom = this.zoom_level;
       this.zoom_level *= 0.8;
+
+      let factor = 1 - this.zoom_level / old_zoom;
+      this.offset.x += (event.offsetX - this.offset.x) * factor;
+      this.offset.y += (event.offsetY - this.offset.y) * factor;
     }
 
     this.draw();
