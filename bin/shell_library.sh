@@ -29,12 +29,6 @@ Available commands:
 EOF
 }
 
-function log {
-  echo Tailing the log, Control+C to quit...
-  echo
-  tail -f $APP_CONTROLLER_ROOT/nohup.out
-}
-
 function abort {
   # Abort sourcing of this file, without exiting the user's shell
   kill -INT $$
@@ -118,6 +112,7 @@ function edit {
 
 set -o vi
 alias vi=vim
+alias log=
 export EDITOR=vim
 
 posda_setup
