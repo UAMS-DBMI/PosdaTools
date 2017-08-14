@@ -1,6 +1,5 @@
 package Posda::DownloadableFile;
 
-our $URL = 'http://tcia-posda-rh-1.ad.uams.edu/papi';
 
 use Modern::Perl;
 use Method::Signatures::Simple;
@@ -8,8 +7,9 @@ use Method::Signatures::Simple;
 use Data::UUID;
 use DBI;
 
-use Posda::Config 'Database';
+use Posda::Config ('Database', 'Config');
 
+our $URL = Config('api_url');
 our $ug = Data::UUID->new;
 
 func get_uuid() {

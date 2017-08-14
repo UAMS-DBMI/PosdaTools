@@ -1,7 +1,7 @@
 import uuid
-from ..config import Database
+from ..config import Database, Config
 
-URL = 'http://tcia-posda-rh-1.ad.uams.edu/papi'
+URL = Config.get("api_url")
 
 def make(file_id, mime_type, valid_until=None):
     hash = str(uuid.uuid4())

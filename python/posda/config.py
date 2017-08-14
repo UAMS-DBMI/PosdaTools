@@ -33,9 +33,10 @@ class Config(object):
 
     def load_db_config():
         global DB_CONFIG
-        # TODO: figure out where the config file is
-        file_location = Config.get("database_config") or \
-            '/home/posda/PosdaTools/Config/databases.json'
+        file_location = Config.get("database_config")
+
+        if file_location is None:
+            raise RuntimeError("Missing database config. Is posda.env loaded?")
 
         with open(file_location) as inf:
             db_config = json.load(inf)
