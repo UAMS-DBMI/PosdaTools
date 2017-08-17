@@ -19,8 +19,10 @@ method reset_db_handles{
   for my $i (keys %$db_handle_cache){
     $db_handle_cache->{$i}->disconnect;
     delete $db_handle_cache->{$i};
-    $db_handle->disconnect;
-    $db_handle = undef;
+    if(defined $db_handle){
+      $db_handle->disconnect;
+      $db_handle = undef;
+    }
   }
 }
 
