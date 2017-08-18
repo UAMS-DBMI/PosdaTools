@@ -3,6 +3,9 @@ package Dispatch::LineReaderWriter;
 use Method::Signatures::Simple;
 use Modern::Perl;
 
+use Dispatch::Select;
+use Dispatch::LineReader;
+
 # Execute the command, sending all data one line at
 # a time, and collecting the output into an array,
 # and pass that finished array to $finished_callback
