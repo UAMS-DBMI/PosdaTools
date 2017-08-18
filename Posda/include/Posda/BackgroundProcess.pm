@@ -3,6 +3,8 @@ package Posda::BackgroundProcess;
 use Modern::Perl;
 use Method::Signatures::Simple;
 
+use FileHandle;
+
 use Posda::DB::PosdaFilesQueries;
 
 sub new {
@@ -75,7 +77,18 @@ sub ForkAndExit {
   $this->{add_comp_time_query} = $add_comp_to_bgrnd_sub;
   $this->{add_sub_error_query} = $add_bgrnd_sub_error;
 
+  # Setup email handle
+  my $EmailHandle = FileHandle->new("|mail -s \"Posda Job Complete\" $this->{notify}");
+  unless($EmailHandle) { die "Couldn't open email handle ($!)" }
+  $this->{email_handle} = $EmailHandle;
+
   return; # only the grandchild returns
+}
+
+sub WriteToEmail {
+  my ($this, $line) = @_;
+
+  $this->{email_handle}->print($line);
 }
 
 sub LogCompletionTime {
