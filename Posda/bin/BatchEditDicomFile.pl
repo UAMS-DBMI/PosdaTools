@@ -3,8 +3,10 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Posda::BackgroundProcess;
 use Posda::UUID;
+use Posda::DownloadableFile;
 use Dispatch::Select;
 use Dispatch::EventHandler;
+use Dispatch::LineReaderWriter;
 use Digest::MD5;
 use FileHandle;
 use Storable qw( store retrieve fd_retrieve store_fd );
@@ -403,6 +405,28 @@ my $email_fileno = $EmailHandle->fileno;
       $this->{email}->print("Ending at: $at_text\n");
       $this->{email}->print("$num_edited edited, $num_failed failed in " .
         "$elapsed seconds\n");
+
+      $background->LogCompletionTime;
+
+      # import the new file into posda
+      Dispatch::LineReaderWriter->write_and_read_all(
+        "ImportSingleFileIntoPosdaAndReturnId.pl \"$ReportPath\" \"BatchEditDicomFile report\"",
+        [""],
+        sub {
+          my ($return) = @_;
+          for my $i (@$return) {
+            if ($i =~ /File id: (.*)/) {
+              my $new_id = $1;
+              my $link = Posda::DownloadableFile::make_csv($new_id);
+              $this->{email}->print("Report file: $link\n");
+
+            } else {
+              say STDERR "Error inserting file into posda! $i";
+            }
+          }
+        }
+      );
+
     }
   }
   sub MailPrinter{
@@ -471,5 +495,3 @@ sub MakeEditor{
     MakeEditor(\@sops, \%SopsToEdit, $EmailHandle, $ReportHandle))->queue;
 }
 Dispatch::Select::Dispatch();
-
-$background->LogCompletionTime;
