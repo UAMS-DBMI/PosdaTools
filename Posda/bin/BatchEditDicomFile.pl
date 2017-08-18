@@ -16,7 +16,7 @@ use Debug;
 my $dbg = sub { print STDERR @_ };
 my $usage = <<EOF;
 Usage:
-BatchEditDicomFile.pl <report_path> <dest_root> <who> <edit_desciption> <notify>
+BatchEditDicomFile.pl <dest_root> <who> <edit_desciption> <notify>
 or
 BatchEditDicomFile.pl -h
 
@@ -31,8 +31,8 @@ Generally, edits files specifed by list of commands, into hierarchy
 based on collection, site, patient, study, and series underneath the <dest_root>
 also records information about the edits performed in the database
 also imports the new files into the database.
-also prepares a spreadsheet summarizing the edits and stores it into
-<report_path>
+also prepares a spreadsheet summarizing the edits, stores it into Posda and
+includes a URL to download it in the email.
 
 When invoked, processes STDIN and writes to STDOUT a summary of the operations
 it will perform.  Then forks a sub-process and exits (after closing
@@ -113,13 +113,13 @@ sub CheckFiles{
   return $sop_p;
 }
 if($#ARGV == 0) { die "$usage\n\n" }
-if($#ARGV != 5){ print "Wrong args: $usage\n"; die "$usage\n\n" }
+if($#ARGV != 4){ print "Wrong args: $usage\n"; die "$usage\n\n" }
 my $getf = PosdaDB::Queries->GetQueryInstance('FirstFileForSopPosda');
 my $getfs = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDisposition');
 my $getfsp = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDispositionPublic');
-my($invoc_id, $ReportPath, $DestRoot, $who, $description, $notify) = @ARGV;
+my($invoc_id, $DestRoot, $who, $description, $notify) = @ARGV;
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 
@@ -334,21 +334,18 @@ $| = 1; # TODO: this should probably be at the top of the script, maybe in the l
 $background->ForkAndExit;
 $background->LogInputCount($num_sops);
 
-my $EmailHandle = FileHandle->new("|mail -s \"Posda Job Complete\" $notify");
-unless($EmailHandle) { die "Couldn't open email handle ($!)" }
-
+my $temp_file = Posda::UUID::GetGuid;
+my $ReportPath = "/tmp/$temp_file";
 my $ReportHandle = FileHandle->new(">$ReportPath");
 unless($ReportHandle) { die "Couldn't open ReportHandle handle ($!)" }
 $ReportHandle->print(
   "sop_instance_uid,from_file,from_digest,to_file,to_digest," .
   "status,,report_file_path,Operation,edit_comment,notify\n");
-$EmailHandle->print("Starting edits on $num_sops sop_instance_uids\n" .
+$background->WriteToEmail("Starting edits on $num_sops sop_instance_uids\n" .
   "Description: $description\n" .
-  "Report file: $ReportPath\n" .
   "Results dir: $WorkDir\n");
-$EmailHandle->print("About to enter Dispatch Environment\n");
-my $rep_fileno = $ReportHandle->fileno;
-my $email_fileno = $EmailHandle->fileno;
+$background->WriteToEmail("About to enter Dispatch Environment\n");
+
 
 {
   package Editor;
@@ -368,8 +365,8 @@ my $email_fileno = $EmailHandle->fileno;
     };
     bless($this, $class);
     my $at_text = $this->now;
-    $this->{email}->print("Starting at: $at_text\n");
-    $this->{rpt}->print(",,,,,,,\"$ReportPath\",EditReport,\"$description\"," .
+    $background->WriteToEmail("Starting at: $at_text\n");
+    $this->{rpt}->print(",,,,,,,\"None\",EditReport,\"$description\"," .
       "\"$notify\"\n");
     $this->{process_pending} = 1;
     $this->InvokeAfterDelay("StartProcessing", 0);
@@ -402,8 +399,8 @@ my $email_fileno = $EmailHandle->fileno;
       my $num_edited = keys %{$this->{sops_completed}};
       my $num_failed = keys %{$this->{sops_failed}};
       my $at_text = $this->now;
-      $this->{email}->print("Ending at: $at_text\n");
-      $this->{email}->print("$num_edited edited, $num_failed failed in " .
+      $background->WriteToEmail("Ending at: $at_text\n");
+      $background->WriteToEmail("$num_edited edited, $num_failed failed in " .
         "$elapsed seconds\n");
 
       $background->LogCompletionTime;
@@ -418,7 +415,7 @@ my $email_fileno = $EmailHandle->fileno;
             if ($i =~ /File id: (.*)/) {
               my $new_id = $1;
               my $link = Posda::DownloadableFile::make_csv($new_id);
-              $this->{email}->print("Report file: $link\n");
+              $background->WriteToEmail("Report file: $link\n");
 
             } else {
               say STDERR "Error inserting file into posda! $i";
@@ -428,11 +425,6 @@ my $email_fileno = $EmailHandle->fileno;
       );
 
     }
-  }
-  sub MailPrinter{
-    my($this) = @_;
-    my $sub = sub { $this->{email}->print(@_) };
-    return $sub;
   }
   sub WhenEditDone{
     my($this, $sop, $struct) = @_;
@@ -492,6 +484,6 @@ sub MakeEditor{
 {
   my @sops = sort keys %SopsToEdit;
   Dispatch::Select::Background->new(
-    MakeEditor(\@sops, \%SopsToEdit, $EmailHandle, $ReportHandle))->queue;
+    MakeEditor(\@sops, \%SopsToEdit, undef, $ReportHandle))->queue;
 }
 Dispatch::Select::Dispatch();
