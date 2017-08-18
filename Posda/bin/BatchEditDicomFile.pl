@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::BackgroundProcess;
 use Posda::UUID;
 use Dispatch::Select;
 use Dispatch::EventHandler;
@@ -8,6 +9,8 @@ use Digest::MD5;
 use FileHandle;
 use Storable qw( store retrieve fd_retrieve store_fd );
 use Debug;
+
+
 my $dbg = sub { print STDERR @_ };
 my $usage = <<EOF;
 Usage:
@@ -108,13 +111,17 @@ sub CheckFiles{
   return $sop_p;
 }
 if($#ARGV == 0) { die "$usage\n\n" }
-if($#ARGV != 4){ print "Wrong args: $usage\n"; die "$usage\n\n" }
+if($#ARGV != 5){ print "Wrong args: $usage\n"; die "$usage\n\n" }
 my $getf = PosdaDB::Queries->GetQueryInstance('FirstFileForSopPosda');
 my $getfs = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDisposition');
 my $getfsp = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDispositionPublic');
-my($ReportPath, $DestRoot, $who, $description, $notify) = @ARGV;
+my($invoc_id, $ReportPath, $DestRoot, $who, $description, $notify) = @ARGV;
+
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+
+
 my $wdir = Posda::UUID::GetGuid;
 my $WorkDir = "$DestRoot/$wdir";
 unless(mkdir($WorkDir) == 1) {
@@ -122,10 +129,13 @@ unless(mkdir($WorkDir) == 1) {
 }
 my $pstate = "Search";
 my $working_file_list = [];
+
 line:
 while(my $line = <STDIN>){
   chomp $line;
   my($command, $arg1, $arg2, $arg3, $arg4) = split /&/, $line;
+  $background->LogInputLine($line);
+
   if($pstate eq "Search"){
     if($command eq "AddFile"){
       my $from_file = $arg1;
@@ -313,18 +323,18 @@ while(my $line = <STDIN>){
   }
 }
 my $num_sops = keys %SopsToEdit;
-print "$num_sops to edit\n";
+print "Found list of $num_sops to edit\nForking background process\n";
 $getf = undef;
 $getfs = undef;
-$| = 1;
-shutdown STDOUT, 1;
-if(my $pid = fork){
- close STDIN;
- close STDOUT;
- exit;
-}
+$getfsp = undef;
+$| = 1; # TODO: this should probably be at the top of the script, maybe in the lib?
+
+$background->ForkAndExit;
+$background->LogInputCount($num_sops);
+
 my $EmailHandle = FileHandle->new("|mail -s \"Posda Job Complete\" $notify");
 unless($EmailHandle) { die "Couldn't open email handle ($!)" }
+
 my $ReportHandle = FileHandle->new(">$ReportPath");
 unless($ReportHandle) { die "Couldn't open ReportHandle handle ($!)" }
 $ReportHandle->print(
@@ -337,10 +347,7 @@ $EmailHandle->print("Starting edits on $num_sops sop_instance_uids\n" .
 $EmailHandle->print("About to enter Dispatch Environment\n");
 my $rep_fileno = $ReportHandle->fileno;
 my $email_fileno = $EmailHandle->fileno;
-my $stdin = fileno(STDIN);
-my $stdout = fileno(STDOUT);
-$stdin = fileno(STDIN);
-$stdout = fileno(STDOUT);
+
 {
   package Editor;
   use vars qw( @ISA );
@@ -464,3 +471,5 @@ sub MakeEditor{
     MakeEditor(\@sops, \%SopsToEdit, $EmailHandle, $ReportHandle))->queue;
 }
 Dispatch::Select::Dispatch();
+
+$background->LogCompletionTime;
