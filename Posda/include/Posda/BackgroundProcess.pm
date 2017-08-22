@@ -6,6 +6,8 @@ use Method::Signatures::Simple;
 use FileHandle;
 
 use Posda::DB::PosdaFilesQueries;
+use Posda::DownloadableFile;
+use File::Temp qw/ tempfile /;
 
 sub new {
   my($class, $invoc_id, $notify) = @_;
@@ -24,6 +26,32 @@ sub new {
                                 $this->{child_pid}, $notify);
 
   return $this;
+}
+
+method WriteToReport($line) {
+  # If this is the first attempt, begin the report output
+  if (not defined $self->{report_handle}) {
+    my ($fh, $filename) = tempfile();
+    if (not defined $fh) { die "Failed to open report handle!" }
+    $self->{report_handle} = $fh;
+    $self->{report_filename} = $filename;
+  }
+
+  $self->{report_handle}->print($line);
+}
+
+method GetReportDownloadableURL() {
+  $self->{report_handle}->close;
+  my $ReportPath = $self->{report_filename};
+  my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$ReportPath" "BackgroundProcess Report"`;
+  if ($result =~ /File id: (.*)/) {
+    my $new_id = $1;
+    my $link = Posda::DownloadableFile::make_csv($new_id);
+    return $link;
+  } else {
+    say STDERR "Error inserting file into posda! $result";
+    return 0;
+  }
 }
 
 sub ForkAndExit {
@@ -140,7 +168,6 @@ sub StartBackgroundProcess {
   # if the query has a 'returning' clause. fix it?
   my $q2 = PosdaDB::Queries->GetQueryInstance("GetBackgroundSubprocessId");
   $q2->RunQuery(sub{my($row) = @_;  $bkgrnd_id = $row->[0];}, sub{});
-  print STDERR "## New background id is: $bkgrnd_id\n";
 
   unless(defined $bkgrnd_id){
     my $error = "Error: unable to create row in background_subprocess";
