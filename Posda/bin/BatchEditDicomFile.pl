@@ -16,7 +16,7 @@ use Debug;
 my $dbg = sub { print STDERR @_ };
 my $usage = <<EOF;
 Usage:
-BatchEditDicomFile.pl <dest_root> <who> <edit_desciption> <notify>
+BatchEditDicomFile.pl <bkgrnd_id> <dest_root> <who> <edit_desciption> <notify>
 or
 BatchEditDicomFile.pl -h
 
@@ -334,11 +334,7 @@ $| = 1; # TODO: this should probably be at the top of the script, maybe in the l
 $background->ForkAndExit;
 $background->LogInputCount($num_sops);
 
-my $temp_file = Posda::UUID::GetGuid;
-my $ReportPath = "/tmp/$temp_file";
-my $ReportHandle = FileHandle->new(">$ReportPath");
-unless($ReportHandle) { die "Couldn't open ReportHandle handle ($!)" }
-$ReportHandle->print(
+$background->WriteToReport(
   "sop_instance_uid,from_file,from_digest,to_file,to_digest," .
   "status,,report_file_path,Operation,edit_comment,notify\n");
 $background->WriteToEmail("Starting edits on $num_sops sop_instance_uids\n" .
@@ -366,7 +362,7 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
     bless($this, $class);
     my $at_text = $this->now;
     $background->WriteToEmail("Starting at: $at_text\n");
-    $this->{rpt}->print(",,,,,,,\"None\",EditReport,\"$description\"," .
+    $background->WriteToReport(",,,,,,,\"None\",EditReport,\"$description\"," .
       "\"$notify\"\n");
     $this->{process_pending} = 1;
     $this->InvokeAfterDelay("StartProcessing", 0);
@@ -375,7 +371,7 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
   sub StartProcessing{
     my($this) = @_;
     delete $this->{process_pending};
-    my $num_simul = 1;
+    my $num_simul = 8;
     my $num_in_process = keys %{$this->{sops_in_process}};
     my $num_waiting = @{$this->{list_of_sops}};
     while(
@@ -404,25 +400,8 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
         "$elapsed seconds\n");
 
       $background->LogCompletionTime;
-
-      # import the new file into posda
-      Dispatch::LineReaderWriter->write_and_read_all(
-        "ImportSingleFileIntoPosdaAndReturnId.pl \"$ReportPath\" \"BatchEditDicomFile report\"",
-        [""],
-        sub {
-          my ($return) = @_;
-          for my $i (@$return) {
-            if ($i =~ /File id: (.*)/) {
-              my $new_id = $1;
-              my $link = Posda::DownloadableFile::make_csv($new_id);
-              $background->WriteToEmail("Report file: $link\n");
-
-            } else {
-              say STDERR "Error inserting file into posda! $i";
-            }
-          }
-        }
-      );
+      my $link = $background->GetReportDownloadableURL;
+      $background->WriteToEmail("Report file: $link\n");
 
     }
   }
@@ -441,7 +420,7 @@ print STDERR "$sop succeded\n";
         $this->{sops_completed}->{$sop} = $struct;
         my $from_dig = $this->GetFileDig($from_file);
         my $to_dig = $this->GetFileDig($to_file);
-        $this->{rpt}->print("$sop,\"$from_file\",$from_dig,\"$to_file\"," .
+        $background->WriteToReport("$sop,\"$from_file\",$from_dig,\"$to_file\"," .
           "$to_dig,OK\n");
       } else {
 print STDERR "$sop failed\n";
@@ -450,7 +429,7 @@ print STDERR "$sop failed\n";
           status => $status,
           report => $ret_struct,
         };
-        $this->{rpt}->print("$sop,\"$from_file\",\"\",\"$to_file\",\"\"," .
+        $background->WriteToReport("$sop,\"$from_file\",\"\",\"$to_file\",\"\"," .
           "$status,\"$ret_struct->{mess}\"\n");
       }
       delete $this->{sops_in_process}->{$sop};
@@ -484,6 +463,6 @@ sub MakeEditor{
 {
   my @sops = sort keys %SopsToEdit;
   Dispatch::Select::Background->new(
-    MakeEditor(\@sops, \%SopsToEdit, undef, $ReportHandle))->queue;
+    MakeEditor(\@sops, \%SopsToEdit, undef, undef))->queue;
 }
 Dispatch::Select::Dispatch();
