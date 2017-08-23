@@ -278,7 +278,7 @@ my $get_adverse = PosdaDB::Queries->GetQueryInstance(
 my %Adverse;
 $get_adverse->RunQuery(sub{
   my($row) = @_;
-    $Adverse{$row->[0]} {
+    $Adverse{$row->[0]} = {
       file_id => $row->[1],
       event_descr => $row->[2],
       when => $row->[3],
