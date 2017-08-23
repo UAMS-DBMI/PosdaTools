@@ -1,16 +1,31 @@
 #!/usr/bin/perl -w
 use strict;
-use Posda::DB::PosdaFilesQueries;
+use Posda::DB::Queries 'Query';
 use Digest::MD5;
+use Posda::BackgroundProcess;
+
+# TODO: It looks like the report_file_path is simply inserted into
+# posda and returned in the email. This can be removed entirely, I think.
+# The report will have already been loaded into posda from the previous command
+# Possibly discuss with Bill, though
+# So that's not entirely true - the ID of the imported file is used for
+# InsertEditEventRow query. Talk to bill for sure, maybe we can write the
+# input file.. or better yet, the ID of the spreadsheet that was uploaded
+# to initiate this?
+# Bill suggests coming up with some other way to get the file_id of the 
+# "previous step". Maybe just a parameter? But then the previous step
+# would need to return that ID? 
+
+
 my $usage = <<EOF;
-ImportEditedFiles.pl <report_file_path> <import_report_path> <comment> <notify>
+ImportEditedFiles.pl <bkgrnd_id> <report_file_id> <import_report_path> <comment> <notify>
 or
 ImportEditedFiles.pl -h
 
 The script expects lines in the following format on STDIN:
 <sop_instance_uid>&<from_digest>&<to_file>&<to_digest>&<status>
 
-Assuming all of the parameters look good,  all of the input lines are slurped
+Assuming all of the parameters look good, all of the input lines are slurped
 and counted.  Then a background process is forked, and the status is returned
 to DbIf. All processing is done in the background process.
 
@@ -97,27 +112,29 @@ Sub Process Scripts Required:
   - ImportSingleFileIntoPosdaAndReturnId.pl
 EOF
 my $short_usage = <<EOF;
-ImportEditedFiles.pl <report_file_path> <import_report_path> <comment> <notify>
+ImportEditedFiles.pl <bkgrnd_id> <report_file_id> <import_report_path> <comment> <notify>
 or
 ImportEditedFiles.pl -h
 EOF
+
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
   exit;
 }
 
-unless($#ARGV == 3){
+unless($#ARGV == 4){
   die "$usage\n";
 }
-my $ReportFilePath = $ARGV[0];
-unless(-f $ReportFilePath) { die "Not a file: $ReportFilePath" };
-my $ImportReportPath = $ARGV[1];
-my $EditComment = $ARGV[2];
-my $Notify = $ARGV[3];
+
+my ($invoc_id, $edit_desc_file_id, $ImportReportPath, $EditComment, $Notify) = @ARGV;
+
+my $background = Posda::BackgroundProcess->new($invoc_id, $Notify);
+
 my %FilesToImport;
 line:
 while(my $line = <STDIN>){
   chomp $line;
+  $background->LogInputLine($line);
   my($sop_inst, $from_dig, $to_file, $to_dig, $status) = split /&/, $line;
   line:
   unless(
@@ -157,77 +174,50 @@ while(my $line = <STDIN>){
 my $num_sops = keys %FilesToImport;
 print "Number of files to import: $num_sops\n";
 print "Entering background\n";
-fork and exit;
-close STDOUT;
-close STDIN;
-open EMAIL, "|mail -s \"Posda File Edit Complete\" $Notify" or die
-  "can't open pipe ($!) to mail $Notify";
+print STDERR "#### should have just ended??\n";
+
+
+$background->ForkAndExit;
+$background->LogInputCount($num_sops);
+
+
 my $start_time = time;
-print EMAIL "Starting ImportEditedFiles.pl in background\n";
-print EMAIL "Number of Files to Import: $num_sops\n";
-open IMPORT, "ImportSingleFileIntoPosdaAndReturnId.pl \"$ReportFilePath\" " .
-  "\"Import of edit file in ImportEditedFiles.pl\"|";
-my($import_file_id, $import_error);
-while(my $line = <IMPORT>){
-  chomp $line;
-print STDERR "Line: $line\n";
-  if($line =~ /^File id:\s*(.*)\s*$/){
-    $import_file_id = $1;
-  }
-  if($line =~ /^Error:\s(.*)$/){
-    $import_error = $1;
-  }
-}
-unless(defined $import_file_id){
-  print EMAIL "Failed to get file_id for report_file_path ($ReportFilePath)\n";
-  if(defined $import_error){
-    print EMAIL "Error: $import_error\n";
-  }
-  print EMAIL "Giving up\n";
-  die "Can't insert $ReportFilePath";
-}
+$background->WriteToEmail("Starting ImportEditedFiles.pl in background\n");
+$background->WriteToEmail("Number of Files to Import: $num_sops\n");
+my $import_error;
+
 my $pid = $$;
-print EMAIL "File id of edit specification $import_file_id\n";
-my $ins_edit_event = PosdaDB::Queries->GetQueryInstance("InsertEditEventRow");
-my $get_edit_event_id = PosdaDB::Queries->GetQueryInstance(
-  "GetCurrentEditEventRowId");
+my $ins_edit_event = Query("InsertEditEventRow");
+my $get_edit_event_id = Query("GetCurrentEditEventRowId");
 $ins_edit_event->RunQuery(sub {}, sub {},
-  $import_file_id, $EditComment, $num_sops, $pid);
+  $edit_desc_file_id, $EditComment, $num_sops, $pid);
 my $edit_event_id;
 $get_edit_event_id->RunQuery(sub {
   my($row) = @_;
   $edit_event_id = $row->[0];
   }, sub { });
 unless(defined $edit_event_id){
-  print EMAIL "Failed to get edit_event_id\n";
-  print EMAIL "Giving up\n";
+  $background->WriteToEmail("Failed to get edit_event_id\n");
+  $background->WriteToEmail("Giving up\n");
   die "Can't create edit event";
 }
-print EMAIL "Created edit event: $edit_event_id\n";
-unless(open REPORT, ">$ImportReportPath"){
-  print EMAIL "Couldn't open Report File: $ImportReportPath\n";
-  print EMAIL "Giving up\n";
-  die "Can't open $ImportReportPath";
-}
-print REPORT "From file digest,To file digest, Import Status\n";
+$background->WriteToEmail("Created edit event: $edit_event_id\n");
+$background->WriteToReport("From file digest,To file digest, Import Status\n");
 unless(open HIDE, "|HideFilesWithStatus.pl $Notify ImportEditedFile"){
-  print EMAIL "Couldn't open Pipe to HideFilesWithStatus.pl ($!)\n";
-  print EMAIL "Giving up\n";
+  $background->WriteToEmail("Couldn't open Pipe to HideFilesWithStatus.pl ($!)\n");
+  $background->WriteToEmail("Giving up\n");
   die "Can't open HideFiles Pipe";
 }
 unless(open ADD, "|FileImportIntoPosdaWithEditEvent.pl $edit_event_id " . 
   "ImportEditedFile \"Edit Event\""
 ){
-  print EMAIL "Couldn't open Pipe to FileImport ($!)\n";
-  print EMAIL "Giving up\n";
+  $background->WriteToEmail("Couldn't open Pipe to FileImport ($!)\n");
+  $background->WriteToEmail("Giving up\n");
   die "Can't open AddFiles Pipe";
 }
-my $get_file_id_and_visibility = PosdaDB::Queries->GetQueryInstance(
-  "GetFileIdAndVisibilityByDigest");
-my $create_edit_row = PosdaDB::Queries->GetQueryInstance(
-  "CreateDicomFileEditRow");
-my $inc_edits = PosdaDB::Queries->GetQueryInstance(
-  "IncrementEditsDone");
+my $get_file_id_and_visibility = Query("GetFileIdAndVisibilityByDigest");
+my $create_edit_row = Query("CreateDicomFileEditRow");
+my $inc_edits = Query("IncrementEditsDone");
 for my $sop(sort keys %FilesToImport){
   my $from_dig = $FilesToImport{$sop}->{from_dig};
   my $to_dig = $FilesToImport{$sop}->{to_dig};
@@ -246,35 +236,34 @@ for my $sop(sort keys %FilesToImport){
   ){
     unless(defined $file_id) { $file_id = "<undef>" }
     unless(defined $ctp_file_id) { $ctp_file_id = "<undef>" }
-    print EMAIL "Error: unable to get visibility:\n" .
+    $background->WriteToEmail("Error: unable to get visibility:\n" .
       "\t digest: $from_dig\n" .
       "\t file_id: $file_id\n" .
       "\t ctp_file_id: $ctp_file_id\n" .
       "\t visibility: $visibility\n" .
-      "\t sop: $sop\n";
-    print EMAIL "aborting processing\n";
+      "\t sop: $sop\n");
+    $background->WriteToEmail("aborting processing\n");
     die "Bad digest: $from_dig";
   }
   unless(defined $visibility) { $visibility = "<undef>" }
   print HIDE "$file_id&$visibility\n";
   print ADD "$to_file\n";
-  print REPORT "$from_dig,$to_dig,\"File replaced\"\n";
-  print EMAIL "file_id: $file_id replaced by $to_file\n";
+  $background->WriteToReport("$from_dig,$to_dig,\"File replaced\"\n");
+  $background->WriteToEmail("file_id: $file_id replaced by $to_file\n");
   $create_edit_row->RunQuery(sub{}, sub{}, $edit_event_id, $from_dig, $to_dig);
   $inc_edits->RunQuery(sub{}, sub{}, $edit_event_id);
 }
 my $loop_complete_time = time;
 my $elapsed_till_end_of_loop = $loop_complete_time - $start_time;
-print EMAIL "Loop complete after $elapsed_till_end_of_loop seconds\n";
+$background->WriteToEmail("Loop complete after $elapsed_till_end_of_loop seconds\n");
 close ADD;
 close HIDE;
 my $close_time = time;
 my $close_elapsed_time = $close_time - $loop_complete_time;
 my $total_elapsed_time = $close_time - $start_time;
-print EMAIL "Subprocesses took $close_elapsed_time to complete\n";
-print EMAIL "Total elapsed time so far: $total_elapsed_time\n";
-my $get_adverse = PosdaDB::Queries->GetQueryInstance(
-  "GetAdverseFileEventsByEditEventId");
+$background->WriteToEmail("Subprocesses took $close_elapsed_time to complete\n");
+$background->WriteToEmail("Total elapsed time so far: $total_elapsed_time\n");
+my $get_adverse = Query("GetAdverseFileEventsByEditEventId");
 my %Adverse;
 $get_adverse->RunQuery(sub{
   my($row) = @_;
@@ -287,50 +276,23 @@ $get_adverse->RunQuery(sub{
   $edit_event_id
 );
 my $adv_event_count = keys %Adverse;
-  print EMAIL "$adv_event_count adverse file events on import\n";
+$background->WriteToEmail("$adv_event_count adverse file events on import\n");
 if($adv_event_count > 0){
-  print REPORT "\n\n\n\"Adverse Events\"\n" .
-  "\"file_id\",\"event description\",\"when\"\n";
+  $background->WriteToReport("\n\n\n\"Adverse Events\"\n" .
+  "\"file_id\",\"event description\",\"when\"\n");
   for my $i (
     sort { $Adverse{$a}->{when} cmp $Adverse{$b}->{when} } keys %Adverse
   ){
-    print REPORT "$Adverse{$i}->{file_id},\"$Adverse{$i}->{event_descr}\"," .
-      "\"$Adverse{$i}->{when}\"\n";
+    $background->WriteToReport("$Adverse{$i}->{file_id},\"$Adverse{$i}->{event_descr}\"," .
+      "\"$Adverse{$i}->{when}\"\n");
   }
-}
-close REPORT;
-unless(open IMPORT, 
-  "ImportSingleFileIntoPosdaAndReturnId.pl \"$ImportReportPath\" " .
-  "\"Edit Report file for edit_id: $edit_event_id\"|"
-){
-  print EMAIL "Failed to import report file into Posda";
-  die "Quitting after all this\n";
-  die "Failed to import Report";
-}
-my $report_file_id;
-while(my $line = <IMPORT>){
-  chomp $line;
-  if($line =~ /^File id:\s*(.*)\s*$/){
-    $report_file_id = $1;
-  }
-  if($line =~ /^Error:\s*(.*)$/){
-    $import_error = $1;
-  }
-}
-unless(defined $report_file_id){
-  print EMAIL "Failed to get file_id for report file\n";
-  if(defined $import_error){
-    print EMAIL "Import Error: $import_error\n";
-  }
-  print EMAIL "Giving up after all this\n";
-  die "Couldn't get id of report file";
 }
 my $final_time = time;
 my $total_elapsed = $final_time - $start_time;
-print EMAIL "Report File Id: $report_file_id\n" .
-  "Total elapsed seconds: $total_elapsed\n";
-close EMAIL;
-my $close_event = PosdaDB::Queries->GetQueryInstance(
-  "CloseDicomFileEditEvent");
+my $close_event = Query("CloseDicomFileEditEvent");
 $close_event->RunQuery(sub {}, sub {},
-  $report_file_id, $Notify, $edit_event_id);
+  $edit_desc_file_id, $Notify, $edit_event_id);
+
+my $link = $background->GetReportDownloadableURL;
+$background->WriteToEmail("Report URL: $link\n");
+$background->LogCompletionTime;

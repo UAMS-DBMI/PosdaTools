@@ -9,6 +9,9 @@ use Posda::DB::PosdaFilesQueries;
 use Posda::DownloadableFile;
 use File::Temp qw/ tempfile /;
 
+
+$| = 1; # Force unbuffered output, when this module is imported
+
 sub new {
   my($class, $invoc_id, $notify) = @_;
   my $this = {
@@ -41,17 +44,29 @@ method WriteToReport($line) {
 }
 
 method GetReportDownloadableURL() {
-  $self->{report_handle}->close;
-  my $ReportPath = $self->{report_filename};
-  my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$ReportPath" "BackgroundProcess Report"`;
-  if ($result =~ /File id: (.*)/) {
-    my $new_id = $1;
-    my $link = Posda::DownloadableFile::make_csv($new_id);
-    return $link;
-  } else {
-    say STDERR "Error inserting file into posda! $result";
-    return 0;
+  if (not defined $self->{download_url}) {
+    $self->{report_handle}->close;
+    my $ReportPath = $self->{report_filename};
+    my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$ReportPath" "BackgroundProcess Report"`;
+    if ($result =~ /File id: (.*)/) {
+      my $new_id = $1;
+      $self->{report_file_id} = $new_id;
+      $self->{download_url} = Posda::DownloadableFile::make_csv($new_id);
+    } else {
+      say STDERR "Error inserting file into posda! $result";
+      return 0;
+    }
   }
+  return $self->{download_url};
+}
+
+method GetReportFileID() {
+  if (not defined $self->{report_file_id}) {
+    # The closing of the report and generating of the file_id
+    # is done in GetReportDownloadableURL, so call that first
+    $self->GetReportDownloadableURL;
+  }
+  return $self->{report_file_id};
 }
 
 sub ForkAndExit {

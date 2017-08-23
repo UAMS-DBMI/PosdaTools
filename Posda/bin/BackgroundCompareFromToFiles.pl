@@ -85,4 +85,6 @@ for my $i (0 .. $#SopList){
 }
 $background->LogCompletionTime;
 my $link = $background->GetReportDownloadableURL;
+my $report_file_id = $background->GetReportFileID;
 $background->WriteToEmail("Report url: $link\n");
+$background->WriteToEmail("Report file_id: $report_file_id\n");
