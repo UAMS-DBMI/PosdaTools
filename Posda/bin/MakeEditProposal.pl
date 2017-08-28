@@ -10,6 +10,18 @@ MakeEditProposal.pl <scan_id> <report_file> <notify>
 Expects lines on STDIN:
 <element>&<vr>&<value>&<description>
 
+Note:
+  <element> can be in any of the following three forms:
+     <(0000,0000)>
+     -(0000,0000)-
+     (0000,0000)
+  The first if preferred, Excel leaves it alone.
+  The second is left alone by Excel, but the leading "-"
+    causes Excel to make silly assumptions when you try
+    to edit it. It is now deprecated.
+  The third (even if you clearly mark it as text with a
+    leading "'") causes Excel to go insane...
+
 Uses the following query:
   GetSeriesForPhiInfo
   WhereSeriesSitsQuick
@@ -30,6 +42,7 @@ while(my $line = <STDIN>){
   chomp $line;
   my($element, $vr, $value, $description) = split(/&/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 }
+  if($element =~ /^-(.*)-$/){ $element = $1 }
   my $q = {
    element => $element,
    vr => $vr,
