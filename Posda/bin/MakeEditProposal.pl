@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
-use Posda::DB::PosdaFilesQueries;
+use Posda::DB 'Query';
+use Posda::BackgroundProcess;
+
 my $usage = <<EOF;
-MakeEditProposal.pl <scan_id> <report_file> <notify>
+MakeEditProposal.pl <bkgrnd_id> <scan_id> <notify>
   scan_id - id of scan to query
-  report_file - where to store report
   notify - email address for completion notification
 
 Expects lines on STDIN:
@@ -30,16 +31,18 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
   exit;
 }
-#print "not yet implemented\n";
-#exit;
 
 unless($#ARGV == 2){
   die "$usage\n";
 }
-my($scan_id, $path, $notify) = @ARGV;
+my($invoc_id, $scan_id, $notify) = @ARGV;
+
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+
 my @SeriesQueries;
 while(my $line = <STDIN>){
   chomp $line;
+  $background->LogInputLine($line);
   my($element, $vr, $value, $description) = split(/&/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 }
   if($element =~ /^-(.*)-$/){ $element = $1 }
@@ -53,23 +56,16 @@ while(my $line = <STDIN>){
 }
 my $num_series = @SeriesQueries;
 print "Found list of $num_series queries to make\n";
-close STDOUT;
-close STDIN;
-fork and exit;
-my $get_series = PosdaDB::Queries->GetQueryInstance("GetSeriesForPhiInfo");
-my $get_series_info = PosdaDB::Queries->GetQueryInstance(
-  "WhereSeriesSitsQuick");
-print STDERR "Survived fork with $num_series to process\n";
-open EMAIL, "|mail -s \"Posda Job Complete\" $notify" or die
-  "can't open pipe ($!) to mail $notify";
+
+$background->ForkAndExit;
+$background->LogInputCount($num_series);
+
+my $get_series = Query("GetSeriesForPhiInfo");
+my $get_series_info = Query("WhereSeriesSitsQuick");
+
 my $start_time = time;
-print EMAIL "Starting simple look up of Series with PHI\n" .
-  "Scan_id: $scan_id\n" .
-  "Report file: $path\n";
-unless(open REPORT, ">$path"){
-  print EMAIL "Couldn't open report file: \"$path\" ($!)\n";
-  die "Couldn't open report file: $path ($!)";
-}
+$background->WriteToEmail("Starting simple look up of Series with PHI\n" .
+  "Scan_id: $scan_id\n");
 my %EditsBySeries;
 for my $i (@SeriesQueries){
   my $el = $i->{element}; 
@@ -94,15 +90,13 @@ for my $i (@SeriesQueries){
         my $pat = $row->[2]; 
         my $study = $row->[3]; 
         my $series = $row->[4]; 
-  #      print REPORT "\"<$el>\",$vr,\"$val\",\"$desc\"," .
-  #      "\"$col\",\"$site\",\"$pat\",\"$study\",\"$s\"\n";
        $EditsBySeries{$s}->{"$el|$vr|$val"} = 1; 
       },
       sub {},
       $s
     );
   }
-  print EMAIL "Retrieved $n_series for:\n\telement: $el\n\tvalue: $val\n";
+  $background->WriteToEmail("Retrieved $n_series for:\n\telement: $el\n\tvalue: $val\n");
 }
 my %SeriesByEditGroups;
 for my $s (keys %EditsBySeries){
@@ -115,23 +109,27 @@ for my $s (keys %EditsBySeries){
   $SeriesByEditGroups{$EditGroupSummary}->{$s} = 1;
 }
 my $num_edit_groups = keys %SeriesByEditGroups;
-print EMAIL "$num_edit_groups distinct edit groups found\n";
-print REPORT "command,arg1,arg2,arg3,arg4\n";
+$background->WriteToEmail("$num_edit_groups distinct edit groups found\n");
+$background->WriteToReport("command,arg1,arg2,arg3,arg4\n");
 for my $c (sort keys %SeriesByEditGroups){
   for my $s (keys %{$SeriesByEditGroups{$c}}){
-    print REPORT "AddSopsInSeries,$s\n";
+    $background->WriteToReport("AddSopsInSeries,$s\n");
   }
-  print REPORT "AccumulateEdits\n";
-print EMAIL "Command group: $c\n";
+  $background->WriteToReport("AccumulateEdits\n");
+$background->WriteToEmail("Command group: $c\n");
   my @edits = split /&/, $c;
   for my $edit (@edits){
-print EMAIL "Edit: $edit\n";
+$background->WriteToEmail("Edit: $edit\n");
     my($el, $vr, $val) = split(/\|/, $edit);
     $el =~ s/"/""/g;
-    print REPORT "edit,edit_op,\"<$el>\",\"$val\"\n";
+    $background->WriteToReport("edit,edit_op,\"<$el>\",\"$val\"\n");
   }
-  print REPORT "ProcessFiles\n";
+  $background->WriteToReport("ProcessFiles\n");
 }
 my $end = time;
 my $duration = $end - $start_time;
-print EMAIL "finished scan\nduration $duration seconds\n";
+$background->WriteToEmail("finished scan\nduration $duration seconds\n");
+my $link = $background->GetReportDownloadableURL;
+$background->WriteToEmail("Report: $link\n");
+
+$background->LogCompletionTime;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Posda::DB::Queries 'Query';
+use Posda::DB 'Query';
 use Digest::MD5;
 use Posda::BackgroundProcess;
 

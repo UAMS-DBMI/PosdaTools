@@ -1,8 +1,8 @@
-package Posda::DB::Queries;
+package Posda::DB;
 # 
 # This package defines a new interface to the old PosdaDB::PosdaFilesQueries
 #
-# Eventually it may completely replace the other package.
+# Eventually it will completely replace the other package.
 #
 #
 
