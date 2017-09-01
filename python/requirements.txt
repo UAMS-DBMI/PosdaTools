@@ -1,1 +1,2 @@
 -e git+https://github.com/UAMS-DBMI/pydicom.git#egg=pydicom
+python-box
