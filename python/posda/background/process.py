@@ -55,6 +55,7 @@ class BackgroundProcess:
         # redirect stdout to a stringio, for email later
         self.real_stdout = sys.stdout
         sys.stdout = self.email
+        self.log_input_count(self.input_line_count)
 
         return (self.parent_pid, self.child_pid)
 
