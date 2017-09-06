@@ -47,51 +47,25 @@ function reconfig {
 }
 
 function start {
-  echo "Starting Posda in the background..."
-
-  rm -f nohup.out
-  nohup AppController.pl localhost $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig &
-  # StartServer.sh &
-  export POSDA_PID=$!
-}
-
-function start_foreground {
-  echo "Starting Posda in the foreground..."
-
-  AppController.pl localhost $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
+  sudo systemctl start posda
 }
 
 function stop {
-  if [ -z "$POSDA_PID" ]; then
-    echo \$POSDA_PID is not set. Are you sure the server is running?
-    echo You could try stopmine to kill all servers running as you.
-  else
-    # the - before the pid indicates the whole process tree should be killed
-    kill -9 -$POSDA_PID
-
-    echo Killed server, PID $POSDA_PID
-    unset POSDA_PID
-
-  fi
+  sudo systemctl stop posda
 }
 
+# deprecated
 function stopmine {
-  echo Attempting to kill all running AppControllers owned by you...
-  pgrep -f -u $UID -a AppController
-  pkill -f -u $UID AppController
+  echo "This function no longer works. Posda is now controlled via systemd"
 }
 
+# deprecated
 function stopall {
-  echo "Attempting to kill ALL running AppControllers!!!"
-  pgrep -f -a AppController
-  pkill -f AppController
-
+  echo "This function no longer works. Posda is now controlled via systemd"
 }
 
 function restart {
-  stop
-  sleep .1
-  start
+  sudo systemctl restart posda
 }
 
 function posda_setup {
@@ -111,11 +85,22 @@ function edit {
 }
 
 set -o vi
+
 alias vi=vim
-alias log=
+alias ls='ls --color'
+alias gst="git status"
+alias gc="git commit -v"
+alias gd="git diff"
+alias gdca="git diff --cached"
+alias log="sudo journalctl -u posda -f"
+
 export EDITOR=vim
+export PS1='\[\033[01m\]POSDA [ \[\033[01;34m\]\u@\h \[\033[00m\]\[\033[01m\]] \[\033[01;32m\]$PWD\[\033[00m\]\n\[\033[01;34m\]$\[\033[00m\] '
 
 posda_setup
+
+export HOME=$POSDA_ROOT
+
 if [ "$1" != "script" ]; then
     clear
     print_report
