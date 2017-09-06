@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/python3.6 -u
 
 import csv
 import sys
@@ -53,6 +53,9 @@ for line in reader:
 print(f"Read {len(lines)} input lines.")
 background.daemonize()
 
+print(f"Comparing spreadsheet to Posda, for {pargs.collection}|{pargs.site}")
+print(f"Read {len(lines)} input lines.")
+
 sop_seen_in_query = defaultdict(int)
 query = {}
 for row in Query("PosdaImagesByCollectionSitePlus").run(
@@ -92,6 +95,7 @@ for sop, k in sop_seen_in_query.items():
     if k > 1:
         errors.append(Error(sop, "duplicate sop in query", "", k))
 
+print(f"Errors found: {len(errors)}")
 main_report = background.create_report()
 writer = csv.writer(main_report)
 writer.writerow(['sop', 'type', 'file_val', 'posda_val'])
