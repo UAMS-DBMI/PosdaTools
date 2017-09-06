@@ -21,6 +21,7 @@ class Query(object):
         with Database("posda_queries") as conn:
             cur = conn.cursor()
             cur.execute("select * from queries where name = %s", [name])
+            self.schema = None
             for name, query, args, columns, tags, schema, desc in cur:
                 self.query = self.__fix_query(query)
                 self.args = args
@@ -29,6 +30,9 @@ class Query(object):
                 self.schema = schema
                 self.description = desc
                 self._database = Database(self.schema)
+
+            if self.schema is None:
+                raise KeyError(f"Query does not exist: {name}")
 
     def __fix_query(self, query):
         """Replace perl-style query arguments with python-style."""
