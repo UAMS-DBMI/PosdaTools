@@ -38,7 +38,7 @@ class BackgroundProcess:
         self.email = StringIO()
         self.start_time = datetime.now()
         self.print_to_email("Background process",
-                            sys.argv[0],
+                            os.path.basename(sys.argv[0]),
                             "begun at", self.start_time)
 
     def _log_args(self):
