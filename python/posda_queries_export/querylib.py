@@ -64,7 +64,11 @@ def _parse_control_line(line, query):
 def parse_query_string(query_string):
     control_lines = 0
     query_lines = 0
-    query = {"query":[]}
+    query = {"query":[],
+             "columns": "None",
+             "description": "None",
+             "args": "None",
+             "tags": "None"}
 
     try:
         for line in query_string.split('\n'):

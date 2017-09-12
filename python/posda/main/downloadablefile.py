@@ -1,5 +1,6 @@
 import uuid
-from ..config import Database, Config
+from ..config import Config
+from ..database import Database
 
 URL = Config.get("api_url")
 

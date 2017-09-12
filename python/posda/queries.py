@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from .config import Database
+from .database import Database
 
 class Error(Exception): pass
 class ConfusingArgsError(Error): pass
@@ -66,10 +66,10 @@ class Query(object):
         args = self.__fix_args(*args, **kwargs)
 
         with self._database as conn:
-            with conn.cursor() as cur:
-                cur.execute(self.query, args)
-                for row in cur:
-                    yield row
+            cur = self._database.cursor()
+            cur.execute(self.query, args)
+            for row in cur:
+                yield row
 
     def get_single_value(self, *args, **kwargs):
         """Return the first value in the first row of the Query.

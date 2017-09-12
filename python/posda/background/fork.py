@@ -1,7 +1,7 @@
 import sys
 import os
 
-from ..config import flush_pool
+from ..database import flush_pool
 
 def close_file_descriptors():
   import resource
