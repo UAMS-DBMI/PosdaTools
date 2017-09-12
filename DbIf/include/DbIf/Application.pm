@@ -2590,6 +2590,7 @@ func apply_command($command, $colmap, $row) {
 }
 
 method ExecuteCommand($http, $dyn) {
+  $self->{SelectedTable} = $dyn->{index};
   my $table = $self->{LoadedTables}->[$dyn->{index}];
 
   # generate a map of column name to col index
@@ -2701,7 +2702,7 @@ method ExecuteNextOperation() {
 }
 
 method ExecutePlannedPipeOperations($http, $dyn) {
-  my $table = $self->{LoadedTables}->[$self->{SelectTable}];
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
 
   my $cmd = $self->{PlannedPipeOperation};
   my $stdin = $self->{PlannedOperations};
