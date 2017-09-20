@@ -291,7 +291,8 @@ method SpecificInitialize($session) {
     my ($name, $cmdline, $type, $input_line, $tags) = @$_;
 
     $commands->{$name} = { cmdline => $cmdline,
-                           parms => [$cmdline =~ /<([^<>]+)>/g] };
+                           parms => [$cmdline =~ /<([^<>]+)>/g],
+                           operation_name => $name              };
     if (defined $input_line) {
       $commands->{$name}->{pipe_parms} = $input_line;
     }
@@ -2715,7 +2716,7 @@ method ExecutePlannedPipeOperations($http, $dyn) {
 
     $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
       1, 0, $table->{spreadsheet_uploaded_id}, undef, undef,
-      $cmd, $self->get_user);
+      $cmd, $self->get_user, $self->{PlannedPipeOp}->{operation_name});
     # set the bkgrnd_id field
     $cmd =~ s/<\?bkgrnd_id\?>/$subprocess_invocation_id/;
   }

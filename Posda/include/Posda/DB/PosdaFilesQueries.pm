@@ -327,7 +327,8 @@ func record_spreadsheet_upload($is_executable, $user, $file_id, $rowcount) {
 
 func invoke_subprocess(
   $from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
-  $query_invoked_by_dbif_id, $button_name, $command_line, $user
+  $query_invoked_by_dbif_id, $button_name, $command_line, $user,
+  $operation_name
 ) {
   my $dbh = _get_handle();
 
@@ -335,12 +336,13 @@ func invoke_subprocess(
     insert into subprocess_invocation
     (from_spreadsheet, from_button, spreadsheet_uploaded_id, 
      query_invoked_by_dbif_id, button_name, command_line, 
-     invoking_user, when_invoked)
-    values (?, ?, ?, ?, ?, ?, ?, now())
+     invoking_user, when_invoked, operation_name)
+    values (?, ?, ?, ?, ?, ?, ?, now(), ?)
     returning subprocess_invocation_id
   });
   $qh->execute($from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
-    $query_invoked_by_dbif_id, $button_name, $command_line, $user);
+    $query_invoked_by_dbif_id, $button_name, $command_line, $user,
+    $operation_name);
   my $results = $qh->fetchall_arrayref();
 
   return $results->[0]->[0];
