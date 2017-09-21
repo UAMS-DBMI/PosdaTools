@@ -2717,8 +2717,10 @@ method ExecutePlannedPipeOperations($http, $dyn) {
     $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
       1, 0, $table->{spreadsheet_uploaded_id}, undef, undef,
       $cmd, $self->get_user, $self->{PlannedPipeOp}->{operation_name});
+
     # set the bkgrnd_id field
     $cmd =~ s/<\?bkgrnd_id\?>/$subprocess_invocation_id/;
+    $cmd =~ s/<\?spreadsheet_id\?>/$table->{spreadsheet_uploaded_id}/;
   }
 
   Dispatch::LineReaderWriter->write_and_read_all(
