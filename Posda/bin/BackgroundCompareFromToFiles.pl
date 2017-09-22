@@ -48,17 +48,17 @@ while(my $line = <STDIN>){
 my $num_sops = keys %data;
 print "$num_sops SOPs loaded\n";
 
-$background->ForkAndExit;
-$background->LogInputCount($num_sops);
+$background->Daemonize;
 
-print STDERR "In child\n";
+$background->WriteToEmail("Comparing $num_sops sops.\n");
 
-$background->WriteToReport("\"Sop InstanceUID\"," .
+my $report = $background->CreateReport();
+
+$report->print("\"Sop InstanceUID\"," .
   "\"File From\",\"File To\",\"Differences\"\r\n");
-close STDOUT;
-close STDIN;
+
 my @SopList = sort keys %data;
-print STDERR "$num_sops sops to process in child\n";
+
 Sop:
 for my $i (0 .. $#SopList){
   my $sop = $SopList[$i];
@@ -68,8 +68,7 @@ for my $i (0 .. $#SopList){
   my $dump_t = File::Temp::tempnam("/tmp", "two");
   my $cmd_f = "DumpDicom.pl $file_f > $dump_f";
   my $cmd_t = "DumpDicom.pl $file_t > $dump_t";
-  print STDERR "command: $cmd_f\n";
-  $background->WriteToEmail("command: $cmd_f\n");
+
   `$cmd_f`;`$cmd_t`;
   my $diff = "";
   open FILE, "diff $dump_f $dump_t|";
@@ -81,10 +80,7 @@ for my $i (0 .. $#SopList){
   close FILE;
   unlink $dump_f;
   unlink $dump_t;
-  $background->WriteToReport("$sop,\"$file_f\",\"$file_t\",\"$diff\"\r\n");
+  $report->print("$sop,\"$file_f\",\"$file_t\",\"$diff\"\r\n");
 }
-$background->LogCompletionTime;
-my $link = $background->GetReportDownloadableURL;
-my $report_file_id = $background->GetReportFileID;
-$background->WriteToEmail("Report url: $link\n");
-$background->WriteToEmail("Report file_id: $report_file_id\n");
+
+$background->Finish;

@@ -8,7 +8,7 @@ package Posda::DB;
 
 require Exporter;
 @ISA = 'Exporter';
-@EXPORT_OK = ('Query');
+@EXPORT_OK = ('Query', 'QueryAsync', 'ResetDBHandles');
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -24,4 +24,7 @@ func QueryAsync($query_name) {
   return PosdaDB::Queries->GetQueryInstanceAsync($query_name);
 }
 
+func ResetDBHandles() {
+  return PosdaDB::Queries->reset_db_handles();
+}
 1;
