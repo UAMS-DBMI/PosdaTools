@@ -99,6 +99,9 @@ sub SetUserPrivs {
   my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
   $sess->{Privileges}->{capability} = $cap_config->{$user};
   $this->{capability} = $cap_config->{$user};
+  $0 = $Dispatch::Http::App::Server::ServerPort .
+    " AppController ($this->{Environment}->{ApplicationName})" .
+    " ($user)";
 }
 sub RevokeLogin {
   my($this) = @_;

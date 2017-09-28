@@ -161,7 +161,15 @@ sub TryNextSocket{
       "this failure. Better give up.";
     $this->{State} = "Error";
     print STDERR $this->{ErrorMessage};
+    my $user = $this->{AuthUser};
+    print STDERR "#########################\n" .
+      "This user: $user\n" .
+      "probably has a browser which blocks popups from this site\n" .
+      "and hasn't figured it out yet.\n" .
+      "perhaps someone should clue him in\n" .
+      "#########################\n";
     $this->AutoRefresh;
+    delete $AppController::RunningApps{$this->{TryingSocket}};
     return;
   }
   my $next_socket = shift(@{$this->{socket_list}});

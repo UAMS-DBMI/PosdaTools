@@ -9,6 +9,7 @@ package Dispatch::LineReader;
 use Socket;
 use Fcntl qw( :flock :DEFAULT F_GETFL F_SETFL O_NONBLOCK );
 use Dispatch::Select;
+use Dispatch::EventHandler;
 sub new_serialized_cmd{
   my($class, $cmd, $struct, $lh, $eh) = @_;
   my($child, $parent, $oldfh);
@@ -16,7 +17,6 @@ sub new_serialized_cmd{
     die("socketpair: $!");
   my $child_pid = fork;
   unless(defined $child_pid) { die "Couldn't fork in new_serialized_cmd" }
-print STDERR "Child Pid: $child_pid\n";
   $oldfh = select($parent); $| = 1; select($oldfh);
   $oldfh = select($child); $| = 1; select($oldfh);
   if($child_pid == 0){
@@ -108,6 +108,13 @@ sub LR_line_reader{
     }
     my $count = sysread($fh, $txt, 100, length($txt));
     if((!defined($count)) || $count <= 0){
+      if(exists $this->{Writer}){
+        print STDERR 
+          "######################\n" .
+          "Warning: shutting down return from subprocess\n" .
+          "         before  output finished\n" .
+          "######################\n";
+      }
       $disp->Remove;
       close $fh;
       if($this->{pid}){
@@ -125,6 +132,7 @@ sub LR_line_reader{
       my $line = $1;
       $txt = $2;
       &{$this->{lh}}($line);
+      $this->{lines_read} += 1;
     }
   };
   return $clos;
@@ -176,5 +184,72 @@ sub DESTROY{
   if($ENV->{POSDA_DEBUG}){
     print STDERR "Destroying $this\n";
   }
+}
+sub NewWithTrickleWrite{
+  my($class, $cmd, $dqh, $lh, $eh) = @_;
+  my($fh, $pid) = ReadWriteChild($cmd);
+  my $this = new_fh($class, $fh, $lh, $eh, $pid);
+  $this->{lines_written} = 0;
+  $this->{lines_read} = 0;
+  $this->{Writer} = sub {
+    my($disp, $sock) = @_;
+    my $to_write = &$dqh($disp);
+    if(defined $to_write){
+      $this->{lines_written} += 1;
+      $this->{fh}->print("$to_write\n");
+    } else {
+      $disp->Remove("writer");
+    }
+  };
+  return $this;
+}
+sub StartWriter{
+  my($this) = @_;
+  if(defined $this->{Writer}){
+    Dispatch::Select::Socket->new(
+      $this->{Writer}, $this->{fh})->Add("writer");
+  }
+}
+sub ShutdownWriter{
+  my($this) = @_;
+  if(defined $this->{Writer}){
+print STDERR "Shutting down after\n" .
+ "\t$this->{lines_written} written,\n" .
+ "\t$this->{lines_read} lines read\n";
+    shutdown $this->{fh}, 1;
+    delete $this->{Writer};
+  }
+}
+sub AdHocDebug{
+  my($this) = @_;
+  print STDERR "Written: $this->{lines_written}\n";
+  print STDERR "Read $this->{lines_read}\n";
+}
+sub ReadWriteChild{
+  my($cmd) = @_;
+  my($child, $parent, $oldfh);
+  socketpair($parent, $child, AF_UNIX, SOCK_STREAM, PF_UNSPEC) or
+    $this->Die("socketpair: $!");
+  $oldfh = select($parent); $| = 1; select($oldfh);
+  $oldfh = select($child); $| = 1; select($oldfh);
+  my $child_pid = fork;
+  unless(defined $child_pid) {
+    $this->Die("couldn't fork: $!");
+  }
+  if($child_pid == 0){
+    close $child;
+    close STDIN;
+    close STDOUT;
+    unless(open STDIN, "<&", $parent){die "Redirect of STDIN failed: $!"}
+    unless(open STDOUT, ">&", $parent){die "Redirect of STDOUT failed: $!"}
+    exec $cmd;
+    die "exec failed: $!";
+  } else {
+    my $flags = fcntl($child, F_GETFL, 0);
+    $flags = fcntl($child, F_SETFL, $flags | O_NONBLOCK);
+    close $parent;
+  }
+  return $child, $child_pid;
+
 }
 1;

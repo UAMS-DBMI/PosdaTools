@@ -29,4 +29,4 @@ unless(defined($new_xfr_stx)) { $new_xfr_stx = $xfr_stx }
 unless($ds) { die "$from didn't parse into a dataset" }
 $ds->MapToConvertPvt();
 my $offset = $ds->WritePart10($to, $new_xfr_stx, "DICOM_TEST", undef, undef);
-print "Dataset offset: $offset\n";
+#print "Dataset offset: $offset\n";

@@ -1,21 +1,17 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::DownloadableFile;
 my $usage = <<EOF;
-PhiBackgroundDciodvfySeries.pl <id> <description> <type> <notify>
+SumPatients.pl <id> <report_path> <notify>
   id - id of row in subprocess_invocation table created for the
     invocation of the script
-  description - description of scan
-  type - type of dciodvfy scan
-    "one_per_series" - scan one file per serits
-    "all_per_series" - scan all files in series
-    "per_sop" - sops are SOP instances - one file per SOP
-  notify - email address for completion notification
+  report_path - file name of report_file
 
-Expects a list of series_uids (or sop_instance_uids) on STDIN
-
-Uses the following script to do most of the work:
-  ProcessDciodvfyScan.pl <type> <uid> <scan_id>
+Expects the following list on <STDIN>
+  <id>&<study>&<series>&<num files>
+Input should be sorted by <id>
+Adds a total column with total by id when id changes
 
 Queries used to implement background processor protocol:
   CreateBackgroundSubprocess
@@ -34,13 +30,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
 my $child_pid = $$;
 my $command = $0;
 my $script_start_time = time;
-unless($#ARGV == 3){
+unless($#ARGV == 2){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $description, $type_of_unit, $notify) = @ARGV;
+my($invoc_id, $report_path, $notify) = @ARGV;
 my $q1 = PosdaDB::Queries->GetQueryInstance(
   "CreateBackgroundSubprocess");
 $q1->RunQuery(sub{}, sub{},
@@ -61,23 +57,27 @@ for my $i (0 .. $#ARGV){
 }
 my $q4 = PosdaDB::Queries->GetQueryInstance(
   "CreateBackgroundInputLine");
-my $line_no = 0;
-my @Series;
+
+my $num_lines = 0;
+my @Rows;
 while(my $line = <STDIN>){
-  $line_no += 1;
   chomp $line;
-  push @Series, $line;
-  $q4->RunQuery(sub{}, sub{}, $bkgrnd_id, $line_no, $line);
+  my($id, $study, $series, $num_files) =
+    split /&/, $line;
+  push(@Rows, [$id, $study, $series, $num_files]);
 }
-my $num_series = @Series;
-my $num_lines = $num_series;
-print "Found list of $num_series series to scan\n" .
+
+my $num_rows = @Rows;
+print "Found list of $num_rows rows to total\n" .
   "Forking background process\n";
+print STDERR "Calling PosdaDB::Queries->reset_db_handles()\n";
 PosdaDB::Queries->reset_db_handles();
+print STDERR "Back from PosdaDB::Queries->reset_db_handles()\n";
 close STDOUT;
 close STDIN;
 fork and exit;
 my $grandchild_pid = $$;
+print STDERR "Running in background, pid = $grandchild_pid\n";
 my($add_time_rows_to_bkgrnd, $create_bgrnd_sub_param,
   $add_bgrnd_sub_error, $add_comp_to_bgrnd_sub);
 eval {
@@ -106,6 +106,7 @@ if($@){
   );
   die "Script errored with update to table ($@)";
 }
+print STDERR "Opening Mail\n";
 unless(open EMAIL, "|mail -s \"Posda Job Complete\" $notify"){
   my $error = "can't open pipe ($!) to mail $notify";
   $add_bgrnd_sub_error->RunQuery(sub{},sub{},
@@ -113,49 +114,80 @@ unless(open EMAIL, "|mail -s \"Posda Job Complete\" $notify"){
   );
   die "Script errored with update to table ($@)";
 }
+print STDERR "Mail is open\n";
 $add_time_rows_to_bkgrnd->RunQuery(sub {}, sub{},
   $num_lines, $grandchild_pid, $bkgrnd_id
 );
 my $date = `date`;
-print EMAIL "$date\nStarting Simple PHI Scan\n" .
-  "Description: $description\n" .
-  "type: $type_of_unit\n" .
+print EMAIL "$date\nRunning /SumPatients.pl\n" .
+  "Report Path: $report_path\n" .
   "background_subprocess_id: $bkgrnd_id\n";
+unless(open REPORT, ">$report_path"){
+  print EMAIL "Unable to open report_file: $report_path\n";
+  exit;
+}
 #######################################################################
 ### Body of script
-my $create_scan = PosdaDB::Queries->GetQueryInstance(
-  "CreateDciodvfyScanInstance");
-my $get_scan_id = PosdaDB::Queries->GetQueryInstance(
-  "GetDciodvfyScanInstanceId");
-my $update_inst = PosdaDB::Queries->GetQueryInstance(
-  "SetDciodvfyScanInstanceNumScanned");
-my $finalize_inst = PosdaDB::Queries->GetQueryInstance(
-  "FinalizeDciodvfyScanInstance");
-$create_scan->RunQuery(sub {}, sub {}, 
-  $type_of_unit, $description, $num_series);
-my $scan_id;
-$get_scan_id->RunQuery(sub {
-  my($row) = @_;
-  $scan_id = $row->[0];
-}, sub {});
-my $num_scanned = 0;
-for my $uid (@Series){
-  my $cmd = "ProcessDciodvfyScan.pl $type_of_unit $uid $scan_id";
-print EMAIL "command: $cmd\n";
-  `$cmd`;
-  $num_scanned += 1;
-  $update_inst->RunQuery(sub {}, sub {},
-    $num_scanned, $scan_id);
+print REPORT "\"id\",\"study\",\"series\",\"num files\",\"subtotal\"\n";
+my $report_file_id;
+my $sub_total = 0;
+my $current_id;
+my %SubTotals;
+my $last_row;
+# row = [$id, $study, $series, $num_files]
+my $report_rows = 0;;
+for my $row (@Rows){
+  unless(defined $current_id) {
+    $current_id = $row->[0];
+  }
+  if($current_id eq $row->[0]){
+    $sub_total += $row->[3];
+    print REPORT "\"$last_row->[0]\",\"$last_row->[1]\"," .
+      "\"$last_row->[2]\",\"$last_row->[3]\",\"\"\n";
+    $last_row = $row;
+  } else {
+    $SubTotals{$current_id} = $sub_total;
+    print REPORT "\"$last_row->[0]\",\"$last_row->[1]\"," .
+      "\"$last_row->[2]\",\"$last_row->[3]\",\"$sub_total\"\n";
+    $sub_total = $row->[3];
+    $last_row = $row;
+    $current_id = $row->[0];
+  }
+  $report_rows += 1;
 }
-$finalize_inst->RunQuery(sub{}, sub {}, $scan_id);
+print REPORT "\"$last_row->[0]\",\"$last_row->[1]\"," .
+  "\"$last_row->[2]\",\"$last_row->[3]\",\"$sub_total\"\n";
+$report_rows += 1;
+print REPORT "\n\n\n\"id\",\"total\"\n";
+for my $id (sort keys %SubTotals){
+  print REPORT "\"$id\",\"$SubTotals{$id}\"\n";
+$report_rows += 1;
+}
+close REPORT;
+if(open GETID, "ImportSingleFileIntoPosdaAndReturnId.pl \"$report_path\" \"Script: Posda/bin/SumPatients.pl\"|"){
+  while (my $line = <GETID>){
+    chomp $line;
+    if($line =~ /^File id:\s*(\d+)\s*$/){
+      $report_file_id = $1;
+    }
+  }
+  print EMAIL "Report file $report_path\n" .
+    "\timported into Posda with id: $report_file_id\n";
+  my $insert_report = PosdaDB::Queries->GetQueryInstance(
+    "RecordReportInsertion");
+  $insert_report->RunQuery(sub {}, sub {},
+    $report_file_id, $report_rows, $bkgrnd_id);
+  my $url = Posda::DownloadableFile::make_csv($report_file_id);
+  print STDERR  "Download url: $url\n";
+  print EMAIL "Download url: $url\n";
+} else {
+  print EMAIL "Unable to import report_file ($report_path) into Posda\n";
+}
 
 ### Body of script
 ###################################################################
 $add_comp_to_bgrnd_sub->RunQuery(sub{}, sub{}, $bkgrnd_id);
 my $end = time;
 my $duration = $end - $script_start_time;
-print EMAIL "finished scan\n" .
-  "num scanned $num_scanned\n" .
-  "duration $duration seconds\n";
-print EMAIL "id of PHI scan: $scan_id\n";
+print EMAIL "finished conversion in $duration seconds\n";
 close EMAIL;

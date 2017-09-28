@@ -3,22 +3,21 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Posda::BackgroundProcess;
 use Posda::UUID;
-use Posda::DownloadableFile;
-use Dispatch::Select;
+use Posda::DownloadableFile; use Dispatch::Select;
 use Dispatch::EventHandler;
-use Dispatch::LineReaderWriter;
+use Dispatch::LineReader;
 use Digest::MD5;
 use FileHandle;
 use Storable qw( store retrieve fd_retrieve store_fd );
-use Debug;
+#use Debug;
+#my $dbg = sub { print STDERR @_ };
+$| = 1; # this should probably be at the top of the script, maybe in the lib?
 
-
-my $dbg = sub { print STDERR @_ };
 my $usage = <<EOF;
 Usage:
-BatchEditDicomFile.pl <bkgrnd_id> <dest_root> <who> <edit_desciption> <notify>
+BackgroundEditDicomFile.pl <bkgrnd_id> <dest_root> <who> <edit_desciption> <notify>
 or
-BatchEditDicomFile.pl -h
+BackgroundEditDicomFile.pl -h
 
 
 Expects lines of the formh:
@@ -43,7 +42,7 @@ When the sub-process completes, it sends a notification email.
 NOTE: you shouldn't run this for duplicate SOPs (its bad practice).  In general
   only one file will be edited per affected SOP Instance UID.
 
-BatchEditDicomFile may run for a long time.
+BackgroundEditDicomFile may run for a long time.
 
 Control Commands:
   AddFile <arg1> = <file_name>, <arg2> = <modality>, <arg3> =
@@ -131,10 +130,12 @@ unless(mkdir($WorkDir) == 1) {
 }
 my $pstate = "Search";
 my $working_file_list = [];
-
 line:
 while(my $line = <STDIN>){
   chomp $line;
+  ######?????
+  $line =~ s/^\s+//;  ###WTF?
+  ######
   my($command, $arg1, $arg2, $arg3, $arg4) = split /&/, $line;
   $background->LogInputLine($line);
 
@@ -335,14 +336,10 @@ print "Found list of $num_sops to edit\nForking background process\n";
 $getf = undef;
 $getfs = undef;
 $getfsp = undef;
-$| = 1; # TODO: this should probably be at the top of the script, maybe in the lib?
-
-$background->ForkAndExit;
-$background->LogInputCount($num_sops);
-
-$background->WriteToReport(
-  "sop_instance_uid,from_file,from_digest,to_file,to_digest," .
-  "status,,report_file_path,Operation,edit_comment,notify\n");
+$background->Daemonize;
+my $rpt_pipe = $background->CreateReport("EditDifferences");
+$rpt_pipe->print("\"Short Report\"," .
+  "\"Long Report\",\"short_file_id\",\"long_file_id\",\"num_files\"\r\n");
 $background->WriteToEmail("Starting edits on $num_sops sop_instance_uids\n" .
   "Description: $description\n" .
   "Results dir: $WorkDir\n");
@@ -354,25 +351,114 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
   use vars qw( @ISA );
   @ISA = ( "Dispatch::EventHandler" );
   sub new{
-    my($class, $list, $hash, $email, $rpt) = @_;
+    my($class, $list, $hash, $invoc_id) = @_;
     my $this = {
       list_of_sops => $list,
       sop_hash => $hash,
       sops_in_process => {},
       sops_completed => {},
       sops_failed => {},
+      compare_requests => {},
+      comparing => {},
+      compare_complete => {},
+      compares_failed => {},
       start_time => time(),
-      email => $email,
-      rpt => $rpt,
+      invoc_id => $invoc_id,
     };
     bless($this, $class);
     my $at_text = $this->now;
     $background->WriteToEmail("Starting at: $at_text\n");
-    $background->WriteToReport(",,,,,,,\"None\",EditReport,\"$description\"," .
-      "\"$notify\"\n");
-    $this->{process_pending} = 1;
-    $this->InvokeAfterDelay("StartProcessing", 0);
+    delete $this->{process_pending};
+    $this->InvokeAfterDelay("RestartProcessing", 0);
+    $this->{CompareSubprocess} = Dispatch::LineReader->NewWithTrickleWrite(
+      "StreamingEditCompare.pl $invoc_id 2>/dev/null",
+      $this->FeedDifferencer,
+      $this->HandleInputFromCompare,
+      $this->HandleEndOfInputFromCompare
+    );
+    Dispatch::Select::Background->new($this->CountPrinter)->timer(10);
     return $this;
+  }
+  sub CountPrinter{
+    my($this) = @_;
+    my $count = 60; # 60 10 second intervals
+    my $sub = sub {
+      my($disp) = @_;
+      $count -= 10;
+      if($count <= 0 || $this->{WeAreDone}){
+        $count = 60;
+        my $at_text = $this->now;
+        my($num_in_process, $num_waiting, $num_queued_for_compare,
+          $num_comparing, $num_compares_complete, $num_compares_failed,
+          $total_to_process);
+        if(
+          exists $this->{sop_hash} &&
+          ref($this->{sop_hash}) eq "HASH"
+        ){
+          $total_to_process = keys %{$this->{sop_hash}};
+        } else { $total_to_process = 0 }
+        if(
+          exists $this->{sops_in_process} &&
+          ref($this->{sops_in_process}) eq "HASH"
+        ){
+          $num_in_process = keys %{$this->{sops_in_process}};
+        } else { $num_in_process = 0 }
+        if(
+          exists $this->{list_of_sops} &&
+          ref($this->{list_of_sops}) eq "ARRAY"
+        ){
+          $num_waiting = keys @{$this->{list_of_sops}};
+        } else { $num_waiting = 0 }
+        if(
+          exists $this->{compare_requests} &&
+          ref($this->{compare_requests}) eq "HASH"
+        ){
+          $num_queued_for_compare = keys %{$this->{compare_requests}};
+        } else { $num_queued_for_compare = 0 }
+        if(
+          exists $this->{comparing} &&
+          ref($this->{comparing}) eq "HASH"
+        ){
+          $num_comparing = keys %{$this->{comparing}};
+        } else { $num_comparing = 0 }
+        if(
+          exists $this->{compares_complete} &&
+          ref($this->{compares_complete}) eq "HASH"
+        ){
+          $num_compares_complete = keys %{$this->{compares_complete}};
+        } else { $num_comparing = 0 }
+        if(
+          exists $this->{sops_failed} &&
+          ref($this->{sops_failed}) eq "HASH"
+        ){
+          $num_compares_failed = keys %{$this->{compares_failed}};
+        } else { $num_compares_failed = 0 }
+        my $elapsed = time - $this->{start_time};
+        my $report =
+          "#############################\n" .
+          "BackgroundEditDicomFile.pl running report\n" .
+          "After $elapsed seconds ($at_text):\n" .
+          "\tTotal to process:   $total_to_process\n" .
+          "\tIn process:         $num_in_process\n" .
+          "\tWaiting:            $num_waiting\n" .
+          "\tQueued for compare: $num_queued_for_compare\n" .
+          "\tComparing           $num_comparing\n" .
+          "\tCompares complete:  $num_compares_complete\n" .
+          "\tCompares failed:    $num_compares_failed\n";
+        if($this->{WeAreDone}) { print "We are done\n" }
+        $report .= "#############################\n";
+        $background->WriteToEmail($report);
+        print STDERR $report;
+if(exists $this->{CompareSubprocess}){
+  $this->{CompareSubprocess}->AdHocDebug;
+}
+        if($this->{WeAreDone}) { exit };
+      }
+      unless($this->{WeAreDone}){
+        $disp->timer(10);
+      }
+    };
+    return $sub;
   }
   sub StartProcessing{
     my($this) = @_;
@@ -380,95 +466,207 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
     my $num_simul = 8;
     my $num_in_process = keys %{$this->{sops_in_process}};
     my $num_waiting = @{$this->{list_of_sops}};
+    my $num_comparing = keys %{$this->{comparing}};
+    my $num_queued_for_compare = keys %{$this->{compare_requests}};
     while(
-      $num_in_process < $num_simul &&
-      $num_waiting > 0
+      $num_in_process < $num_simul && $num_waiting > 0
     ){
       my $next_sop = shift @{$this->{list_of_sops}};
       my $next_struct = $this->{sop_hash}->{$next_sop};
       $this->{sops_in_process}->{$next_sop} = $next_struct;
-      delete $this->{sop_hash}->{$next_sop};
-#      $this->{email}->print("\n#################\nScheduling Edit for: ");
-#      Debug::GenPrint($this->MailPrinter, $next_struct, 1);
-#      $this->{email}->print("\n############\n");
-      $this->SerializedSubProcess($next_struct, "SubProcessEditor.pl",
+      $this->SerializedSubProcess($next_struct, 
+        "SubProcessEditor.pl 2>/dev/null",
         $this->WhenEditDone($next_sop, $next_struct));
       $num_in_process = keys %{$this->{sops_in_process}};
       $num_waiting = @{$this->{list_of_sops}};
     }
-    if($num_waiting == 0 && $num_in_process == 0){
-      my $elapsed  = time - $this->{start_time};
-      my $num_edited = keys %{$this->{sops_completed}};
-      my $num_failed = keys %{$this->{sops_failed}};
-      my $at_text = $this->now;
-      $background->WriteToEmail("Ending at: $at_text\n");
-      $background->WriteToEmail("$num_edited edited, $num_failed failed in " .
-        "$elapsed seconds\n");
-
-      $background->LogCompletionTime;
-      my $link = $background->GetReportDownloadableURL;
-      $background->WriteToEmail("Report file: $link\n");
-
+    if(
+      $num_waiting == 0 &&
+      $num_in_process == 0 &&
+      $num_comparing == 0 &&
+      $num_queued_for_compare == 0
+    ){
+      $this->AtTheEnd;
     }
   }
   sub WhenEditDone{
     my($this, $sop, $struct) = @_;
     my $sub = sub {
       my($status, $ret_struct) = @_;
-#print STDERR "Edit done: $sop\n";
-#print STDERR "Status $status, return: ";
-#Debug::GenPrint($dbg, $ret_struct, 1);
-#print STDERR "\n";
       my $from_file = $struct->{from_file};
       my $to_file = $struct->{to_file};
       if($status eq "Succeeded" && $ret_struct->{Status} eq "OK"){
-print STDERR "$sop succeded\n";
-        $this->{sops_completed}->{$sop} = $struct;
-        my $from_dig = $this->GetFileDig($from_file);
-        my $to_dig = $this->GetFileDig($to_file);
-        $background->WriteToReport("$sop,\"$from_file\",$from_dig,\"$to_file\"," .
-          "$to_dig,OK\n");
+        my $c_struct = {
+          subprocess_invocation_id => $this->{invoc_id},
+          from_file_path => $from_file,
+          to_file_path => $to_file,
+        };
+        $this->QueueCompareRequest($sop, $c_struct);
       } else {
-print STDERR "$sop failed\n";
         $this->{sops_failed}->{$sop} = {
           edits => $struct,
           status => $status,
           report => $ret_struct,
         };
-        $background->WriteToReport("$sop,\"$from_file\",\"\",\"$to_file\",\"\"," .
-          "$status,\"$ret_struct->{mess}\"\n");
       }
       delete $this->{sops_in_process}->{$sop};
-      unless(exists $this->{process_pending}){
-        $this->{process_pending} = 1;
-        $this->InvokeAfterDelay("StartProcessing", 0);
+      $this->RestartProcessing;
+    };
+  }
+  sub RestartProcessing{
+    my($this) = @_;
+    unless(exists $this->{process_pending}){
+      $this->{process_pending} = 1;
+      $this->InvokeAfterDelay("StartProcessing", 0);
+    }
+  }
+  sub HandleInputFromCompare{
+    my($this) = @_;
+    my $sub = sub{
+      my($line) = @_;
+      if($line =~ /Completed:\s*(.*)$/){
+        my $remain = $1;
+        my($sop, $from_file, $to_file,$s_id, $l_id) = split(/\|/, $remain);
+        delete $this->{comparing}->{$sop};
+        $this->{compares_complete}->{$sop} = 1;
+      } elsif($line =~ /Failed:\s*(.*)$/){
+        my $remain = $1;
+        my($sop, $mess) = split(/\|/, $remain);
+        delete $this->{comparing}->{$sop};
+        $this->{compares_failed}->{$sop} = $mess;
+      } else {
+        print STDERR
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!!!!!!!!!!!!!!!!!!\n" .
+          "!!!!!!!  You idiot !!!!!!!!!!!!" .
+          "Bad line: \"$line\"\n" .
+          "!!!!!!!!! Always have default case !!!!!!!!";
+      }
+      # here is where we check from being done
+      my $num_in_process = keys %{$this->{sops_in_process}};
+      my $num_waiting = @{$this->{list_of_sops}};
+      my $num_comparing = keys %{$this->{comparing}};
+      my $num_queued_for_compare = keys %{$this->{compare_requests}};
+      if(
+         $num_waiting == 0 &&
+         $num_in_process == 0 &&
+         $num_comparing == 0 &&
+         $num_queued_for_compare == 0
+      ){
+        # if so, shutdown writer (after returning undef)
+        my $writer = $this->{CompareSubprocess};
+        Dispatch::Select::Background->new(sub {
+          my($disp) = @_;
+          $writer->ShutdownWriter;
+        })->queue;
+        delete $this->{CompareSubprocess};
       }
     };
     return $sub;
   }
-  sub GetFileDig{
-    my($this, $file) = @_;
-    my $ctx = Digest::MD5->new();
-    unless(open FILE, "<$file"){
-      return "Unable to open file";
+  sub HandleEndOfInputFromCompare{
+    my($this) = @_;
+    my $sub = sub{
+      $this->RestartProcessing;
+    };
+    return $sub;
+  }
+  sub FeedDifferencer{
+    my($this) = @_;
+    my $sub = sub {
+      my $num_to_send = keys %{$this->{compare_requests}};
+      if($num_to_send > 0){
+        my $next_to_send = [keys %{$this->{compare_requests}}]->[0];
+        my $next_struct = $this->{compare_requests}->{$next_to_send};
+        my $from = $next_struct->{from_file_path};
+        my $to = $next_struct->{to_file_path};
+        my $id = $next_struct->{subprocess_invocation_id};
+        delete $this->{compare_requests}->{$next_to_send};
+        my $command = "$next_to_send|$from|$to";
+        $this->{comparing}->{$next_to_send} = $command;
+        return $command;
+      } else {
+        # Here we can't check to see if all have been queued
+        # (We can't shutdown writer without losing contents
+        # backed up in pipes);
+        return undef;
+      }
+    };
+    return $sub;
+  }
+  sub QueueCompareRequest{
+    my($this, $key, $value) = @_;
+    my $existing_request_count  = keys %{$this->{compare_requests}};
+    $this->{compare_requests}->{$key} = $value;
+    if($existing_request_count == 0){
+      $this->{CompareSubprocess}->StartWriter;
     }
-    $ctx->addfile(*FILE);
-    my $dig = $ctx->hexdigest;
-    close FILE;
-    return $dig;
+  }
+  sub AtTheEnd{
+    my($this) = @_;
+###############
+    my $elapsed  = time - $this->{start_time};
+    my $num_edited = keys %{$this->{sops_completed}};
+    my $num_failed = keys %{$this->{sops_failed}};
+    my %data;
+    my $num_rows = 0;
+    my $get_list = PosdaDB::Queries->GetQueryInstance(
+      "DifferenceReportByEditId");
+    $get_list->RunQuery(sub {
+        my($row) = @_;
+        my($short_report_file_id, $long_report_file_id, $num_files) = @$row;
+        $num_rows += 1;
+        $data{$short_report_file_id}->{$long_report_file_id} = $num_files;
+      }, sub {}, $this->{invoc_id});
+    my $num_short = keys %data;
+    my $get_path = PosdaDB::Queries->GetQueryInstance("GetFilePath");
+    for my $short_id (keys %data){
+      my $short_seen = 0;
+      for my $long_id (keys %{$data{$short_id}}){
+        my $num_files = $data{$short_id}->{$long_id};
+        my $short_rept = "-";
+        my $long_rept = "";
+        unless($short_seen){
+          $short_seen = 1;
+          $get_path->RunQuery(sub{
+            my($row) = @_;
+            my $file = $row->[0];
+            $short_rept = `cat $file`;
+            chomp $short_rept;
+          }, sub {}, $short_id);
+        }
+        $get_path->RunQuery(sub{
+          my($row) = @_;
+          my $file = $row->[0];
+          $long_rept = `cat $file`;
+          chomp $long_rept;
+        }, sub {}, $long_id);
+        $short_rept =~ s/"/""/g;
+        $long_rept =~ s/"/""/g;
+        $rpt_pipe->print("\"$short_rept\"," .
+          "\"$long_rept\",$short_id,$long_id,$num_files\r\n");
+      }
+    }
+###############
+    my $at_text = $this->now;
+    $background->WriteToEmail("Ending at: $at_text\n");
+    $background->WriteToEmail("$num_edited edited, $num_failed failed in " .
+      "$elapsed seconds\n");
+    $background->WriteToEmail("Invocation Id: $this->{invoc_id}\n");
+    $background->Finish;
+    $this->{WeAreDone} = 1;
   }
 }
 sub MakeEditor{
-  my($sop_list, $sop_hash, $email, $report) = @_;
+  my($sop_list, $sop_hash, $invoc_id) = @_;
   my $sub = sub {
     my($disp) = @_;
-    Editor->new($sop_list, $sop_hash, $email, $report);
+    Editor->new($sop_list, $sop_hash, $invoc_id);
   };
   return $sub;
 }
 {
   my @sops = sort keys %SopsToEdit;
   Dispatch::Select::Background->new(
-    MakeEditor(\@sops, \%SopsToEdit, undef, undef))->queue;
+    MakeEditor(\@sops, \%SopsToEdit, $invoc_id))->queue;
 }
 Dispatch::Select::Dispatch();

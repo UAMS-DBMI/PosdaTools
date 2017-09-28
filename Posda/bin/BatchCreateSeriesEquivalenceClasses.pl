@@ -3,10 +3,11 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 #use Time::Piece;
 my $usage = <<EOF;
-CsvApplyPrivateDisposition.pl <notify email>
+BatchCreateSeriesEquivalenceClasses.pl <notify email>
   Creates image_equivalence_class rows for series listed on STDIN
 EOF
 unless($#ARGV == 0) { die $usage }
+if($ARGV[0] eq "-h") { print "$usage\n"; exit }
 my $email_addr = $ARGV[0];
 my @cmds;
 my $num_lines = 0;

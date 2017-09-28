@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
+use Debug;
+my $dbg = sub {print STDERR @_ };
 my $usage = <<EOF;
 ScanDciodvfyOutput.pl <file>
 EOF
@@ -34,14 +36,53 @@ my %CantBeNegative; #{<tag>}->{<value>}
 my %InvalidElementLength; #{<tag>}->{<value>}->{<length>}->{<desc>}->{<reason>}
 my %AttributeSpecificError; #{<tag>}->{<desc>}
 my %AttributeSpecificErrorWithIndex; #{<tag>}->{<index>}->{<desc>}
+my %InvalidValueForVr; #{<tag>}->{<index>}->{<value>}->{<reason>}->{<desc>}
 
 my $Iod;
+#Dicom dataset contains invalid data values for Value Representations
+#Empty attribute (no value) Type 1 Required Element=<SequenceVariant> Module=<MRImage>                                                       │     2
+#
+
 while(my $line = <PIPE>){
   chomp $line;
   if($line =~ /^\(0x(....),0x(....)\)\s*\?\s*-\s*Warning\s*-\s*Unrecognized tag\s*-\s*(.*)$/){
     my $tag = "($1,$2)";
     my $comment = $3;
     $UnrecognizedTags{$tag}->{$comment} = 1;
+#Error - Value invalid for this VR - (0x0032,0x1030) LO Reason for Study  LO [0] = <HISTORY:    SIGNS & SYMPTONS:  increased o2 requirement   COMMENTS:> - Length invalid for this VR = 67, expected <= 64
+  } elsif(
+    $line =~ /^Error - Value invalid.*VR -\s*\(0x(....),0x(....)\) .*\[(.*)\]\s*=\s*<([^>]+)> - (.*)\s* = (.*)$/
+  ){
+    my $element = "($1,$2)";
+    my $index = $3;
+    my $value = $4;
+    my $reason = $5;
+    my $desc = $6;
+    $index =~ s/^\s*//;
+    $index =~ s/\s*$//;
+    $InvalidValueForVr{$element}->{$index}->{$value}->{$reason}->{$desc} = 1;
+#Value invalid for this VR - (0x0018,0x0015) CS Body Part Examined  CS [0] = <PET TUMOR IMA...> - Character invalid for this VR = '.' (0x2e)
+#Value invalid for this VR - (0x0008,0x0033) TM Content Time  TM [0] = <0833.0000> - Character invalid for this VR = '0' (0x30)              │     2
+#Value invalid for this VR - (0x0008,0x0033) TM Content Time  TM [0] = <0833.0000> - Character invalid for this VR = '.' (0x2e)              │     2
+  } elsif(
+    $line =~ /^Error - Value invalid.*VR\s*-\s*\(0x(....),0x(....)\).*=\s*<([^>]+)>\s*-\s*([^=]+)\s*=\s*(.*)\s*$/
+  ){
+    my $element = "($1,$2)";
+    my $value = $3;
+    my $index = 0;
+    my $reason = $4;
+    my $desc = $5;
+    $InvalidValueForVr{$element}->{$index}->{$value}->{$reason}->{$desc} = 1;
+#Value invalid for this VR - (0x0010,0x1010) AS Patient's Age  AS - Trailing character invalid for this VR = ' ' (0x20)
+  } elsif(
+    $line =~ /^Error - Value invalid.*VR -\s*\(0x(....),0x(....)\).*-\s*(.*)\s* = (.*)$/
+  ){
+    my $element = "($1,$2)";
+    my $value = "<unspec>";
+    my $index = 0;
+    my $reason = $3;
+    my $desc = $4;
+    $InvalidValueForVr{$element}->{$index}->{$value}->{$reason}->{$desc} = 1;
   } elsif(
     $line =~ /^Error - Unrecognized enumerated value <([^>]+)>\s*for value\s*(.*)\s*of attribute\s*<([^>]+)>/
   ){
@@ -100,11 +141,38 @@ while(my $line = <PIPE>){
     $index =~ s/\s*$//;
     my $desc = "$desc1 $desc2";
     $AttributeSpecificErrorWithIndex{$tag}->{$index}->{$desc} = 1;
+#Empty attribute (no value) Type 1 Required Element=<SequenceVariant> Module=<MRImage>
+  } elsif(
+    $line =~ /^Error - (Empty a.*)=<([^>]+)> Module=<([^>]+)>$/
+  ){
+    my $desc1 = $1;
+    my $tag = $2;
+    my $desc2 = $3;
+    my $desc = "$desc1 per module $desc2";
+    $AttributeSpecificError{$tag}->{$desc} = 1;
   } elsif($line =~ 
     /^Error - (Pixel Aspect Ratio) (.*)\s*$/
   ){
     my $tag = $1;
     my $desc = $2;
+    $AttributeSpecificError{$tag}->{$desc} = 1;
+  } elsif($line =~ 
+    /^Error -\s*(.*)\s*-\s*attribute\s*<([^>]+)>\s*$/
+  ){
+#Coding Scheme Designator is deprecated - attribute <CodingSchemeDesignator> = <99SDM>
+    my $desc = $1;
+    my $tag = $2;
+    $AttributeSpecificError{$tag}->{$desc} = 1;
+#Non-numeric attribute while verifying not zero value for attribute <Calcium Scoring Mass Factor Device>                                     │     7
+#Non-numeric attribute while verifying not zero value for attribute <CTDIvol>                                                                │     7
+#Non-numeric attribute while verifying not zero value for attribute <Spiral Pitch Factor>                                                    │     7
+#Non-numeric attribute while verifying not zero value for attribute <Table Feed per Rotation>                                                │     4
+#Non-numeric attribute while verifying not zero value for attribute <Table Speed>                                                            │     7
+  } elsif($line =~ 
+    /^Error - (Non-numeric.*) <(.*)>$/
+  ){
+    my $desc = $1;
+    my $tag = $2;
     $AttributeSpecificError{$tag}->{$desc} = 1;
   } elsif($line =~ 
     /^Warning -\s*(.*)\s*-\s*attribute\s*<([^>]+)>\s*$/
@@ -136,13 +204,19 @@ while(my $line = <PIPE>){
     my $tag = "($2,$3)";
     $UnrecognizedPublicTag{$tag} = 1;
   } elsif($line =~ 
-    /^Error - Bad attribute Value Multiplicity\s*(\d*)\s*\((\d*)\s*Required by Dictionary\) Element=<([^>]+)> Module=<([^>]+)>$/
+    /^Error - Bad attribute Value Multiplicity\s*(\d*)\s*\(([^\s]+)\s*Required by Dictionary\) Element=<([^>]+)> Module=<([^>]+)>$/
   ){
     my $actual = $1;
     my $req = $2;
     my $tag = $3;
     my $module = $4;
     $BadVm{$tag}->{$actual}->{$req}->{$module} = 1;
+#Bad attribute Value Multiplicity Type 1 Required Element=<ImageType> Module=<PETImage>
+#Bad attribute Value Multiplicity Type 3 Optional Element=<ImageType> Module=<GeneralImage>
+  } elsif($line =~ 
+    /^Error - Bad attribute Value Multiplicity Type .* Element.*$/
+  ){
+    # ignore - redundant message
   } elsif($line =~ 
     /^Error - Illegal negative value -\s*(.*)\s*=\s*(.*)\s*$/
   ){
@@ -151,6 +225,12 @@ while(my $line = <PIPE>){
     $CantBeNegative{$tag}->{$value} = 1;
   } elsif($line =~ 
     /^Error - Attribute present when condition unsatisfied.*Element=<([^>]+)> Module=<([^>]+)>/
+  ){
+    my $element = $1;
+    my $module = $2;
+    $AttributesPresentWhenConditionNotSatisfied{$element}->{$module} = 1;
+  } elsif($line =~ 
+    /^Error - Attribute present but empty.*even though condition.*Element=<([^>]+)> Module=<([^>]+)>/
   ){
     my $element = $1;
     my $module = $2;
@@ -170,6 +250,16 @@ while(my $line = <PIPE>){
     $MayNotBePresent{$condition}->{$element} = 1;
   } elsif(
     $line =~ /^Error - Missing attribute\s*(.*)=<([^>]+)> Module=<([^>]+)>/
+  ){
+    my $type = $1;
+    my $element = $2;
+    my $module = $3;
+    $MissingAttributes{$type}->{$element}->{$module} = 1;
+#Missing Tag (Type 1 Required Element) : (0008,0100) SH 1 Code Value : CodeSequence99SDMMacro
+#Missing Tag (Type 1 Required Element) : (0008,0102) SH 1 Coding Scheme Designator : CodeSequence99SDMMacro
+#Missing Tag (Type 2C Conditional Element) : (0020,0060) CS 1 Laterality : GeneralSeries
+  } elsif(
+    $line =~ /^Error - Missing Tag \(([^\)]+)\)\s*:\s*(\(....,....\)).*:\s*(.*)\s*$/
   ){
     my $type = $1;
     my $element = $2;
@@ -373,4 +463,17 @@ for my $error (keys %Errors){
 #$Warnings{$warning} = 1;
 for my $warning (keys %Warnings){
   print "Warning|Uncategorized|$warning\n";
+}
+#$InvalidValueForVr{<tag>}->{<index>}->{<value>}->{<reason>}->{<desc>}
+for my $tag (keys %InvalidValueForVr){
+  for my $index(keys %{$InvalidValueForVr{$tag}}){
+    for my $value(keys %{$InvalidValueForVr{$tag}->{$index}}){
+      for my $reason(keys %{$InvalidValueForVr{$tag}->{$index}->{$value}}){
+        my $h = $InvalidValueForVr{$tag}->{$index}->{$value}->{$reason};
+        for my $desc(keys %{$h}){
+          print "Error|InvalidValueForVr|$tag|$index|$value|$reason|$desc\n";
+        }
+      }
+    }
+  }
 }

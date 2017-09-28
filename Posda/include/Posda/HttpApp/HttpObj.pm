@@ -298,7 +298,10 @@ sub NullLogin {
   my $app_name = $main::HTTP_APP_CONFIG->{dir};
   $0 = $Dispatch::Http::App::Server::ServerPort .
     " AppController ($app_name)" .
-    " with null login";
+    " with uninitialized login";
+#  $0 = $Dispatch::Http::App::Server::ServerPort .
+#    " AppController ($app_name)" .
+#    " ($this->{permissions}->{user_name})";
   StartLogin($this, $http, $app, $session);
 }
 sub StartLogin{

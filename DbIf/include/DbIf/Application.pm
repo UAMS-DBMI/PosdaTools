@@ -1,6 +1,6 @@
 package DbIf::Application;
 
-my $quince_url = "http://tcia-utilities/viewer";
+my $quince_url = "http://tcia-posda-rh-1.ad.uams.edu/viewer";
 
 use Posda::DB::PosdaFilesQueries;
 use Dispatch::BinFragReader;

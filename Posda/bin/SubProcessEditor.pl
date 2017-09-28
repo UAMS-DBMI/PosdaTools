@@ -61,6 +61,13 @@ my $help = <<EOF;
    leaf_delete => {
      <short_ele> => 1,
    },
+   full_ele_pat_substitutions => {  # substitute if ele present with value
+     <full_ele_pat> => {
+       <old_value> => <new_value>,
+       ...
+     },
+     ...
+   },
  };
 
  <full_ele> is a full element name, e.g.:
@@ -73,10 +80,10 @@ my $help = <<EOF;
  All edits are performed in the order listed.  
  All except "leaf_delete", "full_ele_deletes" and "full_ele_additions" are 
    performed in a single mapping over all elements in the dataset.
- After this mapping, "full_ele_deletes" are performed and then
-   "full_ele_additions are performed.
- "leaf_deletes are accumulated during the single mapping, and performed last.
-
+ After this mapping, "full_ele_deletes" are performed, then
+   "full_ele_additions are performed, and then 
+   "full_ele_pat_substitutions" are performed.
+ "leaf_deletes" are accumulated during the single mapping, and performed last.
 
  uid_substitutions and hash_unhashed_uid are NOT compatible, and
  will cause an error (which we will not detect ...)
@@ -220,6 +227,20 @@ for my $s (keys %{$edits->{full_ele_deletes}}){
 for my $s (keys %{$edits->{full_ele_additions}}){
   $ds->Insert($s, $edits->{full_ele_additions}->{$s});
   $results->{full_ele_additions} += 1;
+}
+# full_ele_pat_substitutions
+for my $pat (keys %{$edits->{full_ele_pat_substitutions}}){
+  for my $v (keys %{$edits->{full_ele_pat_substitutions}->{$pat}}){
+    my $s = $edits->{full_ele_pat_substitutions}->{$pat}->{$v};
+    my $m = $ds->Search($pat, $v);
+    if($m && ref($m) eq "ARRAY" && $#{$m} >= 0){
+      for my $ms (@$m){
+        my $sig = $ds->DefaultSubstitute($pat, $ms);
+        #print STDERR "Substitute $s from $v in $sig\n";
+        $ds->Insert($sig, $s);
+      }
+    }
+  }
 }
 # leaf_deletes
 for my $s (@leaf_deletes){

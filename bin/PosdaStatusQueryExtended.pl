@@ -3,7 +3,7 @@ use strict;
 use DBI;
 use Debug;
 my $dbg = sub {print @_ };
-my $dbh = DBI->connect("DBI:Pg:dbname=N_posda_files", "", "");
+my $dbh = DBI->connect("DBI:Pg:dbname=posda_files", "", "");
 my $rq = <<EOF;
 select                                      
   patient_id, patient_import_status,

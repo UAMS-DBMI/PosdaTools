@@ -23,6 +23,7 @@ Line Formats:
     Error|MayNotBePresent|<condition>|<element>
     Error|UnrecognizedEnumeratedValue|<value>|<element>|<index>
     Error|Uncategorized|<error>
+    Error|InvalidValueForVr|<tag>|<index>|<value>|<reason>|<subtype>
     Warning|WrongExplicitVr|<tag>|<desc|<actual>|<req|<reason>
     Warning|RetiredAttribute|<tag>|<desc>
     Warning|AttributeSpecificWarning|<tag>|<desc>
@@ -123,7 +124,9 @@ my $get_e_attr_spec = PosdaDB::Queries->GetQueryInstance(
 #    Error|AttributeSpecificErrorWithIndex|<tag>|<index>|<desc>
 my $get_e_attr_spec_index = PosdaDB::Queries->GetQueryInstance(
   "GetDciodvfyErrorAttrSpecWithIndex");
-
+#    Error|InvalidValueForVr|<tag>|<index>|<value>|<reason>|<desc>\n";
+my $get_e_invalid_value_for_vr = PosdaDB::Queries->GetQueryInstance(
+  "GetDciodvfyErrorInvalidValueForVr");
 #    Warning|DubiousValue|<tag>|<desc>|<value>|<err>
 my $get_w_dubious = PosdaDB::Queries->GetQueryInstance(
   "GetDciodvfyWarningDubious");
@@ -321,8 +324,31 @@ for my $i (@Records){
         my($row) = @_;
         $error_id = $row->[0];
       }, sub {}, ConvertTag($error_tag), $error_subtype, $error_index);
+    } elsif($error_type eq "InvalidValueForVr"){
+      #   Error|InvalidValueForVr|<tag>|<index>|<value>|<reason>|<subtype>\n";
+      $error_tag = $i->[2];
+      $error_index = $i->[3];
+      $error_value = $i->[4];
+      $error_reason = $i->[5];
+      $error_subtype = $i->[6];
+      $error_tag =~ s/^\s*//;
+      $error_tag =~ s/\s*$//;
+      $error_index =~ s/^\s*//;
+      $error_index =~ s/\s*$//;
+      $error_value =~ s/^\s*//;
+      $error_value =~ s/\s*$//;
+      $error_subtype =~ s/^\s*//;
+      $error_subtype =~ s/\s*$//;
+print STDERR "Running GetErrorInvalidValueForVr($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
+      $get_e_invalid_value_for_vr->RunQuery(sub {
+        my($row) = @_;
+        $error_id = $row->[0];
+print STDERR "Created row $error_id\n";
+      }, sub {}, ConvertTag($error_tag), $error_index, $error_value, $error_reason, $error_subtype);
     }
     unless(defined $error_id){
+print STDERR "Creating a new Error row (no row found)\n";
+print STDERR "($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
       $create_error->RunQuery(sub {}, sub {},
         $error_type, ConvertTag($error_tag), $error_subtype, $error_module,
         $error_reason, $error_index, $error_value, $error_text);

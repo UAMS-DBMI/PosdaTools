@@ -12,6 +12,7 @@ my $nop = sub { };
 while(my $line = <STDIN>){
   chomp $line;
   my($id, $new_disp) = split(/\&/, $line);
+  print "Setting $id to $new_disp\n";
   $upd->RunQuery($nop, $nop, $new_disp, $id);
   $rec->RunQuery($nop, $nop, $id, $who, $why, $new_disp);
 }

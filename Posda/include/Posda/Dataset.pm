@@ -977,7 +977,14 @@ sub DumpUID{
 }
 sub DumpOF{
   my($pr, $in_value) = @_;
+  my $len = length($in_value);
+  my $ctx = Digest::MD5->new;
+  $ctx->add($in_value);
+  my $dig = $ctx->hexdigest;
   my @floats = unpack("f*", pack("L*", unpack("V*", $in_value)));
+  my $num_floats = @floats;
+  print "<raw data: $len bytes $num_floats floats digest: $dig>";
+  return;
   for my $i (0 .. $#floats){
     print $floats[$i];
     unless($i == $#floats){
@@ -999,6 +1006,10 @@ sub DumpAT{
 };
 sub DumpEle{
   my($pr, $ele, $max_len) = @_;
+  unless(ref($ele) eq "HASH"){
+    $pr->print("<undef>");
+    return;
+  }
   unless(defined $ele->{value}){
     unless(defined $ele->{VR} && $ele->{VR} eq "SQ"){
 #      print $pr "<null>";
@@ -2483,6 +2494,14 @@ sub Substitute{
     $ret =~ s/$i/$sub->[$map->{$i}]/eg;
   }
   return $ret;
+}
+sub DefaultSubstitute{
+  my($ds, $pat, $sub) = @_;
+  my %map;
+  for my $i (0 .. $#{$sub}){
+    $map{"<$i>"} = $i;
+  }
+  return Substitute($ds, $pat, $sub, \%map);
 }
 sub MakeMatchPat{
   my($class, $sig) = @_;

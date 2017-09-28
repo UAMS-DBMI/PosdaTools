@@ -607,7 +607,7 @@ print STDERR "In $http" . "->DESTROY\n";
             }
           }
           if($sess->{logged_in}){
-            print STDERR "Deleting Inventory\n";
+            print STDERR "Deleting Inventory ($id)\n";
 #           We seem to be hitting this occasionally ...
 #           Setting debug doesn't work ...
 #           So its commented out
@@ -618,6 +618,7 @@ print STDERR "#  See if you can figure out how to get here: " .
 print STDERR "##################################\n";
 #            $ENV{POSDA_DEBUG} = 1;
             if ($sess->can("TearDown")) { $sess->TearDown(); }
+            print STDERR "Delete session: $id\n";
             delete $this->{Inventory}->{$id};
           } else {
             print STDERR "Not Logged in\n";
@@ -713,6 +714,7 @@ print STDERR "##################################\n";
   }
   sub DeleteSession {
     my($this, $session) = @_;
+    print STDERR "Deleting session: $session\n";
     $this->{Inventory}->{$session}->TearDown();
     delete $this->{Inventory}->{$session};
   }
