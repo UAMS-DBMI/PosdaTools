@@ -3,6 +3,7 @@ package DbIf::Application;
 my $quince_url = "http://tcia-posda-rh-1.ad.uams.edu/viewer";
 
 use Posda::DB::PosdaFilesQueries;
+use Posda::DB 'Query';
 use Dispatch::BinFragReader;
 
 use Modern::Perl '2010';
@@ -52,130 +53,7 @@ method SpecificInitialize($session) {
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
     $self->{AllArgs}->{$a} = 1;
   }
-  ### change this to initialize from config
-  my $m_reports = {
-    caption => "Reports",
-    op => 'SetMode',
-    mode => 'Reports',
-    sync => 'Update();'
-  };
   $self->{MenuByMode} = {
-    ListQueries => [
-      {
-        caption => "Upload",
-        op => 'SetMode',
-        mode => 'Upload',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
-        sync => 'Update();'
-      },
-      $m_reports,
-    ],
-    NewQuery => [
-      {
-        caption => "Cancel",
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Save",
-        op => 'SetMode',
-        mode => 'SaveQuery',
-        sync => 'Update();'
-      },
-    ],
-    QuerySuccessful => [
-      {
-        caption => "List",
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Upload",
-        op => 'SetMode',
-        mode => 'Upload',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
-        sync => 'Update();'
-      },
-      $m_reports,
-    ],
-    Files => [
-      {
-        caption => "List",
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Upload",
-        op => 'SetMode',
-        mode => 'Upload',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
-        sync => 'Update();'
-      },
-      $m_reports,
-    ],
-    TableSelected => [
-      {
-        caption => "List",
-        op => 'SetMode',
-        mode => 'ListQueries',
-        sync => 'Update();'
-      },
-      {
-        caption => "Upload",
-        op => 'SetMode',
-        mode => 'Upload',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
-        sync => 'Update();'
-      },
-      $m_reports,
-    ],
     Default => [
       {
         caption => 'List',
@@ -201,18 +79,32 @@ method SpecificInitialize($session) {
         mode => 'Tables',
         sync => 'Update();'
       },
-      $m_reports,
-    ]
-  };
-
-  if ($self->{user_has_permission}('superuser')) {
-    $self->{MenuByMode}->{ActiveQuery} = [
       {
-        caption => "List",
+        caption => "Reports",
+        op => 'SetMode',
+        mode => 'Reports',
+        sync => 'Update();'
+      }
+    ],
+
+    NewQuery => [
+      {
+        caption => "Cancel",
         op => 'SetMode',
         mode => 'ListQueries',
         sync => 'Update();'
       },
+      {
+        caption => "Save",
+        op => 'SetMode',
+        mode => 'SaveQuery',
+        sync => 'Update();'
+      },
+    ],
+  };
+
+  if ($self->{user_has_permission}('superuser')) {
+    $self->{MenuByMode}->{ActiveQuery} = [
       {
         caption => "Edit",
         op => 'SetMode',
@@ -223,15 +115,6 @@ method SpecificInitialize($session) {
         caption => "Clone",
         op => 'SetMode',
         mode => 'CloneQuery',
-        sync => 'Update();'
-      },
-    ];
-  } else {
-    $self->{MenuByMode}->{ActiveQuery} = [
-      {
-        caption => "List",
-        op => 'SetMode',
-        mode => 'ListQueries',
         sync => 'Update();'
       },
     ];
@@ -359,13 +242,48 @@ method ConfigureTagGroups() {
 
 }
 
-method MenuResponse($http, $dyn) {
-  if(exists $self->{MenuByMode}->{$self->{Mode}}){
-    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{$self->{Mode}});
+method MakeMenuByMode($mode) {
+  # Make the menu item to be used by MakeMenu inside
+  # MenuResponse. Basically: There is a default set
+  # of menu entires, and for some modes, additional entries
+  # are appended on.
+
+  my $default_menu = $self->{MenuByMode}->{Default};
+  my $mode_menu = $self->{MenuByMode}->{$mode};
+
+  my @final_menu;
+
+  if (not defined $mode_menu) {
+    @final_menu = @$default_menu;
   } else {
-    $self->MakeMenu($http, $dyn, $self->{MenuByMode}->{Default});
- }
+    @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);
+  }
+
+  my $active_tags = $self->GetActiveTagsAsList;
+  my $background_buttons = get_background_buttons($active_tags);
+
+  my @buttons_menu;
+
+  for my $e (@$background_buttons) {
+    push @buttons_menu, {
+      caption => $e->[3],
+      op => "OpenTableFreePopup",
+      class_ =>$e->[2],
+      cap_ => $e->[1],
+      sync => 'Update();'
+    };
+  }
+  if ($#buttons_menu > -1) {
+    @final_menu = (@final_menu, { type => 'hr' }, @buttons_menu);
+  }
+
+  return \@final_menu;
 }
+method MenuResponse($http, $dyn) {
+  my $menu = $self->MakeMenuByMode($self->{Mode});
+  $self->MakeMenu($http, $dyn, $menu);
+}
+
 method SetMode($http, $dyn){
   $self->{Mode} = $dyn->{mode};
 }
@@ -491,6 +409,17 @@ method SetGroupSelector($http, $dyn){
 #  DEBUG "Selected group: $value";
   # DEBUG Dumper($group);
 
+}
+
+method GetActiveTagsAsList() {
+  if (not defined $self->{TagsState}) {
+    return undef;
+  }
+  my @tags = grep {
+    $self->{TagsState}->{$_} eq 'true';
+  } keys %{$self->{TagsState}};
+
+  return \@tags;
 }
 
 method TagSelection($http, $dyn){
@@ -739,6 +668,13 @@ method OpenTableLevelPopup($http, $dyn) {
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
 
   my $parms = { table => $table, button => $dyn->{cap_}};
+  my $unique_val = "$parms";
+
+  my $class = $dyn->{class_};
+  $self->OpenPopup($class, "${class}_FullTable$unique_val", $parms);
+}
+method OpenTableFreePopup($http, $dyn) {
+  my $parms = { button => $dyn->{cap_}};
   my $unique_val = "$parms";
 
   my $class = $dyn->{class_};
@@ -1840,6 +1776,16 @@ method InsertSaveReportModal($http, $name, $table) {
 
 }
 
+sub get_background_buttons {
+  my ($tags) = @_;
+
+  my $buttons = Query('GetBackgroundButtonsByTag');
+
+  my $results = $buttons->FetchResults($tags);
+
+  return $results;
+}
+
 func get_popup_hash($query_name) {
     my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
 
@@ -2148,6 +2094,7 @@ method UpdateInsertStatus($http, $dyn){
 method UpdatesInserts($http, $dyn){
 }
 #############################
+
 method Upload($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
   <form action="<?dyn="StoreFileUri"?>"
