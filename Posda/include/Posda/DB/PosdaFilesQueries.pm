@@ -176,6 +176,24 @@ sub RunQuery {
   }
 }
 
+sub FetchResults {
+  # Alternate method to simply fetch all results
+  # using fetchall_arrayref
+
+
+  my ($self) = shift;
+
+  my $dbh = _get_handle_main($self->{connect});
+
+  if (not defined $self->{handle}) {
+    $self->Prepare($dbh);
+  }
+
+  my $rows_affected = $self->Execute(@_);
+
+  return $self->{handle}->fetchall_arrayref;
+}
+
 sub _RunQueryBlocking {
   my($self) = shift;
   my $row_callback = shift;
