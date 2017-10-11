@@ -10,3 +10,4 @@ foo
 foo.*
 Posda/bin/extract
 Posda/bin/sproject
+*.viminfo
