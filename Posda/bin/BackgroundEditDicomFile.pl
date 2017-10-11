@@ -58,6 +58,11 @@ Control Commands:
     all the files in the specified series. Uses the query named
     "FilesInSeriesForApplicationOfPrivateDisposition" to get list of
     files, and Sops.
+  AddSopsByPatient <arg1> = <patient_id> like AddFile or
+    AddSop, except that the edits accumulated will be applied to
+    all the files in the specified patient_id. Uses the query named
+    "FilesByPatientForApplicationOfPrivateDisposition" to get list of
+    files, and Sops.
   AddFilesBySeriesPublic <arg1> = <series_instance_uid> like AddFile or
     AddSop, except that the edits accumulated will be applied to
     all the files in the specified series in the Public (nbia) database.
@@ -118,6 +123,8 @@ my $getfs = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDisposition');
 my $getfsp = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDispositionPublic');
+my $getbp = PosdaDB::Queries->GetQueryInstance(
+  'FilesByPatientForApplicationOfPrivateDisposition');
 my($invoc_id, $DestRoot, $who, $description, $notify) = @ARGV;
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
@@ -159,6 +166,13 @@ while(my $line = <STDIN>){
       $pstate = "AccumulateEdits";
     } elsif ($command eq "AddSopsInSeries"){
       $getfs->RunQuery(sub {
+          my($row) = @_;
+          my($from_file, $sop, $modality) = @$row;
+          my $to_file = "$WorkDir/$modality" . "_$sop.dcm";
+          push @$working_file_list, [$from_file, $modality, $sop, $to_file];
+        }, sub {}, $arg1);
+    } elsif ($command eq "AddSopsByPatient"){
+      $getbp->RunQuery(sub {
           my($row) = @_;
           my($from_file, $sop, $modality) = @$row;
           my $to_file = "$WorkDir/$modality" . "_$sop.dcm";

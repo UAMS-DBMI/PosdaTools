@@ -611,7 +611,17 @@ sub DecodeElementValue {
         my $ele_info = 
           $Posda::Dataset::DD->{PvtDict}->{$private_id}
             ->{$this->{grp}}->{$pvt_ele};
+#########
+#  Do we really want to do this:
+#        if(defined $this->{vr} && $this->{vr} ne $ele_info->{VR}) {
+#          $this->{vr_to_convert_to} = $ele_info->{VR};
+#        }
+# in addition to this: 
         $this->{vm} = $ele_info->{VM};
+#????????
+#  In effect, do we want to promote a tag VR mismatch with the private DD
+#  to the same level as a tag mismatch with the public DD??
+#########
       }
     }
   }
@@ -985,7 +995,7 @@ sub EleHandler{
   if(exists $this->{vr_to_convert_to}){
     $element->{type_in_file} = $this->{type};
     $element->{value_in_file} = $this->{value};
-    ($element->{type}, $element->{value}) = CoerceBadVRs(
+    ($element->{type}, $element->{value}) = $this->CoerceBadVRs(
       $this->{vr}, $this->{vr_to_convert_to}, $this->{vm}, $this->{ele_value});
     if(defined($element->{type})){
       $element->{VR} = $this->{vr_to_convert_to};
@@ -1042,7 +1052,8 @@ sub EleHandler{
 }
 
 sub CoerceBadVRs{
-  my($from_vr, $to_vr, $vm, $value_s) = @_;
+  my($this, $from_vr, $to_vr, $vm, $value_s) = @_;
+  if($from_vr eq $to_vr) { return $value_s }
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
@@ -1062,6 +1073,14 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "SH"){
     return("text", $value_s);
+  } elsif($from_vr eq "SS" && $to_vr eq "SH"){
+    my $ref = ref($value_s);
+    if($ref eq "ARRAY"){
+      my $new_v = unpack("a*", pack("s*", @$value_s));
+      push(@{$this->{errors}}, "Coerced $this->{tag} from " .
+        "$from_vr to $to_vr, value = \"$new_v\"");
+      return("text", $new_v);
+    }
   } elsif($from_vr eq "CS" && $to_vr eq "UI"){
     $value_s =~ s/^\s*//;
     $value_s =~ s/\s*$//;
@@ -1072,6 +1091,7 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } else {
     return (undef, undef);
+    print STDERR "Can't coerce a $from_vr to a $to_vr\n";
 #    die "Can't coerce a $from_vr into a $to_vr";
   }
 }
