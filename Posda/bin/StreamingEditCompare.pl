@@ -53,8 +53,8 @@ while(my $line = <STDIN>){
   $ctx->add($s_rept);
   my $s_rept_dig = $ctx->hexdigest;
   my $ctx1 = Digest::MD5->new;
-  $ctx->add($l_rept);
-  my $l_rept_dig = $ctx->hexdigest;
+  $ctx1->add($l_rept);
+  my $l_rept_dig = $ctx1->hexdigest;
   my($s_rept_file_id, $l_rept_file_id);
   if(exists $FileIdByDig{$s_rept_dig}){
     $s_rept_file_id = $FileIdByDig{$s_rept_dig};
