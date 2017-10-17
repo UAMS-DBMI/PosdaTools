@@ -50,6 +50,12 @@ function start {
   sudo systemctl start posda
 }
 
+function start_foreground {
+  echo "Starting Posda in the foreground..."
+
+  AppController.pl localhost $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
+}
+
 function stop {
   sudo systemctl stop posda
 }
