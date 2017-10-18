@@ -211,8 +211,8 @@ sub _RunQueryBlocking {
 
   if ($select) {
     # return the results
-    while(my $h = $self->{handle}->fetchrow_arrayref){
-      &$row_callback($h);
+    while(my @h = $self->{handle}->fetchrow_array){
+      &$row_callback(\@h);
     }
   } else {
     &$row_callback([$rows_affected]);
