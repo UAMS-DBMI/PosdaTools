@@ -176,10 +176,25 @@ sub RunQuery {
   }
 }
 
+
+sub FetchOneHash {
+  # Fetch the first row of results as a hash
+  my ($self) = shift;
+
+  my $dbh = _get_handle_main($self->{connect});
+
+  if (not defined $self->{handle}) {
+    $self->Prepare($dbh);
+  }
+
+  my $rows_affected = $self->Execute(@_);
+
+  return $self->{handle}->fetchrow_hashref;
+}
+
 sub FetchResults {
   # Alternate method to simply fetch all results
   # using fetchall_arrayref
-
 
   my ($self) = shift;
 
