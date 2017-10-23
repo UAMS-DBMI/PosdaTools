@@ -351,9 +351,16 @@ method InboxItem($http, $dyn) {
   });
 
   # Only mark as read if it wasn't already marked as read
-  if ($msg_details->{current_status} ne 'read') {
-    $self->{inbox}->SetRead($message_id);
-  }
+  # Bill asked for this to be modified to always mark as read, upon reading
+  # TODO: This should actually be modified such that it changes
+  # the status to read only if the current status is a "non-read" status.
+  # ie, in the future we may have a 'forwarded' status, this would
+  # be considered a 'read' status and SetRead() should not change the
+  # status (though it should still log a read event to the operations
+  # table)
+  # if ($msg_details->{current_status} ne 'read') {
+  $self->{inbox}->SetRead($message_id);
+  # }
 
 }
 
