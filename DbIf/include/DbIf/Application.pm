@@ -12,6 +12,8 @@ use Storable;
 use File::Basename 'basename';
 use DateTime;
 
+use Regexp::Common "URI";
+
 use Dispatch::LineReaderWriter;
 
 use GenericApp::Application;
@@ -19,7 +21,9 @@ use GenericApp::Application;
 use Posda::Passwords;
 use Posda::Config ('Config','Database');
 use Posda::ConfigRead;
+use Posda::Inbox;
 use DBI;
+
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -46,8 +50,11 @@ func titlize($string) {
   join(' ', map {ucfirst} split('_', $string));
 }
 
+
+
 method SpecificInitialize($session) {
 
+  $self->{inbox} = Posda::Inbox->new($self->get_user);
   $self->{QueryFilterDisplay} = 1;
   $self->{AllArgs} = {};
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
@@ -55,6 +62,12 @@ method SpecificInitialize($session) {
   }
   $self->{MenuByMode} = {
     Default => [
+      {
+        caption => 'Inbox',
+        op => 'SetMode',
+        mode => 'Inbox',
+        sync => 'Update();',
+      },
       {
         caption => 'List',
         op => 'SetMode',
@@ -185,6 +198,163 @@ method SpecificInitialize($session) {
   $self->{Commands} = $commands;
 
   $self->ConfigureTagGroups();
+
+  $self->BackgroundMonitorForEmail;
+}
+
+method BackgroundMonitorForEmail() {
+  #TODO: make this display unread if there are unread,
+  #      or undismissed if if there are no unread
+  #      or none if there are no unread AND no undismissed
+  Dispatch::Select::Background->new(func($disp) {
+    my $count = $self->{inbox}->UnreadCount;
+
+    my $last_count = 0;
+    if (defined $self->{MenuByMode}->{Default}->[0]->{count}) {
+      $last_count = $self->{MenuByMode}->{Default}->[0]->{count};
+    }
+
+    if ($count > 0 && $count != $last_count) {
+      $self->{MenuByMode}->{Default}->[0]->{class} = 'btn btn-danger';
+      $self->{MenuByMode}->{Default}->[0]->{caption} = "Inbox ($count)";
+      $self->{MenuByMode}->{Default}->[0]->{count} = $count;
+      $self->AutoRefresh;
+    }
+
+    if ($count == 0 && $count != $last_count) {
+      $self->{MenuByMode}->{Default}->[0]->{class} = 'btn btn-default';
+      $self->{MenuByMode}->{Default}->[0]->{caption} = "Inbox";
+      $self->{MenuByMode}->{Default}->[0]->{count} = $count;
+      $self->AutoRefresh;
+    }
+
+    $disp->timer(10);
+  })->queue();
+}
+method Inbox($http, $dyn) {
+  my $unread_items = $self->{inbox}->AllUndismissedItems;
+  my $user = $self->get_user;
+
+  # list items
+  $http->queue(qq{
+    <h2>Message Inbox for $user</h2>
+    <table class="table">
+      <tr>
+        <th>Message ID</th>
+        <th>Status</th>
+        <th>Created Date</th>
+        <th>Button</th>
+      </tr>
+  });
+
+  for my $item (@$unread_items) {
+    $http->queue(qq{
+        <tr>
+          <td>$item->{user_inbox_content_id}</td>
+          <td>$item->{current_status}</td>
+          <td>$item->{date_entered}</td>
+          <td>
+    });
+    $self->NotSoSimpleButton($http, {
+      caption => "Open",
+      op => "DisplayInboxItem",
+      sync => 'Update();',
+      message_id => $item->{user_inbox_content_id}
+    });
+    $http->queue(qq{
+          </td>
+        </tr>
+    });
+  }
+  $http->queue(qq{
+    </table>
+  });
+}
+
+method DisplayInboxItem($http, $dyn) {
+  DEBUG "Setting selected Inbox Item to: $dyn->{message_id}";
+
+  $self->{SelectedInboxItem} = $dyn->{message_id};
+  $self->{Mode} = "InboxItem";
+}
+
+method DismissInboxItemButtonClick($http, $dyn) {
+  my $message_id = $dyn->{message_id};
+  $self->{inbox}->SetDismissed($message_id);
+}
+
+method InboxItem($http, $dyn) {
+  my $message_id = $self->{SelectedInboxItem};
+  my $msg_details = $self->{inbox}->ItemDetails($message_id);
+  my $file_content = $self->{inbox}->ReportContent($msg_details->{file_id});
+
+  # Turn any URLs into actual links
+  $file_content =~    s( ($RE{URI}{HTTP}) )
+                (<a href="$1">$1</a>)gx  ;
+
+  my $date_dismissed;
+  if (defined $msg_details->{date_dismissed}) {
+    $date_dismissed = $msg_details->{date_dismissed};
+  } else {
+    $date_dismissed = '';
+  }
+
+  $http->queue(qq{
+    <table class="table">
+      <tr>
+        <th>Status</th>
+        <th>Date Entered</th>
+        <th>Date Dismissed</th>
+      </tr>
+      <tr>
+        <td>$msg_details->{current_status}</td>
+        <td>$msg_details->{date_entered}</td>
+        <td>$date_dismissed</td>
+      </tr>
+    </table>
+    <pre>$file_content</pre>
+  });
+
+
+  if (not defined $msg_details->{date_dismissed}) {
+    $self->SelfConfirmingButton($http, {
+      uniq_id => 'dismiss_button',
+      caption => 'Dismiss this message',
+      op => 'DismissInboxItemButtonClick',
+      message_id => $message_id
+    });
+  }
+
+  my $recent_operations = $self->{inbox}->RecentOperations($message_id);
+  $http->queue(qq{
+    <h4>Recent operations on this message</h4>
+    <table class="table">
+      <tr>
+        <th>What</th>
+        <th>When</th>
+        <th>Who</th>
+        <th>How</th>
+      </tr>
+  });
+  for my $op (@$recent_operations) {
+    $http->queue(qq{
+      <tr>
+        <td>$op->{operation_type}</td>
+        <td>$op->{when_occurred}</td>
+        <td>$op->{invoking_user}</td>
+        <td>$op->{how_invoked}</td>
+      </tr>
+    });
+  }
+  $http->queue(qq{
+    </table>
+  });
+
+  # Only mark as read if it wasn't already marked as read
+  if ($msg_details->{current_status} ne 'read') {
+    $self->{inbox}->SetRead($message_id);
+  }
+
 }
 
 method ConfigureTagGroups() {
