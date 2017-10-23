@@ -135,10 +135,10 @@ my $content = qq{
       <center><h1><?dyn="title"?></h1></center>
     </div>
     <div class="row">
-      <div id="menu" class="col-md-1">
+      <div id="menu" class="col-md-2">
       Menu
       </div>
-      <div id="content" class="col-md-9">
+      <div id="content" class="col-md-10">
       </div>
     </div>
   </div>
