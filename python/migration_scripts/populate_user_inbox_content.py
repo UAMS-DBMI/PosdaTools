@@ -43,6 +43,9 @@ with Database("posda_queries") as conn:
         natural join background_subprocess 
         natural join subprocess_invocation
         where name = 'Email'
+        and background_subprocess_report_id not in (
+            select background_subprocess_report_id from user_inbox_content
+        )
     """)
 
     for row in cur:
