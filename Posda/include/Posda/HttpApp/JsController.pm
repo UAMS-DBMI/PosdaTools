@@ -1,5 +1,12 @@
 #!/usr/bin/perl -w
-#
+
+=head1 SYNOPSIS
+  A collection of functions for making a JavaScript app.
+=cut
+
+=head1 METHODS
+=cut
+
 use strict;
 package Posda::HttpApp::JsController;
 use Method::Signatures::Simple;
@@ -789,6 +796,78 @@ sub NotSoSimpleButton{
     >$postfix};
   $http->queue($string);
 }
+
+
+=head2 SelfConfirmingButton($http, { uniq_id, caption, op, [confirm_caption], [decline_caption] })
+
+A button that prompts the user to confirm their intentions
+when clicked.
+
+ Arguments:
+ uniq_id: A value that will uniquely identify this button on the page.
+ caption: The message to appear in the initial button.
+ op: The operation to execute when the button is clicked and confirmed.
+ confirm_caption: Optional, text to display on the "Yes" button.
+ decline_caption: Optional, text to display on the "No" button.
+
+ Returns: Nothing.
+
+=cut
+sub SelfConfirmingButton {
+  my ($self, $http, $dyn) = @_;
+
+  my $uniq_id = $dyn->{uniq_id};
+
+  if (defined $dyn->{_state} && $dyn->{_state} == 1) {
+    # User clicked the button, move to state 1 (display confirmation)
+    $self->{__SelfConfirmingButtons}->{$uniq_id}->{clicked} = 1;
+    return;
+  }
+
+  if (defined $dyn->{_state} && $dyn->{_state} == 2) {
+    # User clicked no, simply reset the state
+    delete $self->{__SelfConfirmingButtons}->{$uniq_id}->{clicked};
+    return;
+  }
+
+  my $caption = $dyn->{caption};
+  my $confirm_caption = 
+    defined $dyn->{confirm_caption}? $dyn->{confirm_caption}: 'Yes';
+  my $decline_caption = 
+    defined $dyn->{decline_caption}? $dyn->{decline_caption} : 'No';
+  my $op = $dyn->{op};
+
+  if (not defined $self->{__SelfConfirmingButtons}->{$uniq_id}->{clicked}) {
+    $self->NotSoSimpleButtonButton($http, {
+      caption => $caption,
+      op => 'SelfConfirmingButton',
+      _state => 1,
+      uniq_id => $uniq_id,
+      next_op => $op
+    });
+  } else {
+    delete $self->{__SelfConfirmingButtons}->{$uniq_id}->{clicked};
+    #configure dyn for passage to the final step
+    $dyn->{caption} = $confirm_caption;
+    $dyn->{class} = 'btn btn-danger';
+
+    $http->queue(qq{
+      <div>
+        <p>Are you sure?</p>
+    });
+    $self->NotSoSimpleButtonButton($http, $dyn);
+    $self->NotSoSimpleButtonButton($http, {
+      caption => $decline_caption,
+      op => 'SelfConfirmingButton',
+      uniq_id => $uniq_id,
+      _state => 2
+    });
+    $http->queue(qq{
+      </div>
+    });
+  }
+}
+
 sub NotSoSimpleButtonButton{
   # A NotSoSimpleButton that is an actual html5 button tag
   # Always calls Update(); on sync
