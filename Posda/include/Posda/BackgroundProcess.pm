@@ -3,10 +3,11 @@ package Posda::BackgroundProcess;
 use Modern::Perl;
 use Method::Signatures::Simple;
 
-use FileHandle;
 
 use Posda::DB qw/ Query ResetDBHandles /;
 use Posda::DownloadableFile;
+use Posda::Inbox;
+
 use File::Temp qw/ tempfile /;
 use DateTime;
 
@@ -26,6 +27,15 @@ sub new {
     reports => {}
   };
   bless($this, $class);
+
+  # convert $notify to username if it is an email
+  if ($notify =~ /@/) {
+    my $r = Query('InboxEmailToUsername')->FetchOneHash($notify);
+    if (not defined $r) {
+      die "Failed to convert email address ($notify) to username!";
+    }
+    $this->{notify} = $r->{user_name};
+  }
 
   $this->_start_process($invoc_id, $this->{command_line},
                         $this->{child_pid}, $notify);
@@ -100,10 +110,6 @@ method ForkAndExit() {
   $self->{add_comp_time_query} = $add_comp_to_bgrnd_sub;
   $self->{add_sub_error_query} = $add_bgrnd_sub_error;
 
-  # Setup email handle
-  # my $EmailHandle = FileHandle->new("|mail -s \"Posda Job Complete\" $self->{notify}");
-  # unless($EmailHandle) { die "Couldn't open email handle ($!)" }
-  # $self->{email_handle} = $EmailHandle;
   $self->{email_handle} = $self->CreateReport("Email");
 
   my $start_time = DateTime->from_epoch(epoch => $self->{script_start_time});
@@ -150,11 +156,6 @@ method Finish() {
   close($email_rpt->{fh});
   my $email_filename = $email_rpt->{filename};
 
-  # send the email report as an email
-  my $EmailHandle = FileHandle->new("|mail -s \"Posda Job Complete\" -q $email_filename $self->{notify}");
-  unless($EmailHandle) { die "Couldn't open email handle ($!)" }
-  close($EmailHandle); # open and close so it will send the file from -q
-
   # add the email to posda
   $email_rpt->{closed} = $self->_insert_report_file($email_rpt->{filename});
   # add all reports to background_subprocess_report table
@@ -164,10 +165,27 @@ method Finish() {
     my $rpt = $self->{reports}->{$h};
     my $closed = $rpt->{closed};
 
-    $add_report_query->RunQuery(
-        sub{}, sub{},
+    # FetchOneHash because CreateBackgroundReport returns the ID of the 
+    # created report
+    my $report = $add_report_query->FetchOneHash(
         $self->{background_id}, $closed->{file_id}, $h
     );
+
+    if ($h eq 'Email') {
+      # Add mail to user inbox
+      my $inbox = Posda::Inbox->new('nobody');
+      $inbox->SendMail(
+        $self->{notify}, 
+        $report->{background_subprocess_report_id},
+        'Posda::BackgroundProcess'
+      );
+      say STDERR "*** email report's id is: $report->{background_subprocess_report_id}";
+    }
+
+    # $add_report_query->RunQuery(
+    #     sub{}, sub{},
+    #     $self->{background_id}, $closed->{file_id}, $h
+    # );
   }
 }
 

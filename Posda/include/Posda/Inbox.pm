@@ -5,10 +5,11 @@ use Method::Signatures::Simple;
 
 use DBI;
 
-use Posda::Config 'Database';
+use Posda::Config ('Database', 'Config');
 
 use File::Slurp;
 use Regexp::Common "URI";
+use FileHandle;
 
 
 method new($class: $username) {
@@ -21,7 +22,7 @@ method new($class: $username) {
   return bless $self, $class;
 }
 
-# Utility methods #############################################################
+# Utility methods ##########################################################{{{
 
 method get_handle() {
   my $db_handle = DBI->connect(Database('posda_queries'));
@@ -61,6 +62,7 @@ method execute_and_fetchone($query, $args) {
 
   return $rows;
 }
+
 method execute($query, $args) {
   my $handle = $self->get_handle;
 
@@ -92,7 +94,82 @@ method change_status_to($message_id, $new_status, $operation_type) {
     values (?, ?, now(), ?, ?)
   }, [$message_id, $operation_type, 'Posda::Inbox', $self->{username}]);
 }
-# End Utility methods #########################################################
+method get_email_addr_by_username($username) {
+  return $self->execute_and_fetchone(qq{
+    select user_email_addr
+    from user_inbox
+    where user_name = ?
+  }, [$username])->{user_email_addr};
+}
+# End Utility methods ######################################################}}}
+
+
+=head2 SendMail($username, $background_subprocess_report_id, $how)
+
+Add a new email item to the inbox of $username. 
+
+If configured, an email notification will also be sent to the
+user's email.
+
+ Arguments:
+ $username: 
+ $background_subprocess_report_id: 
+ $how:
+
+=cut
+#TODO: make that real ^, and add a note about what the configuration var is?
+method SendMail($username, $report_id, $how) {
+  say STDERR "SendMail called";
+
+  my $result = $self->execute_and_fetchone(qq{
+    insert into user_inbox_content (
+      user_inbox_id,
+      background_subprocess_report_id,
+      current_status,
+      statuts_note,
+      date_entered,
+      date_dismissed
+    ) values (
+      (select user_inbox_id 
+       from user_inbox
+       where user_name = ?), ?, ?, ?, now(), null
+    )
+    returning user_inbox_content_id
+  }, [$username, 
+      $report_id,
+      'entered',
+      "created by $how"]);
+
+  my $rows = $self->execute(qq{
+    insert into user_inbox_content_operation (
+      user_inbox_content_id,
+      operation_type,
+      when_occurred,
+      how_invoked,
+      invoking_user
+    ) values (
+      ?, ?, now(), ?, ?
+    )
+  }, [$result->{user_inbox_content_id}, 
+      'entered',
+      $how,
+      $self->{username}]);
+
+
+  my $send_email = Config('real_email');
+  if (defined $send_email && $send_email == 1) {
+    say STDERR "send mail here";
+    # send the email report as an email
+    my $EmailHandle = FileHandle->new(
+      '|mail -s "Posda Job Complete" ' 
+      . $self->get_email_addr_by_username($username));
+    unless($EmailHandle) { die "Couldn't open email handle ($!)" }
+    $EmailHandle->print("A new message has arrived in your Posda Inbox!\n");
+    close($EmailHandle);
+  }
+
+  return $rows;
+}
 
 method UnreadCount() {
   return $self->execute_and_fetchone(qq{
