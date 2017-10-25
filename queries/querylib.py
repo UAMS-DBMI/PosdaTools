@@ -1,8 +1,17 @@
 import sys
 import psycopg2
+import os
 
 CONNECTION = None
 DSN="dbname=posda_queries"
+
+if 'PGHOST' in os.environ:
+    print(f"WARNING: PGHOST is set to {os.environ['PGHOST']}! "
+          "This operation WILL NOT BE LOCAL!")
+    user_response = input("Type YES to continue: ")
+    if user_response != 'YES':
+        print("Aborting!")
+        sys.exit(1)
 
 def connect():
     global CONNECTION

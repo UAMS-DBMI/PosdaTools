@@ -4,6 +4,13 @@ OUT = "output"
 
 import querylib
 import os
+import sys
+
+try:
+    OUT = sys.argv[1]
+except IndexError:
+    print(f"Usage: {sys.argv[0]} OUTPUT_DIR")
+    sys.exit(1)
 
 # querylib.DSN = "postgres://tcia-utilities/N_posda_queries"
 # querylib.DSN = "postgres://localhost/posda_queries"
