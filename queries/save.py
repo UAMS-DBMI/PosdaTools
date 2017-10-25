@@ -8,7 +8,14 @@ from psycopg2 import IntegrityError
 
 
 files = []
-directory = sys.argv[1]
+try:
+    directory = sys.argv[1]
+except IndexError:
+    print(f"Usage: {sys.argv[0]} DIRECTORY | FILE")
+    print()
+    print("If a directory is given, all files in it are processed.")
+    sys.exit(1)
+
 
 if directory.lower().endswith('.sql'):
     # single-file mode

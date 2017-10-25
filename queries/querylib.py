@@ -14,6 +14,27 @@ def connect():
 def quote(text):
     return '\n'.join([f"-- {line}" for line in text.split('\n')])
 
+def list_queries():
+    conn = connect()
+    cur = conn.cursor()
+
+    cur.execute("""
+      select
+          name,
+          args,
+          columns,
+          tags,
+          schema,
+          description
+      from queries
+      order by name
+    """)
+
+    rows = cur.fetchall()
+    conn.close()
+
+    return rows
+
 def get_query_as_string(query_name):
     ret = []
 

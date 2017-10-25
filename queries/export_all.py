@@ -6,7 +6,7 @@ import querylib
 import os
 
 # querylib.DSN = "postgres://tcia-utilities/N_posda_queries"
-querylib.DSN = "postgres://localhost/posda_queries"
+# querylib.DSN = "postgres://localhost/posda_queries"
 
 conn = querylib.connect()
 cur = conn.cursor()
