@@ -1,4 +1,22 @@
 package Posda::Inbox;
+=head1 NAME
+
+Posda::Inbox - A module for interacting with the Posda Inbox.
+
+=head1 SYNOPSIS
+
+ use Posda::Inbox;
+ my $inbox = Posda::Inbox->new('some_username');
+
+ # get count of unread items
+ $inbox->UnreadCount;  
+
+ # Send a new email to some_other_user; the content of the mail message
+ # is stored in a background report with ID 7
+ $inbox->SendMail('some_other_user', 7, 'Test'); 
+
+=head1 METHODS
+=cut
 
 use Modern::Perl;
 use Method::Signatures::Simple;
@@ -108,19 +126,19 @@ method get_email_addr_by_username($username) {
 
 Add a new email item to the inbox of $username. 
 
-If configured, an email notification will also be sent to the
+If the environment var POSDA_REAL_EMAIL is set to 1, 
+an email notification will also be sent to the
 user's email.
 
- Arguments:
- $username: 
- $background_subprocess_report_id: 
- $how:
+B<Arguments:>
+
+ $username: The username who's inbox will get the mail item.
+ $background_subprocess_report_id: ID of the report that contains the 
+  email content.
+ $how: A short note explaining the source of this email.
 
 =cut
-#TODO: make that real ^, and add a note about what the configuration var is?
 method SendMail($username, $report_id, $how) {
-  say STDERR "SendMail called";
-
   my $result = $self->execute_and_fetchone(qq{
     insert into user_inbox_content (
       user_inbox_id,
@@ -158,19 +176,25 @@ method SendMail($username, $report_id, $how) {
 
   my $send_email = Config('real_email');
   if (defined $send_email && $send_email == 1) {
-    say STDERR "send mail here";
     # send the email report as an email
-    my $EmailHandle = FileHandle->new(
-      '|mail -s "Posda Job Complete" ' 
+    my $email_handle = FileHandle->new(
+      '|mail -s "New Posda Inbox Item!" ' 
       . $self->get_email_addr_by_username($username));
-    unless($EmailHandle) { die "Couldn't open email handle ($!)" }
-    $EmailHandle->print("A new message has arrived in your Posda Inbox!\n");
-    close($EmailHandle);
+    unless($email_handle) { die "Couldn't open email handle ($!)" }
+    $email_handle->print("A new message has arrived in your Posda Inbox!\n");
+    close($email_handle);
   }
 
   return $rows;
 }
 
+=head2 UnreadCount()
+
+Return a count of unread items in the current user's inbox.
+
+A message is B<unread> if date_dismissed is null, and the current_status is 
+set to one of the statuses: entered, new
+=cut
 method UnreadCount() {
   return $self->execute_and_fetchone(qq{
     select count(*)
@@ -181,6 +205,12 @@ method UnreadCount() {
       and user_name = ?
   }, [$self->{username}])->{count};
 }
+
+=head2 UndismissedCount()
+
+Return a count of undismissed items in the current user's inbox.
+
+=cut
 method UndismissedCount() {
   return $self->execute_and_fetchone(qq{
     select count(*)
@@ -191,6 +221,12 @@ method UndismissedCount() {
   }, [$self->{username}])->{count};
 }
 
+=head2 AllItems()
+
+Return a list of all items in the current user's Inbox. This includes
+dismissed items.
+
+=cut
 method AllItems() {
   return $self->execute_and_fetchall(qq{
     select
@@ -205,6 +241,12 @@ method AllItems() {
   }, [$self->{username}]);
 }
 
+=head2 AllUndismissedItems()
+
+Return a list of all items in the current user's Inbox that have not been
+dismissed.
+
+=cut
 method AllUndismissedItems() {
   return $self->execute_and_fetchall(qq{
     select
@@ -220,6 +262,11 @@ method AllUndismissedItems() {
   }, [$self->{username}]);
 }
 
+=head2 ItemDetails($message_id)
+
+Returns a hashref with details about Inbox item identified by $message_id.
+
+=cut
 method ItemDetails($message_id) {
   return $self->execute_and_fetchone(qq{
     select
@@ -235,6 +282,12 @@ method ItemDetails($message_id) {
   }, [$message_id]);
 }
 
+=head2 RecentOperations($message_id)
+
+Return an arrayref of the last 15 operations that were performed on
+the Inbox item identified by $message_id.
+
+=cut
 method RecentOperations($message_id) {
   return $self->execute_and_fetchall(qq{
     select *
@@ -245,6 +298,16 @@ method RecentOperations($message_id) {
   }, [$message_id]);
 }
 
+=head2 ReportFilename($file_id)
+
+Return the absolute path to the file identified by $file_id.
+
+B<NOTE:> this method must establish a connection to posda_files, which
+is not the main database this module uses. It also disconnects immediately
+after retrieving the filename, so you probably should not call this inside
+a tight loop.
+
+=cut
 method ReportFilename($file_id) {
   my $db_handle = DBI->connect(Database('posda_files'));
 
@@ -265,16 +328,38 @@ method ReportFilename($file_id) {
   return $row->{filename};
 }
 
+=head2 ReportContent($file_id)
+
+Return the entire content of the report identified by $file_id.
+
+B<NOTE:> This method calls Posda::Inbox::ReportFilename, which creates
+an extra database connection. See notes above.
+
+=cut
 method ReportContent($file_id) {
   my $filename = $self->ReportFilename($file_id);
   my $file_content = read_file($filename);
   return $file_content;
 }
 
+=head2 SetRead($message_id)
+
+Set an Inbox item, identified by $message_id, to the 'read' status.
+This method also adds an entry into the user_inbox_content_operation table.
+
+=cut
 method SetRead($message_id) {
   $self->change_status_to($message_id, 'read', 'message read');
 }
 
+=head2 SetDismissed($message_id)
+
+Set an Inbox item, identified by $message_id, to the 'dismissed' status,
+and set the date_dismissed to now.
+
+This method also adds an entry into the user_inbox_content_operation table.
+
+=cut
 method SetDismissed($message_id) {
   $self->change_status_to($message_id, 'dismissed', 'message dismissed');
   $self->execute(qq{
