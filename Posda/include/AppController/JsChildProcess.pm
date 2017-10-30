@@ -57,19 +57,10 @@ sub new{
   return $this;
 }
 my $content = <<EOF;
-<div id="container" style="width:<?dyn="width"?>px">
-<div id="header" style="background-color:#E0E0FF;">
-<table width="100%"><tr width="100%"><td width="<?dyn="menu_width"?>">
-<?dyn="Logo"?>
-</td><td align="left" valign="top">
-<div id="title_and_info" style="background-color:#E0E0FF; width:100%; float:left;">foo</div>
-</td><td valign="top" align="right" width="<?dyn="menu_width"?>">
-<span onClick="javascript:CloseThisWindow();">close</span><br>
-</td></tr></table></div>
-<div id="content" style="background-color:#F8F8F8;height:<?dyn="height"?>px;width:100%"?>px;float:left;">
-Content goes here</div>
-<div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-Posda.com</div>
+<div id="container">
+  <div id="header"></div>
+  <div id="content"></div>
+  <div id="footer"></div>
 </div>
 EOF
 my $javascript = <<EOF;
@@ -150,7 +141,7 @@ sub ContentResponse{
   ){
     $http->queue("ContentState: $this->{ContentState}");
   } else {
-    $http->queue("Gimme some Content");
+    $http->queue("<h1>Loading...</h1>");
   }
 }
 sub TryNextSocket{
