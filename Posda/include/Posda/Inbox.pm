@@ -253,9 +253,15 @@ method AllUndismissedItems() {
       user_inbox_content_id,
       background_subprocess_report_id,
       current_status,
-      date_entered
+      date_entered,
+      operation_name
+
     from user_inbox_content 
     natural join user_inbox
+    natural join background_subprocess_report 
+    natural join background_subprocess 
+    natural join subprocess_invocation 
+
     where user_name = ?
       and date_dismissed is null
     order by current_status, date_entered desc
@@ -269,15 +275,12 @@ Returns a hashref with details about Inbox item identified by $message_id.
 =cut
 method ItemDetails($message_id) {
   return $self->execute_and_fetchone(qq{
-    select
-      user_inbox_content_id,
-      current_status,
-      statuts_note,
-      date_entered,
-      date_dismissed,
-      file_id
-    from user_inbox_content
-    natural join background_subprocess_report
+    select * 
+    from 
+      user_inbox_content 
+      natural join background_subprocess_report 
+      natural join background_subprocess 
+      natural join subprocess_invocation 
     where user_inbox_content_id = ?
   }, [$message_id]);
 }

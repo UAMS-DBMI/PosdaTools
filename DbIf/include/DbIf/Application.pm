@@ -241,28 +241,30 @@ method Inbox($http, $dyn) {
     <table class="table">
       <tr>
         <th>Message ID</th>
+        <th>Operation</th>
         <th>Status</th>
         <th>Created Date</th>
-        <th>Button</th>
       </tr>
   });
 
   for my $item (@$unread_items) {
     $http->queue(qq{
         <tr>
-          <td>$item->{user_inbox_content_id}</td>
-          <td>$item->{current_status}</td>
-          <td>$item->{date_entered}</td>
           <td>
     });
+
     $self->NotSoSimpleButton($http, {
-      caption => "Open",
+      caption => $item->{user_inbox_content_id},
       op => "DisplayInboxItem",
       sync => 'Update();',
       message_id => $item->{user_inbox_content_id}
     });
+
     $http->queue(qq{
           </td>
+          <td>$item->{operation_name}</td>
+          <td>$item->{current_status}</td>
+          <td>$item->{date_entered}</td>
         </tr>
     });
   }
@@ -467,7 +469,9 @@ method SetMode($http, $dyn){
 
 method ContentResponse($http, $dyn) {
   # TODO: DrawHistory would preferrably be above the title on the page
-  $self->DrawHistory($http, $dyn);
+  unless ($self->{Mode} =~ /Inbox/) {
+    $self->DrawHistory($http, $dyn);
+  }
 
   if ($self->can($self->{Mode})) {
     my $meth = $self->{Mode};
