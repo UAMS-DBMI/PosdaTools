@@ -5,10 +5,8 @@ use Method::Signatures::Simple;
 use Posda::PopupWindow;
 use Posda::PopupImageViewer;
 use Posda::Config ('Config','Database');
+use Posda::DB 'Query';
 
-use Posda::DB::PosdaFilesQueries;
-
-use Data::Dumper;
 use DBI;
 use URI;
 use HTML::Entities;
@@ -29,9 +27,7 @@ method SpecificInitialize($params) {
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
 
   $self->{table} = $params->{table};
-  my $q1 = PosdaDB::Queries->GetQueryInstance(
-    "GetPopupDefinition"
-  );
+  my $q1 = Query("GetPopupDefinition");
   $q1->RunQuery($self->ProcessQuery, sub {}, $button_name);
   $self->GetParams;
   $self->GetColumns;
@@ -230,20 +226,16 @@ method MenuResponse($http, $dyn) {
 }
 
 method StartSubprocess($http, $dyn){
-  my $q = PosdaDB::Queries->GetQueryInstance(
-    "CreateSubprocessInvocationButton");
-  my $q1 = PosdaDB::Queries->GetQueryInstance(
-    "GetSubProcessInvocationId");
   my $id = $self->{table}->{query}->{invoked_id};
   my $btn_name = $self->{button_name};
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
-  $q->RunQuery(sub {}, sub {},
-    $id, $btn_name, $command_line, $invoking_user);
-  my $new_id;
-  $q1->RunQuery(
-    sub{my($row) = @_; $new_id = $row->[0];},
-    sub {});
+
+  my $new_id = Query("CreateSubprocessInvocationButton")
+               ->FetchOneHash($id, $btn_name, $command_line,
+                              $invoking_user, $btn_name)
+               ->{subprocess_invocation_id};
+
   unless($new_id) {
     die "Couldn't create row in subprocess_invocation";
   }
@@ -264,11 +256,9 @@ method WhenCommandFinishes($subprocess_invocation_id){
   my $sub = sub {
     my($results, $pid) = @_;
     $self->{Results} = $results;
-    my $q = PosdaDB::Queries->GetQueryInstance(
-    "AddPidToSubprocessInvocation");
+    my $q = Query("AddPidToSubprocessInvocation");
     $q->RunQuery(sub{}, sub{}, $pid, $subprocess_invocation_id);
-    my $q1 = PosdaDB::Queries->GetQueryInstance(
-    "CreateSubprocessLine");
+    my $q1 = Query("CreateSubprocessLine");
     my $line_no = 0;
     for my $line (@$results){
       $line_no += 1;
