@@ -47,6 +47,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
 };
 
 my $js_controller_hdr = <<EOF;
+var server_timer;
 function rt(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes," +
     "status=0,left=100,top=100,location=yes";
@@ -183,7 +184,7 @@ function CloseThisWindow(){
 function NewQueueRepeatingServerCmd(method, t){
   //console.log("queue repeating server command");
   var chk_cmd = "NewCheckServer(" + '"' +method+'"' + " ,2500);";
-  setTimeout(chk_cmd, t);
+  server_timer = setTimeout(chk_cmd, t);
 }
 function NewCheckServer(method, t){
   PosdaGetRemoteMethod(method, '', function(text, status, xml){
@@ -194,12 +195,17 @@ function NewCheckServer(method, t){
       } else {
         eval(text);
       }
+      NewQueueRepeatingServerCmd(method, t);
     } else {
       console.log("status: %d", status);
-      alert('Bad Ajax Response');
-      window.location.reload();
+      //alert('Bad Ajax Response');
+      //window.location.reload();
+      document.write("<h1>Bad Ajax Response</h1>");
+      document.write("<p>Your connection to the server was lost.</p>");
+      document.write("<p>This could be due to a server error, or a disruption ");
+      document.write("in your internet connection.</p>");
+      document.write("<p>Refreshing this page may help.</p>");
     }
-    NewQueueRepeatingServerCmd(method, t);
   });
 }
 function DetachAndRedirect(url){
@@ -447,6 +453,9 @@ sub LinkedDelegateEntryBox{
     $default = $this->{$dyn->{linked}}->{$dyn->{index}};
   } else {
     $default = $this->{$dyn->{linked}};
+  }
+  if (not defined $default) {
+    $default = '';
   }
   $default =~ s/"/&quot;/g;
   my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";

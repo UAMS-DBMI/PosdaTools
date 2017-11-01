@@ -10,6 +10,9 @@ package Dispatch::NamedObject;
 use Dispatch::EventHandler;
 use Dispatch::Select;
 use File::Path;
+use Posda::Config 'Config';
+use Posda::DebugLog;
+
 use vars qw( @ISA );
 my $RoutingDebug = "";
 @ISA = qw( Dispatch::EventHandler );
@@ -24,7 +27,7 @@ sub new {
   unless(exists $sess->{root}){ $sess->{root} = {} }
   my $root = $sess->{root};
   $root->{$name} = $this;
-  if($ENV{POSDA_DEBUG}){
+  if(Config('debug')){
     print STDERR "NEW: $class\n";
   }
   return bless $this, $class;
@@ -327,7 +330,7 @@ sub CanDebug{
   if (defined $this->{Environment}->{ApplicationName} and defined $sess->{permissions}) {
     return $sess->{permissions}->has_permission($this->{Environment}->{ApplicationName},'debug');
   } else {
-    print STDERR "CanDebug called before user logged in, or on object with no environment!\n";
+    DEBUG "CanDebug called before user logged in, or on object with no environment!";
     return 0;
   }
 }
@@ -801,7 +804,7 @@ sub SafelyDelTempDir{
 ##############################
 sub DESTROY{
   my($this) = @_;
-  if($ENV{POSDA_DEBUG}){
+  if(Config('debug')){
     print STDERR "DESTROY: $this\n";
   }
 }

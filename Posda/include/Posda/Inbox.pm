@@ -21,6 +21,8 @@ Posda::Inbox - A module for interacting with the Posda Inbox.
 use Modern::Perl;
 use Method::Signatures::Simple;
 
+use Posda::DebugLog;
+
 use DBI;
 
 use Posda::Config ('Database', 'Config');

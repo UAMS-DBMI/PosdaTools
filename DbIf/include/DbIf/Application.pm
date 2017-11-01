@@ -25,7 +25,7 @@ use Posda::Inbox;
 use DBI;
 
 
-use Posda::DebugLog 'on';
+use Posda::DebugLog;
 use Data::Dumper;
 
 use HTML::Entities;
@@ -1658,7 +1658,7 @@ method QueryEnd($query, $then, $invoked_id) {
         $self->{Mode} = "Tables";
       }
     } else {
-      print STDERR "UpdateInsertCompleted!\n";
+      DEBUG "UpdateInsertCompleted!\n";
       return $self->UpdateInsertCompleted($query, $self->{query_rows});
     }
 

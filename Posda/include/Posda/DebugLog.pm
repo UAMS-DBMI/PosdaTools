@@ -6,22 +6,19 @@ package Posda::DebugLog;
 # can be easily disabled for release, without having
 # to call a function each time to see if debug is turned on.
 #
-# It requires 'say'
+# The printing is controlled by the environment variable POSDA_DEBUG
 #
 # Usage example:
-#
-# use Posda::DebugLog 'on';
 #
 # DEBUG "this is a debug message";
 # DEBUG $some_var
 #
 
+use Posda::Config 'Config';
+
 my $DEBUG = 0;
 sub import {
-  shift;
-  if (shift eq 'on') {
-    $DEBUG = 1;
-  }
+  $DEBUG = Config('debug');
 }
 
 use Filter::Simple;

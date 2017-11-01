@@ -16,7 +16,7 @@ use Dispatch::LineReader;
 use Debug;
 use Switch;
 
-use Posda::DebugLog 'off';
+use Posda::DebugLog;
 
 {
   package AppController;
@@ -544,7 +544,7 @@ EOF
     }
   }
   sub AvailAppContent{
-    # DEBUG @_;
+    DEBUG @_;
     my($this, $http, $dyn) = @_;
     my $default_apps = $this->{Capabilities}->{Default}->{Apps};
 
@@ -568,7 +568,10 @@ EOF
     }
 
     my $user = $this->get_user;
-    unless(defined $user) { print STDERR "no user\n";return };
+    unless(defined $user) { 
+      DEBUG "no user";
+      return 
+    };
     # unless(exists $this->{Capabilities}->{$user}->{Apps}){ return }
 
     # get list of apps user can launch
@@ -1093,7 +1096,7 @@ EOF
     my $old_pass = $dyn->{old};
     my $rpt_pass = $dyn->{rpt};
 
-    # DEBUG "$new_pass, $old_pass, $rpt_pass";
+    DEBUG "$new_pass, $old_pass, $rpt_pass";
 
     # verify they match
     if ($new_pass ne $rpt_pass) {

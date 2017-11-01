@@ -5,6 +5,7 @@ use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::Config ('Config','Database');
+use Posda::DebugLog;
 
 use Dispatch::LineReader;
 
@@ -62,7 +63,7 @@ method SpecificInitialize($params) {
         push @lines, $line;
       },
       func() {
-        say STDERR "Finished reading command -h"; 
+        DEBUG "Finished reading command -h"; 
         $self->{lines} = \@lines;
         $self->AutoRefresh;
       }
