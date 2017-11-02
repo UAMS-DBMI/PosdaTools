@@ -4,7 +4,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const pg = require('pg-promise')();
 
-const DIR = '/home/posda/cache/k-storage';
+const DIR = '/nas/public/posda/storage';
 
 function makeDirs(targetDir: string) {
   targetDir.split('/').forEach((dir: any, index: any, splits: any) => {
@@ -31,7 +31,7 @@ function placeFileAndGetMd5(filename: string, root: string) {
   }
 
   let size = fs.statSync(filename).size; // stat before copy
-  fse.copySync(filename, output_filename);
+  fse.moveSync(filename, output_filename);
 
   return { hash: hash, rel_path: rel_path, size: size };
 }
