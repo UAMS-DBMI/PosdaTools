@@ -34,6 +34,7 @@ use Posda::PopupImageViewer;
 #use Posda::PopupCompare;
 use Posda::PopupCompareFiles;
 use Posda::PopupCompareFilesPath;
+use Posda::FileViewerChooser;
 
 use DbIf::PopupHelp;
 use Posda::QueryLog;
@@ -906,24 +907,27 @@ method OpenPopup($class, $name, $params) {
 #    say STDERR "OpenDynamicPopup, executing $class using params:";
 #    print STDERR Dumper($params);
 
+  if ($class eq 'choose') {
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  }
 
-    # if Quince, do it differently:
-    if ($class eq 'Quince') {
-      $self->OpenQuince($name, $params);
-      return;
-    }
+  # if Quince, do it differently:
+  if ($class eq 'Quince') {
+    $self->OpenQuince($name, $params);
+    return;
+  }
 
 
-    eval "require $class";
-    if($@){
-      print STDERR "Class failed to compile\n\t$@\n";
-      return;
-    }
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
 
-    my $child_path = $self->child_path($name);
-    my $child_obj = $class->new($self->{session}, 
-                                $child_path, $params);
-    $self->StartJsChildWindow($child_obj);
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session}, 
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
 }
 
 method OpenQuince($name, $params) {
