@@ -9,6 +9,7 @@ use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
 
 use File::Slurp;
+use Regexp::Common "URI";
 
 use parent 'Posda::PopupWindow';
 
@@ -29,7 +30,16 @@ method SpecificInitialize($params) {
 method ContentResponse($http, $dyn) {
   $http->queue("<h2>Popup Text Viewer</h2>");
   $http->queue("<p>Viewing $self->{file_id} ($self->{filename})</p>");
-  $http->queue("<pre>$self->{text}</pre>");
+
+
+  my $file_content = $self->{text};
+
+  # Turn any URLs into actual links
+  $file_content =~    s( ($RE{URI}{HTTP}) )
+                (<a href="$1">$1</a>)gx  ;
+
+
+  $http->queue("<pre>$file_content</pre>");
 }
 
 method MenuResponse($http, $dyn) {
