@@ -23,4 +23,8 @@ psql -l | grep -q posda_queries           || failed=1
 psql -l | grep -q private_tag_kb          || failed=1
 psql -l | grep -q public_tag_disposition  || failed=1
 
+# a test of a failing test
+psql -l | grep -q public_tag_disposition2  || failed=1
+
+
 exit $failed
