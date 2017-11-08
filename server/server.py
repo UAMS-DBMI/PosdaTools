@@ -57,7 +57,17 @@ async def dump_dicom(request, file_id):
     logging.debug("process ended, getting data")
     data = await proc.stdout.read() # read entire output
     logging.debug("data got, returning it")
-    return text(data.decode('utf8'))
+
+    try:
+        new_data = data.decode()
+    except UnicodeDecodeError:
+        # well it wasn't utf-8; now what?
+        import chardet
+        encoding = chardet.detect(data)['encoding']
+        new_data = data.decode(encoding)
+
+    return text(new_data)
+
 
 @app.route("/vapi/extra_details/<file_id:int>")
 async def get_series_info(request, file_id):
