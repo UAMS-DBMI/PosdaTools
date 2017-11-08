@@ -10,6 +10,7 @@ echo
 echo "If you wish to continue, press enter now. If you have a doubt, press Control+c"
 
 #read 
+cd /home/posda/posdatools/install_files/ubuntu
 
 APT="sudo apt-get install -y"
 CPAN="sudo cpanm --notest"
