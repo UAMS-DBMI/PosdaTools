@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
-wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz
-tar xf Python-3.6.1.tar.xz
-cd Python-3.6.1
-./configure --prefix=/opt/python36
-make
-sudo make install
-cd ..
-sudo rm -rf Python-3.6.1
-rm Python-3.6.1.tar.xz
+wget https://code.imphub.org/projects/PT/repos/misc/raw/python/python3.6-ubuntu-16.04.tar.xz
+sudo tar xf python3.6-ubuntu-16.04.tar.xz -C /
 
 sudo cp python36_profile.sh /etc/profile.d/python36.sh
 
