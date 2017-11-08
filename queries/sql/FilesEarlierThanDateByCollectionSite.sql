@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['file_id', 'old_visibility']
 -- Args: ['collection', 'site', 'before']
--- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'hide_files', 'show_hidden']
+-- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'hide_files']
 -- Description: Show Received before date by collection, site
 
 select 

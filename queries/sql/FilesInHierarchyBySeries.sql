@@ -1,6 +1,6 @@
 -- Name: FilesInHierarchyBySeries
 -- Schema: posda_files
--- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'file_id']
+-- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'sop_instance_uid', 'file_id']
 -- Args: ['series_instance_uid']
 -- Tags: ['by_series_instance_uid', 'posda_files', 'sops']
 -- Description: Get Collection, Site, Patient, Study Hierarchy in which series resides
@@ -12,11 +12,13 @@ select distinct
   patient_id,
   study_instance_uid,
   series_instance_uid,
+  sop_instance_uid,
   file_id
 from
   file_patient natural join
   file_study natural join
   file_series natural join
+  file_sop_common natural join
   ctp_file
 where file_id in (
   select

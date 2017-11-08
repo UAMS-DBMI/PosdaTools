@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['user_name', 'hour_of_change', 'prior_visibility', 'new_visibility', 'reason_for', 'num_files']
 -- Args: ['collection', 'site']
--- Tags: ['show_hidden']
+-- Tags: ['old_hidden']
 -- Description: Show All Hide Events by Collection, Site
 
 select

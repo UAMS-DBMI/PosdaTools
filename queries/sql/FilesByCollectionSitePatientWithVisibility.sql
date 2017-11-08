@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'series_instance_uid', 'sop_instance_uid', 'file_id', 'visibility']
 -- Args: ['collection', 'site', 'patient_id']
--- Tags: ['hide_files']
+-- Tags: ['hide_events']
 -- Description: Get List of files for Collection, Site with visibility
 
 select
