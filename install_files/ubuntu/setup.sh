@@ -9,7 +9,7 @@ echo "REMOVE the user from the sudo group when it finishes."
 echo
 echo "If you wish to continue, press enter now. If you have a doubt, press Control+c"
 
-read 
+#read 
 
 APT="sudo apt-get install -y"
 CPAN="sudo cpanm --notest"
