@@ -2,7 +2,7 @@ BINLOC=./node_modules/.bin/
 NG="${BINLOC}/ng"
 
 build:
-	$(NG) build --prod --base-href "/viewer/"
+	$(NG) build --prod --base-href "/viewer/" --aot=false
 
 deploy:
 	scp -r dist/* tcia-utilities:/home/kaleidoscope/viewer/
