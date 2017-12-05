@@ -2,7 +2,7 @@ package Posda::Config;
 
 require Exporter;
 @ISA = 'Exporter';
-@EXPORT_OK = ('Config', 'Database');
+@EXPORT_OK = ('Config', 'Database', 'DatabaseName');
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -88,6 +88,11 @@ func Database($name) {
   }
 
   return $prefix . join(';', @params);
+}
+
+func DatabaseName($name) {
+  my $db_info = Config('databases')->{$name};
+  return $db_info->{database};
 }
 
 1;

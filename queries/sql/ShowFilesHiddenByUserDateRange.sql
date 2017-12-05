@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'reason', 'before', 'after', 'num_files', 'earliest', 'latest']
 -- Args: ['user', 'from', 'to']
--- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'show_hidden']
+-- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'old_hidden']
 -- Description: Show Files Hidden By User Date Range
 
 select 

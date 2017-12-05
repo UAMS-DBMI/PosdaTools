@@ -6,18 +6,9 @@
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 -- 
 
-select distinct series_instance_uid, dicom_file_type, modality, count(*)
-from (
-select distinct series_instance_uid, sop_instance_uid, dicom_file_type, modality from (
-select
-   distinct series_instance_uid, modality, sop_instance_uid,
-   file_id, dicom_file_type
- from file_series natural join file_sop_common
-   natural join ctp_file natural join dicom_file
+select distinct series_instance_uid, dicom_file_type, modality, count(distinct file_id)
+from
+  file_study natural join file_series natural join dicom_file natural join ctp_file
 where
-  project_name = ? and site_name = ?
-  and visibility is null)
-as foo
-group by series_instance_uid, sop_instance_uid, dicom_file_type, modality)
-as foo
+  project_name = ? and site_name = ? and visibility is null
 group by series_instance_uid, dicom_file_type, modality

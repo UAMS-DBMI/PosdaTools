@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'user_name', 'time', 'reason_for', 'count']
 -- Args: ['collection']
--- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'hide_files', 'show_hidden']
+-- Tags: ['find_series', 'equivalence_classes', 'consistency', 'visual_review_results', 'hide_files', 'old_hidden']
 -- Description: Show Received before date by collection, site
 
 select

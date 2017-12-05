@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['file_id', 'import_time', 'import_type', 'import_comment']
 -- Args: ['sop_instance_uid']
--- Tags: ['show_hidden']
+-- Tags: ['old_hidden']
 -- Description: Show All Hide Events by Collection, Site
 
 select 

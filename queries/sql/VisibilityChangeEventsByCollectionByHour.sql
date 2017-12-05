@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'series_instance_uid', 'when_done', 'user_name', 'prior_visibility', 'new_visibility', 'reason_for', 'num_files']
 -- Args: ['collection']
--- Tags: ['meta', 'test', 'hello', 'bills_test', 'hide_events']
+-- Tags: ['meta', 'test', 'hello', 'bills_test', 'hide_events', 'show_hidden']
 -- Description: Add a filter to a tab
 
 select 

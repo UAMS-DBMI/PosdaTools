@@ -1,0 +1,12 @@
+[Unit]
+Description=Posda Receive Processing Daemon
+After=posda.service
+
+[Service]
+User=posda
+Group=posda
+WorkingDirectory=/home/posda/posdatools/systemd
+Exec=/home/posda/posdatools/systemd/run_in_posda_env.sh systemd/start_PosdaReceiveDaemon.sh
+
+[Install]
+WantedBy=multi-user.target
