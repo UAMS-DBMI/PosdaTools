@@ -28,7 +28,7 @@ my $loading_rules = {
   },
   port_pool => sub {
     my $main_port = Config("port");
-    return [($main_port+3)..($main_port+20)];
+    return [($main_port+5)..($main_port+20)];
   },
 };
 
