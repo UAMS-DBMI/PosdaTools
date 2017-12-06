@@ -1,16 +1,23 @@
-all: build clean run open
+.PHONY: default build open run_forever clean
+
+default: build
 
 clean:
 	rm -f *.png
 
-run:
+run: node_modules
 	node index.js
 
-build:
+build: index.js finish.js
+
+index.js finish.js: index.ts finish.ts node_modules
 	./node_modules/.bin/tsc
 
 open:
 	chromium *.png
 
-run_forever:
+run_forever: node_modules
 	while true; do node index.js; done
+
+node_modules: package.json
+	npm install
