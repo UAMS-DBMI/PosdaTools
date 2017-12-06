@@ -8,9 +8,9 @@ clean:
 run: node_modules
 	node index.js
 
-build: index.js finish.js
+build: index.js finish.js image.js
 
-index.js finish.js: index.ts finish.ts node_modules
+index.js image.js finish.js: index.ts image.ts finish.ts node_modules
 	./node_modules/.bin/tsc
 
 open:
