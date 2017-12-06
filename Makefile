@@ -1,8 +1,14 @@
-BINLOC=./node_modules/.bin/
-NG="${BINLOC}/ng"
+.PHONY: build deploy localdeploy serve
 
-build:
-	$(NG) build --prod --base-href "/k/"
+BINLOC=./node_modules/.bin
+NG=${BINLOC}/ng
+
+default: build
+
+build: dist
+
+dist: node_modules
+	$(NG) build --prod --base-href "/k/" --aot=false
 
 deploy:
 	scp -r dist/* tcia-utilities:/home/kaleidoscope/dist/
@@ -10,5 +16,8 @@ deploy:
 localdeploy:
 	cp -r dist/* /home/www/kaleidoscope/
 
-serve:
+serve: node_modules
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --port 4201 --base-href "/k"
+
+node_modules: package.json package-lock.json
+	npm install
