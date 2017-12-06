@@ -1,7 +1,13 @@
-BINLOC=./node_modules/.bin/
-NG="${BINLOC}/ng"
+.PHONY: build deploy localdeploy serve
 
-build:
+BINLOC=./node_modules/.bin
+NG=${BINLOC}/ng
+
+default: build
+
+build: dist
+
+dist: node_modules
 	$(NG) build --prod --base-href "/viewer/" --aot=false
 
 deploy:
@@ -10,5 +16,8 @@ deploy:
 localdeploy:
 	cp -r dist/* /home/www/quince/
 
-serve:
+serve: node_modules
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
+
+node_modules: package.json package-lock.json
+	npm install
