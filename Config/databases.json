@@ -90,7 +90,8 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_files.sql",
-      "Posda/sql/posda_files_data.sql"
+      "Posda/sql/posda_files_data.sql",
+      "Posda/sql/posda_files_log.sql"
     ],
     "reset"    : [
       "Posda/sql/reset/posda_files.sql"

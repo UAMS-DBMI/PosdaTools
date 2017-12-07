@@ -133,3 +133,4 @@ truncate table structure_set;
 truncate table submission;
 truncate table unique_pixel_data;
 truncate table window_level;
+truncate table log_iec_hide;
