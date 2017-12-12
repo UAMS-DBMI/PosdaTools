@@ -12,11 +12,10 @@ winston.level = 'error';
   Force the pg-promise library to support postgress peer auth,
   by changing the default host to the local unix socket.
 */
-// pg.pg.defaults.host = '/var/run/postgresql';
-pg.pg.defaults.host = 'tcia-posdadb-rh';
+pg.pg.defaults.host = '/var/run/postgresql';
 
 
-const API_URL = 'http://tcia-posda-rh-1/vapi';
+const API_URL = 'http://localhost/vapi';
 
 import { Image } from './image';
 
@@ -366,9 +365,14 @@ async function doOne() {
   let query = `
     update image_equivalence_class i
     set processing_status = 'in-progress'
-    where i.image_equivalence_class_id in (14198, 14209)
+    where i.image_equivalence_class_id in (
+      select image_equivalence_class_id
+      from image_equivalence_class
+      where processing_status = 'QTest1'
+      limit 5
+    )
     returning i.*
-  `; //14198
+  `;
 
   let result = await client.query(query);
 
