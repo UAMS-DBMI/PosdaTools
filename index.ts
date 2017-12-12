@@ -6,16 +6,17 @@ const winston = require('winston');
 const promiseLimit = require('promise-limit');
 const ProgressBar = require('progress');
 
-winston.level = 'debug';
+winston.level = 'error';
 
 /* 
   Force the pg-promise library to support postgress peer auth,
   by changing the default host to the local unix socket.
 */
-pg.pg.defaults.host = '/var/run/postgresql';
+// pg.pg.defaults.host = '/var/run/postgresql';
+pg.pg.defaults.host = 'tcia-posdadb-rh';
 
 
-const API_URL = 'http://localhost/vapi';
+const API_URL = 'http://tcia-posda-rh-1/vapi';
 
 import { Image } from './image';
 
@@ -273,9 +274,11 @@ class K {
 
   async main(iec: number): Promise<any> {
     console.log('IEC: ' + iec);
+	winston.log('debug', iec);
     let url = API_URL + '/iec_info/' + iec;
     let detail_url = API_URL + '/details/';
 
+	winston.log('debug', 'About to create the first Promise');
     return new Promise((accept, reject) => {
       rp(url).then((body: string) => {
         let json_body: any = JSON.parse(body);
@@ -293,15 +296,26 @@ class K {
           return limit(() => this.getAnImage(id));
         }, this);
 
-        Promise.all(promises).then(async (data) => {
-          winston.log('debug', 'All files downloaded, writing pngs');
-          let filename = 'out_' + iec + '.png';
-          await this.writePng(this.maximum_projection, this.minimum_projection,
-            this.mean_projection, filename);
-          await finishImage(this.db, filename, iec);
-          accept();
-        });
-      }).catch((error: any) => console.log("iec_info=", error));
+		  let error_test = false;
+
+		  Promise.all(promises)
+			  .catch(async (error: any) => {
+				  console.log("iec_info=", error);
+				  await flag_as_error(iec);
+				  error_test = true;
+				  reject(error);
+			  }) 
+			  .then(async (data) => {
+				  if (!error_test) {
+				  winston.log('debug', 'All files downloaded, writing pngs');
+				  let filename = 'out_' + iec + '.png';
+				  await this.writePng(this.maximum_projection, this.minimum_projection,
+					this.mean_projection, filename);
+				  await finishImage(this.db, filename, iec);
+				  }
+				  accept();
+			  }, (failure) => console.log(failure));
+      });
     });
   }
 
@@ -324,29 +338,37 @@ class K {
         winston.log('debug', 'Finished processing image: ' + file_id);
         bar.tick();
         accept();
-      }).catch((error: any) => process.exit(1));
+	  }).catch((error: any) => {
+		  winston.log('error', 'Failed to get image ' + file_id);
+		  reject('Failed to get image ' + file_id);
+	  });
     });
   }
 }
 
-
-// let k = new K();
-// k.main(2372);
-
 let client = pg("postgres://@/posda_files");
+
+async function flag_as_error(iec: number) {
+	console.log("Flagging as error: " + iec);
+	await client.query(`
+		update image_equivalence_class
+		set processing_status = 'error'
+		where image_equivalence_class_id = ${iec}
+	`);
+}
+
+async function error(err: any) {
+	// set error state on the IEC here
+	console.log("an error" + err);
+}
 
 async function doOne() {
   let query = `
     update image_equivalence_class i
     set processing_status = 'in-progress'
-    where i.image_equivalence_class_id in (
-      select image_equivalence_class_id
-      from image_equivalence_class
-      where processing_status = 'ReadyToProcess'
-      limit 1
-    )
+    where i.image_equivalence_class_id in (14198, 14209)
     returning i.*
-  `;
+  `; //14198
 
   let result = await client.query(query);
 
@@ -359,7 +381,9 @@ async function doOne() {
   let jobs = result.map((element: any) => {
     return (new K(client)).main(element.image_equivalence_class_id);
   });
-  Promise.all(jobs).then(() => pg.end());
+	Promise.all(jobs)
+		.catch((err) => error(err))
+		.then(() => pg.end());
 }
 
 doOne();

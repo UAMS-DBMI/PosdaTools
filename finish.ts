@@ -5,7 +5,6 @@ const path = require('path');
 const pg = require('pg-promise')();
 const winston = require('winston');
 
-winston.level = 'error';
 const DIR = '/nas/public/posda/storage';
 
 function makeDirs(targetDir: string) {
