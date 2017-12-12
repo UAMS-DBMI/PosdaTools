@@ -368,7 +368,7 @@ async function doOne() {
     where i.image_equivalence_class_id in (
       select image_equivalence_class_id
       from image_equivalence_class
-      where processing_status = 'QTest1'
+      where processing_status = 'ReadyToProcess'
       limit 5
     )
     returning i.*
