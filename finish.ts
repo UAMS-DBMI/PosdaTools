@@ -31,7 +31,7 @@ function placeFileAndGetMd5(filename: string, root: string) {
   }
 
   let size = fs.statSync(filename).size; // stat before copy
-  fse.moveSync(filename, output_filename);
+  fse.moveSync(filename, output_filename, { overwrite: true });
 
   return { hash: hash, rel_path: rel_path, size: size };
 }
