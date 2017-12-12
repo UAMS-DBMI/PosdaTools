@@ -6,7 +6,7 @@ const winston = require('winston');
 const promiseLimit = require('promise-limit');
 const ProgressBar = require('progress');
 
-winston.level = 'error';
+winston.level = 'debug';
 
 /* 
   Force the pg-promise library to support postgress peer auth,
@@ -301,7 +301,7 @@ class K {
           await finishImage(this.db, filename, iec);
           accept();
         });
-      });
+      }).catch((error: any) => console.log("iec_info=", error));
     });
   }
 
@@ -324,7 +324,7 @@ class K {
         winston.log('debug', 'Finished processing image: ' + file_id);
         bar.tick();
         accept();
-      });
+      }).catch((error: any) => process.exit(1));
     });
   }
 }
@@ -343,7 +343,7 @@ async function doOne() {
       select image_equivalence_class_id
       from image_equivalence_class
       where processing_status = 'ReadyToProcess'
-      limit 5
+      limit 1
     )
     returning i.*
   `;

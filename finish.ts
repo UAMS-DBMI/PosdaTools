@@ -3,7 +3,9 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 const pg = require('pg-promise')();
+const winston = require('winston');
 
+winston.level = 'error';
 const DIR = '/nas/public/posda/storage';
 
 function makeDirs(targetDir: string) {
@@ -38,6 +40,7 @@ function placeFileAndGetMd5(filename: string, root: string) {
 
 
 export async function finishImage(client: any, filename: string, iec: number) {
+  winston.log('debug', 'finishImage called');
   let details = placeFileAndGetMd5(filename, DIR);
   if (details.size == 0) {
     console.log('File was 0 size when we statd it, aborting!');
@@ -70,6 +73,7 @@ export async function finishImage(client: any, filename: string, iec: number) {
     [iec]
   );
 
+  winston.log('debug', 'all done, next line is new file id');
   console.log(new_file_id);
 }
 
