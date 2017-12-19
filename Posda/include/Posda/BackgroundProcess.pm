@@ -7,6 +7,7 @@ use Method::Signatures::Simple;
 use Posda::DB qw/ Query ResetDBHandles /;
 use Posda::DownloadableFile;
 use Posda::Inbox;
+use Posda::DebugLog;
 
 use File::Temp qw/ tempfile /;
 use DateTime;
@@ -122,15 +123,18 @@ method ForkAndExit() {
 }
 
 method WriteToEmail($line) {
+  DEBUG "writing to email: $line";
   $self->{email_handle}->print($line);
 }
 
 method Finish() {
+  DEBUG "called";
   # log completion time
   $self->{add_comp_time_query}->RunQuery(
     sub{}, sub{}, $self->{background_id});
 
   $self->{script_end_time} = time;
+  DEBUG "script_end_time = $self->{script_end_time}";
   my $end_time = DateTime->from_epoch(epoch => $self->{script_end_time});
   $self->WriteToEmail("Background process ended at: $end_time\n");
   $self->WriteToEmail("Total time elapsed: " . 
@@ -179,13 +183,16 @@ method Finish() {
         $report->{background_subprocess_report_id},
         'Posda::BackgroundProcess'
       );
-      say STDERR "*** email report's id is: $report->{background_subprocess_report_id}";
+      DEBUG "email report's id is: $report->{background_subprocess_report_id}";
     }
 
     # $add_report_query->RunQuery(
     #     sub{}, sub{},
     #     $self->{background_id}, $closed->{file_id}, $h
     # );
+
+    DEBUG "Unlinking report file: $rpt->{filename}";
+    unlink $rpt->{filename};
   }
 }
 
