@@ -557,6 +557,7 @@ method GetOperationsWithTags($class: $tags) {
   return $results;
 
 }
+
 method GetOperations($class:) {
 
   my $dbh = _get_handle();
@@ -569,6 +570,24 @@ method GetOperations($class:) {
   $qh->execute();
 
   my $results = $qh->fetchall_arrayref();
+
+  return $results;
+
+}
+
+method GetOperationDetails($class: $operation_name) {
+
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    select * 
+    from spreadsheet_operation 
+    where operation_name = ?
+  });
+
+  $qh->execute($operation_name);
+
+  my $results = $qh->fetchrow_hashref();
 
   return $results;
 

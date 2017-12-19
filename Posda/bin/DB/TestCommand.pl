@@ -7,3 +7,7 @@ say "Test command!";
 say Dumper(\@ARGV);
 sleep 1;
 
+while (<STDIN>) {
+	chomp;
+	say "Read line: $_";
+}
