@@ -2,17 +2,31 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.5.7
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
 SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 
 SET search_path = public, pg_catalog;
 
@@ -192,32 +206,39 @@ ALTER SEQUENCE submitter_submitter_id_seq OWNED BY submitter.submitter_id;
 
 
 --
--- Name: request_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: request request_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY request ALTER COLUMN request_id SET DEFAULT nextval('request_request_id_seq'::regclass);
 
 
 --
--- Name: round_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: round round_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY round ALTER COLUMN round_id SET DEFAULT nextval('round_round_id_seq'::regclass);
 
 
 --
--- Name: submitter_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: submitter submitter_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY submitter ALTER COLUMN submitter_id SET DEFAULT nextval('submitter_submitter_id_seq'::regclass);
 
 
 --
--- Name: collection_count_per_round_collection_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: collection_count_per_round collection_count_per_round_collection_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_count_per_round
     ADD CONSTRAINT collection_count_per_round_collection_key UNIQUE (collection);
+
+
+--
+-- Name: posda_file_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posda_file_id_index ON request USING btree (posda_file_id);
 
 
 --

@@ -2,17 +2,31 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.5.7
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
 SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 
 SET search_path = public, pg_catalog;
 
@@ -269,49 +283,49 @@ ALTER SEQUENCE series_scan_series_scan_id_seq OWNED BY series_scan.series_scan_i
 
 
 --
--- Name: element_signature_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: element_signature element_signature_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY element_signature ALTER COLUMN element_signature_id SET DEFAULT nextval('element_signature_element_signature_id_seq'::regclass);
 
 
 --
--- Name: equipment_signature_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: equipment_signature equipment_signature_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY equipment_signature ALTER COLUMN equipment_signature_id SET DEFAULT nextval('equipment_signature_equipment_signature_id_seq'::regclass);
 
 
 --
--- Name: scan_element_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: scan_element scan_element_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY scan_element ALTER COLUMN scan_element_id SET DEFAULT nextval('scan_element_scan_element_id_seq'::regclass);
 
 
 --
--- Name: scan_event_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: scan_event scan_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY scan_event ALTER COLUMN scan_event_id SET DEFAULT nextval('scan_event_scan_event_id_seq'::regclass);
 
 
 --
--- Name: seen_value_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: seen_value seen_value_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY seen_value ALTER COLUMN seen_value_id SET DEFAULT nextval('seen_value_seen_value_id_seq'::regclass);
 
 
 --
--- Name: series_scan_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: series_scan series_scan_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY series_scan ALTER COLUMN series_scan_id SET DEFAULT nextval('series_scan_series_scan_id_seq'::regclass);
 
 
 --
--- Name: private_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: private_disposition_interpretation private_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY private_disposition_interpretation
@@ -319,7 +333,7 @@ ALTER TABLE ONLY private_disposition_interpretation
 
 
 --
--- Name: public_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: public_disposition_interpretation public_disposition_interpretation_disposition_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public_disposition_interpretation

@@ -2,16 +2,16 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.5.7
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
 SET row_security = off;
 
 --
@@ -19,6 +19,20 @@ SET row_security = off;
 --
 
 CREATE SCHEMA db_version;
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 SET search_path = db_version, pg_catalog;
@@ -139,28 +153,28 @@ ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 
 
 --
--- Name: app_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: apps app_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY apps ALTER COLUMN app_id SET DEFAULT nextval('apps_app_id_seq'::regclass);
 
 
 --
--- Name: permission_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: permissions permission_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY permissions ALTER COLUMN permission_id SET DEFAULT nextval('permissions_permission_id_seq'::regclass);
 
 
 --
--- Name: user_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN user_id SET DEFAULT nextval('users_user_id_seq'::regclass);
 
 
 --
--- Name: apps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: apps apps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY apps
@@ -168,7 +182,7 @@ ALTER TABLE ONLY apps
 
 
 --
--- Name: permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY permissions
@@ -176,7 +190,7 @@ ALTER TABLE ONLY permissions
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -184,7 +198,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: users_user_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_user_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -192,7 +206,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: permissions_app_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: permissions permissions_app_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY permissions
@@ -200,7 +214,7 @@ ALTER TABLE ONLY permissions
 
 
 --
--- Name: user_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_permissions user_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY user_permissions
@@ -208,7 +222,7 @@ ALTER TABLE ONLY user_permissions
 
 
 --
--- Name: user_permissions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_permissions user_permissions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY user_permissions
