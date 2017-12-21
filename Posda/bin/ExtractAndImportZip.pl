@@ -36,7 +36,7 @@ $background->Daemonize;
 my $report = $background->CreateReport('main');
 
 $background->WriteToEmail("Began extract and import operation..\n");
-$background->WriteToEmail($filename);
+$background->WriteToEmail("$filename\n");
 
 my $guid = Posda::UUID->GetGuid();
 my $submission_root = Config('submission_root');
@@ -74,7 +74,7 @@ my @errors = map {
 
 # report errors 
 for my $error (@errors) {
-  $background->WriteToEmail($error);
+  $background->WriteToEmail("$error\n");
   $report->print("$error\n");
   say STDERR "Error: $error";
 }
@@ -86,7 +86,7 @@ for my $i (@file_ids) {
 
 my $max_file_id = max @file_ids;
 
-$background->WriteToEmail("Files imported, waiting on import of file_id $max_file_id");
+$background->WriteToEmail("Files imported, waiting on import of file_id $max_file_id\n");
 
 my $q_check_file = Query("IsFileProcessed");
 my $continue = 1;
@@ -98,7 +98,7 @@ while ($continue) {
   $continue = not $val->{processed};
 }
 
-$background->WriteToEmail("All files have been fully processed.");
+$background->WriteToEmail("All files have been fully processed.\n");
 
 DEBUG "Import complete";
 $background->Finish;
