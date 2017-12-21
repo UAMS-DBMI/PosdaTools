@@ -8,6 +8,7 @@ use Posda::DB 'Query';
 use Posda::DebugLog;
 
 use List::Util 'max';
+use Data::Dumper;
 
 my $usage = <<EOF
 Usage: ExtractAndImportZip.pl <background_id> <notify> <filename>
@@ -41,17 +42,25 @@ my $guid = Posda::UUID->GetGuid();
 my $submission_root = Config('submission_root');
 my $extract_dir = "$submission_root/$guid";
 
+DEBUG "Extracting to: $extract_dir";
+
 unless (mkdir($extract_dir)) {
   die "Could not create extraction directory: $extract_dir";
 }
+
+DEBUG "Successfully created extract dir";
 
 my $extract_command = "tar xvf \"$filename\" -C \"$extract_dir\"";
 
 my $results = `$extract_command`;
 
+DEBUG "Extract results: ", Dumper($results);
+
 # Now scan the dir for files and import them into posda
 my $import_command = "find \"$extract_dir\" -type f | ImportFilesInPlace.pl - 'zip'";
 my $import_return = `$import_command`;
+
+DEBUG "Import results: ", Dumper($import_return);
 
 my @import_return_lines = split('\n', $import_return);
 
@@ -66,10 +75,13 @@ my @errors = map {
 # report errors 
 for my $error (@errors) {
   $background->WriteToEmail($error);
+  $report->print("$error\n");
+  say STDERR "Error: $error";
 }
 
 for my $i (@file_ids) {
-  $report->print("Added file_id: $i");
+  $report->print("Added file_id: $i\n");
+  DEBUG "Added file_id: $i";
 }
 
 my $max_file_id = max @file_ids;
@@ -87,7 +99,6 @@ while ($continue) {
 }
 
 $background->WriteToEmail("All files have been fully processed.");
-
 
 DEBUG "Import complete";
 $background->Finish;
