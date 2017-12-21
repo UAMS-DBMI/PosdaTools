@@ -26,6 +26,8 @@ use DBI;
 
 
 use Posda::DebugLog;
+use Posda::UUID;
+use Posda::Subprocess;
 use Data::Dumper;
 
 use HTML::Entities;
@@ -2357,11 +2359,55 @@ method ConvertLinesComplete($hash){
       $hash->{'mime-type'} eq 'application/vnd.ms-excel'
     ) {
       $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
+    } 
+    if ($hash->{'mime-type'} eq 'application/gzip') {
+      $self->ProcessCompressedFile($hash);
     }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
   };
   return $sub;
 }
+
+method ProcessCompressedFile($hash) {
+  my $mime_type = $hash->{'mime-type'};
+  my $filename = $hash->{'Output file'};
+
+  say STDERR "Processing file of type $mime_type";
+  say STDERR "Filename: $filename";
+
+  # Spawn a Subprocess to handle this operation
+
+  my $sub = Posda::Subprocess->new("ExtractAndImportZip");
+  $sub->set_commandline("ExtractAndImportZip.pl <?bkgrnd_id?> <notify> <filename>");
+  $sub->set_params({ 
+    notify => 'quasarj',
+    filename => $filename
+  });
+
+  $sub->execute(func($ret) {
+      say STDERR "Subprocess finished!";
+      say STDERR Dumper($ret);
+  });
+
+  # my $guid = Posda::UUID->GetGuid();
+  # my $submission_root = Config('submission_root');
+  # my $extract_dir = "$submission_root/$guid";
+
+  # unless (mkdir($extract_dir)) {
+  #   die "Could not create extraction directory: $extract_dir";
+  # }
+
+  # my $command = "tar xvf \"$filename\" -C \"$extract_dir\"";
+
+  # Dispatch::LineReader->new_cmd($command, 
+  #   func($line) {
+  #     say STDERR "Unzip: $line"; 
+  #   }, func() {
+  #     say STDERR "End of unzip; files are in: $extract_dir"; 
+  #     # TODO: import these files into posda, but how?
+  #   });
+}
+
 method Files($http, $dyn){
   unless(exists $self->{UploadedFiles}) { $self->{UploadedFiles} = [] }
   my $num_files = @{$self->{UploadedFiles}};
