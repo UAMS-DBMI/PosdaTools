@@ -227,10 +227,14 @@ sub _RunQueryBlocking {
   if ($select) {
     # return the results
     while(my @h = $self->{handle}->fetchrow_array){
-      &$row_callback(\@h);
+      if (defined $row_callback) {
+        &$row_callback(\@h);
+      }
     }
   } else {
-    &$row_callback([$rows_affected]);
+    if (defined $row_callback) {
+      &$row_callback([$rows_affected]);
+    }
   }
   if(ref($end_callback) eq "CODE"){
     &$end_callback();
