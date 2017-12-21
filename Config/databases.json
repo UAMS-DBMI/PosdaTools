@@ -4,7 +4,8 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_queries.sql",
-      "Posda/sql/posda_queries_data.sql"
+      "Posda/sql/posda_queries_data.sql",
+      "Posda/sql/posda_queries_config.sql"
     ],
     "reset"    : [
       "Posda/sql/reset/posda_queries.sql"
