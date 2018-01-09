@@ -1,6 +1,5 @@
 package DbIf::Application;
 
-my $quince_url = "http://tcia-posda-rh-1.ad.uams.edu/viewer";
 
 use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query';
@@ -933,6 +932,8 @@ method OpenPopup($class, $name, $params) {
 }
 
 method OpenQuince($name, $params) {
+  my $external_hostname = Config('external_hostname');
+  my $quince_url = "http://$external_hostname/viewer";
   my $mode;
   my $val;
 
