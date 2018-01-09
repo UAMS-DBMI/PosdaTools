@@ -1,17 +1,29 @@
 #!/usr/bin/env perl
 
 use Modern::Perl;
-$| = 1; # turn on autoflush of stdout
+use Posda::BackgroundProcess;
+
 
 say "Background Button Test v1.0\n\n";
 
 say "This script does not read from stdin";
 
-say "Your params were:";
+my ($invoc_id, $notify) = @ARGV;
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 
-for my $i (@ARGV) {
-  say $i;
+my $lines = 0;
+while (my $line = <STDIN>) {
+  $background->LogInputLine($line);
+  $lines++;
 }
+say "Read $lines lines from stdin, forking now...";
 
+$background->Daemonize;
+# don't write to stdout after this, or it will crash!
 
-say "And the program ends here.";
+my $report = $background->CreateReport('main');
+print $report "test print to report\n";
+
+$background->WriteToEmail("Began BackgroundButtonTest.pl\n");
+
+$background->Finish;

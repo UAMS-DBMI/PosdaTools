@@ -2,7 +2,7 @@
 -- Schema: posda_phi_simple
 -- Columns: ['vr', 'num_series']
 -- Args: ['scan_id']
--- Tags: ['tag_usage', 'simple_phi']
+-- Tags: ['tag_usage', 'old_simple_phi']
 -- Description: Status of PHI scans
 -- 
 

@@ -2,7 +2,7 @@
 -- Schema: intake
 -- Columns: ['series_instance_uid', 'modality', 'num_images']
 -- Args: ['project_name', 'site_name']
--- Tags: ['by_collection', 'find_series', 'intake', 'compare_collection_site', 'simple_phi']
+-- Tags: ['by_collection', 'find_series', 'intake', 'compare_collection_site']
 -- Description: Get Series in A Collection, Site
 -- 
 

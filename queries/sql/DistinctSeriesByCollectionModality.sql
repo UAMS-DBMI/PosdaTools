@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['series_instance_uid', 'patient_id', 'dicom_file_type', 'modality', 'num_files']
 -- Args: ['collection', 'modality']
--- Tags: ['by_collection', 'find_series', 'search_series', 'send_series', 'phi_simple', 'simple_phi', 'dciodvfy', 'edit_files']
+-- Tags: ['by_collection', 'find_series', 'search_series', 'send_series', 'dciodvfy', 'edit_files']
 -- Description: Get Series in A Collection
 -- 
 

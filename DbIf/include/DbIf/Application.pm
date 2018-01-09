@@ -1,6 +1,5 @@
 package DbIf::Application;
 
-my $quince_url = "http://tcia-posda-rh-1.ad.uams.edu/viewer";
 
 use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query';
@@ -26,6 +25,8 @@ use DBI;
 
 
 use Posda::DebugLog;
+use Posda::UUID;
+use Posda::Subprocess;
 use Data::Dumper;
 
 use HTML::Entities;
@@ -931,6 +932,8 @@ method OpenPopup($class, $name, $params) {
 }
 
 method OpenQuince($name, $params) {
+  my $external_hostname = Config('external_hostname');
+  my $quince_url = "http://$external_hostname/viewer";
   my $mode;
   my $val;
 
@@ -1511,26 +1514,26 @@ method DrawWidgetFromTo($http, $dyn) {
 method SetWidgetFromTo($http, $dyn) {
   my $val = $dyn->{val};
   if ($val eq "today") {
-    my $today = DateTime->now->date;
-    my $tomorrow = DateTime->now->add(days => 1)->date;
+    my $today = DateTime->now(time_zone='local')->date;
+    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
     $self->{Input}->{from} = $today;
     $self->{Input}->{to} = $tomorrow;
   }
   if ($val eq "yesterday") {
-    my $today = DateTime->now->date;
-    my $yesterday = DateTime->now->subtract(days => 1)->date;
+    my $today = DateTime->now(time_zone='local')->date;
+    my $yesterday = DateTime->now(time_zone='local')->subtract(days => 1)->date;
     $self->{Input}->{from} = $yesterday;
     $self->{Input}->{to} = $today;
   }
   if ($val eq "lastweek") {
-    my $tomorrow = DateTime->now->add(days => 1)->date;
-    my $lastweek = DateTime->now->subtract(weeks => 1)->date;
+    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
+    my $lastweek = DateTime->now(time_zone='local')->subtract(weeks => 1)->date;
     $self->{Input}->{from} = $lastweek;
     $self->{Input}->{to} = $tomorrow;
   }
   if ($val eq "lastmonth") {
-    my $tomorrow = DateTime->now->add(days => 1)->date;
-    my $lastmonth = DateTime->now->subtract(months => 1)->date;
+    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
+    my $lastmonth = DateTime->now(time_zone='local')->subtract(months => 1)->date;
     $self->{Input}->{from} = $lastmonth;
     $self->{Input}->{to} = $tomorrow;
   }
@@ -2357,11 +2360,37 @@ method ConvertLinesComplete($hash){
       $hash->{'mime-type'} eq 'application/vnd.ms-excel'
     ) {
       $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
+    } 
+    if ($hash->{'mime-type'} =~ /gzip/) {
+      DEBUG "Looks like this is a gzip file!";
+      $self->ProcessCompressedFile($hash);
     }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
   };
   return $sub;
 }
+
+method ProcessCompressedFile($hash) {
+  my $mime_type = $hash->{'mime-type'};
+  my $filename = $hash->{'Output file'};
+
+  say STDERR "Processing file of type $mime_type";
+  say STDERR "Filename: $filename";
+
+  # Spawn a Subprocess to handle this operation
+
+  my $sub = Posda::Subprocess->new("ExtractAndImportZip");
+  $sub->set_commandline("ExtractAndImportZip.pl <?bkgrnd_id?> <notify> <filename>");
+  $sub->set_params({ 
+    notify => $self->get_user,
+    filename => $filename
+  });
+
+  $sub->execute(func($ret) {
+      say STDERR Dumper($ret);
+  });
+}
+
 method Files($http, $dyn){
   unless(exists $self->{UploadedFiles}) { $self->{UploadedFiles} = [] }
   my $num_files = @{$self->{UploadedFiles}};

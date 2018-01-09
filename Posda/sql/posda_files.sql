@@ -2,16 +2,16 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 8.4.20
--- Dumped by pg_dump version 9.5.7
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
 SET row_security = off;
 
 --
@@ -26,6 +26,20 @@ CREATE SCHEMA db_version;
 --
 
 CREATE SCHEMA quasar;
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 SET search_path = db_version, pg_catalog;
@@ -414,10 +428,62 @@ CREATE TABLE control_point_wedge_position (
 
 
 --
+-- Name: copy_from_public; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE copy_from_public (
+    copy_from_public_id integer NOT NULL,
+    when_row_created timestamp without time zone,
+    who text,
+    why text,
+    when_file_rows_populated timestamp without time zone,
+    num_file_rows_populated integer,
+    status_of_copy text,
+    pid_of_running_process integer
+);
+
+
+--
+-- Name: copy_from_public_copy_from_public_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE copy_from_public_copy_from_public_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: copy_from_public_copy_from_public_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE copy_from_public_copy_from_public_id_seq OWNED BY copy_from_public.copy_from_public_id;
+
+
+--
 -- Name: ctp_file; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE ctp_file (
+    file_id integer NOT NULL,
+    project_name text,
+    trial_name text,
+    site_name text,
+    site_id text,
+    visibility text,
+    file_visibility text,
+    batch text,
+    study_year text
+);
+
+
+--
+-- Name: ctp_file_new; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE ctp_file_new (
     file_id integer NOT NULL,
     project_name text,
     trial_name text,
@@ -496,6 +562,20 @@ CREATE SEQUENCE dicom_dir_rec_dicom_dir_rec_id_seq
 --
 
 ALTER SEQUENCE dicom_dir_rec_dicom_dir_rec_id_seq OWNED BY dicom_dir_rec.dicom_dir_rec_id;
+
+
+--
+-- Name: dicom_edit_compare; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dicom_edit_compare (
+    from_file_digest text NOT NULL,
+    to_file_digest text NOT NULL,
+    short_report_file_id integer NOT NULL,
+    long_report_file_id integer NOT NULL,
+    to_file_path text,
+    subprocess_invocation_id integer NOT NULL
+);
 
 
 --
@@ -820,6 +900,39 @@ CREATE TABLE dose_referenced_from_plan (
 
 
 --
+-- Name: downloadable_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE downloadable_file (
+    downloadable_file_id integer NOT NULL,
+    file_id integer NOT NULL,
+    security_hash text NOT NULL,
+    creation_date timestamp without time zone DEFAULT now() NOT NULL,
+    valid_until date,
+    mime_type text
+);
+
+
+--
+-- Name: downloadable_file_downloadable_file_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE downloadable_file_downloadable_file_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: downloadable_file_downloadable_file_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE downloadable_file_downloadable_file_id_seq OWNED BY downloadable_file.downloadable_file_id;
+
+
+--
 -- Name: file; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -835,10 +948,49 @@ CREATE TABLE file (
 
 
 --
+-- Name: file_copy_from_public; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE file_copy_from_public (
+    copy_from_public_id integer NOT NULL,
+    sop_instance_uid text,
+    replace_file_id integer,
+    inserted_file_id integer,
+    copy_file_path text
+);
+
+
+--
 -- Name: file_ct_image; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE file_ct_image (
+    file_id integer NOT NULL,
+    kvp text,
+    instance_number text,
+    scan_options text,
+    data_collection_diameter text,
+    reconstruction_diameter text,
+    dist_source_to_detect text,
+    dist_source_to_pat text,
+    gantry_tilt text,
+    table_height text,
+    rotation_dir text,
+    exposure_time text,
+    xray_tube_current text,
+    exposure text,
+    filter_type text,
+    generator_power text,
+    convolution_kernal text,
+    table_feed_per_rot text
+);
+
+
+--
+-- Name: file_ct_image__old; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE file_ct_image__old (
     file_id integer NOT NULL,
     kvp text,
     instance_number text,
@@ -1133,6 +1285,63 @@ CREATE TABLE file_plan (
 
 
 --
+-- Name: file_pt_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE file_pt_image (
+    file_id integer NOT NULL,
+    pti_trigger_time text,
+    pti_frame_time text,
+    pti_intervals_acquired text,
+    pti_intervals_rejected text,
+    pti_reconstruction_diameter text,
+    pti_gantry_detector_tilt text,
+    pti_table_height text,
+    pti_fov_shape text,
+    pti_fov_dimensions text,
+    pti_collimator_type text,
+    pti_convoution_kernal text,
+    pti_actual_frame_duration text,
+    pti_energy_range_lower_limit text,
+    pti_energy_range_upper_limit text,
+    pti_radiopharmaceutical text,
+    pti_radiopharmaceutical_volume text,
+    pti_radiopharmaceutical_start_time text,
+    pti_radiopharmaceutical_stop_time text,
+    pti_radionuclide_total_dose text,
+    pti_radionuclide_half_life text,
+    pti_radionuclide_positron_fraction text,
+    pti_number_of_slices text,
+    pti_number_of_time_slices text,
+    pti_type_of_detector_motion text,
+    pti_image_id text,
+    pti_series_type text,
+    pti_units text,
+    pti_counts_source text,
+    pti_reprojection_method text,
+    pti_randoms_correction_method text,
+    pti_attenuation_correction_method text,
+    pti_decay_correction text,
+    pti_reconstruction_method text,
+    pti_detector_lines_of_response_used text,
+    pti_scatter_correction_method text,
+    pti_axial_mash text,
+    pti_transverse_mash text,
+    pti_coincidence_window_width text,
+    pti_secondary_counts_type text,
+    pti_frame_reference_time text,
+    pti_primary_counts_accumulated text,
+    pti_secondary_counts_accumulated text,
+    pti_slice_sensitivity_factor text,
+    pti_decay_factor text,
+    pti_dose_calibration_factor text,
+    pti_scatter_fraction_factor text,
+    pti_dead_time_factor text,
+    pti_image_index text
+);
+
+
+--
 -- Name: file_roi_image_linkage; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1315,7 +1524,14 @@ CREATE TABLE for_registration (
 --
 
 CREATE VIEW foreign_keys_view AS
-SELECT tc.table_name, kcu.column_name, ccu.table_name AS foreign_table_name, ccu.column_name AS foreign_column_name FROM ((information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON (((tc.constraint_name)::text = (kcu.constraint_name)::text))) JOIN information_schema.constraint_column_usage ccu ON (((ccu.constraint_name)::text = (tc.constraint_name)::text))) WHERE ((tc.constraint_type)::text = 'FOREIGN KEY'::text);
+ SELECT tc.table_name,
+    kcu.column_name,
+    ccu.table_name AS foreign_table_name,
+    ccu.column_name AS foreign_column_name
+   FROM ((information_schema.table_constraints tc
+     JOIN information_schema.key_column_usage kcu ON (((tc.constraint_name)::text = (kcu.constraint_name)::text)))
+     JOIN information_schema.constraint_column_usage ccu ON (((ccu.constraint_name)::text = (tc.constraint_name)::text)))
+  WHERE ((tc.constraint_type)::text = 'FOREIGN KEY'::text);
 
 
 --
@@ -1417,7 +1633,8 @@ CREATE TABLE image_equivalence_class (
     processing_status text,
     review_status text,
     update_user text,
-    update_date timestamp without time zone
+    update_date timestamp without time zone,
+    hidden boolean DEFAULT false NOT NULL
 );
 
 
@@ -1644,6 +1861,20 @@ ALTER SEQUENCE import_event_import_event_id_seq OWNED BY import_event.import_eve
 
 
 --
+-- Name: log_iec_hide; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE log_iec_hide (
+    user_name text,
+    project text NOT NULL,
+    site text NOT NULL,
+    patient text,
+    hidden boolean,
+    date timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: missing_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1777,6 +2008,20 @@ CREATE TABLE planned_verification_images (
     rt_image_sid text,
     image_device_specific_acquisition_params text,
     referenced_reference_image_number integer
+);
+
+
+--
+-- Name: posda_public_compare; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE posda_public_compare (
+    background_subprocess_id integer NOT NULL,
+    sop_instance_uid text NOT NULL,
+    from_file_id integer NOT NULL,
+    short_report_file_id integer NOT NULL,
+    long_report_file_id integer NOT NULL,
+    to_file_path text NOT NULL
 );
 
 
@@ -2618,6 +2863,43 @@ ALTER SEQUENCE window_level_window_level_id_seq OWNED BY window_level.window_lev
 SET search_path = quasar, pg_catalog;
 
 --
+-- Name: files; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE files (
+    file_id integer
+);
+
+
+--
+-- Name: kirk_series; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE kirk_series (
+    series_instance_uid text NOT NULL
+);
+
+
+--
+-- Name: sops; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE sops (
+    sop_instance_uid text NOT NULL
+);
+
+
+--
+-- Name: sops_and_ids; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE sops_and_ids (
+    sop_instance_uid text NOT NULL,
+    patient_id text
+);
+
+
+--
 -- Name: temp; Type: TABLE; Schema: quasar; Owner: -
 --
 
@@ -2629,210 +2911,240 @@ CREATE TABLE temp (
 SET search_path = public, pg_catalog;
 
 --
--- Name: adverse_file_event_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: adverse_file_event adverse_file_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY adverse_file_event ALTER COLUMN adverse_file_event_id SET DEFAULT nextval('adverse_file_event_adverse_file_event_id_seq'::regclass);
 
 
 --
--- Name: association_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: association association_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY association ALTER COLUMN association_id SET DEFAULT nextval('association_association_id_seq'::regclass);
 
 
 --
--- Name: association_pc_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: association_pc association_pc_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY association_pc ALTER COLUMN association_pc_id SET DEFAULT nextval('association_pc_association_pc_id_seq'::regclass);
 
 
 --
--- Name: dicom_dir_rec_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: copy_from_public copy_from_public_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY copy_from_public ALTER COLUMN copy_from_public_id SET DEFAULT nextval('copy_from_public_copy_from_public_id_seq'::regclass);
+
+
+--
+-- Name: dicom_dir_rec dicom_dir_rec_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY dicom_dir_rec ALTER COLUMN dicom_dir_rec_id SET DEFAULT nextval('dicom_dir_rec_dicom_dir_rec_id_seq'::regclass);
 
 
 --
--- Name: dicom_edit_event_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: dicom_edit_event dicom_edit_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY dicom_edit_event ALTER COLUMN dicom_edit_event_id SET DEFAULT nextval('dicom_edit_event_dicom_edit_event_id_seq'::regclass);
 
 
 --
--- Name: dicom_send_event_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: dicom_send_event dicom_send_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY dicom_send_event ALTER COLUMN dicom_send_event_id SET DEFAULT nextval('dicom_send_event_dicom_send_event_id_seq'::regclass);
 
 
 --
--- Name: file_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: downloadable_file downloadable_file_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY downloadable_file ALTER COLUMN downloadable_file_id SET DEFAULT nextval('downloadable_file_downloadable_file_id_seq'::regclass);
+
+
+--
+-- Name: file file_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY file ALTER COLUMN file_id SET DEFAULT nextval('file_file_id_seq'::regclass);
 
 
 --
--- Name: file_ele_ref_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: file_ele_ref file_ele_ref_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY file_ele_ref ALTER COLUMN file_ele_ref_id SET DEFAULT nextval('file_ele_ref_file_ele_ref_id_seq'::regclass);
 
 
 --
--- Name: file_import_series_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: file_import_series file_import_series_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY file_import_series ALTER COLUMN file_import_series_id SET DEFAULT nextval('file_import_series_file_import_series_id_seq'::regclass);
 
 
 --
--- Name: file_import_study_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: file_import_study file_import_study_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY file_import_study ALTER COLUMN file_import_study_id SET DEFAULT nextval('file_import_study_file_import_study_id_seq'::regclass);
 
 
 --
--- Name: file_storage_root_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: file_storage_root file_storage_root_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY file_storage_root ALTER COLUMN file_storage_root_id SET DEFAULT nextval('file_storage_root_file_storage_root_id_seq'::regclass);
 
 
 --
--- Name: image_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: image image_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY image ALTER COLUMN image_id SET DEFAULT nextval('image_image_id_seq'::regclass);
 
 
 --
--- Name: image_equivalence_class_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: image_equivalence_class image_equivalence_class_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY image_equivalence_class ALTER COLUMN image_equivalence_class_id SET DEFAULT nextval('image_equivalence_class_image_equivalence_class_id_seq'::regclass);
 
 
 --
--- Name: image_geometry_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: image_geometry image_geometry_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY image_geometry ALTER COLUMN image_geometry_id SET DEFAULT nextval('image_geometry_image_geometry_id_seq'::regclass);
 
 
 --
--- Name: import_event_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: import_event import_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY import_event ALTER COLUMN import_event_id SET DEFAULT nextval('import_event_import_event_id_seq'::regclass);
 
 
 --
--- Name: plan_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: plan plan_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY plan ALTER COLUMN plan_id SET DEFAULT nextval('plan_plan_id_seq'::regclass);
 
 
 --
--- Name: roi_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: roi roi_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roi ALTER COLUMN roi_id SET DEFAULT nextval('roi_roi_id_seq'::regclass);
 
 
 --
--- Name: roi_contour_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: roi_contour roi_contour_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roi_contour ALTER COLUMN roi_contour_id SET DEFAULT nextval('roi_contour_roi_contour_id_seq'::regclass);
 
 
 --
--- Name: roi_observation_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: roi_observation roi_observation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roi_observation ALTER COLUMN roi_observation_id SET DEFAULT nextval('roi_observation_roi_observation_id_seq'::regclass);
 
 
 --
--- Name: roi_phyical_properties_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: roi_physical_properties roi_phyical_properties_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roi_physical_properties ALTER COLUMN roi_phyical_properties_id SET DEFAULT nextval('roi_physical_properties_roi_phyical_properties_id_seq'::regclass);
 
 
 --
--- Name: rt_dose_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: rt_dose rt_dose_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY rt_dose ALTER COLUMN rt_dose_id SET DEFAULT nextval('rt_dose_rt_dose_id_seq'::regclass);
 
 
 --
--- Name: rt_dvh_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: rt_dvh rt_dvh_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY rt_dvh ALTER COLUMN rt_dvh_id SET DEFAULT nextval('rt_dvh_rt_dvh_id_seq'::regclass);
 
 
 --
--- Name: rt_dvh_dvh_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: rt_dvh_dvh rt_dvh_dvh_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY rt_dvh_dvh ALTER COLUMN rt_dvh_dvh_id SET DEFAULT nextval('rt_dvh_dvh_rt_dvh_dvh_id_seq'::regclass);
 
 
 --
--- Name: rt_prescription_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: rt_prescription rt_prescription_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY rt_prescription ALTER COLUMN rt_prescription_id SET DEFAULT nextval('rt_prescription_rt_prescription_id_seq'::regclass);
 
 
 --
--- Name: slope_intercept_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: slope_intercept slope_intercept_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY slope_intercept ALTER COLUMN slope_intercept_id SET DEFAULT nextval('slope_intercept_slope_intercept_id_seq'::regclass);
 
 
 --
--- Name: ss_for_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ss_for ss_for_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ss_for ALTER COLUMN ss_for_id SET DEFAULT nextval('ss_for_ss_for_id_seq'::regclass);
 
 
 --
--- Name: structure_set_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: structure_set structure_set_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY structure_set ALTER COLUMN structure_set_id SET DEFAULT nextval('structure_set_structure_set_id_seq'::regclass);
 
 
 --
--- Name: unique_pixel_data_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: unique_pixel_data unique_pixel_data_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY unique_pixel_data ALTER COLUMN unique_pixel_data_id SET DEFAULT nextval('unique_pixel_data_unique_pixel_data_id_seq'::regclass);
 
 
 --
--- Name: window_level_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: window_level window_level_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY window_level ALTER COLUMN window_level_id SET DEFAULT nextval('window_level_window_level_id_seq'::regclass);
 
 
 --
--- Name: distinguished_pixel_digests_pixel_digest_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ctp_file_new ctp_file_new_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY ctp_file_new
+    ADD CONSTRAINT ctp_file_new_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: ctp_file ctp_file_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY ctp_file
+    ADD CONSTRAINT ctp_file_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: distinguished_pixel_digests distinguished_pixel_digests_pixel_digest_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY distinguished_pixel_digests
@@ -2840,12 +3152,128 @@ ALTER TABLE ONLY distinguished_pixel_digests
 
 
 --
--- Name: patient_import_status_patient_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: downloadable_file downloadable_file_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY downloadable_file
+    ADD CONSTRAINT downloadable_file_pkey PRIMARY KEY (downloadable_file_id);
+
+
+--
+-- Name: file_ct_image file_ct_image__new_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_ct_image
+    ADD CONSTRAINT file_ct_image__new_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_equipment file_equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_equipment
+    ADD CONSTRAINT file_equipment_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_for file_for_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_for
+    ADD CONSTRAINT file_for_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_meta file_meta_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_meta
+    ADD CONSTRAINT file_meta_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_patient file_patient_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_patient
+    ADD CONSTRAINT file_patient_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_pt_image file_pt_image_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_pt_image
+    ADD CONSTRAINT file_pt_image_file_id_key UNIQUE (file_id);
+
+
+--
+-- Name: file_series file_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_series
+    ADD CONSTRAINT file_series_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_sop_common file_sop_common_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_sop_common
+    ADD CONSTRAINT file_sop_common_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: file_study file_study_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY file_study
+    ADD CONSTRAINT file_study_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: image_equivalence_class_input_image image_equivalence_class_input_image_uniq; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY image_equivalence_class_input_image
+    ADD CONSTRAINT image_equivalence_class_input_image_uniq UNIQUE (image_equivalence_class_id, file_id);
+
+
+--
+-- Name: patient_import_status patient_import_status_patient_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY patient_import_status
     ADD CONSTRAINT patient_import_status_patient_id_key UNIQUE (patient_id);
 
+
+SET search_path = quasar, pg_catalog;
+
+--
+-- Name: kirk_series kirk_series_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
+--
+
+ALTER TABLE ONLY kirk_series
+    ADD CONSTRAINT kirk_series_pkey PRIMARY KEY (series_instance_uid);
+
+
+--
+-- Name: sops_and_ids sops_and_ids_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
+--
+
+ALTER TABLE ONLY sops_and_ids
+    ADD CONSTRAINT sops_and_ids_pkey PRIMARY KEY (sop_instance_uid);
+
+
+--
+-- Name: sops sops_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
+--
+
+ALTER TABLE ONLY sops
+    ADD CONSTRAINT sops_pkey PRIMARY KEY (sop_instance_uid);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: assocation_import_event_id_idx; Type: INDEX; Schema: public; Owner: -
@@ -2911,10 +3339,24 @@ CREATE INDEX control_point_bld_position_idx ON control_point_bld_position USING 
 
 
 --
+-- Name: ctp_file_all_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ctp_file_all_idx ON ctp_file_new USING btree (file_id, project_name, site_name);
+
+
+--
 -- Name: ctp_file_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ctp_file_file_id_index ON ctp_file USING btree (file_id);
+
+
+--
+-- Name: ctp_file_project_site_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ctp_file_project_site_idx ON ctp_file_new USING btree (project_name, site_name);
 
 
 --
@@ -2936,6 +3378,27 @@ CREATE INDEX ctp_proj_site_index ON ctp_file USING btree (project_name, site_nam
 --
 
 CREATE UNIQUE INDEX ctp_upload_index ON ctp_upload_event USING btree (file_id, rcv_timestamp);
+
+
+--
+-- Name: dec_from_file_dig_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dec_from_file_dig_index ON dicom_edit_compare USING btree (from_file_digest);
+
+
+--
+-- Name: dec_to_file_dig_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dec_to_file_dig_index ON dicom_edit_compare USING btree (to_file_digest);
+
+
+--
+-- Name: dicom_edit_compare_subprocess_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dicom_edit_compare_subprocess_index ON dicom_edit_compare USING btree (subprocess_invocation_id);
 
 
 --
@@ -2970,7 +3433,14 @@ CREATE UNIQUE INDEX dicom_send_event_pk ON dicom_send_event USING btree (dicom_s
 -- Name: file_ct_image_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX file_ct_image_file_id_index ON file_ct_image USING btree (file_id);
+CREATE INDEX file_ct_image_file_id_index ON file_ct_image__old USING btree (file_id);
+
+
+--
+-- Name: file_digest_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_digest_index ON file USING btree (digest);
 
 
 --
@@ -3531,6 +4001,14 @@ CREATE INDEX unique_pixel_date_image ON image USING btree (unique_pixel_data_id)
 --
 
 CREATE UNIQUE INDEX window_level_pk ON window_level USING btree (window_level_id);
+
+
+--
+-- Name: downloadable_file downloadable_file_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY downloadable_file
+    ADD CONSTRAINT downloadable_file_file_id_fkey FOREIGN KEY (file_id) REFERENCES file(file_id);
 
 
 --

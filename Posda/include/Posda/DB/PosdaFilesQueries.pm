@@ -227,10 +227,14 @@ sub _RunQueryBlocking {
   if ($select) {
     # return the results
     while(my @h = $self->{handle}->fetchrow_array){
-      &$row_callback(\@h);
+      if (defined $row_callback) {
+        &$row_callback(\@h);
+      }
     }
   } else {
-    &$row_callback([$rows_affected]);
+    if (defined $row_callback) {
+      &$row_callback([$rows_affected]);
+    }
   }
   if(ref($end_callback) eq "CODE"){
     &$end_callback();
@@ -557,6 +561,7 @@ method GetOperationsWithTags($class: $tags) {
   return $results;
 
 }
+
 method GetOperations($class:) {
 
   my $dbh = _get_handle();
@@ -569,6 +574,24 @@ method GetOperations($class:) {
   $qh->execute();
 
   my $results = $qh->fetchall_arrayref();
+
+  return $results;
+
+}
+
+method GetOperationDetails($class: $operation_name) {
+
+  my $dbh = _get_handle();
+
+  my $qh = $dbh->prepare(qq{
+    select * 
+    from spreadsheet_operation 
+    where operation_name = ?
+  });
+
+  $qh->execute($operation_name);
+
+  my $results = $qh->fetchrow_hashref();
 
   return $results;
 
