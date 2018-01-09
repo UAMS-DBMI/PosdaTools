@@ -2945,15 +2945,57 @@ method PipeOperationsSummary($http, $dyn) {
       </tr>
   });
 
-  for my $op (@{$self->{PlannedOperations}}) {
-    if (not defined $op) { next }
+  my $num_ops = @{$self->{PlannedOperations}};
+  if($num_ops < 20){
+    for my $op (@{$self->{PlannedOperations}}) {
+      my $esc_op = $op;
+      $esc_op =~ s/</&lt/g;
+      $esc_op =~ s/>/&gt/g;
+      if (not defined $op) { next }
+      $http->queue(qq{
+        <tr>
+          <td>
+            $esc_op
+          </td>
+        </tr>
+      });
+    }
+  } else {
+    for my $i (0 .. 10) {
+      my $op = $self->{PlannedOperations}->[$i];
+      my $esc_op = $op;
+      $esc_op =~ s/</&lt/g;
+      $esc_op =~ s/>/&gt/g;
+      if (not defined $op) { next }
+      $http->queue(qq{
+        <tr>
+          <td>
+            $esc_op
+          </td>
+        </tr>
+      });
+    }
     $http->queue(qq{
       <tr>
         <td>
-          $op
+          ...
         </td>
       </tr>
     });
+    for my $i ($#{$self->{PlannedOperations}} - 10 .. $#{$self->{PlannedOperations}}) {
+      my $op = $self->{PlannedOperations}->[$i];
+      my $esc_op = $op;
+      $esc_op =~ s/</&lt/g;
+      $esc_op =~ s/>/&gt/g;
+      if (not defined $op) { next }
+      $http->queue(qq{
+        <tr>
+          <td>
+            $esc_op
+          </td>
+        </tr>
+      });
+    }
   }
 
   $http->queue(qq{
