@@ -1,17 +1,51 @@
-<p>
-  <button class="btn btn-success" 
-          (click)="mark('good')" 
+<p *ngIf="mode == 'unreviewed'">
+  <button class="btn btn-success"
+          (click)="mark('good')"
           >Good</button>
   <button class="btn btn-danger"
-          (click)="mark('bad')" 
+          (click)="mark('bad')"
           >Bad</button>
   <button class="btn btn-warning"
-          (click)="mark('blank')" 
+          (click)="mark('blank')"
           >Blank</button>
   <button class="btn btn-warning"
-          (click)="mark('scout')" 
+          (click)="mark('scout')"
           >Scout</button>
   <button class="btn btn-warning"
-          (click)="mark('other')" 
+          (click)="mark('other')"
           >Other</button>
+</p>
+<p *ngIf="mode != 'unreviewed'">
+<span class="test">
+    <app-hide-button
+      [type]="'btn-success'"
+      [what]=""
+      [message]="'Good'"
+      (onConfirm)="mark('good')"
+    ></app-hide-button>
+    <app-hide-button
+      [type]="'btn-danger'"
+      [what]=""
+      [message]="'Bad'"
+      (onConfirm)="mark('bad')"
+    ></app-hide-button>
+    <app-hide-button
+      [type]="'btn-warning'"
+      [what]=""
+      [message]="'Blank'"
+      (onConfirm)="mark('blank')"
+    ></app-hide-button>
+    <app-hide-button
+      [type]="'btn-warning'"
+      [what]=""
+      [message]="'Scout'"
+      (onConfirm)="mark('scout')"
+    ></app-hide-button>
+    <app-hide-button
+      [type]="'btn-warning'"
+      [what]=""
+      [message]="'Other'"
+      (onConfirm)="mark('other')"
+    ></app-hide-button>
+</span>
 </p>

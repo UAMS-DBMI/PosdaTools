@@ -12,6 +12,7 @@ import { Project } from '../project';
 export class MarkControlComponent implements OnInit {
   @Output() onMark = new EventEmitter<string>();
   @Input() iec: number;
+  @Input() mode: string;
 
   constructor(
     private service: SeriesService,

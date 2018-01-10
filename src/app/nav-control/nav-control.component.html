@@ -1,9 +1,9 @@
 <p>
-  <button class="btn btn-primary" 
+  <button class="btn btn-primary"
           (click)="moveBackward()">
     Go Back
   </button>
-  <button class="btn btn-primary" 
+  <button class="btn btn-primary"
           (click)="moveForward()">
     Skip Forward
   </button>
@@ -12,6 +12,7 @@
 <app-mark-control
   *ngIf="iec"
   [iec]="iec.image_equivalence_class_id"
+  [mode]="mode"
   (onMark)="onMark($event)"
 ></app-mark-control>
 <app-projection
