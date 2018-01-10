@@ -1514,26 +1514,26 @@ method DrawWidgetFromTo($http, $dyn) {
 method SetWidgetFromTo($http, $dyn) {
   my $val = $dyn->{val};
   if ($val eq "today") {
-    my $today = DateTime->now(time_zone='local')->date;
-    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
+    my $today = DateTime->now(time_zone=>'local')->date;
+    my $tomorrow = DateTime->now(time_zone=>'local')->add(days => 1)->date;
     $self->{Input}->{from} = $today;
     $self->{Input}->{to} = $tomorrow;
   }
   if ($val eq "yesterday") {
-    my $today = DateTime->now(time_zone='local')->date;
-    my $yesterday = DateTime->now(time_zone='local')->subtract(days => 1)->date;
+    my $today = DateTime->now(time_zone=>'local')->date;
+    my $yesterday = DateTime->now(time_zone=>'local')->subtract(days => 1)->date;
     $self->{Input}->{from} = $yesterday;
     $self->{Input}->{to} = $today;
   }
   if ($val eq "lastweek") {
-    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
-    my $lastweek = DateTime->now(time_zone='local')->subtract(weeks => 1)->date;
+    my $tomorrow = DateTime->now(time_zone=>'local')->add(days => 1)->date;
+    my $lastweek = DateTime->now(time_zone=>'local')->subtract(weeks => 1)->date;
     $self->{Input}->{from} = $lastweek;
     $self->{Input}->{to} = $tomorrow;
   }
   if ($val eq "lastmonth") {
-    my $tomorrow = DateTime->now(time_zone='local')->add(days => 1)->date;
-    my $lastmonth = DateTime->now(time_zone='local')->subtract(months => 1)->date;
+    my $tomorrow = DateTime->now(time_zone=>'local')->add(days => 1)->date;
+    my $lastmonth = DateTime->now(time_zone=>'local')->subtract(months => 1)->date;
     $self->{Input}->{from} = $lastmonth;
     $self->{Input}->{to} = $tomorrow;
   }
