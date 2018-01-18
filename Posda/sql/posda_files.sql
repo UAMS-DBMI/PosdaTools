@@ -1634,7 +1634,8 @@ CREATE TABLE image_equivalence_class (
     review_status text,
     update_user text,
     update_date timestamp without time zone,
-    hidden boolean DEFAULT false NOT NULL
+    hidden boolean DEFAULT false NOT NULL,
+    visual_review_instance_id integer
 );
 
 
@@ -2830,6 +2831,42 @@ ALTER SEQUENCE unique_pixel_data_unique_pixel_data_id_seq OWNED BY unique_pixel_
 
 
 --
+-- Name: visual_review_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE visual_review_instance (
+    visual_review_instance_id integer NOT NULL,
+    subprocess_invocation_id integer,
+    visual_review_reason text,
+    visual_review_scheduler text,
+    visual_review_num_series integer,
+    when_visual_review_scheduled timestamp without time zone,
+    visual_review_num_series_done integer,
+    visual_review_num_equiv_class integer,
+    when_visual_review_sched_complete timestamp without time zone
+);
+
+
+--
+-- Name: visual_review_instance_visual_review_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE visual_review_instance_visual_review_instance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: visual_review_instance_visual_review_instance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE visual_review_instance_visual_review_instance_id_seq OWNED BY visual_review_instance.visual_review_instance_id;
+
+
+--
 -- Name: window_level; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2861,15 +2898,6 @@ ALTER SEQUENCE window_level_window_level_id_seq OWNED BY window_level.window_lev
 
 
 SET search_path = quasar, pg_catalog;
-
---
--- Name: files; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE files (
-    file_id integer
-);
-
 
 --
 -- Name: kirk_series; Type: TABLE; Schema: quasar; Owner: -
@@ -3118,6 +3146,13 @@ ALTER TABLE ONLY structure_set ALTER COLUMN structure_set_id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY unique_pixel_data ALTER COLUMN unique_pixel_data_id SET DEFAULT nextval('unique_pixel_data_unique_pixel_data_id_seq'::regclass);
+
+
+--
+-- Name: visual_review_instance visual_review_instance_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY visual_review_instance ALTER COLUMN visual_review_instance_id SET DEFAULT nextval('visual_review_instance_visual_review_instance_id_seq'::regclass);
 
 
 --
@@ -3440,7 +3475,7 @@ CREATE INDEX file_ct_image_file_id_index ON file_ct_image__old USING btree (file
 -- Name: file_digest_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX file_digest_index ON file USING btree (digest);
+CREATE UNIQUE INDEX file_digest_index ON file USING btree (digest);
 
 
 --
