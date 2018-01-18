@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+refresh_db() {
+	echo "Refreshing SQL file for $1"	
+	pg_dump -x -s -O $1 > $1.sql
+}
+
 echo "This script will update all the initial db creation sql files."
 echo "It assumes all databases have their 'default' names, so if you have"
 echo "customized anything, it will likely fail. Also, you probably don't"
@@ -10,10 +15,6 @@ echo "Press enter to continue, or Control+C to cancel..."
 read
 
 
-refresh_db() {
-	echo "Refreshing SQL file for $1"	
-	pg_dump -x -s -O $1 > $1.sql
-}
 
 refresh_db posda_files
 refresh_db dicom_roots
