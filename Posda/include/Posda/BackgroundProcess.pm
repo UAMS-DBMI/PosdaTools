@@ -140,7 +140,7 @@ method Finish() {
   $self->WriteToEmail("Total time elapsed: " . 
     ($self->{script_end_time} - $self->{script_start_time}) . "\n");
 
-  for my $h (keys %{$self->{reports}}) {
+  for my $h (sort keys %{$self->{reports}}) {
     if ($h ne 'Email') {
       my $rpt = $self->{reports}->{$h};
 
