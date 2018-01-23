@@ -42,29 +42,44 @@ export async function finishImage(client: any, filename: string, iec: number) {
   winston.log('debug', 'finishImage called');
   let details = placeFileAndGetMd5(filename, DIR);
   if (details.size == 0) {
-    console.log('File was 0 size when we statd it, aborting!');
+    console.log('File was 0 size when we stated it, aborting!');
     return;
   }
 
-  let rows = await client.query(`
-    insert into file
-    (digest, size, is_dicom_file, file_type,
-     processing_priority, ready_to_process)
-    values ($1, $2, $3, $4, $5, $6)
-    returning file_id
-  `, [details.hash, details.size, false, 'series projection', 1, true]);
+  // Test if the file alredy exists (via digest)
+  // If yes, get the file_id
+  let existing_record = await client.oneOrNone(`
+    select file_id from file
+    where digest = $1
+    limit 1
+  `, [details.hash]);
 
+  let file_id: number;
 
-  let new_file_id = rows[0].file_id;
+  if (existing_record == null) {
+    // If no, add the file, retrieve the new file_id, and add the file location
+    let new_file_id = await client.one(`
+      insert into file
+      (digest, size, is_dicom_file, file_type,
+       processing_priority, ready_to_process)
+      values ($1, $2, $3, $4, $5, $6)
+      returning file_id
+    `, [details.hash, details.size, false, 'series projection', 1, true]);
 
-  await client.query(
-    "insert into file_location values ($1, $2, $3, $4)",
-    [new_file_id, 2, details.rel_path, null]
-  );
+    file_id = new_file_id.file_id;
+
+    // set it's location
+    await client.query(
+      "insert into file_location values ($1, $2, $3, $4)",
+      [file_id, 2, details.rel_path, null]
+    );
+  } else {
+    file_id = existing_record.file_id;
+  }
 
   await client.query(
     "insert into image_equivalence_class_out_image values ($1, $2, $3)",
-    [iec, 'combined', new_file_id]
+    [iec, 'combined', file_id]
   );
 
   await client.query(
@@ -73,7 +88,8 @@ export async function finishImage(client: any, filename: string, iec: number) {
   );
 
   winston.log('debug', 'all done, next line is new file id');
-  console.log(new_file_id);
+  console.log(file_id);
 }
 
-// finishImage('test.png', 999);
+// let client = pg("postgres://@/posda_files");
+// finishImage(client, 'test.png', 999);
