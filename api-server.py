@@ -5,11 +5,14 @@ BASE_URL = "/papi"
 import sys
 import logging
 from sanic import Sanic
+from sanic import response
 from sanic.response import json, text, HTTPResponse
 import aiofiles
 import mimetypes
 
 import asyncpg
+
+import asynctar
 
 app = Sanic()
 
@@ -79,6 +82,41 @@ def slash_test(request):
                  "url": request.url,
                  "headers": request.headers,
                  "query_string": request.query_string})
+
+@app.route("/test")
+async def stream_test(request):
+    return asynctar.stream(response, "/mnt/main/test_dicom_data")
+
+@app.route(f"{BASE_URL}/dir/<downloadable_dir_id>/<hash>")
+async def get_file(request, downloadable_dir_id, hash):
+    query = """
+        select
+            path
+        from downloadable_dir
+        where downloadable_dir_id = $1
+          and security_hash = $2
+    """
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, int(downloadable_dir_id), hash)
+    await pool.release(conn)
+
+    try:
+        record = records[0]
+    except IndexError:
+        logging.debug("Query returned no results. Query follows:")
+        logging.debug(query)
+        logging.info(f"Invalid request: {downloadable_dir_id}/{hash} by {request.ip}")
+        return json({'error': 'no records returned'}, status=404)
+
+
+    path = record['path']
+
+    logging.info(f"Serving request: {downloadable_dir_id}/{hash} by {request.ip}")
+
+    return asynctar.stream(response, 
+                           path, 
+                           f"downloaded_dir_{downloadable_dir_id}.tar.gz")
 
 
 if __name__ == "__main__":
