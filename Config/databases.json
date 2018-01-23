@@ -69,7 +69,8 @@
     "database" : "dicom_dd",
     "driver"   : "postgres",
     "init"     : [
-      "Posda/sql/dicom_dd.sql"
+      "Posda/sql/dicom_dd.sql",
+      "Posda/sql/dicom_dd_data.sql"
     ]
   },
   "dicom_dd" : {
