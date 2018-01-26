@@ -50,7 +50,17 @@ unless (mkdir($extract_dir)) {
 
 DEBUG "Successfully created extract dir";
 
-my $extract_command = "tar xvf \"$filename\" -C \"$extract_dir\"";
+# determine filetype; tar or zip?
+# if it doesn't end with .zip, assume it's some kind of tar (so we
+# can easily support all types of tar files 'tar' can handle)
+my $extract_command;
+
+if ($filename =~ /zip$/i) {
+  # looks like a zip file
+  $extract_command = "unzip \"$filename\" -d \"$extract_dir\"";
+} else {
+  $extract_command = "tar xvf \"$filename\" -C \"$extract_dir\"";
+}
 
 my $results = `$extract_command`;
 
