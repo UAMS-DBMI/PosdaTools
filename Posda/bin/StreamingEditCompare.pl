@@ -49,6 +49,14 @@ while(my $line = <STDIN>){
   my $t_dig = $t_try->{digest};
   my $diff = Posda::DiffDicom->new($fds, $tds);
   my($s_rept, $l_rept) = $diff->DiffReport;
+  if(length($s_rept) <= 0){
+    print "Failed: $sop_inst|no lines in short_rept\n";
+    next line;
+  }
+  if(length($l_rept) <= 0){
+    print "Failed: $sop_inst|no lines in short_rept\n";
+    next line;
+  }
   my $ctx = Digest::MD5->new;
   $ctx->add($s_rept);
   my $s_rept_dig = $ctx->hexdigest;

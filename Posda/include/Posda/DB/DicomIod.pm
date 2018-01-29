@@ -752,14 +752,17 @@ my $ctp_params = {
   trial_name => '(0013,"CTP",11)',
   site_name => '(0013,"CTP",12)',
   site_id => '(0013,"CTP",13)',
-  visibility => '(0013,"CTP",14)',
+  file_visibility => '(0013,"CTP",14)',
+  batch => '(0013,"CTP",15)',
+  study_year => '(0013,"CTP",50)',
 };
 sub Import{
   my($db, $ds, $id, $sop_class, $desc, $ieid) = @_;
   my $ins_ctp = $db->prepare(
     "insert into ctp_file(\n" .
-    "  file_id, project_name, trial_name, site_name, site_id, visibility\n".
-    ") values (?, ?, ?, ?, ?, ?)"
+    "  file_id, project_name, trial_name, site_name, site_id,\n".
+    "  file_visibility, batch, study_year\n".
+    ") values (?, ?, ?, ?, ?, ?, ?, ?)"
   );
   my $ins_sop_common = $db->prepare(
     "insert into file_sop_common\n" .
@@ -787,11 +790,14 @@ sub Import{
     (defined($ctp_parms{trial_name}) && $ctp_parms{trial_name} ne "" ) ||
     (defined($ctp_parms{site_name}) && $ctp_parms{site_name} ne "") ||
     (defined($ctp_parms{site_id}) && $ctp_parms{site_id} ne "") ||
+    (defined($ctp_parms{file_visibility}) 
+      && $ctp_parms{file_visibility} ne "") ||
     (defined($ctp_parms{visibility}) && $ctp_parms{visibility} ne "")
   ){
     $ins_ctp->execute(
       $id, $ctp_parms{project_name}, $ctp_parms{trial_name},
-      $ctp_parms{site_name}, $ctp_parms{site_id}, $ctp_parms{visibility}
+      $ctp_parms{site_name}, $ctp_parms{site_id}, $ctp_parms{file_visibility},
+      $ctp_parms{batch}, $ctp_parms{study_year}
     );
   }
   my %parms;

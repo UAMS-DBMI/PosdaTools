@@ -58,6 +58,10 @@ Control Commands:
     all the files in the specified series. Uses the query named
     "FilesInSeriesForApplicationOfPrivateDisposition" to get list of
     files, and Sops.
+  AddSopsInStudy <arg1> = <study> like AddFile or
+    AddSop, except that the edits accumulated will be applied to
+    all the files in the specified study. Uses the query named
+    "FilesInStudyForEdit" to get list of files, and Sops.
   AddSopsByPatient <arg1> = <patient_id> like AddFile or
     AddSop, except that the edits accumulated will be applied to
     all the files in the specified patient_id. Uses the query named
@@ -81,7 +85,10 @@ Accumulation Commands:
     full_ele_replacement - <arg2> = <full element>, <arg3> = <new_value>
     full_ele_delete - <arg2> = <full element>
     full_ele_addition - <arg2> = <full element>, <arg3> = <new_value>
+    new_uid - <arg2> = <full element>, <arg3> = <uid_root>
     leaf_delete - <arg2> = <leaf element>
+    offset_date - <arg2> = <full element>, <arg3> = <signed_offset_in_days>
+    leaf_offset_date - <arg2> = <leaf element>, <arg3> = <signed_offset_in_days>
 ProcessFiles command:
    Applies all of the accumulated edits to the file[s] set in the active
    control command. Clear list of SOPs.  Expect Control Commands to follow.
@@ -121,6 +128,8 @@ if($#ARGV != 4){ print "Wrong args: $usage\n"; die "$usage\n\n" }
 my $getf = PosdaDB::Queries->GetQueryInstance('FirstFileForSopPosda');
 my $getfs = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDisposition');
+my $getfstudy = PosdaDB::Queries->GetQueryInstance(
+  'FilesInStudyForEdit');
 my $getfsp = PosdaDB::Queries->GetQueryInstance(
   'FilesInSeriesForApplicationOfPrivateDispositionPublic');
 my $getbp = PosdaDB::Queries->GetQueryInstance(
@@ -166,6 +175,13 @@ while(my $line = <STDIN>){
       $pstate = "AccumulateEdits";
     } elsif ($command eq "AddSopsInSeries"){
       $getfs->RunQuery(sub {
+          my($row) = @_;
+          my($from_file, $sop, $modality) = @$row;
+          my $to_file = "$WorkDir/$modality" . "_$sop.dcm";
+          push @$working_file_list, [$from_file, $modality, $sop, $to_file];
+        }, sub {}, $arg1);
+    } elsif ($command eq "AddSopsInStudy"){
+      $getfstudy->RunQuery(sub {
           my($row) = @_;
           my($from_file, $sop, $modality) = @$row;
           my $to_file = "$WorkDir/$modality" . "_$sop.dcm";
@@ -229,6 +245,8 @@ while(my $line = <STDIN>){
           }
         }elsif($arg1 eq "hash_unhashed_uid"){
           my $leaf_ele = $arg2;
+          if($leaf_ele =~ /^-(.*)-$/) { $leaf_ele = $1 }
+          if($leaf_ele =~ /^<(.*)>$/) { $leaf_ele = $1 }
           my $uid_root = $arg3;
           unless(exists $sop_p->{hash_unhashed_uid}->{$leaf_ele}){
             $sop_p->{hash_unhashed_uid}->{$leaf_ele} = $uid_root;
@@ -296,9 +314,28 @@ while(my $line = <STDIN>){
           unless(
             $sop_p->{full_ele_replacements}->{$ele} eq $new_v
           ){
-            print "Conflicting full_ele_replacement:\n" .
+            print "Conflicting full_ele_replacement: sop = $sop\n" .
               "ele: $ele to both:\n" .
               "\t$sop_p->{full_ele_replacements}->{$ele}\n" .
+              "\t$new_v\n" .
+              "Editing transaction aborted\n";
+            die "abort";
+          }
+        }elsif($arg1 eq "new_uid"){
+          my $ele = $arg2;
+          if($ele =~ /^<(.*)>$/){ $ele = $1 }
+          my $new_v = $arg3;
+          unless(
+            exists $sop_p->{new_uid}->{$ele}
+          ){
+            $sop_p->{new_uid}->{$ele} = $new_v;
+          }
+          unless(
+            $sop_p->{new_uid}->{$ele} eq $new_v
+          ){
+            print "Conflicting new_uid sop = $sop\n" .
+              "ele: $ele to both:\n" .
+              "\t$sop_p->{new_uid}->{$ele}\n" .
               "\t$new_v\n" .
               "Editing transaction aborted\n";
             die "abort";
@@ -307,6 +344,22 @@ while(my $line = <STDIN>){
           my $ele = $arg2;
           if($ele =~ /^<(.*)>$/){ $ele = $1 }
           $sop_p->{full_ele_deletes}->{$ele} = 1;
+        }elsif($arg1 eq "offset_date"){
+          my $ele = $arg2;
+          my $shift = $arg3;
+          if($ele =~ /^<(.*)>$/){ $ele = $1 }
+          $sop_p->{offset_date}->{$ele} = $shift;
+print STDERR "########################\n";
+print STDERR "offset_date: $ele = $shift\n";
+print STDERR "########################\n";
+        }elsif($arg1 eq "leaf_offset_date"){
+          my $ele = $arg2;
+          my $shift = $arg3;
+          if($ele =~ /^<(.*)>$/){ $ele = $1 }
+          $sop_p->{leaf_offset_date}->{$ele} = $shift;
+print STDERR "########################\n";
+print STDERR "leaf_offset_date: $ele = $shift\n";
+print STDERR "########################\n";
         }elsif($arg1 eq "full_ele_addition"){
           my $ele = $arg2;
           if($ele =~ /^<(.*)>$/){ $ele = $1 }
@@ -319,7 +372,7 @@ while(my $line = <STDIN>){
           unless(
             $sop_p->{full_ele_additions}->{$ele} eq $new_v
           ){
-            print "Conflicting full_ele_additions:\n" .
+            print "Conflicting full_ele_additions: sop = $sop\n" .
               "ele: $ele to both:\n" .
               "\t$sop_p->{full_ele_additions}->{$ele}\n" .
               "\t$new_v\n" .
@@ -371,10 +424,9 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
       sop_hash => $hash,
       sops_in_process => {},
       sops_completed => {},
-      sops_failed => {},
       compare_requests => {},
       comparing => {},
-      compare_complete => {},
+      compares_complete => {},
       compares_failed => {},
       start_time => time(),
       invoc_id => $invoc_id,
@@ -395,12 +447,12 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
   }
   sub CountPrinter{
     my($this) = @_;
-    my $count = 60; # 60 10 second intervals
+    my $count = 360; # 360 10 second intervals (1 hour)
     my $sub = sub {
       my($disp) = @_;
-      $count -= 10;
+      $count -= 1;
       if($count <= 0 || $this->{WeAreDone}){
-        $count = 60;
+        $count = 360;
         my $at_text = $this->now;
         my($num_in_process, $num_waiting, $num_queued_for_compare,
           $num_comparing, $num_compares_complete, $num_compares_failed,
@@ -442,8 +494,8 @@ $background->WriteToEmail("About to enter Dispatch Environment\n");
           $num_compares_complete = keys %{$this->{compares_complete}};
         } else { $num_comparing = 0 }
         if(
-          exists $this->{sops_failed} &&
-          ref($this->{sops_failed}) eq "HASH"
+          exists $this->{compares_failed} &&
+          ref($this->{compares_failed}) eq "HASH"
         ){
           $num_compares_failed = keys %{$this->{compares_failed}};
         } else { $num_compares_failed = 0 }
@@ -517,7 +569,7 @@ if(exists $this->{CompareSubprocess}){
         };
         $this->QueueCompareRequest($sop, $c_struct);
       } else {
-        $this->{sops_failed}->{$sop} = {
+        $this->{compares_failed}->{$sop} = {
           edits => $struct,
           status => $status,
           report => $ret_struct,
@@ -548,6 +600,7 @@ if(exists $this->{CompareSubprocess}){
         my($sop, $mess) = split(/\|/, $remain);
         delete $this->{comparing}->{$sop};
         $this->{compares_failed}->{$sop} = $mess;
+        $background->WriteToEmail("Compare failed:\n\t$mess\n");
       } else {
         print STDERR
           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!!!!!!!!!!!!!!!!!!\n" .
@@ -619,8 +672,8 @@ if(exists $this->{CompareSubprocess}){
     my($this) = @_;
 ###############
     my $elapsed  = time - $this->{start_time};
-    my $num_edited = keys %{$this->{sops_completed}};
-    my $num_failed = keys %{$this->{sops_failed}};
+    my $num_edited = keys %{$this->{compares_complete}};
+    my $num_failed = keys %{$this->{compares_failed}};
     my %data;
     my $num_rows = 0;
     my $get_list = PosdaDB::Queries->GetQueryInstance(

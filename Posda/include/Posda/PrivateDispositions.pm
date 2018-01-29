@@ -74,10 +74,11 @@ sub ShiftIntegerDate{
       #print "Returning shifted\n";
       return $shifted;
     }
+    return $epoch;
   }
   #print "Returning unshifted\n\tbefore: $epoch, after: $shifted\n" .
   #  "\tLow: $this->{low_date_int}, high: $this->{high_date_int}\n";
-  return $epoch;
+  return $shifted;
 }
 sub ShiftDate{
   my($this, $date_string) = @_;
@@ -86,6 +87,12 @@ sub ShiftDate{
   if($date_string =~ /^(........)(.*)$/){
     my $old_date_string = $1;
     my $old_more = $2;
+    if($old_date_string == 0) { return $date_string }
+    $old_date_string =~ /^(....)(..)(..)$/;
+    my $yr = $1; my $m = $2, my $day = $3;
+    unless($m > 0 && $m <13) { return $date_string }
+    unless($day > 0 && $m <32) { return $date_string }
+    #print STDERR "$old_date_string\n";
     my $date = Time::Piece->strptime($old_date_string, "%Y%m%d");
     my $epoch = $date->epoch;
     my $shifted_epoch = $this->ShiftIntegerDate($epoch);
@@ -175,7 +182,7 @@ sub Apply{
   for my $e (keys %OffsetDate){
     my $date = $ds->Get($e);
     if(defined($date) && $date ne ""){
-      my $new_date = ShiftDate($date);
+      my $new_date = $this->ShiftDate($date);
       if($new_date ne $date){
         #print "\tElement: $e\n";
         #print "\t$date => $new_date\n";

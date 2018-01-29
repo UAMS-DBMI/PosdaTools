@@ -140,8 +140,8 @@ sub FileIsReady{
 #################################################################
 #  Initialization  First phase of processing
 my $usage = <<EOF;
-Usage: ImportSingleFileIntoPosdaAndReturnId.pl <comment>";
-or: ImportSingleFileIntoPosdaAndReturnId.pl -h
+Usage: ImportMultipleFilesIntoPosda.pl <comment>";
+or: ImportMultipleFilesIntoPosda.pl -h
 
 expects a list of files on STDIN;
 

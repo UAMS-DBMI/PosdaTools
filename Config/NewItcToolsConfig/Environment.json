@@ -5,7 +5,7 @@
   "ApplicationLoginMethod" : "Login",
   "ApplicationName" : "Start",
   "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
-  "AuthenticationType" : "DB",
+  "ApplicationLoginMethod" : "NullLogin",
   "AuthenticationDbType" : "File",
   "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
   "RrtProtocolDefs" : 

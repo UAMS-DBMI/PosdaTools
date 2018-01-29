@@ -14,9 +14,9 @@ use Digest::MD5;
 #my $Debug = 0;
 #my $dbg = sub {print STDERR @_};
 #sub Debug{
-#  my($class) = @_;
-#  $Debug = 1;
-#}
+# my($class) = @_;
+# $Debug = 1;
+#
 #sub UnDebug{
 #  my($class) = @_;
 #  $Debug = 0;
@@ -812,6 +812,107 @@ sub CanonicalFileName{
   my $file_name = "${SopClassPrefix}_$sop_inst_uid.dcm";
   return $file_name;
 }
+sub WritePart10Fh{
+  my($ds, $fh, $xfr_stx, $ae_title) = @_;
+  unless(
+     $xfr_stx eq "1.2.840.10008.1.2" ||
+     $xfr_stx eq "1.3.6.1.4.1.22213.1.147" ||
+     $xfr_stx eq "1.2.840.10008.1.2.1" ||
+     $xfr_stx eq "1.2.840.10008.1.2.1" ||
+     $xfr_stx eq "1.2.840.10008.1.2.2"
+  ){
+    die "Xfr_stx $xfr_stx not currently supported for part 10 writes";
+  }
+  # Preamble
+  print $fh "\0" x 128;
+  # Prefix
+  print $fh "DICM";
+  # Group Length (save where to update at end)
+  print $fh pack("vv", 2, 0);
+  print $fh 'UL';
+  print $fh pack("v", 4);
+  my $length_place = tell $fh;
+  print $fh pack("V", 0);
+  my $Writer = MakeExpLeElementWriter($fh);
+  my $media_storage_class_id =
+    $ds->ExtractElementBySig("(0008,0016)");
+  my $media_storage_instance_id =
+    $ds->ExtractElementBySig("(0008,0018)");
+  unless($media_storage_instance_id){
+    die "Dataset has no SOP instance UID";
+  }
+  my $implementation_class_uid = '1.3.6.1.4.1.22213.1.143';
+  my $implementation_version_name = '0.5';
+  # File Meta Information Version
+  &$Writer({
+     type => 'raw',
+     VR => 'OB',
+     VM => 1,
+     value => pack("v", 0x0100),
+  }, undef, "(0002,0001)", [2, 1], 1);
+  # Media Storage SOP Class UID
+  &$Writer({
+     type => 'text',
+     VR => 'UI',
+     VM => 1,
+     value => $media_storage_class_id,
+  }, undef, "(0002,0002)", [2, 2], 1);
+  # Media Storage SOP Instance UID
+  &$Writer({
+     type => 'text',
+     VR => 'UI',
+     VM => 1,
+     value => $media_storage_instance_id,
+  }, undef, "(0002,0003)", [2, 3], 1);
+  # Transfer Syntax UID
+  &$Writer({
+     type => 'text',
+     VR => 'UI',
+     VM => 1,
+     value => $xfr_stx,
+  }, undef, "(0002,0010)", [2, 0x10], 1);
+  # Implementation Class UID
+  &$Writer({
+     type => 'text',
+     VR => 'UI',
+     VM => 1,
+     value => $implementation_class_uid,
+  }, undef, "(0002,0012)", [2, 0x12], 1);
+  # Implementation Version Name
+  &$Writer({
+     type => 'text',
+     VR => 'SH',
+     VM => 1,
+     value => $implementation_version_name,
+  }, undef, "(0002,0013)", [2, 0x13], 1);
+  # AE Title
+  &$Writer({
+     type => 'text',
+     VR => 'AE',
+     VM => 1,
+     value => $ae_title,
+  }, undef, "(0002,0016)", [2, 0x16], 1);
+  my $start_data = tell $fh;
+  my $length = $start_data - ($length_place + 4);
+  seek $fh, $length_place, 0;
+  print $fh pack("V", $length);
+  seek $fh, $start_data, 0;
+  $ds->MapToConvertPvtBack();
+  if($xfr_stx eq "1.2.840.10008.1.2"){
+    WriteImpLe($ds, $fh);
+  } elsif($xfr_stx eq "1.2.840.10008.1.2.1"){
+    #WriteExpLeLengthSeqLe($ds, \*FILE);
+    WriteExpLe($ds, $fh);
+  } elsif($xfr_stx eq "1.2.840.10008.1.2.2"){
+    WriteExpBe($ds, *fh);
+  } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
+    WriteExpLeLong($ds, *fh);
+  } else {
+    die "unsupported transfer syntax $xfr_stx";
+  }
+  close $fh;
+  return $start_data;
+}
 sub WritePart10{
   my($ds, $file_name, $xfr_stx, $ae_title, $private_uid, $private) = @_;
   unless(
@@ -983,12 +1084,12 @@ sub DumpOF{
   my $dig = $ctx->hexdigest;
   my @floats = unpack("f*", pack("L*", unpack("V*", $in_value)));
   my $num_floats = @floats;
-  print "<raw data: $len bytes $num_floats floats digest: $dig>";
+  $pr->print("<raw data: $len bytes $num_floats floats digest: $dig>");
   return;
   for my $i (0 .. $#floats){
-    print $floats[$i];
+    $pr->print($floats[$i]);
     unless($i == $#floats){
-      print "\\";
+      $pr->print("\\");
     }
   }
 };

@@ -10,6 +10,7 @@ use strict;
 use Posda::Try;
 use Posda::UUID;
 use Digest::MD5;
+use Posda::PrivateDispositions;
 use Debug;
 my $dbg = sub { print STDERR @_ };
 use Storable qw( store_fd fd_retrieve );
@@ -50,12 +51,20 @@ my $help = <<EOF;
      <full_ele> => <value>,
      ...
    },
+   full_ele_replacements => {  # if ele exists, give it new value
+     <full_ele> => <value>,
+     ...
+   },
    full_ele_deletes => {
      <full_ele> => 1,
      ...
    },
    full_ele_additions => {  # add/overwrite this ele/value
      <full_ele> => <value>,
+     ...
+   },
+   new_uid => {  # add/overwrite a new uid with uid_root
+     <full_ele> => <uid_root>,
      ...
    },
    leaf_delete => {
@@ -68,6 +77,12 @@ my $help = <<EOF;
      },
      ...
    },
+   offset_date => {
+     <full_ele_path> => <signed_shift_in_days>,
+   },
+   leaf_offset_date => {
+     <short_ele> => <signed_shift_in_days>,
+   },
  };
 
  <full_ele> is a full element name, e.g.:
@@ -78,7 +93,8 @@ my $help = <<EOF;
  with substitutions.
  
  All edits are performed in the order listed.  
- All except "leaf_delete", "full_ele_deletes" and "full_ele_additions" are 
+ All except "leaf_delete", "full_ele_deletes", "full_ele_additions", and
+   "new_uid" are 
    performed in a single mapping over all elements in the dataset.
  After this mapping, "full_ele_deletes" are performed, then
    "full_ele_additions are performed, and then 
@@ -173,7 +189,7 @@ my $edit_function = sub {
         $ele->{value} = "$root." . Posda::UUID::FromDigest($dig);
         $results->{hash_unhashed_uid} += 1;
       }
-      my $to = $edits->{short_ele_substitutions}->{$short};
+      #my $to = $edits->{short_ele_substitutions}->{$short};
     }
   }
   # short_ele_substitutions
@@ -211,6 +227,32 @@ my $edit_function = sub {
       $results->{full_ele_replacements} += 1;
     }
   }
+  # offset date
+  for my $s (keys %{$edits->{offset_date}}){
+    if($sig eq $s){
+      my $shifter = Posda::PrivateDispositions->new(
+        undef, $edits->{offset_date}->{$s}, undef, undef);
+      if(defined $ele->{value}) {
+        my $new_value = $shifter->ShiftDate($ele->{value});
+        $ele->{value} = $new_value;
+        $results->{offset_date} += 1;
+      }
+    }
+  }
+  # leaf offset date
+  if(defined $short){
+    for my $s (keys %{$edits->{leaf_offset_date}}){
+      if($short eq $s){
+        my $shifter = Posda::PrivateDispositions->new(
+          undef, $edits->{leaf_offset_date}->{$s}, undef, undef);
+        if(defined $ele->{value}) {
+          my $new_value = $shifter->ShiftDate($ele->{value});
+          $ele->{value} = $new_value;
+          $results->{leaf_offset_date} += 1;
+        }
+      }
+    }
+  }
 };
 my $try = Posda::Try->new($edits->{from_file});
 unless(exists $try->{dataset}) { 
@@ -227,6 +269,14 @@ for my $s (keys %{$edits->{full_ele_deletes}}){
 for my $s (keys %{$edits->{full_ele_additions}}){
   $ds->Insert($s, $edits->{full_ele_additions}->{$s});
   $results->{full_ele_additions} += 1;
+}
+# new_uids
+for my $s (keys %{$edits->{new_uid}}){
+  my $new_uid = "$edits->{new_uid}->{$s}." . Posda::UUID::GetGuid;
+  $new_uid =~ /^(.{64})/;
+  $new_uid = $1;
+  $ds->Insert($s, $new_uid);
+  $results->{new_uid} += 1;
 }
 # full_ele_pat_substitutions
 for my $pat (keys %{$edits->{full_ele_pat_substitutions}}){

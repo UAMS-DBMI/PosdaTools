@@ -23,7 +23,7 @@ Then it selects files to be imported with a limit of files_per_round, and
 import the to files, hiding the from files.
 
 Uses "ImportMultipleFilesIntoPosda.pl" to import the files
-Uses "StreamHideFilesWithStatus.pl to hide the old files
+Uses "StreamHideFilesWithStatus.pl" to hide the old files
 
 It repeats this until there are no more files to edit in the dicom_edit_compare table
 EOF
@@ -48,13 +48,15 @@ $background->ForkAndExit;
 my $start_time = `date`;
 chomp $start_time;
 $background->WriteToEmail("Starting ImportEditedFilesFromDicomEditCompare.pl at $start_time\n");
-$background->WriteToReport("Starting ImportEditedFilesFromDicomEditCompare.pl at $start_time\n");
 print STDERR "Starting ImportEditedFilesFromDicomEditCompare.pl at $start_time\n";
 close STDOUT;
 close STDIN;
 my $get_queue_size = Query("GetPosdaQueueSize");
 my $get_import_list = Query("GetFilesToImportFromEdit");
 my $sleep_time = 0;
+my $round_count = 0;
+my $loop_start = time;
+my $total_imported = 0;
 import_loop:
 while(1){
   print STDERR "At top of import_loop\n";
@@ -69,12 +71,16 @@ while(1){
     $sleep_time += 10;
     next import_loop;
   }
+  $round_count += 1;
   if($sleep_time > 0){
     print STDERR "Total sleep time $sleep_time\n";
+    $background->WriteToEmail("Spent $sleep_time seconds waiting for " .
+      "database backlog to clear\n");
     $sleep_time = 0;
   }
   print STDERR "Queue size ($queue_size) <= $max_queue_for_start\n";
   print STDERR "Querying for files to import\n";
+  my $import_start = time;
   my @list;
   $get_import_list->RunQuery(sub {
     my($row) = @_;
@@ -115,8 +121,32 @@ while(1){
   close HIDE;
   $after_queue_cleared = time - $start;
   print STDERR "Hide Pipe cleared after $after_queue_cleared\n";
+  my $elapsed = time - $import_start;
+  my $total_elapsed = time - $loop_start;
+  $background->WriteToEmail(
+    "Round $round_count: $num_to_import in $elapsed seconds " .
+    "(total_elapsed = $total_elapsed)\n");
 }
+my $num_rounds = $round_count - 1;
+my $loop_elapsed = time - $loop_start;
+$background->WriteToEmail("Import loop finished after $num_rounds rounds, " .
+   "$loop_elapsed seconds\n");
 print STDERR "No files left to import\n";
-my $link = $background->GetReportDownloadableURL;
-$background->WriteToEmail("Report URL: $link\n");
-$background->LogCompletionTime;
+my $get_hidden_to_files = Query("GetHiddenToFiles");
+my @ToUnhide;
+$get_hidden_to_files->RunQuery(sub {
+  my($row) = @_;
+  my($file_id, $visibility) = @$row;
+  push @ToUnhide, [$file_id, $visibility];
+}, sub {}, $edit_file_id);
+my $num_files_to_unhide = @ToUnhide;
+if($num_files_to_unhide > 0){
+  $background->WriteToEmail("There are $num_files_to_unhide " .
+    "to_files to unhide\n");
+  open UNHIDE, "|UnHideFilesWithStatus.pl \"$notify\" " .
+    "\"Unhiding to_files in Import of Edited Files ($edit_file_id)\"";
+  for my $i (@ToUnhide){
+    print UNHIDE "$i->[0]&$i->[1]\n";
+  }
+}
+$background->Finish;
