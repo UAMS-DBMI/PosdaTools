@@ -222,6 +222,7 @@ $FileStorageRoots = get_file_storage_roots();
 if ($path eq '-') {
   DEBUG "Reading filenames from STDIN";
   my $import_id = create_import_event("multi file import", $comment);
+  print "Import id: $import_id\n";
   while (<STDIN>) {
     chomp;
     $path = $_;

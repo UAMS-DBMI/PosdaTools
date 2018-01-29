@@ -74,6 +74,12 @@ DEBUG "Import results: ", Dumper($import_return);
 
 my @import_return_lines = split('\n', $import_return);
 
+
+my @import_ids = map {
+  /Import id: (.*)/;
+} @import_return_lines;
+my $import_id = $import_ids[0];
+
 my @file_ids = map {
   /File id: (.*)/;
 } @import_return_lines;
@@ -109,6 +115,13 @@ while ($continue) {
 }
 
 $background->WriteToEmail("All files have been fully processed.\n");
+
+$background->PrepareBackgroundReportBasedOnQuery(
+  'DicomFileSummaryByImportEvent',
+  'Import Event Summary',
+  200,
+  $import_id
+);
 
 DEBUG "Import complete";
 $background->Finish;

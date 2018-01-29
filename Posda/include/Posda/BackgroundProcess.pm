@@ -216,6 +216,113 @@ sub GetBackgroundID{
   return $this->{background_id};
 }
 
+method PrepareBackgroundReportBasedOnQuery(
+  $query,
+  $report_name,
+  $max_rows
+) {
+  shift; shift; shift; # Discard first 3 params
+  my @params = @_;     # The rest are query arguments
+
+  my @rows;
+  my $q = Query($query);
+  my $header = $q->{columns};
+  my $num_rows = 0;
+  # TODO change this to use the simple row return method
+  $q->RunQuery(sub {
+    my($row) = @_;
+    $num_rows += 1;
+    my @fields = @$row;
+    # move this test outside 
+    unless($#fields == $#$header){
+      my $num_fields = @fields;
+      my $num_header = @$header;
+      $self->WriteToEmail(
+        "Error in PrepareBackgroundReportBasedOnQuery\n" .
+        "Error:      row had $num_fields columns " .
+        "vs header ($num_header) columns\n" .
+        "Query:      $query\n" .
+        "Row number: $num_rows\n");
+      return;
+    }
+    push @rows, \@fields;
+  }, sub {}, @params);
+
+  $self->WriteToEmail(
+    "Report $report_name has $num_rows generated rows\n");
+
+  my @report_spec;
+  if($num_rows > $max_rows){
+    my $remaining = $num_rows;
+    my $current_row = 1;
+    while($remaining > 0){
+      my $first_row = $current_row;
+      my $last_row;
+      if($remaining <= $max_rows){
+        $last_row = $first_row + $remaining - 1;
+        $remaining = 0;
+        $current_row = $last_row + 1;
+      } else {
+        $last_row = $first_row + $max_rows - 1;
+        $remaining = $remaining - $max_rows;
+        $current_row = $last_row + 1;
+      }
+      my $d = {
+        first_row => $first_row,
+        last_row => $last_row,
+        num_rows => $last_row - $first_row + 1,
+      };
+      push @report_spec, $d;
+    }
+  } else {
+    push(@report_spec, {
+      num_rows => $num_rows,
+      first_row => 1,
+      last_row => $num_rows,
+    });
+  }
+  my $num_reports = @report_spec;
+  if($num_reports > 1){
+    $self->WriteToEmail("Splitting report $report_name into " .
+      "$num_reports parts based on max rows: $max_rows\n");
+    my $rept_num = 0;
+    for my $i (@report_spec){
+      $rept_num += 1;
+      my $rept_num_text = sprintf("%03d", $rept_num);
+      my $name = "$report_name [$rept_num_text] " .
+        "($i->{first_row} -> $i->{last_row})";
+      my @rpt_rows;
+      for my $i (1 .. $i->{num_rows}){
+        my $row = shift @rows;
+        push @rpt_rows, $row;
+      }
+      $self->MakeBackgroundReport($header, \@rpt_rows, $name);
+    }
+  } else {
+    $self->MakeBackgroundReport($header, \@rows, $report_name);
+  }
+}
+
+method MakeBackgroundReport($header, $rows, $name){
+  my $rpt = $self->CreateReport($name);
+  for my $i (0 .. $#{$header}){
+    my $f = $header->[$i];
+    unless($i == 0) { $rpt->print(",") }
+    $f =~ s/"/""/g;
+    $rpt->print("\"$f\"");
+  }
+  $rpt->print("\n");
+  for my $r (@$rows){
+    for my $i (0 .. $#{$r}){
+      my $f = $r->[$i];
+      unless($i == 0) { $rpt->print(",") }
+      $f =~ s/"/""/g;
+      $rpt->print("\"$f\"");
+    }
+    $rpt->print("\n");
+  }
+}
+
 # Private methods =============================================================
 
 method _insert_report_file($file_path) {
