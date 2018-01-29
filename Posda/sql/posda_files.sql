@@ -900,6 +900,37 @@ CREATE TABLE dose_referenced_from_plan (
 
 
 --
+-- Name: downloadable_dir; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE downloadable_dir (
+    downloadable_dir_id integer NOT NULL,
+    security_hash text NOT NULL,
+    creation_date timestamp without time zone NOT NULL,
+    path text NOT NULL
+);
+
+
+--
+-- Name: downloadable_dir_downloadable_dir_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE downloadable_dir_downloadable_dir_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: downloadable_dir_downloadable_dir_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE downloadable_dir_downloadable_dir_id_seq OWNED BY downloadable_dir.downloadable_dir_id;
+
+
+--
 -- Name: downloadable_file; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2988,6 +3019,13 @@ ALTER TABLE ONLY dicom_send_event ALTER COLUMN dicom_send_event_id SET DEFAULT n
 
 
 --
+-- Name: downloadable_dir downloadable_dir_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY downloadable_dir ALTER COLUMN downloadable_dir_id SET DEFAULT nextval('downloadable_dir_downloadable_dir_id_seq'::regclass);
+
+
+--
 -- Name: downloadable_file downloadable_file_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3184,6 +3222,14 @@ ALTER TABLE ONLY ctp_file
 
 ALTER TABLE ONLY distinguished_pixel_digests
     ADD CONSTRAINT distinguished_pixel_digests_pixel_digest_key UNIQUE (pixel_digest);
+
+
+--
+-- Name: downloadable_dir downloadable_dir_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY downloadable_dir
+    ADD CONSTRAINT downloadable_dir_pkey PRIMARY KEY (downloadable_dir_id);
 
 
 --

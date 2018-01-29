@@ -144,21 +144,23 @@ func set_file_location($file_id, $root_id, $rel_path) {
   }
 }
 
-func process_one_file($path, $comment) {
-  my($root_id, $root_path, $rel_path) = 
-    @{find_matching_root($FileStorageRoots, $path)};
-
-  ############################################################
+func create_import_event($message, $comment) {
   # Create import_event  TODO: make this one query
-  $insert_import_event->RunQuery(sub{}, sub{}, "single file import", $comment);
+  $insert_import_event->RunQuery(sub{}, sub{}, $message, $comment);
   ####GetImportEventId
   my $ie_id;
   $giei->RunQuery(sub{
     my($row) = @_;
       $ie_id = $row->[0];
     }, sub {});
-  my @FileErrors;
+  return $ie_id;
+}
 
+func process_one_file($path, $import_event_id) {
+  my($root_id, $root_path, $rel_path) = 
+    @{find_matching_root($FileStorageRoots, $path)};
+
+  ############################################################
   unless(-f $path){
     die "Error: $path is not a file\n";
   }
@@ -183,7 +185,7 @@ func process_one_file($path, $comment) {
   # Record the import event
   if(defined $rel_path){
     $insert_file_import->RunQuery(sub{}, sub{}, 
-      $ie_id, $file_id, $rel_path, $root_path, $path);
+      $import_event_id, $file_id, $rel_path, $root_path, $path);
   }
 
   set_file_ready_to_process($file_id);
@@ -219,17 +221,19 @@ $FileStorageRoots = get_file_storage_roots();
 
 if ($path eq '-') {
   DEBUG "Reading filenames from STDIN";
+  my $import_id = create_import_event("multi file import", $comment);
   while (<STDIN>) {
     chomp;
     $path = $_;
     try { # continue processing new lines even when one fails
-      say process_one_file($path, $comment);
+      say process_one_file($path, $import_id);
     } catch {
       print;
     }
   }
 } else {
-  say process_one_file($path, $comment);
+  my $import_id = create_import_event("single file import", $comment);
+  say process_one_file($path, $import_id);
 }
 
 # vim: foldmethod=marker

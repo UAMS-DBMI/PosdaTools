@@ -2361,8 +2361,8 @@ method ConvertLinesComplete($hash){
     ) {
       $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
     } 
-    if ($hash->{'mime-type'} =~ /gzip/) {
-      DEBUG "Looks like this is a gzip file!";
+    if ($hash->{'mime-type'} =~ /zip/) {
+      DEBUG "Looks like this is a zip/gzip file!";
       $self->ProcessCompressedFile($hash);
     }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
