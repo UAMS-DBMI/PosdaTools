@@ -44,7 +44,7 @@ truncate table distinguished_pixel_digest_pixel_value;
 truncate table distinguished_pixel_digests;
 truncate table dose_referenced_from_beam;
 truncate table dose_referenced_from_plan;
-truncate table file;
+truncate table file cascade;
 truncate table file_ct_image;
 truncate table file_dose;
 truncate table file_ele_ref;

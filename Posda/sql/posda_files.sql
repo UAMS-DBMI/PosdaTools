@@ -579,6 +579,21 @@ CREATE TABLE dicom_edit_compare (
 
 
 --
+-- Name: dicom_edit_compare_disposition; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dicom_edit_compare_disposition (
+    subprocess_invocation_id integer NOT NULL,
+    start_creation_time timestamp without time zone,
+    end_creation_time timestamp without time zone,
+    number_edits_scheduled integer,
+    number_compares_with_diffs integer,
+    number_compares_without_diffs integer,
+    current_disposition text
+);
+
+
+--
 -- Name: dicom_edit_event; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3214,6 +3229,14 @@ ALTER TABLE ONLY ctp_file_new
 
 ALTER TABLE ONLY ctp_file
     ADD CONSTRAINT ctp_file_pkey PRIMARY KEY (file_id);
+
+
+--
+-- Name: dicom_edit_compare_disposition dicom_edit_compare_disposition_subprocess_invocation_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dicom_edit_compare_disposition
+    ADD CONSTRAINT dicom_edit_compare_disposition_subprocess_invocation_id_key UNIQUE (subprocess_invocation_id);
 
 
 --

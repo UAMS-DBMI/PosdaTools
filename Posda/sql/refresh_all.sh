@@ -30,3 +30,4 @@ refresh_db posda_queries
 refresh_db posda_simple_phi
 refresh_db private_tag_kb
 refresh_db public_tag_disposition
+refresh_db posda_phi_simple
