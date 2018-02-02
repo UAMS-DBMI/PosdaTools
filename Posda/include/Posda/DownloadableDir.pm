@@ -1,5 +1,7 @@
 package Posda::DownloadableDir;
 
+use overload
+  '""' => 'stringify';
 
 use Modern::Perl;
 use Method::Signatures::Simple;
@@ -12,11 +14,23 @@ use Posda::Config ('Database', 'Config');
 our $URL = Config('api_url');
 our $ug = Data::UUID->new;
 
-func get_uuid() {
-	return lc $ug->create_str();
+
+method new($class: $path) {
+  my $self = {
+    path => $path
+  };
+  bless $self, $class;
+
+  $self->_make();
+
+  return $self;
 }
 
-func make($path) {
+method stringify() {
+  return $self->{link};
+}
+
+method _make() {
   my $uuid = get_uuid();
 
   my $dbh = DBI->connect(Database('posda_files'));
@@ -27,7 +41,7 @@ func make($path) {
     returning downloadable_dir_id
   });
 
-  $sth->execute($uuid, $path);
+  $sth->execute($uuid, $self->{path});
 
   my $rows = $sth->fetchrow_arrayref;
   $sth->finish();
@@ -35,7 +49,18 @@ func make($path) {
 
   $dbh->disconnect();
 
-  return "$URL/dir/$dl_dir_id/$uuid";
+  $self->{link} = "$URL/dir/$dl_dir_id/$uuid";
+  $self->{downloadable_dir_id} = $dl_dir_id;
+  $self->{security_hash} = $uuid;
+}
+
+func get_uuid() {
+	return lc $ug->create_str();
+}
+
+# Deprecated, included for backward compatability
+func make($path) {
+  return Posda::DownloadableDir->new($path);
 }
 
 1;
