@@ -11,6 +11,7 @@ use Posda::DebugLog;
 
 use File::Temp qw/ tempfile /;
 use DateTime;
+use MIME::Base64;
 
 
 $| = 1; # Force unbuffered output, when this module is imported
@@ -323,7 +324,32 @@ method MakeBackgroundReport($header, $rows, $name){
   }
 }
 
-# Private methods =============================================================
+# Insert a clickable button into the email, at the current location
+# Note that the op will ultimately execute within DbIf::Application
+# and Update() is always called.
+method InsertEmailButton($caption, $op, $param_hash, $class) {
+
+  if (not defined $class) {
+    $class = "btn btn-primary";
+  }
+
+  my $params = join('&', map {
+    "$_=$param_hash->{$_}"
+  } keys %$param_hash);
+
+  my $remote_method = 
+    "PosdaGetRemoteMethod('$op', '$params', function(){Update()})";
+
+  my $button_html = qq{
+<button class="$class"
+        onclick="javascript:$remote_method"
+>$caption</button>
+};
+
+  $self->WriteToEmail($button_html);
+}
+
+# Private methods =========================================================={{{
 
 method _insert_report_file($file_path) {
   my $return = {};
@@ -372,8 +398,8 @@ sub _start_process {
   $this->{background_id} = $bkgrnd_id;
   return $bkgrnd_id;
 }
-
-# Deprecated methods ==========================================================
+#}}}
+# Deprecated methods ======================================================={{{
 
 method LogCompletionTime() { # Deprecated
   say STDERR "LogCompletionTime() is deprecated! Use Finish() instead.";
@@ -404,4 +430,8 @@ method WriteToReport($line) {
   $fh->print($line);
 }
 
+#}}}
+
 1;
+
+# vim: set foldmethod=marker
