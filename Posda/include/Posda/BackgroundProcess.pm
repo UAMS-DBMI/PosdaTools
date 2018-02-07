@@ -1,3 +1,58 @@
+{ package Posda::BackgroundProcess::Report; #{{{
+
+  use Modern::Perl;
+  use Method::Signatures::Simple;
+
+  use Posda::DebugLog;
+  use Data::Dumper;
+
+  use File::Temp qw/ tempfile /;
+
+  method new($class: $report_name) {
+    my ($fh, $filename) = tempfile();
+
+    my $self = {
+      name => ($report_name or 'Unnamed Report'),
+      file_handle => $fh,
+      temp_filename => $filename,
+      open => 1,
+    };
+    bless $self, $class;
+
+    DEBUG Dumper($self);
+
+    return $self;
+  }
+
+  method print() {
+    $self->{file_handle}->print(@_);
+  }
+
+  method close() {
+    close($self->{file_handle});
+    $self->_insert_report_file;
+    $self->{open} = 0;
+  }
+
+  method _insert_report_file() {
+    my $file_path = $self->{temp_filename};
+
+    my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$file_path" "BackgroundProcess Report"`;
+    if ($result =~ /File id: (.*)/) {
+      my $new_id = $1;
+      $self->{file_id} = $new_id;
+      my $dlf = Posda::DownloadableFile::make_csv($new_id);
+      $self->{downloadable_file_object} = $dlf;
+      $self->{link} = $dlf->{link};
+      $self->{path} = $dlf->{path};
+      $self->{downloadable_file_id} = $dlf->{downloadable_file_id};
+    } else {
+      die "Error inserting file into posda! $result";
+    }
+  }
+
+}#}}}
+
 package Posda::BackgroundProcess;
 
 use Modern::Perl;
@@ -51,13 +106,11 @@ method CreateReport($report_name) {
   }
 
   if (not defined $self->{reports}->{$report_name}) {
-    my ($fh, $filename) = tempfile();
-    if (not defined $fh) { die "Failed to open report handle!" }
-    $self->{reports}->{$report_name}->{fh} = $fh;
-    $self->{reports}->{$report_name}->{filename} = $filename;
+    my $report = Posda::BackgroundProcess::Report->new($report_name);
+    $self->{reports}->{$report_name} = $report;
   }
 
-  return $self->{reports}->{$report_name}->{fh};
+  return $self->{reports}->{$report_name};
 }
 
 method Daemonize() {
@@ -145,35 +198,36 @@ method Finish() {
     if ($h ne 'Email') {
       my $rpt = $self->{reports}->{$h};
 
-      # close report file handles (except email)
-      close($rpt->{fh});
+      # If the report is already closed, assume the calling script
+      # has already decided how to write it to the email
+      if ($rpt->{open}) {
 
-      # insert all reports (except email) into posda
-      $rpt->{closed} = $self->_insert_report_file($rpt->{filename});
+        # close report file handles (except email)
+        DEBUG "Automatically closing report $rpt->{name}";
+        $rpt->close;
 
-      # add download links for those reports to the mail
-      $self->WriteToEmail("Report '$h': $rpt->{closed}->{url}\n");
+        # add download links for those reports to the mail
+        $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+      }
     }
   }
 
   # close email file handle
   my $email_rpt = $self->{reports}->{Email};
-  close($email_rpt->{fh});
+  $email_rpt->close;
   my $email_filename = $email_rpt->{filename};
 
   # add the email to posda
-  $email_rpt->{closed} = $self->_insert_report_file($email_rpt->{filename});
   # add all reports to background_subprocess_report table
   my $add_report_query = Query('CreateBackgroundReport');
 
   for my $h (keys %{$self->{reports}}) {
     my $rpt = $self->{reports}->{$h};
-    my $closed = $rpt->{closed};
 
     # FetchOneHash because CreateBackgroundReport returns the ID of the 
     # created report
     my $report = $add_report_query->FetchOneHash(
-        $self->{background_id}, $closed->{file_id}, $h
+        $self->{background_id}, $rpt->{file_id}, $h
     );
 
     if ($h eq 'Email') {
@@ -187,13 +241,8 @@ method Finish() {
       DEBUG "email report's id is: $report->{background_subprocess_report_id}";
     }
 
-    # $add_report_query->RunQuery(
-    #     sub{}, sub{},
-    #     $self->{background_id}, $closed->{file_id}, $h
-    # );
-
-    DEBUG "Unlinking report file: $rpt->{filename}";
-    unlink $rpt->{filename};
+    DEBUG "Unlinking report file: $rpt->{temp_filename}";
+    unlink $rpt->{temp_filename};
   }
 }
 
@@ -351,19 +400,6 @@ method InsertEmailButton($caption, $op, $param_hash, $class) {
 
 # Private methods =========================================================={{{
 
-method _insert_report_file($file_path) {
-  my $return = {};
-  my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$file_path" "BackgroundProcess Report"`;
-  if ($result =~ /File id: (.*)/) {
-    my $new_id = $1;
-    return {
-      file_id => $new_id,
-      url => Posda::DownloadableFile::make_csv($new_id)
-    };
-  } else {
-    die "Error inserting file into posda! $result";
-  }
-}
 
 method _log_input_count($count) {
   $self->{add_time_rows_query}->RunQuery(sub {}, sub{},

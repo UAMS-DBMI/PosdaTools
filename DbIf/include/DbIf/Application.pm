@@ -2445,8 +2445,8 @@ method Files($http, $dyn){
 method LoadCsvIntoTable($http, $dyn){
   $self->{Mode} = "LoadCsvIntoTable";
   my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output file"};
-  my $cmd = "CsvToPerlStruct.pl \"$file\"";
-  $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
+
+  $self->LoadCSVIntoTable_NoMode($file);
 }
 method LoadCSVIntoTable_NoMode($file) {
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
