@@ -21,6 +21,8 @@ use Data::Dumper;
 
 method SpecificInitialize() {
   $self->{dbh} = DBI->connect(Database('posda_auth'));
+  # Needed for creating user_inbox entry
+  $self->{queries_dbh} = DBI->connect(Database('posda_queries'));
   $self->{AllPermissions} = $self->GetAllPermissionList();
   $self->{AppPermMap} = $self->GetAppPermMap();
 
@@ -213,6 +215,9 @@ method RenderUserList($http, $dyn) {
         <input class="form-control" 
                autocomplete="off"
                type="text" name="NewUserName" placeholder="Username">
+        <input class="form-control" 
+               autocomplete="off"
+               type="text" name="NewEmail" placeholder="Email">
 
   });
 
@@ -378,10 +383,11 @@ method UpdateSelection($http, $dyn) {
 
 method CreateNewUser($http, $dyn) {
   my $name = $dyn->{NewUserName};
+  my $email = $dyn->{NewEmail};
   my $pass = $dyn->{NewUserPass} or 'no_pass';
 
   my $enc_pass = Posda::Passwords::encode($pass);
-  DEBUG "$name, $pass, $enc_pass";
+  DEBUG "$name, $email, $pass, $enc_pass";
 
   my $stmt = $self->{dbh}->prepare(qq{
     insert into users (user_name, full_name, password)
@@ -390,6 +396,13 @@ method CreateNewUser($http, $dyn) {
 
   $stmt->execute($name, $enc_pass);
   $stmt->finish;
+
+  my $email_stmt = $self->{queries_dbh}->prepare(qq{
+    insert into user_inbox (user_name, user_email_addr)
+    values (?, ?)
+  });
+  $email_stmt->execute($name, $email);
+  $email_stmt->finish;
 
   $self->{SelectedUsername} = $name;
   $self->{Mode} = "RenderUserCreated";
@@ -407,6 +420,15 @@ method DeleteUser($http, $dyn) {
 
   $stmt->execute($user);
   $stmt->finish;
+
+  my $email_stmt = $self->{queries_dbh}->prepare(qq{
+    delete from user_inbox
+    where user_name = ?
+  });
+
+  $email_stmt->execute($user);
+  $email_stmt->finish;
+
 
   $self->{Mode} = "RenderUserDeleted";
 
