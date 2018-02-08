@@ -10,6 +10,8 @@ use Posda::DB 'Query';
 use DBI;
 use URI;
 use HTML::Entities;
+use Debug;
+my $dbg = sub {print STDERR @_};
 
 use MIME::Base64;
 
@@ -19,8 +21,45 @@ use vars qw( @ISA );
 
 my $db_handle;
 
+# params = {
+#   button => <button_name>.
+#   table => {
+#     query => {
+#       columns => [ <col1>, <col2>, <col3> ],
+#     },
+#   },
+# };
+#
+# $self = {
+#   button_name => <button_name>,
+#   title => "Process Button: $button_name",
+#   table => $params->{table}
+#   temp_path => <path>,
+#   command_line => <command_line>,
+#   input_line_format => <input_line_format>
+#   operation_name => <operation_name>;
+#   operation_type => <operation_type>;
+#   help_info => [ <operation_name>, <command_line>, <operaton_type,
+#       <input_line_format>, <tags>
+#   ], 
+#   Params => [ <param_name_1>, .. <param_name_n>],
+#   MetaParams => [ <meta_param_name_1>, .. <meta_param_name_n>],
+#   Columns => [<col_1>, <col_2>, ... <col_n>],
+#   RowHashArray => [
+#     {
+#       <col_1> => <v1>,
+#       ...
+#     },
+#     ...
+#   ],
+# };
 method SpecificInitialize($params) {
   my $button_name = $params->{button};
+  for my $i (keys %{$params}){
+    unless($i eq "button"){
+      $self->{default_param}->{$i} = $params->{$i};
+    }
+  }
   $self->{button_name} = $button_name;
   $self->{title} = "Process Button: $button_name";
   # Determine temp dir
@@ -33,6 +72,9 @@ method SpecificInitialize($params) {
   $self->GetColumns;
   $self->MakeRowHashArray;
   $self->MakeLineList;
+  unless(defined $self->{ParamValues}->{notify}){
+    $self->{ParamValues}->{notify} = $self->get_user;
+  }
 }
 method GetParams{
   my $start = $self->{command_line};
@@ -45,6 +87,9 @@ method GetParams{
       push @MetaParms, $1;
     } else {
       push @Parms, $parm;
+      if(exists $self->{default_param}->{$parm}){
+        $self->{ParamValues}->{$parm} = $self->{default_param}->{$parm};
+      }
     }
   }
   $self->{Params} = \@Parms;

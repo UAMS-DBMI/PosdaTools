@@ -73,6 +73,18 @@ sub Analyze{
       $this->{DifferentValues}->{$el}->{to} = $to_v;
     }
   }
+  for my $sig (keys %{$this->{OnlyInFrom}}){
+    my($pat, $indices) = Posda::Dataset->MakeMatchPat($sig);
+    $this->{OnlyInFromPat}->{$pat} = 1;
+  }
+  for my $sig (keys %{$this->{OnlyInTo}}){
+    my($pat, $indices) = Posda::Dataset->MakeMatchPat($sig);
+    $this->{OnlyInToPat}->{$pat} = 1;
+  }
+  for my $sig (keys %{$this->{DifferentValues}}){
+    my($pat, $indices) = Posda::Dataset->MakeMatchPat($sig);
+    $this->{DifferentValuesPat}->{$pat} = 1;
+  }
 }
 sub RenderValue{
   my($this, $ele) = @_;
@@ -102,63 +114,63 @@ sub ReportFromSemi{
   my($short_rpt, $long_rpt) = ("","");
   my $num_only_in_from = keys %$OnlyInFrom;
   if($num_only_in_from > 0){
-    $short_rpt .= "Only in from file:\n";
-    $long_rpt .= "Only in from file:\n";
+    $short_rpt .= "Only in from file:\r\n";
+    $long_rpt .= "Only in from file:\r\n";
     my %SeenPatterns;
     for my $el (sort keys %$OnlyInFrom){
       my $tag_pat = $this->MakePattern($el);
       unless(exists $SeenPatterns{$tag_pat}){
         $SeenPatterns{$tag_pat} = 1;
-        $short_rpt .= "\t$el\n";
+        $short_rpt .= "\t$el\r\n";
         if($this->IsUid($el)){
-          $long_rpt .= "\t$tag_pat: <uid>\n";
+          $long_rpt .= "\t$tag_pat: <uid>\r\n";
         } elsif($this->IsDate($el)){
-          $long_rpt .= "\t$tag_pat: <date>\n";
+          $long_rpt .= "\t$tag_pat: <date>\r\n";
         } else {
           my $v = $this->RenderValue($OnlyInFrom->{$el});
-          $long_rpt .= "\t$tag_pat : $v\n";
+          $long_rpt .= "\t$tag_pat : $v\r\n";
         }
       }
     }
   }
   my $num_only_in_to = keys %$OnlyInTo;
   if($num_only_in_to > 0){
-    $short_rpt .= "Only in to file:\n";
-    $long_rpt .= "Only in to file:\n";
+    $short_rpt .= "Only in to file:\r\n";
+    $long_rpt .= "Only in to file:\r\n";
     my %SeenPatterns;
     for my $el (sort keys %$OnlyInTo){
       my $tag_pat = $this->MakePattern($el);
       unless(exists $SeenPatterns{$tag_pat}){
         $SeenPatterns{$tag_pat} = 1;
-        $short_rpt .= "\t$tag_pat\n";
+        $short_rpt .= "\t$tag_pat\r\n";
         if($this->IsUid($el)){
-          $long_rpt .= "\t$tag_pat: <uid>\n";
+          $long_rpt .= "\t$tag_pat: <uid>\r\n";
         } elsif($this->IsDate($el)){
-          $long_rpt .= "\t$tag_pat: <date>\n";
+          $long_rpt .= "\t$tag_pat: <date>\r\n";
         } else {
           my $v = $this->RenderValue($OnlyInTo->{$el});
-          $long_rpt .= "\t$tag_pat: $v\n";
+          $long_rpt .= "\t$tag_pat: $v\r\n";
         }
       }
     }
   }
   my $num_diffs = keys %$DifferentValues;
   if($num_diffs > 0){
-    $short_rpt .= "Elements changed:\n";
-    $long_rpt .= "Elements changed:\n";
+    $short_rpt .= "Elements changed:\r\n";
+    $long_rpt .= "Elements changed:\r\n";
     my %SeenPatterns;
     for my $el (sort keys %$DifferentValues){
       my $tag_pat = $this->MakePattern($el);
       unless(exists $SeenPatterns{$tag_pat}){
         $SeenPatterns{$tag_pat} = 1;
-        $short_rpt .= "\t$tag_pat: \n";
+        $short_rpt .= "\t$tag_pat: \r\n";
         if($this->IsUid($el)){
-          $long_rpt .= "\t$tag_pat: <changed uid>\n";
+          $long_rpt .= "\t$tag_pat: <changed uid>\r\n";
         } elsif($this->IsDate($el)){
-          $long_rpt .= "\t$tag_pat: <changed date>\n";
+          $long_rpt .= "\t$tag_pat: <changed date>\r\n";
         } else {
           $long_rpt .= "\t$tag_pat: $DifferentValues->{$el}->{from} " .
-            "=> $DifferentValues->{$el}->{to}\n";
+            "=> $DifferentValues->{$el}->{to}\r\n";
         }
       }
     }
@@ -216,6 +228,55 @@ sub DiffReport{
       $short_rpt .= "\t$el\n";
       $long_rpt .= "\t$el: $this->{DifferentValues}->{$el}->{from} " .
         "=> $this->{DifferentValues}->{$el}->{to}\n";
+    }
+  }
+  return($short_rpt, $long_rpt);
+}
+sub CondensedDiffReport{
+  my($this) = @_;
+  my $short_rpt = "";
+  $this->Analyze;
+  my $num_only_in_from = keys %{$this->{OnlyInFromPat}};
+  if($num_only_in_from > 0){
+    $short_rpt .= "Only in from file:\n";
+    for my $el (sort keys %{$this->{OnlyInFromPat}}){
+      $short_rpt .= "\t$el\n";
+    }
+  }
+  my $num_only_in_to = keys %{$this->{OnlyInToPat}};
+  if($num_only_in_to > 0){
+    $short_rpt .= "Only in to file:\n";
+    for my $el (sort keys %{$this->{OnlyInToPat}}){
+      $short_rpt .= "\t$el\n";
+    }
+  }
+  my $num_diffs = keys %{$this->{DifferentValuesPat}};
+  if($num_diffs > 0){
+    $short_rpt .= "Elements changed:\n";
+    for my $el (sort keys %{$this->{DifferentValuesPat}}){
+      $short_rpt .= "\t$el\n";
+    }
+  }
+  my $long_rpt = "";
+  $num_only_in_from = keys %{$this->{OnlyInFrom}};
+  if($num_only_in_from > 0){
+    $long_rpt .= "Only in from file:\n";
+    for my $el (sort keys %{$this->{OnlyInFrom}}){
+      $long_rpt .= "\t$el\n";
+    }
+  }
+  $num_only_in_to = keys %{$this->{OnlyInTo}};
+  if($num_only_in_to > 0){
+    $long_rpt .= "Only in to file:\n";
+    for my $el (sort keys %{$this->{OnlyInTo}}){
+      $long_rpt .= "\t$el\n";
+    }
+  }
+  $num_diffs = keys %{$this->{DifferentValues}};
+  if($num_diffs > 0){
+    $long_rpt .= "Elements changed:\n";
+    for my $el (sort keys %{$this->{DifferentValues}}){
+      $long_rpt .= "\t$el\n";
     }
   }
   return($short_rpt, $long_rpt);

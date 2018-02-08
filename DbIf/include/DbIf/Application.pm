@@ -1,6 +1,6 @@
 package DbIf::Application;
 
-
+use File::Path 'rmtree';
 use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query';
 use Dispatch::BinFragReader;
@@ -282,6 +282,14 @@ method DisplayInboxItem($http, $dyn) {
   $self->{Mode} = "InboxItem";
 }
 
+method DeleteAndDismiss($http, $dyn) {
+  print STDERR "deleting inbox_item: $self->{SelectedInboxItem}\n" .
+    "rm -rf $dyn->{path}\n";
+  $self->{inbox}->SetDismissed($self->{SelectedInboxItem});
+  rmtree($dyn->{path});
+  $self->{Mode} = "Inbox";
+}
+
 method DismissInboxItemButtonClick($http, $dyn) {
   my $message_id = $dyn->{message_id};
   $self->{inbox}->SetDismissed($message_id);
@@ -469,8 +477,20 @@ method SetMode($http, $dyn){
   $self->{Mode} = $dyn->{mode};
 }
 
+method ScriptButton($http, $dyn) {
+  my $inbox_item = $self->{SelectedInboxItem};
+  if($self->can("$dyn->{op}")){
+    my $op = $dyn->{op};
+    return $self->$op($http, $dyn);
+  }
+  print STDERR "Unknown op: $dyn->{op}\n";
+}
+
 method ContentResponse($http, $dyn) {
   # TODO: DrawHistory would preferrably be above the title on the page
+  if($self->{Mode} eq "ScriptButton"){
+    return($self->ScriptButtonResponse($http, $dyn));
+  }
   unless ($self->{Mode} =~ /Inbox/) {
     $self->DrawHistory($http, $dyn);
   }
@@ -856,12 +876,23 @@ method OpenTableLevelPopup($http, $dyn) {
   my $class = $dyn->{class_};
   $self->OpenPopup($class, "${class}_FullTable$unique_val", $parms);
 }
+
+my $table_free_seq = 0;
 method OpenTableFreePopup($http, $dyn) {
   my $parms = { button => $dyn->{cap_}};
-  my $unique_val = "$parms";
+  for my $i (keys %{$dyn}){
+    unless(
+      $i eq "cap_" || $i eq "class_" ||
+      $i eq "obj_path" || $i eq "op" || $i eq "ts"
+    ){
+      $parms->{$i} = $dyn->{$i};
+    }
+  }
+  $table_free_seq += 1;
+  my $unique_val = "seq_$table_free_seq";
 
   my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable$unique_val", $parms);
+  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
 }
 
 method OpenDynamicPopup($http, $dyn) {

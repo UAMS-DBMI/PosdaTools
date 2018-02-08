@@ -10,6 +10,8 @@ use Posda::HttpApp::DebugWindow;
 use Posda::HttpApp::Authenticator;
 
 use Data::Dumper;
+use Debug;
+my $dbg = sub {print STDERR @_ };
 
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController", "Posda::HttpApp::Authenticator" );

@@ -136,7 +136,7 @@ my $map_uids = sub {
   }
 };
 my $try = Posda::Try->new($edits->{from_file});
-unless(exists $try->{dataset}) { 
+unless(exists $try->{dataset}) {
   Error("file $edits->{from_file} didn't parse", $try);
 }
 my $ds = $try->{dataset};

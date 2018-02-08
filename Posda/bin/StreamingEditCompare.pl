@@ -48,13 +48,18 @@ while(my $line = <STDIN>){
   my $f_dig = $f_try->{digest};
   my $t_dig = $t_try->{digest};
   my $diff = Posda::DiffDicom->new($fds, $tds);
-  my($s_rept, $l_rept) = $diff->DiffReport;
+  $diff->Analyze;
+  my($only_in_from, $only_in_to, $different) = 
+    $diff->SemiDiffReport;
+  my($s_rept, $l_rept) = 
+    $diff->ReportFromSemi($only_in_from, $only_in_to, $different);
+#  my($s_rept, $l_rept) = $diff->DiffReport;
   if(length($s_rept) <= 0){
     print "Failed: $sop_inst|no lines in short_rept\n";
     next line;
   }
   if(length($l_rept) <= 0){
-    print "Failed: $sop_inst|no lines in short_rept\n";
+    print "Failed: $sop_inst|no lines in long_rept\n";
     next line;
   }
   my $ctx = Digest::MD5->new;
