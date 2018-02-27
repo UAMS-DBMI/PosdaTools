@@ -2,9 +2,8 @@
 -- Schema: posda_phi_simple
 -- Columns: ['phi_scan_instance_id', 'start_time', 'end_time', 'description', 'num_series', 'num_series_scanned', 'file_query']
 -- Args: ['phi_scan_instance_id']
--- Tags: ['tag_usage', 'scan_status']
--- Description: Status of PHI scans
--- 
+-- Tags: ['adding_ctp', 'for_scripting', 'scan_status']
+-- Description: Get a query_scan_instance by instance_id
 
 select
   phi_scan_instance_id,

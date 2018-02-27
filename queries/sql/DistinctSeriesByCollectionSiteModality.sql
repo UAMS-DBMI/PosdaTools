@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['series_instance_uid', 'dicom_file_type', 'modality', 'count']
 -- Args: ['project_name', 'site_name', 'modality']
--- Tags: ['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files']
+-- Tags: ['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files', 'simple_phi']
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 -- 
 

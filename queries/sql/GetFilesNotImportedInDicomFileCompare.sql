@@ -19,12 +19,12 @@ where
       (
         select file_id from file f where dec.to_file_digest = f.digest
        ) 
-       and subprocess_invocation_id = ?
+       and edit_command_file_id = ?
       except
       select distinct from_file_digest 
       from dicom_edit_compare dec, file f natural join ctp_file
-      where dec.from_file_digest = f.digest and visibility is null and subprocess_invocation_id = ?
+      where dec.from_file_digest = f.digest and visibility is null and edit_command_file_id = ?
 
     ) as foo
   )
-  and subprocess_invocation_id = ?
+  and edit_command_file_id = ?

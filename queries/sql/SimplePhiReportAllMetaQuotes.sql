@@ -2,9 +2,8 @@
 -- Schema: posda_phi_simple
 -- Columns: ['element', 'vr', 'q_value', 'description', 'num_series']
 -- Args: ['scan_id']
--- Tags: ['tag_usage', 'meta_q_queries']
--- Description: Status of PHI scans
--- 
+-- Tags: ['adding_ctp', 'for_scripting', 'phi_reports']
+-- Description: Simple Phi Report with Meta Quotes
 
 select 
   distinct '<' || element_sig_pattern || '>' as element, vr, 

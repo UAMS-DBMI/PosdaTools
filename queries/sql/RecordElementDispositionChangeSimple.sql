@@ -2,7 +2,7 @@
 -- Schema: posda_phi_simple
 -- Columns: []
 -- Args: ['id', 'who', 'why', 'disp']
--- Tags: ['tag_usage', 'used_in_phi_maint']
+-- Tags: ['tag_usage', 'simple_phi', 'used_in_phi_maint']
 -- Description: Private tags with no disposition with values in phi_simple
 
 insert into element_disposition_changed(

@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['patient_id', 'study_instance_uid', 'series_instance_uid', 'dicom_file_type', 'modality', 'num_files', 'first_loaded', 'last_loaded']
 -- Args: ['collection', 'site']
--- Tags: ['Hierarchy', 'phi_simple', 'old_simple_phi']
+-- Tags: ['Hierarchy', 'phi_simple', 'simple_phi']
 -- Description: Construct list of files in a collection, site in a Patient, Study, Series Hierarchy
 
 select distinct

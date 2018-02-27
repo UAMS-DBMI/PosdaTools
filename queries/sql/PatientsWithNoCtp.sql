@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['patient_id', 'num_series', 'num_files']
 -- Args: []
--- Tags: ['adding_ctp']
+-- Tags: ['adding_ctp', 'find_patients', 'no_ctp_patients']
 -- Description: Get Series in A Collection
 -- 
 

@@ -1,20 +1,19 @@
 -- Name: PhiScanStatus
--- Schema: posda_phi
--- Columns: ['id', 'description', 'start_time', 'end_time', 'duration', 'status', 'to_scan', 'scanned']
+-- Schema: posda_phi_simple
+-- Columns: ['id', 'start_time', 'end_time', 'duration', 'description', 'to_scan', 'scanned']
 -- Args: []
--- Tags: ['tag_usage', 'phi_review']
+-- Tags: ['tag_usage', 'phi_review', 'phi_status']
 -- Description: Status of PHI scans
 -- 
 
 select
-  scan_event_id as id,
-  scan_started as start_time,
-  scan_ended as end_time,
-  scan_ended - scan_started as duration,
-  scan_status as status,
-  scan_description as description,
-  num_series_to_scan as to_scan,
+  phi_scan_instance_id as id,
+  start_time,
+  end_time,
+  end_time - start_time as duration,
+  description,
+  num_series as to_scan,
   num_series_scanned as scanned
 from 
-  scan_event
+  phi_scan_instance
 order by id
