@@ -44,6 +44,17 @@ method new($class: $username) {
 
 # Utility methods ##########################################################{{{
 
+method send_real_email_notification($username) {
+  my $send_email = Config('real_email');
+  if (defined $send_email && $send_email == 1) {
+    my $email_handle = FileHandle->new(
+      '|mail -s "New Posda Inbox Item!" ' 
+      . $self->get_email_addr_by_username($username));
+    unless($email_handle) { die "Couldn't open email handle ($!)" }
+    $email_handle->print("A new message has arrived in your Posda Inbox!\n");
+    close($email_handle);
+  }
+}
 method get_handle() {
   my $db_handle = DBI->connect(Database('posda_queries'));
   return $db_handle;
@@ -175,17 +186,62 @@ method SendMail($username, $report_id, $how) {
       $how,
       $self->{username}]);
 
+  $self->send_real_email_notification($username);
 
-  my $send_email = Config('real_email');
-  if (defined $send_email && $send_email == 1) {
-    # send the email report as an email
-    my $email_handle = FileHandle->new(
-      '|mail -s "New Posda Inbox Item!" ' 
-      . $self->get_email_addr_by_username($username));
-    unless($email_handle) { die "Couldn't open email handle ($!)" }
-    $email_handle->print("A new message has arrived in your Posda Inbox!\n");
-    close($email_handle);
-  }
+  return $rows;
+}
+
+=head2 Forward($message_id, $username)
+
+Forward the message identified by $message_id to $username.
+
+If the environment var POSDA_REAL_EMAIL is set to 1, 
+an email notification will also be sent to the
+user's email.
+
+=cut
+method Forward($message_id, $username) {
+  my $details = $self->ItemDetails($message_id);
+
+  my $report_id = $details->{background_subprocess_report_id};
+  my $note = $details->{statuts_note};
+
+
+  my $result = $self->execute_and_fetchone(qq{
+    insert into user_inbox_content (
+      user_inbox_id,
+      background_subprocess_report_id,
+      current_status,
+      statuts_note,
+      date_entered,
+      date_dismissed
+    ) values (
+      (select user_inbox_id 
+       from user_inbox
+       where user_name = ?), ?, ?, ?, now(), null
+    )
+    returning user_inbox_content_id
+  }, [$username, 
+      $report_id,
+      'entered',
+      $note]);
+
+  my $rows = $self->execute(qq{
+    insert into user_inbox_content_operation (
+      user_inbox_content_id,
+      operation_type,
+      when_occurred,
+      how_invoked,
+      invoking_user
+    ) values (
+      ?, ?, now(), ?, ?
+    )
+  }, [$result->{user_inbox_content_id}, 
+      'entered',
+      'manually forwarded', # TODO: add the original how here?
+      $self->{username}]);
+
+  $self->send_real_email_notification($username);
 
   return $rows;
 }
@@ -372,6 +428,19 @@ method SetDismissed($message_id) {
     set date_dismissed = now()
     where user_inbox_content_id = ?
   }, [$message_id]);
+}
+
+=head2 GetAllUsernames()
+
+Return an arrayref containing a list of all usernames which
+are valid targets for sending email to.
+
+=cut
+method GetAllUsernames() {
+  return $self->execute_and_fetchall(qq{
+    select user_name
+    from user_inbox
+  });
 }
 
 1;

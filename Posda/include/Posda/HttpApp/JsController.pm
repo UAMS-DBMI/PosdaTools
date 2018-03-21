@@ -730,7 +730,7 @@ sub SimpleButton{
 # op must be specified.
 # You must close the <form> tag yourself, and you must provide
 # a submit button. NOTE: The JQuery seralize() method will
-# ONLY seralize inputs that name a 'name' attribute. Make sure you
+# ONLY seralize inputs that have a 'name' attribute. Make sure you
 # give your elements a name (and not just an id) or no data will be
 # sent to the method!
 method SimpleJQueryForm($http, $dyn) {
@@ -806,6 +806,34 @@ sub NotSoSimpleButton{
   $http->queue($string);
 }
 
+=head2 SimpleDropdownListFromArray($http, { name, [class] }, $element_array)
+
+Draw a simple dropwdown list (select/option list), filled with 
+the elements from $element_array. The "value" and the actual caption
+are set to the same value from the array.
+
+ Arguments:
+ $http: A Posda HTTP object
+ name: The name to be used on the html name attribute; for use with a form
+ class: The html class attribute will be set to this value, if supplied
+ $element_array: An array of elements to be drawn in the dropwdown
+
+ Returns: Nothing.
+
+=cut
+method SimpleDropdownListFromArray($http, $dyn, $elements) {
+  my $element_name = $dyn->{name}
+    or die "missing name argument";
+  my $class = ($dyn->{class} or 'form-control');
+  
+  $http->queue(qq{<select class="$class" name="$element_name">});
+
+  map {
+    $http->queue(qq{<option value="$_">$_</option>});
+  } @$elements;
+
+  $http->queue(qq{</select>});
+}
 
 =head2 SelfConfirmingButton($http, { uniq_id, caption, op, [confirm_caption], [decline_caption] })
 

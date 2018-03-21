@@ -295,6 +295,67 @@ method DismissInboxItemButtonClick($http, $dyn) {
   $self->{inbox}->SetDismissed($message_id);
 }
 
+method ForwardInboxItemButtonClick($http, $dyn) {
+  say STDERR "ForwardInboxItemButtonClick called";
+
+  my $message_id = $dyn->{message_id};
+  
+
+  $self->{_ForwardInboxButtonClicked} = 1;
+}
+
+method DrawForwardForm($http, $dyn) {
+  if (not defined $self->{_UsernameCache}) {
+    $self->{_UsernameCache} = $self->{inbox}->GetAllUsernames;
+  }
+  my @all_users = map {
+    $_->{user_name}
+  } @{$self->{_UsernameCache}};
+
+  say STDERR Dumper(\@all_users);
+
+  if (not defined $self->{_ForwardInboxButtonClicked}) {
+    $self->NotSoSimpleButtonButton($http, {
+      caption => "Forward this message",
+      op => "ForwardInboxItemButtonClick",
+    });
+  } else {
+    $http->queue(qq{
+      <p>
+      <div class="form-group" style="width: 200px">
+    });
+    $self->SimpleJQueryForm($http, {
+        id => 'forwardform',
+        op => 'ForwardFormSubmitButtonClicked',
+        class => 'alert alert-info form',
+    });
+    $http->queue(qq{
+      <p>Forward this message to:</p>
+      <p>
+    });
+
+    $self->SimpleDropdownListFromArray($http, {
+        name => "username",
+    }, \@all_users);
+
+    $http->queue(qq{
+      </p>
+      <p><button type="submit" class="btn btn-primary">Do it</button></p>
+      </form>
+      </div>
+      </p>
+    });
+  }
+}
+
+method ForwardFormSubmitButtonClicked($http, $dyn) {
+  my $forward_to_user = $dyn->{username};
+  my $message_id = $self->{SelectedInboxItem};
+
+  $self->{inbox}->Forward($message_id, $forward_to_user);
+  delete $self->{_ForwardInboxButtonClicked};
+}
+
 method InboxItem($http, $dyn) {
   my $message_id = $self->{SelectedInboxItem};
   my $msg_details = $self->{inbox}->ItemDetails($message_id);
@@ -336,6 +397,14 @@ method InboxItem($http, $dyn) {
       message_id => $message_id
     });
   }
+
+  $self->DrawForwardForm($http, $dyn);
+  # $self->SelfConfirmingButton($http, {
+  #   uniq_id => 'forward_button',
+  #   caption => 'Forward this message',
+  #   op => 'ForwardInboxItemButtonClick',
+  #   message_id => $message_id
+  # });
 
   my $recent_operations = $self->{inbox}->RecentOperations($message_id);
   $http->queue(qq{
