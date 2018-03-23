@@ -1,0 +1,50 @@
+<div id="container">
+  <div style="width: 562px; height: 562px;">
+  <canvas #canvas 
+    [height]="512" 
+    [width]="512"
+    (mousemove)="onMouseMove($event)"
+    (mousedown)="onMouseDown($event)"
+    (mouseup)="onMouseUp($event)"
+    (wheel)="onMouseWheel($event)"
+  ></canvas>
+  <md-slider #wwidth vertical thumbLabel
+    class="slider-tall"
+    min="-1000"
+    max="1000"
+    [value]="getWindowWidth()"
+    (input)="onChangeWidth($event)"
+  ></md-slider>
+  <md-slider #wcenter thumbLabel
+    class="slider-wide" 
+    min="-1000" 
+    max="1000"
+      [value]="getWindowCenter()"
+      (input)="onChangeCenter($event)"
+  ></md-slider>
+    <md-menu #appMenu="mdMenu">
+      <button md-menu-item (click)="winlev(2000, 300)">Bone</button>
+      <button md-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
+
+      <button md-menu-item (click)="winlev(350, 50)">Abdomen</button>
+      <button md-menu-item (click)="winlev(450, 50)">Pelvis</button>
+      <button md-menu-item (click)="winlev(350, 50)">Mediastinum</button>
+      <button md-menu-item (click)="winlev(1600, -600)">Lung</button>
+      <button md-menu-item (click)="winlev(4000, 400)">Sinus</button>
+      <button md-menu-item (click)="winlev(180, 80)">Larynx</button>
+      <button md-menu-item (click)="winlev(120, 40)">Brain Posterior</button>
+      <button md-menu-item (click)="winlev(80, 40)">Brain</button>
+      <button md-menu-item (click)="winlev(600, 250)">MR</button>
+      <button md-menu-item (click)="winlev(255, 128)">Ultrasound</button>
+    </md-menu>
+  <div class="buttons">
+    <button md-raised-button [mdMenuTriggerFor]="appMenu">
+      Presets
+    </button>
+    <button md-raised-button (click)="reset()">Reset Window/Level</button>
+    <button md-raised-button (click)="resetZoom()">Reset Zoom</button>
+    <button md-raised-button (click)="openDetails()">Details</button>
+    <button md-raised-button (click)="openDump()">Dump</button>
+  </div>
+  </div>
+</div>

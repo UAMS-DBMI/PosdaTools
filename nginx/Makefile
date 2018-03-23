@@ -1,10 +1,11 @@
-.PHONY: run stop
+.PHONY: run stop bash
 
 default: build
 
-build: last_built
+build: last_built 
 
-last_built: Dockerfile
+last_built: Dockerfile default.conf
+	@docker stop posda_nginx_test || true
 	docker build . -t quasarj/posda_nginx:build
 	date > last_built
 
@@ -13,3 +14,6 @@ run: build
 
 stop:
 	docker stop posda_nginx_test
+
+bash:
+	docker exec -it posda_nginx_test sh

@@ -1,0 +1,13 @@
+h2, table {
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+th {
+  text-align: left;
+}
+td {
+  border-bottom: 1px solid #eee;
+}
+.th {
+  padding-right: 10px;
+  font-weight: bold;
+}

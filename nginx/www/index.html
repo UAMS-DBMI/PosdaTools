@@ -1,0 +1,45 @@
+<DOCTYPE html>
+<html>
+<head>
+	<title>POSDA</title>
+	<link rel="stylesheet" href="bootstrap4/css/bootstrap.min.css" 
+		integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ">
+	<script src="bootstrap4/js/bootstrap.min.js" 
+		integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+	<div class="jumbotron">
+		<h1 class="display-3">POSDA (Docker)</h1>
+	</div>
+
+	<p>
+		Welcome to Posda! You may select from the options below:
+	</p>
+
+	<p>
+		<!-- 
+		  The below onClick is a hack to link to a different port
+		  while also linking to a relative URL ("current domain")
+		-->
+		<a class="btn btn-primary"
+				href="/"
+				onclick="javascript:event.target.port=64610" >
+			Posda Login
+		</a>
+	</p>
+	<p>
+		<a class="btn btn-secondary"
+			href="/viewer">Quince DICOM Viewer</a>
+	</p>
+	<p>
+		<a class="btn btn-secondary"
+			href="/papi">Posda API</a>
+	</p>
+
+</div>
+</body>
+</html>
