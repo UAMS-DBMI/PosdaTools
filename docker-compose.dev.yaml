@@ -1,0 +1,94 @@
+# New microservices version of the system
+#
+
+version: '3.1'
+
+services:
+    db:
+        image: postgres:10.1-alpine
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: example
+        volumes:
+            - pgdata_alpine:/var/lib/postgresql/data
+        ports:
+            - 5433:5432
+
+    posda:
+        image: quasarj/posda2:build
+        restart: always
+        depends_on:
+            - db
+        ports:
+            - 64610-64699:64610-64699
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - /home/quasar/projects/posda2/posda/posdatools:/home/posda/posdatools
+        environment:
+            TZ: America/Chicago
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+
+    posda-api:
+        image: quasarj/posda-api:build
+        restart: always
+        depends_on:
+            - db
+            - posda
+        environment:
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+
+    quince:
+        image: quasarj/quince:build
+        restart: always
+        depends_on:
+            - db
+            - posda
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+        environment:
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+
+    # kaleidoscope:
+    #     image: 
+    #     restart: always
+    #     depends_on:
+    #         - db
+    #         - posda
+    #     volumes:
+    #         - posda_cache_alpine: ??? maybe submission root
+
+    # k-base: 
+    #     image: 
+    #     restart: always
+    #     depends_on:
+    #         - db
+    #         - posda
+    #     volumes:
+    #         - posda_cache_alpine: ??? maybe submission root
+
+    nginx:
+        image: quasarj/posda_nginx:build
+        restart: always
+        ports:
+            - 80:80
+        depends_on:
+            - posda
+        links:
+            - posda:posda
+            - posda-api:posda-api
+            - quince:quince
+
+volumes:
+    posda_cache_alpine:
+    # posda_submission_root:
+    pgdata_alpine:
+
