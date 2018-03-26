@@ -7,3 +7,6 @@
 [submodule "nginx/quince"]
 	path = nginx/quince
 	url = ssh://git@imphub:7999/pt/quince.git
+[submodule "papi/posda-api"]
+	path = papi/posda-api
+	url = ssh://git@imphub:7999/pt/posda-api.git
