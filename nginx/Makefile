@@ -4,7 +4,7 @@ default: build
 
 build: last_built 
 
-last_built: Dockerfile default.conf
+last_built: Dockerfile default.conf quince/dist
 	@docker stop posda_nginx_test || true
 	docker build . -t quasarj/posda_nginx:build
 	date > last_built
@@ -17,3 +17,6 @@ stop:
 
 bash:
 	docker exec -it posda_nginx_test sh
+
+quince/dist:
+	make -C quince dist
