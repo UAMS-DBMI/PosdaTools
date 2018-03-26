@@ -1,3 +1,6 @@
 [submodule "posda/posdatools"]
 	path = posda/posdatools
 	url = ssh://git@imphub:7999/pt/posdatools.git
+[submodule "quince/quince"]
+	path = quince/quince
+	url = ssh://git@imphub:7999/pt/quince.git
