@@ -4,7 +4,7 @@ default: build
 
 build: last_built 
 
-last_built: Dockerfile default.conf quince/dist
+last_built: Dockerfile default.conf quince/dist kaleidoscope/dist
 	@docker stop posda_nginx_test || true
 	docker build . -t quasarj/posda_nginx:build
 	date > last_built
@@ -20,3 +20,6 @@ bash:
 
 quince/dist:
 	make -C quince dist
+
+kaleidoscope/dist:
+	make -C kaleidoscope dist

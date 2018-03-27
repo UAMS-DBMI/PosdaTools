@@ -10,3 +10,9 @@
 [submodule "papi/posda-api"]
 	path = papi/posda-api
 	url = ssh://git@imphub:7999/pt/posda-api.git
+[submodule "nginx/kaleidoscope"]
+	path = nginx/kaleidoscope
+	url = ssh://git@imphub:7999/pt/kaleidoscope.git
+[submodule "kaleidoscope/kaleidoscope"]
+	path = kaleidoscope/kaleidoscope
+	url = ssh://git@imphub:7999/pt/kaleidoscope.git
