@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.6
 import sys
+import os
 import logging
 from sanic import Sanic
 from sanic.response import json, text, HTTPResponse
@@ -652,6 +653,9 @@ async def user_watch():
     asyncio.get_event_loop().create_task(user_watch())
 
 if __name__ == "__main__":
+    if os.environ.get('DEBUG', 0) != 0:
+        DEBUG = True
+
     if len(sys.argv) > 1 and sys.argv[1].lower() == 'debug':
         DEBUG = True
 
