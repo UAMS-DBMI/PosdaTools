@@ -18,13 +18,14 @@ try {
   my $client = REST::Client->new();
   # Currently, assume the webservice is running on localhost
   # TODO: this should probably be a configuration variable!
-  $client->GET("http://localhost/api/new_token/$user");
+  $client->GET("http://kaleidoscope:8089/api/new_token/$user");
   my $resp = decode_json($client->responseContent());
   my $token = $resp->{token};
 
 
   print "Redirect to http://$external_url/k/?token=$token\n";
 } catch {
+  print "Login token error: $@\n";
   print "Redirect to http://$external_url/k/error.html\n";
 };
 
