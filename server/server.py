@@ -595,7 +595,7 @@ async def login_check(request):
             # logging.debug("Token from json: ", token)
         except Exception as e:
             logging.debug("Rejecting request because no token")
-            return text("not logged in", status=404)
+            return text("not logged in", status=401)
 
     try:
         user = sessions[token]
@@ -604,7 +604,7 @@ async def login_check(request):
         return None
     except KeyError:
         logging.debug("Rejecting request because invalid token")
-        return text("not logged in", status=404)
+        return text("not logged in", status=401)
 
 
 @app.route("/api/save", methods=["POST"])
