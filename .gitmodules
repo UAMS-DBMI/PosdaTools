@@ -16,3 +16,6 @@
 [submodule "kaleidoscope/kaleidoscope"]
 	path = kaleidoscope/kaleidoscope
 	url = ssh://git@imphub:7999/pt/kaleidoscope.git
+[submodule "kaleidoscope-base/k-base"]
+	path = kaleidoscope-base/k-base
+	url = ssh://git@imphub:7999/pt/kaleidoscope-base.git
