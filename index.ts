@@ -7,6 +7,9 @@ const promiseLimit = require('promise-limit');
 const ProgressBar = require('progress');
 
 winston.level = 'error';
+if (process.env.DEBUG == 1) {
+	winston.level = 'debug';
+}
 
 /* 
   Force the pg-promise library to support postgress peer auth,
@@ -15,7 +18,7 @@ winston.level = 'error';
 pg.pg.defaults.host = '/var/run/postgresql';
 
 
-const API_URL = 'http://localhost/vapi';
+const API_URL = 'http://quince:8088/vapi';
 
 import { Image } from './image';
 
@@ -377,7 +380,7 @@ async function doOne() {
   let result = await client.query(query);
 
   if (result.length < 1) {
-    console.log('No work to do, sleeping for 5 seconds...');
+    winston.log('debug', 'No work to do, sleeping for 5 seconds...');
     setTimeout(() => {}, 5000); // cause node to stay open
   } else {
     console.log("Generating images for " + result.length + " IECs...");
