@@ -540,6 +540,7 @@ method MakeMenuByMode($mode) {
 method MenuResponse($http, $dyn) {
   my $menu = $self->MakeMenuByMode($self->{Mode});
   $self->MakeMenu($http, $dyn, $menu);
+  # $self->DrawRoles($http, $dyn);
 }
 
 method SetMode($http, $dyn){
@@ -561,7 +562,12 @@ method ContentResponse($http, $dyn) {
     return($self->ScriptButtonResponse($http, $dyn));
   }
   unless ($self->{Mode} =~ /Inbox/) {
+    $http->queue(qq{
+      <div style="display: flex; flex-direction: row; align-items: end; margin-bottom: 5px">
+    });
     $self->DrawHistory($http, $dyn);
+    $self->DrawRoles($http, $dyn);
+    $http->queue(qq{</div>});
   }
 
   if ($self->can($self->{Mode})) {
@@ -649,7 +655,7 @@ method DrawHistory($http, $dyn) {
 
   $http->queue(qq{
     </select>
-    <p></p>
+    <p id="drawhistory_end"></p>
   });
 }
 
@@ -857,6 +863,7 @@ method ListQueries($http, $dyn){
 
 
 
+  # $self->DrawRoles($http, $dyn);
   $self->DrawTabs($http, $dyn);
   $self->RefreshEngine($http, $dyn, qq{
     <p></p>
@@ -882,16 +889,54 @@ method ListQueries($http, $dyn){
   $self->DrawSpreadsheetOperationList($http, $dyn, \@selected_tags);
 }
 
-method DrawTabs($http, $dyn) {
-  my $raw_tabs = PosdaDB::Queries->GetTabs();
-  my $tabs = [];
+method DrawRoles($http, $dyn) {
+  my $all_roles = PosdaDB::Queries->GetRoles();
+  say STDERR Dumper($all_roles);
 
-  for my $tab (@$raw_tabs) {
-    if ($self->{user_has_permission}($tab->{query_tab_name})) {
-      push @$tabs, $tab;
+  my $roles = [];
+
+  for my $role (@$all_roles) {
+    if ($self->{user_has_permission}($role)) {
+      push @$roles, $role;
     }
   }
 
+  # Just pick the first one if one isn't selected
+  if (not defined $self->{SelectedRole}) {
+    $self->{SelectedRole} = $all_roles->[0];
+  }
+
+  $http->queue(qq{
+    <div id="role_box" style="width: 25%">
+    <label>Role:</label>
+  });
+
+  $self->SelectByValue($http, {
+    op => 'SetRoleSelection',
+  });
+
+  for my $r (@$roles) {
+    my $selected = '';
+    if ($self->{SelectedRole} eq $r) {
+      $selected = 'selected="selected"';
+    }
+    $http->queue(qq{<option value="$r" $selected>$r</option>});
+  }
+
+  $http->queue(qq{
+    </select>
+    </div>
+    <p id="drawroles_end"></p>
+  });
+}
+
+method SetRoleSelection($http, $dyn) {
+  $self->{SelectedRole} = $dyn->{value};
+}
+
+method DrawTabs($http, $dyn) {
+  my $tabs = PosdaDB::Queries->GetTabsByRole($self->{SelectedRole});
+  
   # select the first tab as the default
   if (not defined $self->{SelectedTab}) {
     $self->SwitchToTab($http, { tab =>  $tabs->[0]->{query_tab_name} });

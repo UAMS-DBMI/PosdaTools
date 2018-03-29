@@ -450,7 +450,48 @@ method GetChainedQueryDetails($class: $chained_query_id) {
 }
 
 
+method GetRoles($class:) {
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select role_name
+    from role
+  });
 
+  $qh->execute();
+
+  my $results = $qh->fetchall_arrayref({});
+
+  # return a simple arrayref
+  return [map { 
+    $_->{role_name}
+  } @$results];
+}
+
+method GetTabsByRole($class: $role){
+
+  # TODO: Add some type of caching to this method!
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    select
+        qt.query_tab_name,
+        qt.query_tab_description,
+        qt.defines_dropdown,
+        rt.sort_order,
+        qt.defines_search_engine
+    from role_tabs rt
+    join query_tabs qt
+      on rt.query_tab_name = qt.query_tab_name
+    where role_name = ?
+    order by rt.sort_order
+  });
+
+  $qh->execute($role);
+
+  my $results = $qh->fetchall_arrayref({});
+
+  return $results;
+};
 method GetTabs($class:){
 
   # TODO: Add some type of caching to this method!
