@@ -3,13 +3,14 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -35,8 +36,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = db_version, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -45,18 +44,16 @@ SET default_with_oids = false;
 -- Name: version; Type: TABLE; Schema: db_version; Owner: -
 --
 
-CREATE TABLE version (
+CREATE TABLE db_version.version (
     version integer
 );
 
-
-SET search_path = public, pg_catalog;
 
 --
 -- Name: pt; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt (
+CREATE TABLE public.pt (
     pt_id integer NOT NULL,
     pt_signature text NOT NULL,
     pt_short_signature text NOT NULL,
@@ -76,7 +73,7 @@ CREATE TABLE pt (
 -- Name: pt_dcmtk; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt_dcmtk (
+CREATE TABLE public.pt_dcmtk (
     pt_dcmtk_is_repeating boolean,
     pt_id integer,
     ptrg_id integer,
@@ -91,7 +88,7 @@ CREATE TABLE pt_dcmtk (
 -- Name: pt_dicom3; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt_dicom3 (
+CREATE TABLE public.pt_dicom3 (
     pt_dicom3_is_repeating boolean,
     pt_id integer,
     ptrg_id integer,
@@ -112,7 +109,7 @@ CREATE TABLE pt_dicom3 (
 -- Name: pt_gdcm; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt_gdcm (
+CREATE TABLE public.pt_gdcm (
     pt_gdcm_is_repeating boolean,
     pt_id integer,
     ptrg_id integer,
@@ -127,7 +124,7 @@ CREATE TABLE pt_gdcm (
 -- Name: pt_observation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt_observation (
+CREATE TABLE public.pt_observation (
     pt_id integer NOT NULL,
     pt_obs_observer text,
     pt_obs_value text,
@@ -140,7 +137,7 @@ CREATE TABLE pt_observation (
 -- Name: pt_pt_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pt_pt_id_seq
+CREATE SEQUENCE public.pt_pt_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -152,14 +149,14 @@ CREATE SEQUENCE pt_pt_id_seq
 -- Name: pt_pt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pt_pt_id_seq OWNED BY pt.pt_id;
+ALTER SEQUENCE public.pt_pt_id_seq OWNED BY public.pt.pt_id;
 
 
 --
 -- Name: pt_wustl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pt_wustl (
+CREATE TABLE public.pt_wustl (
     pt_id integer,
     pt_wustl_vr text,
     pt_wustl_vm text,
@@ -179,7 +176,7 @@ CREATE TABLE pt_wustl (
 -- Name: ptrg; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ptrg (
+CREATE TABLE public.ptrg (
     ptrg_id integer NOT NULL,
     ptrg_signature_masked text NOT NULL,
     ptrg_owner text NOT NULL,
@@ -201,7 +198,7 @@ CREATE TABLE ptrg (
 -- Name: ptrg_observation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ptrg_observation (
+CREATE TABLE public.ptrg_observation (
     ptrg_id integer NOT NULL,
     ptrg_obs_observer text,
     ptrg_obs_value text,
@@ -214,7 +211,7 @@ CREATE TABLE ptrg_observation (
 -- Name: ptrg_ptrg_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE ptrg_ptrg_id_seq
+CREATE SEQUENCE public.ptrg_ptrg_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -226,28 +223,28 @@ CREATE SEQUENCE ptrg_ptrg_id_seq
 -- Name: ptrg_ptrg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE ptrg_ptrg_id_seq OWNED BY ptrg.ptrg_id;
+ALTER SEQUENCE public.ptrg_ptrg_id_seq OWNED BY public.ptrg.ptrg_id;
 
 
 --
 -- Name: pt pt_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pt ALTER COLUMN pt_id SET DEFAULT nextval('pt_pt_id_seq'::regclass);
+ALTER TABLE ONLY public.pt ALTER COLUMN pt_id SET DEFAULT nextval('public.pt_pt_id_seq'::regclass);
 
 
 --
 -- Name: ptrg ptrg_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ptrg ALTER COLUMN ptrg_id SET DEFAULT nextval('ptrg_ptrg_id_seq'::regclass);
+ALTER TABLE ONLY public.ptrg ALTER COLUMN ptrg_id SET DEFAULT nextval('public.ptrg_ptrg_id_seq'::regclass);
 
 
 --
 -- Name: pt pt_pt_signature_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pt
+ALTER TABLE ONLY public.pt
     ADD CONSTRAINT pt_pt_signature_key UNIQUE (pt_signature);
 
 
@@ -255,7 +252,7 @@ ALTER TABLE ONLY pt
 -- Name: ptrg ptrg_ptrg_signature_masked_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ptrg
+ALTER TABLE ONLY public.ptrg
     ADD CONSTRAINT ptrg_ptrg_signature_masked_key UNIQUE (ptrg_signature_masked);
 
 

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.3
+-- Dumped from database version 9.6.3
 -- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
@@ -57,7 +57,8 @@ CREATE TABLE public.activity (
     activity_id integer NOT NULL,
     brief_description text,
     when_created timestamp with time zone,
-    who_created text
+    who_created text,
+    when_closed timestamp with time zone
 );
 
 
@@ -585,6 +586,48 @@ CREATE TABLE public.tag_preparation (
 
 
 --
+-- Name: user_activity; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_activity (
+    user_activity_id integer NOT NULL,
+    user_name text NOT NULL,
+    description text NOT NULL,
+    when_activity_created timestamp with time zone,
+    when_activity_closed timestamp with time zone
+);
+
+
+--
+-- Name: user_activity_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_activity_messages (
+    user_activity_id integer NOT NULL,
+    background_subprocess_report_id integer NOT NULL
+);
+
+
+--
+-- Name: user_activity_user_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_activity_user_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_activity_user_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_activity_user_activity_id_seq OWNED BY public.user_activity.user_activity_id;
+
+
+--
 -- Name: user_inbox; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -729,6 +772,13 @@ ALTER TABLE ONLY public.spreadsheet_uploaded ALTER COLUMN spreadsheet_uploaded_i
 --
 
 ALTER TABLE ONLY public.subprocess_invocation ALTER COLUMN subprocess_invocation_id SET DEFAULT nextval('public.subprocess_invocation_subprocess_invocation_id_seq'::regclass);
+
+
+--
+-- Name: user_activity user_activity_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_activity ALTER COLUMN user_activity_id SET DEFAULT nextval('public.user_activity_user_activity_id_seq'::regclass);
 
 
 --

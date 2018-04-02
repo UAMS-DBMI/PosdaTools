@@ -3,13 +3,14 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -28,8 +29,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -38,7 +37,7 @@ SET default_with_oids = false;
 -- Name: app_instance; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE app_instance (
+CREATE TABLE public.app_instance (
     app_instance_id integer NOT NULL,
     started_at timestamp with time zone,
     pid integer
@@ -49,7 +48,7 @@ CREATE TABLE app_instance (
 -- Name: app_instance_app_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE app_instance_app_instance_id_seq
+CREATE SEQUENCE public.app_instance_app_instance_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -61,14 +60,14 @@ CREATE SEQUENCE app_instance_app_instance_id_seq
 -- Name: app_instance_app_instance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE app_instance_app_instance_id_seq OWNED BY app_instance.app_instance_id;
+ALTER SEQUENCE public.app_instance_app_instance_id_seq OWNED BY public.app_instance.app_instance_id;
 
 
 --
 -- Name: app_measurement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE app_measurement (
+CREATE TABLE public.app_measurement (
     app_instance_id integer NOT NULL,
     at timestamp with time zone,
     pcpu double precision,
@@ -94,7 +93,7 @@ CREATE TABLE app_measurement (
 -- Name: app_instance app_instance_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY app_instance ALTER COLUMN app_instance_id SET DEFAULT nextval('app_instance_app_instance_id_seq'::regclass);
+ALTER TABLE ONLY public.app_instance ALTER COLUMN app_instance_id SET DEFAULT nextval('public.app_instance_app_instance_id_seq'::regclass);
 
 
 --

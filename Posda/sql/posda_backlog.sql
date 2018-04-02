@@ -3,13 +3,14 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -28,8 +29,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -38,7 +37,7 @@ SET default_with_oids = false;
 -- Name: collection_count_per_round; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collection_count_per_round (
+CREATE TABLE public.collection_count_per_round (
     collection text NOT NULL,
     file_count integer NOT NULL
 );
@@ -48,7 +47,7 @@ CREATE TABLE collection_count_per_round (
 -- Name: control_status; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE control_status (
+CREATE TABLE public.control_status (
     status text NOT NULL,
     processor_pid text,
     idle_poll_interval interval,
@@ -65,7 +64,7 @@ CREATE TABLE control_status (
 -- Name: request; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE request (
+CREATE TABLE public.request (
     request_id integer NOT NULL,
     submitter_id integer NOT NULL,
     received_file_path text,
@@ -88,7 +87,7 @@ CREATE TABLE request (
 -- Name: request_error; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE request_error (
+CREATE TABLE public.request_error (
     request_id integer NOT NULL,
     error_time timestamp without time zone,
     error_description text
@@ -99,7 +98,7 @@ CREATE TABLE request_error (
 -- Name: request_request_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE request_request_id_seq
+CREATE SEQUENCE public.request_request_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -111,14 +110,14 @@ CREATE SEQUENCE request_request_id_seq
 -- Name: request_request_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE request_request_id_seq OWNED BY request.request_id;
+ALTER SEQUENCE public.request_request_id_seq OWNED BY public.request.request_id;
 
 
 --
 -- Name: round; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE round (
+CREATE TABLE public.round (
     round_id integer NOT NULL,
     round_start timestamp without time zone,
     round_end timestamp without time zone,
@@ -133,7 +132,7 @@ CREATE TABLE round (
 -- Name: round_collection; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE round_collection (
+CREATE TABLE public.round_collection (
     round_id integer NOT NULL,
     collection text NOT NULL,
     num_entered integer,
@@ -146,7 +145,7 @@ CREATE TABLE round_collection (
 -- Name: round_counts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE round_counts (
+CREATE TABLE public.round_counts (
     round_id integer NOT NULL,
     collection text NOT NULL,
     num_requests integer,
@@ -158,7 +157,7 @@ CREATE TABLE round_counts (
 -- Name: round_round_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE round_round_id_seq
+CREATE SEQUENCE public.round_round_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -170,14 +169,14 @@ CREATE SEQUENCE round_round_id_seq
 -- Name: round_round_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE round_round_id_seq OWNED BY round.round_id;
+ALTER SEQUENCE public.round_round_id_seq OWNED BY public.round.round_id;
 
 
 --
 -- Name: submitter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submitter (
+CREATE TABLE public.submitter (
     submitter_id integer NOT NULL,
     collection text NOT NULL,
     site text NOT NULL,
@@ -190,7 +189,7 @@ CREATE TABLE submitter (
 -- Name: submitter_submitter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE submitter_submitter_id_seq
+CREATE SEQUENCE public.submitter_submitter_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -202,35 +201,35 @@ CREATE SEQUENCE submitter_submitter_id_seq
 -- Name: submitter_submitter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE submitter_submitter_id_seq OWNED BY submitter.submitter_id;
+ALTER SEQUENCE public.submitter_submitter_id_seq OWNED BY public.submitter.submitter_id;
 
 
 --
 -- Name: request request_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY request ALTER COLUMN request_id SET DEFAULT nextval('request_request_id_seq'::regclass);
+ALTER TABLE ONLY public.request ALTER COLUMN request_id SET DEFAULT nextval('public.request_request_id_seq'::regclass);
 
 
 --
 -- Name: round round_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY round ALTER COLUMN round_id SET DEFAULT nextval('round_round_id_seq'::regclass);
+ALTER TABLE ONLY public.round ALTER COLUMN round_id SET DEFAULT nextval('public.round_round_id_seq'::regclass);
 
 
 --
 -- Name: submitter submitter_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submitter ALTER COLUMN submitter_id SET DEFAULT nextval('submitter_submitter_id_seq'::regclass);
+ALTER TABLE ONLY public.submitter ALTER COLUMN submitter_id SET DEFAULT nextval('public.submitter_submitter_id_seq'::regclass);
 
 
 --
 -- Name: collection_count_per_round collection_count_per_round_collection_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection_count_per_round
+ALTER TABLE ONLY public.collection_count_per_round
     ADD CONSTRAINT collection_count_per_round_collection_key UNIQUE (collection);
 
 
@@ -238,21 +237,21 @@ ALTER TABLE ONLY collection_count_per_round
 -- Name: posda_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX posda_file_id_index ON request USING btree (posda_file_id);
+CREATE INDEX posda_file_id_index ON public.request USING btree (posda_file_id);
 
 
 --
 -- Name: request_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX request_lookup ON request USING btree (submitter_id, file_in_posda, file_copied, copy_error, import_error);
+CREATE INDEX request_lookup ON public.request USING btree (submitter_id, file_in_posda, file_copied, copy_error, import_error);
 
 
 --
 -- Name: submitter_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX submitter_lookup ON submitter USING btree (collection, site, subj);
+CREATE UNIQUE INDEX submitter_lookup ON public.submitter USING btree (collection, site, subj);
 
 
 --

@@ -3,13 +3,14 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -35,8 +36,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = db_version, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -45,18 +44,16 @@ SET default_with_oids = false;
 -- Name: version; Type: TABLE; Schema: db_version; Owner: -
 --
 
-CREATE TABLE version (
+CREATE TABLE db_version.version (
     version integer
 );
 
-
-SET search_path = public, pg_catalog;
 
 --
 -- Name: collection; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collection (
+CREATE TABLE public.collection (
     collection_id integer NOT NULL,
     collection_code text
 );
@@ -66,7 +63,7 @@ CREATE TABLE collection (
 -- Name: collection_collection_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE collection_collection_id_seq
+CREATE SEQUENCE public.collection_collection_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -78,14 +75,14 @@ CREATE SEQUENCE collection_collection_id_seq
 -- Name: collection_collection_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE collection_collection_id_seq OWNED BY collection.collection_id;
+ALTER SEQUENCE public.collection_collection_id_seq OWNED BY public.collection.collection_id;
 
 
 --
 -- Name: site; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE site (
+CREATE TABLE public.site (
     site_id integer NOT NULL,
     site_code text
 );
@@ -95,7 +92,7 @@ CREATE TABLE site (
 -- Name: site_site_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE site_site_id_seq
+CREATE SEQUENCE public.site_site_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -107,14 +104,14 @@ CREATE SEQUENCE site_site_id_seq
 -- Name: site_site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE site_site_id_seq OWNED BY site.site_id;
+ALTER SEQUENCE public.site_site_id_seq OWNED BY public.site.site_id;
 
 
 --
 -- Name: submission; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submission (
+CREATE TABLE public.submission (
     submission_id integer NOT NULL,
     collection_id integer NOT NULL,
     site_id integer NOT NULL,
@@ -132,7 +129,7 @@ CREATE TABLE submission (
 -- Name: submission_submission_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE submission_submission_id_seq
+CREATE SEQUENCE public.submission_submission_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -144,14 +141,14 @@ CREATE SEQUENCE submission_submission_id_seq
 -- Name: submission_submission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE submission_submission_id_seq OWNED BY submission.submission_id;
+ALTER SEQUENCE public.submission_submission_id_seq OWNED BY public.submission.submission_id;
 
 
 --
 -- Name: submissionevent; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submissionevent (
+CREATE TABLE public.submissionevent (
     submission_id integer NOT NULL,
     event_type text,
     occurance_date_time timestamp with time zone,
@@ -164,28 +161,28 @@ CREATE TABLE submissionevent (
 -- Name: collection collection_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection ALTER COLUMN collection_id SET DEFAULT nextval('collection_collection_id_seq'::regclass);
+ALTER TABLE ONLY public.collection ALTER COLUMN collection_id SET DEFAULT nextval('public.collection_collection_id_seq'::regclass);
 
 
 --
 -- Name: site site_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY site ALTER COLUMN site_id SET DEFAULT nextval('site_site_id_seq'::regclass);
+ALTER TABLE ONLY public.site ALTER COLUMN site_id SET DEFAULT nextval('public.site_site_id_seq'::regclass);
 
 
 --
 -- Name: submission submission_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission ALTER COLUMN submission_id SET DEFAULT nextval('submission_submission_id_seq'::regclass);
+ALTER TABLE ONLY public.submission ALTER COLUMN submission_id SET DEFAULT nextval('public.submission_submission_id_seq'::regclass);
 
 
 --
 -- Name: collection collection_collection_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection
+ALTER TABLE ONLY public.collection
     ADD CONSTRAINT collection_collection_code_key UNIQUE (collection_code);
 
 
@@ -193,7 +190,7 @@ ALTER TABLE ONLY collection
 -- Name: site site_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY site
+ALTER TABLE ONLY public.site
     ADD CONSTRAINT site_site_code_key UNIQUE (site_code);
 
 

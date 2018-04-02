@@ -3,13 +3,14 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -28,8 +29,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -38,7 +37,7 @@ SET default_with_oids = false;
 -- Name: count_report; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE count_report (
+CREATE TABLE public.count_report (
     count_report_id integer NOT NULL,
     at timestamp with time zone
 );
@@ -48,7 +47,7 @@ CREATE TABLE count_report (
 -- Name: count_report_count_report_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE count_report_count_report_id_seq
+CREATE SEQUENCE public.count_report_count_report_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -60,14 +59,14 @@ CREATE SEQUENCE count_report_count_report_id_seq
 -- Name: count_report_count_report_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE count_report_count_report_id_seq OWNED BY count_report.count_report_id;
+ALTER SEQUENCE public.count_report_count_report_id_seq OWNED BY public.count_report.count_report_id;
 
 
 --
 -- Name: totals_by_collection_site; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE totals_by_collection_site (
+CREATE TABLE public.totals_by_collection_site (
     count_report_id integer NOT NULL,
     collection_name text,
     site_name text,
@@ -82,7 +81,7 @@ CREATE TABLE totals_by_collection_site (
 -- Name: count_report count_report_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY count_report ALTER COLUMN count_report_id SET DEFAULT nextval('count_report_count_report_id_seq'::regclass);
+ALTER TABLE ONLY public.count_report ALTER COLUMN count_report_id SET DEFAULT nextval('public.count_report_count_report_id_seq'::regclass);
 
 
 --
