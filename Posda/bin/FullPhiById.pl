@@ -33,7 +33,9 @@ my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $description = $scan->{description};
 $background->WriteToEmail("Scan ($scan_id) description: $description\n");
-$scan->PrepareBackgroundReportBasedOnQuery(
-  "SimplePhiReportAllMetaQuotes", "Full PHI Report",
-  $background, $max_rows);
+$background->WriteToEmail("Creating " .
+  "\"SimplePhiReportAllMetaQuotes\" report\n");
+my $rpt = $background->CreateReport("Full PHI Report");
+$scan->PrintTableFromQuery(
+  "SimplePhiReportAllMetaQuotes", $rpt);
 $background->Finish;

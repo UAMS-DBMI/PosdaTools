@@ -57,7 +57,7 @@ my $rpt2 = $background->CreateReport("Selected Private");
 $lines = $scan->PrintTableFromQuery(
   "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes", $rpt2);
 my $rpt3 = $background->CreateReport("Edit Skeleton");
-$rpt3->print("element,vr,q_value,description,disp,num_series," .
+$rpt3->print("type,path,q_value,num_files," .
   "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
 $rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
 $background->Finish;

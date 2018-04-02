@@ -83,6 +83,12 @@ method SpecificInitialize($session) {
         sync => 'Update();'
       },
       {
+        caption => "Activity",
+        op => 'SetMode',
+        mode => 'Activities',
+        sync => 'Update();'
+      },
+      {
         caption => "Files",
         op => 'SetMode',
         mode => 'Files',
@@ -293,6 +299,16 @@ method DeleteAndDismiss($http, $dyn) {
 method DismissInboxItemButtonClick($http, $dyn) {
   my $message_id = $dyn->{message_id};
   $self->{inbox}->SetDismissed($message_id);
+  $self->{Mode} = "Inbox";
+}
+
+method FileInboxItemButtonClick($http, $dyn) {
+  my $message_id = $dyn->{message_id};
+  print STDERR "File Inbox Button Clicked ($message_id)\n";
+  my $q = Query('InsertActivityInboxContent');
+  $q->RunQuery(sub {}, sub{}, $self->{ActivitySelected}, $message_id);
+  $self->{inbox}->SetDismissed($message_id);
+  $self->{Mode} = "Inbox";
 }
 
 method ForwardInboxItemButtonClick($http, $dyn) {
@@ -312,7 +328,7 @@ method DrawForwardForm($http, $dyn) {
     $_->{user_name}
   } @{$self->{_UsernameCache}};
 
-  say STDERR Dumper(\@all_users);
+#  say STDERR Dumper(\@all_users);
 
   if (not defined $self->{_ForwardInboxButtonClicked}) {
     $self->NotSoSimpleButtonButton($http, {
@@ -394,6 +410,15 @@ method InboxItem($http, $dyn) {
       uniq_id => 'dismiss_button',
       caption => 'Dismiss this message',
       op => 'DismissInboxItemButtonClick',
+      message_id => $message_id
+    });
+  }
+
+  if (not defined $msg_details->{date_dismissed}) {
+    $self->SelfConfirmingButton($http, {
+      uniq_id => 'file_button',
+      caption => 'File this message',
+      op => 'FileInboxItemButtonClick',
       message_id => $message_id
     });
   }
@@ -891,7 +916,7 @@ method ListQueries($http, $dyn){
 
 method DrawRoles($http, $dyn) {
   my $all_roles = PosdaDB::Queries->GetRoles();
-  say STDERR Dumper($all_roles);
+#  say STDERR Dumper($all_roles);
 
   my $roles = [];
 
@@ -1054,6 +1079,15 @@ method OpenPopup($class, $name, $params) {
 #    print STDERR Dumper($params);
 
   if ($class eq 'choose') {
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  } elsif ($class eq 'choose_from'){
+    $params->{file_id} = $params->{from_file_id};
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  } elsif ($class eq 'choose_to'){
+    $params->{file_id} = $params->{to_file_id};
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  } elsif ($class eq 'choose_spreadsheet'){
+    $params->{file_id} = $params->{spreadsheet_file_id};
     $class = Posda::FileViewerChooser::choose($params->{file_id});
   }
 
@@ -2425,6 +2459,128 @@ method UpdateInsertStatus($http, $dyn){
   });
 }
 method UpdatesInserts($http, $dyn){
+}
+#############################
+#Here Bill is putting in the "Activities" Page assortment
+method Activities($http, $dyn){
+  $self->RefreshActivities;
+  $self->RefreshEngine($http, $dyn, qq{
+    <h2>Activities</h2>
+  });
+  $self->RenderActivityDropDown($http, $dyn);
+  $self->RenderNewActivityForm($http, $dyn);
+}
+
+method RenderNewActivityForm($http, $dyn) {
+  $http->queue(qq{
+    <h3>Insert A new activity</h3>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label>Short description</label>
+        <input class="form-control" id="newActivity" value="">
+      </div>
+  });
+  $self->SubmitValueButton($http, {
+      caption => 'Save',
+      element_id => 'newActivity',
+      op => 'newActivity',
+      class => 'btn btn-primary',
+      #extra => $extra
+  });
+
+  $http->queue(qq{
+    </div>
+  });
+}
+method RenderActivityDropDown($http, $dyn){
+  unless(defined $self->{ActivitySelected}){
+    $self->{ActivitySelected} = "<none>";
+  }
+  my @activity_list;
+  push @activity_list, ["<none>", "----- No Activity Selected ----"];
+  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+  for my $i (@sorted_ids){
+    push @activity_list, [$i , $self->{Activities}->{$i}->{desc}];
+  }
+  $self->SelectByValue($http, {
+    op => 'SetActivity',
+  });
+  for my $i (@activity_list){ 
+    $http->queue("{<option value=\"$i->[0]\"");
+    if($i->[0] eq $self->{ActivitySelected}){
+      $http->queue(" selected")
+    }
+    $http->queue(">$i->[1]</option>");
+  }
+  $http->queue(qq{
+    </select>
+  });
+}
+
+method SetActivity($http, $dyn){
+  $self->{ActivitySelected} = $dyn->{value};
+}
+
+method newActivity($http, $dyn){
+  my $desc = $dyn->{value};
+  my $user = $self->get_user;
+  print STDERR "In new activity $user: $desc\n";
+  my $q = Query('CreateActivity');
+  $q->RunQuery(sub {}, sub {}, $desc, $user);
+}
+method SortedActivityIds($h){
+  return sort {
+    if(
+      $h->{$a}->{user} eq $self->get_user &&
+      $h->{$b}->{user} ne $self->get_user
+    ){ return 1 }
+    elsif(
+      $h->{$b}->{user} eq $self->get_user &&
+      $h->{$a}->{user} ne $self->get_user 
+    ){ return -1 }
+    elsif(
+      $h->{$a}->{user} eq $self->get_user
+    ){
+      if(
+       defined($h->{$a}->{closed}) &&
+       $h->{$b}->{closed}
+      ){ return -1 }
+      elsif(
+       defined($h->{$b}->{closed}) &&
+       $h->{$a}->{closed}
+      ){ return 1 }
+      return $h->{$a}->{opened} cmp $h->{$b}->{opened}
+    } elsif(
+      $h->{$a}->{user} ne $h->{$b}->{user}
+    ){
+      return $h->{$a}->{user} cmp $h->{$b}->{user}
+    }
+    if(
+     defined($h->{$a}->{closed}) &&
+     $h->{$b}->{closed}
+    ){ return -1 }
+    elsif(
+     defined($h->{$b}->{closed}) &&
+     $h->{$a}->{closed}
+    ){ return 1 }
+    return $h->{$a}->{opened} cmp $h->{$b}->{opened}
+  } keys %$h;
+}
+method RefreshActivities{
+  my $q = Query('GetActivities');
+  my %Activities;
+  $self->{Activities} = {};
+  $q->RunQuery(sub {
+    my($row) = @_;
+    my($act_id, $b_desc, $created, $who, $closed) = @$row;
+    $Activities{$act_id} = {
+      user => $who,
+      closed => $closed,
+      opened => $created,
+      desc => $b_desc
+    };
+  }, sub {}, $self->get_user);
+  $self->{Activities} = \%Activities;
 }
 #############################
 

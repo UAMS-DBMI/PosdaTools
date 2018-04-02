@@ -400,6 +400,15 @@ my $SopHandlers = {
       \&Posda::DB::Modules::WindowLevel,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.66' =>{
+    name => 'Raw DataStorage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
   '1.2.840.10008.5.1.4.1.1.66.1' =>{
     name => 'Spatial Registration Storage',
     handlers => [
@@ -638,6 +647,22 @@ my $SopHandlers = {
       \&Posda::DB::Modules::RtFractionScheme,
       \&Posda::DB::Modules::RtBeams,
       \&Posda::DB::Modules::RtBrachy,
+    ],
+  },
+  '1.2.840.10008.5.1.4.1.1.481.8' =>{
+    name => 'RT Ion Plan Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+#      \&Posda::DB::Modules::RtPlan,
+#      \&Posda::DB::Modules::RtPrescription,
+#      \&Posda::DB::Modules::RtToleranceTables,
+#      \&Posda::DB::Modules::RtPatientSetup,
+#      \&Posda::DB::Modules::RtFractionScheme,
+#      \&Posda::DB::Modules::RtBeams,
+#      \&Posda::DB::Modules::RtBrachy,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.481.6' =>{

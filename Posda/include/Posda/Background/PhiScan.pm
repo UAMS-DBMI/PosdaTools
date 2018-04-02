@@ -2,9 +2,9 @@ use strict;
 package Posda::Background::PhiScan;
 use Posda::DB 'Query';
 my $doc = <<EOF;
-Instances of Posda::Background::PHI  essentially represent rows in the 
+Instances of Posda::Background::PhiScan  essentially represent rows in the 
 phi_scan_instance table in the posda_phi_simple database, which in turn 
-represent PHI scans.
+represent PHI scans of DICOM files.
 
 Such an instance of this class can be created in one of two different ways:
  - initiate a scan.  This creates a row in phi_scan_instance, and populates
@@ -166,6 +166,7 @@ sub PrintTableFromQuery{
 }
 sub PrepareBackgroundReportBasedOnQuery{
   my($this, $query, $report_name, $background, $max_rows) = @_;
+print STDERR "In PrepareBackgroundReportBasedOnQuery\n";
   my @rows;
   my $q = Query($query);
   my $header = $q->{columns};
@@ -242,6 +243,7 @@ sub PrepareBackgroundReportBasedOnQuery{
 }
 sub MakeBackgroundReport{
   my($header, $rows, $name, $background) = @_;
+  print STDERR "In MakeBackgroundReport\n";
   my $rpt = $background->CreateReport($name);
   for my $i (0 .. $#{$header}){
     my $f = $header->[$i];
@@ -259,6 +261,6 @@ sub MakeBackgroundReport{
     }
     $rpt->print("\n");
   }
-  close($rpt);
+  $rpt->close;
 }
 1;

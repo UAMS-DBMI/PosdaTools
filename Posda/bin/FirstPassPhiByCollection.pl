@@ -52,10 +52,18 @@ my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $id = $scan->{phi_scan_instance_id};
 $background->WriteToEmail("Created scan id: $id in $elapsed seconds\n");
-$scan->PrepareBackgroundReportBasedOnQuery(
-  "SimplePublicPhiReportSelectedVrWithMetaquotes",
-  "Public with Selected VR", $background, 50000);
-$scan->PrepareBackgroundReportBasedOnQuery(
-  "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes",
-  "Relevant Private", $background, 50000);
+$background->WriteToEmail("Creating " .
+  "\"SimplePublicPhiReportSelectedVrWithMetaquotes\" report.\n");
+my $rpt1 = $background->CreateReport("Selected Public VR");
+my $lines = $scan->PrintTableFromQuery(
+  "SimplePublicPhiReportSelectedVrWithMetaquotes", $rpt1);
+$background->WriteToEmail("Creating " .
+  "\"SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes\" report.\n");
+my $rpt2 = $background->CreateReport("Selected Private");
+$lines = $scan->PrintTableFromQuery(
+  "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes", $rpt2);
+my $rpt3 = $background->CreateReport("Edit Skeleton");
+$rpt3->print("type,path,q_value,num_files," .
+  "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
+$rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
 $background->Finish;

@@ -3,19 +3,18 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Posda::BackgroundProcess;
 my $usage = <<EOF;
-BackgroundPrivateDispositions.pl <id> <to_dir> <uid_root> <offset> <notify>
+BackgroundPrivateDispositionsByPatShift.pl <id> <to_dir> <uid_root> <notify>
   id - id of row in subprocess_invocation table created for the
     invocation of the script
   writes result into <to_dir>
   UID's not hashed if they begin with <uid_root>
-  date's always offset with offset (days)
   email sent to <notify>
 
 Expects the following list on <STDIN>
-  <patient_id>&<study_uid>&<series_uid>
+  <patient_id>&<study_uid>&<series_uid>&<offset>
 Constructs a destination file name as follows:
   <to_dir>/<patient_id>/<study_uid>/<series_uid>/<modality>_sop_inst_uid.dcm
-Actually invokes ApplyPrivateDispositionUnconditionalDate.pl to do the edits
+Actually invokes NewApplyPrivateDispositions.pl to do the edits
 EOF
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
@@ -24,13 +23,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
 my $child_pid = $$;
 my $command = $0;
 my $script_start_time = time;
-unless($#ARGV == 4){
+unless($#ARGV == 3){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $to_dir, $uid_root, $offset, $notify) = @ARGV;
+my($invoc_id, $to_dir, $uid_root, $notify) = @ARGV;
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 
 my %Patients;
@@ -38,86 +37,15 @@ my $num_lines = 0;
 my @Series;
 while(my $line = <STDIN>){
   chomp $line;
-  my($patient_id, $study_uid, $series_uid) =
+  my($patient_id, $study_uid, $series_uid, $offset) =
     split /&/, $line;
   push @Series, $series_uid;
-  $Patients{$patient_id}->{$study_uid}->{$series_uid} = 1;
+  unless($offset =~ /^(.*) days$/){
+    print "Bad offset: $offset\n";
+  }
+  $offset = $1;
+  $Patients{$patient_id}->{$study_uid}->{$series_uid} = $offset;
   $num_lines += 1;
-  $background->LogInputLine($line);
-}
-my $q1 = PosdaDB::Queries->GetQueryInstance(
-  "PrivateTagsWhichArentMarked");
-my $q2 = PosdaDB::Queries->GetQueryInstance(
-  "DistinctDispositionsNeededSimple");
-my $error = 0;
-my @new_tags;
-$q1->RunQuery(sub{
-  my($row) = @_;
-  my($id, $ele_sig, $vr, $name, $disp) = @$row;
-  push(@new_tags, [$id, $ele_sig, $vr, $name, $disp]);
-}, sub {});
-if(@new_tags > 0){
-  print "Error: there are new private tags which have no disposition\n";
-  print "<table border><tr><th>id</th><th>tag</th>" .
-    "<th>vr</th><th>name</th><th>disp</th></tr>";
-  for my $i (@new_tags){
-    print "<tr>";
-    for my $v (@$i){
-      print "<td>";
-      if(defined $v) { print "$v" } else {print "&lt;undef&gt;" }
-      print "</td>";
-    }
-    print "</tr>";
-  }
-  print "</table>";
-  print "Not forking background because of errors\n";
-  exit;
-}
-my @dispositions_needed;
-$q2->RunQuery(sub {
-  my($row) = @_;
-  my($id, $ele_sig, $vr, $name) = @$row;
-  push @dispositions_needed, [$id, $ele_sig, $vr, $name];
-}, sub {});
-if(@dispositions_needed > 0){
-  print "Error: the following private tags have no disposition\n";
-  print "<table border><tr><th>id</th><th>tag</th>" .
-    "<th>vr</th><th>name</th></tr>";
-  for my $i (@dispositions_needed){
-    print "<tr>";
-    for my $v (@$i){
-      print "<td>";
-      if(defined $v) { print "$v" } else {print "&lt;undef&gt;" }
-      print "</td>";
-    }
-    print "</tr>";
-  }
-  print "</table>";
-  print "Not forking background because of errors\n";
-  exit;
-}
-my $q5 = PosdaDB::Queries->GetQueryInstance(
-  "AreVisibleFilesMarkedAsBadOrUnreviewedInSeries");
-my $q6 = PosdaDB::Queries->GetQueryInstance(
-  "IsThisSeriesNotVisuallyReviewed");
-for my $series (@Series){
-#  $q5->RunQuery(sub {
-#  }, sub {}, $series);
-  $q6->RunQuery(sub {
-    my($row) = @_;
-    print "Warning: series $series not submitted for visual review\n";
-  }, sub {}, $series);
-  $q5->RunQuery(sub{
-    my($row) = @_;
-    print "Error series $series has unreviewed or bad files\n";
-    $error += 1;
-  }, sub {}, $series);
-}
-
-if($error){
-  print "Not forking background because of errors\n";
-  $background->LogError("Didn't enter background because of errors");
-  exit;
 }
 my $num_series = @Series;
 print "Found list of $num_series series to send\n" .
@@ -134,6 +62,7 @@ my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPr
 for my $patient_id (sort keys %Patients){
   for my $study_uid (sort keys %{$Patients{$patient_id}}){
     for my $series_uid (sort keys %{$Patients{$patient_id}->{$study_uid}}){
+      my $offset = $Patients{$patient_id}->{$study_uid}->{$series_uid};
       my $dir = "$to_dir/$patient_id";
       unless(-d $dir){
         unless(mkdir $dir){
@@ -163,7 +92,7 @@ for my $patient_id (sort keys %Patients){
         my $path = $row->[0];
         my $sop_instance_uid = $row->[1];
         my $modality = $row->[2];
-        my $cmd = "ApplyPrivateDispositionUnconditionalDate.pl $path " .
+        my $cmd = "NewApplyPrivateDispositions.pl $path " .
           "\"$to_dir/$patient_id/" .
           "$study_uid/" .
           "$series_uid/$modality" . "_$sop_instance_uid.dcm\" " .
@@ -173,9 +102,11 @@ for my $patient_id (sort keys %Patients){
     }
   }
 }
+#exit;
 my $num_commands = @cmds;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
+#print STDERR "about to execute $num_commands in 5 subshells\n";
 open SCRIPT1, "|/bin/sh";
 open SCRIPT2, "|/bin/sh";
 open SCRIPT3, "|/bin/sh";

@@ -30533,7 +30533,7 @@ my $PvtDict = {
         group => "0013",
         Name => "Batch",
       },
-      "22" => {
+      "80" => {
         VM => 1,
         VR => "LO",
         ele => "50",

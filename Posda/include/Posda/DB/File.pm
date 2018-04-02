@@ -505,7 +505,7 @@ sub ProcessFilesWithLimit{
         ## todo - what if its neither a DICOMDIR nor a known UID?
       }
     } else {
-      my $file_type = `file $h->{path}`;
+      my $file_type = `file \"$h->{path}\"`;
       chomp $file_type;
       if($file_type =~ /^[^:]*:\s*(.*)$/){
         $file_type = $1;

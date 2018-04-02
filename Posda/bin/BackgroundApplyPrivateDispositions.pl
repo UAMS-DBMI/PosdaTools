@@ -42,6 +42,8 @@ Queries used to implement background processor protocol:
   CreateBackgroundInputLine
   AddCompletionTimeToBackgroundSubprocess
 EOF
+print "This script is obsolete.  Use \"BackgroundPrivateDispositions(.pl)\" instead\n";
+exit;
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
   exit;

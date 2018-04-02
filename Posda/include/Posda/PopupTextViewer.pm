@@ -35,8 +35,10 @@ method ContentResponse($http, $dyn) {
   my $file_content = $self->{text};
 
   # Turn any URLs into actual links
-  $file_content =~    s( ($RE{URI}{HTTP}) )
-                (<a href="$1">$1</a>)gx  ;
+#  $file_content =~    s( ($RE{URI}{HTTP}) )
+#                (<a href="$1">$1</a>)gx  ;
+   $file_content =~ s/</&lt;/gx;
+   $file_content =~ s/>/&gt;/gx;
 
 
   $http->queue("<pre>$file_content</pre>");

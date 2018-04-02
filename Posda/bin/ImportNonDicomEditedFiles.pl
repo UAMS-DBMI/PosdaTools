@@ -6,30 +6,30 @@ use Posda::BackgroundProcess;
 use File::Path 'rmtree';
 
 my $usage = <<EOF;
-ImportEdits.pl <bkgrnd_id> <sub_invoc_id> <notify>
+ImportNonDicomEdits.pl <bkgrnd_id> <sub_invoc_id> <notify>
 or
-ImportEdits.pl -h
+ImportNonDicomEdits.pl -h
 
 The script doesn't expect lines on STDIN:
 
 It does the following before entering background:
-  1) It checks the status of the dicom_edit_compare_disposition row with
+  1) It checks the status of the non_dicom_edit_compare_disposition row with
      that sub_invoc_id.  Unless it is "Comparisons Complete", print an
      error and exit.
      Query: "StartTransactionPosda"
-     Query: "LockDicomEditCompareDisposition"
-     Query: "GetDicomEditCompareDisposition".
+     Query: "LockNonDicomEditCompareDisposition"
+     Query: "GetNonDicomEditCompareDisposition".
      Query: "EndTransactionPosda"
   1.5) Update the disposition to "Import In Progress"
-     Query: "UpdateDicomEditCompareDispositionStatus"
+     Query: "UpdateNonDicomEditCompareDispositionStatus"
      Query: "EndTransactionPosda"
   2) Make the following lists:
      a) A list of the files which are "from" files in dicom_edit_compare which
         are visible in the database with their current visibility.
-        Query: "GetDicomEditCompareFromFiles"
+        Query: "GetNonDicomEditCompareFromFiles"
      b) A list of the files which are "to" files in dicom_edit_compare.  With
         these files, get path, a file_id (if available), 
-        Query: "GetDicomEditCompareToFiles"
+        Query: "GetNonDicomEditCompareToFiles"
   3) The file_ids which occur only in the "from" files are to be hidden.
   5) If there are files which are in both the "from" and "to" files,
      This is an abnormal occurance and should be noted in the email and the
@@ -42,26 +42,25 @@ It does the following before entering background:
 Then it drops into the background to actually do any hides and make visible,
 and import operations.
 It uses the following sub scripts:
-  HideFilesWithStatus.pl to hide files
-  UnHideFilesWithStatus.pl to unhide files which already have 
-    ctp_file rows (project_name is not null).
-  HideFilesWithNoCtpWithStatus.pl to hide files, creating a new
-    ctp_file row with project_name and site_name = 'UNKNOWN'
+  HideNonDicomFilesWithStatus.pl to hide files
+  UnHideNonDicomFilesWithStatus.pl to unhide files are hidden and need to
+     to not be.
   ImportMultipleFilesIntoPosda.pl to import new files into Posda.
   
 These operations are done in the following order:
   1) Hide files which need to be hidden
-  2) Unhide files with ctp_file rows which need to unhidden
-  3) Create new hidden ctp_file rows for files which need to be hidden and
-     have no ctp_file_rows
+  2) Unhide files which are hidden and shouldn't be
   4) Import new files
+
 Importing files into Posda is throttled by only writing files to the subprocess
 when there are fewer than 100 files waiting to be processed processed in Posda.
 100 files are written in a batch.
 Query: GetPosdaQueueSize
-When the file handle to ImportMultiple files in Posda, this script will get the
-maximum file_id and then wait until that file has been processed before it
-exits.  This will insure that all imported files have been processed.
+
+When the file handle to ImportMultiple files in Posda closes (i.e all files have
+been imported), this script will get the maximum file_id and then wait until that
+file has been processed before it exits.  This will insure that all imported
+files have been processed.
 Query: GetMaxFileId
 Query: GetMaxProcessedFileId
 
@@ -95,10 +94,10 @@ unless($#ARGV == 2){
 
 my ($invoc_id, $subproc_invoc_id, $notify) = @ARGV;
 
-my $get_decd = Query("GetDicomEditCompareDisposition");
+my $get_decd = Query("GetNonDicomEditCompareDisposition");
 my $start_trans = Query("StartTransactionPosda");
 my $end_trans = Query("EndTransactionPosda");
-my $loc_decd = Query("LockDicomEditCompareDisposition");
+my $loc_decd = Query("LockNonDicomEditCompareDisposition");
 my $status;
 my $DestDir;
 $start_trans->RunQuery(sub{}, sub{});
@@ -114,21 +113,19 @@ unless($status eq "Comparisons Complete"){
   print "Error: status is \"$status\".\nInappropriate for import\n";
   exit;
 }
-my $upd_decd = Query("UpdateDicomEditCompareDispositionStatus");
+my $upd_decd = Query("UpdateNonDicomEditCompareDispositionStatus");
 $upd_decd->RunQuery(sub{}, sub{}, "Import In Progress", $subproc_invoc_id);
 $end_trans->RunQuery(sub{}, sub{});
 
-my $get_from = Query("GetDicomEditCompareFromFiles");
-my %FromFiles;
+my $get_from = Query("GetNonDicomEditCompareFromFiles"); my %FromFiles;
 $get_from->RunQuery(sub {
   my($row) = @_;
   my($file_id, $proj_name, $visibility) = @$row;
   $FromFiles{$file_id} = [$proj_name, $visibility];
 }, sub {}, $subproc_invoc_id);
-my $get_to = Query("GetDicomEditCompareToFiles");
+my $get_to = Query("GetNonDicomEditCompareToFiles");
 my %FilesBothFromAndTo;
-my %FromFilesWithCtpToHide;
-my %FromFilesWithoutCtpToHide;
+my %FromFilesToHide;
 my %FromFilesAlreadyHidden;
 my %ToFilesToUnhide;
 my %ToFilesToImport;
@@ -137,10 +134,12 @@ $get_to->RunQuery(sub {
   my($path, $file_id, $proj_name, $visibility) = @$row;
   if(defined($file_id)){
     if(exists $FromFiles{$file_id}){
+      print "Warning: $file_id is in both From and To files\n";
       $FilesBothFromAndTo{$file_id} = $FromFiles{$file_id};
       delete $FromFiles{$file_id};
     } else {
       if(defined $visibility){
+        print "Warning: to_file $file_id already exists\n";
         $ToFilesToUnhide{$file_id} = [$proj_name, $visibility];
       }
     }
@@ -152,27 +151,22 @@ my $num_from_files = keys %FromFiles;
 #Analyze files, build lists report abnormals, etc;
 for my $file_id (keys %FromFiles){
   my($proj_name, $visibility) = @{$FromFiles{$file_id}};
-  if(defined $proj_name){
-    if(defined $visibility){
-      $FromFilesAlreadyHidden{$file_id} = $FromFiles{$file_id};
-    } else {
-      $FromFilesWithCtpToHide{$file_id} = $FromFiles{$file_id};
-    }
+  if(defined $visibility){
+    print "Warning: from_file $file_id is already hidden\n";
+    $FromFilesAlreadyHidden{$file_id} = $FromFiles{$file_id};
   } else {
-    $FromFilesWithoutCtpToHide{$file_id} = $FromFiles{$file_id};
+    $FromFilesToHide{$file_id} = $FromFiles{$file_id};
   }
   delete $FromFiles{$file_id};
 }
-my $num_from_files_with_ctp_to_hide = keys %FromFilesWithCtpToHide;
-my $num_from_files_without_ctp_to_hide = keys %FromFilesWithoutCtpToHide;
+my $num_from_files_to_hide = keys %FromFilesToHide;
 my $num_from_files_already_hidden = keys %FromFilesAlreadyHidden;
 my $num_files_both_from_and_to = keys %FilesBothFromAndTo;
 my $num_files_already_imported_to_unhide = 
   keys %ToFilesToUnhide;
 my $num_to_files_to_unhide = keys %ToFilesToUnhide;
 my $num_to_files_to_import = keys %ToFilesToImport;
-print "From files with CTP to hide: $num_from_files_with_ctp_to_hide\n" .
-  "From files without CTP to hide: $num_from_files_without_ctp_to_hide\n" .
+print "From files  to hide: $num_from_files_to_hide\n" .
   "From files already hidden: $num_from_files_already_hidden\n" .
   "Files in both from and to: $num_files_both_from_and_to\n" .
   "To files already imported (to unhide): " .
@@ -192,34 +186,18 @@ $background->Daemonize;
 my $start_time = `date`;
 chomp $start_time;
 $background->WriteToEmail("Starting:\n" .
-  "ImportEdits.pl \"$invoc_id\" \"$subproc_invoc_id\" \"$notify\"\n" .
+  "ImportNonDicomEditedFiles.pl \"$invoc_id\" \"$subproc_invoc_id\" \"$notify\"\n" .
   "at $start_time\n");
-print STDERR "Starting ImportEditedFilesFromDicomEditCompare.pl at $start_time\n";
-#hide files with no CTP
-if($num_from_files_without_ctp_to_hide > 0){
+print STDERR "Starting ImportNonDicomEditedFiles.pl at $start_time\n";
+#hide files 
+if($num_from_files_to_hide > 0){
   $background->WriteToEmail(
-    "Hiding $num_from_files_without_ctp_to_hide files without ctp_file rows\n");
+    "Hiding $num_from_files_to_hide from files\n");
   my $start = time;
-  open HIDE, "|HideFilesWithNoCtpWithStatus.pl $notify \"Hiding from files " .
-    "in dicom_edit_compare($subproc_invoc_id)\"";
-  for my $file_id (keys %FromFilesWithoutCtpToHide){
-    my($proj_name, $visibility) = @{$FromFilesWithoutCtpToHide{$file_id}};
-    unless(defined $visibility) { $visibility = "<undef>" }
-    print HIDE "$file_id&$visibility\n";
-  }
-  close HIDE;
-  my $elapsed = time - $start;
-  $background->WriteToEmail("Duration of hide: $elapsed seconds\n");
-}
-#hide files with no CTP
-if($num_from_files_with_ctp_to_hide > 0){
-  $background->WriteToEmail(
-    "Hiding $num_from_files_with_ctp_to_hide files with ctp_file rows\n");
-  my $start = time;
-  open HIDE, "|HideFilesWithStatus.pl $notify \"Hiding from files " .
-    "in dicom_edit_compare($subproc_invoc_id)\"";
-  for my $file_id (keys %FromFilesWithCtpToHide){
-    my($proj_name, $visibility) = @{$FromFilesWithCtpToHide{$file_id}};
+  open HIDE, "|HideNonDicomFilesWithStatus.pl $notify \"Hiding from files " .
+    "in non_dicom_edit_compare($subproc_invoc_id)\"";
+  for my $file_id (keys %FromFilesToHide){
+    my($proj_name, $visibility) = @{$FromFilesToHide{$file_id}};
     unless(defined $visibility) { $visibility = "<undef>" }
     print HIDE "$file_id&$visibility\n";
   }
@@ -231,8 +209,8 @@ if($num_files_already_imported_to_unhide > 0){
   $background->WriteToEmail(
     "Unhiding $num_files_already_imported_to_unhide files\n");
   my $start = time;
-  open HIDE, "|UnHideFilesWithStatus.pl $notify \"Unhiding from files " .
-    "in dicom_edit_compare($subproc_invoc_id)\"";
+  open HIDE, "|UnHideNonDicomFilesWithStatus.pl $notify \"Unhiding from files " .
+    "in non_dicom_edit_compare($subproc_invoc_id)\"";
   for my $file_id (keys %ToFilesToUnhide){
     my($proj_name, $visibility) = @{$ToFilesToUnhide{$file_id}};
     unless(defined $visibility) { $visibility = "<undef>" }
@@ -268,8 +246,7 @@ while(1){
     $queue_size = $row->[0];
   }, sub {});
   if($queue_size > $max_queue_for_start) {
-    my $remaining = @FilesToImport;
-    print STDERR "(Sleep 10) qs: $queue_size, rem: $remaining\n";
+    print STDERR "Sleeping 10: queue_size $queue_size\n";
     sleep 10;
     $sleep_time += 10;
     next import_loop;
@@ -331,11 +308,6 @@ my $elapsed_in_delete = time - $start_delete;
 $background->WriteToEmail("Deleted directory and $num_to_files_to_import in " .
   "$elapsed_in_delete seconds\n");
 #Update status of dicom_edit_compare_disposition
-my $upd = Query("UpdateDicomEditCompareDispositionStatus");
+my $upd = Query("UpdateNonDicomEditCompareDispositionStatus");
 $upd->RunQuery(sub{}, sub{}, "Import Complete - to files deleted",
    $subproc_invoc_id);
-$background->PrepareBackgroundReportBasedOnQuery(
-  "SummaryOfFromFiles", "Summary of From Files", 1000, $subproc_invoc_id);
-$background->PrepareBackgroundReportBasedOnQuery(
-  "SummaryOfToFiles", "Summary of To Files", 1000, $subproc_invoc_id);
-$background->Finish;

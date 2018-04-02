@@ -14,7 +14,8 @@ my $usage = <<EOF
 Usage: ExtractAndImportZip.pl <background_id> <notify> <filename>
 
 This is a Background Process script which extract a given tar file
-to the POSDA_SUBMISSION_ROOT and then import the files in-place.
+to the "imports from browser" file_storage_root and then 
+imports the files in-place.
 
 Once the files have been imported and processed, an email report is
 sent to <notify>.
@@ -33,14 +34,30 @@ my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 $background->Daemonize;
 # don't write to stdout after this, or it will crash!
 
+my $get_root = Query("GetFileStorageRootByStorageClass");
+my $submission_root;
+$get_root->RunQuery(sub {
+  my($row) = @_;
+  $submission_root = $row->[0];
+}, sub {}, "imports from browser");
+
 my $report = $background->CreateReport('main');
 
 $background->WriteToEmail("Began extract and import operation..\n");
 $background->WriteToEmail("$filename\n");
 
 my $guid = Posda::UUID->GetGuid();
-my $submission_root = Config('submission_root');
-my $extract_dir = "$submission_root/$guid";
+#my $submission_root = Config('submission_root');
+my($sec,$min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = 
+  localtime(time);
+$year += 1900;
+my $date_dir = "$year-$mon-$mday";
+unless(-d "$submission_root/$date_dir"){
+  unless(mkdir "$submission_root/$date_dir"){
+     die "Could not create date directory: $submission_root/$date_dir";
+  }
+}
+my $extract_dir = "$submission_root/$date_dir/$guid";
 
 DEBUG "Extracting to: $extract_dir";
 

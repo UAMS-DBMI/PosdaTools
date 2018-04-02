@@ -10,6 +10,9 @@
 package XMLParse;
 use strict;
 use XML::Parser;
+use Debug;
+use Encode qw(encode decode);
+my $dbg = sub {print @_};
 
 sub new{
   my $class = shift;
@@ -121,6 +124,10 @@ sub newTree{
     unless($el eq $this->{el}->{tag}){ 
       die "Non matching tags: $el $this->{el}->{tag}" 
     }
+    if(exists $this->{el}->{value}->{content}){
+      $this->{el}->{value}->{content} = 
+        $this->CollapseText($this->{el}->{value}->{content});
+    }
     if(exists $this->{el}->{parent}){
       push(@{$this->{el}->{parent}->{value}->{content}}, $this->{el}->{value});
     }
@@ -132,8 +139,17 @@ sub newTree{
     my $parser = shift;
     my $string = shift;
     my $el = $this->{el}->{tag};
-    if($string =~ /^\s*$/){ return }
-    push(@{$this->{el}->{value}->{content}}, $string);
+    if($string =~ /^\s*$/){
+      if($string eq "\r"){
+        push(@{$this->{el}->{value}->{content}}, $string)
+      } elsif($string eq "\n"){
+        push(@{$this->{el}->{value}->{content}}, $string)
+      } else {
+        push(@{$this->{el}->{value}->{content}}, " ")
+      }
+    } else {
+      push(@{$this->{el}->{value}->{content}}, $string)
+    }
   };
   $this->{parser} = XML::Parser->new(Handlers => {
     Start => $start,
@@ -141,5 +157,40 @@ sub newTree{
     Char => $char,
   });
   return bless($this, $class);
+}
+sub ParseTree{
+  my($this) = @_;
+  my $ret = {
+    tag => $this->{el}->{tag},
+    attrs => $this->{el}->{value}->{attrs},
+    content => $this->{el}->{value}->{content}
+  };
+  return $ret;
+}
+sub CollapseText{
+  my $this = shift;
+  my $content = shift;
+  my @collapsed_content;
+  my $running_text = "";
+  item:
+  for my $i (0 .. $#{$content}){
+    my $item = $content->[$i];
+    my $type = ref($item);
+    if(ref($item) ne "HASH"){
+      $running_text .= $item;
+      next item;
+    } else {
+      if($running_text ne ""){
+        push @collapsed_content, encode('utf8', $running_text);
+        $running_text = "";
+      }
+      push @collapsed_content, $item;
+      next item;
+    }
+  }
+  if($running_text ne ""){
+    push @collapsed_content, encode('utf8', $running_text);
+  }
+  return \@collapsed_content;
 }
 1;

@@ -883,9 +883,9 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       notify => $notify
     };
     $background->InsertEmailButton($caption, $op, $param_hash);
-    $op = "ScriptButton";
-    $caption = "Accept Edits, Import and Delete Temporary Files";
-    $param_hash = {
+    my $op = "ScriptButton";
+    my $caption = "Accept Edits, Import and Delete Temporary Files";
+    my $param_hash = {
       op => "OpenTableFreePopup",
       class_ => "Posda::ProcessPopup",
       cap_ => "ImportEdits",

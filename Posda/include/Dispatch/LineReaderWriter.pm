@@ -5,6 +5,7 @@ use Modern::Perl;
 
 use Dispatch::Select;
 use Dispatch::LineReader;
+use Encode;
 
 # Execute the command, sending all data one line at
 # a time, and collecting the output into an array,
@@ -20,7 +21,7 @@ func write_and_read_all($class: $cmd, $data, $finished_callback) {
   Dispatch::Select::Socket->new(
     func($dispatch, $sock) {
       if (my $line = shift @$data) {
-        my $bytes_written = syswrite $sock, "$line\n";
+        my $bytes_written = syswrite $sock, encode("utf8", "$line\n");
       } else {
         # remove from the queue when out of data to write
         shutdown($sock, 1);

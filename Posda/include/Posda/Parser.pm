@@ -1067,6 +1067,8 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } elsif($from_vr eq "SH" && $to_vr eq "DT"){
     return("text", $value_s);
+  } elsif($from_vr eq "ST" && $to_vr eq "LO"){
+    return("text", $value_s);
   } elsif($from_vr eq "LT" && $to_vr eq "LO" && length($value_s) < 65){
     return("text", $value_s);
   } elsif($from_vr eq "OB" && $to_vr eq "CS"){

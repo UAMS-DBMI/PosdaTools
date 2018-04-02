@@ -54,6 +54,11 @@ sub new{
   }
   return bless $this, $class;
 }
+sub NewRandomUid{
+  my($this) = @_;
+  my $rand = Posda::UUID::GetUUID();
+  return $this->HashUID($rand);
+}
 sub HashUID{
   my($this, $uid) = @_;
   if($uid =~ /^$this->{uid_root}/){
