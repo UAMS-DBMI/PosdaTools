@@ -866,9 +866,9 @@ CreateActivity	insert into activity(brief_description, when_created, who_created
 InsertActivityInboxContent	insert into activity_inbox_content(\n activity_id, user_inbox_content_id\n) values (\n  ?, ?\n)\n	{activity_id,user_inbox_content_id}	{}	{AllCollections,queries,activities}	posda_queries	Get a list of available queries
 ListActivities	select\n  activity_id,\n  brief_description,\n  when_created,\n  who_created,\n  when_closed\nfrom\n  activity	{}	{activity_id,brief_description,when_created,who_created,when_closed}	{AllCollections,queries,activities}	posda_queries	Get a list of available queries
 DciodvfyErrorsStringByErrorId	select                                                    \n  dciodvfy_error_id || '|' ||\n  error_type || '|' ||                                                                                                                                                                                                                   \n  coalesce(error_tag, '[null]') || '|' ||\n  coalesce(error_value, '[null]') || '|' ||\n  coalesce(error_subtype, '[null]') || '|' ||\n  coalesce(error_module, '[null]') || '|' ||\n  coalesce(error_reason, '[null]') || '|' ||\n  coalesce(error_index, '[null]') || '|' ||\n  coalesce(error_text, '[null]') as error_string\nfrom dciodvfy_error \nwhere  dciodvfy_error_id = ?	{dciodvfy_error_id}	{error_string}	{tag_usage,dciodvfy}	posda_phi_simple	Show all the dciodvfy scans
-InboxContentByActivityId	select\n user_name, user_inbox_content_id as id, operation_name,\n  current_status, file_id, file_id_in_posda as spreadsheet_file_id\nfrom \n  activity_inbox_content natural join user_inbox natural join\n  user_inbox_content natural join background_subprocess_report\n  natural join background_subprocess natural join subprocess_invocation\n  natural left join spreadsheet_uploaded\nwhere activity_id = ?\norder by when_invoked desc	{activity_id}	{user_name,id,operation_name,current_status,file_id,spreadsheet_file_id}	{AllCollections,queries,activities}	posda_queries	Get a list of available queries
 DciodvfyErrorIdsBySeriesAndScanInstance	select                                                    \n  dciodvfy_error_id\nfrom dciodvfy_error \nwhere  dciodvfy_error_id in (\n  select distinct dciodvfy_error_id\n  from (\n    select\n      distinct unit_uid, dciodvfy_error_id\n    from\n      dciodvfy_unit_scan\n      natural join dciodvfy_unit_scan_error\n    where\n      dciodvfy_scan_instance_id = ? and unit_uid =?\n  )\n as foo\n)	{dciodvfy_scan_instance_id,series_instance_uid}	{dciodvfy_error_id}	{tag_usage,dciodvfy}	posda_phi_simple	Show all the dciodvfy scans
 DistinctPatientStudySeriesByCollectionSite	select distinct\n  patient_id, \n  study_instance_uid,\n  series_instance_uid, \n  dicom_file_type,\n  modality, \n  count(distinct file_id) as num_files\nfrom\n  ctp_file\n  natural join dicom_file\n  natural join file_study\n  natural join file_series\n  natural join file_patient\nwhere\n  project_name = ? and\n  site_name = ? and\n  visibility is null\ngroup by\n  patient_id, \n  study_instance_uid,\n  series_instance_uid,\n  dicom_file_type,\n  modality\n  	{collection,site}	{patient_id,study_instance_uid,series_instance_uid,dicom_file_type,modality,num_files}	{by_collection,find_series,search_series,send_series}	posda_files	Get Series in A Collection\n
+InboxContentByActivityId	select\n user_name, user_inbox_content_id as id, operation_name,\n  when_script_started as when, \n  file_id, subprocess_invocation_id as sub_id,\n  command_line,\n  file_id_in_posda as spreadsheet_file_id\nfrom \n  activity_inbox_content natural join user_inbox natural join\n  user_inbox_content natural join background_subprocess_report\n  natural join background_subprocess natural join subprocess_invocation\n  natural left join spreadsheet_uploaded\nwhere activity_id = ?\norder by when_invoked desc	{activity_id}	{user_name,id,operation_name,when,file_id,command_line,spreadsheet_file_id}	{AllCollections,queries,activities}	posda_queries	Get a list of available queries
 GetDciodvfyErrorInvalidValueForVr	select\n  dciodvfy_error_id as id\nfrom \n  dciodvfy_error\nwhere\n  error_type = 'InvalidValueForVr'\n  and error_tag = ? and\n  error_index = ? and\n  error_value = ? and\n  error_reason = ? and\n  error_subtype = ?\n	{error_tag,error_index,error_value,error_reason,error_desc}	{id}	{NotInteractive,used_in_dciodvfy}	posda_phi_simple	Get an dciodvfy_errors row by error_tag where error_type = 'InvalidValueForVr'
 GetSeriesBasedOnErrorId	select \n  distinct unit_uid as series_instance_uid\nfrom \n  dciodvfy_unit_scan natural join dciodvfy_unit_scan_error\nwhere\n  dciodvfy_error_id = ?\norder by dciodvfy_error_id	{dciodvfy_error_id}	{series_instance_uid}	{tag_usage,dciodvfy}	posda_phi_simple	find series for a particular dciodvfy_error
 PatientStudySeriesHierarchyByCollectionSiteWithCounts	select distinct\n  patient_id,\n  study_instance_uid,\n  series_instance_uid,\n  count(distinct file_id) as num_files\nfrom\n  file_study natural join ctp_file natural join file_series natural join file_patient\nwhere \n  file_id in (\n    select distinct file_id\n    from ctp_file\n    where project_name = ? and site_name = ? and\n    visibility is null\n  )\ngroup by patient_id, study_instance_uid, series_instance_uid\norder by patient_id, study_instance_uid, series_instance_uid	{collection,site}	{patient_id,study_instance_uid,series_instance_uid,num_files}	{Hierarchy,apply_disposition}	posda_files	Construct list of files in a collection, site in a Patient, Study, Series Hierarchy
@@ -876,6 +876,7 @@ GetDupContourCountsExtended	select\n  project_name as collection,\n  site_name a
 ForConstructingSeriesEquivalenceClasses	select distinct\n  series_instance_uid, modality, series_number, laterality, series_date, dicom_file_type,\n  performing_phys, protocol_name, series_description,\n  operators_name, body_part_examined, patient_position,\n  smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,\n  performed_procedure_step_start_date\n  performed_procedure_step_desc, performed_procedure_step_comments, image_type,\n  iop, pixel_rows, pixel_columns,\n  file_id\nfrom\n  file_series natural join ctp_file natural join dicom_file\n  left join file_image using(file_id)\n  left join image using (image_id)\n  left join file_image_geometry using (file_id)\n  left join image_geometry using (image_geometry_id)\nwhere series_instance_uid = ? and visibility is null\n	{series_instance_uid}	{series_instance_uid,modality,series_number,laterality,series_date,dicom_file_type,performing_phys,protocol_name,series_description,operators_name,body_part_examined,patient_position,smallest_pixel_value,largest_pixel_value,performed_procedure_step_id,performed_procedure_step_start_date,performed_procedure_step_desc,performed_procedure_step_comments,image_type,iop,pixel_rows,pixel_columns,file_id}	{consistency,find_series,equivalence_classes}	posda_files	For building series equivalence classes
 HideEventInfo	select \n  distinct project_name as collection,\n  site_name as site,\n  patient_id,\n  series_instance_uid,\n  count(distinct file_id) as num_files\nfrom \n  ctp_file natural join\n  file_series natural join \n  file_patient\nwhere file_id in (\nselect\n  distinct file_id\nfrom\n  file_visibility_change\nwhere\n  date_trunc('day', time_of_change) = ? and\n  reason_for = ? and\n  user_name = ?\n)\ngroup by\n  collection, site, patient_id, series_instance_uid\norder by\n  collection, site, patient_id, series_instance_uid	{day_of_change,reason_for,user_name}	{collection,site,patient_id,series_instance_uid,num_files}	{meta,test,hello,bills_test,hide_events}	posda_files	Add a filter to a tab
 ClosedPlanarContoursWithoutLinksByFile	select\n  distinct roi_id,\n  roi_name\nfrom\n  file_structure_set natural join\n  structure_set natural join\n  roi natural join \n  roi_contour r\nwhere\n  file_id =? and \n  geometric_type = 'CLOSED_PLANAR' and \n  not exists (\n    select roi_contour_id from contour_image ci where ci.roi_contour_id = r.roi_contour_id\n  )	{file_id}	{roi_id,roi_name}	{LinkageChecks,used_in_struct_linkage_check}	posda_files	Get list of Roi with info by file_id\n\n
+FilesInHierarchyByPatient	select distinct\n  project_name as collection,\n  site_name as site,\n  patient_id,\n  study_instance_uid,\n  series_instance_uid,\n  study_date,\n  count (distinct file_id) as num_files\nfrom\n  file_patient natural join\n  file_study natural join\n  file_series natural join\n  ctp_file\nwhere file_id in (\n  select\n    distinct file_id\n  from\n    file_patient natural join ctp_file\n  where\n    patient_id = ? and visibility is null\n)\ngroup by collection, site, patient_id, \n  study_instance_uid, series_instance_uid, study_date\norder by\n  project_name, site_name, patient_id,\n  study_instance_uid, series_instance_uid\n	{patient_id}	{collection,site,patient_id,study_instance_uid,series_instance_uid,study_date,num_files}	{by_series_instance_uid,posda_files,sops}	posda_files	Get Collection, Site, Patient, Study Hierarchy in which series resides\n
 FileWithInfoBySopInPublic	select\n  frame_of_reference_uid as frame_of_ref,\n  image_orientation_patient as iop,\n  image_position_patient as ipp,\n  pixel_spacing,\n  i_rows as pixel_rows,\n  i_columns as pixel_columns\nfrom\n  general_image i, general_series s\nwhere\n  i.general_series_pk_id = s.general_series_pk_id and\n  sop_instance_uid = ?	{sop_instance_uid}	{frame_of_ref,iop,ipp,pixel_spacing,pixel_rows,pixel_columns}	{LinkageChecks,used_in_struct_linkage_check}	public	Get list of Roi with info by file_id\n\n
 HideEvents	select\n  distinct date_trunc('day', time_of_change) as when_done, \n  reason_for,\n  user_name, \n  count(*) as num_files\nfrom\n  file_visibility_change\ngroup by when_done, reason_for, user_name\norder by when_done desc	{}	{when_done,reason_for,user_name,num_files}	{meta,test,hello,bills_test,hide_events}	posda_files	Add a filter to a tab
 FileWithInfoBySopInPosda	select \n  file_for.for_uid as frame_of_ref,\n  iop, \n  ipp,\n  pixel_spacing,\n  pixel_rows,\n  pixel_columns\nfrom\n  file_sop_common natural join ctp_file\n  natural join file_for natural join file_image\n  join image_geometry using (image_id)\n  join image using (image_id)\nwhere\n  sop_instance_uid = ?\n  and visibility is null	{sop_instance_uid}	{frame_of_ref,iop,ipp,pixel_spacing,pixel_rows,pixel_columns}	{LinkageChecks,used_in_struct_linkage_check}	posda_files	Get list of Roi with info by file_id\n\n
@@ -1364,6 +1365,63 @@ activities	{activities}
 
 
 --
+-- Data for Name: role; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.role (role_name) FROM stdin;
+legacy_bbennett
+legacy_ksmith01
+legacy_priorf
+legacy_rddobbins
+legacy_smberryman
+legacy_tracyn
+workflow_1
+curator
+\.
+
+
+--
+-- Data for Name: role_tabs; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.role_tabs (role_name, query_tab_name, sort_order) FROM stdin;
+legacy_bbennett	UploadedData	10
+legacy_bbennett	bills_test_queries	20
+legacy_bbennett	count_check	30
+legacy_bbennett	curation	40
+legacy_bbennett	db_admin	50
+legacy_bbennett	legacy	60
+legacy_bbennett	scripting	70
+legacy_ksmith01	bills_test_queries	10
+legacy_ksmith01	count_check	20
+legacy_ksmith01	curation	30
+legacy_ksmith01	db_admin	40
+legacy_ksmith01	legacy	50
+legacy_ksmith01	scripting	60
+legacy_priorf	count_check	10
+legacy_priorf	curation	20
+legacy_priorf	legacy	30
+legacy_priorf	scripting	40
+legacy_rddobbins	count_check	10
+legacy_rddobbins	curation	20
+legacy_rddobbins	db_admin	30
+legacy_rddobbins	legacy	40
+legacy_rddobbins	scripting	50
+legacy_smberryman	curation	10
+legacy_smberryman	legacy	20
+legacy_tracyn	bills_test_queries	10
+legacy_tracyn	count_check	20
+legacy_tracyn	curation	30
+legacy_tracyn	legacy	40
+legacy_tracyn	scripting	50
+curator	UploadedData	10
+curator	VisualReview	20
+curator	Phi	30
+curator	Finalize	30
+\.
+
+
+--
 -- Data for Name: spreadsheet_operation; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1499,6 +1557,8 @@ ImportPatientMapping	ImportPatientMapping.pl <?bkgrnd_id?>	background_process	<f
 ImportNonDicomEdits	ImportNonDicomEditedFiles.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{non_dicom_edit}
 GenerateYearOfDiagnosisEdits	GenerateEditsForYearsOfDiagnosis.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>&<year>	{bills_ad_hoc_scripts}
 RadcompPrivateDisp	BackgroundPrivateDispositionsByPatShift.pl <?bkgrnd_id?> <to_dir> <uid_root> <notify>	background_process	<patient_id>&<study_uid>&<series_uid>&<offset>	{bills_test}
+MakeHierarchyByPat	GetHierarchyFromPatientId.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>	{bills_test}
+ProposeAdHocMelanomaEdits	ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>	background_process	<patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>	{bills_test,bills_ad_hoc_scripts}
 \.
 
 

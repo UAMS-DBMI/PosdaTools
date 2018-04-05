@@ -15,6 +15,7 @@
     "database" : "posda_auth",
     "driver"   : "postgres",
     "init"     : [
+      "Posda/sql/posda_auth.sql",
       "Posda/sql/posda_auth_setup.sql"
     ],
     "reset"    : [

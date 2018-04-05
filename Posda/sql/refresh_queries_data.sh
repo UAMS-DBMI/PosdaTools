@@ -16,6 +16,8 @@ pg_dump -x -a -O \
 	-t query_tag_filter \
 	-t spreadsheet_operation \
 	-t tag_preparation \
+	-t role \
+	-t role_tabs \
 	posda_queries > posda_queries_data.sql
 
 echo "After refresh:"
