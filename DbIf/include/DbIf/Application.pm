@@ -588,7 +588,7 @@ method ContentResponse($http, $dyn) {
   }
   unless ($self->{Mode} =~ /Inbox/) {
     $http->queue(qq{
-      <div style="display: flex; flex-direction: row; align-items: end; margin-bottom: 5px">
+      <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
     });
     $self->DrawHistory($http, $dyn);
     $self->DrawRoles($http, $dyn);
