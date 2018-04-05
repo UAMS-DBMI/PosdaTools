@@ -2,7 +2,7 @@
 -- Schema: posda_queries
 -- Columns: ['id', 'button_name', 'operation_name', 'invoking_user', 'when_invoked', 'file_id', 'name']
 -- Args: ['invoking_user']
--- Tags: ['meta', 'test', 'hello', 'query_tabs', 'bills_test']
+-- Tags: ['meta', 'test', 'hello', 'query_tabs', 'bills_test', 'subprocess']
 -- Description: Add a filter to a tab
 
 select 

@@ -1,13 +1,9 @@
--- Name: GetSimpleValueSeen
+-- Name: GetNonDicomFileScanId
 -- Schema: posda_phi_simple
 -- Columns: ['id']
--- Args: ['value']
+-- Args: []
 -- Tags: ['used_in_simple_phi', 'NotInteractive', 'non_dicom_phi']
 -- Description: Get value seen if exists
 
 select
-  value_seen_id as id
-from 
-  value_seen
-where
-  value = ?
+  currval('non_dicom_file_scan_non_dicom_file_scan_id_seq') as id

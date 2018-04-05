@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['patient_id', 'study_uid', 'series_uid', 'num_files']
 -- Args: []
--- Tags: ['meta', 'test', 'hello', 'bills_test']
+-- Tags: ['meta', 'test', 'hello', 'bills_test', 'bills_ad_hoc_scripts']
 -- Description: Add a filter to a tab
 
 select
