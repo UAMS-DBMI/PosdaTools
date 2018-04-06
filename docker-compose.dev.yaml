@@ -31,6 +31,22 @@ services:
             PGPASSWORD: example
             POSDA_EXTERNAL_HOSTNAME: localhost
 
+    posda-file-process:
+        image: quasarj/posda2:build
+        command: file-process
+        restart: always
+        depends_on:
+            - db
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - /home/quasar/projects/posda2/posda/posdatools:/home/posda/posdatools
+        environment:
+            TZ: America/Chicago
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+            POSDA_EXTERNAL_HOSTNAME: localhost
+
     posda-api:
         image: quasarj/posda-api:build
         restart: always

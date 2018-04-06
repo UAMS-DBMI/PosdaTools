@@ -15,7 +15,6 @@ RUN apk --update add alpine-sdk \
 					 py2-pip \
 					 cairo-dev \
 					 postgresql-client \
-					 supervisor \
 					 file \
 					 tzdata \
 					 unzip
@@ -64,16 +63,13 @@ RUN pip3 install xlsx2csv
 # RUN cd /k-base && npm install && make
 
 COPY posdatools /home/posda/posdatools
-COPY supervisord_scripts/ /etc/supervisor.d/
 
 WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]
-COPY init.sh /init.sh
+COPY docker-entrypoint /
 COPY posda.env /home/posda/posdatools/
 
-RUN pip install supervisor-stdout
-
-# TODO: change this to an entrypoint?
-CMD ["/init.sh"]
+ENTRYPOINT ["/docker-entrypoint"]
+CMD ["main"]
 
 EXPOSE 64610-64700

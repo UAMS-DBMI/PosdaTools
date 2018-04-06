@@ -1,0 +1,108 @@
+#!/bin/bash
+set -e
+
+APPROOT=/home/posda/posdatools
+
+main() {
+	echo "Starting main Posda server..."
+
+	if [ ! -e "/home/posda/cache/POSDA_VERSION" ]; then
+		echo "Looks like this is the first run.. setting up Posda.."
+		setup
+	fi
+
+	cd $APPROOT
+	exec ./posda_start.sh
+}
+
+api() {
+	echo "starting api";
+
+}
+
+file_process() {
+	echo "Starting Posda File Process Daemon..."
+
+	cd $APPROOT/systemd
+
+	echo "Working dir is: $(pwd)"
+
+	exec ./run_in_posda_env.sh systemd/start_PosdaFileProcessDaemon.pl
+}
+
+setup() {
+	cd $APPROOT
+	./setup.sh
+
+	psql posda_files <<-END
+		insert into file_storage_root
+		values 
+		(1, '/home/posda/cache/submission_root', true, 'default import path'),
+		(2, '/home/posda/cache/k-storage', true, 'k-base generated'),
+		(3, '/home/posda/cache/created', true, 'created');
+	END
+
+	mkdir -p /home/posda/cache/submission_root
+	mkdir -p /home/posda/cache/k-storage
+	mkdir -p /home/posda/cache/created
+	echo 2 > /home/posda/cache/POSDA_VERSION
+}
+
+help() {
+  echo "Posda Docker."
+  echo ""
+  echo "Usage:"
+  echo ""
+
+  echo "setup -- create database tables and cache file structure"
+  echo ""
+  echo "main -- start the main Posda server"
+  echo "api -- start the Posda API Server (python based)"
+  echo "file-process -- start the Posda File Process Daemon"
+}
+
+case "$1" in
+  main)
+    shift
+    main
+    ;;
+  api)
+    shift
+    api
+    ;;
+  file-process)
+    shift
+	file_process
+    ;;
+  help)
+    shift
+    help
+    ;;
+  *)
+    exec "$@"
+    ;;
+esac
+
+# Other examples:
+# case "$1" in
+#   worker)
+#     shift
+#     worker
+#     ;;
+#   manage)
+#     shift
+#     exec /app/manage.py $*
+#     ;;
+#   tests)
+#     shift
+#     tests $@
+#     ;;
+#   help)
+#     shift
+#     help
+#     ;;
+#   *)
+#     exec "$@"
+#     ;;
+# esac
+
