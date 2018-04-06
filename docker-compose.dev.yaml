@@ -48,7 +48,8 @@ services:
             POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
-        image: quasarj/posda-api:build
+        image: quasarj/posda2:build
+        command: api
         restart: always
         depends_on:
             - db

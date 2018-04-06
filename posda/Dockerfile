@@ -63,6 +63,8 @@ RUN pip3 install xlsx2csv
 # RUN cd /k-base && npm install && make
 
 COPY posdatools /home/posda/posdatools
+COPY posda-api/ /posda-api/
+RUN pip3 install -r /posda-api/requirements.txt
 
 WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]
