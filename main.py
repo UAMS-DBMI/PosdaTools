@@ -13,6 +13,10 @@ app.blueprint(tests.blueprint, url_prefix='/v1/tests')
 app.blueprint(download.blueprint, url_prefix='/v1/download')
 app.blueprint(dump.blueprint, url_prefix='/v1/dump')
 
+# Deprecated routes
+app.add_route(download.download_file, '/file/<downloadable_file_id>/<hash>') 
+app.add_route(download.download_dir, '/dir/<downloadable_dir_id>/<hash>')
+
 
 @app.listener('before_server_start')
 async def connect_to_db(sanic, loop):
