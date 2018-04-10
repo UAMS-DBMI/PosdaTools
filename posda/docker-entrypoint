@@ -17,7 +17,7 @@ main() {
 
 api() {
 	echo "Start Posda API Server...";
-	exec python3 /posda-api/api-server.py
+	exec python3 /posda-api/main.py
 }
 
 file_process() {
@@ -39,7 +39,8 @@ setup() {
 		values 
 		(1, '/home/posda/cache/submission_root', true, 'default import path'),
 		(2, '/home/posda/cache/k-storage', true, 'k-base generated'),
-		(3, '/home/posda/cache/created', true, 'created');
+		(3, '/home/posda/cache/created', true, 'created'),
+		(4, '/home/posda/cache/submission_root', true, 'imports from browser');
 	END
 
 	mkdir -p /home/posda/cache/submission_root

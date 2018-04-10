@@ -64,7 +64,7 @@ RUN pip3 install xlsx2csv
 
 COPY posdatools /home/posda/posdatools
 COPY posda-api/ /posda-api/
-RUN pip3 install -r /posda-api/requirements.txt
+RUN pip3 install -r /posda-api/requirements.frozen.txt
 
 WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]
