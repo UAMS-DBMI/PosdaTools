@@ -1,0 +1,4 @@
+{
+  "test.py::test_async_test": true,
+  "test.py::test_one": true
+}

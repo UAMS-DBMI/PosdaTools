@@ -5,13 +5,20 @@ import logging
 from sanic import Sanic
 
 from papi.util import db
-from papi.resources import tests, download, dump
+from papi.resources import tests, download, dump, collections, studies, series
+from papi.resources import files
 
 app = Sanic()
 
 app.blueprint(tests.blueprint, url_prefix='/v1/tests')
 app.blueprint(download.blueprint, url_prefix='/v1/download')
 app.blueprint(dump.blueprint, url_prefix='/v1/dump')
+
+app.blueprint(collections.blueprint, url_prefix='/v1/collections')
+app.blueprint(studies.blueprint, url_prefix='/v1/studies')
+app.blueprint(series.blueprint, url_prefix='/v1/series')
+app.blueprint(files.blueprint, url_prefix='/v1/files')
+
 
 # Deprecated routes
 app.add_route(download.download_file, '/file/<downloadable_file_id>/<hash>') 

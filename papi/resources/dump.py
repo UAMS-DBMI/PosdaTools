@@ -1,3 +1,5 @@
+script_location = '/posda-api/dicom_dump.sh'
+
 from sanic.response import text, HTTPResponse
 from sanic import Blueprint
 import asyncio
@@ -32,7 +34,7 @@ async def dump_dicom(request, file_id):
     try:
         logging.debug(asyncio.subprocess.PIPE)
         proc = await asyncio.create_subprocess_exec(
-            "./dicom_dump.sh", file, stdout=asyncio.subprocess.PIPE)
+            script_location, file, stdout=asyncio.subprocess.PIPE)
     except Exception as e:
         logging.error("Failed to create subprocess")
         logging.error(e)

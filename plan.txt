@@ -1,0 +1,119 @@
+Posda API Plan
+==============
+
+Exiting things we need to replicate or incorporate:
+downloadable_file
+downloadable_dir
+
+
+Other endpoint ideas:
+
+* emails
+* subprocess records
+
+
+
+
+---------
+Decision:
+Flat approach, with nesting when needed.
+When it comes to creating, the full nesting might be necessary
+At that time, it might make sense to add the full nested path as a GET alias
+On second thought, it might make sense to implement both now...
+If the user wants to list all studies for a given patient, it would make
+the most sense to access that via:
+/collections/HNSCC/Lahey/patients/PAT01/studies
+
+Hmm but then what if we knew the study_id and wanted the series?
+/studies/1.2.3.45534.43534223..../series
+
+Would it be possible to support all of these? Possibly, if we're careful.
+---------
+
+
+Resources:
+* collections
+* patients
+* studies
+* series
+* files
+* structure-sets
+* rois
+
+
+NOTE: Some resources currently require a nested path to uniquely identify them.
+
+
+Simple list of end points:
+
+/collections
+/collections/{collection_id}/patients
+/studies
+/series
+/files
+
+
+IDs:
+----
+
+collection_id: will actually be in the format of collection_name|site_name
+
+
+Full list of endpoints:
+-----------------------
+
+/collections?...
+/collections/{collection_id}
+/collections/{collection_id}/patients?...
+/collections/{collection_id}/patients/{patient_id}
+/studies?...
+/studies/{study_id}
+/series?...
+/series/{series_id}
+/files?...
+/files/{file_id}
+
+
+
+OLD, NO LONGER VALID
+Proposal (based on DICOM Web layout):
+	All under /v1:
+
+[1] /collections?...
+[2] /collections/<collection_id>
+[3] /collections/<collection_id>/patients?...
+[4] /collections/<collection_id>/patients/<patient_id>
+[5] /collections/<collection_id>/patients/<patient_id>/studies?...
+[6] /collections/<collection_id>/patients/<patient_id>/studies/<study_id>
+[7] /collections/<collection_id>/patients/<patient_id>/studies/<study_id>/series?...
+[8] /collections/<collection_id>/patients/<patient_id>/studies/<study_id>/series/<series_id>
+
+
+
+
+
+# file specific access
+/files?...
+/files/<file_id>
+/files/<file_id>/dump
+/files/<file_id>/download
+
+
+
+
+
+DICOM Web Endpoints
+===================
+
+/studies?...
+/studies/<study_id>
+/studies/<study_id>/rendered
+/studies/<study_id>/series?...
+/studies/<study_id>/series/<series_id>
+/studies/<study_id>/series/<series_id>/rendered
+/studies/<study_id>/series/<series_id>/metadata
+/studies/<study_id>/series/<series_id>/instances?...
+/studies/<study_id>/series/<series_id>/instances/<instance_id>
+/studies/<study_id>/series/<series_id>/instances/<instance_id>/rendered
+/studies/<study_id>/series/<series_id>/instances/<instance_id>/metadata
+/studies/<study_id>/series/<series_id>/instances/<instance_id>/frames/<frame_id>
