@@ -283,6 +283,67 @@ sub EntryBox{
     "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
     "/>");
 }
+
+=head2 DebouncedEntryBox
+
+An entry box that only calls it's op when the value actually changes.
+
+ Arguments:
+
+ Returns: Nothing.
+
+=cut
+sub DebouncedEntryBox {
+  my ($self, $http, $dyn) = @_;
+
+
+  my $uniq_id = $dyn->{uniq_id}; # or die 'uniq_id is required';
+  my $op = $dyn->{op} or die 'op is required';
+  my $class = $dyn->{class} || "form-control";
+  my $default = $dyn->{default} || '';
+
+  if (defined $self->{__DebouncedEntryBox_Cache}->{$uniq_id}) {
+    $default = $self->{__DebouncedEntryBox_Cache}->{$uniq_id};
+  }
+
+  my $proxy_op = 'DebouncedEntryBox_Update';
+  my $params = qq{'op=$op&uniq_id=$uniq_id&value='+encodeURIComponent(this.value)};
+
+  $http->queue(qq{
+    <input 
+      type="text"
+      name="$uniq_id" 
+      value="$default"
+      class="$class"
+
+      onblur="PosdaGetRemoteMethod('$proxy_op', $params);"
+      onfocus="PosdaGetRemoteMethod('$proxy_op', $params);"
+      onmouseout="PosdaGetRemoteMethod('$proxy_op', $params);"
+      onkeyup="PosdaGetRemoteMethod('$proxy_op', $params);"
+      onselect="PosdaGetRemoteMethod('$proxy_op', $params);"
+    />
+  });
+}
+
+sub DebouncedEntryBox_Update {
+  my ($self, $http, $dyn) = @_;
+
+  my $uniq_id = $dyn->{uniq_id};
+  my $value = $dyn->{value};
+
+  my $last_value = $self->{__DebouncedEntryBox_Cache}->{$uniq_id} || '';
+  if ($value ne $last_value) {
+    $self->{__DebouncedEntryBox_Cache}->{$uniq_id} = $value;
+    my $op = $dyn->{op};
+    $self->$op($http, { uniq_id => $uniq_id, value => $value });
+  }
+}
+
+sub DebouncedEntryBox_ResetAll {
+  my ($self, $http, $dyn) = @_;
+  delete $self->{__DebouncedEntryBox_Cache};
+}
+
 sub DelegateTextArea{
   my($this, $http, $dyn) = @_;
   my @parms;
