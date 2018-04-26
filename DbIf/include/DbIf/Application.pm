@@ -1,5 +1,6 @@
 package DbIf::Application;
 
+use DbIf::Table;
 use File::Path 'rmtree';
 use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query';
@@ -1876,15 +1877,16 @@ method UpdateInsertCompleted($query, $struct){
 }
 
 method CreateTableFromQuery($query, $struct, $start_at) {
+  # create LoadedTable array
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
-  my $new_entry = {
-    type => "FromQuery",
-    at => $start_at,
-    duration => time - $start_at,
-    rows => $struct->{Rows},
-  };
-  my $new_q = {
-  };
+
+  # This code creates a copy of the query, but without
+  # the dbh (database handle). There was some problem with
+  # using storable's freeze if the handle existed. We don't
+  # just delete the handle, in case the query needs to be re-used later.
+  #
+  # I am not sure why we drop the columns and then recreate them?
+  my $new_q = {};
   for my $i (keys %$query){
     unless($i eq 'columns' 
         or $i eq 'dbh' # if the handle is included it will fail to Freeze
@@ -1894,10 +1896,11 @@ method CreateTableFromQuery($query, $struct, $start_at) {
   }
   my @cols = @{$query->{columns}};
   $new_q->{columns} = \@cols;
-  $new_entry->{query} = $new_q;
-  push(@{$self->{LoadedTables}}, $new_entry);
 
+  my $new_table = DbIf::Table::from_query($new_q, $struct, $start_at);
+  push(@{$self->{LoadedTables}}, $new_table);
 }
+
 method SelectNewestTable() {
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
@@ -2177,6 +2180,32 @@ func get_popup_hash($query_name) {
     return $popup_hash;
 }
 
+method DrawFilterableFieldHeading($http, $column_name, $column_number) {
+  $http->queue(qq{<th>$column_name});
+  $self->DebouncedEntryBox($http, {
+      uniq_id => $column_name,
+      op => 'Test1Change'
+  });
+  $http->queue(qq{</th>});
+
+}
+
+method Test1Change($http, $dyn) {
+  say STDERR Dumper($dyn);
+
+  # Test applying a filter to the current table
+  # TODO: Perhaps make a table object which can have
+  # a filter method? would need to update this in a few places, I think?
+
+  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  my $col = $dyn->{uniq_id};
+  my $val = $dyn->{value};
+
+  $table->add_filter($col, $val);
+
+  $self->AutoRefresh;
+}
+
 method TableSelected($http, $dyn){
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
@@ -2247,8 +2276,10 @@ method TableSelected($http, $dyn){
       <table class="table table-striped">
         <tr>
     });
+    my $col_num = 0;
     for my $i (@{$query->{columns}}){
-      $http->queue("<th>$i</th>");
+      $self->DrawFilterableFieldHeading($http, $i, $col_num);
+      $col_num += 1;
     }
     if ($#{$chained_queries} > -1) {
       $http->queue("<th>Chained</th>");
@@ -2760,6 +2791,7 @@ method CsvLoaded($file){
     if($status eq "Succeeded"){
       if($struct->{status} eq "OK"){
         unless(
+          # created LoadedTables array
           exists $self->{LoadedTables} &&
           ref($self->{LoadedTables}) eq "ARRAY"
         ){ $self->{LoadedTables} = [] }
@@ -2947,11 +2979,13 @@ method LoadPreparedReport($http, $dyn) {
 }
 
 method Tables($http, $dyn){
+  # created LoadedTables array
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $num_tables = @{$self->{LoadedTables}};
   if($num_tables == 0){
     return $self->RefreshEngine($http, $dyn, "No tables have been loaded");
   }
+  #TODO: fix this
   $self->RefreshEngine($http, $dyn,
     '<table class="table table-striped table-condensed">' .
     '<tr><th colspan="4"><p>Tables</p></th></tr>'.
@@ -3373,6 +3407,8 @@ method SelectTable($http, $dyn){
   $self->{SelectedTable} = $dyn->{index};
   # push new table onto the history stack
   $self->PushToHistory($dyn->{index});
+  $self->DebouncedEntryBox_ResetAll;
+  $self->{LoadedTables}->[$dyn->{index}]->clear_filters;
   $self->{Mode} = "TableSelected";
 }
 method PushToHistory($index) {
