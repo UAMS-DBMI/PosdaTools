@@ -2358,7 +2358,7 @@ method TableSelected($http, $dyn){
   } elsif($table->{type} eq "FromCsv"){
     my $file = $table->{file};
     my $rows = $table->{rows};
-    my $num_rows = @$rows - 1;
+    my $num_rows = @$rows - 0;
     my $at = $table->{at};
 
     my $popup_hash = get_popup_hash(basename($file));
@@ -2382,12 +2382,12 @@ method TableSelected($http, $dyn){
       <table class="table table-striped">
         <tr>
     });
-    for my $i (@{$rows->[0]}){
+    for my $i (@{$table->{columns}}){
       $http->queue("<th>$i</th>");
     }
     $http->queue('</tr>');
   
-    for my $ri (1 .. $#{$rows}){
+    for my $ri (0 .. $#{$rows}){
       my $r = $rows->[$ri];
       $http->queue('<tr>');
       my $col_idx = 0;
@@ -2791,43 +2791,37 @@ method CsvLoaded($file){
     if($status eq "Succeeded"){
       if($struct->{status} eq "OK"){
         unless(
-          # created LoadedTables array
+          # create LoadedTables array
           exists $self->{LoadedTables} &&
           ref($self->{LoadedTables}) eq "ARRAY"
         ){ $self->{LoadedTables} = [] }
 
-        # Get the basename of the file
-        my $basename;
-        my $fn = $file;
-        if($fn =~ /\/([^\/]+)$/){
-          $basename = $1;
-        } else {
-          $basename = $fn;
-        }
+        ## Get the basename of the file
+        #my $basename;
+        #my $fn = $file;
+        #if($fn =~ /\/([^\/]+)$/){
+        #  $basename = $1;
+        #} else {
+        #  $basename = $fn;
+        #}
 
-        # test if there is a query file to load
-        my $queryfile = "$file.query";
-        my $query;
+        ## test if there is a query file to load
+        #my $queryfile = "$file.query";
+        #my $query;
 
-        # if $queryfile exists, load it
-        if (-e $queryfile) {
-          $query = retrieve $queryfile;
-        }
+        ## if $queryfile exists, load it
+        #if (-e $queryfile) {
+        #  $query = retrieve $queryfile;
+        #}
 
-        my $new_table_entry = {
-          type => "FromCsv",
-          file => $file,
-          basename => $basename,
-          at => time,
-          rows => $struct->{rows},
-        };
+        #if (defined $query) {
+        #  $new_table_entry->{query} = $query;
+        #  $new_table_entry->{type} = "FromQuery";
+        #  #delete the first row, as it is query headers
+        #  delete $new_table_entry->{rows}->[0];
+        #}
 
-        if (defined $query) {
-          $new_table_entry->{query} = $query;
-          $new_table_entry->{type} = "FromQuery";
-          #delete the first row, as it is query headers
-          delete $new_table_entry->{rows}->[0];
-        }
+        my $new_table_entry = DbIf::Table::from_csv($file, $struct, time);
 
         # import the new file into posda
         Dispatch::LineReaderWriter->write_and_read_all(
@@ -2997,15 +2991,13 @@ method Tables($http, $dyn){
     my $i = $self->{LoadedTables}->[$in];
     my $type = $i->{type};
     my $type_disp;
-    my $num_rows;
+    my $num_rows = @{$i->{rows}};
     my $name;
     if($type eq "FromCsv") {
       $type_disp = "From CSV Upload";
-      $num_rows = @{$i->{rows}} - 1;
       $name = $i->{basename};
     } elsif ($type eq "FromQuery"){
       $type_disp = "From DB Query";
-      $num_rows = @{$i->{rows}};
       $name = "$i->{query}->{schema}:$i->{query}->{name}(";
       for my $bi (0 .. $#{$i->{query}->{bindings}}){
         my $b = $i->{query}->{bindings}->[$bi];
@@ -3033,9 +3025,7 @@ method Tables($http, $dyn){
     });
     my $can_nickname = 0;
     my $can_command = 0;
-    my $cols;
-    if($type eq "FromCsv"){ $cols = $i->{rows}->[0] }
-    elsif($type eq "FromQuery"){ $cols = $i->{query}->{columns} }
+    my $cols = $i->{columns};
     for my $i (@$cols) {
       if(
         $i eq "series_instance_uid" ||
@@ -3090,15 +3080,18 @@ method ExecuteCommand($http, $dyn) {
   $self->{SelectedTable} = $dyn->{index};
   my $table = $self->{LoadedTables}->[$dyn->{index}];
 
+  # TODO: rethink this, with new DbIf::Table this might
+  # be easier!
+
   # generate a map of column name to col index
   my $colmap = {};
   map {
-    my $item = $table->{rows}->[0]->[$_];
+    my $item = $table->{columns}->[$_];
     $colmap->{$item} = $_;
-  } (0 .. $#{$table->{rows}->[0]});
+  } (0 .. $#{$table->{columns}});
 
   # Test for pipe edge case
-  my $first_row_op = $table->{rows}->[1]->[$colmap->{Operation}];
+  my $first_row_op = $table->{rows}->[0]->[$colmap->{Operation}];
   if (defined $self->{Commands}->{$first_row_op}->{pipe_parms}) {
     my $op = $self->{Commands}->{$first_row_op};
 
@@ -3116,13 +3109,12 @@ method ExecuteCommand($http, $dyn) {
       for my $row (@{$table->{rows}}) {
         push @$col1, $row->[$col_idx];
       }
-      shift @$col1; # kill the first element
 
       $cols->{$col_name} = $col1;
     }
 
     # now generate the cmdline like normal
-    my $final_cmd = apply_command($op, $colmap, $table->{rows}->[1]);
+    my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);
 
     my @planned_operations;
     my $first_col_name = [keys %{$cols}]->[0];

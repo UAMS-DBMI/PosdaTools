@@ -4,6 +4,7 @@ use Modern::Perl '2010';
 use Method::Signatures::Simple;
 
 use List::MoreUtils 'first_index';
+use File::Basename 'basename';
 
 use Data::Dumper;
 
@@ -40,8 +41,40 @@ func test() {
   $t2->clear_filters;
   $t2->print;
 
+
+  # test csv
+  my $csv_struct = {
+    rows => [
+      ['first_name', 'last_name', 'age'],
+      ['Quasar', 'Jarosz', 34],
+      ['Joseph', 'Utecht', 28],
+      ['Emel', 'Şeker', 21],
+    ]
+  };
+
+  my $t3 = DbIf::Table::from_csv('/tmp/some/file.csv', $csv_struct, time);
+  # say Dumper($t3);
+  $t3->print;
+  
+
 }
 ##########################################
+func from_csv($filename, $struct, $start_time) {
+  my $rows = $struct->{rows};
+  my $columns = shift @$rows;
+
+  my $table = DbIf::Table->new(
+    'FromCsv',
+    $start_time,
+    $columns,
+    $rows
+  );
+
+  $table->{file} = $filename;
+  $table->{basename} = basename($filename);
+
+  return $table;
+}
 
 func from_query($query, $struct, $start_time) {
   my $table = DbIf::Table->new(
