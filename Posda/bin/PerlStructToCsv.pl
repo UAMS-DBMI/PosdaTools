@@ -25,7 +25,10 @@ if($#ARGV >= 0){ die $usage }
 #my $csv = Text::CSV->new( { binary => 1 });
 
 my $struct = fd_retrieve(\*STDIN);
-unless(ref($struct) eq "HASH") { die "PerlStructToCsv.pl requires a HASH" }
+unless(ref($struct) eq "HASH" or 
+       ref($struct) eq "DbIf::Table") { 
+     die "PerlStructToCsv.pl requires a HASH or DbIf::Table";
+}
 if($struct->{type} eq "FromQuery"){
   for my $col (0 .. $#{$struct->{query}->{columns}}){
     print "\"$struct->{query}->{columns}->[$col]\"";
