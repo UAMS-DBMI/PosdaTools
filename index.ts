@@ -3,12 +3,11 @@ const pg = require('pg-promise')();
 const Canvas = require('canvas');
 const fs = require('fs');
 const winston = require('winston');
-const promiseLimit = require('promise-limit');
-const ProgressBar = require('progress');
+const cluster = require('cluster');
 
 winston.level = 'error';
 if (process.env.DEBUG == 1) {
-	winston.level = 'debug';
+  winston.level = 'debug';
 }
 
 /* 
@@ -18,19 +17,12 @@ if (process.env.DEBUG == 1) {
 pg.pg.defaults.host = '/var/run/postgresql';
 
 
-const API_URL = 'http://quince:8088/vapi';
+const API_URL = 'http://tcia-posda-rh-1/vapi';
+// const API_URL = 'http://quince:8000/vapi';
 
 import { Image } from './image';
 
 import { finishImage } from './finish';
-
-var images_to_get: number = 0;
-var bar = new ProgressBar(':bar ETA :eta s', 
-{ 
-  total: 1, 
-  width: 70,
-  head: '>'
-});
 
 
 interface OutputImage {
@@ -49,9 +41,15 @@ function toArrayBuffer(buffer: Buffer): ArrayBuffer {
     return ab;
 }
 
-class K {
+function workerLog(message: any) {
+  console.log("[" + process.pid + "] " + message);
+}
 
-  files_to_get: any;
+class K {// {{{
+
+  iec: number;
+  files_to_get: number;
+  files_got: number = 0;
   file_id: number;
 
   current_image: Image;
@@ -131,8 +129,8 @@ class K {
         this.drawMono(image);
       }
     } catch (e) {
-      console.log(e);
-      console.log(this.current_image);
+      workerLog(e);
+      workerLog(this.current_image);
     }
   }
 
@@ -241,6 +239,8 @@ class K {
     this.mean_projection.count++;
   }
 
+  // This actually prepares a canvas and writes the images into it
+  // then calls writeCanvasToFile
   async writePng(max: OutputImage, min: OutputImage, mean: OutputImage, name: string) {
     let canvas: any = new Canvas();
     let c: any = canvas.getContext('2d');
@@ -265,103 +265,104 @@ class K {
     c.putImageData(meanImageData, this.current_image.width, 0);
     c.putImageData(minImageData, this.current_image.width * 2, 0);
 
+    winston.log('debug', 'about to await writeCanvasToFile');
+    await this.writeCanvasToFile(canvas, name);
+  }
+
+  // Async code to actually write a PNG file
+  async writeCanvasToFile(canvas: any, name: string): Promise<any> {
+    winston.log('debug', 'test1 executing');
+    let stream: any = canvas.pngStream();
+    let out: any = fs.createWriteStream(name, { autoClose: true });
+    stream.on('data', (chunk: any) => out.write(chunk));
+    stream.on('end', () => { out.end() });
+    // There is no way to await a stream, so we have
+    // to use a quick Promise directly
     await new Promise((accept, reject) => {
-      let stream: any = canvas.pngStream();
-      let out: any = fs.createWriteStream(name, { autoClose: true });
-      stream.on('data', (chunk: any) => out.write(chunk));
-      stream.on('end', () => { out.end();} );
-      out.on('finish', () => { accept(); });
+      out.on('finish', () => { accept() });
     });
   }
 
   async main(iec: number): Promise<any> {
-    console.log('IEC: ' + iec);
-	winston.log('debug', iec);
-    let url = API_URL + '/iec_info/' + iec;
-    let detail_url = API_URL + '/details/';
+    this.iec = iec;
+    try {
+      workerLog('IEC: ' + iec);
+      winston.log('debug', iec);
+      let url = API_URL + '/iec_info/' + iec;
+      let detail_url = API_URL + '/details/';
 
-	winston.log('debug', 'About to create the first Promise');
-    return new Promise((accept, reject) => {
-      rp(url).then((body: string) => {
-        let json_body: any = JSON.parse(body);
-        let file_ids = json_body.file_ids;
+      winston.log('debug', 'About to request url');
+      let body: string = await rp(url);
+      let json_body: any = JSON.parse(body);
+      let file_ids = json_body.file_ids;
 
-        winston.log('info', 'Images in this IEC: ' + file_ids.length);
-        images_to_get += file_ids.length;
-        bar.total = images_to_get;
+      winston.log('info', 'Images in this IEC: ' + file_ids.length);
+      this.files_to_get = file_ids.length;
 
-
-        let limit = promiseLimit(5);
-
-        // let promises = file_ids.map(this.getAnImage, this);
-        let promises = file_ids.map((id: number) => {
-          return limit(() => this.getAnImage(id));
-        }, this);
-
-		  let error_test = false;
-
-		  Promise.all(promises)
-			  .catch(async (error: any) => {
-				  console.log("iec_info=", error);
-				  await flag_as_error(iec);
-				  error_test = true;
-				  reject(error);
-			  }) 
-			  .then(async (data) => {
-				  if (!error_test) {
-				  winston.log('debug', 'All files downloaded, writing pngs');
-				  let filename = 'out_' + iec + '.png';
-				  await this.writePng(this.maximum_projection, this.minimum_projection,
-					this.mean_projection, filename);
-				  await finishImage(this.db, filename, iec);
-				  }
-				  accept();
-			  }, (failure) => console.log(failure));
-      });
-    });
+      for (let i = 0; i < file_ids.length; i++) {
+        await this.getAnImage(file_ids[i]);
+      }
+      winston.log('debug', 'All files downloaded, writing pngs');
+      let filename = 'out_' + iec + '.png';
+      await this.writePng(this.maximum_projection,
+                          this.minimum_projection,
+                          this.mean_projection,
+                          filename);
+      await finishImage(this.db, filename, iec);
+    } catch (e) {
+      flag_as_error(iec);
+    }
   }
 
-  getAnImage(file_id: number) {
+  async getAnImage(file_id: number): Promise<any> {
     let url = API_URL + '/details/' + file_id;
-    return new Promise((accept, reject) => {
-      let options: any = {
-        url: url,
-        encoding: null, // magic param to get binary back (as a Buffer, supposedly)
-        resolveWithFullResponse: true
-      };
-      winston.log('debug', 'About to get file ' + file_id);
-      rp(options).then((response: any) => {
-        winston.log('debug', 'About to process file ' + file_id);
-        this.current_image = this.processHeaders(response.headers);
-        this.current_image.pixel_data = toArrayBuffer(response.body);
-        this.file_id = file_id;
-        this.draw();
+    let options: any = {
+      url: url,
+      encoding: null, // magic param to get binary back (as a Buffer, supposedly)
+      resolveWithFullResponse: true
+    };
+    winston.log('debug', 'About to get file ' + file_id);
+    let response: any = await rp(options);
+    winston.log('debug', 'About to process file ' + file_id);
+    this.current_image = this.processHeaders(response.headers);
+    this.current_image.pixel_data = toArrayBuffer(response.body);
+    this.file_id = file_id;
+    this.draw();
 
-        winston.log('debug', 'Finished processing image: ' + file_id);
-        bar.tick();
-        accept();
-	  }).catch((error: any) => {
-		  winston.log('error', 'Failed to get image ' + file_id);
-		  reject('Failed to get image ' + file_id);
-	  });
-    });
+    winston.log('debug', 'Finished processing image: ' + file_id);
+
+    this.files_got += 1;
+    this.reportProgress();
   }
-}
+
+  reportProgress() {
+    if (this.files_got % 10 == 0) {
+      workerLog("IEC " + this.iec + " " + this.files_got + "/" + this.files_to_get);
+    }
+  }
+
+}// }}}
+
 
 let client = pg("postgres://@/posda_files");
 
 async function flag_as_error(iec: number) {
-	console.log("Flagging as error: " + iec);
-	await client.query(`
-		update image_equivalence_class
-		set processing_status = 'error'
-		where image_equivalence_class_id = ${iec}
-	`);
+  workerLog("Flagging as error: " + iec);
+  await client.query(`
+    update image_equivalence_class
+    set processing_status = 'error'
+    where image_equivalence_class_id = ${iec}
+  `);
 }
 
 async function error(err: any) {
-	// set error state on the IEC here
-	console.log("an error" + err);
+  // set error state on the IEC here
+  workerLog("an error" + err);
+}
+
+// Promise-ify setTimeout
+function timeout(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function doOne() {
@@ -372,7 +373,8 @@ async function doOne() {
       select image_equivalence_class_id
       from image_equivalence_class
       where processing_status = 'ReadyToProcess'
-      limit 5
+      limit 1
+      for update skip locked
     )
     returning i.*
   `;
@@ -381,16 +383,40 @@ async function doOne() {
 
   if (result.length < 1) {
     winston.log('debug', 'No work to do, sleeping for 5 seconds...');
-    setTimeout(() => {}, 5000); // cause node to stay open
+    await timeout(10000);
   } else {
-    console.log("Generating images for " + result.length + " IECs...");
+    workerLog("Generating images for " + result.length + " IECs...");
   }
   let jobs = result.map((element: any) => {
     return (new K(client)).main(element.image_equivalence_class_id);
   });
-	Promise.all(jobs)
-		.catch((err) => error(err))
-		.then(() => pg.end());
+
+  Promise.all(jobs)
+    .catch((err) => error(err))
+    .then(() => pg.end());
 }
 
-doOne();
+async function runForever() {
+  while (true) {
+    await doOne();
+  }
+}
+
+if (cluster.isMaster) {
+  let worker_count = process.env.WORKERS || 4;
+  console.log(`Starting ${worker_count} worker processes...`);
+
+	for (let i = 0; i < worker_count; i++) {
+		cluster.fork();
+	}
+
+	cluster.on('exit', (worker: any, code: any, signal: any) => {
+		console.log(worker.process.pid + " died?");
+	});
+} else {
+  // Looks like I'm a child, time to work!
+  workerLog("Worker starting up...");
+  runForever();
+}
+
+// vim: ts=2 sw=2 expandtab foldmethod=marker
