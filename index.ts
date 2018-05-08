@@ -310,6 +310,7 @@ class K {// {{{
                           filename);
       await finishImage(this.db, filename, iec);
     } catch (e) {
+      workerLog("Something went wrong with this IEC: " + e);
       flag_as_error(iec);
     }
   }
@@ -344,7 +345,7 @@ class K {// {{{
 }// }}}
 
 
-let client = pg("postgres://@/posda_files");
+let client: any = pg("postgres://@/posda_files");
 
 async function flag_as_error(iec: number) {
   workerLog("Flagging as error: " + iec);
@@ -398,7 +399,13 @@ async function doOne() {
 
 async function runForever() {
   while (true) {
-    await doOne();
+    try {
+      await doOne();
+    } catch (e) {
+      workerLog(e);
+      workerLog("Aborting this worker because of the above error!");
+      process.exit(1);
+    }
   }
 }
 
@@ -411,7 +418,7 @@ if (cluster.isMaster) {
 	}
 
 	cluster.on('exit', (worker: any, code: any, signal: any) => {
-		console.log(worker.process.pid + " died?");
+		console.log("Worker " + worker.process.pid + " has died.");
 	});
 } else {
   // Looks like I'm a child, time to work!
