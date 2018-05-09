@@ -19,7 +19,7 @@ function makeDirs(targetDir: string) {
 
 function placeFileAndGetMd5(filename: string, root: string) {
   let hash = md5File.sync(filename);
-  console.log(hash);
+  // console.log(hash);
 
 
   let prefix = path.join(hash.substr(0, 2), hash.substr(2, 2), hash.substr(4, 2));
@@ -39,10 +39,11 @@ function placeFileAndGetMd5(filename: string, root: string) {
 
 
 export async function finishImage(client: any, filename: string, iec: number) {
-  winston.log('debug', 'finishImage called');
+  winston.log('debug', 'Finished image for IEC' + iec);
+  // console.log('Finishing IEC ' + iec);
   let details = placeFileAndGetMd5(filename, DIR);
   if (details.size == 0) {
-    console.log('File was 0 size when we stated it, aborting!');
+    console.log("File was 0 size when we stat'd it, aborting!");
     return;
   }
 
@@ -87,8 +88,8 @@ export async function finishImage(client: any, filename: string, iec: number) {
     [iec]
   );
 
-  winston.log('debug', 'all done, next line is new file id');
-  console.log(file_id);
+  winston.log('debug', 'all done, file_id is' + file_id);
+  // console.log(file_id);
 }
 
 // let client = pg("postgres://@/posda_files");
