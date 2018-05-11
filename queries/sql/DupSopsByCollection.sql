@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['sop_instance_uid', 'earliest', 'latest']
 -- Args: ['collection']
--- Tags: ['meta', 'test', 'hello', 'bills_test']
+-- Tags: ['meta', 'test', 'hello', 'bills_test', 'check_dups']
 -- Description: List of duplicate sops with file_ids and latest load date
 
 select distinct sop_instance_uid, min(latest) as earliest, max(latest) as latest

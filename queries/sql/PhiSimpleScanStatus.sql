@@ -2,7 +2,7 @@
 -- Schema: posda_phi_simple
 -- Columns: ['id', 'start_time', 'end_time', 'duration', 'description', 'to_scan', 'scanned', 'phi_status']
 -- Args: []
--- Tags: ['tag_usage', 'simple_phi']
+-- Tags: ['tag_usage', 'simple_phi', 'scan_status']
 -- Description: Status of PHI scans
 -- 
 

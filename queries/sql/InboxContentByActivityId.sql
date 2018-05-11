@@ -17,4 +17,4 @@ from
   natural join background_subprocess natural join subprocess_invocation
   natural left join spreadsheet_uploaded
 where activity_id = ?
-order by when_invoked desc
+order by when_script_started desc

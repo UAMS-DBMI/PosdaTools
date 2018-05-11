@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'subj_id', 'sop_instance_uid', 'num_files']
 -- Args: ['collection', 'from', 'to']
--- Tags: ['duplicates', 'dup_sops', 'hide_dup_sops']
+-- Tags: ['duplicates', 'dup_sops', 'hide_dup_sops', 'check_dups']
 -- Description: Return a count of duplicate SOP Instance UIDs
 -- 
 
