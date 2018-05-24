@@ -316,9 +316,9 @@ method AllUndismissedItems() {
 
     from user_inbox_content 
     natural join user_inbox
-    natural join background_subprocess_report 
-    natural join background_subprocess 
-    natural join subprocess_invocation 
+    natural left join background_subprocess_report 
+    natural left join background_subprocess 
+    natural left join subprocess_invocation 
 
     where user_name = ?
       and date_dismissed is null
