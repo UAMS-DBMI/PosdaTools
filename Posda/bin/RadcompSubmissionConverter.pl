@@ -130,6 +130,7 @@ for my $file_id (keys %Files){
     "\"Difference report\"";
   my $to_file_id;
   my $result = `$i_cmd`;
+  unlink $to_temp;
   if($result =~ /File id: (.*)/){
     $to_file_id = $1;
   } else {

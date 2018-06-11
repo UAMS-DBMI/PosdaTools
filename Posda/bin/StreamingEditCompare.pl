@@ -78,6 +78,7 @@ while(my $line = <STDIN>){
       "ImportSingleFileIntoPosdaAndReturnId.pl \"$short_rept\" " .
       "\"Difference report\"";
     my $result = `$cmd`;
+    unlink $short_rept;
     if($result =~ /File id: (.*)/){
       $s_rept_file_id = $1;
       $FileIdByDig{$s_rept_dig} = $s_rept_file_id;
@@ -95,6 +96,7 @@ while(my $line = <STDIN>){
       "ImportSingleFileIntoPosdaAndReturnId.pl \"$long_rept\" " .
       "\"Difference report\"";
     my $result = `$cmd`;
+    unlink $long_rept;
     if($result =~ /File id: (.*)/){
       $l_rept_file_id = $1;
       $FileIdByDig{$l_rept_dig} = $l_rept_file_id;

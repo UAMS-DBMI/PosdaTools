@@ -46,10 +46,12 @@ $fhl->close;
 my $short_id;
 my $long_id;
 my $result_s = `ImportSingleFileIntoPosdaAndReturnId.pl "$short_rept" "Difference report"`;
+unlink $short_rept;
 if($result_s =~ /File id: (.*)/){
   $short_id = $1;
 }
 my $result_l = `ImportSingleFileIntoPosdaAndReturnId.pl "$long_rept" "Difference report"`;
+unlink $long_rept;
 if($result_l =~ /File id: (.*)/){
   $long_id = $1;
 }

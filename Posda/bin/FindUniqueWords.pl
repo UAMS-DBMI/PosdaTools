@@ -26,6 +26,11 @@ sub UncompressGeProtocolDataBlock{
   `$cmd2`;
   my $cmd3 = "cat $unzip_name";
   my $new_v = `$cmd3`;
+
+  unlink $fname;
+  unlink $zip_name;
+  unlink $unzip_name;
+
   return $new_v;
 }
 sub MakeEleFun{
