@@ -46,6 +46,7 @@
       $self->{link} = $dlf->{link};
       $self->{path} = $dlf->{path};
       $self->{downloadable_file_id} = $dlf->{downloadable_file_id};
+      unlink $file_path;
     } else {
       die "Error inserting file into posda! $result";
     }
