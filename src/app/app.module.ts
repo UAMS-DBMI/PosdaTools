@@ -11,7 +11,6 @@ import { ModeSelectComponent } from './mode-select/mode-select.component';
 import { SeriesService } from './series.service';
 import { ErrorService, ErrorComponent } from './errors';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { BusyModule } from 'angular2-busy';
 import { ProjectSelectComponent } from './project-select/project-select.component';
 import { ProjectionComponent } from './projection/projection.component';
 import { NavControlComponent } from './nav-control/nav-control.component';
@@ -38,7 +37,6 @@ import { HideButtonComponent } from './hide-button/hide-button.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    BusyModule,
     BrowserAnimationsModule
   ],
   providers: [SeriesService, ErrorService],
