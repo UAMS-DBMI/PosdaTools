@@ -3,8 +3,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule, Routes } from '@angular/router';
-
+//import { RouterModule, Routes } from '@angular/router';
+import { routes } from './app.router';
 import { AppComponent } from './app.component';
 import { ModeSelectComponent } from './mode-select/mode-select.component';
 // import { SeriesComponent} from './series/series.component';
@@ -37,7 +37,8 @@ import { HideButtonComponent } from './hide-button/hide-button.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    routes
   ],
   providers: [SeriesService, ErrorService],
   bootstrap: [AppComponent]
