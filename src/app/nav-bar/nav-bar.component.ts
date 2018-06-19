@@ -16,13 +16,13 @@ export class NavBarComponent implements OnInit {
   ngOnInit() {
   }
 
-  home() {
-    this.onNavigation.emit('home');
-    console.log("emitting onNavigation => 'home'");
-  }
-  admin() {
-    this.onNavigation.emit('admin');
-    console.log("emitting onNavigation => 'admin'");
-  }
+  // home() {
+  //   this.onNavigation.emit('home');
+  //   console.log("emitting onNavigation => 'home'");
+  // }
+  // admin() {
+  //   this.onNavigation.emit('admin');
+  //   console.log("emitting onNavigation => 'admin'");
+  // }
 
 }
