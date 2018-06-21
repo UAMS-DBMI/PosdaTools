@@ -85,6 +85,16 @@ sub ShiftIntegerDate{
   #  "\tLow: $this->{low_date_int}, high: $this->{high_date_int}\n";
   return $shifted;
 }
+sub DiffDate{
+  my($this, $from, $to) = @_;
+  my $fdate = Time::Piece->strptime($from, "%Y%m%d");
+  my $fepoch = $fdate->epoch;
+  my $tdate = Time::Piece->strptime($to, "%Y%m%d");
+  my $tepoch = $tdate->epoch;
+  my $diff = $tepoch - $fepoch;
+  my $days = $diff / (60 * 60 * 24);
+  return sprintf("%4d", $days);
+}
 sub ShiftDate{
   my($this, $date_string) = @_;
   unless(defined $date_string) { return $date_string }

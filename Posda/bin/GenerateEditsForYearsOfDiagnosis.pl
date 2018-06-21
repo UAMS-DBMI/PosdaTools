@@ -56,7 +56,7 @@ for my $pat (keys %YearByPat){
   }, sub {}, $pat);
   $background->WriteToEmail("Found $series_found series for patient $pat\n");
   if($series_found > 0){
-    $rpt->print(",,set_tag,\"<(0013,\"\"CTP\"\",50)>\",<$YearByPat{$pat}0101>,<>\n");
+    $rpt->print(",,set_tag,\"<(0013,\"\"CTP\"\",50)>\",<$YearByPat{$pat}>,<>\n");
   }
 }
 #$rpt->close;

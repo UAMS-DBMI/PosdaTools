@@ -19,6 +19,9 @@ method SpecificInitialize($params) {
 
   my $file_id = $params->{file_id};
   $self->{file_id} = $file_id;
+  if(exists $params->{spreadsheet_file_id}){
+    $self->{spreadsheet} = 1;
+  }
 
   my $results = Query('FilePathByFileId')->FetchOneHash($file_id);
   $self->{filename} = $results->{path};
@@ -35,16 +38,34 @@ method ContentResponse($http, $dyn) {
   my $file_content = $self->{text};
 
   # Turn any URLs into actual links
-#  $file_content =~    s( ($RE{URI}{HTTP}) )
-#                (<a href="$1">$1</a>)gx  ;
-   $file_content =~ s/</&lt;/gx;
-   $file_content =~ s/>/&gt;/gx;
+  if(exists $self->{spreadsheet}){
+     $file_content =~ s/</&lt;/gx;
+     $file_content =~ s/>/&gt;/gx;
+  } else {
+    $file_content =~    s( ($RE{URI}{HTTP}) )
+                  (<a href="$1">$1</a>)gx  ;
+  }
 
 
   $http->queue("<pre>$file_content</pre>");
 }
 
 method MenuResponse($http, $dyn) {
+  $http->queue(qq{
+    <a class="btn btn-primary" 
+       href="DownloadTextAsCsv?obj_path=$self->{path}">
+       Download as CSV
+    </a>
+  });
 }
-
+method ScriptButton($http, $dyn){
+  my $parent = $self->parent;
+  if($parent->can("ScriptButton")){
+    $parent->ScriptButton($http, $dyn);
+  }
+}
+method DownloadTextAsCsv($http, $dyn){
+  $http->DownloadHeader("text/csv", "Foo.csv");
+  $http->queue($self->{text});
+}
 1;

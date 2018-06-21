@@ -35,7 +35,6 @@ my $description = $scan->{description};
 $background->WriteToEmail("Scan ($scan_id) description: $description\n");
 $background->WriteToEmail("Creating " .
   "\"SimplePhiReportAllMetaQuotes\" report\n");
-my $rpt = $background->CreateReport("Full PHI Report");
-$scan->PrintTableFromQuery(
-  "SimplePhiReportAllMetaQuotes", $rpt);
+$background->PrepareBackgroundReportBasedOnQuery(
+  "SimplePhiReportAllMetaQuotes", "Phi Report All", $max_rows, $scan_id);
 $background->Finish;

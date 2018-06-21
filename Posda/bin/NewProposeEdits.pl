@@ -9,7 +9,7 @@ ProposeEdits.pl <bkgrnd_id> <scan_id> <notify>
   notify - email address for completion notification
 
 Expects lines on STDIN:
-<<element>>&<vr>&<<q_value>>&<num_series>&<p_op>&<<q_arg1>>&<<q_arg2>>
+<<element>>~<vr>~<<q_value>>~<num_series>~<p_op>~<<q_arg1>>~<<q_arg2>>
 
 Note:
   The double metaquotes in the line specification are not errors.
@@ -36,18 +36,18 @@ while(my $line = <STDIN>){
   chomp $line;
   $background->LogInputLine($line);
   my($element, $vr, $q_value, $num_series, $p_op, $q_arg1, $q_arg2) = 
-    split(/&/, $line);
+    split(/~/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 } elsif($element){
-    print "Waning - element: \"$element\" not metaquoted\n";
+    print "Warning - element: \"$element\" not metaquoted\n";
   }
   if($q_value =~ /^<(.*)>$/){ $q_value = $1 } elsif($q_value) {
-    print "Waning - q_value: \"$q_value\" not metaquoted\n";
+    print "Warning - q_value: \"$q_value\" not metaquoted\n";
   }
   if($q_arg1 =~ /^<(.*)>$/){ $q_arg1 = $1 } elsif($q_arg1) {
-    print "Waning - q_arg1: \"$q_arg1\" not metaquoted\n";
+    print "Warning - q_arg1: \"$q_arg1\" not metaquoted\n";
   }
   if($q_arg2 =~ /^<(.*)>$/){ $q_arg2 = $1 } elsif($q_arg2) {
-    print "Waning - q_arg2: \"$q_arg2\" not metaquoted\n";
+    print "Warning - q_arg2: \"$q_arg2\" not metaquoted\n";
   }
   my $q = {
    element => $element,
@@ -68,7 +68,7 @@ $background->ForkAndExit;
 $background->LogInputCount($num_series);
 
 my $get_series = Query("GetSeriesForPhiInfo");
-my $get_series_info = Query("WhereSeriesSitsQuick");
+my $get_series_count = Query("SeriesFileCount");
 
 my $start_time = time;
 $background->WriteToEmail("Starting simple look up of Series with PHI\n" .
@@ -94,22 +94,15 @@ for my $i (@SeriesQueries){
     $tag, $vr, $val, $scan_id
   );
   my $n_series = @series;
-  my $files_in_series = 0;
   for my $s (@series){
-    $get_series_info->RunQuery(sub{
+    $EditsBySeries{$s}->{$bucket} = 1;
+    $get_series_count->RunQuery(sub{
         my($row) = @_;
-        my $col = $row->[0]; 
-        my $site = $row->[1]; 
-        my $pat = $row->[2]; 
-        my $study = $row->[3]; 
-        my $series = $row->[4]; 
-        $EditsBySeries{$s}->{$bucket} = 1; 
-        $files_in_series += 1;
+        $FilesInSeries{$s} = $row->[0]; 
       },
       sub {},
       $s
     );
-    $FilesInSeries{$s} = $files_in_series;
   }
   $background->WriteToEmail("Retrieved $n_series for:\n\telement: $tag\n\tvalue: $val\n");
 }
@@ -119,7 +112,7 @@ for my $s (keys %EditsBySeries){
   my @edit_keys = sort keys %{$EditsBySeries{$s}};
   for my $k (0 .. $#edit_keys){
     $EditGroupSummary .= $edit_keys[$k];
-    unless($k == $#edit_keys){ $EditGroupSummary .= "&" }
+    unless($k == $#edit_keys){ $EditGroupSummary .= "~" }
   }
   $SeriesByEditGroups{$EditGroupSummary}->{$s} = 1;
 }
@@ -141,7 +134,7 @@ for my $c (sort keys %SeriesByEditGroups){
     }
   }
   $background->WriteToEmail("Command group: $c\n");
-  my @edits = split /&/, $c;
+  my @edits = split /~/, $c;
   for my $edit (@edits){
   $background->WriteToEmail("Edit: $edit\n");
     my($op, $tag, $arg1, $arg2) = split(/\|/, $edit);

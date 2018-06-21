@@ -23,6 +23,7 @@ func choose($file_id) {
 
   # get the mime type of the file
   my $result = Query('FileType')->FetchOneHash($file_id);
+  unless(defined $result) { return undef }
   defined $result or die ChooserError->new("file not found: $file_id");
 
   my $type = $result->{file_type};

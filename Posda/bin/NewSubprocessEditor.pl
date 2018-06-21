@@ -26,6 +26,10 @@ my $help = <<EOF;
      <from_uid> => <to_uid>,
      ...
    },
+   uid_root_transform => {
+     from => <from_uid_root>,
+     to  => <to_uid_root>
+   },
    edits => [
      <edit_spec>,
      ...
@@ -34,6 +38,7 @@ my $help = <<EOF;
 
   where:
   <uid_substitutions> is optional.
+  <uid_root_transform> is optional.
 
   <edit_spec> = {
     op => <operation>,
@@ -83,7 +88,10 @@ my $help = <<EOF;
    1) if uid_substitutions is present, perform uid_substitutions.  Even if the
       tag doesn't have a VR of UI, if it has a value which matches a <from_uid>
       change it to <to_uid>.
-   2) Then perform operations in order specified.  The same tag may be edited
+   2) if uid_root_transform is present, perform uid_substitutions.  Even if the
+      tag doesn't have a VR of UI, if it has a value which matches a <from_uid>
+      change it to <to_uid>.
+   3) Then perform operations in order specified.  The same tag may be edited
       multiple times.  The last edit wins.  Caveat usor.
 
 EOF
@@ -109,12 +117,15 @@ my $buff;
 #print STDERR "read $count bytes\n";
 #exit;
 my $edits = fd_retrieve(\*STDIN);
+#print STDERR "Edits: ";
+#Debug::GenPrint($dbg, $edits, 1);
+#print STDERR "\n#######################\n";
 unless(exists $edits->{from_file}){ Error("No from_file in edits") }
 unless(-f $edits->{from_file}){ Error("file not found: $edits->{from_file}") }
 $results->{from_file} = $edits->{from_file};
 my $map_uids = sub {
   my($ele, $sig) = @_;
-  if($ele->{vr} eq "UI"){
+#  if($ele->{vr} eq "UI"){
     if($ele->{type} eq "text"){
       if($ele->{value} && ref($ele->{value}) eq "ARRAY"){
         for my $i (0 .. $#{$ele->{value}}){
@@ -133,7 +144,32 @@ my $map_uids = sub {
       } else {
       }
     }
-  }
+#  }
+};
+my $transform_uids = sub {
+  my($ele, $sig) = @_;
+#  if($ele->{vr} eq "UI"){
+    if($ele->{type} eq "text"){
+      if($ele->{value} && ref($ele->{value}) eq "ARRAY"){
+        for my $i (0 .. $#{$ele->{value}}){
+          my $from = $ele->{value}->[$i];
+          if($from =~ /^$edits->{uid_root_transform}->{from}(.*)$/){
+            my $remain = $1;
+            my $to = "$edits->{uid_root_transform}->{to}$remain";
+            $ele->{value}->[$i] = $to;;
+          }
+        }
+      } elsif($ele->{value}){
+        my $from = $ele->{value};
+        if($from =~ /^$edits->{uid_root_transform}->{from}(.*)$/){
+          my $remain = $1;
+          my $to = "$edits->{uid_root_transform}->{to}$remain";
+          $ele->{value} = $to;
+        }
+      } else {
+      }
+    }
+#  }
 };
 my $try = Posda::Try->new($edits->{from_file});
 unless(exists $try->{dataset}) {
@@ -145,7 +181,11 @@ if(exists $edits->{uid_substitutions}){
   if($num_subs >= 0){
     $ds->MapPvt($map_uids);
   }
-}
+} 
+if(exists $edits->{uid_root_transform}){
+print STDERR "Found uid_root_transform\n";
+  $ds->MapPvt($transform_uids);
+} 
 
 my @effective_edits;
 for my $edit(@{$edits->{edits}}){

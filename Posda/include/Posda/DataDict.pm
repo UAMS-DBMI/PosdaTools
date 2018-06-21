@@ -30540,6 +30540,13 @@ my $PvtDict = {
         group => "0013",
         Name =>  "Year of Study",
       },
+      "81" => {
+        VM => 1,
+        VR => "LO",
+        ele => "51",
+        group => "0013",
+        Name =>  "Year of Diagnosis",
+      },
     },
   },
   "ITC_for_RTOG_Conversion" => {

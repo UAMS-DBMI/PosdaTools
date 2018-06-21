@@ -43,12 +43,12 @@ $background->Daemonize;
 my $update_status = Query("UpdateStatusVisualReviewInstance");
 my $finalize = Query("FinalizeVisualReviewScheduling");
 my $tot_series = 0;
-my $tot_equiv = 0;
 for my $s (@series){
+  my $tot_equiv = 0;
   my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $visual_review_instance_id";
   open CMD, "$cmd|";
   while(my $line = <CMD>){
-    if($line =~ /\s*(\d+)\s*classes for series\*(.*)\s$/){
+    if($line =~ /\s*(\d+)\s*classes for series\s*(.*)\s*$/){
       my $num_equiv = $1;
       $tot_equiv += $num_series;
       $tot_series += 1;
