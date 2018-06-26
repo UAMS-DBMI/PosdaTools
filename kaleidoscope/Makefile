@@ -1,4 +1,4 @@
-IMAGE_NAME=quasarj/kaleidoscope:build
+IMAGE_NAME=quasarj/kaleidoscope:latest
 TEST_NAME=kaleidoscope_test
 .PHONY: run stop bash
 

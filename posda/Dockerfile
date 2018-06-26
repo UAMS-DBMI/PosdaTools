@@ -17,7 +17,9 @@ RUN apk --update add alpine-sdk \
 					 postgresql-client \
 					 file \
 					 tzdata \
-					 unzip
+					 unzip \
+					 py3-psycopg2 \
+					 cmake
 
 # Perl modules from Alpine repos
 RUN apk --update add perl-json \
@@ -42,8 +44,12 @@ RUN cpanm --notest REST::Client \
 				   K/KE/KEN/xls2csv-1.07.tar.gz
 
 RUN mkdir /home/posda
+RUN mkdir -p /build/build
+RUN wget -O /build/master.zip https://github.com/malaterre/GDCM/archive/master.zip
+RUN unzip -d /build /build/master.zip
+RUN cd /build/build && cmake -DGDCM_BUILD_APPLICATIONS=ON -DGDCM_USE_SYSTEM_OPENJPEG=OFF ../GDCM-master && make && make install
 
-RUN pip3 install xlsx2csv
+RUN pip3 install xlsx2csv mysql-connector python-box
 
 # # # Install Quince
 # RUN mkdir -p /quince && mkdir -p /root/quince/server && chown nginx:nginx /quince
@@ -70,6 +76,8 @@ WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]
 COPY docker-entrypoint /
 COPY posda.env /home/posda/posdatools/
+
+ENV PYTHONPATH /home/posda/posdatools/python
 
 ENTRYPOINT ["/docker-entrypoint"]
 CMD ["main"]

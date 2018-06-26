@@ -1,4 +1,4 @@
-IMAGE_NAME=quasarj/quince:build
+IMAGE_NAME=quasarj/quince:latest
 TEST_NAME=quince_test
 .PHONY: run stop bash
 

@@ -1,4 +1,4 @@
-IMAGE_NAME=quasarj/k-base:build
+IMAGE_NAME=quasarj/k-base:latest
 TEST_NAME=k-base_test
 .PHONY: run stop bash
 

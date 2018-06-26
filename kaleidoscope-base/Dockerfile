@@ -14,6 +14,7 @@ RUN apk --update add alpine-sdk \
 					 tzdata
 
 COPY k-base/ /k-base/
+COPY run.sh /k-base/
 RUN cd /k-base && npm install && make
 
 VOLUME ["/home/posda/cache"]
