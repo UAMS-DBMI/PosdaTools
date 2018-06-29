@@ -34,7 +34,7 @@ export class FileService {
   }
 
   getDump(file_id: number): Observable<any> {
-    return this.http.get("/vapi/dump/" + file_id).map(
+    return this.http.get("/papi/v1/dump/" + file_id).map(
       res => res.text()
     );
   }
