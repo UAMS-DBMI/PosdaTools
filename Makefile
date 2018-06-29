@@ -8,7 +8,7 @@ default: build
 build: dist
 
 dist: node_modules
-	$(NG) build --prod --base-href "/k/" --aot=false
+	$(NG) build --prod --base-href "/k/" 
 
 deploy:
 	scp -r dist/* tcia-utilities:/home/kaleidoscope/dist/
