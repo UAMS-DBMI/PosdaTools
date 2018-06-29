@@ -5,20 +5,18 @@ import logging
 from sanic import Sanic
 
 from papi.util import db
-from papi.resources import tests, download, dump, collections, studies, series
-from papi.resources import files
+from papi.resources import tests, download, dump
+import papi.blueprints
 
 app = Sanic()
 
+# Configure main routes
+papi.blueprints.configure_blueprints(app)
+
+# Add secondary routes
 app.blueprint(tests.blueprint, url_prefix='/v1/tests')
 app.blueprint(download.blueprint, url_prefix='/v1/download')
 app.blueprint(dump.blueprint, url_prefix='/v1/dump')
-
-app.blueprint(collections.blueprint, url_prefix='/v1/collections')
-app.blueprint(studies.blueprint, url_prefix='/v1/studies')
-app.blueprint(series.blueprint, url_prefix='/v1/series')
-app.blueprint(files.blueprint, url_prefix='/v1/files')
-
 
 # Deprecated routes
 app.add_route(download.download_file, '/file/<downloadable_file_id>/<hash>') 
@@ -34,7 +32,8 @@ if __name__ == "__main__":
 
     debug = os.environ.get('DEBUG', 0) != 0
     host = os.environ.get('HOST', '0.0.0.0')
-    port = os.environ.get('PORT', '8087')
+    port = int(os.environ.get('PORT', '8087'))
+    workers = int(os.environ.get('WORKERS', 4))
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -43,4 +42,4 @@ if __name__ == "__main__":
 
     logging.info('Starting up...')
 
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, workers=workers)

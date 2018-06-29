@@ -1,7 +1,6 @@
 from sanic import response
 from sanic.response import json, text, HTTPResponse
 from sanic.views import HTTPMethodView
-from sanic import Blueprint
 
 
 from ..util import asynctar
@@ -11,10 +10,7 @@ from ..util import json_objects, json_records
 from ..models import Collection
 
 
-blueprint = Blueprint('collections')
-
-
-async def get_all_collections(request):
+async def get_all_collections(request, **kwargs):
     query = """
         select distinct
             project_name as collection,
@@ -63,7 +59,7 @@ async def get_collections_by_site(site_name):
     )
 
 
-async def get_single_collection(request, collection_id, site_id):
+async def get_single_collection(request, collection_id, site_id, **kwargs):
     query = """
         select 
             project_name as collection,
@@ -83,7 +79,7 @@ async def get_single_collection(request, collection_id, site_id):
     )
 
 
-async def get_all_patients(request, collection_id, site_id):
+async def get_all_patients(request, collection_id, site_id, **kwargs):
     query = """
         select distinct 
             patient_name as patient 
@@ -97,7 +93,7 @@ async def get_all_patients(request, collection_id, site_id):
         await db.fetch(query, [collection_id, site_id])
     )
 
-async def get_single_patient(request, collection_id, site_id, patient_id):
+async def get_single_patient(request, collection_id, site_id, patient_id, **kwargs):
     query = """
         select
             patient_name as patient,
@@ -120,7 +116,7 @@ async def get_single_patient(request, collection_id, site_id, patient_id):
         await db.fetch_one(query, [collection_id, site_id, patient_id])
     )
 
-async def get_all_studies(request, collection_id, site_id, patient_id):
+async def get_all_studies(request, collection_id, site_id, patient_id, **kwargs):
     query = """
         select distinct 
             project_name as collection,
@@ -138,9 +134,3 @@ async def get_all_studies(request, collection_id, site_id, patient_id):
     return json_records(
         await db.fetch(query, [collection_id, site_id, patient_id])
     )
-
-blueprint.add_route(get_all_collections, '/')
-blueprint.add_route(get_single_collection, '/<collection_id>/<site_id>')
-blueprint.add_route(get_all_patients, '/<collection_id>/<site_id>/patients')
-blueprint.add_route(get_single_patient, '/<collection_id>/<site_id>/patients/<patient_id>')
-blueprint.add_route(get_all_studies, '/<collection_id>/<site_id>/patients/<patient_id>/studies')

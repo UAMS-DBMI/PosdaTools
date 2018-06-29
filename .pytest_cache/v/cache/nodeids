@@ -1,4 +1,18 @@
 [
-  "test.py::test_test",
-  "test.py::test_files"
+  "test.py::test_root",
+  "test.py::test_collections_root",
+  "test.py::test_collections",
+  "test.py::test_collections_patients_root",
+  "test.py::test_collections_patients",
+  "test.py::test_collections_patients_studies",
+  "test.py::test_studies_root",
+  "test.py::test_studies",
+  "test.py::test_studies_series",
+  "test.py::test_series_root",
+  "test.py::test_series",
+  "test.py::test_series_files",
+  "test.py::test_files_root",
+  "test.py::test_files",
+  "test.py::test_files_data",
+  "test.py::test_files_pixel_data"
 ]
