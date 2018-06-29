@@ -17,8 +17,8 @@ if (process.env.DEBUG == 1) {
 pg.pg.defaults.host = '/var/run/postgresql';
 
 
-const API_URL = 'http://tcia-posda-rh-1/vapi';
-// const API_URL = 'http://quince:8000/vapi';
+// const API_URL = 'http://tcia-posda-rh-1/vapi';
+const API_URL = 'http://quince:8088/vapi';
 
 import { Image } from './image';
 
