@@ -5,8 +5,6 @@ from sanic import Sanic
 from sanic.response import json, text, HTTPResponse
 import aiofiles
 import uuid
-import asyncio
-import uvloop
 import datetime
 
 import asyncpg
@@ -29,45 +27,6 @@ async def connect_to_db(sanic, loop):
     pool = await asyncpg.create_pool(database='posda_files', 
                                      loop=loop)
     # loop.create_task(user_watch())
-
-@app.route("/vapi/dump/<file_id:int>")
-async def dump_dicom(request, file_id):
-    # get the filename from the database
-    logging.debug(f"Generating dump for {file_id}")
-    query = """
-        select root_path || '/' || rel_path as file
-        from
-            file_location
-            natural join file_storage_root
-        where file_id = $1
-    """
-
-    conn = await pool.acquire()
-    records = await conn.fetch(query, file_id)
-    await pool.release(conn)
-
-    file = records[0]['file']
-    logging.debug(file)
-
-    create = asyncio.create_subprocess_exec("./dicom_dump.sh", file, stdout=asyncio.subprocess.PIPE)
-    proc = await create
-    logging.debug("process created, about to wait on it")
-
-    #await proc.wait() # wait for it to end
-    logging.debug("process ended, getting data")
-    data = await proc.stdout.read() # read entire output
-    logging.debug("data got, returning it")
-
-    try:
-        new_data = data.decode()
-    except UnicodeDecodeError:
-        # well it wasn't utf-8; now what?
-        import chardet
-        encoding = chardet.detect(data)['encoding']
-        new_data = data.decode(encoding)
-
-    return text(new_data)
-
 
 @app.route("/vapi/extra_details/<file_id:int>")
 async def get_series_info(request, file_id):
