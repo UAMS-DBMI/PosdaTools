@@ -15,7 +15,7 @@ services:
             - 5433:5432
 
     posda:
-        image: quasarj/posda2:build
+        image: quasarj/posda2:latest
         restart: always
         depends_on:
             - db
@@ -23,14 +23,34 @@ services:
             - 64610-64699:64610-64699
         volumes:
             - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - /mnt:/mnt
         environment:
             TZ: America/Chicago
             PGHOST: db
             PGUSER: postgres
             PGPASSWORD: example
+            POSDA_EXTERNAL_HOSTNAME: localhost
+
+    posda-file-process:
+        image: quasarj/posda2:latest
+        command: file-process
+        restart: always
+        depends_on:
+            - db
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+        environment:
+            TZ: America/Chicago
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+            POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
-        image: quasarj/posda-api:build
+        image: quasarj/posda2:latest
+        command: api
         restart: always
         depends_on:
             - db
@@ -44,7 +64,7 @@ services:
             - posda_cache_alpine:/home/posda/cache
 
     quince:
-        image: quasarj/quince:build
+        image: quasarj/quince:latest
         restart: always
         depends_on:
             - db
@@ -56,26 +76,37 @@ services:
             PGUSER: postgres
             PGPASSWORD: example
 
-    # kaleidoscope:
-    #     image: 
-    #     restart: always
-    #     depends_on:
-    #         - db
-    #         - posda
-    #     volumes:
-    #         - posda_cache_alpine: ??? maybe submission root
+    kaleidoscope:
+        image: quasarj/kaleidoscope:latest
+        restart: always
+        depends_on:
+            - db
+            - posda
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+        environment:
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+            #DEBUG: 1
 
-    # k-base: 
-    #     image: 
-    #     restart: always
-    #     depends_on:
-    #         - db
-    #         - posda
-    #     volumes:
-    #         - posda_cache_alpine: ??? maybe submission root
+    k-base:
+        image: quasarj/k-base:latest
+        restart: always
+        depends_on:
+            - db
+            - posda
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+        environment:
+            PGHOST: db
+            PGUSER: postgres
+            PGPASSWORD: example
+        links:
+            - quince:quince
 
     nginx:
-        image: quasarj/posda_nginx:build
+        image: quasarj/posda_nginx:latest
         restart: always
         ports:
             - 80:80
@@ -85,6 +116,7 @@ services:
             - posda:posda
             - posda-api:posda-api
             - quince:quince
+            - kaleidoscope:kaleidoscope
 
 volumes:
     posda_cache_alpine:

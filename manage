@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -e
+
+help() {
+    echo "Posda Docker Edition (DE) Management Script
+
+This script is intended for use mainly in development environments,
+and as such all commands operate using the dev docker-compose file.
+
+Supported operations:
+    help - this help
+    up - bring up all containers via docker-compose
+         specify -d to detatch (attached by default)
+    down - bring down all containers via docker-compose
+    psql - execute the PostgreSQL shell inside the running db container
+    shell - open a Posda Shell inside the main Posda container
+    "
+}
+
+
+case "$1" in
+  up)
+    shift
+    exec docker-compose up $*
+    ;;
+
+  down)
+    shift
+    exec docker-compose down $*
+    ;;
+
+  psql)
+    shift
+    exec docker exec -it posda2_db_1 psql -U postgres $*
+    ;;
+
+  shell)
+    shift
+    exec docker exec -itw /home/posda/posdatools/ posda2_posda_1 /home/posda/posdatools/posda_shell
+    ;;
+
+  help)
+    shift
+    help
+    ;;
+
+  *)
+    help
+    ;;
+esac
