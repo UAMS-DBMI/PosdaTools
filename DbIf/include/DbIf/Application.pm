@@ -1008,6 +1008,7 @@ method SwitchToTab($http, $dyn) {
 }
 
 method OpenTableLevelPopup($http, $dyn) {
+print STDERR "In OpenTableFreePopup\n";
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
 
   my $parms = { table => $table, button => $dyn->{cap_}};
@@ -1019,6 +1020,7 @@ method OpenTableLevelPopup($http, $dyn) {
 
 my $table_free_seq = 0;
 method OpenTableFreePopup($http, $dyn) {
+print STDERR "In OpenTableFreePopup\n";
   my $parms = { button => $dyn->{cap_}};
   for my $i (keys %{$dyn}){
     unless(
@@ -1036,6 +1038,10 @@ method OpenTableFreePopup($http, $dyn) {
 }
 
 method OpenDynamicPopup($http, $dyn) {
+print STDERR "In OpenDynamicPopup\n";
+for my $i (keys %{$dyn}){
+  print STDERR "dyn{$i}: $dyn->{$i}\n";
+}
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
     my $cols = $table->{query}->{columns};
@@ -1047,6 +1053,7 @@ method OpenDynamicPopup($http, $dyn) {
     for my $i (0 .. $#{$row}) {
       $h->{$cols->[$i]} = $row->[$i];
     }
+    $h->{button} = $dyn->{cap_};
 
     my $unique_val = "$h";
 
@@ -1079,8 +1086,10 @@ method OpenPopup($class, $name, $params) {
 #    say STDERR "OpenDynamicPopup, executing $class using params:";
 #    print STDERR Dumper($params);
 
+
   if ($class eq 'choose') {
     $class = Posda::FileViewerChooser::choose($params->{file_id});
+    delete $params->{spreadsheet_file_id};
   } elsif ($class eq 'choose_from'){
     $params->{file_id} = $params->{from_file_id};
     $class = Posda::FileViewerChooser::choose($params->{file_id});
@@ -1091,13 +1100,13 @@ method OpenPopup($class, $name, $params) {
     $params->{file_id} = $params->{spreadsheet_file_id};
     $class = Posda::FileViewerChooser::choose($params->{file_id});
   }
+  unless(defined $class){ return }
 
   # if Quince, do it differently:
   if ($class eq 'Quince') {
     $self->OpenQuince($name, $params);
     return;
   }
-
 
   eval "require $class";
   if($@){
@@ -2163,7 +2172,7 @@ func get_popup_hash($query_name) {
     my $popup_hash = {};
     map {
       my ($id, $query, $class, $col, $is_full_table, $name) = @$_;
-      if ($is_full_table == 1) {
+      if ($is_full_table) {
         unless(exists $popup_hash->{table_level_popup}){
           $popup_hash->{table_level_popup} = [];
         }
@@ -2318,6 +2327,7 @@ method TableSelected($http, $dyn){
               op => "OpenDynamicPopup",
               row => "$row_index",
               class_ => "$popup_details->{class}",
+              cap_ => "$popup_details->{name}",
               sync => 'Update();'
           });
         }
@@ -2334,6 +2344,7 @@ method TableSelected($http, $dyn){
             op => "OpenDynamicPopup",
             row => "$row_index",
             class_ => "$popup_details->{class}",
+            cap_ => "$popup_details->{name}",
             sync => 'Update();'
         });
         $http->queue('</td>');
@@ -2504,7 +2515,7 @@ method Activities($http, $dyn){
 
 method RenderNewActivityForm($http, $dyn) {
   $http->queue(qq{
-    <h3>Insert A new activity</h3>
+    <h3>Insert a new activity</h3>
     <div class="col-md-4">
       <div class="form-group">
         <label>Short description</label>
@@ -2531,7 +2542,8 @@ method RenderActivityDropDown($http, $dyn){
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
   my @sorted_ids = $self->SortedActivityIds($self->{Activities});
   for my $i (@sorted_ids){
-    push @activity_list, [$i , $self->{Activities}->{$i}->{desc}];
+    push @activity_list, [$i , "$self->{Activities}->{$i}->{desc}" .
+      " ($self->{Activities}->{$i}->{user})"];
   }
   $self->SelectByValue($http, {
     op => 'SetActivity',
@@ -2550,10 +2562,14 @@ method RenderActivityDropDown($http, $dyn){
 
 method SetActivity($http, $dyn){
   $self->{ActivitySelected} = $dyn->{value};
+  my $activity_name = $self->{Activities}->{$dyn->{value}}->{desc};
+  $self->{title} = "Database Interface (<small>$activity_name</small>)";
+  $self->AutoRefresh;
 }
 
 method newActivity($http, $dyn){
   my $desc = $dyn->{value};
+  if($desc =~/^\s*$/){ return }
   my $user = $self->get_user;
   print STDERR "In new activity $user: $desc\n";
   my $q = Query('CreateActivity');
@@ -2598,7 +2614,7 @@ method SortedActivityIds($h){
   } keys %$h;
 }
 method RefreshActivities{
-  my $q = Query('GetActivities');
+  my $q = Query('GetOpenActivities');
   my %Activities;
   $self->{Activities} = {};
   $q->RunQuery(sub {
@@ -2610,7 +2626,7 @@ method RefreshActivities{
       opened => $created,
       desc => $b_desc
     };
-  }, sub {}, $self->get_user);
+  }, sub {});
   $self->{Activities} = \%Activities;
 }
 #############################

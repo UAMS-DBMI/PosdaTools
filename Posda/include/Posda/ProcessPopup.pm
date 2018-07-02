@@ -55,6 +55,12 @@ my $db_handle;
 # };
 method SpecificInitialize($params) {
   my $button_name = $params->{button};
+print STDERR "Parms: ";
+Debug::GenPrint($dbg, $params, 1);
+print STDERR "\n";
+print STDERR "Self ";
+Debug::GenPrint($dbg, $self, 1);
+print STDERR "\n";
   for my $i (keys %{$params}){
     unless($i eq "button"){
       $self->{default_param}->{$i} = $params->{$i};
