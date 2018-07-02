@@ -1,21 +1,21 @@
 [submodule "posda/posdatools"]
 	path = posda/posdatools
-	url = ssh://git@imphub:7999/pt/posdatools.git
+	url = https://code.imphub.org/scm/pt/posdatools.git
 [submodule "quince/quince"]
 	path = quince/quince
-	url = ssh://git@imphub:7999/pt/quince.git
+	url = https://code.imphub.org/scm/pt/quince.git
 [submodule "nginx/quince"]
 	path = nginx/quince
-	url = ssh://git@imphub:7999/pt/quince.git
+	url = https://code.imphub.org/scm/pt/quince.git
 [submodule "papi/posda-api"]
 	path = posda/posda-api
-	url = ssh://git@imphub:7999/pt/posda-api.git
+	url = https://code.imphub.org/scm/pt/posda-api.git
 [submodule "nginx/kaleidoscope"]
 	path = nginx/kaleidoscope
-	url = ssh://git@imphub:7999/pt/kaleidoscope.git
+	url = https://code.imphub.org/scm/pt/kaleidoscope.git
 [submodule "kaleidoscope/kaleidoscope"]
 	path = kaleidoscope/kaleidoscope
-	url = ssh://git@imphub:7999/pt/kaleidoscope.git
+	url = https://code.imphub.org/scm/pt/kaleidoscope.git
 [submodule "kaleidoscope-base/k-base"]
 	path = kaleidoscope-base/k-base
-	url = ssh://git@imphub:7999/pt/kaleidoscope-base.git
+	url = https://code.imphub.org/scm/pt/kaleidoscope-base.git
