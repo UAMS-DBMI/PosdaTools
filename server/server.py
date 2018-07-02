@@ -334,14 +334,47 @@ order by count desc
 
     return json([dict(i.items()) for i in records])
 
+@app.route("/api/get_custom")
+async def get_custom_by_params(request):
+    after = int(request.args.get('offset') or 0)
+    processing_status = request.args.get('processing_status')
+    review_status = request.args.get('review_status')
+    dicom_file_type = request.args.get('dicom_file_type')
+    visual_review_instance_id = request.get('visual_review_instance_id')
+
+    logging.debug(f"get_custom")
+
+    if processing_status is not None:
+        where_text += f"and processing_status = '{processing_status}'"
+    
+    if review_status is not None:
+        where_text += f"and review_status = '{review_status}' "
+
+    if dicom_file_type is not None:
+        where_text += f"and dicom_file_type = '{dicom_file_type}' "
+
+    query = f"""
+select distinct image_equivalence_class_id, series_instance_uid, processing_status, 
+review_status, visibility, count(distinct file_id) as num_files
+
+from image_equivalence_class 
+    natural join image_equivalence_class_input_image 
+    natural join dicom_file 
+    natural join ctp_file
+
+where 1 = 1  
+    {where_text}
+group by image_equivalence_class_id, series_instance_uid, processing_status, review_status, visibility
+        """
+    
+    return json([dict(i.items()) for i in records])
 
 @app.route("/api/set/<state>")
 async def get_set(request, state):
     after = int(request.args.get('offset') or 0)
     collection = request.args.get('project')
     site = request.args.get('site')
-    review_status = request.args.get('review_status')
-    file_type = request.args.get('file_type')
+    
 
     logging.debug(f"get_set:state={state},site={site},collection={collection}")
 
@@ -356,7 +389,7 @@ async def get_set(request, state):
 
     logging.debug(f"handler chosen: {handler}")
 
-    records = await handler(after, collection, site, review_status, file_type)
+    records = await handler(after, collection, site, review_status, dicom_file_type)
     logging.debug("get_set:request handled, emitting response now")
 
     return json([dict(i.items()) for i in records])
@@ -369,12 +402,6 @@ async def get_unreviewed_data(after, collection, site, review_status, file_type)
 
     if site is not None:
         where_text += f"and site_name = '{site}' "
-
-    if review_status is not None:
-        where_text += f"and review_status = '{review_status}' "
-
-    if file_type is not None:
-        where_text += f"and file_type = '{file_type}' "
 
     query = f"""
 select 
@@ -473,12 +500,6 @@ async def get_reviewed_data(state, after, collection, site, review_status, file_
 
     if site is not None:
         where_text += f"and site_name = '{site}' "
-
-    if review_status is not None:
-        where_text += f"and review_status = '{review_status}' "
-
-    if file_type is not None:
-        where_text += f"and file_type = '{file_type}' "
 
     query = f"""
 select 
