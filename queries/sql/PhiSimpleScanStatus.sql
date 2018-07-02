@@ -16,4 +16,4 @@ select
   num_series_scanned as scanned
 from 
   phi_scan_instance
-order by id
+order by id desc

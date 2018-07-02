@@ -1,4 +1,4 @@
--- Name: GetFilesWithNoSeriesInfoByCollection
+-- Name: GetFilesWithNoStudyInfoByCollection
 -- Schema: posda_files
 -- Columns: ['file_id', 'path']
 -- Args: ['collection']
@@ -22,7 +22,7 @@ where
     select
       file_id 
     from
-      file_series s 
+      file_study s 
     where
       s.file_id = c.file_id
   )

@@ -14,4 +14,4 @@ select
   visual_review_num_equiv_class as num_equiv,
   when_visual_review_sched_complete as sched_finish_time
 from visual_review_instance
-  order by when_scheduled
+  order by when_scheduled desc

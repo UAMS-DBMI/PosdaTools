@@ -1,6 +1,6 @@
--- Name: DuplicateSopsInSeries
+-- Name: DuplicateSopsInSeriesNew
 -- Schema: posda_files
--- Columns: ['sop_instance_uid', 'import_time', 'file_id']
+-- Columns: ['sop_instance_uid', 'import_day', 'file_id']
 -- Args: ['series_instance_uid']
 -- Tags: ['by_series', 'dup_sops', 'ACRIN-FMISO-Brain Duplicate Elimination']
 -- Description: List of Actual duplicate SOPs (i.e. different files, same SOP)
@@ -8,7 +8,7 @@
 -- 
 
 select
-  sop_instance_uid, import_time, file_id
+  sop_instance_uid, date_trunc('day',import_time) as import_day, file_id
 from 
   file_sop_common
   natural join file_import natural join import_event
@@ -24,4 +24,4 @@ group by sop_instance_uid
 ) as foo
 where count > 1
 )
-order by sop_instance_uid, import_time
+order by sop_instance_uid, import_day, file_id

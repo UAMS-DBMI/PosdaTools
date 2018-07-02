@@ -74,20 +74,6 @@
       "Posda/sql/dicom_dd_data.sql"
     ]
   },
-  "dicom_dd" : {
-    "database" : "dicom_dd",
-    "driver"   : "postgres",
-    "init"     : [
-      "Posda/sql/dicom_dd.sql"
-    ]
-  },
-  "dicom_dd" : {
-    "database" : "dicom_dd",
-    "driver"   : "postgres",
-    "init"     : [
-      "Posda/sql/dicom_dd.sql"
-    ]
-  },
   "posda_files" : {
     "database" : "posda_files",
     "driver"   : "postgres",
@@ -139,13 +125,6 @@
     "init"     : [
       "Posda/sql/posda_phi_simple.sql",
       "Posda/sql/posda_phi_simple_data.sql"
-    ]
-  },
-  "private_tag_kb" : {
-    "database" : "private_tag_kb",
-    "driver"   : "postgres",
-    "init"     : [
-      "Posda/sql/N_private_tag_kb.sql"
     ]
   },
   "posda_backlog" : {

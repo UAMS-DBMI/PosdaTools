@@ -1,4 +1,4 @@
--- Name: DistinctSeriesByCollectionSite
+-- Name: DistinctVisibleSeriesByCollectionSite
 -- Schema: posda_files
 -- Columns: ['series_instance_uid', 'dicom_file_type', 'modality', 'count']
 -- Args: ['project_name', 'site_name']

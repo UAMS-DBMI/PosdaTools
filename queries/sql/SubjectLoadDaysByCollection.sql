@@ -1,6 +1,6 @@
 -- Name: SubjectLoadDaysByCollection
 -- Schema: posda_backlog
--- Columns: ['collection', 'site', 'subj', 'time', 'count', 'max_delay', 'min_delay']
+-- Columns: ['collection', 'site', 'subj', 'time', 'number_of_files', 'max_delay', 'min_delay']
 -- Args: ['interval_type', 'from', 'to', 'collection']
 -- Tags: ['find_series', 'for_tracy', 'backlog_round_history']
 -- Description: Get List of Series by Subject Name

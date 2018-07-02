@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['file_id']
 -- Args: ['visual_review_instance_id', 'series_instance_uid']
--- Tags: ['signature', 'phi_review', 'visual_review', 'visual_review_new_workflow']
+-- Tags: ['signature', 'phi_review', 'visual_review_new_workflow']
 -- Description: Get a list of files which are hidden by series id and visual review id
 
 select

@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'series_instance_uid', 'visibility', 'num_files']
 -- Args: []
--- Tags: ['bills_test', 'posda_db_populate']
+-- Tags: ['posda_db_populate', 'dicom_file_type']
 -- Description: Add a filter to a tab
 
 select 

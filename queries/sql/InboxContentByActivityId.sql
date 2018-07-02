@@ -1,6 +1,6 @@
 -- Name: InboxContentByActivityId
 -- Schema: posda_queries
--- Columns: ['user_name', 'id', 'operation_name', 'when', 'file_id', 'command_line', 'spreadsheet_file_id']
+-- Columns: ['user_name', 'id', 'operation_name', 'when', 'file_id', 'sub_id', 'command_line', 'spreadsheet_file_id']
 -- Args: ['activity_id']
 -- Tags: ['AllCollections', 'queries', 'activities']
 -- Description: Get a list of available queries

@@ -1,6 +1,6 @@
 -- Name: DicomFilesMissingThingsByDateRange
 -- Schema: posda_files
--- Columns: ['file_id', 'collection', 'site', 'file_patient_missing', 'file_sop_common_missing', 'file_series_missing', 'file_equipment_missing']
+-- Columns: ['file_id', 'collection', 'site', 'file_sop_common_missing', 'file_patient_missing', 'file_study_missing', 'file_series_missing', 'file_equipment_missing']
 -- Args: ['from', 'to']
 -- Tags: []
 -- Description: List DICOM files which are missing one of:
