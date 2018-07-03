@@ -67,7 +67,7 @@ export class NavControlComponent implements OnInit {
 
   fetchMoreDataFromQuery(){
     console.log("fetchMoreDataFromQuery");
-    this.busy = this.service.getNextUnreviewedByQuery(this.review_status, this.dicom_file_type).subscribe(
+    this.busy = this.service.getNextUnreviewedByQuery(this.processing_status, this.review_status, this.dicom_file_type).subscribe(
       data => {
         console.log('fetchMoreDataFromQuery got: ', data);
         if (this.iec !== undefined) {
