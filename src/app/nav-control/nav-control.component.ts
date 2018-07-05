@@ -51,6 +51,7 @@ export class NavControlComponent implements OnInit {
     if ( this.processing_status || this.review_status || this.dicom_file_type) {
       //We probably got here from an external app calling Kaleidoscope with
       //query parameters in url
+      console.log('Is this updating?');
       this.fetchMoreDataFromQuery();
     }
     else {
