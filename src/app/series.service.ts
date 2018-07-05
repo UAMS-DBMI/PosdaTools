@@ -57,13 +57,15 @@ export class SeriesService {
       return this.http.get(url, this.options).map(res => res.json());
   }
 
-  getNextUnreviewedByQuery(processing_status: string, review_status: string, file_type: string ): Observable<EquivalenceClassMap>{
+  getNextByQuery(processing_status: string, review_status: string, file_type: string ): Observable<EquivalenceClassMap>{
     let params: URLSearchParams = new URLSearchParams();
     params.set("processing_status", processing_status);
     params.set("review_status", review_status);
     params.set("file_type", file_type);
+    params.set("token", this.token);
     this.options.search = params;
 
+    console.log("get_custom");
     let url = this.url + '/get_custom';
 
     return this.http.get(url, this.options).map(res => res.json());

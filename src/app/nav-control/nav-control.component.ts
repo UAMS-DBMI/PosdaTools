@@ -46,10 +46,6 @@ export class NavControlComponent implements OnInit {
         console.log('Query param dicom_file_type: ', this.dicom_file_type);
         console.log('Query param visual_review_instance_id: ', this.visual_review_instance_id);
 
-        if (this.processing_status == "ReadyToReview"){
-          this.service.mode = "unreviewed";
-        }
-
       });
 
     if ( this.processing_status || this.review_status || this.dicom_file_type) {
@@ -67,7 +63,7 @@ export class NavControlComponent implements OnInit {
 
   fetchMoreDataFromQuery(){
     console.log("fetchMoreDataFromQuery");
-    this.busy = this.service.getNextUnreviewedByQuery(this.processing_status, this.review_status, this.dicom_file_type).subscribe(
+    this.busy = this.service.getNextByQuery(this.processing_status, this.review_status, this.dicom_file_type).subscribe(
       data => {
         console.log('fetchMoreDataFromQuery got: ', data);
         if (this.iec !== undefined) {
