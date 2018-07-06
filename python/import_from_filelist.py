@@ -121,20 +121,22 @@ def import_one_file(import_event_id, root, line_obj):
     )
 
     # TODO: refactor this, it is so ugly!
-    if exists:
-        return
+    if not exists:
 
-    rel_path = copy_file(file_id, digest, root_id, root_path, file)
+        rel_path = copy_file(file_id, digest, root_id, root_path, file)
 
-    # set the file location
-    insert_file_location.execute(
-        file_id=file_id,
-        file_storage_root_id=root_id,
-        rel_path=str(rel_path)
-    )
+        # set the file location
+        insert_file_location.execute(
+            file_id=file_id,
+            file_storage_root_id=root_id,
+            rel_path=str(rel_path)
+        )
 
-    # mark ready to process
-    make_posda_file_ready_to_process.execute(file_id)
+        # mark ready to process
+        make_posda_file_ready_to_process.execute(file_id)
+
+    if original_file.startswith('decompressed;'):
+        os.unlink(file)
 
 
 def copy_file(file_id, digest, root_id, root_path, source_path):
