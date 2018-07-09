@@ -61,7 +61,7 @@ export class SeriesService {
     let params: URLSearchParams = new URLSearchParams();
     params.set("processing_status", processing_status);
     params.set("review_status", review_status);
-    params.set("dicom_file_type", file_type);
+    params.set("dicom_file_type", dicom_file_type);
     params.set("token", this.token);
     this.options.search = params;
 

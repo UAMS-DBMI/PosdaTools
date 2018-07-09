@@ -385,7 +385,6 @@ async def get_set(request, state):
     collection = request.args.get('project')
     site = request.args.get('site')
 
-
     logging.debug(f"get_set:state={state},site={site},collection={collection}")
 
     handler = {
