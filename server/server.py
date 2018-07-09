@@ -358,17 +358,25 @@ async def get_custom_by_params(request):
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
     query = f"""
-select distinct image_equivalence_class_id, series_instance_uid, processing_status,
-review_status, visibility, count(distinct file_id) as num_files
+        select distinct 
+        image_equivalence_class_id, 
+        series_instance_uid, 
+        equivalence_class_number,
+        processing_status,
+        review_status, 
+        projection_type,
+        image_equivalence_class_out_image.file_id,
+        visibility, count(distinct file_id) as num_files
 
-from image_equivalence_class
-    natural join image_equivalence_class_input_image
-    natural join dicom_file
-    natural join ctp_file
+        from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            natural join image_equivalence_class_out_image
+            natural join dicom_file
+            natural join ctp_file
 
-where 1 = 1
-    {where_text}
-group by image_equivalence_class_id, series_instance_uid, processing_status, review_status, visibility
+        where 1 = 1
+            {where_text}
+        group by image_equivalence_class_id, series_instance_uid, processing_status, review_status, visibility
         """
 
     logging.debug("get_custom query: " + query)
