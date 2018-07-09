@@ -358,7 +358,7 @@ async def get_custom_by_params(request):
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
     query = f"""
-        select distinct 
+        select 
         image_equivalence_class_id, 
         series_instance_uid, 
         equivalence_class_number,
@@ -366,23 +366,30 @@ async def get_custom_by_params(request):
         review_status, 
         projection_type,
         image_equivalence_class_out_image.file_id,
-        visibility, count(distinct file_id) as num_files
+        visibility, 
+        root_path || '/' || rel_path as path,
+        (select count(file_id)
+            from image_equivalence_class_input_image i
+            where i.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id) as file_count
 
         from image_equivalence_class
             natural join image_equivalence_class_input_image
             natural join image_equivalence_class_out_image
             natural join dicom_file
             natural join ctp_file
+            natural join file_location
+            natural join file_storage_root
 
-        where 1 = 1
+        where image_equivalence_class_id > $1
             {where_text}
-        group by image_equivalence_class_id, series_instance_uid, processing_status, review_status, visibility
+        
+        limit 1
         """
 
     logging.debug("get_custom query: " + query)
 
     conn = await pool.acquire()
-    records = await conn.fetch(query)
+    records = await conn.fetch(query, after)
     await pool.release(conn)
 
     return json([dict(i.items()) for i in records])
