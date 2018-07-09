@@ -399,12 +399,12 @@ async def get_set(request, state):
 
     logging.debug(f"handler chosen: {handler}")
 
-    records = await handler(after, collection, site, review_status, dicom_file_type)
+    records = await handler(after, collection, site)
     logging.debug("get_set:request handled, emitting response now")
 
     return json([dict(i.items()) for i in records])
 
-async def get_unreviewed_data(after, collection, site, review_status, file_type):
+async def get_unreviewed_data(after, collection, site):
     where_text = ""
 
     if collection is not None:
@@ -489,20 +489,20 @@ limit 1
 
     return records
 
-async def get_good_data(after, collection, site, review_status, file_type):
-    return await get_reviewed_data('Good', after, collection, site, review_status, file_type)
+async def get_good_data(after, collection, site):
+    return await get_reviewed_data('Good', after, collection, site)
 
-async def get_bad_data(after, collection, site, review_status, file_type):
-    return await get_reviewed_data('Bad', after, collection, site, review_status, file_type)
+async def get_bad_data(after, collection, site):
+    return await get_reviewed_data('Bad', after, collection, site)
 
-async def get_blank_data(after, collection, site, review_status, file_type):
-    return await get_reviewed_data('Blank', after, collection, site, review_status, file_type)
-async def get_scout_data(after, collection, site, review_status, file_type):
-    return await get_reviewed_data('Scout', after, collection, site, review_status, file_type)
-async def get_other_data(after, collection, site, review_status, file_type):
-    return await get_reviewed_data('Other', after, collection, site, review_status, file_type)
+async def get_blank_data(after, collection, site):
+    return await get_reviewed_data('Blank', after, collection, site)
+async def get_scout_data(after, collection, site):
+    return await get_reviewed_data('Scout', after, collection, site)
+async def get_other_data(after, collection, site):
+    return await get_reviewed_data('Other', after, collection, site)
 
-async def get_reviewed_data(state, after, collection, site, review_status, file_type):
+async def get_reviewed_data(state, after, collection, site):
     where_text = ""
 
     if collection is not None:
