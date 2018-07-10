@@ -358,32 +358,62 @@ async def get_custom_by_params(request):
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
     query = f"""
-        select 
-        image_equivalence_class_id, 
-        series_instance_uid, 
-        equivalence_class_number,
-        processing_status,
-        review_status, 
-        projection_type,
-        image_equivalence_class_out_image.file_id,
-        visibility, 
-        root_path || '/' || rel_path as path,
-        (select count(file_id)
-            from image_equivalence_class_input_image i
-            where i.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id) as file_count
+        select
+  image_equivalence_class_id,
+  series_instance_uid,
+  equivalence_class_number,
+  processing_status,
+  review_status,
+  projection_type,
+  image_equivalence_class_out_image.file_id,
+  root_path || '/' || rel_path as path,
+            (select count(file_id)
+             from image_equivalence_class_input_image i
+             where i.image_equivalence_class_id =
+                   image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+             (select patient_id
+              from file_patient
+              natural join file_series
+              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
+from (
+  select
+    image_equivalence_class_id,
+    (select project_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) limit 1
+    ) project_name,
+    (select site_name from ctp_file
+      where ctp_file.file_id =
+      (
+      select file_id
+      from image_equivalence_class_input_image i
+      where i.image_equivalence_class_id = iec.image_equivalence_class_id
+      limit 1) limit 1
+    ) site_name,
+    processing_status
 
-        from image_equivalence_class
-            natural join image_equivalence_class_input_image
-            natural join image_equivalence_class_out_image
-            natural join dicom_file
-            natural join ctp_file
-            natural join file_location
-            natural join file_storage_root
+  from image_equivalence_class iec
 
-        where image_equivalence_class_id > $1
-            {where_text}
-        
-        limit 1
+  where not hidden
+  order by image_equivalence_class_id
+) iecs
+natural join image_equivalence_class
+natural join image_equivalence_class_out_image
+natural join file_location
+natural join file_storage_root
+
+where 1 = 1
+  and image_equivalence_class_id > $1
+  {where_text}
+
+limit 1
         """
 
     logging.debug("get_custom query: " + query)
