@@ -48,39 +48,25 @@ export class NavControlComponent implements OnInit {
 
       });
 
-    if ( this.processing_status || this.review_status || this.dicom_file_type) {
-      //We probably got here from an external app calling Kaleidoscope with
-      //query parameters in url
-      console.log('Is this updating?');
-      this.fetchMoreDataFromQuery();
-    }
-    else {
-      //We probably got here from user selecting a project
-      //TODO - should possibly refactor everything to use the query parameters
-      //for consistency
-      this.fetchMoreData();
-    }
-  }
+    if (this.processing_status && this.processing_status.toLowerCase() == "unreviewed")
+      this.service.mode = "unreviewed";
+    if (this.review_status &&
+        (this.review_status.toLowerCase() == "good"
+          ||  this.review_status.toLowerCase() == "bad"
+          || this.review_status.toLowerCase() == "blank"
+          || this.review_status.toLowerCase() == "scout"
+          || this.review_status.toLowerCase() == "other"
+        ) )
+      this.service.mode = this.review_status.toLowerCase();
 
-  fetchMoreDataFromQuery(){
-    console.log("fetchMoreDataFromQuery");
-    this.busy = this.service.getNextByQuery(this.processing_status, this.review_status, this.dicom_file_type).subscribe(
-      data => {
-        console.log('fetchMoreDataFromQuery got: ', data);
-        if (this.iec !== undefined) {
-          this.history.push(this.iec);
-        }
-        this.iec = data[0];
-      },
-      error => this.handleError(error)
-    );
 
-    return this.busy;
+    this.fetchMoreData();
+
   }
 
   fetchMoreData() {
     console.log("fetchMoreData");
-    this.busy = this.service.getNextUnreviewed(this.iec).subscribe(
+    this.busy = this.service.getNextUnreviewed(this.iec, this.dicom_file_type, this.visual_review_instance_id).subscribe(
       data => {
         console.log('fetchMoreData got: ', data);
         if (this.iec !== undefined) {

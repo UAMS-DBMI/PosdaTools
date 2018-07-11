@@ -429,6 +429,8 @@ async def get_set(request, state):
     after = int(request.args.get('offset') or 0)
     collection = request.args.get('project')
     site = request.args.get('site')
+    dicom_file_type = request.args.get('dicom_file_type')
+    visual_review_instance_id = request.get('visual_review_instance_id')
 
     logging.debug(f"get_set:state={state},site={site},collection={collection}")
 
@@ -443,12 +445,12 @@ async def get_set(request, state):
 
     logging.debug(f"handler chosen: {handler}")
 
-    records = await handler(after, collection, site)
+    records = await handler(after, collection, site, dicom_file_type, visual_review_instance_id)
     logging.debug("get_set:request handled, emitting response now")
 
     return json([dict(i.items()) for i in records])
 
-async def get_unreviewed_data(after, collection, site):
+async def get_unreviewed_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     where_text = ""
 
     if collection is not None:
@@ -456,6 +458,12 @@ async def get_unreviewed_data(after, collection, site):
 
     if site is not None:
         where_text += f"and site_name = '{site}' "
+
+    if dicom_file_type is not None:
+        where_text += f"and dicom_file_type = '{dicom_file_type}' "
+
+    if visual_review_instance_id is not None:
+        where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
     query = f"""
 select
@@ -519,6 +527,7 @@ natural join image_equivalence_class
 natural join image_equivalence_class_out_image
 natural join file_location
 natural join file_storage_root
+natural	left join dicom_file
 
 where 1 = 1
   and image_equivalence_class_id > $1
@@ -533,20 +542,20 @@ limit 1
 
     return records
 
-async def get_good_data(after, collection, site):
-    return await get_reviewed_data('Good', after, collection, site)
+async def get_good_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Good', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_bad_data(after, collection, site):
-    return await get_reviewed_data('Bad', after, collection, site)
+async def get_bad_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Bad', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_blank_data(after, collection, site):
-    return await get_reviewed_data('Blank', after, collection, site)
-async def get_scout_data(after, collection, site):
-    return await get_reviewed_data('Scout', after, collection, site)
-async def get_other_data(after, collection, site):
-    return await get_reviewed_data('Other', after, collection, site)
+async def get_blank_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Blank', after, collection, site, dicom_file_type, visual_review_instance_id)
+async def get_scout_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Scout', after, collection, site, dicom_file_type, visual_review_instance_id)
+async def get_other_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Other', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_reviewed_data(state, after, collection, site):
+async def get_reviewed_data(state, after, collection, site, dicom_file_type, visual_review_instance_id):
     where_text = ""
 
     if collection is not None:
@@ -554,6 +563,13 @@ async def get_reviewed_data(state, after, collection, site):
 
     if site is not None:
         where_text += f"and site_name = '{site}' "
+
+    if dicom_file_type is not None:
+        where_text += f"and dicom_file_type = '{dicom_file_type}' "
+
+    if visual_review_instance_id is not None:
+        where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
+
 
     query = f"""
 select
@@ -618,6 +634,7 @@ natural join image_equivalence_class
 natural join image_equivalence_class_out_image
 natural join file_location
 natural join file_storage_root
+natural	left join dicom_file
 
 where 1 = 1
   and image_equivalence_class_id > $1
