@@ -1,6 +1,7 @@
-IMAGE_NAME=quasarj/k-base:latest
+TAG=$(shell git --git-dir=./k-base/.git rev-parse --short HEAD)
+IMAGE_NAME=quasarj/k-base
 TEST_NAME=k-base_test
-.PHONY: run stop bash
+.PHONY: push
 
 default: build
 
@@ -8,20 +9,9 @@ build: last_built
 
 last_built: Dockerfile
 	@docker stop ${TEST_NAME} || true
-	docker build . -t ${IMAGE_NAME}
+	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 
-run: build
-	docker run --rm -d --name ${TEST_NAME} ${IMAGE_NAME}
-
-run-it: build
-	docker run --rm -it ${IMAGE_NAME}
-
-runit: build
-	docker run --rm -it --name ${TEST_NAME} ${IMAGE_NAME}
-
-stop:
-	docker stop ${TEST_NAME}
-
-bash:
-	docker exec -it ${TEST_NAME} sh
+push: last_built
+	docker image push ${IMAGE_NAME}:${TAG}
+	docker image push ${IMAGE_NAME}:latest
