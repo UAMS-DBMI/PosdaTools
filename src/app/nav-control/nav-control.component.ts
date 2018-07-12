@@ -48,7 +48,7 @@ export class NavControlComponent implements OnInit {
 
       });
 
-    if (this.processing_status && this.processing_status.toLowerCase() == "unreviewed")
+    if (this.processing_status && this.processing_status.toLowerCase() == "readytoreview")
       this.service.mode = "unreviewed";
     if (this.review_status &&
         (this.review_status.toLowerCase() == "good"
