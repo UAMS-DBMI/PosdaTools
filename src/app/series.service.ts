@@ -64,8 +64,10 @@ export class SeriesService {
       }
 
       let params: URLSearchParams = new URLSearchParams();
-      params.set("project", this.selectedProject.project_name);
-      params.set("site", this.selectedProject.site_name);
+      if (this.selectedProject) {
+        params.set("project", this.selectedProject.project_name);
+        params.set("site", this.selectedProject.site_name);
+      }
       params.set("dicom_file_type", dicom_file_type);
       params.set("visual_review_instance_id", visual_review_instance_id);
       params.set("offset", String(offset));
