@@ -57,7 +57,7 @@ async def download_file(request, downloadable_file_id, hash):
         content_type=mime_type,
         headers={'Content-Disposition': 
                  f"attachment; "
-                 "filename=\"downloaded_file_{downloadable_file_id}{ext}\""},
+                 f"filename=\"downloaded_file_{downloadable_file_id}{ext}\""},
         body_bytes=data
     )
 
