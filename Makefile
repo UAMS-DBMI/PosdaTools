@@ -5,16 +5,10 @@ NG=${BINLOC}/ng
 
 default: build
 
-build: dist
+build: /html
 
-dist: node_modules
-	$(NG) build --prod --base-href "/viewer/" --aot=false
-
-deploy:
-	scp -r dist/* tcia-utilities:/home/kaleidoscope/viewer/
-
-localdeploy:
-	cp -r dist/* /home/www/quince/
+/html: node_modules
+	$(NG) build --prod --base-href "/viewer/" --aot=false -op $@
 
 serve: node_modules
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
