@@ -48,20 +48,35 @@ export class NavControlComponent implements OnInit {
 
       });
 
-    if (this.processing_status && this.processing_status.toLowerCase() == "readytoreview")
-      this.service.mode = "unreviewed";
-    if (this.review_status &&
-        (this.review_status.toLowerCase() == "good"
-          ||  this.review_status.toLowerCase() == "bad"
-          || this.review_status.toLowerCase() == "blank"
-          || this.review_status.toLowerCase() == "scout"
-          || this.review_status.toLowerCase() == "other"
-        ) )
-      this.service.mode = this.review_status.toLowerCase();
 
+    this.setServiceMode();
 
     this.fetchMoreData();
 
+  }
+
+  setServiceMode(){
+    //Only set mode here if we got here via a parameterized url
+
+    if (this.processing_status && this.processing_status.toLowerCase() == "readytoreview")
+      this.service.mode = "unreviewed";
+
+    //If we got contradictory info (i.e "readytoreview" & "good"), favor the review_status
+    if (this.review_status &&
+      (this.review_status.toLowerCase() == "good"
+        ||  this.review_status.toLowerCase() == "bad"
+        || this.review_status.toLowerCase() == "blank"
+        || this.review_status.toLowerCase() == "scout"
+        || this.review_status.toLowerCase() == "other"
+      ) )
+      this.service.mode = this.review_status.toLowerCase();
+
+
+    //If we get parameters, but don't get either processing_status or review_status.
+    //May eventually want to ask the user.  For now, assume "unreviewed"
+    if (this.service.mode == null){
+      this.service.mode = "unreviewed";
+    }
   }
 
   fetchMoreData() {
