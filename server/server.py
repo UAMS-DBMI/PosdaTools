@@ -432,7 +432,7 @@ async def get_set(request, state):
     dicom_file_type = request.args.get('dicom_file_type')
     visual_review_instance_id = request.get('visual_review_instance_id')
 
-    logging.debug(f"get_set:state={state},site={site},collection={collection}")
+    logging.debug(f"get_set:state={state},site={site},collection={collection},dicom_file_type={dicom_file_type},visual_review_instance_id={visual_review_instance_id}")
 
     handler = {
         'unreviewed': get_unreviewed_data,
@@ -464,6 +464,8 @@ async def get_unreviewed_data(after, collection, site, dicom_file_type, visual_r
 
     if visual_review_instance_id is not None:
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
+
+    logging.debug(f"get_unreviewed_data where_text: {where_text}")
 
     query = f"""
 select
