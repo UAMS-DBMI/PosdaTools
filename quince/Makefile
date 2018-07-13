@@ -1,24 +1,15 @@
-IMAGE_NAME=quasarj/quince:latest
-TEST_NAME=quince_test
-.PHONY: run stop bash
+TAG=$(shell git --git-dir=./quince/.git rev-parse --short HEAD)
+IMAGE_NAME=quasarj/quince
+.PHONY: push
 
 default: build
 
 build: last_built 
 
 last_built: Dockerfile
-	@docker stop ${TEST_NAME} || true
-	docker build . -t ${IMAGE_NAME}
+	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 
-run: build
-	docker run --rm -d --name ${TEST_NAME} ${IMAGE_NAME}
-
-runit: build
-	docker run --rm -it --name ${TEST_NAME} ${IMAGE_NAME}
-
-stop:
-	docker stop ${TEST_NAME}
-
-bash:
-	docker exec -it ${TEST_NAME} sh
+push: last_built
+	docker image push ${IMAGE_NAME}:${TAG}
+	docker image push ${IMAGE_NAME}:latest
