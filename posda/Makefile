@@ -1,19 +1,15 @@
-.PHONY: run stop bash
+TAG=$(shell git --git-dir=./posdatools/.git rev-parse --short HEAD)
+IMAGE_NAME=quasarj/posda2
+.PHONY: push
 
 default: build
 
 build: last_built 
 
 last_built: Dockerfile
-	@docker stop posda2_test || true
-	docker build . -t quasarj/posda2:latest
+	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 
-run: build
-	docker run --rm -d --name posda2_test -p 64610:64610 quasarj/posda2:latest
-
-stop:
-	docker stop posda2_test
-
-bash:
-	docker exec -it posda2_test sh
+push: last_built
+	docker image push ${IMAGE_NAME}:${TAG}
+	docker image push ${IMAGE_NAME}:latest

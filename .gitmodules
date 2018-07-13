@@ -4,15 +4,9 @@
 [submodule "quince/quince"]
 	path = quince/quince
 	url = ssh://git@imphub:7999/pt/quince.git
-[submodule "nginx/quince"]
-	path = nginx/quince
-	url = ssh://git@imphub:7999/pt/quince.git
 [submodule "papi/posda-api"]
 	path = posda/posda-api
 	url = ssh://git@imphub:7999/pt/posda-api.git
-[submodule "nginx/kaleidoscope"]
-	path = nginx/kaleidoscope
-	url = ssh://git@imphub:7999/pt/kaleidoscope.git
 [submodule "kaleidoscope/kaleidoscope"]
 	path = kaleidoscope/kaleidoscope
 	url = ssh://git@imphub:7999/pt/kaleidoscope.git
