@@ -3,11 +3,13 @@ FROM alpine:latest
 RUN apk --update add alpine-sdk \
 					 python3 \
 					 postgresql-client \
-					 python3-dev 
+					 python3-dev  \
+					 nodejs
 
-COPY kaleidoscope/server/ /app/
-RUN pip3 install -r /app/requirements.txt
+COPY kaleidoscope/ /app/
+RUN pip3 install -r /app/server/requirements.txt
+RUN cd /app && make
 
-VOLUME ["/home/posda/cache"]
+VOLUME ["/home/posda/cache", "/html"]
 
-CMD ["python3", "/app/server.py"]
+CMD ["python3", "/app/server/server.py"]

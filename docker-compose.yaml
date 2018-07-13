@@ -1,7 +1,7 @@
 # New microservices version of the system
 #
 
-version: '3.1'
+version: '3.2'
 
 services:
     db:
@@ -71,6 +71,7 @@ services:
             - posda
         volumes:
             - posda_cache_alpine:/home/posda/cache
+            - quince_files:/html
         environment:
             PGHOST: db
             PGUSER: postgres
@@ -84,6 +85,7 @@ services:
             - posda
         volumes:
             - posda_cache_alpine:/home/posda/cache
+            - kaleidoscope_files:/html
         environment:
             PGHOST: db
             PGUSER: postgres
@@ -117,9 +119,23 @@ services:
             - posda-api:posda-api
             - quince:quince
             - kaleidoscope:kaleidoscope
+        volumes:
+            - type: volume
+              source: quince_files
+              target: /quince
+              volume:
+                nocopy: true
+            - type: volume
+              source: kaleidoscope_files
+              target: /kaleidoscope
+              volume:
+                nocopy: true
 
 volumes:
     posda_cache_alpine:
     # posda_submission_root:
     pgdata_alpine:
+    quince_files:
+    kaleidoscope_files:
+
 
