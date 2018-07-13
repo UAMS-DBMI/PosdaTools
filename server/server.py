@@ -430,7 +430,7 @@ async def get_set(request, state):
     collection = request.args.get('project')
     site = request.args.get('site')
     dicom_file_type = request.args.get('dicom_file_type')
-    visual_review_instance_id = request.get('visual_review_instance_id')
+    visual_review_instance_id = request.args.get('visual_review_instance_id')
 
     logging.debug(f"get_set:state={state},site={site},collection={collection},dicom_file_type={dicom_file_type},visual_review_instance_id={visual_review_instance_id}")
 
