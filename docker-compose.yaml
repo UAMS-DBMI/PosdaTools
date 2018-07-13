@@ -114,6 +114,8 @@ services:
             - 80:80
         depends_on:
             - posda
+            - quince
+            - kaleidoscope
         links:
             - posda:posda
             - posda-api:posda-api

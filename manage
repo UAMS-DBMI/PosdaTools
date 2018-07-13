@@ -21,6 +21,7 @@ Supported operations:
 case "$1" in
   up)
     shift
+    make -C posda posdatools/posda.env
     exec docker-compose up $*
     ;;
 

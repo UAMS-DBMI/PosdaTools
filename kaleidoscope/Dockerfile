@@ -10,6 +10,8 @@ COPY kaleidoscope/ /app/
 RUN pip3 install -r /app/server/requirements.txt
 RUN cd /app && make
 
+COPY run.sh /
+
 VOLUME ["/home/posda/cache", "/html"]
 
-CMD ["python3", "/app/server/server.py"]
+CMD ["/run.sh"]

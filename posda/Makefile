@@ -13,3 +13,7 @@ last_built: Dockerfile
 push: last_built
 	docker image push ${IMAGE_NAME}:${TAG}
 	docker image push ${IMAGE_NAME}:latest
+
+# Special rule to ensure posda.env is in place
+posdatools/posda.env: posda.env
+	cp posda.env posdatools/
