@@ -452,6 +452,8 @@ where 1 = 1
   and image_equivalence_class_id > $1
 {where_text}
 
+order by image_equivalence_class_id
+
 limit 1
     """
 
@@ -566,6 +568,8 @@ natural join file_storage_root
 where 1 = 1
   and image_equivalence_class_id > $1
 {where_text}
+
+order by image_equivalence_class_id
 
 limit 1
     """
