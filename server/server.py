@@ -334,96 +334,6 @@ order by count desc
 
     return json([dict(i.items()) for i in records])
 
-@app.route("/api/get_custom")
-async def get_custom_by_params(request):
-    after = int(request.args.get('offset') or 0)
-    processing_status = request.args.get('processing_status')
-    review_status = request.args.get('review_status')
-    dicom_file_type = request.args.get('dicom_file_type')
-    visual_review_instance_id = request.get('visual_review_instance_id')
-
-    logging.debug(f"get_custom")
-
-    where_text = ""
-    if processing_status is not None:
-        where_text += f"and processing_status = '{processing_status}' "
-
-    if review_status is not None:
-        where_text += f"and review_status = '{review_status}' "
-
-    if dicom_file_type is not None:
-        where_text += f"and dicom_file_type = '{dicom_file_type}' "
-
-    if visual_review_instance_id is not None:
-        where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
-
-    query = f"""
-        select
-  image_equivalence_class_id,
-  series_instance_uid,
-  equivalence_class_number,
-  processing_status,
-  review_status,
-  projection_type,
-  image_equivalence_class_out_image.file_id,
-  root_path || '/' || rel_path as path,
-            (select count(file_id)
-             from image_equivalence_class_input_image i
-             where i.image_equivalence_class_id =
-                   image_equivalence_class.image_equivalence_class_id) as file_count,
-            (select body_part_examined
-             from file_series
-             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_id
-              from file_patient
-              natural join file_series
-              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
-from (
-  select
-    image_equivalence_class_id,
-    (select project_name from ctp_file
-      where ctp_file.file_id =
-      (
-      select file_id
-      from image_equivalence_class_input_image i
-      where i.image_equivalence_class_id = iec.image_equivalence_class_id
-      limit 1) limit 1
-    ) project_name,
-    (select site_name from ctp_file
-      where ctp_file.file_id =
-      (
-      select file_id
-      from image_equivalence_class_input_image i
-      where i.image_equivalence_class_id = iec.image_equivalence_class_id
-      limit 1) limit 1
-    ) site_name,
-    processing_status
-
-  from image_equivalence_class iec
-
-  where not hidden
-  order by image_equivalence_class_id
-) iecs
-natural join image_equivalence_class
-natural join image_equivalence_class_out_image
-natural join file_location
-natural join file_storage_root
-
-where 1 = 1
-  and image_equivalence_class_id > $1
-  {where_text}
-
-limit 1
-        """
-
-    logging.debug("get_custom query: " + query)
-
-    conn = await pool.acquire()
-    records = await conn.fetch(query, after)
-    await pool.release(conn)
-
-    return json([dict(i.items()) for i in records])
-
 @app.route("/api/set/<state>")
 async def get_set(request, state):
     after = int(request.args.get('offset') or 0)
@@ -466,6 +376,7 @@ async def get_unreviewed_data(after, collection, site, dicom_file_type, visual_r
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
     logging.debug(f"get_unreviewed_data where_text: {where_text}")
+    logging.debug(f"after: {after}")
 
     query = f"""
 select
@@ -578,6 +489,8 @@ async def get_reviewed_data(state, after, collection, site, dicom_file_type, vis
     if visual_review_instance_id is not None:
         where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
 
+    logging.debug(f"get_unreviewed_data where_text: {where_text}")
+    logging.debug(f"after: {after}")
 
     query = f"""
 select
