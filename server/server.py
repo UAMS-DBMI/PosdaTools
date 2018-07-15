@@ -517,6 +517,13 @@ from (
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
       limit 1) limit 1
     ) site_name,
+    (select dicom_file_type from dicom_file
+        where dicom_file.file_id = 
+            (select file_id
+            from image_equivalence_class_input_image i
+            where i.image_equivalence_class_id = iec.image_equivalence_class_id
+            limit 1) limit 1
+    ) dicom_file_type,
     processing_status
 
   from image_equivalence_class iec
@@ -529,7 +536,6 @@ natural join image_equivalence_class
 natural join image_equivalence_class_out_image
 natural join file_location
 natural join file_storage_root
-natural	left join dicom_file
 
 where 1 = 1
   and image_equivalence_class_id > $1
@@ -623,6 +629,13 @@ from (
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
       limit 1) limit 1
     ) site_name,
+    (select dicom_file_type from dicom_file
+        where dicom_file.file_id = 
+            (select file_id
+            from image_equivalence_class_input_image i
+            where i.image_equivalence_class_id = iec.image_equivalence_class_id
+            limit 1) limit 1
+    ) dicom_file_type,
     processing_status
 
   from image_equivalence_class iec
@@ -636,7 +649,6 @@ natural join image_equivalence_class
 natural join image_equivalence_class_out_image
 natural join file_location
 natural join file_storage_root
-natural	left join dicom_file
 
 where 1 = 1
   and image_equivalence_class_id > $1
