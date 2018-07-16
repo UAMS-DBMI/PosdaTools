@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "Setting up development environment..."
+
+git submodule init
+git submodule update
+
+docker pull quasarj/posda2:latest
+docker pull quasarj/kaleidoscope:latest
+docker pull quasarj/k-base:latest
+docker pull quasarj/quince:latest
+docker pull quasarj/posda_nginx:latest
