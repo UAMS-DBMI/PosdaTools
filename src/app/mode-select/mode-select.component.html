@@ -1,4 +1,5 @@
 <p>Select operating mode</p>
+<div class="btn-group" role="group">
 <button class="btn btn-outline-primary"
     [class.active]="mode == 'unreviewed'"
     (click)="setMode('unreviewed')"
@@ -23,5 +24,6 @@
     [class.active]="mode == 'other'"
     (click)="setMode('other')"
     >Other</button>
+</div>
 
 <app-project-select [mode]="mode" (onProjectChosen)="onProjectChosen.emit($event)"></app-project-select>

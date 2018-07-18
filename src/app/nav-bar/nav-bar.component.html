@@ -7,27 +7,43 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <!--<a class="nav-link" href="#" (click)="home()">Home</a>-->
         <a class="nav-link" routerLink="home">Home</a>
       </li>
       <li class="nav-item">
-        <!--<a class="nav-link" href="#" (click)="admin()">Admin</a>-->
         <a class="nav-link" routerLink="admin">Admin</a>
       </li>
-      <!-- <li class="nav-item"> -->
-      <!--   <a class="nav-link" href="#">Link</a> -->
-      <!-- </li> -->
-      <!-- <li class="nav-item"> -->
-      <!--   <a class="nav-link disabled" href="#">Disabled</a> -->
-      <!-- </li> -->
     </ul>
-    <ul class="navbar-nav">
-      <li *ngIf="mode" class="status">
-        <p>Mode: {{mode}}</p>
-      </li>
-      <li *ngIf="project" class="status">
-        <p>Project: {{project.project_name}} / {{project.site_name}}</p>
-      </li>
-    </ul>
+
+
+
+    <div class="d-flex flex-row">
+      <div *ngIf="mode" class="px-2 d-flex flex-column">
+        <small class="text-muted">Mode</small>
+        {{mode}}
+      </div>
+      <div *ngIf="project" class="px-2 d-flex flex-column">
+        <small class="text-muted">Project</small>
+        {{project.project_name}} / {{project.site_name}}
+      </div>
+      <div *ngIf="visual_review_instance_id" class="px-2 d-flex flex-column">
+        <small class="text-muted">VRI ID</small>
+        <div class="align-self-center">{{visual_review_instance_id}}</div>
+      </div>
+      <div *ngIf="dicom_file_type" class="px-2 d-flex flex-column">
+        <small class="text-muted">Dicom File Type</small>
+        {{dicom_file_type}}
+      </div>
+    </div>
+
+
+
+    <!--<ul class="navbar-nav">-->
+      <!--<li *ngIf="mode" class="status">-->
+        <!--<p>Mode: {{mode}}</p>-->
+      <!--</li>-->
+      <!--<li *ngIf="project" class="status">-->
+        <!--<p>Project: {{project.project_name}} / {{project.site_name}}</p>-->
+      <!--</li>-->
+    <!--</ul>-->
   </div>
 </nav>

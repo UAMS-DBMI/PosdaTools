@@ -49,13 +49,13 @@ export class NavControlComponent implements OnInit {
       });
 
 
-    this.setServiceMode();
+    this.setServiceVars();
 
     this.fetchMoreData();
 
   }
 
-  setServiceMode(){
+  setServiceVars(){
     //Only set mode here if we got here via a parameterized url
 
     if (this.processing_status && this.processing_status.toLowerCase() == "readytoreview")
@@ -77,7 +77,12 @@ export class NavControlComponent implements OnInit {
     if (this.service.mode == null){
       this.service.mode = "unreviewed";
     }
+
+
+    this.service.dicom_file_type = this.dicom_file_type;
+    this.service.visual_review_instance_id = this.visual_review_instance_id;
   }
+
 
   fetchMoreData() {
     console.log("fetchMoreData");

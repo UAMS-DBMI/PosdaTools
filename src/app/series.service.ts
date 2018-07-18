@@ -18,6 +18,8 @@ export class SeriesService {
   public selectedProject: Project;
   public token: string;
   public mode: string;
+  public dicom_file_type: string;
+  public visual_review_instance_id: string;
 
   private options = new RequestOptions();
 

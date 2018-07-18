@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { Project } from '../project';
+import { SeriesService } from '../series.service';
 
 @Component({
   selector: 'app-nav',
@@ -7,13 +8,23 @@ import { Project } from '../project';
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
-  @Output() onNavigation = new EventEmitter<String>();
-  @Input() mode: string;
-  @Input() project: Project;
+  mode: string;
+  dicom_file_type: string;
+  project: Project;
+  visual_review_instance_id: string;
 
-  constructor() { }
+  @Output() onNavigation = new EventEmitter<String>();
+  // @Input() mode: string;
+  // @Input() project: Project;
+
+
+  constructor(private service: SeriesService) { }
 
   ngOnInit() {
+    this.mode = this.service.mode;
+    this.dicom_file_type = this.service.dicom_file_type;
+    this.project = this.service.selectedProject;
+    this.visual_review_instance_id = this.service.visual_review_instance_id;
   }
 
   // home() {
