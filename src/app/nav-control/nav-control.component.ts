@@ -59,7 +59,7 @@ export class NavControlComponent implements OnInit {
     //Only set mode here if we got here via a parameterized url
 
     if (this.processing_status && this.processing_status.toLowerCase() == "readytoreview")
-      this.service.mode = "unreviewed";
+      this.service.setMode("unreviewed");
 
     //If we got contradictory info (i.e "readytoreview" & "good"), favor the review_status
     if (this.review_status &&
@@ -69,25 +69,24 @@ export class NavControlComponent implements OnInit {
         || this.review_status.toLowerCase() == "scout"
         || this.review_status.toLowerCase() == "other"
       ) )
-      this.service.mode = this.review_status.toLowerCase();
+      this.service.setMode(this.review_status.toLowerCase());
 
 
     //If we get parameters, but don't get either processing_status or review_status.
     //May eventually want to ask the user.  For now, assume "unreviewed"
     if (this.service.mode == null){
-      this.service.mode = "unreviewed";
+      this.service.setMode("unreviewed");
     }
 
 
-    console.log("nav-control.component.ts  calling this.service.setDicom_File_Type ");
     this.service.setDicom_File_Type(this.dicom_file_type);
-    this.service.visual_review_instance_id = this.visual_review_instance_id;
+    this.service.setVisualReviewInstanceId(this.visual_review_instance_id);
   }
 
 
   fetchMoreData() {
     console.log("fetchMoreData");
-    this.busy = this.service.getNextUnreviewed(this.iec, this.dicom_file_type, this.visual_review_instance_id).subscribe(
+    this.busy = this.service.getNextUnreviewed(this.iec).subscribe(
       data => {
         console.log('fetchMoreData got: ', data);
         if (this.iec !== undefined) {

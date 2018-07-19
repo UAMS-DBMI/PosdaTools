@@ -30,7 +30,7 @@ export class ProjectSelectComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.service.mode = this.mode;
+    this.service.setMode(this.mode);
     if (this.mode !== undefined) {
       this.busy = this.service.getAvailableProjects(this.mode).subscribe(
           items => this.projectList = items,
@@ -41,8 +41,8 @@ export class ProjectSelectComponent implements OnInit {
 
   choose(a: Project): void {
     //console.log(a);
-    //this.onProjectChosen.emit(a);
-    this.service.selectedProject = a;
+    this.onProjectChosen.emit(a);
+    this.service.setSelectedProject(a);
     this.router.navigate(['work']);
   }
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { EquivalenceClassMap } from './equivalence-class-map';
 import { Project } from './project';
-import { Subject} from "rxjs/Rx";
+import { BehaviorSubject} from "rxjs/Rx";
 
 import 'rxjs/add/operator/map';
 
@@ -18,9 +18,13 @@ export class SeriesService {
 
   public selectedProject: Project;
   public token: string;
-  public mode: string;
-  public dicom_file_type = new Subject<string>();
-  public visual_review_instance_id: string;
+
+  //BehaviorSubject objects so that other components can subscribe to them
+  // and so that .getValue() can be used on these inside this file
+  public mode = new BehaviorSubject<string>("");
+  public dicom_file_type = new BehaviorSubject<string>("");
+  public visual_review_instance_id = new BehaviorSubject<string>("");
+  public projectDescription = new BehaviorSubject<string>("");
 
   private options = new RequestOptions();
 
@@ -39,11 +43,29 @@ export class SeriesService {
   }
 
   setDicom_File_Type(value: string){
-    //publish this value to all the subscribers that have already subscribed to this
-    console.log("series.service.ts: setDicom_File_Type");
-    console.log("value: " + value);
+    //publish dicom_file_type to all the subscribers that have already subscribed to this
     this.dicom_file_type.next(value);
   }
+
+  setSelectedProject(value: Project){
+    this.selectedProject = value;
+    //This feels a litte hacky... TODO: figure out how to make project itself able to be a Subject
+    this.projectDescription.next(this.selectedProject.project_name + " / " + this.selectedProject.site_name);
+  }
+
+  setMode(value: string){
+    //publish mode to all the subscribers that have already subscribed to this
+    this.mode.next(value);
+  }
+
+
+  setVisualReviewInstanceId(value: string){
+    //publish visual_review_instance_id to all the subscribers that have already subscribed to this
+    this.visual_review_instance_id.next(value);
+  }
+
+
+
 
   getSeries(iec: number): Observable<EquivalenceClassMap> {
       let params: URLSearchParams = new URLSearchParams();
@@ -62,12 +84,12 @@ export class SeriesService {
       params.set("token", this.token);
       this.options.search = params;
 
-      let url = this.url + '/set/' + this.mode;
+      let url = this.url + '/set/' + this.mode.getValue();
 
       return this.http.get(url, this.options).map(res => res.json());
   }
 
-  getNextUnreviewed(after: EquivalenceClassMap, dicom_file_type: string, visual_review_instance_id: string): Observable<EquivalenceClassMap> {
+  getNextUnreviewed(after: EquivalenceClassMap): Observable<EquivalenceClassMap> {
       let offset: number = 0;
       if (after !== undefined) {
         offset = after.image_equivalence_class_id;
@@ -78,13 +100,13 @@ export class SeriesService {
         params.set("project", this.selectedProject.project_name);
         params.set("site", this.selectedProject.site_name);
       }
-      params.set("dicom_file_type", dicom_file_type);
-      params.set("visual_review_instance_id", visual_review_instance_id);
+      params.set("dicom_file_type", this.dicom_file_type.getValue());
+      params.set("visual_review_instance_id", this.visual_review_instance_id.getValue());
       params.set("offset", String(offset));
       params.set("token", this.token);
       this.options.search = params;
 
-      let url = this.url + '/set/' + this.mode;
+      let url = this.url + '/set/' + this.mode.getValue();
 
       return this.http.get(url, this.options).map(res => res.json());
   }

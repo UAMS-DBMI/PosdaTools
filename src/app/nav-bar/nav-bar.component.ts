@@ -10,12 +10,16 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class NavBarComponent implements OnInit, OnDestroy {
   mode: string;
+  modeSubscription: Subscription;
   dicom_file_type: string;
   dicomFileTypeSubscription: Subscription;
-  project: Project;
-  visual_review_instance_id: string;
+  project: string;
+  projectSubscription: Subscription;
 
-  @Output() onNavigation = new EventEmitter<String>();
+  visual_review_instance_id: string;
+  vriiSubscription: Subscription;
+
+  //@Output() onNavigation = new EventEmitter<String>();
   // @Input() mode: string;
   // @Input() project: Project;
 
@@ -24,12 +28,27 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    console.log("nav-bar.component.ts ngOnInit");
-
     this.dicomFileTypeSubscription = this.service.dicom_file_type.subscribe(
       (dicom_file_type) => {
-        console.log("dicomFileTypeSubscription  dicom_file_type: " + dicom_file_type);
         this.dicom_file_type = dicom_file_type;
+      }
+    );
+
+    this.modeSubscription = this.service.mode.subscribe(
+      (mode) => {
+        this.mode = mode;
+      }
+    );
+
+    this.vriiSubscription = this.service.visual_review_instance_id.subscribe(
+      (visual_review_instance_id) => {
+        this.visual_review_instance_id = visual_review_instance_id;
+      }
+    );
+
+    this.projectSubscription = this.service.projectDescription.subscribe(
+      (project) => {
+        this.project = project;
       }
     );
 
@@ -37,6 +56,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.dicomFileTypeSubscription.unsubscribe();
+    this.modeSubscription.unsubscribe();
+    this.vriiSubscription.unsubscribe();
+    this.projectSubscription.unsubscribe();
   }
 
   // home() {
