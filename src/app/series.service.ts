@@ -40,6 +40,8 @@ export class SeriesService {
 
   setDicom_File_Type(value: string){
     //publish this value to all the subscribers that have already subscribed to this
+    console.log("series.service.ts: setDicom_File_Type");
+    console.log("value: " + value);
     this.dicom_file_type.next(value);
   }
 

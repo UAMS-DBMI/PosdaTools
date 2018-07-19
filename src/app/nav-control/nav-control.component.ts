@@ -79,6 +79,7 @@ export class NavControlComponent implements OnInit {
     }
 
 
+    console.log("nav-control.component.ts  calling this.service.setDicom_File_Type ");
     this.service.setDicom_File_Type(this.dicom_file_type);
     this.service.visual_review_instance_id = this.visual_review_instance_id;
   }

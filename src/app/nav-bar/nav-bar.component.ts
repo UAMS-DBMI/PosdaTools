@@ -24,8 +24,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    console.log("nav-bar.component.ts ngOnInit");
+
     this.dicomFileTypeSubscription = this.service.dicom_file_type.subscribe(
       (dicom_file_type) => {
+        console.log("dicomFileTypeSubscription  dicom_file_type: " + dicom_file_type);
         this.dicom_file_type = dicom_file_type;
       }
     );
