@@ -79,7 +79,7 @@ export class NavControlComponent implements OnInit {
     }
 
 
-    this.service.dicom_file_type = this.dicom_file_type;
+    this.service.setDicom_File_Type(this.dicom_file_type);
     this.service.visual_review_instance_id = this.visual_review_instance_id;
   }
 

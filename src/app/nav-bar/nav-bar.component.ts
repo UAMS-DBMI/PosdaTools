@@ -1,15 +1,17 @@
-import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, Input } from '@angular/core';
 import { Project } from '../project';
 import { SeriesService } from '../series.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css']
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent implements OnInit, OnDestroy {
   mode: string;
   dicom_file_type: string;
+  dicomFileTypeSubscription: Subscription;
   project: Project;
   visual_review_instance_id: string;
 
@@ -21,10 +23,17 @@ export class NavBarComponent implements OnInit {
   constructor(private service: SeriesService) { }
 
   ngOnInit() {
-    this.mode = this.service.mode;
-    this.dicom_file_type = this.service.dicom_file_type;
-    this.project = this.service.selectedProject;
-    this.visual_review_instance_id = this.service.visual_review_instance_id;
+
+    this.dicomFileTypeSubscription = this.service.dicom_file_type.subscribe(
+      (dicom_file_type) => {
+        this.dicom_file_type = dicom_file_type;
+      }
+    );
+
+  }
+
+  ngOnDestroy() {
+    this.dicomFileTypeSubscription.unsubscribe();
   }
 
   // home() {

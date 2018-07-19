@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { EquivalenceClassMap } from './equivalence-class-map';
 import { Project } from './project';
+import { Subject} from "rxjs/Rx";
 
 import 'rxjs/add/operator/map';
 
@@ -18,7 +19,7 @@ export class SeriesService {
   public selectedProject: Project;
   public token: string;
   public mode: string;
-  public dicom_file_type: string;
+  public dicom_file_type = new Subject<string>();
   public visual_review_instance_id: string;
 
   private options = new RequestOptions();
@@ -35,6 +36,11 @@ export class SeriesService {
   setToken(token: string) {
     this.token = token;
     localStorage.setItem('token', token);
+  }
+
+  setDicom_File_Type(value: string){
+    //publish this value to all the subscribers that have already subscribed to this
+    this.dicom_file_type.next(value);
   }
 
   getSeries(iec: number): Observable<EquivalenceClassMap> {
