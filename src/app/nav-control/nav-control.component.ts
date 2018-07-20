@@ -56,10 +56,10 @@ export class NavControlComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    this.service.setSelectedProject(null);
     this.service.setMode("");
     this.service.setDicom_File_Type("");
     this.service.setVisualReviewInstanceId("");
+    this.service.setSelectedProject(null);
   }
 
   setServiceVars(){

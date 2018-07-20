@@ -50,7 +50,11 @@ export class SeriesService {
   setSelectedProject(value: Project){
     this.selectedProject = value;
     //This feels a litte hacky... TODO: figure out how to make project itself able to be a Subject
-    this.projectDescription.next(this.selectedProject.project_name + " / " + this.selectedProject.site_name);
+    if (this.selectedProject)
+      this.projectDescription.next(this.selectedProject.project_name + " / " + this.selectedProject.site_name);
+    else
+      this.projectDescription.next("");
+
   }
 
   setMode(value: string){
