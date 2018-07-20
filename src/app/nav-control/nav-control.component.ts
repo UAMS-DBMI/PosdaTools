@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import {Component, OnInit, Input, HostListener, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../project';
 import { SeriesService } from '../series.service';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './nav-control.component.html',
   styleUrls: ['./nav-control.component.css']
 })
-export class NavControlComponent implements OnInit {
+export class NavControlComponent implements OnInit, OnDestroy {
   @Input() project: Project;
   @Input() mode: string;
 
@@ -53,6 +53,13 @@ export class NavControlComponent implements OnInit {
 
     this.fetchMoreData();
 
+  }
+
+  ngOnDestroy(){
+    this.service.setSelectedProject(null);
+    this.service.setMode("");
+    this.service.setDicom_File_Type("");
+    this.service.setVisualReviewInstanceId("");
   }
 
   setServiceVars(){
