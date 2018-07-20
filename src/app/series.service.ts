@@ -62,13 +62,10 @@ export class SeriesService {
     this.mode.next(value);
   }
 
-
   setVisualReviewInstanceId(value: string){
     //publish visual_review_instance_id to all the subscribers that have already subscribed to this
     this.visual_review_instance_id.next(value);
   }
-
-
 
 
   getSeries(iec: number): Observable<EquivalenceClassMap> {
