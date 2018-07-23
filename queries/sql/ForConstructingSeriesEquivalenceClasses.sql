@@ -10,7 +10,7 @@ select distinct
   performing_phys, protocol_name, series_description,
   operators_name, body_part_examined, patient_position,
   smallest_pixel_value, largest_pixel_value, performed_procedure_step_id,
-  performed_procedure_step_start_date
+  performed_procedure_step_start_date,
   performed_procedure_step_desc, performed_procedure_step_comments, image_type,
   iop, pixel_rows, pixel_columns,
   file_id,ipp
@@ -20,7 +20,7 @@ from
   left join image using (image_id)
   left join file_image_geometry using (file_id)
   left join image_geometry using (image_geometry_id)
-where series_instance_uid = '1.3.6.1.4.1.14519.5.2.1.3983.1600.225936344090001524288753349553' and visibility is null
+where series_instance_uid = ? and visibility is null
  
 
 
