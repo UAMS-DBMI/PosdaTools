@@ -34,7 +34,7 @@ export class ErrorService {
      [class]="getSeverityClass(error.severity)"
      role="alert">
     <strong>{{error.title}}</strong>
-    <small>{{error.description}}</small>
+    <small> {{error.description}}</small>
     <button type="button"
             class="close"
             aria-label="Close"

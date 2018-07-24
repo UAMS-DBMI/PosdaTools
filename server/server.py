@@ -49,7 +49,7 @@ class User(object):
 @app.listener("before_server_start")
 async def connect_to_db(sanic, loop):
     global pool
-    pool = await asyncpg.create_pool(database='posda_files', 
+    pool = await asyncpg.create_pool(database='posda_files',
                                      loop=loop)
     loop.create_task(user_watch())
 
@@ -69,14 +69,14 @@ async def get_details(request, iec):
             to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
             (select count(file_id)
              from image_equivalence_class_input_image i
-             where i.image_equivalence_class_id = 
+             where i.image_equivalence_class_id =
                    image_equivalence_class.image_equivalence_class_id) as file_count,
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_id 
-              from file_patient 
-              natural join file_series 
+             (select patient_id
+              from file_patient
+              natural join file_series
               where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 
 
@@ -105,7 +105,7 @@ async def hide_collection(request, collection, site):
     logging.debug(f"Hiding: {collection}|{site}")
 
     query = f"""
-        insert into log_iec_hide (user_name, project, site, hidden) 
+        insert into log_iec_hide (user_name, project, site, hidden)
         values ('{user.name}', '{collection}', '{site}', true);
 
         update image_equivalence_class
@@ -135,7 +135,7 @@ async def unhide_collection(request, collection, site):
     logging.debug(f"Unhiding: {collection}|{site}")
 
     query = f"""
-        insert into log_iec_hide (user_name, project, site, hidden) 
+        insert into log_iec_hide (user_name, project, site, hidden)
         values ('{user.name}', '{collection}', '{site}', false);
 
         update image_equivalence_class
@@ -166,7 +166,7 @@ async def hide_patient(request, collection, site, patient):
     logging.debug(f"Hiding: {collection}|{site}[{patient}]")
 
     query = f"""
-        insert into log_iec_hide (user_name, project, site, patient, hidden) 
+        insert into log_iec_hide (user_name, project, site, patient, hidden)
         values ('{user.name}', '{collection}', '{site}', '{patient}', true);
 
         update image_equivalence_class
@@ -200,7 +200,7 @@ async def unhide_patient(request, collection, site, patient):
     logging.debug(f"Hiding: {collection}|{site}[{patient}]")
 
     query = f"""
-        insert into log_iec_hide (user_name, project, site, patient, hidden) 
+        insert into log_iec_hide (user_name, project, site, patient, hidden)
         values ('{user.name}', '{collection}', '{site}', '{patient}', false);
 
         update image_equivalence_class
@@ -297,11 +297,11 @@ async def get_projects(request, state):
   seperate table.
 */
 select
-  project_name, 
+  project_name,
   site_name,
   count(image_equivalence_class_id)
 from (
-  select 
+  select
         image_equivalence_class_id,
         (select project_name from ctp_file
           where ctp_file.file_id =
@@ -334,14 +334,15 @@ order by count desc
 
     return json([dict(i.items()) for i in records])
 
-
 @app.route("/api/set/<state>")
 async def get_set(request, state):
     after = int(request.args.get('offset') or 0)
     collection = request.args.get('project')
     site = request.args.get('site')
+    dicom_file_type = request.args.get('dicom_file_type')
+    visual_review_instance_id = request.args.get('visual_review_instance_id')
 
-    logging.debug(f"get_set:state={state},site={site},collection={collection}")
+    logging.debug(f"get_set:state={state},site={site},collection={collection},dicom_file_type={dicom_file_type},visual_review_instance_id={visual_review_instance_id}")
 
     handler = {
         'unreviewed': get_unreviewed_data,
@@ -354,12 +355,12 @@ async def get_set(request, state):
 
     logging.debug(f"handler chosen: {handler}")
 
-    records = await handler(after, collection, site)
+    records = await handler(after, collection, site, dicom_file_type, visual_review_instance_id)
     logging.debug("get_set:request handled, emitting response now")
 
     return json([dict(i.items()) for i in records])
 
-async def get_unreviewed_data(after, collection, site):
+async def get_unreviewed_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     where_text = ""
 
     if collection is not None:
@@ -368,8 +369,17 @@ async def get_unreviewed_data(after, collection, site):
     if site is not None:
         where_text += f"and site_name = '{site}' "
 
+    if dicom_file_type is not None:
+        where_text += f"and dicom_file_type = '{dicom_file_type}' "
+
+    if visual_review_instance_id is not None:
+        where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
+
+    logging.debug(f"get_unreviewed_data where_text: {where_text}")
+    logging.debug(f"after: {after}")
+
     query = f"""
-select 
+select
   image_equivalence_class_id,
   series_instance_uid,
   equivalence_class_number,
@@ -380,17 +390,17 @@ select
   root_path || '/' || rel_path as path,
             (select count(file_id)
              from image_equivalence_class_input_image i
-             where i.image_equivalence_class_id = 
+             where i.image_equivalence_class_id =
                    image_equivalence_class.image_equivalence_class_id) as file_count,
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_id 
-              from file_patient 
-              natural join file_series 
+             (select patient_id
+              from file_patient
+              natural join file_series
               where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 from (
-  /* 
+  /*
     Acquire the project_name and site_name associated with each IEC
     by looking only at the first file_id of it's input image set.
     This is pretty ugly, but is more than 100x faster than other
@@ -400,7 +410,7 @@ from (
     at the IEC level (say, in image_equivalence_class table)
     Quasar, 2017-04-27
   */
-  select 
+  select
     image_equivalence_class_id,
     (select project_name from ctp_file
       where ctp_file.file_id =
@@ -418,12 +428,19 @@ from (
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
       limit 1) limit 1
     ) site_name,
+    (select dicom_file_type from dicom_file
+        where dicom_file.file_id = 
+            (select file_id
+            from image_equivalence_class_input_image i
+            where i.image_equivalence_class_id = iec.image_equivalence_class_id
+            limit 1) limit 1
+    ) dicom_file_type,
     processing_status
 
   from image_equivalence_class iec
 
   where not hidden
-    and processing_status = 'ReadyToReview' 
+    and processing_status = 'ReadyToReview'
   order by image_equivalence_class_id
 ) iecs
 natural join image_equivalence_class
@@ -435,6 +452,8 @@ where 1 = 1
   and image_equivalence_class_id > $1
 {where_text}
 
+order by image_equivalence_class_id
+
 limit 1
     """
 
@@ -444,20 +463,20 @@ limit 1
 
     return records
 
-async def get_good_data(after, collection, site):
-    return await get_reviewed_data('Good', after, collection, site)
+async def get_good_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Good', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_bad_data(after, collection, site):
-    return await get_reviewed_data('Bad', after, collection, site)
+async def get_bad_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Bad', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_blank_data(after, collection, site):
-    return await get_reviewed_data('Blank', after, collection, site)
-async def get_scout_data(after, collection, site):
-    return await get_reviewed_data('Scout', after, collection, site)
-async def get_other_data(after, collection, site):
-    return await get_reviewed_data('Other', after, collection, site)
+async def get_blank_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Blank', after, collection, site, dicom_file_type, visual_review_instance_id)
+async def get_scout_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Scout', after, collection, site, dicom_file_type, visual_review_instance_id)
+async def get_other_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Other', after, collection, site, dicom_file_type, visual_review_instance_id)
 
-async def get_reviewed_data(state, after, collection, site):
+async def get_reviewed_data(state, after, collection, site, dicom_file_type, visual_review_instance_id):
     where_text = ""
 
     if collection is not None:
@@ -466,8 +485,17 @@ async def get_reviewed_data(state, after, collection, site):
     if site is not None:
         where_text += f"and site_name = '{site}' "
 
+    if dicom_file_type is not None:
+        where_text += f"and dicom_file_type = '{dicom_file_type}' "
+
+    if visual_review_instance_id is not None:
+        where_text += f"and visual_review_instance_id = {visual_review_instance_id}"
+
+    logging.debug(f"get_unreviewed_data where_text: {where_text}")
+    logging.debug(f"after: {after}")
+
     query = f"""
-select 
+select
   image_equivalence_class_id,
   series_instance_uid,
   equivalence_class_number,
@@ -478,17 +506,17 @@ select
   root_path || '/' || rel_path as path,
             (select count(file_id)
              from image_equivalence_class_input_image i
-             where i.image_equivalence_class_id = 
+             where i.image_equivalence_class_id =
                    image_equivalence_class.image_equivalence_class_id) as file_count,
             (select body_part_examined
              from file_series
              where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-             (select patient_id 
-              from file_patient 
-              natural join file_series 
+             (select patient_id
+              from file_patient
+              natural join file_series
               where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
 from (
-  /* 
+  /*
     Acquire the project_name and site_name associated with each IEC
     by looking only at the first file_id of it's input image set.
     This is pretty ugly, but is more than 100x faster than other
@@ -498,7 +526,7 @@ from (
     at the IEC level (say, in image_equivalence_class table)
     Quasar, 2017-04-27
   */
-  select 
+  select
     image_equivalence_class_id,
     (select project_name from ctp_file
       where ctp_file.file_id =
@@ -516,12 +544,19 @@ from (
       where i.image_equivalence_class_id = iec.image_equivalence_class_id
       limit 1) limit 1
     ) site_name,
+    (select dicom_file_type from dicom_file
+        where dicom_file.file_id = 
+            (select file_id
+            from image_equivalence_class_input_image i
+            where i.image_equivalence_class_id = iec.image_equivalence_class_id
+            limit 1) limit 1
+    ) dicom_file_type,
     processing_status
 
   from image_equivalence_class iec
 
   where not hidden
-    and processing_status = 'Reviewed' 
+    and processing_status = 'Reviewed'
     and review_status = '{state}'
   order by image_equivalence_class_id
 ) iecs
@@ -533,6 +568,8 @@ natural join file_storage_root
 where 1 = 1
   and image_equivalence_class_id > $1
 {where_text}
+
+order by image_equivalence_class_id
 
 limit 1
     """

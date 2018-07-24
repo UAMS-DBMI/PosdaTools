@@ -4,6 +4,7 @@ import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
 import { Project } from '../project';
 import { ErrorService } from '../errors';
+import {Router} from "@angular/router";
 
 import { Subscription } from 'rxjs';
 
@@ -22,13 +23,14 @@ export class ProjectSelectComponent implements OnInit {
   constructor(
     private service: SeriesService,
     private errorS: ErrorService,
+    private router: Router
   ) { }
 
   ngOnInit() {
   }
 
   ngOnChanges() {
-    this.service.mode = this.mode;
+    this.service.setMode(this.mode);
     if (this.mode !== undefined) {
       this.busy = this.service.getAvailableProjects(this.mode).subscribe(
           items => this.projectList = items,
@@ -38,8 +40,10 @@ export class ProjectSelectComponent implements OnInit {
   }
 
   choose(a: Project): void {
-    // console.log(a);
+    //console.log(a);
     this.onProjectChosen.emit(a);
+    this.service.setSelectedProject(a);
+    this.router.navigate(['work']);
   }
 
 }
