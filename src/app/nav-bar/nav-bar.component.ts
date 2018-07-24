@@ -15,13 +15,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   dicomFileTypeSubscription: Subscription;
   project: string;
   projectSubscription: Subscription;
-
   visual_review_instance_id: string;
   vriiSubscription: Subscription;
-
-  //@Output() onNavigation = new EventEmitter<String>();
-  // @Input() mode: string;
-  // @Input() project: Project;
 
 
   constructor(private service: SeriesService) { }
@@ -61,13 +56,5 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.projectSubscription.unsubscribe();
   }
 
-  // home() {
-  //   this.onNavigation.emit('home');
-  //   console.log("emitting onNavigation => 'home'");
-  // }
-  // admin() {
-  //   this.onNavigation.emit('admin');
-  //   console.log("emitting onNavigation => 'admin'");
-  // }
 
 }
