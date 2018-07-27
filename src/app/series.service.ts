@@ -38,6 +38,8 @@ export class SeriesService {
   }
 
   setToken(token: string) {
+    console.log("setToken");
+    console.log("token: " + token);
     this.token = token;
     localStorage.setItem('token', token);
   }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../project';
 import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
+import { ErrorService } from '../errors';
 
 import { Subscription } from 'rxjs';
 
@@ -26,6 +27,7 @@ export class NavControlComponent implements OnInit, OnDestroy {
 
   constructor(private service: SeriesService,
               private route: ActivatedRoute,
+              private errorS: ErrorService,
               private router: Router) { }
 
   ngOnInit() {
@@ -101,7 +103,8 @@ export class NavControlComponent implements OnInit, OnDestroy {
         }
         this.iec = data[0];
       },
-      error => this.handleError(error)
+      //error => this.handleError(error)
+      error => this.errorS.announceError("Server Error", "Logged out?", 2)
     );
 
     return this.busy;

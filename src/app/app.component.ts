@@ -36,12 +36,13 @@ export class AppComponent {
   private handleError(error) {
       console.log("Error follows");
 	  console.log(error);
-      this.errorS.announceError("Server Error", 
-          "Error communicating with server. Maybe you have been logged out?", 2);  
+      this.errorS.announceError("Server Error",
+          "Error communicating with server. Maybe you have been logged out?", 2);
       this.loggedOut = true;
   }
 
   private attemptLogin(search: string) {
+    console.log("attemptLogin");
     var token: string;
     var parts: string[];
     parts = search.split('=');
