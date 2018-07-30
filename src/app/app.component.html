@@ -1,28 +1,11 @@
 <app-nav
   (onNavigation)="onNavigation($event)"
-  [mode]="mode"
-  [project]="project"
 ></app-nav>
 <div class="container-fluid">
   <div class="row">
     <div class="col">
       <app-error></app-error>
-      <app-admin
-         *ngIf="admin"
-      ></app-admin>
-
-      <app-mode-select
-        *ngIf="!project && !admin"
-        (onProjectChosen)="onProjectChosen($event)"
-        (onModeChosen)="onModeChosen($event)"
-        >
-      </app-mode-select>
-
-      <app-nav-control
-         *ngIf="project && !admin"
-         [project]="project"
-         [mode]="mode"
-        ></app-nav-control>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

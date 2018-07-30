@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@a
 
 import { SeriesService } from '../series.service';
 import { EquivalenceClassMap } from '../equivalence-class-map';
-import { Project } from '../project';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-mark-control',
@@ -12,7 +12,10 @@ import { Project } from '../project';
 export class MarkControlComponent implements OnInit {
   @Output() onMark = new EventEmitter<string>();
   @Input() iec: number;
-  @Input() mode: string;
+
+
+  mode: string;
+  modeSubscription: Subscription;
 
   constructor(
     private service: SeriesService,
@@ -20,6 +23,15 @@ export class MarkControlComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.modeSubscription = this.service.mode.subscribe(
+      (mode) => {
+        this.mode = mode;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.modeSubscription.unsubscribe();
   }
 
   mark(state: string) {
