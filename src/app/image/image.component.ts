@@ -56,14 +56,14 @@ export class ImageComponent implements OnInit {
 
 
   constructor(
-    private http: Http, 
+    private http: Http,
     private service: FileService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MdDialog
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     let file_id = this.route.snapshot.params['file_id'];
     if (file_id != undefined) {
       this.file_id = file_id;
@@ -202,10 +202,10 @@ export class ImageComponent implements OnInit {
 
     let c = this.context;
     let expected_length =  // Expected output length in bytes
-      this.current_image.width * this.current_image.height 
+      this.current_image.width * this.current_image.height
       * 4; // 4 planes, RGBA
 
-    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes
 
     for (let i = 0; i < image.length; i+=3) {
       let j = (i/3) * 4;
@@ -221,10 +221,10 @@ export class ImageComponent implements OnInit {
   drawRRGGBB(image: Uint8Array) {
     let c = this.context;
     let expected_length =  // Expected output length in bytes
-      this.current_image.width * this.current_image.height 
+      this.current_image.width * this.current_image.height
       * 4; // 4 planes, RGBA
 
-    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes
 
     // offset of each plane
     let R = 0;
@@ -247,7 +247,7 @@ export class ImageComponent implements OnInit {
     let c = this.context;
     let expected_length = this.current_image.width * this.current_image.height * 4;
 
-    let output_image = new Uint8ClampedArray(expected_length); // length in bytes 
+    let output_image = new Uint8ClampedArray(expected_length); // length in bytes
 
 
     for (let i = 0; i < image.length; i++) {
@@ -269,17 +269,24 @@ export class ImageComponent implements OnInit {
     newImageData.data.set(image);
 
     /*
-     * We could use c.putImageData here, however it does not 
+     * We could use c.putImageData here, however it does not
      * support scaling. By converting the ImageData into an
-     * ImageBitmap (via the extern function createImageBitmap, see 
+     * ImageBitmap (via the extern function createImageBitmap, see
      * definition at the top of this file), we can use c.drawImage
      * and do automatic scaling.
      */
     createImageBitmap(newImageData).then(img => {
       c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      c.drawImage(img, this.offset.x, this.offset.y, 
-                  this.current_image.width * this.zoom_level, 
+      console.log("img.src: ");
+      console.log(img.src);
+      if (img.src){
+        c.drawImage(img, this.offset.x, this.offset.y,
+                  this.current_image.width * this.zoom_level,
                   this.current_image.height * this.zoom_level);
+      }
+      else {
+        c.putImageData(img, this.offset.x, this.offset.y));
+      }
     });
 
   }
@@ -364,7 +371,7 @@ export class ImageComponent implements OnInit {
 
   resetZoom(): void {
     this.zoom_level = 1;
-    this.offset = { x: (512/2) - (this.current_image.width / 2), 
+    this.offset = { x: (512/2) - (this.current_image.width / 2),
                     y: (512/2) - (this.current_image.height / 2) };
     this.draw();
   }
