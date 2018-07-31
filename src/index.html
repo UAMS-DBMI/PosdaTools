@@ -27,7 +27,12 @@
       img.addEventListener('load', function() {
         resolve(this);
       });
-      img.src = URL.createObjectURL(blob);
+      try {
+        img.src = URL.createObjectURL(blob);
+      }
+      catch (error){
+        img.srcObject = blob;
+      }
     });
     }
   }
