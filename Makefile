@@ -8,7 +8,7 @@ default: build
 build: /html
 
 /html: node_modules
-	$(NG) build --prod --base-href "/viewer/" --aot=false -op $@
+	$(NG) build --prod --base-href "/viewer/" --aot=false
 
 serve: node_modules
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
