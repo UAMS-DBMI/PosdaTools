@@ -285,7 +285,7 @@ export class ImageComponent implements OnInit {
                   this.current_image.height * this.zoom_level);
       }
       else {
-        c.putImageData(img, this.offset.x, this.offset.y));
+        c.putImageData(img, this.offset.x, this.offset.y);
       }
     });
 
