@@ -7,10 +7,29 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet">
+
 </head>
 <body>
   <app-root>Loading...</app-root>
 </body>
+
+
+<script>
+  /* Safari and Edge polyfill for createImageBitmap
+ * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/createImageBitmap
+ */
+  if (!('createImageBitmap' in window)) {
+    window.createImageBitmap = async function(blob) {
+      return new Promise((resolve,reject) => {
+        let img = document.createElement('img');
+      img.addEventListener('load', function() {
+        resolve(this);
+      });
+      img.src = URL.createObjectURL(blob);
+    });
+    }
+  }
+</script>
 </html>
