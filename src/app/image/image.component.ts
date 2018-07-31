@@ -275,33 +275,19 @@ export class ImageComponent implements OnInit {
      * definition at the top of this file), we can use c.drawImage
      * and do automatic scaling.
      */
-    // createImageBitmap(newImageData).then(img => {
-    //   c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //   c.drawImage(img, this.offset.x, this.offset.y,
-    //               this.current_image.width * this.zoom_level,
-    //               this.current_image.height * this.zoom_level);
-    // });
-
-    let newImage = this.imagedata_to_image(newImageData);
-    c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    c.drawImage(newImage, this.offset.x, this.offset.y,
-                   this.current_image.width * this.zoom_level,
-                  this.current_image.height * this.zoom_level);
-
+    try {
+      createImageBitmap(newImageData).then(img => {
+        c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        c.drawImage(img, this.offset.x, this.offset.y,
+          this.current_image.width * this.zoom_level,
+          this.current_image.height * this.zoom_level);
+      });
+    }
+    catch (error){
+      // Degrade somewhat gracefully for Safari and IE
+      c.putImageData(newImageData, this.canvas.width, this.canvas.height);
+    }
   }
-
-  imagedata_to_image(imagedata: any) {
-    let canvas = document.createElement('canvas');
-    let ctx = canvas.getContext('2d');
-    canvas.width = imagedata.width;
-    canvas.height = imagedata.height;
-    ctx.putImageData(imagedata, 0, 0);
-
-    let image = new Image();
-    image.src = canvas.toDataURL();
-    return image;
-  }
-
 
   reset(): void {
     this.w_width_override = undefined;

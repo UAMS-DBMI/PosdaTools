@@ -16,25 +16,25 @@
 </body>
 
 
-<script>
-  /* Safari and Edge polyfill for createImageBitmap
- * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/createImageBitmap
- */
-  if (!('createImageBitmap' in window)) {
-    window.createImageBitmap = async function(blob) {
-      return new Promise((resolve,reject) => {
-        let img = document.createElement('img');
-      img.addEventListener('load', function() {
-        resolve(this);
-      });
-      try {
-        img.src = URL.createObjectURL(blob);
-      }
-      catch (error){
-        img.srcObject = blob;
-      }
-    });
-    }
-  }
-</script>
+<!--<script>-->
+  <!--/* Safari and Edge polyfill for createImageBitmap-->
+ <!--* https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/createImageBitmap-->
+ <!--*/-->
+  <!--if (!('createImageBitmap' in window)) {-->
+    <!--window.createImageBitmap = async function(blob) {-->
+      <!--return new Promise((resolve,reject) => {-->
+        <!--let img = document.createElement('img');-->
+      <!--img.addEventListener('load', function() {-->
+        <!--resolve(this);-->
+      <!--});-->
+      <!--try {-->
+        <!--img.src = URL.createObjectURL(blob);-->
+      <!--}-->
+      <!--catch (error){-->
+        <!--img.srcObject = blob;-->
+      <!--}-->
+    <!--});-->
+    <!--}-->
+  <!--}-->
+<!--</script>-->
 </html>
