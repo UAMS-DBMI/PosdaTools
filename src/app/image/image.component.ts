@@ -284,9 +284,8 @@ export class ImageComponent implements OnInit {
       });
     }
     catch (error){
-      // Degrade somewhat gracefully for Safari and IE
-      console.log("caught createImageBitmap error");
-      console.log("newImageData: " + newImageData);
+      // Degrade somewhat gracefully for Safari and IE - which don't support createImageBitmap
+      console.log("createImageBitmap error");
       c.clearRect(0, 0, this.canvas.width, this.canvas.height);
       c.putImageData(newImageData, 0, 0);
     }
