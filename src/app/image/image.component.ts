@@ -288,7 +288,7 @@ export class ImageComponent implements OnInit {
       console.log("caught createImageBitmap error");
       console.log("newImageData: " + newImageData);
       c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      c.putImageData(newImageData, this.canvas.width, this.canvas.height);
+      c.putImageData(newImageData, 0, 0);
     }
   }
 
