@@ -3,6 +3,7 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Debug;
 use Data::Dumper;
+use VectorMath;
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
 CreateSeriesEquivalenceClasses.pl <series_instance_uid>
@@ -63,9 +64,6 @@ $q_inst->RunQuery(
   $ARGV[0]
 );
 
-#Debug
-#print "Separator\n", Dumper($Separator);
-
 #check that the non-geometric fields match the template
 
 #First separate any IEC groups that differ on non geometric data
@@ -88,68 +86,78 @@ foreach my $file_id (keys %$Separator){
   }
 }
 
-print "\nTemplates\n";
-print Dumper(\$templates);
-
 #Within each group compare the geometric data to separate the files into the final IECs
+my $prev_1;
+my $prev_2;
+my $dist = 0;
+my $radials = {};
+my $lines = {};
+foreach my $tmpl_id (keys %$templates){
 
+    foreach my $file_id (@{$templates->{$tmpl_id}}){
 
+      my $image_position_patient = $Separator->{$file_id}->{"ipp"};
+      my $point;
+      @$point = split /\\/, $image_position_patient;
+      
+      unless( !defined($prev_1) or $prev_1 = $prev_2){
+            $dist = VectorMath::DistPointToLine(\$point,\$prev_1,$prev_2);
+         }elsif(!defined($prev_2)){
+             $prev_2 = $point;
+         }
+         
+         if (@$point[2] == @$prev_2[2]){
+           #print "radial";
+            push @{$radials->{0}},$file_id;
+         }elsif ($dist == 0){
+           #print "\non a line\n";
+           push @{$lines->{0}},$file_id;
+         }
+       $prev_1 = $prev_2;
+       $prev_2 = $point; 
+    }
+}
 
+# my @equiv_classes = $radials + $lines;
+my @equiv_classes; 
+foreach my $rad_id (keys %$radials){
+ push @equiv_classes, $radials->{$rad_id};
+}
+foreach my $line_id (keys %$lines){
+ push @equiv_classes, $lines->{$line_id};
+}
 
-
-##my @equiv_classes;
-      #my $level = 0;
-#my $num_levels = $#col_headers - 1;
-#my $files_ptr = \%Separator;
-#print "\nBegin Walk Separator\n";
-#WalkSeparator($files_ptr, $level, $num_levels, \@equiv_classes);
-#print "\nEnd Walk Separator\n";
-#my $num_equiv = @equiv_classes;
-#print "$num_equiv classes for series $ARGV[0]:\n";
-#my $ins_equiv = PosdaDB::Queries->GetQueryInstance("CreateEquivalenceClass");
-#my $get_id = PosdaDB::Queries->GetQueryInstance("GetEquivalenceClassId");
-#my $ins_equiv_file = PosdaDB::Queries->GetQueryInstance(
-#  "CreateEquivalenceInputClass");
-#my $upd_proc_stat = PosdaDB::Queries->GetQueryInstance(
-#  "UpdateEquivalenceClassProcessingStatus");
-#for my $i (0 .. $#equiv_classes){
-#  #inserts 'series_instance_uid' and 'equivalence_class_number' into Image_Equivalence_Class table with 'Preparing' status  
-#  $ins_equiv->RunQuery(sub{}, sub{}, $ARGV[0], $i);
-#  my $id = $i;
-#  #gets the newly generated Sequence Id from that table
-#  $get_id->RunQuery(
-#    sub {
-#       my($row) = @_;
-#       $id = $row->[0]
-#    },
-#    sub {}
-#  );
-#  print "[$id]-[$i]$ARGV[0]:\n"; 
-#  #loop through each equivalnce class array
-#  for my $file_id (@{$equiv_classes[$i]}){
-#    #print the array id and the file id
-#    print "\t[$id] file: $file_id\n";
-#    #insert into the Image_Equivalence_Class_Input_Image table the corresponding IEC table record id and the file id
-#    $ins_equiv_file->RunQuery(sub {}, sub {}, $id, $file_id);
-#  }
-#  #when complete, change status of the IEC table record from 'Preparing' to 'ReadytoProcess'
-#  $upd_proc_stat->RunQuery(sub{}, sub{}, "ReadyToProcess", $id);
-#}
-
-#sub WalkSeparator{
-#  my($tree, $cur_level, $max_level, $equiv_classes) = @_;
-#  if($cur_level == $max_level){
-#    #at each level create an array of files? and assign it to equivalence class array?
-#    my @files = keys %$tree;
-#    print "\nThis level has $#files files.\n";
-#    push @$equiv_classes, \@files;
-#  } else {
-#    for my $k (keys %$tree){
-#      #get to the bottom of the tree (h_ptr)
-#      WalkSeparator($tree->{$k}, $cur_level + 1, $max_level, $equiv_classes);
-#    }
-#  }
-#}
+my $num_equiv = @equiv_classes;
+print "$num_equiv classes for series $ARGV[0]:\n";
+my $ins_equiv = PosdaDB::Queries->GetQueryInstance("CreateEquivalenceClass");
+my $get_id = PosdaDB::Queries->GetQueryInstance("GetEquivalenceClassId");
+my $ins_equiv_file = PosdaDB::Queries->GetQueryInstance(
+  "CreateEquivalenceInputClass");
+my $upd_proc_stat = PosdaDB::Queries->GetQueryInstance(
+  "UpdateEquivalenceClassProcessingStatus");
+for my $i (0 .. $#equiv_classes){
+  #inserts 'series_instance_uid' and 'equivalence_class_number' into Image_Equivalence_Class table with 'Preparing' status  
+  $ins_equiv->RunQuery(sub{}, sub{}, $ARGV[0], $i);
+  my $id = $i;
+  #gets the newly generated Sequence Id from that table
+  $get_id->RunQuery(
+    sub {
+       my($row) = @_;
+       $id = $row->[0]
+    },
+    sub {}
+  );
+  print "[$id]-[$i]$ARGV[0]:\n"; 
+  #loop through each equivalnce class array
+  for my $file_id (@{$equiv_classes[$i]}){
+    #print the array id and the file id
+    print "\t[$id] file: $file_id\n";
+    #insert into the Image_Equivalence_Class_Input_Image table the corresponding IEC table record id and the file id
+    $ins_equiv_file->RunQuery(sub {}, sub {}, $id, $file_id);
+  }
+  #when complete, change status of the IEC table record from 'Preparing' to 'ReadytoProcess'
+  $upd_proc_stat->RunQuery(sub{}, sub{}, "ReadyToProcess", $id);
+}
 
 #Compare the string values of matching keys (ignoring geometric data)
 sub HashCompare{
