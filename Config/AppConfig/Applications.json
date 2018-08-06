@@ -70,7 +70,7 @@
       "w" : 1024,
       "sort_order" : 14,
     },
-    "SeriesProjection": {
+    "Kaleidoscope": {
       "Directory": "POSDA_ROOT/Config/SeriesProjection",
       "Application" : "kaleidoscope.pl <host> <port> <dir> <color> <user>",
       "Description" : "Series Projection Inspection",
