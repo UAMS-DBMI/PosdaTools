@@ -322,7 +322,7 @@ method AllUndismissedItems() {
 
     where user_name = ?
       and date_dismissed is null
-    order by user_inbox_content_id
+    order by user_inbox_content_id desc
   }, [$self->{username}]);
 }
 
