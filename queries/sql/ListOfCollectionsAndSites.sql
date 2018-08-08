@@ -7,11 +7,13 @@
 -- 
 
 select 
-    distinct project_name, site_name, count(*) 
+    project_name,
+	site_name,
+	count(*) 
 from 
-   ctp_file natural join file_study natural join
-   file_series
+	ctp_file 
 where
   visibility is null
+
 group by project_name, site_name
 order by project_name, site_name
