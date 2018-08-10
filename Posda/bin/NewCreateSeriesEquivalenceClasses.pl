@@ -8,7 +8,7 @@ my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
 CreateSeriesEquivalenceClasses.pl <series_instance_uid> <visual_review_inst_id>
 EOF
-unless($#ARGV == 0){ die $usage }
+unless($#ARGV == 1){ die $usage }
 if($ARGV[0] eq "-h"){ print STDERR "$usage\n"; exit }
 my $q_inst = PosdaDB::Queries->GetQueryInstance(
   "ForConstructingSeriesEquivalenceClasses");
