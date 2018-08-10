@@ -97,7 +97,7 @@ if(
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 $background->Daemonize;
 $background->WriteToEmail("About to unhide $NumFromFiles \"from\" files\n");
-open UNHIDE, "|UnHideFilesWithStatus.pl $notify \"Repeal of edits " .
+open UNHIDE, "|UnhideFilesWithStatus.pl $notify \"Repeal of edits " .
   "$subproc_invoc_id\"";
 for my $file_id (keys %HiddenFromFiles){
   print UNHIDE "$file_id&$HiddenFromFiles{$file_id}->[2]\n";
