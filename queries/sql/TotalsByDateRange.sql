@@ -9,15 +9,14 @@
 -- It is intended for short date ranges (i.e. "What came in last night?" or "What came in last month?")
 -- 
 
-
 select distinct
 	project_name,
 	site_name,
 
-	count(distinct patient_id),
-	count(distinct study_instance_uid),
-	count(distinct series_instance_uid),
-	count(distinct sop_instance_uid)
+	count(distinct patient_id) as num_subjects,
+	count(distinct study_instance_uid) as num_studies,
+	count(distinct series_instance_uid) as num_series,
+	count(distinct sop_instance_uid) as total_files
 from
 	import_event
 	natural join file_import
