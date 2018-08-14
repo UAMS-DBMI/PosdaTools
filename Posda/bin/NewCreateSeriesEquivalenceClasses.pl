@@ -87,38 +87,47 @@ foreach my $file_id (keys %$Separator){
 }
 
 #Within each group compare the geometric data to separate the files into the final IECs
-my $prev_1;
-my $prev_2;
-my $dist = 0;
+
+my ($prev_2,$prev_1,$point,$dist);
 my $radials = {};
 my $lines = {};
+my $extras = {};
+
+print " \n begining separation \n";
 foreach my $tmpl_id (keys %$templates){
-
-    foreach my $file_id (@{$templates->{$tmpl_id}}){
-
+    my @templ = @{$templates->{$tmpl_id}};
+    
+    foreach my $file_id (@templ){
       my $image_position_patient = $Separator->{$file_id}->{"ipp"};
       my $point;
       @$point = split /\\/, $image_position_patient;
       
-      unless( !defined($prev_1) or $prev_1 = $prev_2){
-            $dist = VectorMath::DistPointToLine(\$point,\$prev_1,$prev_2);
-         }elsif(!defined($prev_2)){
-             $prev_2 = $point;
-         }
+      if(!defined($prev_2)){
+           #if this is the first file, compare it to the last one
+           print "\n setting prev values for the first file\n";
+           unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
+           @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
+      }
+      #print "\n prev 2: ", Dumper($prev_2), " prev 1: ", Dumper($prev_1), " point: ", Dumper($point), "\n" ; 
          
-         if (@$point[2] == @$prev_2[2]){
-           #print "radial";
-            push @{$radials->{0}},$file_id;
-         }elsif ($dist == 0){
-           #print "\non a line\n";
+      if (@$point[2] == @$prev_2[2]){
+         # print " radial ";
+         push @{$radials->{0}},$file_id;
+       }else{
+         $dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);
+         if  ($dist > -0.009 and $dist < 0.009){ # distance = 0 or very close
+           #print " on a line ";
            push @{$lines->{0}},$file_id;
+         }else{
+           push @{$extras->{0}},$file_id; 
          }
+       }
        $prev_1 = $prev_2;
        $prev_2 = $point; 
     }
 }
 
-# my @equiv_classes = $radials + $lines;
+# my @equiv_classes = $radials + $lines + $extras;
 my @equiv_classes; 
 foreach my $rad_id (keys %$radials){
  push @equiv_classes, $radials->{$rad_id};
@@ -126,7 +135,9 @@ foreach my $rad_id (keys %$radials){
 foreach my $line_id (keys %$lines){
  push @equiv_classes, $lines->{$line_id};
 }
-
+foreach my $extra_id (keys %$extras){
+ push @equiv_classes, $extras->{$extras};
+}
 my $num_equiv = @equiv_classes;
 print "$num_equiv classes for series $ARGV[0]:\n";
 my $ins_equiv = PosdaDB::Queries->GetQueryInstance("CreateEquivalenceClassNew");
