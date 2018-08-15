@@ -104,7 +104,7 @@ foreach my $tmpl_id (keys %$templates){
       
       if(!defined($prev_2)){
            #if this is the first file, compare it to the last one
-           print "\n setting prev values for the first file\n";
+           #print "\n setting prev values for the first file\n";
            unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
            @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
       }
@@ -113,17 +113,20 @@ foreach my $tmpl_id (keys %$templates){
       if (@$point[2] == @$prev_2[2]){
          # print " radial ";
          push @{$radials->{0}},$file_id;
+         $prev_1 = $prev_2;
+         $prev_2 = $point; 
        }else{
          $dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);
-         if  ($dist > -0.009 and $dist < 0.009){ # distance = 0 or very close
+         if  ($dist > -0.9 and $dist < 0.9){ # distance = 0 or very close
            #print " on a line ";
            push @{$lines->{0}},$file_id;
+           $prev_1 = $prev_2;
+           $prev_2 = $point; 
          }else{
+           #print "\n failed to line - dist : $dist \n";
            push @{$extras->{0}},$file_id; 
          }
        }
-       $prev_1 = $prev_2;
-       $prev_2 = $point; 
     }
 }
 
@@ -136,7 +139,7 @@ foreach my $line_id (keys %$lines){
  push @equiv_classes, $lines->{$line_id};
 }
 foreach my $extra_id (keys %$extras){
- push @equiv_classes, $extras->{$extras};
+ push @equiv_classes, $extras->{$extra_id};
 }
 my $num_equiv = @equiv_classes;
 print "$num_equiv classes for series $ARGV[0]:\n";
