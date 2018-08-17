@@ -52,8 +52,8 @@ def get_xfer_syntax(filename):
 def import_one_file(import_event_id, root, line_obj):
     root_id, root_path = root
 
-    file = line_obj["file_name"]
-    size = line_obj["size"]
+    file = line_obj[0]
+    size = line_obj[1]
 
     print ("Data was read: ", file, size)
 
@@ -81,7 +81,7 @@ def import_one_file(import_event_id, root, line_obj):
         file_id=file_id,
         rel_path=None,
         rel_dir=None,
-        file_name=original_file,
+        file_name=file,
     )
 
     # TODO: refactor this, it is so ugly!
@@ -99,7 +99,7 @@ def import_one_file(import_event_id, root, line_obj):
         # mark ready to process
         make_posda_file_ready_to_process.execute(file_id)
 
-    if original_file.startswith('decompressed;'):
+    if file.startswith('decompressed;'):
         os.unlink(file)
 
 
