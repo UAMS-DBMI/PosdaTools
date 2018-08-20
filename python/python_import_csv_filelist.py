@@ -6,7 +6,7 @@ import shutil
 import tempfile
 import subprocess
 
-import pydicom
+
 
 from posda.queries import Query
 from posda.main import args
@@ -35,31 +35,37 @@ get_current_posda_file_id = Query("GetCurrentPosdaFileId")
 insert_file_import_long = Query("InsertFileImportLong")
 make_posda_file_ready_to_process = Query("MakePosdaFileReadyToProcess")
 insert_file_location = Query("InsertFileLocation")
-
+get_matching_root = Query("GetMatchingRootID")
+create_new_root = Query("InsertNewRootPath")
 
 
 def make_rel_path_from_digest(digest):
     return Path() / digest[:2] / digest[2:4] / digest[4:6] / digest
 
 
-def get_xfer_syntax(filename):
-    try:
-        ds = pydicom.dcmread(filename)
-        return ds.file_meta.TransferSyntaxUID
-    except:
-        return None
+# def get_xfer_syntax(filename):
+#     try:
+#         ds = pydicom.dcmread(filename)
+#         return ds.file_meta.TransferSyntaxUID
+#     except:
+#         return None
 
-def import_one_file(import_event_id, root, line_obj):
-    root_id, root_path = root
+def import_one_file(import_event_id, root_id, line_obj):
 
-    file = line_obj[0]
-    size = line_obj[1]
+    root_path = line_obj[0]
+    file = line_obj[1]
+    size = line_obj[2]
+    test_digest = line_obj[3]
 
-    print ("Data was read: ", file, size)
+    print ("Data was read: ",root_path,  file, size)
 
     # get digest of the file
-    digest = md5sum(file)
+    digest = md5sum(root_path + "/" + file)
 
+    #verify the digests match
+    if test_digest != digest:
+        raise Exception("ERROR - DIGEST ERROR - DIGEST IN FILE DOES NOT MATCH")
+        
     file_id = get_posda_file_id_by_digest.get_single_value(digest)
 
     exists = False
@@ -87,7 +93,8 @@ def import_one_file(import_event_id, root, line_obj):
     # TODO: refactor this, it is so ugly!
     if not exists:
 
-        rel_path = copy_file(file_id, digest, root_id, root_path, file)
+        #rel_path = copy_file(file_id, digest, root_id, root_path, file)
+        rel_path = file
 
         # set the file location
         insert_file_location.execute(
@@ -103,17 +110,17 @@ def import_one_file(import_event_id, root, line_obj):
         os.unlink(file)
 
 
-def copy_file(file_id, digest, root_id, root_path, source_path):
-    rel_path = make_rel_path_from_digest(digest)
-    destination_path = root_path / rel_path
+# def copy_file(file_id, digest, root_id, root_path, source_path):
+#     rel_path = make_rel_path_from_digest(digest)
+#     destination_path = root_path / rel_path
 
-    # Ensure the parent dir exists
-    destination_path.parent.mkdir(parents=True, exist_ok=True)
+#     # Ensure the parent dir exists
+#     destination_path.parent.mkdir(parents=True, exist_ok=True)
 
-    print(source_path, destination_path)
-    shutil.copy(source_path, destination_path)
+#     print(source_path, destination_path)
+#     shutil.copy(source_path, destination_path)
 
-    return rel_path
+#     return rel_path
 
 filename = pargs.plist
 
@@ -124,15 +131,23 @@ Query("InsertEditImportEvent").execute(
 )
 
 import_event_id = Query("GetImportEventId").get_single_value()
-for row in Query("GetPosdaFileCreationRoot").run():
-    root = tuple(row)
+# for row in Query("GetPosdaFileCreationRoot").run():
+#     root = tuple(row)
 
-print(root)
+# print(root)
 
 with open(filename) as infile:
     reader = csv.DictReader(infile,delimiter=',')
     for line in reader:
-        obj = line["file_name"],line["size"]
+        obj = line["root_path"],line["rel_path"],line["size"],line["digest"]
         print("reading")
-        import_one_file(import_event_id, root, obj)
+        root_id = get_matching_root.get_single_value(
+                root_path=line["root_path"])
+        if root_id is None:
+            root_id = create_new_root.run(
+                root_path=line["root_path"])
+            print("root_path created")
+        else:
+            print("root_path exists")
+        import_one_file(import_event_id, root_id, obj)
         # break
