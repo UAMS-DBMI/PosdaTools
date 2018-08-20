@@ -7,4 +7,4 @@
 -- 
 -- (import list will have the root path for a file in prod, this will find the local id for that path)
 
-insert into file_storage_root  (rooth_path, current, storage_class) values ( ? , true, 'imported from File List Importer') returning file_storage_root_id 
+insert into file_storage_root  (root_path, current, storage_class) values ( ? , true, 'imported from File List Importer') returning file_storage_root_id 
