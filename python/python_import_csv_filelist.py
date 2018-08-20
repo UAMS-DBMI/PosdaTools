@@ -144,7 +144,7 @@ with open(filename) as infile:
         root_id = get_matching_root.get_single_value(
                 root_path=line["root_path"])
         if root_id is None:
-            root_id = create_new_root.run(
+            root_id = create_new_root.get_single_value(
                 root_path=line["root_path"])
             print("root_path created")
         else:
