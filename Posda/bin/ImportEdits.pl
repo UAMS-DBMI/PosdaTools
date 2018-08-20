@@ -43,7 +43,7 @@ Then it drops into the background to actually do any hides and make visible,
 and import operations.
 It uses the following sub scripts:
   HideFilesWithStatus.pl to hide files
-  UnHideFilesWithStatus.pl to unhide files which already have 
+  UnhideFilesWithStatus.pl to unhide files which already have 
     ctp_file rows (project_name is not null).
   HideFilesWithNoCtpWithStatus.pl to hide files, creating a new
     ctp_file row with project_name and site_name = 'UNKNOWN'
@@ -231,7 +231,7 @@ if($num_files_already_imported_to_unhide > 0){
   $background->WriteToEmail(
     "Unhiding $num_files_already_imported_to_unhide files\n");
   my $start = time;
-  open HIDE, "|UnHideFilesWithStatus.pl $notify \"Unhiding from files " .
+  open HIDE, "|UnhideFilesWithStatus.pl $notify \"Unhiding from files " .
     "in dicom_edit_compare($subproc_invoc_id)\"";
   for my $file_id (keys %ToFilesToUnhide){
     my($proj_name, $visibility) = @{$ToFilesToUnhide{$file_id}};
