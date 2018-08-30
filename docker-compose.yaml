@@ -62,6 +62,7 @@ services:
 
         volumes:
             - posda_cache_alpine:/home/posda/cache
+            - ./posda/posda-api:/posda-api
 
     quince:
         image: quasarj/quince:latest
