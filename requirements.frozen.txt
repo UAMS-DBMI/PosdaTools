@@ -1,8 +1,0 @@
-aiofiles==0.3.2
-asyncpg==0.15.0
-chardet==3.0.4
-httptools==0.0.11
-sanic==0.7.0
-ujson==1.35
-uvloop==0.9.1
-websockets==4.0.1
