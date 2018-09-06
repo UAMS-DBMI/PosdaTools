@@ -76,7 +76,7 @@ foreach my $file_id (keys %$Separator){
      if(HashCompare($Separator->{$tmpl_id},$Separator->{$file_id})){
         #add this file to this templates members
         push @{$templates->{$tmpl_id}}, $file_id; 
-        $match = 1; 
+	$match = 1; 
         last;
       }  
   }
@@ -99,34 +99,39 @@ foreach my $tmpl_id (keys %$templates){
     
     foreach my $file_id (@templ){
       my $image_position_patient = $Separator->{$file_id}->{"ipp"};
-      my $point;
-      @$point = split /\\/, $image_position_patient;
-      
-      if(!defined($prev_2)){
-           #if this is the first file, compare it to the last one
-           #print "\n setting prev values for the first file\n";
-           unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
-           @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
-      }
-      #print "\n prev 2: ", Dumper($prev_2), " prev 1: ", Dumper($prev_1), " point: ", Dumper($point), "\n" ; 
+      unless($image_position_patient eq "<undef>"){
+	      my $point;
+	      @$point = split /\\/, $image_position_patient;
+	      
+	      if(!defined($prev_2)){
+		   #if this is the first file, compare it to the last one
+		   print "\n setting prev values for the first file\n";
+		   unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
+		   @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
+	      }
+	      print "\n prev 2: ", Dumper($prev_2), " prev 1: ", Dumper($prev_1), " point: ", Dumper($point), "\n" ; 
          
-      if (@$point[2] == @$prev_2[2]){
-         # print " radial ";
-         push @{$radials->{0}},$file_id;
-         $prev_1 = $prev_2;
-         $prev_2 = $point; 
-       }else{
-         $dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);
-         if  ($dist > -0.9 and $dist < 0.9){ # distance = 0 or very close
-           #print " on a line ";
-           push @{$lines->{0}},$file_id;
-           $prev_1 = $prev_2;
-           $prev_2 = $point; 
-         }else{
-           #print "\n failed to line - dist : $dist \n";
-           push @{$extras->{0}},$file_id; 
-         }
-       }
+	      if (@$point[2] == @$prev_2[2]){
+		 print " radial ";
+		 push @{$radials->{0}},$file_id;
+		 $prev_1 = $prev_2;
+		 $prev_2 = $point; 
+	       }else{
+		 $dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);
+		 if  ($dist > -0.9 and $dist < 0.9){ # distance = 0 or very close
+		   print " on a line ";
+		   push @{$lines->{0}},$file_id;
+		   $prev_1 = $prev_2;
+		   $prev_2 = $point; 
+		 }else{
+		   print "\n failed to line - dist : $dist \n";
+		   push @{$extras->{0}},$file_id; 
+		 }
+	       }
+             }else{
+		   print "\n Undefined ipp \n";
+		   push @{$extras->{1}},$file_id; 
+             }
     }
 }
 
