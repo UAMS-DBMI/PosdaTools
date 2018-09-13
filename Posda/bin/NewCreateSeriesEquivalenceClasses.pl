@@ -6,7 +6,7 @@ use Data::Dumper;
 use VectorMath;
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
-CreateSeriesEquivalenceClasses.pl <series_instance_uid> <visual_review_inst_id>
+NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <visual_review_inst_id>
 EOF
 unless($#ARGV == 1){ die $usage }
 if($ARGV[0] eq "-h"){ print STDERR "$usage\n"; exit }
@@ -82,6 +82,7 @@ foreach my $file_id (keys %$Separator){
   }
   unless($match){
     #since no templates matched, create  a new one and add this as its first member
+    #print STDERR "pushing to template  $file_id NO MATCH";
     push @{$templates->{$file_id}}, $file_id;
   }
 }
@@ -96,46 +97,53 @@ my $extras = {};
 print " \n begining separation \n";
 foreach my $tmpl_id (keys %$templates){
     my @templ = @{$templates->{$tmpl_id}};
+
+    #print STDERR "\n", Dumper(@templ), "\n";
     
     foreach my $file_id (@templ){
       my $image_position_patient = $Separator->{$file_id}->{"ipp"};
+      #print STDERR " image_position_patient  $image_position_patient  ";
       unless($image_position_patient eq "<undef>"){
 	      my $point;
 	      @$point = split /\\/, $image_position_patient;
 	      
 	      if(!defined($prev_2)){
 		   #if this is the first file, compare it to the last one
-		   print "\n setting prev values for the first file\n";
+		   #print STDERR "\n setting prev values for the first file\n";
 		   unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
 		   @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
 	      }
-	      print "\n prev 2: ", Dumper($prev_2), " prev 1: ", Dumper($prev_1), " point: ", Dumper($point), "\n" ; 
+	      #print STDERR "\n prev 2: ", Dumper($prev_2), " prev 1: ", Dumper($prev_1), " point: ", Dumper($point), "\n" ; 
          
 	      if (@$point[2] == @$prev_2[2]){
-		 print " radial ";
+		 #print STDERR " radial ";
 		 push @{$radials->{0}},$file_id;
 		 $prev_1 = $prev_2;
 		 $prev_2 = $point; 
 	       }else{
-		 $dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);
+		 eval{$dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);};
+	         if ($@){
+			print STDERR "$@";
+			$dist = 5; 
+		 }
 		 if  ($dist > -0.9 and $dist < 0.9){ # distance = 0 or very close
-		   print " on a line ";
+		   #print STDERR " on a line ";
 		   push @{$lines->{0}},$file_id;
 		   $prev_1 = $prev_2;
 		   $prev_2 = $point; 
 		 }else{
-		   print "\n failed to line - dist : $dist \n";
+		   #print  STDERR "\n failed to line - dist : $dist \n";
 		   push @{$extras->{0}},$file_id; 
 		 }
 	       }
              }else{
-		   print "\n Undefined ipp \n";
+		   #print  STDERR "\n Undefined ipp for $file_id\n";
 		   push @{$extras->{1}},$file_id; 
              }
     }
 }
 
-# my @equiv_classes = $radials + $lines + $extras;
+# equiv_classes = radials + lines + extras;
 my @equiv_classes; 
 foreach my $rad_id (keys %$radials){
  push @equiv_classes, $radials->{$rad_id};
@@ -144,8 +152,10 @@ foreach my $line_id (keys %$lines){
  push @equiv_classes, $lines->{$line_id};
 }
 foreach my $extra_id (keys %$extras){
+ #print STDERR "\nPush $extra_id to extra\n";
  push @equiv_classes, $extras->{$extra_id};
 }
+
 my $num_equiv = @equiv_classes;
 print "$num_equiv classes for series $ARGV[0]:\n";
 my $ins_equiv = PosdaDB::Queries->GetQueryInstance("CreateEquivalenceClassNew");
