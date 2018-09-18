@@ -306,7 +306,6 @@ sub ProduceLinesForPatientEdits{
   #{{{ Shift Dates
   my @date_elements = (
     "(0008,0012)",
-    "(0008,0015)",
     "(0008,0020)",
     "(0008,0021)",
     "(0008,0022)",
