@@ -143,7 +143,7 @@ my $num_files_to_unhide = @ToUnhide;
 if($num_files_to_unhide > 0){
   $background->WriteToEmail("There are $num_files_to_unhide " .
     "to_files to unhide\n");
-  open UNHIDE, "|UnHideFilesWithStatus.pl \"$notify\" " .
+  open UNHIDE, "|UnhideFilesWithStatus.pl \"$notify\" " .
     "\"Unhiding to_files in Import of Edited Files ($edit_file_id)\"";
   for my $i (@ToUnhide){
     print UNHIDE "$i->[0]&$i->[1]\n";

@@ -9,7 +9,7 @@ COPY apps (app_id, app_name) FROM stdin;
 8	DicomProxy
 9	DicomProxyAnalysis
 10	DbIf
-11	SeriesProjection
+11	Kaleidoscope
 12	NewItcTools
 \.
 
