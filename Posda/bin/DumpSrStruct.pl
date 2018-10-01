@@ -49,9 +49,9 @@ my $doc_type = GetCodedValue($ds, "(0040,a043)");
 print "Document type: $doc_type\n";
 my $content = ParseContainer($ds, "(0040,a730)");
 print "Content: ";
-#Debug::GenPrint($dbg, $content, 1);
+Debug::GenPrint($dbg, $content, 1);
 print "\n";
-PrintContent($content, 1);
+#PrintContent($content, 1);
 sub PrintContent{
   my($content, $indent) = @_;
   if(ref($content) eq "ARRAY"){

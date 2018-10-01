@@ -90,6 +90,12 @@ method SpecificInitialize($session) {
         sync => 'Update();'
       },
       {
+        caption => "Download",
+        op => 'SetMode',
+        mode => 'DownloadTar',
+        sync => 'Update();'
+      },
+      {
         caption => "Files",
         op => 'SetMode',
         mode => 'Files',
@@ -579,7 +585,34 @@ method ScriptButton($http, $dyn) {
     my $op = $dyn->{op};
     return $self->$op($http, $dyn);
   }
-  print STDERR "Unknown op: $dyn->{op}\n";
+  print STDERR "Script button - Unknown op: $dyn->{op}\n";
+}
+
+method DownloadSpecifiedFileById($http, $dyn) {
+  my $shortname = $dyn->{targ_name};
+  my $file_id = $dyn->{file_id};
+  my $mime_type = $dyn->{mime_type};
+print STDERR "DownloadSpecifiedFileById(" .
+  "$file_id, \"$shortname\", \"$mime_type\")";
+for my $i (keys %$dyn){
+  print STDERR "dyn{$i} = \"$dyn->{$i}\"\n";
+}
+  my $filename;
+  Query('GetFilePath')->RunQuery(sub{
+    my($row) = @_;
+    $filename = $row->[0];
+  }, sub {}, $file_id);
+
+  my $fh;
+  if(open $fh, $filename) {
+    $http->DownloadHeader($mime_type, $shortname);
+    Dispatch::Select::Socket->new(
+      $self->SendFile($http),
+    $fh)->Add("reader");
+  } else {
+    print STDERR "Can't open file $filename\n";
+  }
+
 }
 
 method ContentResponse($http, $dyn) {
@@ -1961,7 +1994,6 @@ sub SendFile{
     if($http->ready_out){
       $http->queue($buff);
     } else {
-      #print STDERR "Throttling tar\n";
       $disp->Remove("reader");
       my $event = Dispatch::Select::Event->new(
         Dispatch::Select::Background->new(
@@ -2630,7 +2662,88 @@ method RefreshActivities{
   $self->{Activities} = \%Activities;
 }
 #############################
+#Here Bill is putting in the "DownloadTar"
+method DownloadTar($http, $dyn){
+  my @dirs;
+  opendir(DIR, "/nas/public/posda/cache/linked_for_download");
+  while(my $dir = readdir(DIR)){
+    unless(-d "/nas/public/posda/cache/linked_for_download/$dir"){
+      next;
+    }
+    if($dir =~ /^\./) { next }
+    push @dirs, $dir;
+  }
+  if(@dirs <= 0){
+    $http->queue(qq{
+      There are no directories ready for download<br>
+    });
+  } else {
+    unless(
+      $self->{SelectedDownloadSubdir} &&
+      -d "/nas/public/posda/cache/linked_for_download/" .
+         $self->{SelectedDownloadSubdir}
+    ){
+      $self->{SelectedDownloadSubdir} = $dirs[0];
+    }
+    $self->{DownloadTar} = 
+      "/nas/public/posda/cache/linked_for_download/" .
+      $self->{SelectedDownloadSubdir};
+    ########
+    # here goes the selection 
+    $http->queue("Select sub directory: ");
+    $self->SelectDelegateByValue($http, {
+      op => "SetSelectedDownloadSubdir",
+      sync => "Update();",
+    });
+    for my $i (@dirs){
+      $http->queue("<option value=\"$i\"");
+      if($i eq $self->{SelectedDownloadSubdir}){
+        $http->queue(" selected");
+      }
+      $http->queue(">$i</option>");
+    }
+    $http->queue("</select><br>");
+    ########
+    $http->queue(qq{<br>
+      Selected Directory: $self->{DownloadTar}<br>
+      <a class="btn btn-primary" 
+         href="DownloadTarOfThisDirectory?obj_path=$self->{path}">
+         Download This Directory as Tar</a>
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "DeleteThisDirectory",
+      caption => "Delete This Directory",
+      sync => "Update();",
+    });
+  }
+  $self->NotSoSimpleButton($http, {
+    op => "SetMode",
+    mode => "ListQueries",
+    caption => "Cancel",
+    sync => "Update();",
+  });
+}
+method SetSelectedDownloadSubdir($http, $dyn){
+  $self->{SelectedDownloadSubdir} = $dyn->{value};
+}
+method DownloadTarOfThisDirectory($http, $dyn){
+  my $dir = $self->{DownloadTar};
+  my $fh;
+  if(open $fh, "(cd $dir && tar -chf - .)|") {
+    $http->DownloadHeader("application/x-tgz", 
+      "$self->{SelectedDownloadSubdir}.tgz");
+    Dispatch::Select::Socket->new(
+      $self->SendFile($http),
+    $fh)->Add("reader");
+  } else {
+    print STDERR "Yikes: ($!) in DownloadTarOfThisDirectory\n";
+  }
+}
+method DeleteThisDirectory($http, $dyn){
+  rmtree($self->{DownloadTar});
+}
 
+#############################
 method Upload($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
   <form action="<?dyn="StoreFileUri"?>"
@@ -2785,6 +2898,17 @@ method Files($http, $dyn){
         op => "LoadCsvIntoTable",
         index => $in
       });
+    } else {
+      if(exists $self->{UploadedFiles}->[$in]->{file_id}){
+        $http->queue("File id: " .
+          $self->{UploadedFiles}->[$in]->{file_id});
+      } else {
+        $self->NotSoSimpleButton($http, {
+          caption => "Save into DB",
+          op => "ImportFileIntoPosda",
+          index => $in
+        });
+      }
     }
     $self->RefreshEngine($http, $dyn, '</p></td></tr>');
   }
@@ -2799,6 +2923,26 @@ method LoadCsvIntoTable($http, $dyn){
 method LoadCSVIntoTable_NoMode($file) {
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
   $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
+}
+
+method ImportFileIntoPosda($http, $dyn){
+  my $index = $dyn->{index};
+  my $f_info = $self->{UploadedFiles}->[$index];
+  my $file = $f_info->{"Output file"};
+  my $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" " .
+    "\"Importing Uploaded file into Posda\"";
+  open COMMAND, "$cmd|";
+  my $file_id;
+  my $error;
+  while(my $line = <COMMAND>){
+    chomp $line;
+    if($line =~ /^File id: (.*)$/){
+      $f_info->{file_id} = $1;
+    } elsif ($line =~ /^Error: (.*)$/) {
+      $f_info->{import_error} = $1;
+    }
+  }
+  close COMMAND;
 }
 
 method CsvLoaded($file){

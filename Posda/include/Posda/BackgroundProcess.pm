@@ -378,6 +378,7 @@ method MakeBackgroundReport($header, $rows, $name){
 # Note that the op will ultimately execute within DbIf::Application
 # and Update() is always called.
 method InsertEmailButton($caption, $op, $param_hash, $class) {
+print STDERR "################\n";
 
   if (not defined $class) {
     $class = "btn btn-primary";

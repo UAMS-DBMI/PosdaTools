@@ -127,6 +127,9 @@ my $buff;
 #print STDERR "read $count bytes\n";
 #exit;
 my $edits = fd_retrieve(\*STDIN);
+print STDERR "Edits: ";
+Debug::GenPrint($dbg, $edits, 1);
+print STDERR "\n";
 unless(exists $edits->{from_file}){ Error("No from_file in edits") }
 unless(-f $edits->{from_file}){ Error("file not found: $edits->{from_file}") }
 $results->{from_file} = $edits->{from_file};
@@ -267,6 +270,7 @@ for my $s (keys %{$edits->{full_ele_deletes}}){
 }
 # full_ele_additions
 for my $s (keys %{$edits->{full_ele_additions}}){
+print STDERR "full_ele_addtion: $s -> $edits->{full_ele_additions}->{$s}\n";
   $ds->Insert($s, $edits->{full_ele_additions}->{$s});
   $results->{full_ele_additions} += 1;
 }

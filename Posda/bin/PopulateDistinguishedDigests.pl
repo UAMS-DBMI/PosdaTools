@@ -2,9 +2,9 @@
 use strict;
 use Posda::DB::PosdaFilesQueries;
 #use HexDump;
-my $driver_query = PosdaDB::Queries->GetQueryInstance("FindDuplicatedPixelDigests");
+my $driver_query = PosdaDB::Queries->GetQueryInstance("FindDuplicatedPixelDigestsNew");
 my $check_query = PosdaDB::Queries->GetQueryInstance("SeeIfDigestIsAlreadyKnownDistinguished");
-my $get_pix_desc = PosdaDB::Queries->GetQueryInstance("GetPixelDescriptorByDigest");
+my $get_pix_desc = PosdaDB::Queries->GetQueryInstance("GetPixelDescriptorByDigestNew");
 my $insert_distinguished =
   PosdaDB::Queries->GetQueryInstance("InsertDistinguishedDigest");
 my $insert_distinguished_value =
@@ -43,7 +43,8 @@ for my $dig (@digests){
       $query_desc{bits_allocated} = $row->[5];
       $query_desc{high_bit} = $row->[6];
       $query_desc{file_offset} = $row->[7];
-      $query_desc{path} = $row->[8];
+      $query_desc{pixel_length} = $row->[8];
+      $query_desc{path} = $row->[9];
       unless(defined $query_desc{number_of_frames}){
         $query_desc{number_of_frames} = 1;
       }
@@ -155,13 +156,15 @@ for my $dig (@digests){
     seek FILE, $seek_whence, 0;
     my $len_read = read (FILE, $buff, $pix_len);
     unless($len_read == $pix_len){
-      die "Wrong # bytes read ($len_read vs $pix_len)";
+      print STDERR "Wrong # bytes read ($len_read vs $pix_len)\ndigest: $dig\n";
+      close FILE;
+      next dig;
     }
     my @pixels;
     my $unpacker;
     if($word_len == 16){
       $unpacker = "S$pix_len";
-      $unpacker = "W$pix_len";
+#      $unpacker = "W$pix_len";
     } elsif($word_len == 8){
       $unpacker = "C$pix_len";
     } elsif($word_len == 32){
@@ -283,5 +286,7 @@ for my $dig (@digests){
         }
       }
     }
+  } else {
+    print "$dig has not image row\n";
   }
 }

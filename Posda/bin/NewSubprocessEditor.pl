@@ -71,18 +71,32 @@ my $help = <<EOF;
   by <tag> and <tag_mode>
   <arg1> and <arg2> are the arguments of these operands:
     shift_date(number_of_days) - shift a date by an integer number of days.
-                                 to oshift backwards supply negative integer.
+                                 to shift backwards supply negative integer.
     delete_tag() - Delete the tag
     set_tag(value) - Set the value of a tag unconditionally.
                      Even if not present.
     substitute(existing_value, new_value) - Set the value of the tag only if
                                             its current value matches
                                             existing_value
+    string_replace(old_text, new_text) - replace any occurance of <old_text>
+                                         with <new_text> in the string value
+                                         of the tag.
     empty_tag() - Empty the tag (set it to empty value).
                   Even if tag is not present.
     hash_unhashed_uid(uid_root) - hash the value of the tag unless the current
                                   value of the tag is either empty, or matches
                                   the supplied uid_root.
+    date_difference(ref_tag, date) - Replace value in tag with number of days
+                                     from date to date in ref_tag. 
+                                     negative if date in ref_tag preceeds date
+                                     positive if date preceeds date in ref_tag
+                                     i.e. date is "from", ref_tag_date is "to"
+                                     difference is "to - from"
+                                     Typically, date is "date of diagnosis" and
+                                     tag is (0008,0020) (Study Date).
+                                     If there is an error computing difference,
+                                     value of tag is replaced with error message,
+                                     which may be verbose
 
    Order of processing:
    1) if uid_substitutions is present, perform uid_substitutions.  Even if the
@@ -241,6 +255,13 @@ for my $e (@effective_edits){
     if($value eq $earg1){
       $ds->Insert($etag, $earg2);
     }
+  }elsif($eop eq "string_replace"){
+    my $value = $ds->Get($etag);
+    my $value1 = $value;
+    $value1 =~ s/$earg1/$earg2/g;
+    if($value ne $value1){
+      $ds->Insert($etag, $value1);
+    }
   }elsif($eop eq "empty_tag"){
     $ds->Insert($etag, "");
   }elsif($eop eq "short_hash"){
@@ -260,6 +281,18 @@ for my $e (@effective_edits){
       my $new_uid = "$earg1." . Posda::UUID::FromDigest($dig);
       $ds->Insert($etag, $new_uid);
     }
+  }elsif($eop eq "date_difference"){
+    my $val;
+    my $date_in_tag = $ds->Get($earg1);
+    my $date = $earg2;
+    eval {
+      $val = Posda::PrivateDispostions->DiffDate(
+        $date_in_tag, $date);
+    };
+    if($@){
+      $val = "error in computation: $@";
+    }
+    
   }else{
   }
 }

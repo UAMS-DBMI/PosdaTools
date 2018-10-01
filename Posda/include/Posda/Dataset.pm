@@ -2409,10 +2409,12 @@ sub NewSearch{
       my $which = scalar @$accum;
       $index_list->{$index} = $which;
       unless($this->{$grp}->{private}->{$owner}->{$ele}->{VR} eq "SQ"){
-        die sprintf(
-           "indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]" .
+        print STDERR  sprintf(
+           "Warning: indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]" .
            "  (%s)",
            $grp, $ele, $remain);
+        #print STDERR "\n - ignoring this error.\n";
+        return $list;
       }
       my $obj_list = $this->{$grp}->{private}->{$owner}->{$ele}->{value};
       for my $i (0 .. $#{$obj_list}){

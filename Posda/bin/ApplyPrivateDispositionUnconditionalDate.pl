@@ -117,7 +117,7 @@ unless(exists $try->{dataset}){ die "$ARGV[0] is not a DICOM file" }
 my $ds = $try->{dataset};
 #print "Editing file $ARGV[0]\n";
 for my $e (keys %DeleteByElement){
-#  print "\tDeleting: $e\n";
+  #print "\tDeleting: $e\n";
   $ds->Delete($e);
 }
 for my $p (keys %DeleteByPattern){
@@ -200,10 +200,10 @@ for my $e (keys %OffsetDate){
   }
 }
 for my $e (keys %OffsetInteger){
-#print "element: $e\n";
+#print "OffsetInteger:\nelement: $e\n";
   my $date = $ds->Get($e);
 #print "Date before: $date\n";
-  if(defined($date) && $date ne ""){
+  if(defined($date) && $date ne "" && $date > 0){
     my $new_date = ShiftIntegerDate($date);
     if($new_date != $date){
       #print "\tElement: $e\n";

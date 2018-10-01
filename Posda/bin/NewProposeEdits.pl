@@ -9,7 +9,7 @@ ProposeEdits.pl <bkgrnd_id> <scan_id> <notify>
   notify - email address for completion notification
 
 Expects lines on STDIN:
-<<element>>~<vr>~<<q_value>>~<num_series>~<p_op>~<<q_arg1>>~<<q_arg2>>
+<<element>>%<vr>%<<q_value>>%<num_series>%<p_op>%<<q_arg1>>%<<q_arg2>>
 
 Note:
   The double metaquotes in the line specification are not errors.
@@ -36,7 +36,7 @@ while(my $line = <STDIN>){
   chomp $line;
   $background->LogInputLine($line);
   my($element, $vr, $q_value, $num_series, $p_op, $q_arg1, $q_arg2) = 
-    split(/~/, $line);
+    split(/%/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 } elsif($element){
     print "Warning - element: \"$element\" not metaquoted\n";
   }
@@ -112,7 +112,7 @@ for my $s (keys %EditsBySeries){
   my @edit_keys = sort keys %{$EditsBySeries{$s}};
   for my $k (0 .. $#edit_keys){
     $EditGroupSummary .= $edit_keys[$k];
-    unless($k == $#edit_keys){ $EditGroupSummary .= "~" }
+    unless($k == $#edit_keys){ $EditGroupSummary .= "%" }
   }
   $SeriesByEditGroups{$EditGroupSummary}->{$s} = 1;
 }
@@ -134,7 +134,7 @@ for my $c (sort keys %SeriesByEditGroups){
     }
   }
   $background->WriteToEmail("Command group: $c\n");
-  my @edits = split /~/, $c;
+  my @edits = split /%/, $c;
   for my $edit (@edits){
   $background->WriteToEmail("Edit: $edit\n");
     my($op, $tag, $arg1, $arg2) = split(/\|/, $edit);

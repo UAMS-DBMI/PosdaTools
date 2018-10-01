@@ -3,13 +3,15 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Posda::BackgroundProcess;
 my $usage = <<EOF;
-BackgroundPrivateDispositions.pl <id> <to_dir> <uid_root> <offset> <notify>
+BackgroundPrivateDispositions.pl <id> <to_dir> <notify>
   id - id of row in subprocess_invocation table created for the
     invocation of the script
   writes result into <to_dir>
+  email sent to <notify>
+
+<uid_root> and <offset> are obtained from patient_mapping table
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
-  email sent to <notify>
 
 Expects the following list on <STDIN>
   <patient_id>&<study_uid>&<series_uid>
@@ -24,16 +26,17 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
 my $child_pid = $$;
 my $command = $0;
 my $script_start_time = time;
-unless($#ARGV == 4){
+unless($#ARGV == 2){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $to_dir, $uid_root, $offset, $notify) = @ARGV;
+my($invoc_id, $to_dir, $notify) = @ARGV;
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 
 my %Patients;
+my %PatientMapping;
 my $num_lines = 0;
 my @Series;
 while(my $line = <STDIN>){
@@ -47,8 +50,6 @@ while(my $line = <STDIN>){
 }
 my $q1 = PosdaDB::Queries->GetQueryInstance(
   "PrivateTagsWhichArentMarked");
-my $q2 = PosdaDB::Queries->GetQueryInstance(
-  "DistinctDispositionsNeededSimple");
 my $error = 0;
 my @new_tags;
 $q1->RunQuery(sub{
@@ -74,6 +75,8 @@ if(@new_tags > 0){
   exit;
 }
 my @dispositions_needed;
+my $q2 = PosdaDB::Queries->GetQueryInstance(
+  "DistinctDispositionsNeededSimple");
 $q2->RunQuery(sub {
   my($row) = @_;
   my($id, $ele_sig, $vr, $name) = @$row;
@@ -95,6 +98,45 @@ if(@dispositions_needed > 0){
   print "</table>";
   print "Not forking background because of errors\n";
   exit;
+}
+my $q3 = PosdaDB::Queries->GetQueryInstance(
+  "GetPatientMappingByPatientId");
+pat:
+for my $pat (keys %Patients){
+  my $error_seen = 0;
+  $q3->RunQuery(sub{
+    my($row) = @_;
+    my($from_patient_id,
+      $to_patient_id,
+      $to_patient_name,
+      $collection_name,
+      $site_name,
+      $batch_number,
+      $uid_root,
+      $diagnosis_date,
+      $baseline_date,
+      $date_shift,
+      $computed_shift) = @$row;
+    if(exists $PatientMapping{$to_patient_id}){
+      unless($error_seen){
+        print "There is more than one mapping for patient_id: $pat\n";
+      }
+      $error += 1;
+      $error_seen = 1;
+      return;
+    }
+    unless($computed_shift =~ /^([^\s]+)\s*days$/){
+      unless($error_seen){
+        print "Now computed shift for patient_id: $pat\n";
+      }
+      $error += 1;
+      $error_seen = 1;
+      return;
+    }
+    my $offset = $1;
+    $PatientMapping{$pat}->{uid_root} = $uid_root;
+    $PatientMapping{$pat}->{offset} = $offset;
+  }, sub {}, $pat);
 }
 my $q5 = PosdaDB::Queries->GetQueryInstance(
   "AreVisibleFilesMarkedAsBadOrUnreviewedInSeries");
@@ -132,6 +174,8 @@ $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n" .
 my @cmds;
 my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition");
 for my $patient_id (sort keys %Patients){
+  my $offset = $PatientMapping{$patient_id}->{offset};
+  my $uid_root = $PatientMapping{$patient_id}->{uid_root};
   $background->WriteToEmail("Patient: $patient_id\n");
   for my $study_uid (sort keys %{$Patients{$patient_id}}){
     $background->WriteToEmail("Study $study_uid\n");
@@ -191,24 +235,24 @@ command:
 while(1){
   my $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "1. Running cmd: $cmd\n";
-  print SCRIPT1 "$cmd\n";
+#  print STDERR "1. Running cmd: $cmd\n";
+ print SCRIPT1 "$cmd\n";
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "2. Running cmd: $cmd\n";
-  print SCRIPT2 "$cmd\n";
+# print STDERR "2. Running cmd: $cmd\n";
+ print SCRIPT2 "$cmd\n";
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "3. Running cmd: $cmd\n";
-  print SCRIPT3 "$cmd\n";
+# print STDERR "3. Running cmd: $cmd\n";
+ print SCRIPT3 "$cmd\n";
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "4. Running cmd: $cmd\n";
-  print SCRIPT4 "$cmd\n";
+# print STDERR "4. Running cmd: $cmd\n";
+ print SCRIPT4 "$cmd\n";
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "5. Running cmd: $cmd\n";
-  print SCRIPT5 "$cmd\n";
+# print STDERR "5. Running cmd: $cmd\n";
+ print SCRIPT5 "$cmd\n";
 }
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("All commands queued\n");

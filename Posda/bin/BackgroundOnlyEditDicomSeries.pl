@@ -444,6 +444,14 @@ sub look_for_private{
   return $found_private;
 }
 #############################
+#  If there is a list of uid_substitutions, add it to every edit
+my $num_uid_substitutions = keys %UidMapping;
+if($num_uid_substitutions > 0){
+  for my $sop (keys %SopsToEdit){
+    $SopsToEdit{$sop}->{uid_substitutions} = \%UidMapping;
+  }
+}
+#############################
 # Uncomment these lines when testing just the processing of
 # input
 # Only do this for small test cases - it generates a lot of 

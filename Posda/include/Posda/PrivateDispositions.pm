@@ -71,6 +71,18 @@ sub HashUID{
   $new_uid = substr($new_uid, 0, 64);
   return $new_uid;
 }
+sub NewSopInstanceBasedOn{
+  my($class, $uid) = @_;
+  $uid =~ /^(.*)\.[0-9]*$/;
+  my $uid_root = $1;
+  my $rand = Posda::UUID::GetUUID();
+  my $ctx = Digest::MD5->new;
+  $ctx->add($rand);
+  my $dig = $ctx->digest;
+  my $new_uid = "$uid_root." . Posda::UUID::FromDigest($dig);
+  $new_uid = substr($new_uid, 0, 64);
+  return $new_uid;
+}
 sub ShiftIntegerDate{
   my($this, $epoch) = @_;
   my $shifted = $epoch + ($this->{shift} * 60 * 60 * 24);
@@ -206,14 +218,14 @@ sub Apply{
     }
   }
   for my $e (keys %OffsetInteger){
-  #print "element: $e\n";
+  print "element: $e\n";
     my $date = $ds->Get($e);
-  #print "Date before: $date\n";
-    if(defined($date) && $date ne ""){
+  print "Date before: $date\n";
+    if(defined($date) && $date ne "" && $date > 0){
       my $new_date = $this->ShiftIntegerDate($date);
       if($new_date != $date){
-        #print "\tElement: $e\n";
-        #print "\t$date => $new_date\n";
+        print "\tElement: $e\n";
+        print "\t$date => $new_date\n";
         $ds->Insert($e, $new_date);
       }
     }

@@ -489,8 +489,8 @@ sub LinkedDelegateEntryBox{
   my @attrs;
   for my $i (keys %$dyn){
     if($i eq "op") { next }
-    if($i eq "length" || $i eq "name") { 
-      push @attrs, "length=\"$dyn->{length}";
+    if($i eq "length" || $i eq "name" || $i eq "size") { 
+      push @attrs, "$i=\"$dyn->{$i}\"";
       next
     }
     push @parms, "$i=$dyn->{$i}";
@@ -509,6 +509,7 @@ sub LinkedDelegateEntryBox{
   for my $i (0 .. $#parms){
     $v_string .= "$parms[$i]&";
   }
+print STDERR "value string: $v_string\"\n##################\n";
   my $default;
   if(exists $dyn->{index}){
     $default = $this->{$dyn->{linked}}->{$dyn->{index}};
@@ -520,8 +521,8 @@ sub LinkedDelegateEntryBox{
   }
   $default =~ s/"/&quot;/g;
   my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
-  $http->queue('<input type="text"' .
-    ($default ? " value=\"$default\"" : "") .
+  $http->queue('<input type="text"' . $attr_s .
+    ($default ? " value=\"$default\" " : " ") .
     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
     "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
     "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .

@@ -7,7 +7,7 @@ use Debug;
 sub MakeDebugPrinter{
   my($hand) = @_;
   my $sub = sub {
-    print $hand @_;
+    $hand->print(@_);
   };
   return $sub;
 }
@@ -168,10 +168,10 @@ DebugPrintStruct($dbg, "EditsList", \@EditList);
 my $uids_mapped = keys %UidMapping;
 my $rpt1 = $background->CreateReport("PreliminaryEditSpreadsheet");
 if($uids_mapped){
-  print $rpt1 "\"unmapped_uid\",\"mapped_uid\",";
+  $rpt1->print("\"unmapped_uid\",\"mapped_uid\",");
 }
-print $rpt1 "\"series_instance_uid\",\"operation\",\"tag\",\"value1\"," .
-  "\"value2\"\n";
+$rpt1->print("\"series_instance_uid\",\"operation\",\"tag\",\"value1\"," .
+  "\"value2\"\n");
 my @unmapped_list = keys %UidMapping;
 my $current_mapping_index = 0;
 for my $edit (@EditList){
@@ -180,7 +180,7 @@ for my $edit (@EditList){
   for my $ser (@$series){
     print_mapping($current_mapping_index, $rpt1);
     $current_mapping_index += 1;
-    print $rpt1 "$ser,,,,,\n";
+    $rpt1->print("$ser,,,,,\n");
   }
   for my $ed(keys %$edits){
     for my $cmds (@{$edits->{$ed}}){
@@ -191,14 +191,14 @@ for my $edit (@EditList){
         if($cmds->[$i] =~ /^\s*<(.*)>$/) { $cmds->[$i] = $1 }
         $cmds->[$i] =~ s/\"/\"\"/g;
       }
-      print $rpt1 ",$ed,\"<$cmds->[0]>\",\"<$cmds->[1]>\",\"<$cmds->[2]>\"\n";
+      $rpt1->print(",$ed,\"<$cmds->[0]>\",\"<$cmds->[1]>\",\"<$cmds->[2]>\"\n");
     }
   }
 }
 while($current_mapping_index <= $#unmapped_list){
   print_mapping($current_mapping_index, $rpt1);
   $current_mapping_index += 1;
-  print $rpt1 "\n";
+  $rpt1->print("\n");
 }
 $background->Finish;
 exit;
@@ -208,7 +208,7 @@ sub print_mapping{
     if($index <= $#unmapped_list){
       my $unmapped = $unmapped_list[$index];
       my $mapped = $UidMapping{$unmapped};
-      print $rpt "$unmapped,$mapped,";
+      $rpt->print("$unmapped,$mapped,");
       return;
     }
   }

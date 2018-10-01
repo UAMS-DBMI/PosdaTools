@@ -5,7 +5,7 @@ use Posda::BackgroundProcess;
 my $usage = <<EOF;
 HideEquivalenceClasses.pl <?bkgrd_id?> <notify>
 or 
-HideEquivalenceClassesMakePassThru.pl -h
+HideEquivalenceClasses.pl -h
 
 Expects line of form:
 <image_equivalence_class_uid&<processing_status>&<review_status>
@@ -24,6 +24,10 @@ while(my $line = <STDIN>){
   my($image_equivalence_class_id, $processing_status, $review_status) =
     split(/&/, $line);
   if($review_status eq "<undef>" && $processing_status eq "error") {
+    $EquivClasses{$image_equivalence_class_id} = 1;
+  }elsif($review_status eq "Bad" && $processing_status eq "Reviewed") {
+    $EquivClasses{$image_equivalence_class_id} = 1;
+  }elsif($review_status eq "Blank" && $processing_status eq "Reviewed") {
     $EquivClasses{$image_equivalence_class_id} = 1;
   } else {
     $dont_change{$image_equivalence_class_id} = 1;
