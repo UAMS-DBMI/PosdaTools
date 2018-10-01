@@ -252,6 +252,15 @@ sub ProduceLinesForPatientEdits{
   }
   $rpt->print(",set_tag,<PatientID>,<$map->{to_patient_id}>,<>\n");
   $rpt->print(",set_tag,<PatientName>,<$map->{to_patient_name}>,<>\n");
+
+  $rpt->print(",set_tag,<(0012,0051)>,<Days offset from diagnosis>,<>\n");
+  $rpt->print(",set_tag,<(0012,0062)>,<YES>,<>\n");
+
+  # Show de-identification was done
+  $rpt->print(",set_tag,<(0012,0063)>,<Per DICOM PS 3.15 AnnexE. Details in 0012,0064>,<>\n");
+  # Not sure how to add sequence??? Ask Bill!
+
+  $rpt->print(",set_tag,<(0028,0303)>,<MODIFIED>,<>\n");
  #}}}
 
   #{{{ Hash UDIs
@@ -528,6 +537,7 @@ sub ProduceLinesForPatientEdits{
 #{{{ Empty Tags
   my @empty_elements = (
     "(0008,0090)",
+    "(0008,0050)",
     "(0010,0030)",
     "(0020,0010)",
     "(0040,2016)",
@@ -535,6 +545,8 @@ sub ProduceLinesForPatientEdits{
     "(0040,a075)",
     "(0040,a123)",
     "(0070,0084)",
+    "(0012,0030)",
+    "(0012,0031)",
   );
 
   for my $i (@empty_elements){
