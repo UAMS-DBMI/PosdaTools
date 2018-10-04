@@ -30,6 +30,16 @@ file_process() {
 	exec ./run_in_posda_env.sh systemd/start_PosdaFileProcessDaemon.pl
 }
 
+backlog_process() {
+	echo "Starting Backlog Process Daemon..."
+
+	cd $APPROOT/systemd
+
+	echo "Working dir is: $(pwd)"
+
+	exec ./run_in_posda_env.sh Posda/bin/ProcessBacklog.pl
+}
+
 setup() {
 	cd $APPROOT
 	./setup.sh
@@ -41,6 +51,7 @@ setup() {
 		(2, '/home/posda/cache/k-storage', true, 'k-base generated'),
 		(3, '/home/posda/cache/created', true, 'created'),
 		(4, '/home/posda/cache/submission_root', true, 'imports from browser');
+		select setval('file_storage_root_file_storage_root_id_seq', 5);
 	END
 
 	mkdir -p /home/posda/cache/submission_root
@@ -60,6 +71,7 @@ help() {
   echo "main -- start the main Posda server"
   echo "api -- start the Posda API Server (python based)"
   echo "file-process -- start the Posda File Process Daemon"
+  echo "backlog-process -- start the Backlog Process Daemon"
 }
 
 case "$1" in
@@ -74,6 +86,10 @@ case "$1" in
   file-process)
     shift
 	file_process
+    ;;
+  backlog-process)
+    shift
+	backlog_process
     ;;
   help)
     shift
