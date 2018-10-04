@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.3
+-- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -692,7 +692,11 @@ CREATE TABLE public.dicom_file (
     has_meta boolean,
     is_dicom_dir boolean,
     has_sop_common boolean,
-    dicom_file_type text
+    dicom_file_type text,
+    has_pixel_data boolean,
+    pixel_data_digest text,
+    pixel_data_offset integer,
+    pixel_data_length integer
 );
 
 
@@ -1306,7 +1310,8 @@ CREATE TABLE public.file_location (
     file_id integer NOT NULL,
     file_storage_root_id integer NOT NULL,
     rel_path text NOT NULL,
-    is_home text
+    is_home text,
+    file_is_present boolean
 );
 
 
@@ -1357,7 +1362,8 @@ CREATE TABLE public.file_patient (
     other_ids text,
     other_names text,
     ethnic_group text,
-    comments text
+    comments text,
+    patient_age text
 );
 
 
@@ -3663,6 +3669,13 @@ CREATE INDEX ctp_file_file_id_index ON public.ctp_file USING btree (file_id);
 --
 
 CREATE INDEX ctp_file_project_site_idx ON public.ctp_file_new USING btree (project_name, site_name);
+
+
+--
+-- Name: ctp_file_vis_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ctp_file_vis_idx ON public.ctp_file USING btree (visibility);
 
 
 --

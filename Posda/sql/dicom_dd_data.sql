@@ -3,24 +3,23 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.1
+-- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
-
-SET search_path = public, pg_catalog;
 
 --
 -- Data for Name: dicom_element; Type: TABLE DATA; Schema: public; Owner: posda
 --
 
-COPY dicom_element (tag, name, keyword, vr, vm, is_retired, comments) FROM stdin;
+COPY public.dicom_element (tag, name, keyword, vr, vm, is_retired, comments) FROM stdin;
 (0008,0001)	Length to End	LengthToEnd	UL	1	t	
 (0008,0005)	Specific Character Set	SpecificCharacterSet	CS	1-n	f	
 (0008,0006)	Language Code Sequence	LanguageCodeSequence	SQ	1	f	

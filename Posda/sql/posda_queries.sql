@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.3
+-- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -99,6 +99,49 @@ CREATE TABLE public.activity_posda_file (
     activity_id integer NOT NULL,
     file_id_in_posda integer NOT NULL,
     association_description text
+);
+
+
+--
+-- Name: activity_timepoint; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_timepoint (
+    activity_timepoint_id integer NOT NULL,
+    activity_id integer NOT NULL,
+    when_created timestamp without time zone,
+    who_created text,
+    comment text,
+    creating_user text
+);
+
+
+--
+-- Name: activity_timepoint_activity_timepoint_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.activity_timepoint_activity_timepoint_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_timepoint_activity_timepoint_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.activity_timepoint_activity_timepoint_id_seq OWNED BY public.activity_timepoint.activity_timepoint_id;
+
+
+--
+-- Name: activity_timepoint_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_timepoint_file (
+    activity_timepoint_id integer NOT NULL,
+    file_id integer NOT NULL
 );
 
 
@@ -709,6 +752,13 @@ ALTER SEQUENCE public.user_inbox_user_inbox_id_seq OWNED BY public.user_inbox.us
 --
 
 ALTER TABLE ONLY public.activity ALTER COLUMN activity_id SET DEFAULT nextval('public.activity_activity_id_seq'::regclass);
+
+
+--
+-- Name: activity_timepoint activity_timepoint_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_timepoint ALTER COLUMN activity_timepoint_id SET DEFAULT nextval('public.activity_timepoint_activity_timepoint_id_seq'::regclass);
 
 
 --
