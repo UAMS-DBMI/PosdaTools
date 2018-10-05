@@ -38,7 +38,7 @@ case "$1" in
 
   shell)
     shift
-    exec docker-compose exec posda /home/posda/magic_shell.sh
+    exec docker-compose exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
     ;;
 
   logs)
