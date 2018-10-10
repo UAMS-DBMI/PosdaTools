@@ -14,6 +14,7 @@ Supported operations:
     down - bring down all containers via docker-compose
     psql - execute the PostgreSQL shell inside the running db container
     shell - open a Posda Shell inside the main Posda container
+    logs - open and follow the full logs
     "
 }
 
@@ -37,7 +38,12 @@ case "$1" in
 
   shell)
     shift
-    exec docker exec -itw /home/posda/posdatools/ posda2_posda_1 /home/posda/posdatools/posda_shell
+    exec docker-compose exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
+    ;;
+
+  logs)
+    shift
+    exec docker-compose logs -f --tail=10
     ;;
 
   help)
