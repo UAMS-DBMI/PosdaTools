@@ -94,6 +94,14 @@ class K {// {{{
       let image = new Uint8Array(source.length);
 
       let slope = this.current_image.slope;
+
+      // temp fix for PET images with very small slopes
+      // When applied, this small slope makes all pixels
+      // go to 0, which isn't so good
+      if (slope < 0.001) {
+        slope = 1;
+      }
+
       let intercept = this.current_image.intercept;
       let w_width = this.current_image.window_width;
       let w_center = this.current_image.window_center;
