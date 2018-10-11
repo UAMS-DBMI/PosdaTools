@@ -286,12 +286,13 @@ for my $e (@effective_edits){
     my $date_in_tag = $ds->Get($earg1);
     my $date = $earg2;
     eval {
-      $val = Posda::PrivateDispostions->DiffDate(
+      $val = Posda::PrivateDispositions->DiffDate(
         $date_in_tag, $date);
     };
     if($@){
       $val = "error in computation: $@";
     }
+    $ds->Insert($etag, $val);
     
   }else{
   }

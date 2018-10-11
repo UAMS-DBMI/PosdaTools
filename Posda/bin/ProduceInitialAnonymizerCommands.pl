@@ -243,15 +243,46 @@ sub ProduceLinesForPatientEdits{
 
 
   #{{{ Set tags
-  $rpt->print(",set_tag,\"<(0013,\"\"CTP\"\",10)>\",<$map->{collection_name}>,<>\n");
-  $rpt->print(",set_tag,\"<(0013,\"\"CTP\"\",11)>\",<$map->{collection_name}>,<>\n");
-  $rpt->print(",set_tag,\"<(0013,\"\"CTP\"\",12)>\",<$map->{site_name}>,<>\n");
-  $rpt->print(",set_tag,\"<(0013,\"\"CTP\"\",13)>\",<$map->{site_id}>,<>\n");
+  $rpt->print(qq{,set_tag,"<(0013,""CTP"",10)>",<$map->{collection_name}>,<>\n});
+  $rpt->print(qq{,set_tag,"<(0013,""CTP"",11)>",<$map->{collection_name}>,<>\n});
+  $rpt->print(qq{,set_tag,"<(0013,""CTP"",12)>",<$map->{site_name}>,<>\n});
+  $rpt->print(qq{,set_tag,"<(0013,""CTP"",13)>",<$map->{site_id}>,<>\n});
   if(defined $map->{batch_number}){
-    $rpt->print(",set_tag,\"<(0013,\"\"CTP\"\",15)>\",<$map->{batch_number}>,<>\n");
+    $rpt->print(qq{,set_tag,"<(0013,""CTP"",15)>",<$map->{batch_number}>,<>\n});
   }
   $rpt->print(",set_tag,<PatientID>,<$map->{to_patient_id}>,<>\n");
   $rpt->print(",set_tag,<PatientName>,<$map->{to_patient_name}>,<>\n");
+
+  # Days from diagnosis
+  my $diagnosis_date_trunc = substr($map->{diagnosis_date}, 0, 10);
+  $diagnosis_date_trunc =~ s/-//g;
+
+  $rpt->print(qq{,date_difference,"<(0012,0050)>","<(0008,0020)>",<$diagnosis_date_trunc>\n});
+  $rpt->print(qq{,set_tag,"<(0012,0051)>",<Days offset from diagnosis>,<>\n});
+  $rpt->print(qq{,set_tag,"<(0012,0062)>",<YES>,<>\n});
+
+  # Show de-identification was done
+  $rpt->print(qq{,set_tag,"<(0012,0063)>","<Per DICOM PS 3.15 AnnexE. Details in 0012,0064>",<>\n});
+
+  my $deid_sequence = [
+    ['113100', 'DCM', 'Basic Application Confidentiality Profile'],
+    ['113101', 'DCM', 'Clean Pixel Data Option'],
+    ['113104', 'DCM', 'Clean Structured Content Option'],
+    ['113105', 'DCM', 'Clean Descriptors Option'],
+    ['113107', 'DCM', 'Retain Longitudinal Temporal Information Modified Dates Option'],
+    ['113108', 'DCM', 'Retain Patient Characteristics Option'],
+    ['113109', 'DCM', 'Retain Device Identity Option'],
+    ['113111', 'DCM', 'Retain Safe Private Option'],
+  ];
+
+  for my $i (0 .. $#{$deid_sequence}) {
+    my $item = $deid_sequence->[$i];
+    $rpt->print(qq{,set_tag,"<(0012,0064)[$i](0008,0100)>",<$item->[0]>,<>\n}); # Code Value
+    $rpt->print(qq{,set_tag,"<(0012,0064)[$i](0008,0102)>",<$item->[1]>,<>\n}); # Code Scheme Designator
+    $rpt->print(qq{,set_tag,"<(0012,0064)[$i](0008,0104)>",<$item->[2]>,<>\n}); # Code Meaning
+  }
+
+  $rpt->print(qq{,set_tag,"<(0028,0303)>",<MODIFIED>,<>\n});
  #}}}
 
   #{{{ Hash UDIs
@@ -306,7 +337,6 @@ sub ProduceLinesForPatientEdits{
   #{{{ Shift Dates
   my @date_elements = (
     "(0008,0012)",
-    "(0008,0015)",
     "(0008,0020)",
     "(0008,0021)",
     "(0008,0022)",
@@ -529,6 +559,7 @@ sub ProduceLinesForPatientEdits{
 #{{{ Empty Tags
   my @empty_elements = (
     "(0008,0090)",
+    "(0008,0050)",
     "(0010,0030)",
     "(0020,0010)",
     "(0040,2016)",
@@ -536,6 +567,8 @@ sub ProduceLinesForPatientEdits{
     "(0040,a075)",
     "(0040,a123)",
     "(0070,0084)",
+    "(0012,0030)",
+    "(0012,0031)",
   );
 
   for my $i (@empty_elements){

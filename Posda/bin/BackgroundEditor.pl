@@ -135,6 +135,7 @@ Edit operations currently supported:
   empty_tag(<tag>)
   short_hash(<tag>)
   hash_unhashed_uid(<tag>, <uid_root>)
+  date_difference(<ref_tag>, <date>)
 
 This script uses the "NewSubprocessEditor.pl" as a subprocess to apply the
 edits in parallel to individual files.
@@ -395,6 +396,7 @@ sub ProcessIndividualEdit{
     empty_tag => 1,
     short_hash => 1,
     hash_unhashed_uid => 1,
+    date_difference => 1,
   };
   my($op, $tag, $v1, $v2) = @$edit;
   unless(exists $supported_edit_ops->{$op}){
