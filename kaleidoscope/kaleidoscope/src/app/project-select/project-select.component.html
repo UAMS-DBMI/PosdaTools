@@ -1,0 +1,10 @@
+<div *ngIf="projectList">
+    <p>
+      Select a Project/Site from the list below.
+    </p>
+  <li *ngFor="let a of projectList">
+    <a (click)="choose(a)" href="javascript:void(0)">
+      {{a.project_name}} - {{a.site_name}} ({{a.count}})
+    </a>
+  </li>
+</div>

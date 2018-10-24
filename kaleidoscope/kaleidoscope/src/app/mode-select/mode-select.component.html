@@ -1,0 +1,29 @@
+<p>Select operating mode</p>
+<div class="btn-group" role="group">
+<button class="btn btn-outline-primary"
+    [class.active]="mode == 'unreviewed'"
+    (click)="setMode('unreviewed')"
+    >Unreviewed</button>
+<button class="btn btn-outline-success"
+    [class.active]="mode == 'good'"
+    (click)="setMode('good')"
+    >Good</button>
+<button class="btn btn-outline-danger"
+    [class.active]="mode == 'bad'"
+    (click)="setMode('bad')"
+    >Bad</button>
+<button class="btn btn-outline-warning"
+    [class.active]="mode == 'blank'"
+    (click)="setMode('blank')"
+    >Blank</button>
+<button class="btn btn-outline-warning"
+    [class.active]="mode == 'scout'"
+    (click)="setMode('scout')"
+    >Scout</button>
+<button class="btn btn-outline-warning"
+    [class.active]="mode == 'other'"
+    (click)="setMode('other')"
+    >Other</button>
+</div>
+
+<app-project-select [mode]="mode" (onProjectChosen)="onProjectChosen.emit($event)"></app-project-select>

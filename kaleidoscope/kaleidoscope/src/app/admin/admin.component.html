@@ -1,0 +1,35 @@
+<ul class="nav nav-tabs mb-2">
+  <li class="nav-item">
+    <a class="nav-link" (click)="onClickHide()" [class.active]="mode == 'hide'">Hide</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" (click)="onClickUnhide()" [class.active]="mode == 'unhide'">Unhide</a>
+  </li>
+</ul>
+
+<div *ngIf="mode == 'hide'">
+  <h3>Hide IECs</h3>
+  <p>Click on a project-site for options.</p>
+
+  <div class="list-group">
+    <div *ngFor="let a of projectList">
+      <app-hidebox
+        [project]="a"
+      ></app-hidebox>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mode == 'unhide'">
+  <h3>Unhide IECs</h3>
+  <p>Click on a project-site for options.</p>
+
+  <div class="list-group">
+    <div *ngFor="let a of projectList">
+      <app-hidebox
+        [project]="a"
+        [mode]="'Unhide'"
+      ></app-hidebox>
+    </div>
+  </div>
+</div>

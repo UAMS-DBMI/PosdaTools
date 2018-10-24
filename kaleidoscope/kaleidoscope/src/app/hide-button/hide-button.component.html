@@ -1,0 +1,16 @@
+<button *ngIf="!clicked" class="btn {{type}} m-1" (click)="onClick()">
+  {{message}} {{what}}
+</button>
+
+<div *ngIf="clicked" class="fix-display">
+  <div class="alert alert-warning">
+    <span>Are you sure?</span>
+    <button class="btn btn-danger m-1" (click)="onClickYes()">
+      Yes I am sure.
+    </button>
+
+    <button class="btn btn-success m-1" (click)="onClickNo()">
+      No, wait!
+    </button>
+  </div>
+</div>
