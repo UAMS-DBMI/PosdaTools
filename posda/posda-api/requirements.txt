@@ -1,0 +1,7 @@
+sanic
+asyncpg
+aiofiles
+chardet
+
+requests
+green
