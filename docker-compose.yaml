@@ -25,12 +25,13 @@ services:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
+            - /nas:/nas
         environment:
             TZ: America/Chicago
             PGHOST: db
             PGUSER: postgres
             PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: localhost
+            POSDA_EXTERNAL_HOSTNAME: tcia-dev-2.ad.uams.edu 
 
     posda-file-process:
         image: quasarj/posda2:latest
@@ -41,12 +42,14 @@ services:
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
+            - /mnt:/mnt
+            - /nas:/nas
         environment:
             TZ: America/Chicago
             PGHOST: db
             PGUSER: postgres
             PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: localhost
+            POSDA_EXTERNAL_HOSTNAME: tcia-dev-2.ad.uams.edu 
 
     posda-api:
         image: quasarj/posda2:latest
@@ -63,6 +66,8 @@ services:
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/posda-api:/posda-api
+            - /mnt:/mnt
+            - /nas:/nas
 
     quince:
         image: quasarj/quince:latest
@@ -73,6 +78,8 @@ services:
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - quince_files:/html
+            - /mnt:/mnt
+            - /nas:/nas
         environment:
             PGHOST: db
             PGUSER: postgres
@@ -102,6 +109,8 @@ services:
             - posda
         volumes:
             - posda_cache_alpine:/home/posda/cache
+            - /mnt:/mnt
+            - /nas:/nas
         environment:
             PGHOST: db
             PGUSER: postgres
