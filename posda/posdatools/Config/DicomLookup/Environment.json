@@ -1,0 +1,8 @@
+// 
+{
+  "ApplicationInitClass" : "DicomLookup::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+}

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_F.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="632px" viewBox="0 0 502 632" enable-background="new 0 0 502 632" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="630"/>
+	<g>
+		
+			<rect x="156.863" y="31.269" fill="#CCDEF0" stroke="#010101" stroke-width="0.7528" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="306.029" height="585.661"/>
+		
+			<rect x="326.065" y="464.998" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="117" height="131.721"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="383.911" y1="506.614" x2="383.911" y2="520.487"/>
+				<g>
+					<polygon fill="#005695" points="381.587,518.902 383.911,527.575 386.235,518.902 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="7.2243,7.2243" x1="383.839" y1="555.615" x2="383.839" y2="567.062"/>
+				<g>
+					<polygon fill="#005695" points="381.515,565.478 383.839,574.15 386.163,565.478 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="334.417" y="574.15" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="6" width="98.999" height="11.25"/>
+		
+			<rect x="334.776" y="483.178" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 350.5195 491.5234)"><tspan x="0" y="0" font-size="9">Directory Record</tspan><tspan x="-11.26" y="10.8" font-size="9">(Key1, Key2, Key3, ...)</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 428.7695 532.792)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 420.7656 554.7969)" font-size="9">0-1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			334.778,540.869 384.2,527.576 433.774,541.062 433.774,541.092 384.2,554.576 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 354.6133 543.5684)" font-size="9">is chained with</text>
+		</g>
+		
+			<rect x="176.648" y="331.879" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="117" height="243.281"/>
+		
+			<rect x="185.648" y="349.879" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 201.3853 358.2227)"><tspan x="0" y="0" font-size="9">Directory Record</tspan><tspan x="-11.261" y="10.799" font-size="9">(Key1, Key2, Key3, ...)</tspan></text>
+		</g>
+		
+			<rect x="39.108" y="409.02" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 65.3394 418.7129)"><tspan x="0" y="0" font-size="9">Referenced</tspan><tspan x="-4.5" y="10.801" font-size="9">SOP Instance</tspan><tspan x="-7.249" y="21.601" font-size="9">(object in a file)</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.566" y1="435.565" x2="234.566" y2="450.966"/>
+				<g>
+					<polygon fill="#005695" points="232.242,449.381 234.566,458.054 236.891,449.381 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.6406 413.8906)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 271.6387 435.8955)" font-size="9">0-1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.65,421.959 235.072,408.668 284.646,422.152 284.646,422.182 235.072,435.666 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 205.4829 424.668)" font-size="9">is chained with</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="384.246" y1="443.771" x2="384.246" y2="457.91"/>
+				<g>
+					<polygon fill="#005695" points="381.922,456.325 384.246,464.998 386.57,456.325 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 429.3223 421.0908)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 421.3203 443.0957)" font-size="9">0-1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			335.332,426.389 384.752,408.668 434.327,426.646 434.327,426.686 384.752,444.666 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 365.8164 423.7607)"><tspan x="0" y="0" font-size="9">optionally</tspan><tspan x="-2.248" y="10.8" font-size="9">references</tspan></text>
+		</g>
+		<text transform="matrix(1 0 0 1 157.2998 25.709)" font-size="12">Basic Directory Information Object</text>
+		<g>
+			<text transform="matrix(1 0 0 1 204.6372 340.2227)" font-size="9">Directory Entity</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="235.072" y1="74.562" x2="235.072" y2="87.955"/>
+				<g>
+					<polygon fill="#005695" points="232.748,86.369 235.072,95.042 237.396,86.369 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="235" y1="122.481" x2="235" y2="137.306"/>
+				<g>
+					<polygon fill="#005695" points="232.676,135.721 235,144.394 237.324,135.721 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.928" y1="166.8" x2="234.928" y2="181.697"/>
+				<g>
+					<polygon fill="#005695" points="232.604,180.111 234.928,188.784 237.252,180.111 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.855" y1="215.804" x2="234.855" y2="231.048"/>
+				<g>
+					<polygon fill="#005695" points="232.531,229.463 234.855,238.136 237.18,229.463 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.783" y1="259.767" x2="234.783" y2="275.438"/>
+				<g>
+					<polygon fill="#005695" points="232.459,273.853 234.783,282.525 237.107,273.853 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.783" y1="373.324" x2="234.783" y2="400.824"/>
+				<g>
+					<polygon fill="#005695" points="232.459,399.239 234.783,407.912 237.107,399.239 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="235.09,388.157 
+					384.834,388.157 384.834,400.824 				"/>
+				<g>
+					<polygon fill="#005695" points="382.51,399.239 384.834,407.912 387.158,399.239 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					234.758,388.157 88.61,388.157 88.61,400.824 				"/>
+				<g>
+					<polygon fill="#005695" points="86.286,399.239 88.61,407.912 90.934,399.239 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.711" y1="308.767" x2="234.711" y2="324.79"/>
+				<g>
+					<polygon fill="#005695" points="232.387,323.205 234.711,331.878 237.035,323.205 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="185.648" y="238.136" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 190.6333 251.8809)" font-size="9">Root Directory Record</text>
+		</g>
+		
+			<rect x="185.648" y="50.666" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.485"/>
+		<g>
+			<text transform="matrix(1 0 0 1 193.3721 64.4033)" font-size="9">File Set Identification</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.6406 100.2646)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 271.6387 122.2695)" font-size="9">0-n</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.65,108.334 235.072,95.042 284.646,108.526 284.646,108.557 235.072,122.041 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 211.9868 111.0415)" font-size="9">is related in</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.6406 194.0068)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 271.6387 216.0117)" font-size="9">0-1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.65,202.076 235.072,188.784 284.646,202.27 284.646,202.299 235.072,215.784 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 211.7358 204.7837)" font-size="9">is related to</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.6406 287.749)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.6406 309.7539)" font-size="9">1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.65,295.818 235.072,282.525 284.646,296.012 284.646,296.041 235.072,309.525 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 227.9956 298.5259)" font-size="9">is a</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="234.494" y1="479.685" x2="234.494" y2="495.356"/>
+				<g>
+					<polygon fill="#005695" points="232.17,493.771 234.494,502.444 236.818,493.771 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="7.3614,7.3614" x1="234.422" y1="528.685" x2="234.422" y2="540.842"/>
+				<g>
+					<polygon fill="#005695" points="232.098,539.257 234.422,547.93 236.746,539.257 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="185.359" y="458.055" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.5"/>
+		
+			<rect x="185" y="549.02" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="6" width="98.999" height="11.25"/>
+		<g>
+			<text transform="matrix(1 0 0 1 201.1001 466.4023)"><tspan x="0" y="0" font-size="9">Directory Record</tspan><tspan x="-11.261" y="10.799" font-size="9">(Key1, Key2, Key3, ...)</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 279.3516 507.6699)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 271.3496 529.6758)" font-size="9">0-1</text>
+		</g>
+		
+			<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.361,515.738 234.783,502.445 284.357,515.932 284.357,515.961 234.783,529.445 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 205.1938 518.4473)" font-size="9">is chained with</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 354.0566 473.3428)" font-size="9">Directory Entity</text>
+		</g>
+		
+			<rect x="185.648" y="144.394" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 193.6353 158.1382)" font-size="9">Directory information</text>
+		</g>
+	</g>
+</g>
+</svg>

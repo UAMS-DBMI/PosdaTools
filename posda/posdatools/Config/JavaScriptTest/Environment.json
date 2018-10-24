@@ -1,0 +1,9 @@
+// 
+{
+  "ApplicationInitClass" : "Posda::HttpApp::JavaScriptApp",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "JavascriptRoot" : "POSDA_ROOT/JavaScriptTest/javascript",
+}

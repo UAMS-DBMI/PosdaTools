@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-30.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:44 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="762px" viewBox="0 0 502.001 762" enable-background="new 0 0 502.001 762" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="760"/>
+	<g>
+		
+			<rect x="54.338" y="394.786" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="347.859"/>
+		<rect x="320.813" y="21.705" fill="none" width="126.849" height="358.797"/>
+		<text transform="matrix(0.9288 0 0 1 320.8135 41.4302)"><tspan x="0" y="0" font-size="8">Contrast agent 1</tspan><tspan x="0" y="14" font-size="8">= C-B0318</tspan><tspan x="0" y="28" font-size="8">= SRT</tspan><tspan x="0" y="42" font-size="8">= Iodipamide</tspan><tspan x="0" y="56" font-size="8">= 1</tspan><tspan x="0" y="98" font-size="8">= G-D102</tspan><tspan x="0" y="112" font-size="8">= SRT</tspan><tspan x="0" y="126" font-size="8">= Intra-arterial route</tspan><tspan x="0" y="168" font-size="8">= C-11400</tspan><tspan x="0" y="182" font-size="8">= SRT</tspan><tspan x="0" y="196" font-size="8">= Iodine</tspan><tspan x="0" y="210" font-size="8">= 45</tspan><tspan x="0" y="224" font-size="8">= 350</tspan><tspan x="0" y="238" font-size="8">= YES</tspan><tspan x="0" y="266" font-size="8">Administered phase 1</tspan><tspan x="0" y="280" font-size="8">= 45</tspan><tspan x="0" y="294" font-size="8">= 001536.0</tspan><tspan x="0" y="308" font-size="8">= 001539.0</tspan><tspan x="0" y="322" font-size="8">= 15</tspan><tspan x="0" y="336" font-size="8">= 3</tspan></text>
+		<rect x="320.813" y="398.784" fill="none" width="126.849" height="343.861"/>
+		<text transform="matrix(0.9288 0 0 1 320.8135 418.5098)"><tspan x="0" y="0" font-size="8">Frames 1 to 4</tspan><tspan x="0" y="42" font-size="8">= 1</tspan><tspan x="0" y="56" font-size="8">= NO</tspan><tspan x="0" y="70" font-size="8">= NO</tspan><tspan x="0" y="84" font-size="8">Frames 5 to 7</tspan><tspan x="0" y="126" font-size="8">= 1</tspan><tspan x="0" y="140" font-size="8">= YES</tspan><tspan x="0" y="154" font-size="8">= NO</tspan><tspan x="0" y="168" font-size="8">Frames 8 to 23</tspan><tspan x="0" y="210" font-size="8">= 1</tspan><tspan x="0" y="224" font-size="8">= YES</tspan><tspan x="0" y="238" font-size="8">= YES</tspan><tspan x="0" y="252" font-size="8">Frames 24 to 25</tspan><tspan x="0" y="294" font-size="8">= 1</tspan><tspan x="0" y="308" font-size="8">= YES</tspan><tspan x="0" y="322" font-size="8">= NO</tspan></text>
+		
+			<rect x="54.338" y="19.354" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="362.227"/>
+		
+			<rect x="69.448" y="32.923" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="348.658"/>
+		
+			<rect x="84.576" y="284.048" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.666" height="97.533"/>
+		
+			<rect x="99.868" y="298.047" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="83.534"/>
+		
+			<rect x="84.577" y="46.251" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="14"/>
+		
+			<rect x="84.576" y="60.203" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="74.156" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="88.108" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="14"/>
+		
+			<rect x="84.576" y="102.062" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.65" height="69.994"/>
+		
+			<rect x="99.868" y="116.06" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="55.996"/>
+		
+			<rect x="112.763" y="130.059" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="144.058" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="158.057" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="84.576" y="172.056" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.666" height="69.995"/>
+		
+			<rect x="99.868" y="186.055" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="55.996"/>
+		
+			<rect x="112.763" y="228.052" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="84.576" y="242.051" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.666" height="13.999"/>
+		
+			<rect x="84.576" y="256.05" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.666" height="13.999"/>
+		
+			<rect x="84.576" y="270.049" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.666" height="13.999"/>
+		
+			<rect x="112.572" y="312.013" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="13.999"/>
+		
+			<rect x="112.572" y="339.978" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="13.999"/>
+		
+			<rect x="112.572" y="367.582" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="13.999"/>
+		
+			<rect x="112.572" y="325.931" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="13.999"/>
+		
+			<rect x="112.572" y="353.814" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="13.999"/>
+		<rect x="58.478" y="22.798" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 28.5259)" font-size="8">Contrast/Bolus Agent Sequence</text>
+		<rect x="92.036" y="50.946" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 56.6675)" font-size="8">&gt;Code Value</text>
+		<rect x="92.035" y="78.779" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 84.4995)" font-size="8">&gt;Code Meaning</text>
+		<g>
+			<rect x="122.29" y="133.602" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 139.3262)" font-size="8">&gt;&gt;Code Value</text>
+		</g>
+		<g>
+			<rect x="122.29" y="147.52" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 153.2324)" font-size="8">&gt;&gt;Coding Scheme Designator</text>
+		</g>
+		<rect x="73.719" y="36.858" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 42.5835)" font-size="8">Item 1</text>
+		<rect x="103.719" y="119.688" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 125.3989)" font-size="8">Item 1</text>
+		<rect x="103.719" y="189.683" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 195.394)" font-size="8">Item 1</text>
+		<rect x="103.719" y="301.19" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 306.9019)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="161.434" fill="none" width="106.325" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 167.1567)" font-size="8">&gt;&gt;Code Meaning</text>
+		</g>
+		<rect x="256.338" y="22.784" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 28.5132)" font-size="8">(0018,0012)</text>
+		<rect x="256.338" y="50.946" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 56.6699)" font-size="8">(0008,0100)</text>
+		<rect x="256.74" y="78.779" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 84.5034)" font-size="8">(0008,0104)</text>
+		<rect x="92.035" y="64.863" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 70.5815)" font-size="8">&gt;Coding Scheme Designator</text>
+		<rect x="256.74" y="64.863" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 70.5869)" font-size="8">(0008,0102)</text>
+		<rect x="92.036" y="92.696" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 98.4165)" font-size="8">&gt;Contrast/Bolus Agent Number</text>
+		<rect x="256.338" y="92.697" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 98.4204)" font-size="8">(0018,9337)</text>
+		<rect x="92.035" y="106.613" fill="none" width="164.902" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 112.3389)" font-size="8">&gt;Contrast/Bolus Administration Route Sequence</text>
+		<rect x="256.74" y="106.613" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 112.3369)" font-size="8">(0018,0014)</text>
+		<g>
+			<rect x="256.682" y="133.604" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 139.3257)" font-size="8">(0008,0100)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="147.52" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 153.2422)" font-size="8">(0008,0102)</text>
+		</g>
+		<g>
+			<rect x="122.29" y="231.194" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 236.9175)" font-size="8">&gt;&gt;Code Meaning</text>
+		</g>
+		<g>
+			<rect x="92.035" y="245.192" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 92.0352 250.9058)" font-size="8">&gt;Contrast/Bolus Volume</text>
+		</g>
+		<g>
+			<rect x="92.035" y="259.192" fill="none" width="164.323" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 92.0352 264.918)" font-size="8">&gt;Contrast/Bolus Ingredient Concentration</text>
+		</g>
+		<g>
+			<rect x="92.035" y="273.19" fill="none" width="164.303" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 92.0352 278.917)" font-size="8">&gt;Contrast/Bolus Ingredient Opaque</text>
+		</g>
+		<g>
+			<rect x="92.035" y="287.19" fill="none" width="164.489" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 92.0352 292.9165)" font-size="8">&gt;Contrast Administration Profile Sequence</text>
+		</g>
+		<g>
+			<rect x="256.658" y="161.436" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 167.1577)" font-size="8">(0008,0104)</text>
+		</g>
+		<g>
+			<rect x="256.658" y="175.353" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 181.0747)" font-size="8">(0018,9338)</text>
+		</g>
+		<rect x="92.035" y="175.35" fill="none" width="164.303" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 181.0757)" font-size="8">&gt;Contrast/Bolus Ingredient Code Sequence</text>
+		<g>
+			<rect x="256.682" y="231.194" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 236.9053)" font-size="8">(0008,0104)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="245.192" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 250.9014)" font-size="8">(0018,1041)</text>
+		</g>
+		<g>
+			<rect x="256.619" y="259.19" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.6191 264.9004)" font-size="8">(0018,1049)</text>
+		</g>
+		<g>
+			<rect x="256.74" y="273.19" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.7402 278.8994)" font-size="8">(0018,9425)</text>
+		</g>
+		<g>
+			<rect x="256.861" y="287.188" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.8613 292.8989)" font-size="8">(0018,9340)</text>
+		</g>
+		<g>
+			<rect x="257.104" y="315.153" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 257.1035 320.8638)" font-size="8">(0018,1041)</text>
+		</g>
+		
+			<rect x="112.763" y="200.127" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="214.126" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		<g>
+			<rect x="122.29" y="203.269" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 208.9927)" font-size="8">&gt;&gt;Code Value</text>
+		</g>
+		<g>
+			<rect x="122.29" y="217.269" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 222.9941)" font-size="8">&gt;&gt;Coding Scheme Designator</text>
+		</g>
+		<g>
+			<rect x="256.682" y="203.271" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 208.9805)" font-size="8">(0008,0100)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="217.267" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 222.9932)" font-size="8">(0008,0102)</text>
+		</g>
+		<g>
+			<rect x="122.29" y="356.956" fill="none" width="134.155" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 362.6816)" font-size="8">&gt;&gt;Contrast Flow Rate</text>
+		</g>
+		<g>
+			<rect x="122.29" y="371.083" fill="none" width="134.322" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 376.8096)" font-size="8">&gt;&gt;Contrast Flow Duration</text>
+		</g>
+		<g>
+			<rect x="122.29" y="315.153" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 320.8799)" font-size="8">&gt;&gt;Contrast/Bolus Volume</text>
+		</g>
+		<g>
+			<rect x="122.29" y="329.071" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 334.7979)" font-size="8">&gt;&gt;Contrast/Bolus Start Time</text>
+		</g>
+		<g>
+			<rect x="122.29" y="343.118" fill="none" width="134.155" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 348.8447)" font-size="8">&gt;&gt;Contrast/Bolus Stop Time</text>
+		</g>
+		<g>
+			<rect x="256.682" y="371.085" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 376.7979)" font-size="8">(0018,1047)</text>
+		</g>
+		<g>
+			<rect x="256.683" y="329.073" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 334.7808)" font-size="8">(0018,1042)</text>
+		</g>
+		<g>
+			<rect x="256.499" y="343.12" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 348.8252)" font-size="8">(0018,1043)</text>
+		</g>
+		<g>
+			<rect x="256.659" y="356.958" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 362.6636)" font-size="8">(0018,1046)</text>
+		</g>
+		
+			<rect x="54.338" y="381.581" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.565"/>
+		<rect x="58.478" y="385.005" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 390.7285)" font-size="8">...</text>
+		
+			<rect x="69.448" y="408.677" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.492"/>
+		
+			<rect x="84.577" y="422.005" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="70.164"/>
+		
+			<rect x="99.868" y="436.005" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="56.164"/>
+		
+			<rect x="112.763" y="450.172" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="464.171" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="478.17" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		<rect x="58.478" y="398.553" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 404.2812)" font-size="8">Per-Frame Functional Groups Sequence</text>
+		<rect x="92.036" y="426.701" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 432.4277)" font-size="8">&gt;Contrast/Bolus Usage Sequence</text>
+		<g>
+			<rect x="122.29" y="453.715" fill="none" width="128.71" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 459.4414)" font-size="8">&gt;&gt;Contrast/Bolus Agent Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="467.633" fill="none" width="134.208" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 473.3594)" font-size="8">&gt;&gt;Contrast/Bolus Agent Administered</text>
+		</g>
+		<rect x="73.719" y="412.613" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 418.3379)" font-size="8">Items 1 to 4</text>
+		<rect x="103.719" y="439.801" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 445.5127)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="481.547" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 487.2734)" font-size="8">&gt;&gt;Contrast/Bolus Agent Detected</text>
+		</g>
+		<rect x="256.338" y="398.539" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 404.2676)" font-size="8">(5200,9230)</text>
+		<rect x="256.338" y="426.701" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 432.4248)" font-size="8">(0018,9341)</text>
+		<g>
+			<rect x="256.682" y="453.717" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 459.4395)" font-size="8">(0018,9337)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="467.633" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 473.3555)" font-size="8">(0018,9342)</text>
+		</g>
+		<g>
+			<rect x="256.658" y="481.549" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 487.2715)" font-size="8">(0018,9343)</text>
+		</g>
+		
+			<rect x="69.448" y="492.169" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.492"/>
+		
+			<rect x="84.577" y="505.497" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="70.164"/>
+		
+			<rect x="99.868" y="519.665" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="55.996"/>
+		
+			<rect x="112.763" y="533.664" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="547.663" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="561.662" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		<rect x="92.036" y="510.193" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 515.9199)" font-size="8">&gt;Contrast/Bolus Usage Sequence</text>
+		<g>
+			<rect x="122.29" y="537.207" fill="none" width="128.71" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 542.9336)" font-size="8">&gt;&gt;Contrast/Bolus Agent Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="551.125" fill="none" width="134.208" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 556.8516)" font-size="8">&gt;&gt;Contrast/Bolus Agent Administered</text>
+		</g>
+		<rect x="73.719" y="496.105" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 501.8301)" font-size="8">Items 5 to 7</text>
+		<rect x="103.719" y="523.293" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 529.0049)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="565.039" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 570.7656)" font-size="8">&gt;&gt;Contrast/Bolus Agent Detected</text>
+		</g>
+		<rect x="256.338" y="510.193" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 515.917)" font-size="8">(0018,9341)</text>
+		<g>
+			<rect x="256.682" y="537.209" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 542.9316)" font-size="8">(0018,9337)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="551.125" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 556.8477)" font-size="8">(0018,9342)</text>
+		</g>
+		<g>
+			<rect x="256.658" y="565.041" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 570.7637)" font-size="8">(0018,9343)</text>
+		</g>
+		
+			<rect x="69.448" y="575.661" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.492"/>
+		
+			<rect x="84.577" y="588.989" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="70.164"/>
+		
+			<rect x="99.868" y="603.157" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="55.996"/>
+		
+			<rect x="112.763" y="617.156" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="631.155" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="645.154" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		<rect x="92.036" y="593.686" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 599.4121)" font-size="8">&gt;Contrast/Bolus Usage Sequence</text>
+		<g>
+			<rect x="122.29" y="620.699" fill="none" width="128.71" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 626.4258)" font-size="8">&gt;&gt;Contrast/Bolus Agent Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="634.617" fill="none" width="134.208" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 640.3438)" font-size="8">&gt;&gt;Contrast/Bolus Agent Administered</text>
+		</g>
+		<rect x="73.719" y="579.598" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 585.3223)" font-size="8">Items 8 to 23</text>
+		<rect x="103.719" y="606.785" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 612.4971)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="648.531" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 654.2578)" font-size="8">&gt;&gt;Contrast/Bolus Agent Detected</text>
+		</g>
+		<rect x="256.338" y="593.686" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 599.4092)" font-size="8">(0018,9341)</text>
+		<g>
+			<rect x="256.682" y="620.701" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 626.4238)" font-size="8">(0018,9337)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="634.617" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 640.3398)" font-size="8">(0018,9342)</text>
+		</g>
+		<g>
+			<rect x="256.658" y="648.533" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 654.2559)" font-size="8">(0018,9343)</text>
+		</g>
+		
+			<rect x="69.448" y="659.153" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="83.492"/>
+		
+			<rect x="84.577" y="672.481" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.665" height="70.164"/>
+		
+			<rect x="99.868" y="686.649" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="55.996"/>
+		
+			<rect x="112.763" y="700.648" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="714.647" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		
+			<rect x="112.763" y="728.646" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.479" height="13.999"/>
+		<rect x="92.036" y="677.178" fill="none" width="158.964" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 682.9043)" font-size="8">&gt;Contrast/Bolus Usage Sequence</text>
+		<g>
+			<rect x="122.29" y="704.191" fill="none" width="128.71" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 709.918)" font-size="8">&gt;&gt;Contrast/Bolus Agent Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="718.109" fill="none" width="134.208" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 723.8359)" font-size="8">&gt;&gt;Contrast/Bolus Agent Administered</text>
+		</g>
+		<rect x="73.719" y="663.09" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 668.8145)" font-size="8">Items 24 to 25</text>
+		<rect x="103.719" y="690.277" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 695.9893)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="732.023" fill="none" width="134.048" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 737.75)" font-size="8">&gt;&gt;Contrast/Bolus Agent Detected</text>
+		</g>
+		<rect x="256.338" y="677.178" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 682.9014)" font-size="8">(0018,9341)</text>
+		<g>
+			<rect x="256.682" y="704.193" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 709.916)" font-size="8">(0018,9337)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="718.109" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 723.832)" font-size="8">(0018,9342)</text>
+		</g>
+		<g>
+			<rect x="256.658" y="732.025" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 737.748)" font-size="8">(0018,9343)</text>
+		</g>
+	</g>
+</g>
+</svg>

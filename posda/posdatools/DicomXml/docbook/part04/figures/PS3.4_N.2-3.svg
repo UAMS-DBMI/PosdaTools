@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_N.2-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:09 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="232px" viewBox="0 0 502 232" enable-background="new 0 0 502 232" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="230"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="338.354" y1="133.192" x2="345.109" y2="133.192"/>
+				<g>
+					<polygon fill="#005695" points="343.524,135.517 352.197,133.192 343.524,130.868 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="424.079" y="16.683" fill="#CCDEF0" width="70.936" height="198.635"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="258.641,189.984 268.294,189.984 
+					268.294,136.574 276.775,136.574 				"/>
+				<g>
+					<polygon fill="#005695" points="275.19,138.898 283.863,136.574 275.19,134.25 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="385.141" y1="102.959" x2="385.141" y2="111.727"/>
+				<g>
+					<polygon fill="#005695" points="382.816,110.142 385.141,118.814 387.465,110.142 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="232.733" y1="159.299" x2="232.733" y2="167.71"/>
+				<g>
+					<polygon fill="#005695" points="230.409,166.125 232.733,174.798 235.058,166.125 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="206.805" y="144.852" fill="#CCDEF0" width="51.836" height="14.4"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="190.852,67.055 268.19,67.055 
+					268.19,127.791 276.672,127.791 				"/>
+				<g>
+					<polygon fill="#005695" points="275.087,130.115 283.76,127.791 275.087,125.467 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="206.805" y="175.133" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.836" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 221.5049 182.9004)"><tspan x="0" y="0"  font-size="7.2">Palette</tspan><tspan x="-5.196" y="8.641"  font-size="7.2">Color LUT</tspan><tspan x="-13" y="17.28"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 210.8594 156.1191)"  font-size="7.2">Pseudo Color</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 427.5195 23.8003)"><tspan x="0" y="0"  font-size="7.2">Device-Independent</tspan><tspan x="0" y="8.64"  font-size="7.2">Values</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="164.898" y1="35.344" x2="164.898" y2="44.831"/>
+				<g>
+					<polygon fill="#005695" points="162.574,43.245 164.898,51.918 167.223,43.245 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="138.971" y="16.684" fill="#CCDEF0" width="51.84" height="18.863"/>
+		<g>
+			<text transform="matrix(1 0 0 1 147.8354 23.8003)"><tspan x="0" y="0"  font-size="7.2">Window or</tspan><tspan x="3.002" y="8.64"  font-size="7.2">VOI LUT</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="417.898" y1="133.229" x2="433.851" y2="133.229"/>
+				<g>
+					<polygon fill="#005695" points="432.266,135.554 440.938,133.229 432.266,130.905 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 443.1758 135.2441)"  font-size="7.2">PCS-Values</text>
+		</g>
+		<rect x="352.732" y="88.33" fill="#CCDEF0" width="64.801" height="14.4"/>
+		
+			<rect x="352.732" y="118.838" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="64.801" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 374.9316 126.6035)"><tspan x="0" y="0"  font-size="7.2">Profile</tspan><tspan x="-19.217" y="8.64"  font-size="7.2">Connection Space</tspan><tspan x="-14.005" y="17.279"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 358.7236 97.5371)"  font-size="7.2">ICC Input Profile</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="310.886" y1="102.959" x2="310.886" y2="111.727"/>
+				<g>
+					<polygon fill="#005695" points="308.562,110.142 310.886,118.814 313.21,110.142 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="283.878" y="88.33" fill="#CCDEF0" width="54" height="14.4"/>
+		<g>
+			<text transform="matrix(1 0 0 1 284.6689 97.5371)"  font-size="7.2">Relative Opacity</text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="95.843" y1="35.344" x2="95.843" y2="44.831"/>
+				<g>
+					<polygon fill="#005695" points="93.519,43.245 95.843,51.918 98.167,43.245 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="67.035" y="16.684" fill="#CCDEF0" width="57.6" height="18.863"/>
+		<g>
+			<text transform="matrix(1 0 0 1 81.8262 23.8003)"><tspan x="0" y="0"  font-size="7.2">Rescale </tspan><tspan x="-12.209" y="8.64"  font-size="7.2">Slope / Intercept</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="121.924" y1="189.525" x2="131.554" y2="189.525"/>
+				<g>
+					<polygon fill="#005695" points="129.969,191.85 138.642,189.525 129.969,187.201 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="190.677" y1="189.525" x2="199.589" y2="189.525"/>
+				<g>
+					<polygon fill="#005695" points="198.004,191.85 206.677,189.525 198.004,187.201 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="139.008" y="175.133" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.844" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 150.9199 187.2207)"><tspan x="0" y="0"  font-size="7.2">VOI LUT</tspan><tspan x="-10.206" y="8.641"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="51.002" y1="189.525" x2="62.435" y2="189.525"/>
+				<g>
+					<polygon fill="#005695" points="60.85,191.85 69.522,189.525 60.85,187.201 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="69.915" y="175.133" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 74.6294 186.3906)"><tspan x="0" y="0"  font-size="7.2">Modality LUT</tspan><tspan x="-3.002" y="8.641"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 6.9863 174.2607)"><tspan x="0" y="0"  font-size="7.2">Superimposed</tspan><tspan x="13.208" y="8.64"  font-size="7.2">Image</tspan><tspan x="7.008" y="17.28"  font-size="7.2">Grayscale</tspan><tspan x="3.804" y="25.92"  font-size="7.2">Stored Pixel</tspan><tspan x="12.206" y="34.56"  font-size="7.2">Values</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="121.924" y1="66.527" x2="131.554" y2="66.527"/>
+				<g>
+					<polygon fill="#005695" points="129.969,68.852 138.642,66.527 129.969,64.203 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="139.008" y="52.135" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.844" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 150.9199 64.2212)"><tspan x="0" y="0"  font-size="7.2">VOI LUT</tspan><tspan x="-10.206" y="8.64"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="51.002" y1="66.527" x2="62.435" y2="66.527"/>
+				<g>
+					<polygon fill="#005695" points="60.85,68.852 69.522,66.527 60.85,64.203 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="69.915" y="52.135" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 74.6294 63.3911)"><tspan x="0" y="0"  font-size="7.2">Modality LUT</tspan><tspan x="-3.002" y="8.64"  font-size="7.2">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 12.9907 51.2612)"><tspan x="0" y="0"  font-size="7.2">Underlying</tspan><tspan x="7.204" y="8.64"  font-size="7.2">Image</tspan><tspan x="1.004" y="17.28"  font-size="7.2">Grayscale</tspan><tspan x="-2.201" y="25.92"  font-size="7.2">Stored Pixel</tspan><tspan x="6.202" y="34.56"  font-size="7.2">Values</tspan></text>
+		</g>
+		
+			<rect x="283.877" y="118.8" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 296.8682 130.8877)"><tspan x="0" y="0"  font-size="7.2">Blending</tspan><tspan x="-1.798" y="8.64"  font-size="7.2">Operation</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

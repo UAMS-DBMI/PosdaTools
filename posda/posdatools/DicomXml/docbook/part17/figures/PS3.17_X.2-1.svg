@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_X.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:56 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="202px" viewBox="0 0 502 202" enable-background="new 0 0 502 202" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="200"/>
+	<g>
+		<rect x="255.502" y="39.07" fill="#CCDEF0" stroke="#003468" stroke-linecap="round" width="234" height="150.261"/>
+		<rect x="12.499" y="39.07" fill="#CCDEF0" stroke="#003468" stroke-linecap="round" width="234.003" height="91.38"/>
+		<g>
+			<rect x="21.501" y="42.584" fill="none" width="216" height="84.35"/>
+			<text transform="matrix(1 0 0 1 21.501 49.0151)"><tspan x="0" y="0" font-size="9">Header</tspan><tspan x="0" y="10.8" font-size="9">CONTAINER “Diagnostic Imaging Report”</tspan><tspan x="0" y="21.6" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="21.6" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="21.6" font-size="9">CONTAINER “Findings”</tspan><tspan x="0" y="32.4" font-size="9" letter-spacing="6">		</tspan><tspan x="18" y="32.4" font-size="9" letter-spacing="-2">	</tspan><tspan x="18" y="32.4" font-size="9">TEXT</tspan><tspan x="41.001" y="32.4" font-size="9" letter-spacing="1">	</tspan><tspan x="45" y="32.4" font-size="9" letter-spacing="6">	</tspan><tspan x="54" y="32.4" font-size="9" letter-spacing="-2">	</tspan><tspan x="54" y="32.4" font-size="9">“Finding” “Chest X-ray PA and Lateral. </tspan><tspan x="54.333" y="43.2" font-size="9">There is a mass in the left anterior… </tspan><tspan x="54.333" y="54" font-size="9">Probable malignancy… Refer to </tspan><tspan x="54.333" y="64.799" font-size="9">oncology…”</tspan></text>
+		</g>
+		<g>
+			<rect x="264.502" y="42.584" fill="none" width="216" height="143.563"/>
+			<text transform="matrix(1 0 0 1 264.502 49.0151)"><tspan x="0" y="0" font-size="9">Header</tspan><tspan x="0" y="10.8" font-size="9">CONTAINER “Diagnostic Imaging Report”</tspan><tspan x="0" y="21.6" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="21.6" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="21.6" font-size="9">CONTAINER “Current Procedure Descriptions”</tspan><tspan x="0" y="32.4" font-size="9" letter-spacing="6">		</tspan><tspan x="18" y="32.4" font-size="9" letter-spacing="-2">	</tspan><tspan x="18" y="32.4" font-size="9">TEXT</tspan><tspan x="41.001" y="32.4" font-size="9" letter-spacing="1">	</tspan><tspan x="45" y="32.4" font-size="9" letter-spacing="-2">	</tspan><tspan x="45" y="32.4" font-size="9">“Procedure Description” “Chest X-ray PA </tspan><tspan x="45.25" y="43.2" font-size="9">and Lateral”</tspan><tspan x="0" y="54" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="54" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="54" font-size="9">CONTAINER “Findings”</tspan><tspan x="0" y="64.799" font-size="9" letter-spacing="6">		</tspan><tspan x="18" y="64.799" font-size="9" letter-spacing="-2">	</tspan><tspan x="18" y="64.799" font-size="9">TEXT “Finding” “There is a mass in the left </tspan><tspan x="45.5" y="75.6" font-size="9">anterior…”</tspan><tspan x="0" y="86.4" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="86.4" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="86.4" font-size="9">CONTAINER “Conclusions”</tspan><tspan x="0" y="97.2" font-size="9" letter-spacing="6">		</tspan><tspan x="18" y="97.2" font-size="9" letter-spacing="-2">	</tspan><tspan x="18" y="97.2" font-size="9">TEXT “Conclusion” “Probable malignancy…”</tspan><tspan x="0" y="108" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="108" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="108" font-size="9">CONTAINER “Recommendations”</tspan><tspan x="0" y="118.799" font-size="9" letter-spacing="6">		</tspan><tspan x="18" y="118.799" font-size="9" letter-spacing="-2">	</tspan><tspan x="18" y="118.799" font-size="9">TEXT “Recommendation” “Refer to oncology…”</tspan></text>
+		</g>
+		<g>
+			<rect x="12.5" y="12.668" fill="none" width="216" height="22.801"/>
+			<text transform="matrix(1 0 0 1 12.4995 19.8149)"><tspan x="0" y="0" font-size="10">Basic Text SR instance –</tspan><tspan x="0" y="12" font-size="10">undifferentiated transcription text stream</tspan></text>
+		</g>
+		<g>
+			<rect x="255.502" y="12.668" fill="none" width="216" height="22.801"/>
+			<text transform="matrix(1 0 0 1 255.502 19.8149)"><tspan x="0" y="0" font-size="10">Basic Text SR instance –</tspan><tspan x="0" y="12" font-size="10">captioned transcription text stream</tspan></text>
+		</g>
+	</g>
+</g>
+</svg>

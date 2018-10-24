@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part15/figures/PS3.15_F.1-5.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.085px" height="256.871px" viewBox="0 0 495.085 256.871" enable-background="new 0 0 495.085 256.871"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure F.1-5 DHCP Interactions
+  </title>
+  <desc>
+	DICOM PS 3.15-2008 Part 15: Security and System Management Profiles
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<g>
+	
+		<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.514 247.5425 128.4351)" overflow="visible"/>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="88.365" y1="65.128" x2="262.245" y2="65.128"/>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="88.365" y1="164.652" x2="261.166" y2="164.652"/>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="270.182" y1="89.107" x2="95.981" y2="89.107"/>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="270.182" y1="211.89" x2="95.981" y2="211.89"/>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="83.88" y1="244.669" x2="83.88" y2="36.235"/>
+	
+		<path fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M61.379,12.202h45.001v27H61.379V12.202z"/>
+	<text transform="matrix(1 0 0 1 72.3809 28.7695)" font-size="9">Client</text>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="275.21" y1="244.669" x2="275.21" y2="36.235"/>
+	
+		<path fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M243.706,12.202h63v27h-63V12.202z"/>
+	<text transform="matrix(1 0 0 1 248.4575 22.1689)"><tspan x="0" y="0" font-size="9">DHCP Server</tspan><tspan x="6.746" y="10.8" font-size="9">(Selected)</tspan></text>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="402.21" y1="244.669" x2="402.21" y2="36.235"/>
+	
+		<path fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M370.706,12.202h63v27h-63V12.202z"/>
+	<text transform="matrix(1 0 0 1 375.458 22.1689)"><tspan x="0" y="0" font-size="9">DHCP Server</tspan><tspan x="-1.508" y="10.8" font-size="9">(Not Selected)</tspan></text>
+	<text transform="matrix(1 0 0 1 106.4902 61.498)"><tspan x="0" y="0" font-size="8">1. DHCP Query (broadcast)</tspan><tspan x="0" y="24.6" font-size="8">2.Responses from all DHCP Servers</tspan><tspan x="0" y="73.8" font-size="8">3. Select Server</tspan><tspan x="0" y="98.4" font-size="8">4. Request Parameters</tspan><tspan x="0" y="123" font-size="8">5. Determine Parameters, establish lease</tspan><tspan x="0" y="147.599" font-size="8">7. Parameters</tspan></text>
+	
+		<rect x="79.41" y="51.14" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="27.251"/>
+	
+		<rect x="79.41" y="115.122" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="57.769"/>
+	
+		<rect x="271.026" y="129.522" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="91.981"/>
+	
+		<rect x="79.16" y="204.222" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="33.002"/>
+	
+		<rect x="270.854" y="52.891" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="45"/>
+	
+		<rect x="397.854" y="52.891" fill="#CCDFF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="52.5"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="89.867,124.313 101.898,124.313 
+		101.898,139.451 95.981,139.451 	"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="270.305,174.89 258.273,174.89 
+		258.273,190.029 263.822,190.029 	"/>
+	
+		<line fill="#4E8ABE" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="88.411" y1="68.728" x2="391.984" y2="68.728"/>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="398.182" y1="93.787" x2="95.981" y2="93.787"/>
+</g>
+</svg>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_7.10-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:01:05 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="257px" viewBox="0 0 502 257" enable-background="new 0 0 502 257" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="255"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="197.423" y1="90.306" x2="197.377" y2="105.728"/>
+				<g>
+					<polygon fill="#005695" points="195.058,104.136 197.356,112.815 199.706,104.15 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="197.423" y1="141.512" x2="197.377" y2="157.498"/>
+				<g>
+					<polygon fill="#005695" points="195.057,155.906 197.356,164.586 199.706,155.92 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="238.068,45.871 238.068,56.656 
+					196.864,56.656 196.864,64.808 				"/>
+				<g>
+					<polygon fill="#005695" points="194.54,63.223 196.864,71.896 199.188,63.223 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="305.273" y1="90.306" x2="305.273" y2="204.041"/>
+				<g>
+					<polygon fill="#005695" points="302.949,202.456 305.273,211.129 307.598,202.456 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="263.572,45.871 263.572,56.656 
+					304.776,56.656 304.776,64.808 				"/>
+				<g>
+					<polygon fill="#005695" points="302.452,63.223 304.776,71.896 307.101,63.223 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" points="197.587,182.586 197.587,195.891 
+					290.267,195.891 290.267,204.041 				"/>
+				<g>
+					<polygon fill="#005695" points="287.942,202.456 290.267,211.129 292.591,202.456 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	
+		<rect x="147.724" y="112.815" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.695"/>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		152.423,81.168 197.356,72.306 242.423,81.295 242.423,81.316 197.356,90.306 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 184.667 83.8022)" font-size="9">issues</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 150.8701 130.4932)" font-size="12">Implant Template</text>
+	</g>
+	
+		<rect x="255.276" y="211.129" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.695"/>
+	<g>
+		<text transform="matrix(1 0 0 1 285.0977 228.8066)" font-size="12">Implant</text>
+	</g>
+	
+		<rect x="199.746" y="17.176" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.999" height="28.695"/>
+	<g>
+		<text transform="matrix(1 0 0 1 213.8896 34.853)" font-size="12">Manufacturer</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 219.2373 72.8804)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 218.5176 94.8853)" font-size="9">1-n</text>
+	</g>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		152.423,173.449 197.356,164.586 242.423,173.576 242.423,173.598 197.356,182.586 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 176.1611 176.083)" font-size="9">represents</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 219.2373 165.1611)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 218.5176 187.166)" font-size="9">1-n</text>
+	</g>
+	
+		<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		260.273,81.168 305.207,72.306 350.273,81.295 350.273,81.316 305.207,90.306 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 286.7607 83.8022)" font-size="9">produces</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 327.0879 72.8804)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 326.3682 94.8853)" font-size="9">1-n</text>
+	</g>
+</g>
+</svg>

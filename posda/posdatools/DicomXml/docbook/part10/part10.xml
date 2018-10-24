@@ -1,0 +1,1935 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part10/part10.xml,v $ -->
+<!-- $Date: 2014/05/08 19:53:43 $ -->
+<!-- $Revision: 1.1 $ -->
+<book xmlns="http://docbook.org/ns/docbook" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xl="http://www.w3.org/1999/xlink" label="PS3.10" version="5.0" xml:id="PS3.10">
+  <title>PS3.10</title>
+  <subtitle>DICOM PS3.10 2013 - Media Storage and File Format for Media Interchange</subtitle>
+  <info>
+    <author>
+      <orgname>DICOM Standards Committee</orgname>
+    </author>
+    <copyright>
+      <year>2013</year>
+      <holder>NEMA</holder>
+    </copyright>
+  </info>
+  <chapter label="" status="1" xml:id="chapter_Notice">
+    <title>Notice and Disclaimer</title>
+    <para>The information in this publication was considered technically sound by the consensus of
+      persons engaged in the development and approval of the document at the time it was developed.
+      Consensus does not necessarily mean that there is unanimous agreement among every person
+      participating in the development of this document.</para>
+    <para>NEMA standards and guideline publications, of which the document contained herein is one,
+      are developed through a voluntary consensus standards development process. This process brings
+      together volunteers and/or seeks out the views of persons who have an interest in the topic
+      covered by this publication. While NEMA administers the process and establishes rules to
+      promote fairness in the development of consensus, it does not write the document and it does
+      not independently test, evaluate, or verify the accuracy or completeness of any information or
+      the soundness of any judgments contained in its standards and guideline publications.</para>
+    <para>NEMA disclaims liability for any personal injury, property, or other damages of any nature
+      whatsoever, whether special, indirect, consequential, or compensatory, directly or indirectly
+      resulting from the publication, use of, application, or reliance on this document. NEMA
+      disclaims and makes no guaranty or warranty, expressed or implied, as to the accuracy or
+      completeness of any information published herein, and disclaims and makes no warranty that the
+      information in this document will fulfill any of your particular purposes or needs. NEMA does
+      not undertake to guarantee the performance of any individual manufacturer or seller's products
+      or services by virtue of this standard or guide.</para>
+    <para>In publishing and making this document available, NEMA is not undertaking to render
+      professional or other services for or on behalf of any person or entity, nor is NEMA
+      undertaking to perform any duty owed by any person or entity to someone else. Anyone using
+      this document should rely on his or her own independent judgment or, as appropriate, seek the
+      advice of a competent professional in determining the exercise of reasonable care in any given
+      circumstances. Information and other standards on the topic covered by this publication may be
+      available from other sources, which the user may wish to consult for additional views or
+      information not covered by this publication.</para>
+    <para>NEMA has no power, nor does it undertake to police or enforce compliance with the contents
+      of this document. NEMA does not certify, test, or inspect products, designs, or installations
+      for safety or health purposes. Any certification or other statement of compliance with any
+      health or safety-related information in this document shall not be attributable to NEMA and is
+      solely the responsibility of the certifier or maker of the statement.</para>
+  </chapter>
+  <chapter label="" status="1" xml:id="chapter_Foreword">
+    <title>Foreword</title>
+    <para>This DICOM Standard was developed according to the procedures of the DICOM Standards Committee.</para>
+    <para>The DICOM Standard is structured as a multi-part document using the guidelines established in <xref linkend="biblio_ISODirectives3"/>.</para>
+  </chapter>
+  <chapter xml:id="chapter_1" label="1" status="1">
+    <title>Scope and Field of Application</title>
+    <para>This Part of the DICOM Standard specifies a general model for the storage of Medical Imaging information on removable media. The purpose of this Part is to provide a framework allowing the interchange of various types of medical images and related information on a broad range of physical storage media.</para>
+    <para>This Part specifies:</para>
+    <orderedlist numeration="loweralpha">
+      <listitem>
+        <para>a layered model for the storage of medical images and related information on storage media. This model introduces the concept of Media Storage Application Profiles, which specify application specific subsets of the DICOM Standard to which a Media Storage implementation may claim conformance. Such a conformance applies only to the writing, reading and updating of the content of storage media. Specific Application Profiles are not included in this Part but in <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/>;</para>
+      </listitem>
+      <listitem>
+        <para>a DICOM File Format supporting the encapsulation of any Information Object Definition;</para>
+      </listitem>
+      <listitem>
+        <para>a Secure DICOM File Format supporting the encapsulation of a DICOM File Format in a cryptographic envelope;</para>
+      </listitem>
+      <listitem>
+        <para>a DICOM File Service providing independence from the underlying media format and physical media. The policies specific to the DICOMDIR file used to store the Media Storage Directory Service/Object Pair Class are also addressed.</para>
+      </listitem>
+    </orderedlist>
+    <para>This Part is related to other parts of the DICOM Standard in that:</para>
+    <itemizedlist>
+      <listitem>
+        <para><olink targetdoc="PS3.2" targetptr="PS3.2" xrefstyle="select: labelnumber"/>, Conformance, specifies the requirements that shall be met to achieve DICOM Conformance in Media Storage;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/>, Information Object Definitions, specifies a number of Information Object Definitions (e.g., various types of images) that may be used in conjunction with this part;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/>, builds upon this part to define the Media Storage Service Class;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>, Data Structure and Encoding, addresses the encoding rules necessary to construct a Data Set that is encapsulated in a file as specified in this part;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.6" targetptr="PS3.6" xrefstyle="select: labelnumber"/>, Data Dictionary, contains a registry by Tag of all Data Elements related to the Attributes of Information Objects defined in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/>. This index includes the Value Representation and Value Multiplicity for each Data Element;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/>, Media Storage Application Profiles standardizes a number of choices related to a specific clinical need (selection of a Physical Medium and Media Format as well as specific Service/Object Pair Classes). It aims at facilitating the interoperability between implementations that claim conformance to the same Application Profile. <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/> is intended to be extended as the clinical needs for Media Storage Interchange evolve;</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/>, Media Formats and Physical Media for Data Interchange, defines a number of selected Physical Medium and corresponding Media Formats. These Media Formats and Physical Medium selections are referenced by one or more of the Application Profiles of <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/>. <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> is intended to be extended as the technologies related to Physical Medium evolve.</para>
+      </listitem>
+      <listitem>
+        <para><olink targetdoc="PS3.15" targetptr="PS3.15" xrefstyle="select: labelnumber"/>, Security Profiles defines a number of profiles for use with Secure DICOM Media Storage Application Profiles. The Media Storage Security Profiles specify the cryptographic techniques to be used for each Secure DICOM File in a Secure Media Storage Application Profile.</para>
+      </listitem>
+    </itemizedlist>
+    <para>PS3.10 lays a foundation for open Media Interchange by standardizing an overall architecture and addressing some of the major barriers to interoperability: the definition of a DICOM File Format, a DICOM File Service and the policies associated with a Media Storage Directory structure.</para>
+    <note>
+      <para><olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> specifies a general medical imaging Basic Directory Information Object Definition and <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/> specifies the corresponding Media Storage Directory SOP Class that is a member of the Media Storage Service Class.</para>
+    </note>
+    <para>Adherence to the provisions of PS3.10 by implementations reading, writing or updating Storage Media represents a key foundation for open Storage Media Interchange. However, it is only with the selection of standard Physical Media and corresponding Media Formats in <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> and the use of specific Application Profiles in <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/> that effective Media Storage Interchange interoperability is achieved. Therefore, claiming conformance to PS3.10 only, is not a valid DICOM Conformance Statement. DICOM Media Storage Conformance shall be made in relation to a <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/> Application Profile according to the framework defined by <olink targetdoc="PS3.2" targetptr="PS3.2" xrefstyle="select: labelnumber"/>.</para>
+  </chapter>
+  <chapter xml:id="chapter_2" label="2" status="1">
+    <title>References</title>
+    <section xml:id="sect_2.1" label="2.1" status="2">
+      <title>Normative References</title>
+      <para>The following standards contain provisions that, through reference in this text, constitute provisions of this Standard. At the time of publication, the editions indicated were valid. All standards are subject to revision, and parties to agreements based on this Standard are encouraged to investigate the possibilities of applying the most recent editions of the standards indicated below.</para>
+      <para>ISO/IEC Directives, 1989 Part 3 - Drafting and presentation of International Standards.</para>
+      <para>ISO 7498-1, Information Processing Systems - Open Systems Interconnection - Basic Reference Model.</para>
+      <para>ISO 7498-2, Information processing systems - Open Systems Interconnection - Basic reference Model - Part 2: Security Architecture</para>
+      <para>ISO/TR 8509, Information Processing Systems - Open Systems Interconnection - Service Conventions</para>
+      <para>ISO 8822, Information Processing Systems - Open Systems Interconnection - Connection-Oriented Presentation Service Definition.</para>
+      <para>ISO 8859, Information Processing - 8-bit single-byte coded graphic character sets - Part 1: Latin Alphabet No. 1</para>
+      <para>RFC-3369, Cryptographic Message Syntax, August 2002</para>
+      <para>RFC 2557 MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)</para>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_3" label="3" status="1">
+    <title>Definitions</title>
+    <para>For the purposes of this Standard the following definitions apply.</para>
+    <section xml:id="sect_3.1" label="3.1" status="2">
+      <title>Reference Model Definitions</title>
+      <para>This Part of the Standard is based on the concepts developed in ISO 7498-1 and makes use of the following terms defined in it:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Application Entity;</para>
+        </listitem>
+        <listitem>
+          <para>Application Process;</para>
+        </listitem>
+        <listitem>
+          <para>Service or Layer Service;</para>
+        </listitem>
+        <listitem>
+          <para>Transfer Syntax.</para>
+        </listitem>
+      </orderedlist>
+      <para>This Part of the Standard makes use of the following terms defined in ISO 7498-2:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Data Confidentiality</para>
+          <note>
+            <para>The definition is "the property that information is not made available or disclosed to unauthorized individuals, entities or processes."</para>
+          </note>
+        </listitem>
+        <listitem>
+          <para>Data Origin Authentication</para>
+          <note>
+            <para>The definition is "the corroboration that the source of data received is as claimed."</para>
+          </note>
+        </listitem>
+        <listitem>
+          <para>Data Integrity</para>
+          <note>
+            <para>The definition is "the property that data has not been altered or destroyed in an unauthorized manner."</para>
+          </note>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.2" label="3.2" status="2">
+      <title>Service Conventions Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in ISO/TR 8509:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Service Provider;</para>
+        </listitem>
+        <listitem>
+          <para>Service User.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.3" label="3.3" status="2">
+      <title>Presentation Service Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in ISO 8822:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Abstract Syntax;</para>
+        </listitem>
+        <listitem>
+          <para>Abstract Syntax Name.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.4" label="3.4" status="2">
+      <title>DICOM Introduction and Overview Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in <olink targetdoc="PS3.1" targetptr="PS3.1" xrefstyle="select: labelnumber"/>:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Attribute.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.5" label="3.5" status="2">
+      <title>DICOM Information Object Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/>:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Information Object Definition.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.6" label="3.6" status="2">
+      <title>DICOM Data Structure and Encoding Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Data Element;</para>
+        </listitem>
+        <listitem>
+          <para>Data Set;</para>
+        </listitem>
+        <listitem>
+          <para>Data Element Type;</para>
+        </listitem>
+        <listitem>
+          <para>Value;</para>
+        </listitem>
+        <listitem>
+          <para>Value Multiplicity;</para>
+        </listitem>
+        <listitem>
+          <para>Value Representation;</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.7" label="3.7" status="2">
+      <title>DICOM Message Exchange Definitions</title>
+      <para>This Part of the Standard makes use of the following terms defined in <olink targetdoc="PS3.7" targetptr="PS3.7" xrefstyle="select: labelnumber"/>:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>Service Object Pair (SOP) Class;</para>
+        </listitem>
+        <listitem>
+          <para>Service Object Pair (SOP) Instance;</para>
+        </listitem>
+        <listitem>
+          <para>Implementation Class UID.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_3.8" label="3.8" status="2">
+      <title>DICOM Media Storage and File Format Definitions</title>
+      <para>The following definitions are commonly used in this Part of the Standard:</para>
+      <variablelist>
+        <varlistentry>
+          <term>Application Profile</term>
+          <listitem>
+            <para>A Media Storage Application Profile defines a selection of choices at the various layers of the DICOM Media Storage Model that are applicable to a specific need or context in which the media interchange is intended to be performed.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DICOM File Service</term>
+          <listitem>
+            <para>The DICOM File Service specifies a minimum abstract view of files to be provided by the Media Format Layer. Constraining access to the content of files by the Application Entities through such a DICOM File Service boundary ensures Media Format and Physical Media independence.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DICOM File</term>
+          <listitem>
+            <para>A DICOM File is a File with a content formatted according to the requirements of this Part of the DICOM Standard. In particular such files shall contain, the File Meta Information and a properly formatted Data Set.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DICOMDIR File</term>
+          <listitem>
+            <para>A unique and mandatory DICOM File within a File-set that contains the Media Storage Directory SOP Class. This File is given a single component File ID, DICOMDIR.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File</term>
+          <listitem>
+            <para>A File is an ordered string of zero or more bytes, where the first byte is at the beginning of the file and the last byte at the end of the File. Files are identified by a unique File ID and may by written, read and/or deleted.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File ID</term>
+          <listitem>
+            <para>Files are identified by a File ID that is unique within the context of the File-set they belong to. A set of ordered File ID Components (up to a maximum of eight) forms a File ID.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File ID Component</term>
+          <listitem>
+            <para>A string of one to eight characters of a defined character set.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File Meta Information</term>
+          <listitem>
+            <para>The File Meta Information includes identifying information on the encapsulated Data Set. It is a mandatory header at the beginning of every DICOM File.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File-set</term>
+          <listitem>
+            <para>A File-set is a collection of DICOM Files (and possibly non-DICOM Files) that share a common naming space within which File IDs are unique.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File-set Creator</term>
+          <listitem>
+            <para>An Application Entity that creates the DICOMDIR File (see <xref linkend="sect_8.6" xrefstyle="select: label"/>) and zero or more DICOM Files.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File-set Reader</term>
+          <listitem>
+            <para>An Application Entity that accesses one or more files in a File-set.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>File-set Updater</term>
+          <listitem>
+            <para>An Application Entity that accesses Files, creates additional Files, or deletes existing Files in a File-set. A File-set Updater makes the appropriate alterations to the DICOMDIR file reflecting the additions or deletions.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DICOM File Format</term>
+          <listitem>
+            <para>The DICOM File Format provides a means to encapsulate in a File the Data Set representing a SOP Instance related to a DICOM Information Object.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Media Format</term>
+          <listitem>
+            <para>Data structures and associated policies that organize the bit streams defined by the Physical Media format into data file structures and associated file directories.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Media Storage Model</term>
+          <listitem>
+            <para>The DICOM Media Storage Model pertains to the data structures used at different layers to achieve interoperability through media interchange.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Media Storage Services</term>
+          <listitem>
+            <para>DICOM Media Storage Services define a set of operations with media that facilitate storage to and retrieval from the media of DICOM SOP Instances.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Physical Media</term>
+          <listitem>
+            <para>A piece of material with recording capabilities for streams of bits. Characteristics of a Physical Media include form factor, mechanical characteristics, recording properties and rules for recording and organizing bit streams in accessible structures</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Secure DICOM File</term>
+          <listitem>
+            <para>A DICOM File that is encapsulated with the Cryptographic Message Syntax specified in RFC 2630.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Secure File-set</term>
+          <listitem>
+            <para>A File-set in which all DICOM Files are Secure DICOM Files.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Secure Media Storage Application Profile</term>
+          <listitem>
+            <para>A DICOM Media Storage Application Profile that requires a Secure File-set.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_4" label="4" status="1">
+    <title>Symbols and Abbreviations</title>
+    <para>The following symbols and abbreviations are used in this Part of the Standard.</para>
+    <variablelist>
+      <varlistentry>
+        <term>ACC</term>
+        <listitem>
+          <para>American College of Cardiology</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ACR</term>
+        <listitem>
+          <para>American College of Radiology</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ASCII</term>
+        <listitem>
+          <para>American Standard Code for Information Interchange</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>AE</term>
+        <listitem>
+          <para>Application Entity</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ANSI</term>
+        <listitem>
+          <para>American National Standards Institute</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>CEN/TC/251</term>
+        <listitem>
+          <para>Comite Europeen de Normalisation - Technical Committee 251 - Medical Informatics</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>DICOM</term>
+        <listitem>
+          <para>Digital Imaging and Communications in Medicine</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>FSC</term>
+        <listitem>
+          <para>File-set Creator</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>FSR</term>
+        <listitem>
+          <para>File-set Reader</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>FSU</term>
+        <listitem>
+          <para>File-set Updater</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>HL7</term>
+        <listitem>
+          <para>Health Level 7</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>HTML</term>
+        <listitem>
+          <para>Hypertext Transfer Markup Language</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>IEEE</term>
+        <listitem>
+          <para>Institute of Electrical and Electronics Engineers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ISO</term>
+        <listitem>
+          <para>International Standards Organization</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ID</term>
+        <listitem>
+          <para>Identifier</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>IOD</term>
+        <listitem>
+          <para>Information Object Definition</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>JIRA</term>
+        <listitem>
+          <para>Japan Medical Imaging and Radiological Systems Industries Association</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>MIME</term>
+        <listitem>
+          <para>Multipurpose Internet Mail Extensions</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>NEMA</term>
+        <listitem>
+          <para>National Electrical Manufacturers Association</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>OSI</term>
+        <listitem>
+          <para>Open Systems Interconnection</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>SOP</term>
+        <listitem>
+          <para>Service-Object Pair</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>TCP/IP</term>
+        <listitem>
+          <para>Transmission Control Protocol/Internet Protocol</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>UID</term>
+        <listitem>
+          <para>Unique Identifier</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>VR</term>
+        <listitem>
+          <para>Value Representation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>XML</term>
+        <listitem>
+          <para>Extensible Markup Language</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </chapter>
+  <chapter xml:id="chapter_5" label="5" status="1">
+    <title>Conventions</title>
+    <para>Words are capitalized in this document to help the reader understand that these words have been previously defined in Section 3 of this document and are to be interpreted with that meaning.</para>
+    <para>A Tag is represented as (gggg,eeee), where gggg equates to the Group Number and eeee equates to the Element Number within that Group. Tags are represented in hexadecimal notation as specified in <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>..</para>
+    <para>Attributes of File Meta Information are assigned a Type that indicates if a specific Attribute is required depending on the Media Storage Services. The following Type designations are derived from the <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/> designations but take into account the Media Storage environment:</para>
+    <itemizedlist>
+      <listitem>
+        <para>Type 1: Such Attributes shall be present with an explicit Value in files created by File-set Creators and File-set Updaters. They shall be supported by File-set Readers and File-set Updaters;</para>
+      </listitem>
+      <listitem>
+        <para>Type 1C: Such Attributes shall be present with an explicit Value in Files created by File-set Creators and File-set Updaters if the specified condition is met. They shall be supported by File-set Readers and File-set Updaters.</para>
+      </listitem>
+      <listitem>
+        <para>Type 2: Such Attributes shall be present with an explicit Value or with a zero-length Value if unknown, in Files created by File-set Creators and File-set Updaters. They shall be supported by File-set Readers and File-set Updaters;</para>
+      </listitem>
+      <listitem>
+        <para>Type 2C: Such Attributes shall be present with an explicit Value or with a zero-length if unknown, in Files created by File-set Creators and File-set Updaters if the specified condition is met. They shall be supported by File-set Readers and File-set Updaters;</para>
+      </listitem>
+      <listitem>
+        <para>Type 3: Such Attributes may be present with an explicit Value or a zero-length Value in Files created by File-set Creators and File-set Updaters. They may be supported or ignored by File-set Readers and File-set Updaters.</para>
+      </listitem>
+    </itemizedlist>
+  </chapter>
+  <chapter xml:id="chapter_6" label="6" status="1">
+    <title>DICOM Models for Media Storage</title>
+    <para>This section defines the DICOM Media Storage Model used by DICOM Application Entities for the purpose of communication through the interchange of removable storage media. Specifically, this Section provides a model to clarify a number of concepts for digital imaging and communications and introduces key terms used throughout the DICOM Standard. This model has been used to partition the DICOM Standard into separate parts related to storage media interchange.</para>
+    <section xml:id="sect_6.1" label="6.1" status="2">
+      <title>General DICOM Communication Model</title>
+      <para><xref linkend="figure_6.1-1" xrefstyle="select: label"/> presents the general communication model of DICOM that spans network and storage media interchange communications. The DICOM Application Entities may rely on either one of the following boundaries:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>the OSI Upper Layer Service, which provides independence from specific physical networking communication support</para>
+        </listitem>
+        <listitem>
+          <para>the DICOM File Service, which provides access to Storage Media independently from specific physical media storage formats and file structures.</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        <figure xml:id="figure_6.1-1" label="6.1-1" pgwide="1">
+          <title>General DICOM Communication Model</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/PS3.10_6.1-1.svg"/>
+              <!--<imagedata fileref="part10_fromword_files/image002.png"/>-->
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+    </section>
+    <section xml:id="sect_6.2" label="6.2" status="2">
+      <title>The DICOM Media Storage Model</title>
+      <para>The DICOM Media Storage Model is presented by <xref linkend="figure_6.2-1" xrefstyle="select: label"/> and expands on the General DICOM Communication Model introduced earlier in <xref linkend="sect_6.1" xrefstyle="select: label"/>.</para>
+      <para>The DICOM Media Storage Model focuses on the aspects directly related to data interchange through removable storage media. It pertains to the data structures and associated rules used at different layers to achieve interoperability through media interchange. The Services identified in this Model are simple boundaries between functional layers.</para>
+      <note>
+        <para>It is not within the scope of this Standard to specify Application Programming Interfaces at these boundaries.</para>
+      </note>
+      <para>
+        <figure xml:id="figure_6.2-1" label="6.2-1" pgwide="1">
+          <title>DICOM Media Storage Model</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/PS3.10_6.2-1.svg"/>
+              <!--<imagedata fileref="part10_fromword_files/image004.png"/>-->
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The DICOM Media Storage Model includes three layers, which are described in the following sections.</para>
+      <section xml:id="sect_6.2.1" label="6.2.1" status="3">
+        <title>Physical Media Layer</title>
+        <para>Physical media characteristics are defined at the Physical Media Layer. Such characteristics include the physical media form factor, dimension, mechanical characteristics and recording properties. This Layer also defines the organization and grouping of the recorded bits.</para>
+        <note>
+          <orderedlist>
+            <listitem>
+              <para>An example of a Physical Media Layer in the personal computer environment is the 3 1/2 inch floppy disk, double sided, high density.</para>
+            </listitem>
+            <listitem>
+              <para>The specification of one or more specific Physical Media for a given application is beyond the scope of this Part of the DICOM Standard. <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> and its annexes specify several Physical Media choices. <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/> defines a number of Application Profiles that select specific Physical Media depending on the requirements of specific medical imaging applications.</para>
+            </listitem>
+          </orderedlist>
+        </note>
+      </section>
+      <section xml:id="sect_6.2.2" label="6.2.2" status="3">
+        <title>Media Format Layer</title>
+        <para>At the Media Format Layer, Physical Media bit streams are organized into specific structures. Data file structures and associated directory structures are defined to allow efficient access and management of the physical media space.</para>
+        <note>
+          <para>This layer is often specific to a given operating system environment. An example of such a Media Format Layer definition associated with the 3 1/2 inch floppy disk are the data structures used by the operating systems of various personal computer file systems. <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> and its annexes specify several Media Format choices.</para>
+        </note>
+        <para>Media Formats supported by the DICOM Standard are selected to support the minimum requirements specified by the DICOM File Service as specified in Section 8 of this Part. Constraining access to the File content through such a DICOM File Service ensures that the DICOM Data Format Layer is independent from Media Format and Physical Media selection.</para>
+      </section>
+      <section xml:id="sect_6.2.3" label="6.2.3" status="3">
+        <title>DICOM Data Format Layer</title>
+        <para>The DICOM Data Format Layer includes four elements of specification:</para>
+        <orderedlist numeration="loweralpha">
+          <listitem>
+            <para>DICOM Media Storage SOP Classes and associated Information Object Definitions;</para>
+          </listitem>
+          <listitem>
+            <para>The DICOM File Format;</para>
+          </listitem>
+          <listitem>
+            <para>The Secure DICOM File Format;</para>
+          </listitem>
+          <listitem>
+            <para>The DICOM Media Storage Directory SOP Class;</para>
+          </listitem>
+          <listitem>
+            <para>DICOM Media Storage Application Profiles;</para>
+          </listitem>
+          <listitem>
+            <para>DICOM Security Profiles for Media Storage.</para>
+          </listitem>
+        </orderedlist>
+        <section xml:id="sect_6.2.3.1" label="6.2.3.1" status="4">
+          <title>DICOM SOP Classes</title>
+          <para>DICOM SOP Classes and associated Information Object Definitions (IODs) are used to convey specific medical imaging information at the Data Format Layer. SOP Classes and IODs used for Media Storage shall follow the framework established in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> and <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/>. Examples of such IODs are modality images, patient information, results, etc.</para>
+          <para>The use of DICOM IODs in conjunction with Media Storage Services forms a number of Media Storage Service Object Pair Classes or SOP Classes. Media Storage Services (e.g., read, write, delete, etc.) shall be performed through the DICOM File Service. The content of the resulting DICOM Files shall be formatted according to the DICOM File Format as specified below.</para>
+          <note>
+            <orderedlist>
+              <listitem>
+                <para>The concept of a SOP Class in the Media Storage context is equivalent to the concept of SOP Class introduced in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> and <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/> for network related operations (DIMSE Operations).</para>
+              </listitem>
+              <listitem>
+                <para>Both Composite and Normalized IODs and SOP Classes may be used in the Media Storage context.</para>
+              </listitem>
+            </orderedlist>
+          </note>
+          <para><olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/> defines a number of SOP Classes that may be used for Media Storage. These SOP Classes are based on DICOM Standard IODs that may be found in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/>.</para>
+          <para>The structure and encoding of a Data Set representing the data associated with a SOP Class shall follow <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>. The specification of Transfer Syntaxes that may be used to encode such a Data Set, is also defined in <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>.</para>
+        </section>
+        <section xml:id="sect_6.2.3.2" label="6.2.3.2" status="4">
+          <title>Concept of the DICOM File Format</title>
+          <para>The encapsulation of a DICOM Data Set in a File shall follow the specifications of Section 7 of this Part. These encapsulation rules define a DICOM File Format able to contain in a File any DICOM Data set. Files are identified by File IDs. No semantics shall be inferred from these File IDs, nor from their structure.</para>
+          <note>
+            <para>A medical imaging application acting as a creator of a DICOM File may use semantic information to generate a File ID, but readers of DICOM files should not rely on apparent semantic content of a File ID.</para>
+          </note>
+          <para>Data Set encapsulation shall be based on the DICOM File Service as specified in Section 8 of this Part.</para>
+          <note>
+            <para>It is acceptable that a specific Media Format offers more file services than those specified in the DICOM File Service. Such services may be local or internal to an implementation. Their usage is beyond the scope of the DICOM Standard. However, in cases where such services are reflected in the file structures of the Media format Layer or in the Data Set encoding of an Information Object, the extension of such services in a manner that jeopardizes interoperability should not be done (e.g., File IDs longer than those specified in the DICOM File Service).</para>
+          </note>
+          <para>The encapsulation of a DICOM File in a Secure DICOM File shall follow the specifications of <xref linkend="sect_7.4" xrefstyle="select: label"/> of this Part. These encapsulation rules define a mechanism for creating a Secure DICOM File by encapsulating an unprotected DICOM File as payload within a secure envelope.</para>
+        </section>
+        <section xml:id="sect_6.2.3.3" label="6.2.3.3" status="4">
+          <title>DICOM Medical Information Directory</title>
+          <para>In addition to the DICOM Image and Image related SOP Classes (e.g., results, patients) other SOP Classes tailored for media storage may be used to provide references (or directories) based on medical information, thus facilitating access to the clinical imaging information. Such a SOP Class is the Media Storage Directory SOP Class as defined in <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/>. Instances of this SOP Class are conveyed in the File with a File ID of DICOMDIR.</para>
+        </section>
+      </section>
+      <section xml:id="sect_6.2.4" label="6.2.4" status="3">
+        <title>DICOM Media Storage Application Profiles</title>
+        <para>A Media Storage Application Profile defines a selection of choices at the various layers of the DICOM Media Storage Model that are applicable to a specific need or context in which the media interchange is intended to be performed. Such choices are formally specified as a Media Storage Application Profile in order to ensure interoperability between implementations conforming to the same Media Storage Application Profile. It facilitates conformance statements that allow users to assess interoperability of different implementations.</para>
+        <para>Media Storage Application Profiles shall include:</para>
+        <orderedlist numeration="loweralpha">
+          <listitem>
+            <para>The description of the need addressed by the Application Profile (e.g., cardiac, echography, angiography) and its context of application;</para>
+          </listitem>
+          <listitem>
+            <para>The selection, at the Data Format Layer, of a number of specific IODs and associated SOP Classes. For standard DICOM SOP Classes, this shall be done by reference to <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/>. These SOP Classes, like any other DICOM SOP Classes are assigned a unique registered UID. For each SOP Class it shall be stated if its support is required or optional within the context of this profile;</para>
+          </listitem>
+          <listitem>
+            <para>The selection of a specific Media Format definition. This is done by reference to <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> that specify the selected Physical Medium, a specific associated Media Format and the mapping of this Media Format (or file system) services onto the DICOM File Service;</para>
+          </listitem>
+          <listitem>
+            <para>The selection of appropriate Transfer Syntaxes;</para>
+          </listitem>
+          <listitem>
+            <para>The selection of a specific Security Profile. This is done by reference to <olink targetdoc="PS3.15" targetptr="PS3.15" xrefstyle="select: labelnumber"/> that specifies the cryptographic algorithms to be used to encapsulate the DICOM Files of the DICOM File Set into Secure DICOM Files. If a Media Storage Application Profile selects no Security Profile, then the Application Profile is unsecure and the Secure DICOM File Format shall not be used with that Application Profile;</para>
+          </listitem>
+          <listitem>
+            <para>Other choices facilitating interoperability such as specific limits (e.g., maximum file sizes, if necessary, support of options, if any).</para>
+          </listitem>
+        </orderedlist>
+        <para>The complete definition and structure of a Media Storage Application Profiles is specified by <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/>. A number of Standard Application Profiles corresponding to different needs are included in <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/>.</para>
+      </section>
+      <section xml:id="sect_6.2.5" label="6.2.5" status="3">
+        <title>Media Storage and The DICOM Standard Structure</title>
+        <para><xref linkend="figure_6.2-2" xrefstyle="select: label"/> provides an overview of the relationship between the functional areas identified by the DICOM Media Storage Model introduced in <xref linkend="sect_6.2" xrefstyle="select: label"/> and the various Parts of the DICOM Standard related to Media Storage. A number of Parts of the DICOM Standard are common between Network Communication and Media Interchange.</para>
+        <para>
+          <figure xml:id="figure_6.2-2" label="6.2-2" pgwide="1">
+            <title>Media Storage and DICOM Parts</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="figures/PS3.10_6.2-2.svg"/>
+                <!--<imagedata fileref="part10_fromword_files/image006.png"/>-->
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+      </section>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_7" label="7" status="1">
+    <title>DICOM File Format</title>
+    <para>The DICOM File Format provides a means to encapsulate in a file the Data Set representing a SOP Instance related to a DICOM IOD. As shown in <xref linkend="figure_7-1" xrefstyle="select: label"/>, the byte stream of the Data Set is placed into the file after the DICOM File Meta Information. Each file contains a single SOP Instance.</para>
+    <para>
+      <figure xml:id="figure_7-1" label="7-1" pgwide="1">
+        <title>File-set and File Format</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/PS3.10_7-1.svg"/>
+            <!--<imagedata fileref="part10_fromword_files/image008.png"/>-->
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </para>
+    <section xml:id="sect_7.1" label="7.1" status="2">
+      <title>DICOM File Meta Information</title>
+      <para>The File Meta Information includes identifying information on the encapsulated Data Set. This header consists of a 128 byte File Preamble, followed by a 4 byte DICOM prefix, followed by the File Meta Elements shown in <xref linkend="table_7.1-1" xrefstyle="select: label"/>. This header shall be present in every DICOM file.</para>
+      <para>The File Preamble is available for use as defined by Application Profiles or specific implementations. This Part of the DICOM Standard does not require any structure for this fixed size Preamble. It is not required to be structured as a DICOM Data Element with a Tag and a Length. It is intended to facilitate access to the images and other data in the DICOM file by providing compatibility with a number of commonly used computer image file formats. Whether or not the File Preamble contains information, the DICOM File content shall conform to the requirements of this Part and the Data Set shall conform to the SOP Class specified in the File Meta Information.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>If the File Preamble is not used by an Application Profile or a specific implementation, all 128 bytes shall be set to 00H. This is intended to facilitate the recognition that the Preamble is used when all 128 bytes are not set as specified above.</para>
+          </listitem>
+          <listitem>
+            <para>The File Preamble may for example contain information enabling a multi-media application to randomly access images stored in a DICOM Data Set. The same file can be accessed in two ways: by a multi-media application using the preamble and by a DICOM Application that ignores the preamble.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+      <para>The four byte DICOM Prefix shall contain the character string "DICM" encoded as uppercase characters of the ISO 8859 G0 Character Repertoire. This four byte prefix is not structured as a DICOM Data Element with a Tag and a Length.</para>
+      <para>The Preamble and Prefix are followed by a set of DICOM Meta Elements with Tags and Lengths as defined in <xref linkend="table_7.1-1" xrefstyle="select: label"/>.</para>
+      <table rules="all" frame="box" xml:id="table_7.1-1" label="7.1-1">
+        <caption>DICOM File Meta Information</caption>
+        <thead>
+          <tr valign="top">
+            <th align="center" colspan="1" rowspan="1">
+              <para>Attribute Name</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>Tag</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>Type</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>Attribute Description</para>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>File Preamble</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para><emphasis role="italic">No Tag or Length Fields</emphasis></para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>A fixed 128 byte field available for Application Profile or implementation specified use. If not used by an Application Profile or a specific implementation all bytes shall be set to 00H.</para>
+              <para>File-set Readers or Updaters shall not rely on the content of this Preamble to determine that this File is or is not a DICOM File.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>DICOM Prefix</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para><emphasis role="italic">No Tag or Length Fields</emphasis></para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Four bytes containing the character string "DICM". This Prefix is intended to be used to recognize that this File is or not a DICOM File.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>File Meta Information Group Length</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0000)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Number of bytes following this File Meta Element (end of the Value field) up to and including the last File Meta Element of the Group 2 File Meta Information</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>File Meta Information Version</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0001)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>This is a two byte field where each bit identifies a version of this File Meta Information header. In version 1 the first byte value is 00H and the second value byte value is 01H.</para>
+              <para>Implementations reading Files with Meta Information where this attribute has bit 0 (lsb) of the second byte set to 1 may interpret the File Meta Information as specified in this version of PS3.10. All other bits shall not be checked.</para>
+              <note>
+                <para>A bit field where each bit identifies a version, allows explicit indication of the support of multiple previous versions. Future versions of the File Meta Information that can be read by version 1 readers will have bit 0 of the second byte set to 1</para>
+              </note>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Media Storage SOP Class UID</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0002)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Uniquely identifies the SOP Class associated with the Data Set. SOP Class UIDs allowed for media storage are specified in <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/> - Media Storage Application Profiles.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Media Storage SOP Instance UID</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0003)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Uniquely identifies the SOP Instance associated with the Data Set placed in the file and following the File Meta Information.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Transfer Syntax UID</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0010)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Uniquely identifies the Transfer Syntax used to encode the following Data Set. This Transfer Syntax does not apply to the File Meta Information.</para>
+              <note>
+                <para>It is recommended to use one of the DICOM Transfer Syntaxes supporting explicit Value Representation encoding to facilitate interpretation of File Meta Element Values. JPIP Referenced Pixel Data Transfer Syntaxes are not used (see <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>).</para>
+              </note>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Implementation Class UID</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0012)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Uniquely identifies the implementation that wrote this file and its content. It provides an unambiguous identification of the type of implementation that last wrote the file in the event of interchange problems. It follows the same policies as defined by <olink targetdoc="PS3.7" targetptr="PS3.7" xrefstyle="select: labelnumber"/> (association negotiation).</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Implementation Version Name</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0013)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>3</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Identifies a version for an Implementation Class UID (0002,0012) using up to 16 characters of the repertoire identified in <xref linkend="sect_8.5" xrefstyle="select: label"/>. It follows the same policies as defined by <olink targetdoc="PS3.7" targetptr="PS3.7" xrefstyle="select: labelnumber"/> (association negotiation).</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Source Application Entity Title</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0016)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>3</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>The DICOM Application Entity (AE) Title of the AE that wrote this file's content (or last updated it). If used, it allows the tracing of the source of errors in the event of media interchange problems. The policies associated with AE Titles are the same as those defined in <olink targetdoc="PS3.8" targetptr="PS3.8" xrefstyle="select: labelnumber"/>.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Private Information Creator UID</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0100)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>3</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>The UID of the creator of the private information (0002,0102).</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>Private Information</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>(0002,0102)</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>1C</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Contains Private Information placed in the File Meta Information. The creator shall be identified in (0002,0100). Required if Private Information Creator UID (0002,0100) is present.</para>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <para>Except for the 128 byte preamble and the 4 byte prefix, the File Meta Information shall be encoded using the Explicit VR Little Endian Transfer Syntax (UID=1.2.840.10008.1.2.1) as defined in DICOM <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>. Values of each File Meta Element shall be padded when necessary to achieve an even length, as specified in <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/> by their corresponding Value Representation. The Unknown (UN) Value Representation shall not be used in the File Meta Information. For compatibility with future versions of this Standard, any Tag (0002,xxxx) not defined in <xref linkend="table_7.1-1" xrefstyle="select: label"/> shall be ignored.</para>
+      <para>Values of all Tags (0002,xxxx) are reserved for use by this Standard and later versions of DICOM. Data Elements with a group of 0002 shall not be used in data sets other than within the File Meta Information.</para>
+      <note>
+        <para><olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/> specifies that Elements with Tags (0001,xxxx), (0003,xxxx), (0005,xxxx), and (0007,xxxx) shall not be used.</para>
+      </note>
+    </section>
+    <section xml:id="sect_7.2" label="7.2" status="2">
+      <title>Data Set Encapsulation</title>
+      <para>Each File shall contain a single Data Set representing a single SOP Instance related to a single SOP Class (and corresponding IOD).</para>
+      <note>
+        <para>A file may contain more than a single 2D image frame as specific IODs may be defined to include multiple frames.</para>
+      </note>
+      <para>The Transfer Syntax used to encode the Data Set shall be the one identified by the Transfer Syntax UID of the DICOM File Meta Information.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>The Transfer Syntax used to encode the Data Set cannot be changed within the Data Set; i.e., the Transfer Syntax UID Data Element may not occur anywhere within the Data Set, e.g., nested within a Sequence Item.</para>
+          </listitem>
+          <listitem>
+            <para>A DICOM Data Set does not include its total length. The end of the file indication provided by the DICOM File Service (see <xref linkend="sect_8.4" xrefstyle="select: label"/>) is the only indication of the end of the Data Set.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+      <para>The last Data Element of a Data Set may be Data Element (FFFC,FFFC) if padding of a Data Set is desired when a file is written. The Value of this Data Set Trailing Padding Data Element (FFFC,FFFC) has no significance and shall be ignored by all DICOM implementations reading this Data Set. File-set Readers or Updaters shall be able to process this Data Set Trailing Padding (FFFC,FFFC) either in the Data Set following the Meta Information or in Data Sets nested in a Sequence (see <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>).</para>
+    </section>
+    <section xml:id="sect_7.3" label="7.3" status="2">
+      <title>Support of File Management Information</title>
+      <para>The DICOM File Format does not include file management information in order to avoid duplication with functions related to the Media Format Layer. If necessary for a given DICOM Application Profile, the following information should be offered by the Media Format Layer:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>File content owner identification;</para>
+        </listitem>
+        <listitem>
+          <para>File access statistics (e.g., date and time of creation);</para>
+        </listitem>
+        <listitem>
+          <para>Application file access control;</para>
+        </listitem>
+        <listitem>
+          <para>Physical media access control (e.g., write protect).</para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section xml:id="sect_7.4" label="7.4" status="2">
+      <title>Secure DICOM File Format</title>
+      <para>A Secure DICOM File shall contain a single DICOM File encapsulated with the Cryptographic Message Syntax as defined in RFC 3369. Depending on the cryptographic algorithms used for encapsulation, a Secure DICOM File can provide one or more the following security properties:</para>
+      <itemizedlist>
+        <listitem>
+          <para>Data Confidentiality (by means of encryption)</para>
+        </listitem>
+        <listitem>
+          <para>Data Origin Authentication (by means of certificates and digital signatures)</para>
+        </listitem>
+        <listitem>
+          <para>Data Integrity (by means of digital signatures)</para>
+        </listitem>
+      </itemizedlist>
+      <para>In addition, a Secure DICOM File offers the possibility to communicate encryption keys and certificates to the intended recipients by means of key transport, key agreement or symmetric key-encryption key schemes.</para>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_8" label="8" status="1">
+    <title>DICOM File Service</title>
+    <para>The DICOM File Service specifies an abstract view of files from the point of view of a service user in the Data Format Layer. Constraining access to the content of files by Application Entities through such a DICOM File Service ensures independence of the Data Format Layer functions from specific Media Format and Physical Media selections.</para>
+    <note>
+      <para>This DICOM File Service definition is abstract in the sense that it is only the specification of a boundary. Its focus is limited to the aspects directly related to the access to the data structures of the Media Format Layer (not the specifications of the data structures themselves). Even though the DICOM File Service may be described by means of a number of abstract primitives such as read, write, delete, etc., it is not intended to be the definition of an Application Programming Interface (API).</para>
+    </note>
+    <para>The DICOM File Service specified for Media Storage offers a basic service, simple enough to be supported by a wide range of commonly available Media Format (or file systems), but rich enough to provide the key functions to effectively manage files and access their content. The following sections specify the minimum mandatory requirements that shall be met by any physical media and associated media format to comply with the DICOM Media Storage model.</para>
+    <note>
+      <para>It is acceptable that a specific Media Format offers more file services than those specified in the DICOM File Service. Such services may be internal to an implementation (i.e., not visible through the data structures on the Storage Media). Their usage is beyond the scope of the DICOM Standard. However, in cases where such services are reflected in the file structures of the Media format Layer or in the Data Set encoding an Information Object, the extension of such services in a manner that jeopardizes interoperability should not be done (e.g., File IDs longer than specified in the DICOM File Service).</para>
+    </note>
+    <section xml:id="sect_8.1" label="8.1" status="2">
+      <title>File-set</title>
+      <para>The DICOM File Service offers the ability to create and access one or more files in a File-set. A File-set is a collection of files that share a common naming space within which File IDs (see <xref linkend="sect_8.2" xrefstyle="select: label"/>) are unique. No semantics is attached to the order of Files within a File-set.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>The DICOM File Service does not require that Files within a File-set be simultaneously accessible (e.g., sequentially accessed media such as tapes are supported).</para>
+          </listitem>
+          <listitem>
+            <para>The DICOM File Service does not explicitly include the notion of distributing a File-set or a File across multiple "volumes/physical medium". However the transparent support by the Media Format Layer of such a feature is not precluded.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+      <para>A File ID naming space (corresponding to a File-set) shall be associated with an appropriate feature of a Media Format defined structure. This mapping shall be specified in <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> for each Media Format specification (this is integral to the specification of the relationship between any specific Media Format services and the DICOM File Services defined in this part).</para>
+      <note>
+        <para>An example of such a relationship is to map the File ID naming space to a volume in a personal computer Media Format or a partition in a workstation File System on a removable medium. Another example is to map the File ID naming space to a directory and its tree of sub-directories. In this case it could offer the possibility of supporting multiple File-sets (one per directory) on the same physical medium. Each File-set would have its own DICOMDIR File. To ensure interoperability, <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> shall specify these specific mapping rules between the directories and the File ID naming space of a File-set (including the rules to unambiguously locate the DICOMDIR File).</para>
+      </note>
+      <para>A single File with the File ID DICOMDIR shall be included in each File-set.</para>
+      <para>Each File-set shall be uniquely identified by a File-set UID that shall be registered according to the UID registration rules specified in <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>. When Files are added or removed from a File-set, the File-set UID shall not change.</para>
+      <para>A File-set may also be identified by a File-set ID, which provides a simple (but possibly not globally unique) human readable reference. A File-set ID is string of zero (0) to sixteen (16) characters from the subset of the G0 repertoire of ISO 8859 (see <xref linkend="sect_8.5" xrefstyle="select: label"/>). A File-set ID may be associated or mapped to an appropriate identifier at the Media Format Layer.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>Continuing with the personal computer Media Format example used first in the previous note, a File-set ID may be defined to be identical to a volume label.</para>
+          </listitem>
+          <listitem>
+            <para>Non-DICOM Files (Files with a content not formatted according to the requirements of this Part of the DICOM Standard) may be present in a File-set. Such files should not contain the DICOM File Meta Information specified in <xref linkend="table_7.1-1" xrefstyle="select: label"/> and may not be referenced by the DICOM Media Storage Directory (see <xref linkend="sect_8.6" xrefstyle="select: label"/>).</para>
+          </listitem>
+        </orderedlist>
+      </note>
+      <para>A File-set Descriptor File (a "readme" file) may also be attached to a File-set. See <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> for a detailed specification of the Basic Directory IOD.</para>
+    </section>
+    <section xml:id="sect_8.2" label="8.2" status="2">
+      <title>File IDs</title>
+      <para>Files are identified by a File ID that is unique within the context of a File-set. A File ID is an ordered sequence of File ID Components. A File ID may contain one to eight components. Each Component is a string of one to eight characters from a subset of the G0 repertoire of ISO 8859 (see <xref linkend="sect_8.5" xrefstyle="select: label"/>)</para>
+      <para>Such a structure for File IDs (a sequence of components) allows the DICOM File Service to organize file selection in a hierarchical mode. No conventions are defined by the DICOM Standard for the use of the structure of File IDs components and their content (except for the reserved File ID DICOMDIR, see <xref linkend="sect_8.6" xrefstyle="select: label"/>). Furthermore, no semantics shall be conveyed by the structure and content of such File IDs. This implies that when a File ID is assigned to any File in a File-set, the creating DICOM Application Entity may choose to structure the File ID as it wishes. Any other AE reading existing files or creating new files shall not be required to know any semantics the original creator may have associated with such a structure.</para>
+      <para>The File ID used to access a File through the abstract DICOM File Service is not necessarily the sole file identifier. The interchange Media Format (file system) may allow multiple file names to address the same physical file. Any use of alternate file names is beyond the scope of the DICOM Standard.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>A DICOM File ID is equivalent to the commonly used concept of "path name" concatenated with a "file name". An example of a valid DICOM File ID with four components shown separated by backslashes is:SUBDIR1\SUBDIR2\SUBDIR3\ABCDEFGH</para>
+          </listitem>
+          <listitem>
+            <para>As specified in the DICOM Storage Media Model, no semantics is attached to File ID content and structure as it relates to the DICOM Information Objects stored in these files. If used, the hierarchical structure simply provides a means to organize the Files of a File-set and facilitate their selection.</para>
+          </listitem>
+          <listitem>
+            <para>The DICOM File Service does not specify any "separator" between the Components of the File ID. This is a Value Representation issue that may be addressed in a specific manner by each Media Format Layer. In DICOM IODs, File ID Components are generally handled as multiple Values and separated by "backslashes". There is no requirement that Media Format Layers use this separator.</para>
+          </listitem>
+          <listitem>
+            <para>DICOM files stored on interchange media may have an alternate file name or link that uses less restricted file names, such as a filename extension (e.g., ".dcm" in accordance with RFC 3240).</para>
+          </listitem>
+        </orderedlist>
+      </note>
+    </section>
+    <section xml:id="sect_8.3" label="8.3" status="2">
+      <title>File Management Roles and Services</title>
+      <para>When DICOM Application Entities participate in the exchange of information by the interchange of Storage Media, they perform through the DICOM File Service a number of Media Storage Services:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>M-WRITE, to create new files in a File-set and assign them a File ID;</para>
+        </listitem>
+        <listitem>
+          <para>M-READ to read existing files based on their File ID;</para>
+        </listitem>
+        <listitem>
+          <para>M-DELETE to delete existing files based on their File ID;</para>
+        </listitem>
+        <listitem>
+          <para>M-INQUIRE FILE-SET to inquire free space available for creating new files within the File-set;</para>
+        </listitem>
+        <listitem>
+          <para>M-INQUIRE FILE to inquire date and time of file creation (or last update if applicable) for any file within the File-set.</para>
+        </listitem>
+      </orderedlist>
+      <para>A DICOM Application Entity may take one or more of the following three roles:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>File-set Creator (FSC). Such an Application Entity, exercises this role by means of M-WRITE Operations to create the DICOMDIR File (see <xref linkend="sect_8.6" xrefstyle="select: label"/>) and zero or more DICOM Files;</para>
+        </listitem>
+        <listitem>
+          <para>File-set Reader (FSR). Such an Application Entity, exercises this role by means of M-READ Operations to access one or more Files in a File-set. A File-set Reader shall not modify any of the files of the File-set (including the DICOMDIR File);</para>
+        </listitem>
+        <listitem>
+          <para>File-set Updater (FSU). Such an Application Entity, exercises this role by means of M-READ, M-WRITE, and M-DELETE Operations. It reads, but shall not modify, the content of any of the DICOM files in a File-set except for the DICOMDIR File. It may create additional Files by means of an M-WRITE or delete existing Files in a File-set by means of an M-DELETE.</para>
+        </listitem>
+      </orderedlist>
+      <note>
+        <para>Although a File-set Updater (FSU) may include the functions corresponding to a File-set Creator (FSC) and a File-set Reader (FSR), it is not required that implementations supporting an FSU role also support an FSC or an FSR role..</para>
+      </note>
+      <para>The use of the concept of roles in DICOM Conformance Statements will result in a more precise expression of the capabilities of implementations supporting DICOM Media Storage. Conforming implementations shall support one of the following choices:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>File-set Creator,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Reader,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Creator and File-set Reader,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Updater,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Updater and File-set Creator,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Updater and File-set Reader,</para>
+        </listitem>
+        <listitem>
+          <para>File-set Updater, File-set Creator and File-set Reader.</para>
+        </listitem>
+      </orderedlist>
+      <para>Based on the roles supported by a DICOM Application Entity, the DICOM File Service shall support the Media Operations defined in <xref linkend="table_8.3-1" xrefstyle="select: label"/>.</para>
+      <table rules="all" frame="box" xml:id="table_8.3-1" label="8.3-1">
+        <caption>Media Operations and Roles</caption>
+        <thead>
+          <tr valign="top">
+            <th align="center" colspan="1" rowspan="1">
+              <para>Media Operations Roles</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>M-WRITE</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>M-READ</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>M-DELETE</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>M-INQUIRE FILE-SET</para>
+            </th>
+            <th align="center" colspan="1" rowspan="1">
+              <para>M-INQUIRE FILE</para>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSC</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSR</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSC+FSR</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Not required</emphasis>
+              </para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSU</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSU+FSC</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSU+FSR</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="center" colspan="1" rowspan="1">
+              <para>FSU+FSC+FSR</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+            <td align="center" colspan="1" rowspan="1">
+              <para>Mandatory</para>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>Media Preparation is outside the scope of this Part of the DICOM Standard. However it is assumed to be performed by the FS Creator.</para>
+          </listitem>
+          <listitem>
+            <para>The DICOM File Service does not require that file update capabilities (e.g., append) be supported by every Media Format Definition selected. The non-support of such file update capabilities to the DICOMDIR File may simply result in having to delete and create a new file in order to keep the directory information consistent.</para>
+          </listitem>
+          <listitem>
+            <para>If the content of a file needs to be updated or changed by an FSU, it is considered by this Part of the DICOM Standard as an M-DELETE Operation followed by an M-WRITE Operation. The FSU is responsible for ensuring the internal consistency of the File and its conformance to PS3.10 and the specific SOP Class stored, exactly as if the FSU was creating a new File. In particular, if an FSU implementation needs to update the file content but is not able to recognize and fully process the content of the File Preamble (see <xref linkend="sect_7.1" xrefstyle="select: label"/>), it may consider setting the first four bytes of the Preamble to "DICM" followed by 124 bytes to 00H. This would avoid introducing inconsistencies between the content of the File Preamble and the remainder of the file content. An example of this situation may occur when a TIFF IFD 0 Offset in the File Preamble points at a further TIFF IFD embedded in the DICOM Data Set, and the update operation changes the location of this embedded TIFF IFD.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+    </section>
+    <section xml:id="sect_8.4" label="8.4" status="2">
+      <title>File Content Access</title>
+      <para>The DICOM File Service offers the ability to access the content of any File of a File-set. The File content is an ordered string of zero or more bytes, where the first byte is at the beginning of the file and the last byte at the end of the File.</para>
+      <note>
+        <para>This File content definition as an ordered string of bytes is related to the view provided at the DICOM File Service level. It may not correspond to the physical ordering of bytes of data on a specific medium.</para>
+      </note>
+      <para>The DICOM File Service shall manage the delimitation of the end of the File by ensuring the user of the File Service that read access beyond the last byte will be detected and reported to the DICOM File Service user. This delimitation function is performed by the Media Format Layer.</para>
+      <para>The DICOM File Service shall offer the ability:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>for an FSR or FSU to perform an M-READ to read zero or more bytes of the content of a File;</para>
+        </listitem>
+        <listitem>
+          <para>for an FSC or FSU to perform an M-WRITE to write one or more bytes making the content of a File.</para>
+        </listitem>
+      </orderedlist>
+      <note>
+        <para>The DICOM File Service does not require any specific capability for the selective read access or write access of the content of a file (e.g., seek or append). However it does not restrict specific Media Format definitions to support such features.</para>
+      </note>
+    </section>
+    <section xml:id="sect_8.5" label="8.5" status="2">
+      <title>Character Set</title>
+      <para>File IDs and File-set IDs shall be character strings made of characters from a subset of the G0 repertoire of ISO 8859. The following characters form this subset:</para>
+      <para>A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z (uppercase)</para>
+      <para>1, 2, 3, 4, 5, 6, 7, 8, 9, 0 and _ (underscore)</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>This is the character set defined for Control Strings (Value Representation CS - see <olink targetdoc="PS3.5" targetptr="PS3.5" xrefstyle="select: labelnumber"/>) except that SPACE is not included.</para>
+          </listitem>
+          <listitem>
+            <para>This character set is selected to limit characters in File IDs and File-set IDs to those that do not conflict with reserved characters and delimiters in the file systems defined in <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/>. Component delimiters or other required demarcations defined in <olink targetdoc="PS3.12" targetptr="PS3.12" xrefstyle="select: labelnumber"/> are not part of File IDs or File-set IDs</para>
+          </listitem>
+        </orderedlist>
+      </note>
+    </section>
+    <section xml:id="sect_8.6" label="8.6" status="2">
+      <title>Reserved DICOMDIR File ID</title>
+      <para>A single File with a File ID, DICOMDIR, shall exist as a member of every File-set. This File ID is made of a single Component (see <xref linkend="sect_8.2" xrefstyle="select: label"/> for the File ID structure). It contains the DICOM Media Storage Directory (see <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> for detailed specification of the Basic Directory IOD), which includes general information about the whole File-set. This general information is always present, but optionally the directory content may be left empty in environments where it would not be needed. If the DICOMDIR File does not exist in a File-set, the File-set does not conform to PS3.10. The DICOMDIR shall not reference Files outside of the File-set to which it belongs.</para>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>An example of the content of the DICOMDIR File may be found in <xref linkend="chapter_A" xrefstyle="template: Annex %n"/>.</para>
+          </listitem>
+          <listitem>
+            <para>If one chooses to map the origin of a File-set to a specific directory node in a specific Media Format, the File IDs, including the DICOMDIR File IDs, would be relative to this directory node path name.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+      <para>The DICOMDIR File shall use the Explicit VR Little Endian Transfer Syntax (UID=1.2.840.10008.1.2.1) to encode the Media Storage Directory SOP Class. The DICOMDIR File shall comply with the DICOM File Format specified in Section 7 of this Standard. In particular the:</para>
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <para>SOP Class UID in the File Meta Information (header of the DICOMDIR File) shall have the Value specified in <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/> of this Standard for the Media Storage Directory SOP Class;</para>
+        </listitem>
+        <listitem>
+          <para>SOP Instance UID in the File Meta Information (header of the DICOMDIR File) shall contain the File-set UID Value. The File-set UID is assigned by the Application Entity that created the File-set (FSC role, see <xref linkend="sect_8.3" xrefstyle="select: label"/>) with zero or more DICOM Files. This File-set UID Value shall not be changed by any other Application Entities reading or updating the content of the File-set.</para>
+        </listitem>
+      </orderedlist>
+      <note>
+        <orderedlist>
+          <listitem>
+            <para>This policy reflects that a File-set is an abstraction of a "container" within which Files may be created or read. The File-set UID is related to the "container" not its content. A File-set in the DICOM File Service is intended to be mapped to a supporting feature of a selected Media Format (e.g., volume or partition).</para>
+          </listitem>
+          <listitem>
+            <para>The Standard does not prevent the making of duplicate copies of a File-set (i.e., a File-set with the same File-set UID). However, within a managed domain of File-sets, a domain specific policy may be used to prevent the creation of such duplicate File-sets.</para>
+          </listitem>
+        </orderedlist>
+      </note>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_9" label="9" status="1">
+    <title>Conformance Requirements</title>
+    <para>An implementation of PS3.10 shall:</para>
+    <orderedlist numeration="loweralpha">
+      <listitem>
+        <para>have a Conformance Statement based on a <olink targetdoc="PS3.11" targetptr="PS3.11" xrefstyle="select: labelnumber"/> Application Profile in accordance with the framework defined in <olink targetdoc="PS3.2" targetptr="PS3.2" xrefstyle="select: labelnumber"/>;</para>
+      </listitem>
+      <listitem>
+        <para>meet the requirements of the DICOM File Format as specified in <xref linkend="chapter_7" xrefstyle="template: Section %n"/>;</para>
+      </listitem>
+      <listitem>
+        <para>support the DICOM File Service as specified in <xref linkend="chapter_8" xrefstyle="template: Section %n"/>, in one or more of the roles identified in <xref linkend="sect_8.3" xrefstyle="select: label"/>;</para>
+      </listitem>
+      <listitem>
+        <para>perform the Media Operations defined in <xref linkend="table_8.3-1" xrefstyle="select: label"/> according to the role supported;</para>
+      </listitem>
+      <listitem>
+        <para>support the DICOMDIR File with a content as specified in the Media Storage Directory SOP Class in <olink targetdoc="PS3.4" targetptr="PS3.4" xrefstyle="select: labelnumber"/>.</para>
+      </listitem>
+    </orderedlist>
+  </chapter>
+  <chapter xml:id="chapter_A" label="A" status="1">
+    <title>Example of DICOMDIR File Content (Informative)</title>
+    <para>This Annex provides an example of a File content that is based on selected aspects of the example introduced in <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/> for the Basic Directory Information Object. This is not a normative Annex. It is only an illustration, which is simply intended to help the reader better understand the organization of a DICOM Directory stored in a DICOMDIR File.</para>
+    <section xml:id="sect_A.1" label="A.1" status="2">
+      <title>Simple Directory Content Example</title>
+      <para><xref linkend="table_A.1-1" xrefstyle="select: label"/> shows in a simplified manner, the content of a simple DICOMDIR File. Values of elements are noted between square brackets (e.g., [1.2.840.10008.34.7.6]). Byte Offsets are shown by symbolic Values noted between brackets (e.g., {1493}).</para>
+      <table rules="all" frame="box" xml:id="table_A.1-1" label="A.1-1">
+        <caption>Directory Content Example</caption>
+        <tbody>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="3"/>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Meta-Info</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>128 bytes</para>
+              <para>4 bytes</para>
+              <para>0002,0000</para>
+              <para>0002,0001</para>
+              <para>0002,0002</para>
+              <para>0002,0003</para>
+              <para>0002,0010</para>
+              <para>0002,0012</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>File Preamble <emphasis role="bold">[all bytes set to 00H]</emphasis></para>
+              <para>DICOM Prefix <emphasis role="bold">[DICM]</emphasis></para>
+              <para>Group Length</para>
+              <para>File Meta-Information Version <emphasis role="bold">[0001]</emphasis></para>
+              <para>SOP Class UID <emphasis role="bold">[1.2.840.10008.1.3.10]</emphasis></para>
+              <para>SOP Instance UID <emphasis role="bold">[1.2.840.23856.36.45.3]</emphasis></para>
+              <para>Transfer Syntax UID <emphasis role="bold">[1.2.840.10008.1.1]</emphasis></para>
+              <para>Implementation Class UID <emphasis role="bold">[1.2.840.23856.34.90.3]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>File-set Identification</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1130</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>File-set ID <emphasis role="bold">[EXAMPLE]</emphasis>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>General Directory Information</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1200</para>
+              <para>0004,1202</para>
+              <para>0004,1212</para>
+              <para>...</para>
+              <para>0004,1220</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of First Record of Root Directory Entity <emphasis role="bold">{1829}</emphasis></para>
+              <para>Offset of Last Record of Root Directory Entity <emphasis role="bold">{6F18}</emphasis></para>
+              <para>File-set Consistency Flag <emphasis role="bold">[0000H]</emphasis></para>
+              <para>...</para>
+              <para>Directory Record Sequence.</para>
+              <para>This Data Element Value includes the following Sequence of Items.</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="5">
+              <para>
+                <emphasis role="bold">{1829}</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Item Tag</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E000</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Data Element (includes the following Data Elements)</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="2">
+              <para><emphasis role="bold">Study 1</emphasis></para>
+              <para>Directory Record</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1400</para>
+              <para>0004,1410</para>
+              <para>0004,1420</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of the next Dir. Record in Dir. Entity (not shown in example)</para>
+              <para>Record In-use Flag <emphasis role="bold">[FFFFH]</emphasis></para>
+              <para>Offset of Referenced Lower Level Directory Entity <emphasis role="bold">{2299}</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1430</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Directory Record Type <emphasis role="bold">[STUDY]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Selection Keys</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0020,000D</para>
+              <para>0020,0010</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Study Instance UID <emphasis role="bold">[1.2.840.4656.23.4568745]</emphasis></para>
+              <para>Study ID <emphasis role="bold">[srt78UJ]</emphasis></para>
+              <para>....</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Del. Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E00D</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Delimitation Tag is present only if Item is of undefined length</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="4">
+              <para>
+                <emphasis role="bold">{2299}</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Item Tag</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E000</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Data Element (includes the following Data Elements)</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="2">
+              <para><emphasis role="bold">Series 1</emphasis></para>
+              <para>Directory Record</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1400</para>
+              <para>0004,1410</para>
+              <para>0004,1420</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of the next Dir. Record in Dir. Entity (not shown in example)</para>
+              <para>Record In-use Flag <emphasis role="bold">[0FFFFH]</emphasis></para>
+              <para>Offset of Referenced Lower Level Directory Entity <emphasis role="bold">{2681}</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1430</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Directory Record Type <emphasis role="bold">[SERIES]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Selection Keys</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0008,0060</para>
+              <para>0020,0011</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Modality <emphasis role="bold">[NM]</emphasis></para>
+              <para>Series Number <emphasis role="bold">[2]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1"/>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Del. Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E00D</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Delimitation Tag is present only if Item is of undefined length</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="6">
+              <para>
+                <emphasis role="bold">{2681}</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Item Tag</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E000</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Data Element (includes the following Data Elements)</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="3">
+              <para><emphasis role="bold">Image 1</emphasis></para>
+              <para>Directory Record</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1400</para>
+              <para>0004,1410</para>
+              <para>0004,1420</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of the next Dir. Record in Dir. Entity <emphasis role="bold">{3419}</emphasis></para>
+              <para>Record In-use Flag <emphasis role="bold">[FFFFH]</emphasis></para>
+              <para>Offset of Referenced Lower Level Directory Entity <emphasis role="bold">[00000000H]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1430</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Directory Record Type <emphasis role="bold">[IMAGE]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1500</para>
+              <para>0004,1510</para>
+              <para>0004,1511</para>
+              <para>0004,1512</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Referenced File ID <emphasis role="bold">[DIR\TDRI\3856G3]</emphasis></para>
+              <para>Referenced SOP Class UID in File <emphasis role="bold">[1.2.840.10008.5.1.4.1.1.5]</emphasis></para>
+              <para>Referenced SOP Instance UID in File <emphasis role="bold">[1.2.840.34.56.78999654.234]</emphasis></para>
+              <para>Referenced Transfer Syntax UID in File <emphasis role="bold">[1.2.840.10008.1.2.1]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Selection Keys</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0008,0018</para>
+              <para>0020,0013</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Image SOP Instance UID <emphasis role="bold">[1.2.840.34.56.78999654.234]</emphasis></para>
+              <para>Image Number <emphasis role="bold">[1]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Del. Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E00D</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Delimitation Tag is present only if Item is of undefined length</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="6">
+              <para>
+                <emphasis role="bold">{3419}</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Item Tag</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E000</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Data Element (includes the following Data Elements)</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="3">
+              <para><emphasis role="bold">Image 2</emphasis></para>
+              <para>Directory Record</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1400</para>
+              <para>0004,1410</para>
+              <para>0004,1420</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of the next Dir. Record in Dir. Entity (not shown in example)</para>
+              <para>Record In-use Flag <emphasis role="bold">[FFFFH]</emphasis></para>
+              <para>Offset of Referenced Lower Level Directory Entity <emphasis role="bold">[00000000H]</emphasis>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1430</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Directory Record Type <emphasis role="bold">[IMAGE]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1500</para>
+              <para>0004,1510</para>
+              <para>0004,1511</para>
+              <para>0004,1512</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Referenced File ID <emphasis role="bold">[DIR\TDRI\3856G7]</emphasis></para>
+              <para>Referenced SOP Class UID in File <emphasis role="bold">[1.2.840.10008.5.1.4.1.1.5]</emphasis></para>
+              <para>Referenced SOP Instance UID in File <emphasis role="bold">[1.2.840.34.56.78999654.235]</emphasis></para>
+              <para>Referenced Transfer Syntax UID in File <emphasis role="bold">[1.2.840.10008.1.2.2]</emphasis></para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Selection Keys</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0008,0018</para>
+              <para>0020,0013</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Image SOP Instance UID <emphasis role="bold">[1.2.840.34.56.78999654.235]</emphasis></para>
+              <para>Image Number <emphasis role="bold">[2]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Del. Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E00D</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Delimitation Tag is present only if Item is of undefined length</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="4">
+              <para>
+                <emphasis role="bold">{6F18}</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="bold">Item Tag</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E000</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Data Element (includes the following Data Elements)</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para><emphasis role="bold">Patient C</emphasis></para>
+              <para>Directory Record</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0004,1400</para>
+              <para>0004,1410</para>
+              <para>0004,1430</para>
+              <para>...</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Offset of the next Dir. Record in Dir. Entity <emphasis role="bold">{00000000H}</emphasis></para>
+              <para>Record In-use Flag <emphasis role="bold">[FFFFH]</emphasis></para>
+              <para>Directory Record Type <emphasis role="bold">[PATIENT]</emphasis></para>
+              <para>...</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>
+                <emphasis role="italic">Selection Keys</emphasis>
+              </para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>0010,0010</para>
+              <para>0010,0020</para>
+              <para>....</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Patient Name <emphasis role="bold">[Patient C]</emphasis></para>
+              <para>Patient ID <emphasis role="bold">[523-61-8765]</emphasis></para>
+              <para>....</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Del. Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E00D</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Item Delimitation Tag is present only if Item is of undefined length</para>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td align="left" colspan="1" rowspan="1"/>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Sequence Delimitation Tag</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>FFFE,E0DD</para>
+            </td>
+            <td align="left" colspan="1" rowspan="1">
+              <para>Used only if the Directory Record Sequence (0004,1220) is of undefined length to delimit the end of the Value of the Directory Record Sequence Data Element.</para>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section xml:id="sect_A.2" label="A.2" status="2">
+      <title>Example of DICOMDIR File Content With Multiple Referenced Files</title>
+      <para>This section was previously defined in DICOM. It is now retired. See PS3.3-1998.</para>
+    </section>
+  </chapter>
+  <chapter xml:id="chapter_B" label="B" status="1">
+    <title>HL7 Structured Document Files</title>
+    <para>Structured Documents as defined by an HL7 standard may be stored on DICOM Interchange Media, and may be referenced from within DICOM SOP Instances (including the DICOMDIR Media Storage Directory). There are two alternatives for storage of such documents - they may be encapsulated in DICOM SOP Instances, or they may be stored as native HL7 objects (unencapsulated),</para>
+    <para>An Encapsulated CDA is referenced from the Media Storage Directory like any other DICOM SOP Instance.</para>
+    <para>References to a native (unencapsulated) Structured Document use a SOP Class UID, identifying the document class, and a SOP Instance UID. The SOP Instance UID is arbitrary, and the native document instance identifier is encoded in the HL7 Instance Identifier (0040,E001) attribute (see <olink targetdoc="PS3.3" targetptr="PS3.3" xrefstyle="select: labelnumber"/>, "HL7 Structured Document Directory Record Definition" and "HL7 Structured Document Reference Sequence" for further information).</para>
+    <note>
+      <orderedlist>
+        <listitem>
+          <para>The HL7 standards that define such documents include the Clinical Document Architecture (CDA), Structured Product Labeling (SPL), and Structured Clinical Trial Protocol (SCTP) standards.</para>
+        </listitem>
+        <listitem>
+          <para>The SOP Instance UID used to reference a particular HL7 Structured Document is not necessarily the same in all DICOM Instances. E.g., an SR Document and a DICOMDIR, both stored on the same media, may
+            <emphasis role="italic">internally</emphasis> use different SOP Instance UIDs to reference the same HL7 Structured Document, but they will each provide a mapping to the same HL7 Instance Identifier as the
+            <emphasis role="italic">external</emphasis> identifier.</para>
+        </listitem>
+        <listitem>
+          <para>It is recommended that an HL7 Structured Document that can be associated with a patient and study be encapsulated in a DICOM SOP Instance, and that the SOP Instance UID of that encapsulation be used consistently for all references.</para>
+        </listitem>
+      </orderedlist>
+    </note>
+    <para>An HL7 Structured Document is an aggregate multimedia object, consisting of a base XML-encoded document, plus zero or more multimedia components (e.g., graphics) that are considered an integral part of the object. The multimedia components may be encoded in-line in the XML document, or they may be referenced external objects.</para>
+    <para>Such a document stored on DICOM Interchange Media shall be encoded as either:</para>
+    <itemizedlist>
+      <listitem>
+        <para>an XML document with any multimedia components encoded in-line, and stored in a single file. The file shall be stored on the media with a File ID as defined for DICOM files. There shall be no preamble or header in the file prior to the XML content. For the purpose of identifying the Transfer Syntax of such a stored file from the DICOMDIR, the Transfer Syntax UID "1.2.840.10008.1.2.6.2" is specified for an XML encoded document.</para>
+      </listitem>
+      <listitem>
+        <para>a Multipart MIME package, as described in RFC 2557 "MIME Encapsulation of Aggregate Documents, such as HTML (MHTML) " (http://www.ietf.org/rfc/rfc2557.txt). A single package shall be stored in a single file, and shall encapsulate a single HL7 Structured Document and its referenced multimedia. The file shall be stored on the media with a File ID as defined for DICOM files. There shall be no preamble or header in the file prior to the MIME headers. For the purpose of identifying the Transfer Syntax of such a stored file from the DICOMDIR, the Transfer Syntax UID "1.2.840.10008.1.2.6.1" is specified for RFC 2557 MIME Encapsulation.</para>
+      </listitem>
+    </itemizedlist>
+    <note>
+      <para>The File ID, consistent with DICOM file naming rules, is limited to eight characters with no extension, in a directory structure where each directory is limited to an eight character name. There may also be alternate file identifiers (e.g., links) to those files that use less restricted file names (see <xref linkend="sect_8.2" xrefstyle="select: label"/>).</para>
+    </note>
+    <para>Any multimedia component that is included by reference in multiple HL7 Structured Documents stored on the same media shall be replicated into each referencing document MIME package.</para>
+  </chapter>
+</book>

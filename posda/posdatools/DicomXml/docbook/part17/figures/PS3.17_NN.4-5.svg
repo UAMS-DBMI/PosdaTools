@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_NN.4-5.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="332px" viewBox="0 0 502 332" enable-background="new 0 0 502 332" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="330"/>
+	<g>
+		<g>
+			<rect x="145.357" y="221.205" fill="#E7E7E7" stroke="#010101" width="198" height="72.001"/>
+			<rect x="151.357" y="225.705" fill="#FFFFFF" stroke="#010101" width="31.5" height="63.001"/>
+			<text transform="matrix(0 -0.963 1 0 170.2788 274.4707)" fill="#010101" font-size="10.2494">Slide ID</text>
+		</g>
+		<circle fill="#F89A1C" cx="194.233" cy="236.876" r="3.5"/>
+		<circle fill="#64C9D9" cx="209.359" cy="236.876" r="3.5"/>
+		<circle fill="#6ABD45" cx="224.484" cy="236.876" r="3.5"/>
+		<circle fill="#F78D1E" cx="278.024" cy="236.876" r="3.5"/>
+		<circle fill="#8B278A" cx="293.15" cy="236.876" r="3.5"/>
+		<circle fill="#969696" cx="308.275" cy="236.876" r="3.5"/>
+		<g>
+			<text transform="matrix(0.963 0 0 1 173.8203 314.1094)" font-size="7">Tissue Section Item IDs</text>
+		</g>
+		<g>
+			<text transform="matrix(0.963 0 0 1 257.7803 314.1094)" font-size="7">Tissue Section Item IDs</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="194.232" y1="304.75" x2="194.232" y2="249.18"/>
+				<g>
+					<polygon points="195.685,250.17 194.232,244.75 192.779,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="209.358" y1="304.75" x2="209.358" y2="249.18"/>
+				<g>
+					<polygon points="210.811,250.17 209.358,244.75 207.906,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="224.484" y1="304.75" x2="224.484" y2="249.18"/>
+				<g>
+					<polygon points="225.937,250.17 224.484,244.75 223.031,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="278.021" y1="304.75" x2="278.021" y2="249.18"/>
+				<g>
+					<polygon points="279.475,250.17 278.021,244.75 276.568,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="293.147" y1="304.75" x2="293.147" y2="249.18"/>
+				<g>
+					<polygon points="294.6,250.17 293.147,244.75 291.695,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="1" x1="308.272" y1="304.75" x2="308.272" y2="249.18"/>
+				<g>
+					<polygon points="309.725,250.17 308.272,244.75 306.82,250.17 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<rect x="63.5" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="110.092,50.524 110.092,15.581 118.478,25.645 
+				118.478,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="118.478,58.911 73.145,58.911 63.5,50.524 
+				110.092,50.524 			"/>
+			<text transform="matrix(1 0 0 1 74.958 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<g>
+			<rect x="124.942" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="171.534,50.524 171.534,15.581 179.92,25.645 
+				179.92,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="179.92,58.911 134.586,58.911 124.942,50.524 
+				171.534,50.524 			"/>
+			<text transform="matrix(1 0 0 1 136.4004 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<g>
+			<rect x="186.384" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="232.976,50.524 232.976,15.581 241.362,25.645 
+				241.362,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="241.362,58.911 196.028,58.911 186.384,50.524 
+				232.976,50.524 			"/>
+			<text transform="matrix(1 0 0 1 197.8423 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<g>
+			<rect x="260.64" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="307.23,50.524 307.23,15.581 315.616,25.645 
+				315.616,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="315.616,58.911 270.283,58.911 260.64,50.524 
+				307.23,50.524 			"/>
+			<text transform="matrix(1 0 0 1 272.0967 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<g>
+			<rect x="322.081" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.592" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="368.673,50.524 368.673,15.581 377.058,25.645 
+				377.058,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="377.058,58.911 331.725,58.911 322.081,50.524 
+				368.673,50.524 			"/>
+			<text transform="matrix(1 0 0 1 333.5381 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<rect x="124.942" y="137.883" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.942"/>
+		<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="171.534,172.825 171.534,137.883 179.92,147.945 
+			179.92,181.212 		"/>
+		<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="179.92,181.212 134.586,181.212 124.942,172.825 
+			171.534,172.825 		"/>
+		<text transform="matrix(1 0 0 1 136.4004 143.1357)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan><tspan x="-3.833" y="28.8" font-size="6">Cassette ID</tspan></text>
+		<rect x="322.081" y="137.883" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.592" height="34.942"/>
+		<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="368.673,172.825 368.673,137.883 377.058,147.945 
+			377.058,181.212 		"/>
+		<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="377.058,181.212 331.725,181.212 322.081,172.825 
+			368.673,172.825 		"/>
+		<g>
+			<rect x="383.523" y="15.581" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="46.591" height="34.943"/>
+			<polygon fill="#86B2D8" stroke="#000000" stroke-miterlimit="1" points="430.114,50.524 430.114,15.581 438.5,25.645 
+				438.5,58.911 			"/>
+			<polygon fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" points="438.5,58.911 393.167,58.911 383.523,50.524 
+				430.114,50.524 			"/>
+			<text transform="matrix(1 0 0 1 394.9805 24.189)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan></text>
+		</g>
+		<text transform="matrix(1 0 0 1 333.5371 143.1357)"><tspan x="0" y="0" font-size="6">Cassette</tspan><tspan x="-4.333" y="7.2" font-size="6">(Tissue dice</tspan><tspan x="-8.01" y="14.4" font-size="6">embedded in a</tspan><tspan x="3.504" y="21.6" font-size="6">Block)</tspan><tspan x="-3.834" y="28.8" font-size="6">Cassette ID</tspan></text>
+		<circle fill="#64C9D9" cx="148.238" cy="93.692" r="10.483"/>
+		<circle fill="#F89A1C" cx="86.796" cy="93.692" r="10.483"/>
+		<circle fill="#F89A1C" cx="192.062" cy="155.354" r="4.077"/>
+		<circle fill="#64C9D9" cx="209.68" cy="155.354" r="4.077"/>
+		<circle fill="#6ABD45" cx="227.298" cy="155.354" r="4.077"/>
+		<circle fill="#F78D1E" cx="390.802" cy="155.354" r="4.077"/>
+		<circle fill="#8B278A" cx="408.42" cy="155.354" r="4.077"/>
+		<circle fill="#969696" cx="426.038" cy="155.354" r="4.077"/>
+		<circle fill="#6ABD45" cx="209.68" cy="93.692" r="10.483"/>
+		<circle fill="#8B278A" cx="345.377" cy="93.692" r="10.483"/>
+		<circle fill="#F78D1E" cx="283.935" cy="93.692" r="10.483"/>
+		<circle fill="#969696" cx="406.819" cy="93.692" r="10.483"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="86.796" y1="79.665" x2="86.796" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="87.958,78.873 86.796,83.209 85.634,78.873 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="148.238,133.919 148.238,114.58 86.796,114.58 
+					86.796,104.062 				"/>
+				<g>
+					<polygon fill="#005695" points="149.4,133.126 148.238,137.463 147.076,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="148.436,133.919 148.436,114.58 209.66,114.58 
+					209.66,104.062 				"/>
+				<g>
+					<polygon fill="#005695" points="149.598,133.126 148.436,137.463 147.274,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="148.238" y1="79.665" x2="148.238" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="149.4,78.873 148.238,83.209 147.076,78.873 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="148.238" y1="133.919" x2="148.238" y2="104.062"/>
+				<g>
+					<polygon fill="#005695" points="149.4,133.126 148.238,137.463 147.076,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="345.386,133.919 345.386,114.58 283.944,114.58 
+					283.944,104.062 				"/>
+				<g>
+					<polygon fill="#005695" points="346.548,133.126 345.386,137.463 344.224,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="345.584,133.919 345.584,114.58 406.809,114.58 
+					406.809,104.062 				"/>
+				<g>
+					<polygon fill="#005695" points="346.746,133.126 345.584,137.463 344.422,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="345.386" y1="133.919" x2="345.386" y2="104.062"/>
+				<g>
+					<polygon fill="#005695" points="346.548,133.126 345.386,137.463 344.224,133.126 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="245.959,217.811 245.959,198.471 148.38,198.471 
+					148.38,181.396 				"/>
+				<g>
+					<polygon fill="#005695" points="247.121,217.019 245.959,221.354 244.797,217.019 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="246.157,217.811 246.157,198.471 345.315,198.471 
+					345.315,181.396 				"/>
+				<g>
+					<polygon fill="#005695" points="247.319,217.019 246.157,221.354 244.995,217.019 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="209.68" y1="79.665" x2="209.68" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="210.842,78.873 209.68,83.209 208.518,78.873 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="283.935" y1="79.665" x2="283.935" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="285.097,78.873 283.935,83.209 282.772,78.873 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="345.377" y1="79.665" x2="345.377" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="346.539,78.873 345.377,83.209 344.215,78.873 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="406.819" y1="79.665" x2="406.819" y2="58.911"/>
+				<g>
+					<polygon fill="#005695" points="407.981,78.873 406.819,83.209 405.657,78.873 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

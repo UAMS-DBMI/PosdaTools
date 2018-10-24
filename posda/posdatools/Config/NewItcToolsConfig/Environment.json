@@ -1,0 +1,32 @@
+// 
+{
+  "ApplicationInitClass" : "NewItcTools::NewStart",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "RrtProtocolDefs" : 
+    "POSDA_ROOT/NewItcTools/config/rrt_protocol_defs",
+  "StdTissueNames" : 
+    "POSDA_ROOT/NewItcTools/config/std_tissue_names",
+  "SubmissionDir" : 
+    "POSDA_CACHE_ROOT/NewItcToolsData/submission",
+  "ArchiveDir" :
+    "POSDA_CACHE_ROOT/NewItcToolsData/archive",
+  "CompletedArchiveDir" :
+    "POSDA_CACHE_ROOT/NewItcToolsData/finalize",
+  "CacheDir" : "POSDA_CACHE_ROOT",
+  "PersistentDir" :
+    "POSDA_CACHE_ROOT/NewItcToolsData/persistent",
+  "GlobalPersistentDir" :
+    "POSDA_CACHE_ROOT/NewItcToolsData/global_persistent",
+  "WorkingDir" : 
+    "POSDA_CACHE_ROOT/NewItcToolsData/working",
+  "TempDir" : 
+    "POSDA_CACHE_ROOT/NewItcToolsData/temp",
+  "tools_db_defs_dir" :
+    "POSDA_CACHE_ROOT/NewItcToolsData/db_defs",
+}

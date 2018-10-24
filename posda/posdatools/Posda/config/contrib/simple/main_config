@@ -1,0 +1,134 @@
+#########################################################################
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+base_for|base
+named_obj|patient|cylinder|base|(0,0,200)|(0,0,-200)|150
+named_obj|arrow1_c|cylinder|base|(50,0,0)|(100,0,0)|4
+named_obj|arrow1_n|cone|base|(110,0,0)|(100,0,0)|1
+named_obj|arrow1|union|base|arrow1_c|arrow1_n
+named_obj|arrow2_c|cylinder|base|(0,50,0)|(0,100,0)|8
+named_obj|arrow2_n|cone|base|(0,120,0)|(0,100,0)|1
+named_obj|arrow2|union|base|arrow2_c|arrow2_n
+named_obj|arrow3_c|cylinder|base|(0,0,50)|(0,0,100)|12
+named_obj|arrow3_n|cone|base|(0,0,130)|(0,0,100)|1
+named_obj|arrow3|union|base|arrow3_c|arrow3_n
+named_obj|beam1|cylinder|base|(45,0,0)|(115,0,0)|8
+named_obj|beam2|cylinder|base|(0,45,0)|(0,125,0)|16
+named_obj|beam3|cylinder|base|(0,0,45)|(0,0,135)|24
+#
+named_obj|beam_1|static_beam|base|HFS|(0,0,0)|(-10,10)|(-30,30)|0|10|0|0|1000
+#
+#ct rendering object lists
+obj_list|water|patient
+obj_list|tumor|arrow1|arrow2|arrow3
+obj_list|full_list|arrow1|arrow2|arrow3|patient
+#
+#contouring object lists
+obj_list|patient|patient
+obj_list|arrow1|arrow1
+obj_list|arrow2|arrow2
+obj_list|arrow3|arrow3
+#
+set_obj_prop|base|ct_density|0|water
+set_obj_prop|base|ct_density|500|tumor
+roi|base|external|1|0|AUTOMATIC|patient
+roi|base|ptv1|2|0.9|AUTOMATIC|arrow1
+roi|base|ptv2|3|0.9|AUTOMATIC|arrow2
+roi|base|ptv3|4|0.9|AUTOMATIC|arrow3
+#
+roi_color|base|1|0\128\128
+roi_color|base|2|0\128\255
+roi_color|base|3|128\128\0
+#
+roi_obs|base|1|1|interpreted_type|EXTERNAL
+roi_obs|base|1|1|observation_label|Patient
+roi_obs|base|1|1|interpreter|
+#
+roi_obs|base|2|2|interpreted_type|PTV1
+roi_obs|base|2|2|observation_label|ptv1
+roi_obs|base|2|2|interpreter|
+roi_obs|base|3|3|interpreted_type|PTV2
+roi_obs|base|3|3|observation_label|ptv2
+roi_obs|base|3|3|interpreter|
+roi_obs|base|4|4|interpreted_type|PTV3
+roi_obs|base|4|4|observation_label|ptv3
+roi_obs|base|4|4|interpreter|
+
+beam_dose|bd_1|base|beam1|arrow1|1000|100
+beam_dose|bd_2|base|beam2|arrow2|1000|100
+beam_dose|bd_3|base|beam3|arrow3|1000|100
+plan_dose|pd|base|bd_1|bd_2|bd_3
+
+#transformed_for|trans1|base|shift=(0,0,175)|rz=5|shift=(0,0,-175)
+#transformed_for|trans2|base|shift=(0,0,175)|ry=5|shift=(0,0,-175)
+#transformed_for|trans3|base|shift=(0,0,175)|rx=5|shift=(0,0,-175)
+#xform_obj_list|base=>trans1|full_list
+#xform_obj_list|base=>trans2|full_list
+#xform_obj_list|base=>trans3|full_list
+#xform_roi_list|base=>trans1|1=>1|2=>2|3=>3|4=>4|5=>5
+#xform_roi_list|base=>trans2|1=>1|2=>2|3=>3|4=>4|5=>5
+#xform_roi_list|base=>trans3|1=>1|2=>2|3=>3|4=>4|5=>5
+#
+#########################################################################
+#
+# study defines a base study
+#
+#  study_id           study directory
+#    \ /for |config_file\       / study description
+study|1|base|Study_config|Study1|Original - HFS
+study|2|base|Study_config|Study2|HFP (CT conventions)
+study|3|base|Study_config|Study3|HFP (RTP conventions)
+study|4|base|Study_config|Study4|FFS (CT conventions)
+study|5|base|Study_config|Study5|FFS (RTP conventions)
+study|6|base|Study_config|Study6|FFP 
+#########################################################################
+#
+# series defines a series to be generated
+#
+# study id
+#  \    /
+#   \   |series_num
+#    \  |  /                    series directory
+#     \ | /for |config_file_path  \       /type(parms)[|obj_list]
+series|1|1|base|CT_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|1|2|base|CT_small_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|1|3|base|RTS_config|Series3|RTS(1,2,1,2,3,4)|none
+series|1|4|base|RTP_config|Series4|RTP(1,3,pd,bd_1=1,bd_2=2,bd_3=3)|none
+series|1|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none
+#series|1|6|base|REG_config|Series6|REG(trans1=>base,base=>trans1)|none
+#
+series|2|1|base|CT_HFP1_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|2|2|base|CT_small_HFP1_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|2|3|base|RTS_config|Series3|RTS(2,2,1,2,3,4)|none
+series|2|4|base|RTP_config|Series4|RTP(2,3,pd,bd1=1,bd2=2,bd3=3)|none
+series|2|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none
+#
+series|3|1|base|CT_HFP2_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|3|2|base|CT_small_HFP2_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|3|3|base|RTS_config|Series3|RTS(3,2,1,2,3,4)|none
+series|3|4|base|RTP_config|Series4|RTP(3,3,pd,bd1=1,bd2=2,bd3=3)|none
+series|3|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none
+#
+series|4|1|base|CT_FFS1_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|4|2|base|CT_small_FFS2_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|4|3|base|RTS_config|Series3|RTS(4,2,1,2,3,4)|none
+series|4|4|base|RTP_config|Series4|RTP(4,3,pd,bd1=1,bd2=2,bd3=3)|none
+series|4|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none
+#
+series|5|1|base|CT_FFS2_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|5|2|base|CT_small_FFS2_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|5|3|base|RTS_config|Series3|RTS(5,2,1,2,3,4)|none
+series|5|4|base|RTP_config|Series4|RTP(5,3,pd,bd1=1,bd2=2,bd3=3)|none
+series|5|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none
+#
+series|6|1|base|CT_FFP_config|Series1|CT(1.0,400,[0,0,0])|full_list
+series|6|2|base|CT_small_FFP_config|Series2|CT(4.0,100,[0,0,0])|full_list
+series|6|3|base|RTS_config|Series3|RTS(6,2,1,2,3,4)|none
+series|6|4|base|RTP_config|Series4|RTP(6,3,pd,bd1=1,bd2=2,bd3=3)|none
+series|6|5|base|RTD_config|Series5|RTD(4.0,100,[0,0,0],plan=pd)|none

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.10.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="542px" viewBox="0 0 502 542" enable-background="new 0 0 502 542" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="540"/>
+	<g>
+		<g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 151.1035 25.519)" font-size="12">a. No spatial transformation</text>
+			</g>
+			<g>
+				<rect x="151.104" y="32.5" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="188.997" height="141.75"/>
+				<rect x="151.104" y="32.5" fill="#003468" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<text transform="matrix(1 0 0 1 159.7026 50.5996)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">TLHC</tspan><tspan x="0" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (1,1)</tspan></text>
+				<text transform="matrix(1 0 0 1 278.2227 50.5996)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (640,1)</tspan></text>
+				<text transform="matrix(1 0 0 1 159.6929 163.5884)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (1,480)</tspan></text>
+				<text transform="matrix(1 0 0 1 306.9609 152.0991)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">BRHC</tspan><tspan x="-36.879" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="-31.719" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="-29.379" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="-24.898" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (640,480)</tspan></text>
+				<rect x="331.101" y="32.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<rect x="151.104" y="165.25" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<rect x="331.101" y="165.25" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 53.1318 317.6035)" font-size="12">b. 90º clockwise rotation</text>
+			</g>
+			<g>
+				<rect x="53.131" y="322.289" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="141.75" height="188.99"/>
+				<rect x="185.881" y="322.289" fill="#003468" stroke="#000000" stroke-miterlimit="1" width="9" height="8.998"/>
+				<text transform="matrix(1 0 0 1 62.0562 339.4336)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">TLHC</tspan><tspan x="0" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (1,480)</tspan></text>
+				<text transform="matrix(1 0 0 1 143.876 339.4336)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (1,1)</tspan></text>
+				<text transform="matrix(1 0 0 1 63.0562 499.1738)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (640,480)</tspan></text>
+				<text transform="matrix(1 0 0 1 162.356 487.1738)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">BRHC</tspan><tspan x="-26.619" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="-21.459" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="-19.119" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="-14.639" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (640,1)</tspan></text>
+				<rect x="185.881" y="502.279" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<rect x="53.131" y="322.289" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="8.998"/>
+				<rect x="53.131" y="502.279" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<text transform="matrix(0.8815 0 0 1 307.125 317.6035)"><tspan x="0" y="0" font-size="12">c. 90º clockwise rotation</tspan><tspan x="0" y="14.4" font-size="12">and horizontal flip</tspan></text>
+			</g>
+			<g>
+				<rect x="307.119" y="338.125" fill="#B2CEE7" stroke="#000000" stroke-miterlimit="1" width="141.75" height="188.994"/>
+				<rect x="307.119" y="338.125" fill="#003468" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<text transform="matrix(1 0 0 1 316.0488 356.7129)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">TLHC</tspan><tspan x="0" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (1,1)</tspan></text>
+				<text transform="matrix(1 0 0 1 386.71 358.5137)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (1,480)</tspan></text>
+				<text transform="matrix(1 0 0 1 317.0488 515.0137)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="5.16" y="0" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="7.5" y="0" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="11.98" y="0" font-family="'MyriadPro-Regular'" font-size="10">el (640,1)</tspan></text>
+				<text transform="matrix(1 0 0 1 415.4492 503.0137)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="10">BRHC</tspan><tspan x="-36.879" y="12" font-family="'MyriadPro-Regular'" font-size="10">P</tspan><tspan x="-31.719" y="12" font-family="'MyriadPro-Regular'" font-size="10">i</tspan><tspan x="-29.379" y="12" font-family="'MyriadPro-Regular'" font-size="10">x</tspan><tspan x="-24.899" y="12" font-family="'MyriadPro-Regular'" font-size="10">el (640,480)</tspan></text>
+				<rect x="307.119" y="518.119" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<rect x="439.869" y="338.125" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+				<rect x="439.869" y="518.119" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="9" height="9"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="248.78" y1="176.143" x2="370.347" y2="293.533"/>
+				<g>
+					<polygon fill="#005695" points="366.214,294.39 377.994,300.918 371.058,289.373 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="131.523" y1="293.4" x2="248.78" y2="176.143"/>
+				<g>
+					<polygon fill="#005695" points="135.67,294.185 124.006,300.918 130.739,289.254 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="159.467" y="219.96" fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-miterlimit="1" width="45" height="45"/>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="165.091" y1="225.585" x2="198.842" y2="225.585"/>
+			
+				<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,2" x1="165.091" y1="225.585" x2="165.091" y2="259.335"/>
+			<g>
+				<g>
+					<path fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" d="M192.805,225.585
+						c0,12.247-7.944,22.639-18.96,26.303"/>
+					<g>
+						<polygon fill="#005695" points="175.238,248.503 165.091,253.299 176.277,254.22 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="253.78" y="219.96" fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-miterlimit="1" width="107.74" height="45"/>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6" x1="337.623" y1="225.584" x2="337.623" y2="253.299"/>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="329.788" y1="259.337" x2="352.505" y2="259.337"/>
+					<g>
+						<polygon fill="#005695" points="331.77,262.242 320.929,259.337 331.77,256.432 						"/>
+					</g>
+				</g>
+			</g>
+			<polygon fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="341.796,228.245 348.057,239.091 
+				354.317,249.935 341.796,249.935 			"/>
+			<polygon fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,2" points="
+				333.45,228.245 327.189,239.091 320.929,249.935 333.45,249.935 			"/>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 300.2373 250.4678)" fill="#005695" font-size="28.8">+</text>
+		</g>
+		<g>
+			
+				<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="259.425" y1="225.586" x2="293.175" y2="225.586"/>
+			
+				<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,2" x1="259.425" y1="225.586" x2="259.425" y2="259.336"/>
+			<g>
+				<g>
+					<path fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" d="M287.139,225.585
+						c0,12.247-7.943,22.639-18.961,26.303"/>
+					<g>
+						<polygon fill="#005695" points="269.572,248.503 259.425,253.299 270.61,254.22 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,13 @@
+/bin/
+tags
+*.log
+test.pl
+nohup.out
+__pycache__
+*.swp
+posda.env
+foo
+foo.*
+Posda/bin/extract
+Posda/bin/sproject
+*.viminfo

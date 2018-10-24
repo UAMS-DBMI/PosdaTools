@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_I.4.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:58:37 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="217px" viewBox="0 0 502 217" enable-background="new 0 0 502 217" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="215"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="153.545" y1="120.262" x2="103.435" y2="70.153"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="153.051" y1="120.079" x2="102.941" y2="170.188"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M35.431,165.32c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C51.549,201.346,35.431,185.203,35.431,165.32z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M35.431,75.407c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.028-36.023,36.028
+			C51.549,111.436,35.431,95.29,35.431,75.407z"/>
+		<text transform="matrix(1 0 0 1 54.7661 56.1636)"><tspan x="0" y="0"  font-size="10">Internal</tspan><tspan x="0.835" y="12"  font-size="10">Search</tspan><tspan x="0.005" y="24"  font-size="10">Service</tspan><tspan x="-9.17" y="36"  font-size="10">Capabilities</tspan></text>
+		<text transform="matrix(1 0 0 1 54.7661 146.0361)"><tspan x="0" y="0"  font-size="10">Internal</tspan><tspan x="-1.938" y="12"  font-size="10">Transfer</tspan><tspan x="0.005" y="24"  font-size="10">Service</tspan><tspan x="-9.17" y="36"  font-size="10">Capabilities</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="238.998" y1="120.262" x2="289.108" y2="70.153"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="239.492" y1="120.079" x2="289.603" y2="170.188"/>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M285.089,75.414c0-9.938,16.118-17.993,36-17.993c19.896,0,36.023,8.056,36.023,17.993s-16.128,18.007-36.023,18.007
+				C301.207,93.421,285.089,85.352,285.089,75.414z"/>
+			<text transform="matrix(1 0 0 1 295.2695 78.2051)"  font-size="10">WADO-URI</text>
+		</g>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M285.089,119.449c0-9.938,16.118-17.993,36-17.993c19.896,0,36.023,8.056,36.023,17.993s-16.128,18.007-36.023,18.007
+				C301.207,137.456,285.089,129.387,285.089,119.449z"/>
+			<text transform="matrix(1 0 0 1 295.8262 122.2402)"  font-size="10">WADO-WS</text>
+		</g>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M285.089,166.58c0-9.938,16.118-17.993,36-17.993c19.896,0,36.023,8.056,36.023,17.993s-16.128,18.007-36.023,18.007
+				C301.207,184.587,285.089,176.518,285.089,166.58z"/>
+			<text transform="matrix(1 0 0 1 296.9355 169.3721)"  font-size="10">WADO-RS</text>
+		</g>
+		
+			<rect x="153.997" y="101.775" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="85.002" height="36"/>
+		<text transform="matrix(1 0 0 1 162.8848 116.2402)"><tspan x="0" y="0"  font-size="10">WADO Service</tspan><tspan x="-6.128" y="12"  font-size="10">Application Entity </tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="407.717" y1="120.262" x2="357.605" y2="70.153"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="407.223" y1="120.079" x2="357.111" y2="170.188"/>
+		
+			<rect x="409.567" y="102.079" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="57.001" height="36"/>
+		<text transform="matrix(1 0 0 1 412.5049 122.8633)"  font-size="10">Remote AE</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" x1="382.414" y1="200.942" x2="382.414" y2="33.69"/>
+		<g>
+			<path fill="#B2CEE7" d="M304.414,19.255c0-1.98,1.62-3.6,3.6-3.6h148.801c1.979,0,3.6,1.62,3.6,3.6V30.09
+				c0,1.98-1.62,3.6-3.6,3.6H308.014c-1.979,0-3.6-1.62-3.6-3.6V19.255z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 308.2344 28.5269)"  font-size="10">DICOM WADO Network Interface</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="357.112" y1="120.079" x2="407.717" y2="120.079"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="239.492" y1="120.079" x2="285.089" y2="120.079"/>
+	</g>
+</g>
+</svg>

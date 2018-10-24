@@ -1,0 +1,22 @@
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+base_for|base
+named_obj|patient|ellipsoid|base|(0,0,-75)|(0,0,75)|200
+named_obj|one|ellipsoid|base|(10,0,-50)|(-10,0,-50)|30
+named_obj|two|ellipsoid|base|(0,10,50)|(0,-10,50)|30
+#
+obj_list|patient|patient
+obj_list|tumor|one|two
+obj_list|ct_list|one|two|patient
+#
+set_obj_prop|base|ct_density|0|patient
+set_obj_prop|base|ct_density|500|tumor
+#
+study|1|base|Study_config|Study1|Ellipsoid Phantoms
+series|1|1|base|CT_config|Series1|CT(2.0,120,[0,0,0])|ct_list

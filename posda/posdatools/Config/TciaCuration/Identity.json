@@ -1,0 +1,15 @@
+// 
+{
+  "Greeting": { },
+  "HostName": "tcia-utilities",
+  "Title": "Tcia Curation Application",
+  "LoginTitle": "Login for Tcia Curation App",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 780,
+  "width": 1500,
+  "menu_width": 100,
+  "content_width": 900,
+}

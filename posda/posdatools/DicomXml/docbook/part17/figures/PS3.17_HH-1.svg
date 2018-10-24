@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_HH-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="547px" viewBox="0 0 502 547" enable-background="new 0 0 502 547" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="545"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="386.465" y1="469.111" x2="386.465" y2="15.979"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="232.646" y1="469.111" x2="232.646" y2="15.979"/>
+		
+			<rect x="232.485" y="27.099" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="423.466"/>
+		<rect x="234.649" y="28.987" fill="none" width="151.691" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 234.6494 35.4297)" font-size="9">Shared Functional Groups Sequence</text>
+		
+			<rect x="232.485" y="39.965" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="76.537"/>
+		
+			<rect x="246.884" y="55.04" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.581" height="61.462"/>
+		
+			<rect x="261.188" y="70.404" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125.277" height="46.098"/>
+		<rect x="246.884" y="43.577" fill="none" width="139.581" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 246.8833 50.0181)" font-size="9">Item 1 (Shared - All Frames)</text>
+		<rect x="275.588" y="85.77" fill="#FFFFFF" stroke="#000000" width="110.877" height="30.732"/>
+		<rect x="281.13" y="89.472" fill="none" width="103.894" height="18.125"/>
+		<text transform="matrix(0.8793 0 0 1 281.1309 95.3125)"><tspan x="0" y="0" font-size="8.1589">Reference to source image </tspan><tspan x="0" y="9.791" font-size="8.1589">(external object)</tspan></text>
+		<rect x="263.791" y="73.189" fill="none" width="121.71" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 263.791 79.0293)" font-size="8.1589">Item 1</text>
+		<rect x="250.802" y="58.744" fill="none" width="135.663" height="7.716"/>
+		<text transform="matrix(0.8793 0 0 1 250.8022 64.5835)" font-size="8.1589">Derivative Image Sequence</text>
+		<rect x="266.996" y="15.979" fill="none" width="84.958" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 280.2051 22.4199)" font-size="9">Other Attributes</text>
+		<rect x="266.997" y="456.574" fill="none" width="84.957" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 280.2051 463.0039)" font-size="9">Other Attributes</text>
+		<rect x="234.649" y="119.45" fill="none" width="151.688" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 234.6494 125.8809)" font-size="9">Per-frame Functional Groups Sequence</text>
+		
+			<rect x="232.485" y="130.428" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="76.536"/>
+		
+			<rect x="246.884" y="145.503" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.581" height="61.461"/>
+		
+			<rect x="261.188" y="160.867" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125.277" height="46.097"/>
+		<rect x="246.884" y="134.039" fill="none" width="139.581" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 246.8833 140.4702)" font-size="9">Item 1 (Frame 1)</text>
+		<rect x="275.588" y="176.231" fill="#FFFFFF" stroke="#000000" width="110.877" height="30.732"/>
+		<rect x="281.13" y="180.158" fill="none" width="83.516" height="21.006"/>
+		<text transform="matrix(0.8793 0 0 1 281.1309 185.9863)"><tspan x="0" y="0" font-size="8.1589">Referenced Segment </tspan><tspan x="0" y="9.791" font-size="8.1589">Number = 1</tspan></text>
+		<rect x="263.791" y="163.652" fill="none" width="121.71" height="7.716"/>
+		<text transform="matrix(0.8793 0 0 1 263.791 169.481)" font-size="8.1589">Item 1</text>
+		<rect x="250.802" y="149.207" fill="none" width="135.663" height="7.716"/>
+		<text transform="matrix(0.8793 0 0 1 250.8022 155.0356)" font-size="8.1589">Segment Identification Sequence</text>
+		
+			<rect x="232.485" y="206.985" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="76.544"/>
+		
+			<rect x="246.884" y="222.065" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.581" height="61.464"/>
+		
+			<rect x="261.188" y="237.433" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125.277" height="46.097"/>
+		<rect x="246.884" y="210.598" fill="none" width="139.581" height="8.513"/>
+		<text transform="matrix(0.9288 0 0 1 246.8833 217.0288)" font-size="9">Item 2 (Frame 2)</text>
+		<rect x="275.588" y="252.8" fill="#FFFFFF" stroke="#000000" width="110.877" height="30.729"/>
+		<rect x="281.13" y="256.812" fill="none" width="75.581" height="23.924"/>
+		<text transform="matrix(0.8793 0 0 1 281.1309 262.6401)"><tspan x="0" y="0" font-size="8.1589">Referenced Segment </tspan><tspan x="0" y="9.791" font-size="8.1589">Number = 2</tspan></text>
+		<rect x="263.791" y="240.22" fill="none" width="121.71" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 263.791 246.0483)" font-size="8.1589">Item 1</text>
+		<rect x="250.802" y="225.771" fill="none" width="135.663" height="7.716"/>
+		<text transform="matrix(0.8793 0 0 1 250.8022 231.5996)" font-size="8.1589">Segment Identification Sequence</text>
+		
+			<rect x="232.485" y="283.551" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="76.533"/>
+		
+			<rect x="246.884" y="298.625" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.581" height="61.459"/>
+		
+			<rect x="261.188" y="313.99" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125.277" height="46.094"/>
+		<rect x="246.884" y="287.162" fill="none" width="139.581" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 246.8833 293.5918)" font-size="9">Item 3 (Frame 3)</text>
+		<rect x="275.588" y="329.355" fill="#FFFFFF" stroke="#000000" width="110.877" height="30.729"/>
+		<rect x="281.13" y="333.305" fill="none" width="75.658" height="20.717"/>
+		<text transform="matrix(0.8793 0 0 1 281.1309 339.1328)"><tspan x="0" y="0" font-size="8.1589">Referenced Segment </tspan><tspan x="0" y="9.791" font-size="8.1589">Number = 3</tspan></text>
+		<rect x="263.791" y="316.775" fill="none" width="121.71" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 263.791 322.6035)" font-size="8.1589">Item 1</text>
+		<rect x="250.802" y="302.33" fill="none" width="135.663" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 250.8022 308.1582)" font-size="8.1589">Segment Identification Sequence</text>
+		
+			<rect x="232.485" y="360.105" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="153.979" height="76.533"/>
+		
+			<rect x="246.884" y="375.18" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.581" height="61.459"/>
+		
+			<rect x="261.188" y="390.545" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="125.277" height="46.094"/>
+		<rect x="246.884" y="363.717" fill="none" width="139.581" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 246.8833 370.1465)" font-size="9">Item 4 (Frame 4)</text>
+		<rect x="275.588" y="405.91" fill="#FFFFFF" stroke="#000000" width="110.877" height="30.729"/>
+		<rect x="281.13" y="409.842" fill="none" width="76.235" height="19.779"/>
+		<text transform="matrix(0.8793 0 0 1 281.1309 415.6699)"><tspan x="0" y="0" font-size="8.1589">Referenced Segment </tspan><tspan x="0" y="9.791" font-size="8.1589">Number = 4</tspan></text>
+		<rect x="263.791" y="393.33" fill="none" width="121.71" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 263.791 399.1582)" font-size="8.1589">Item 1</text>
+		<rect x="250.802" y="378.885" fill="none" width="135.663" height="7.715"/>
+		<text transform="matrix(0.8793 0 0 1 250.8022 384.7129)" font-size="8.1589">Segment Identification Sequence</text>
+		
+			<rect x="404.465" y="102.97" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.591" height="319.987"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="486.056" y1="437.479" x2="486.056" y2="85.829"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="404.465" y1="437.477" x2="404.465" y2="85.829"/>
+		<rect x="405.597" y="105.799" fill="none" width="80.459" height="8.51"/>
+		<text transform="matrix(0.8191 0 0 1 405.5977 112.2305)" font-size="9">Pixel Data</text>
+		
+			<rect x="419.955" y="116.747" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="66.101" height="76.56"/>
+		<rect x="423.781" y="120.347" fill="none" width="62.274" height="8.511"/>
+		<text transform="matrix(0.8191 0 0 1 423.7812 126.7783)" font-size="9">Frame 1</text>
+		
+			<rect x="419.955" y="193.307" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="66.101" height="76.54"/>
+		<rect x="423.781" y="196.908" fill="none" width="62.274" height="8.51"/>
+		<text transform="matrix(0.8191 0 0 1 423.7812 203.3379)" font-size="9">Frame 2</text>
+		
+			<rect x="419.955" y="346.402" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="66.101" height="76.555"/>
+		<rect x="423.781" y="350.002" fill="none" width="62.274" height="8.51"/>
+		<text transform="matrix(0.8191 0 0 1 423.7812 356.4316)" font-size="9">Frame 4</text>
+		
+			<rect x="419.955" y="269.847" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="66.101" height="76.556"/>
+		<rect x="423.781" y="273.447" fill="none" width="62.274" height="8.51"/>
+		<text transform="matrix(0.8191 0 0 1 423.7812 279.877)" font-size="9">Frame 3</text>
+		
+			<rect x="15.945" y="178.544" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="198.351" height="333.931"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="214.296" y1="531.021" x2="214.296" y2="161.401"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="15.945" y1="531.021" x2="15.945" y2="161.401"/>
+		<rect x="72.642" y="164.978" fill="none" width="84.957" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 85.8501 171.4189)" font-size="9">Other Attributes</text>
+		<rect x="72.642" y="518.484" fill="none" width="84.957" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 85.8501 524.9141)" font-size="9">Other Attributes</text>
+		<rect x="19.029" y="181.373" fill="none" width="195.457" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 19.0288 187.8037)" font-size="9">Segment Sequence</text>
+		
+			<rect x="33.512" y="192.351" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="180.784" height="76.533"/>
+		<rect x="37.851" y="195.962" fill="none" width="176.445" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 37.8506 202.3931)" font-size="9">Item 1 (Segment 1)</text>
+		<rect x="50.289" y="207.426" fill="#FFFFFF" stroke="#005695" width="164.007" height="61.458"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="253.519" x2="214.296" y2="253.519"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="238.155" x2="214.296" y2="238.155"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="222.79" x2="214.296" y2="222.79"/>
+		<rect x="53.889" y="211.13" fill="none" width="160.407" height="56.672"/>
+		<text transform="matrix(0.9288 0 0 1 53.8887 217.5601)"><tspan x="0" y="0" font-size="9">Segment Number = 1</tspan><tspan x="0" y="15.8" font-size="9">Segment Name = Left Ventricle</tspan><tspan x="0" y="31.6" font-size="9">Segment Category = Tissue</tspan><tspan x="0" y="47.4" font-size="9">Segment Type = Left Ventricle</tspan></text>
+		
+			<rect x="33.512" y="268.903" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="180.784" height="76.534"/>
+		<rect x="37.851" y="272.515" fill="none" width="176.445" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 37.8506 278.9463)" font-size="9">Item 2 (Segment 2)</text>
+		<rect x="50.289" y="283.98" fill="#FFFFFF" stroke="#005695" width="164.007" height="61.457"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="330.072" x2="214.296" y2="330.072"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="314.709" x2="214.296" y2="314.709"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="299.344" x2="214.296" y2="299.344"/>
+		<rect x="53.889" y="287.684" fill="none" width="160.407" height="56.672"/>
+		<text transform="matrix(0.9288 0 0 1 53.8887 294.1152)"><tspan x="0" y="0" font-size="9">Segment Number = 2</tspan><tspan x="0" y="15.799" font-size="9">Segment Name = Right Ventricle</tspan><tspan x="0" y="31.6" font-size="9">Segment Category = Tissue</tspan><tspan x="0" y="47.4" font-size="9">Segment Type = Right Ventricle</tspan></text>
+		
+			<rect x="33.512" y="345.438" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="180.784" height="76.533"/>
+		<rect x="37.851" y="349.049" fill="none" width="176.445" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 37.8506 355.4795)" font-size="9">Item 3 (Segment 3)</text>
+		<rect x="50.289" y="360.514" fill="#FFFFFF" stroke="#005695" width="164.007" height="61.457"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="406.605" x2="214.296" y2="406.605"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="391.242" x2="214.296" y2="391.242"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="375.877" x2="214.296" y2="375.877"/>
+		<rect x="53.889" y="364.217" fill="none" width="160.407" height="56.672"/>
+		<text transform="matrix(0.9288 0 0 1 53.8887 370.6484)"><tspan x="0" y="0" font-size="9">Segment Number = 3</tspan><tspan x="0" y="15.799" font-size="9">Segment Name = Stent</tspan><tspan x="0" y="31.6" font-size="9">Segment Category = Physical Object</tspan><tspan x="0" y="47.4" font-size="9">Segment Type = Stent</tspan></text>
+		
+			<rect x="33.512" y="421.971" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="180.784" height="76.533"/>
+		<rect x="37.851" y="425.582" fill="none" width="176.445" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 37.8506 432.0127)" font-size="9">Item 4 (Segment 4)</text>
+		<rect x="50.289" y="437.047" fill="#FFFFFF" stroke="#005695" width="164.007" height="61.457"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="483.139" x2="214.296" y2="483.139"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="467.775" x2="214.296" y2="467.775"/>
+		<line fill="#FFFFFF" stroke="#005695" x1="50.289" y1="452.41" x2="214.296" y2="452.41"/>
+		<rect x="53.889" y="440.771" fill="none" width="160.407" height="56.672"/>
+		<text transform="matrix(0.9288 0 0 1 53.8887 447.2031)"><tspan x="0" y="0" font-size="9">Segment Number = 4</tspan><tspan x="0" y="15.799" font-size="9">Segment Name = Aorta</tspan><tspan x="0" y="31.6" font-size="9">Segment Category = Anatomical Structure</tspan><tspan x="0" y="47.4" font-size="9">Segment Type = Aorta</tspan></text>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" stroke-width="2" x1="323.826" y1="200.218" x2="194.634" y2="200.218"/>
+				<path fill="#ED1C24" d="M191.8,201.448c1.984,0.599,3.273,1.151,4.865,1.79v-6.053c-0.569,0.271-2.881,1.191-4.865,1.79
+					c-2.124,0.642-4.049,1.08-5.298,1.237C187.751,200.368,189.676,200.807,191.8,201.448z"/>
+				<circle fill="#ED1C24" cx="323.826" cy="200.218" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#FFF200" stroke-width="2" x1="323.826" y1="276.771" x2="194.634" y2="276.771"/>
+				<path fill="#FFF200" d="M191.8,278.001c1.984,0.6,3.273,1.151,4.865,1.79v-6.053c-0.569,0.271-2.881,1.191-4.865,1.79
+					c-2.124,0.642-4.049,1.08-5.298,1.236C187.751,276.922,189.676,277.36,191.8,278.001z"/>
+				<circle fill="#FFF200" cx="323.826" cy="276.772" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#0DB14B" stroke-width="2" x1="323.826" y1="353.324" x2="194.634" y2="353.324"/>
+				<path fill="#0DB14B" d="M191.8,354.554c1.984,0.6,3.273,1.151,4.865,1.79v-6.053c-0.569,0.271-2.881,1.191-4.865,1.79
+					c-2.124,0.642-4.049,1.08-5.298,1.236C187.751,353.475,189.676,353.913,191.8,354.554z"/>
+				<circle fill="#0DB14B" cx="323.826" cy="353.325" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#00AEEF" stroke-width="2" x1="323.826" y1="429.877" x2="194.634" y2="429.877"/>
+				<path fill="#00AEEF" d="M191.8,431.106c1.984,0.6,3.273,1.151,4.865,1.79v-6.053c-0.569,0.271-2.881,1.191-4.865,1.79
+					c-2.124,0.642-4.049,1.08-5.298,1.236C187.751,430.027,189.676,430.466,191.8,431.106z"/>
+				<circle fill="#00AEEF" cx="323.826" cy="429.877" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" stroke-width="2" x1="323.826" y1="137.968" x2="435.02" y2="137.968"/>
+				<path fill="#ED1C24" d="M437.854,136.738c-1.983-0.599-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.237C441.902,137.818,439.978,137.379,437.854,136.738z"/>
+				<circle fill="#ED1C24" cx="323.826" cy="137.968" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#FFF200" stroke-width="2" x1="323.826" y1="214.521" x2="435.02" y2="214.521"/>
+				<path fill="#FFF200" d="M437.854,213.291c-1.983-0.599-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.237C441.902,214.371,439.978,213.932,437.854,213.291z"/>
+				<circle fill="#FFF200" cx="323.826" cy="214.52" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#0DB14B" stroke-width="2" x1="323.826" y1="291.074" x2="435.02" y2="291.074"/>
+				<path fill="#0DB14B" d="M437.854,289.845c-1.983-0.6-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.236C441.902,290.924,439.978,290.485,437.854,289.845z"/>
+				<circle fill="#0DB14B" cx="323.826" cy="291.074" r="4.511"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#00AEEF" stroke-width="2" x1="323.826" y1="367.627" x2="435.02" y2="367.627"/>
+				<path fill="#00AEEF" d="M437.854,366.397c-1.983-0.6-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+					c2.124-0.642,4.049-1.08,5.298-1.236C441.902,367.477,439.978,367.038,437.854,366.397z"/>
+				<circle fill="#00AEEF" cx="323.826" cy="367.626" r="4.511"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

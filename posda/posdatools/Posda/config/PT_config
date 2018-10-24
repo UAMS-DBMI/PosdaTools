@@ -1,0 +1,49 @@
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0008)|Image Type|ORIGINAL\PRIMARY
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.128
+(0008,0021)|Series Date|20061117
+(0008,0022)|Acquisition Date|20061117
+(0008,0031)|Series Time|144533
+(0008,0032)|Acquisition Time|144533
+(0008,0060)|Modality|PT
+(0008,0070)|Manufacturer|Posda.com
+(0008,0080)|Institution Name|Anonymized
+(0008,0090)|Referring Physician's Name|Anonymous^Physician
+(0008,1010)|Station Name|Anonymized
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,0050)|Slice Thickness|5
+(0018,1000)|Device Serial Number|773
+(0018,1020)|Software Version(s)|9.1.1
+(0018,1030)|Protocol Name|Pseudo Phantoms
+(0018,1100)|Reconstruction Diameter|576.000000
+(0018,1147)|Field of View Shape|CYLINDRICAL RING
+(0018,1149)|Field of View Dimension(s)|863\180
+(0018,1181)|Collimator Type|NONE
+(0018,1242)|Actual Frame Duration|599999
+(0018,5100)|Patient Position|HFS
+(0020,0037)|Image Orientation (Patient)|1.000000\0.000000\0.000000\0.000000\1.000000\0.000000
+(0028,0002)|Samples per Pixel|1
+(0028,0004)|Photometric Interpretation|MONOCHROME2
+(0028,0010)|Rows|144
+(0028,0011)|Columns|144
+(0028,0030)|Pixel Spacing|4.000000\4.000000
+(0028,0051)|Corrected Image|DECY\RADL\ATTN\SCAT\DTIM\RAN\NORM
+(0028,0100)|Bits Allocated|16
+(0028,0101)|Bits Stored|16
+(0028,0102)|High Bit|15
+(0054,1000)|Series Type|WHOLE BODY\IMAGE
+(0054,1001)|Units|CNTS
+(0054,1002)|Counts Source|EMISSION
+(0054,1100)|Randoms Correction Method|DLYD
+(0054,1101)|Attenuation Correction Method|Attenuation Cor=SS-SIMUL,
+(0054,1102)|Decay Correction|NONE
+(0054,1103)|Reconstruction Method|LOR-RAMLA
+(0054,1105)|Scatter Correction Method|SS-SIMUL
+(0054,1300)|Frame Reference Time|299999

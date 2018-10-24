@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_H.2-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:09 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="347px" viewBox="0 0 502 347" enable-background="new 0 0 502 347" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="345"/>
+	<g>
+		<rect x="13.88" y="269.096" fill="#FFFFFF" width="474.241" height="63.746"/>
+		<rect x="13.88" y="14.159" fill="#B2CEE7" width="474.241" height="254.937"/>
+		<rect x="64.507" y="78.201" fill="#CCDEF0" stroke="#000000" width="185.001" height="209.561"/>
+		<rect x="292.51" y="78.201" fill="#CCDEF0" stroke="#000000" width="185" height="209.561"/>
+		<rect x="18.577" y="21.487" fill="none" width="46.354" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 18.5796 27.9326)"><tspan x="0" y="0"  font-size="9">Application</tspan><tspan x="0" y="10.8"  font-size="9">Layer</tspan></text>
+		<rect x="18.577" y="58.911" fill="none" width="46.354" height="31.673"/>
+		<text transform="matrix(1 0 0 1 18.5796 64.6431)"><tspan x="0" y="0"  font-size="8">DICOM </tspan><tspan x="0" y="9.6"  font-size="8">Application </tspan><tspan x="0" y="19.2"  font-size="8">Entity</tspan></text>
+		<rect x="18.577" y="196.075" fill="none" width="37.5" height="32"/>
+		<text transform="matrix(0.9288 0 0 1 18.5796 202.5234)"><tspan x="0" y="0"  font-size="9">DICOM</tspan><tspan x="0" y="10.801"  font-size="9">Service</tspan><tspan x="0" y="21.601"  font-size="9">Elements</tspan></text>
+		<rect x="18.577" y="297.201" fill="none" width="50.354" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 18.5796 303.6387)"><tspan x="0" y="0"  font-size="9">Presentation</tspan><tspan x="0" y="10.799"  font-size="9">Layer</tspan></text>
+		<text transform="matrix(1 0 0 1 293.1191 66.0078)"><tspan x="0" y="0"  font-size="8">PRINT MANAGEMENT</tspan><tspan x="0" y="9.6"  font-size="8">SERVICE CLASS PROVIDER</tspan></text>
+		<rect x="245.061" y="173.187" fill="none" width="53.021" height="18.549"/>
+		<text transform="matrix(0.9288 0 0 1 259.8047 178.915)"><tspan x="0" y="0"  font-size="8">DIMSE</tspan><tspan x="-9.779" y="9.601"  font-size="8">PROTOCOL</tspan></text>
+		<path fill="#B2CEE7" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M179.036,224.527
+			h-106V122.201h106V224.527z"/>
+		<text transform="matrix(1 0 0 1 65.7988 66.0078)"><tspan x="0" y="0"  font-size="8">PRINT MANAGEMENT</tspan><tspan x="0" y="9.6"  font-size="8">SERVICE CLASS USER</tspan></text>
+		<path fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M142.503,167.525
+			h-32.4v-32.402h32.4V167.525z"/>
+		<rect x="87.015" y="236.982" fill="none" width="78.501" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 94.9048 243.4199)"><tspan x="0" y="0"  font-size="9">OSI Upper Layer</tspan><tspan x="-7.756" y="10.8"  font-size="9">Presentation Service</tspan></text>
+		<path fill="#6799C8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M174.229,275.254
+			H78.302v-12h95.927V275.254z"/>
+		
+			<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="6,4" d="
+			M241.077,281.217H73.293v-23.529h110.783v-75.16h57V281.217z"/>
+		<circle fill="none" stroke="#003468" cx="100.993" cy="143.048" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="118.035" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="135.06" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="152.084" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="100.993" cy="160.141" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="118.035" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="135.06" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="152.084" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="100.993" cy="177.234" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="118.035" cy="177.215" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="135.06" cy="177.215" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="152.084" cy="177.215" r="4.5"/>
+		<rect x="176.75" y="95.803" fill="none" width="70.597" height="20.557"/>
+		<text transform="matrix(0.9288 0 0 1 176.7524 102.2451)"><tspan x="0" y="0"  font-size="9">Basic (mandatory)</tspan><tspan x="0" y="10.8"  font-size="9">Meta-SOP Class</tspan></text>
+		<rect x="305.221" y="97.644" fill="none" width="60.568" height="18.885"/>
+		<text transform="matrix(0.9288 0 0 1 305.2305 104.0879)"><tspan x="0" y="0"  font-size="9">Optional</tspan><tspan x="0" y="10.8"  font-size="9">SOP Class</tspan></text>
+		<polyline fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			174.868,99.439 165.562,99.439 135.06,143.028 		"/>
+		<path fill="#B2CEE7" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M467.037,224.527
+			h-106V122.201h106V224.527z"/>
+		<path fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M430.367,167.525
+			h-32.4v-32.402h32.4V167.525z"/>
+		<circle fill="none" stroke="#003468" cx="388.996" cy="143.048" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="406.037" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="423.062" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="440.086" cy="143.028" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="388.996" cy="160.141" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="406.037" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="423.062" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="440.086" cy="160.122" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="388.996" cy="177.234" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="406.037" cy="177.215" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="423.062" cy="177.215" r="4.5"/>
+		<circle fill="none" stroke="#003468" cx="440.086" cy="177.215" r="4.5"/>
+		<polyline fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			348.107,112.478 354.787,112.478 388.996,143.048 		"/>
+		
+			<line fill="#FFFFFF" stroke="#005695" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="56.077" y1="200.559" x2="485.51" y2="200.559"/>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M174.229,213.877
+			h-45.001v-27h45.001V213.877z"/>
+		<rect x="131.218" y="195.878" fill="none" width="41.021" height="9"/>
+		<text transform="matrix(0.9288 0 0 1 134.0815 202.3223)"  font-size="9">DIMSE-N</text>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M123.302,213.877
+			h-45v-27h45V213.877z"/>
+		<rect x="80.292" y="195.878" fill="none" width="41.02" height="9"/>
+		<text transform="matrix(0.9288 0 0 1 83.1558 202.3223)"  font-size="9">DIMSE-C</text>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M236.108,213.877
+			h-47v-27h47V213.877z"/>
+		<rect x="188.667" y="191.378" fill="none" width="48.02" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 191.3032 197.8223)"><tspan x="0" y="0"  font-size="9">Association</tspan><tspan x="8.007" y="10.8"  font-size="9">Service</tspan></text>
+		<rect x="375.068" y="236.982" fill="none" width="78.502" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 382.957 243.4199)"><tspan x="0" y="0"  font-size="9">OSI Upper Layer</tspan><tspan x="-7.756" y="10.8"  font-size="9">Presentation Service</tspan></text>
+		<path fill="#6799C8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M366.357,263.254
+			h95.926v12h-95.926V263.254z"/>
+		
+			<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="6,4" d="
+			M299.51,182.527h57v75.16h110.783v23.529H299.51V182.527z"/>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M351.342,213.877
+			h-47v-27h47V213.877z"/>
+		<rect x="303.9" y="191.378" fill="none" width="48.02" height="20"/>
+		<text transform="matrix(0.9288 0 0 1 306.5332 197.8223)"><tspan x="0" y="0"  font-size="9">Association</tspan><tspan x="8.007" y="10.8"  font-size="9">Service</tspan></text>
+		
+			<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			264.229,195.541 264.229,190.867 249.508,200.162 264.229,209.465 264.229,203.953 276.439,203.953 276.439,209.465 
+			291.16,200.162 276.439,190.867 276.439,195.541 		"/>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M462.23,213.877
+			h-45v-27h45V213.877z"/>
+		<rect x="419.221" y="195.878" fill="none" width="41.02" height="9"/>
+		<text transform="matrix(0.9288 0 0 1 422.082 202.3223)"  font-size="9">DIMSE-N</text>
+		<path fill="#FFFFFF" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="M411.305,213.877
+			h-45v-27h45V213.877z"/>
+		<rect x="368.295" y="195.878" fill="none" width="41.02" height="9"/>
+		<text transform="matrix(0.9288 0 0 1 371.1553 202.3223)"  font-size="9">DIMSE-C</text>
+	</g>
+</g>
+</svg>

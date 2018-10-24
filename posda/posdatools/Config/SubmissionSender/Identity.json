@@ -1,0 +1,15 @@
+// 
+{
+  "Greeting": { },
+  "HostName": "tcia-utilities",
+  "Title": "Submission Sender Application",
+  "LoginTitle": "Login for Submission Sender App",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 600,
+  "width": 1200,
+  "menu_width": 100,
+  "content_width": 800,
+}

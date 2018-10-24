@@ -1,0 +1,14 @@
+// 
+{
+  "Greeting": { },
+  "ImageName": "PosdaLogo.png",
+  "HostName": "tcia-utilities",
+  "Title": "Posda DICOM Curation",
+  "LoginTitle": "Posda Curation Tools",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 780,
+  "width": 1000,
+}

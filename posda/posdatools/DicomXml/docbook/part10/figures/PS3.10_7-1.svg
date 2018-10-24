@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part10/figures/PS3.10_7-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="377px" viewBox="0 0 502 377" enable-background="new 0 0 502 377" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.10: Media Storage and File Format for Media Interchange
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="375"/>
+	<g>
+		
+			<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.738,115.344 185.738,98.206 245.945,98.206 245.945,84.416 293.737,107.204 245.945,130.002 245.945,115.344 		"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="172.724" y1="359.654" x2="172.724" y2="30.249"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="33.258" y1="359.654" x2="33.258" y2="30.249"/>
+		
+			<rect x="33.258" y="39.851" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.466" height="90.482"/>
+		<rect x="45.036" y="44.477" fill="none" width="125.303" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 45.0381 50.9229)" font-size="9">DICOM SOP Instance</text>
+		
+			<rect x="33.258" y="130.55" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.466" height="90.483"/>
+		
+			<rect x="43.985" y="53.655" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="128.738" height="76.678"/>
+		
+			<rect x="54.714" y="68.815" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="118.01" height="61.347"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="114.825" x2="172.724" y2="114.825"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="99.488" x2="172.724" y2="99.488"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="84.151" x2="172.724" y2="84.151"/>
+		
+			<rect x="43.985" y="144.354" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="128.738" height="76.679"/>
+		
+			<rect x="54.714" y="159.687" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="118.01" height="61.347"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="205.697" x2="172.724" y2="205.697"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="190.36" x2="172.724" y2="190.36"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="175.023" x2="172.724" y2="175.023"/>
+		<rect x="45.036" y="133.504" fill="none" width="125.303" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 45.0381 139.9502)" font-size="9">DICOM SOP Instance</text>
+		
+			<rect x="33.258" y="221.276" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="139.466" height="90.482"/>
+		
+			<rect x="43.985" y="235.08" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="128.738" height="76.679"/>
+		
+			<rect x="54.714" y="250.412" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="118.01" height="61.347"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="296.423" x2="172.724" y2="296.423"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="281.086" x2="172.724" y2="281.086"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="54.714" y1="265.749" x2="172.724" y2="265.749"/>
+		<rect x="45.036" y="224.229" fill="none" width="125.303" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 45.0381 230.6758)" font-size="9">DICOM SOP Instance</text>
+		
+			<line fill="none" stroke="#005695" stroke-width="7" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,11" x1="83.779" y1="329.804" x2="116.287" y2="329.804"/>
+		
+			<rect x="306.743" y="30.249" fill="#CCDEF0" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" width="162" height="329.405"/>
+		
+			<rect x="315.743" y="39.851" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="144" height="90.482"/>
+		<rect x="323.229" y="44.442" fill="none" width="129.029" height="10.106"/>
+		<text transform="matrix(0.9288 0 0 1 323.2314 50.8892)" font-size="9">File containing one SOP Instance</text>
+		
+			<rect x="324.743" y="60.234" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="18"/>
+		<rect x="329.02" y="64.476" fill="none" width="117.447" height="9.518"/>
+		<text transform="matrix(0.9288 0 0 1 333.3955 70.9224)" font-size="9">DICOM File Meta Information</text>
+		
+			<rect x="324.743" y="83.919" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="36"/>
+		<rect x="355.295" y="97.538" fill="none" width="64.897" height="8.764"/>
+		<text transform="matrix(0.9288 0 0 1 356.3906 103.9844)" font-size="9">DICOM Data Set</text>
+		
+			<rect x="315.743" y="220.815" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="144" height="90.482"/>
+		<rect x="323.229" y="225.407" fill="none" width="129.029" height="10.107"/>
+		<text transform="matrix(0.9288 0 0 1 323.2314 231.8535)" font-size="9">File containing one SOP Instance</text>
+		
+			<rect x="324.743" y="241.2" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="18"/>
+		<rect x="329.02" y="245.441" fill="none" width="117.447" height="9.517"/>
+		<text transform="matrix(0.9288 0 0 1 333.3955 251.8867)" font-size="9">DICOM File Meta Information</text>
+		
+			<rect x="324.743" y="264.886" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="36"/>
+		<rect x="355.295" y="278.503" fill="none" width="64.897" height="8.764"/>
+		<text transform="matrix(0.9288 0 0 1 356.3906 284.9492)" font-size="9">DICOM Data Set</text>
+		
+			<rect x="315.743" y="130.333" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="144" height="90.482"/>
+		<rect x="323.229" y="134.925" fill="none" width="129.029" height="10.106"/>
+		<text transform="matrix(0.9288 0 0 1 323.2314 141.3706)" font-size="9">File containing one SOP Instance</text>
+		
+			<rect x="324.743" y="150.718" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="18"/>
+		<rect x="329.02" y="154.958" fill="none" width="117.447" height="9.518"/>
+		<text transform="matrix(0.9288 0 0 1 333.3955 161.4048)" font-size="9">DICOM File Meta Information</text>
+		
+			<rect x="324.743" y="174.402" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="36"/>
+		<rect x="355.295" y="188.021" fill="none" width="64.897" height="8.764"/>
+		<text transform="matrix(0.9288 0 0 1 356.3906 194.4668)" font-size="9">DICOM Data Set</text>
+		
+			<line fill="none" stroke="#005695" stroke-width="7" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,11" x1="374.179" y1="329.804" x2="406.687" y2="329.804"/>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 306.7461 25.3232)" font-size="9">File-set containing DICOM Formated Files</text>
+		</g>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 190.5459 109.9482)" font-size="9">DICOM Part 5 Encoding</text>
+		</g>
+		
+			<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.738,192.054 185.738,174.916 245.945,174.916 245.945,161.126 293.737,183.913 245.945,206.712 245.945,192.054 		"/>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 190.5459 186.6582)" font-size="9">DICOM Part 5 Encoding</text>
+		</g>
+		
+			<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			185.738,268.764 185.738,251.626 245.945,251.626 245.945,237.836 293.737,260.623 245.945,283.422 245.945,268.764 		"/>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 190.5459 263.3682)" font-size="9">DICOM Part 5 Encoding</text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.19.6-5.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="252px" viewBox="0 0 502 252" enable-background="new 0 0 502 252" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="250"/>
+	<g>
+		<polygon fill="#005695" stroke="#000000" points="411.251,189.407 291.889,234.483 291.889,92.586 411.251,47.512 		"/>
+		<polygon fill="#CCDEF0" stroke="#000000" points="388.967,171.331 314.172,199.575 314.172,110.662 388.967,82.418 		"/>
+		<line fill="none" stroke="#ED1C24" stroke-dasharray="4" x1="351.505" y1="143.526" x2="119.47" y2="54.434"/>
+		<g>
+			<line fill="#A7A9AC" x1="310.012" y1="108.437" x2="384.154" y2="80.324"/>
+			<g>
+				<line fill="none" stroke="#999999" x1="310.012" y1="108.437" x2="375.87" y2="83.465"/>
+				<g>
+					<polygon fill="#999999" points="375.048,86.884 384.154,80.324 372.987,81.451 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#A7A9AC" x1="310.012" y1="108.437" x2="310.012" y2="196.644"/>
+			<g>
+				<line fill="none" stroke="#999999" x1="310.012" y1="108.437" x2="310.012" y2="187.784"/>
+				<g>
+					<polygon fill="#999999" points="307.106,185.803 310.012,196.644 312.917,185.803 					"/>
+				</g>
+			</g>
+		</g>
+		<polygon fill="#FFFFFF" stroke="#000000" points="322.167,116.898 315.049,119.586 315.049,111.125 322.167,108.437 		"/>
+		
+			<line fill="none" stroke="#A7A9AC" stroke-miterlimit="1" stroke-dasharray="6" x1="351.569" y1="80.324" x2="351.569" y2="174.997"/>
+		
+			<line fill="#6D6E71" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6" x1="278.774" y1="172.345" x2="380.17" y2="131.374"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="175.494" y1="117.117" x2="250.802" y2="86.688"/>
+		
+			<line fill="none" stroke="#58595B" stroke-miterlimit="1" stroke-dasharray="6,6" x1="57.045" y1="79.658" x2="119.678" y2="54.35"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#00AEEF" x1="229.805" y1="97.098" x2="229.805" y2="43.442"/>
+				<g>
+					<polygon fill="#00AEEF" points="232.71,45.424 229.805,34.583 226.899,45.424 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 223.6489 26.3799)" fill="#00AEEF" font-size="10">+ Zp</text>
+		<text transform="matrix(1 0 0 1 155.5986 66.7407)" fill="#0DB14B" font-size="10">+ Yp</text>
+		<g>
+			<g>
+				<line fill="none" stroke="#0DB14B" x1="230.104" y1="96.375" x2="169.901" y2="73.732"/>
+				<g>
+					<polygon fill="#0DB14B" points="172.778,71.71 161.608,70.613 170.732,77.149 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 290.2188 68.1035)" fill="#ED1C24" font-size="10">+ Xp</text>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="230.171" y1="96.377" x2="277.275" y2="72.157"/>
+				<g>
+					<polygon fill="#ED1C24" points="276.842,75.646 285.154,68.105 274.185,70.479 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 334.0293 160.8057)"><tspan x="0" y="0" font-size="10">Physical</tspan><tspan x="-12.23" y="10.009" font-size="10">Detector Area</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 327.8867 120.1592)" font-size="12">THLC</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 227.2085 112.4893)" font-size="10">O</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 387.4023 82.0986)" fill="#A7A9AC" font-size="10">Rows</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 304.4023 208.3984)" fill="#A7A9AC" font-size="10">Columns</text>
+		</g>
+		<path stroke="#000000" stroke-miterlimit="1" d="M236.814,95.441c0-3.729-3.024-6.75-6.752-6.75v6.75H236.814z"/>
+		
+			<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M230.062,88.691c-3.729,0-6.751,3.021-6.751,6.75h6.751V88.691z"/>
+		<path stroke="#000000" stroke-miterlimit="1" d="M223.312,95.441c0,3.729,3.022,6.75,6.751,6.75v-6.75H223.312z"/>
+		
+			<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M230.062,95.441v6.75c3.728,0,6.752-3.021,6.752-6.75H230.062z"/>
+		<path fill="#FEDA00" d="M126.958,54.727c-0.001-4.412-3.482-7.988-7.775-7.988c-4.294,0.002-7.772,3.579-7.771,7.992
+			c0,4.413,3.48,7.988,7.773,7.987C123.481,62.717,126.959,59.141,126.958,54.727z"/>
+		<circle cx="119.112" cy="54.575" r="0.785"/>
+		<path d="M118.164,56.361c-0.602-0.343-1.009-1.002-1.01-1.76c0-0.057,0.003-0.111,0.009-0.169l-4.764,0.001
+			c-0.002,0.057-0.003,0.113-0.002,0.169c0,2.562,1.359,4.798,3.375,5.987L118.164,56.361z"/>
+		<path d="M120.029,56.361c0.603-0.343,1.01-1.002,1.01-1.76c0-0.057-0.002-0.113-0.008-0.17h4.765c0.001,0.056,0,0.112,0.001,0.168
+			c0,2.562-1.356,4.799-3.373,5.99L120.029,56.361z"/>
+		<path d="M118,52.928c0.598-0.35,1.373-0.47,2.028-0.092c0.049,0.029,0.096,0.06,0.142,0.092l2.382-4.127
+			c-0.049-0.028-0.097-0.057-0.147-0.086c-2.217-1.279-4.832-1.063-6.871,0.089L118,52.928z"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="97.311" y1="75.992" x2="172.546" y2="104.5"/>
+				<g>
+					<polygon fill="#005695" points="98.299,80.094 87.369,72.225 100.77,73.574 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="169.087,106.918 182.487,108.268 171.558,100.398 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" x1="73.007" y1="84.58" x2="268.922" y2="163.999"/>
+				<g>
+					<polygon fill="#005695" points="73.9,88.704 63.154,80.586 76.52,82.242 					"/>
+				</g>
+				<g>
+					<polygon fill="#005695" points="265.408,166.337 278.774,167.993 268.028,159.875 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="117.219" y="81.919" fill="#F2EFD1" width="22" height="14.499"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 118.6069 92.0635)" font-size="12">ISO</text>
+		</g>
+		<rect x="202.079" y="131.846" fill="#F2EFD1" width="22" height="14.501"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 204.1211 145.2295)" font-size="12">SID</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 374.9824 213.8125)" font-size="12">Detector Plane</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 114.6035 37.8125)" font-size="12">X-ray Source</text>
+		</g>
+	</g>
+</g>
+</svg>

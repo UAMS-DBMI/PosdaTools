@@ -1,0 +1,15 @@
+my($this, $fh, $out, $args) = @_;
+my $name = $args->[0];
+my $host = $args->[1];
+my $port = $args->[2];
+my $file = $args->[3];
+unless(-r $file){
+  print "Can't read $file\n";
+  return;
+}
+my $Dicom = Dispatch::Dicom::Connection->connect($host, $port, $file);
+unless($Dicom) {
+  print "unable to connect to $host:$port\n";
+  return;
+}
+$this->{objects}->{$name} = $Dicom;

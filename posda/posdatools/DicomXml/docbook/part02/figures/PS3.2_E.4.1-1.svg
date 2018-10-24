@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_E.4.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="257px" viewBox="0 0 502 257" enable-background="new 0 0 502 257" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="255"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="134.178" y1="185.177" x2="204.99" y2="185.177"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M63.321,185.165c0-19.883,16.118-36.001,36-36.001c19.896,0,36.023,16.118,36.023,36.001s-16.128,36.025-36.023,36.025
+			C79.439,221.19,63.321,205.048,63.321,185.165z"/>
+		<text transform="matrix(1 0 0 1 69.376 181.6562)"><tspan x="0" y="0"  font-size="11">Connectivity</tspan><tspan x="2.75" y="13.201"  font-size="11">Verification</tspan></text>
+		
+			<rect x="197.785" y="49.649" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="86.773" height="175.665"/>
+		<text transform="matrix(1 0 0 1 229.8643 119.5913)"><tspan x="0" y="0"  font-size="11">Print</tspan><tspan x="-20.794" y="13.2"  font-size="11">Management </tspan><tspan x="-4.891" y="26.4"  font-size="11">Server</tspan><tspan x="-15.598" y="39.6"  font-size="11">Application</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="293.726" y1="94.205" x2="360.921" y2="94.205"/>
+		<path fill="#005695" d="M290.892,95.435c1.983,0.599,3.273,1.151,4.865,1.79v-6.054c-0.57,0.271-2.882,1.191-4.865,1.79
+			c-2.124,0.642-4.049,1.081-5.298,1.237C286.843,94.354,288.768,94.793,290.892,95.435z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M362.167,94.19c0-22.361,18.128-40.487,40.486-40.487c22.377,0,40.514,18.126,40.514,40.487c0,22.361-18.137,40.515-40.514,40.515
+			C380.295,134.705,362.167,116.551,362.167,94.19z"/>
+		<text transform="matrix(1 0 0 1 371.958 78.4819)"><tspan x="0" y="0"  font-size="9">Print Composer</tspan><tspan x="7.003" y="10.8"  font-size="9">(SCU) Send</tspan><tspan x="1.749" y="21.6"  font-size="9">Images &amp; Print</tspan><tspan x="4.995" y="32.4"  font-size="9">Management</tspan><tspan x="8.75" y="43.2"  font-size="9">Information</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="134.178" y1="94.203" x2="204.99" y2="94.203"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M58.833,94.19c0-22.361,18.128-40.487,40.486-40.487c22.377,0,40.514,18.126,40.514,40.487c0,22.361-18.137,40.515-40.514,40.515
+			C76.961,134.705,58.833,116.551,58.833,94.19z"/>
+		<text transform="matrix(1 0 0 1 80.8252 69.7144)"><tspan x="0" y="0"  font-size="9">Receives</tspan><tspan x="-5.007" y="10.8"  font-size="9">Images and</tspan><tspan x="-17.514" y="21.6"  font-size="9">Presentation Data</tspan><tspan x="-7.51" y="32.4"  font-size="9">and Prepare </tspan><tspan x="-4.001" y="43.2"  font-size="9">Images for </tspan><tspan x="3.25" y="54"  font-size="9">Printing</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="360.921" y1="185.185" x2="293.726" y2="185.185"/>
+		<path fill="#005695" d="M363.755,183.954c-1.983-0.599-3.273-1.15-4.865-1.789v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+			c2.124-0.642,4.049-1.08,5.298-1.237C367.804,185.034,365.879,184.596,363.755,183.954z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M366.655,185.159c0-19.889,16.119-36.007,36-36.007c19.896,0,36.023,16.118,36.023,36.007c0,19.894-16.127,36.043-36.023,36.043
+			C382.774,221.202,366.655,205.053,366.655,185.159z"/>
+		<text transform="matrix(1 0 0 1 377.1006 169.9766)"><tspan x="0" y="0"  font-size="10">Remote AE</tspan><tspan x="5.003" y="12"  font-size="10">Receives</tspan><tspan x="-1.667" y="24"  font-size="10">Connectivity</tspan><tspan x="0.833" y="36"  font-size="10">Verification</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="327.82" y1="241.92" x2="327.82" y2="32.784"/>
+		<g>
+			<path fill="#B2CEE7" d="M258.325,18.681c0-1.98,1.62-3.6,3.6-3.6h130.797c1.979,0,3.6,1.62,3.6,3.6v10.849
+				c0,1.98-1.62,3.6-3.6,3.6H261.925c-1.979,0-3.6-1.62-3.6-3.6V18.681z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 262.2422 27.9414)"  font-size="11">DICOM Standard Interface</text>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "ApplicationInitClass" : "CountGetter::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
+  "JavascriptRoot" : "POSDA_ROOT/CountGetter/javascript",
+  "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
+  "SubmissionRoot" : "POSDA_SUBMISSION_ROOT",
+}

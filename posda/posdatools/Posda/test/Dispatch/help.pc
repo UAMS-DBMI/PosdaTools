@@ -1,0 +1,14 @@
+my($this, $fh, $out, $args) = @_;
+if($#{$args} >= 0){
+  my $obj_name = $args->[0];
+  unless(defined $this->{commands}->{$obj_name}){
+    print $out "$obj_name is not an option\n";
+    return;
+  }
+  print $out "$obj_name:\n$this->{command_text}->{$obj_name}\n";
+  return;
+}
+print $out "commands:\n";
+for my $i (keys %{$this->{commands}}){
+  print $out "\t$i\n";
+}

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_V.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:21 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="427px" viewBox="0 0 502 427" enable-background="new 0 0 502 427" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="425"/>
+	<g>
+		<rect x="39.201" y="45.425" fill="#CCDEF0" width="423.599" height="93.77"/>
+		<rect x="39.201" y="139.194" fill="#B2CEE7" width="423.599" height="206.235"/>
+		<rect x="39.201" y="345.43" fill="#86B2D8" width="423.599" height="65.807"/>
+		<text transform="matrix(1 0 0 1 46.1689 58.7715)"><tspan x="0" y="0" font-size="11">Hanging Protocol</tspan><tspan x="0" y="13.2" font-size="11">Definition Module</tspan></text>
+		<text transform="matrix(1 0 0 1 46.1689 152.541)"><tspan x="0" y="0" font-size="11">Hanging Protocol</tspan><tspan x="0" y="13.2" font-size="11">Display Module</tspan></text>
+		<text transform="matrix(1 0 0 1 46.1689 358.7754)" font-size="11">Screen Space</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="251.676" y1="39.125" x2="251.676" y2="52.556"/>
+				<g>
+					<polygon fill="#005695" points="249.352,50.971 251.676,59.644 254,50.971 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="250.932" y1="288.447" x2="250.932" y2="301.162"/>
+				<g>
+					<polygon fill="#005695" points="248.607,299.577 250.932,308.25 253.256,299.577 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="251.676" y1="88.125" x2="251.676" y2="101.556"/>
+				<g>
+					<polygon fill="#005695" points="249.352,99.971 251.676,108.644 254,99.971 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="251.069" y1="197.519" x2="251.069" y2="211.672"/>
+				<g>
+					<polygon fill="#005695" points="248.745,210.087 251.069,218.76 253.394,210.087 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="250.997" y1="241.123" x2="250.997" y2="253.838"/>
+				<g>
+					<polygon fill="#005695" points="248.673,252.253 250.997,260.926 253.321,252.253 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 294.916 63.374)" font-size="9">M</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 295.4141 85.3789)" font-size="9">N</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 318.3535 164.9062)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 317.6064 186.9111)" font-size="9">N</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 295.4941 264.4072)" font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 295.4941 286.4121)" font-size="9">1</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="251.676" y1="132.895" x2="251.676" y2="145.607"/>
+				<g>
+					<polygon fill="#005695" points="249.352,144.021 251.676,152.694 254,144.021 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					250.785,331.246 250.785,354.83 196.615,354.83 196.615,365.931 				"/>
+				<g>
+					<polygon fill="#005695" points="194.291,364.346 196.615,373.019 198.939,364.346 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="
+					251.033,331.246 251.033,354.83 305.296,354.83 305.296,365.931 				"/>
+				<g>
+					<polygon fill="#005695" points="302.972,364.346 305.296,373.019 307.62,364.346 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="211.169" y="109.489" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 231.1572 123.248)" font-size="9">Image Set</text>
+		</g>
+		
+			<rect x="208.947" y="308.746" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="84.002" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 220.6826 318.0938)"><tspan x="0" y="0" font-size="9">Ordered Image</tspan><tspan x="14.506" y="8.799" font-size="9">Box Set</tspan></text>
+		</g>
+		
+			<rect x="210.862" y="219.303" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80.999" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 228.6035 233.0586)" font-size="9">Display Set</text>
+		</g>
+		
+			<rect x="211.169" y="15.764" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80.999" height="22.485"/>
+		<g>
+			<text transform="matrix(1 0 0 1 214.9106 25.1084)"><tspan x="0" y="0" font-size="9">DICOM composite</tspan><tspan x="4.489" y="8.8" font-size="9">object instances</tspan></text>
+		</g>
+		
+			<polygon fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			202.171,73.436 251.592,60.144 301.166,73.628 301.166,73.658 251.592,87.143 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 233.1572 76.1509)" font-size="9">Selection</text>
+		</g>
+		
+			<polygon fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			179.364,175.369 251.251,153.216 323.359,175.691 323.359,175.74 251.251,198.215 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 227.8511 168.6973)"><tspan x="0" y="0" font-size="9">Processing:</tspan><tspan x="-19.499" y="8.8" font-size="9">Filter, Reformat, Sort,</tspan><tspan x="-14.265" y="17.6" font-size="9">Presentation Intent</tspan></text>
+		</g>
+		
+			<polygon fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			201.505,274.471 250.926,261.18 300.499,274.664 300.499,274.693 250.926,288.178 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 237.3428 277.1836)" font-size="9">Layout</text>
+		</g>
+		
+			<rect x="263.295" y="374.027" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="84.003" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 283.7861 388.6133)" font-size="9">Image Box</text>
+		</g>
+		
+			<rect x="154.613" y="373.188" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="84.003" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 175.104 387.7734)" font-size="9">Image Box</text>
+		</g>
+	</g>
+</g>
+</svg>

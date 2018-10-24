@@ -1,0 +1,15 @@
+// 
+{
+  "Greeting": { },
+  "HostName": "JavaScriptTestApp - tcia-utilties",
+  "Title": "JavaScript Test Application - tcia-utilties",
+  "LoginTitle": "Login for JavaScript Test App",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 780,
+  "width": 1000,
+  "menu_width": 100,
+  "content_width": 900,
+}

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_FFF.2.1-13b.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502.001px" height="672.003px" viewBox="0 0 502.001 672.003" enable-background="new 0 0 502.001 672.003"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500.001" height="670.003"/>
+	<g>
+		
+			<rect x="54.338" y="115.962" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="157.116" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.659"/>
+		
+			<rect x="54.338" y="170.774" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.566"/>
+		
+			<rect x="54.338" y="184.433" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.565"/>
+		
+			<rect x="54.338" y="102.41" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="88.857" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="75.335" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="61.814" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="48.292" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="34.771" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		
+			<rect x="54.338" y="21.25" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		<rect x="320.813" y="24.188" fill="none" width="126.849" height="214.693"/>
+		<text transform="matrix(0.9288 0 0 1 320.8135 29.9146)"><tspan x="0" y="0" font-size="8">= UID “E”</tspan><tspan x="0" y="27.5" font-size="8">= UID “F”</tspan><tspan x="0" y="41.25" font-size="8">= ECG</tspan><tspan x="0" y="68.75" font-size="8">= 1.2.840.10008.5.15.1.1</tspan><tspan x="0" y="82.5" font-size="8">= SOURCE</tspan><tspan x="0" y="96.25" font-size="8">= ECG Equipment ID</tspan><tspan x="0" y="110" font-size="8">= 1/2</tspan><tspan x="0" y="123.75" font-size="8">= Y</tspan><tspan x="0" y="137.5" font-size="8">= Clock System ID</tspan><tspan x="0" y="151.25" font-size="8">= NTP</tspan><tspan x="0" y="165" font-size="8">= aaa.bbb.ccc.ddd</tspan><tspan x="0" y="192.5" font-size="8">UID “H”</tspan></text>
+		<rect x="320.813" y="255.082" fill="none" width="132.655" height="402.878"/>
+		<text transform="matrix(0.9288 0 0 1 320.8135 260.8081)"><tspan x="0" y="0" font-size="8">Only one ECG Multiplex Group</tspan><tspan x="0" y="14" font-size="8">= 10</tspan><tspan x="0" y="28" font-size="8">= ORIGINAL</tspan><tspan x="0" y="42" font-size="8">= 2</tspan><tspan x="0" y="56" font-size="8">= 1500</tspan><tspan x="0" y="70" font-size="8">= 300</tspan><tspan x="0" y="98" font-size="8">First ECG Channel</tspan><tspan x="0" y="112" font-size="8">= 1</tspan><tspan x="0" y="126" font-size="8">= ECG Recording 1</tspan><tspan x="0" y="168" font-size="8">= 2:2</tspan><tspan x="0" y="182" font-size="8">= MDC</tspan><tspan x="0" y="196" font-size="8">= Lead II</tspan><tspan x="0" y="210" font-size="8">= 0.0</tspan><tspan x="0" y="224" font-size="8">= 16</tspan><tspan x="0" y="252" font-size="8">= 2</tspan><tspan x="0" y="266" font-size="8">= Synchronization</tspan><tspan x="0" y="308" font-size="8">= 109002</tspan><tspan x="0" y="322" font-size="8">= DCM</tspan><tspan x="0" y="336" font-size="8">= ECG-based gating signal, processed</tspan><tspan x="0" y="350" font-size="8">= 0.0</tspan><tspan x="0" y="364" font-size="8">= 16</tspan><tspan x="0" y="378" font-size="8">= 16</tspan><tspan x="0" y="392" font-size="8">= SS</tspan></text>
+		<rect x="58.478" y="24.188" fill="none" width="175.978" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 29.915)" font-size="8">Study Instance UID</text>
+		<rect x="54.698" y="8.836" fill="none" width="175.978" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 54.6973 14.563)" font-size="8">General ECG SOP Instance</text>
+		<rect x="58.478" y="37.71" fill="none" width="156.672" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 43.4365)" font-size="8">...</text>
+		<rect x="58.478" y="51.23" fill="none" width="142.656" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 56.9575)" font-size="8">Series Instance UID</text>
+		<rect x="58.478" y="118.899" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 124.6255)" font-size="8">Trigger Source or Type</text>
+		<rect x="58.478" y="173.698" fill="none" width="141.53" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 179.4253)" font-size="8">Time Distribution Protocol</text>
+		<rect x="256.789" y="24.188" fill="none" width="44.533" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 256.7891 29.915)" font-size="8">(0020,000D)</text>
+		<rect x="256.938" y="51.23" fill="none" width="44.385" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.9375 56.9575)" font-size="8">(0020,000E)</text>
+		<rect x="256.443" y="118.899" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 124.6255)" font-size="8">(0008,1061)</text>
+		
+			<rect x="54.338" y="129.554" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		<rect x="58.478" y="132.491" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 138.2173)" font-size="8">Synchronization Channel</text>
+		<rect x="256.443" y="132.491" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 138.2173)" font-size="8">(0008,106C)</text>
+		
+			<rect x="54.338" y="143.301" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.592"/>
+		<rect x="58.478" y="146.238" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 151.9639)" font-size="8">Acquisition Time Synchronized</text>
+		<rect x="256.443" y="146.238" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 151.9639)" font-size="8">(0008,1800)</text>
+		<rect x="58.478" y="159.908" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 165.6343)" font-size="8">Time Source</text>
+		<rect x="256.443" y="159.908" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 165.6343)" font-size="8">(0008,1801)</text>
+		<rect x="256.443" y="173.579" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 179.3047)" font-size="8">(0008,1802)</text>
+		<rect x="58.478" y="187.249" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 192.9751)" font-size="8">NTP Source Address</text>
+		<rect x="256.443" y="187.249" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 192.9751)" font-size="8">(0008,1803)</text>
+		<rect x="58.478" y="105.347" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 111.0728)" font-size="8">Synchronization Trigger</text>
+		<rect x="256.443" y="105.347" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 111.0728)" font-size="8">(0018,106A)</text>
+		<rect x="58.478" y="91.794" fill="none" width="142.322" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 97.52)" font-size="8">Synchronization Frame of Reference UID</text>
+		<rect x="256.443" y="91.794" fill="none" width="44.879" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.4434 97.52)" font-size="8">(0020,0200)</text>
+		
+			<rect x="54.338" y="197.999" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.659"/>
+		
+			<rect x="54.338" y="211.657" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.566"/>
+		
+			<rect x="54.338" y="225.316" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="13.565"/>
+		<rect x="58.478" y="200.97" fill="none" width="141.863" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 206.6973)" font-size="8">...</text>
+		<rect x="58.478" y="214.581" fill="none" width="141.53" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 220.3081)" font-size="8">SOP Instance UID</text>
+		<rect x="58.478" y="228.74" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 234.4663)" font-size="8">...</text>
+		<rect x="256.338" y="214.581" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 220.3086)" font-size="8">(0008,0018)</text>
+		
+			<rect x="54.338" y="238.844" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="257.904" height="419.282"/>
+		
+			<rect x="69.448" y="252.412" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.794" height="405.547"/>
+		
+			<rect x="84.658" y="265.74" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.584" height="364.219"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="84.658" y1="294.154" x2="312.242" y2="294.154"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="84.658" y1="280.053" x2="312.242" y2="280.053"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="84.658" y1="308.148" x2="312.242" y2="308.148"/>
+		
+			<rect x="99.868" y="350.153" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="140.166"/>
+		
+			<rect x="112.572" y="364.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="378.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="392.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="70"/>
+		<rect x="58.478" y="242.288" fill="none" width="141.988" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 248.0181)" font-size="8">Waveform Sequence</text>
+		<rect x="92.036" y="270.436" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 276.1597)" font-size="8">&gt;Multiplex Group Time Offset</text>
+		<rect x="92.035" y="298.269" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 303.9917)" font-size="8">&gt;Number of Waveform Channels</text>
+		<g>
+			<rect x="122.29" y="367.85" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 373.5786)" font-size="8">&gt;&gt;Waveform Channel Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="381.768" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 387.4849)" font-size="8">&gt;&gt;Channel Label</text>
+		</g>
+		<rect x="73.719" y="256.348" fill="none" width="127.729" height="7.721"/>
+		<text transform="matrix(0.9288 0 0 1 73.7188 262.0757)" font-size="8">Item 1</text>
+		<rect x="103.719" y="353.936" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 359.6509)" font-size="8">Item 1</text>
+		<g>
+			<rect x="122.29" y="395.682" fill="none" width="106.325" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 401.4087)" font-size="8">&gt;&gt;Channel Source Sequence</text>
+		</g>
+		<rect x="256.338" y="242.274" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 248.0054)" font-size="8">(5400,0100)</text>
+		<rect x="256.338" y="270.436" fill="none" width="44.984" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 276.1621)" font-size="8">(0018,1068)</text>
+		<rect x="256.74" y="298.269" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 303.9956)" font-size="8">(003A,0005)</text>
+		<rect x="92.035" y="284.353" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 290.0737)" font-size="8">&gt;Waveform Originality</text>
+		<rect x="256.74" y="284.353" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 290.0791)" font-size="8">(003A,0004)</text>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="84.658" y1="336.153" x2="312.242" y2="336.153"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="84.658" y1="322.153" x2="312.242" y2="322.153"/>
+		<rect x="92.036" y="312.186" fill="none" width="108.83" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0356 317.9087)" font-size="8">&gt;Number of Waveform Samples</text>
+		<rect x="92.035" y="340.02" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 345.7407)" font-size="8">&gt;Channel Definition Sequence</text>
+		<rect x="256.338" y="312.187" fill="none" width="44.984" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.3379 317.9126)" font-size="8">(003A,0010)</text>
+		<rect x="256.74" y="340.02" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 345.7466)" font-size="8">(003A,0200)</text>
+		<rect x="92.035" y="326.103" fill="none" width="136.58" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 92.0352 331.8232)" font-size="8">&gt;Sampling Frequency</text>
+		<rect x="256.74" y="326.103" fill="none" width="44.582" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 256.7402 331.8291)" font-size="8">(003A,001A)</text>
+		<g>
+			<rect x="256.682" y="367.852" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 373.5786)" font-size="8">(003A,0202)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="381.768" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 387.4946)" font-size="8">(003A,0203)</text>
+		</g>
+		
+			<rect x="112.572" y="462.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="475.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		<g>
+			<rect x="122.29" y="465.262" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 470.9897)" font-size="8">&gt;&gt;Channel Time Skew</text>
+		</g>
+		<g>
+			<rect x="122.29" y="479.18" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 484.897)" font-size="8">&gt;&gt;Waveform Bits Stored</text>
+		</g>
+		<g>
+			<rect x="256.658" y="395.684" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 401.4106)" font-size="8">(003A,0208)</text>
+		</g>
+		
+			<rect x="125.572" y="406.153" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="186.67" height="56"/>
+		
+			<rect x="138.276" y="420.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		
+			<rect x="138.261" y="434.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		
+			<rect x="138.276" y="448.153" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		<rect x="58.478" y="64.752" fill="none" width="142.656" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 70.479)" font-size="8">Modality</text>
+		<rect x="256.938" y="64.752" fill="none" width="44.385" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 256.9375 70.479)" font-size="8">(0008,0060)</text>
+		<rect x="58.478" y="78.273" fill="none" width="156.673" height="7.716"/>
+		<text transform="matrix(0.9288 0 0 1 58.478 84.0005)" font-size="8">...</text>
+		<g>
+			<rect x="148.111" y="423.514" fill="none" width="78.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1113 429.2251)" font-size="8">&gt;&gt;Code Value</text>
+		</g>
+		<g>
+			<rect x="148.111" y="437.43" fill="none" width="102.955" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1108 443.144)" font-size="8">&gt;&gt;Coding Scheme Description</text>
+		</g>
+		<rect x="129.54" y="409.598" fill="none" width="96.499" height="7.717"/>
+		<text transform="matrix(0.9288 0 0 1 129.54 415.311)" font-size="8">Item 1</text>
+		<g>
+			<rect x="148.111" y="451.346" fill="none" width="78.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1113 457.0571)" font-size="8">&gt;&gt;Code Meaning</text>
+		</g>
+		<g>
+			<rect x="256.682" y="465.258" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 470.9731)" font-size="8">(003A,0214)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="479.172" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 484.8853)" font-size="8">(003A,021A)</text>
+		</g>
+		<g>
+			<rect x="256.683" y="423.514" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 429.2251)" font-size="8">(0008,0100)</text>
+		</g>
+		<g>
+			<rect x="256.499" y="437.43" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 443.1392)" font-size="8">(0008,0102)</text>
+		</g>
+		<g>
+			<rect x="256.659" y="451.358" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 457.0649)" font-size="8">(0008,0104)</text>
+		</g>
+		
+			<rect x="84.658" y="629.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.584" height="14.166"/>
+		
+			<rect x="84.658" y="643.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="227.584" height="14.166"/>
+		<g>
+			<rect x="94.376" y="632.903" fill="none" width="157.054" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 94.376 638.6294)" font-size="8">&gt;Waveform Bits Allocated</text>
+		</g>
+		<g>
+			<rect x="94.375" y="646.821" fill="none" width="156.69" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 94.3755 652.5474)" font-size="8">&gt;Waveform Sample Interpretation</text>
+		</g>
+		<g>
+			<rect x="256.682" y="632.901" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 638.6157)" font-size="8">(5400,1004)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="646.817" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 652.5298)" font-size="8">(5400,1006)</text>
+		</g>
+		
+			<rect x="99.868" y="489.959" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="212.374" height="140"/>
+		
+			<rect x="112.572" y="503.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="517.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="531.958" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="70"/>
+		<g>
+			<rect x="122.29" y="507.657" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 513.3853)" font-size="8">&gt;&gt;Waveform Channel Number</text>
+		</g>
+		<g>
+			<rect x="122.29" y="521.573" fill="none" width="102.954" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 527.2896)" font-size="8">&gt;&gt;Channel Label</text>
+		</g>
+		<rect x="103.719" y="493.743" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 103.7188 499.4575)" font-size="8">Item 2</text>
+		<g>
+			<rect x="122.29" y="535.489" fill="none" width="106.325" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 541.2153)" font-size="8">&gt;&gt;Channel Source Sequence</text>
+		</g>
+		<g>
+			<rect x="256.682" y="507.657" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 513.3843)" font-size="8">(003A,0202)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="521.575" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 527.3013)" font-size="8">(003A,0203)</text>
+		</g>
+		
+			<rect x="112.572" y="601.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		
+			<rect x="112.572" y="615.764" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="199.67" height="14"/>
+		<g>
+			<rect x="122.29" y="605.071" fill="none" width="102.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.29 610.7983)" font-size="8">&gt;&gt;Channel Time Skew</text>
+		</g>
+		<g>
+			<rect x="122.29" y="618.987" fill="none" width="102.954" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 122.2896 624.7046)" font-size="8">&gt;&gt;Waveform Bits Stored</text>
+		</g>
+		<g>
+			<rect x="256.658" y="535.489" fill="none" width="44.664" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 541.2163)" font-size="8">(003A,0208)</text>
+		</g>
+		
+			<rect x="125.572" y="545.959" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="186.67" height="56"/>
+		
+			<rect x="138.276" y="559.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		
+			<rect x="138.261" y="573.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		
+			<rect x="138.276" y="587.959" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.966" height="14"/>
+		<g>
+			<rect x="148.111" y="563.321" fill="none" width="78.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1113 569.0317)" font-size="8">&gt;&gt;Code Value</text>
+		</g>
+		<g>
+			<rect x="148.111" y="577.237" fill="none" width="102.955" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1108 582.9517)" font-size="8">&gt;&gt;Coding Scheme Description</text>
+		</g>
+		<rect x="129.54" y="549.405" fill="none" width="96.499" height="7.715"/>
+		<text transform="matrix(0.9288 0 0 1 129.54 555.1177)" font-size="8">Item 1</text>
+		<g>
+			<rect x="148.111" y="591.153" fill="none" width="78.953" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 148.1113 596.8638)" font-size="8">&gt;&gt;Code Meaning</text>
+		</g>
+		<g>
+			<rect x="256.682" y="605.071" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 610.7866)" font-size="8">(003A,0214)</text>
+		</g>
+		<g>
+			<rect x="256.498" y="618.987" fill="none" width="44.824" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 624.6997)" font-size="8">(003A,021A)</text>
+		</g>
+		<g>
+			<rect x="256.683" y="563.321" fill="none" width="44.641" height="7.715"/>
+			<text transform="matrix(0.9288 0 0 1 256.6816 569.0317)" font-size="8">(0008,0100)</text>
+		</g>
+		<g>
+			<rect x="256.499" y="577.235" fill="none" width="44.824" height="7.717"/>
+			<text transform="matrix(0.9288 0 0 1 256.498 582.9438)" font-size="8">(0008,0102)</text>
+		</g>
+		<g>
+			<rect x="256.659" y="591.163" fill="none" width="44.664" height="7.713"/>
+			<text transform="matrix(0.9288 0 0 1 256.6582 596.8716)" font-size="8">(0008,0104)</text>
+		</g>
+	</g>
+</g>
+</svg>

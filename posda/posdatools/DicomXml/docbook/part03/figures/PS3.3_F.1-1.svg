@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_F.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="422px" viewBox="0 0 502 422" enable-background="new 0 0 502 422" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="420"/>
+	<g>
+		
+			<path fill="#CCDEF0" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" d="
+			M450.029,392.77c0,6.627-5.373,12-12,12H63.971c-6.628,0-12-5.373-12-12V47.229c0-6.627,5.372-12,12-12h374.058
+			c6.627,0,12,5.373,12,12V392.77z"/>
+		
+			<rect x="79.019" y="56.589" fill="#B2CEE7" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="344.01" height="201.681"/>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 51.9712 27.8677)" font-size="12">Formatted Physical Medium</text>
+		</g>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 77.2212 53.1177)" font-size="12">DICOM File-Set</text>
+		</g>
+		
+			<rect x="79.019" y="293.27" fill="#B2CEE7" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" width="344.01" height="103.5"/>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 77.2212 289.7998)" font-size="12">DICOM File-Set N</text>
+		</g>
+		<g>
+			
+				<rect x="93.871" y="121.233" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="72.115"/>
+			<rect x="93.871" y="155.301" fill="none" width="119.358" height="33"/>
+			<text transform="matrix(0.9288 0 0 1 101.3608 163.877)"><tspan x="0" y="0" font-size="12">File-set information +</tspan><tspan x="-3.498" y="14.4" font-size="12">Medical Info. Directory</tspan></text>
+			
+				<rect x="93.871" y="121.421" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126" height="18"/>
+			<rect x="98.147" y="125.662" fill="none" width="117.447" height="9.517"/>
+			<text transform="matrix(0.9288 0 0 1 106.2495 134.2461)" font-size="12">File ID = DICOMDIR</text>
+		</g>
+		
+			<rect x="96.371" y="310.082" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" width="126" height="72.115"/>
+		<rect x="96.371" y="344.15" fill="none" width="119.358" height="33"/>
+		<text transform="matrix(0.9288 0 0 1 99.3843 352.7266)"><tspan x="0" y="0" font-size="12">Other DICOM File-sets</tspan><tspan x="19.653" y="14.4" font-size="12">may be present</tspan></text>
+		
+			<rect x="96.371" y="310.27" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" width="126" height="18"/>
+		<rect x="100.647" y="314.512" fill="none" width="117.447" height="9.516"/>
+		<text transform="matrix(0.9288 0 0 1 108.7495 323.0957)" font-size="12">File ID = DICOMDIR</text>
+		
+			<rect x="302.662" y="73.589" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="77.088" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 322.0854 84.2437)" font-size="10">File ID = AB\18</text>
+		
+			<rect x="302.662" y="103.47" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="106.969" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 322.0854 114.1133)" font-size="10">File ID = AB\12</text>
+		
+			<rect x="302.662" y="133.351" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="136.85" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 320.7026 143.9941)" font-size="10">File ID = AB\GT</text>
+		
+			<rect x="302.662" y="163.231" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="166.731" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 308.7573 173.875)" font-size="10">File ID = AB\CDE\FG</text>
+		
+			<rect x="302.662" y="193.112" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="196.612" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 309.0356 203.7559)" font-size="10">File ID = AB\CDE\FH</text>
+		
+			<rect x="302.662" y="222.993" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="106.357" height="18"/>
+		<rect x="305.593" y="226.492" fill="none" width="100.5" height="11"/>
+		<text transform="matrix(1 0 0 1 311.2573 233.6367)" font-size="10">File ID = AB\CDE\FI</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="293.923" y2="88.349"/>
+				<g>
+					<polygon fill="#005695" points="294.555,92.521 301.71,81.111 289.808,87.415 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="292.486" y2="115.574"/>
+				<g>
+					<polygon fill="#005695" points="292.157,119.781 301.71,110.288 288.69,113.73 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="291.282" y2="143.028"/>
+				<g>
+					<polygon fill="#005695" points="289.627,146.91 301.71,140.961 288.272,140.07 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="291.247" y2="170.003"/>
+				<g>
+					<polygon fill="#005695" points="288.29,173.014 301.71,171.883 289.523,166.151 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="292.518" y2="199.384"/>
+				<g>
+					<polygon fill="#005695" points="288.71,201.205 301.71,204.725 292.213,195.175 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="219.871" y1="157.182" x2="294.002" y2="227.606"/>
+				<g>
+					<polygon fill="#005695" points="289.877,228.496 301.71,234.929 294.68,223.441 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

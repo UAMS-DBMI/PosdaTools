@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.4.1-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="332px" viewBox="0 0 502 332" enable-background="new 0 0 502 332" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="330"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="145.714" y1="70.294" x2="311.313" y2="70.294"/>
+		<path fill="#005695" d="M313.675,69.269c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C317.05,70.169,315.444,69.803,313.675,69.269z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="145.714" y1="217.566" x2="311.315" y2="217.566"/>
+		<path fill="#005695" d="M313.677,216.541c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C317.052,217.441,315.446,217.075,313.677,216.541z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="91.697" y1="241.75" x2="372.497" y2="241.75"/>
+		<path fill="#005695" d="M374.858,240.726c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C378.233,241.625,376.628,241.259,374.858,240.726z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="39.286" y1="266.721" x2="438.886" y2="266.721"/>
+		<path fill="#005695" d="M441.247,265.696c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C444.622,266.596,443.017,266.229,441.247,265.696z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="39.286" y1="291.578" x2="438.886" y2="291.578"/>
+		<path fill="#005695" d="M441.247,290.554c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C444.622,291.453,443.017,291.087,441.247,290.554z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="145.714" y1="144.682" x2="311.315" y2="144.682"/>
+		<path fill="#005695" d="M313.677,143.656c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C317.052,144.557,315.446,144.191,313.677,143.656z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="320.331" y1="94.273" x2="154.728" y2="94.273"/>
+		<path fill="#005695" d="M152.366,95.298c1.653,0.5,2.728,0.959,4.054,1.492v-5.044c-0.475,0.226-2.401,0.993-4.054,1.492
+			c-1.77,0.535-3.374,0.9-4.415,1.031C148.992,94.398,150.597,94.764,152.366,95.298z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="34.692" y1="311.029" x2="34.692" y2="41.4"/>
+		
+			<rect x="12.192" y="17.367" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 18.9326 33.9351)"  font-size="9">Storage</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="87.855" y1="311.029" x2="87.855" y2="41.4"/>
+		
+			<rect x="65.355" y="17.367" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 68.6021 33.9351)"  font-size="9">Hardcopy</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="141.023" y1="311.029" x2="141.023" y2="41.4"/>
+		
+			<rect x="118.523" y="17.367" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 122.5278 33.9351)"  font-size="9">Workflow</text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="325.359" y1="311.029" x2="325.359" y2="41.4"/>
+		
+			<rect x="293.855" y="17.367" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="27"/>
+		<text transform="matrix(1 0 0 1 302.3496 27.3345)"><tspan x="0" y="0"  font-size="9">Department</tspan><tspan x="3.248" y="10.8"  font-size="9">Scheduler</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="452.303" y1="311.029" x2="452.303" y2="41.4"/>
+		
+			<rect x="414.809" y="16.701" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="75" height="27"/>
+		<text transform="matrix(1 0 0 1 421.2852 26.6685)"><tspan x="0" y="0"  font-size="9">Image Manager</tspan><tspan x="13.758" y="10.8"  font-size="9">Manager</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="385.833" y1="311.029" x2="385.833" y2="41.4"/>
+		
+			<rect x="363.331" y="17.045" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.002" height="27"/>
+		<text transform="matrix(1 0 0 1 372.5225 33.6128)"  font-size="9">Printer</text>
+		<text transform="matrix(1 0 0 1 163.8389 66.6636)"><tspan x="0" y="0"  font-size="8">1. Query Worklist</tspan><tspan x="0" y="24.6"  font-size="8">2.Receive Worklist</tspan><tspan x="0" y="49.2"  font-size="8">3. Select Work item (MSPS)</tspan><tspan x="0" y="73.8"  font-size="8">4. Start Acquisition (Create MPPS)</tspan><tspan x="0" y="123"  font-size="8">5. Acquire Images</tspan><tspan x="0" y="147.6"  font-size="8">6. Complete Acquisition (Finalize MPPS)</tspan><tspan x="0" y="172.2"  font-size="8">7. Print Acquired Images (optional)</tspan><tspan x="0" y="196.799"  font-size="8">8. Store Acquired Images &amp;GSPS</tspan><tspan x="0" y="221.401"  font-size="8">9. Commit Acquired Images &amp; GSPS</tspan></text>
+		
+			<rect x="136.759" y="56.306" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="70.084"/>
+		
+			<rect x="136.759" y="134.688" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="91.981"/>
+		
+			<rect x="321.176" y="134.688" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="91.981"/>
+		
+			<rect x="83.152" y="227.389" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="33"/>
+		
+			<rect x="381.509" y="227.389" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="33"/>
+		
+			<rect x="321.003" y="58.057" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="45"/>
+		
+			<rect x="30.379" y="260.119" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="42.667"/>
+		
+			<rect x="447.507" y="260.119" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="42.667"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="147.216,105.717 159.247,105.717 
+			159.247,120.855 153.698,120.855 		"/>
+		<path fill="#005695" d="M151.336,121.881c1.653,0.5,2.728,0.959,4.054,1.492v-5.045c-0.475,0.226-2.401,0.992-4.054,1.492
+			c-1.77,0.534-3.374,0.9-4.415,1.03C147.962,120.98,149.567,121.347,151.336,121.881z"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="147.216,173.391 159.247,173.391 
+			159.247,198.135 153.698,198.135 		"/>
+		<path fill="#005695" d="M151.336,199.037c1.653,0.44,2.728,0.846,4.054,1.314v-4.441c-0.475,0.197-2.401,0.873-4.054,1.312
+			c-1.77,0.471-3.374,0.793-4.415,0.908C147.962,198.245,149.567,198.567,151.336,199.037z"/>
+	</g>
+</g>
+</svg>

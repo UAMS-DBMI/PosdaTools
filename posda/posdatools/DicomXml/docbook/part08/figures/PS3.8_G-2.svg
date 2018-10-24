@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part08/figures/PS3.8_G-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="307px" viewBox="0 0 502 307" enable-background="new 0 0 502 307" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.8 Network Communication Support for Message Exchange
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F6F0D8" width="500" height="305"/>
+	<g>
+		<rect x="80.301" y="16.664" fill="#FFFFFF" width="105.958" height="273.893"/>
+		<rect x="186.259" y="16.664" fill="#CCDEF0" width="134.501" height="273.893"/>
+		<rect x="320.26" y="16.664" fill="#B2CEE7" width="106.871" height="273.893"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 229.7407 84.7139)"><tspan x="0" y="0" font-size="11">DICOM UL</tspan><tspan x="-13.457" y="13.2" font-size="11">Service Provider</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 110.8467 84.7139)" font-size="11">Requestor</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 90.9033 31.6338)"><tspan x="0" y="0" font-size="11">Application Entity in</tspan><tspan x="24.466" y="13.2" font-size="11">System B</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 36.478 93.9082)"><tspan x="0" y="0" font-size="11">Request</tspan><tspan x="-0.599" y="13.2" font-size="11">Primitive</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 18.7705 218.6836)"><tspan x="0" y="0" font-size="11">Confirmation</tspan><tspan x="10.095" y="13.201" font-size="11">Primitive</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 433.541 128.4438)"><tspan x="0" y="0" font-size="11">Indication</tspan><tspan x="2.46" y="13.2" font-size="11">Primitive</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 432.5625 182.5645)"><tspan x="0" y="0" font-size="11">Responsive</tspan><tspan x="7.654" y="13.2" font-size="11">Primitive</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 356.5879 84.7139)" font-size="11">Acceptor</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 333.4082 28.6338)"><tspan x="0" y="0" font-size="11">Application Entity in</tspan><tspan x="24.464" y="13.2" font-size="11">System B</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 275.2207 271.7168)"><tspan x="0" y="0" font-size="11">Service Access Point</tspan><tspan x="3.064" y="13.2" font-size="11">( SAP ) in System A</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 141.2207 271.7168)"><tspan x="0" y="0" font-size="11">Service Access Point</tspan><tspan x="3.064" y="13.2" font-size="11">( SAP ) in System A</tspan></text>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linecap="round" stroke-miterlimit="1" x1="320.76" y1="251.678" x2="320.76" y2="16.443"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linecap="round" stroke-miterlimit="1" x1="186.259" y1="251.678" x2="186.259" y2="16.443"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" x1="315.76" y1="114.409" x2="191.259" y2="114.409"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4" x1="315.76" y1="204.344" x2="191.259" y2="204.344"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="80.533" y1="97.949" x2="176.101" y2="113.829"/>
+				<g>
+					<polygon fill="#005695" points="173.67,116.37 184.841,115.281 174.623,110.638 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="322.82" y1="113.146" x2="418.389" y2="129.032"/>
+				<g>
+					<polygon fill="#005695" points="415.957,131.573 427.128,130.484 416.91,125.841 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="89.273" y1="219.746" x2="184.841" y2="203.868"/>
+				<g>
+					<polygon fill="#005695" points="91.704,222.287 80.533,221.198 90.751,216.556 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="331.56" y1="203.109" x2="427.128" y2="187.226"/>
+				<g>
+					<polygon fill="#005695" points="333.991,205.65 322.82,204.562 333.038,199.918 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

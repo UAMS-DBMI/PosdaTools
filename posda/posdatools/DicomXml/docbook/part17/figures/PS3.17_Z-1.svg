@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_Z-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:21 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="297px" viewBox="0 0 502 297" enable-background="new 0 0 502 297" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="295"/>
+<g>
+	<polygon fill="#E6E7E8" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" points="
+		265.619,53.072 245.074,54.58 245.074,27.679 265.619,26.941 	"/>
+	<polygon fill="#E6E7E8" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" points="
+		161.301,22.711 136.293,24.119 136.293,161.727 161.301,156.059 	"/>
+	<polygon fill="#BCBEC0" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" points="
+		136.292,38.873 136.292,161.727 118.104,153.703 118.105,16.127 245.074,27.678 245.074,54.58 	"/>
+	<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" points="
+		265.619,26.941 131.254,15.736 118.105,16.127 245.471,27.655 	"/>
+</g>
+<g>
+	<g>
+		<path opacity="0.6" fill="#CCCCCC" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" d="M368.199,242.953
+			c-0.9-0.34-1.805-0.68-2.713-1.016c-50.84-18.846-95.896-23.76-100.633-10.98c-3.414,9.211,15.049,25.098,44.66,40.309v-3.6
+			c-29.611-15.211-48.074-31.098-44.66-40.309c4.736-12.779,49.793-7.865,100.633,10.98c0.908,0.336,1.812,0.676,2.713,1.016
+			V242.953z"/>
+		<path fill="#FFFFFF" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" d="M309.514,267.666
+			c-29.611-15.211-48.074-31.098-44.66-40.309c4.736-12.779,49.793-7.865,100.633,10.98c0.908,0.336,1.812,0.676,2.713,1.016
+			L309.514,267.666z"/>
+	</g>
+	<polygon fill="#999999" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" points="330.734,213.232 389.121,185.547 
+		389.121,253.578 330.734,281.264 	"/>
+	<polygon fill="#CCCCCC" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" points="309.76,203.074 330.734,212.967 
+		330.734,281.264 309.76,271.467 	"/>
+	<polygon fill="#999999" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" points="348.465,217.73 406.852,190.045 
+		406.852,193.645 348.465,221.33 	"/>
+	<polygon fill="#CCCCCC" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" points="348.465,217.73 229.72,161.727 
+		229.72,165.326 348.465,221.33 	"/>
+	<polygon fill="#4F8ABE" stroke="#000000" stroke-width="0.5" stroke-linejoin="round" points="284.471,149.178 406.852,190.045 
+		348.465,217.73 229.72,161.727 	"/>
+</g>
+<polygon fill="#B2CEE7" stroke="#000000" stroke-width="0.5" points="247.141,157.723 232.173,151.42 254.268,146.814 
+	269.992,152.555 284.471,149.178 406.852,190.045 348.465,217.73 229.72,161.727 "/>
+<g>
+	<text transform="matrix(1 0 0 1 372.2168 172.5391)"><tspan x="0" y="0" fill="#ED1C24" font-size="12">X</tspan><tspan x="8.752" y="5" fill="#ED1C24" font-size="9">t</tspan></text>
+	<text transform="matrix(1 0 0 1 206.7905 141.8188)"><tspan x="0" y="0" fill="#00AEEF" font-size="12">Z</tspan><tspan x="7.33" y="4" fill="#00AEEF" font-size="12">t</tspan></text>
+	<text transform="matrix(1 0 0 1 314.0879 240.4521)"><tspan x="0" y="0" fill="#0DB14B" font-size="12">Y</tspan><tspan x="8.752" y="5" fill="#0DB14B" font-size="9">t</tspan></text>
+	<text transform="matrix(1 0 0 1 333.1543 197.0078)"><tspan x="0" y="0" font-size="12">O</tspan><tspan x="9.418" y="5" font-size="9">t</tspan></text>
+	<g>
+		<g>
+			<line fill="none" stroke="#0DB14B" stroke-width="2" x1="324.01" y1="189.131" x2="324.01" y2="224.062"/>
+			<g>
+				<polygon fill="#0DB14B" points="321.686,222.478 324.01,231.15 326.334,222.478 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line fill="none" stroke="#ED1C24" stroke-width="2" x1="324.01" y1="189.131" x2="363.285" y2="175.262"/>
+			<g>
+				<polygon fill="#ED1C24" points="362.564,177.981 369.969,172.902 361.018,173.599 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line fill="none" stroke="#00AEEF" stroke-width="2" x1="324.01" y1="189.131" x2="225.941" y2="141.985"/>
+			<g>
+				<polygon fill="#00AEEF" points="228.377,140.577 219.554,138.914 226.363,144.767 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#0DB14B" d="M176.433,80.029"/>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#0DB14B" stroke-width="2" x1="243.873" y1="80.294" x2="243.872" y2="105.928"/>
+		<g>
+			<polygon fill="#0DB14B" points="240.385,103.55 243.871,116.56 247.358,103.551 			"/>
+		</g>
+	</g>
+</g>
+<text transform="matrix(1 -0.0019 0.0019 1 174.833 70.2134)" fill="#00AEEF" font-size="12.5">+Z</text>
+<text transform="matrix(1 -0.0019 0.0019 1 292.8799 73.6362)" fill="#ED1C24" font-size="12.5">+X</text>
+<text transform="matrix(1 -0.0019 0.0019 1 224.2173 121.8423)" fill="#0DB14B" font-size="12.5">+Y</text>
+<g>
+	<text transform="matrix(1 -3.400000e-04 3.400000e-04 1 249.4214 73.6362)" font-size="12.5">O</text>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="1,1" x1="317.77" y1="180.523" x2="244.559" y2="79.533"/>
+		<g>
+			<polygon points="319.197,176.552 324.01,189.131 313.552,180.645 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#ED1C24" stroke-width="2" x1="244.559" y1="79.533" x2="285.895" y2="72.464"/>
+		<g>
+			<polygon fill="#ED1C24" points="284.724,75.022 292.881,71.27 283.94,70.44 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="1,1" x1="244.559" y1="79.533" x2="399.308" y2="109.308"/>
+		<g>
+			<polygon points="396.313,112.282 409.747,111.316 397.631,105.435 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#00AEEF" stroke-width="2" x1="240.74" y1="79.461" x2="197.256" y2="71.495"/>
+		<g>
+			<polygon fill="#00AEEF" points="199.234,69.494 190.284,70.218 198.396,74.067 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<path stroke="#000000" stroke-miterlimit="1" d="M249.771,79.539c0.002-3.26-2.641-5.898-5.9-5.898v5.902L249.771,79.539z"/>
+	
+		<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M243.871,73.641c-3.256,0-5.896,2.643-5.896,5.904l5.896-0.002V73.641z"/>
+	<path stroke="#000000" stroke-miterlimit="1" d="M237.975,79.545c0.002,3.257,2.645,5.897,5.9,5.896l-0.004-5.898L237.975,79.545z"
+		/>
+	
+		<path fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M243.871,79.543l0.004,5.898c3.258-0.002,5.898-2.645,5.896-5.902L243.871,79.543z"/>
+</g>
+<g>
+	<rect x="248.411" y="119.518" fill="#F5EED6" width="64.001" height="17"/>
+	<text transform="matrix(1 -0.0048 0.0048 1 248.4922 132.1519)" font-size="12.5">(Tx, Ty, Tz)</text>
+</g>
+<g>
+	<text transform="matrix(1 -3.400000e-04 3.400000e-04 1 414.5449 106.0933)" font-size="12.5">P</text>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="1,1" x1="401.875" y1="118.461" x2="324.01" y2="189.131"/>
+		<g>
+			<polygon points="397.771,117.478 409.747,111.316 402.457,122.641 			"/>
+		</g>
+	</g>
+</g>
+<circle fill="#FFFFFF" stroke="#003468" cx="409.747" cy="111.316" r="3.6"/>
+<g>
+	<rect x="307.324" y="87.925" fill="#F5EED6" width="58" height="15"/>
+	<text transform="matrix(1 -0.0048 0.0048 1 309.9463 99.3345)" font-size="10">(Px, Py, Pz)</text>
+</g>
+<g>
+	<rect x="348.465" y="135.621" fill="#F5EED6" width="64" height="16.003"/>
+	<text transform="matrix(1 -0.0048 0.0048 1 349.9189 146.5508)" font-size="10">(Pxt, Pyt, Pzt)</text>
+</g>
+</svg>

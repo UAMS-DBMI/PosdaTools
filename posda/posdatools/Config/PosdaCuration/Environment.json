@@ -1,0 +1,25 @@
+{
+  "ApplicationInitClass" : "PosdaCuration::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Data/Login.db",
+  "ApplicationName" : "PosdaCuration",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
+  "JavascriptRoot" : "POSDA_ROOT/PosdaCuration/javascript",
+  "QuarantineMasterRoot" : "POSDA_ROOT/Data/quarantines",
+  "QuarantineRoot" : "POSDA_ROOT/Data/QuarantinedExtractions/data",
+  "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
+  "ExtractionRoot" :
+     "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
+  "PhiAnalysisRoot" :
+     "POSDA_CACHE_ROOT/Data/PhiAnalysis/data",
+  "extraction_root" :
+     "POSDA_CACHE_ROOT/Data/HierarchicalExtractions/data",
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
+  "IntakeDatabaseHost" : "144.30.1.71",
+  "PublicDatabaseHost" : "144.30.1.74",
+
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData"
+}

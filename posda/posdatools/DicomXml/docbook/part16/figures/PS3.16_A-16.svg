@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part16/figures/PS3.16_A-16.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="501.986px" height="331.984px" viewBox="0 0 501.986 331.984" enable-background="new 0 0 501.986 331.984"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.6 Part 16: Content Mapping Resource
+   </desc>
+   <title>
+	Figure A-16: Spiral Acquisition Parameters 
+   </title>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="499.986" height="329.984"/>
+	
+		<polygon fill="#B2CEE7" stroke="#86B2D8" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		197.794,47.831 209.756,47.831 216.956,62.231 190.594,62.231 	"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="107.126" x2="449.196" y2="107.126"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="129.193" x2="449.196" y2="129.193"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="152.366" x2="449.196" y2="152.366"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="175.273" x2="449.196" y2="175.273"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="198.18" x2="449.196" y2="198.18"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="221.086" x2="449.196" y2="221.086"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="267.52" x2="449.196" y2="267.52"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="290.683" x2="449.196" y2="290.683"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="313.188" x2="449.196" y2="313.188"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="188.195" y1="244.071" x2="449.196" y2="244.071"/>
+	<rect x="459.872" y="58.335" fill="none" width="31.455" height="8.51"/>
+	<text transform="matrix(0.9288 0 0 1 459.8711 64.7764)" font-size="9">Feet (Z)</text>
+	<rect x="10.66" y="102.422" fill="none" width="171.535" height="217.798"/>
+	<text transform="matrix(0.9288 0 0 1 99.0508 108.8633)"><tspan x="0" y="0" font-size="9">FWHM of Dose Profile         </tspan><tspan x="-50.581" y="23" font-size="9">Top Z Location of Scanning Length</tspan><tspan x="-81.075" y="46" font-size="9">Top Z Location of Reconstructable Volume</tspan><tspan x="-17.521" y="69" font-size="9">First Reconstructable Slice</tspan><tspan x="-17.037" y="92" font-size="9">Last Reconstructable Slice</tspan><tspan x="-94.078" y="115" font-size="9">Bottom Z Location of Reconstructable Volume</tspan><tspan x="-63.585" y="138" font-size="9">Bottom Z Location of Scanning Length</tspan><tspan x="-48.568" y="161" font-size="9">Length of Reconstructable Volume</tspan><tspan x="21.96" y="184" font-size="9">Scanning Length</tspan><tspan x="25.471" y="207" font-size="9">Exposed Range</tspan></text>
+	
+		<rect x="238.183" y="11.764" fill="#86B2D8" stroke="#6799C8" stroke-width="0.5" stroke-miterlimit="1" width="143.979" height="50"/>
+	<rect x="372.161" y="16.764" fill="#B2CEE7" stroke="#6799C8" stroke-width="0.5" stroke-miterlimit="1" width="10" height="45"/>
+	<rect x="238.183" y="16.764" fill="#B2CEE7" stroke="#6799C8" stroke-width="0.5" stroke-miterlimit="1" width="10" height="45"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="194.195" y1="55.031" x2="194.195" y2="312.716"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="213.716" y1="55.031" x2="213.716" y2="107.126"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,2" x1="194.37" y1="55.031" x2="213.716" y2="55.031"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="248.184" y1="62.329" x2="248.184" y2="175.273"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="372.161" y1="61.764" x2="372.161" y2="198.18"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="194.556" y1="107.126" x2="213.716" y2="107.126"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="203.275" y1="129.452" x2="204.275" y2="129.452"/>
+	
+		<polygon fill="#B2CEE7" stroke="#86B2D8" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		409.364,47.831 421.325,47.831 428.526,62.231 402.163,62.231 	"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="405.765" y1="55.031" x2="405.765" y2="107.126"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="425.286" y1="55.031" x2="425.286" y2="313.188"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,2" x1="405.94" y1="55.031" x2="425.286" y2="55.031"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="406.125" y1="107.126" x2="425.286" y2="107.126"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="237.683" y1="152.366" x2="238.683" y2="152.366"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="414.845" y1="244.116" x2="415.845" y2="244.116"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="381.661" y1="221.087" x2="382.661" y2="221.087"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="382.161" y1="62.329" x2="382.161" y2="267.52"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="238.183" y1="267.52" x2="382.161" y2="267.52"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="203.775" y1="290.683" x2="415.345" y2="290.683"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="194.195" y1="313.188" x2="425.286" y2="313.188"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="372.161" y1="198.18" x2="382.162" y2="198.18"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="238.183" y1="175.273" x2="248.184" y2="175.273"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="238.183" y1="62.329" x2="238.183" y2="267.52"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="415.345" y1="47.831" x2="415.345" y2="290.683"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="203.775" y1="47.831" x2="203.775" y2="290.683"/>
+	<g>
+		<g>
+			
+				<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-miterlimit="1" x1="188.195" y1="62.329" x2="450.015" y2="62.329"/>
+			<g>
+				<polygon points="448.528,64.508 456.659,62.329 448.528,60.149 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

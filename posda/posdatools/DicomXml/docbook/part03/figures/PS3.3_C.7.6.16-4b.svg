@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.16-4b.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="302px" viewBox="0 0 502 302" enable-background="new 0 0 502 302" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="300"/>
+	<g>
+		<rect x="115.263" y="42.169" fill="#CCDEF0" width="269.069" height="191.999"/>
+		<rect x="142.383" y="90.169" fill="#B2CEE7" width="294.844" height="24"/>
+		<rect x="142.383" y="137.932" fill="#B2CEE7" width="294.844" height="24.002"/>
+		<rect x="142.383" y="186.057" fill="#B2CEE7" width="294.844" height="24"/>
+		<g>
+			
+				<rect x="115.263" y="42.169" fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" width="269.069" height="191.999"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="66.169" x2="384.332" y2="66.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="90.169" x2="384.332" y2="90.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="114.169" x2="384.332" y2="114.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="138.169" x2="384.332" y2="138.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="162.168" x2="384.332" y2="162.168"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="186.168" x2="384.332" y2="186.168"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="115.263" y1="210.168" x2="384.332" y2="210.168"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="357.398" y1="234.168" x2="357.398" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="330.531" y1="234.168" x2="330.531" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="303.598" y1="234.168" x2="303.598" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="276.73" y1="234.168" x2="276.73" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="249.798" y1="234.168" x2="249.798" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="222.864" y1="234.168" x2="222.864" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="195.997" y1="234.168" x2="195.997" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="169.063" y1="234.168" x2="169.063" y2="42.169"/>
+			
+				<line fill="none" stroke="#9D9FA2" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="8" x1="142.196" y1="234.168" x2="142.196" y2="42.169"/>
+		</g>
+		<rect x="355.832" y="244.189" fill="none" width="57" height="8.109"/>
+		<text transform="matrix(0.9288 0 0 1 355.832 250.623)" font-size="9">Image Position</text>
+		<rect x="64.773" y="26.244" fill="none" width="43" height="31.85"/>
+		<text transform="matrix(0.9288 0 0 1 74.1982 32.6855)"><tspan x="0" y="0" font-size="9">Frame</tspan><tspan x="-8.76" y="10.8" font-size="9">Acquisition</tspan><tspan x="3.002" y="21.6" font-size="9">Time</tspan></text>
+		<rect x="172.787" y="17.967" fill="none" width="99.668" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 172.7871 24.4082)" font-size="9">In-Stack Position Number</text>
+		<rect x="203.298" y="275.924" fill="none" width="40.665" height="8.109"/>
+		<text transform="matrix(0.9288 0 0 1 203.2979 282.3574)" font-size="9">Stack ID 1</text>
+		<g>
+			<g>
+				<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M222.982,269.365c-0.122-3.252-1.757-5.641-4.905-7.164
+					c-3.149-1.525-7.045-2.465-11.691-2.82s-10.942-0.535-18.889-0.535c-11.309-0.066-19.393-0.285-24.253-0.66
+					c-4.86-0.369-9.093-1.311-12.7-2.82c-3.606-1.506-5.868-3.275-6.785-5.309c-0.917-2.033-1.375-4.453-1.375-7.268"/>
+			</g>
+			<g>
+				<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M303.555,242.789c0,2.814-0.459,5.234-1.375,7.268
+					c-0.918,2.033-3.18,3.803-6.785,5.309c-3.607,1.51-7.84,2.451-12.701,2.82c-4.859,0.375-12.943,0.594-24.252,0.66
+					c-7.946,0-14.243,0.18-18.889,0.535s-8.542,1.295-11.691,2.82c-3.148,1.523-4.783,3.912-4.905,7.164"/>
+			</g>
+		</g>
+		<g>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M151.72,206.242c0,0.762-0.461,1.379-1.035,1.379
+				c-0.57,0-1.031-0.617-1.031-1.379c0-0.758,0.461-1.375,1.031-1.375C151.259,204.867,151.72,205.484,151.72,206.242z"/>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M179.781,206.242c0,0.762-0.461,1.379-1.031,1.379
+				s-1.031-0.617-1.031-1.379c0-0.758,0.461-1.375,1.031-1.375S179.781,205.484,179.781,206.242z"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="206.814" cy="200.051" rx="1.033" ry="1.377"/>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M235.913,200.051c0,0.76-0.461,1.377-1.036,1.377
+				c-0.569,0-1.03-0.617-1.03-1.377s0.461-1.377,1.03-1.377C235.452,198.674,235.913,199.291,235.913,200.051z"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="262.941" cy="193.857" rx="1.033" ry="1.375"/>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M292.039,193.857c0,0.758-0.459,1.375-1.029,1.375
+				s-1.035-0.617-1.035-1.375c0-0.762,0.465-1.377,1.035-1.377S292.039,193.096,292.039,193.857z"/>
+		</g>
+		<g>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M152.851,152.092c0,0.758-0.461,1.377-1.035,1.377
+				c-0.57,0-1.031-0.619-1.031-1.377c0-0.761,0.461-1.376,1.031-1.376C152.39,150.716,152.851,151.331,152.851,152.092z"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="179.882" cy="152.092" rx="1.031" ry="1.377"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="207.945" cy="145.898" rx="1.033" ry="1.377"/>
+			<path fill="#003468" stroke="#003468" stroke-miterlimit="10" d="M237.042,145.898c0,0.759-0.46,1.377-1.034,1.377
+				c-0.57,0-1.031-0.618-1.031-1.377c0-0.762,0.461-1.376,1.031-1.376C236.582,144.522,237.042,145.137,237.042,145.898z"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="264.074" cy="139.705" rx="1.033" ry="1.376"/>
+			<ellipse fill="#003468" stroke="#003468" stroke-miterlimit="10" cx="292.14" cy="139.705" rx="1.032" ry="1.376"/>
+		</g>
+		<g>
+			<path fill="#003468" stroke="#005695" stroke-miterlimit="10" d="M152.879,110.539c0,0.758-0.461,1.376-1.035,1.376
+				c-0.57,0-1.031-0.618-1.031-1.376c0-0.762,0.461-1.376,1.031-1.376C152.418,109.163,152.879,109.777,152.879,110.539z"/>
+			<ellipse fill="#003468" stroke="#005695" stroke-miterlimit="10" cx="179.91" cy="110.539" rx="1.031" ry="1.376"/>
+			<ellipse fill="#003468" stroke="#005695" stroke-miterlimit="10" cx="207.973" cy="104.346" rx="1.033" ry="1.375"/>
+			<path fill="#003468" stroke="#005695" stroke-miterlimit="10" d="M237.071,104.346c0,0.758-0.461,1.375-1.035,1.375
+				c-0.569,0-1.03-0.617-1.03-1.375c0-0.762,0.461-1.377,1.03-1.377C236.61,102.969,237.071,103.584,237.071,104.346z"/>
+			<ellipse fill="#003468" stroke="#005695" stroke-miterlimit="10" cx="264.104" cy="98.151" rx="1.033" ry="1.376"/>
+			<ellipse fill="#003468" stroke="#005695" stroke-miterlimit="10" cx="292.169" cy="98.151" rx="1.032" ry="1.376"/>
+		</g>
+		<rect x="153.999" y="30.546" fill="none" width="5.87" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 153.999 36.9883)" font-size="9">1</text>
+		<rect x="180.87" y="30.546" fill="none" width="5.869" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 180.8691 36.9883)" font-size="9">2</text>
+		<rect x="207.739" y="30.546" fill="none" width="5.869" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 207.7393 36.9883)" font-size="9">3</text>
+		<rect x="234.608" y="30.546" fill="none" width="5.871" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 234.6089 36.9883)" font-size="9">4</text>
+		<rect x="261.479" y="30.546" fill="none" width="5.869" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 261.4785 36.9883)" font-size="9">5</text>
+		<rect x="288.35" y="30.546" fill="none" width="5.871" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 288.3477 36.9883)" font-size="9">6</text>
+		<rect x="337.559" y="194.619" fill="none" width="99.668" height="8.111"/>
+		<text transform="matrix(0.9288 0 0 1 337.5596 201.0537)" font-size="9">Temporal Position Index 1</text>
+		<rect x="337.559" y="145.372" fill="none" width="99.668" height="8.111"/>
+		<text transform="matrix(0.9288 0 0 1 337.5596 151.8057)" font-size="9">Temporal Position Index 2</text>
+		<rect x="337.559" y="96.124" fill="none" width="99.668" height="8.11"/>
+		<text transform="matrix(0.9288 0 0 1 337.5596 102.5576)" font-size="9">Temporal Position Index 3</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="115.263" y1="234.168" x2="115.263" y2="43.461"/>
+				<g>
+					<polygon points="118.168,45.442 115.263,34.602 112.357,45.442 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="115.263" y1="234.168" x2="380.291" y2="234.168"/>
+				<g>
+					<polygon points="378.31,237.073 389.15,234.168 378.31,231.263 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,20 @@
+// 
+{
+  "ApplicationInitClass" : "FileDist::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "CacheDir" : "POSDA_CACHE_ROOT",
+  "TestDataRoot" : "POSDA_CACHE_ROOT/Data/TestData",
+  "ParticipantDataRoot" : 
+    "POSDA_CACHE_ROOT/Data/Participant_Data_2014C",
+  "ParticipantResultsRoot" : 
+    "POSDA_CACHE_ROOT/Data/Participant_Results_2014C",
+  "ReceiverDataRoot" : "POSDA_CACHE_ROOT/DicomReceiver",
+  "TempDataRoot" : 
+    "POSDA_CACHE_ROOT/Data/TempDirectory",
+  "AnonymizeParallelism" : 5,
+}

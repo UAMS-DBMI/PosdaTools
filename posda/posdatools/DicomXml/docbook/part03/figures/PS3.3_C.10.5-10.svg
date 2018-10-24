@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.10.5-10.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="142px" viewBox="0 0 502 142" enable-background="new 0 0 502 142" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="140"/>
+	<g>
+		
+			<rect x="84.974" y="31.667" fill="#CCDEF0" stroke="#4F8ABE" stroke-miterlimit="10" stroke-dasharray="1,1" width="144" height="55"/>
+		<text transform="matrix(1 0 0 1 134.9893 37.8716)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 134.9893 61.1152)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 134.9893 84.3594)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 49.6421 24.7905)" font-size="10">Top</text>
+		<text transform="matrix(1 0 0 1 36.7271 61.9512)" font-size="10">Center</text>
+		<text transform="matrix(1 0 0 1 35.1938 99.1113)" font-size="10">Bottom</text>
+		<text transform="matrix(1 0 0 1 116.6782 122.7783)" font-size="10">Vertical Alignment</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="69.695" y1="59.167" x2="80.266" y2="59.167"/>
+				<g>
+					<polygon points="79.275,60.62 84.695,59.167 79.275,57.714 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="69.695" y1="22.791" x2="80.883" y2="29.411"/>
+				<g>
+					<polygon points="79.291,30.157 84.695,31.667 80.77,27.656 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="69.695" y1="95.834" x2="80.916" y2="88.977"/>
+				<g>
+					<polygon points="80.828,90.733 84.695,86.667 79.312,88.254 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="281.807" y="31.667" fill="#CCDEF0" stroke="#4F8ABE" stroke-miterlimit="10" stroke-dasharray="1,1" width="185" height="39.4"/>
+		<text transform="matrix(1 0 0 1 420.291 53.3154)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 284.3535 53.3154)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 352.3223 53.3154)" font-size="7">Your text here</text>
+		<text transform="matrix(1 0 0 1 281.8066 99.1113)" font-size="10">Left</text>
+		<text transform="matrix(1 0 0 1 359.2344 99.1113)" font-size="10">Center</text>
+		<text transform="matrix(1 0 0 1 443.4619 99.1113)" font-size="10">Right</text>
+		<text transform="matrix(1 0 0 1 328.1738 122.7783)" font-size="10">Horizontal Alignment</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="281.807" y1="86.067" x2="281.807" y2="75.497"/>
+				<g>
+					<polygon points="283.26,76.488 281.807,71.067 280.354,76.488 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="374.307" y1="86.067" x2="374.307" y2="75.497"/>
+				<g>
+					<polygon points="375.76,76.488 374.307,71.067 372.854,76.488 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="466.807" y1="86.067" x2="466.807" y2="75.497"/>
+				<g>
+					<polygon points="468.26,76.488 466.807,71.067 465.354,76.488 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

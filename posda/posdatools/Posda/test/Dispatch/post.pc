@@ -1,0 +1,5 @@
+my($this, $fh, $out, $args) = @_;
+if(exists $this->{objects}->{$args->[0]}){
+  $this->{objects}->{$args->[0]}->post();
+}
+delete($this->{objects}->{$args->[0]});

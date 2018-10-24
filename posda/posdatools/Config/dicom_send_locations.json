@@ -1,0 +1,62 @@
+{
+  "Quasar" : {
+    "host" : "dbmi-imac.ad.uams.edu",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "QUASAR"
+  },
+  "RSBIT2" : {
+    "host" : "rsbit2",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "RSBIT"
+  },
+  "Joseph" : {
+    "host" : "144.30.108.74",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "JOSEPH"
+  },
+  "Beast" : {
+    "host" : "144.30.111.143",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BEAST"
+  },
+  "IntakeServer" : {
+    "host" : "144.30.1.71",
+    "port" : "11112",
+    "calling_ae" : "POSDA",
+    "called_ae" : "CTP"
+  },
+  "PosdaDatabase" : {
+    "host" : "localhost",
+    "port" : "64611",
+    "calling_ae" : "SEND_LOOP",
+    "called_ae" : "RCV_LOOP"
+  },
+  "Bill's OsiriX" : {
+    "host" : "144.30.109.157",
+    "port" : "11112",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BBOSIRIX"
+  },
+  "Bill's Posda" : {
+    "host" : "tcia-utilities",
+    "port" : "64661",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BBPOSDA"
+  },
+  "Bill's Posda Mac" : {
+    "host" : "144.30.109.157",
+    "port" : "64611",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BBMAC"
+  },
+  "FirstProxy(Osirix)" : {
+    "host" : "localhost",
+    "port" : "64812",
+    "calling_ae" : "POSDA",
+    "called_ae" : "BBOSIRIX"
+  }
+}

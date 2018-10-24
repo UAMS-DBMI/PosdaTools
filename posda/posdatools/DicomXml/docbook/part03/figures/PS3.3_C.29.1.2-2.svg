@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.29.1.2-2.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="187px" viewBox="0 0 502 187" enable-background="new 0 0 502 187" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="185"/>
+	<g>
+		<g>
+			<polygon fill="#FFFFFF" stroke="#ED2224" stroke-width="3" stroke-linecap="round" stroke-miterlimit="8" points="
+				316.872,43.614 217.872,142.614 415.872,142.614 			"/>
+			
+				<line fill="none" stroke="#6ABD45" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="8" x1="316.872" y1="16.614" x2="316.872" y2="160.614"/>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 86.1289 25.4795)" fill="#010101" font-size="10">IN;</text>
+			<text transform="matrix(1 0 0 1 86.1289 39.6406)" fill="#010101" font-size="10">PA;</text>
+			<text transform="matrix(1 0 0 1 86.1289 53.8018)" fill="#010101" font-size="10">PC2,255,0,0;</text>
+			<text transform="matrix(1 0 0 1 86.1289 67.9629)" fill="#010101" font-size="10">PC255,0,255,0;</text>
+			<text transform="matrix(1 0 0 1 86.1289 82.124)" fill="#010101" font-size="10">SP2;</text>
+			<text transform="matrix(1 0 0 1 86.1289 96.2852)" fill="#010101" font-size="10">PU500,500;</text>
+			<text transform="matrix(1 0 0 1 86.1289 110.4463)" fill="#010101" font-size="10">PD745,255,255,255;</text>
+			<text transform="matrix(1 0 0 1 86.1289 124.6074)" fill="#010101" font-size="10">PD500,500;</text>
+			<text transform="matrix(1 0 0 1 86.1289 138.7686)" fill="#010101" font-size="10">SP255;</text>
+			<text transform="matrix(1 0 0 1 86.1289 152.9297)" fill="#010101" font-size="10">PU500,600;</text>
+			<text transform="matrix(1 0 0 1 86.1289 167.0908)" fill="#010101" font-size="10">PD500,100;</text>
+		</g>
+	</g>
+</g>
+</svg>

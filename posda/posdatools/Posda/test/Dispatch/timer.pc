@@ -1,0 +1,9 @@
+my($this, $fh, $out, $args) = @_;
+my $rm = sub {
+  delete $this->{objects}->{$args->[0]};
+};
+my $foo = Dispatch::Select::Background->new(
+  Dispatch::Test::CreateTimer($out, $args->[0], $rm)
+);
+$this->{objects}->{$args->[0]} = $foo;
+$foo->timer($args->[1]);

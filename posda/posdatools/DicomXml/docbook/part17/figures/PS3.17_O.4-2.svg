@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_O.4-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="462px" viewBox="0 0 502 462" enable-background="new 0 0 502 462" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="460"/>
+	<g>
+		<rect x="36.833" y="32.491" fill="#FFFFFF" width="428.335" height="45"/>
+		<rect x="36.833" y="77.482" fill="#D9D9D9" width="428.335" height="59.232"/>
+		<rect x="36.833" y="383.94" fill="#D9D9D9" width="428.335" height="60.801"/>
+		<rect x="36.833" y="136.713" fill="#FFFFFF" width="428.335" height="48"/>
+		<rect x="36.833" y="184.635" fill="#D9D9D9" width="428.335" height="48"/>
+		<rect x="36.833" y="287.859" fill="#D9D9D9" width="428.335" height="48.001"/>
+		<rect x="36.833" y="335.86" fill="#FFFFFF" width="428.335" height="48"/>
+		<g>
+			<text transform="matrix(1 0 0 1 38.9785 26.1216)" font-size="10">DICOM Attributes</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 246.1855 26.1216)" font-size="10">Spatial Registration Information Model</text>
+		</g>
+		<rect x="36.833" y="232.707" fill="#FFFFFF" width="428.335" height="55.199"/>
+		<rect x="46.919" y="200.057" fill="none" width="78.917" height="10.113"/>
+		<text transform="matrix(0.9288 0 0 1 46.918 205.0659)" font-size="7">Frame of Reference UID</text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="330.891,109.136 330.891,118.917 
+					241.678,118.917 241.678,144.085 				"/>
+				<g>
+					<polygon fill="#005695" points="239.354,142.5 241.678,151.172 244.002,142.5 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="299.732" y1="118.917" x2="299.732" y2="189.628"/>
+				<g>
+					<polygon fill="#005695" points="297.408,188.042 299.732,196.715 302.057,188.042 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="422.535,268.338 422.535,278.119 
+					299.729,278.119 299.729,398.024 				"/>
+				<g>
+					<polygon fill="#005695" points="297.405,396.439 299.729,405.112 302.054,396.439 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="363.487" y1="278.119" x2="363.487" y2="343.792"/>
+				<g>
+					<polygon fill="#005695" points="361.163,342.207 363.487,350.88 365.812,342.207 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="330.95" y1="65.047" x2="330.95" y2="84.27"/>
+				<g>
+					<polygon fill="#005695" points="328.626,82.684 330.95,91.357 333.274,82.684 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="298.406" y="90.903" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.088" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 312.8594 97.6499)"><tspan x="0" y="0" font-size="7">Deformable</tspan><tspan x="-0.584" y="8.4" font-size="7">Registration</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 338.7324 88.0684)" font-size="7">1..*</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 248.8784 148.6885)" font-size="7">0..*</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 307.1309 193.7085)" font-size="7">0..1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 429.2676 300.3965)" font-size="7">0..1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 306.7773 402.9131)" font-size="7">0..1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 370.9062 348.251)" font-size="7">0..1</text>
+		</g>
+		
+			<rect x="258.729" y="196.715" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="82.001" height="18.003"/>
+		<g>
+			<text transform="matrix(1 0 0 1 268.6055 203.4653)"><tspan x="0" y="0" font-size="7">Frame of Reference</tspan><tspan x="6.225" y="8.4" font-size="7">(including Atlas)</tspan></text>
+		</g>
+		
+			<rect x="209.227" y="151.714" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.091" height="18.002"/>
+		<g>
+			<text transform="matrix(1 0 0 1 212.9766 158.4604)"><tspan x="0" y="0" font-size="7">Referenced Image</tspan><tspan x="10.317" y="8.4" font-size="7">(Image List)</tspan></text>
+		</g>
+		
+			<rect x="280.324" y="38.046" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="101.252" height="27.001"/>
+		<g>
+			<text transform="matrix(1 0 0 1 287.8203 48.9702)"><tspan x="0" y="0" font-size="8">Deformable Registration</tspan><tspan x="18.451" y="9.6" font-size="8">SOP Instance</tspan></text>
+		</g>
+		<rect x="46.919" y="151.359" fill="none" width="120.624" height="18.708"/>
+		<text transform="matrix(0.9288 0 0 1 46.9189 156.3682)"><tspan x="0" y="0" font-size="7">Referenced Image Sequence Item</tspan><tspan x="0" y="8.4" font-size="7">&gt;Image SOP Instance Reference Macro</tspan></text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="331.152,118.917 363.485,118.917 
+					363.485,240.078 				"/>
+				<g>
+					<polygon fill="#005695" points="361.161,238.493 363.485,247.166 365.81,238.493 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="363.486,118.917 422.535,118.917 
+					422.535,295.215 				"/>
+				<g>
+					<polygon fill="#005695" points="420.211,293.63 422.535,302.303 424.859,293.63 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 370.4111 244.6816)" font-size="7">0..*</text>
+		</g>
+		<rect x="46.919" y="247.354" fill="none" width="91.624" height="18.707"/>
+		<text transform="matrix(0.9288 0 0 1 46.9189 252.3613)"><tspan x="0" y="0" font-size="7">Used Fiducials Sequence Item</tspan><tspan x="0" y="8.4" font-size="7">&gt;Fiducial UID</tspan></text>
+		<rect x="47.891" y="37.123" fill="none" width="71.803" height="35.736"/>
+		<text transform="matrix(0.9288 0 0 1 47.8906 42.1313)"><tspan x="0" y="0" font-size="7">Content Date</tspan><tspan x="0" y="8.4" font-size="7">Content Time</tspan><tspan x="0" y="16.8" font-size="7">Content Identification</tspan><tspan x="0" y="25.2" font-size="7">Registration Sequence</tspan></text>
+		
+			<rect x="330.939" y="247.717" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.092" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 344.8125 254.458)"><tspan x="0" y="0" font-size="7">Registration</tspan><tspan x="4.277" y="8.399" font-size="7">Evidence</tspan></text>
+		</g>
+		<rect x="46.921" y="302.86" fill="none" width="151.606" height="22.68"/>
+		<text transform="matrix(0.9288 0 0 1 46.918 307.8652)"><tspan x="0" y="0" font-size="7">Pre Deformation Matrix Registration Sequence Item</tspan><tspan x="0" y="8.4" font-size="7">&gt;FoR Transformation Matrix</tspan><tspan x="0" y="16.801" font-size="7">&gt;FoR Transformation Matrix Type</tspan></text>
+		<rect x="46.921" y="348.521" fill="none" width="156.864" height="22.68"/>
+		<text transform="matrix(0.9288 0 0 1 46.9209 353.5293)"><tspan x="0" y="0" font-size="7">Post Deformation Matrix Registration Sequence Item</tspan><tspan x="0" y="8.4" font-size="7">&gt;FoR Transformation Matrix</tspan><tspan x="0" y="16.801" font-size="7">&gt;FoR Transformation Matrix Type</tspan></text>
+		<rect x="46.921" y="390.451" fill="none" width="132.106" height="48.002"/>
+		<text transform="matrix(0.9288 0 0 1 46.918 395.4648)"><tspan x="0" y="0" font-size="7">Deformable Registration Grid Sequence Item</tspan><tspan x="0" y="8.399" font-size="7">&gt;Image Orientation (Patient)</tspan><tspan x="0" y="16.8" font-size="7">&gt;Image Position (Patient)</tspan><tspan x="0" y="25.199" font-size="7">&gt;Grid Dimensions</tspan><tspan x="0" y="33.6" font-size="7">&gt;Grid Resolution</tspan><tspan x="0" y="42" font-size="7">&gt;Vector Grid Data</tspan></text>
+		
+			<rect x="330.943" y="350.86" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.088" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 336.4492 357.6074)"><tspan x="0" y="0" font-size="7">Post Deformation</tspan><tspan x="-2.137" y="8.399" font-size="7">Matrix Registration</tspan></text>
+		</g>
+		
+			<rect x="390.088" y="302.86" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.092" height="18.002"/>
+		<g>
+			<text transform="matrix(1 0 0 1 397.1465 309.6064)"><tspan x="0" y="0" font-size="7">Pre Deformation</tspan><tspan x="-3.692" y="8.399" font-size="7">Matrix Registration</tspan></text>
+		</g>
+		
+			<rect x="267.184" y="405.453" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.092" height="18"/>
+		<g>
+			<text transform="matrix(1 0 0 1 281.6387 412.1992)"><tspan x="0" y="0" font-size="7">Deformable</tspan><tspan x="-8.169" y="8.4" font-size="7">Registration Grid</tspan></text>
+		</g>
+		<rect x="46.919" y="82.432" fill="none" width="145.55" height="52.613"/>
+		<text transform="matrix(0.9288 0 0 1 46.9189 87.4409)"><tspan x="0" y="0" font-size="7">Deformable Registration Sequence Item</tspan><tspan x="0" y="8.4" font-size="7">&gt;Source Frame of Reference UID</tspan><tspan x="0" y="16.8" font-size="7">&gt;Referenced Image Sequence</tspan><tspan x="0" y="25.2" font-size="7">&gt;Pre Deformation Matrix Registration Sequence</tspan><tspan x="0" y="33.6" font-size="7">&gt;Post Deformation Matrix Registration Sequence</tspan><tspan x="0" y="42" font-size="7">&gt;Deformable Registration Grid Sequence</tspan></text>
+	</g>
+</g>
+</svg>

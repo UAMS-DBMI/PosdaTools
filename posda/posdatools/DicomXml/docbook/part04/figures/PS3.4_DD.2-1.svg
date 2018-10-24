@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_DD.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="577px" viewBox="0 0 502 577" enable-background="new 0 0 502 577" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="575"/>
+	<g>
+		<text transform="matrix(1 0 0 1 323.6006 115.6499)"><tspan x="0" y="0"  font-size="9">Plan data request</tspan><tspan x="-1.999" y="18"  font-size="9">Plan data received</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,122.133c0-17.116,13.875-30.99,30.99-30.99c17.127,0,31.01,13.874,31.01,30.99c0,17.115-13.883,31.012-31.01,31.012
+			C89.067,153.145,75.192,139.248,75.192,122.133z"/>
+		<text transform="matrix(1 0 0 1 86.3267 112.0063)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.2"  font-size="11">System</tspan><tspan x="4.59" y="26.4"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,199.445c0-17.115,13.875-30.989,30.99-30.989c17.127,0,31.01,13.874,31.01,30.989s-13.883,31.011-31.01,31.011
+			C89.067,230.456,75.192,216.561,75.192,199.445z"/>
+		<text transform="matrix(1 0 0 1 86.3267 189.3057)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.2"  font-size="11">System</tspan><tspan x="4.59" y="26.4"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,276.758c0-17.116,13.875-30.99,30.99-30.99c17.127,0,31.01,13.874,31.01,30.99c0,17.115-13.883,31.012-31.01,31.012
+			C89.067,307.77,75.192,293.873,75.192,276.758z"/>
+		<text transform="matrix(1 0 0 1 86.3267 266.6182)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.2"  font-size="11">System</tspan><tspan x="4.59" y="26.399"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,354.07c0-17.116,13.875-30.99,30.99-30.99c17.127,0,31.01,13.874,31.01,30.99c0,17.115-13.883,31.012-31.01,31.012
+			C89.067,385.082,75.192,371.186,75.192,354.07z"/>
+		<text transform="matrix(1 0 0 1 86.3267 343.9434)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.201"  font-size="11">System</tspan><tspan x="4.59" y="26.4"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,431.383c0-17.116,13.875-30.99,30.99-30.99c17.127,0,31.01,13.874,31.01,30.99c0,17.115-13.883,31.012-31.01,31.012
+			C89.067,462.395,75.192,448.498,75.192,431.383z"/>
+		<text transform="matrix(1 0 0 1 86.3267 421.2432)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.2"  font-size="11">System</tspan><tspan x="4.59" y="26.399"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M75.192,508.695c0-17.116,13.875-30.99,30.99-30.99c17.127,0,31.01,13.874,31.01,30.99c0,17.115-13.883,31.012-31.01,31.012
+			C89.067,539.707,75.192,525.811,75.192,508.695z"/>
+		<text transform="matrix(1 0 0 1 86.3267 498.5557)"><tspan x="0" y="0"  font-size="11">Delivery</tspan><tspan x="1.528" y="13.2"  font-size="11">System</tspan><tspan x="4.59" y="26.399"  font-size="11">(SCU)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.107,122.133c0-17.116,13.875-30.99,30.99-30.99c17.126,0,31.01,13.874,31.01,30.99c0,17.115-13.884,31.012-31.01,31.012
+			C256.982,153.145,243.107,139.248,243.107,122.133z"/>
+		<text transform="matrix(1 0 0 1 262.1875 118.6064)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.107,199.445c0-17.116,13.875-30.99,30.99-30.99c17.126,0,31.01,13.874,31.01,30.99c0,17.115-13.884,31.012-31.01,31.012
+			C256.982,230.457,243.107,216.561,243.107,199.445z"/>
+		<text transform="matrix(1 0 0 1 262.1875 189.3057)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.107,276.758c0-17.116,13.875-30.99,30.99-30.99c17.126,0,31.01,13.874,31.01,30.99c0,17.115-13.884,31.012-31.01,31.012
+			C256.982,307.77,243.107,293.873,243.107,276.758z"/>
+		<text transform="matrix(1 0 0 1 262.1875 266.6182)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.108,354.07c0-17.115,13.874-30.989,30.989-30.989c17.126,0,31.009,13.874,31.009,30.989s-13.883,31.011-31.009,31.011
+			C256.982,385.081,243.108,371.186,243.108,354.07z"/>
+		<text transform="matrix(1 0 0 1 262.1875 350.5439)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.108,431.383c0-17.115,13.874-30.989,30.989-30.989c17.126,0,31.009,13.874,31.009,30.989s-13.883,31.011-31.009,31.011
+			C256.982,462.394,243.108,448.498,243.108,431.383z"/>
+		<text transform="matrix(1 0 0 1 262.1875 421.2432)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M243.108,508.695c0-17.115,13.874-30.989,30.989-30.989c17.126,0,31.009,13.874,31.009,30.989s-13.883,31.011-31.009,31.011
+			C256.982,539.706,243.108,525.811,243.108,508.695z"/>
+		<text transform="matrix(1 0 0 1 262.1875 498.5557)"><tspan x="0" y="0"  font-size="11">MPV</tspan><tspan x="-3.053" y="13.2"  font-size="11">(SCP)</tspan></text>
+		<text transform="matrix(1 0 0 1 158.7886 115.6494)"><tspan x="0" y="0"  font-size="9">N-CREATE RQ</tspan><tspan x="-2.503" y="18"  font-size="9">N-CREATE RSP</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="118.607" x2="242.415" y2="118.607"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="137.164" y1="118.607" x2="235.328" y2="118.607"/>
+				<g>
+					<polygon fill="#005695" points="233.742,120.932 242.415,118.607 233.742,116.283 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="136.1" x2="242.415" y2="136.1"/>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="144.251" y1="136.1" x2="242.415" y2="136.1"/>
+				<g>
+					<polygon fill="#005695" points="145.837,138.424 137.164,136.1 145.837,133.775 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="306.251" y1="118.607" x2="411.502" y2="118.607"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="306.251" y1="118.607" x2="404.414" y2="118.607"/>
+				<g>
+					<polygon fill="#005695" points="402.829,120.932 411.502,118.607 402.829,116.283 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="306.251" y1="136.1" x2="411.502" y2="136.1"/>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="313.339" y1="136.1" x2="411.502" y2="136.1"/>
+				<g>
+					<polygon fill="#005695" points="314.924,138.424 306.251,136.1 314.924,133.775 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 168.2896 189.231)"><tspan x="0" y="0"  font-size="9">N-SET RQ</tspan><tspan x="-2.503" y="18"  font-size="9">N-SET RSP</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="192.188" x2="242.415" y2="192.188"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="137.164" y1="192.188" x2="235.328" y2="192.188"/>
+				<g>
+					<polygon fill="#005695" points="233.742,194.513 242.415,192.188 233.742,189.864 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="209.681" x2="242.415" y2="209.681"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="144.251" y1="209.681" x2="242.415" y2="209.681"/>
+				<g>
+					<polygon fill="#005695" points="145.837,212.005 137.164,209.681 145.837,207.356 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 160.0405 262.8125)"><tspan x="0" y="0"  font-size="9">N-ACTION RQ</tspan><tspan x="-2.502" y="18"  font-size="9">N-ACTION RSP</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="265.771" x2="242.415" y2="265.771"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="137.164" y1="265.771" x2="235.328" y2="265.771"/>
+				<g>
+					<polygon fill="#005695" points="233.742,268.095 242.415,265.771 233.742,263.446 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="283.263" x2="242.415" y2="283.263"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="144.251" y1="283.263" x2="242.415" y2="283.263"/>
+				<g>
+					<polygon fill="#005695" points="145.837,285.587 137.164,283.263 145.837,280.938 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 149.7891 342.1875)"><tspan x="0" y="0"  font-size="9">N-EVENT-REPORT</tspan><tspan x="4.983" y="10.8"  font-size="9">TVS (3008,002C)</tspan><tspan x="-10.503" y="28.8"  font-size="9">N-EVENT-REPORT RSP</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="242.415" y1="373.79" x2="137.164" y2="373.79"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="235.328" y1="373.79" x2="137.164" y2="373.79"/>
+				<g>
+					<polygon fill="#005695" points="233.742,371.466 242.415,373.79 233.742,376.114 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="242.415" y1="356.298" x2="137.164" y2="356.298"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="242.415" y1="356.298" x2="144.251" y2="356.298"/>
+				<g>
+					<polygon fill="#005695" points="145.837,353.974 137.164,356.298 145.837,358.622 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 167.7905 417.1758)"><tspan x="0" y="0"  font-size="9">N-GET RQ</tspan><tspan x="-2.503" y="18"  font-size="9">N-GET RSP</tspan><tspan x="-13.019" y="28.8"  font-size="9">TVS (3008,002C)</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="420.133" x2="242.415" y2="420.133"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="137.164" y1="420.133" x2="235.328" y2="420.133"/>
+				<g>
+					<polygon fill="#005695" points="233.742,422.457 242.415,420.133 233.742,417.809 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="450.226" x2="242.415" y2="450.226"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="144.251" y1="450.226" x2="242.415" y2="450.226"/>
+				<g>
+					<polygon fill="#005695" points="145.837,452.55 137.164,450.226 145.837,447.901 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 159.5356 502.1992)"><tspan x="0" y="0"  font-size="9">N-DELETE RQ</tspan><tspan x="-2.503" y="18"  font-size="9">N-DELETE RSP</tspan></text>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="505.158" x2="242.415" y2="505.158"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="137.164" y1="505.158" x2="235.328" y2="505.158"/>
+				<g>
+					<polygon fill="#005695" points="233.742,507.482 242.415,505.158 233.742,502.834 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="40.343" y1="122.455" x2="68.105" y2="122.455"/>
+				<g>
+					<polygon fill="#005695" points="66.52,124.779 75.192,122.455 66.52,120.131 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="55.825" y1="199.456" x2="68.105" y2="199.456"/>
+				<g>
+					<polygon fill="#005695" points="66.52,201.78 75.193,199.456 66.52,197.132 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="55.825" y1="276.769" x2="68.105" y2="276.769"/>
+				<g>
+					<polygon fill="#005695" points="66.52,279.093 75.193,276.769 66.52,274.444 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="55.825" y1="354.081" x2="68.106" y2="354.081"/>
+				<g>
+					<polygon fill="#005695" points="66.521,356.405 75.193,354.081 66.521,351.757 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="55.825" y1="431.394" x2="68.105" y2="431.394"/>
+				<g>
+					<polygon fill="#005695" points="66.52,433.718 75.193,431.394 66.52,429.069 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="137.164" y1="522.65" x2="242.415" y2="522.65"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="144.251" y1="522.65" x2="242.415" y2="522.65"/>
+				<g>
+					<polygon fill="#005695" points="145.837,524.975 137.164,522.65 145.837,520.326 					"/>
+				</g>
+			</g>
+		</g>
+		<path fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" d="
+			M136.851,492.475"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" points="
+			358.875,163.443 358.875,69.469 283.283,34.965 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" points="
+			179.542,561.57 179.542,69.469 258.743,34.965 		"/>
+		<g>
+			<path fill="#B2CEE7" d="M205.108,19.031c0-1.98,1.62-3.6,3.6-3.6h130.796c1.979,0,3.6,1.62,3.6,3.6v10.837
+				c0,1.98-1.62,3.6-3.6,3.6H208.708c-1.98,0-3.6-1.62-3.6-3.6V19.031z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 208.9951 27.1182)"  font-size="11">DICOM Standard Interface</text>
+		<path fill="#CCDEF0" stroke="#010101" d="M474.741,95.81c0,2.606-13.881,4.718-30.997,4.718c-17.122,0-31.003-2.111-31.003-4.718
+			v52.616c0,2.604,13.881,4.718,31.003,4.718c17.116,0,30.997-2.113,30.997-4.718V95.81z"/>
+		<path fill="#CCDEF0" stroke="#010101" d="M412.741,95.863c0-2.608,13.881-4.72,31.003-4.72c17.116,0,30.997,2.111,30.997,4.72
+			c0,2.604-13.881,4.716-30.997,4.716C426.622,100.579,412.741,98.467,412.741,95.863z"/>
+		<text transform="matrix(1 0 0 1 427.5439 127.043)"  font-size="9.2133">Archive</text>
+		<text transform="matrix(1 0 0 1 27.2705 125.917)"  font-size="12">A</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="2,2" x1="40.343" y1="508.706" x2="68.105" y2="508.706"/>
+				<g>
+					<polygon fill="#005695" points="66.52,511.03 75.192,508.706 66.52,506.382 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 27.2705 512.0479)"  font-size="12">A</text>
+		<text transform="matrix(1 0 0 1 44.0835 202.7974)"  font-size="12">B</text>
+		<text transform="matrix(1 0 0 1 44.0835 280.1099)"  font-size="12">B</text>
+		<text transform="matrix(1 0 0 1 44.0835 357.4219)"  font-size="12">B</text>
+		<text transform="matrix(1 0 0 1 44.0835 434.7344)"  font-size="12">B</text>
+	</g>
+</g>
+</svg>

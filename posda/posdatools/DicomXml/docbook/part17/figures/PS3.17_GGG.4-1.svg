@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_GGG.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="297px" viewBox="0 0 502 297" enable-background="new 0 0 502 297" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="295"/>
+	<g>
+		<text transform="matrix(1 0 0 1 79.4131 133.2754)" fill="#010101" font-size="6.5">User decides to cancel Task X</text>
+		<text transform="matrix(1 0 0 1 412.4336 80.2744)" fill="#010101" font-size="6.5">Create Transaction UID</text>
+		<text transform="matrix(1 0 0 1 221.5112 233.668)" fill="#010101" font-size="6.5">Update Task X Details (N-SET(T-UID))  </text>
+		<text transform="matrix(1 0 0 1 414.9355 202.1689)" fill="#010101" font-size="6.5"> </text>
+		<text transform="matrix(1 0 0 1 221.5112 71.5903)" fill="#010101" font-size="6.5">Start Task X (N-ACTION IN PROGRESS [T-UID])</text>
+		<text transform="matrix(1 0 0 1 221.5112 184.4492)" fill="#010101" font-size="6.5">Copy Contact URI from Request into N-EVENT</text>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="214.52" y1="75.937" x2="388.173" y2="75.937"/>
+		<polygon fill="#005695" points="215.708,77.68 209.205,75.938 215.708,74.194 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="398.748,71.611 407.082,71.596 407.082,80.278 
+			403.832,80.278 		"/>
+		<polygon fill="#005695" points="405.021,78.535 398.518,80.278 405.021,82.021 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="393.998" y1="52.729" x2="393.998" y2="280.284"/>
+		<rect x="354.072" y="16.716" fill="#B2CEE7" width="79.852" height="35.442"/>
+		
+			<rect x="354.072" y="16.716" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="79.852" height="35.442"/>
+		<text transform="matrix(1 0 0 1 374.6641 31.603)" fill="#010101" font-size="8">Treatment </text>
+		<text transform="matrix(1 0 0 1 365.1113 41.2031)" fill="#010101" font-size="8">Delivery System</text>
+		<rect x="389.25" y="63.062" fill="#CCDEF0" width="9.5" height="25.75"/>
+		
+			<rect x="389.25" y="63.062" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="25.75"/>
+		<rect x="389.25" y="101.966" fill="#CCDEF0" width="9.5" height="13.833"/>
+		
+			<rect x="389.25" y="101.966" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.833"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="56.008" y1="52.229" x2="56.008" y2="280.284"/>
+		<rect x="16.958" y="16.716" fill="#B2CEE7" width="79.851" height="35.442"/>
+		
+			<rect x="16.958" y="16.716" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="79.851" height="35.442"/>
+		<text transform="matrix(1 0 0 1 31.769 37.4365)" fill="#231F20" font-size="8">User Terminal</text>
+		<rect x="51.258" y="121.216" fill="#CCDEF0" width="9.5" height="72"/>
+		
+			<rect x="51.258" y="121.216" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="72"/>
+		<rect x="389.25" y="189.299" fill="#CCDEF0" width="9.5" height="84.917"/>
+		
+			<rect x="389.25" y="189.299" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="84.917"/>
+		<rect x="164.529" y="16.716" fill="#B2CEE7" width="79.851" height="35.442"/>
+		
+			<rect x="164.529" y="16.716" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="79.851" height="35.442"/>
+		<text transform="matrix(1 0 0 1 185.1147 26.603)" fill="#010101" font-size="8">Treatment </text>
+		<text transform="matrix(1 0 0 1 182.2188 36.2031)" fill="#010101" font-size="8">Managment </text>
+		<text transform="matrix(1 0 0 1 191.1147 45.8032)" fill="#010101" font-size="8">System</text>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="204.455" y1="52.229" x2="204.455" y2="280.284"/>
+		<rect x="199.704" y="63.062" fill="#CCDEF0" width="9.5" height="25.75"/>
+		
+			<rect x="199.704" y="63.062" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="25.75"/>
+		<rect x="199.704" y="101.966" fill="#CCDEF0" width="9.5" height="13.833"/>
+		
+			<rect x="199.704" y="101.966" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.833"/>
+		<rect x="199.704" y="147.632" fill="#CCDEF0" width="9.5" height="15.167"/>
+		
+			<rect x="199.704" y="147.632" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="15.167"/>
+		<rect x="199.704" y="248.466" fill="#CCDEF0" width="9.5" height="25.75"/>
+		
+			<rect x="199.704" y="248.466" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="25.75"/>
+		<rect x="199.704" y="231.216" fill="#CCDEF0" width="9.5" height="13.042"/>
+		
+			<rect x="199.704" y="231.216" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="13.042"/>
+		<rect x="199.704" y="173.75" fill="#CCDEF0" width="9.5" height="33.966"/>
+		
+			<rect x="199.704" y="173.75" fill="none" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.5" height="33.966"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="214.52" y1="105.716" x2="388.173" y2="105.716"/>
+		<polygon fill="#005695" points="215.708,107.459 209.205,105.716 215.708,103.973 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="209.205" y1="112.216" x2="382.856" y2="112.216"/>
+		<polygon fill="#005695" points="381.667,113.959 388.171,112.216 381.667,110.473 		"/>
+		<text transform="matrix(1 0 0 1 221.5112 101.9648)" fill="#010101" font-size="6.5">Start Listening (N-ACTION SUBSCRIBE (Task X))</text>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="60.758,127.14 69.091,127.124 69.091,135.807 
+			65.841,135.807 		"/>
+		<polygon fill="#005695" points="67.031,134.063 60.527,135.807 67.031,137.55 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="66.435" y1="159.383" x2="198.489" y2="159.383"/>
+		<polygon fill="#005695" points="67.625,161.125 61.121,159.383 67.625,157.64 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="61.12" y1="152.466" x2="193.173" y2="152.466"/>
+		<polygon fill="#005695" points="191.985,154.209 198.49,152.466 191.985,150.723 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="60.758,167.613 69.091,167.598 69.091,176.281 
+			65.841,176.281 		"/>
+		<polygon fill="#005695" points="67.031,174.537 60.527,176.28 67.031,178.023 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="61.12" y1="183.549" x2="193.173" y2="183.549"/>
+		<polygon fill="#005695" points="191.985,185.292 198.489,183.55 191.985,181.806 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="209.205,178.318 217.538,178.302 217.538,186.985 
+			214.288,186.985 		"/>
+		<polygon fill="#005695" points="215.476,185.242 208.972,186.985 215.476,188.728 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="209.205" y1="202.174" x2="382.856" y2="202.174"/>
+		<polygon fill="#005695" points="381.667,203.917 388.171,202.174 381.667,200.431 		"/>
+		<text transform="matrix(1 0 0 1 79.4131 147.6323)" fill="#010101" font-size="6.5">Find UPS Task of Interest: (C-FIND)</text>
+		<text transform="matrix(1 0 0 1 79.4131 173.75)" fill="#010101" font-size="6.5">User selects Task X</text>
+		<text transform="matrix(1 0 0 1 79.4131 191.2988)" fill="#010101" font-size="6.5">Request Task X Cancel</text>
+		<text transform="matrix(1 0 0 1 79.4131 199.0996)" fill="#010101" font-size="6.5">(N-ACTION REQUEST CANCEL)</text>
+		<text transform="matrix(1 0 0 1 221.5112 121.2163)" fill="#010101" font-size="6.5">Return Current Task X Status (N-EVENT)</text>
+		<text transform="matrix(1 0 0 1 221.5112 197.832)" fill="#010101" font-size="6.5">Report Task X Cancel Requested (N-EVENT)</text>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="213.804" y1="237.737" x2="387.456" y2="237.737"/>
+		<polygon fill="#005695" points="214.994,239.479 208.489,237.737 214.994,235.993 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="213.804" y1="255.216" x2="387.456" y2="255.216"/>
+		<polygon fill="#005695" points="214.994,256.959 208.49,255.216 214.994,253.474 		"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="209.205" y1="268.487" x2="382.856" y2="268.487"/>
+		<polygon fill="#005695" points="381.667,270.229 388.171,268.487 381.667,266.744 		"/>
+		<text transform="matrix(1 0 0 1 221.5112 251.1738)" fill="#010101" font-size="6.5">Cancel Task X (N-ACTION CANCELED [T-UID])</text>
+		<text transform="matrix(1 0 0 1 221.5112 264.8887)" fill="#010101" font-size="6.5">Report Task X Canceled (N-EVENT)</text>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="398.992,228.417 407.324,228.401 407.324,237.085 
+			404.074,237.085 		"/>
+		<polygon fill="#005695" points="405.264,235.341 398.76,237.084 405.264,238.827 		"/>
+		<text transform="matrix(1 0 0 1 412.4355 225.9893)" fill="#010101" font-size="6.5">Operator Pauses Task &amp;</text>
+		<text transform="matrix(1 0 0 1 412.4355 233.7891)" fill="#010101" font-size="6.5">Uses Contact URI to call </text>
+		<text transform="matrix(1 0 0 1 412.4355 241.5898)" fill="#010101" font-size="6.5">User &amp; discuss cancel</text>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="398.748,197.849 407.082,197.833 407.082,206.516 
+			403.832,206.516 		"/>
+		<polygon fill="#005695" points="405.021,204.772 398.518,206.515 405.021,208.258 		"/>
+		<text transform="matrix(1 0 0 1 412.4355 195.1621)" fill="#010101" font-size="6.5">Display Cancel Request </text>
+		<text transform="matrix(1 0 0 1 412.4355 202.9619)" fill="#010101" font-size="6.5">for Task X and Contact </text>
+		<text transform="matrix(1 0 0 1 412.4355 210.7617)" fill="#010101" font-size="6.5">URI to Operator</text>
+		<text transform="matrix(1 0 0 1 412.4355 257.3535)" fill="#010101" font-size="6.5">Operator agrees and </text>
+		<text transform="matrix(1 0 0 1 412.4355 265.1543)" fill="#010101" font-size="6.5">cancels Task X</text>
+		<polyline fill="none" stroke="#005695" stroke-linejoin="round" points="398.748,255.987 407.082,255.971 407.082,264.653 
+			403.832,264.653 		"/>
+		<polygon fill="#005695" points="405.021,262.91 398.518,264.653 405.021,266.396 		"/>
+		<text transform="matrix(1 0 0 1 414.9355 133.3818)" fill="#010101" font-size="24">...</text>
+	</g>
+</g>
+</svg>

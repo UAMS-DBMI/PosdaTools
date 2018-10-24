@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_A.4.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="402px" viewBox="0 0 502 402" enable-background="new 0 0 502 402" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="400"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="256.77" y1="165.051" x2="354.929" y2="165.051"/>
+		<path fill="#005695" d="M357.763,163.82c-1.983-0.599-3.273-1.151-4.865-1.79v6.054c0.57-0.271,2.882-1.191,4.865-1.79
+			c2.124-0.642,4.049-1.08,5.298-1.237C361.812,164.9,359.887,164.462,357.763,163.82z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="262.741" y1="181.61" x2="363.061" y2="181.61"/>
+		<path fill="#005695" d="M259.907,180.381c1.983-0.6,3.273-1.152,4.865-1.791v6.054c-0.57-0.271-2.882-1.19-4.865-1.79
+			c-2.124-0.642-4.05-1.08-5.299-1.236C255.857,181.461,257.783,181.021,259.907,180.381z"/>
+		
+			<rect x="181.381" y="154.443" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.78" height="36"/>
+		<text transform="matrix(1 0 0 1 190.3682 168.9116)"><tspan x="0" y="0"  font-size="11">Application</tspan><tspan x="2.14" y="13.2"  font-size="11">Entity &lt;2&gt;</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="135.478" y1="172.974" x2="181.082" y2="172.974"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M63.766,172.961c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C79.884,208.986,63.766,192.844,63.766,172.961z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M366.212,172.961c0-19.883,16.119-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.127,36.025-36.023,36.025
+			C382.331,208.986,366.212,192.844,366.212,172.961z"/>
+		<text transform="matrix(1 0 0 1 86.6323 162.8384)"><tspan x="0" y="0"  font-size="11">Local</tspan><tspan x="-17.107" y="13.2"  font-size="11">Real-vWorld</tspan><tspan x="-9.467" y="26.4"  font-size="11">Activity B</tspan></text>
+		<text transform="matrix(1 0 0 1 381.9629 162.8384)"><tspan x="0" y="0"  font-size="11">Remote</tspan><tspan x="-8.247" y="13.2"  font-size="11">Real-World</tspan><tspan x="-3.357" y="26.4"  font-size="11">Activity Y</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="256.65" y1="108.973" x2="354.81" y2="108.973"/>
+		<path fill="#005695" d="M357.644,107.742c-1.983-0.599-3.273-1.151-4.865-1.79v6.054c0.57-0.271,2.882-1.191,4.865-1.79
+			c2.124-0.642,4.049-1.08,5.298-1.237C361.692,108.822,359.768,108.384,357.644,107.742z"/>
+		
+			<rect x="181.381" y="91.413" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.78" height="36"/>
+		<text transform="matrix(1 0 0 1 190.3682 105.8794)"><tspan x="0" y="0"  font-size="11">Application</tspan><tspan x="2.14" y="13.2"  font-size="11">Entity &lt;1&gt;</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="135.478" y1="108.974" x2="181.082" y2="108.974"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M63.766,108.961c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C79.884,144.986,63.766,128.844,63.766,108.961z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M366.212,108.961c0-19.883,16.119-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.127,36.025-36.023,36.025
+			C382.331,144.986,366.212,128.844,366.212,108.961z"/>
+		<text transform="matrix(1 0 0 1 86.6323 98.8384)"><tspan x="0" y="0"  font-size="11">Local</tspan><tspan x="-14.357" y="13.2"  font-size="11">Real-World</tspan><tspan x="-9.467" y="26.4"  font-size="11">Activity A</tspan></text>
+		<text transform="matrix(1 0 0 1 381.9629 98.8384)"><tspan x="0" y="0"  font-size="11">Remote</tspan><tspan x="-8.247" y="13.2"  font-size="11">Real-World</tspan><tspan x="-3.357" y="26.4"  font-size="11">Activity X</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="181.88" y1="306.364" x2="131.77" y2="256.256"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="181.386" y1="306.182" x2="131.275" y2="356.29"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M63.766,351.423c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C79.884,387.448,63.766,371.306,63.766,351.423z"/>
+		<text transform="matrix(1 0 0 1 86.6323 341.3105)"><tspan x="0" y="0"  font-size="11">Local</tspan><tspan x="-14.357" y="13.201"  font-size="11">Real-World</tspan><tspan x="-9.77" y="26.4"  font-size="11">Activity D</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M63.766,261.51c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.028-36.023,36.028
+			C79.884,297.538,63.766,281.393,63.766,261.51z"/>
+		<text transform="matrix(1 0 0 1 86.6323 251.3906)"><tspan x="0" y="0"  font-size="11">Local</tspan><tspan x="-14.357" y="13.201"  font-size="11">Real-World</tspan><tspan x="-9.77" y="26.4"  font-size="11">Activity C</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="256.65" y1="307.203" x2="354.81" y2="307.203"/>
+		<path fill="#005695" d="M357.644,305.974c-1.983-0.6-3.273-1.151-4.865-1.79v6.053c0.57-0.271,2.882-1.191,4.865-1.79
+			c2.124-0.642,4.049-1.08,5.298-1.236C361.692,307.053,359.768,306.614,357.644,305.974z"/>
+		
+			<rect x="181.381" y="287.878" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.78" height="36"/>
+		<text transform="matrix(1 0 0 1 190.3682 302.3438)"><tspan x="0" y="0"  font-size="11">Application</tspan><tspan x="2.14" y="13.199"  font-size="11">Entity &lt;3&gt;</tspan></text>
+		<text transform="matrix(1 0 0 1 212.3232 359.3438)"><tspan x="0" y="0"  font-size="11">Association</tspan><tspan x="0" y="13.199"  font-size="11">Acceptance</tspan></text>
+		<text transform="matrix(1 0 0 1 212.3232 62.1826)"><tspan x="0" y="0"  font-size="11">Association</tspan><tspan x="0" y="13.2"  font-size="11">Initiation</tspan></text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M366.212,307.191c0-19.877,16.119-35.994,36-35.994c19.896,0,36.023,16.117,36.023,35.994c0,19.869-16.127,36.012-36.023,36.012
+			C382.331,343.203,366.212,327.061,366.212,307.191z"/>
+		<text transform="matrix(1 0 0 1 381.9629 297.0684)"><tspan x="0" y="0"  font-size="11">Remote</tspan><tspan x="-8.247" y="13.201"  font-size="11">Real-World</tspan><tspan x="-3.048" y="26.4"  font-size="11">Activity Z</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" x1="329.12" y1="387.045" x2="329.12" y2="32.59"/>
+		<g>
+			<path fill="#B2CEE7" d="M260.122,18.153c0-1.98,1.62-3.6,3.6-3.6h130.797c1.979,0,3.6,1.62,3.6,3.6V28.99
+				c0,1.98-1.62,3.6-3.6,3.6H263.722c-1.979,0-3.6-1.62-3.6-3.6V18.153z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 264.0391 27.4292)"  font-size="11">DICOM Standard Interface</text>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="269.757" y1="349.956" x2="310.796" y2="308.916"/>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="269.757" y1="65.841" x2="310.796" y2="106.881"/>
+	</g>
+</g>
+</svg>

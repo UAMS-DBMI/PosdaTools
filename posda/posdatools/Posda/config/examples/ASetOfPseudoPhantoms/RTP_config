@@ -1,0 +1,20 @@
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.481.5
+(0008,0060)|Modality|RTPLAN
+(0008,0070)|Manufacturer|Posda.com
+(0008,103e)|Series Description|Pseudo Phantom Generated
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,1020)|Software Version(s)|0.5
+(300a,0002)|RT Plan Label|Phantom Plan
+(300a,0003)|RT Plan Name|Phantom Plan
+(300a,0004)|RT Plan Description|Phantom Plan
+(300a,0006)|RT Plan Date|20081027
+(300a,0007)|RT Plan Time|
+(300a,000a)|RT Plan Intent|PALLATIVE
+(300a,000c)|RT Plan Geometry|PATIENT

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_T.3-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:56 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="302px" viewBox="0 0 502 302" enable-background="new 0 0 502 302" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="300"/>
+	<g>
+		<text transform="matrix(0.9288 0 0 1 176.9189 27.3916)" font-size="14">Radial-based Wall Motion</text>
+		<g>
+			<text transform="matrix(0.9288 0 0 1 73.1377 61.6543)"><tspan x="0" y="0" font-size="11">Mean Motion</tspan><tspan x="0" y="13.2" font-size="11">1.</tspan><tspan x="9.173" y="13.2" font-size="11" letter-spacing="2.153">	</tspan><tspan x="14.534" y="13.2" font-size="11">Antero-basal</tspan><tspan x="76.902" y="13.2" font-size="11" letter-spacing="8.613">	</tspan><tspan x="88.908" y="13.2" font-size="11">:</tspan><tspan x="91.964" y="13.2" font-size="11" letter-spacing="3.23">	</tspan><tspan x="98.807" y="13.2" font-size="11">33%</tspan><tspan x="0" y="26.4" font-size="11">2. Antero-lateral</tspan><tspan x="78.261" y="26.4" font-size="11" letter-spacing="7.536">	</tspan><tspan x="88.908" y="26.4" font-size="11">:</tspan><tspan x="91.963" y="26.4" font-size="11" letter-spacing="3.23">	</tspan><tspan x="98.807" y="26.4" font-size="11">39%</tspan><tspan x="0" y="39.6" font-size="11">3. Apical</tspan><tspan x="42.189" y="39.6" font-size="11" letter-spacing="43.065">	</tspan><tspan x="88.909" y="39.6" font-size="11">:</tspan><tspan x="91.965" y="39.6" font-size="11" letter-spacing="3.23">	</tspan><tspan x="98.808" y="39.6" font-size="11">17%</tspan><tspan x="0" y="52.8" font-size="11">4. Diaphragmatic</tspan><tspan x="83.148" y="52.8" font-size="11" letter-spacing="2.153">	</tspan><tspan x="88.908" y="52.8" font-size="11">:</tspan><tspan x="91.964" y="52.8" font-size="11" letter-spacing="3.23">	</tspan><tspan x="98.807" y="52.8" font-size="11">26%</tspan><tspan x="0" y="66" font-size="11">5. Postero-basal</tspan><tspan x="80.097" y="66" font-size="11" letter-spacing="5.383">	</tspan><tspan x="88.908" y="66" font-size="11">:</tspan><tspan x="91.963" y="66" font-size="11" letter-spacing="3.23">	</tspan><tspan x="98.806" y="66" font-size="11">30%</tspan></text>
+			<g>
+				<path fill-rule="evenodd" clip-rule="evenodd" d="M283.737,51.905c-1.124,4.481-3.361,7.849-5.309,11.504
+					c4.076,1.141,7.11-2.037,11.502-0.885c5.283,1.386,10.18,11.201,17.697,13.274c2.555,0.705,5.148-0.773,7.078,0
+					c4.702,1.884,8.073,6.227,9.734,10.62c15.478-1.32,24.941,3.375,37.166,5.31c13.999,16.976,30.044,31.904,40.708,52.213
+					c-0.625,3.281,1.513,3.798,0.885,7.08c16.733,22.794,22.375,56.682,25.664,92.92c-5.049,11.337-5.352,31.595-9.734,40.708
+					c-23.08,5.74-48.235-0.479-69.026-2.654c-11.275-1.181-14.068-0.492-22.123-6.194c-3.009-2.13-5.772-6.847-8.849-8.85
+					c-1.441-0.938-3.291,0.039-4.425-0.886c-10.356-8.448-19.769-21.18-30.084-26.549c-3.802-1.979-8.016-2.652-11.503-4.424
+					c-3.334-1.694-6.386-3.654-10.619-4.425c-10.899-10.636-16.952-26.117-16.814-47.788c1.094-2.864-2.863-0.678-1.77-3.54
+					c3.552-13.49-3.782-19.121-9.735-27.434c-0.013-7.094-0.877-15.037,3.54-17.699c-6.885-12.503,0.315-31.99-3.54-44.248
+					c-0.94-1.715-5.097-0.213-5.31-2.655C248.544,76.887,262.876,61.13,283.737,51.905z M278.429,77.568
+					c-12.305,5.099-25.325,9.483-38.938,13.274c5.042,5.034,1.248,12.427-1.771,16.814c2.745,9.938,9.496,15.872,13.274,24.779
+					c-5.718,6.661-6.032,16.34-1.77,24.778c-0.444,3.686-3.096,5.163-3.54,8.85c7.777,15.526,7.562,39.046,21.239,48.673
+					c3.787,7.422,7.008,15.411,12.389,21.239c13.281,0.285,22.072,5.062,35.393,5.31c9.556,2.983,17.527,13.616,28.316,16.814
+					c6.793,2.012,16.244,0.691,22.124,3.539c10.109-9.95,18.187-21.932,30.089-30.088c1.673-12.996-4.018-17.284-8.85-24.779
+					c-8.322-12.906-10.993-20.241-21.239-29.203c-10.206-8.928-22.398-16.545-30.089-24.779
+					c-4.338-18.081-9.737-35.099-26.545-40.708c-5.656-7.618-7.351-19.199-10.618-29.204
+					C290.315,84.778,280.317,81.237,278.429,77.568z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#4F8ABE" d="M236.836,91.728c1.757,0.603,2.025,2.696,3.54,3.54
+					c-0.083,4.343-0.986,7.863-4.425,8.85C235,98.532,239.604,96.521,236.836,91.728z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#4F8ABE" d="M237.721,112.967c0.662,7.722,11.113,11.458,11.505,18.584
+					c0.19,3.475-4.854,6.904-5.31,10.62c-0.971,7.905,6.944,14.375,0.885,21.239c-6.528-5.123-13.408-20.117-5.31-29.204
+					C236.488,128.463,234.584,120.018,237.721,112.967z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#4F8ABE" d="M280.198,54.56c0.667,1.593-2.737,6.672-3.54,9.734
+					c3.262,3.194,7.14,0.46,10.619-0.885c10.328,4.123,12.975,15.931,29.199,14.159c2.896,3.298,5.471,6.917,7.964,10.62
+					c14.236-0.964,23.851,2.697,35.396,4.425c14.054,16.918,30.002,31.945,40.708,52.212c3.211,17.437,14.101,27.197,18.584,43.363
+					c3.576,17.371,4.065,30.68,6.194,51.327c0.06,0.559,1.803,3.726,1.771,4.425c-0.273,5.778-4.351,11.396-5.31,16.814
+					c-1.183,6.683-0.149,13.09-2.655,19.47c-10.659,10.287-36.867,1.417-48.673,3.539c-10.275-3.965-21.224-1.498-30.089-3.539
+					c-12.304-2.833-21.646-16.028-30.97-23.895c-1.504-1.269-3.788-1.396-5.309-2.654c-4.959-4.102-11.725-10.69-18.582-14.16
+					c5.42-1.96,14.026,2.37,21.236,3.54c2.098,0.341,4.323-0.55,6.194,0c10.756,3.158,19.866,12.437,27.43,16.814
+					c10.043-0.012,18.078,1.98,25.664,4.425c9.5-12.035,19.853-23.217,30.974-33.628c2.732-15.802-9.076-22.537-15.044-33.629
+					c-1.3-2.416-0.63-4.474-1.771-6.194c-3.031-4.581-10.085-11.754-15.044-15.045c-7.963-5.285-27.185-20.122-30.974-29.203
+					c-1.603-3.843-0.436-7.562-1.77-11.505c-2.366-7.002-6.689-12.343-13.272-19.469c-14.819-2.878-15.049-20.349-19.466-33.629
+					c-5.113-1.672-13.549-0.02-17.697-2.655c-0.428-2.788,2.715-2.004,1.77-5.31c-14.552,3.473-32.435,14.914-51.326,14.159
+					C247.731,76.369,265.005,66.504,280.198,54.56z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#4F8ABE" d="M245.686,172.26c6.366,12.928,5.677,24.735,12.39,35.397
+					c4.615,7.331,13.205,14.552,15.93,25.664C252.156,229.439,248.121,201.943,245.686,172.26z"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="370.456" y1="283.764" x2="323.644" y2="172.26"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="323.644" y1="172.26" x2="427.094" y2="243.94"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="323.644" y1="172.26" x2="279.313" y2="235.977"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="323.644" y1="172.26" x2="361.606" y2="93.373"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="323.644" y1="172.26" x2="282.904" y2="54.56"/>
+				
+					<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="323.644" y1="172.26" x2="245.686" y2="166.064"/>
+				<circle fill="#ED1C24" stroke="#000000" stroke-miterlimit="1" cx="328.007" cy="100.907" r="6.372"/>
+				<text transform="matrix(1 0 0 1 324.5684 104.354)" font-size="12.3894">1</text>
+				<circle fill="#F7941E" stroke="#000000" stroke-miterlimit="1" cx="381.74" cy="157.037" r="6.372"/>
+				<text transform="matrix(1 0 0 1 378.3018 160.4844)" font-size="12.3894">2</text>
+				<circle fill="#FFF200" stroke="#000000" stroke-miterlimit="1" cx="403.643" cy="259.87" r="6.372"/>
+				<text transform="matrix(1 0 0 1 400.2041 263.3145)" font-size="12.3894">3</text>
+				<circle fill="#0DB14B" stroke="#000000" stroke-miterlimit="1" cx="324.562" cy="235.977" r="6.37"/>
+				<text transform="matrix(1 0 0 1 321.1221 239.4219)" font-size="12.3894">4</text>
+				<circle fill="#00AEEF" stroke="#000000" stroke-miterlimit="1" cx="277.366" cy="190.844" r="6.371"/>
+				<text transform="matrix(1 0 0 1 273.9199 194.2891)" font-size="12.3894">5</text>
+				<g>
+					<g>
+						
+							<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="281.789" y1="53.604" x2="231.318" y2="87.77"/>
+						<circle fill="#ED1C24" cx="231.318" cy="87.769" r="3.008"/>
+						<circle fill="#ED1C24" cx="281.79" cy="53.604" r="3.008"/>
+					</g>
+				</g>
+				<g>
+					<g>
+						
+							<line fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="281.789" y1="76.093" x2="236.836" y2="91.728"/>
+						<circle fill="#ED1C24" cx="236.836" cy="91.727" r="3.008"/>
+						<circle fill="#ED1C24" cx="281.789" cy="76.094" r="3.008"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

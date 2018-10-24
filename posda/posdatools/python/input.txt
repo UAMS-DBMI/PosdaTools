@@ -1,0 +1,7 @@
+{ "command": "do stuff",
+  "database": {
+    "user": "postgres",
+    "dbname": "app_stats",
+    "host": "tcia-utilities"
+  }
+}

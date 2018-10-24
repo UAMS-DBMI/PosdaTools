@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.17-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="662px" viewBox="0 0 502 662" enable-background="new 0 0 502 662" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="660"/>
+	<g>
+		<g>
+			<rect x="24.5" y="16.191" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="453.001" height="185.332"/>
+			<rect x="24.5" y="16.191" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="147" height="114.333"/>
+			<rect x="32.686" y="38.77" fill="none" width="129.813" height="84.755"/>
+			<text transform="matrix(0.9288 0 0 1 32.6875 45.2148)"><tspan x="0" y="0" font-size="9">The Dimension Index Sequence </tspan><tspan x="0" y="10.8" font-size="9">defines:</tspan><tspan x="0" y="32.4" font-size="9">1. Which attributes are selected to </tspan><tspan x="10.766" y="43.2" font-size="9">be indexed for each frame.</tspan><tspan x="0" y="64.8" font-size="9">2. The ordering of indices in the </tspan><tspan x="10.766" y="75.6" font-size="9">Dimension attribute.</tspan></text>
+			<rect x="178.299" y="165.524" fill="none" width="281.337" height="24.667"/>
+			<text transform="matrix(0.9288 0 0 1 178.3008 171.2422)"><tspan x="0" y="0" font-size="8">Real world values of Cardiac Trigger Delay Time attribute are equal for each column.</tspan><tspan x="0" y="15.6" font-size="8">Real world values of Image Position attribute are equal for each row.</tspan></text>
+			<g>
+				<rect x="245.717" y="76.966" fill="#B2CEE7" width="64.628" height="65.075"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="291.698" y1="77.168" x2="312.952" y2="77.168"/>
+				<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" x1="245.418" y1="77.168" x2="290.403" y2="77.168"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="245.566" y1="122.524" x2="245.566" y2="77.161"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="245.566" y1="143.66" x2="245.566" y2="122.524"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="267.161" y1="122.524" x2="267.161" y2="77.161"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="267.161" y1="143.66" x2="267.161" y2="122.524"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="288.753" y1="122.524" x2="288.753" y2="77.161"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="288.753" y1="143.66" x2="288.753" y2="122.524"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="291.698" y1="98.791" x2="312.952" y2="98.791"/>
+				<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" x1="245.418" y1="98.791" x2="290.403" y2="98.791"/>
+				
+					<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="291.698" y1="120.388" x2="312.952" y2="120.388"/>
+				<line fill="#B2CEE7" stroke="#010101" stroke-miterlimit="1" x1="245.418" y1="120.388" x2="290.403" y2="120.388"/>
+			</g>
+			<rect x="236.906" y="38.77" fill="none" width="69.528" height="28.263"/>
+			<text transform="matrix(0.9288 0 0 1 236.9072 44.4976)"><tspan x="0" y="0" font-size="8">Index 1 :</tspan><tspan x="0" y="9.6" font-size="8">Cardiac Trigger</tspan><tspan x="0" y="19.2" font-size="8">Delay Time attribute</tspan></text>
+			<rect x="174.906" y="72.515" fill="none" width="52.693" height="27.755"/>
+			<text transform="matrix(0.9288 0 0 1 199.0977 78.2324)"><tspan x="0" y="0" font-size="8">Index 2 :</tspan><tspan x="-22.23" y="9.6" font-size="8">Image Position</tspan><tspan x="1.781" y="19.2" font-size="8">attribute</tspan></text>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="226.648" y1="67.187" x2="316.756" y2="67.187"/>
+					<g>
+						<polygon fill="#005695" points="315.964,68.349 320.3,67.187 315.964,66.024 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="233.85" y1="59.986" x2="233.85" y2="146.4"/>
+					<g>
+						<polygon fill="#005695" points="232.688,145.608 233.85,149.944 235.012,145.608 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<rect x="367.519" y="94.412" fill="none" stroke="#000000" stroke-miterlimit="1" width="86.25" height="45.233"/>
+				<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="367.519" y1="127.604" x2="453.769" y2="127.604"/>
+				<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="367.519" y1="116.53" x2="453.769" y2="116.53"/>
+				<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="367.519" y1="105.47" x2="453.769" y2="105.47"/>
+				<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="415.769" y1="94.41" x2="415.769" y2="139.646"/>
+			</g>
+			<rect x="368.269" y="78.917" fill="none" width="51" height="62.792"/>
+			<text transform="matrix(0.9288 0 0 1 371.3652 83.918)"><tspan x="0" y="0" font-size="7">Cardiac Trigger</tspan><tspan x="6.421" y="8.4" font-size="7">Delay Time</tspan><tspan x="10.998" y="19" font-size="8">Index 1</tspan><tspan x="10.998" y="29.6" font-size="8">Index 1</tspan><tspan x="10.998" y="40.2" font-size="8">Index 1</tspan><tspan x="20.368" y="52" font-size="9">...</tspan></text>
+			<rect x="410.269" y="78.917" fill="none" width="51" height="62.792"/>
+			<text transform="matrix(0.9288 0 0 1 426.7324 83.918)"><tspan x="0" y="0" font-size="7">Image</tspan><tspan x="-2.724" y="8.4" font-size="7">Position</tspan><tspan x="-3.394" y="19" font-size="8">Index 2</tspan><tspan x="-3.394" y="29.6" font-size="8">Index 2</tspan><tspan x="-3.394" y="40.2" font-size="8">Index 2</tspan><tspan x="5.976" y="52" font-size="9">...</tspan></text>
+			<polygon fill="#FFFFFF" stroke="#4F8ABE" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+				325.101,113.167 325.101,107.154 340.642,107.154 340.642,102.314 355.37,110.311 340.64,118.311 340.64,113.168 			"/>
+			<text transform="matrix(0.9288 0 0 1 34.354 31.8169)" font-size="11">Step 1</text>
+		</g>
+		<g>
+			<rect x="24.5" y="406.055" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="453.001" height="239.754"/>
+			<rect x="24.5" y="406.055" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="147" height="61.754"/>
+			<g>
+				<rect x="32.686" y="428.635" fill="none" width="122.063" height="32.174"/>
+				<text transform="matrix(0.9288 0 0 1 32.6875 435.0625)"><tspan x="0" y="0" font-size="9">Index values are stored in the</tspan><tspan x="0" y="10.801" font-size="9">Dimension Index Values </tspan><tspan x="0" y="21.601" font-size="9">belonging to the current frame.</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.9288 0 0 1 34.354 421.457)" font-size="11">Step 3</text>
+			</g>
+			<rect x="396.751" y="441.414" fill="#86B2D8" width="13.5" height="92.234"/>
+			<rect x="234.857" y="569.76" fill="#86B2D8" width="54.851" height="13.5"/>
+			<rect x="235.057" y="441.145" fill="#B2CEE7" width="86.022" height="86.617"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="292.341" y1="501.785" x2="292.341" y2="441.404"/>
+			<circle fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" cx="249.429" cy="455.803" r="9.001"/>
+			<circle fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" cx="278.092" cy="455.803" r="9.001"/>
+			<rect x="234.66" y="470.195" fill="#6799C8" width="28.747" height="28.744"/>
+			<path fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" d="M297.751,455.803c0-4.973,4.033-9,9.004-9s8.996,4.027,8.996,9
+				c0,4.969-4.025,8.998-8.996,8.998S297.751,460.771,297.751,455.803z"/>
+			<path fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" d="M240.43,484.717c0-4.971,4.031-9.002,9.002-9.002
+				c4.972,0,8.999,4.031,8.999,9.002c0,4.969-4.027,8.998-8.999,8.998C244.461,493.715,240.43,489.686,240.43,484.717z"/>
+			<path fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" d="M269.091,484.717c0-4.971,4.031-9.002,9.002-9.002
+				s9,4.031,9,9.002c0,4.969-4.029,8.998-9,8.998S269.091,489.686,269.091,484.717z"/>
+			<path fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" d="M297.753,484.717c0-4.971,4.031-9.002,9.002-9.002
+				s8.996,4.031,8.996,9.002c0,4.969-4.025,8.998-8.996,8.998S297.753,489.686,297.753,484.717z"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="249.43" cy="513.631" r="9.002"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="278.092" cy="513.631" r="9.001"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="306.752" cy="513.631" r="9.001"/>
+			<rect x="326.312" y="417.689" fill="#86B2D8" stroke="#86B2D8" stroke-miterlimit="1" width="42.119" height="112.168"/>
+			<rect x="172.238" y="532.393" fill="#86B2D8" stroke="#86B2D8" stroke-miterlimit="1" width="150.829" height="22.666"/>
+			<rect x="175.346" y="537.182" fill="none" width="52.326" height="15.428"/>
+			<text transform="matrix(0.9288 0 0 1 175.3481 542.8955)"><tspan x="0" y="0" font-size="8">Cardiac Trigger</tspan><tspan x="0" y="7.601" font-size="8">Delay Time</tspan></text>
+			<rect x="333.013" y="419.785" fill="none" width="28.197" height="14.123"/>
+			<text transform="matrix(0.9288 0 0 1 336.7832 425.499)"><tspan x="0" y="0" font-size="8">Image</tspan><tspan x="-3.112" y="7.601" font-size="8">Position</tspan></text>
+			<rect x="332.991" y="450.605" fill="none" width="27.805" height="68.504"/>
+			<text transform="matrix(0.9288 0 0 1 337.3145 455.6025)"><tspan x="0" y="0" font-size="7">value1</tspan><tspan x="-0.974" y="30.399" font-size="7">value 2</tspan><tspan x="-0.974" y="60.8" font-size="7">value 3</tspan></text>
+			<rect x="266.327" y="540.316" fill="none" width="23.527" height="42.943"/>
+			<text transform="matrix(0.9288 0 0 1 267.9668 545.3135)"><tspan x="0" y="0" font-size="7">Value2</tspan><tspan x="8.952" y="32.399" font-size="7">2</tspan></text>
+			<rect x="294.651" y="540.316" fill="none" width="24.197" height="6.193"/>
+			<text transform="matrix(0.9288 0 0 1 296.627 545.3135)" font-size="7">Value3</text>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="441.414" x2="363.712" y2="441.414"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="470.195" x2="363.712" y2="470.195"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="498.939" x2="363.712" y2="498.939"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="234.857" y1="552.109" x2="234.857" y2="501.785"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="263.601" y1="552.109" x2="263.601" y2="501.785"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="292.341" y1="552.109" x2="292.341" y2="501.785"/>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="277.782" y1="553.587" x2="277.782" y2="565.364"/>
+					<g>
+						<polygon fill="#005695" points="276.62,554.379 277.782,550.043 278.944,554.379 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="276.62,564.572 277.782,568.908 278.944,564.572 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="249.43" y1="553.587" x2="249.43" y2="565.364"/>
+					<g>
+						<polygon fill="#005695" points="248.268,554.379 249.43,550.043 250.592,554.379 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="248.268,564.572 249.43,568.908 250.592,564.572 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="367.602" y1="454.684" x2="390.381" y2="454.684"/>
+					<g>
+						<polygon fill="#005695" points="368.394,455.846 364.058,454.684 368.394,453.521 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="389.589,455.846 393.925,454.684 389.589,453.521 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="367.602" y1="483.309" x2="390.381" y2="483.309"/>
+					<g>
+						<polygon fill="#005695" points="368.394,484.471 364.058,483.309 368.394,482.146 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="389.589,484.471 393.925,483.309 389.589,482.146 						"/>
+					</g>
+				</g>
+			</g>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="441.414" x2="294.536" y2="441.414"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="263.601" y1="501.785" x2="263.601" y2="441.404"/>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="470.195" x2="294.536" y2="470.195"/>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="498.939" x2="294.536" y2="498.939"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="234.857" y1="501.785" x2="234.857" y2="441.404"/>
+			<rect x="242.959" y="569.76" fill="#4F8ABE" width="13.503" height="13.5"/>
+			<rect x="396.751" y="475.01" fill="#4F8ABE" width="13.5" height="13.5"/>
+			<rect x="237.162" y="540.316" fill="none" width="24.532" height="42.943"/>
+			<text transform="matrix(0.9288 0 0 1 239.3066 545.3135)"><tspan x="0" y="0" font-size="7">Value1</tspan><tspan x="8.952" y="32.399" font-size="7">1</tspan></text>
+			<g>
+				<rect x="305.001" y="570.668" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="105.25" height="61.25"/>
+				<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="305.001" y1="619.67" x2="410.251" y2="619.67"/>
+				<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="305.001" y1="607.424" x2="410.251" y2="607.424"/>
+				<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="305.001" y1="595.162" x2="410.251" y2="595.162"/>
+				<line fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" x1="305.001" y1="582.914" x2="410.251" y2="582.914"/>
+			</g>
+			<rect x="305.501" y="583.443" fill="#6799C8" width="104.334" height="11.334"/>
+			<rect x="305.501" y="572.924" fill="none" width="41" height="57.244"/>
+			<text transform="matrix(0.9288 0 0 1 308.1943 580.0723)"><tspan x="0" y="0" font-size="10">Frame X</tspan><tspan x="0" y="12" font-size="10">Frame Y</tspan><tspan x="15.002" y="24" font-size="10">...</tspan><tspan x="0.281" y="36" font-size="10">Frame Z</tspan><tspan x="15.002" y="48" font-size="10">...</tspan></text>
+			<rect x="366.501" y="572.924" fill="none" width="10" height="62.793"/>
+			<text transform="matrix(0.9288 0 0 1 368.916 580.0723)"><tspan x="0" y="0" font-size="10">1</tspan><tspan x="0" y="12" font-size="10">1</tspan><tspan x="-1.386" y="24" font-size="10">...</tspan><tspan x="0" y="36" font-size="10">2</tspan><tspan x="-1.386" y="48" font-size="10">...</tspan></text>
+			<rect x="380.751" y="572.924" fill="none" width="10" height="62.793"/>
+			<text transform="matrix(0.9288 0 0 1 384.543 580.0723)"><tspan x="0" y="0" font-size="10">|</tspan><tspan x="0" y="12" font-size="10">|</tspan><tspan x="0" y="24" font-size="10">|</tspan><tspan x="0" y="36" font-size="10">|</tspan><tspan x="0" y="48" font-size="10">|</tspan></text>
+			<rect x="397.001" y="572.924" fill="none" width="10" height="62.793"/>
+			<text transform="matrix(0.9288 0 0 1 399.416 580.0723)"><tspan x="0" y="0" font-size="10">1</tspan><tspan x="0" y="12" font-size="10">2</tspan><tspan x="-1.386" y="24" font-size="10">...</tspan><tspan x="0" y="36" font-size="10">1</tspan><tspan x="-1.386" y="48" font-size="10">...</tspan></text>
+			<line stroke="#000000" stroke-miterlimit="1" x1="357.626" y1="570.668" x2="357.626" y2="631.918"/>
+			<rect x="399.464" y="451.975" fill="none" width="8.596" height="37.535"/>
+			<text transform="matrix(0.9288 0 0 1 401.9531 456.9727)"><tspan x="0" y="0" font-size="7">1</tspan><tspan x="0" y="27.399" font-size="7">2</tspan></text>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="411.614,482.059 427.96,482.059 427.96,588.809 
+						420.006,588.809 					"/>
+					<g>
+						<polygon fill="#005695" points="421.195,587.065 414.69,588.809 421.195,590.552 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="249.551,584.111 249.551,588.809 295.303,588.809 					
+						"/>
+					<g>
+						<polygon fill="#005695" points="294.113,590.552 300.618,588.809 294.113,587.065 						"/>
+					</g>
+				</g>
+			</g>
+			<rect x="244.521" y="480.59" fill="none" width="9.815" height="8.252"/>
+			<text transform="matrix(0.9288 0 0 1 246.3315 487.7344)" font-size="10">Y</text>
+			<rect x="244.521" y="451.762" fill="none" width="9.815" height="8.08"/>
+			<text transform="matrix(0.9288 0 0 1 246.332 458.9062)" font-size="10">X</text>
+			<rect x="273.185" y="451.762" fill="none" width="9.812" height="8.08"/>
+			<text transform="matrix(0.9288 0 0 1 275.2539 458.9062)" font-size="10">Z</text>
+		</g>
+		<g>
+			<rect x="24.5" y="201.554" fill="#CCDEF0" stroke="#000000" stroke-miterlimit="1" width="453.001" height="204.507"/>
+			<rect x="24.5" y="201.554" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="147" height="75.505"/>
+			<g>
+				<rect x="32.686" y="224.131" fill="none" width="122.063" height="42.377"/>
+				<text transform="matrix(0.9288 0 0 1 32.6875 230.563)"><tspan x="0" y="0" font-size="9">For each frame, the index values</tspan><tspan x="0" y="10.8" font-size="9">are assigned by the application,</tspan><tspan x="0" y="21.6" font-size="9">and linked to real word values of</tspan><tspan x="0" y="32.4" font-size="9">the defined attributes.</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(0.9288 0 0 1 34.354 216.957)" font-size="11">Step 2</text>
+			</g>
+			<rect x="365.308" y="363.709" fill="#86B2D8" width="75.75" height="31.25"/>
+			<rect x="396.751" y="244.111" fill="#86B2D8" width="13.5" height="119.598"/>
+			<rect x="234.857" y="372.459" fill="#86B2D8" width="130.45" height="13.5"/>
+			<rect x="235.057" y="243.843" fill="#B2CEE7" width="86.022" height="86.619"/>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="244.111" x2="294.536" y2="244.111"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="234.857" y1="304.482" x2="234.857" y2="244.103"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="263.601" y1="304.482" x2="263.601" y2="244.103"/>
+			
+				<line fill="none" stroke="#010101" stroke-linecap="square" stroke-miterlimit="1" x1="292.341" y1="304.482" x2="292.341" y2="244.103"/>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="272.893" x2="294.536" y2="272.893"/>
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" x1="234.66" y1="301.638" x2="294.536" y2="301.638"/>
+			<circle fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" cx="249.43" cy="258.5" r="9"/>
+			<circle fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" cx="278.092" cy="258.5" r="9.001"/>
+			<path fill="#B2CEE7" stroke="#003468" stroke-miterlimit="1" d="M297.751,258.5c0-4.972,4.033-9,9.004-9s8.996,4.028,8.996,9
+				c0,4.971-4.025,9-8.996,9S297.751,263.471,297.751,258.5z"/>
+			<circle fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" cx="249.43" cy="287.414" r="9"/>
+			<circle fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" cx="278.092" cy="287.414" r="9.001"/>
+			<circle fill="#86B2D8" stroke="#003468" stroke-miterlimit="1" cx="306.752" cy="287.414" r="8.999"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="249.43" cy="316.329" r="9.002"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="278.092" cy="316.329" r="9.001"/>
+			<circle fill="#6799C8" stroke="#003468" stroke-miterlimit="1" cx="306.752" cy="316.329" r="9.001"/>
+			<rect x="172.238" y="335.092" fill="#86B2D8" stroke="#86B2D8" stroke-miterlimit="1" width="196.192" height="22.668"/>
+			<rect x="326.312" y="220.387" fill="#86B2D8" stroke="#86B2D8" stroke-miterlimit="1" width="42.119" height="137.373"/>
+			<rect x="175.346" y="339.883" fill="none" width="52.326" height="15.426"/>
+			<text transform="matrix(0.9288 0 0 1 175.3481 345.5957)"><tspan x="0" y="0" font-size="8">Cardiac Trigger</tspan><tspan x="0" y="7.6" font-size="8">Delay Time</tspan></text>
+			<rect x="333.013" y="222.483" fill="none" width="28.197" height="14.123"/>
+			<text transform="matrix(0.9288 0 0 1 336.7832 228.1992)"><tspan x="0" y="0" font-size="8">Image</tspan><tspan x="-3.112" y="7.6" font-size="8">Position</tspan></text>
+			<rect x="332.991" y="253.303" fill="none" width="27.805" height="68.503"/>
+			<text transform="matrix(0.9288 0 0 1 337.3145 258.3027)"><tspan x="0" y="0" font-size="7">value1</tspan><tspan x="-0.974" y="30.4" font-size="7">value 2</tspan><tspan x="-0.974" y="60.8" font-size="7">value 3</tspan></text>
+			<rect x="328.13" y="337.264" fill="none" width="37.527" height="18.326"/>
+			<text transform="matrix(0.9288 0 0 1 328.5166 342.9756)"><tspan x="0" y="0" font-size="8">Real World</tspan><tspan x="7.552" y="9.601" font-size="8">Values</tspan></text>
+			<rect x="399.464" y="254.672" fill="none" width="8.596" height="71.713"/>
+			<text transform="matrix(0.9288 0 0 1 401.9512 259.6724)"><tspan x="0" y="0" font-size="7">1</tspan><tspan x="0" y="27.4" font-size="7">2</tspan><tspan x="0" y="54.8" font-size="7">3</tspan></text>
+			<text transform="matrix(0.9288 0 0 1 368.3906 371.8232)"><tspan x="0" y="0" font-size="8">Assigned index value</tspan><tspan x="0" y="9.6" font-size="8">corresponding with</tspan><tspan x="0" y="19.2" font-size="8">attribute value</tspan></text>
+			<rect x="237.162" y="343.016" fill="none" width="24.532" height="42.943"/>
+			<text transform="matrix(0.9288 0 0 1 239.3066 348.0137)"><tspan x="0" y="0" font-size="7">Value1</tspan><tspan x="8.952" y="32.399" font-size="7">1</tspan></text>
+			<rect x="266.327" y="343.016" fill="none" width="23.527" height="42.943"/>
+			<text transform="matrix(0.9288 0 0 1 267.9668 348.0137)"><tspan x="0" y="0" font-size="7">Value2</tspan><tspan x="8.952" y="32.399" font-size="7">2</tspan></text>
+			<rect x="294.651" y="343.016" fill="none" width="24.197" height="42.943"/>
+			<text transform="matrix(0.9288 0 0 1 296.627 348.0137)"><tspan x="0" y="0" font-size="7">Value3</tspan><tspan x="8.952" y="32.399" font-size="7">3</tspan></text>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="244.111" x2="363.712" y2="244.111"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="272.893" x2="363.712" y2="272.893"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.261" y1="301.638" x2="363.712" y2="301.638"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="234.857" y1="354.811" x2="234.857" y2="304.483"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="263.601" y1="354.811" x2="263.601" y2="304.483"/>
+			
+				<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,4" x1="292.341" y1="354.811" x2="292.341" y2="304.483"/>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="306.751" y1="356.288" x2="306.751" y2="368.065"/>
+					<g>
+						<polygon fill="#005695" points="305.589,357.08 306.751,352.744 307.913,357.08 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="305.589,367.273 306.751,371.609 307.913,367.273 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="277.782" y1="356.288" x2="277.782" y2="368.065"/>
+					<g>
+						<polygon fill="#005695" points="276.62,357.08 277.782,352.744 278.944,357.08 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="276.62,367.273 277.782,371.609 278.944,367.273 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="248.814" y1="356.288" x2="248.814" y2="368.065"/>
+					<g>
+						<polygon fill="#005695" points="247.652,357.08 248.814,352.744 249.977,357.08 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="247.652,367.273 248.814,371.609 249.977,367.273 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="367.602" y1="286.007" x2="390.381" y2="286.007"/>
+					<g>
+						<polygon fill="#005695" points="368.394,287.169 364.058,286.007 368.394,284.845 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="389.589,287.169 393.925,286.007 389.589,284.845 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="367.602" y1="257.382" x2="390.381" y2="257.382"/>
+					<g>
+						<polygon fill="#005695" points="368.394,258.544 364.058,257.382 368.394,256.22 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="389.589,258.544 393.925,257.382 389.589,256.22 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="367.602" y1="314.632" x2="390.381" y2="314.632"/>
+					<g>
+						<polygon fill="#005695" points="368.394,315.794 364.058,314.632 368.394,313.47 						"/>
+					</g>
+					<g>
+						<polygon fill="#005695" points="389.589,315.794 393.925,314.632 389.589,313.47 						"/>
+					</g>
+				</g>
+			</g>
+			<rect x="244.521" y="283.637" fill="none" width="9.815" height="8.252"/>
+			<text transform="matrix(0.9288 0 0 1 246.3315 290.7847)" font-size="10">Y</text>
+			<rect x="244.521" y="254.809" fill="none" width="9.815" height="8.08"/>
+			<text transform="matrix(0.9288 0 0 1 246.332 261.9565)" font-size="10">X</text>
+			<rect x="273.185" y="254.809" fill="none" width="9.812" height="8.08"/>
+			<text transform="matrix(0.9288 0 0 1 275.2539 261.9565)" font-size="10">Z</text>
+		</g>
+	</g>
+</g>
+</svg>

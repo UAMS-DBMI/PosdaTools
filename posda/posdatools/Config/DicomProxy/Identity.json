@@ -1,0 +1,11 @@
+// 
+{
+  "Greeting": { },
+  "HostName": "tcia-utilities",
+  "Title": "Dicom Transparent Proxy",
+  "LoginTitle": "Login for Dicom Transparent Proxy",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+}

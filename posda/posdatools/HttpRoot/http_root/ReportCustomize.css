@@ -1,0 +1,38 @@
+
+/* 
+ */
+
+table.pretty {
+  width: 100%;
+  clear: both;
+}
+
+.fg-button {
+  outline: 0; 
+  margin:0 4px 0 0; 
+  padding: .2em 1em; 
+  text-decoration:none !important; 
+  cursor:pointer; 
+  position: relative; 
+  text-align: center; 
+  zoom: 1; 
+}
+
+.fg-button-orig {
+  outline: 0; 
+  margin:0 4px 0 0; 
+  padding: .4em 1em; 
+  text-decoration:none !important; 
+  cursor:pointer; 
+  position: relative; 
+  text-align: center; 
+  zoom: 1; 
+}
+
+.dataTables_info {
+  text-align: right;
+  height:30px; 
+  line-height:30px;
+  position:absolute;
+  right:12px;
+}

@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_A.36-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="317px" viewBox="0 0 502 317" enable-background="new 0 0 502 317" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g display="none">
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="136.439,25.204 136.439,29.822 
+				66.486,29.822 66.248,203.227 			"/>
+			<g>
+				<polygon fill="#005695" points="63.926,201.639 66.238,210.314 68.574,201.645 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="136.675,25.204 136.675,29.822 
+				178.559,29.822 178.974,72.717 			"/>
+			<g>
+				<polygon fill="#005695" points="176.635,71.154 179.043,79.804 181.283,71.109 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="136.677,25.204 136.677,29.822 
+				435.493,29.822 435.492,137.227 			"/>
+			<g>
+				<polygon fill="#005695" points="433.168,135.641 435.492,144.314 437.816,135.641 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="85.698,203.227 85.698,133.26 
+				138.447,133.26 138.79,100.126 178.939,100.126 178.939,93.889 			"/>
+			<g>
+				<polygon fill="#005695" points="88.022,201.642 85.698,210.314 83.374,201.642 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="104.999,203.106 104.999,198.171 
+				387.782,198.171 387.782,166.114 427.932,166.114 427.932,159.182 			"/>
+			<g>
+				<polygon fill="#005695" points="107.323,201.521 104.999,210.194 102.675,201.521 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="182.542,100.126 251.062,100.126 
+				251.062,143.864 			"/>
+			<g>
+				<polygon fill="#005695" points="182.536,102.215 179.176,93.889 186.25,99.419 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="417.678,137.341 417.678,135.218 
+				363.897,135.218 363.218,100.126 179.177,100.126 179.177,93.889 			"/>
+			<g>
+				<polygon fill="#005695" points="420.002,135.755 417.678,144.428 415.354,135.755 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 175.4834 114.4062)" font-size="5.7857">1</text>
+		</g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 175.4824 128.5522)" font-size="5.7857">0-n</text>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 288.0977 114.4062)" font-size="5.7857">1</text>
+		</g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 288.0977 128.5522)" font-size="5.7857">0-n</text>
+		</g>
+	</g>
+	<g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 400.7119 114.4062)" font-size="5.7857">1</text>
+		</g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 400.7119 128.5522)" font-size="5.7857">0-n</text>
+		</g>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 103.4639 48.8838)" display="inline" font-size="5.7857">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 103.4639 63.0298)" display="inline" font-size="5.7857">0-n</text>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 216.0791 48.8838)" display="inline" font-size="5.7857">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 216.0786 63.0298)" display="inline" font-size="5.7857">0-n</text>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 472.6084 48.8838)" display="inline" font-size="5.7857">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1.5556 0 0 1 472.6084 63.0298)" display="inline" font-size="5.7857">0-n</text>
+	</g>
+	<g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 424.5645 179.5449)" font-size="5.7857">1</text>
+		</g>
+		<g display="inline">
+			<text transform="matrix(1.5556 0 0 1 424.5645 193.6914)" font-size="5.7857">0-n</text>
+		</g>
+	</g>
+</g>
+<rect x="1" y="1" fill="#F5EED6" width="500" height="315"/>
+<rect x="34.698" y="16.132" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="22.5"/>
+<g>
+	<text transform="matrix(1 0 0 1 56.8003 30.7163)" font-size="10">Image</text>
+</g>
+<rect x="197.991" y="278.32" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.001" height="22.5"/>
+<g>
+	<text transform="matrix(1 0 0 1 208.147 292.332)" font-size="10">Prior Image</text>
+</g>
+<rect x="205.192" y="122.207" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="22.5"/>
+<g>
+	<text transform="matrix(1 0 0 1 219.2344 131.6724)"><tspan x="0" y="0" font-size="10">Raw Data</tspan><tspan x="-0.566" y="10" font-size="10">Sequence</tspan></text>
+</g>
+<rect x="395.303" y="49.757" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="22.5"/>
+<g>
+	<text transform="matrix(1 0 0 1 401.0215 63.7822)" font-size="10">Spectroscopy</text>
+</g>
+<rect x="282.885" y="278.369" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="22.499"/>
+<g>
+	<text transform="matrix(1 0 0 1 308.3281 287.1074)"><tspan x="0" y="0" font-size="10">Prior</tspan><tspan x="-19.736" y="10" font-size="10">Spectroscopy</tspan></text>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="241.192" y1="144.707" x2="241.192" y2="159.707"/>
+		<g>
+			<polygon fill="#005695" points="240.03,158.915 241.192,163.251 242.354,158.915 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="241.192" y1="184.691" x2="241.192" y2="274.476"/>
+		<g>
+			<polygon fill="#005695" points="240.03,273.684 241.192,278.02 242.354,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="316.185,94.588 261.771,94.588 261.771,118.978 		"/>
+		<g>
+			<polygon fill="#005695" points="260.609,118.185 261.771,122.521 262.934,118.185 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="159.002,94.588 220.611,94.588 220.611,118.978 		"/>
+		<g>
+			<polygon fill="#005695" points="219.449,118.185 220.611,122.521 221.773,118.185 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="177.347" y1="61.008" x2="389.723" y2="61.008"/>
+		<g>
+			<polygon fill="#005695" points="388.931,62.17 393.267,61.008 388.931,59.846 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="431.315,72.213 431.315,94.588 414.069,94.588 		"/>
+		<g>
+			<polygon fill="#005695" points="414.861,93.426 410.525,94.588 414.861,95.75 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M198.191,180.69c0,2.762,2.239,5,5,5h76.002c2.762,0,5-2.238,5-5v-11.982c0-2.762-2.238-5-5-5h-76.002
+		c-2.761,0-5,2.238-5,5V180.69z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M198.191,180.69c0,2.762,2.239,5,5,5h76.002c2.762,0,5-2.238,5-5
+		v-11.982c0-2.762-2.238-5-5-5h-76.002c-2.761,0-5,2.238-5,5V180.69z"/>
+</g>
+<text transform="matrix(1 0 0 1 202.3345 170.0801)"><tspan x="0" y="0" font-size="6">References Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">required if planned on</tspan><tspan x="0" y="14.4" font-size="6">prior image</tspan></text>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="431.315,211.48 431.315,248.262 406.069,248.262 		"/>
+		<g>
+			<polygon fill="#005695" points="406.861,247.1 402.525,248.262 406.861,249.424 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="431.315,174.698 431.315,211.48 425.218,211.48 		"/>
+		<g>
+			<polygon fill="#005695" points="426.01,210.318 421.674,211.48 426.01,212.643 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="431.315,93.584 431.315,174.698 406.262,174.698 		"/>
+		<g>
+			<polygon fill="#005695" points="407.054,173.536 402.718,174.698 407.054,175.86 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="70.698,38.632 70.698,61.008 77.894,61.008 		"/>
+		<g>
+			<polygon fill="#005695" points="77.101,62.17 81.438,61.008 77.101,59.846 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="70.698,175.147 70.698,211.48 77.098,211.48 		"/>
+		<g>
+			<polygon fill="#005695" points="76.305,212.643 80.642,211.48 76.305,210.318 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="70.699,93.917 70.699,174.7 75.878,174.7 		"/>
+		<g>
+			<polygon fill="#005695" points="75.085,175.862 79.422,174.7 75.085,173.538 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="70.698,59.803 70.698,94.588 75.785,94.588 		"/>
+		<g>
+			<polygon fill="#005695" points="74.992,95.75 79.329,94.588 74.992,93.426 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="316.663,248.262 306.387,248.262 306.387,274.476 		"/>
+		<g>
+			<polygon fill="#005695" points="305.225,273.684 306.387,278.02 307.549,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="316.729,211.481 299.644,211.481 299.644,274.476 		"/>
+		<g>
+			<polygon fill="#005695" points="298.481,273.684 299.644,278.02 300.806,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="316.799,174.7 292.31,174.7 292.31,197.783 
+			292.259,197.782 251.418,197.782 251.418,274.476 		"/>
+		<g>
+			<polygon fill="#005695" points="250.256,273.684 251.418,278.02 252.58,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="154.699,174.7 179.188,174.7 179.188,197.783 
+			179.239,197.782 230.88,197.782 230.88,274.476 		"/>
+		<g>
+			<polygon fill="#005695" points="229.718,273.684 230.88,278.02 232.042,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<polyline fill="none" stroke="#005695" stroke-miterlimit="1" points="168.938,211.481 220.048,211.481 220.048,274.476 		"/>
+		<g>
+			<polygon fill="#005695" points="218.886,273.684 220.048,278.02 221.21,273.684 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M316.522,180.689c0,2.762,2.238,5,5,5h76c2.762,0,5-2.238,5-5v-11.982c0-2.762-2.238-5-5-5h-76
+		c-2.762,0-5,2.238-5,5V180.689z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M316.522,180.689c0,2.762,2.238,5,5,5h76c2.762,0,5-2.238,5-5v-11.982
+		c0-2.762-2.238-5-5-5h-76c-2.762,0-5,2.238-5,5V180.689z"/>
+</g>
+<text transform="matrix(1 0 0 1 321.2578 170.085)"><tspan x="0" y="0" font-size="6">References Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">required if planned on</tspan><tspan x="0" y="14.4" font-size="6">prior image</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M80.111,180.689c0,2.762,2.239,5,5,5h76c2.761,0,5-2.238,5-5v-11.982c0-2.762-2.239-5-5-5h-76
+		c-2.761,0-5,2.238-5,5V180.689z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M80.111,180.689c0,2.762,2.239,5,5,5h76c2.761,0,5-2.238,5-5v-11.982
+		c0-2.762-2.239-5-5-5h-76c-2.761,0-5,2.238-5,5V180.689z"/>
+</g>
+<text transform="matrix(1 0 0 1 84.8589 170.0811)"><tspan x="0" y="0" font-size="6">References Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">required if planned on</tspan><tspan x="0" y="14.4" font-size="6">prior image</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M316.522,254.253c0,2.762,2.238,5,5,5h76c2.762,0,5-2.238,5-5v-11.982c0-2.762-2.238-5-5-5h-76
+		c-2.762,0-5,2.238-5,5V254.253z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M316.522,254.253c0,2.762,2.238,5,5,5h76c2.762,0,5-2.238,5-5v-11.982
+		c0-2.762-2.238-5-5-5h-76c-2.762,0-5,2.238-5,5V254.253z"/>
+</g>
+<text transform="matrix(1 0 0 1 321.2578 243.6484)"><tspan x="0" y="0" font-size="6">References Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">required if planned on</tspan><tspan x="0" y="14.4" font-size="6">prior spectroscopy data</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M316.522,214.271c0,2.762,2.238,5,5,5h95c2.762,0,5-2.238,5-5v-5.581c0-2.762-2.238-5-5-5h-95
+		c-2.762,0-5,2.238-5,5V214.271z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M316.522,214.271c0,2.762,2.238,5,5,5h95c2.762,0,5-2.238,5-5v-5.581
+		c0-2.762-2.238-5-5-5h-95c-2.762,0-5,2.238-5,5V214.271z"/>
+</g>
+<text transform="matrix(1 0 0 1 319.9238 210.0674)"><tspan x="0" y="0" font-size="6">References Source Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">for derived spectroscopy data</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M80.112,214.271c0,2.762,2.239,5,5,5h95c2.761,0,5-2.238,5-5v-5.581c0-2.762-2.239-5-5-5h-95
+		c-2.761,0-5,2.238-5,5V214.271z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M80.112,214.271c0,2.762,2.239,5,5,5h95c2.761,0,5-2.238,5-5v-5.581
+		c0-2.762-2.239-5-5-5h-95c-2.761,0-5,2.238-5,5V214.271z"/>
+</g>
+<text transform="matrix(1 0 0 1 83.5259 210.0684)"><tspan x="0" y="0" font-size="6">References Source Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">for derived images</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M82.526,63.798c0,2.761,2.239,5,5,5h103.707c2.761,0,5-2.239,5-5v-5.581c0-2.761-2.239-5-5-5H87.526
+		c-2.761,0-5,2.239-5,5V63.798z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M82.526,63.798c0,2.761,2.239,5,5,5h103.707c2.761,0,5-2.239,5-5
+		v-5.581c0-2.761-2.239-5-5-5H87.526c-2.761,0-5,2.239-5,5V63.798z"/>
+</g>
+<text transform="matrix(1 0 0 1 85.939 59.5996)"><tspan x="0" y="0" font-size="6">References Image Sequence</tspan><tspan x="0" y="7.2" font-size="6">only if image type is METABOLITE MAP</tspan></text>
+<g>
+	<path fill="#CCDEF0" d="M80.112,97.378c0,2.761,2.239,5,5,5h84c2.761,0,5-2.239,5-5v-5.58c0-2.761-2.239-5-5-5h-84
+		c-2.761,0-5,2.239-5,5V97.378z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M80.112,97.378c0,2.761,2.239,5,5,5h84c2.761,0,5-2.239,5-5v-5.58
+		c0-2.761-2.239-5-5-5h-84c-2.761,0-5,2.239-5,5V97.378z"/>
+</g>
+<text transform="matrix(1 0 0 1 83.5254 95.9785)" font-size="6">References Raw Data Sequence</text>
+<g>
+	<path fill="#CCDEF0" d="M316.522,97.378c0,2.761,2.238,5,5,5h84c2.762,0,5-2.239,5-5v-5.58c0-2.761-2.238-5-5-5h-84
+		c-2.762,0-5,2.239-5,5V97.378z"/>
+	<path fill="none" stroke="#005695" stroke-miterlimit="1" d="M316.522,97.378c0,2.761,2.238,5,5,5h84c2.762,0,5-2.239,5-5v-5.58
+		c0-2.761-2.238-5-5-5h-84c-2.762,0-5,2.239-5,5V97.378z"/>
+</g>
+<text transform="matrix(1 0 0 1 319.9238 95.9785)" font-size="6">References Raw Data Sequence</text>
+<g>
+	<text transform="matrix(1 0 0 1 199.1455 57.8799)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 176.5522 92.2397)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 168.2583 172.0801)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 243.3779 193.626)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 187.4062 208.9062)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 302.4043 172.085)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 302.4043 92.2397)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 302.4043 245.6484)" font-size="8">0-n</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 302.4043 208.9062)" font-size="8">0-n</text>
+</g>
+</svg>

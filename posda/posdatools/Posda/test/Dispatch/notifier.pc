@@ -1,0 +1,8 @@
+my($this, $fh, $out, $args) = @_;
+my $name = shift @$args;
+my $foo = Dispatch::Select::Event->new(
+  Dispatch::Select::Background->new(
+    Dispatch::Test::CreateNotifier($out, $args))
+  );
+$this->{objects}->{$name} = $foo;
+print $out "Added notifier $name\n";

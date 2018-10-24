@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part05/figures/PS3.5_G.6-1.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:30 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.084px" height="570.013px" viewBox="0 0 495.084 570.013" enable-background="new 0 0 495.084 570.013"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.5-2008 5: Data Structures and Encoding
+   </desc>
+   <title>
+	Figure G.6-1 EXAMPLE OF ELEMENTS FOR AN ENCODED YCBCR RLE THREE-FRAME IMAGE WITH BASIC OFFSET TABLE
+   </title>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -1.1406 247.5425 285.0063)" overflow="visible"/>
+<g>
+	<g>
+		<rect x="310.727" y="359.464" fill="#CCDFF0" width="113.137" height="188.251"/>
+		<text transform="matrix(0.8815 0 0 1 326.9028 464.9146)"><tspan x="0" y="0" font-size="9">(FFFE,</tspan><tspan x="0" y="10.8" font-size="9">E0DD)</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 327.6519 531.2153)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 317.4028 404.7544)"><tspan x="0" y="0" font-size="11">Sequence</tspan><tspan x="0" y="13.201" font-size="11">Delimiter</tspan><tspan x="0" y="26.4" font-size="11">Tag</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 383.9702 464.9146)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">0000H</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 384.0718 531.2153)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 380.8306 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Length</tspan></text>
+		<rect x="315.709" y="364.715" fill="none" width="107.1" height="11.732"/>
+		<text transform="matrix(0.8815 0 0 1 315.7104 372.5884)" font-size="11">Sequence Delimiter Item</text>
+		<rect x="15.226" y="302.714" fill="#4E8ABE" width="408.638" height="56.75"/>
+		<rect x="163.106" y="359.464" fill="#6799C8" width="147.717" height="188.251"/>
+		<rect x="15.063" y="359.464" fill="#87B2D8" width="148.101" height="188.251"/>
+		<g>
+			<rect x="15.226" y="302.714" fill="none" stroke="#000000" stroke-miterlimit="1" width="408.638" height="245.001"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="15.464" y1="519.766" x2="424.01" y2="519.766"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="15.342" y1="390.714" x2="424.01" y2="390.714"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="15.458" y1="359.464" x2="423.516" y2="359.464"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="254.893" y1="390.714" x2="254.893" y2="547.715"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="367.225" y1="390.714" x2="367.225" y2="547.715"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="106.892" y1="390.714" x2="106.892" y2="547.715"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="208.893" y1="390.714" x2="208.893" y2="547.715"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="60.559" y1="390.714" x2="60.559" y2="547.715"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="163.164" y1="359.464" x2="163.164" y2="547.715"/>
+		</g>
+		<text transform="matrix(0.8815 0 0 1 171.5854 464.9146)"><tspan x="0" y="0" font-size="9">(FFFE,</tspan><tspan x="0" y="10.8" font-size="9">E000)</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 172.3359 531.2153)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 174.4951 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Tag</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 217.2593 464.9146)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">0BC8H</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 218.0195 531.2153)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 214.7783 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Length</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 259.1782 464.9146)"><tspan x="0" y="0" font-size="9">RLE </tspan><tspan x="0" y="10.8" font-size="9">Compressed</tspan><tspan x="0" y="21.6" font-size="9">Frame</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 266.5728 531.2153)"><tspan x="0" y="0" font-size="11">0BC8H</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 269.2661 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Value</tspan></text>
+		<rect x="170.25" y="364.715" fill="none" width="123.933" height="26"/>
+		<text transform="matrix(0.8815 0 0 1 170.2495 372.5884)"><tspan x="0" y="0" font-size="11">Third Fragment (Frame 3) of </tspan><tspan x="0" y="13.201" font-size="11">Pixel Data</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 22.6792 464.9146)"><tspan x="0" y="0" font-size="9">(FFFE,</tspan><tspan x="0" y="10.8" font-size="9">E000)</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 23.4292 531.2153)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 25.5884 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Tag</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 68.353 464.9146)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">036AH</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 69.1128 531.2153)"><tspan x="0" y="0" font-size="11">2</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 65.8716 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Length</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 110.2715 464.9146)"><tspan x="0" y="0" font-size="9">RLE </tspan><tspan x="0" y="10.8" font-size="9">Compressed</tspan><tspan x="0" y="21.6" font-size="9">Frame</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 117.667 531.2153)"><tspan x="0" y="0" font-size="11">036AH</tspan><tspan x="0" y="13.199" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 120.3594 404.7544)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.201" font-size="11">Value</tspan></text>
+		<rect x="21.343" y="364.715" fill="none" width="123.935" height="26"/>
+		<text transform="matrix(0.8815 0 0 1 21.3423 372.5884)"><tspan x="0" y="0" font-size="11">Second Fragment (Frame 2) </tspan><tspan x="0" y="13.201" font-size="11">of Pixel Data</tspan></text>
+		<rect x="176.477" y="328.047" fill="none" width="86.137" height="10.334"/>
+		<text transform="matrix(0.8815 0 0 1 176.4761 335.9224)" font-size="11">Data Element, cont.</text>
+	</g>
+	<g>
+		<rect x="15.226" y="24.114" fill="#4E8ABE" width="464.798" height="56.75"/>
+		<rect x="15.226" y="80.864" fill="#FFFFFF" width="45.444" height="188.251"/>
+		<rect x="151.448" y="80.864" fill="#FFFFFF" width="45.333" height="188.251"/>
+		<rect x="60.67" y="80.864" fill="#CCDFF0" width="90.778" height="188.251"/>
+		<rect x="333.002" y="80.864" fill="#B2CEE7" width="147.021" height="188.251"/>
+		<rect x="196.781" y="80.864" fill="#CCDFF0" width="136.221" height="188.251"/>
+		<g>
+			<rect x="15.226" y="24.114" fill="none" stroke="#000000" stroke-miterlimit="1" width="464.798" height="245.001"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="15.226" y1="241.166" x2="480.024" y2="241.166"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="196.781" y1="112.114" x2="480.024" y2="112.114"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="15.226" y1="80.864" x2="480.024" y2="80.864"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="423.782" y1="112.114" x2="423.782" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="378.448" y1="112.114" x2="378.448" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="333.002" y1="80.864" x2="333.002" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="287.67" y1="112.114" x2="287.67" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="242.226" y1="112.114" x2="242.226" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="196.781" y1="24.114" x2="196.781" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="151.448" y1="24.114" x2="151.448" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="106.003" y1="81.114" x2="106.003" y2="269.115"/>
+			<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="60.67" y1="24.114" x2="60.67" y2="269.115"/>
+		</g>
+		<text transform="matrix(0.8815 0 0 1 296.6577 159.9146)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">0000H</tspan><tspan x="0" y="21.6" font-size="9">0000</tspan><tspan x="0" y="32.4" font-size="9">02D0H</tspan><tspan x="0" y="43.2" font-size="9">0000</tspan><tspan x="0" y="54" font-size="9">0642H</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 293.9136 252.6147)"><tspan x="0" y="0" font-size="11">000CH</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 296.606 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Value</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 342.2251 186.3145)"><tspan x="0" y="0" font-size="9">(FFFE,</tspan><tspan x="0" y="10.8" font-size="9">E000)</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 342.9761 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 345.1353 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Tag</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 387.8989 186.3145)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">02C8H</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 388.6587 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 385.4185 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Length</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 429.8179 186.3145)"><tspan x="0" y="0" font-size="9">RLE </tspan><tspan x="0" y="10.8" font-size="9">Compressed</tspan><tspan x="0" y="21.6" font-size="9">Frame</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 437.2134 252.6147)"><tspan x="0" y="0" font-size="11">02C8H</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 439.9058 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Value</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 249.4956 186.3145)"><tspan x="0" y="0" font-size="9">0000</tspan><tspan x="0" y="10.8" font-size="9">0000CH</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 252.4614 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 249.2202 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Length</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 205.6396 186.3145)"><tspan x="0" y="0" font-size="9">(FFFE,</tspan><tspan x="0" y="10.8" font-size="9">E000)</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 206.3896 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 208.5488 126.1548)"><tspan x="0" y="0" font-size="11">Item</tspan><tspan x="0" y="13.2" font-size="11">Tag</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 156.0483 173.1143)"><tspan x="0" y="0" font-size="9">FFFF</tspan><tspan x="0" y="10.8" font-size="9">FFFFH</tspan><tspan x="0" y="21.6" font-size="9">undefined</tspan><tspan x="0" y="32.4" font-size="9">length</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 161.8867 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 114.2925 192.9146)" font-size="9">0000H</text>
+		<text transform="matrix(0.8815 0 0 1 114.3936 252.6147)"><tspan x="0" y="0" font-size="11">2</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 74.9175 192.9146)" font-size="9">OB</text>
+		<text transform="matrix(0.8815 0 0 1 69.0605 252.6147)"><tspan x="0" y="0" font-size="11">2</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 18.561 173.1143)"><tspan x="0" y="0" font-size="9">(7FE0, </tspan><tspan x="0" y="10.8" font-size="9">0010)</tspan><tspan x="0" y="21.6" font-size="9">with</tspan><tspan x="0" y="32.4" font-size="9">VR of OB</tspan></text>
+		<text transform="matrix(0.8815 0 0 1 23.7275 252.6147)"><tspan x="0" y="0" font-size="11">4</tspan><tspan x="0" y="13.2" font-size="11">bytes</tspan></text>
+		<rect x="340.889" y="86.114" fill="none" width="123.936" height="26"/>
+		<text transform="matrix(0.8815 0 0 1 340.8892 93.9888)"><tspan x="0" y="0" font-size="11">First Fragment (Frame 1) of </tspan><tspan x="0" y="13.2" font-size="11">Pixel Data</tspan></text>
+		<rect x="18.289" y="28.114" fill="none" width="38.381" height="53"/>
+		<text transform="matrix(0.8815 0 0 1 18.2886 35.9888)"><tspan x="0" y="0" font-size="11">Pixel</tspan><tspan x="0" y="13.2" font-size="11">Data</tspan><tspan x="0" y="26.4" font-size="11">Element</tspan><tspan x="0" y="39.6" font-size="11">Tag</tspan></text>
+		<rect x="65.289" y="42.114" fill="none" width="82.937" height="25"/>
+		<text transform="matrix(0.8815 0 0 1 65.2886 49.9888)"><tspan x="0" y="0" font-size="11">Value </tspan><tspan x="0" y="13.2" font-size="11">Representation</tspan></text>
+		<rect x="155.789" y="36.114" fill="none" width="37.437" height="37"/>
+		<text transform="matrix(0.8815 0 0 1 155.7886 43.9888)"><tspan x="0" y="0" font-size="11">Data </tspan><tspan x="0" y="13.2" font-size="11">Element </tspan><tspan x="0" y="26.4" font-size="11">Length</tspan></text>
+		<rect x="302.756" y="49.447" fill="none" width="60.271" height="10.333"/>
+		<text transform="matrix(0.8815 0 0 1 302.7573 57.3218)" font-size="11">Data Element</text>
+		<rect x="215.589" y="87.114" fill="none" width="101.437" height="23"/>
+		<text transform="matrix(0.8815 0 0 1 215.5889 94.9888)"><tspan x="0" y="0" font-size="11">Basic Offset Table with</tspan><tspan x="0" y="13.2" font-size="11">Item Value</tspan></text>
+	</g>
+</g>
+</svg>

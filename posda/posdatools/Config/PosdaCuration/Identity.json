@@ -1,0 +1,14 @@
+{
+  "Greeting": { },
+  "HostName": "POSDA_EXTERNAL_HOSTNAME",
+  "Title": "Posda Curation Application",
+  "LoginTitle": "Login for Posda Curation App",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+  "height": 600,
+  "width": 1200,
+  "menu_width": 100,
+  "content_width": 800
+}

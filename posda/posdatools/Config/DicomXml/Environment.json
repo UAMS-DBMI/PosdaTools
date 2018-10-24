@@ -1,0 +1,11 @@
+// 
+{
+  "ApplicationInitClass" : "DicomXml::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "ParsedDicomRoot" : "POSDA_ROOT/ParsedDicom",
+  "DicomXmlRoot" : "POSDA_ROOT/DicomXml/docbook",
+  "ParsedIodRoot" : "POSDA_ROOT/ParsedIods",
+}

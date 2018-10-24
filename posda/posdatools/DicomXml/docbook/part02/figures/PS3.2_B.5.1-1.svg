@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.5.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="102px" viewBox="0 0 502 102" enable-background="new 0 0 502 102" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="100"/>
+	<g>
+		
+			<rect x="207.141" y="23.986" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.767" height="54"/>
+		<text transform="matrix(1 0 0 1 210.3223 40.853)"><tspan x="0" y="0"  font-size="11">Offline-Media</tspan><tspan x="5.801" y="13.2"  font-size="11">Application</tspan><tspan x="18.952" y="26.4"  font-size="11">Entity</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="161.238" y1="50.986" x2="206.842" y2="50.986"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M89.526,50.974c0-19.882,16.118-35.999,36-35.999c19.896,0,36.023,16.117,36.023,35.999c0,19.883-16.128,36.025-36.023,36.025
+			C105.645,86.999,89.526,70.856,89.526,50.974z"/>
+		<text transform="matrix(1 0 0 1 109.6401 47.4536)"><tspan x="0" y="0"  font-size="11">Export</tspan><tspan x="-3.967" y="13.201"  font-size="11">to CD-R</tspan></text>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="279.154" y1="50.98" x2="324.154" y2="50.98"/>
+			<path fill="#005695" d="M328.879,48.93c-3.307-0.998-5.457-1.918-8.109-2.982v10.088c0.949-0.451,4.803-1.984,8.109-2.982
+				c3.539-1.07,6.748-1.801,8.828-2.062C335.627,50.73,332.418,49.998,328.879,48.93z"/>
+		</g>
+		<path fill="#D9D9D9" stroke="#000000" stroke-width="0.25" stroke-miterlimit="3.8637" d="M340.477,51.031
+			c0-19.893,16.111-36.006,35.992-36.006c19.895,0,36.006,16.113,36.006,36.006c0,19.884-16.111,35.994-36.006,35.994
+			C356.588,87.025,340.477,70.915,340.477,51.031z"/>
+		<path fill="#808080" stroke="#000000" stroke-width="0.25" stroke-miterlimit="3.8637" d="M393.812,21.736
+			c3.973,2.111,6.369,4.238,9.279,7.619l-53.232,42.238c2.887,3.893,5.484,6.26,9.688,8.721L393.812,21.736z"/>
+		<path fill="none" stroke="#000000" stroke-miterlimit="3.8637" d="M342.617,51.031c0-18.711,15.158-33.865,33.855-33.865
+			c18.709,0,33.863,15.154,33.863,33.865c0,18.696-15.154,33.854-33.863,33.854C357.775,84.886,342.617,69.728,342.617,51.031z"/>
+		<path fill="#FFFFFF" stroke="#000000" stroke-width="0.5" stroke-miterlimit="3.8637" d="M368.412,51.025
+			c0-4.454,3.609-8.063,8.059-8.063c4.461,0,8.068,3.609,8.068,8.063s-3.607,8.063-8.068,8.063
+			C372.021,59.089,368.412,55.479,368.412,51.025z"/>
+		<path fill="#808080" stroke="#000000" stroke-width="0.25" stroke-miterlimit="3.8637" d="M373.562,51.027
+			c0-1.608,1.307-2.914,2.912-2.914c1.611,0,2.914,1.306,2.914,2.914c0,1.607-1.303,2.91-2.914,2.91
+			C374.869,53.938,373.562,52.635,373.562,51.027z"/>
+		<circle opacity="0.78" fill="#D9D9D9" cx="375.83" cy="50.844" r="27"/>
+		<text transform="matrix(1 0 0 1 363.3291 39.9741)"><tspan x="0" y="0"  font-size="11">CD-R</tspan><tspan x="-5.517" y="13.2"  font-size="11">Storage</tspan><tspan x="-5.814" y="26.4"  font-size="11">Medium</tspan></text>
+	</g>
+</g>
+</svg>

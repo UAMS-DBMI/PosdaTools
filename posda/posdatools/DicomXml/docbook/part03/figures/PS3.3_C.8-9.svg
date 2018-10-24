@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8-9.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:19 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="202px" viewBox="0 0 502 202" enable-background="new 0 0 502 202" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="200"/>
+	<g>
+		<polygon fill="#E0E0E0" stroke="#000000" stroke-miterlimit="1" points="287.673,24.27 330.974,99.273 374.276,174.274 
+			287.673,174.273 201.068,174.273 244.371,99.273 		"/>
+		<polygon fill="#808080" stroke="#000000" stroke-miterlimit="1" points="288.173,24.27 307.975,99.273 327.774,174.274 
+			288.173,174.273 248.569,174.273 268.371,99.273 		"/>
+		
+			<path fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M187.336,174.273h201.308v10.032H187.336V174.273z"/>
+		<ellipse fill="#FEDA00" cx="287.992" cy="23.983" rx="7.773" ry="7.989"/>
+		<circle cx="288.064" cy="24.137" r="0.785"/>
+		<path d="M289.013,22.351c0.602,0.343,1.009,1.002,1.009,1.76c0,0.057-0.003,0.112-0.008,0.169h4.764
+			c0.001-0.057,0.002-0.113,0.002-0.169c0-2.562-1.358-4.798-3.374-5.988L289.013,22.351z"/>
+		<path d="M287.146,22.351c-0.602,0.343-1.009,1.002-1.009,1.76c0,0.057,0.002,0.112,0.007,0.169h-4.764
+			c-0.001-0.057-0.001-0.113-0.001-0.169c0-2.562,1.357-4.798,3.374-5.988L287.146,22.351z"/>
+		<path d="M289.176,25.784c-0.598,0.35-1.372,0.47-2.028,0.091c-0.049-0.028-0.096-0.059-0.142-0.091l-2.383,4.125
+			c0.049,0.029,0.097,0.058,0.146,0.087c2.218,1.28,4.833,1.064,6.872-0.087L289.176,25.784z"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,2" x1="182.484" y1="47.591" x2="368.64" y2="47.591"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,2" x1="182.484" y1="22.871" x2="278.87" y2="22.871"/>
+		
+			<line fill="none" stroke="#010101" stroke-miterlimit="1" stroke-dasharray="6,2" x1="182.484" y1="130.371" x2="374.274" y2="130.371"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-miterlimit="1" x1="349.338" y1="131.078" x2="374.274" y2="131.078"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-miterlimit="1" x1="201.891" y1="131.078" x2="226.008" y2="131.078"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linejoin="bevel" stroke-miterlimit="1" x1="207.33" y1="47.871" x2="281.942" y2="47.871"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linejoin="bevel" stroke-miterlimit="1" x1="294.403" y1="47.871" x2="368.64" y2="47.871"/>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 131.4512 50.1484)" font-size="12">Collimator</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 264.1016 153.3486)"><tspan x="0" y="0" font-size="12">Exposure</tspan><tspan x="12.674" y="12.408" font-size="12">Area</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 139.0859 182.6191)" font-size="12">Detector</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 113.3574 26.0527)" font-size="12">X-Ray Source</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 118.6465 133.6484)" font-size="12">Field of View</text>
+		</g>
+	</g>
+</g>
+</svg>

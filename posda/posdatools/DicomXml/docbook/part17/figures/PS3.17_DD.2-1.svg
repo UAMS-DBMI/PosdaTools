@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_DD.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="460.425px" height="396.56px" viewBox="0 0 460.425 396.56" enable-background="new 0 0 460.425 396.56"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="241.796" y1="395.06" x2="241.796" y2="104.371"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="334.671" y1="395.06" x2="334.671" y2="104.371"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="427.55" y1="395.06" x2="427.55" y2="104.371"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="32.875" y1="395.06" x2="32.875" y2="104.371"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="37.633" y1="134.262" x2="322.86" y2="134.262"/>
+				<path fill="#005695" d="M325.222,133.237c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C328.597,134.137,326.991,133.771,325.222,133.237z"/>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 52.4873 131.1582)"><tspan x="0" y="0" font-size="8">1. Acquisition complete</tspan><tspan x="0" y="24.6" font-size="8">2. Schedule Interpretation</tspan><tspan x="0" y="49.2" font-size="8">3. Store SOP Instances</tspan><tspan x="0" y="73.8" font-size="8">4. Query GP -SPS</tspan><tspan x="0" y="98.4" font-size="8">5. Receive GP -SPS</tspan><tspan x="0" y="123" font-size="8">6. Transmit SOP Instances for Input Information</tspan><tspan x="0" y="147.6" font-size="8">7. Update GP -SPS (Status: IN PROGRESS )</tspan><tspan x="0" y="172.2" font-size="8">8. Create GP-PPS (Status: IN PROGRESS)</tspan><tspan x="0" y="196.8" font-size="8">9. Set GP-PPS (Status: COMPLETED)</tspan><tspan x="0" y="221.4" font-size="8">10. Update GP -SPS (Status: COMPLETED)</tspan><tspan x="0" y="246" font-size="8">11. Store Results</tspan></text>
+		
+			<rect x="28.631" y="123.516" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="20.713"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="37.633" y1="182.957" x2="226.551" y2="182.957"/>
+				<path fill="#005695" d="M228.913,181.932c-1.653-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.374-0.9,4.414-1.031C232.287,182.832,230.683,182.466,228.913,181.932z"/>
+			</g>
+		</g>
+		
+			<rect x="28.631" y="172.211" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="20.713"/>
+		
+			<rect x="28.633" y="198.209" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.001" height="18.002"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="416.13" y1="233.123" x2="339.175" y2="233.123"/>
+				<path fill="#005695" d="M418.491,232.098c-1.652-0.5-2.728-0.959-4.054-1.492v5.044c0.475-0.226,2.401-0.993,4.054-1.492
+					c1.77-0.535,3.375-0.9,4.415-1.031C421.866,232.998,420.261,232.632,418.491,232.098z"/>
+			</g>
+		</g>
+		
+			<rect x="210.297" y="80.336" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="62.997" height="27"/>
+		<text transform="matrix(1 0 0 1 226.7954 96.3311)" font-size="9">Archive</text>
+		
+			<rect x="303.171" y="80.336" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="27"/>
+		<text transform="matrix(1 0 0 1 316.1729 90.9316)"><tspan x="0" y="0" font-size="9">Workflow</tspan><tspan x="0.74" y="10.8" font-size="9">Manager</tspan></text>
+		
+			<rect x="396.05" y="80.336" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="27"/>
+		<text transform="matrix(1 0 0 1 405.5439 90.9316)"><tspan x="0" y="0" font-size="9">Performing</tspan><tspan x="8.253" y="10.8" font-size="9">Device</tspan></text>
+		
+			<rect x="1.375" y="80.336" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="27"/>
+		<text transform="matrix(1 0 0 1 11.1182 90.9316)"><tspan x="0" y="0" font-size="9">Acquisition</tspan><tspan x="5.005" y="10.8" font-size="9">Modality</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="233.123" x2="330.169" y2="233.123"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="416.13" y1="258.284" x2="246.796" y2="258.284"/>
+				<path fill="#005695" d="M418.491,257.259c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C421.866,258.159,420.261,257.794,418.491,257.259z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="258.284" x2="237.796" y2="258.284"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="346.374" y1="207.211" x2="423.329" y2="207.211"/>
+				<path fill="#005695" d="M344.013,208.236c1.653,0.5,2.728,0.959,4.054,1.492v-5.044c-0.475,0.226-2.4,0.993-4.054,1.492
+					c-1.77,0.535-3.374,0.9-4.415,1.031C340.639,207.336,342.243,207.702,344.013,208.236z"/>
+			</g>
+		</g>
+		
+			<rect x="423.222" y="123.516" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.004" height="260.575"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="207.211" x2="330.169" y2="207.211"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="346.374" y1="282.155" x2="423.329" y2="282.155"/>
+				<path fill="#005695" d="M344.013,283.181c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.4,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C340.639,282.28,342.243,282.646,344.013,283.181z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="282.155" x2="330.169" y2="282.155"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="346.374" y1="307.317" x2="423.329" y2="307.317"/>
+				<path fill="#005695" d="M344.013,308.343c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.4,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C340.639,307.442,342.243,307.808,344.013,308.343z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="307.317" x2="330.169" y2="307.317"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="346.374" y1="354.983" x2="423.329" y2="354.983"/>
+				<path fill="#005695" d="M344.013,356.009c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.4,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C340.639,355.108,342.243,355.474,344.013,356.009z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="354.983" x2="330.169" y2="354.983"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="346.374" y1="330.542" x2="423.329" y2="330.542"/>
+				<path fill="#005695" d="M344.013,331.567c1.653,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.4,0.992-4.054,1.491
+					c-1.77,0.534-3.374,0.9-4.415,1.03C340.639,330.667,342.243,331.032,344.013,331.567z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="330.542" x2="330.169" y2="330.542"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="253.208" y1="379.806" x2="423.329" y2="379.806"/>
+				<path fill="#005695" d="M250.847,380.831c1.652,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.401,0.992-4.054,1.491
+					c-1.77,0.534-3.375,0.9-4.415,1.03C247.472,379.931,249.077,380.296,250.847,380.831z"/>
+			</g>
+		</g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="379.806" x2="237.796" y2="379.806"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="5,5,1,5" x1="53.266" y1="159.576" x2="330.169" y2="159.576"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="339.175,159.576 357.175,159.576 
+					357.175,171.945 345.392,171.945 				"/>
+				<path fill="#005695" d="M343.03,172.97c1.653,0.5,2.728,0.959,4.054,1.492v-5.044c-0.475,0.226-2.4,0.993-4.054,1.492
+					c-1.77,0.535-3.374,0.9-4.415,1.031C339.656,172.07,341.261,172.436,343.03,172.97z"/>
+			</g>
+		</g>
+		
+			<rect x="330.169" y="123.516" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9.004" height="237.995"/>
+		
+			<rect x="237.796" y="169.549" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="214.542"/>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 160.6201 22.2754)" fill="#ED1C24" font-size="24">Figure retired</text>
+</svg>

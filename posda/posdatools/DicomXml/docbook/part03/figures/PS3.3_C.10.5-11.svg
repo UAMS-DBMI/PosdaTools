@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.10.5-11.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="92px" viewBox="0 0 502 92" enable-background="new 0 0 502 92" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="90"/>
+	<g>
+		<line fill="none" stroke="#4F8ABE" stroke-width="2" stroke-miterlimit="10" x1="170.002" y1="71.623" x2="222.564" y2="24.07"/>
+		<line fill="none" stroke="#999999" stroke-width="2" stroke-miterlimit="10" x1="171.802" y1="73.424" x2="224.364" y2="25.87"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="141.961" y1="23.878" x2="152.593" y2="23.878"/>
+				<g>
+					<polygon points="151.602,25.331 157.022,23.878 151.602,22.426 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="141.852,55.379 145.838,55.379 
+					145.838,68.42 				"/>
+				<g>
+					<polygon points="144.385,67.43 145.838,72.85 147.291,67.43 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 44.7705 27.6309)"><tspan x="0" y="0" font-size="10">Shadow Offset X = 1</tspan><tspan x="19.033" y="15.333" font-size="10">(0070,0245)</tspan><tspan x="0" y="30.667" font-size="10">Shadow Offset Y = 1</tspan><tspan x="19.033" y="46" font-size="10">(0070,0246)</tspan></text>
+		<line fill="none" stroke="#4F8ABE" stroke-width="2" stroke-miterlimit="10" x1="399.262" y1="71.623" x2="451.824" y2="24.07"/>
+		<line fill="none" stroke="#999999" stroke-width="2" stroke-miterlimit="10" x1="404.668" y1="62.613" x2="457.23" y2="15.073"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="371.221" y1="23.878" x2="381.852" y2="23.878"/>
+				<g>
+					<polygon points="380.861,25.331 386.281,23.878 380.861,22.426 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="371.111,55.379 375.098,55.379 
+					375.098,68.42 				"/>
+				<g>
+					<polygon points="373.645,67.43 375.098,72.85 376.551,67.43 					"/>
+				</g>
+			</g>
+		</g>
+		<text transform="matrix(1 0 0 1 274.0283 27.6309)"><tspan x="0" y="0" font-size="10">Shadow Offset X = 3</tspan><tspan x="19.033" y="15.333" font-size="10">(0070,0245)</tspan><tspan x="-1.665" y="30.667" font-size="10">Shadow Offset Y = -5</tspan><tspan x="19.033" y="46" font-size="10">(0070,0246)</tspan></text>
+	</g>
+</g>
+</svg>

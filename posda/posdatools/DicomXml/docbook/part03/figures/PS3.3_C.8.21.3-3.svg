@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.21.3-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:10 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="312px" viewBox="0 0 502 312" enable-background="new 0 0 502 312" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="310"/>
+	<g>
+		
+			<rect x="86.563" y="32.953" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="242.89" height="240.939"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="329.453" y1="296.189" x2="329.453" y2="19.061"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3" x1="86.563" y1="292.939" x2="86.563" y2="15.811"/>
+		<rect x="149.352" y="280.721" fill="none" width="117.313" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 178.7378 287.1777)" font-size="9">Other Attributes</text>
+		<rect x="149.352" y="19.386" fill="none" width="117.313" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 178.7378 25.8438)" font-size="9">Other Attributes</text>
+		<rect x="87.847" y="35.782" fill="none" width="205.157" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 87.8477 42.207)" font-size="9">X-Ray 3D Acquisition Sequence (0018,9507)</text>
+		<rect x="337.401" y="157.268" fill="none" width="78.036" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 337.4014 163.6973)" font-size="9">Acquisition context 2</text>
+		<rect x="337.401" y="50.372" fill="none" width="78.036" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 337.4014 56.8013)" font-size="9">Acquisition context 1</text>
+		<rect x="337.401" y="106.125" fill="none" width="73.672" height="20.5"/>
+		<text transform="matrix(0.9288 0 0 1 337.4014 112.5552)"><tspan x="0" y="0" font-size="9">SOP instance A</tspan><tspan x="0" y="10.8" font-size="9"> = frames M1 to M2</tspan></text>
+		<rect x="337.401" y="213.02" fill="none" width="73.672" height="20.5"/>
+		<text transform="matrix(0.9288 0 0 1 337.4014 219.4512)"><tspan x="0" y="0" font-size="9">SOP instance A</tspan><tspan x="0" y="10.799" font-size="9"> = frames C1 to C2</tspan></text>
+		
+			<rect x="104.129" y="46.76" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="225.324" height="106.84"/>
+		
+			<rect x="120.906" y="61.921" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="208.547" height="76.429"/>
+		
+			<rect x="120.906" y="138.35" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="208.547" height="15.25"/>
+		<rect x="108.468" y="50.371" fill="none" width="198.934" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 108.4683 56.7969)" font-size="9">Item 1</text>
+		<rect x="125.473" y="65.698" fill="none" width="176.347" height="8.511"/>
+		<text transform="matrix(0.9288 0 0 1 125.4741 72.1235)" font-size="9">Source Image Sequence (0008,2112)</text>
+		<rect x="125.473" y="141.447" fill="none" width="176.347" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 125.4741 147.8735)" font-size="9">other attributes: angles, etc…</text>
+		
+			<rect x="137.573" y="77.041" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="191.88" height="61.309"/>
+		<rect x="142.285" y="81.205" fill="none" width="123.967" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 142.2856 87.6387)" font-size="9">Item 1</text>
+		
+			<rect x="154.906" y="92.443" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="174.547" height="45.906"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="154.906" y1="107.833" x2="329.453" y2="107.833"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="154.906" y1="123.438" x2="329.453" y2="123.438"/>
+		<rect x="163.046" y="97.22" fill="none" width="165.972" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 103.6494)" font-size="9">Referenced SOP Class UID (0008,1150)</text>
+		<rect x="163.046" y="112.12" fill="none" width="166.277" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 118.5493)" font-size="9">Referenced SOP Instance UID (0008,1155)</text>
+		<rect x="163.046" y="127.019" fill="none" width="166.777" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 133.4492)" font-size="9">Referenced Frame Number (0008,1160)</text>
+		
+			<rect x="104.129" y="153.65" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="225.324" height="106.84"/>
+		
+			<rect x="120.906" y="168.811" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="208.547" height="76.43"/>
+		
+			<rect x="120.906" y="245.24" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="208.547" height="15.25"/>
+		<rect x="108.468" y="157.262" fill="none" width="198.934" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 108.4683 163.6924)" font-size="9">Item 2</text>
+		<rect x="125.473" y="172.588" fill="none" width="176.347" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 125.4741 179.0195)" font-size="9">Source Image Sequence (0008,2112)</text>
+		<rect x="125.473" y="248.338" fill="none" width="176.347" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 125.4741 254.7695)" font-size="9">other attributes: angles, etc…</text>
+		
+			<rect x="137.573" y="183.932" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="191.88" height="61.309"/>
+		<rect x="142.285" y="188.096" fill="none" width="123.967" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 142.2856 194.5342)" font-size="9">Item 1</text>
+		
+			<rect x="154.906" y="199.334" fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="174.547" height="45.906"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="154.906" y1="214.723" x2="329.453" y2="214.723"/>
+		
+			<line fill="#FFFFFF" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="154.906" y1="230.328" x2="329.453" y2="230.328"/>
+		<rect x="163.046" y="204.111" fill="none" width="165.972" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 210.5449)" font-size="9">Referenced SOP Class UID (0008,1150)</text>
+		<rect x="163.046" y="219.01" fill="none" width="166.277" height="8.51"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 225.4453)" font-size="9">Referenced SOP Instance UID (0008,1155)</text>
+		<rect x="163.046" y="233.91" fill="none" width="166.777" height="8.512"/>
+		<text transform="matrix(0.9288 0 0 1 163.0454 240.3447)" font-size="9">Referenced Frame Number (0008,1160)</text>
+	</g>
+</g>
+</svg>

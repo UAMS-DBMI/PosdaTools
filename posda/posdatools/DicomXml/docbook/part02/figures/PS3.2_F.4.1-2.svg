@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_F.4.1-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="397px" viewBox="0 0 502 397" enable-background="new 0 0 502 397" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="395"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="38.5" y1="381.996" x2="38.5" y2="48.996"/>
+		
+			<rect x="11.5" y="15.023" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.001" height="36"/>
+		<text transform="matrix(1 0 0 1 14.9307 30.4546)"><tspan x="0" y="0"  font-size="8">Peer Storage</tspan><tspan x="8.898" y="9.6"  font-size="8">SCP AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="100.912" y1="381.996" x2="100.912" y2="48.996"/>
+		
+			<rect x="73.911" y="15.023" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.001" height="36"/>
+		<text transform="matrix(1 0 0 1 79.1284 25.6558)"><tspan x="0" y="0"  font-size="8">Peer Query-</tspan><tspan x="6.891" y="9.6"  font-size="8">Retrieve</tspan><tspan x="6.893" y="19.2"  font-size="8">SCU AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="163.322" y1="381.996" x2="163.322" y2="48.996"/>
+		
+			<rect x="136.321" y="15.023" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.001" height="36"/>
+		<text transform="matrix(1 0 0 1 138.4229 30.4546)"><tspan x="0" y="0"  font-size="8">Peer Storage-</tspan><tspan x="10.01" y="9.6"  font-size="8">SCU AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="463.497" y1="381.996" x2="463.497" y2="48.996"/>
+		
+			<rect x="158.822" y="71.411" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="27"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="402.213" y1="381.996" x2="402.213" y2="48.996"/>
+		
+			<rect x="375.216" y="15.005" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54.002" height="36"/>
+		<text transform="matrix(1 0 0 1 386.665 25.6372)"><tspan x="0" y="0"  font-size="8">QUERY-</tspan><tspan x="-5.779" y="9.6"  font-size="8">RETRIEVE-</tspan><tspan x="0.885" y="19.2"  font-size="8">SCP AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="340.764" y1="381.996" x2="340.764" y2="48.996"/>
+		
+			<rect x="313.764" y="15.023" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="36"/>
+		<text transform="matrix(1 0 0 1 319.877 30.4556)"><tspan x="0" y="0"  font-size="8">STORAGE-</tspan><tspan x="6.219" y="9.6"  font-size="8">SCP AE</tspan></text>
+		
+			<rect x="436.501" y="15.005" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="36"/>
+		<text transform="matrix(1 0 0 1 442.6104 30.437)"><tspan x="0" y="0"  font-size="8">STORAGE-</tspan><tspan x="5.998" y="9.6"  font-size="8">SCU AE</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="167.822" y1="88.405" x2="329.821" y2="88.405"/>
+		<path fill="#005695" d="M332.183,87.381c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C335.558,88.28,333.952,87.915,332.183,87.381z"/>
+		
+			<rect x="336.264" y="78.411" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="20"/>
+		
+			<rect x="96.407" y="199.318" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="65.477"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="105.74" y1="215.593" x2="391.215" y2="215.593"/>
+		<path fill="#005695" d="M393.577,214.568c-1.654-0.5-2.729-0.96-4.055-1.492v5.045c0.475-0.225,2.4-0.992,4.055-1.492
+			c1.77-0.534,3.373-0.9,4.414-1.03C396.95,215.468,395.347,215.102,393.577,214.568z"/>
+		
+			<rect x="397.69" y="206.318" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="58.362"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="397.991" y1="254.796" x2="112.516" y2="254.796"/>
+		<path fill="#005695" d="M110.153,253.771c1.654-0.499,2.729-0.959,4.055-1.491v5.044c-0.475-0.225-2.4-0.992-4.055-1.491
+			c-1.77-0.534-3.373-0.9-4.414-1.03C106.78,254.671,108.384,254.306,110.153,253.771z"/>
+		
+			<rect x="158.822" y="120.283" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="27"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="167.822" y1="137.277" x2="329.821" y2="137.277"/>
+		<path fill="#005695" d="M332.183,136.253c-1.652-0.499-2.728-0.96-4.054-1.491v5.044c0.475-0.226,2.401-0.993,4.054-1.491
+			c1.77-0.535,3.375-0.9,4.415-1.031C335.558,137.152,333.952,136.787,332.183,136.253z"/>
+		
+			<rect x="336.265" y="127.306" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="60.332"/>
+		
+			<rect x="96.388" y="277.658" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="27"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="105.388" y1="294.653" x2="389.011" y2="294.653"/>
+		<path fill="#005695" d="M391.372,293.628c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C394.747,294.528,393.142,294.163,391.372,293.628z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="406.686" y1="334.152" x2="451.23" y2="334.152"/>
+		<path fill="#005695" d="M453.592,333.127c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+			c1.77-0.534,3.375-0.9,4.415-1.03C456.967,334.027,455.361,333.662,453.592,333.127z"/>
+		
+			<rect x="34" y="345.816" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="27"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="459.363" y1="363.586" x2="52.859" y2="363.586"/>
+		<path fill="#005695" d="M50.497,362.561c1.654-0.499,2.729-0.959,4.055-1.491v5.044c-0.475-0.225-2.4-0.992-4.055-1.491
+			c-1.77-0.534-3.373-0.9-4.414-1.03C47.124,363.461,48.727,363.096,50.497,362.561z"/>
+		
+			<rect x="397.686" y="284.66" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="59.388"/>
+		
+			<rect x="459.186" y="314.46" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="58.356"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="336.265" y1="177.609" x2="174.265" y2="177.609"/>
+		<path fill="#005695" d="M171.903,176.585c1.652-0.499,2.728-0.96,4.054-1.491v5.044c-0.475-0.226-2.401-0.993-4.054-1.491
+			c-1.77-0.535-3.375-0.9-4.415-1.031C168.528,177.484,170.134,177.119,171.903,176.585z"/>
+		
+			<rect x="158.822" y="167.615" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="20"/>
+		<rect x="176.272" y="70.664" fill="none" width="148.238" height="295.988"/>
+		<text transform="matrix(1 0 0 1 176.2725 76.3945)"><tspan x="0" y="0"  font-size="8">1</tspan><tspan x="4.538" y="0"  font-size="8">. </tspan><tspan x="8.983" y="0"  font-size="8">Pee</tspan><tspan x="23.484" y="0"  font-size="8">r </tspan><tspan x="28.371" y="0"  font-size="8">A</tspan><tspan x="33.796" y="0"  font-size="8">E </tspan><tspan x="41.354" y="0"  font-size="8">Send</tspan><tspan x="60.394" y="0"  font-size="8">s </tspan><tspan x="66.617" y="0"  font-size="8">Composit</tspan><tspan x="101.116" y="0"  font-size="8">e </tspan><tspan x="107.788" y="0"  font-size="8">SO</tspan><tspan x="119.525" y="0"  font-size="8">P   </tspan><tspan x="10" y="9.6"  font-size="8">Instanc</tspan><tspan x="36.416" y="9.6"  font-size="8">e</tspan><tspan x="0" y="39.2"  font-size="8">2</tspan><tspan x="4.538" y="39.2"  font-size="8">. </tspan><tspan x="8.983" y="39.2"  font-size="8">Pee</tspan><tspan x="23.484" y="39.2"  font-size="8">r </tspan><tspan x="28.371" y="39.2"  font-size="8">A</tspan><tspan x="33.796" y="39.2"  font-size="8">E </tspan><tspan x="41.354" y="39.2"  font-size="8">Request</tspan><tspan x="71.774" y="39.2"  font-size="8">s </tspan><tspan x="77.997" y="39.2"  font-size="8">Storag</tspan><tspan x="102.101" y="39.2"  font-size="8">e </tspan><tspan x="10" y="48.8"  font-size="8">Commitmen</tspan><tspan x="53.917" y="48.8"  font-size="8">t </tspan><tspan x="58.363" y="48.8"  font-size="8">o</tspan><tspan x="62.901" y="48.8"  font-size="8">f </tspan><tspan x="67.346" y="48.8"  font-size="8">Compositi</tspan><tspan x="103.713" y="48.8"  font-size="8">e </tspan><tspan x="110.385" y="48.8"  font-size="8">SO</tspan><tspan x="122.121" y="48.8"  font-size="8">P </tspan><tspan x="10" y="58.4"  font-size="8">Instanc</tspan><tspan x="36.416" y="58.4"  font-size="8">e</tspan><tspan x="0" y="88"  font-size="8">3</tspan><tspan x="4.472" y="88"  font-size="8">. </tspan><tspan x="8.917" y="88"  font-size="8">Sen</tspan><tspan x="23.218" y="88"  font-size="8">d </tspan><tspan x="29.89" y="88"  font-size="8">Storag</tspan><tspan x="53.593" y="88"  font-size="8">e </tspan><tspan x="60.265" y="88"  font-size="8">Commitmen</tspan><tspan x="103.583" y="88"  font-size="8">t </tspan><tspan x="108.028" y="88"  font-size="8">Notificatio</tspan><tspan x="143.397" y="88"  font-size="8">n </tspan><tspan x="10" y="97.6"  font-size="8">fo</tspan><tspan x="16.716" y="97.6"  font-size="8">r </tspan><tspan x="21.603" y="97.6"  font-size="8">Composit</tspan><tspan x="55.57" y="97.6"  font-size="8">e </tspan><tspan x="62.242" y="97.6"  font-size="8">SO</tspan><tspan x="73.845" y="97.6"  font-size="8">P </tspan><tspan x="81.403" y="97.6"  font-size="8">Instanc</tspan><tspan x="107.353" y="97.6"  font-size="8">e</tspan><tspan x="0" y="127.2"  font-size="8">4</tspan><tspan x="4.405" y="127.2"  font-size="8">. </tspan><tspan x="8.85" y="127.2"  font-size="8">Pee</tspan><tspan x="22.951" y="127.2"  font-size="8">r </tspan><tspan x="27.838" y="127.2"  font-size="8">A</tspan><tspan x="33.129" y="127.2"  font-size="8">E </tspan><tspan x="40.688" y="127.2"  font-size="8">Querie</tspan><tspan x="64.433" y="127.2"  font-size="8">s </tspan><tspan x="70.656" y="127.2"  font-size="8">fo</tspan><tspan x="77.238" y="127.2"  font-size="8">r </tspan><tspan x="82.125" y="127.2"  font-size="8">Informatio</tspan><tspan x="117.251" y="127.2"  font-size="8">n </tspan><tspan x="123.923" y="127.2"  font-size="8">relate</tspan><tspan x="143.668" y="127.2"  font-size="8">d </tspan><tspan x="10" y="136.8"  font-size="8">t</tspan><tspan x="12.178" y="136.8"  font-size="8">o </tspan><tspan x="18.85" y="136.8"  font-size="8">SO</tspan><tspan x="30.32" y="136.8"  font-size="8">P </tspan><tspan x="37.878" y="136.8"  font-size="8">Instanc</tspan><tspan x="63.36" y="136.8"  font-size="8">e</tspan><tspan x="0" y="166.4"  font-size="8">5</tspan><tspan x="4.538" y="166.4"  font-size="8">. </tspan><tspan x="8.983" y="166.4"  font-size="8">Retur</tspan><tspan x="28.99" y="166.4"  font-size="8">n </tspan><tspan x="35.662" y="166.4"  font-size="8">Informatio</tspan><tspan x="72.122" y="166.4"  font-size="8">n </tspan><tspan x="78.794" y="166.4"  font-size="8">relate</tspan><tspan x="99.339" y="166.4"  font-size="8">d </tspan><tspan x="106.011" y="166.4"  font-size="8">t</tspan><tspan x="108.322" y="166.4"  font-size="8">o </tspan><tspan x="114.994" y="166.4"  font-size="8">SO</tspan><tspan x="126.73" y="166.4"  font-size="8">P </tspan><tspan x="10" y="176"  font-size="8">Instanc</tspan><tspan x="36.416" y="176"  font-size="8">e</tspan><tspan x="0" y="205.6"  font-size="8">6</tspan><tspan x="4.538" y="205.6"  font-size="8">. </tspan><tspan x="8.983" y="205.6"  font-size="8">Pee</tspan><tspan x="23.484" y="205.6"  font-size="8">r </tspan><tspan x="28.371" y="205.6"  font-size="8">A</tspan><tspan x="33.796" y="205.6"  font-size="8">E </tspan><tspan x="41.354" y="205.6"  font-size="8">Request</tspan><tspan x="71.774" y="205.6"  font-size="8">s </tspan><tspan x="77.997" y="205.6"  font-size="8">Retrieva</tspan><tspan x="108.497" y="205.6"  font-size="8">l </tspan><tspan x="112.497" y="205.6"  font-size="8">o</tspan><tspan x="117.035" y="205.6"  font-size="8">f </tspan><tspan x="121.48" y="205.6"  font-size="8">SO</tspan><tspan x="133.217" y="205.6"  font-size="8">P </tspan><tspan x="10" y="215.2"  font-size="8">Instanc</tspan><tspan x="36.416" y="215.2"  font-size="8">e</tspan><tspan x="0" y="244.801"  font-size="8">7</tspan><tspan x="4.538" y="244.801"  font-size="8">. </tspan><tspan x="8.983" y="244.801"  font-size="8">Image</tspan><tspan x="31.662" y="244.801"  font-size="8">s </tspan><tspan x="37.885" y="244.801"  font-size="8">t</tspan><tspan x="40.197" y="244.801"  font-size="8">o </tspan><tspan x="46.869" y="244.801"  font-size="8">b</tspan><tspan x="51.407" y="244.801"  font-size="8">e </tspan><tspan x="58.079" y="244.801"  font-size="8">sen</tspan><tspan x="71.244" y="244.801"  font-size="8">t </tspan><tspan x="75.689" y="244.801"  font-size="8">t</tspan><tspan x="78.001" y="244.801"  font-size="8">o </tspan><tspan x="84.673" y="244.801"  font-size="8">C-MOV</tspan><tspan x="111.78" y="244.801"  font-size="8">E </tspan><tspan x="10" y="254.4"  font-size="8">Destinatio</tspan><tspan x="46.463" y="254.4"  font-size="8">n </tspan><tspan x="53.135" y="254.4"  font-size="8">A</tspan><tspan x="58.56" y="254.4"  font-size="8">E </tspan><tspan x="66.119" y="254.4"  font-size="8">i</tspan><tspan x="67.985" y="254.4"  font-size="8">n </tspan><tspan x="74.657" y="254.4"  font-size="8">Respons</tspan><tspan x="106.854" y="254.4"  font-size="8">e</tspan><tspan x="0" y="284"  font-size="8">8. Images Sent to Peer AE in Response</tspan></text>
+	</g>
+</g>
+</svg>

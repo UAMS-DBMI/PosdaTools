@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.7.6.16-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="392px" viewBox="0 0 502 392" enable-background="new 0 0 502 392" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="390"/>
+	<g>
+		<g>
+			<line fill="#6799C8" x1="106.836" y1="315.016" x2="98.624" y2="237.617"/>
+			<g>
+				
+					<line fill="none" stroke="#6799C8" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="106.836" y1="315.016" x2="99.372" y2="244.665"/>
+				<g>
+					<polygon fill="#6799C8" points="101.85,245.996 98.624,237.617 97.228,246.486 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#6799C8" x1="106.892" y1="315.016" x2="127.326" y2="237.617"/>
+			<g>
+				
+					<line fill="none" stroke="#6799C8" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="106.892" y1="315.016" x2="125.517" y2="244.47"/>
+				<g>
+					<polygon fill="#6799C8" points="127.359,246.596 127.326,237.617 122.865,245.409 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#6799C8" x1="68.912" y1="237.617" x2="106.625" y2="315.016"/>
+			<g>
+				
+					<line fill="none" stroke="#6799C8" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="72.017" y1="243.988" x2="106.625" y2="315.016"/>
+				<g>
+					<polygon fill="#6799C8" points="70.622,246.432 68.912,237.617 74.8,244.396 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="223.597" y1="315.016" x2="231.195" y2="244.664"/>
+				<g>
+					<polygon fill="#005695" points="233.336,246.489 231.957,237.617 228.714,245.99 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="118.028" y1="241.662" x2="223.564" y2="315.016"/>
+				<g>
+					<polygon fill="#005695" points="118.003,244.476 112.208,237.617 120.656,240.658 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="223.646" y1="315.016" x2="147.749" y2="242.513"/>
+				<g>
+					<polygon fill="#005695" points="150.5,241.927 142.624,237.617 147.289,245.288 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="89.825" y1="241.048" x2="223.521" y2="315.016"/>
+				<g>
+					<polygon fill="#005695" points="90.087,243.85 83.624,237.617 92.337,239.782 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="223.647" y1="315.016" x2="258.501" y2="243.98"/>
+				<g>
+					<polygon fill="#005695" points="259.89,246.427 261.623,237.617 255.716,244.379 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="204.768" y1="244.47" x2="223.415" y2="315.016"/>
+				<g>
+					<polygon fill="#005695" points="202.926,246.596 202.957,237.617 207.42,245.408 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="304.07" y="17" fill="none" width="181.197" height="358"/>
+		<text transform="matrix(0.9288 0 0 1 304.0703 24.8628)"><tspan x="0" y="0" font-size="11">Identifying Attributes and Scope</tspan><tspan x="-6.46" y="22.8" font-size="9">Series Number (0020,0011)</tspan><tspan x="-6.46" y="101.6" font-size="9">In-Concatenation Number (0020,9162)</tspan><tspan x="6.46" y="112.4" font-size="9">Shall be unique within Concatenation [if part of </tspan><tspan x="6.46" y="123.2" font-size="9">a Concatenation]</tspan><tspan x="-6.46" y="134" font-size="9">Instance Number (0020,0013)</tspan><tspan x="6.46" y="144.8" font-size="9">Shall be the same for all SOP Instances of a </tspan><tspan x="6.46" y="155.6" font-size="9">Concatenation and different for each separate </tspan><tspan x="6.46" y="166.4" font-size="9">Concatenation inside a series.</tspan><tspan x="-6.46" y="177.2" font-size="9">Concatenation Frame Offset Number (0020,9228) </tspan><tspan x="0" y="188" font-size="9">shall be unique within Concatenation</tspan><tspan x="-6.46" y="206.8" font-size="9">Implicit Frame Number</tspan><tspan x="6.46" y="217.6" font-size="9">Shall be unique within SOP Instance; (not an </tspan><tspan x="6.46" y="228.4" font-size="9">attribute)</tspan><tspan x="-6.46" y="239.2" font-size="9">In-Stack Number (0020,9057)</tspan><tspan x="6.46" y="250" font-size="9">Shall be unique within Stack ID (0020,9056)</tspan><tspan x="-6.46" y="302.6" font-size="9">Stack ID (0020,9056)</tspan><tspan x="6.46" y="313.4" font-size="9">Shall be unique within Concatenation; must be </tspan><tspan x="6.46" y="324.2" font-size="9">unique within Dimension Organization if the </tspan><tspan x="6.46" y="335" font-size="9">Stack ID tag is referenced by a Dimension </tspan><tspan x="6.46" y="345.8" font-size="9">Index Pointer (0020,9165)</tspan></text>
+		
+			<rect x="70.764" y="315.291" fill="#6799C8" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 16.7339 329.3262)" font-size="10">Stacks</text>
+		</g>
+		
+			<rect x="187.527" y="315.291" fill="#005695" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.008" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 16.7334 233.1973)" font-size="10">Frames</text>
+		</g>
+		<rect x="253.695" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="181.185" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="195.685" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="210.185" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.407" height="14.4"/>
+		<rect x="224.692" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.403" height="14.4"/>
+		<rect x="239.195" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.401" height="14.4"/>
+		<rect x="134.494" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="61.994" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="76.494" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="90.994" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="105.494" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<rect x="119.994" y="223.217" fill="#CCDEF0" stroke="#010101" stroke-miterlimit="1" width="14.4" height="14.4"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="165.074,103.736 165.074,118.682 
+					170.074,118.682 223.49,118.682 223.49,138.276 				"/>
+				<g>
+					<polygon fill="#005695" points="221.166,136.69 223.49,145.363 225.814,136.69 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="165.099,103.736 165.099,118.682 
+					160.099,118.682 106.688,118.682 106.688,138.276 				"/>
+				<g>
+					<polygon fill="#005695" points="104.364,136.69 106.688,145.363 109.013,136.69 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" points="
+					262.898,156.579 274.16,156.579 274.16,123.002 287.18,123.002 				"/>
+				<g>
+					<polygon fill="#005695" points="285.595,125.326 294.268,123.002 285.595,120.678 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" points="
+					262.898,156.883 274.324,156.883 274.324,199.336 287.637,199.336 				"/>
+				<g>
+					<polygon fill="#005695" points="286.052,201.66 294.725,199.336 286.052,197.012 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<line fill="#4F8ABE" x1="164.82" y1="56.895" x2="164.82" y2="80.852"/>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="164.82" y1="56.895" x2="164.82" y2="73.764"/>
+				<g>
+					<polygon fill="#005695" points="162.496,72.179 164.82,80.852 167.144,72.179 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="128.814" y="80.852" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 132.5674 94.8779)" font-size="10">Concatenation</text>
+		</g>
+		
+			<rect x="128.813" y="34" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 150.6416 47.7197)" font-size="10">Series</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" x1="203.112" y1="44" x2="287.178" y2="44"/>
+				<g>
+					<polygon fill="#005695" points="285.593,46.324 294.266,44 285.593,41.676 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="105.896" y1="167.864" x2="111.83" y2="216.183"/>
+				<g>
+					<polygon fill="#005695" points="109.33,214.893 112.694,223.217 113.944,214.325 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="99.167" y1="216.196" x2="105.863" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="101.687,214.945 98.194,223.217 97.082,214.308 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="105.945" y1="167.864" x2="124.654" y2="216.6"/>
+				<g>
+					<polygon fill="#005695" points="121.916,215.953 127.194,223.217 126.255,214.287 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="86.261" y1="216.639" x2="105.819" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="89.009,216.032 83.624,223.217 84.694,214.302 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="105.946" y1="167.864" x2="137.849" y2="217.263"/>
+				<g>
+					<polygon fill="#005695" points="135.036,217.192 141.694,223.217 138.941,214.671 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="73.097" y1="217.301" x2="105.713" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="75.91,217.258 69.194,223.217 72.03,214.698 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" x1="274.16" y1="156.883" x2="287.637" y2="156.883"/>
+				<g>
+					<polygon fill="#005695" points="286.052,159.207 294.725,156.883 286.052,154.559 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" x1="270.559" y1="229.477" x2="287.18" y2="229.477"/>
+				<g>
+					<polygon fill="#005695" points="285.595,231.801 294.268,229.477 285.595,227.152 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" stroke-dasharray="3,1" x1="261.941" y1="324.871" x2="287.178" y2="324.871"/>
+				<g>
+					<polygon fill="#005695" points="285.593,327.195 294.266,324.871 285.593,322.547 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="70.764" y="145.364" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.999" height="22.5"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="221.896" y1="167.864" x2="230.634" y2="216.242"/>
+				<g>
+					<polygon fill="#005695" points="228.065,215.096 231.894,223.217 232.639,214.27 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="217.959" y1="216.152" x2="221.863" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="220.404,214.76 217.389,223.217 215.771,214.385 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="221.945" y1="167.864" x2="243.531" y2="216.733"/>
+				<g>
+					<polygon fill="#005695" points="240.765,216.223 246.395,223.217 245.017,214.345 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="205.243" y1="216.508" x2="221.82" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="207.954,215.758 202.957,223.217 203.554,214.258 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="221.946" y1="167.864" x2="256.816" y2="217.421"/>
+				<g>
+					<polygon fill="#005695" points="254.003,217.462 260.895,223.217 257.805,214.786 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="192.041" y1="217.145" x2="221.713" y2="167.864"/>
+				<g>
+					<polygon fill="#005695" points="194.85,216.986 188.385,223.217 190.868,214.588 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 75.9097 159.3853)" font-size="10">SOP Instance</text>
+		</g>
+		
+			<rect x="187.527" y="145.364" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72.008" height="22.5"/>
+		<g>
+			<text transform="matrix(1 0 0 1 192.6812 159.3853)" font-size="10">SOP Instance</text>
+		</g>
+	</g>
+</g>
+</svg>

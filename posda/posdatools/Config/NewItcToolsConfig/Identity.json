@@ -1,0 +1,12 @@
+// 
+{
+  "Greeting": { },
+  "ImageName": "Cloud.jpg",
+  "LogoImage": "/ITCLogoWeb.jpg",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Itc",
+  "HostName": "tcia-utilities",
+  "Title": "ITC QA Tools",
+  "LoginTitle": "Login Page for NewItcTools",
+}

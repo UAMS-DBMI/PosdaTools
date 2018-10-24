@@ -1,0 +1,11 @@
+// 
+{
+  "Greeting": { },
+  "HostName": "Dicom Element Lookup",
+  "Title": "Dicom Element Lookup",
+  "LoginTitle": "Login for Dicom Element Lookup",
+  "LogoImage": "/PosdaLogo.png",
+  "LogoHeight": "81",
+  "LogoWidth": "151",
+  "LogoAlt": "Posda", 
+}

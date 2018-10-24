@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_A.62-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:43 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="152px" viewBox="0 0 502 152" enable-background="new 0 0 502 152" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="150"/>
+	<g>
+		<g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="250.943" y1="45.625" x2="250.943" y2="60.199"/>
+					<g>
+						<polygon fill="#005695" points="248.619,58.613 250.943,67.286 253.268,58.613 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-linejoin="round" x1="250.943" y1="85.054" x2="250.943" y2="99.627"/>
+					<g>
+						<polygon fill="#005695" points="248.619,98.042 250.943,106.715 253.268,98.042 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="201.556" y="16.929" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.696"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			205.944,75.916 250.878,67.054 295.944,76.043 295.944,76.064 250.878,85.054 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 229.6826 78.5508)" font-size="9">references</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 203.7056 28.7397)"><tspan x="0" y="0" font-size="12">Implant Assembly</tspan><tspan x="22.339" y="11.733" font-size="12">Template</tspan></text>
+		</g>
+		
+			<rect x="201.444" y="106.376" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="28.695"/>
+		<g>
+			<text transform="matrix(1 0 0 1 204.5913 124.0527)" font-size="12">Implant Template</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 272.0391 67.6284)" font-size="9">0-n</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 272.0391 89.6328)" font-size="9">1-n</text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,12 @@
+// 
+{
+  "ApplicationInitClass" : "DicomProxyAnalysis::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "AuthenticationType" : "DB",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "AnalysisRootDir" : "POSDA_CACHE_ROOT/ProxyData/Analysis",
+}

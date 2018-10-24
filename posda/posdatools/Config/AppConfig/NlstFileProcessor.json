@@ -1,0 +1,8 @@
+//
+{
+  "database" : "nlst_images",
+  "log_file" : "POSDA_CACHE_ROOT/Logs/NlstDbImport.log",
+  "sub_process_program" : "ProcessPosdaFilesInDb.pl",
+  "chunk_size" : 10,
+  "parallelism" : 1,
+}

@@ -1,0 +1,18 @@
+#
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0002,0000)|Group Length|UL|1|
+(0002,0001)|File Meta Information Version|OB|1|
+(0002,0002)|Media Storage SOP Class UID|UI|1|
+(0002,0003)|Media Storage SOP Instance UID|UI|1|
+(0002,0010)|Transfer Syntax UID|UI|1|
+(0002,0012)|Implementation Class UID|UI|1|
+(0002,0013)|Implementation Version Name|SH|1|
+(0002,0016)|Source Application Entity Title|AE|1|
+(0002,0100)|Private Information Creator UID|UI|1|
+(0002,0102)|Private Information|OB|1|

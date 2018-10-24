@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_Q.4-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:09 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="152px" viewBox="0 0 502 152" enable-background="new 0 0 502 152" xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="150"/>
+	<g>
+		
+			<rect x="188" y="119.014" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="126.001" height="17.988"/>
+		<g>
+			<text transform="matrix(1 0 0 1 191.6377 131.3594)"  font-size="12">Structured Information</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="251.007" y1="89.143" x2="251.007" y2="111.928"/>
+				<g>
+					<polygon fill="#005695" points="248.683,110.343 251.007,119.016 253.331,110.343 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="251.007" y1="33.158" x2="251.007" y2="55.242"/>
+				<g>
+					<polygon fill="#005695" points="248.683,53.657 251.007,62.33 253.331,53.657 					"/>
+				</g>
+			</g>
+		</g>
+		
+			<rect x="209.002" y="14.999" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="83.997" height="18"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 232.3135 27.1367)"  font-size="12">Patient</text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			206.002,75.623 250.936,62.33 295.999,75.814 295.999,75.845 250.936,89.33 		"/>
+		<g>
+			<text transform="matrix(1 0 0 1 234.2397 78.3389)"  font-size="9">contains</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 290.9941 67.2471)"  font-size="9">1</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 290.9932 89.252)"  font-size="9">1</text>
+		</g>
+	</g>
+</g>
+</svg>

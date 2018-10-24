@@ -1,0 +1,13 @@
+my($this, $fh, $out, $args) = @_;
+my $name = $args->[0];
+my $port = $args->[1];
+my $file = $args->[2];
+unless(-r $file){
+  print "Can't read $file\n";
+  return;
+}
+my $Dicom = Dispatch::Dicom::Acceptor->new(
+  $port, $file, Dispatch::Test::CreateObjAdder($name, $this->{objects})
+);
+$Dicom->Add("reader");
+$this->{objects}->{$name} = $Dicom;

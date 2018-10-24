@@ -1,0 +1,30 @@
+{
+  "quasar": {
+    "superuser": 1,
+    "groups": [
+      "BigSet1",
+      "Test2"
+    ]
+  },
+  "bbennett": {
+    "superuser": 1,
+    "groups": [
+      "BigSet1",
+      "Test2",
+      "view_posda_backlog",
+      "manage_posda_backlog",
+      "downloads_by_date",
+      "duplicate_sop_evaluation",
+      "duplicate_sop_resolution",
+      "counts_patient_status",
+      "consistency_check",
+      "linkage_check",
+      "visual_review_scheduling",
+      "visual_review_tracking_processing",
+      "phi_review",
+      "dicom_batch_file_editing",
+      "send_data_via_dicom",
+      "monthly_report_queries",
+    ]
+  }
+}

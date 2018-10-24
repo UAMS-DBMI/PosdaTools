@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_X.3-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="602px" viewBox="0 0 502 602" enable-background="new 0 0 502 602" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="600"/>
+<g>
+	<g>
+		<rect x="52.901" y="12.508" fill="#F38081" stroke="#003468" width="324" height="89.025"/>
+		<g>
+			<rect x="56.757" y="16.108" fill="none" width="316.287" height="81.792"/>
+			<text transform="matrix(1 0 0 1 56.7578 23.9702)"><tspan x="0" y="0" font-size="11">Section</tspan><tspan x="0" y="14.8" font-size="9" letter-spacing="-2">	</tspan><tspan x="0" y="14.8" font-size="9">classCode*: &lt;= DOCSECT</tspan><tspan x="0" y="25.6" font-size="9">moodCode*: &lt;= EVN</tspan><tspan x="0" y="36.4" font-size="9">id: II [0..1]</tspan><tspan x="0" y="47.2" font-size="9">code: CE CWE [0..1] &lt;= DocumentSectionType</tspan><tspan x="0" y="58" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="58" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="58" font-size="9">(”DICOM Object Catalog” DICOM Code: 121181)</tspan><tspan x="0" y="68.8" font-size="9">title: ST [0..1]</tspan></text>
+		</g>
+	</g>
+	<g>
+		<rect x="52.901" y="157.053" fill="#F38081" stroke="#003468" width="324" height="96.577"/>
+		<g>
+			<rect x="56.757" y="160.653" fill="none" width="316.287" height="92.977"/>
+			<text transform="matrix(1 0 0 1 56.7578 168.5151)"><tspan x="0" y="0" font-size="11">Act</tspan><tspan x="0" y="14.8" font-size="9" letter-spacing="-2">	</tspan><tspan x="0" y="14.8" font-size="9">classCode*: &lt;= ACT</tspan><tspan x="0" y="25.6" font-size="9">moodCode*: &lt;= EVN</tspan><tspan x="0" y="36.4" font-size="9">id: II [1..1] (StudyInstance UID (0020,000D)</tspan><tspan x="0" y="47.2" font-size="9">code: [1..1] &lt;= ExternallyDefinedActCodes</tspan><tspan x="0" y="58" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="58" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="58" font-size="9">(”DICOM Study” DICOM Code: 113014)</tspan><tspan x="0" y="68.8" font-size="9">title: ST (StudyDescription (0008,1030)</tspan><tspan x="0" y="79.6" font-size="9">effectiveTime: TS (Study Date (0008,0020) and Study Time (0008,0030)</tspan></text>
+		</g>
+	</g>
+	<g>
+		<rect x="52.901" y="319.869" fill="#F38081" stroke="#003468" width="324" height="107.76"/>
+		<g>
+			<rect x="56.757" y="323.469" fill="none" width="316.287" height="104.162"/>
+			<text transform="matrix(1 0 0 1 56.7578 331.332)"><tspan x="0" y="0" font-size="11">Act</tspan><tspan x="0" y="14.801" font-size="9" letter-spacing="-2">	</tspan><tspan x="0" y="14.801" font-size="9">classCode*: &lt;= ACT</tspan><tspan x="0" y="25.601" font-size="9">moodCode*: &lt;= EVN</tspan><tspan x="0" y="36.4" font-size="9">id: II [1..1] (SeriesInstance UID (0020,000E)</tspan><tspan x="0" y="47.201" font-size="9">code: [1..1] &lt;= ExternallyDefinedActCodes</tspan><tspan x="0" y="58" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="58" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="58" font-size="9">(”DICOM Series” DICOM Code: 113015 postcoordinated with qualifier name</tspan><tspan x="0" y="68.801" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="68.801" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="68.801" font-size="9">“modality DICOM Code: 121139 and qualifier value modality (0008,0060))</tspan><tspan x="0" y="79.601" font-size="9">text: ST (SeriesDescription (0008,103E)</tspan><tspan x="0" y="90.4" font-size="9">effectiveTime: TS (Series Date (0008,0021) and Series Time (0008,0031)</tspan></text>
+		</g>
+	</g>
+	<g>
+		<rect x="52.901" y="493.871" fill="#F38081" stroke="#003468" width="324" height="95.621"/>
+		<g>
+			<rect x="56.757" y="497.471" fill="none" width="316.287" height="92.021"/>
+			<text transform="matrix(1 0 0 1 56.7578 505.332)"><tspan x="0" y="0" font-size="11">Observation</tspan><tspan x="0" y="14.801" font-size="9" letter-spacing="-2">	</tspan><tspan x="0" y="14.801" font-size="9">classCode*: &lt;= DGIMG</tspan><tspan x="0" y="25.601" font-size="9">moodCode*: &lt;= EVN</tspan><tspan x="0" y="36.4" font-size="9">id: II [1..1] (SeriesInstance UID (0008,0018)</tspan><tspan x="0" y="47.201" font-size="9">code: [1..1] CWE &lt;= ExternallyDefinedActCodes</tspan><tspan x="0" y="58" font-size="9" letter-spacing="6">	</tspan><tspan x="9" y="58" font-size="9" letter-spacing="-2">	</tspan><tspan x="9" y="58" font-size="9">(SOP CLASS UID CODE (0008,0016)</tspan><tspan x="0" y="68.801" font-size="9">text: (WADO Reference)</tspan><tspan x="0" y="79.601" font-size="9">effectiveTime: TS (Content Date (0008,0023) and Content Time (0008,0033)</tspan></text>
+		</g>
+	</g>
+	<g>
+		<polygon fill="#F9B9BA" stroke="#003468" points="376.901,142.653 214.492,157.054 52.901,142.653 52.901,101.533 
+			376.901,101.533 		"/>
+		<g>
+			<rect x="56.757" y="103.624" fill="none" width="316.287" height="39.029"/>
+			<text transform="matrix(1 0 0 1 56.7578 111.4858)"><tspan x="0" y="0" font-size="11">entry</tspan><tspan x="0" y="14.8" font-size="9">typeCode*: &lt;= x_ActRelationshipEntry</tspan><tspan x="0" y="25.6" font-size="9">contextConductionInd*: [1..1] “true”</tspan></text>
+		</g>
+	</g>
+	<g>
+		<polygon fill="#F9B9BA" stroke="#003468" points="376.901,305.471 214.492,319.869 52.901,305.471 52.901,253.63 376.901,253.63 
+					"/>
+		<g>
+			<rect x="56.757" y="257.23" fill="none" width="316.287" height="48.241"/>
+			<text transform="matrix(1 0 0 1 56.7578 265.0923)"><tspan x="0" y="0" font-size="11">entryRelationship</tspan><tspan x="0" y="14.8" font-size="9">typeCode*: ) CNE &lt;= x_ActRelationshipEntryRelationship (COMP)</tspan><tspan x="0" y="25.6" font-size="9">contextControlCode*: CS CNE [1..1] &lt;= ContextControl “AP”</tspan><tspan x="0" y="36.4" font-size="9">contextConductionInd*: BL [1..1] “true”</tspan></text>
+		</g>
+	</g>
+	<g>
+		<polygon fill="#F9B9BA" stroke="#003468" points="376.901,479.471 214.492,493.869 52.901,479.471 52.901,427.631 
+			376.901,427.631 		"/>
+		<g>
+			<rect x="56.757" y="431.23" fill="none" width="316.287" height="48.24"/>
+			<text transform="matrix(1 0 0 1 56.7578 439.0938)"><tspan x="0" y="0" font-size="11">entryRelationship</tspan><tspan x="0" y="14.799" font-size="9">typeCode*: ) CNE &lt;= x_ActRelationshipEntryRelationship (COMP)</tspan><tspan x="0" y="25.6" font-size="9">contextControlCode*: CS CNE [1..1] &lt;= ContextControl “AP”</tspan><tspan x="0" y="36.399" font-size="9">contextConductionInd*: BL [1..1] “true”</tspan></text>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 384.5684 142.6421)" font-size="9">1..* Act</text>
+	<text transform="matrix(1 0 0 1 384.5684 305.459)" font-size="9">1..* Act</text>
+	<text transform="matrix(1 0 0 1 384.5684 479.459)" font-size="9">1..* Observation</text>
+</g>
+</svg>

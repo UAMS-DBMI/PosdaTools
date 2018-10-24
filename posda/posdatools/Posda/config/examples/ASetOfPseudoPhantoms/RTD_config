@@ -1,0 +1,26 @@
+#
+#Copyright 2008, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+(0008,0016)|SOP Class UID|1.2.840.10008.5.1.4.1.1.481.2
+(0008,0060)|Modality|RTDOSE
+(0008,0070)|Manufacturer|Posda
+(0008,1090)|Manufacturer's Model Name|CreatePseudoPhantom.pl
+(0018,1020)|Software Version(s)|4.3.3
+(0020,0037)|Image Orientation (Patient)|1\0\0\0\1\0
+(0020,1040)|Position Reference Indicator|
+(0028,0002)|Samples per Pixel|1
+(0028,0004)|Photometric Interpretation|MONOCHROME2
+(0028,0010)|Rows|128
+(0028,0011)|Columns|128
+(0028,0030)|Pixel Spacing|4\4
+(0028,0100)|Bits Allocated|16
+(0028,0101)|Bits Stored|16
+(0028,0102)|High Bit|15
+(0028,0103)|Pixel Representation|0
+(3004,0002)|Dose Units|GY
+(3004,0004)|Dose Type|PHYSICAL
+(3004,000e)|Dose Grid Scaling|0.005

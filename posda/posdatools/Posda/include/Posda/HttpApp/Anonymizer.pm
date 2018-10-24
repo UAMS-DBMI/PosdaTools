@@ -1,0 +1,2 @@
+die "Obsolete";
+1;

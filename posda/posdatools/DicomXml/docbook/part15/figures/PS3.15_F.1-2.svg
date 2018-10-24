@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part15/figures/PS3.15_F.1-2.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.084px" height="398.15px" viewBox="0 0 495.084 398.15" enable-background="new 0 0 495.084 398.15"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure F.1-2 DNS Reference Standards
+  </title>
+  <desc>
+	DICOM PS 3.15-2008 Part 15: Security and System Management Profiles
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<g>
+	
+		<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.7967 247.5425 199.0747)" overflow="visible"/>
+	
+		<rect x="183.455" y="14.162" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="134.999" height="54"/>
+	<g>
+		<text transform="matrix(1 0 0 1 230.1968 40.5718)"><tspan x="0" y="0" font-size="9">RFC-1035</tspan><tspan x="0" y="10.8" font-size="9">RFC-2181</tspan><tspan x="0" y="21.6" font-size="9">etc.</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 188.1787 24.5859)" font-size="9">Base DNS Protocol Documents</text>
+	</g>
+	
+		<rect x="44.366" y="105.397" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="55.576"/>
+	<g>
+		<text transform="matrix(1 0 0 1 73.1089 135.0474)"><tspan x="0" y="0" font-size="9">RFC-2538</tspan><tspan x="0" y="10.8" font-size="9">RFC-2931</tspan><tspan x="7.256" y="21.6" font-size="9">DSIG  </tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 46.022 115.5171)" font-size="9">New Security RRs</text>
+	</g>
+	
+		<rect x="201.285" y="284.413" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.997" height="58.91"/>
+	
+		<rect x="201.285" y="105.397" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.997" height="143.599"/>
+	<g>
+		<text transform="matrix(1 0 0 1 230.0259 135.7158)"><tspan x="0" y="0" font-size="9">RFC-2535</tspan><tspan x="0" y="10.8" font-size="9">RFC-3007</tspan><tspan x="0" y="21.6" font-size="9">RFC-3008</tspan><tspan x="0" y="32.4" font-size="9">RFC-3090</tspan><tspan x="10.756" y="43.2" font-size="9">SIZE</tspan><tspan x="7.256" y="54" font-size="9">OKBIT</tspan><tspan x="7.506" y="64.8" font-size="9">ADBIT</tspan><tspan x="7.007" y="75.6" font-size="9">OPTIN</tspan><tspan x="3.753" y="86.4" font-size="9">PARSIG</tspan><tspan x="5.502" y="97.201" font-size="9">PARKY</tspan><tspan x="9.257" y="108" font-size="9">LIMIT</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 203.8501 115.5166)" font-size="9">DNSSEC protocol</text>
+	</g>
+	
+		<rect x="351.721" y="105.397" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="36"/>
+	
+		<rect x="351.721" y="284.413" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="58.91"/>
+	<g>
+		<text transform="matrix(1 0 0 1 353.1851 115.5171)" font-size="9">New Security Uses</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 380.9692 134.3823)" font-size="9">SSH-DNS</text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="250.842" y1="69.703" x2="250.842" y2="96.887"/>
+	<path fill="#005595" d="M252.073,99.721c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.568,1.192,2.881,1.79,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C250.993,103.77,251.43,101.844,252.073,99.721z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="251.149,81.361 
+		400.893,81.361 400.893,96.887 	"/>
+	<path fill="#005595" d="M402.124,99.721c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.568,1.191,2.881,1.789,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C401.043,103.77,401.481,101.844,402.124,99.721z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="250.817,81.361 
+		93.868,81.361 93.868,96.887 	"/>
+	<path fill="#005595" d="M92.638,99.721c-0.598-1.984-1.15-3.273-1.789-4.865h6.053c-0.27,0.568-1.191,2.881-1.789,4.865
+		c-0.643,2.123-1.08,4.049-1.238,5.297C93.718,103.77,93.28,101.844,92.638,99.721z"/>
+	
+		<rect x="44.366" y="284.413" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="99.576"/>
+	<g>
+		<text transform="matrix(1 0 0 1 46.5361 294.9751)" font-size="9">DS Alg. Impl</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 73.1084 314.3403)"><tspan x="0" y="0" font-size="9">RFC-2536</tspan><tspan x="0" y="10.8" font-size="9">RFC-2537</tspan><tspan x="0" y="21.6" font-size="9">RFC-2539</tspan><tspan x="-0.745" y="32.4" font-size="9">GSS-TSIG</tspan><tspan x="0" y="43.2" font-size="9">RFC-3110</tspan><tspan x="11.257" y="54" font-size="9">ECC</tspan><tspan x="14.258" y="64.8" font-size="9">DH</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 230.0264 314.1987)"><tspan x="0" y="0" font-size="9">RFC-2845</tspan><tspan x="0" y="10.8" font-size="9">RFC-2930</tspan><tspan x="4.008" y="21.601" font-size="9">RENEW</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 203.7153 294.9751)" font-size="9">Transactions</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 352.8911 294.9751)" font-size="9">Implementation Notes</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 387.2202 314.3403)"><tspan x="0" y="0" font-size="9">CAIRN</tspan><tspan x="-10.507" y="10.8" font-size="9">ROLLOVER</tspan><tspan x="-19.76" y="21.6" font-size="9">RESROLLOVER</tspan></text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="250.842" y1="248.997" x2="250.842" y2="276.18"/>
+	<path fill="#005595" d="M252.073,279.014c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.568,1.192,2.881,1.79,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C250.993,283.063,251.43,281.137,252.073,279.014z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="251.149,260.655 
+		400.893,260.655 400.893,276.18 	"/>
+	<path fill="#005595" d="M402.124,279.014c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.568,1.191,2.881,1.789,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C401.043,283.063,401.481,281.137,402.124,279.014z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="250.817,260.655 
+		93.868,260.655 93.868,276.18 	"/>
+	<path fill="#005595" d="M92.638,279.014c-0.598-1.984-1.15-3.273-1.789-4.865h6.053c-0.27,0.568-1.191,2.881-1.789,4.865
+		c-0.643,2.123-1.08,4.049-1.238,5.297C93.718,283.063,93.28,281.137,92.638,279.014z"/>
+</g>
+</svg>

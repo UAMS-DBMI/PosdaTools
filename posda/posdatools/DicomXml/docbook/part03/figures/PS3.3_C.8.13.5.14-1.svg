@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8.13.5.14-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="342px" viewBox="0 0 502 342" enable-background="new 0 0 502 342" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="500" height="340"/>
+<g>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="192.424" y1="147.653" x2="428.226" y2="147.653"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="192.424" y1="190.966" x2="428.226" y2="190.966"/>
+	<rect x="55.799" y="79.116" fill="none" width="120.825" height="144.248"/>
+	<text transform="matrix(0.9288 0 0 1 82.3042 85.5557)"><tspan x="0" y="0" font-size="9">ASL Pulse Train Duration</tspan><tspan x="31.012" y="10.8" font-size="9">(0018,9258)  [ms]</tspan><tspan x="7.013" y="32.4" font-size="9">Bolus Cut-off Delaytime </tspan><tspan x="30.52" y="43.2" font-size="9">(0018,925F)  [ms]</tspan><tspan x="-6.992" y="64.8" font-size="9">Frame Reference Datetime</tspan><tspan x="53.011" y="75.6" font-size="9">(0018,9151) </tspan><tspan x="57.041" y="86.399" font-size="9">(per frame)</tspan><tspan x="38.03" y="108.001" font-size="9">Inversion Times</tspan><tspan x="33.512" y="118.8" font-size="9">(0018,9079) [ms]</tspan><tspan x="57.041" y="129.601" font-size="9">(per frame)</tspan></text>
+	<rect x="197.151" y="16" fill="none" width="36.667" height="13.333"/>
+	<text transform="matrix(0.9288 0 0 1 197.1509 21.0078)"><tspan x="0" y="0" font-size="7">Labeling</tspan><tspan x="0" y="7.4" font-size="7">control none</tspan></text>
+	<rect x="256.524" y="24" fill="none" width="39.998" height="5.333"/>
+	<text transform="matrix(0.9288 0 0 1 256.5244 29.0078)" font-size="7">Bolus Cut-off</text>
+	<rect x="335.521" y="24" fill="none" width="72.492" height="5.333"/>
+	<text transform="matrix(0.9288 0 0 1 335.5205 29.0078)" font-size="7">Slice by Slice Acquisition</text>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="192.424" y1="82.742" x2="428.226" y2="82.742"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-miterlimit="1" x1="192.424" y1="115.153" x2="428.226" y2="115.153"/>
+	<rect x="439.626" y="46.911" fill="none" width="17.377" height="8.51"/>
+	<text transform="matrix(0.9288 0 0 1 439.623 53.3447)" font-size="9">time</text>
+	<rect x="198.424" y="32.718" fill="#FFFFFF" stroke="#000000" width="34.12" height="18"/>
+	
+		<rect x="259.464" y="32.718" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="34.119" height="18"/>
+	
+		<rect x="330.399" y="32.718" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="7.166" height="18"/>
+	
+		<rect x="355.589" y="32.718" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="7.166" height="18"/>
+	
+		<rect x="380.778" y="32.718" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="7.166" height="18"/>
+	
+		<rect x="405.968" y="32.718" fill="#6799C8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="7.166" height="18"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="232.544" y1="64.111" x2="232.544" y2="245.053"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="6,2" x1="198.424" y1="64.111" x2="198.424" y2="92.333"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="259.464" y1="64.111" x2="259.464" y2="125.785"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="293.583" y1="64.111" x2="293.583" y2="125.785"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="333.982" y1="64.111" x2="333.982" y2="245.053"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="359.172" y1="64.111" x2="359.172" y2="245.053"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="384.361" y1="64.111" x2="384.361" y2="245.053"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="4,4" x1="409.551" y1="64.111" x2="409.551" y2="245.053"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="198.424" y1="82.742" x2="232.544" y2="82.742"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="259.463" y1="115.153" x2="293.583" y2="115.153"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="333.262" y1="147.653" x2="334.703" y2="147.653"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="358.451" y1="147.653" x2="359.893" y2="147.653"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="383.64" y1="147.653" x2="385.081" y2="147.653"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="408.829" y1="147.653" x2="410.271" y2="147.653"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="232.544" y1="190.966" x2="333.982" y2="190.966"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="232.544" y1="201.767" x2="359.172" y2="201.767"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="232.544" y1="212.565" x2="384.361" y2="212.565"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="6" stroke-linecap="round" stroke-miterlimit="1" x1="232.544" y1="223.364" x2="410.271" y2="223.364"/>
+	
+		<rect x="44.999" y="245.053" fill="#FFFFFF" stroke="#000000" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="173.145" height="80.947"/>
+	<g>
+		<g>
+			<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="1" x1="192.424" y1="50.718" x2="430.185" y2="50.718"/>
+			<g>
+				<polygon points="428.6,53.042 437.272,50.718 428.6,48.394 				"/>
+			</g>
+		</g>
+	</g>
+	<text transform="matrix(0.9288 0 0 1 52.0107 256.0234)"><tspan x="0" y="0" font-size="7">Bolus Cut-off Delay Time (0018,925F) [ms]</tspan><tspan x="0" y="11.4" font-size="7">Inversion Times (0018,9079) [ms]</tspan><tspan x="0" y="19.8" font-size="7">(from end of Pulse Train to Frame Reference Datetime)</tspan><tspan x="0" y="32.2" font-size="7">ASL Pulse Train Duration (0018,9258 ) [ms]</tspan><tspan x="0" y="43.6" font-size="7">Bolus Cut-off Technique Description (0018,925E) [text]</tspan><tspan x="0" y="55" font-size="7">Frame Reference Datetime (0018,9151)</tspan><tspan x="0" y="63.4" font-size="7">(provides the absolute timing [DT])</tspan></text>
+</g>
+</svg>

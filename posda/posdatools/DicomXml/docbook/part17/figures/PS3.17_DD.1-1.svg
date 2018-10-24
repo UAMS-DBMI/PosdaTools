@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_DD.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="427px" viewBox="0 0 502 427" enable-background="new 0 0 502 427" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="425"/>
+	<g>
+		
+			<path fill="#B2CEE7" stroke="#6799C8" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="12,5" d="
+			M258.744,214.807h159.254v76.559H258.744V214.807z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="430.479" y1="377.039" x2="430.479" y2="38.516"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="53.499" y1="377.775" x2="53.499" y2="39.248"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M57.676,58.039h-9V77.5c3.149,0,5.968,0,9,0V58.039z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M434.78,58.039h-9v304.256c3.149,0,5.968,0,9,0V58.039z"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M385.552,15.121h90.096v27h-90.096V15.121z"/>
+		<text transform="matrix(1 0 0 1 391.7246 31.1162)" font-size="9">Information System</text>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M26.354,15.121h54.29v27h-54.29V15.121z"/>
+		<text transform="matrix(1 0 0 1 36.7485 31.1162)" font-size="9">Modality</text>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="57.63" y1="67.688" x2="417.998" y2="67.688"/>
+										<path fill="#005695" d="M420.359,66.663c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.226,2.401-0.992,4.054-1.491
+											c1.77-0.535,3.375-0.9,4.415-1.031C423.734,67.563,422.129,67.197,420.359,66.663z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="424.773" y1="135.564" x2="60.377" y2="135.564"/>
+										<path fill="#005695" d="M57.981,134.541c1.676-0.5,2.767-0.961,4.112-1.492v5.045c-0.481-0.227-2.437-0.994-4.112-1.492
+											c-1.795-0.535-3.423-0.9-4.479-1.031C54.559,135.439,56.187,135.074,57.981,134.541z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="12,5" x1="424.773" y1="227.252" x2="60.372" y2="227.252"/>
+										<path fill="#005695" d="M57.978,226.229c1.676-0.5,2.767-0.961,4.111-1.492v5.045c-0.481-0.227-2.436-0.994-4.111-1.492
+											c-1.795-0.535-3.424-0.9-4.479-1.031C54.554,227.127,56.183,226.762,57.978,226.229z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										
+											<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="424.773" y1="319.479" x2="60.377" y2="319.479"/>
+										<path fill="#005695" d="M57.981,318.455c1.676-0.5,2.767-0.961,4.112-1.492v5.045c-0.481-0.227-2.437-0.994-4.112-1.492
+											c-1.795-0.535-3.423-0.9-4.479-1.031C54.559,319.354,56.187,318.988,57.981,318.455z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+		<rect x="63.749" y="58.952" fill="none" width="181.29" height="47.767"/>
+		<text transform="matrix(1 0 0 1 63.749 64.667)"><tspan x="0" y="0" font-size="8">1. Query IS for Scheduled Procedure Step entities </tspan><tspan x="9" y="12" font-size="8">- specific time period (e.g., April 04, 2014) </tspan><tspan x="9" y="24" font-size="8">- particular Station AE (modality, where the </tspan><tspan x="9" y="36" font-size="8">Procedure Step is to be performed)</tspan></text>
+		<rect x="260.213" y="127.457" fill="none" width="140.854" height="250.319"/>
+		<text transform="matrix(1 0 0 1 260.2129 133.1709)"><tspan x="0" y="0" font-size="8">2. Worklist Response: </tspan><tspan x="9" y="12" font-size="8">- Scheduled Procedure: Step 1 </tspan><tspan x="9" y="24" font-size="8">- Requested Procedure: 123 </tspan><tspan x="9" y="36" font-size="8">- Imaging Service Request: 5578 </tspan><tspan x="9" y="48" font-size="8">- Patient: “JONES” </tspan><tspan x="9" y="60" font-size="8">- Visit: 05081234</tspan><tspan x="0" y="80" font-size="8">REPEAT</tspan><tspan x="0" y="92" font-size="8">... Worklist Response: </tspan><tspan x="9" y="104" font-size="8">- Scheduled Procedure: Step __  </tspan><tspan x="9" y="116" font-size="8">- Requested Procedure: __ </tspan><tspan x="9" y="128" font-size="8">- Imaging Service Request: __ </tspan><tspan x="9" y="140" font-size="8">- Patient: __ </tspan><tspan x="9" y="152" font-size="8">- Visit: __ </tspan><tspan x="0" y="184" font-size="8">N. Worklist Response: </tspan><tspan x="9" y="196" font-size="8">- Scheduled Procedure: Step n </tspan><tspan x="9" y="208" font-size="8">- Requested Procedure: 345 </tspan><tspan x="9" y="220" font-size="8">- Imaging Service Request: 3422 </tspan><tspan x="9" y="232" font-size="8">- Patient: “MILLER” </tspan><tspan x="9" y="244" font-size="8">- Visit: 95080476</tspan></text>
+		<text transform="matrix(1 0 0 1 232.624 396.5801)"><tspan x="0" y="0" font-size="10">Network</tspan><tspan x="-3.066" y="12" font-size="10">Boundary</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linecap="round" stroke-miterlimit="1" x1="250.961" y1="384.975" x2="250.961" y2="42.121"/>
+	</g>
+</g>
+</svg>

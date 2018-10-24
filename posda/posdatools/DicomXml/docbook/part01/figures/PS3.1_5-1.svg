@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part01/figures/PS3.1_5-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:07 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="500px" height="552px" viewBox="0 0 500 552" enable-background="new 0 0 500 552"
+	 xml:space="preserve">
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.1 Part 1: Introduction and Overview
+   </desc>
+   <title>
+	Figure 5-1 General Communication Model
+   </title>
+</g>
+
+<rect x="1" y="1" fill="#F5EED6" width="498" height="550"/>
+<g>
+	
+		<path fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+		M15.629,81.557H482.63v164.707H15.629V81.557z"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="7" stroke-linecap="round" stroke-miterlimit="1" x1="371.233" y1="115.27" x2="371.233" y2="527.515"/>
+	
+		<line fill="none" stroke="#005695" stroke-width="7" stroke-linecap="round" stroke-miterlimit="1" x1="125.43" y1="115.27" x2="125.43" y2="527.515"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M86.883,100.258c0-1.98,1.62-3.6,3.6-3.6h318.018c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6
+		H90.483c-1.98,0-3.6-1.62-3.6-3.6V100.258z"/>
+	<path fill="none" stroke="#000000" stroke-width="0.75" d="M86.883,100.258c0-1.98,1.62-3.6,3.6-3.6h318.018
+		c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6H90.483c-1.98,0-3.6-1.62-3.6-3.6V100.258z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M86.883,137.758c0-1.98,1.62-3.6,3.6-3.6h318.018c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6
+		H90.483c-1.98,0-3.6-1.62-3.6-3.6V137.758z"/>
+	<path fill="none" stroke="#000000" stroke-width="0.75" d="M86.883,137.758c0-1.98,1.62-3.6,3.6-3.6h318.018
+		c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6H90.483c-1.98,0-3.6-1.62-3.6-3.6V137.758z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M86.883,175.617c0-1.98,1.62-3.6,3.6-3.6h318.018c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6
+		H90.483c-1.98,0-3.6-1.62-3.6-3.6V175.617z"/>
+	<path fill="none" stroke="#000000" stroke-width="0.75" d="M86.883,175.617c0-1.98,1.62-3.6,3.6-3.6h318.018
+		c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6H90.483c-1.98,0-3.6-1.62-3.6-3.6V175.617z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M63.374,213.129c0-1.98,1.62-3.6,3.6-3.6h118.478c1.98,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6
+		H66.974c-1.98,0-3.6-1.62-3.6-3.6V213.129z"/>
+	<path fill="none" stroke="#000000" stroke-width="0.75" d="M63.374,213.129c0-1.98,1.62-3.6,3.6-3.6h118.478
+		c1.98,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6H66.974c-1.98,0-3.6-1.62-3.6-3.6V213.129z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M15.432,266.087c0-1.98,1.62-3.6,3.6-3.6h212.919c1.98,0,3.6,1.62,3.6,3.6v24.762c0,1.979-1.62,3.6-3.6,3.6
+		H19.032c-1.98,0-3.6-1.62-3.6-3.6V266.087z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M261.395,266.087c0-1.98,1.62-3.6,3.6-3.6h212.92c1.979,0,3.6,1.62,3.6,3.6v24.762
+		c0,1.979-1.62,3.6-3.6,3.6h-212.92c-1.979,0-3.6-1.62-3.6-3.6V266.087z"/>
+</g>
+<g>
+	<path fill="#CCDEF0" d="M308.874,213.129c0-1.98,1.62-3.6,3.6-3.6h118.479c1.979,0,3.6,1.62,3.6,3.6v17.678
+		c0,1.98-1.62,3.6-3.6,3.6H312.473c-1.979,0-3.6-1.62-3.6-3.6V213.129z"/>
+	<path fill="none" stroke="#000000" stroke-width="0.75" d="M308.874,213.129c0-1.98,1.62-3.6,3.6-3.6h118.479
+		c1.979,0,3.6,1.62,3.6,3.6v17.678c0,1.98-1.62,3.6-3.6,3.6H312.473c-1.979,0-3.6-1.62-3.6-3.6V213.129z"/>
+</g>
+<text transform="matrix(1 0 0 1 72.7349 225.7861)" font-size="12">Message Exchange</text>
+<text transform="matrix(1 0 0 1 21.2065 278.46)" font-size="11">BOUNDARY: DICOM Upper Layer Service</text>
+<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linecap="round" stroke-miterlimit="1" x1="29.509" y1="286.563" x2="221.353" y2="286.563"/>
+<g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M49.405,511.054c0-1.979,1.62-3.6,3.6-3.6h144.853c1.98,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V511.054z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" d="M49.405,511.054c0-1.979,1.62-3.6,3.6-3.6h144.853
+				c1.98,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V511.054z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 87.6616 519.5908)"><tspan x="0" y="0" font-size="9">Network Exchange</tspan><tspan x="-10.753" y="10.8" font-size="9">On-Line Communication</tspan></text>
+	</g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M49.405,449.942c0-1.979,1.62-3.6,3.6-3.6h144.853c1.98,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V449.942z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" d="M49.405,449.942c0-1.979,1.62-3.6,3.6-3.6h144.853
+				c1.98,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V449.942z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 77.8618 463.2803)" font-size="9">TCP/IP Transport Layer</text>
+	</g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M49.405,388.831c0-1.979,1.62-3.6,3.6-3.6h144.853c1.98,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V388.831z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="4" d="M49.405,388.831c0-1.979,1.62-3.6,3.6-3.6
+				h144.853c1.98,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V388.831z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 96.6167 397.3682)"><tspan x="0" y="0" font-size="9">Security Layer</tspan><tspan x="9.004" y="10.8" font-size="9">(Optional)</tspan></text>
+	</g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M49.405,327.72c0-1.979,1.62-3.6,3.6-3.6h144.853c1.98,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V327.72z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" d="M49.405,327.72c0-1.979,1.62-3.6,3.6-3.6h144.853
+				c1.98,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H53.005c-1.98,0-3.6-1.62-3.6-3.6V327.72z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 84.3657 341.0576)" font-size="9">DICOM Upper Layer</text>
+	</g>
+</g>
+<g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M295.618,511.054c0-1.979,1.62-3.6,3.6-3.6h144.854c1.979,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H299.217c-1.979,0-3.6-1.62-3.6-3.6V511.054z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" d="M295.618,511.054c0-1.979,1.62-3.6,3.6-3.6h144.854
+				c1.979,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H299.217c-1.979,0-3.6-1.62-3.6-3.6V511.054z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 317.3569 519.6084)"><tspan x="0" y="0" font-size="9">Media Storage Interchange</tspan><tspan x="5.766" y="10.8" font-size="9">Off-Line Communication</tspan></text>
+	</g>
+	<g>
+		<g>
+			<path fill="#CCDEF0" d="M295.618,327.72c0-1.979,1.62-3.6,3.6-3.6h144.854c1.979,0,3.6,1.62,3.6,3.6v22.229
+				c0,1.979-1.62,3.6-3.6,3.6H299.217c-1.979,0-3.6-1.62-3.6-3.6V327.72z"/>
+			<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="4" d="M295.618,327.72c0-1.979,1.62-3.6,3.6-3.6
+				h144.854c1.979,0,3.6,1.62,3.6,3.6v22.229c0,1.979-1.62,3.6-3.6,3.6H299.217c-1.979,0-3.6-1.62-3.6-3.6V327.72z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 342.8804 336.2744)"><tspan x="0" y="0" font-size="9">Security Layer</tspan><tspan x="9.005" y="10.8" font-size="9">(Optional)</tspan></text>
+	</g>
+	<g>
+		<g>
+			<path fill="#B2CEE7" d="M293.804,377.544h155.68v105.912h-155.68V377.544z"/>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 296.728 388.0557)" font-size="9">Physical Media and File Formats</text>
+		</g>
+		<g>
+			<polygon fill="#CCDEF0" stroke="#000000" stroke-width="0.75" points="441.097,475.108 390.109,475.108 390.109,407.276 
+				398.746,398.628 441.097,398.628 			"/>
+			<text transform="matrix(1 0 0 1 395.1479 408.1484)"><tspan x="0" y="0" font-size="9">&lt;FILE&gt;</tspan><tspan x="0" y="10.8" font-size="9">   &lt;FIELD&gt;</tspan><tspan x="0" y="21.6" font-size="9">   .</tspan><tspan x="0" y="32.4" font-size="9">   .</tspan><tspan x="0" y="43.2" font-size="9">   .</tspan><tspan x="0" y="54" font-size="9">   &lt;/FIELD&gt;</tspan><tspan x="0" y="64.8" font-size="9">&lt;/FILE&gt;</tspan></text>
+		</g>
+		<g>
+			<path fill="#D9D9D9" stroke="#000000" stroke-width="0.25" stroke-miterlimit="3.8637" d="M304.448,436.874
+				c0-20.23,16.385-36.615,36.6-36.615c20.232,0,36.615,16.385,36.615,36.615c0,20.219-16.383,36.602-36.615,36.602
+				C320.833,473.476,304.448,457.093,304.448,436.874z"/>
+			<path fill="#808080" stroke="#000000" stroke-width="0.25" stroke-miterlimit="3.8637" d="M358.248,407.118
+				c4.041,2.146,6.478,4.309,9.438,7.748l-54.136,42.953c2.938,3.959,5.579,6.365,9.852,8.867L358.248,407.118z"/>
+			<path fill="none" stroke="#000000" stroke-miterlimit="3.8637" d="M306.622,436.874c0-19.029,15.414-34.439,34.428-34.439
+				c19.027,0,34.439,15.41,34.439,34.439c0,19.014-15.412,34.426-34.439,34.426C322.036,471.3,306.622,455.888,306.622,436.874z"/>
+			<path fill="#FFFFFF" stroke="#000000" stroke-width="0.5" stroke-miterlimit="3.8637" d="M330.242,436.87
+				c0-5.975,4.84-10.814,10.809-10.814c5.98,0,10.818,4.84,10.818,10.814c0,5.971-4.838,10.811-10.818,10.811
+				C335.082,447.681,330.242,442.841,330.242,436.87z"/>
+			<path stroke="#000000" stroke-width="0.5" stroke-miterlimit="3.8637" d="M337.153,436.87c0-2.156,1.748-3.904,3.9-3.904
+				c2.158,0,3.904,1.748,3.904,3.904c0,2.154-1.746,3.9-3.904,3.9C338.901,440.771,337.153,439.024,337.153,436.87z"/>
+		</g>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 273.4331 278.46)" font-size="11">BOUNDARY: DICOM Basic File Service</text>
+<line fill="#4F8ABE" stroke="#005695" stroke-width="4" stroke-linecap="round" stroke-miterlimit="1" x1="275.305" y1="286.563" x2="467.149" y2="286.563"/>
+<text transform="matrix(1 0 0 1 173.8379 112.0972)" font-size="12">Service Class Specifications</text>
+<text transform="matrix(1 0 0 1 167.498 149.9932)" font-size="12">Information Objects Definitions</text>
+<text transform="matrix(1 0 0 1 117.7305 187.8896)" font-size="12">Dataset Structure and Encoding - Data Dictionary</text>
+<text transform="matrix(1 0 0 1 340.8921 225.7861)" font-size="12">File Format</text>
+<text transform="matrix(1 0 0 1 18.5068 76.5854)" font-size="12">DICOM Application Entity</text>
+<g>
+	<polyline fill="#4F8ABE" points="194.085,15.04 308.696,15.04 308.214,32.527 346.594,32.527 249.59,81.603 151.666,32.527 
+		193.625,32.527 	"/>
+	<text transform="matrix(1 0 0 1 205.4453 29.4482)"><tspan x="0" y="0" fill="#FFFFFF" font-size="12"> Medical Images</tspan><tspan x="-17.687" y="14.4" fill="#FFFFFF" font-size="12">and related information</tspan></text>
+</g>
+</svg>

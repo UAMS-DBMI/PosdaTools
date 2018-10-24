@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+export APP_CONTROLLER_ROOT="$(pwd)"
+export APP_CONTROLLER_STAGE=`basename $APP_CONTROLLER_ROOT`
+
+
+export PATH=$APP_CONTROLLER_ROOT/bin:$PATH
+export POSDA_HOME=$APP_CONTROLLER_ROOT/Posda
+
+# Automatically setup all installed apps
+for i in **/env/Setup; do
+  NAME=$(dirname $(dirname $i))  # ugly way to get the first dirname
+  source $i $APP_CONTROLLER_ROOT/$NAME
+done
+
+source posda.env

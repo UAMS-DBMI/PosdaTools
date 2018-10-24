@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_C.4.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="317px" viewBox="0 0 502 317" enable-background="new 0 0 502 317" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="315"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="135.727" y1="201.857" x2="181.332" y2="201.857"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M64.017,198.543c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C80.135,234.568,64.017,218.426,64.017,198.543z"/>
+		<text transform="matrix(1 0 0 1 82.2935 195.0234)"><tspan x="0" y="0"  font-size="11">Update</tspan><tspan x="-7.641" y="13.199"  font-size="11">Procedure</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="9" x1="135.727" y1="137.857" x2="181.332" y2="137.857"/>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M64.017,137.844c0-19.883,16.118-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.128,36.025-36.023,36.025
+			C80.135,173.869,64.017,157.727,64.017,137.844z"/>
+		<text transform="matrix(1 0 0 1 74.0352 127.7241)"><tspan x="0" y="0"  font-size="11">Scheduled</tspan><tspan x="0.617" y="13.2"  font-size="11">Procedure</tspan><tspan x="6.735" y="26.4"  font-size="11">Queries</tspan></text>
+		
+			<rect x="174.127" y="51.567" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="86.791" height="233.278"/>
+		<text transform="matrix(1 0 0 1 182.4927 172.6289)"  font-size="13">DICOMSRV</text>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="269.832" y1="168.983" x2="364.25" y2="168.983"/>
+			<path fill="#005695" d="M266.998,170.213c1.982,0.6,3.273,1.152,4.865,1.791v-6.054c-0.57,0.271-2.883,1.19-4.865,1.79
+				c-2.123,0.642-4.049,1.08-5.299,1.236C262.949,169.133,264.875,169.572,266.998,170.213z"/>
+		</g>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M365.961,168.971c0-19.883,16.119-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.127,36.025-36.023,36.025
+			C382.08,204.996,365.961,188.854,365.961,168.971z"/>
+		<text transform="matrix(1 0 0 1 376.4053 155.3638)"><tspan x="0" y="0"  font-size="10">Remote AE</tspan><tspan x="4.443" y="12"  font-size="10">Requests</tspan><tspan x="13.901" y="24"  font-size="10">MLW</tspan><tspan x="0.833" y="36"  font-size="10">Verification</tspan></text>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="269.832" y1="87.579" x2="362.217" y2="87.579"/>
+			<path fill="#005695" d="M266.998,88.81c1.982,0.599,3.273,1.151,4.865,1.79v-6.054c-0.57,0.271-2.883,1.191-4.865,1.79
+				c-2.123,0.642-4.049,1.08-5.299,1.237C262.949,87.729,264.875,88.168,266.998,88.81z"/>
+		</g>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M365.961,87.566c0-19.883,16.119-36,36-36c19.896,0,36.023,16.117,36.023,36s-16.127,36.025-36.023,36.025
+			C382.08,123.592,365.961,107.449,365.961,87.566z"/>
+		<text transform="matrix(1 0 0 1 376.4062 77.4497)"><tspan x="0" y="0"  font-size="10">Remote AE</tspan><tspan x="4.443" y="12"  font-size="10">Requests</tspan><tspan x="0.832" y="24"  font-size="10">Verification</tspan></text>
+		<g>
+			
+				<line fill="#4F8ABE" stroke="#005695" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="269.832" y1="250.383" x2="362.217" y2="250.383"/>
+			<path fill="#005695" d="M266.998,251.612c1.982,0.599,3.273,1.151,4.865,1.79v-6.054c-0.57,0.271-2.883,1.191-4.865,1.79
+				c-2.123,0.642-4.049,1.08-5.299,1.237C262.949,250.532,264.875,250.971,266.998,251.612z"/>
+		</g>
+		
+			<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+			M365.961,250.375c0-19.889,16.119-36.007,36-36.007c19.896,0,36.023,16.118,36.023,36.007c0,19.893-16.127,36.043-36.023,36.043
+			C382.08,286.418,365.961,270.268,365.961,250.375z"/>
+		<text transform="matrix(1 0 0 1 376.4062 240.2559)"><tspan x="0" y="0"  font-size="10">Remote AE</tspan><tspan x="-4.72" y="12"  font-size="10">Makes MPPS</tspan><tspan x="6.943" y="24"  font-size="10">Request</tspan></text>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="2,4" x1="329.369" y1="300.711" x2="329.369" y2="33.981"/>
+		<g>
+			<path fill="#B2CEE7" d="M260.371,19.89c0-1.98,1.62-3.6,3.6-3.6h130.797c1.979,0,3.6,1.62,3.6,3.6v10.837
+				c0,1.98-1.62,3.6-3.6,3.6H263.971c-1.979,0-3.6-1.62-3.6-3.6V19.89z"/>
+		</g>
+		<text transform="matrix(1 0 0 1 264.2881 29.145)"  font-size="11">DICOM Standard Interface</text>
+	</g>
+</g>
+</svg>

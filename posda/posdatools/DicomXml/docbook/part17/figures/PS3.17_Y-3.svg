@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_Y-3.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:56 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="352px" viewBox="0 0 502 352" enable-background="new 0 0 502 352" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="350"/>
+	<g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="308.369" y1="326.209" x2="283.027" y2="326.209"/>
+				<path fill="#ED1C24" d="M280.666,327.234c1.652,0.499,2.728,0.959,4.054,1.491v-5.044c-0.475,0.225-2.401,0.992-4.054,1.491
+					c-1.77,0.534-3.375,0.9-4.415,1.03C277.291,326.334,278.896,326.699,280.666,327.234z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="197.382" y1="326.107" x2="173.168" y2="326.107"/>
+				<path fill="#ED1C24" d="M199.744,325.082c-1.653-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.374-0.9,4.415-1.03C203.118,325.982,201.514,325.617,199.744,325.082z"/>
+			</g>
+		</g>
+		<g>
+			<rect x="212.362" y="322.525" fill="none" width="56.634" height="7.367"/>
+			<text transform="matrix(1 0 0 1 212.3613 328.9561)" font-size="9">Window width</text>
+		</g>
+		<g>
+			<rect x="423.576" y="243.838" fill="none" width="44.377" height="20.801"/>
+			<text transform="matrix(1 0 0 1 435.7559 250.2676)"><tspan x="0" y="0" font-size="9">Input</tspan><tspan x="-11.5" y="10.8" font-size="9">gray levels</tspan></text>
+		</g>
+		<g>
+			<rect x="44.788" y="18.693" fill="none" width="44.514" height="21.541"/>
+			<text transform="matrix(1 0 0 1 53.5366 25.1245)"><tspan x="0" y="0" font-size="9">Output</tspan><tspan x="-8" y="10.8" font-size="9">gray levels</tspan></text>
+		</g>
+		<g>
+			<rect x="209.239" y="296.857" fill="none" width="62.88" height="10.211"/>
+			<text transform="matrix(1 0 0 1 209.2393 303.2891)" font-size="9">Window center</text>
+		</g>
+		<rect x="66.219" y="60.904" fill="#CCDEF0" stroke="#000000" width="342" height="193.334"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="59.019" y1="99.562" x2="408.219" y2="99.562"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="59.019" y1="60.904" x2="408.219" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="59.019" y1="138.219" x2="408.219" y2="138.219"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="59.019" y1="176.924" x2="408.219" y2="176.924"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="59.019" y1="215.58" x2="408.219" y2="215.58"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="373.986" y1="261.438" x2="373.986" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="407.828" y1="261.438" x2="407.828" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="339.836" y1="261.438" x2="339.836" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="305.604" y1="261.438" x2="305.604" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="271.453" y1="261.438" x2="271.453" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="237.219" y1="261.438" x2="237.219" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="202.986" y1="261.438" x2="202.986" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="168.835" y1="261.438" x2="168.835" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="134.602" y1="261.438" x2="134.602" y2="60.904"/>
+		<line fill="#CCDEF0" stroke="#000000" x1="100.453" y1="261.438" x2="100.453" y2="60.904"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#003468" points="66.219,50.904 66.219,254.238 422.219,254.238 				"/>
+				<path fill="#003468" d="M424.58,253.213c-1.652-0.499-2.728-0.959-4.054-1.491v5.044c0.475-0.225,2.401-0.992,4.054-1.491
+					c1.77-0.534,3.375-0.9,4.415-1.03C427.955,254.113,426.35,253.748,424.58,253.213z"/>
+				<path fill="#003468" d="M65.194,48.542c-0.5,1.653-0.959,2.728-1.492,4.054h5.044c-0.226-0.475-0.993-2.401-1.492-4.054
+					c-0.535-1.77-0.9-3.374-1.031-4.415C66.094,45.168,65.729,46.773,65.194,48.542z"/>
+			</g>
+		</g>
+		<g>
+			<rect x="207.95" y="15.093" fill="none" width="66.796" height="10.771"/>
+			<text transform="matrix(1 0 0 1 207.9502 22.9561)" font-size="11">Sigmoid LUT</text>
+		</g>
+		<g>
+			<rect x="34.047" y="57.279" fill="none" width="22.812" height="203.438"/>
+			<text transform="matrix(1 0 0 1 38.5059 65.1411)"><tspan x="0" y="0" font-size="11">250</tspan><tspan x="0" y="38.2" font-size="11">200</tspan><tspan x="0" y="76.4" font-size="11">150</tspan><tspan x="0" y="114.6" font-size="11">100</tspan><tspan x="6.118" y="152.8" font-size="11">50</tspan><tspan x="12.235" y="191" font-size="11">0</tspan></text>
+		</g>
+		<g>
+			<rect x="62.853" y="264.639" fill="none" width="354.147" height="10.311"/>
+			<text transform="matrix(1 0 0 1 62.853 272.5)"><tspan x="0" y="0" font-size="11">0</tspan><tspan x="6.118" y="0" font-size="11" letter-spacing="53">	</tspan><tspan x="62.549" y="0" font-size="11">50</tspan><tspan x="74.784" y="0" font-size="11" letter-spacing="49">	</tspan><tspan x="127.49" y="0" font-size="11">100</tspan><tspan x="145.843" y="0" font-size="11" letter-spacing="47">	</tspan><tspan x="196.157" y="0" font-size="11">150</tspan><tspan x="214.51" y="0" font-size="11" letter-spacing="46">	</tspan><tspan x="264.157" y="0" font-size="11">200</tspan><tspan x="282.51" y="0" font-size="11" letter-spacing="47">	</tspan><tspan x="332.823" y="0" font-size="11">250</tspan></text>
+		</g>
+		<line fill="none" stroke="#ED1C24" stroke-dasharray="4" x1="205.996" y1="336.906" x2="205.996" y2="253.939"/>
+		<line fill="none" stroke="#ED1C24" stroke-dasharray="4" x1="275.363" y1="88.414" x2="275.363" y2="336.906"/>
+		<path fill="none" stroke="#003468" stroke-width="3" d="M408.471,89.003c-135.346,0-129.352-13.333-169.656,86.927
+			c-35.849,89.176-28.536,78.482-173.519,78.482"/>
+		<line fill="none" stroke="#003468" stroke-dasharray="4" x1="288.873" y1="57.279" x2="192.507" y2="285.947"/>
+		<line fill="none" stroke="#003468" stroke-dasharray="4" x1="408.471" y1="89.003" x2="255.373" y2="89.003"/>
+		<line fill="none" stroke="#003468" stroke-dasharray="4" x1="218.394" y1="254.812" x2="65.296" y2="254.812"/>
+		<g>
+			<g>
+				<line fill="none" stroke="#ED1C24" x1="240.679" y1="179.93" x2="240.679" y2="296.857"/>
+				<path fill="#ED1C24" d="M239.654,177.568c-0.5,1.653-0.959,2.728-1.492,4.054h5.044c-0.226-0.475-0.993-2.4-1.492-4.054
+					c-0.535-1.77-0.9-3.375-1.031-4.415C240.554,174.194,240.188,175.798,239.654,177.568z"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

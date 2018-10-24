@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part02/figures/PS3.2_B.4.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:08 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="272px" viewBox="0 0 502 272" enable-background="new 0 0 502 272" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.2 Conformance
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="270"/>
+	<g>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="399.893" y1="256.201" x2="399.893" y2="39.832"/>
+		
+			<rect x="377.392" y="15.799" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 387.3916 27.3267)"><tspan x="0" y="0"  font-size="9">Image</tspan><tspan x="-5.254" y="10.8"  font-size="9">Manager</tspan></text>
+		
+			<rect x="395.068" y="54.737" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="192.714"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="68.726" x2="387.412" y2="68.726"/>
+		<path fill="#005695" d="M389.773,67.701c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C393.148,68.601,391.543,68.235,389.773,67.701z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="93.156" x2="387.412" y2="93.156"/>
+		<path fill="#005695" d="M389.773,92.132c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.226,2.401-0.993,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C393.148,93.031,391.543,92.666,389.773,92.132z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="117.587" x2="387.412" y2="117.587"/>
+		<path fill="#005695" d="M389.773,116.562c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C393.148,117.462,391.543,117.096,389.773,116.562z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="143.561" x2="387.412" y2="143.561"/>
+		<path fill="#005695" d="M389.773,142.535c-1.652-0.5-2.728-0.959-4.054-1.492v5.045c0.475-0.226,2.401-0.992,4.054-1.492
+			c1.77-0.534,3.375-0.9,4.415-1.03C393.148,143.436,391.543,143.069,389.773,142.535z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="166.344" x2="387.412" y2="166.344"/>
+		<path fill="#005695" d="M389.773,165.319c-1.652-0.499-2.728-0.96-4.054-1.491v5.044c0.475-0.226,2.401-0.993,4.054-1.491
+			c1.77-0.535,3.375-0.9,4.415-1.031C393.148,166.219,391.543,165.854,389.773,165.319z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="191.289" x2="387.412" y2="191.289"/>
+		<path fill="#005695" d="M389.773,190.265c-1.652-0.499-2.728-0.96-4.054-1.491v5.044c0.475-0.226,2.401-0.993,4.054-1.491
+			c1.77-0.535,3.375-0.9,4.415-1.031C393.148,191.164,391.543,190.799,389.773,190.265z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="394.24" y1="216.234" x2="113.068" y2="216.234"/>
+		<path fill="#005695" d="M110.707,217.261c1.653,0.499,2.728,0.959,4.054,1.491v-5.046c-0.475,0.226-2.401,0.993-4.054,1.492
+			c-1.77,0.535-3.374,0.901-4.415,1.032C107.333,216.359,108.937,216.727,110.707,217.261z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="106.24" y1="241.18" x2="387.412" y2="241.18"/>
+		<path fill="#005695" d="M389.773,240.155c-1.652-0.5-2.728-0.96-4.054-1.492v5.045c0.475-0.227,2.401-0.993,4.054-1.492
+			c1.77-0.535,3.375-0.9,4.415-1.031C393.148,241.055,391.543,240.688,389.773,240.155z"/>
+		
+			<line fill="#4F8ABE" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3" x1="102.108" y1="256.201" x2="102.108" y2="39.832"/>
+		
+			<rect x="79.608" y="15.799" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="45.001" height="27"/>
+		<text transform="matrix(1 0 0 1 86.353 27.3267)"><tspan x="0" y="0"  font-size="9">Storage</tspan><tspan x="9.758" y="10.8"  font-size="9">AE</tspan></text>
+		<text transform="matrix(1 0 0 1 124.3794 65.0952)"><tspan x="0" y="0"  font-size="8">1. Open Association</tspan><tspan x="0" y="24.6"  font-size="8">2. C-STORE (RF Image)</tspan><tspan x="0" y="49.2"  font-size="8">3. C-STORE (GSPS)</tspan><tspan x="0" y="73.799"  font-size="8">4. C-STORE (RF Image)</tspan><tspan x="0" y="98.4"  font-size="8">5. C-STORE (GSPS)</tspan><tspan x="0" y="123"  font-size="8">6 N-ACTION (Storage Commitment Request for Images &amp; GSPS)</tspan><tspan x="0" y="147.6"  font-size="8">7. N-EVENT-REPORT (Storage Commitment Response)</tspan><tspan x="0" y="172.2"  font-size="8">8. Close Association</tspan></text>
+		
+			<rect x="97.285" y="54.737" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="9" height="192.714"/>
+	</g>
+</g>
+</svg>

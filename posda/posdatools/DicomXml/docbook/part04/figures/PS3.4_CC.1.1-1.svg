@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_CC.1.1-1.svg,v $ -->
+<!-- $Date: 2014/05/09 13:15:42 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="257px" viewBox="0 0 502 257" enable-background="new 0 0 502 257" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="255"/>
+	<g>
+		
+			<rect x="310.317" y="205.846" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="61.992" height="36.003"/>
+		<g>
+			<text transform="matrix(1 0 0 1 317.3164 226.0723)" font-size="8">CANCELLED</text>
+		</g>
+		
+			<rect x="220.993" y="205.847" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="61.992" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 227.0962 226.0723)" font-size="8">COMPLETED</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" stroke-dasharray="6,4" x1="296.677" y1="15.151" x2="296.677" y2="46.292"/>
+				<g>
+					<polygon fill="#005695" points="293.771,44.311 296.677,55.151 299.582,44.311 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-miterlimit="1" stroke-dasharray="6,2,1,2" x1="296.677" y1="90.406" x2="296.677" y2="121.547"/>
+				<g>
+					<polygon fill="#005695" points="293.771,119.565 296.677,130.406 299.582,119.565 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="311.795" y1="165.661" x2="335.416" y2="198.471"/>
+				<g>
+					<polygon fill="#005695" points="331.9,198.561 340.592,205.661 336.615,195.166 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-miterlimit="1" x1="280.838" y1="165.661" x2="257.217" y2="198.471"/>
+				<g>
+					<polygon fill="#005695" points="256.018,195.166 252.041,205.661 260.732,198.561 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="129.675" y="96.116" fill="none" width="89.044" height="21.38"/>
+		<text transform="matrix(1 0 0 1 129.6748 101.8413)"><tspan x="0" y="0" font-size="8">N-ACTION by an SCU</tspan><tspan x="0" y="9.6" font-size="8">(or SCP internal logic) </tspan></text>
+		<rect x="129.675" y="20.861" fill="none" width="89.544" height="21.38"/>
+		<text transform="matrix(1 0 0 1 129.6748 26.5864)"><tspan x="0" y="0" font-size="8">N-CREATE by an SCU</tspan><tspan x="0" y="9.6" font-size="8">(or SCP internal logic) </tspan></text>
+		
+			<rect x="265.681" y="130.106" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="61.992" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 268.9004 150.332)" font-size="8">IN PROGRESS</text>
+		</g>
+		
+			<rect x="265.681" y="54.367" fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="61.992" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 272.0117 74.5928)" font-size="8">SCHEDULED</text>
+		</g>
+		<rect x="129.675" y="166.484" fill="none" width="88.782" height="31.154"/>
+		<text transform="matrix(1 0 0 1 129.6748 172.209)"><tspan x="0" y="0" font-size="8">N-ACTION by an SCU</tspan><tspan x="0" y="9.6" font-size="8">with the Locking UID</tspan><tspan x="0" y="19.2" font-size="8">(or SCP internal logic) </tspan></text>
+	</g>
+</g>
+</svg>

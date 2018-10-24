@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part15/figures/PS3.15_H.1-2.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.085px" height="271.863px" viewBox="0 0 495.085 271.863" enable-background="new 0 0 495.085 271.863"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure H.1-2 DICOM Configuration Hierarchy
+  </title>
+  <desc>
+	DICOM PS 3.15-2008 Part 15: Security and System Management Profiles
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<g>
+	
+		<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.544 247.5425 135.9316)" overflow="visible"/>
+	<rect x="36.599" y="170.725" fill="#CCDFF0" stroke="#000000" stroke-miterlimit="1" width="90" height="90"/>
+	<rect x="252.932" y="170.725" fill="#CCDFF0" stroke="#000000" stroke-miterlimit="1" width="90" height="90"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="84.218,191.655 84.218,199.297 
+		60.781,199.297 60.781,207.148 	"/>
+	
+		<rect x="42.065" y="241.146" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.913"/>
+	<g>
+		<text transform="matrix(1 0 0 1 49.4609 247.3945)"><tspan x="0" y="0" font-size="6">Transfer</tspan><tspan x="-4.339" y="7.199" font-size="6">Capabilities</tspan></text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="60.781" y1="228.123" x2="60.781" y2="236.082"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="84.242,191.866 84.242,199.297 
+		107.679,199.297 107.679,207.361 	"/>
+	
+		<rect x="42.065" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 43.2925 221.75)" font-size="6">Network AEs</text>
+	</g>
+	
+		<rect x="84.502" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.131" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 86.3872 221.75)" font-size="6">Connections</text>
+	</g>
+	
+		<rect x="65.648" y="175.276" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 72.209 184.709)" font-size="6">Device A</text>
+	</g>
+	<rect x="134.358" y="170.725" fill="#CCDFF0" stroke="#000000" stroke-miterlimit="1" width="90" height="90"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="181.78,191.655 181.78,199.297 
+		158.344,199.297 158.344,207.148 	"/>
+	
+		<rect x="139.628" y="241.146" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.913"/>
+	<g>
+		<text transform="matrix(1 0 0 1 147.0239 247.3945)"><tspan x="0" y="0" font-size="6">Transfer</tspan><tspan x="-4.339" y="7.199" font-size="6">Capabilities</tspan></text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="158.344" y1="228.123" x2="158.344" y2="236.082"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="181.805,191.866 181.805,199.297 
+		205.241,199.297 205.241,207.361 	"/>
+	
+		<rect x="139.628" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 140.8555 221.75)" font-size="6">Network AEs</text>
+	</g>
+	
+		<rect x="182.064" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.131" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 183.9502 221.75)" font-size="6">Connections</text>
+	</g>
+	
+		<rect x="163.211" y="175.276" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.132" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 169.772 184.709)" font-size="6">Device B</text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="300.222,191.655 300.222,199.297 
+		276.788,199.297 276.788,207.148 	"/>
+	
+		<rect x="258.071" y="241.146" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.131" height="15.913"/>
+	<g>
+		<text transform="matrix(1 0 0 1 265.4678 247.3945)"><tspan x="0" y="0" font-size="6">Transfer</tspan><tspan x="-4.34" y="7.199" font-size="6">Capabilities</tspan></text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" x1="276.788" y1="228.123" x2="276.788" y2="236.082"/>
+	<polyline fill="none" stroke="#005595" stroke-linecap="round" stroke-miterlimit="1" points="300.246,191.866 300.246,199.297 
+		323.681,199.297 323.681,207.361 	"/>
+	
+		<rect x="258.071" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.131" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 259.2988 221.75)" font-size="6">Network AEs</text>
+	</g>
+	
+		<rect x="300.506" y="212.318" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.129" height="15.912"/>
+	<g>
+		<text transform="matrix(1 0 0 1 302.3936 221.75)" font-size="6">Connections</text>
+	</g>
+	
+		<rect x="281.654" y="175.276" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="37.128" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 286.3828 184.709)" font-size="6">Device N  </text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="268.743,87.938 
+		268.743,100.722 182.177,100.722 182.177,114.227 	"/>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="268.805" y1="38.14" x2="268.805" y2="51.645"/>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="182.177" y1="148.811" x2="182.177" y2="162.314"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="268.991,87.938 
+		268.991,100.722 377.242,100.722 377.242,114.227 	"/>
+	
+		<rect x="219.306" y="11.14" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.995" height="27"/>
+	<g>
+		<text transform="matrix(1 0 0 1 223.2812 21.7461)"><tspan x="0" y="0" font-size="9">Hospital, Organization,</tspan><tspan x="17.76" y="10.8" font-size="9">Country, Root</tspan></text>
+	</g>
+	
+		<rect x="219.307" y="60.002" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.993" height="27"/>
+	<g>
+		<text transform="matrix(1 0 0 1 225.7886 76.0083)" font-size="9">DICOM Configuration</text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="181.929,140.162 
+		181.929,152.946 84.922,152.946 84.922,162.852 	"/>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="182.177,140.162 
+				182.177,152.946 300.514,152.946 300.514,162.852 			"/>
+			<path fill="#005595" d="M301.743,165.686c0.6-1.983,1.151-3.273,1.79-4.865h-6.053c0.271,0.57,1.191,2.882,1.79,4.865
+				c0.642,2.124,1.08,4.049,1.236,5.298C300.664,169.734,301.103,167.81,301.743,165.686z"/>
+		</g>
+	</g>
+	
+		<rect x="150.426" y="122.277" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="63" height="17.996"/>
+	<g>
+		<text transform="matrix(1 0 0 1 165.9189 133.7822)" font-size="9">Devices</text>
+	</g>
+	
+		<rect x="404.486" y="175.498" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3,4" width="54" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 407.1631 184.9307)" font-size="7">Unique AE Title</text>
+	</g>
+	
+		<rect x="404.486" y="196.721" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3,4" width="54" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 407.1631 206.1523)" font-size="7">Unique AE Title</text>
+	</g>
+	
+		<rect x="404.486" y="217.942" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3,4" width="54" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 407.1631 227.375)" font-size="7">Unique AE Title</text>
+	</g>
+	
+		<rect x="404.486" y="154.276" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="54" height="15.915"/>
+	<g>
+		<text transform="matrix(1 0 0 1 407.1631 163.709)" font-size="7">Unique AE Title</text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="377.415,140.162 
+		377.415,161.587 395.683,161.587 	"/>
+	
+		<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+		377.415,161.162 377.415,182.587 395.683,182.587 	"/>
+	
+		<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+		377.415,182.162 377.415,203.587 395.683,203.587 	"/>
+	
+		<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+		377.415,203.162 377.415,224.587 395.683,224.587 	"/>
+	
+		<rect x="323.162" y="122.277" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108" height="17.996"/>
+	<g>
+		<text transform="matrix(1 0 0 1 325.8955 133.7822)" font-size="9">Unique AE Titles Registry</text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" x1="229.585" y1="220.725" x2="247.585" y2="220.725"/>
+</g>
+</svg>

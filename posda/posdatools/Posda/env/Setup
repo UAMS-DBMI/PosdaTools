@@ -1,0 +1,45 @@
+# Set up Posda Environment based on POSDA_HOME or $1
+#
+#
+#Copyright 2012, Bill Bennett
+# Part of the Posda package
+# Posda may be copied only under the terms of either the Artistic License or the
+# GNU General Public License, which may be found in the Posda Distribution,
+# or at http://posda.com/License.html
+#
+if [ $# -eq 1 ]; then
+  export TEMP_ROOT=$1;
+  if [ ${TEMP_ROOT:0:1} != "/" ]; then
+    export TEMP_ROOT=~/$1;
+  fi
+  if [ -d $TEMP_ROOT ]; then
+    export POSDA_HOME=$TEMP_ROOT;
+  else
+    echo $TEMP_ROOT is not a directory;
+    exit -1;
+  fi
+fi
+export PERL5LIB=$POSDA_HOME/include:$PERL5LIB
+export PATH=$POSDA_HOME/bin:\
+$POSDA_HOME/bin/AppController:\
+$POSDA_HOME/bin/ae:\
+$POSDA_HOME/bin/contrib:\
+$POSDA_HOME/bin/DB:\
+$POSDA_HOME/bin/dclunie:\
+$POSDA_HOME/bin/dcmtk:\
+$POSDA_HOME/bin/DoseManip:\
+$POSDA_HOME/bin/dvtk:\
+$POSDA_HOME/bin/examples:\
+$POSDA_HOME/bin/FrameOfRef:\
+$POSDA_HOME/bin/ImageMagick:\
+$POSDA_HOME/bin/SubProcess:\
+$POSDA_HOME/bin/temp:\
+$POSDA_HOME/bin/test:\
+$POSDA_HOME/bin/report:\
+$POSDA_HOME/bin/cache:\
+$PATH
+export POSDA_DEBUG=0
+export POSDA_TEST_COMMANDS=$POSDA_HOME/test/Dispatch
+export POSDA_TEST_SCRIPTS=$POSDA_HOME/test/Scripts
+export POSDA_TPL=$POSDA_HOME/tpl
+export POSDA_TEST_BIN=$POSDA_HOME/bin/test

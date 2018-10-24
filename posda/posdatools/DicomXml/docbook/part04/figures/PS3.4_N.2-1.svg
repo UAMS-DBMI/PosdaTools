@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part04/figures/PS3.4_N.2-1.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:09 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="498.044px" height="292.812px" viewBox="0 0 498.044 292.812" enable-background="new 0 0 498.044 292.812"
+	 xml:space="preserve">
+
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.4 Service Class Specifications
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="496.044" height="290.812"/>
+	<g>
+		<rect x="422.161" y="27.479" fill="#CCDEF0" width="70.936" height="251.559"/>
+		<g>
+			<text transform="matrix(1 0 0 1 441.6621 65.6333)"  font-size="7">P-Values</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 423.6016 34.5732)"><tspan x="0" y="0"  font-size="7">Device-Independent</tspan><tspan x="0" y="8.4"  font-size="7">Values</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 441.8027 198.9668)"  font-size="7">PCS-Values</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="294.991" y1="99.635" x2="294.991" y2="108.402"/>
+				<g>
+					<polygon fill="#005695" points="292.667,106.816 294.991,115.489 297.315,106.816 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="245.915" y1="63.619" x2="262.31" y2="63.619"/>
+				<g>
+					<polygon fill="#005695" points="260.725,65.943 269.397,63.619 260.725,61.295 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="178.066" y1="63.619" x2="186.978" y2="63.619"/>
+				<g>
+					<polygon fill="#005695" points="185.393,65.943 194.065,63.619 185.393,61.295 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="118.938" y1="63.619" x2="128.21" y2="63.619"/>
+				<g>
+					<polygon fill="#005695" points="126.625,65.943 135.298,63.619 126.625,61.295 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="48.567" y1="63.619" x2="59.999" y2="63.619"/>
+				<g>
+					<polygon fill="#005695" points="58.414,65.943 67.086,63.619 58.414,61.295 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="320.903" y1="63.619" x2="429.774" y2="63.619"/>
+				<g>
+					<polygon fill="#005695" points="428.189,65.943 436.862,63.619 428.189,61.295 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="253.469,63.675 253.469,130.285 
+					261.949,130.285 				"/>
+				<g>
+					<polygon fill="#005695" points="260.364,132.609 269.037,130.285 260.364,127.961 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="320.903,130.285 330.562,130.027 
+					330.562,187.885 340.484,187.885 				"/>
+				<g>
+					<polygon fill="#005695" points="338.899,190.209 347.572,187.885 338.899,185.561 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="320.903,263.627 330.562,263.627 
+					330.562,205.717 340.484,205.717 				"/>
+				<g>
+					<polygon fill="#005695" points="338.899,208.041 347.572,205.717 338.899,203.393 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="48.207" y1="196.952" x2="340.484" y2="196.952"/>
+				<g>
+					<polygon fill="#005695" points="338.899,199.276 347.572,196.952 338.899,194.628 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="380.345" y1="165.602" x2="380.345" y2="175.09"/>
+				<g>
+					<polygon fill="#005695" points="378.021,173.505 380.345,182.178 382.669,173.505 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="294.991" y1="32.435" x2="294.991" y2="41.921"/>
+				<g>
+					<polygon fill="#005695" points="292.667,40.336 294.991,49.009 297.315,40.336 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="219.961" y1="32.435" x2="219.961" y2="41.921"/>
+				<g>
+					<polygon fill="#005695" points="217.637,40.336 219.961,49.009 222.285,40.336 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="93.048" y1="32.435" x2="93.048" y2="41.921"/>
+				<g>
+					<polygon fill="#005695" points="90.724,40.336 93.048,49.009 95.372,40.336 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="412.737" y1="196.952" x2="429.774" y2="196.952"/>
+				<g>
+					<polygon fill="#005695" points="428.189,199.276 436.862,196.952 428.189,194.628 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="50.366" y1="263.619" x2="261.232" y2="263.619"/>
+				<g>
+					<polygon fill="#005695" points="259.647,265.943 268.32,263.619 259.647,261.295 					"/>
+				</g>
+			</g>
+		</g>
+		<rect x="269.062" y="84.827" fill="#CCDEF0" width="51.841" height="14.4"/>
+		
+			<rect x="67.12" y="49.228" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.84" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 72.4263 61.3682)"><tspan x="0" y="0"  font-size="7">Modality LUT</tspan><tspan x="-2.919" y="8.4"  font-size="7">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 11.6528 57.1685)"><tspan x="0" y="0"  font-size="7">Grayscale</tspan><tspan x="-3.116" y="8.4"  font-size="7">Stored Pixel</tspan><tspan x="5.053" y="16.8"  font-size="7">Values</tspan></text>
+		</g>
+		
+			<rect x="135.037" y="49.228" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="43.2" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 148.2788 61.3682)"><tspan x="0" y="0"  font-size="7">Mask</tspan><tspan x="-9.343" y="8.4"  font-size="7">Subtraction</tspan></text>
+		</g>
+		
+			<rect x="194.07" y="49.228" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.844" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 206.374 61.3682)"><tspan x="0" y="0"  font-size="7">VOI LUT</tspan><tspan x="-9.922" y="8.4"  font-size="7">Transformation</tspan></text>
+		</g>
+		
+			<rect x="269.062" y="49.228" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.841" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 275.3271 57.168)"><tspan x="0" y="0"  font-size="7">Presentation</tspan><tspan x="13.039" y="8.4"  font-size="7">LUT</tspan><tspan x="-3.885" y="16.8"  font-size="7">Transformation</tspan></text>
+		</g>
+		
+			<rect x="269.062" y="115.894" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.841" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 284.082 123.6602)"><tspan x="0" y="0"  font-size="7">Palette</tspan><tspan x="-5.052" y="8.4"  font-size="7">Color LUT</tspan><tspan x="-12.64" y="16.8"  font-size="7">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 273.7305 96.0933)"  font-size="7">Pseudo Color</text>
+		</g>
+		<rect x="269.062" y="13.712" fill="#CCDEF0" width="51.841" height="18.864"/>
+		<g>
+			<text transform="matrix(1 0 0 1 275.2861 20.8931)"><tspan x="0" y="0"  font-size="7">Presentation</tspan><tspan x="13.039" y="8.4"  font-size="7">LUT</tspan></text>
+		</g>
+		<rect x="194.033" y="13.712" fill="#CCDEF0" width="51.84" height="18.864"/>
+		<g>
+			<text transform="matrix(1 0 0 1 203.3726 20.8931)"><tspan x="0" y="0"  font-size="7">Window or</tspan><tspan x="2.919" y="8.4"  font-size="7">VOI LUT</tspan></text>
+		</g>
+		<rect x="64.239" y="13.712" fill="#CCDEF0" width="57.601" height="18.864"/>
+		<g>
+			<text transform="matrix(1 0 0 1 79.4233 20.8931)"><tspan x="0" y="0"  font-size="7">Rescale </tspan><tspan x="-11.871" y="8.4"  font-size="7">Slope / Intercept</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 10.875 190.3262)"><tspan x="0" y="0"  font-size="7">True Color</tspan><tspan x="-2.338" y="8.4"  font-size="7">Stored Pixel</tspan><tspan x="5.831" y="16.801"  font-size="7">Values</tspan></text>
+		</g>
+		<rect x="347.937" y="152.054" fill="#CCDEF0" width="64.801" height="14.4"/>
+		
+			<rect x="347.937" y="182.561" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="64.801" height="28.801"/>
+		<g>
+			<text transform="matrix(1 0 0 1 370.417 190.3262)"><tspan x="0" y="0"  font-size="7">Profile</tspan><tspan x="-18.683" y="8.4"  font-size="7">Connection Space</tspan><tspan x="-13.615" y="16.8"  font-size="7">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 5.5698 256.9932)"><tspan x="0" y="0"  font-size="7">Indexed Color</tspan><tspan x="2.92" y="8.4"  font-size="7">Stored Pixel</tspan><tspan x="11.089" y="16.8"  font-size="7">Values</tspan></text>
+		</g>
+		
+			<rect x="269.062" y="249.228" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="51.841" height="28.8"/>
+		<g>
+			<text transform="matrix(1 0 0 1 284.082 256.9932)"><tspan x="0" y="0"  font-size="7">Palette</tspan><tspan x="-5.052" y="8.4"  font-size="7">Color LUT</tspan><tspan x="-12.64" y="16.8"  font-size="7">Transformation</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 354.6592 161.2598)"  font-size="7">ICC Input Profile</text>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,25 @@
+{
+  "ApplicationInitClass" : "DicomProxy::Application",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "Login",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  
+  "ConnectionRootDir" : "POSDA_CACHE_ROOT/Data/ProxyData/Connections",
+  "AnalysisRootDir" : "POSDA_CACHE_ROOT/Data/ProxyData/Analysis",
+  "IncomingSocketPool" : [ 
+    64812, 64813, 64814, 64815, 64816, 64817, 64818, 64819, 64820,
+  ],
+  "ProxyDestinations" : {
+    "LocalSCP" : {
+      "host": "localhost",
+      "port": "64611",
+    },
+    "Osirix" : {
+      "host": "144.30.109.157",
+      "port": "1112",
+    },
+  }
+}

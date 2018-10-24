@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part05/figures/PS3.5_G.6-2.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:30 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.084px" height="277.51px" viewBox="0 0 495.084 277.51" enable-background="new 0 0 495.084 277.51"
+	 xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.5-2008 5: Data Structures and Encoding
+   </desc>
+   <title>
+	Figure G.6-2 EXAMPLE OF ENCODED YCBCR RLE COMPRESSED FRAME ITEM VALUE
+   </title>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.5553 247.5425 138.7549)" overflow="visible"/>
+<g>
+	<rect x="29.044" y="51.758" fill="#CCDFF0" width="437" height="110.631"/>
+	<rect x="29.044" y="35.961" fill="#4E8ABE" width="437" height="15.796"/>
+	<rect x="29.044" y="162.389" fill="#B2CEE7" width="437" height="94.776"/>
+	<rect x="29.044" y="20.166" fill="#FFFFFF" width="437" height="15.796"/>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 51.6294 32.272)" font-size="12">Offset</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 138.7661 32.272)" font-size="12">Data</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 252.3257 32.272)" font-size="12">Description of Data</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 419.6782 177.4062)" font-size="12">(Data)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 419.6782 209.4072)" font-size="12">(Data)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 419.6782 241.4062)" font-size="12">(Data)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 413.5044 48.272)" font-size="12">(Header)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 202.7124 63.3535)" font-size="11">location of RLE Segment 1 (Y component)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 202.7124 48.3535)" font-size="11">number of RLE Segments</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 202.7124 79.3535)" font-size="11">location of RLE Segment 2 (CB component)</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 202.7124 95.3535)" font-size="11">location of RLE Segment 3 (CR component)</text>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 123.5186 48.52)" font-size="11">0000 0003H</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 123.5186 64.52)" font-size="11">0000 0040H</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 123.5186 80.52)" font-size="11">0000 0140H</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 122.7129 96.5195)" font-size="11">0000 01C0H</text>
+		</g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 123.5186 112.5195)" font-size="11">0000 0000H</text>
+		</g>
+	</g>
+	<g>
+		<g>
+			<text transform="matrix(0.8815 0 0 1 39.3179 48.52)" font-size="11">0000 0000H</text>
+		</g>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 145.8975 128.52)" font-size="11">...</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 145.8975 144.5205)" font-size="11">...</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 123.5186 160.5195)" font-size="11">0000 0000H</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 112.2109 176.5195)"><tspan x="0" y="0" font-size="11">Y - RLE Segment</tspan><tspan x="31.18" y="13.2" font-size="11">Data</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 39.3179 176.5195)" font-size="11">0000 0040H</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 108.71 208.5205)"><tspan x="0" y="0" font-size="11">CB - RLE Segment</tspan><tspan x="35.151" y="13.199" font-size="11">Data</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 108.4424 240.5195)"><tspan x="0" y="0" font-size="11">CR - RLE Segment</tspan><tspan x="35.455" y="13.2" font-size="11">Data</tspan></text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 39.3179 208.5205)" font-size="11">0000 0140H</text>
+	</g>
+	<g>
+		<text transform="matrix(0.8815 0 0 1 38.5122 240.5195)" font-size="11">0000 01C0H</text>
+	</g>
+	<g>
+		<rect x="29.044" y="20.166" fill="none" stroke="#000000" stroke-miterlimit="1" width="437" height="237"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="225.573" x2="466.043" y2="225.573"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="193.981" x2="466.043" y2="193.981"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="162.389" x2="466.043" y2="162.389"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="146.593" x2="466.043" y2="146.593"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="130.739" x2="466.043" y2="130.739"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="114.942" x2="466.043" y2="114.942"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="99.146" x2="466.043" y2="99.146"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="83.35" x2="466.043" y2="83.35"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="67.554" x2="466.043" y2="67.554"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="51.758" x2="466.043" y2="51.758"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="29.044" y1="35.961" x2="466.043" y2="35.961"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="399.842" y1="20.166" x2="399.842" y2="257.165"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="196.377" y1="20.166" x2="196.377" y2="257.165"/>
+		<line fill="none" stroke="#000000" stroke-miterlimit="1" x1="105.895" y1="20.166" x2="105.895" y2="257.165"/>
+	</g>
+</g>
+</svg>

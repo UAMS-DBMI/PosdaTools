@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part15/figures/PS3.15_H.1-1.svg,v $ -->
+<!-- $Date: 2014/02/18 14:35:29 $ -->
+<!-- $Revision: 1.1 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495.085px" height="261.869px" viewBox="0 0 495.085 261.869" enable-background="new 0 0 495.085 261.869"
+	 xml:space="preserve">
+
+<defs>
+    <style type="text/css">
+      text {
+        font-family: Helvetica, Verdana, san-serif
+      }
+    </style>
+  </defs>
+
+<g>
+  <title>
+	Figure H.1-1 Application Configuration Data Model
+  </title>
+  <desc>
+	DICOM PS 3.15-2008 Part 15: Security and System Management Profiles
+  </desc>
+</g>
+
+<symbol  id="Background_Bounding_Box" viewBox="-247.542 -249.875 495.085 499.749">
+	<polygon fill="#F4EED7" points="247.542,-249.875 -247.542,-249.875 -247.542,249.874 247.542,249.874 	"/>
+</symbol>
+<g>
+	
+		<use xlink:href="#Background_Bounding_Box"  width="495.085" height="499.749" x="-247.542" y="-249.875" transform="matrix(1 0 0 -0.524 247.5425 130.9341)" overflow="visible"/>
+	
+		<rect x="217.414" y="12.956" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="107.996" height="22.5"/>
+	<g>
+		<text transform="matrix(1 0 0 1 257.6592 26.7183)" font-size="9">Device</text>
+	</g>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="184.218" y1="97.337" x2="184.218" y2="110.123"/>
+	<path fill="#005595" d="M185.448,112.957c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.569,1.191,2.881,1.789,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C184.368,117.005,184.806,115.08,185.448,112.957z"/>
+	
+		<rect x="144.012" y="119.666" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80.999" height="22.5"/>
+	<g>
+		<text transform="matrix(1 0 0 1 146.4902 133.4214)" font-size="9">Application Entities</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 229.0034 75.5542)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 219.5068 97.5591)" font-size="9">1-N</text>
+	</g>
+	
+		<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		135.014,83.612 184.435,70.32 234.009,83.805 234.009,83.834 184.435,97.319 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 167.3535 86.3311)" font-size="9">provides</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 409.6924 76.9575)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 399.1982 98.9624)" font-size="9">1-M</text>
+	</g>
+	
+		<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		315.696,85.02 365.116,71.728 414.69,85.212 414.69,85.243 365.116,98.727 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 348.291 87.7344)" font-size="9">contains</text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="271.007,35.899 
+		271.007,48.683 184.44,48.683 184.44,62.188 	"/>
+	<path fill="#005595" d="M185.671,65.022c0.6-1.984,1.151-3.273,1.79-4.865h-6.054c0.271,0.569,1.191,2.881,1.791,4.865
+		c0.641,2.123,1.08,4.049,1.236,5.298C184.591,69.071,185.03,67.145,185.671,65.022z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="271.255,35.899 
+		271.255,48.683 365.114,48.683 365.114,62.188 	"/>
+	<path fill="#005595" d="M366.345,65.022c0.6-1.984,1.15-3.273,1.789-4.865h-6.053c0.271,0.569,1.191,2.881,1.791,4.865
+		c0.641,2.123,1.08,4.049,1.236,5.298C365.265,69.071,365.704,67.145,366.345,65.022z"/>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="129.591" y1="204.086" x2="129.591" y2="216.872"/>
+	<path fill="#005595" d="M130.821,219.706c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.568,1.191,2.881,1.789,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C129.741,223.754,130.179,221.829,130.821,219.706z"/>
+	
+		<rect x="89.385" y="226.415" fill="#87B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="80.999" height="22.5"/>
+	<g>
+		<text transform="matrix(1 0 0 1 92.1206 240.1743)" font-size="9">Transfer Capability</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 174.377 182.3032)" font-size="9">1</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 164.8804 204.3071)" font-size="9">1-N</text>
+	</g>
+	
+		<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		80.387,190.36 129.808,177.069 179.382,190.553 179.382,190.583 129.808,204.067 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 122.4805 193.0796)" font-size="9">has</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 273.5693 183.7056)" font-size="9">1-N</text>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 272.5713 205.7114)" font-size="9">1-M</text>
+	</g>
+	
+		<polygon fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+		189.077,191.768 238.497,178.477 288.071,191.961 288.071,191.991 238.497,205.475 	"/>
+	<g>
+		<text transform="matrix(1 0 0 1 214.4067 194.4829)" font-size="9">available on</text>
+	</g>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="183.983,142.647 
+		183.983,155.432 156.998,155.432 129.813,155.432 129.813,168.936 	"/>
+	<path fill="#005595" d="M131.044,171.77c0.6-1.984,1.151-3.273,1.79-4.865h-6.054c0.271,0.57,1.191,2.881,1.791,4.865
+		c0.641,2.123,1.08,4.049,1.236,5.299C129.964,175.819,130.403,173.893,131.044,171.77z"/>
+	<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="184.231,142.647 
+		184.231,155.432 211.265,155.432 211.464,155.432 238.495,155.432 238.495,168.936 	"/>
+	<path fill="#005595" d="M239.726,171.77c0.6-1.984,1.15-3.273,1.789-4.865h-6.053c0.271,0.57,1.191,2.881,1.791,4.865
+		c0.641,2.123,1.08,4.049,1.236,5.299C238.646,175.819,239.085,173.893,239.726,171.77z"/>
+	
+		<line fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" x1="365.534" y1="98.576" x2="365.534" y2="111.361"/>
+	<path fill="#005595" d="M366.765,114.195c0.598-1.984,1.15-3.273,1.789-4.865h-6.053c0.27,0.569,1.191,2.881,1.789,4.865
+		c0.643,2.123,1.08,4.049,1.238,5.297C365.685,118.244,366.122,116.318,366.765,114.195z"/>
+	
+		<rect x="320.827" y="119.666" fill="#87B2D8" stroke="#010101" stroke-width="0.7906" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90" height="22.5"/>
+	<g>
+		<text transform="matrix(1 0 0 1 323.0654 133.4214)" font-size="9">Network Connections</text>
+	</g>
+	<g>
+		<g>
+			<polyline fill="none" stroke="#005595" stroke-width="2" stroke-linecap="round" stroke-miterlimit="1" points="238.352,206.392 
+				238.352,220.615 298.52,220.615 298.52,99.621 341.888,99.621 341.888,111.323 			"/>
+			<path fill="#005595" d="M343.117,114.157c0.6-1.984,1.151-3.273,1.79-4.865h-6.053c0.271,0.569,1.191,2.881,1.79,4.865
+				c0.642,2.124,1.08,4.049,1.236,5.298C342.038,118.206,342.477,116.28,343.117,114.157z"/>
+		</g>
+	</g>
+</g>
+</svg>

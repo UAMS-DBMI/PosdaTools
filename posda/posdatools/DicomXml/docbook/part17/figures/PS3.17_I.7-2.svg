@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_I.7-2.svg,v $ -->
+<!-- $Date: 2014/05/09 12:31:57 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="247px" viewBox="0 0 502 247" enable-background="new 0 0 502 247" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="245"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="71.76" y1="99.689" x2="71.76" y2="108.328"/>
+				<path fill="#005695" d="M72.785,110.689c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C71.885,114.064,72.25,112.458,72.785,110.689z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			35.586,87.799 71.558,74.625 107.593,88.225 107.593,88.256 71.519,101.621 		"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 53.501 90.5278)" font-size="7">CONTAINS</text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="162.062" y1="100.588" x2="162.062" y2="109.227"/>
+				<path fill="#005695" d="M163.086,111.589c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C162.187,114.962,162.552,113.359,163.086,111.589z"/>
+			</g>
+		</g>
+		
+			<rect x="126.061" y="114.914" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="26.985"/>
+		<g>
+			<text transform="matrix(1 0 0 1 139.2065 126.1533)"><tspan x="0" y="0" font-size="7">BPD = 5.2 mm</tspan><tspan x="14.883" y="8.399" font-size="7">NUM</tspan></text>
+		</g>
+		
+			<rect x="35.759" y="114.914" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="72" height="26.985"/>
+		<g>
+			<text transform="matrix(1 0 0 1 48.9048 126.1523)"><tspan x="0" y="0" font-size="7">BPD = 5.1 mm</tspan><tspan x="14.883" y="8.4" font-size="7">NUM</tspan></text>
+		</g>
+		
+			<rect x="112.561" y="201.236" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="26.984"/>
+		<g>
+			<text transform="matrix(1 0 0 1 119.1655 212.4795)"><tspan x="0" y="0" font-size="7">Measurement Type = mean</tspan><tspan x="32.784" y="8.399" font-size="7">CODE</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="161.532,57.151 270.116,57.151 
+					270.116,68.207 				"/>
+				<path fill="#005695" d="M271.142,70.568c0.499-1.652,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.401,1.491,4.054
+					c0.534,1.77,0.9,3.375,1.03,4.415C270.241,73.943,270.606,72.337,271.142,70.568z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="162.062" y1="44.186" x2="162.062" y2="68.424"/>
+				<path fill="#005695" d="M163.087,70.787c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C162.187,74.16,162.553,72.556,163.087,70.787z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			126.061,87.671 162.029,74.502 198.061,88.097 198.061,88.127 161.988,101.482 		"/>
+		<text transform="matrix(1 0 0 1 143.9761 89.936)" font-size="7">CONTAINS</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="270.115" y1="100.588" x2="270.115" y2="109.227"/>
+				<path fill="#005695" d="M271.14,111.589c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C270.24,114.962,270.606,113.359,271.14,111.589z"/>
+			</g>
+		</g>
+		
+			<rect x="234.118" y="114.914" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="71.997" height="26.985"/>
+		<g>
+			<text transform="matrix(1 0 0 1 247.2637 126.1533)"><tspan x="0" y="0" font-size="7">BPD = 5.3 mm</tspan><tspan x="14.883" y="8.399" font-size="7">NUM</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			234.118,87.671 270.086,74.502 306.115,88.097 306.115,88.127 270.045,101.482 		"/>
+		<text transform="matrix(1 0 0 1 252.0332 89.936)" font-size="7">CONTAINS</text>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="162.061" y1="142.689" x2="162.061" y2="153.744"/>
+				<path fill="#005695" d="M163.085,156.105c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C162.186,159.48,162.551,157.875,163.085,156.105z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="162.061" y1="186.127" x2="162.061" y2="194.389"/>
+				<path fill="#005695" d="M163.085,196.752c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C162.186,200.125,162.551,198.521,163.085,196.752z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			112.561,173.209 162.017,160.041 211.561,173.635 211.561,173.666 161.961,187.02 		"/>
+		<text transform="matrix(1 0 0 1 127.6416 175.4766)" font-size="7">HAS CONCEPT MOD</text>
+		
+			<rect x="220.619" y="201.236" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="98.997" height="26.984"/>
+		<g>
+			<text transform="matrix(1 0 0 1 224.1016 212.4795)"><tspan x="0" y="0" font-size="7">Selected value = user chosen</tspan><tspan x="35.904" y="8.399" font-size="7">CODE</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="270.118" y1="142.689" x2="270.118" y2="153.744"/>
+				<path fill="#005695" d="M271.144,156.105c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C270.243,159.48,270.608,157.875,271.144,156.105z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="412.847" y1="142.689" x2="412.847" y2="153.744"/>
+				<path fill="#005695" d="M413.872,156.105c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C412.972,159.48,413.337,157.875,413.872,156.105z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="270.118" y1="186.127" x2="270.118" y2="194.389"/>
+				<path fill="#005695" d="M271.144,196.752c0.499-1.654,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C270.243,200.125,270.608,198.521,271.144,196.752z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			220.619,173.209 270.074,160.041 319.616,173.635 319.616,173.666 270.019,187.02 		"/>
+		<text transform="matrix(1 0 0 1 239.3892 175.4766)" font-size="7">HAS PROPERTIES</text>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="161.395,57.151 71.759,57.151 
+					71.759,68.207 				"/>
+				<path fill="#005695" d="M72.784,70.568c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C71.884,73.943,72.25,72.337,72.784,70.568z"/>
+			</g>
+		</g>
+		
+			<rect x="103.558" y="15.083" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="117.008" height="27.002"/>
+		<g>
+			<text transform="matrix(1 0 0 1 128.2676 26.0103)"><tspan x="0" y="0" font-size="8">Observation Group</tspan><tspan x="10.238" y="9.6" font-size="8">CONTAINER</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="413.408,187.059 413.408,214.732 
+					389.044,214.732 335.99,214.732 335.99,128.318 312.064,128.318 				"/>
+				<path fill="#005695" d="M309.703,129.344c1.653,0.498,2.728,0.959,4.054,1.49v-5.043c-0.475,0.225-2.4,0.992-4.054,1.49
+					c-1.77,0.535-3.374,0.9-4.415,1.031C306.329,128.443,307.934,128.809,309.703,129.344z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="270.505,57.152 413.251,57.152 
+					413.251,68.207 				"/>
+				<path fill="#005695" d="M414.276,70.569c0.499-1.653,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.4,1.491,4.054
+					c0.534,1.77,0.9,3.374,1.03,4.415C413.376,73.943,413.741,72.338,414.276,70.569z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="412.842" y1="101.148" x2="412.842" y2="109.787"/>
+				<path fill="#005695" d="M413.866,112.148c0.5-1.652,0.96-2.728,1.492-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C412.967,115.523,413.333,113.917,413.866,112.148z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			376.842,88.231 412.809,75.062 448.842,88.657 448.842,88.687 412.768,102.042 		"/>
+		<text transform="matrix(1 0 0 1 394.7617 90.4956)" font-size="7">CONTAINS</text>
+		
+			<rect x="358.851" y="114.746" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108.006" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 369.8145 125.6719)"><tspan x="0" y="0" font-size="8">Gestational Age = 150 d</tspan><tspan x="33.922" y="9.6" font-size="8">NUM</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			367.854,173.211 412.817,160.039 457.856,173.637 457.856,173.666 412.767,187.021 		"/>
+		<text transform="matrix(1 0 0 1 391.2627 171.2764)"><tspan x="0" y="0" font-size="7">R-INFERRED</tspan><tspan x="11.279" y="8.399" font-size="7">FROM</tspan></text>
+	</g>
+</g>
+</svg>

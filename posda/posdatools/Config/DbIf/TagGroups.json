@@ -1,0 +1,35 @@
+{
+  ".Unlimited": 1,
+  ".Show No Tags": 1,
+  "view_posda_backlog": {
+    "backlog_round_history" : 1,
+    "backlog_status" : 1,
+    "backlog_analysis_reporting_tools" : 1,
+  },
+  "manage_posda_backlog": {
+  },
+  "downloads_by_date": {
+  },
+  "duplicate_sop_evaluation": {
+  },
+  "duplicate_sop_resolution": {
+  },
+  "counts_patient_status": {
+  },
+  "consistency_check": {
+  },
+  "linkage_check": {
+  },
+  "visual_review_scheduling": {
+  },
+  "visual_review_tracking_processing": {
+  },
+  "phi_review": {
+  },
+  "dicom_batch_file_editing": {
+  },
+  "send_data_via_dicom": {
+  },
+  "monthly_report_queries": {
+  }
+}

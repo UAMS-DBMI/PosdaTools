@@ -1,0 +1,11 @@
+// 
+{
+  "ApplicationInitClass" : "AppController::JavaScriptApp",
+  "ApplicationInitMethod" : "InitApp",
+  "ApplicationLoginMethod" : "NullLogin",
+  "ApplicationName" : "Testing Application Server",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "AuthenticationDbType" : "File",
+  "AuthenticationDbFileName" : "POSDA_CACHE_ROOT/Login.db",
+  "JavascriptRoot" : "POSDA_ROOT/Posda/javascript",
+}

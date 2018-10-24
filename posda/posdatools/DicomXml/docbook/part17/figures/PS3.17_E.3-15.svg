@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_E.3-15.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:20 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="387px" viewBox="0 0 502 387" enable-background="new 0 0 502 387" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="385"/>
+	<g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			176.981,312.635 221.944,299.461 266.986,313.061 266.986,313.092 221.896,326.457 		"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 211.0991 309.2393)"><tspan x="0" y="0" font-size="7">R-HAS</tspan><tspan x="-11.671" y="8.399" font-size="7">PROPERTIES</tspan></text>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="277.724,154.225 277.724,176.338 
+					160.729,176.338 160.729,187.398 				"/>
+				<path fill="#005695" d="M161.754,189.76c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C160.854,193.134,161.22,191.53,161.754,189.76z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="277.53" y1="109.959" x2="277.53" y2="120.045"/>
+				<path fill="#005695" d="M278.555,122.407c0.5-1.653,0.96-2.728,1.492-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C277.655,125.781,278.021,124.176,278.555,122.407z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="169.419" y1="109.959" x2="169.419" y2="120.045"/>
+				<path fill="#005695" d="M170.444,122.407c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C169.544,125.781,169.91,124.176,170.444,122.407z"/>
+			</g>
+		</g>
+		<rect x="26.805" y="346.891" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" width="145.333" height="22.678"/>
+		<line fill="#FFFFFF" stroke="#000000" stroke-miterlimit="1" x1="26.805" y1="358.23" x2="172.138" y2="358.23"/>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="277.84,64.244 169.417,64.244 
+					169.417,75.301 				"/>
+				<path fill="#005695" d="M170.442,77.663c0.5-1.653,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C169.542,81.037,169.908,79.432,170.442,77.663z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="277.84" y1="64.244" x2="277.84" y2="75.518"/>
+				<path fill="#005695" d="M278.865,77.879c0.499-1.653,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.401,1.491,4.054
+					c0.534,1.77,0.9,3.374,1.03,4.415C277.965,81.253,278.33,79.649,278.865,77.879z"/>
+			</g>
+		</g>
+		
+			<rect x="164.979" y="15.279" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="117.007" height="36"/>
+		<g>
+			<text transform="matrix(1 0 0 1 174.1387 25.9043)"><tspan x="0" y="0" font-size="8">SUMMARY OF ANALYSES</tspan><tspan x="15.549" y="9.6" font-size="8">CODE: Succeeded</tspan><tspan x="43.783" y="19.2" font-size="8">1.4</tspan></text>
+		</g>
+		<rect x="28.355" y="349.521" fill="none" width="142.231" height="19.578"/>
+		<text transform="matrix(0.9288 0 0 1 28.3555 355.2412)"><tspan x="0" y="0" font-size="8">Algorithm Name TEXT: “Mass Maker”</tspan><tspan x="0" y="11.001" font-size="8">Algorithm Version TEXT: “V1.9”</tspan></text>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="223.483" y1="51.279" x2="223.483" y2="64.244"/>
+		
+			<rect x="181.483" y="344.736" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="81.001" height="26.984"/>
+		<g>
+			<text transform="matrix(1 0 0 1 191.2437 351.7754)"><tspan x="0" y="0" font-size="7">Reference to Image</tspan><tspan x="7.79" y="8.4" font-size="7">Library IMAGE</tspan><tspan x="9.924" y="16.8" font-size="7">content items</tspan></text>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			232.528,95.658 277.49,82.483 322.533,96.084 322.533,96.115 277.441,109.48 		"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 259.6465 94.77)"><tspan x="0" y="0" font-size="7">INFERRED</tspan><tspan x="7.585" y="8.4" font-size="7">FROM</tspan></text>
+		</g>
+		
+			<rect x="228.03" y="127.754" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="99" height="27.002"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			124.415,95.658 169.38,82.483 214.423,96.084 214.423,96.115 169.331,109.48 		"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 151.5332 94.77)"><tspan x="0" y="0" font-size="7">INFERRED</tspan><tspan x="7.586" y="8.4" font-size="7">FROM</tspan></text>
+		</g>
+		
+			<rect x="119.917" y="127.754" fill="#FFC20E" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="4" width="99.002" height="27.002"/>
+		<g>
+			<text transform="matrix(1 0 0 1 137.7109 134.8022)"><tspan x="0" y="0" font-size="7">FAILED ANALYSES</tspan><tspan x="11.095" y="8.4" font-size="7">CONTAINER</tspan><tspan x="1.943" y="16.8" font-size="7">Not in this example</tspan></text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 234.5444 139.0015)"><tspan x="0" y="0" font-size="7">SUCCESSFUL ANALYSES</tspan><tspan x="22.374" y="8.4" font-size="7">CONTAINER</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="221.983" y1="326.932" x2="221.983" y2="337.018"/>
+				<path fill="#005695" d="M223.008,339.379c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C222.108,342.754,222.474,341.148,223.008,339.379z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="99.472" y1="326.936" x2="99.472" y2="337.021"/>
+				<path fill="#005695" d="M100.497,339.383c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C99.597,342.758,99.962,341.152,100.497,339.383z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="160.737,268.258 160.737,281.221 
+					160.394,281.223 99.471,281.223 99.471,292.277 				"/>
+				<path fill="#005695" d="M100.496,294.639c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C99.596,298.014,99.961,296.408,100.496,294.639z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="160.615,268.258 160.615,281.221 
+					160.958,281.223 221.882,281.223 221.882,292.277 				"/>
+				<path fill="#005695" d="M222.907,294.639c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C222.007,298.014,222.373,296.408,222.907,294.639z"/>
+			</g>
+		</g>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+			277.499,268.258 277.499,281.221 277.271,281.223 236.958,281.223 236.958,292.277 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+			277.418,268.258 277.418,281.221 277.645,281.223 317.958,281.223 317.958,292.277 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+			394.768,268.258 394.768,281.221 394.54,281.223 354.228,281.223 354.228,292.277 		"/>
+		<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+			394.687,268.258 394.687,281.221 394.914,281.223 435.228,281.223 435.228,292.277 		"/>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			54.468,312.635 99.433,299.461 144.476,313.061 144.476,313.092 99.384,326.457 		"/>
+		<g>
+			<text transform="matrix(1 0.0022 -0.0022 1 92.2798 309.248)"><tspan x="0" y="0" font-size="7">HAS</tspan><tspan x="-15.365" y="8.399" font-size="7">PROPERTIES</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="160.729" y1="223.398" x2="160.729" y2="235.645"/>
+				<path fill="#005695" d="M161.754,238.006c0.5-1.652,0.959-2.728,1.492-4.054h-5.044c0.226,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.375,1.031,4.415C160.854,241.381,161.22,239.775,161.754,238.006z"/>
+			</g>
+		</g>
+		
+			<rect x="106.727" y="242.125" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 114.4951 253.0508)"><tspan x="0" y="0" font-size="8">ANALYSIS PERFORMED</tspan><tspan x="2.221" y="9.6" font-size="8">CODE: Mass Correlation</tspan></text>
+		</g>
+		
+			<rect x="223.458" y="242.125" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3,4" width="108.001" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 231.2261 253.0508)"><tspan x="0" y="0" font-size="8">ANALYSIS PERFORMED</tspan><tspan x="2.221" y="9.6" font-size="8">CODE: Mass Correlation</tspan></text>
+		</g>
+		
+			<rect x="340.728" y="242.125" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" stroke-dasharray="3,4" width="108.001" height="27"/>
+		<g>
+			<text transform="matrix(1 0 0 1 348.4961 253.0508)"><tspan x="0" y="0" font-size="8">ANALYSIS PERFORMED</tspan><tspan x="2.221" y="9.6" font-size="8">CODE: Mass Correlation</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" x1="394.727" y1="223.398" x2="394.727" y2="235.645"/>
+				<path fill="#005695" d="M395.752,238.006c0.499-1.652,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.401,1.491,4.054
+					c0.534,1.77,0.9,3.375,1.03,4.415C394.852,241.381,395.217,239.775,395.752,238.006z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" points="
+					278.492,176.338 394.727,176.338 394.727,187.398 				"/>
+				<path fill="#005695" d="M395.752,189.76c0.499-1.653,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.401,1.491,4.054
+					c0.534,1.77,0.9,3.374,1.03,4.415C394.852,193.134,395.217,191.53,395.752,189.76z"/>
+			</g>
+		</g>
+		
+			<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" x1="394.728" y1="176.338" x2="475.195" y2="176.34"/>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" x1="277.459" y1="223.398" x2="277.459" y2="234.896"/>
+				<path fill="#005695" d="M278.484,237.258c0.499-1.652,0.959-2.728,1.491-4.054h-5.044c0.225,0.475,0.992,2.401,1.491,4.054
+					c0.534,1.77,0.9,3.375,1.03,4.415C277.584,240.633,277.949,239.027,278.484,237.258z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" stroke-dasharray="3,4" x1="277.724" y1="176.338" x2="277.724" y2="187.398"/>
+				<path fill="#005695" d="M278.748,189.76c0.5-1.653,0.96-2.728,1.492-4.054h-5.045c0.227,0.475,0.993,2.401,1.492,4.054
+					c0.535,1.77,0.9,3.374,1.031,4.415C277.849,193.134,278.215,191.53,278.748,189.76z"/>
+			</g>
+		</g>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			227.955,210.967 277.415,197.793 326.962,211.393 326.962,211.424 277.361,224.787 		"/>
+		<text transform="matrix(1 0 0 1 259.375 213.2363)" font-size="7">CONTAINS</text>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			345.225,210.967 394.685,197.793 444.231,211.393 444.231,211.424 394.631,224.787 		"/>
+		<text transform="matrix(1 0 0 1 376.6445 213.2363)" font-size="7">CONTAINS</text>
+		
+			<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+			111.224,210.967 160.684,197.793 210.23,211.393 210.23,211.424 160.63,224.787 		"/>
+		<text transform="matrix(1 0 0 1 142.644 213.2363)" font-size="7">CONTAINS</text>
+	</g>
+</g>
+</svg>

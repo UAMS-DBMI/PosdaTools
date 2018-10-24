@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part03/figures/PS3.3_C.8-8.svg,v $ -->
+<!-- $Date: 2014/05/09 12:27:11 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="402px" viewBox="0 0 502 402" enable-background="new 0 0 502 402" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.3 Part 3: Information Object Definitions
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="400"/>
+	<g>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M488.48,248.862c0,5.379-5.385,9.738-12.027,9.738H140.509c-6.643,0-12.028-4.359-12.028-9.738v-79.524
+				c0-5.379,5.385-9.738,12.028-9.738h335.944c6.643,0,12.027,4.359,12.027,9.738V248.862z"/>
+			
+				<rect x="144.894" y="184.907" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.799" height="63"/>
+			
+				<rect x="42.321" y="184.907" fill="#005695" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.646" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 48.8516 201.3125)"><tspan x="0" y="0" fill="#FFFFFF" font-size="11">Composite</tspan><tspan x="14.368" y="10.533" fill="#FFFFFF" font-size="11">Pixel</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 54.6606 243.8789)" fill="#FFFFFF" font-size="11">(5A00H)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="107.918" y1="214.209" x2="138.058" y2="214.209"/>
+					<g>
+						<polygon fill="#005695" points="136.473,216.533 145.146,214.209 136.473,211.885 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="386.935" y="184.907" fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 386.9316 180.0332)" font-size="11">Real World Value</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 390.7285 207.9121)" font-size="11">Value (cm/sec)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 390.7285 242.6621)" font-size="11">(-20 cm/sec)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="245.692" y1="214.209" x2="259.589" y2="214.209"/>
+					<g>
+						<polygon fill="#005695" points="258.004,216.533 266.677,214.209 258.004,211.885 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="184.341" y1="239.604" x2="199.239" y2="239.604"/>
+					<g>
+						<polygon fill="#005695" points="197.653,241.929 206.326,239.604 197.653,237.28 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="366.727" y1="214.209" x2="379.689" y2="214.209"/>
+					<g>
+						<polygon fill="#005695" points="378.104,216.533 386.777,214.209 378.104,211.885 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="266.443" y="184.907" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.283" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 300.3203 201.9561)"><tspan x="0" y="0" font-size="9">Table of</tspan><tspan x="-22.008" y="10.8" font-size="9">X &amp; Y Break Points</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 184.5415 201.9561)"><tspan x="0" y="0" font-size="9">Mask</tspan><tspan x="-5.753" y="10.8" font-size="9">(0F00H)</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 148.3555 242.1064)" font-size="9">(5A00H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 208.022 242.1064)" font-size="9">(000AH)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="312.129" y1="239.604" x2="326.024" y2="239.604"/>
+					<g>
+						<polygon fill="#005695" points="324.439,241.929 333.112,239.604 324.439,237.28 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 276.8359 242.1064)" font-size="9">(000AH)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 335.1172 242.1064)" font-size="9">(-20)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 128.4805 155.2881)" font-size="10">Doppler Velocity Region Pixel Component Calibration</text>
+			</g>
+		</g>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M488.48,377.513c0,5.379-5.385,9.736-12.027,9.736H140.509c-6.643,0-12.028-4.357-12.028-9.736v-79.525
+				c0-5.379,5.385-9.738,12.028-9.738h335.944c6.643,0,12.027,4.359,12.027,9.738V377.513z"/>
+			
+				<rect x="42.321" y="313.556" fill="#005695" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.646" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 48.8516 329.9619)"><tspan x="0" y="0" fill="#FFFFFF" font-size="11">Composite</tspan><tspan x="14.368" y="10.533" fill="#FFFFFF" font-size="11">Pixel</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 54.6606 372.5283)" fill="#FFFFFF" font-size="11">(5A00H)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="107.918" y1="345.022" x2="138.058" y2="345.022"/>
+					<g>
+						<polygon fill="#005695" points="136.473,347.347 145.146,345.022 136.473,342.698 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="386.935" y="313.556" fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 386.9316 308.6826)" font-size="11">Real World Value</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 390.7285 336.5615)" font-size="11">Value (dB)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 390.7285 371.3115)" font-size="11">(12 dB)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="245.692" y1="345.022" x2="259.589" y2="345.022"/>
+					<g>
+						<polygon fill="#005695" points="258.004,347.347 266.677,345.022 258.004,342.698 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="144.894" y="313.556" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.799" height="63"/>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="184.341" y1="368.253" x2="199.239" y2="368.253"/>
+					<g>
+						<polygon fill="#005695" points="197.653,370.577 206.326,368.253 197.653,365.929 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="366.727" y1="345.022" x2="379.689" y2="345.022"/>
+					<g>
+						<polygon fill="#005695" points="378.104,347.347 386.777,345.022 378.104,342.698 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="266.443" y="313.556" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.283" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 300.3203 330.6055)"><tspan x="0" y="0" font-size="9">Table of</tspan><tspan x="-22.008" y="10.8" font-size="9">X &amp; Y Break Points</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 184.5415 330.6055)"><tspan x="0" y="0" font-size="9">Mask</tspan><tspan x="-5.753" y="10.8" font-size="9">(F000H)</tspan></text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 148.3555 370.7559)" font-size="9">(5A00H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 208.5205 370.7559)" font-size="9">(0005H)</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="312.129" y1="368.253" x2="326.024" y2="368.253"/>
+					<g>
+						<polygon fill="#005695" points="324.439,370.577 333.112,368.253 324.439,365.929 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 277.334 370.7559)" font-size="9">(0005H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 336.6162 370.7559)" font-size="9">(12)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 127.3672 283.9375)" font-size="10">Doppler Intensity Region Pixel Component Calibration</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="21.401,114.781 21.401,211.26 
+						35.328,211.26 					"/>
+					<g>
+						<polygon fill="#005695" points="33.743,213.584 42.416,211.26 33.743,208.936 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="21.401,211.096 21.401,345.022 
+						35.328,345.022 					"/>
+					<g>
+						<polygon fill="#005695" points="33.743,347.347 42.416,345.022 33.743,342.698 						"/>
+					</g>
+				</g>
+			</g>
+			
+				<rect x="13.52" y="51.757" fill="#005695" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="65.646" height="63"/>
+			<g>
+				<text transform="matrix(1 0 0 1 34.4194 68.1621)" fill="#FFFFFF" font-size="11">Pixel</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 25.8604 110.7285)" fill="#FFFFFF" font-size="11">(5A00H)</text>
+			</g>
+		</g>
+		<g>
+			
+				<path fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" d="
+				M407.481,118.621c0,6.258-4.969,11.332-11.098,11.332H139.578c-6.128,0-11.097-5.074-11.097-11.332V26.083
+				c0-6.258,4.969-11.332,11.097-11.332h256.806c6.129,0,11.098,5.074,11.098,11.332V118.621z"/>
+			
+				<rect x="297.616" y="36.802" fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="90" height="77.955"/>
+			
+				<line fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.616" y1="88.779" x2="387.616" y2="88.779"/>
+			
+				<line fill="#4F8ABE" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" x1="297.616" y1="62.781" x2="387.616" y2="62.781"/>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="274.493" y1="75.941" x2="290.432" y2="75.941"/>
+					<g>
+						<polygon fill="#005695" points="288.847,78.265 297.52,75.941 288.847,73.617 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="274.493" y1="46.871" x2="290.432" y2="46.871"/>
+					<g>
+						<polygon fill="#005695" points="288.847,49.195 297.52,46.871 288.847,44.546 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="274.493" y1="105.011" x2="290.432" y2="105.011"/>
+					<g>
+						<polygon fill="#005695" points="288.847,107.335 297.52,105.011 288.847,102.687 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 296.1445 31.7227)" font-size="11">Displayed Pixel</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 322.7559 51.2959)"><tspan x="0" y="0" font-size="11">R (B1H)</tspan><tspan x="0" y="27.533" font-size="11">G (05H)</tspan><tspan x="0" y="55.067" font-size="11">B (1FH)</tspan></text>
+			</g>
+			
+				<rect x="173.694" y="33.371" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.799" height="27"/>
+			<g>
+				<text transform="matrix(1 0 0 1 206.085 43.6055)" font-size="9">Red LUT</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="212.062" y1="51.902" x2="226.765" y2="51.902"/>
+					<g>
+						<polygon fill="#005695" points="225.18,54.226 233.853,51.902 225.18,49.578 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 177.1553 54.4053)" font-size="9">(5A00H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 236.3232 54.4053)" font-size="9">(B1B1H)</text>
+			</g>
+			
+				<rect x="173.694" y="62.441" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.799" height="27"/>
+			<g>
+				<text transform="matrix(1 0 0 1 201.8335 72.6758)" font-size="9">Green LUT</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="212.062" y1="80.972" x2="226.765" y2="80.972"/>
+					<g>
+						<polygon fill="#005695" points="225.18,83.296 233.853,80.972 225.18,78.648 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 177.1553 83.4756)" font-size="9">(5A00H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 237.3203 83.4756)" font-size="9">(0505H)</text>
+			</g>
+			
+				<rect x="173.694" y="91.511" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="100.799" height="27"/>
+			<g>
+				<text transform="matrix(1 0 0 1 205.334 101.7461)" font-size="9">Blue LUT</text>
+			</g>
+			<g>
+				<g>
+					
+						<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="212.062" y1="110.042" x2="226.765" y2="110.042"/>
+					<g>
+						<polygon fill="#005695" points="225.18,112.367 233.853,110.042 225.18,107.718 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 177.1553 112.5459)" font-size="9">(5A00H)</text>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 236.8281 112.5459)" font-size="9">(1F1FH)</text>
+			</g>
+			<g>
+				<g>
+					<line fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" x1="79.118" y1="75.935" x2="166.26" y2="75.935"/>
+					<g>
+						<polygon fill="#005695" points="164.674,78.259 173.347,75.935 164.674,73.611 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="142.474,75.667 142.474,104.468 
+						166.26,104.468 					"/>
+					<g>
+						<polygon fill="#005695" points="164.674,106.792 173.347,104.468 164.674,102.144 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<polyline fill="none" stroke="#005695" stroke-width="2" stroke-miterlimit="1" points="142.474,75.968 142.474,50.167 
+						166.26,50.167 					"/>
+					<g>
+						<polygon fill="#005695" points="164.674,52.492 173.347,50.167 164.674,47.843 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Source: /home/bbennett/pass/archive/DicomXml/docbook/part17/figures/PS3.17_E.3-5.svg,v $ -->
+<!-- $Date: 2014/05/09 12:30:21 $ -->
+<!-- $Revision: 1.2 $ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="502px" height="227px" viewBox="0 0 502 227" enable-background="new 0 0 502 227" xml:space="preserve">
+
+<defs>
+	<style type="text/css">
+	text {
+	  font-family: Helvetica, Verdana, ArialUnicodeMS, san-serif
+	}
+	</style>
+</defs>
+
+<g>
+   <desc>
+	PS 3.17 Part 17: Explanatory Information
+   </desc>
+</g>
+
+<g>
+	<rect x="1" y="1" fill="#F5EED6" width="500" height="225"/>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="75.715" y1="178.184" x2="75.715" y2="209.521"/>
+				<path fill="#005695" d="M76.74,211.883c0.5-1.652,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C75.84,215.258,76.206,213.652,76.74,211.883z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" d="M192.714,178.186
+					c0,16.555,0,31.336,0,31.336"/>
+				<path fill="#005695" d="M193.738,211.883c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C192.839,215.258,193.205,213.652,193.738,211.883z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="426.715" y1="178.184" x2="426.715" y2="209.521"/>
+				<path fill="#005695" d="M427.739,211.883c0.5-1.652,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.402,1.492,4.055
+					c0.535,1.77,0.9,3.375,1.031,4.414C426.84,215.258,427.206,213.652,427.739,211.883z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="309.448" y1="178.184" x2="309.448" y2="209.521"/>
+				<path fill="#005695" d="M310.474,211.883c0.499-1.652,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.402,1.491,4.055
+					c0.534,1.77,0.9,3.375,1.03,4.414C309.573,215.258,309.938,213.652,310.474,211.883z"/>
+			</g>
+		</g>
+		
+			<rect x="156.719" y="13.784" fill="#86B2D8" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="170.999" height="45.001"/>
+		<g>
+			<text transform="matrix(1 0 0 1 203.9775 24.1099)"><tspan x="0" y="0" font-size="8">CAD Processing and </tspan><tspan x="4.896" y="9.6" font-size="8">Findings Summary</tspan><tspan x="-44.24" y="19.2" font-size="8">CODE: All algorithms succeeded; with findings</tspan><tspan x="32.68" y="28.8" font-size="8">1.2</tspan></text>
+		</g>
+		
+			<rect x="372.715" y="133.184" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108.002" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 409.8145 143.5146)"><tspan x="0" y="0" font-size="8">Individual</tspan><tspan x="-35.123" y="9.601" font-size="8">Impression/Recommendation</tspan><tspan x="-6.656" y="19.2" font-size="8">CONTAINER</tspan><tspan x="8.004" y="28.8" font-size="8">1.2.4</tspan></text>
+		</g>
+		
+			<rect x="138.715" y="133.184" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="107.999" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 175.814 143.5146)"><tspan x="0" y="0" font-size="8">Individual</tspan><tspan x="-35.123" y="9.601" font-size="8">Impression/Recommendation</tspan><tspan x="-6.656" y="19.2" font-size="8">CONTAINER</tspan><tspan x="8.004" y="28.8" font-size="8">1.2.2</tspan></text>
+		</g>
+		
+			<rect x="255.718" y="133.184" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 292.8174 143.5146)"><tspan x="0" y="0" font-size="8">Individual</tspan><tspan x="-35.123" y="9.601" font-size="8">Impression/Recommendation</tspan><tspan x="-6.656" y="19.2" font-size="8">CONTAINER</tspan><tspan x="8.004" y="28.8" font-size="8">1.2.3</tspan></text>
+		</g>
+		
+			<rect x="21.716" y="133.184" fill="#B2CEE7" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" width="108.001" height="45"/>
+		<g>
+			<text transform="matrix(1 0 0 1 58.8159 143.5146)"><tspan x="0" y="0" font-size="8">Individual</tspan><tspan x="-35.123" y="9.601" font-size="8">Impression/Recommendation</tspan><tspan x="-6.656" y="19.2" font-size="8">CONTAINER</tspan><tspan x="8.004" y="28.8" font-size="8">1.2.1</tspan></text>
+		</g>
+		<g>
+			<g>
+				
+					<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					26.003,105.267 75.463,92.091 125.01,105.693 125.01,105.724 75.409,119.088 				"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0.0022 -0.0022 1 46.3374 107.9731)" font-size="7">INFERRED FROM</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					143.21,105.267 192.67,92.091 242.217,105.693 242.217,105.724 192.617,119.088 				"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0.0022 -0.0022 1 163.5449 107.9731)" font-size="7">INFERRED FROM</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					260.418,105.267 309.878,92.091 359.425,105.693 359.425,105.724 309.824,119.088 				"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0.0022 -0.0022 1 280.752 107.9731)" font-size="7">INFERRED FROM</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<polygon fill="#CCDEF0" stroke="#010101" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1" points="
+					377.626,105.267 427.085,92.091 476.632,105.693 476.632,105.724 427.032,119.088 				"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0.0022 -0.0022 1 397.96 107.9731)" font-size="7">INFERRED FROM</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="75.715" y1="119.088" x2="75.715" y2="125.982"/>
+				<path fill="#005695" d="M76.74,128.346c0.5-1.654,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C75.84,131.719,76.206,130.115,76.74,128.346z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="242.039,58.785 242.039,79.792 
+					75.715,79.792 75.715,84.892 				"/>
+				<path fill="#005695" d="M76.74,87.253c0.5-1.653,0.959-2.729,1.492-4.055h-5.044c0.226,0.475,0.993,2.401,1.492,4.055
+					c0.535,1.77,0.9,3.374,1.031,4.414C75.84,90.627,76.206,89.023,76.74,87.253z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="192.714" y1="119.088" x2="192.714" y2="125.982"/>
+				<path fill="#005695" d="M193.738,128.346c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C192.839,131.719,193.205,130.115,193.738,128.346z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" d="M242.039,79.792h-49.324
+					c0,0-0.001-1.745-0.001,5.101"/>
+				<path fill="#005695" d="M193.738,87.253c0.5-1.653,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.401,1.492,4.055
+					c0.535,1.77,0.9,3.374,1.031,4.414C192.839,90.627,193.205,89.023,193.738,87.253z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="426.715" y1="119.088" x2="426.715" y2="125.982"/>
+				<path fill="#005695" d="M427.739,128.346c0.5-1.654,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.4,1.492,4.055
+					c0.535,1.77,0.9,3.373,1.031,4.414C426.84,131.719,427.206,130.115,427.739,128.346z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="308.892,79.792 426.715,79.792 
+					426.715,84.892 				"/>
+				<path fill="#005695" d="M427.739,87.253c0.5-1.653,0.96-2.729,1.492-4.055h-5.045c0.227,0.475,0.993,2.401,1.492,4.055
+					c0.535,1.77,0.9,3.374,1.031,4.414C426.84,90.627,427.206,89.023,427.739,87.253z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" x1="309.448" y1="119.088" x2="309.448" y2="125.982"/>
+				<path fill="#005695" d="M310.474,128.346c0.499-1.654,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.4,1.491,4.055
+					c0.534,1.77,0.9,3.373,1.03,4.414C309.573,131.719,309.938,130.115,310.474,128.346z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline fill="none" stroke="#005695" stroke-linecap="round" stroke-miterlimit="1" points="242.832,79.792 309.448,79.792 
+					309.448,84.892 				"/>
+				<path fill="#005695" d="M310.474,87.253c0.499-1.653,0.959-2.729,1.491-4.055h-5.044c0.225,0.475,0.992,2.401,1.491,4.055
+					c0.534,1.77,0.9,3.374,1.03,4.414C309.573,90.627,309.938,89.023,310.474,87.253z"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
