@@ -832,6 +832,7 @@ sub ReadElementValue{
     }
   } elsif($this->{ele_len} == 0) {
     if(exists($this->{vr_to_convert_to})){
+      print STDERR "$this->{tag} converts to $this->{vr_to_convert_to}\n";
       my $VRDesc = $Posda::Dataset::DD->{VRDesc}->{$this->{vr}};
       unless(defined $VRDesc) { die "unknown VR: $this->{vr} ($this->{tag})" }
       if($this->{vr} eq "UN" && exists $this->{vr_to_convert_to}){
@@ -839,6 +840,9 @@ sub ReadElementValue{
           "Recasting $this->{tag} (with null value) from $this->{vr} to " .
           "$this->{vr_to_convert_to}");
         $this->{vr} = $this->{vr_to_convert_to};
+        if($this->{vr} eq "SQ"){
+          $this->{type} = "seq";
+        }
         delete $this->{vr_to_convert_to};
       }
     }
@@ -898,8 +902,11 @@ sub ReadFixedLengthDataset{
     }
     ReadElementHeader($this);
     if($this->{grp} == 0xfffe){
-      die "Encountered an unexpected item tag ($this->{length}) " .
-        "offset: $this->{ele_offset}\n\n --";
+      my $group = sprintf("%04x", $this->{grp});
+      my $element = sprintf("%04x", $this->{ele});
+      die "Encountered an unexpected item tag ($group,$element) \n" .
+        " (length: $this->{length} " .
+        "offset: $this->{ele_offset})\n\n --";
     }
     unless($last_tag le $this->{tag}){
       if($this->{tag} eq "(0000,0000)"){

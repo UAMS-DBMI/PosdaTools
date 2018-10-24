@@ -730,7 +730,13 @@ sub EncodeElementValue{
         $Value = EncodeFloatEle($ele->{value}, "N*");
       }
     } elsif($type eq 'raw'){
-      $Value = $ele->{value};
+      # kludge for odd length owner tags
+      if(length($ele->{value}) & 1){
+        print STDERR "Warning $ele has odd value (padding with space)\n";
+        $Value = "$ele->{value} ";
+      } else {
+        $Value = $ele->{value};
+      }
     }
     unless(defined $Value) { $Value = ""; }
     return $Value, $type, $vr;
@@ -3095,10 +3101,18 @@ sub Insert{
       ){
         # store the value if its an array
         $this->{$grp}->{private}->{$owner}->{$ele}->{value}->[$index] = $value;
+      }elsif(
+        exists($this->{$grp}->{private}->{$owner}->{$ele}) &&
+        exists($this->{$grp}->{private}->{$owner}->{$ele}->{value}) &&
+        $this->{$grp}->{private}->{$owner}->{$ele}->{value} eq ""
+      ){
+        # create array and store value if its blank
+        $this->{$grp}->{private}->{$owner}->{$ele}->{value} = [];
+        $this->{$grp}->{private}->{$owner}->{$ele}->{value}->[$index] = $value;
       } else {
         # or error off
         die "insert into non-array";
-      }
+      } 
     } else {
       # and its a standard (or private by element)
       unless(exists $this->{$grp}->{$ele}){
@@ -3115,6 +3129,15 @@ sub Insert{
         ref($this->{$grp}->{$ele}->{value}) eq "ARRAY"
       ){
         # store the value if its an array
+        $this->{$grp}->{$ele}->{value}->[$index] = $value;
+      } elsif(
+        # create array if element present and blank
+        exists($this->{$grp}->{$ele}) &&
+        exists($this->{$grp}->{$ele}->{value}) &&
+        $this->{$grp}->{$ele}->{value} eq ""
+      ){
+        # store the value if its an array
+        $this->{$grp}->{$ele}->{value} = [];
         $this->{$grp}->{$ele}->{value}->[$index] = $value;
       } else {
         # or error off

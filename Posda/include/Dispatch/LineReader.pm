@@ -198,7 +198,9 @@ sub NewWithTrickleWrite{
       $this->{lines_written} += 1;
       $this->{fh}->print("$to_write\n");
     } else {
-      $disp->Remove("writer");
+      unless(exists $this->{shutdown}){
+        $disp->Remove("writer");
+      }
     }
   };
   return $this;
@@ -219,6 +221,7 @@ print STDERR "Shutting down after\n" .
     shutdown $this->{fh}, 1;
     delete $this->{Writer};
   }
+  $this->{shutdown} = 1;
 }
 sub AdHocDebug{
   my($this) = @_;

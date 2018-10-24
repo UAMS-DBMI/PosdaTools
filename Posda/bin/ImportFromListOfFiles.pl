@@ -13,6 +13,7 @@ use Digest::MD5;
 use File::Copy;
 use File::Path qw(remove_tree make_path);
 use File::Compare;
+die "!!!!!!! this script is obsolete.  Use ImportMultipleFilesIntoPosda.pl instead !!!!!!!";
 
 sub InsertFile{
   my($db, $digest, $size) = @_;

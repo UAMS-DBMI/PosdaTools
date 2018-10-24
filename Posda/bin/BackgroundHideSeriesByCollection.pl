@@ -37,7 +37,7 @@ $background->WriteToEmail("$date\nHiding $num_series series\n" .
   "For: ($invoc_id) $reason\n\n");
 #######################################################################
 ### Body of script
-open SUBP, "|HideFilesWithStatus.pl $ARGV[1] \"$ARGV[2]\""
+open SUBP, "|HideFilesWithStatus.pl $notify \"$reason\""
   or die "can't open subprocess ($!)";
 my $get_files = Query('FilesIdsInSeriesWithVisibilityAndCollection');
 for my $s (@series){

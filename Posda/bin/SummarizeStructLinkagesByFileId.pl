@@ -37,623 +37,219 @@ my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 
 print "Going straight to background\n";
 
-$background->ForkAndExit;
+$background->Daemonize;
 
 my $start_time = `date`;
 chomp $start_time;
 $background->WriteToEmail("Starting SummarizeStructLinkagesByFileId.pl at $start_time\n");
 $background->WriteToEmail("##### This is a test version of this script #####\n");
 
-my @Rows;
-my @RowInfo;
-my %ContourTypesByRoiId;
+my %Rois;
+my %Sops;
+my %RoiNameToId;
+my %ForUids;
+my $DatasetStart;
+my $FilePath;
+my $Collection;
+my $Site;
+my $Patient;
+my $Study;
+my $Series;
+my %SopsLookedUp;
+my %CtSeriesSeen;
 
-my $get_structs = Query("GetSsByFileId");
-$get_structs->RunQuery(sub {
+my $get_file_path = Query("GetFilePathWithCollSitePatientStudySeries");
+$get_file_path->RunQuery(sub{
   my($row) = @_;
-  my @copied = @$row;
-  push @Rows, \@copied;
+  $FilePath = $row->[0];
+  $Collection = $row->[1];
+  $Patient = $row->[2];
+  $Site = $row->[3];
+  $Study = $row->[4];
+  $Series = $row->[5];
+}, sub{}, $file_id);
+my $get_dataset_start = Query("GetDatasetStart");
+$get_dataset_start->RunQuery(sub{
+  my($row) = @_;
+  $DatasetStart = $row->[0];
+}, sub{}, $file_id);
+my $get_roi_info = Query("RoiInfoByFileIdWithCounts");
+$get_roi_info->RunQuery(sub {
+  my($row) = @_;
+  my($roi_id, $for_uid, $linked_sop_instance_uid,
+     $max_x, $max_y, $max_z, $min_x, $min_y,
+     $min_z, $roi_name, $roi_description,
+     $roi_interpreted_type, $num_contours) =
+     @$row;
+  $Rois{$roi_id}->{for_uid} = $for_uid;
+  $ForUids{$for_uid}->{roi_ids}->{$roi_id} = 1;
+  $Rois{$roi_id}->{max_x} = $max_x;
+  $Rois{$roi_id}->{max_y} = $max_y;
+  $Rois{$roi_id}->{max_z} = $max_z;
+  $Rois{$roi_id}->{min_x} = $min_x;
+  $Rois{$roi_id}->{min_y} = $min_y;
+  $Rois{$roi_id}->{min_z} = $min_z;
+  $Rois{$roi_id}->{roi_name} = $roi_name;
+  $RoiNameToId{$roi_name} = $roi_id;
+  $Rois{$roi_id}->{roi_description} = $roi_description;
+  $Rois{$roi_id}->{roi_interpreted_type} = $roi_interpreted_type;
+  $Rois{$roi_id}->{sop_links}->{$linked_sop_instance_uid} = $num_contours;
+  $Sops{$linked_sop_instance_uid}->{has_roi_name}->{$roi_name} = 1;
 }, sub {}, $file_id);
-
-my $get_rois = Query("RoiInfoByFileId");
-my $get_contour_types = Query("ContourTypesByRoi");
-my $get_struct_vol = Query("StructVolByFileId");
-my $get_contour_links = Query("GetContourImageLinksByFileId");
-my $get_unlinked_closed_p = Query("ClosedPlanarContoursWithoutLinksByFile");
-my $file_in_posda = Query("FileWithInfoBySopInPosda");
-my $file_in_public = Query("FileWithInfoBySopInPublic");
-my $get_roi_linkages = Query("RoiLinkagesByFileId");
-my $get_for_from_series = Query("ImageFrameOfReferenceBySeries");
-my $start_loop = time;
-for my $row(@Rows){
-  my %RowInfo;
-  $RowInfo{Collection} = $row->[0];
-  $RowInfo{Site} = $row->[1];
-  $RowInfo{Patient} = $row->[2];
-  $RowInfo{FileId} = $row->[3];
-  NumRois(\%RowInfo);
-  SopsInVol(\%RowInfo);
-  SopsLinkedToRoi(\%RowInfo);
-  InternalLinkages(\%RowInfo);
-  FrameOfRefExternal(\%RowInfo);
-  VolumeFilesInPosda(\%RowInfo);
-  VolumeFilesInPublic(\%RowInfo);
-  RoiFilesInPosda(\%RowInfo);
-  RoiFilesInPublic(\%RowInfo);
-  FrameOfReferenceMatches(\%RowInfo);
-  UnlinkedClosedPlanar(\%RowInfo);
-  PointsWithinVolume(\%RowInfo);
-  Warnings(\%RowInfo);
-#  for my $i (0 .. $#cols){
-#    $rpt->print("\"$RowInfo{$cols[$i]}\"");
-#    if($i == $#cols){
-#      $rpt->print("\r\n");
-#    } else {
-#      $rpt->print(",");
-#    }
-#  }
-  push @RowInfo, \%RowInfo;
-}
-my $bg = DebugToEmail($background);
-$background->WriteToEmail("Debug Info:\nRows: ");
-Debug::GenPrint($bg, \@Rows, 1);
-$background->WriteToEmail("\nRowInfo: ");
-Debug::GenPrint($bg, \@RowInfo, 1);
-$background->WriteToEmail("\nContourTypesByRoiId: ");
-Debug::GenPrint($bg, \%ContourTypesByRoiId, 1);
-$background->WriteToEmail("\n");
-$background->Finish;
-sub NumRois{
-  #  $RowInfo->{Rois}->{$roi_id} = {
-  #    for_uid => $for_uid,
-  #    max => [$max_x, $max_y, $max_z],
-  #    min => [$min_x, $min_y, $min_z],
-  #    roi_name => <roi_name>,
-  #    roi_description => <roi_description>,
-  #    ro_interp_type => <roi_interp_type>,
-  #    roi_num => <roi_num>
-  #  };
-  my($RowInfo) = @_;
-  $get_rois->RunQuery(sub {
-    my($row) = @_;
-    my($roi_id, $for_uid, $max_x, $max_y, $max_z,
-      $min_x, $min_y, $min_z, $roi_name, $roi_desc,
-      $roi_interp_type, $roi_num) = @$row;
-     $RowInfo->{Rois}->{$roi_id} = {
-       for_uid => $for_uid,
-       max => [$max_x, $max_y, $max_z],
-       min => [$min_x, $min_y, $min_z],
-       roi_name => $roi_name,
-       roi_description => $roi_desc,
-       roi_interp_type => $roi_interp_type,
-       roi_num => $roi_num,
-     };
-  }, sub {}, $RowInfo->{FileId});
-  for my $roi_id (keys %{$RowInfo->{Rois}}){
-    my %ContourTypes;
-    $get_contour_types->RunQuery(sub {
+my $get_cont_info = Query('ContourInfoByRoiIdAndSopInst');
+my $get_sop_geo = Query('GetImageGeoBySop1');
+roi:
+for my $roi_id (keys %Rois){
+  for my $sop_uid (keys %{$Rois{$roi_id}->{sop_links}}){
+    $get_cont_info->RunQuery(sub {
       my($row) = @_;
-      my($geo_type, $num_contours, $total_points) = @$row;
-      $ContourTypes{$geo_type} = [$num_contours, $total_points];
-    }, sub {}, $roi_id);
-    my $num_types = keys %ContourTypes;
-    if($num_types > 1){
-      my @ContourTypes = keys %ContourTypes;
-      my $message = "Roi ($roi_id), named " .
-        "$RowInfo->{Rois}->{$roi_id}->{roi_name} has contours with " .
-        "more than one geometric type: ";
-      for my $i (0 .. $#ContourTypes){
-        $message .= "\"$ContourTypes[$i]\"";
-        if($i <= $#ContourTypes){
-          $message .= ", ";
-        }
+      my($contour_file_offset, $contour_length, $contour_digest,
+        $num_points, $contour_type) = @$row;
+      my $real_start = $DatasetStart + $contour_file_offset;
+      my $cmd = "GetFilePart.pl \"$FilePath\" $real_start $contour_length";
+      unless(open CONTOURS, "$cmd|"){
+        $background->WriteToEmail("can't get contours");
+        return;
       }
-      push @{$RowInfo->{WarningList}}, $message;
-    }
-    for my $i (keys %ContourTypes){
-      $RowInfo->{RoiByContourType}->{$i}->{$roi_id} =
-        $RowInfo->{Rois}->{$roi_id};
-    }
-    $ContourTypesByRoiId{$roi_id} = \%ContourTypes;
+      my $contours;
+      my $length = read CONTOURS, $contours, $contour_length;
+      unless($length == $contour_length) {
+        $background->WriteToEmail(
+          "read wrong length $length vs $contour_length\n");
+        return;
+      }
+## Digest check disabled - digests in DB are wrong!
+#      my $ctx = Digest::MD5->new;
+#      $ctx->add($contours);
+#      my $dig = $ctx->hexdigest;
+#      unless($dig eq $contour_digest){
+#        $background->WriteToEmail(
+#          "Non matching digests $dig vs $contour_digest\n");
+#        $background->WriteToEmail(
+#          "\troi_id: $roi_id, sop_inst: $sop_uid\n");
+#      }
+      my @nums = split /\\/, $contours;
+      my $num_nums_read = @nums;
+      my $nums_expected = $num_points * 3;
+      unless($num_nums_read == $nums_expected){
+        $background->WriteToEmail("Wrong number of numbers: " .
+          "$num_nums_read vs $nums_expected " .
+          "for $num_points points\n");
+        return;
+      }
+      my @zs;
+      for my $i (0 .. $num_points - 1){
+        $zs[$i] = $nums[($i * 3) + 2];
+      }
+      unless(defined $Sops{$sop_uid}->{tot_z}){
+        $Sops{$sop_uid}->{tot_z} = 0;
+        $Sops{$sop_uid}->{num_z} = 0;
+      }
+      my $h = $Sops{$sop_uid};
+      for my $z (@zs){
+        unless(defined $h->{max_z}) { $h->{max_z} = $z } 
+        unless(defined $h->{min_z}) { $h->{min_z} = $z }
+        if($z < $h->{min_z}){ $h->{min_z} = $z }
+        if($z > $h->{max_z}){ $h->{max_z} = $z }
+        $h->{tot_z} += $z;
+        $h->{num_z} += 1;
+      }
+      unless(exists $SopsLookedUp{$sop_uid}){
+        $SopsLookedUp{$sop_uid} = 1;
+        $get_sop_geo->RunQuery(sub {
+          my($row) = @_;
+          my($iop, $ipp, $for_uid, $series_instance_uid) = @$row;
+          $h->{iop} = $iop;
+          $h->{ipp} = $ipp;
+          $h->{for_uid} = $for_uid;
+          $CtSeriesSeen{$series_instance_uid} += 1;
+          $ForUids{$for_uid}->{sop}->{$sop_uid} = 1;
+        }, sub {}, $sop_uid);
+      }
+    }, sub{}, $sop_uid, $roi_id);
   }
-  $RowInfo->{NumRois} = keys %{$RowInfo->{Rois}};
 }
-sub SopsInVol{
-  #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
-  #    $sop_class, $study_inst, $series_inst, $for_uid
-  #  ];
-  #  Warns for dup SOP inst
-  my($RowInfo) = @_;
-  my %Error;
-  my %SopInst;
-  my %SopClass;
-  my %StudyInst;
-  my %SeriesInst;
-  my %ForUid;
-  $get_struct_vol->RunQuery(sub {
-    my($row) = @_;
-    my($sop_inst, $sop_class, $study_inst, $series_inst, $for_uid) = @$row;
-    if(exists $SopInst{$sop_inst}){
-      $Error{"Warning: Sop Inst ($sop_inst) is duplicated in volume"} = 1;
+my $rpt = $background->CreateReport("Structure Set Summary");
+$rpt->print("key,value\r\n");
+$rpt->print("Script,SummarizeStructLinkagesByFileId.pl\r\n");
+$rpt->print("At,$start_time\r\n");
+$rpt->print("By,$notify\r\n");
+$rpt->print("File id,$file_id\r\n");
+$rpt->print("Collection,$Collection\r\n");
+$rpt->print("Site,$Site\r\n");
+$rpt->print("Study,$Study\r\n");
+$rpt->print("Series,$Series\r\n");
+for my $series (keys %CtSeriesSeen){
+  $rpt->print("Ct Series,$series ($CtSeriesSeen{$series})\r\n");
+}
+$rpt->print("\r\n");
+for my $sop(keys %Sops){
+  if($Sops{$sop}->{min_z} eq $Sops{$sop}->{max_z}){
+    $Sops{$sop}->{contour_offset} = $Sops{$sop}->{min_z};
+  } else {
+    $Sops{$sop}->{contour_offset} =
+      $Sops{$sop}->{tot_z} / $Sops{$sop}->{num_z};
+  }
+  if(exists $Sops{$sop}->{ipp}){
+    my($x, $y, $z) = split(/\\/, $Sops{$sop}->{ipp});
+    $Sops{$sop}->{file_present} = "yes";
+    $Sops{$sop}->{ct_offset} = $z;
+  } else {
+    $Sops{$sop}->{file_present} = "no";
+    $Sops{$sop}->{ct_offset} = "";
+  }
+}
+my @cols = ("sop_instance_uid", "roi_offset", 
+  "file_present", "file_offset");
+for my $roi_name (sort keys %RoiNameToId){
+  push @cols, $roi_name;
+}
+for my $i (0 .. $#cols){
+  $rpt->print("$cols[$i]");
+  if($i == $#cols){
+    $rpt->print("\r\n");
+  } else {
+    $rpt->print(",");
+  }
+}
+for my $sop (
+  sort {
+    $Sops{$a}->{contour_offset} <=>
+    $Sops{$b}->{contour_offset}
+  }
+  keys %Sops
+){
+  for my $i (0 .. $#cols){
+    my $col = $cols[$i];
+    if($col eq "sop_instance_uid"){
+      $rpt->print("$sop,");
+    }elsif($col eq "roi_offset") {
+      $rpt->print("$Sops{$sop}->{contour_offset},");
+    }elsif($col eq "file_present"){
+      $rpt->print("$Sops{$sop}->{file_present},");
+    }elsif($col eq "file_offset"){
+      $rpt->print("$Sops{$sop}->{ct_offset},");
     } else {
-      $SopInst{$sop_inst} = [$sop_class, $study_inst, $series_inst, $for_uid];
-    }
-    $SopClass{$sop_class} = 1;
-    $StudyInst{$study_inst} = 1;
-    $SeriesInst{$series_inst} = 1;
-    $ForUid{$for_uid} = 1;
-    if(exists $SopInst{$for_uid}) {
-      $Error{"Warning: Frame of Reference ($for_uid) matches SOP Instance"} = 1;
-    }
-    if(exists $StudyInst{$for_uid}) {
-      $Error{"Warning: Frame of Reference ($for_uid) matches Study Instance"}
-        = 1;
-    }
-    if(exists $SeriesInst{$for_uid}) {
-      $Error{"Warning: Frame of Reference ($for_uid) matches Series Instance"}
-        = 1;
-    }
-  }, sub{}, $RowInfo->{FileId});
-  my $num_for = keys %ForUid;
-  if($num_for > 1){
-      $Error{"Warning: $num_for Frames of Reference"} = 1;
-  }
-  my $num_series = keys %SeriesInst;
-  if($num_series > 1){
-      $Error{"Warning: $num_series Series"} = 1;
-  }
-  my $num_study = keys %StudyInst;
-  if($num_study > 1){
-      $Error{"Warning: $num_study Series"} = 1;
-  }
-  my $num_sop_class = keys %SopClass;
-  if($num_sop_class > 1){
-      $Error{"Warning: $num_sop_class SOP Classes"} = 1;
-  }
-  my $num_sops = keys %SopInst;
-  $RowInfo->{SopsInVolStruct} = \%SopInst;
-  $RowInfo->{SopsInVol} = $num_sops;
-  my $num_e = keys %Error;
-  if($num_e > 0){
-    for my $m (keys %Error){
-      push @{$RowInfo->{WarningList}}, $m;
-    }
-  }
-  $RowInfo->{VolumeDescription} = {
-    SopInst => \%SopInst,
-    SopClass =>  \%SopClass,
-    StudyInst => \%StudyInst,
-    SeriesInst => \%SeriesInst,
-    ForUid => \%ForUid,
-  };
-}
-sub SopsLinkedToRoi{
-  #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
-  #  [ <num_contours>, <num_points> ];
-  my($RowInfo) = @_;
-  my %RoisPerSopByContourType;
-  my %Error;
-  $get_contour_links->RunQuery(sub {
-    my($row) = @_;
-    my($roi_id,$sop_inst_uid, $sop_class_uid, $contour_type,
-      $num_contours, $num_points) = @$row;
-    $RoisPerSopByContourType{$contour_type}->{$sop_inst_uid}
-      ->{$sop_class_uid} = [$num_contours, $num_points];
-  }, sub{}, $RowInfo->{FileId});
-  $RowInfo->{RoisPerSopByContourType} = \%RoisPerSopByContourType;
-  my $message = "";
-  for my $i (keys %RoisPerSopByContourType){
-    my $num_sops = keys %{$RoisPerSopByContourType{$i}};
-    $message .= "$i: $num_sops\n";
-  }
-  $RowInfo->{SopsLinkedToRoi} = $message;
-}
-sub InternalLinkages{
-  #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
-  #  [ <num_contours>, <num_points> ];
-  #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
-  #    $sop_class, $study_inst, $series_inst, $for_uid
-  #  ];
-  #  $RowInfo->{Rois}->{$roi_id} = {
-  #    for_uid => $for_uid,
-  #    max => [$max_x, $max_y, $max_z],
-  #    min => [$min_x, $min_y, $min_z],
-  #    roi_name => <roi_name>,
-  #    roi_description => <roi_description>,
-  #    roi_interp_type => <roi_interp_type>,
-  #    roi_num => <roi_num>
-  #  };
-  #Adds:
-  #  $RoiInfo{SopReferencesContourTypeAndRoiId}->{$contour_type} = {
-  #    <roi_id> => {
-  #      <sop_instance_uid> => 1,
-  #      ...
-  #    },
-  #    ...
-  #  };
-  my($RowInfo) = @_;
-  my $errors_logged = 0;
-  my %Errors;
-  $get_roi_linkages->RunQuery(sub {
-    my($row) = @_;
-    my($roi_id, $sop, $roi_type) = @$row;
-    $RowInfo->{SopReferencesContourTypeAndRoiId}->{$roi_type}
-      ->{$roi_id}->{$sop} = 1;
-  }, sub {}, $RowInfo->{FileId});
-  for my $type (keys %{$RowInfo->{RoisPerSopByContourType}}){
-    my $tp = $RowInfo->{RoisPerSopByContourType}->{$type};
-    for my $sop (keys %$tp){
-      my $num_c = keys %{$tp->{$sop}};
-      if($num_c > 1){
-        my $mess = "Warning: sop instance ($sop) has more than one " .
-          "sop_class in reference";
-        $Errors{$mess} = 1;
-        $errors_logged += 1;
-      }
-      my $l_class = [keys %{$tp->{$sop}}]->[0];
-      unless(exists $RowInfo->{SopsInVolStruct}->{$sop}){
-        my $mess = "Warning: referenced sop instance ($sop) not found " .
-          "in volume";
-        $Errors{$mess} = 1;
-        $errors_logged += 1;
-      } else {
-        unless($l_class eq $RowInfo->{SopsInVolStruct}->{$sop}->[0]){
-          my $mess = "Warning: referenced sop instance ($sop) has " .
-            "different class in volume";
-          $Errors{$mess} = 1;
-          $errors_logged += 1;
-        } 
-      }
-    }
-  }
-  my %rois;
-  for my $t (keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}}){
-    for my $r (
-      keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}->{$t}}
-    ){
-      for my $s (
-        keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}->{$t}->{$r}}
-      ){
-        $rois{$r}->{$s} = 1;
-      }
-    }
-  }
-  for my $r (keys %rois){
-    for my $s (keys %{$rois{$r}}){
-      my $sop_for = $RowInfo->{SopsInVolStruct}->{$s}->[3];
-      my $roi_for = $RowInfo->{Rois}->{$r}->{for_uid};
-      if($sop_for ne $roi_for){
-        my $mess = "roi_for ($roi_for) ne sop_for ($sop_for)";
-        $Errors{$mess} = 1;
-        $errors_logged += 1;
-      }
-    }
-  }
-  if($errors_logged > 0){
-    $RowInfo->{InternalLinkages} = "$errors_logged errors logged";
-  } else {
-    $RowInfo->{InternalLinkages} = "Ok";
-  }
-  my $num_e = keys %Errors;
-  if($num_e > 0){
-    for my $m (keys %Errors){
-      push @{$RowInfo->{WarningList}}, $m;
-    }
-  }
-}
-sub FrameOfRefExternal{
-  #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
-  #    $sop_class, $study_inst, $series_inst, $for_uid
-  #  ];
-  #  Adds:
-  #  $RowInfo{FrameOfRefBySeriesFromVolStruct} = {
-  #    <series_instance_uid> => {
-  #      <frame_of_ref_uid> => <num_files>,
-  #      ...
-  #    },
-  #    ...
-  #  };
-  my($RowInfo) = @_;
-  my $errors_logged = 0;
-  my %Errors;
-  $RowInfo->{FrameOfRefExternal} = "Not yet implemented";
-  my %series;
-  my %fors;
-  for my $s(keys %{$RowInfo->{SopsInVolStruct}}){
-    my $ser = $RowInfo->{SopsInVolStruct}->{$s}->[2];
-    my $for = $RowInfo->{SopsInVolStruct}->{$s}->[3];
-    $series{$ser}->{$for} = 1;
-    $fors{$for} = 1;
-  }
-  my $num_series = keys %series;
-  my $num_fors = keys %fors;
-  if($num_series > 1){
-    $Errors{"$num_series series in referenced frame of ref sequence"} = 1;
-    $errors_logged += 1;
-  }
-  if($num_fors > 1){
-    $Errors{"$num_fors frames of ref in referenced frame of ref sequence"} = 1;
-    $errors_logged += 1;
-  }
-  for my $s (keys %series){
-    my $num_fors = keys %{$series{$s}};
-    if($num_fors > 1){
-      $Errors{"series ($s) has more than one frame of ref"} = 1;
-      $errors_logged += 1;
-    }
-  }
-  for my $s (keys %series){
-    $get_for_from_series->RunQuery(sub {
-      my($row) = @_;
-      my($for_uid, $num_files) = @$row;
-      $RowInfo->{FrameOfRefBySeriesFromVolStruct}->{$s}->{$for_uid} = $num_files;
-    }, sub{}, $s);
-  }
-  for my $s (keys %{$RowInfo->{SopsInVolStruct}}){
-    my $ref_series = $RowInfo->{SopsInVolStruct}->{$s}->[2];
-    my $ref_for = $RowInfo->{SopsInVolStruct}->{$s}->[3];
-    unless(exists $RowInfo->{FrameOfRefBySeriesFromVolStruct}->{$ref_series}->{$ref_for}){
-      $Errors{"For in ref for seq ($ref_for) doesn't match any file in series"} = 1;
-      $errors_logged += 1;
-    }
-  }
-  if($errors_logged > 0){
-    $RowInfo->{FrameOfRefExternal} = "$errors_logged errors logged";
-  } else {
-    $RowInfo->{FrameOfRefExternal} = "Ok";
-  }
-  my $num_e = keys %Errors;
-  if($num_e > 0){
-    for my $m (keys %Errors){
-      push @{$RowInfo->{WarningList}}, $m;
-    }
-  }
-}
-sub VolumeFilesInPosda{
-  #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
-  #    $sop_class, $study_inst, $series_inst, $for_uid
-  #  ];
-  #  Adds:
-  #  $RowInfo{SopInfoFoundInVolPosda}->{$sop_inst_uid} = [
-  #    $frame_of_ref, $iop, $ipp, $pix_spacing,
-  #    $pix_rows, $pix_cols ],
-  #
-  my($RowInfo) = @_;
-  my $sops_found = 0;
-  my $sops_not_found = 0;
-  my %SopsFoundInVol;
-  for my $sop (keys %{$RowInfo->{SopsInVolStruct}}){
-    my $num_rows = 0;
-    $file_in_posda->RunQuery(sub {
-      my($row) = @_;
-      my($frame_of_ref, $iop, $ipp, $pixel_spacing,
-        $pixel_rows, $pixel_columns) = @$row;
-      $SopsFoundInVol{$sop} = [
-        $frame_of_ref, $iop, $ipp, $pixel_spacing, 
-        $pixel_rows, $pixel_columns
-      ];
-      $num_rows += 1;
-    }, sub {}, $sop);
-    if($num_rows < 1) {$sops_not_found += 1}
-    if($num_rows == 1) {$sops_found += 1}
-  }
-  $RowInfo->{SopInfoFoundInVolPosda} = \%SopsFoundInVol;
-  $RowInfo->{VolumeFilesInPosda} = 
-    "Found: $sops_found; Not found: $sops_not_found";
-}
-sub VolumeFilesInPublic{
-  #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
-  #    $sop_class, $study_inst, $series_inst, $for_uid
-  #  ];
-  #  Adds:
-  #  $RowInfo{SopInfoFoundInVolPosda}->{$sop_inst_uid} = [
-  #    $frame_of_ref, $iop, $ipp, $pix_spacing,
-  #    $pix_rows, $pix_cols ],
-  #
-  my($RowInfo) = @_;
-  my $sops_found = 0;
-  my $sops_not_found = 0;
-  my %SopsFoundInVol;
-  for my $sop (keys %{$RowInfo->{SopsInVolStruct}}){
-    my $num_rows = 0;
-    $file_in_public->RunQuery(sub {
-      my($row) = @_;
-      my($frame_of_ref, $iop, $ipp, $pixel_spacing,
-        $pixel_rows, $pixel_columns) = @$row;
-      $SopsFoundInVol{$sop} = [
-        $frame_of_ref, $iop, $ipp, $pixel_spacing, 
-        $pixel_rows, $pixel_columns
-      ];
-      $num_rows += 1;
-    }, sub {}, $sop);
-    if($num_rows < 1) { $sops_not_found += 1 }
-    if($num_rows >= 1) {$sops_found += 1}
-  }
-  $RowInfo->{SopInfoFoundInVolPublic} = \%SopsFoundInVol;
-  $RowInfo->{VolumeFilesInPublic} = 
-    "Found: $sops_found; Not found: $sops_not_found";
-}
-sub RoiFilesInPosda{
-  #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
-  #  [ <num_contours>, <num_points> ];
-  my($RowInfo) = @_;
-  my %SopsFoundInRoi;
-  my %RowsFoundByType;
-  my %RowsNotFoundByType;
-  for my $type (keys %{$RowInfo->{RoisPerSopByContourType}}){
-    for my $sop (keys %{$RowInfo->{RoisPerSopByContourType}->{$type}}){
-      my $num_rows;
-      $file_in_posda->RunQuery(sub {
-        my($row) = @_;
-        my($frame_of_ref, $iop, $ipp, $pixel_spacing,
-          $pixel_rows, $pixel_columns) = @$row;
-        $SopsFoundInRoi{$type}->{$sop} = [
-          $frame_of_ref, $iop, $ipp, $pixel_spacing, 
-          $pixel_rows, $pixel_columns
-        ];
-        $num_rows += 1;
-      }, sub {}, $sop);
-      if($num_rows < 1) {$RowsNotFoundByType{$type} += 1}
-      if($num_rows >= 1) {$RowsFoundByType{$type} += 1}
-    }
-  }
-  my $message = "";
-  my $num_types_found = keys %RowsFoundByType;
-  my $num_types_not_found = keys %RowsNotFoundByType;
-  if($num_types_found > 0){
-    $message .= "Found:";
-    for my $type (keys %RowsFoundByType){
-      $message .= " $type = $RowsFoundByType{$type}";
-    }
-    $message .= "   ";
-  }
-  if($num_types_not_found > 0){
-    $message .= "Not Found:";
-    for my $type (keys %RowsNotFoundByType){
-      $message .= " $type = $RowsNotFoundByType{$type}";
-    }
-  }
-  if($message eq ""){
-    $RowInfo->{RoiFilesInPosda} = "???";
-  } else {
-    $RowInfo->{RoiFilesInPosda} = $message;
-  }
-}
-sub RoiFilesInPublic{
-  #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
-  #  [ <num_contours>, <num_points> ];
-  my($RowInfo) = @_;
-  my %SopsFoundInRoi;
-  my %RowsFoundByType;
-  my %RowsNotFoundByType;
-  for my $type (keys %{$RowInfo->{RoisPerSopByContourType}}){
-    for my $sop (keys %{$RowInfo->{RoisPerSopByContourType}->{$type}}){
-      my $num_rows = 0;
-      $file_in_public->RunQuery(sub {
-        my($row) = @_;
-        my($frame_of_ref, $iop, $ipp, $pixel_spacing,
-          $pixel_rows, $pixel_columns) = @$row;
-        $SopsFoundInRoi{$type}->{$sop} = [
-          $frame_of_ref, $iop, $ipp, $pixel_spacing, 
-          $pixel_rows, $pixel_columns
-        ];
-        $num_rows += 1;
-      }, sub {}, $sop);
-      if($num_rows < 1) {$RowsNotFoundByType{$type} += 1}
-      if($num_rows >= 1) {$RowsFoundByType{$type} += 1}
-    }
-  }
-  my $message = "";
-  my $num_types_found = keys %RowsFoundByType;
-  my $num_types_not_found = keys %RowsNotFoundByType;
-  if($num_types_found > 0){
-    $message .= "Found:";
-    for my $type (keys %RowsFoundByType){
-      $message .= " $type = $RowsFoundByType{$type}";
-    }
-    $message .= "   ";
-  }
-  if($num_types_not_found > 0){
-    $message .= "Not Found:";
-    for my $type (keys %RowsNotFoundByType){
-      $message .= " $type = $RowsNotFoundByType{$type}";
-    }
-  }
-  if($message eq ""){
-    $RowInfo->{RoiFilesInPublic} = "???";
-  } else {
-    $RowInfo->{RoiFilesInPublic} = $message;
-  }
-}
-sub FrameOfReferenceMatches{
-  #  $RowInfo->{Rois}->{$roi_id} = {
-  #    for_uid => $for_uid,
-  #    max => [$max_x, $max_y, $max_z],
-  #    min => [$min_x, $min_y, $min_z],
-  #    roi_name => <roi_name>,
-  #    roi_description => <roi_description>,
-  #    roi_interp_type => <roi_interp_type>,
-  #    roi_num => <roi_num>
-  #  };
-  #  $RowInfo{SopInfoFoundInVolPosda}->{$sop_inst_uid} = [
-  #    $frame_of_ref, $iop, $ipp, $pix_spacing,
-  #    $pix_rows, $pix_cols
-  #  ];
-  #  $RoiInfo{SopReferencesContourTypeAndRoiId}->{$contour_type} = {
-  #    <roi_id> => {
-  #      <sop_instance_uid> => 1,
-  #      ...
-  #    },
-  #    ...
-  #  };
-  my($RowInfo) = @_;
-  my %ErrByContourTypeRoi;
-  my $message = "";
-  for my $typ (keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}}){
-    for my $roi (keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}->{$typ}}){
-      my $roi_for = $RowInfo->{Rois}->{$roi}->{for_uid};
-      for my $sop (
-        keys %{$RowInfo->{SopReferencesContourTypeAndRoiId}->{$typ}->{$roi}}
-      ){
-        my $sop_for = $RowInfo->{SopInfoFoundInVolPosda}->{$sop}->[0];
-        unless($sop_for eq $roi_for){
-          $ErrByContourTypeRoi{$typ}->{$roi} = 1;
-          print STDERR "sop_for ($sop_for) doesn't match roi_for ($roi_for)\n";
+      if(exists $RoiNameToId{$col}){
+        my$roi_id = $RoiNameToId{$col};
+        if(exists $Rois{$roi_id}->{sop_links}->{$sop}){
+          $rpt->print($Rois{$roi_id}->{sop_links}->{$sop});
         }
       }
+      if($i == $#cols){
+        $rpt->print("\r\n");
+      } else {
+        $rpt->print(",");
+      }
     }
   }
-  my @types = keys %ErrByContourTypeRoi;
-  if(@types == 0) {
-    $RowInfo->{FrameOfReferenceMatches} = "Matches";
-    return;
-  }
-  for my $t (@types){
-    my $num_rois = keys %{$ErrByContourTypeRoi{$t}};
-    if($message) { $message .= "\n" }
-    $message .= "$num_rois of type $t have none matching for";
-  }
-  $RowInfo->{FrameOfReferenceMatches} = $message;
-}
-sub UnlinkedClosedPlanar{
-  my($RowInfo) = @_;
-  my @Unlinked;
-  $get_unlinked_closed_p->RunQuery(sub{
-    my($row) = @_;
-    push @Unlinked, $row->[1];
-  }, sub {}, $RowInfo->{FileId});
-  my $num_unlinked = @Unlinked;
-  if($num_unlinked > 0){
-    my $message = "ROIs with unlinked CLOSED_PLANAR Contours:\n";
-    for my $i (0 .. $#Unlinked){
-      $message .= "    $Unlinked[$i]";
-      unless($i == $#Unlinked){ $message .= "\n" }
-    }
-    $RowInfo->{UnlinkedClosedPlanar} = $message;
-  } else {
-    $RowInfo->{UnlinkedClosedPlanar} = "None";
-  }
-}
-sub PointsWithinVolume{
-  my($RowInfo) = @_;
-  $RowInfo->{PointsWithinVolume} = "Not Currently Implemented";
-}
-sub Warnings{
-  my($RowInfo) = @_;
-  if(
-    exists($RowInfo->{WarningList}) && ref($RowInfo->{WarningList}) eq "ARRAY"
-  ){
-    my $Warning = "";
-    for my $i (@{$RowInfo->{WarningList}}){
-      $Warning .= "$i\n";
-    }
-    $Warning =~ s/"/""/g;
-    $RowInfo->{Warnings} = $Warning;
-  } else {
-    $RowInfo->{Warnings} = "";
-  }
-}
+} 
+#my $bg = DebugToEmail($background);
+#$background->WriteToEmail("Debug Info:\nRois ");
+#Debug::GenPrint($bg, \%Rois, 1);
+#$background->WriteToEmail("\nSops ");
+#Debug::GenPrint($bg, \%Sops, 1);
+#$background->WriteToEmail("\nRoiNameToId ");
+#Debug::GenPrint($bg, \%RoiNameToId, 1);
+#$background->WriteToEmail("\n");
+$background->Finish;

@@ -85,6 +85,7 @@ my $get_disp = PosdaDB::Queries->GetQueryInstance("GetElementByPrivateDispositio
 my %DeleteByElement;
 my %DeleteByPattern;
 my %OffsetDate;
+my %OffsetDateByPattern;
 my %OffsetInteger;
 my %HashByElement;
 my %HashByPattern;
@@ -98,7 +99,12 @@ $get_disp->RunQuery(sub {
 }, sub {}, 'd');
 $get_disp->RunQuery(sub {
   my($row) = @_;
-  $OffsetDate{$row->[0]} = 1;
+  my $tag = $row->[0];
+  if($tag =~ /</){
+    $OffsetDateByPattern{$tag} = 1;
+  }else {
+    $OffsetDate{$tag} = 1;
+  }
 }, sub {}, 'o');
 $get_disp->RunQuery(sub {
   my($row) = @_;
@@ -163,25 +169,27 @@ for my $e (keys %HashByElement){
   }
 }
 for my $p (keys %HashByPattern){
+#print STDERR "**********\nHash by Pattern\nelement: $p\n";
   my $list = $ds->NewSearch($p);
   if(defined($list) && ref($list) eq "ARRAY" && $#{$list} >= 0){
     pat:
     for my $i (0 .. $#{$list}){
-      unless(ref($i) eq "ARRAY") {
-        print STDERR "not a list";
+      my $ps = $list->[$i];
+      unless(ref($ps) eq "ARRAY") {
+#        print STDERR "not a list\n";
         next pat;
       }
-      my $new_e = $p;
-      for my $j (0 .. $#{$i}){
-        my $new_e = $p;
-        $p =~ s/$i->{$j}/<$j>/;
-      }
+      my $new_e = $ds->DefaultSubstitute($p, $ps);
+#      for my $j (0 .. $#{$i}){
+#        my $new_e = $p;
+#        $p =~ s/$i->{$j}/<$j>/;
+#      }
       my $u = $ds->Get($new_e);
       if(defined $u && $u ne "" && $u =~ /^[0-9\.]+$/){
         my $nu = HashUID($u);
         unless($nu eq $u){
-          #print "\tElement: $new_e\n";
-          #print "\t$u\n\t =>\n\t$nu\n";
+#          print STDERR "\tElement: $new_e\n";
+#          print STDERR "\t$u\n\t =>\n\t$nu\n";
           $ds->Insert($new_e, $nu);
         }
       }
@@ -189,6 +197,7 @@ for my $p (keys %HashByPattern){
   }
 }
 for my $e (keys %OffsetDate){
+#print STDERR "**********\nOffsetDate\nelement: $e\n";
   my $date = $ds->Get($e);
   if(defined($date) && $date ne ""){
     my $new_date = ShiftDate($date);
@@ -196,6 +205,25 @@ for my $e (keys %OffsetDate){
       #print "\tElement: $e\n";
       #print "\t$date => $new_date\n";
       $ds->Insert($e, $new_date);
+    }
+  }
+}
+for my $e (keys %OffsetDateByPattern){
+#print STDERR "**********\nOffsetDatePattern\nelement: $e\n";
+  my $m = $ds->NewSearch($e);
+  if(defined $m && ref($m) eq "ARRAY"){
+    for my $p (@$m){
+      my $tag = $ds->DefaultSubstitute($e, $p);
+#      print STDERR "tag: $tag\n";
+      my $date = $ds->Get($tag);
+      if(defined($date) && $date ne ""){
+        my $new_date = ShiftDate($date);
+        if($new_date ne $date){
+#          print STDERR "\tElement: $tag\n";
+#          print STDERR "\t$date => $new_date\n";
+          $ds->Insert($tag, $new_date);
+        }
+      }
     }
   }
 }

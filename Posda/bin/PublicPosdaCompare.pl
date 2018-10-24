@@ -17,6 +17,8 @@ and does a compare of the lists.
 
 In test: reports on differences
 EOF
+print "This is obsolete - don't use\n";
+exit;
 $| = 1;
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";

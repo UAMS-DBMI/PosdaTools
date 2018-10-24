@@ -15,7 +15,8 @@ sub get_uuid {
 }
 
 use Debug;
-my $dbg = sub { print @_ };
+my $dbg = sub { print STDERR @_ };
+#my $dbg = sub { print @_ };
 $| = 1; # this should probably be at the top of the script, maybe in the lib?
 
 my $usage = <<EOF;
@@ -436,10 +437,10 @@ sub ProcessIndividualEdit{
     $tag = $1;
     $tag_mode = "leaf";
   }
-  if(look_for_private($tag)){
-    print "Error: Private reference ($tag) not supported\n";
-    exit;
-  }
+#  if(look_for_private($tag)){
+#    print "Error: Private reference ($tag) not supported\n";
+#    exit;
+#  }
   if($tag =~ /x/){
     print "Error: repeating element <$tag> not supported\n";
     exit;
@@ -680,8 +681,13 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       my $next_sop = shift @{$this->{list_of_sops}};
       my $next_struct = $this->{sop_hash}->{$next_sop};
       $this->{sops_in_process}->{$next_sop} = $next_struct;
+#print STDERR "Starting edit in BackgroundEditor.pl\n";
+#print STDERR "params: ";
+#Debug::GenPrint($dbg, $next_struct, 1);
+#print STDERR "\n";
       $this->SerializedSubProcess($next_struct,
         "NewSubprocessEditor.pl 2>/dev/null",
+#        "NewSubprocessEditor.pl",
         $this->WhenEditDone($next_sop, $next_struct));
       $num_in_process = keys %{$this->{sops_in_process}};
       $num_waiting = @{$this->{list_of_sops}};

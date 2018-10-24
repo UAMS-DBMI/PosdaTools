@@ -210,6 +210,9 @@ for my $edit(@{$edits->{edits}}){
   my $arg2 = $edit->{arg2};
   if($tag_mode eq "exact" || $tag_mode eq "item"){
     push(@effective_edits, [$tag, $op, $arg1, $arg2]);
+#    if($tag_mode eq "item"){
+#      print STDERR "Item edit: [$tag, $op, $arg1, $arg2]\n";
+#    }
   }elsif($tag_mode eq "pattern"){
     my $list = $ds->Search($tag);
     if(defined($list) && ref($list) eq "ARRAY" && $#{$list} >= 0){
