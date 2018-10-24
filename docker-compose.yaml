@@ -31,7 +31,7 @@ services:
             PGHOST: db
             PGUSER: postgres
             PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: tcia-dev-2.ad.uams.edu 
+            POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-file-process:
         image: quasarj/posda2:latest
@@ -49,7 +49,7 @@ services:
             PGHOST: db
             PGUSER: postgres
             PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: tcia-dev-2.ad.uams.edu 
+            POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
         image: quasarj/posda2:latest
