@@ -4,6 +4,7 @@ echo "Setting up development environment..."
 
 git submodule init
 git submodule update
+git submodule foreach git checkout master
 git submodule foreach git pull origin master
 
 docker pull quasarj/posda2:latest
