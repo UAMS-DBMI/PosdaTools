@@ -1,0 +1,14 @@
+.slider {
+  /* width: 1000px; */
+  width: 100%;
+}
+
+.seriescard {
+  width: 600px;
+  margin: 20px 0 10px 0;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+}

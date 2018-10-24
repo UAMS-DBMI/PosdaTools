@@ -1,0 +1,29 @@
+<h2>Image Details</h2>
+<div *ngIf="error">{{error}}</div>
+<div *ngIf="details">
+  <table>
+     <tr> <td><span class="th">Collection </span></td> <td >{{details.project_name}}</td> </tr>
+     <tr> <td><span class="th">Site </span></td> <td >{{details.site_name}}</td> </tr>
+     <tr> <td><span class="th">Patient </span></td> <td >{{details.patient_id}}</td> </tr>
+     <tr> <td><span class="th">Modality </span></td> <td >{{details.modality}}</td> </tr>
+     <tr> <td><span class="th">Body Part Examined</span></td> <td >{{details.body_part_examined}}</td> </tr>
+     <tr> <td><span class="th">Series Description</span></td> <td >{{details.series_description}}</td> </tr>
+     <tr> <td><span class="th">File ID</span></td> <td >{{data}}</td> </tr>
+     <tr> <td><span class="th">File Path </span></td> <td >{{details.file}}</td> </tr>
+     <tr> <td><span class="th">Series Instance UID </span></td> <td >{{details.series_instance_uid}}</td> </tr>
+     <tr> <td><span class="th">File/Sop Instance UID </span></td> <td >{{details.sop_instance_uid}}</td> </tr>
+     <tr> <td><span class="th">File Size </span></td> <td >{{details.size}}</td> </tr>
+     <tr> <td><span class="th">Rows </span></td> <td >{{details.pixel_rows}}</td> </tr>
+     <tr> <td><span class="th">Columns </span></td> <td >{{details.pixel_columns}}</td> </tr>
+     <tr> <td><span class="th">Bits Stored </span></td> <td >{{details.bits_stored}}</td> </tr>
+     <tr> <td><span class="th">Bits Allocated </span></td> <td >{{details.bits_allocated}}</td> </tr>
+     <tr> <td><span class="th">File Offset </span></td> <td >{{details.file_offset}}</td> </tr>
+     <tr> <td><span class="th">Photometric Interpretation </span></td> <td >{{details.photometric_interpretation}}</td> </tr>
+     <tr> <td><span class="th">Pixel Pad Value</span></td> <td >{{details.pixel_pad}}</td> </tr>
+     <tr> <td><span class="th">Pixel Representation </span></td> <td >{{details.pixel_representation}}</td> </tr>
+     <tr> <td><span class="th">Slope </span></td> <td >{{details.slope}}</td> </tr>
+     <tr> <td><span class="th">Intercept </span></td> <td >{{details.intercept}}</td> </tr>
+     <tr> <td><span class="th">Window Center </span></td> <td >{{details.window_center}}</td> </tr>
+     <tr> <td><span class="th">Window Width </span></td> <td >{{details.window_width}}</td> </tr>
+  </table>
+</div>

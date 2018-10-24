@@ -1,0 +1,20 @@
+<div id="container">
+  <md-card class="seriescard">
+    <div style="display: flex">
+      <button md-icon-button (click)="play()"><md-icon>play_arrow</md-icon></button>
+      <button md-icon-button (click)="stop()"><md-icon>pause</md-icon></button>
+      <md-slider #series_position thumbLabel
+        class="slider"
+        min="0"
+        [max]="length"
+        [value]="current_offset"
+        (input)="onChange($event)"
+      ></md-slider>
+      <button md-icon-button (click)="movePrevious()"><md-icon>keyboard_arrow_left</md-icon></button>
+      <button md-icon-button (click)="moveNext()"><md-icon>keyboard_arrow_right</md-icon></button>
+    </div>
+    <!-- <p>Current id: {{current_file_id}}</p> -->
+  </md-card>
+</div>
+
+<app-image [height]="512" [width]="512" [file_id]="current_file_id"></app-image>
