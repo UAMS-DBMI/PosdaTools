@@ -59,8 +59,6 @@ def stream(response, path, dl_filename):
                            headers={'Content-Disposition': f'attachment; filename="{dl_filename}"'})
 
 def stream_files(response, paths, dl_filename):
-    if not path.endswith('/'):
-        path += '/'
     async def streaming_fn(response):
         fake_file = ResponseFile(response)
 
