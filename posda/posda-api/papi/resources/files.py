@@ -26,6 +26,32 @@ async def get_single_file(request, file_id, **kwargs):
         await db.fetch_one(query, [int(file_id)])
     )
 
+async def get_series_files(request, series_uid, **kwargs):
+    query = """
+        select file_id
+        from
+            file_series
+            natural join file_sop_common
+            natural join ctp_file
+        where series_instance_uid = $1
+          and visibility is null
+        order by
+            -- sometimes instance_number is empty string or null
+            case instance_number
+                when '' then '0'
+                when null then '0'
+                else instance_number
+            end::int
+    """
+    # use asynctar here to get all the files and return them
+    async with db.pool.acquire() as conn:
+        records = await conn.fetch(query, series_uid)
+
+    return asynctar.stream_files(response,
+                           records,
+                           f"{series_uid}.tar.gz")
+
+
 async def get_pixel_data(request, file_id, **kwargs):
     # TODO: make this real
     return text("binary pixel data here")
@@ -33,10 +59,10 @@ async def get_pixel_data(request, file_id, **kwargs):
 async def get_data(request, file_id, **kwargs):
     query = """
         select
-            root_path || '/' || rel_path as file, 
+            root_path || '/' || rel_path as file,
             size
         from file
-        natural join file_location 
+        natural join file_location
         natural join file_storage_root
         where file_id = $1
     """

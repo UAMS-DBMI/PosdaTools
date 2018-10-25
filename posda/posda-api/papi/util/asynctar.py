@@ -57,3 +57,27 @@ def stream(response, path, dl_filename):
     return response.stream(streaming_fn, 
                            content_type='application/gzip',
                            headers={'Content-Disposition': f'attachment; filename="{dl_filename}"'})
+
+def stream_files(response, paths, dl_filename):
+    if not path.endswith('/'):
+        path += '/'
+    async def streaming_fn(response):
+        fake_file = ResponseFile(response)
+
+        # mode w|gz means stream as gzip (differs from w:gz)
+        tar = tarfile.open(fileobj=fake_file, mode='w|gz', dereference=True)
+        await asyncio.sleep(0)
+
+        for filename in paths:
+            arcname = os.path.basename(filename)
+            await add_file_to_tar(tar, filename, arcname)
+
+            await asyncio.sleep(0)
+        await asyncio.sleep(0)
+
+        tar.close()
+
+    return response.stream(streaming_fn,
+                           content_type='application/gzip',
+                           headers={'Content-Disposition': f'attachment; filename="{dl_filename}"'})
+
