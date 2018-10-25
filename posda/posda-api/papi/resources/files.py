@@ -8,6 +8,10 @@ from ..util import asynctar
 from ..util import db
 from ..util import json_objects, json_records
 
+import os
+from io import BytesIO
+import tarfile
+import asyncio
 import aiofiles
 import mimetypes
 
@@ -28,28 +32,48 @@ async def get_single_file(request, file_id, **kwargs):
 
 async def get_series_files(request, series_uid, **kwargs):
     query = """
-        select file_id
-        from
-            file_series
-            natural join file_sop_common
-            natural join ctp_file
-        where series_instance_uid = $1
-          and visibility is null
-        order by
-            -- sometimes instance_number is empty string or null
-            case instance_number
-                when '' then '0'
-                when null then '0'
-                else instance_number
-            end::int
+	select root_path || '/' || rel_path as file
+			    from
+				file_series
+				natural join file_sop_common
+				natural join ctp_file
+				natural join file_image
+				natural join file_location
+				natural join file_storage_root
+			    where series_instance_uid = $1
+			      and visibility is null
     """
     # use asynctar here to get all the files and return them
     async with db.pool.acquire() as conn:
-        records = await conn.fetch(query, series_uid)
+        records = [x[0] for x in await conn.fetch(query, series_uid)]
 
-    return asynctar.stream_files(response,
-                           records,
-                           f"{series_uid}.tar.gz")
+    # build tar
+    tar = tarfile.open(f"/tmp/{series_uid}.tar.gz", mode='w|gz', dereference=True)
+    for filename in records:
+        arcname = os.path.basename(filename)
+        f = await aiofiles.open(filename, mode='rb')
+        test = BytesIO(await f.read())
+
+        info = tarfile.TarInfo(arcname)
+        info.size = test.getbuffer().nbytes
+
+        tar.addfile(info, fileobj=test)
+
+    tar.close()
+    try:
+        async with aiofiles.open(f"/tmp/{series_uid}.tar.gz", 'rb') as f:
+            data = await f.read()
+    except FileNotFoundError:
+        raise NotFound("File not found on disk")
+
+    return HTTPResponse(
+        status=200,
+        content_type='application/gzip',
+        headers={'Content-Disposition':
+                 f"attachment; "
+                 f"filename=\"{series_uid}.tar.gz\""},
+        body_bytes=data
+    )
 
 
 async def get_pixel_data(request, file_id, **kwargs):
