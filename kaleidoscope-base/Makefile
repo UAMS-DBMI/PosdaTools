@@ -1,4 +1,4 @@
-TAG=$(shell git --git-dir=./k-base/.git rev-parse --short HEAD)
+TAG=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=quasarj/k-base
 TEST_NAME=k-base_test
 .PHONY: push
