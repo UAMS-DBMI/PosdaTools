@@ -1,4 +1,4 @@
-TAG=$(shell git --git-dir=./kaleidoscope/.git rev-parse --short HEAD)
+TAG=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=quasarj/kaleidoscope
 .PHONY: push
 
