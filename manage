@@ -12,6 +12,7 @@ Supported operations:
     up - bring up all containers via docker-compose
          specify -d to detatch (attached by default)
     down - bring down all containers via docker-compose
+    restart - restart containers without removing
     psql - execute the PostgreSQL shell inside the running db container
     shell - open a Posda Shell inside the main Posda container
     logs - open and follow the full logs
@@ -20,6 +21,10 @@ Supported operations:
 
 
 case "$1" in
+  restart)
+    shift
+    exec docker-compose restart $*
+    ;;
   up)
     shift
     make -C posda posdatools/posda.env
@@ -33,7 +38,7 @@ case "$1" in
 
   psql)
     shift
-    exec docker exec -it posda2_db_1 psql -U postgres $*
+    exec docker-compose exec db psql -U postgres $*
     ;;
 
   shell)
