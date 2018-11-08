@@ -17,7 +17,7 @@ export class SeriesComponent implements OnInit {
 
   private timerSub: any = undefined;
 
-  constructor(private http: Http, 
+  constructor(private http: Http,
               private route: ActivatedRoute,
               private router: Router
               ) { }
@@ -83,5 +83,9 @@ export class SeriesComponent implements OnInit {
       this.timerSub.unsubscribe();
       this.timerSub = undefined;
     }
+  }
+
+  download_link(): string {
+    return '/papi/v1/files/series/' + this.series_instance_uid;
   }
 }
