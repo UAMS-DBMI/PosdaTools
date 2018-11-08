@@ -47,8 +47,13 @@ async def get_series_files(request, series_uid, **kwargs):
     async with db.pool.acquire() as conn:
         records = [x[0] for x in await conn.fetch(query, series_uid)]
 
+    """
+    file_name = f"{series_uid}.tar.gz"
+    return asynctar.stream_files(response, records, file_name)
+    """
     # build tar
-    tar = tarfile.open(f"/tmp/{series_uid}.tar.gz", mode='w|gz', dereference=True)
+    file_path = f"/tmp/{series_uid}.tar.gz"
+    tar = tarfile.open(file_path, mode='w|gz', dereference=True)
     for filename in records:
         arcname = os.path.basename(filename)
         f = await aiofiles.open(filename, mode='rb')
@@ -60,20 +65,20 @@ async def get_series_files(request, series_uid, **kwargs):
         tar.addfile(info, fileobj=test)
 
     tar.close()
-    try:
-        async with aiofiles.open(f"/tmp/{series_uid}.tar.gz", 'rb') as f:
-            data = await f.read()
-    except FileNotFoundError:
-        raise NotFound("File not found on disk")
 
-    return HTTPResponse(
-        status=200,
-        content_type='application/gzip',
-        headers={'Content-Disposition':
-                 f"attachment; "
-                 f"filename=\"{series_uid}.tar.gz\""},
-        body_bytes=data
-    )
+    async def streaming_fn(response):
+        f = await aiofiles.open(file_path, mode='rb')
+        while True:
+            chunk = await f.read(4096)
+            if(not chunk):
+                break
+            await response.write(chunk)
+        f.close()
+        os.remove(file_path)
+
+    return response.stream(streaming_fn,
+                           content_type='application/gzip',
+                           headers={'Content-Disposition': f'attachment; filename="{series_uid}.tar.gz"'})
 
 
 async def get_pixel_data(request, file_id, **kwargs):

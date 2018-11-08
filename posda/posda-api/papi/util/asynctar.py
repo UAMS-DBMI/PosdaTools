@@ -13,8 +13,8 @@ class ResponseFile:
     def __init__(self, response):
         self._response = response
 
-    def write(self, data):
-        self._response.write(data)
+    async def write(self, data):
+        await self._response.write(data)
 
     def tell(self):
         return 0
@@ -39,22 +39,22 @@ def stream(response, path, dl_filename):
         tar = tarfile.open(fileobj=fake_file, mode='w|gz', dereference=True)
         await asyncio.sleep(0)
 
-        for dirpath, dirnames, filenames in os.walk(path):
-            for filename in filenames:
+        async for dirpath, dirnames, filenames in os.walk(path):
+            async for filename in filenames:
 
                 full_filename = os.path.join(dirpath, filename)
 
                 # Remove the leading path info from the filename before
                 # adding it to the archive, so it extracs nicely
                 arcname = full_filename.replace(path, '')
-                await add_file_to_tar(tar, full_filename, arcname)
+                add_file_to_tar(tar, full_filename, arcname)
 
                 await asyncio.sleep(0)
             await asyncio.sleep(0)
 
         tar.close()
 
-    return response.stream(streaming_fn, 
+    return response.stream(streaming_fn,
                            content_type='application/gzip',
                            headers={'Content-Disposition': f'attachment; filename="{dl_filename}"'})
 
@@ -64,18 +64,13 @@ def stream_files(response, paths, dl_filename):
 
         # mode w|gz means stream as gzip (differs from w:gz)
         tar = tarfile.open(fileobj=fake_file, mode='w|gz', dereference=True)
-        await asyncio.sleep(0)
 
         for filename in paths:
             arcname = os.path.basename(filename)
             await add_file_to_tar(tar, filename, arcname)
-
-            await asyncio.sleep(0)
-        await asyncio.sleep(0)
 
         tar.close()
 
     return response.stream(streaming_fn,
                            content_type='application/gzip',
                            headers={'Content-Disposition': f'attachment; filename="{dl_filename}"'})
-
