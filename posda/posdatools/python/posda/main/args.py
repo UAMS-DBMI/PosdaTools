@@ -18,7 +18,7 @@ class Parser(object):
     def parse(self):
         # TODO: build an arg parser???
 
-        if len(sys.argv) < len(self.arguments):
+        if len(sys.argv) < len(self.arguments) + 1:
             self.usage()
             if '-h' in sys.argv:
                 print()
