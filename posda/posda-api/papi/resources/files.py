@@ -30,28 +30,7 @@ async def get_single_file(request, file_id, **kwargs):
         await db.fetch_one(query, [int(file_id)])
     )
 
-async def get_series_files(request, series_uid, **kwargs):
-    query = """
-	select root_path || '/' || rel_path as file
-			    from
-				file_series
-				natural join file_sop_common
-				natural join ctp_file
-				natural join file_image
-				natural join file_location
-				natural join file_storage_root
-			    where series_instance_uid = $1
-			      and visibility is null
-    """
-    # use asynctar here to get all the files and return them
-    async with db.pool.acquire() as conn:
-        records = [x[0] for x in await conn.fetch(query, series_uid)]
-
-    """
-    file_name = f"{series_uid}.tar.gz"
-    return asynctar.stream_files(response, records, file_name)
-    """
-    # build tar
+async def tar_files_and_stream(records):
     file_path = f"/tmp/{series_uid}.tar.gz"
     tar = tarfile.open(file_path, mode='w|gz', dereference=True)
     for filename in records:
@@ -80,6 +59,50 @@ async def get_series_files(request, series_uid, **kwargs):
                            content_type='application/gzip',
                            headers={'Content-Disposition': f'attachment; filename="{series_uid}.tar.gz"'})
 
+
+async def get_series_files(request, series_uid, **kwargs):
+    query = """
+	select root_path || '/' || rel_path as file
+			    from
+				file_series
+				natural join file_sop_common
+				natural join ctp_file
+				natural join file_image
+				natural join file_location
+				natural join file_storage_root
+			    where series_instance_uid = $1
+			      and visibility is null
+    """
+    # use asynctar here to get all the files and return them
+    async with db.pool.acquire() as conn:
+        records = [x[0] for x in await conn.fetch(query, series_uid)]
+
+    """
+    file_name = f"{series_uid}.tar.gz"
+    return asynctar.stream_files(response, records, file_name)
+    """
+    return tar_files_and_stream(records)
+
+async def get_iec_files(request, iec_id, **kwargs):
+    query = """
+	select root_path || '/' || rel_path as file
+			    from
+				file_series
+				natural join file_sop_common
+				natural join ctp_file
+				natural join file_image
+				natural join file_location
+				natural join file_storage_root
+                natural join image_equivalence_class_input
+                natural join image_equivalence_class
+			    where image_equivalence_class_id = $1
+			      and visibility is null
+    """
+    # use asynctar here to get all the files and return them
+    async with db.pool.acquire() as conn:
+        records = [x[0] for x in await conn.fetch(query, iec_id)]
+
+    return tar_files_and_stream(records)
 
 async def get_pixel_data(request, file_id, **kwargs):
     # TODO: make this real
