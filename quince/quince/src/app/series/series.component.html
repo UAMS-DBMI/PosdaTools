@@ -12,6 +12,7 @@
       ></md-slider>
       <button md-icon-button (click)="movePrevious()"><md-icon>keyboard_arrow_left</md-icon></button>
       <button md-icon-button (click)="moveNext()"><md-icon>keyboard_arrow_right</md-icon></button>
+      <a [href]="download_link()"><button md-icon-button><md-icon>save_alt</md-icon></button></a>
     </div>
     <!-- <p>Current id: {{current_file_id}}</p> -->
   </md-card>

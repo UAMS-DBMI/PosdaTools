@@ -1,0 +1,10 @@
+{
+	"/vapi": {
+		"target": "http://tcia-dev-3.ad.uams.edu/",
+		"secure": false
+	},
+	"/papi": {
+		"target": "http://tcia-dev-3.ad.uams.edu/",
+		"secure": false
+	}
+}

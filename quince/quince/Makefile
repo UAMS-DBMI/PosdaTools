@@ -9,6 +9,7 @@ build: /html
 
 /html: node_modules
 	$(NG) build --prod --base-href "/viewer/" --aot=false
+	mkdir /html
 	cp -r dist/* /html/
 
 serve: node_modules

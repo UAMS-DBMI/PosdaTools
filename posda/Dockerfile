@@ -70,7 +70,7 @@ RUN pip3 install xlsx2csv mysql-connector python-box
 
 COPY posdatools /home/posda/posdatools
 COPY posda-api/ /posda-api/
-RUN pip3 install -r /posda-api/requirements.frozen.txt
+RUN pip3 install -r /posda-api/requirements.txt
 
 WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]

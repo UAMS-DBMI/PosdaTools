@@ -4,7 +4,8 @@ RUN apk --update add alpine-sdk \
 					 python3 \
 					 postgresql-client \
 					 python3-dev  \
-					 nodejs
+					 nodejs	\
+					 npm
 
 COPY quince/ /app/
 RUN pip3 install -r /app/server/requirements.txt
