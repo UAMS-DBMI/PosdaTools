@@ -88,13 +88,13 @@ async def get_iec_files(request, iec_id, **kwargs):
 				ctp_file
 				natural join file_location
 				natural join file_storage_root
-                natural join image_equivalence_class_input
+                natural join image_equivalence_class_input_image
 			    where image_equivalence_class_id = $1
 			      and visibility is null
     """
     # use asynctar here to get all the files and return them
     async with db.pool.acquire() as conn:
-        records = [x[0] for x in await conn.fetch(query, iec_id)]
+        records = [x[0] for x in await conn.fetch(query, int(iec_id))]
 
     return await tar_files_and_stream(records, iec_id)
 

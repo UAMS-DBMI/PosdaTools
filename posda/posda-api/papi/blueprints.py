@@ -110,7 +110,7 @@ def generate_files_blueprint():
     blueprint.add_route(fi.get_all_files, '/')
     blueprint.add_route(fi.get_single_file, '/<file_id>')
     blueprint.add_route(fi.get_series_files, '/series/<series_uid>')
-    blueprint.add_route(fi.get_iec_files, '/iec/<series_uid>')
+    blueprint.add_route(fi.get_iec_files, '/iec/<iec_id>')
     blueprint.add_route(fi.get_pixel_data, '/<file_id>/pixels')
     blueprint.add_route(fi.get_data, '/<file_id>/data')
 
