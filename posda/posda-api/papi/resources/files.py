@@ -30,8 +30,8 @@ async def get_single_file(request, file_id, **kwargs):
         await db.fetch_one(query, [int(file_id)])
     )
 
-async def tar_files_and_stream(records):
-    file_path = f"/tmp/{series_uid}.tar.gz"
+async def tar_files_and_stream(records, file_name):
+    file_path = f"/tmp/{file_name}.tar.gz"
     tar = tarfile.open(file_path, mode='w|gz', dereference=True)
     for filename in records:
         arcname = os.path.basename(filename)
@@ -57,7 +57,7 @@ async def tar_files_and_stream(records):
 
     return response.stream(streaming_fn,
                            content_type='application/gzip',
-                           headers={'Content-Disposition': f'attachment; filename="{series_uid}.tar.gz"'})
+                           headers={'Content-Disposition': f'attachment; filename="{file_name}.tar.gz"'})
 
 
 async def get_series_files(request, series_uid, **kwargs):
@@ -79,7 +79,7 @@ async def get_series_files(request, series_uid, **kwargs):
     file_name = f"{series_uid}.tar.gz"
     return asynctar.stream_files(response, records, file_name)
     """
-    return tar_files_and_stream(records)
+    return await tar_files_and_stream(records, series_uid)
 
 async def get_iec_files(request, iec_id, **kwargs):
     query = """
@@ -96,7 +96,7 @@ async def get_iec_files(request, iec_id, **kwargs):
     async with db.pool.acquire() as conn:
         records = [x[0] for x in await conn.fetch(query, iec_id)]
 
-    return tar_files_and_stream(records)
+    return await tar_files_and_stream(records, iec_id)
 
 async def get_pixel_data(request, file_id, **kwargs):
     # TODO: make this real
