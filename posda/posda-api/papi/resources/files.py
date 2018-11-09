@@ -65,9 +65,7 @@ async def get_series_files(request, series_uid, **kwargs):
 	select root_path || '/' || rel_path as file
 			    from
 				file_series
-				natural join file_sop_common
 				natural join ctp_file
-				natural join file_image
 				natural join file_location
 				natural join file_storage_root
 			    where series_instance_uid = $1
@@ -87,14 +85,10 @@ async def get_iec_files(request, iec_id, **kwargs):
     query = """
 	select root_path || '/' || rel_path as file
 			    from
-				file_series
-				natural join file_sop_common
-				natural join ctp_file
-				natural join file_image
+				ctp_file
 				natural join file_location
 				natural join file_storage_root
                 natural join image_equivalence_class_input
-                natural join image_equivalence_class
 			    where image_equivalence_class_id = $1
 			      and visibility is null
     """
