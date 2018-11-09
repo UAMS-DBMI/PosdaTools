@@ -10,6 +10,8 @@ import { Observable } from 'rxjs/Rx';
 })
 export class SeriesComponent implements OnInit {
   private series_instance_uid: string = '1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315';
+  private iec_id: string;
+  private show_download: boolean = false;
   private file_ids: number[];
   public current_offset: number;
   public current_file_id: number;
@@ -28,10 +30,13 @@ export class SeriesComponent implements OnInit {
 
     if (uid === undefined) {
       let iec = this.route.snapshot.params['iec'];
+      this.iec_id = iec;
+      this.show_download = true;
       this.http.get("/vapi/iec_info/" + iec).subscribe(
         res => this.handleResponse(res.json())
       );
     } else {
+      this.show_download = true;
       this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
         res => this.handleResponse(res.json())
       );
@@ -86,6 +91,10 @@ export class SeriesComponent implements OnInit {
   }
 
   download_link(): string {
-    return '/papi/v1/files/series/' + this.series_instance_uid;
+    if(this.iec_id !== undefined){
+      return '/papi/v1/files/iec/' + this.iec_id;
+    } else if(this.series_instance_uid !== undefined) {
+      return '/papi/v1/files/series/' + this.series_instance_uid;
+    }
   }
 }
