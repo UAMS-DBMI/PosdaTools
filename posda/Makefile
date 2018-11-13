@@ -1,5 +1,5 @@
 TAG=$(shell git rev-parse --short HEAD)
-IMAGE_NAME=quasarj/posda2
+IMAGE_NAME=tcia/posda
 .PHONY: push
 
 default: build

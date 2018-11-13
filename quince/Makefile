@@ -1,5 +1,5 @@
 TAG=$(shell git rev-parse --short HEAD)
-IMAGE_NAME=quasarj/quince
+IMAGE_NAME=tcia/quince
 .PHONY: push
 
 default: build
