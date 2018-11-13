@@ -36,7 +36,7 @@ async def tar_files_and_stream(records, file_name):
         tar = tarfile.open(file_path, mode='w|gz', dereference=True)
         out = await aiofiles.open(file_path, mode='rb')
         for filename in records:
-            arcname = os.path.basename(filename)
+            arcname = os.path.join(file_name, os.path.basename(filename))
             f = await aiofiles.open(filename, mode='rb')
             test = BytesIO(await f.read())
 
@@ -51,8 +51,14 @@ async def tar_files_and_stream(records, file_name):
                 await response.write(chunk)
 
         tar.close()
+        while True:
+            chunk = await out.read(1024 * 512)
+            if(not chunk):
+                break
+            await response.write(chunk)
 
         f.close()
+        out.close()
         os.remove(file_path)
 
     return response.stream(streaming_fn,
