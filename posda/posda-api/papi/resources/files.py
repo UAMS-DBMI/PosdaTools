@@ -31,27 +31,27 @@ async def get_single_file(request, file_id, **kwargs):
     )
 
 async def tar_files_and_stream(records, file_name):
-    file_path = f"/tmp/{file_name}.tar.gz"
-    tar = tarfile.open(file_path, mode='w|gz', dereference=True)
-    for filename in records:
-        arcname = os.path.basename(filename)
-        f = await aiofiles.open(filename, mode='rb')
-        test = BytesIO(await f.read())
-
-        info = tarfile.TarInfo(arcname)
-        info.size = test.getbuffer().nbytes
-
-        tar.addfile(info, fileobj=test)
-
-    tar.close()
-
     async def streaming_fn(response):
-        f = await aiofiles.open(file_path, mode='rb')
-        while True:
-            chunk = await f.read(4096)
-            if(not chunk):
-                break
-            await response.write(chunk)
+        file_path = f"/tmp/{file_name}.tar.gz"
+        tar = tarfile.open(file_path, mode='w|gz', dereference=True)
+        out = await aiofiles.open(file_path, mode='rb')
+        for filename in records:
+            arcname = os.path.basename(filename)
+            f = await aiofiles.open(filename, mode='rb')
+            test = BytesIO(await f.read())
+
+            info = tarfile.TarInfo(arcname)
+            info.size = test.getbuffer().nbytes
+
+            tar.addfile(info, fileobj=test)
+            while True:
+                chunk = await out.read(1024 * 512)
+                if(not chunk):
+                    break
+                await response.write(chunk)
+
+        tar.close()
+
         f.close()
         os.remove(file_path)
 
