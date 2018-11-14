@@ -130,7 +130,10 @@ export class ImageComponent implements OnInit {
 
     // console.log("drawing");
     let data = this.current_image.pixel_data;
-    let source = new Uint16Array(data); // load bytes in array
+    let source: any = new Uint16Array(data); // load bytes in array
+    if(this.current_image.bits_allocated == 8){
+      source = new Uint8Array(data); // load bytes in array
+    }
     let image = new Uint8Array(source.length);
 
     // test values ---------
@@ -159,12 +162,22 @@ export class ImageComponent implements OnInit {
     // window/level into 8bit array
     for (let i = 0; i < source.length; i++) {
       let val = (source[i] * slope) + intercept;
-      if (val <= w_bottom) {
-        image[i] = 0;
-      } else if (val > w_top) {
-        image[i] = 255;
+      // Apply window and level if more than 8 bits allocated
+      if(this.current_image.bits_allocated > 8){
+        if (val <= w_bottom) {
+          image[i] = 0;
+        } else if (val > w_top) {
+          image[i] = 255;
+        } else {
+          image[i] = ((val - (w_center - w_width / 2)) / w_width) * 255;
+        }
       } else {
-        image[i] = ((val - (w_center - w_width / 2)) / w_width) * 255;
+        image[i] = val;
+        // MONOCHROME2 has reversed colors
+        if(this.current_image.photometric_interpretation == 'MONOCHROME2'){
+          // javascript for bitwise not
+          image[i] = ~image[i];
+        }
       }
     }
 
@@ -173,11 +186,13 @@ export class ImageComponent implements OnInit {
 
   draw(): void {
 
+    /*
     // width and height should be passed back from the REST endpoint
-    if (this.current_image.width > 1000 || this.current_image.height > 1000) {
+    if (this.current_image.width > 10000 || this.current_image.height > 10000) {
       this.drawError(2);
       return;
     }
+    */
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
         // make an image without winlev

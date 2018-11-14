@@ -10,5 +10,7 @@ export interface Image {
     pixel_representation: number;
     photometric_interpretation: string;
     planar_configuration: number;
+    bits_allocated: number;
+    bits_stored: number;
     pixel_data?: ArrayBuffer;
 }
