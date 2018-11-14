@@ -1,6 +1,5 @@
 TAG=$(shell git rev-parse --short HEAD)
-IMAGE_NAME=quasarj/k-base
-TEST_NAME=k-base_test
+IMAGE_NAME=tcia/k-base
 .PHONY: push
 
 default: build
@@ -8,7 +7,6 @@ default: build
 build: last_built 
 
 last_built: Dockerfile
-	@docker stop ${TEST_NAME} || true
 	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 

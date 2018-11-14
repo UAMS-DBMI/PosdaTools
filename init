@@ -2,8 +2,8 @@
 
 echo "Setting up development environment..."
 
-docker pull quasarj/posda2:latest
-docker pull quasarj/kaleidoscope:latest
-docker pull quasarj/k-base:latest
-docker pull quasarj/quince:latest
-docker pull quasarj/posda_nginx:latest
+docker pull tcia/posda:latest
+docker pull tcia/kaleidoscope:latest
+docker pull tcia/k-base:latest
+docker pull tcia/quince:latest
+docker pull tcia/posda_nginx:latest

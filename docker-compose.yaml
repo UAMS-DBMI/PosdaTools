@@ -15,7 +15,7 @@ services:
             - 5433:5432
 
     posda:
-        image: quasarj/posda2:latest
+        image: tcia/posda:latest
         restart: always
         depends_on:
             - db
@@ -34,7 +34,7 @@ services:
             POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-file-process:
-        image: quasarj/posda2:latest
+        image: tcia/posda:latest
         command: file-process
         restart: always
         depends_on:
@@ -52,7 +52,7 @@ services:
             POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
-        image: quasarj/posda2:latest
+        image: tcia/posda:latest
         command: api
         restart: always
         depends_on:
@@ -70,7 +70,7 @@ services:
             - /nas:/nas
 
     quince:
-        image: quasarj/quince:latest
+        image: tcia/quince:latest
         restart: always
         depends_on:
             - db
@@ -86,7 +86,7 @@ services:
             PGPASSWORD: example
 
     kaleidoscope:
-        image: quasarj/kaleidoscope:latest
+        image: tcia/kaleidoscope:latest
         restart: always
         depends_on:
             - db
@@ -102,7 +102,7 @@ services:
             #DEBUG: 1
 
     k-base:
-        image: quasarj/k-base:latest
+        image: tcia/k-base:latest
         restart: always
         depends_on:
             - db
@@ -119,7 +119,7 @@ services:
             - quince:quince
 
     nginx:
-        image: quasarj/posda_nginx:latest
+        image: tcia/posda_web:latest
         restart: always
         ports:
             - 80:80
