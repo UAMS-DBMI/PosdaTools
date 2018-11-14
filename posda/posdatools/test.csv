@@ -1,0 +1,6 @@
+series_instance_uid,op,tag,val1,val2,Operation,description,notify
+1,delete_tag,<FirstRow>,<>,<>,BackgroundEdit,"just cause",quasarj
+2,delete_tag,<SecondRow>,<>,<>
+3,delete_tag,<ThirdRow>,<>,<>
+4,delete_tag,<FourthRow>,<>,<>
+5,set_tag,<FifthTag>,<Some Cool Value :)>,<>
