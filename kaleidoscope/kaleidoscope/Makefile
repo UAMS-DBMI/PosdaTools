@@ -9,6 +9,7 @@ build: /html
 
 /html: node_modules
 	$(NG) build --prod --base-href "/k/"
+	mkdir $@
 	cp -r dist/* $@
 
 serve: node_modules

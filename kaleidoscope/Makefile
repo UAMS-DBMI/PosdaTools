@@ -1,5 +1,5 @@
 TAG=$(shell git rev-parse --short HEAD)
-IMAGE_NAME=quasarj/kaleidoscope
+IMAGE_NAME=tcia/kaleidoscope
 .PHONY: push
 
 default: build
