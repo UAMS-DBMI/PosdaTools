@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.5
+-- Dumped by pg_dump version 10.5 (Ubuntu 10.5-0ubuntu0.18.04)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -371,6 +371,41 @@ CREATE TABLE public.collection_codes (
 
 
 --
+-- Name: compare_public_to_posda_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.compare_public_to_posda_instance (
+    compare_public_to_posda_instance_id integer NOT NULL,
+    when_compare_started timestamp without time zone,
+    when_compare_completed timestamp without time zone,
+    status_of_compare text,
+    number_of_sops integer,
+    number_compares_completed integer,
+    num_failed integer,
+    last_updated timestamp without time zone
+);
+
+
+--
+-- Name: compare_public_to_posda_insta_compare_public_to_posda_insta_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.compare_public_to_posda_insta_compare_public_to_posda_insta_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: compare_public_to_posda_insta_compare_public_to_posda_insta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.compare_public_to_posda_insta_compare_public_to_posda_insta_seq OWNED BY public.compare_public_to_posda_instance.compare_public_to_posda_instance_id;
+
+
+--
 -- Name: contour_image; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -696,7 +731,8 @@ CREATE TABLE public.dicom_file (
     has_pixel_data boolean,
     pixel_data_digest text,
     pixel_data_offset integer,
-    pixel_data_length integer
+    pixel_data_length integer,
+    has_no_roi_linkages boolean
 );
 
 
@@ -2232,6 +2268,41 @@ CREATE TABLE public.posda_public_compare (
 
 
 --
+-- Name: public_to_posda_file_comparison; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.public_to_posda_file_comparison (
+    public_to_posda_file_comparison_id integer NOT NULL,
+    compare_public_to_posda_instance_id integer NOT NULL,
+    sop_instance_uid text NOT NULL,
+    posda_file_id integer,
+    posda_file_path text,
+    public_file_path text,
+    short_report_file_id integer,
+    long_report_file_id integer
+);
+
+
+--
+-- Name: public_to_posda_file_comparis_public_to_posda_file_comparis_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.public_to_posda_file_comparis_public_to_posda_file_comparis_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: public_to_posda_file_comparis_public_to_posda_file_comparis_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.public_to_posda_file_comparis_public_to_posda_file_comparis_seq OWNED BY public.public_to_posda_file_comparison.public_to_posda_file_comparison_id;
+
+
+--
 -- Name: related_roi_observations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3122,6 +3193,17 @@ CREATE TABLE quasar.kirk_series (
 
 
 --
+-- Name: mvtest; Type: MATERIALIZED VIEW; Schema: quasar; Owner: -
+--
+
+CREATE MATERIALIZED VIEW quasar.mvtest AS
+ SELECT DISTINCT ctp_file.project_name,
+    ctp_file.site_name
+   FROM public.ctp_file
+  WITH NO DATA;
+
+
+--
 -- Name: sops; Type: TABLE; Schema: quasar; Owner: -
 --
 
@@ -3168,6 +3250,13 @@ ALTER TABLE ONLY public.association ALTER COLUMN association_id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.association_pc ALTER COLUMN association_pc_id SET DEFAULT nextval('public.association_pc_association_pc_id_seq'::regclass);
+
+
+--
+-- Name: compare_public_to_posda_instance compare_public_to_posda_instance_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.compare_public_to_posda_instance ALTER COLUMN compare_public_to_posda_instance_id SET DEFAULT nextval('public.compare_public_to_posda_insta_compare_public_to_posda_insta_seq'::regclass);
 
 
 --
@@ -3287,6 +3376,13 @@ ALTER TABLE ONLY public.import_event ALTER COLUMN import_event_id SET DEFAULT ne
 --
 
 ALTER TABLE ONLY public.plan ALTER COLUMN plan_id SET DEFAULT nextval('public.plan_plan_id_seq'::regclass);
+
+
+--
+-- Name: public_to_posda_file_comparison public_to_posda_file_comparison_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.public_to_posda_file_comparison ALTER COLUMN public_to_posda_file_comparison_id SET DEFAULT nextval('public.public_to_posda_file_comparis_public_to_posda_file_comparis_seq'::regclass);
 
 
 --
@@ -4040,6 +4136,13 @@ CREATE INDEX image_equivalence_class_out_image_idx ON public.image_equivalence_c
 --
 
 CREATE UNIQUE INDEX image_equivalence_class_pk ON public.image_equivalence_class USING btree (image_equivalence_class_id);
+
+
+--
+-- Name: image_equivalence_class_vri; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX image_equivalence_class_vri ON public.image_equivalence_class USING btree (visual_review_instance_id);
 
 
 --
