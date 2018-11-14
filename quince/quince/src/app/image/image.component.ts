@@ -54,6 +54,8 @@ export class ImageComponent implements OnInit {
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
+  private roi_display = false;
+
 
   constructor(
     private http: Http,
@@ -291,9 +293,9 @@ export class ImageComponent implements OnInit {
      * and do automatic scaling.
      */
     try {
-      createImageBitmap(newImageData).then(img => {
-        c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        c.drawImage(img, this.offset.x, this.offset.y,
+      createImageBitmap(newImageData).then(img => { //built in js function
+        c.clearRect(0, 0, this.canvas.width, this.canvas.height); //clear screen
+        c.drawImage(img, this.offset.x, this.offset.y, //actual drawing
           this.current_image.width * this.zoom_level,
           this.current_image.height * this.zoom_level);
       });
