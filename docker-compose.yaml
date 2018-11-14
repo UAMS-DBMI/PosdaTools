@@ -34,7 +34,7 @@ services:
             POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-file-process:
-        image: tcia/posda2:latest
+        image: tcia/posda:latest
         command: file-process
         restart: always
         depends_on:
@@ -52,7 +52,7 @@ services:
             POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
-        image: tcia/posda2:latest
+        image: tcia/posda:latest
         command: api
         restart: always
         depends_on:
