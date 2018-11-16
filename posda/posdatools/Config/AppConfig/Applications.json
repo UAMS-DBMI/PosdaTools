@@ -101,7 +101,7 @@
     "DicomReceiver": {
       "ObjClass": "Posda::Receiver",
       "CreationArgs": [
-         1104,
+         104,
          ["Config", "DicomReceiver"],
          "POSDA_SUBMISSION_ROOT",
       ],
