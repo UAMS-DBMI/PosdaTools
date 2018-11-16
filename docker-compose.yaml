@@ -21,6 +21,7 @@ services:
             - db
         ports:
             - 64610-64699:64610-64699
+            - 11112:104
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools

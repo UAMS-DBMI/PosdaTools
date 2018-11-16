@@ -98,6 +98,14 @@
     },
   },
   "StaticObjs": {
+    "DicomReceiver": {
+      "ObjClass": "Posda::Receiver",
+      "CreationArgs": [
+         104,
+         ["Config", "DicomReceiver"],
+         "POSDA_SUBMISSION_ROOT",
+      ],
+    }
   },
   "BomDirs": {
     "Posda": "POSDA_ROOT/Posda",
