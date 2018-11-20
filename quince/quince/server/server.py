@@ -263,8 +263,12 @@ async def get_image(request, file_id):
         select
         	a.roi_id
         	,a.roi_name
-        	,a.roi_color
         	,c.roi_contour_id
+            ,i.pixel_rows
+	        ,i.pixel_columns
+            ,j.ipp
+            ,i.pixel_spacing
+            ,a.roi_color
         	,c.contour_data
         from
         	roi a
@@ -279,6 +283,12 @@ async def get_image(request, file_id):
         		on f.file_id = e.file_id
         	join file_series g
         		on g.file_id = f.file_id
+            join file_image h
+        		on f.file_id = h.file_id
+        	join image i
+        		on h.image_id = i.image_id
+        	join image_geometry j
+        		on i.image_id = j.image_id
         	where g.file_id = $1
     """
 
@@ -288,12 +298,22 @@ async def get_image(request, file_id):
 
     rois = []
     for row in records:
-        points = row[4].split('\\')
+
+        ipp_split = row[5].split('\\')
+        pxlspc = row[6].split('\\')
+        rgb = row[7].split('\\')
+
+        points = row[8].split('\\')
         splitpoints = iter(points)
+
         rois.append({"roi_id": row[0],
                      "roi_name": row[1],
-                     "roi_color": row[2],
-                     "roi_contour_id": row[3],
+                     "roi_contour_id": row[2],
+                     "pixel_rows": row[3],
+                     "pixel_columns": row[4],
+                     "ipp": ipp_split,
+                     "pixel_spacing": pxlspc,
+                     "roi_color": rgb,
                      "contour_data": [(x,y) for x,y,z in zip(splitpoints,splitpoints,splitpoints)]})
     return json(rois)
 
