@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { Image } from './image';
+import { Roi } from './roi';
 import { Observable } from 'rxjs';
 import { ImageDetails } from './image-details';
 
 @Injectable()
 export class FileService {
   private map: { [file_id: number]: Observable<Image>; } = {};
+  private roi_map: { [file_id: number]: Observable<Roi[]>; } = {};
 
   constructor(private http: Http) {}
 
@@ -33,6 +35,18 @@ export class FileService {
     );
   }
 
+
+
+  getRois(file_id: number): Observable<any> {
+    if (undefined == this.roi_map[file_id]) {
+      this.roi_map[file_id] = this.http.get("/vapi/details/ROI/" + file_id).map(
+        res => res.json()
+      ).publishReplay(1).refCount();
+    }
+    return this.roi_map[file_id];
+  }
+
+
   getDump(file_id: number): Observable<any> {
     return this.http.get("/papi/v1/dump/" + file_id).map(
       res => res.text()
@@ -58,4 +72,21 @@ export class FileService {
 
     return img;
   }
+
+/*  processRoiHeaders(headers: any): Roi {
+    let roi = {
+      roi_id: Number(headers.get('roi_id')),
+      roi_name: Number(headers.get('roi_name')),
+      roi_contour_id: Number(headers.get('roi_contour_id')),
+      pixel_rows: Number(headers.get('pixel_rows')),
+      pixel_columns: Number(headers.get('pixel_columns')),
+      ipp: headers.get('ipp'),
+      pixel_spacing: headers.get('pixel_spacing'),
+      roi_color: headers.get('roi_color'),
+      countour_data: headers.get('countour_data'),
+    };
+
+    return roi;
+  }
+  */
 }
