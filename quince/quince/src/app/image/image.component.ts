@@ -505,6 +505,10 @@ export class ImageComponent implements OnInit {
   }
   public toggleROI(): void{
     this.roi_display = !this.roi_display;
-    this.draw();
+    if(this.roi_display){
+      this.loadROI();
+    } else {
+      this.draw();
+    }
   }
 }

@@ -22,31 +22,30 @@
         [value]="getWindowCenter()"
         (input)="onChangeCenter($event)"
     ></mat-slider>
-      <mat-menu #appMenu="matMenu">
-        <button mat-menu-item (click)="winlev(2000, 300)">Bone</button>
-        <button mat-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
+  </div>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="winlev(2000, 300)">Bone</button>
+    <button mat-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
 
-        <button mat-menu-item (click)="winlev(350, 50)">Abdomen</button>
-        <button mat-menu-item (click)="winlev(450, 50)">Pelvis</button>
-        <button mat-menu-item (click)="winlev(350, 50)">Mediastinum</button>
-        <button mat-menu-item (click)="winlev(1600, -600)">Lung</button>
-        <button mat-menu-item (click)="winlev(4000, 400)">Sinus</button>
-        <button mat-menu-item (click)="winlev(180, 80)">Larynx</button>
-        <button mat-menu-item (click)="winlev(120, 40)">Brain Posterior</button>
-        <button mat-menu-item (click)="winlev(80, 40)">Brain</button>
-        <button mat-menu-item (click)="winlev(600, 250)">MR</button>
-        <button mat-menu-item (click)="winlev(255, 128)">Ultrasound</button>
-      </mat-menu>
-    <div class="buttons">
-      <button mat-raised-button [matMenuTriggerFor]="appMenu">
-        Presets
-      </button>
-      <button mat-raised-button (click)="reset()">Reset Window/Level</button>
-      <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
-      <button mat-raised-button (click)="openDetails()">Details</button>
-      <button mat-raised-button (click)="openDump()">Dump</button>
-
-    </div>
+    <button mat-menu-item (click)="winlev(350, 50)">Abdomen</button>
+    <button mat-menu-item (click)="winlev(450, 50)">Pelvis</button>
+    <button mat-menu-item (click)="winlev(350, 50)">Mediastinum</button>
+    <button mat-menu-item (click)="winlev(1600, -600)">Lung</button>
+    <button mat-menu-item (click)="winlev(4000, 400)">Sinus</button>
+    <button mat-menu-item (click)="winlev(180, 80)">Larynx</button>
+    <button mat-menu-item (click)="winlev(120, 40)">Brain Posterior</button>
+    <button mat-menu-item (click)="winlev(80, 40)">Brain</button>
+    <button mat-menu-item (click)="winlev(600, 250)">MR</button>
+    <button mat-menu-item (click)="winlev(255, 128)">Ultrasound</button>
+  </mat-menu>
+  <div class="buttons">
+    <button mat-raised-button [matMenuTriggerFor]="appMenu">
+      Presets
+    </button>
+    <button mat-raised-button (click)="reset()">Reset Window/Level</button>
+    <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
     <button mat-raised-button (click)="toggleROI()">ROI</button>
+    <button mat-raised-button (click)="openDetails()">Details</button>
+    <button mat-raised-button (click)="openDump()">Dump</button>
   </div>
 </div>
