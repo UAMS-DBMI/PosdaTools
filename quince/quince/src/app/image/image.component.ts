@@ -354,56 +354,33 @@ export class ImageComponent implements OnInit {
     }
     let c = this.context;
     for (let roi of this.roi_array){
-        //console.log(roi);
-        let origin = roi.ipp;
-        let pxspace = roi.pixel_spacing;
-        let px_columns = roi.pixel_columns;
-        let px_rows = roi.pixel_rows;
-        let xtotal = pxspace[0] * px_columns;
-        let ytotal = pxspace[1] * px_rows ;
-        let xtotal_image = (this.current_image.width * this.zoom_level) ;
-        let ytotal_image = (this.current_image.height * this.zoom_level);
-        let xscale = xtotal_image/xtotal;
-        let yscale = ytotal_image/ytotal;
+      let origin = roi.ipp;
+      let pxspace = roi.pixel_spacing;
+      let px_columns = roi.pixel_columns;
+      let px_rows = roi.pixel_rows;
+      let xtotal = pxspace[0] * px_columns;
+      let ytotal = pxspace[1] * px_rows ;
+      let xtotal_image = (this.current_image.width * this.zoom_level) ;
+      let ytotal_image = (this.current_image.height * this.zoom_level);
+      let xscale = xtotal_image/xtotal;
+      let yscale = ytotal_image/ytotal;
 
-        c.strokeStyle = 'rgb('+ roi.roi_color[0]+ ',' + roi.roi_color[1]+ ',' +roi.roi_color[2] +')';
-        //console.log(c.fillStyle)
+      c.strokeStyle = 'rgb('+ roi.roi_color[0]+ ',' + roi.roi_color[1]+ ',' +roi.roi_color[2] +')';
+      c.beginPath();
+      let first = true;
+      for (let coordpix of roi.contour_data){
+        let x = ((coordpix[0] - origin[0]) * xscale) + this.offset.x;//x
+        let y = ((coordpix[1] - origin[1])  * yscale) + this.offset.y; //y
 
-        c.beginPath();
-
-        //console.log(roi.contour_data);
-        let first = true;
-        for (let coordpix of roi.contour_data){
-          let x = ((coordpix[0] - origin[0]) * xscale) + this.offset.x;//x
-          let y = ((coordpix[1] - origin[1])  * yscale) + this.offset.y; //y
-
-          if (first){
-            c.moveTo(x, y);
-            first = false;
-          }else{
-            c.lineTo(x, y);
-          }
+        if (first){
+          c.moveTo(x, y);
+          first = false;
+        }else{
+          c.lineTo(x, y);
         }
-        c.stroke();
-
+      }
+      c.stroke();
     }
-
-    /*
-     img.countour_data = data.arrayBuffer();
-
-     let origin = img.ipp;
-     let pxspace = img.pixel_spacing
-     //let xtotal = (image.pixel_columns * pxspace[0]) + origin[0]
-     //let ytotal = (image.pixel_rows * pxspace[1]) + origin[1]
-
-     for (let coordpix of img.countour_data){
-       coordpix[0] = (coordpix[0] - origin[0]) * pxspace[0]; //x
-       coordpix[1] = (coordpix[1] - origin[1]) * pxspace[1]; //y
-     */
-
-
-
-
   }
 
   reset(): void {

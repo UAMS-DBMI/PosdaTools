@@ -72,21 +72,4 @@ export class FileService {
 
     return img;
   }
-
-/*  processRoiHeaders(headers: any): Roi {
-    let roi = {
-      roi_id: Number(headers.get('roi_id')),
-      roi_name: Number(headers.get('roi_name')),
-      roi_contour_id: Number(headers.get('roi_contour_id')),
-      pixel_rows: Number(headers.get('pixel_rows')),
-      pixel_columns: Number(headers.get('pixel_columns')),
-      ipp: headers.get('ipp'),
-      pixel_spacing: headers.get('pixel_spacing'),
-      roi_color: headers.get('roi_color'),
-      countour_data: headers.get('countour_data'),
-    };
-
-    return roi;
-  }
-  */
 }
