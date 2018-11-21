@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { timer } from 'rxjs/observable/timer';
 
 @Component({
   selector: 'app-series',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
 export class SeriesComponent implements OnInit {
   private series_instance_uid: string = '1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315';
   private iec_id: string;
-  private show_download: boolean = false;
+  public show_download: boolean = false;
   private file_ids: number[];
   public current_offset: number;
   public current_file_id: number;
@@ -19,7 +20,7 @@ export class SeriesComponent implements OnInit {
 
   private timerSub: any = undefined;
 
-  constructor(private http: Http,
+  constructor(private http: HttpClient,
               private route: ActivatedRoute,
               private router: Router
               ) { }
@@ -33,12 +34,12 @@ export class SeriesComponent implements OnInit {
       this.iec_id = iec;
       this.show_download = true;
       this.http.get("/vapi/iec_info/" + iec).subscribe(
-        res => this.handleResponse(res.json())
+        res => this.handleResponse(res)
       );
     } else {
       this.show_download = true;
       this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
-        res => this.handleResponse(res.json())
+        res => this.handleResponse(res)
       );
     }
   }
@@ -76,8 +77,8 @@ export class SeriesComponent implements OnInit {
 
   play(): void {
     if (this.timerSub == undefined) {
-      let timer = Observable.timer(1, 100);
-      this.timerSub = timer.subscribe(t => {
+      let t = timer(1, 100);
+      this.timerSub = t.subscribe(t => {
         this.moveNext();
       });
     }

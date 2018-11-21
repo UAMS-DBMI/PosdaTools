@@ -1,26 +1,30 @@
 import { Injectable } from '@angular/core';
-import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Image } from './image';
 import { Roi } from './roi';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { ImageDetails } from './image-details';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/publishreplay';
+
 
 @Injectable()
 export class FileService {
   private map: { [file_id: number]: Observable<Image>; } = {};
   private roi_map: { [file_id: number]: Observable<Roi[]>; } = {};
 
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
 
   getFile(file_id: number): Observable<Image> {
     // console.log("getFile called");
     if (undefined == this.map[file_id]) {
       this.map[file_id] = this.http.get("/vapi/details/" + file_id,
-                    { responseType: ResponseContentType.ArrayBuffer }).map(
-        data => {
-          let img = this.processHeaders(data.headers);
-          img.pixel_data = data.arrayBuffer();
+                    { observe: 'response', responseType: 'arraybuffer' }).map(
+        response => {
+          let img = this.processHeaders(response.headers);
+          img.pixel_data = response.body;
           return img;
         }
       ).publishReplay(1).refCount();
@@ -30,27 +34,22 @@ export class FileService {
 
 
   getDetails(file_id: number): Observable<ImageDetails> {
-    return this.http.get("/vapi/extra_details/" + file_id).map(
-      res => res.json()
-    );
+    return this.http.get<ImageDetails>("/vapi/extra_details/" + file_id);
   }
 
 
 
-  getRois(file_id: number): Observable<any> {
+  getRois(file_id: number): Observable<Roi[]> {
     if (undefined == this.roi_map[file_id]) {
-      this.roi_map[file_id] = this.http.get("/vapi/details/ROI/" + file_id).map(
-        res => res.json()
-      ).publishReplay(1).refCount();
+      this.roi_map[file_id] = this.http.get<Roi[]>("/vapi/details/ROI/" + file_id)
+          .publishReplay(1).refCount();
     }
     return this.roi_map[file_id];
   }
 
 
   getDump(file_id: number): Observable<any> {
-    return this.http.get("/papi/v1/dump/" + file_id).map(
-      res => res.text()
-    );
+    return this.http.get("/papi/v1/dump/" + file_id, {responseType: 'text'});
   }
 
   processHeaders(headers: any): Image {

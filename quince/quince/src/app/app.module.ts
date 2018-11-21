@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@angular/material';
+import { MyMaterialModule } from './material.module';
 
 import { AppComponent } from './app.component';
 import { ImageComponent } from './image/image.component';
@@ -40,9 +40,9 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     BrowserAnimationsModule,
-    MaterialModule,
+    MyMaterialModule,
     BusyModule,
     RouterModule.forRoot(appRoutes)
   ],

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 import { FileService } from '../file.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ImageDetails } from '../image-details';
 
 @Component({
@@ -13,8 +13,8 @@ export class DetailsComponent implements OnInit {
   public details: ImageDetails;
 
   constructor(
-    public dialogRef: MdDialogRef<DetailsComponent>,
-      @Inject(MD_DIALOG_DATA) public data: number,
+    public dialogRef: MatDialogRef<DetailsComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: number,
       private service: FileService) { }
 
   ngOnInit() {

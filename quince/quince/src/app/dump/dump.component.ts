@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 import { FileService } from '../file.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Subscription } from 'rxjs';
 
@@ -14,8 +14,8 @@ export class DumpComponent implements OnInit {
   public busy: Subscription;
 
   constructor(
-    public dialogRef: MdDialogRef<DumpComponent>,
-      @Inject(MD_DIALOG_DATA) public data: number,
+    public dialogRef: MatDialogRef<DumpComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: number,
       private service: FileService) { }
 
   ngOnInit() {
