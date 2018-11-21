@@ -55,8 +55,11 @@ export class ImageComponent implements OnInit {
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
-  private roi_display = true;
+  private roi_display = false;
   private roi_array: Roi[];
+  private roi_loaded: boolean = false;
+  private image_loaded: boolean = false;
+
 
   constructor(
     private http: Http,
@@ -96,8 +99,10 @@ export class ImageComponent implements OnInit {
   }
 
   loadFile(): void {
+    this.image_loaded = false;
     this.service.getFile(this.file_id).subscribe(
       res => {
+        this.image_loaded = true;
         if (this.current_image == undefined) {
           this.current_image = res;
           this.resetZoom();
@@ -115,9 +120,10 @@ export class ImageComponent implements OnInit {
   }
 
   loadROI(): void {
-    this.roi_array = [];
+    this.roi_loaded = false;
     this.service.getRois(this.file_id).subscribe(
       res => {
+          this.roi_loaded = true;
           this.roi_array = res;
           this.draw();
         }
@@ -214,6 +220,12 @@ export class ImageComponent implements OnInit {
       return;
     }
     */
+    if ((this.roi_display && !this.roi_loaded) || !this.image_loaded){
+      return;
+    }
+    // TODO: Fix Double Printing
+    //console.log(this.file_id);
+    //console.log(this.roi_loaded  + '  ' + this.image_loaded);
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
         // make an image without winlev
@@ -516,5 +528,9 @@ export class ImageComponent implements OnInit {
       width: '75%',
       data: this.file_id
     });
+  }
+  public toggleROI(): void{
+    this.roi_display = !this.roi_display;
+    this.draw();
   }
 }
