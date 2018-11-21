@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { Image } from './image';
+import { Roi } from './roi';
 import { Observable } from 'rxjs';
 import { ImageDetails } from './image-details';
 
 @Injectable()
 export class FileService {
   private map: { [file_id: number]: Observable<Image>; } = {};
+  private roi_map: { [file_id: number]: Observable<Roi[]>; } = {};
 
   constructor(private http: Http) {}
 
@@ -32,6 +34,18 @@ export class FileService {
       res => res.json()
     );
   }
+
+
+
+  getRois(file_id: number): Observable<any> {
+    if (undefined == this.roi_map[file_id]) {
+      this.roi_map[file_id] = this.http.get("/vapi/details/ROI/" + file_id).map(
+        res => res.json()
+      ).publishReplay(1).refCount();
+    }
+    return this.roi_map[file_id];
+  }
+
 
   getDump(file_id: number): Observable<any> {
     return this.http.get("/papi/v1/dump/" + file_id).map(

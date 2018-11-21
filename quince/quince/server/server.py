@@ -24,7 +24,7 @@ DEBUG = False
 @app.listener("before_server_start")
 async def connect_to_db(sanic, loop):
     global pool
-    pool = await asyncpg.create_pool(database='posda_files', 
+    pool = await asyncpg.create_pool(database='posda_files',
                                      loop=loop)
     # loop.create_task(user_watch())
 
@@ -33,14 +33,14 @@ async def get_series_info(request, file_id):
 
     query = """
         select distinct
-            root_path || '/' || rel_path as file, 
-            file_offset, 
-            size, 
-            bits_stored, 
-            bits_allocated, 
-            pixel_representation, 
-            pixel_columns, 
-            pixel_rows, 
+            root_path || '/' || rel_path as file,
+            file_offset,
+            size,
+            bits_stored,
+            bits_allocated,
+            pixel_representation,
+            pixel_columns,
+            pixel_rows,
             photometric_interpretation,
 
             slope,
@@ -61,10 +61,10 @@ async def get_series_info(request, file_id):
 
         from
             file_image
-            natural join image 
-            natural join unique_pixel_data 
+            natural join image
+            natural join unique_pixel_data
             natural join pixel_location
-            natural join file_location 
+            natural join file_location
             natural join file_storage_root
             natural join file_equipment
             natural join file_sop_common
@@ -91,19 +91,19 @@ async def get_series_info(request, file_id):
 async def get_iec_info(request, iec):
 
     query = """
-    select 
-        file_id 
-    from 
-        image_equivalence_class_input_image 
-        natural join file_sop_common 
-    where 
+    select
+        file_id
+    from
+        image_equivalence_class_input_image
+        natural join file_sop_common
+    where
         image_equivalence_class_id = $1
-    order by 
+    order by
         -- sometimes instance_number is empty string or null
-        case instance_number 
-            when '' then '0' 
+        case instance_number
+            when '' then '0'
             when null then '0'
-            else instance_number 
+            else instance_number
         end::int
     """
 
@@ -117,19 +117,19 @@ async def get_iec_info(request, iec):
 async def get_series_info(request, series):
 
     query = """
-        select file_id 
-        from 
-            file_series 
+        select file_id
+        from
+            file_series
             natural join file_sop_common
             natural join ctp_file
         where series_instance_uid = $1
           and visibility is null
         order by
             -- sometimes instance_number is empty string or null
-            case instance_number 
-                when '' then '0' 
+            case instance_number
+                when '' then '0'
                 when null then '0'
-                else instance_number 
+                else instance_number
             end::int
     """
 
@@ -144,14 +144,14 @@ async def get_image(request, file_id):
 
     query = """
         select distinct
-            root_path || '/' || rel_path as file, 
-            file_offset, 
-            size, 
-            bits_stored, 
-            bits_allocated, 
-            pixel_representation, 
-            pixel_columns, 
-            pixel_rows, 
+            root_path || '/' || rel_path as file,
+            file_offset,
+            size,
+            bits_stored,
+            bits_allocated,
+            pixel_representation,
+            pixel_columns,
+            pixel_rows,
             photometric_interpretation,
 
             slope,
@@ -165,10 +165,10 @@ async def get_image(request, file_id):
 
         from
             file_image
-            natural join image 
-            natural join unique_pixel_data 
+            natural join image
+            natural join unique_pixel_data
             natural join pixel_location
-            natural join file_location 
+            natural join file_location
             natural join file_storage_root
             natural join file_equipment
 
@@ -237,7 +237,7 @@ async def get_details(request, iec):
             to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
             (select count(file_id)
              from image_equivalence_class_input_image i
-             where i.image_equivalence_class_id = 
+             where i.image_equivalence_class_id =
                    image_equivalence_class.image_equivalence_class_id) as file_count
 
 
@@ -256,7 +256,66 @@ async def get_details(request, iec):
 
     return json(dict(records[0]))
 
+@app.route("/vapi/details/ROI/<file_id>")
+async def get_image(request, file_id):
 
+    query = """
+        select
+        	a.roi_id
+        	,a.roi_name
+        	,c.roi_contour_id
+            ,i.pixel_rows
+	        ,i.pixel_columns
+            ,j.ipp
+            ,i.pixel_spacing
+            ,a.roi_color
+        	,c.contour_data
+        from
+        	roi a
+        	--natural join file_roi_image_linkage b --file_id
+        	join roi_contour c  --roi_id
+        		on a.roi_id = c.roi_id
+        	join contour_image d
+        		on d.roi_contour_id = c.roi_contour_id
+        	join file_sop_common e
+        		on e.sop_instance_uid = d.sop_instance
+        	join file f
+        		on f.file_id = e.file_id
+        	join file_series g
+        		on g.file_id = f.file_id
+            join file_image h
+        		on f.file_id = h.file_id
+        	join image i
+        		on h.image_id = i.image_id
+        	join image_geometry j
+        		on i.image_id = j.image_id
+        	where g.file_id = $1
+    """
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, int(file_id))
+    await pool.release(conn)
+
+    rois = []
+    for row in records:
+
+        ipp_split = row[5].split('\\')
+        pxlspc = row[6].split('\\')
+        rgb = row[7].split('\\')
+
+        points = row[8].split('\\')
+        splitpoints = iter(points)
+
+        rois.append({"roi_id": row[0],
+                     "roi_name": row[1],
+                     "roi_contour_id": row[2],
+                     "pixel_rows": row[3],
+                     "pixel_columns": row[4],
+                     "ipp": ipp_split,
+                     "pixel_spacing": pxlspc,
+                     "roi_color": rgb,
+                     "contour_data": [(x,y) for x,y,z in zip(splitpoints,splitpoints,splitpoints)]})
+    return json(rois)
 
 @app.route("/test", methods=["GET", "POST"])
 def slash_test(request):

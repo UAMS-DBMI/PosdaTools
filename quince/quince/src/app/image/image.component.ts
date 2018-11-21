@@ -6,7 +6,7 @@ import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
 import { MdDialog } from '@angular/material';
 import { DumpComponent } from '../dump/dump.component';
-
+import { Roi } from '../roi';
 
 // extern def of this built-in js func
 declare function createImageBitmap(file: any): Promise<any>;
@@ -29,7 +29,7 @@ export class ImageComponent implements OnInit {
   @Input() image: ArrayBuffer;
   @Input() width: number;
   @Input() height: number;
-
+  
   private current_image: Image;
 
   public w_width: number = 400;
@@ -54,6 +54,11 @@ export class ImageComponent implements OnInit {
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
+  private roi_display = false;
+  private roi_array: Roi[];
+  private roi_loaded: boolean = false;
+  private image_loaded: boolean = false;
+
 
   constructor(
     private http: Http,
@@ -67,6 +72,9 @@ export class ImageComponent implements OnInit {
     let file_id = this.route.snapshot.params['file_id'];
     if (file_id != undefined) {
       this.file_id = file_id;
+      if(this.roi_display){
+          this.loadROI();
+      }
       this.loadFile();
     }
   }
@@ -83,12 +91,17 @@ export class ImageComponent implements OnInit {
       return;
 
     this.last_file_id = this.file_id;
+    if(this.roi_display){
+        this.loadROI();
+    }
     this.loadFile();
   }
 
   loadFile(): void {
+    this.image_loaded = false;
     this.service.getFile(this.file_id).subscribe(
       res => {
+        this.image_loaded = true;
         if (this.current_image == undefined) {
           this.current_image = res;
           this.resetZoom();
@@ -96,10 +109,23 @@ export class ImageComponent implements OnInit {
           this.current_image = res;
           this.draw();
         }
+
       },
       error => {
         this.drawError();
       }
+    );
+
+  }
+
+  loadROI(): void {
+    this.roi_loaded = false;
+    this.service.getRois(this.file_id).subscribe(
+      res => {
+          this.roi_loaded = true;
+          this.roi_array = res;
+          this.draw();
+        }
     );
 
   }
@@ -193,6 +219,12 @@ export class ImageComponent implements OnInit {
       return;
     }
     */
+    if ((this.roi_display && !this.roi_loaded) || !this.image_loaded){
+      return;
+    }
+    // TODO: Fix Double Printing
+    //console.log(this.file_id);
+    //console.log(this.roi_loaded  + '  ' + this.image_loaded);
     try {
       if (this.current_image.photometric_interpretation == 'RGB') {
         // make an image without winlev
@@ -202,11 +234,13 @@ export class ImageComponent implements OnInit {
         let image = this.applySlopeInterceptWinLev();
         this.drawMono(image);
       }
+
     } catch (e) {
       console.log(e);
       console.log(this.current_image);
       this.drawError(1);
     }
+
   }
 
   drawRGB(image: Uint8Array) {
@@ -291,18 +325,60 @@ export class ImageComponent implements OnInit {
      * and do automatic scaling.
      */
     try {
-      createImageBitmap(newImageData).then(img => {
-        c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        c.drawImage(img, this.offset.x, this.offset.y,
+      createImageBitmap(newImageData).then(img => { //built in js function
+        c.clearRect(0, 0, this.canvas.width, this.canvas.height); //clear screen
+        c.drawImage(img, this.offset.x, this.offset.y, //actual drawing
           this.current_image.width * this.zoom_level,
           this.current_image.height * this.zoom_level);
+        if (this.roi_display){
+          this.drawROI();
+        }
       });
+
     }
     catch (error){
       // Degrade somewhat gracefully for Safari and IE - which don't support createImageBitmap
       console.log("createImageBitmap error");
       c.clearRect(0, 0, this.canvas.width, this.canvas.height);
       c.putImageData(newImageData, 0, 0);
+      if (this.roi_display){
+          this.drawROI();
+      }
+    }
+  }
+
+  drawROI() {
+    if (this.current_image == undefined){
+      return;
+    }
+    let c = this.context;
+    for (let roi of this.roi_array){
+      let origin = roi.ipp;
+      let pxspace = roi.pixel_spacing;
+      let px_columns = roi.pixel_columns;
+      let px_rows = roi.pixel_rows;
+      let xtotal = pxspace[0] * px_columns;
+      let ytotal = pxspace[1] * px_rows ;
+      let xtotal_image = (this.current_image.width * this.zoom_level) ;
+      let ytotal_image = (this.current_image.height * this.zoom_level);
+      let xscale = xtotal_image/xtotal;
+      let yscale = ytotal_image/ytotal;
+
+      c.strokeStyle = 'rgb('+ roi.roi_color[0]+ ',' + roi.roi_color[1]+ ',' +roi.roi_color[2] +')';
+      c.beginPath();
+      let first = true;
+      for (let coordpix of roi.contour_data){
+        let x = ((coordpix[0] - origin[0]) * xscale) + this.offset.x;//x
+        let y = ((coordpix[1] - origin[1])  * yscale) + this.offset.y; //y
+
+        if (first){
+          c.moveTo(x, y);
+          first = false;
+        }else{
+          c.lineTo(x, y);
+        }
+      }
+      c.stroke();
     }
   }
 
@@ -428,5 +504,9 @@ export class ImageComponent implements OnInit {
       width: '75%',
       data: this.file_id
     });
+  }
+  public toggleROI(): void{
+    this.roi_display = !this.roi_display;
+    this.draw();
   }
 }
