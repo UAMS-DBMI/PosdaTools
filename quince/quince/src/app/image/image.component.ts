@@ -29,8 +29,7 @@ export class ImageComponent implements OnInit {
   @Input() image: ArrayBuffer;
   @Input() width: number;
   @Input() height: number;
-  @Input() roi_image: ArrayBuffer;
-
+  
   private current_image: Image;
 
   public w_width: number = 400;
