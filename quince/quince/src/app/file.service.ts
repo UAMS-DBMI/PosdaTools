@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ImageDetails } from './image-details';
 
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/publishreplay';
+import 'rxjs/add/operator/publishReplay';
 
 
 @Injectable()
