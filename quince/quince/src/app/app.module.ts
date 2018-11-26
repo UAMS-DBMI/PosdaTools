@@ -12,7 +12,6 @@ import 'hammerjs';
 import { SeriesComponent } from './series/series.component';
 
 import { RouterModule, Routes } from '@angular/router';
-import { BusyModule } from 'angular2-busy';
 
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FileService } from './file.service';
@@ -43,7 +42,6 @@ const appRoutes: Routes = [
     HttpClientModule,
     BrowserAnimationsModule,
     MyMaterialModule,
-    BusyModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [FileService],
