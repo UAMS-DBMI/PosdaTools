@@ -8,7 +8,7 @@ default: build
 build: /html
 
 /html: node_modules
-	$(NG) build --prod --base-href "/viewer/" --aot=false
+	$(NG) build --prod --base-href "/viewer/"
 	mkdir /html
 	cp -r dist/* /html/
 

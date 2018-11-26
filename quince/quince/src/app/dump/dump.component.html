@@ -1,3 +1,2 @@
-<div [ngBusy]="busy"></div>
-<div [innerHTML]="text">
-</div>
+<mat-spinner *ngIf="busy"></mat-spinner>
+<div [innerHTML]="text"></div>

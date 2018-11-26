@@ -11,7 +11,9 @@ canvas {
 }
 #container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   margin-top: 10px;
 }
 
@@ -20,6 +22,10 @@ canvas {
 }
 
 .buttons {
-  display: flex; 
+  display: flex;
   justify-content: space-around;
+}
+
+.buttons button {
+  margin: 2px;
 }

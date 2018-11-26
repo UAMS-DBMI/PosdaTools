@@ -1,10 +1,9 @@
 import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
-import { ResponseContentType, Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DumpComponent } from '../dump/dump.component';
 import { Roi } from '../roi';
 
@@ -29,7 +28,7 @@ export class ImageComponent implements OnInit {
   @Input() image: ArrayBuffer;
   @Input() width: number;
   @Input() height: number;
-  
+
   private current_image: Image;
 
   public w_width: number = 400;
@@ -61,11 +60,10 @@ export class ImageComponent implements OnInit {
 
 
   constructor(
-    private http: Http,
     private service: FileService,
     private route: ActivatedRoute,
     private router: Router,
-    private dialog: MdDialog
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -507,6 +505,10 @@ export class ImageComponent implements OnInit {
   }
   public toggleROI(): void{
     this.roi_display = !this.roi_display;
-    this.draw();
+    if(this.roi_display){
+      this.loadROI();
+    } else {
+      this.draw();
+    }
   }
 }

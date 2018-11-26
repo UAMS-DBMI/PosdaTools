@@ -1,21 +1,20 @@
 <div id="container">
-  <md-card class="seriescard">
+  <mat-card class="seriescard">
     <div style="display: flex">
-      <button md-icon-button (click)="play()"><md-icon>play_arrow</md-icon></button>
-      <button md-icon-button (click)="stop()"><md-icon>pause</md-icon></button>
-      <md-slider #series_position thumbLabel
+      <button mat-icon-button (click)="play()"><mat-icon>play_arrow</mat-icon></button>
+      <button mat-icon-button (click)="stop()"><mat-icon>pause</mat-icon></button>
+      <mat-slider #series_position thumbLabel
         class="slider"
         min="0"
         [max]="length"
         [value]="current_offset"
         (input)="onChange($event)"
-      ></md-slider>
-      <button md-icon-button (click)="movePrevious()"><md-icon>keyboard_arrow_left</md-icon></button>
-      <button md-icon-button (click)="moveNext()"><md-icon>keyboard_arrow_right</md-icon></button>
-      <a *ngIf="show_download" [href]="download_link()"><button md-icon-button><md-icon>save_alt</md-icon></button></a>
+      ></mat-slider>
+      <button mat-icon-button (click)="movePrevious()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button (click)="moveNext()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+      <a *ngIf="show_download" [href]="download_link()"><button mat-icon-button><mat-icon>save_alt</mat-icon></button></a>
     </div>
     <!-- <p>Current id: {{current_file_id}}</p> -->
-  </md-card>
+  </mat-card>
 </div>
-
 <app-image [height]="512" [width]="512" [file_id]="current_file_id"></app-image>

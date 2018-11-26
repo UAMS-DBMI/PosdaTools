@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@angular/material';
+import { MyMaterialModule } from './material.module';
 
 import { AppComponent } from './app.component';
 import { ImageComponent } from './image/image.component';
@@ -12,7 +12,6 @@ import 'hammerjs';
 import { SeriesComponent } from './series/series.component';
 
 import { RouterModule, Routes } from '@angular/router';
-import { BusyModule } from 'angular2-busy';
 
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FileService } from './file.service';
@@ -40,10 +39,9 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     BrowserAnimationsModule,
-    MaterialModule,
-    BusyModule,
+    MyMaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [FileService],

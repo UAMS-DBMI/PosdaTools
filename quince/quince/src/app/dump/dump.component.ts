@@ -1,8 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 import { FileService } from '../file.service';
-
-import { Subscription } from 'rxjs';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-dump',
@@ -11,16 +9,23 @@ import { Subscription } from 'rxjs';
 })
 export class DumpComponent implements OnInit {
   public text: string;
-  public busy: Subscription;
+  public busy: boolean = true;
 
   constructor(
-    public dialogRef: MdDialogRef<DumpComponent>,
-      @Inject(MD_DIALOG_DATA) public data: number,
+    public dialogRef: MatDialogRef<DumpComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: number,
       private service: FileService) { }
 
   ngOnInit() {
-    this.busy = this.service.getDump(this.data).subscribe(
-      res => this.text = res
+    this.service.getDump(this.data).subscribe(
+      res => {
+        this.text = res;
+        this.busy = false;
+      },
+      error => {
+        this.text = error;
+        this.busy = false;
+      }
     );
   }
 
