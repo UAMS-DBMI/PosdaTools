@@ -1,37 +1,58 @@
 #!/usr/bin/perl -w
-#
+
+use Modern::Perl;
+
 use DBD::Pg;
+
+use Posda::Config 'Database';
+
 use Posda::Try;
 use Posda::DB::DicomDir;
 use Posda::DB::DicomIod;
-use strict;
-$| = 1;
-my $usage = "ProcessPosdaFilesInDb.pl <connect_string> <chunk_size>\n";
-unless($#ARGV == 1) { die $usage }
-my $db = DBI->connect($ARGV[0]);
-unless($db) { die "couldn't connect to DB: $ARGV[0]" }
-my $q = $db->prepare(
-  "select\n" . 
-  "  file_id, processing_priority, root_path || '/' || rel_path as path\n" .
-  "from\n" .
-  "  file NATURAL JOIN file_location NATURAL JOIN file_storage_root\n" .
-  "where\n" .
-  "  is_dicom_file is null and\n" .
-  "  ready_to_process and\n" .
-  "  processing_priority is not null\n" .
-  "order by processing_priority, file_id\n" .
-  "limit ?"
-);
-unless($ARGV[1] > 0){
-  $ARGV[1] = 1;
+
+use JSON;
+use Redis;
+
+use Data::Dumper;
+
+
+
+$| = 1; # Set non-buffered output mode
+
+my $usage = "ProcessPosdaFilesInDb.pl";
+
+say "Starting up...";
+
+# Setup phase
+#
+my $db = DBI->connect(Database('posda_files'));
+unless($db) { die "couldn't connect to DB: posda_files" }
+
+my $redis = Redis->new(server => 'redis:6379'); #hostname from Docker-compose
+
+# TODO: Need a way to gracefully shut down!
+while (1) {
+  my ($key, $next_thing) = $redis->brpop('files', 5);
+  # say $next_thing;
+
+  if (defined $key) {
+    my ($file_id, $file_path) = @{decode_json($next_thing)};
+    say $file_id, $file_path;
+    InsertOneFile($file_id, $file_path, $db);
+  }
 }
-$q->execute($ARGV[1]);
-my @errors;
-row:
-while(my $h = $q->fetchrow_hashref){
+
+
+sub InsertOneFile {
+  my($file_id, $file_path, $db) = @_;
+
+  my $h = { path => $file_path,
+            file_id => $file_id };
+
+  my @errors;
   unless(-f $h->{path}) { 
-    print STDERR "File ($h->{path} not found\n";
-    next row
+    print STDERR "File ($h->{path}) not found\n";
+    return;
   }
   my $try = Posda::Try->new($h->{path});
   if(exists $try->{dataset}){
@@ -93,6 +114,7 @@ while(my $h = $q->fetchrow_hashref){
     my $i_err = $db->prepare(
       "insert into dicom_file_errors(file_id, error_msg) values (?, ?)"
     );
+    # TODO should @errors be emptied here?
     for my $i (@errors){
       $i_err->execute($h->{file_id}, $i);
     }
@@ -122,16 +144,7 @@ while(my $h = $q->fetchrow_hashref){
     $q->execute($file_type, $h->{file_id});
   }
 }
-my $q1 = $db->prepare(
-  "select count(*) from file\n" .
-  "where is_dicom_file is null and\n" .
-  "  processing_priority is not null and\n" .
-  "  ready_to_process and\n" .
-  "  processing_priority is not null\n"
-);
-$q1->execute;
-my $h = $q1->fetchrow_hashref;
-print "remaining: $h->{count}\n";
+
 sub InsertMeta{
   my($db, $file_id, $df) = @_;
   my $ins_part10 = $db->prepare(
