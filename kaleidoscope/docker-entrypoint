@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp -ar /app/dist/* /html/
+
+exec python3 /app/server/server.py

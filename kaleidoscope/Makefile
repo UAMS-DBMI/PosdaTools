@@ -6,7 +6,7 @@ default: build
 
 build: last_built 
 
-last_built: Dockerfile
+last_built: Dockerfile docker-entrypoint kaleidoscope
 	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 

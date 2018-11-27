@@ -11,8 +11,8 @@ COPY kaleidoscope/ /app/
 RUN pip3 install -r /app/server/requirements.txt
 RUN cd /app && make
 
-COPY run.sh /
+COPY docker-entrypoint /
 
 VOLUME ["/home/posda/cache", "/html"]
 
-CMD ["/run.sh"]
+CMD ["/docker-entrypoint"]
