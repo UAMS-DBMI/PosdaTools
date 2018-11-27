@@ -14,6 +14,10 @@ services:
         ports:
             - 5433:5432
 
+    redis:
+        image: redis:latest
+        restart: always
+
     posda:
         image: tcia/posda:latest
         restart: always
@@ -34,23 +38,23 @@ services:
             PGPASSWORD: example
             POSDA_EXTERNAL_HOSTNAME: localhost
 
-    posda-file-process:
-        image: tcia/posda:latest
-        command: file-process
-        restart: always
-        depends_on:
-            - db
-        volumes:
-            - posda_cache_alpine:/home/posda/cache
-            - ./posda/posdatools:/home/posda/posdatools
-            - /mnt:/mnt
-            - /nas:/nas
-        environment:
-            TZ: America/Chicago
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: localhost
+    # posda-file-process:
+    #     image: tcia/posda:latest
+    #     command: file-process
+    #     restart: always
+    #     depends_on:
+    #         - db
+    #     volumes:
+    #         - posda_cache_alpine:/home/posda/cache
+    #         - ./posda/posdatools:/home/posda/posdatools
+    #         - /mnt:/mnt
+    #         - /nas:/nas
+    #     environment:
+    #         TZ: America/Chicago
+    #         PGHOST: db
+    #         PGUSER: postgres
+    #         PGPASSWORD: example
+    #         POSDA_EXTERNAL_HOSTNAME: localhost
 
     posda-api:
         image: tcia/posda:latest
