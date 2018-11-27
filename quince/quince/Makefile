@@ -1,3 +1,4 @@
+SRCFILES := $(shell find src -type f)
 .PHONY: build deploy localdeploy serve
 
 BINLOC=./node_modules/.bin
@@ -5,12 +6,11 @@ NG=${BINLOC}/ng
 
 default: build
 
-build: /html
+build: dist
 
-/html: node_modules
+dist: node_modules $(SRCFILES)
+	@echo "Rebuilding because these files changed: $?"
 	$(NG) build --prod --base-href "/viewer/"
-	mkdir /html
-	cp -r dist/* /html/
 
 serve: node_modules
 	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
