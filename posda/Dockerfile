@@ -25,6 +25,7 @@ RUN apk --update add alpine-sdk \
 RUN apk --update add perl-json \
 					 perl-data-uuid \
 					 perl-dbd-pg \
+					 perl-dbd-mysql \
 					 perl-switch \
 					 perl-term-readkey \
 					 perl-text-csv \
