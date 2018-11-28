@@ -21,6 +21,8 @@ RUN apk --update add alpine-sdk \
 					 py3-psycopg2 \
 					 py3-numpy \
 					 cmake
+					 cmake \
+					 redis
 
 # Perl modules from Alpine repos
 RUN apk --update add perl-json \
@@ -42,7 +44,8 @@ RUN cpanm --notest REST::Client \
 				   Text::Markdown \
 				   Modern::Perl \
 				   Method::Signatures::Simple \
-				   K/KE/KEN/xls2csv-1.07.tar.gz
+				   K/KE/KEN/xls2csv-1.07.tar.gz \
+				   Redis
 
 RUN mkdir /home/posda
 RUN mkdir -p /build/build
