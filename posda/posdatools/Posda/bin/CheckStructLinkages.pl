@@ -3,6 +3,7 @@ use strict;
 use Posda::DB 'Query';
 use Digest::MD5;
 use Posda::BackgroundProcess;
+use Data::Dumper;
 
 my $usage = <<EOF;
 CheckStructLinkages.pl <bkgrnd_id> <collection> <site> <notify>
@@ -661,7 +662,21 @@ sub UnlinkedClosedPlanar{
 }
 sub PointsWithinVolume{
   my($RowInfo) = @_;
-  $RowInfo->{PointsWithinVolume} = "Not Currently Implemented";
+  #$RowInfo->{Rois}->{$roi_id}->{roi_name};
+  #query the ROI max/mins
+  #print STDERR Dumper($RowInfo->{Rois});
+  my $testValue = 514;
+  my $pointswithinvol = "True for defined roi limits";
+  for my $i (keys %{$RowInfo->{Rois}}){
+	if ((defined  $RowInfo->{Rois}->{$i}->{max_x}  && $RowInfo->{Rois}->{$i}->{max_x} > $testValue )  
+	|| (defined $RowInfo->{Rois}->{$i}->{max_y} && $RowInfo->{Rois}->{$i}->{max_y} > $testValue )  
+	|| (defined $RowInfo->{Rois}->{$i}->{max_z} && $RowInfo->{Rois}->{$i}->{max_z} > $testValue )  
+	){
+		$pointswithinvol = "False";	
+	}
+  }
+  print STDERR $pointswithinvol;
+  $RowInfo->{PointsWithinVolume} = $pointswithinvol;
 }
 sub Warnings{
   my($RowInfo) = @_;
