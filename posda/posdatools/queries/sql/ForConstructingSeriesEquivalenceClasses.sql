@@ -1,6 +1,6 @@
 -- Name: ForConstructingSeriesEquivalenceClasses
 -- Schema: posda_files
--- Columns: ['series_instance_uid', 'modality', 'series_number', 'laterality', 'series_date', 'dicom_file_type', 'performing_phys', 'protocol_name', 'series_description', 'operators_name', 'body_part_examined', 'patient_position', 'smallest_pixel_value', 'largest_pixel_value', 'performed_procedure_step_id', 'performed_procedure_step_start_date', 'performed_procedure_step_desc', 'performed_procedure_step_comments', 'image_type', 'iop', 'pixel_rows', 'pixel_columns', 'file_id','ipp']
+-- Columns: ['series_instance_uid', 'modality', 'series_number', 'laterality', 'series_date', 'dicom_file_type', 'performing_phys', 'protocol_name', 'series_description', 'operators_name', 'body_part_examined', 'patient_position', 'smallest_pixel_value', 'largest_pixel_value', 'performed_procedure_step_id', 'performed_procedure_step_start_date', 'performed_procedure_step_desc', 'performed_procedure_step_comments', 'image_type', 'iop', 'pixel_rows', 'pixel_columns', 'file_id', 'ipp']
 -- Args: ['series_instance_uid']
 -- Tags: ['consistency', 'find_series', 'equivalence_classes']
 -- Description: For building series equivalence classes

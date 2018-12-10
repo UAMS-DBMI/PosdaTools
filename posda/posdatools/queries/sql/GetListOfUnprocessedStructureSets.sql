@@ -15,8 +15,8 @@ where file_id in (
   from dicom_file df natural join ctp_file
   where 
   dicom_file_type = 'RT Structure Set Storage'
-  and visibility is null
+  and visibility is null and has_no_roi_linkages is null
   and not exists (
     select file_id from file_roi_image_linkage r where r.file_id = df.file_id
   )
-)
+) 

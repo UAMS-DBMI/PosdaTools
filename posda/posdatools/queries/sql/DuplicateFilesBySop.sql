@@ -15,7 +15,7 @@ select
     min(import_time) as first_upload, 
     max(import_time) as last_upload
 from
-  ctp_file join file_patient using(file_id)
+  file_patient left join ctp_file using(file_id)
   join file_sop_common using(file_id)
   join file_series using(file_id)
   join file_location using(file_id)

@@ -8,7 +8,9 @@
 select
  count(*) as num_files
 from
-  file NATURAL JOIN file_location NATURAL JOIN file_storage_root
+  file 
+-- Removed by Quasar on 2018-11-25. Results are not identical but it is more than 500 times faster
+-- NATURAL JOIN file_location NATURAL JOIN file_storage_root
 where
   is_dicom_file is null and
   ready_to_process and

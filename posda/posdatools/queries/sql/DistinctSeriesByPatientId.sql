@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'modality', 'dicom_file_type', 'count']
 -- Args: ['patient_id']
--- Tags: ['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files', 'simple_phi', 'dciodvfy', 'ctp_details', 'select_for_phi', 'visual_review_selection', 'activity_timepoints']
+-- Tags: ['dciodvfy', 'select_for_phi', 'visual_review_selection', 'activity_timepoint_support']
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 -- 
 

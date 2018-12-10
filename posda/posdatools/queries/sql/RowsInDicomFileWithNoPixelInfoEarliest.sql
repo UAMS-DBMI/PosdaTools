@@ -8,5 +8,5 @@
 select 
   file_id, root_path || '/' || rel_path as path
 from dicom_file natural join file_location natural join file_storage_root
-where has_pixel_data is null 
+where has_pixel_data is null and file_is_present
 order by file_id limit ?

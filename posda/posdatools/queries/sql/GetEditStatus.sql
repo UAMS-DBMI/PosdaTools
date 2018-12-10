@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['id', 'start_creation_time', 'duration', 'to_edit', 'changed', 'not_changed', 'disposition', 'dest_dir']
 -- Args: []
--- Tags: ['adding_ctp', 'find_patients', 'series_selection', 'check_edits']
+-- Tags: ['adding_ctp', 'find_patients', 'series_selection', 'check_edits', 'testing_edit_objects']
 -- Description: Get List of visible patients with CTP data
 
 select
