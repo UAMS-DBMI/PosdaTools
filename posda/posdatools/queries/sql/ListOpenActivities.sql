@@ -1,16 +1,18 @@
 -- Name: ListOpenActivities
 -- Schema: posda_queries
--- Columns: ['activity_id', 'brief_description', 'when_created', 'who_created']
+-- Columns: ['activity_id', 'brief_description', 'when_created', 'who_created', 'num_items']
 -- Args: []
 -- Tags: ['AllCollections', 'queries', 'activities']
 -- Description: Get a list of available queries
 
 select
-  activity_id,
+  distinct activity_id,
   brief_description,
   when_created,
-  who_created
+  who_created,
+  count(distinct user_inbox_content_id) as num_items
 from
-  activity
+  activity natural left join activity_inbox_content
 where when_closed is null
+group by activity_id, brief_description, when_created, who_created
 order by activity_id desc

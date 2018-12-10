@@ -2,7 +2,7 @@
 -- Schema: posda_queries
 -- Columns: ['user_name', 'id', 'operation_name', 'current_status', 'activity_id', 'brief_description', 'when', 'file_id', 'command_line', 'spreadsheet_file_id']
 -- Args: []
--- Tags: ['AllCollections', 'queries', 'activities']
+-- Tags: ['AllCollections', 'queries', 'activity_support']
 -- Description: Get a list of available queries
 
 select

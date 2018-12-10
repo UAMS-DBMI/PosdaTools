@@ -11,6 +11,6 @@ select
 from
   import_event natural join file_import
 where
-  import_type = 'multi file import' and 
+  import_type = 'single file import' and 
   import_time > ? and import_time < ?
 group by import_event_id, import_time

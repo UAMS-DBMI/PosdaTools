@@ -2,7 +2,7 @@
 -- Schema: posda_queries
 -- Columns: []
 -- Args: ['activity_id']
--- Tags: ['activity_timepoint_support', 'activities']
+-- Tags: ['activity_timepoint_support', 'activity_support']
 -- Description: Close an activity
 -- 
 -- 

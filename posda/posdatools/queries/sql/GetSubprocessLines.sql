@@ -2,7 +2,7 @@
 -- Schema: posda_queries
 -- Columns: ['line']
 -- Args: ['subprocess_invocation_id']
--- Tags: ['AllCollections', 'queries', 'activities']
+-- Tags: ['AllCollections', 'queries', 'activity_support']
 -- Description: Get a list of available queries
 
 select

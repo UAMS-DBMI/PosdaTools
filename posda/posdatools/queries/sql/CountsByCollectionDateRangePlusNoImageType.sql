@@ -1,6 +1,6 @@
 -- Name: CountsByCollectionDateRangePlusNoImageType
 -- Schema: posda_files
--- Columns: ['patient_id', 'study_date', 'modality', 'series_description', 'series_date', 'study_description', 'study_instance_uid', 'series_instance_uid', 'manufacturer', 'manuf_model_name', 'software_versions', 'num_sops', 'num_files', 'earliest', 'latest']
+-- Columns: ['patient_id', 'study_date', 'series_instance_uid', 'modality', 'study_description', 'series_description', 'num_sops', 'num_files', 'latest', 'earliest']
 -- Args: ['from', 'to', 'collection']
 -- Tags: ['counts', 'count_queries']
 -- Description: Counts query by Collection, Site
