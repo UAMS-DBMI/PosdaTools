@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Image } from './image';
 import { Roi } from './roi';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ImageDetails } from './image-details';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/publishReplay';
+import { map, publishReplay, refCount } from 'rxjs/operators';
 
 
 @Injectable()
@@ -21,13 +20,16 @@ export class FileService {
     // console.log("getFile called");
     if (undefined == this.map[file_id]) {
       this.map[file_id] = this.http.get("/vapi/details/" + file_id,
-                    { observe: 'response', responseType: 'arraybuffer' }).map(
-        response => {
-          let img = this.processHeaders(response.headers);
-          img.pixel_data = response.body;
-          return img;
-        }
-      ).publishReplay(1).refCount();
+        { observe: 'response', responseType: 'arraybuffer' }).pipe(
+        map(
+          response => {
+            let img = this.processHeaders(response.headers);
+            img.pixel_data = response.body;
+            return img;
+          }),
+        publishReplay(1),
+        refCount()
+      );
     }
     return this.map[file_id];
   }
@@ -42,7 +44,9 @@ export class FileService {
   getRois(file_id: number): Observable<Roi[]> {
     if (undefined == this.roi_map[file_id]) {
       this.roi_map[file_id] = this.http.get<Roi[]>("/vapi/details/ROI/" + file_id)
-          .publishReplay(1).refCount();
+        .pipe(
+          publishReplay(1),
+          refCount());
     }
     return this.roi_map[file_id];
   }
