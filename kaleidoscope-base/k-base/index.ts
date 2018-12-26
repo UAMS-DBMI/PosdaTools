@@ -392,17 +392,10 @@ async function doOne() {
 
   if (result.length < 1) {
     winston.log('debug', 'No work to do, sleeping for 5 seconds...');
-    await timeout(10000);
-  } else {
-    workerLog("Generating images for " + result.length + " IECs...");
+    return timeout(10000);
   }
-  let jobs = result.map((element: any) => {
-    return (new K(client)).main(element.image_equivalence_class_id);
-  });
-
-  Promise.all(jobs)
-    .catch((err) => error(err))
-    .then(() => pg.end());
+  let element: any = result[0];
+  return (new K(client)).main(element.image_equivalence_class_id);
 }
 
 async function runForever() {
