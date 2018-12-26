@@ -13,6 +13,7 @@ from .resources import collections as co
 from .resources import studies as st
 from .resources import series as se
 from .resources import files as fi
+from .resources import rois
 
 
 def configure_blueprints(app):
@@ -34,7 +35,32 @@ def configure_blueprints(app):
         generate_files_blueprint(),
         url_prefix='/v1/files'
     )
+    app.blueprint(
+        generate_rois_blueprint(),
+        url_prefix='/v1/rois'
+    )
 
+def generate_rois_blueprint():
+    blueprint = Blueprint('rois')
+
+    blueprint.add_route(
+        rois.test,
+        '/'
+    )
+    blueprint.add_route(
+        rois.get_contours_for_sop,
+        '/for_sop/<sop>'
+    )
+    blueprint.add_route(
+        rois.get_contours_for_file,
+        '/for_file/<file_id>'
+    )
+    # blueprint.add_route(
+    #     st.get_all_series,
+    #     '/<study_id>/series'
+    # )
+
+    return blueprint
 
 def generate_collections_blueprint():
     blueprint = Blueprint('collections')

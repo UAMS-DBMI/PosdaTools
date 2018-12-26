@@ -5,3 +5,4 @@ chardet
 
 requests
 green
+numpy
