@@ -44,21 +44,13 @@ def generate_rois_blueprint():
     blueprint = Blueprint('rois')
 
     blueprint.add_route(
-        rois.test,
-        '/'
-    )
-    blueprint.add_route(
         rois.get_contours_for_sop,
-        '/for_sop/<sop>'
+        '/sop/<sop>'
     )
     blueprint.add_route(
         rois.get_contours_for_file,
-        '/for_file/<file_id>'
+        '/file/<file_id>'
     )
-    # blueprint.add_route(
-    #     st.get_all_series,
-    #     '/<study_id>/series'
-    # )
 
     return blueprint
 
