@@ -212,10 +212,10 @@ method RenderUserList($http, $dyn) {
     $extra_msg
     <form class="form-inline" id="NewUserForm"
           onSubmit="PosdaGetRemoteMethod('CreateNewUser', \$('#NewUserForm').serialize(), function(){Update();});return false;">
-        <input class="form-control" 
+        <input class="form-control"
                autocomplete="off"
                type="text" name="NewUserName" placeholder="Username">
-        <input class="form-control" 
+        <input class="form-control"
                autocomplete="off"
                type="text" name="NewEmail" placeholder="Email">
 
@@ -223,7 +223,7 @@ method RenderUserList($http, $dyn) {
 
   if ($auth_type eq 'database') {
     $http->queue(qq{
-          <input class="form-control" 
+          <input class="form-control"
                  autocomplete="off"
                  type="password" name="NewUserPass" placeholder="Password">
     });
@@ -307,16 +307,16 @@ method RenderAssignPerms($http, $dyn) {
   } else {
     $http->queue(qq{
       <div class="alert alert-info">
-        Passwords are stored in a hashed format, and therefore cannot be 
+        Passwords are stored in a hashed format, and therefore cannot be
         displayed. You may change the user's password here at any time.
       </div>
-      <form id="ChangePasswordForm" class="form-inline" 
+      <form id="ChangePasswordForm" class="form-inline"
             onSubmit="PosdaGetRemoteMethod('UpdatePassword', \$('#ChangePasswordForm').serialize(), function(){Update();});return false;">
-        <input class="form-control" 
+        <input class="form-control"
                autocomplete="off"
                type="password" name="NewUserPass" placeholder="New Password">
 
-        <input id="ChangePasswordFormSubmit" 
+        <input id="ChangePasswordFormSubmit"
                class="btn btn-warning" type="submit" value="Change Password">
       </form>
     });
@@ -382,7 +382,7 @@ method UpdateSelection($http, $dyn) {
 }
 
 method CreateNewUser($http, $dyn) {
-  my $name = $dyn->{NewUserName};
+  my $name = lc $dyn->{NewUserName}; #username forced to lowercase
   my $email = $dyn->{NewEmail};
   my $pass = $dyn->{NewUserPass} or 'no_pass';
 

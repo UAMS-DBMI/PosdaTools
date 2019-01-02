@@ -190,7 +190,7 @@ method SpecificInitialize($session) {
   # $self->{DbLookUp} = $self->{Environment}->{DbSpec};
 
   if (-e "$self->{SavedQueriesDir}/bindingcache.pinfo") {
-    $self->{BindingCache} = 
+    $self->{BindingCache} =
       retrieve("$self->{SavedQueriesDir}/bindingcache.pinfo");
   } else {
     $self->{BindingCache} = {};
@@ -322,7 +322,7 @@ method ForwardInboxItemButtonClick($http, $dyn) {
   say STDERR "ForwardInboxItemButtonClick called";
 
   my $message_id = $dyn->{message_id};
-  
+
 
   $self->{_ForwardInboxButtonClicked} = 1;
 }
@@ -642,8 +642,8 @@ my $tag_ops = {
 };
 my $tag_mode_list = [
   "Queries With Any Selected Tag Set",
-  "Queries With No Tags Set", 
-  "All Queries", 
+  "Queries With No Tags Set",
+  "All Queries",
 ];
 my $tag_modes;
 for my $i (@$tag_mode_list){
@@ -817,7 +817,7 @@ method TagSelection($http, $dyn){
       }
 
       my $new_state = $checked eq 'checked'? 'false':'true';
-      my $extra_class = $checked eq 'checked'? 'active':''; 
+      my $extra_class = $checked eq 'checked'? 'active':'';
 
       $http->queue(qq{
         <td>
@@ -962,7 +962,7 @@ method DrawRoles($http, $dyn) {
 
   # Just pick the first one if one isn't selected
   if (not defined $self->{SelectedRole}) {
-    $self->{SelectedRole} = $all_roles->[0];
+    $self->{SelectedRole} = $roles->[0];
   }
 
   $http->queue(qq{
@@ -995,7 +995,7 @@ method SetRoleSelection($http, $dyn) {
 
 method DrawTabs($http, $dyn) {
   my $tabs = PosdaDB::Queries->GetTabsByRole($self->{SelectedRole});
-  
+
   # select the first tab as the default
   if (not defined $self->{SelectedTab}) {
     $self->SwitchToTab($http, { tab =>  $tabs->[0]->{query_tab_name} });
@@ -1148,7 +1148,7 @@ method OpenPopup($class, $name, $params) {
   }
 
   my $child_path = $self->child_path($name);
-  my $child_obj = $class->new($self->{session}, 
+  my $child_obj = $class->new($self->{session},
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
@@ -1224,7 +1224,7 @@ method OpHelp($http, $dyn) {
 
 
   my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
-  my $child_obj = DbIf::PopupHelp->new($self->{session}, 
+  my $child_obj = DbIf::PopupHelp->new($self->{session},
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }
@@ -1345,7 +1345,7 @@ method SmallInputBoxWithAddButton($http, $dyn) {
   });
 }
 
-### 
+###
 # Delegated methods
 ###
 
@@ -1645,7 +1645,7 @@ method ActiveQuery($http, $dyn){
     if($d->{struct} eq "text"){
       #DEBUG 'text';
       if( defined($d->{special}) && $d->{special} eq "pre-formatted"){
-         $self->RefreshEngine($http, $dyn, 
+         $self->RefreshEngine($http, $dyn,
            "<pre><code class=\"sql\">$self->{query}->{$i}</code></pre>");
       } elsif (defined $d->{special} && $d->{special} eq "markdown") {
          $self->RefreshEngine($http, $dyn, markdown($self->{query}->{$i}));
@@ -1671,7 +1671,7 @@ method ActiveQuery($http, $dyn){
         $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
         for my $arg (@{$self->{query}->{args}}){
           # preload the Input if arg is in cache
-          if (defined $self->{BindingCache}->{$arg} and 
+          if (defined $self->{BindingCache}->{$arg} and
               not defined $self->{Input}->{$arg}) {
             $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
           }
@@ -1692,7 +1692,7 @@ method ActiveQuery($http, $dyn){
         }
         $http->queue('</table>');
         $http->queue('<p>');
-        $self->NotSoSimpleButton($http, { 
+        $self->NotSoSimpleButton($http, {
             caption => "Query and Display Results",
             op => "MakeQuery",
             sync => "Update();",
@@ -1701,7 +1701,7 @@ method ActiveQuery($http, $dyn){
         });
         $http->queue('</p>');
         $http->queue('<p>');
-        $self->NotSoSimpleButton($http, { 
+        $self->NotSoSimpleButton($http, {
             caption => "Query and Go to Tables",
             op => "MakeQuery",
             sync => "Update();",
@@ -1930,9 +1930,9 @@ method CreateTableFromQuery($query, $struct, $start_at) {
   # I am not sure why we drop the columns and then recreate them?
   my $new_q = {};
   for my $i (keys %$query){
-    unless($i eq 'columns' 
+    unless($i eq 'columns'
         or $i eq 'dbh' # if the handle is included it will fail to Freeze
-    ){ 
+    ){
       $new_q->{$i} = $query->{$i};
     }
   }
@@ -2020,10 +2020,10 @@ method DownloadTableAsCsv($http, $dyn){
   my $cmd = "PerlStructToCsv.pl";
   Dispatch::BinFragReader->new_serialized_cmd(
     $cmd,
-    $table, 
+    $table,
     func($frag) {
       $http->queue("$frag");
-    }, 
+    },
     func() {
       # do nothing, on purpose
     }
@@ -2033,9 +2033,9 @@ method DownloadTableAsCsv($http, $dyn){
 method StoreQuery($query, $filename) {
   # my $new_q = {};
   # for my $i (keys %$query){
-  #   unless($i eq 'columns' 
+  #   unless($i eq 'columns'
   #       or $i eq 'dbh' # if the handle is included it will fail to Freeze
-  #   ){ 
+  #   ){
   #     $new_q->{$i} = $query->{$i};
   #   }
   # }
@@ -2067,10 +2067,10 @@ method SaveTableAsReport($http, $dyn){
   my $cmd = "PerlStructToCsv.pl";
   Dispatch::BinFragReader->new_serialized_cmd(
     $cmd,
-    $table, 
+    $table,
     func($frag) {
       print $fh $frag;
-    }, 
+    },
     func() {
       close $fh;
       $self->QueueJsCmd("alert('Report saved!');");
@@ -2160,7 +2160,7 @@ method InsertSaveReportModal($http, $name, $table) {
           <form id="saveAsReportForm">
             <div class="form-group">
               <label for="saveName">Save as</label>
-              <input type="input" class="form-control" 
+              <input type="input" class="form-control"
                      id="saveName" name="saveName"
                      value="$name">
             </div>
@@ -2172,7 +2172,7 @@ method InsertSaveReportModal($http, $name, $table) {
           </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" 
+            <button type="button" class="btn btn-default"
                     data-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-primary"
                     onClick="javascript:PosdaGetRemoteMethod('SaveTableAsReport', \$('#saveAsReportForm').serialize(), function () {Update();});"
@@ -2262,7 +2262,7 @@ method TableSelected($http, $dyn){
       <div>
       <h3>Table from query: $query->{name}</h3>
       <p>
-        <a class="btn btn-primary" 
+        <a class="btn btn-primary"
            href="DownloadTableAsCsv?obj_path=$self->{path}&table=$self->{SelectedTable}">
            Download
         </a>
@@ -2298,7 +2298,7 @@ method TableSelected($http, $dyn){
       $http->queue('</ul>');
     }
     $http->queue("Rows: $num_rows<hr>");
-    # 
+    #
     if (defined $popup_hash->{table_level_popup}) {
 #      my $tlp = $popup_hash->{table_level_popup};
       $http->queue("<p>");
@@ -2408,8 +2408,8 @@ method TableSelected($http, $dyn){
 
     $self->RefreshEngine($http, $dyn, qq{
       <div style="background-color: white">
-      Table from CSV file: $file   
-      <a class="btn btn-sm btn-primary" 
+      Table from CSV file: $file
+      <a class="btn btn-sm btn-primary"
          href="DownloadTableAsCsv?obj_path=$self->{path}&table=$self->{SelectedTable}">Download</a>
      });
     $self->InsertSaveReportModal($http, basename($file));
@@ -2429,7 +2429,7 @@ method TableSelected($http, $dyn){
       $http->queue("<th>$i</th>");
     }
     $http->queue('</tr>');
-  
+
     for my $ri (0 .. $#{$rows}){
       my $r = $rows->[$ri];
       $http->queue('<tr>');
@@ -2527,7 +2527,7 @@ method UpdateInsertStatus($http, $dyn){
 
   $http->queue(qq{
     <p class="alert alert-success">
-      UPDATE or INSERT query succeeded: $query_name. 
+      UPDATE or INSERT query succeeded: $query_name.
       $result_count rows were affected.
     </p>
   });
@@ -2580,7 +2580,7 @@ method RenderActivityDropDown($http, $dyn){
   $self->SelectByValue($http, {
     op => 'SetActivity',
   });
-  for my $i (@activity_list){ 
+  for my $i (@activity_list){
     $http->queue("{<option value=\"$i->[0]\"");
     if($i->[0] eq $self->{ActivitySelected}){
       $http->queue(" selected")
@@ -2615,7 +2615,7 @@ method SortedActivityIds($h){
     ){ return 1 }
     elsif(
       $h->{$b}->{user} eq $self->get_user &&
-      $h->{$a}->{user} ne $self->get_user 
+      $h->{$a}->{user} ne $self->get_user
     ){ return -1 }
     elsif(
       $h->{$a}->{user} eq $self->get_user
@@ -2685,11 +2685,11 @@ method DownloadTar($http, $dyn){
     ){
       $self->{SelectedDownloadSubdir} = $dirs[0];
     }
-    $self->{DownloadTar} = 
+    $self->{DownloadTar} =
       "/nas/public/posda/cache/linked_for_download/" .
       $self->{SelectedDownloadSubdir};
     ########
-    # here goes the selection 
+    # here goes the selection
     $http->queue("Select sub directory: ");
     $self->SelectDelegateByValue($http, {
       op => "SetSelectedDownloadSubdir",
@@ -2706,7 +2706,7 @@ method DownloadTar($http, $dyn){
     ########
     $http->queue(qq{<br>
       Selected Directory: $self->{DownloadTar}<br>
-      <a class="btn btn-primary" 
+      <a class="btn btn-primary"
          href="DownloadTarOfThisDirectory?obj_path=$self->{path}">
          Download This Directory as Tar</a>
     });
@@ -2730,7 +2730,7 @@ method DownloadTarOfThisDirectory($http, $dyn){
   my $dir = $self->{DownloadTar};
   my $fh;
   if(open $fh, "(cd $dir && tar -chf - .)|") {
-    $http->DownloadHeader("application/x-tgz", 
+    $http->DownloadHeader("application/x-tgz",
       "$self->{SelectedDownloadSubdir}.tgz");
     Dispatch::Select::Socket->new(
       $self->SendFile($http),
@@ -2821,7 +2821,7 @@ method ConvertLinesComplete($hash){
       $hash->{'mime-type'} eq 'application/vnd.ms-excel'
     ) {
       $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
-    } 
+    }
     if ($hash->{'mime-type'} =~ /zip/) {
       DEBUG "Looks like this is a zip/gzip file!";
       $self->ProcessCompressedFile($hash);
@@ -2842,7 +2842,7 @@ method ProcessCompressedFile($hash) {
 
   my $sub = Posda::Subprocess->new("ExtractAndImportZip");
   $sub->set_commandline("ExtractAndImportZip.pl <?bkgrnd_id?> <notify> <filename>");
-  $sub->set_params({ 
+  $sub->set_params({
     notify => $self->get_user,
     filename => $filename
   });
@@ -3017,13 +3017,13 @@ method Reports($http, $dyn) {
   my $common_dir = $self->{PreparedReportsCommonDir};
 
   opendir(my $dh, $report_dir) or die "Can't open report dir: $report_dir";
-  my @files = grep { 
+  my @files = grep {
     /^[^\.]/ and not /\.query$/
   } readdir($dh); # ignore dots
   closedir $dh;
 
   opendir(my $cdh, $common_dir) or die "Can't open report dir: $common_dir";
-  my @common_files = grep { 
+  my @common_files = grep {
     /^[^\.]/ and not /\.query$/
   } readdir($cdh); # ignore dots
   closedir $cdh;
@@ -3060,7 +3060,7 @@ method Reports($http, $dyn) {
         <td>$type</td>
         <td>$size</td>
         <td>
-        <a class="btn btn-primary" 
+        <a class="btn btn-primary"
            href="DownloadPreparedReport?obj_path=$self->{path}&filename=$filename&shortname=$f">
            ⬇
         </a>
@@ -3118,7 +3118,7 @@ method LoadPreparedReport($http, $dyn) {
   }
   my $file = "$dir/$dyn->{filename}";
 
-  # couldn't call existing method because we need more control 
+  # couldn't call existing method because we need more control
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
   my $final_callback = $self->CsvLoaded($file);
   $self->SemiSerializedSubProcess($cmd, func() {
@@ -3178,7 +3178,7 @@ method Tables($http, $dyn){
         sync => "Update();",
     });
     $http->queue(qq{
-        <a class="btn btn-primary" 
+        <a class="btn btn-primary"
            href="DownloadTableAsCsv?obj_path=$self->{path}&table=$in">
            Download
         </a>
@@ -3335,7 +3335,7 @@ method ExecuteNextOperation() {
   }
 
   Dispatch::LineReader->new_cmd(
-    $op, 
+    $op,
     func($line) {
       # save into output buffer
       push @{$self->{Results}}, $line;
@@ -3384,7 +3384,7 @@ method ExecutePlannedPipeOperations($http, $dyn) {
         # TODO: Is this really useful? the way write_and_read_all()
         # works, the subprocess should always be dead by the time
         # we get here. This is in the spec, but maybe it should be
-        # modified? 
+        # modified?
         PosdaDB::Queries::set_subprocess_pid(
           $subprocess_invocation_id, $pid);
         PosdaDB::Queries::record_subprocess_lines(
@@ -3570,8 +3570,8 @@ method PushToHistory($index) {
   }
 
   # if the given index is already in the list, delete it
-  my @del_indexes = grep { 
-    $self->{TableHistory}->[$_] eq $index 
+  my @del_indexes = grep {
+    $self->{TableHistory}->[$_] eq $index
   } 0 .. $#{$self->{TableHistory}};
   # this will really only ever return 1 item
   # so this for loop is safe, even though splice changes the array!
@@ -3749,7 +3749,7 @@ method FileIdsFetched($nn_type, $table_n){
       $q_t .= ")";
       my $q = {
         query => $q_t,
-        columns => ["project_name", "site_name", "subj_id", 
+        columns => ["project_name", "site_name", "subj_id",
           "sop_nickname", "version_number", "file_digest"],
         args =>[],
         bindings =>[],
@@ -3803,7 +3803,7 @@ method FileNnsFetched($nn_type, $f_info, $table_n){
     }
   };
   return $sub;
-} 
+}
 method SeriesStudyBySop($sop_where, $nn_type, $table_n){
   my $q = {
     schema => "posda_files",
@@ -3925,7 +3925,7 @@ method SeriesBySopsFetched(
       }
       $series_where .= ")";
       $self->NicknamesBySeries(
-        $series_where, \%series_info, $sop_info, $file_info, 
+        $series_where, \%series_info, $sop_info, $file_info,
         $dig_info, $nn_type, $table_n
       );
     } else {
@@ -3950,8 +3950,8 @@ print STDERR "StudiesBySeries($series_where, $nn_type, $table_n)\n";
       "   distinct series_instance_uid, study_instance_uid,\n" .
       "   project_name, site_name , patient_id\n" .
       "from\n" .
-      "  file_series natural join file_study\n" . 
-      "   natural join ctp_file natural join file_patient\n" . 
+      "  file_series natural join file_study\n" .
+      "   natural join ctp_file natural join file_patient\n" .
       $series_where,
     columns => ["series_instance_uid", "study_instance_uid",
       "project_name", "site_name", "patient_id" ],
