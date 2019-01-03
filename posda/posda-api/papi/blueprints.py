@@ -55,6 +55,7 @@ def generate_rois_blueprint():
     blueprint.add_route(
         rois.get_contours_for_file,
         '/file/<file_id>'
+    )
 
     return blueprint
 
