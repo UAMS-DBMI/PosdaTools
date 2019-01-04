@@ -5,7 +5,7 @@ import logging
 from sanic import Sanic
 
 from papi.util import db
-from papi.resources import tests, download, dump
+from papi.resources import tests, download, dump, importer
 import papi.blueprints
 
 app = Sanic()
@@ -44,6 +44,22 @@ if __name__ == "__main__":
     host = os.environ.get('HOST', '0.0.0.0')
     port = int(os.environ.get('PORT', '8087'))
     workers = int(os.environ.get('WORKERS', 4))
+
+
+    # configure importer
+    importer.FILE_STORAGE_PATH = os.environ.get(
+        'FILE_STORAGE_PATH',
+        "/home/posda/cache/created" 
+    )
+    importer.TEMP_STORAGE_PATH = os.environ.get(
+        'TEMP_STORAGE_PATH',
+        "/home/posda/temp"
+    )
+    importer.FILE_STORAGE_ROOT = int(os.environ.get(
+        'FILE_STORAGE_ROOT',
+        3
+    ))
+
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)

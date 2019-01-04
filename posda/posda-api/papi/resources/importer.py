@@ -10,10 +10,11 @@ import hashlib
 import tempfile
 import os
 
-LOC = "/home/posda/cache/created" #TODO this should be read from db
-# The temp dir MUST be on the same filesystem as the eventual location
-# under this system!
-TEMP_DIR = "/home/posda/temp"
+# These are default values; they should be configured
+# from whatever code imports this module!
+FILE_STORAGE_PATH = "/home/posda/cache/created" 
+TEMP_STORAGE_PATH = "/home/posda/temp"
+FILE_STORAGE_ROOT = 3
 
 class ImportEvent(HTTPMethodView):
     async def put(self, request):
@@ -30,9 +31,11 @@ class ImportEvent(HTTPMethodView):
 
 class CloseImportEvent(HTTPMethodView):
     def post(self, request, event_id):
-        # if int(event_id) != 328: # TODO fix this
-        #     # not found path
-        #     raise NotFound("no such import event found")
+        """Close the import event, by setting an end date
+
+        TODO: The table currently doesn't have an end date, so
+        for the time being this is a no-op.
+        """
 
 
         return json({
@@ -42,29 +45,29 @@ class CloseImportEvent(HTTPMethodView):
 class ImportFile(HTTPMethodView):
     @stream
     async def put(self, request):
+        # both of these are optional
         import_event_id = request.args.get('import_event_id')
         digest = request.args.get('digest')
 
-
-        # if digest is None, that's okay
-
-        fp = tempfile.NamedTemporaryFile(dir=TEMP_DIR, delete=False)
+        fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
         m = hashlib.md5()
         bytes_read = 0
         while True:
-            data = await request.stream.get()
-            if data is None:
+            chunk = await request.stream.get()
+            if chunk is None:
                 break
-            m.update(data)
-            fp.write(data)
-            bytes_read += len(data)
+            m.update(chunk)
+            fp.write(chunk)
+            bytes_read += len(chunk)
+
+        fp.close()
 
         computed_digest = m.hexdigest()
         if digest is not None and computed_digest != digest:
+            os.unlink(fp.name)
             raise InvalidUsage("digest of received bytes does not match "
                                "supplied digest")
 
-        fp.close()
 
         created, file_id = \
             await create_or_get_file_id(computed_digest, bytes_read)
@@ -108,11 +111,11 @@ async def create_import_event(comment):
 
 async def copy_file_into_place(filename, digest):
     # figure out what file_storage_root_id is
-    root_id = 3 #TODO fake
-    root = LOC # fake
+    root_id = FILE_STORAGE_ROOT
+    root = FILE_STORAGE_PATH
     path = os.path.join(digest[:2],
-                            digest[2:4],
-                            digest[4:6])
+                        digest[2:4],
+                        digest[4:6])
 
     rel_path = os.path.join(path, digest)
 
