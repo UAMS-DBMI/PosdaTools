@@ -39,18 +39,15 @@ export class FileService {
     return this.http.get<ImageDetails>("/vapi/extra_details/" + file_id);
   }
 
-
-
-  getRois(file_id: number): Observable<Roi[]> {
+  getRois(file_id: number):Observable<Roi[]> {
     if (undefined == this.roi_map[file_id]) {
-      this.roi_map[file_id] = this.http.get<Roi[]>("/vapi/details/ROI/" + file_id)
+      this.roi_map[file_id] = this.http.get<Roi[]>("papi/v1/rois/file/" + file_id)
         .pipe(
           publishReplay(1),
           refCount());
     }
     return this.roi_map[file_id];
   }
-
 
   getDump(file_id: number): Observable<any> {
     return this.http.get("/papi/v1/dump/" + file_id, {responseType: 'text'});
