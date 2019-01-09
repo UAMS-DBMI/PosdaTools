@@ -13,11 +13,11 @@ use Digest::MD5;
 use File::Copy;
 use File::Path qw(remove_tree make_path);
 use File::Compare;
+use Data::Dumper;
+
 my $start_t = PosdaDB::Queries->GetQueryInstance("StartTransactionPosda");
-my $locker = PosdaDB::Queries->GetQueryInstance("LockFilePosda");
-my $unlocker = PosdaDB::Queries->GetQueryInstance("EndTransactionPosda");
 my $gfile = PosdaDB::Queries->GetQueryInstance("GetPosdaFileIdByDigest");
-my $insf = PosdaDB::Queries->GetQueryInstance("InsertFilePosda");
+my $insf = PosdaDB::Queries->GetQueryInstance("InsertFilePosdaReturnID");
 my $gfileloc = PosdaDB::Queries->GetQueryInstance("FilePathComponentsByFileId");
 my $ifl = PosdaDB::Queries->GetQueryInstance("InsertFileLocation");
 my $mpfltp = PosdaDB::Queries->GetQueryInstance("MakePosdaFileReadyToProcess");
@@ -26,33 +26,26 @@ my $get_root = PosdaDB::Queries->GetQueryInstance("GetPosdaFileCreationRoot");
 my $insert_import_event = PosdaDB::Queries->GetQueryInstance("InsertEditImportEvent");
 my $insert_file_import = PosdaDB::Queries->GetQueryInstance("InsertFileImportLong");
 my $giei = PosdaDB::Queries->GetQueryInstance("GetImportEventId");
+my $endtransaction = PosdaDB::Queries->GetQueryInstance("EndTransactionPosda");
 
 sub InsertFile{
   my($digest, $size) = @_;
   $start_t->RunQuery(sub {}, sub {});
-  $locker->RunQuery(sub {}, sub {});
+    
+  my $results = $insf->FetchOneHash($digest,$size);
   my $file_id;
-  $gfile->RunQuery(sub {
-      my($row) = @_;
-      if(defined $file_id) {
-        $unlocker->RunQuery(sub{}, sub {});
-        die "Duplicate file entries for $digest";
-      }
-      $file_id = $row->[0];
-    }, sub {},
-    $digest
-  );
-  unless(defined $file_id){
-    $insf->RunQuery(sub {}, sub {}, $digest, $size);
-    $g_file_id->RunQuery(sub {
-        my($row) = @_;
-        $file_id = $row->[0];
-      }, sub {},
-    );
+  unless(defined $results){
+    $gfile->RunQuery(sub {
+	   my($row) = @_;
+           $file_id = $row->[0];
+         }, sub {}, $digest);
+  }else{
+    $file_id = $results->{file_id};
   }
-  $unlocker->RunQuery(sub{}, sub{});
+  $endtransaction->RunQuery(sub{}, sub{});
   return $file_id;
 }
+
 sub CopyOrLinkFile{
   my($file_id, $digest, $root_id, $root, $fname, $errors) = @_;
   my @locs;
