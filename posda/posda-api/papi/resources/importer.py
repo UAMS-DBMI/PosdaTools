@@ -48,6 +48,9 @@ class ImportFile(HTTPMethodView):
         # both of these are optional
         import_event_id = request.args.get('import_event_id')
         digest = request.args.get('digest')
+        
+        if digest is None:
+            raise InvalidUsage("digest is required")
 
         fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
         m = hashlib.md5()
@@ -63,7 +66,7 @@ class ImportFile(HTTPMethodView):
         fp.close()
 
         computed_digest = m.hexdigest()
-        if digest is not None and computed_digest != digest:
+        if computed_digest != digest:
             os.unlink(fp.name)
             raise InvalidUsage("digest of received bytes does not match "
                                "supplied digest")
