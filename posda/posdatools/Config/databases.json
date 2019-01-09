@@ -1,15 +1,7 @@
 {
   "posda_queries" : {
-    "database" : "posda_queries",
-    "driver"   : "postgres",
-    "init"     : [
-      "Posda/sql/posda_queries.sql",
-      "Posda/sql/posda_queries_data.sql",
-      "Posda/sql/posda_queries_config.sql"
-    ],
-    "reset"    : [
-      "Posda/sql/reset/posda_queries.sql"
-    ]
+    "database" : "posda_files",
+    "driver"   : "postgres"
   },
   "posda_auth" : {
     "database" : "posda_auth",
@@ -79,7 +71,9 @@
     "driver"   : "postgres",
     "init"     : [
       "Posda/sql/posda_files.sql",
-      "Posda/sql/posda_files_data.sql"
+      "Posda/sql/posda_files_data.sql",
+      "Posda/sql/posda_dbif_config_data.sql",
+      "Posda/sql/posda_dbif_config.sql"
     ],
     "reset"    : [
       "Posda/sql/reset/posda_files.sql"

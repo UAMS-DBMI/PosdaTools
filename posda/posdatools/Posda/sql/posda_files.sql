@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.5 (Ubuntu 10.5-0ubuntu0.18.04)
+-- Dumped by pg_dump version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,6 +20,20 @@ SET row_security = off;
 --
 
 CREATE SCHEMA db_version;
+
+
+--
+-- Name: dbif_config; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA dbif_config;
+
+
+--
+-- Name: dicom_conv; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA dicom_conv;
 
 
 --
@@ -53,6 +67,324 @@ SET default_with_oids = false;
 
 CREATE TABLE db_version.version (
     version integer
+);
+
+
+--
+-- Name: background_buttons; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.background_buttons (
+    background_button_id integer NOT NULL,
+    operation_name text,
+    object_class text,
+    button_text text,
+    tags text[]
+);
+
+
+--
+-- Name: background_buttons_background_button_id_seq; Type: SEQUENCE; Schema: dbif_config; Owner: -
+--
+
+CREATE SEQUENCE dbif_config.background_buttons_background_button_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: background_buttons_background_button_id_seq; Type: SEQUENCE OWNED BY; Schema: dbif_config; Owner: -
+--
+
+ALTER SEQUENCE dbif_config.background_buttons_background_button_id_seq OWNED BY dbif_config.background_buttons.background_button_id;
+
+
+--
+-- Name: chained_query; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.chained_query (
+    chained_query_id integer NOT NULL,
+    from_query text NOT NULL,
+    to_query text NOT NULL,
+    caption text
+);
+
+
+--
+-- Name: chained_query_chained_query_id_seq; Type: SEQUENCE; Schema: dbif_config; Owner: -
+--
+
+CREATE SEQUENCE dbif_config.chained_query_chained_query_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chained_query_chained_query_id_seq; Type: SEQUENCE OWNED BY; Schema: dbif_config; Owner: -
+--
+
+ALTER SEQUENCE dbif_config.chained_query_chained_query_id_seq OWNED BY dbif_config.chained_query.chained_query_id;
+
+
+--
+-- Name: chained_query_cols_to_params; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.chained_query_cols_to_params (
+    chained_query_id integer NOT NULL,
+    from_column_name text NOT NULL,
+    to_parameter_name text NOT NULL
+);
+
+
+--
+-- Name: popup_buttons; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.popup_buttons (
+    popup_button_id integer NOT NULL,
+    name text,
+    object_class text,
+    btn_col text,
+    is_full_table boolean,
+    btn_name text
+);
+
+
+--
+-- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE; Schema: dbif_config; Owner: -
+--
+
+CREATE SEQUENCE dbif_config.popup_buttons_popup_button_id_seq1
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE OWNED BY; Schema: dbif_config; Owner: -
+--
+
+ALTER SEQUENCE dbif_config.popup_buttons_popup_button_id_seq1 OWNED BY dbif_config.popup_buttons.popup_button_id;
+
+
+--
+-- Name: queries; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.queries (
+    name text,
+    query text,
+    args text[],
+    columns text[],
+    tags text[],
+    schema text,
+    description text
+);
+
+
+--
+-- Name: query_tabs; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.query_tabs (
+    query_tab_name text,
+    query_tab_description text,
+    defines_dropdown boolean,
+    sort_order integer,
+    defines_search_engine boolean
+);
+
+
+--
+-- Name: query_tabs_query_tag_filter; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.query_tabs_query_tag_filter (
+    query_tab_name text NOT NULL,
+    filter_name text NOT NULL,
+    sort_order integer NOT NULL
+);
+
+
+--
+-- Name: query_tag_filter; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.query_tag_filter (
+    filter_name text,
+    tags_enabled text[]
+);
+
+
+--
+-- Name: role; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.role (
+    role_name text NOT NULL
+);
+
+
+--
+-- Name: role_tabs; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.role_tabs (
+    role_name text,
+    query_tab_name text,
+    sort_order integer
+);
+
+
+--
+-- Name: spreadsheet_operation; Type: TABLE; Schema: dbif_config; Owner: -
+--
+
+CREATE TABLE dbif_config.spreadsheet_operation (
+    operation_name text NOT NULL,
+    command_line text,
+    operation_type text,
+    input_line_format text,
+    tags text[]
+);
+
+
+--
+-- Name: dicom_module_to_posda_table; Type: TABLE; Schema: dicom_conv; Owner: -
+--
+
+CREATE TABLE dicom_conv.dicom_module_to_posda_table (
+    dicom_module_name text,
+    create_row_query text,
+    table_name text
+);
+
+
+--
+-- Name: dicom_tag_parm_column_table; Type: TABLE; Schema: dicom_conv; Owner: -
+--
+
+CREATE TABLE dicom_conv.dicom_tag_parm_column_table (
+    tag text,
+    tag_cannonical_name text,
+    posda_table_name text,
+    column_name text
+);
+
+
+--
+-- Name: tag_preparation; Type: TABLE; Schema: dicom_conv; Owner: -
+--
+
+CREATE TABLE dicom_conv.tag_preparation (
+    tag_cannonical_name text,
+    preparation_description text
+);
+
+
+--
+-- Name: activity; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity (
+    activity_id integer NOT NULL,
+    brief_description text,
+    when_created timestamp with time zone,
+    who_created text,
+    when_closed timestamp with time zone
+);
+
+
+--
+-- Name: activity_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.activity_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.activity_activity_id_seq OWNED BY public.activity.activity_id;
+
+
+--
+-- Name: activity_inbox_content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_inbox_content (
+    activity_id integer NOT NULL,
+    user_inbox_content_id integer NOT NULL
+);
+
+
+--
+-- Name: activity_posda_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_posda_file (
+    activity_id integer NOT NULL,
+    file_id_in_posda integer NOT NULL,
+    association_description text
+);
+
+
+--
+-- Name: activity_timepoint; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_timepoint (
+    activity_timepoint_id integer NOT NULL,
+    activity_id integer NOT NULL,
+    when_created timestamp without time zone,
+    who_created text,
+    comment text,
+    creating_user text
+);
+
+
+--
+-- Name: activity_timepoint_activity_timepoint_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.activity_timepoint_activity_timepoint_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_timepoint_activity_timepoint_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.activity_timepoint_activity_timepoint_id_seq OWNED BY public.activity_timepoint.activity_timepoint_id;
+
+
+--
+-- Name: activity_timepoint_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_timepoint_file (
+    activity_timepoint_id integer NOT NULL,
+    file_id integer NOT NULL
 );
 
 
@@ -199,6 +531,106 @@ CREATE TABLE public.association_pc_proposed_ts (
     association_pc_id integer NOT NULL,
     proposed_ts_uid text NOT NULL
 );
+
+
+--
+-- Name: background_input_line; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.background_input_line (
+    background_subprocess_id integer NOT NULL,
+    line_number integer,
+    line text
+);
+
+
+--
+-- Name: background_subprocess; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.background_subprocess (
+    background_subprocess_id integer NOT NULL,
+    subprocess_invocation_id integer,
+    input_rows_processed integer,
+    command_executed text,
+    foreground_pid integer,
+    background_pid integer,
+    when_script_started timestamp with time zone,
+    when_background_entered timestamp with time zone,
+    when_script_ended timestamp with time zone,
+    user_to_notify text,
+    process_error text,
+    crash text,
+    crash_date timestamp without time zone
+);
+
+
+--
+-- Name: COLUMN background_subprocess.crash; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.background_subprocess.crash IS 'Text stored if the subprocess crashes';
+
+
+--
+-- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.background_subprocess_background_subprocess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: background_subprocess_background_subprocess_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.background_subprocess_background_subprocess_id_seq OWNED BY public.background_subprocess.background_subprocess_id;
+
+
+--
+-- Name: background_subprocess_params; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.background_subprocess_params (
+    background_subprocess_id integer NOT NULL,
+    param_index integer,
+    param_value text
+);
+
+
+--
+-- Name: background_subprocess_report; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.background_subprocess_report (
+    background_subprocess_report_id integer NOT NULL,
+    background_subprocess_id integer,
+    file_id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+--
+-- Name: background_subprocess_report_background_subprocess_report_i_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.background_subprocess_report_background_subprocess_report_i_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: background_subprocess_report_background_subprocess_report_i_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.background_subprocess_report_background_subprocess_report_i_seq OWNED BY public.background_subprocess_report.background_subprocess_report_id;
 
 
 --
@@ -587,6 +1019,18 @@ CREATE TABLE public.ctp_filex (
 CREATE TABLE public.ctp_upload_event (
     file_id integer NOT NULL,
     rcv_timestamp timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: dbif_query_args; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dbif_query_args (
+    query_invoked_by_dbif_id integer NOT NULL,
+    arg_index integer,
+    arg_name text,
+    arg_value text
 );
 
 
@@ -1271,7 +1715,8 @@ CREATE TABLE public.file_import (
     file_id integer NOT NULL,
     rel_path text,
     rel_dir text,
-    file_name text
+    file_name text,
+    file_import_time timestamp with time zone
 );
 
 
@@ -1967,7 +2412,10 @@ CREATE TABLE public.import_event (
     import_comment text,
     import_time timestamp with time zone,
     remote_file text,
-    volume_name text
+    volume_name text,
+    import_close_time timestamp with time zone,
+    related_id_1 integer,
+    related_id_2 integer
 );
 
 
@@ -2254,6 +2702,18 @@ CREATE TABLE public.planned_verification_images (
 
 
 --
+-- Name: popup_buttons_popup_button_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.popup_buttons_popup_button_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
 -- Name: posda_public_compare; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2303,6 +2763,39 @@ ALTER SEQUENCE public.public_to_posda_file_comparis_public_to_posda_file_compari
 
 
 --
+-- Name: query_invoked_by_dbif; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.query_invoked_by_dbif (
+    query_invoked_by_dbif_id integer NOT NULL,
+    query_name text,
+    invoking_user text,
+    query_start_time timestamp with time zone,
+    query_end_time timestamp with time zone,
+    number_of_rows integer
+);
+
+
+--
+-- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: query_invoked_by_dbif_query_invoked_by_dbif_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED BY public.query_invoked_by_dbif.query_invoked_by_dbif_id;
+
+
+--
 -- Name: related_roi_observations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2310,6 +2803,37 @@ CREATE TABLE public.related_roi_observations (
     roi_observation_id integer NOT NULL,
     related_roi_observation_num integer NOT NULL
 );
+
+
+--
+-- Name: report_inserted; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.report_inserted (
+    report_inserted_id integer NOT NULL,
+    report_file_in_posda integer,
+    report_rows_generated integer,
+    background_subprocess_id integer
+);
+
+
+--
+-- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.report_inserted_report_inserted_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_inserted_report_inserted_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.report_inserted_report_inserted_id_seq OWNED BY public.report_inserted.report_inserted_id;
 
 
 --
@@ -2998,6 +3522,39 @@ ALTER SEQUENCE public.slope_intercept_slope_intercept_id_seq OWNED BY public.slo
 
 
 --
+-- Name: spreadsheet_uploaded; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.spreadsheet_uploaded (
+    spreadsheet_uploaded_id integer NOT NULL,
+    time_uploaded timestamp with time zone,
+    is_executable boolean,
+    uploading_user text,
+    file_id_in_posda integer,
+    number_rows integer
+);
+
+
+--
+-- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.spreadsheet_uploaded_spreadsheet_uploaded_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: spreadsheet_uploaded_spreadsheet_uploaded_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.spreadsheet_uploaded_spreadsheet_uploaded_id_seq OWNED BY public.spreadsheet_uploaded.spreadsheet_uploaded_id;
+
+
+--
 -- Name: ss_for; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3087,6 +3644,57 @@ CREATE TABLE public.submission (
 
 
 --
+-- Name: subprocess_invocation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subprocess_invocation (
+    subprocess_invocation_id integer NOT NULL,
+    from_spreadsheet boolean,
+    from_button boolean,
+    spreadsheet_uploaded_id integer,
+    query_invoked_by_dbif_id integer,
+    button_name text,
+    command_line text,
+    process_pid integer,
+    invoking_user text,
+    when_invoked timestamp with time zone,
+    operation_name text,
+    scrash text,
+    scrash_date timestamp without time zone
+);
+
+
+--
+-- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subprocess_invocation_subprocess_invocation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subprocess_invocation_subprocess_invocation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subprocess_invocation_subprocess_invocation_id_seq OWNED BY public.subprocess_invocation.subprocess_invocation_id;
+
+
+--
+-- Name: subprocess_lines; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subprocess_lines (
+    subprocess_invocation_id integer NOT NULL,
+    line_number integer NOT NULL,
+    line text NOT NULL
+);
+
+
+--
 -- Name: unique_pixel_data; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3114,6 +3722,125 @@ CREATE SEQUENCE public.unique_pixel_data_unique_pixel_data_id_seq
 --
 
 ALTER SEQUENCE public.unique_pixel_data_unique_pixel_data_id_seq OWNED BY public.unique_pixel_data.unique_pixel_data_id;
+
+
+--
+-- Name: user_activity; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_activity (
+    user_activity_id integer NOT NULL,
+    user_name text NOT NULL,
+    description text NOT NULL,
+    when_activity_created timestamp with time zone,
+    when_activity_closed timestamp with time zone
+);
+
+
+--
+-- Name: user_activity_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_activity_messages (
+    user_activity_id integer NOT NULL,
+    background_subprocess_report_id integer NOT NULL
+);
+
+
+--
+-- Name: user_activity_user_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_activity_user_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_activity_user_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_activity_user_activity_id_seq OWNED BY public.user_activity.user_activity_id;
+
+
+--
+-- Name: user_inbox; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_inbox (
+    user_inbox_id integer NOT NULL,
+    user_name text,
+    user_email_addr text
+);
+
+
+--
+-- Name: user_inbox_content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_inbox_content (
+    user_inbox_content_id integer NOT NULL,
+    user_inbox_id integer,
+    background_subprocess_report_id integer,
+    current_status text,
+    statuts_note text,
+    date_entered timestamp without time zone,
+    date_dismissed timestamp without time zone
+);
+
+
+--
+-- Name: user_inbox_content_operation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_inbox_content_operation (
+    user_inbox_content_id integer,
+    operation_type text,
+    when_occurred timestamp without time zone,
+    how_invoked text,
+    invoking_user text
+);
+
+
+--
+-- Name: user_inbox_content_user_inbox_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_inbox_content_user_inbox_content_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_inbox_content_user_inbox_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_inbox_content_user_inbox_content_id_seq OWNED BY public.user_inbox_content.user_inbox_content_id;
+
+
+--
+-- Name: user_inbox_user_inbox_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_inbox_user_inbox_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_inbox_user_inbox_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_inbox_user_inbox_id_seq OWNED BY public.user_inbox.user_inbox_id;
 
 
 --
@@ -3193,6 +3920,34 @@ CREATE TABLE quasar.kirk_series (
 
 
 --
+-- Name: ldct_mayo; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.ldct_mayo (
+    file_name text NOT NULL
+);
+
+
+--
+-- Name: ldct_mayo_full; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.ldct_mayo_full (
+    file_id integer,
+    file_name text
+);
+
+
+--
+-- Name: ldct_mayo_missing; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.ldct_mayo_missing (
+    file_name text
+);
+
+
+--
 -- Name: mvtest; Type: MATERIALIZED VIEW; Schema: quasar; Owner: -
 --
 
@@ -3201,6 +3956,15 @@ CREATE MATERIALIZED VIEW quasar.mvtest AS
     ctp_file.site_name
    FROM public.ctp_file
   WITH NO DATA;
+
+
+--
+-- Name: phantom_files; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.phantom_files (
+    file_id integer
+);
 
 
 --
@@ -3232,6 +3996,41 @@ CREATE TABLE quasar.temp (
 
 
 --
+-- Name: background_buttons background_button_id; Type: DEFAULT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.background_buttons ALTER COLUMN background_button_id SET DEFAULT nextval('dbif_config.background_buttons_background_button_id_seq'::regclass);
+
+
+--
+-- Name: chained_query chained_query_id; Type: DEFAULT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.chained_query ALTER COLUMN chained_query_id SET DEFAULT nextval('dbif_config.chained_query_chained_query_id_seq'::regclass);
+
+
+--
+-- Name: popup_buttons popup_button_id; Type: DEFAULT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.popup_buttons ALTER COLUMN popup_button_id SET DEFAULT nextval('dbif_config.popup_buttons_popup_button_id_seq1'::regclass);
+
+
+--
+-- Name: activity activity_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity ALTER COLUMN activity_id SET DEFAULT nextval('public.activity_activity_id_seq'::regclass);
+
+
+--
+-- Name: activity_timepoint activity_timepoint_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_timepoint ALTER COLUMN activity_timepoint_id SET DEFAULT nextval('public.activity_timepoint_activity_timepoint_id_seq'::regclass);
+
+
+--
 -- Name: adverse_file_event adverse_file_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3250,6 +4049,20 @@ ALTER TABLE ONLY public.association ALTER COLUMN association_id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.association_pc ALTER COLUMN association_pc_id SET DEFAULT nextval('public.association_pc_association_pc_id_seq'::regclass);
+
+
+--
+-- Name: background_subprocess background_subprocess_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess ALTER COLUMN background_subprocess_id SET DEFAULT nextval('public.background_subprocess_background_subprocess_id_seq'::regclass);
+
+
+--
+-- Name: background_subprocess_report background_subprocess_report_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess_report ALTER COLUMN background_subprocess_report_id SET DEFAULT nextval('public.background_subprocess_report_background_subprocess_report_i_seq'::regclass);
 
 
 --
@@ -3386,6 +4199,20 @@ ALTER TABLE ONLY public.public_to_posda_file_comparison ALTER COLUMN public_to_p
 
 
 --
+-- Name: query_invoked_by_dbif query_invoked_by_dbif_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.query_invoked_by_dbif ALTER COLUMN query_invoked_by_dbif_id SET DEFAULT nextval('public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq'::regclass);
+
+
+--
+-- Name: report_inserted report_inserted_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_inserted ALTER COLUMN report_inserted_id SET DEFAULT nextval('public.report_inserted_report_inserted_id_seq'::regclass);
+
+
+--
 -- Name: roi roi_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3449,6 +4276,13 @@ ALTER TABLE ONLY public.slope_intercept ALTER COLUMN slope_intercept_id SET DEFA
 
 
 --
+-- Name: spreadsheet_uploaded spreadsheet_uploaded_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.spreadsheet_uploaded ALTER COLUMN spreadsheet_uploaded_id SET DEFAULT nextval('public.spreadsheet_uploaded_spreadsheet_uploaded_id_seq'::regclass);
+
+
+--
 -- Name: ss_for ss_for_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3463,10 +4297,38 @@ ALTER TABLE ONLY public.structure_set ALTER COLUMN structure_set_id SET DEFAULT 
 
 
 --
+-- Name: subprocess_invocation subprocess_invocation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subprocess_invocation ALTER COLUMN subprocess_invocation_id SET DEFAULT nextval('public.subprocess_invocation_subprocess_invocation_id_seq'::regclass);
+
+
+--
 -- Name: unique_pixel_data unique_pixel_data_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.unique_pixel_data ALTER COLUMN unique_pixel_data_id SET DEFAULT nextval('public.unique_pixel_data_unique_pixel_data_id_seq'::regclass);
+
+
+--
+-- Name: user_activity user_activity_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_activity ALTER COLUMN user_activity_id SET DEFAULT nextval('public.user_activity_user_activity_id_seq'::regclass);
+
+
+--
+-- Name: user_inbox user_inbox_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox ALTER COLUMN user_inbox_id SET DEFAULT nextval('public.user_inbox_user_inbox_id_seq'::regclass);
+
+
+--
+-- Name: user_inbox_content user_inbox_content_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox_content ALTER COLUMN user_inbox_content_id SET DEFAULT nextval('public.user_inbox_content_user_inbox_content_id_seq'::regclass);
 
 
 --
@@ -3481,6 +4343,70 @@ ALTER TABLE ONLY public.visual_review_instance ALTER COLUMN visual_review_instan
 --
 
 ALTER TABLE ONLY public.window_level ALTER COLUMN window_level_id SET DEFAULT nextval('public.window_level_window_level_id_seq'::regclass);
+
+
+--
+-- Name: background_buttons background_buttons_pkey; Type: CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.background_buttons
+    ADD CONSTRAINT background_buttons_pkey PRIMARY KEY (background_button_id);
+
+
+--
+-- Name: popup_buttons popup_buttons_pkey; Type: CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.popup_buttons
+    ADD CONSTRAINT popup_buttons_pkey PRIMARY KEY (popup_button_id);
+
+
+--
+-- Name: query_tabs query_tabs_query_tab_name_key; Type: CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.query_tabs
+    ADD CONSTRAINT query_tabs_query_tab_name_key UNIQUE (query_tab_name);
+
+
+--
+-- Name: role role_pkey; Type: CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.role
+    ADD CONSTRAINT role_pkey PRIMARY KEY (role_name);
+
+
+--
+-- Name: spreadsheet_operation spreadsheet_operation_operation_name_key; Type: CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.spreadsheet_operation
+    ADD CONSTRAINT spreadsheet_operation_operation_name_key UNIQUE (operation_name);
+
+
+--
+-- Name: background_subprocess background_subprocess_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess
+    ADD CONSTRAINT background_subprocess_pkey PRIMARY KEY (background_subprocess_id);
+
+
+--
+-- Name: background_subprocess_report background_subprocess_report_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess_report
+    ADD CONSTRAINT background_subprocess_report_pkey PRIMARY KEY (background_subprocess_report_id);
+
+
+--
+-- Name: background_subprocess_report background_subprocess_report_uniq; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess_report
+    ADD CONSTRAINT background_subprocess_report_uniq UNIQUE (background_subprocess_id, file_id);
 
 
 --
@@ -3660,11 +4586,43 @@ ALTER TABLE ONLY public.site_codes
 
 
 --
+-- Name: user_inbox_content user_inbox_content_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox_content
+    ADD CONSTRAINT user_inbox_content_pkey PRIMARY KEY (user_inbox_content_id);
+
+
+--
+-- Name: user_inbox user_inbox_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox
+    ADD CONSTRAINT user_inbox_pkey PRIMARY KEY (user_inbox_id);
+
+
+--
+-- Name: user_inbox user_inbox_user_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox
+    ADD CONSTRAINT user_inbox_user_name_key UNIQUE (user_name);
+
+
+--
 -- Name: kirk_series kirk_series_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
 --
 
 ALTER TABLE ONLY quasar.kirk_series
     ADD CONSTRAINT kirk_series_pkey PRIMARY KEY (series_instance_uid);
+
+
+--
+-- Name: ldct_mayo ldct_mayo_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
+--
+
+ALTER TABLE ONLY quasar.ldct_mayo
+    ADD CONSTRAINT ldct_mayo_pkey PRIMARY KEY (file_name);
 
 
 --
@@ -3681,6 +4639,20 @@ ALTER TABLE ONLY quasar.sops_and_ids
 
 ALTER TABLE ONLY quasar.sops
     ADD CONSTRAINT sops_pkey PRIMARY KEY (sop_instance_uid);
+
+
+--
+-- Name: queries_name_index; Type: INDEX; Schema: dbif_config; Owner: -
+--
+
+CREATE UNIQUE INDEX queries_name_index ON dbif_config.queries USING btree (name);
+
+
+--
+-- Name: role_tabs_uidx; Type: INDEX; Schema: dbif_config; Owner: -
+--
+
+CREATE UNIQUE INDEX role_tabs_uidx ON dbif_config.role_tabs USING btree (role_name, query_tab_name);
 
 
 --
@@ -3737,6 +4709,13 @@ CREATE INDEX beam_limiting_device_idx ON public.beam_limiting_device USING btree
 --
 
 CREATE INDEX contour_image_id_idx ON public.contour_image USING btree (roi_contour_id);
+
+
+--
+-- Name: contour_image_rev_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contour_image_rev_idx ON public.contour_image USING btree (sop_instance, roi_contour_id);
 
 
 --
@@ -3901,13 +4880,6 @@ CREATE INDEX file_for_file_id_idx ON public.file_for USING btree (file_id);
 
 
 --
--- Name: file_image_file_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_image_file_id_index ON public.file_image USING btree (file_id);
-
-
---
 -- Name: file_image_geometry_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3922,10 +4894,10 @@ CREATE INDEX file_image_geometry_image_geometry_id_idx ON public.file_image_geom
 
 
 --
--- Name: file_image_image_id_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: file_image_main_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX file_image_image_id_idx ON public.file_image USING btree (image_id);
+CREATE INDEX file_image_main_idx ON public.file_image USING btree (file_id, image_id);
 
 
 --
@@ -3940,6 +4912,13 @@ CREATE INDEX file_import_file_id_idx ON public.file_import USING btree (file_id)
 --
 
 CREATE INDEX file_import_import_event_id_idx ON public.file_import USING btree (import_event_id);
+
+
+--
+-- Name: file_import_import_event_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_import_import_event_index ON public.file_import USING btree (import_event_id);
 
 
 --
@@ -3961,13 +4940,6 @@ CREATE UNIQUE INDEX file_import_series_pk ON public.file_import_series USING btr
 --
 
 CREATE INDEX file_location_file_id_idx ON public.file_location USING btree (file_id);
-
-
---
--- Name: file_meta_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_meta_file_id_idx ON public.file_meta USING btree (file_id);
 
 
 --
@@ -3996,6 +4968,13 @@ CREATE INDEX file_plan_file_id_idx ON public.file_plan USING btree (file_id);
 --
 
 CREATE INDEX file_plan_plan_id_idx ON public.file_plan USING btree (plan_id);
+
+
+--
+-- Name: file_roi_image_linkage_linked_sop_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_roi_image_linkage_linked_sop_idx ON public.file_roi_image_linkage USING btree (linked_sop_instance_uid);
 
 
 --
@@ -4069,17 +5048,10 @@ CREATE INDEX file_visibility_change_idx ON public.file_visibility_change USING b
 
 
 --
--- Name: file_win_lev_file_id_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: file_win_lev_main_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX file_win_lev_file_id_idx ON public.file_win_lev USING btree (file_id);
-
-
---
--- Name: file_win_level_wl_index_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_win_level_wl_index_idx ON public.file_win_lev USING btree (wl_index);
+CREATE INDEX file_win_lev_main_idx ON public.file_win_lev USING btree (file_id, window_level_id, wl_index);
 
 
 --
@@ -4227,6 +5199,20 @@ CREATE INDEX pixel_location_unique_pixel_data_id_idx ON public.pixel_location US
 --
 
 CREATE UNIQUE INDEX plan_pk ON public.plan USING btree (plan_id);
+
+
+--
+-- Name: query_by_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX query_by_user_index ON public.query_invoked_by_dbif USING btree (invoking_user);
+
+
+--
+-- Name: queue_size; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX queue_size ON public.file USING btree (is_dicom_file, ready_to_process, processing_priority);
 
 
 --
@@ -4426,11 +5412,66 @@ CREATE UNIQUE INDEX window_level_pk ON public.window_level USING btree (window_l
 
 
 --
+-- Name: phantom_files_idx; Type: INDEX; Schema: quasar; Owner: -
+--
+
+CREATE INDEX phantom_files_idx ON quasar.phantom_files USING btree (file_id);
+
+
+--
+-- Name: role_tabs role_tabs_query_tab_name_fkey; Type: FK CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.role_tabs
+    ADD CONSTRAINT role_tabs_query_tab_name_fkey FOREIGN KEY (query_tab_name) REFERENCES dbif_config.query_tabs(query_tab_name);
+
+
+--
+-- Name: role_tabs role_tabs_role_name_fkey; Type: FK CONSTRAINT; Schema: dbif_config; Owner: -
+--
+
+ALTER TABLE ONLY dbif_config.role_tabs
+    ADD CONSTRAINT role_tabs_role_name_fkey FOREIGN KEY (role_name) REFERENCES dbif_config.role(role_name);
+
+
+--
+-- Name: background_subprocess_report background_subprocess_report_background_subprocess_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.background_subprocess_report
+    ADD CONSTRAINT background_subprocess_report_background_subprocess_id_fkey FOREIGN KEY (background_subprocess_id) REFERENCES public.background_subprocess(background_subprocess_id);
+
+
+--
 -- Name: downloadable_file downloadable_file_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.downloadable_file
     ADD CONSTRAINT downloadable_file_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: user_inbox_content user_inbox_content_background_subprocess_report_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox_content
+    ADD CONSTRAINT user_inbox_content_background_subprocess_report_id_fkey FOREIGN KEY (background_subprocess_report_id) REFERENCES public.background_subprocess_report(background_subprocess_report_id);
+
+
+--
+-- Name: user_inbox_content_operation user_inbox_content_operation_user_inbox_content_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox_content_operation
+    ADD CONSTRAINT user_inbox_content_operation_user_inbox_content_id_fkey FOREIGN KEY (user_inbox_content_id) REFERENCES public.user_inbox_content(user_inbox_content_id);
+
+
+--
+-- Name: user_inbox_content user_inbox_content_user_inbox_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_inbox_content
+    ADD CONSTRAINT user_inbox_content_user_inbox_id_fkey FOREIGN KEY (user_inbox_id) REFERENCES public.user_inbox(user_inbox_id);
 
 
 --

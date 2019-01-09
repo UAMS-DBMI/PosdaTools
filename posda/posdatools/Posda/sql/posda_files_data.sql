@@ -7,3 +7,5 @@ insert into import_control values (
 	null, 				-- pending_change_request
 	50 				-- files_per_round
 );
+
+alter database posda_files set search_path = public, dbif_config, dicom_conv;
