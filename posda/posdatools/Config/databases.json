@@ -1,9 +1,7 @@
 {
   "posda_queries" : {
     "database" : "posda_files",
-    "driver"   : "postgres",
-    "init"     : [],
-    "reset"    : []
+    "driver"   : "postgres"
   },
   "posda_auth" : {
     "database" : "posda_auth",

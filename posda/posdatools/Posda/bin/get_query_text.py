@@ -13,7 +13,7 @@ def quote(text):
 
 query_name = sys.argv[1]
 
-conn = psycopg2.connect("dbname=posda_queries")
+conn = psycopg2.connect("dbname=posda_files")
 cur = conn.cursor()
 
 cur.execute("""
