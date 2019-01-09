@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FILE=posda_dbif_config.sql
+FILE=posda_dbif_config_data.sql
 
 echo "Prior to refresh:"
 wc -l $FILE
