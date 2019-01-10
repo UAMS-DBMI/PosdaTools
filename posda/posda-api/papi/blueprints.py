@@ -14,6 +14,7 @@ from .resources import studies as st
 from .resources import series as se
 from .resources import files as fi
 from .resources import rois
+from .resources import importer
 
 
 def configure_blueprints(app):
@@ -39,6 +40,10 @@ def configure_blueprints(app):
         generate_rois_blueprint(),
         url_prefix='/v1/rois'
     )
+    app.blueprint(
+        generate_import_blueprint(),
+        url_prefix='/v1/import'
+    )
 
 def generate_rois_blueprint():
     blueprint = Blueprint('rois')
@@ -50,6 +55,29 @@ def generate_rois_blueprint():
     blueprint.add_route(
         rois.get_contours_for_file,
         '/file/<file_id>'
+    )
+
+    return blueprint
+
+def generate_import_blueprint():
+    blueprint = Blueprint('import')
+
+    # blueprint.add_route(
+    #     co.get_all_collections,
+    #     '/'
+    # )
+
+    blueprint.add_route(
+        importer.ImportEvent.as_view(),
+        '/event'
+    )
+    blueprint.add_route(
+        importer.CloseImportEvent.as_view(),
+        '/event/<event_id>/close'
+    )
+    blueprint.add_route(
+        importer.ImportFile.as_view(),
+        '/file'
     )
 
     return blueprint
