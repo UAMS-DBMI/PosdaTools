@@ -53,12 +53,15 @@ if __name__ == "__main__":
     )
     importer.TEMP_STORAGE_PATH = os.environ.get(
         'TEMP_STORAGE_PATH',
-        "/home/posda/temp"
+        "/home/posda/cache/temp"
     )
     importer.FILE_STORAGE_ROOT = int(os.environ.get(
         'FILE_STORAGE_ROOT',
         3
     ))
+
+    if not os.path.exists(importer.TEMP_STORAGE_PATH):
+        os.makedirs(importer.TEMP_STORAGE_PATH)
 
 
     if debug:

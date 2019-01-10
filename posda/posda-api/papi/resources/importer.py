@@ -13,7 +13,7 @@ import os
 # These are default values; they should be configured
 # from whatever code imports this module!
 FILE_STORAGE_PATH = "/home/posda/cache/created" 
-TEMP_STORAGE_PATH = "/home/posda/temp"
+TEMP_STORAGE_PATH = "/home/posda/cache/temp"
 FILE_STORAGE_ROOT = 3
 
 class ImportEvent(HTTPMethodView):
