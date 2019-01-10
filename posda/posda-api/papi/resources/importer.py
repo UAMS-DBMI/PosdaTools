@@ -30,13 +30,13 @@ class ImportEvent(HTTPMethodView):
         })
 
 class CloseImportEvent(HTTPMethodView):
-    def post(self, request, event_id):
-        """Close the import event, by setting an end date
+    async def post(self, request, event_id):
+        """Close the import event, by setting an end date"""
 
-        TODO: The table currently doesn't have an end date, so
-        for the time being this is a no-op.
-        """
-
+        try:
+            await close_import_event(int(event_id))
+        except TypeError:
+            raise InvalidUsage("invalid import_event_id")
 
         return json({
             'status': 'success',
@@ -112,6 +112,17 @@ async def create_import_event(comment):
 
         return record['import_event_id']
 
+async def close_import_event(import_event_id):
+    async with db.pool.acquire() as conn:
+        record = await conn.fetchrow("""\
+            update import_event
+            set import_close_time = now()
+            where import_event_id = $1
+            returning import_event_id
+        """, import_event_id)
+
+        return record['import_event_id']
+
 async def copy_file_into_place(filename, digest):
     # figure out what file_storage_root_id is
     root_id = FILE_STORAGE_ROOT
@@ -152,7 +163,7 @@ async def create_file_import(file_id, import_event_id):
         await conn.execute("""\
             insert into file_import
             values
-            ($1, $2, $3, $4, $5)
+            ($1, $2, $3, $4, $5, now())
         """, import_event_id, file_id, None, None, None)
         # TODO The 3 empty fields could be filled with something?
 
