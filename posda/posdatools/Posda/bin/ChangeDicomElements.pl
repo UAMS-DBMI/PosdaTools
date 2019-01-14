@@ -41,7 +41,7 @@ if($pairs > 0){
   }
 }
 if($df){
-  $ds->WritePart10($to, $xfr_stx, "DICOM_TEST", undef, undef);
+  $ds->WritePart10($to, $xfr_stx, "POSDA", undef, undef);
 } else {
   $ds->WriteRawDicom($to, $xfr_stx);
 }

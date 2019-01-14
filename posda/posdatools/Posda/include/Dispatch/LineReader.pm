@@ -10,6 +10,8 @@ use Socket;
 use Fcntl qw( :flock :DEFAULT F_GETFL F_SETFL O_NONBLOCK );
 use Dispatch::Select;
 use Dispatch::EventHandler;
+use vars @ISA;
+@ISA =  ("Dispatch::EventHandler");
 sub new_serialized_cmd{
   my($class, $cmd, $struct, $lh, $eh) = @_;
   my($child, $parent, $oldfh);

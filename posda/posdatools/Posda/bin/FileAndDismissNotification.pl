@@ -38,7 +38,12 @@ $bkgrnd->WriteToEmail(
 
 my $ins = Query('InsertActivityInboxContent');
 my $dismiss = Query('DismissInboxContentItem');
+my $count = 1;
 for my $inbox_content_id (keys %inbox_content_ids){
   $ins->RunQuery(sub{}, sub {}, $activity_id, $inbox_content_id);
   $dismiss->RunQuery(sub{}, sub{}, $inbox_content_id);
+  $count += 1;
 }
+$bkgrnd->WriteToEmail(
+ "Filed $count items into activity $activity_id and dismissed\n");
+$bkgrnd->Finish;

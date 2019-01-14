@@ -24,5 +24,5 @@ for my $i (@FileList){
   $hide->RunQuery(sub {}, sub {}, $file_id);
   $ins_vc->RunQuery(sub {}, sub {},
     $file_id, $ARGV[0], $old_visibility, 'hidden', $ARGV[1]);
-  print "Hide file $file_id and recorded visibility change\n";
+  print STDERR "Hide file $file_id and recorded visibility change\n";
 }

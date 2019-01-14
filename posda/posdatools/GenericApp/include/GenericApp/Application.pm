@@ -131,7 +131,7 @@ my $content = qq{
 </nav>
 
   <div class="container-fluid">
-    <div class="page-header">
+    <div id="header" class="page-header">
       <center><h1><?dyn="title"?></h1></center>
     </div>
     <div class="row">
@@ -258,6 +258,12 @@ sub MenuResponse{
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
   return $http->queue("content goes here");
+}
+
+sub HeaderResponse{
+  my($this, $http, $dyn) = @_;
+  return $this->RefreshEngine($http, $dyn,'<center><h1><?dyn="title"?></h1></center>');
+
 }
 
 1;

@@ -161,7 +161,7 @@ unless(-d $root) {
 }
 ############################################################
 # Create import_event 
-$insert_import_event->RunQuery(sub{}, sub{}, "single file import", $comment);
+$insert_import_event->RunQuery(sub{}, sub{}, "script: ImportMultipleFilesIntoPosda.pl", $comment);
 ####GetImportEventId
 my $ie_id;
 $giei->RunQuery(sub{

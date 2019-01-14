@@ -71,7 +71,9 @@ def fix_xfer_syntax(filename):
     """
 
     current_syntax = get_xfer_syntax(filename)
-    if current_syntax == '1.2.840.10008.1.2.1' or current_syntax is None:
+    if (current_syntax == '1.2.840.10008.1.2.1' or 
+        current_syntax is None or
+        current_syntax == '1.2.840.10008.1.2'):
         return (filename, filename)
     else:
         print(current_syntax)
@@ -83,14 +85,20 @@ def fix_xfer_syntax(filename):
                     "-i", filename,
                     "-o", new_filename])
 
-    print(f"Successfully converted file: {new_filename}")
-
-    return (new_filename, f"decompressed;{filename}")
+    if os.path.exists(new_filename):
+        print(f"Successfully converted file: {new_filename}")
+        return (new_filename, f"decompressed;{filename}")
+    else:
+        print(f"Looks like this one failed: {new_filename}")
+        return (None, None)
 
 def import_one_file(import_event_id, root, line_obj):
     root_id, root_path = root
 
     file, original_file = fix_xfer_syntax(line_obj['filename'])
+    if file is None:
+        print("Skipping due to previous errors. If this is happening a lot you might want to abort")
+        return
     size = line_obj['size']
 
     # get digest of the file
@@ -156,7 +164,7 @@ filename = pargs.plist
 # Begin an import event
 Query("InsertEditImportEvent").execute(
     import_type="plist import",
-    import_comment="test comment",
+    import_comment="VICTRE",
 )
 
 import_event_id = Query("GetImportEventId").get_single_value()

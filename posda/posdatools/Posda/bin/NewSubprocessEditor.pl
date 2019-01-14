@@ -43,7 +43,7 @@ my $help = <<EOF;
   <edit_spec> = {
     op => <operation>,
     tag => <tag>,
-    tag_mode => "exact|pattern|leaf|item",
+    tag_mode => "exact|pattern|leaf|item|group_pattern|private_group",
     arg1 => <arg1 of op>,
     arg2 => <arg2 of op>
   };
@@ -58,6 +58,11 @@ my $help = <<EOF;
     (0018,1078) 
   or an item in a multi-valued tag, e.g:
     (0008,0008)[7]
+  or a group_pattern, e.g:
+    60xx
+    50xx
+  or a private_group, e.g:
+    0013
 
   <tag_mode> specifies the type of tag. If the tag specified is a pattern,
   and <tag_mode> is not "pattern", then this program will crash because of
@@ -72,6 +77,8 @@ my $help = <<EOF;
   <arg1> and <arg2> are the arguments of these operands:
     shift_date(number_of_days) - shift a date by an integer number of days.
                                  to shift backwards supply negative integer.
+    shift_date_by_year(number_of_years) - shift a date by an integer number of years.
+                                 to shift backwards supply negative integer.
     delete_tag() - Delete the tag
     set_tag(value) - Set the value of a tag unconditionally.
                      Even if not present.
@@ -85,7 +92,7 @@ my $help = <<EOF;
                   Even if tag is not present.
     hash_unhashed_uid(uid_root) - hash the value of the tag unless the current
                                   value of the tag is either empty, or matches
-                                  the supplied uid_root.
+                                  the supplied uid_root
     date_difference(ref_tag, date) - Replace value in tag with number of days
                                      from date to date in ref_tag. 
                                      negative if date in ref_tag preceeds date
@@ -97,6 +104,15 @@ my $help = <<EOF;
                                      If there is an error computing difference,
                                      value of tag is replaced with error message,
                                      which may be verbose
+   copy_from_tag(from_tag) - Copy the value in from_tag to tag
+   delete_matching_group() - tag_mode must be 'group_pattern', tag specifies pattern
+                             deletes all of the groups matching the pattern
+   move_owner_block(owner, block) - tag_mode must be private_group, tag specifies 
+                                    block owner (e.g. "CTP").  Moves owners tags to
+                                    specified allocated block (moving other tags
+                                    as necessary). This operation is to simulate
+                                    CTP's behaviour (blindly putting data in block 10,
+                                    regardless of what is already there).
 
    Order of processing:
    1) if uid_substitutions is present, perform uid_substitutions.  Even if the
@@ -227,6 +243,22 @@ for my $edit(@{$edits->{edits}}){
     for my $tag_inst (@tags){
       push(@effective_edits, [$tag_inst, $op, $arg1, $arg2]);
     }
+  }elsif($tag_mode eq "group_pattern"){
+    unless($op eq "delete_matching_group"){
+      die "tag_mode of group_pattern with op $op";
+    }
+    unless($arg1 eq "60xx" || $arg1 eq "50xx"){
+      print STDERR "delete matching group: $arg1\n";
+    }
+    push(@effective_edits, [$tag, $op, $arg1, $arg2]);
+  }elsif($tag_mode eq "private_group"){
+    unless($tag =~ /^[\da-f][\da-f][\da-f][13579bdf]$/){
+      die "tag_mode of private_group with group $tag";
+    }
+    unless($op eq "move_owner_block"){
+      die "tag_mode of private_group with op $op";
+    }
+    push(@effective_edits, [$tag, $op, $arg1, $arg2]);
   }
 }
 for my $e (@effective_edits){
@@ -239,6 +271,17 @@ for my $e (@effective_edits){
         my $new_value = $shifter->ShiftDate($value);
       $ds->Insert($etag, $new_value);
     }
+  }elsif($eop eq "shift_date_by_year"){
+    my $value = $ds->Get($etag);
+    if(defined $value){
+      if($value =~ /^(\d\d\d\d)(.*)/){
+        my $year = $1;
+        my $rem = $2;
+        $year += $earg1;
+        my $new_date = sprintf("%4d",$year) . $rem;
+        $ds->Insert($etag, $new_date);
+      }
+    }
   }elsif($eop eq "copy_date_from_tag_to_dt"){
     my $value = $ds->Get($etag);
     my $sub_date = $ds->Get($earg1);
@@ -249,6 +292,9 @@ for my $e (@effective_edits){
         $ds->Insert($etag, $new_value);
       }
     }
+  }elsif($eop eq "copy_from_tag"){
+    my $value = $ds->Get($earg1);
+    $ds->Insert($etag, $value);
   }elsif($eop eq "delete_tag"){
     $ds->Delete($etag);
   }elsif($eop eq "set_tag"){
@@ -290,13 +336,44 @@ for my $e (@effective_edits){
     my $date = $earg2;
     eval {
       $val = Posda::PrivateDispositions->DiffDate(
-        $date_in_tag, $date);
+        $date, $date_in_tag);
     };
     if($@){
       $val = "error in computation: $@";
     }
     $ds->Insert($etag, $val);
-    
+  }elsif($eop eq "delete_matching_group"){
+    for my $gr (keys %{$ds}){
+      my $group = sprintf("%4x", $gr);
+      if($etag == '60xx' && $group =~ /^60..$/){
+        delete $ds->{$gr};
+      }
+      if($etag == '50xx' && $group =~ /^50..$/){
+        delete $ds->{$gr};
+      }
+    }
+  }elsif($eop eq "move_owner_block"){
+    my $gr = hex($etag);
+    my $owner = $earg1;
+    my $bl = hex($earg2);
+    $ds->MapToConvertPvt;
+    if(exists $ds->{$gr}){
+      my $private_map = $ds->{$gr}->{private_map};
+      my $r_private_map = $ds->{$gr}->{r_private_map};
+      unless($r_private_map->{$owner} == $bl){
+        my $cur_blk = $r_private_map->{$owner};
+        if(exists $private_map->{$bl}){
+          my $to_move_own = $private_map->{$bl};
+	  $private_map->{$cur_blk} = $to_move_own;
+          $r_private_map->{$to_move_own} = $cur_blk;
+        }
+        $private_map->{$bl} = $owner;
+        $r_private_map->{$owner} = $bl;
+        # So differences show up
+        $ds->Insert('(0013,"Posda",01)', "private tag blocks reallocated");
+      }
+    }
+    $ds->MapToConvertPvtBack;
   }else{
   }
 }

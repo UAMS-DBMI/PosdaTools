@@ -44,6 +44,7 @@ my $dest_file = $ARGV[0];
 my @files;
 while(my $line = <STDIN>){
   chomp $line;
+print STDERR "File: $line\n";
   push @files, $line;
 }
 my $try;
@@ -69,6 +70,8 @@ $ds->Insert("(0008,0018)", Posda::UUID::GetUUID());
 for my $i ("(0020,9161)", "(0020,9162)", "(0020,9163)", "(0020,9228)"){
   $ds->Delete($i);
 }
+my $num_frames = @files;
+$ds->Insert("(0028,0008)", $num_frames);
 $ds->Insert("(5200,9230)", \@function_groups);
 my $new_pix = join '', @pixel_data;
 $ds->Insert("(7fe0,0010)", $new_pix);

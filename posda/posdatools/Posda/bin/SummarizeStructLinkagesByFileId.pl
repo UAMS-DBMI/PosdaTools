@@ -79,7 +79,8 @@ $get_roi_info->RunQuery(sub {
   my($roi_id, $for_uid, $linked_sop_instance_uid,
      $max_x, $max_y, $max_z, $min_x, $min_y,
      $min_z, $roi_name, $roi_description,
-     $roi_interpreted_type, $num_contours) =
+     $roi_interpreted_type, $contour_offset, $contour_length,
+     $path) =
      @$row;
   $Rois{$roi_id}->{for_uid} = $for_uid;
   $ForUids{$for_uid}->{roi_ids}->{$roi_id} = 1;

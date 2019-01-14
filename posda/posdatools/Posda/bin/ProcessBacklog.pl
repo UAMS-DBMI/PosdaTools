@@ -236,6 +236,10 @@ my $start_round = PosdaDB::Queries->GetQueryInstance("StartRound");
 my $close_round = PosdaDB::Queries->GetQueryInstance("CloseRound");
 sub ProcessRound{
   my($round_id, $round_desc) = @_;
+#  TODO:
+## Create an import_event and get id
+## Add import_event_id as parameter to EnterFileInPosda
+#
   $start_round->RunQuery(sub{}, sub{}, $round_id);
   for my $collection (keys %$round_desc){
 print STDERR "Processing Collecton $collection\n";
@@ -262,6 +266,9 @@ print STDERR "Marking file in Posda\n";
       $files_inserted, $files_failed_to_enter, $files_already_present);
   }
   $close_round->RunQuery(sub {}, sub {}, $round_id);
+#  TODO:
+## Close import_event
+#
 }
 ####
 # Enter File In Posda
@@ -311,6 +318,10 @@ $get_file_storage_roots->RunQuery(
   },
   sub {}
 );
+#  TODO:
+## current params are bogus (except f_desc)
+## delete last two and add import_event_id
+#
 sub EnterFileInPosda{
   my($f_desc, $files_inserted, $files_already_present) = @_;
   my @posda_file_ids;
@@ -369,6 +380,10 @@ print STDERR "Creating new file\n";
   }
 #print STDERR "Transaction complete\n";
 #  $end_t->RunQuery(sub {}, sub{});
+#  TODO:
+## don't create import_event_row
+## use import_event_id passed in
+#
   $make_file_ready_to_process->RunQuery(sub {}, sub {}, $posda_file_id);
   $insert_import_event->RunQuery(sub {}, sub {},
     $f_desc->{time_rcv});

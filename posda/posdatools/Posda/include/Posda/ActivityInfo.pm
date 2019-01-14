@@ -69,20 +69,27 @@ sub GetFileInfoForTp{
   for my $f (@$file_ids){
     $q->RunQuery(sub {
       my($row) = @_;
-      my($collection, $site, $patient_id, $study_instance_uid,
-        $series_instance_uid, $sop_instance_uid,
-        $modality, $dicom_file_type) = @$row;
+      my($collection, $site, $visibility, $patient_id, $study_instance_uid,
+        $series_instance_uid, $sop_instance_uid, $sop_class_uid,
+        $modality, $dicom_file_type, $path,
+        $earliest_import_day,
+        $latest_import_day) = @$row;
       if(exists $FileInfo{$f}){
         die "Duplicate files in timepoint $tp_id";
       }
       $FileInfo{$f}->{collection} = $collection;
       $FileInfo{$f}->{site} = $site;
+      $FileInfo{$f}->{visibility} = $visibility;
       $FileInfo{$f}->{patient_id} = $patient_id;
       $FileInfo{$f}->{study_instance_uid} = $study_instance_uid;
       $FileInfo{$f}->{series_instance_uid} = $series_instance_uid;
       $FileInfo{$f}->{sop_instance_uid} = $sop_instance_uid;
+      $FileInfo{$f}->{sop_class_uid} = $sop_class_uid;
       $FileInfo{$f}->{modality} = $modality;
       $FileInfo{$f}->{dicom_file_type} = $dicom_file_type;
+      $FileInfo{$f}->{file_path} = $path;
+      $FileInfo{$f}->{earliest_import} = $earliest_import_day;
+      $FileInfo{$f}->{latest_import} = $latest_import_day;
       $FileInfo{$f}->{file_id} = $f;
     }, sub {}, $f);
   }
@@ -95,7 +102,7 @@ sub MakeFileHierarchyFromInfo{
     my $i = $info->{$f};
     $H{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
       ->{$i->{study_instance_uid}}->{$i->{series_instance_uid}}
-      ->{$i->{sop_instance_uid}}->{$f} = 1;
+      ->{$i->{sop_instance_uid}}->{$f} = $i->{visibility};
   }
   return \%H;
 }
@@ -105,16 +112,23 @@ sub MakeCondensedHierarchyFromInfo{
   for my $f (keys %$info){
     my $i = $info->{$f};
      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
-        ->{files}->{$i->{file_id}} = 1;
-      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
-        ->{sops}->{$i->{sop_instance_uid}} = 1;
-      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
-        ->{sop_classes}->{$i->{dicom_file_type}} = 1;
-      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
-        ->{modalities}->{$i->{modality}} = 1;
-      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+        ->{files}->{$f} = 1;
+     if( defined($i->{visibility})){
+       $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+        ->{hidden_files}->{$f} = 1;
+     } else {
+       $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+        ->{visible_files}->{$f} = 1;
+     }
+     $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+       ->{sops}->{$i->{sop_instance_uid}} = 1;
+     $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+       ->{sop_classes}->{$i->{dicom_file_type}} = 1;
+     $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+       ->{modalities}->{$i->{modality}} = 1;
+     $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
        ->{studies}->{$i->{study_instance_uid}} = 1;
-      $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
+     $Report{$i->{collection}}->{$i->{site}}->{$i->{patient_id}}
        ->{series}->{$i->{series_instance_uid}} = 1;
   }
   return \%Report;
@@ -122,7 +136,7 @@ sub MakeCondensedHierarchyFromInfo{
 sub PrintCondensedHierarchyReport{
   my($this, $rpt, $hier) = @_;
   $rpt->print("collection,site,patient_id,num_studies,num_series," .
-    "num_modalities,num_sop_classes,num_sops,num_files\r\n");
+    "num_modalities,num_sop_classes,num_sops,num_files,visible,hidden\r\n");
   for my $coll(sort keys %{$hier}){
     my $site_h = $hier->{$coll};
     for my $site (sort keys %$site_h){
@@ -130,13 +144,15 @@ sub PrintCondensedHierarchyReport{
       for my $pat_id (sort keys %$pat_h){
         my $h = $pat_h->{$pat_id};
         my $num_files = keys %{$h->{files}};
+        my $num_visible = keys %{$h->{visible_files}};
+        my $num_hidden = keys %{$h->{hidden_files}};
         my $num_modalities = keys %{$h->{modalities}};
         my $num_sop_class = keys %{$h->{sop_classes}};
         my $num_studies = keys %{$h->{studies}};
         my $num_series = keys %{$h->{series}};
         my $num_sops = keys %{$h->{sops}};
         $rpt->print("$coll,$site,$pat_id,$num_studies,$num_series,$num_modalities," .
-          "$num_sop_class,$num_sops,$num_files\r\n");
+          "$num_sop_class,$num_sops,$num_files,$num_visible,$num_hidden\r\n");
       }
     }
   }
@@ -150,7 +166,7 @@ sub MakeFileHierarchyForLatestTimepoint{
 sub PrintHierarchyReport{
   my($this, $rpt, $hier) = @_;
   my @cols = ("collection", "site", "patient_id", "study_instance_uid", 
-    "series_instance_uid", "num_sops", "num_files");
+    "series_instance_uid", "num_sops", "num_files", "visible", "hidden");
   my $print_row = sub {
     my($p, $cols) = @_;
     for my $i (0 .. $#{$cols}){
@@ -173,13 +189,21 @@ sub PrintHierarchyReport{
             my $sh = $hier->{$col}->{$site}->{$pat}->{$stdy}->{$series};
             my $num_sops = 0;
             my $num_files = 0;
+            my $num_visible = 0;
+            my $num_hidden = 0;
             for my $sop (keys %$sh){
               $num_sops += 1;
               for my $f (keys %{$sh->{$sop}}){
                 $num_files += 1;
+                if(defined $sh->{$sop}->{$f}){
+                  $num_hidden += 1;
+                } else {
+                  $num_visible += 1;
+                }
               }
             }
-            my $row = [$col, $site, $pat, $stdy, $series, $num_sops, $num_files];
+            my $row = [$col, $site, $pat, $stdy, $series, $num_sops, $num_files,
+              $num_visible, $num_hidden];
             &$print_row($rpt, $row);
           }
         }
@@ -220,13 +244,84 @@ sub CreateTpFromSeriesList{
     $act_time_id = $row->[0];
   }, sub{});
   unless(defined $act_time_id){
-    die "Unable to new activity_timepoint_id";
+    die "Unable to retrieve new activity_timepoint_id";
   }
   my $ins_file = Query("InsertActivityTimepointFile");
   for my $file_id (keys %FileIds){
     $ins_file->RunQuery(sub{}, sub{}, $act_time_id, $file_id);
   }
   return $act_time_id, \%FileIds;
+}
+sub SeriesDupReport{
+  my($this, $FileInfo) = @_;
+  my %Series;
+  my %SeriesWithDups;
+  # $SeriesWithDups{<series_instance_uid>} = {
+  #   num_sops => <num_sops>,
+  #   num_files => <num_files>,
+  # };
+  #
+  #
+  my %SeriesDupReport;
+  #$SeriesDupReport = {<series_instance_uid>} = {
+  #  <import_day> => {
+  #    sops => {
+  #      <sop_instance_uid> {
+  #        <file_id> => 1,
+  #      ...
+  #      },
+  #      ...
+  #    },
+  #    files => {
+  #      <file_id> => <sop_instance_uid>,
+  #      ...
+  #    },
+  #    num_sops => <num_sops>,
+  #    num_files => <num_files>,
+  #    min_file_id => <min_file_id>,
+  #    max_file_id => <max_file_id>,
+  #  },
+  #  ...
+  #};
+  for my $f (keys %$FileInfo){
+    my $series = $FileInfo->{$f}->{series_instance_uid};
+    unless(defined $series) { die "Series undefined for $f" }
+    my $sop = $FileInfo->{$f}->{sop_instance_uid};
+    $Series{$series}->{$sop}->{$f} = 1;
+  }
+  for my $series (keys %Series){
+    my $num_sops = keys %{$Series{$series}};
+    my $num_files = 0;
+    for my $sop (keys %{$Series{$series}}){
+      $num_files += keys %{$Series{$series}->{$sop}};
+    }
+    if($num_sops != $num_files){
+       $SeriesWithDups{$series}->{num_sops} = $num_sops;
+       $SeriesWithDups{$series}->{num_files} = $num_files;
+    }
+  }
+  for my $series(keys %SeriesWithDups){
+    for my $sop(keys %{$Series{$series}}){
+      for my $f (keys %{$Series{$series}->{$sop}}){
+        my $tt = $FileInfo->{$f}->{latest_import};
+        my $day = substr $tt, 0, 10;
+        $SeriesDupReport{$series}->{$day}->{sops}->{$sop}->{$f} = 1;
+        $SeriesDupReport{$series}->{$day}->{files}->{$f} = $sop;
+      }
+    }
+  }
+  for my $series(keys %SeriesDupReport){
+    for my $day(keys %{$SeriesDupReport{$series}}){
+      my $p = $SeriesDupReport{$series}->{$day};
+      my @sops = keys %{$p->{sops}};
+      $p->{num_sops} =  @sops;
+      my @files = sort keys %{$p->{files}};
+      $p->{num_files} = @files;
+      $p->{max_file_id} = $files[$#files];
+      $p->{min_file_id} = $files[0];
+    }
+  }
+  return \%SeriesWithDups, \%SeriesDupReport;
 }
 
 1;

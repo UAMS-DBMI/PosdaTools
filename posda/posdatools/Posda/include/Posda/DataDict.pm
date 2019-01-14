@@ -30489,6 +30489,17 @@ my $Dict = {
   }
 };
 my $PvtDict = {
+  "Posda" => {
+    "19" => {
+      "1" => {
+        VM => 1,
+        VR => "LO",
+        ele => "01",
+        group => "0013",
+        Name => "To make change of private block visible",
+      },
+    }
+  },
   "CTP" => {
     "19" => {
       "16" => {

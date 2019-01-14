@@ -71,12 +71,12 @@ and that all of the "from" files are hidden (except those that are also
 "to" files (note exception)).
 
 Then it will update the status of dicom_edit_compare_disposition to 
-"Import Complete - deleting from files".
-Then it will delete all the "from" files (and the directory in which they 
+"Import Complete - deleting to files".
+Then it will delete all the "to" files (and the directory in which they 
 reside).  It will use "rmtree" from File::Path to do this.
 
 Then it will update the status of dicom_edit_compare_disposition to
-"Import Complete - from files deleted".
+"Import Complete - to files deleted".
 
 Then it is done.
 EOF
@@ -249,10 +249,11 @@ if($num_files_already_imported_to_unhide > 0){
 #################
 # Import Loop
 # Imports all files in @FilesToImport
-# metering to insure files are only inserted when < 100 files waiting 
-# inserts 20 per batch
-my $max_queue_for_start = 100;
-my $number_to_queue = 20;
+# metering to insure files are only inserted when < $max_queue_for_start files waiting 
+# inserts $number_to_queue per batch
+my $max_queue_for_start = 500;
+my $number_to_queue = 100;
+
 my $get_queue_size = Query("GetPosdaQueueSize");
 my $total_sleep_time = 0;
 my $sleep_time = 0;
