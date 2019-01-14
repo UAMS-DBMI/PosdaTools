@@ -614,6 +614,9 @@ for my $i (keys %$dyn){
   }
 
 }
+method HeaderResponseTest($http, $dyn){
+  $http->queue("Test");
+}
 
 method ContentResponse($http, $dyn) {
   # TODO: DrawHistory would preferrably be above the title on the page
@@ -2595,8 +2598,14 @@ method RenderActivityDropDown($http, $dyn){
 method SetActivity($http, $dyn){
   $self->{ActivitySelected} = $dyn->{value};
   my $activity_name = $self->{Activities}->{$dyn->{value}}->{desc};
-  $self->{title} = "Database Interface (<small>$activity_name</small>)";
-  $self->AutoRefresh;
+  if($activity_name ne ""){
+    $self->{title} = "Database Interface (<small>$dyn->{value}: $activity_name</small>)";
+    $self->AutoRefreshOne;
+  } else {
+    $self->{title} = "Database Interface (<small>no activity</small>)";
+    $self->AutoRefreshOne;
+  }
+#  $self->AutoRefresh;
 }
 
 method newActivity($http, $dyn){
