@@ -345,29 +345,20 @@ export class ImageComponent implements OnInit {
     }
   }
 
+
   drawROI() {
     if (this.current_image == undefined){
       return;
     }
     let c = this.context;
     for (let roi of this.roi_array){
-      let origin = roi.ipp;
-      let pxspace = roi.pixel_spacing;
-      let px_columns = roi.pixel_columns;
-      let px_rows = roi.pixel_rows;
-      let xtotal = pxspace[0] * px_columns;
-      let ytotal = pxspace[1] * px_rows ;
-      let xtotal_image = (this.current_image.width * this.zoom_level) ;
-      let ytotal_image = (this.current_image.height * this.zoom_level);
-      let xscale = xtotal_image/xtotal;
-      let yscale = ytotal_image/ytotal;
 
-      c.strokeStyle = 'rgb('+ roi.roi_color[0]+ ',' + roi.roi_color[1]+ ',' +roi.roi_color[2] +')';
+      c.strokeStyle = 'rgb('+ roi.color[0]+ ',' + roi.color[1]+ ',' +roi.color[2] +')';
       c.beginPath();
       let first = true;
-      for (let coordpix of roi.contour_data){
-        let x = ((coordpix[0] - origin[0]) * xscale) + this.offset.x;//x
-        let y = ((coordpix[1] - origin[1])  * yscale) + this.offset.y; //y
+      for (let coordpix of roi.points){
+        let x = coordpix[0] * this.zoom_level + this.offset.x; //x
+        let y = coordpix[1] * this.zoom_level + this.offset.y; //y
 
         if (first){
           c.moveTo(x, y);
