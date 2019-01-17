@@ -3,7 +3,7 @@ import psycopg2
 import os
 
 CONNECTION = None
-DSN="dbname=posda_queries"
+DSN="dbname=posda_files"
 
 if 'PGHOST' in os.environ:
     print(f"WARNING: PGHOST is set to {os.environ['PGHOST']}! "
