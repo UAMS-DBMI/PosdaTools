@@ -39,8 +39,8 @@ for my $sop_inst(keys %data){
     { $data{$sop_inst}->{$a} cmp $data{$sop_inst}->{$b} } 
     keys %{$data{$sop_inst}};
   for my $f (0 .. $#file_id_list-1){
-    print STDERR "Hide file_id: $file_id_list[$f]\n";
+    print "Hide file_id: $file_id_list[$f]\n";
     print CHILD "$file_id_list[$f]&<undef>\n";
   }
-  print STDERR "Leave file_id: $file_id_list[$#file_id_list]\n";
+  print "Leave file_id: $file_id_list[$#file_id_list]\n";
 }

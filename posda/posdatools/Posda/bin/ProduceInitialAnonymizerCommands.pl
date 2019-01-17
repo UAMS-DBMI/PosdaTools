@@ -3,7 +3,7 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 my $usage = <<EOF;
-ProduceInitialAnonymizerCommands.pl <bkgrnd_id> <notify>
+ProduceInitialAnonymizerCommands.pl <bkgrnd_id> <collection> <site> <notify>
 or
 ProduceInitialAnonymizerCommands.pl -h
 
@@ -33,11 +33,11 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
   exit;
 }
-unless($#ARGV == 1) {
+unless($#ARGV == 3) {
   print "Error: wrong number of args\n$usage\n";
   exit;
 }
-my($invoc_id, $notify) = @ARGV;
+my($invoc_id, $collection, $site, $notify) = @ARGV;
 
 my %patients; 
 # $patients{<from_patient_id>} = {
@@ -66,7 +66,7 @@ while (my $line = <STDIN>){
 }
 my $get_site_codes = Query("GetSiteCodes");
 my $get_collection_codes = Query("GetCollectionCodes");
-my $get_patient_mapping = Query("GetPatientMapping");
+my $get_patient_mapping = Query("GetPatientMappingByCollectionSite");
 my %PatientMapping;
 # $PatientMapping{$from_patient_id} = [
 #   {
@@ -152,7 +152,7 @@ $get_patient_mapping->RunQuery(sub{
   } else {
     $PatientMapping{$from_patient_id} = $hash;
   }
-}, sub{});
+}, sub{}, $collection, $site);
 my $num_patients = keys %patients;
 my @mapped_patients;
 for my $i (keys %patients){
@@ -573,6 +573,14 @@ sub ProduceLinesForPatientEdits{
   for my $i (@empty_elements){
     $rpt->print(",empty_tag,\"<..$i>\",<>,<>\n");
   }
+
+#}}}
+
+#{{{ Delete Groups and make sure CTP Group is mapped
+
+  $rpt->print(",delete_matching_groups,\"60xx\",<>,<>\n");
+  $rpt->print(",delete_matching_groups,\"50xx\",<>,<>\n");
+  $rpt->print(",move_owner_block,\"<0013>\",<CTP>,<10>\n");
 
 #}}}
 

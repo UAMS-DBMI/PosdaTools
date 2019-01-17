@@ -3,7 +3,8 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 use Posda::UUID;
-use Posda::DownloadableFile; use Dispatch::Select;
+use Posda::DownloadableFile;
+use Dispatch::Select;
 use Dispatch::EventHandler;
 use Dispatch::LineReader;
 use Digest::MD5;
@@ -87,8 +88,18 @@ Tags may be specified in any of the following ways (e.g):
      (00e1,"ELSCINT1",39)[<0>](0008,1110)[0](0008,1155), or
      (00e1,"ELSCINT1",39)[0](0008,1110)[<0>](0008,1155)
    Also, repeating tags (e.g. (60xx,0051)) are not supported.  They may 
-   actually work if you enter the full tag value, but generally Posda support
-   for repeating tags is a little sketchy.
+      actually work if you enter the full tag value, but generally Posda support
+      for repeating tags is a little sketchy.
+   There is a horrible kludge to support deleting repeating blocks. A tag of one
+      of the following formats:
+      60xx
+      50xx
+      is allowed and specifies a tag_mode of "group_pattern" <op> must be
+      "delete_matching_group"
+   Another horrible kludge allows remapping private blocks (e.g):
+      0013
+      This is specifically to support the op move_owner_block ("CTP", "10") (note arg is hex string, not number)
+
 
 The contents of the fields <tag>, <value1>, and <value2> may by enclosed in 
   "meta-quotes" (i.e. "<(0010,0010)>" for "(0010,0010)".  This is to prevent
@@ -128,7 +139,9 @@ bad place to create these files, recovery from a bad run simply means deleting
 the bogus files you created.
 Edit operations currently supported:
   shift_date(<tag>, <shift_count>)
+  shift_date_by_year(<tag>, <shift_count>)
   copy_date_from_tag_to_dt(<tag>, <from_tag>)
+  copy_from_tag(<tag>, <from_tag>)
   delete_tag(<tag>)
   set_tag(<tag>, <value>)
   substitute(<tag>, <existing_value>, <new_value>)
@@ -389,7 +402,9 @@ sub ProcessIndividualEdit{
   my($edit) = @_;
   my $supported_edit_ops = {
     shift_date => 1,
+    shift_date_by_year => 1,
     copy_date_from_tag_to_dt => 1,
+    copy_from_tag => 1,
     delete_tag => 1,
     set_tag => 1,
     substitute => 1,
@@ -398,6 +413,8 @@ sub ProcessIndividualEdit{
     short_hash => 1,
     hash_unhashed_uid => 1,
     date_difference => 1,
+    delete_matching_group => 1,
+    move_owner_block => 1,
   };
   my($op, $tag, $v1, $v2) = @$edit;
   unless(exists $supported_edit_ops->{$op}){
@@ -441,10 +458,17 @@ sub ProcessIndividualEdit{
 #    print "Error: Private reference ($tag) not supported\n";
 #    exit;
 #  }
-  if($tag =~ /x/){
-    print "Error: repeating element <$tag> not supported\n";
-    exit;
+  if($tag eq "60xx" || $tag eq "50xx"){
+    $tag_mode = "group_pattern";
   }
+  if($tag =~ /^[0-9a-f][0-9a-f][0-9a-f][13579bdf]$/){
+    $tag_mode = "private_group";
+  }
+#  if($tag =~ /x/){
+#    print "Error: repeating element <$tag> not supported\n";
+#    exit;
+#  }
+
   if($check_item_at_end && $tag_mode ne "item"){
     print "Error: Bad item specification: $tag\n";
     exit;

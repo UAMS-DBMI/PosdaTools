@@ -1048,7 +1048,7 @@ sub RoiContour{
         slab_thickness => "(3006,0039)[$rci](3006,0040)[$ci](3006,0044)",
         offset_vector => "(3006,0039)[$rci](3006,0040)[$ci](3006,0045)",
         number_points => "(3006,0039)[$rci](3006,0040)[$ci](3006,0046)",
-        data => "(3006,0039)[$rci](3006,0040)[$ci](3006,0050)",
+#        data => "(3006,0039)[$rci](3006,0040)[$ci](3006,0050)",
       };
       my $ModList = {
         attached_contours => "MultiText",
@@ -1064,10 +1064,12 @@ sub RoiContour{
         "  slab_thickness,\n" .
         "  offset_vector,\n" .
         "  number_of_points,\n" .
-        "  roi_contour_attachment,\n" .
-        "  contour_data\n" .
+        "  roi_contour_attachment\n" .
+#        "  roi_contour_attachment,\n" .
+#        "  contour_data\n" .
         ") values (\n" .
-        "  ?, ?, ?, ?, ?, ?, ?, ?\n" .
+        "  ?, ?, ?, ?, ?, ?, ?\n" .
+#        "  ?, ?, ?, ?, ?, ?, ?, ?\n" .
         ")"
       );
       $q->execute(
@@ -1077,8 +1079,9 @@ sub RoiContour{
         $parms->{slab_thickness},
         $parms->{offset_vector},
         $parms->{number_points},
-        $parms->{attached_contours},
-        $parms->{data},
+        $parms->{attached_contours}
+#        $parms->{attached_contours},
+#        $parms->{data},
       );
       my $m2 = $ds->Substitutions(
         "(3006,0039)[$rci](3006,0040)[$ci](3006,0016)[<0>]");

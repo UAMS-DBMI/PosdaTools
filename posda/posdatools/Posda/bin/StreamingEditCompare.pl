@@ -26,6 +26,10 @@ my ($invoc_id) = @ARGV;
 
 my $ins = PosdaDB::Queries->GetQueryInstance(
   "InsertIntoDicomEditCompareFixed");
+my $at_least_one_from_bad = 0;
+my $at_least_one_to_bad = 0;
+my $at_least_one_short_bad = 0;
+my $at_least_one_long_bad = 0;
 my %FileIdByDig;
 line:
 while(my $line = <STDIN>){
@@ -35,12 +39,18 @@ while(my $line = <STDIN>){
     split(/\|/, $line);
   my $f_try = Posda::Try->new($from_file);
   unless(exists $f_try->{dataset}){
-    print "Failed: $sop_inst|$from_file is not a dicom file\n";
+    unless($at_least_one_from_bad){
+      print "Failed: $sop_inst|$from_file is not a dicom file\n";
+    }
+    $at_least_one_from_bad += 1;
     next line;
   }
   my $t_try = Posda::Try->new($to_file);
   unless(exists $t_try->{dataset}){
-    print "Failed: $sop_inst|$to_file is not a dicom file\n";
+    unless($at_least_one_to_bad){
+      print "Failed: $sop_inst|$to_file is not a dicom file\n";
+    }
+    $at_least_one_to_bad += 1;
     next line;
   }
   my $fds = $f_try->{dataset};
@@ -55,11 +65,17 @@ while(my $line = <STDIN>){
     $diff->ReportFromSemi($only_in_from, $only_in_to, $different);
 #  my($s_rept, $l_rept) = $diff->DiffReport;
   if(length($s_rept) <= 0){
-    print "Failed: $sop_inst|no lines in short_rept\n";
+    unless($at_least_one_short_bad){
+      print "Failed: $sop_inst|no lines in short_rept\n";
+    }
+    $at_least_one_short_bad += 1;
     next line;
   }
   if(length($l_rept) <= 0){
-    print "Failed: $sop_inst|no lines in long_rept\n";
+    unless($at_least_one_long_bad){
+      print "Failed: $sop_inst|no lines in long_rept\n";
+    }
+    $at_least_one_long_bad += 1;
     next line;
   }
   my $ctx = Digest::MD5->new;

@@ -18,6 +18,7 @@ Usage:
 or
   ReconcileTagNames.pl -h
 EOF
+die "Don't use this script\n";
 
 if($#ARGV >= 0 && ($ARGV[0] eq "-h")){
   print $help;

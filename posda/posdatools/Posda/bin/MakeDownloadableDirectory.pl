@@ -36,9 +36,11 @@ while(my $line = <STDIN>){
   $Patients{$pat} = 1;
   $Series{$series} = 1;
   $Studies{$study} = 1;
+print "Query for FilesInSeries for $series\n";
   $get_files->RunQuery(sub {
     my($row) = @_;
     my $path = $row->[0];
+print "Found path; $path\n";
     $Hierarchy{$coll}->{$pat}->{$study}->{$series}->{$path} = 1;
     $Files{$path} = 1;
   }, sub {}, $series);

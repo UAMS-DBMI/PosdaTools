@@ -30,6 +30,13 @@ method SpecificInitialize($params) {
   $self->{text} = $text;
 }
 
+sub HeaderResponse{
+  my($this, $http, $dyn) = @_;
+  return $this->RefreshEngine($http, $dyn,'<center><h1><?dyn="title"?></h1></center>');
+
+}
+
+
 method ContentResponse($http, $dyn) {
   $http->queue("<h2>Popup Text Viewer</h2>");
   $http->queue("<p>Viewing $self->{file_id} ($self->{filename})</p>");

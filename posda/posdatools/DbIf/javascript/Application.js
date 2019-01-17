@@ -1,3 +1,7 @@
+function HeaderResponseReturned(text, status, xml){
+  document.getElementById('header').innerHTML = text;
+}
+
 function MenuResponseReturned(text, status, xml){
   document.getElementById('menu').innerHTML = text;
 }
@@ -17,6 +21,10 @@ function ContentResponseReturned(text, status, xml){
 
 function LoginResponseReturned(text, status, xml){
   document.getElementById('login').innerHTML = text;
+}
+
+function UpdateHeader(){
+  PosdaGetRemoteMethod("HeaderResponse", "" , HeaderResponseReturned);
 }
 
 function UpdateMenu(){
@@ -45,6 +53,12 @@ function ChangeMode(op, mode){
 }
 
 function Update(){ 
+  UpdateMenu();
+  UpdateContent();
+  UpdateLogin();
+}
+function UpdateOne(){ 
+  UpdateHeader();
   UpdateMenu();
   UpdateContent();
   UpdateLogin();

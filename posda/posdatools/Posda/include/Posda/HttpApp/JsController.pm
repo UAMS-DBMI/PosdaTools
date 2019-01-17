@@ -645,6 +645,10 @@ sub AutoRefresh{
   my($this) = @_;
   $this->QueueJsCmd("Update();");
 }
+sub AutoRefreshOne{
+  my($this) = @_;
+  $this->QueueJsCmd("UpdateOne();");
+}
 sub StartJsChildProcess{
   my($this, $process_desc, $host, $child_name) = @_;
   unless(defined $child_name) {
