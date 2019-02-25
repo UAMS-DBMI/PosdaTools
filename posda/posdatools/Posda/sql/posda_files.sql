@@ -793,6 +793,18 @@ CREATE TABLE public.beam_wedge (
 
 
 --
+-- Name: clinical_trial_qualified_patient_id; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.clinical_trial_qualified_patient_id (
+    collection text,
+    site text,
+    patient_id text,
+    qualified boolean
+);
+
+
+--
 -- Name: collection_codes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1009,6 +1021,25 @@ CREATE TABLE public.ctp_filex (
     site_name text,
     site_id text,
     visibility text
+);
+
+
+--
+-- Name: ctp_manifest_row; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ctp_manifest_row (
+    file_id integer NOT NULL,
+    cm_index integer,
+    cm_collection text,
+    cm_site text,
+    cm_patient_id text,
+    cm_study_date text,
+    cm_series_instance_uid text,
+    cm_study_description text,
+    cm_series_description text,
+    cm_modality text,
+    cm_num_files integer
 );
 
 
@@ -3844,6 +3875,17 @@ ALTER SEQUENCE public.user_inbox_user_inbox_id_seq OWNED BY public.user_inbox.us
 
 
 --
+-- Name: visible_file_totals_at_time; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.visible_file_totals_at_time (
+    time_of_reading timestamp without time zone,
+    number_of_visible_dicom_files integer,
+    number_of_bytes bigint
+);
+
+
+--
 -- Name: visual_review_instance; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3911,39 +3953,36 @@ ALTER SEQUENCE public.window_level_window_level_id_seq OWNED BY public.window_le
 
 
 --
--- Name: kirk_series; Type: TABLE; Schema: quasar; Owner: -
+-- Name: ldct_all; Type: TABLE; Schema: quasar; Owner: -
 --
 
-CREATE TABLE quasar.kirk_series (
-    series_instance_uid text NOT NULL
-);
-
-
---
--- Name: ldct_mayo; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE quasar.ldct_mayo (
-    file_name text NOT NULL
-);
-
-
---
--- Name: ldct_mayo_full; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE quasar.ldct_mayo_full (
+CREATE TABLE quasar.ldct_all (
     file_id integer,
     file_name text
 );
 
 
 --
--- Name: ldct_mayo_missing; Type: TABLE; Schema: quasar; Owner: -
+-- Name: ldct_and_projection; Type: TABLE; Schema: quasar; Owner: -
 --
 
-CREATE TABLE quasar.ldct_mayo_missing (
-    file_name text
+CREATE TABLE quasar.ldct_and_projection (
+    filename text
+);
+
+
+--
+-- Name: ldct_missing; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.ldct_missing (
+    filename text,
+    import_event_id integer,
+    file_id integer,
+    rel_path text,
+    rel_dir text,
+    file_name text,
+    file_import_time timestamp with time zone
 );
 
 
@@ -3963,34 +4002,6 @@ CREATE MATERIALIZED VIEW quasar.mvtest AS
 --
 
 CREATE TABLE quasar.phantom_files (
-    file_id integer
-);
-
-
---
--- Name: sops; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE quasar.sops (
-    sop_instance_uid text NOT NULL
-);
-
-
---
--- Name: sops_and_ids; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE quasar.sops_and_ids (
-    sop_instance_uid text NOT NULL,
-    patient_id text
-);
-
-
---
--- Name: temp; Type: TABLE; Schema: quasar; Owner: -
---
-
-CREATE TABLE quasar.temp (
     file_id integer
 );
 
@@ -4402,14 +4413,6 @@ ALTER TABLE ONLY public.background_subprocess_report
 
 
 --
--- Name: background_subprocess_report background_subprocess_report_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.background_subprocess_report
-    ADD CONSTRAINT background_subprocess_report_uniq UNIQUE (background_subprocess_id, file_id);
-
-
---
 -- Name: collection_codes collection_codes_collection_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4610,38 +4613,6 @@ ALTER TABLE ONLY public.user_inbox
 
 
 --
--- Name: kirk_series kirk_series_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
---
-
-ALTER TABLE ONLY quasar.kirk_series
-    ADD CONSTRAINT kirk_series_pkey PRIMARY KEY (series_instance_uid);
-
-
---
--- Name: ldct_mayo ldct_mayo_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
---
-
-ALTER TABLE ONLY quasar.ldct_mayo
-    ADD CONSTRAINT ldct_mayo_pkey PRIMARY KEY (file_name);
-
-
---
--- Name: sops_and_ids sops_and_ids_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
---
-
-ALTER TABLE ONLY quasar.sops_and_ids
-    ADD CONSTRAINT sops_and_ids_pkey PRIMARY KEY (sop_instance_uid);
-
-
---
--- Name: sops sops_pkey; Type: CONSTRAINT; Schema: quasar; Owner: -
---
-
-ALTER TABLE ONLY quasar.sops
-    ADD CONSTRAINT sops_pkey PRIMARY KEY (sop_instance_uid);
-
-
---
 -- Name: queries_name_index; Type: INDEX; Schema: dbif_config; Owner: -
 --
 
@@ -4702,6 +4673,13 @@ CREATE INDEX beam_control_point_idx ON public.beam_control_point USING btree (pl
 --
 
 CREATE INDEX beam_limiting_device_idx ON public.beam_limiting_device USING btree (plan_id, beam_number);
+
+
+--
+-- Name: clinical_trial_qualified_patient_collection_site_patient_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX clinical_trial_qualified_patient_collection_site_patient_id_idx ON public.clinical_trial_qualified_patient_id USING btree (collection, site, patient_id);
 
 
 --
