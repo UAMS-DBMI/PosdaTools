@@ -96,6 +96,12 @@ method SpecificInitialize($session) {
         sync => 'Update();'
       },
       {
+        caption => "ShowBackground",
+        op => 'SetMode',
+        mode => 'ShowBackground',
+        sync => 'Update();'
+      },
+      {
         caption => "Files",
         op => 'SetMode',
         mode => 'Files',
@@ -2670,6 +2676,52 @@ method RefreshActivities{
   }, sub {});
   $self->{Activities} = \%Activities;
 }
+#############################
+#Here Bill is putting in the "ShowBackground"
+method ShowBackground($http, $dyn){
+ $self->SemiSerializedSubProcess(
+  "FindRunningBackgroundSubprocesses.pl|CsvStreamToPerlStruct.pl",
+   $self->LoadScriptOutput("running_subprocesses"));
+ if(
+   exists $self->{running_subprocesses} and
+   ref($self->{running_subprocesses}) eq "HASH" and
+   exists($self->{running_subprocesses}->{rows}) and
+   ref($self->{running_subprocesses}->{rows}) eq "ARRAY"
+ ){
+   my $rows = $self->{running_subprocesses}->{rows};
+   $http->queue('<table class="table table-striped table-condensed">');
+   for my $i (0 .. $#{$rows}){
+     $http->queue("<tr>");
+     my $sub_id = $rows->[$i]->[0];
+     for my $j (0 .. $#{$rows->[$i]}){
+       if ($i == 0 ){$http->queue("<th>")
+       } else {$http->queue("<td>") }
+       my $c = $rows->[$i]->[$j];
+       $c =~ s/<\?bkgrnd_id\?>/$sub_id/g;
+       $http->queue($c);
+       if ($i == 0 ){$http->queue("</th>")
+       } else {$http->queue("</td>") }
+     }
+     $http->queue("</tr>");
+    }
+    $http->queue("</table>");
+  } else {
+    $http->queue("Running subprocesses not found");
+  }
+}
+method LoadScriptOutput($table_name) {
+  my $sub = sub{
+    my($status, $struct) = @_;
+    if($status eq "Succeeded"){
+      $self->{$table_name} = $struct;
+    } else {
+      push @{$self->{Errors}}, "Couldn't load script output $table_name";
+    }
+    $self->AutoRefresh;
+  };
+  return $sub;
+}
+#############################
 #############################
 #Here Bill is putting in the "DownloadTar"
 method DownloadTar($http, $dyn){

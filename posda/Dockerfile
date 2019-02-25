@@ -19,6 +19,7 @@ RUN apk --update add alpine-sdk \
 					 tzdata \
 					 unzip \
 					 py3-psycopg2 \
+					 py3-numpy \
 					 cmake
 
 # Perl modules from Alpine repos

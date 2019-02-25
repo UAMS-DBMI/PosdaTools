@@ -4,6 +4,7 @@ use Posda::DB 'Query';
 use Digest::MD5;
 use Posda::BackgroundProcess;
 use Posda::ActivityInfo;
+use Debug;
 
 my $usage = <<EOF;
 CompareSopsTpPosdaPublicLikeEq.pl <?bkgrnd_id?> "<collection_like>" "<site>" <activity_id> <notify>
@@ -50,6 +51,22 @@ sub MakeHierarchy{
   }
   return \%hier;
 }
+sub MakeCondensedHierarchy{
+  my($hash) = @_;
+  my $num_sops = keys %$hash;
+  if($num_sops <= 0) { return undef }
+  my %hier;
+  for my $sop (keys %$hash){
+    my $rec = $hash->{$sop};
+    my $pat_id = $rec->{pat_id};
+    my $study_uid = $rec->{study_uid};
+    my $series_uid = $rec->{series_uid};
+    $hier{$pat_id}->{studies}->{$study_uid} = 1;
+    $hier{$pat_id}->{series}->{$series_uid} = 1;
+    $hier{$pat_id}->{sops}->{$sop} = $rec;
+  }
+  return \%hier;
+}
 print "script: $0\n";
 print "going to background to collect and analyze data\n";
 my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
@@ -61,6 +78,9 @@ my $now = `date`;
 chomp $now;
 my $start = time;
 $back->WriteToEmail("script: $0\n");
+$back->WriteToEmail("collecton $collection\n");
+$back->WriteToEmail("site $site\n");
+$back->WriteToEmail("activity_id $activity_id\n");
 $back->WriteToEmail("at: $now\n");
 $back->WriteToEmail("by $notify\n\n");
 my %PosdaSops;
@@ -139,17 +159,18 @@ $get_public_counts->RunQuery(sub {
 );
 my $ActInfo = Posda::ActivityInfo->new($activity_id);
 my $tp_id = $ActInfo->LatestTimepoint;
+$back->WriteToEmail("activity: $activity_id, tp_id: $tp_id\n");
 my $TpFileInfo = $ActInfo->GetFileInfoForTp($tp_id);
 file:
 for my $file_id (keys %$TpFileInfo){
   my $hash = $TpFileInfo->{$file_id};
   my $mapped = MapTp($hash);
   my $sop_inst = $mapped->{sop_inst};
-  my $coll = $hash->{collection};
-  if($coll ne $collection){
-    $TpSopsNotInCollection{$sop_inst} = $mapped;
-    next file;
-  }
+#  my $coll = $hash->{collection};
+#  if($coll ne $collection){
+#    $TpSopsNotInCollection{$sop_inst} = $mapped;
+#    next file;
+#  }
   if(exists $TpSops{$sop_inst}){
     if(exists $TpDup1Sops{$sop_inst}){
       if(exists $TpDup2Sops{$sop_inst}){
@@ -171,12 +192,18 @@ my $collection_complete = time;
 my $collection_time = $collection_complete - $start;
 $back->WriteToEmail("collection of data took " .
   "$collection_time seconds\n");
+######################################################
+my $num_in_public = keys %PublicSops;
+$back->WriteToEmail("$num_in_public sops in public\n");
+my $num_in_tp = keys %TpSops;
+$back->WriteToEmail("$num_in_tp sops in tp\n");
+my $num_in_posda = keys %PosdaSops;
+$back->WriteToEmail("$num_in_posda sops in posda\n");
 #######################################################
 # To compute:
 my %SopsInPosdaNotInTpOrPublic;
 my %SopsInTpAndPublic;
 my %SopsInTpAndNotInPublic;
-my %SopsInPublicNotInPosda;
 for my $sop(keys %PosdaSops){
   if(
     (!(exists $TpSops{$sop})) &&
@@ -195,12 +222,16 @@ for my $sop(keys %TpSops){
 }
 my $InPosdaNotInTpOrPublicHierarchy
   = MakeHierarchy(\%SopsInPosdaNotInTpOrPublic);
+my $CondensedInPosdaNotInTpOrPublicHierarchy
+  = MakeCondensedHierarchy(\%SopsInPosdaNotInTpOrPublic);
 my $InTpAndPublicHierarchy
   = MakeHierarchy(\%SopsInTpAndPublic);
+my $CondensedInTpAndPublicHierarchy
+  = MakeCondensedHierarchy(\%SopsInTpAndPublic);
 my $InTpAndNotInPublicHierarchy
   = MakeHierarchy(\%SopsInTpAndNotInPublic);
-my $InPublicNotInPosdaHierarchy
-  = MakeHierarchy(\%SopsInPublicNotInPosda);
+my $CondensedInTpAndNotInPublicHierarchy
+  = MakeCondensedHierarchy(\%SopsInTpAndNotInPublic);
 my $analysis_complete = time;
 my $analysis_time = $analysis_complete - $collection_complete;
 $back->WriteToEmail("Analysis of data took " .
@@ -213,10 +244,25 @@ if(defined $InPosdaNotInTpOrPublicHierarchy){
     "",
     ["script", $0],
     ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
     ["at", $now],
     ["by", $notify],
     "",
   ], $InPosdaNotInTpOrPublicHierarchy);
+  my $rpt05 = $back->CreateReport(
+    "Condensed In Posda, Not In Timepoint or Public");
+  PrintCondensedHierarchy($rpt05, [
+    "Condensed Files In Posda, But Not In Timepoint Or Public",
+    "",
+    ["script", $0],
+    ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
+    ["at", $now],
+    ["by", $notify],
+    "",
+  ], $CondensedInPosdaNotInTpOrPublicHierarchy);
 } else {
   $back->WriteToEmail("No files In Posda But Not " .
     "In Timepoint Or Public\n");
@@ -229,46 +275,69 @@ if(defined $InTpAndPublicHierarchy){
     "",
     ["script", $0],
     ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
     ["at", $now],
     ["by", $notify],
     "",
   ], $InTpAndPublicHierarchy);
+  my $rpt25 = $back->CreateReport("Condensed In Both Tp And Public");
+  PrintCondensedHierarchy($rpt25, [
+    "Condensed Files In Posda, Timepoint And Public",
+    "",
+    ["script", $0],
+    ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
+    ["at", $now],
+    ["by", $notify],
+    "",
+  ], $CondensedInTpAndPublicHierarchy);
 } else {
   $back->WriteToEmail(
     "No files In Both Tp And Public\n");
 }
 
 if(defined $InTpAndNotInPublicHierarchy){
+  my $dbg = sub {
+    my($text) = @_;
+    $back->WriteToEmail($text);
+  };
+#  $back->WriteToEmail("InTpAndNotInPublicHierarchy: ");
+#  Debug::GenPrint($dbg, $InTpAndNotInPublicHierarchy, 1);
+#  $back->WriteToEmail("\n");
   my $rpt3 = $back->CreateReport("In Tp And Not In Public");
   PrintHierarchy($rpt3, [
     "Files In Timepoint And Not inPublic",
     "",
     ["script", $0],
     ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
     ["at", $now],
     ["by", $notify],
     "",
   ], $InTpAndNotInPublicHierarchy);
+#  $back->WriteToEmail("CondensedInTpAndNotInPublicHierarchy: ");
+#  Debug::GenPrint($dbg, $CondensedInTpAndNotInPublicHierarchy, 1);
+#  $back->WriteToEmail("\n");
+  my $rpt35 = $back->CreateReport("Condensed In Tp And Not In Public");
+  PrintCondensedHierarchy($rpt35, [
+    "Condensed Files In Timepoint And Not inPublic",
+    "",
+    ["script", $0],
+    ["collection", $collection],
+    ["site", $site],
+    ["activity_id", $activity_id],
+    ["at", $now],
+    ["by", $notify],
+    "",
+  ], $CondensedInTpAndNotInPublicHierarchy);
 } else {
   $back->WriteToEmail(
     "No Files In Timepoint And Not In Public\n");
 }
 
-if(defined $InPublicNotInPosdaHierarchy){
-  my $rpt3 = $back->CreateReport("In Public And Not In Posda");
-  PrintHierarchy($rpt3, [
-    "Files In Public And Not In Posda",
-    "",
-    ["script", $0],
-    ["collection", $collection],
-    ["at", $now],
-    ["by", $notify],
-    "",
-  ], $InTpAndNotInPublicHierarchy);
-} else {
-  $back->WriteToEmail(
-    "No Files In Public And Not In Posda\n");
-}
 #my %PosdaSops;
 #my %PosdaDup1Sops;
 #my %PosdaDup2Sops;
@@ -302,9 +371,36 @@ sub PrintHierarchy{
     for my $study_uid (keys %{$hier->{$pat_id}}){
       for my $series_uid (keys %{$hier->{$pat_id}->{$study_uid}}){
         my $h = $hier->{$pat_id}->{$study_uid}->{$series_uid};
-        my $num_sops = keys %$h;
+        my $num_sops = "???";
+        if(ref($h) eq "HASH"){ $num_sops = keys %$h }
         $rpt->print("$pat_id,$study_uid,$series_uid,$num_sops\r\n");
       }
     }
+  }
+}
+sub PrintCondensedHierarchy{
+  my($rpt, $list, $hier) = @_;
+  my $dbg;
+  for my $i (@$list){
+    if(ref($i) eq "ARRAY"){
+      for my $j (0 ..$#{$i}){
+        my $t = $i->[$j];
+        $t =~ s/\"/\"\"/g;
+        $rpt->print("\"$t\"");
+        unless($j == $#{$i}){ $rpt->print(",") }
+      }
+      $rpt->print("\r\n");
+    } else {
+      $rpt->print("$i\r\n")
+    }
+  }
+  $rpt->print("pat_id,num_studies,num_series,num_sops\r\n");
+  my @patients = keys %$hier;
+  my $num_pats = @patients;
+  for my $pat_id (keys %$hier){ 
+    my $num_studies = keys %{$hier->{$pat_id}->{studies}};
+    my $num_series = keys %{$hier->{$pat_id}->{series}};
+    my $num_sops = keys %{$hier->{$pat_id}->{sops}};
+    $rpt->print("$pat_id,$num_studies,$num_series,$num_sops\n");
   }
 }

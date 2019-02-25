@@ -6,11 +6,11 @@ use Modern::Perl;
 use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
-use Posda::DB 'QueryAsync';
+use Posda::DB 'QueryAsync', 'Query';
 
 use Regexp::Common "URI";
 
-use parent 'Posda::PopupWindow';
+use parent 'Posda::PopupStatus';
 
 
 method SpecificInitialize($params) {
@@ -30,79 +30,9 @@ method SpecificInitialize($params) {
     [$self->{subprocess_invocation_id}]);
   $self->SemiSerializedSubProcess(
     "FindRunningBackgroundSubprocesses.pl|CsvStreamToPerlStruct.pl",
-    $self->LoadScriptOutput("running_subproceses"));
-}
-method StartQuery($q_name, $args){
-  my $q = QueryAsync($q_name);
-  my $cols = $q->{columns};
-  my $q_args = $q->{args};
-  unless ($#{$args} == $#{$q_args}){
-    push(@{$self->{Errors}}, "Arg count mismatch: $q_name");
-    return;
-  }
-  $self->{queries_running}->{$q_name} = 1;
-  $q->RunQuery(
-    $self->HandleRow($q_name),
-    $self->HandleQueryEnd($q_name),
-    @$args);
-}
-method LoadScriptOutput($table_name){
-  my $sub = sub{
-    my($status, $struct) = @_;
-    if($status eq "Succeeded"){
-      $self->{$table_name} = $struct;
-    } else {
-      push @{$self->{Errors}}, "Couldn't load script output $table_name";
-    }
-  };
-  return $sub;
-}
-method HandleRow($q_name){
-  my $sub = sub {
-    my($row) = @_;
-    unless(exists $self->{query_results}->{$q_name}){
-      $self->{query_results}->{$q_name} = [];
-    }
-    push(@{$self->{query_results}->{$q_name}}, $row);
-  };
-  return $sub;
-}
-method HandleQueryEnd($q_name){
-  my $sub = sub {
-    delete $self->{queries_running}->{$q_name};
-  };
-  return $sub;
+    $self->LoadScriptOutput("running_subprocesses"));
 }
 
-method ContentResponse($http, $dyn) {
-  my @queries_running = keys %{$self->{queries_running}};
-  if(@queries_running > 0){
-    $http->queue("Queries running:<ul>");
-    for my $i (@queries_running){
-      $http->queue("<li>$i");
-      if(exists($self->{query_results}->{$i})){
-        my $num_rows = @{$self->{query_results}->{$i}};
-        $http->queue(" ($num_rows rows)");
-      }
-      $http->queue("</li>");
-    }
-    $http->queue("</ul>");
-    return;
-  }
-  my @queries_with_results = keys %{$self->{query_results}};
-  if(@queries_with_results > 0){
-    $http->queue("Queries with results:<ul>");
-    for my $i (@queries_with_results){
-      $http->queue("<li>$i");
-      if(exists($self->{query_results}->{$i})){
-        my $num_rows = @{$self->{query_results}->{$i}};
-        $http->queue(" ($num_rows rows)");
-      }
-      $http->queue("</li>");
-    }
-  }
-  $http->queue("More to come");
-}
 method StartTimer{
   $self->{backgrounder} = Dispatch::Select::Background->new($self->TimeIncrementor);
   $self->{backgrounder}->timer(10);
@@ -125,6 +55,78 @@ method ScriptButton($http, $dyn){
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
+}
+
+method InitializedResponse($http, $dyn){
+  my $edit_status = $self->{query_results}->{GetEditStatusByEditId}->[0]->[6];
+  my $files_to_edit = $self->{query_results}->{GetEditStatusByEditId}->[0]->[3];
+  my $files_changed = $self->{query_results}->{GetEditStatusByEditId}->[0]->[4];
+  my $files_not_changed = $self->{query_results}->{GetEditStatusByEditId}->[0]->[5];
+  my $es = $self->{query_results}->{ActivityStuffMoreBySubprocessInvocationId}->[0];
+  my $has_email = 0;
+  for my $i (0 .. $#{$self->{query_results}->{ActivityStuffMoreBySubprocessInvocationId}}){
+    my $foo = $self->{query_results}->{ActivityStuffMoreBySubprocessInvocationId}->[$i];
+    if($foo->[5] eq "Email"){
+      $es = $foo;
+      $has_email = 1;
+    }
+  }
+  my $edit_started = $es->[7];
+  my $edit_ended = $es->[9];
+  my $edit_by = $es->[10];
+  my $notified = $es->[11];
+  my $edit_invocation = $es->[14];
+  $edit_invocation =~ s/<\?bkgrnd_id\?>/$self->{subprocess_invocation_id}/g;
+  my $files_imported = $self->{query_results}->{ToFilesFilesImportedByEditId}->[0]->[0];
+  my($user_inbox_content_id, $activity_id);
+  if($has_email){
+     $user_inbox_content_id = $es->[2];
+     $activity_id = $es->[6];
+  }
+  $http->queue("The edit was started by $edit_by at $edit_started.\n<br>" .
+    "The command was:<pre>\n$edit_invocation.\n</pre>" .
+    "$files_to_edit files were edited: $files_changed changed, $files_not_changed didn't.\n<br>" .
+    "Current edit status is \"$edit_status\".<br>");
+   if($user_inbox_content_id){
+     $http->queue("A notification of completion of edit (content_id $user_inbox_content_id) was sent to $notified\n<br>");
+     if($activity_id) {
+       $http->queue("This notification is stored on the timeline of activity $activity_id.\n<br>");
+     }
+   }
+   $http->queue("<br>$files_imported files have been imported.\n<br>");
+   my $running = $self->{script_results}->{running_subprocesses}->{rows};
+   my($imp_id, $bkgrnd_id, $pid, $import_command, $import_started, $import_for);
+   command:
+   for my $i (1 .. $#{$running}){
+     $import_command = $running->[$i]->[3];
+     if(($import_command =~ /ImportEdit/) && ($import_command =~ $self->{subprocess_invocation_id})){
+       $imp_id = $running->[$i]->[0];
+       $bkgrnd_id = $running->[$i]->[1];
+       $pid = $running->[$i]->[2];
+       $import_started = $running->[$i]->[4];
+       $import_for = $running->[$i]->[5];
+       last command;
+     }
+   }
+   if($imp_id and $import_for ne "Stale"){
+     $import_command =~ s/<\?bkgrnd_id\?>/$imp_id/g;
+     $http->queue("The import appears to be running.\n<br>" .
+       "It has subprocess_invocation_id: $imp_id,\n<br>" .
+       "And background_subprocess_id: $bkgrnd_id,\n<br>" .
+       "And pid: $pid.\n<br>" .
+       "And command:<pre>$import_command\n</pre>" .
+       "It was started at $import_started and has been running for $import_for.\n<br>");
+     my $percent = sprintf("%2.2f", ($files_imported / $files_to_edit) * 100);
+     $http->queue("It is $percent percent complete\n<br>");
+     my $projected_end;
+     Query("ProjectCompletion")->RunQuery(sub{
+       my($row) = @_;
+       $projected_end = $row->[0];
+     }, sub {}, $import_started, $files_imported, $files_to_edit, $files_imported);
+     $http->queue("And has a projected completion of $projected_end\n<br>");
+   } else {
+     $http->queue("There is no ImportEdits running for $self->{subprocess_invocation_id}.\n<br>");
+   }
 }
 
 1;

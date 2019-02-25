@@ -321,6 +321,7 @@ $background->WriteToEmail("Waited $process_wait_time for " .
 ##TODO
 #Check all "to" files imported OK and visible
 #Check All "from" files are hidden
+#Change Current disposition to "Import Complete - deleting to files"
 ##end TODO
 #Delete directory
 my $start_delete = time;

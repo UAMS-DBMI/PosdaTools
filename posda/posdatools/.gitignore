@@ -11,3 +11,8 @@ foo.*
 Posda/bin/extract
 Posda/bin/sproject
 *.viminfo
+*.plist
+*.one
+*.two
+*.list
+*.dump

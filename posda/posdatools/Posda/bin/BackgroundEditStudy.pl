@@ -3,6 +3,7 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 use Posda::BackgroundEditor;
+use Posda::ProcessBackgroundEditStudyInstructions;
 use Posda::UUID;
 use Posda::DownloadableFile; use Dispatch::Select;
 use Dispatch::EventHandler;
@@ -145,381 +146,31 @@ Be careful that the version of this file is compatable with the version of
 "NewSubprocessEditor.pl".  Why would it not be?  If you have changed one but
 not the other...
 EOF
-#Inputs will be parsed into these data structures
-my %SopsToEdit;
-# $SopsToEdit = {
-#   <sop> => {
-#     from_file => <from_file>,
-#     to_file => <to_file>,
-#     edits => [
-#       {
-#         op => <op>,
-#         tag => <tag>,
-#         tag_mode => "exact"|"pattern"|"leaf"|"private"|"item",
-#         value1 => <value1>,
-#         value2 => <value2>
-#       },
-#       ...
-#     ]
-#   },
-#   ...
-# };
-#
-my %PatientToNickname;
-my $pat_seq = 0;
-my %StudyToNickname;
-my $study_seq = 0;
-my %SeriesToNickname;
-my $series_seq = 0;
-#############################
-## This routine checks for Duplicate SOPs
-## This is a serious no-no, and causes
-## the edits to all be aborted before they
-## start.
-sub CheckFiles{
-  my($from_file, $to_file, $sop) = @_;
-  unless(exists $SopsToEdit{$sop}){
-    $SopsToEdit{$sop} = {
-      from_file => $from_file,
-      to_file => $to_file,
-    };
-  }
-  my $sop_p = $SopsToEdit{$sop};
-  unless(
-    $sop_p->{from_file} eq $from_file &&
-    $sop_p->{to_file} eq $to_file
-  ){
-    print "SOP vs file collision:\n" .
-      "\tSOP: $sop\n" .
-      "\tFrom:\n" .
-      "\t\t$sop_p->{from_file}\n" .
-      "\tvs\n" .
-      "\t\t$from_file\n" .
-      "\tTo:\n" .
-      "\t\t$sop_p->{to_file}\n" .
-      "\tvs\n" .
-      "\t\t$to_file\n" .
-      "Editing transaction aborted\n";
-     die "abort";
-  }
-  return $sop_p;
-}
-
-#############################
-## This code process parameters
-##
-#
-#
 
 if($#ARGV == 0) { die "$usage\n\n" }
 if($#ARGV != 2){ print "Wrong args: $usage\n"; die "$usage\n\n" }
 my($invoc_id, $description, $notify) = @ARGV;
-#print "Undergoing maintenance\n";
-#exit;
 
-#############################
-# Compute the Destination Dir (and die if it already exists)
-my $sub_dir = get_uuid();
-my $CacheDir = $ENV{POSDA_CACHE_ROOT};
-unless(-d $CacheDir){
-  print "Error: Cache dir ($CacheDir) isn't a directory\n";
-}
-my $EditDir = "$CacheDir/edits";
-unless(-d $EditDir){
-  unless(mkdir($EditDir) == 1){
-    print "Error: can't mkdir $EditDir ($!)";
-    exit;
-  }
-}
-my $DestDir = "$EditDir/$sub_dir";
-if(-e $DestDir) {
-  print "Error: Destination dir ($DestDir) already exists\n";
-  exit;
-}
-unless(mkdir($DestDir) == 1){
-  print "Error: can't mkdir $DestDir ($!)";
-  exit;
-}
+my $InputProc = Posda::ProcessBackgroundEditStudyInstructions->new();
+$InputProc->ProcessInput(\*STDIN);
+my $FilesToEdit = $InputProc->FilesToEdit;
+my $DestDir = $InputProc->EditDir;
 
-#############################
-## This code parses the input and populates the hashes
-## %SopsToEdit and %UidMapping
-#
 
-my $get_list_of_sops_and_files = Query("GetFilesAndSopsByStudy");
-my $look_up_tag = Query("LookUpTag");
-my $last_line_was_study = 0;
-my $last_line_was_edit = 0;
-my $accumulating_study = [];
-my $current_study = [];
-my $accumulating_edits = [];
-line:
-while(my $line = <STDIN>){
-  chomp $line;
-  my($study_uid, $op, $tag, $v1, $v2) =
-    split(/&/, $line);
-  if($study_uid){
-    if($op) {
-      print "Error: operation ($op) on same line as study ($study_uid)\n";
-      exit;
-    }
-    if($last_line_was_edit){
-      ProcessEndOfEdits();
-    }
-    push @$accumulating_study, $study_uid;
-    $last_line_was_study = 1;
-    next line;
-  }
-  if($op){
-    if($last_line_was_study) {
-      $current_study = $accumulating_study;
-      $accumulating_study = [];
-      unless($#{$current_study} >= 0){
-        print "Error: operation($op) applies to no study\n";
-        exit;
-      }
-    }
-    push(@{$accumulating_edits}, [$op, $tag, $v1, $v2]);
-    $last_line_was_study = 0;
-    $last_line_was_edit = 1;
-  } elsif ($last_line_was_edit){
-    ProcessEndOfEdits();
-    $last_line_was_edit = 0;
-  }
-}
-if($last_line_was_edit) { ProcessEndOfEdits(); }
-
-#############################
-## Process a list of Edits with study list
-#
-
-sub ProcessEndOfEdits{
-  my @sops_for_these_edits;
-  for my $study(@$current_study){
-    my $ss = GetStudyFileList($study);
-    for my $sop(keys %$ss){
-      if(exists $SopsToEdit{$sop}){
-        print "Error: the sop ($sop)\n  occurring in study($study)\n  " .
-          "seems to have occurred also in an earlier study\n";
-        exit;
-      }
-      push @sops_for_these_edits, $sop;
-      $SopsToEdit{$sop}->{from_file} = $ss->{$sop}->{from_file};
-      $SopsToEdit{$sop}->{to_file} = $ss->{$sop}->{to_file};
-    }
-  }
-  $current_study = [];
-  for my $edit (@$accumulating_edits){
-    my $processed_edit = ProcessIndividualEdit($edit);
-    for my $sop(@sops_for_these_edits){
-      unless(exists $SopsToEdit{$sop}->{edits}){
-        $SopsToEdit{$sop}->{edits} = [];
-      }
-      push(@{$SopsToEdit{$sop}->{edits}}, $processed_edit);
-    }
-  }
-  $accumulating_edits = [];
-}
-
-#############################
-## Get all the info for a list of study
-#
-
-sub GetStudyFileList{
-  my($study) = @_;
-  my %study_struct;
-  $get_list_of_sops_and_files->RunQuery(sub{
-    my($row) = @_;
-    my($pat_id, $study_id, $series_id, $sop, $file_id, $path) = @$row;
-    if(exists $study_struct{$sop}){
-      print "Error: duplicate sop ($sop) in study ($study)\n";
-      exit;
-    }
-    unless(exists $PatientToNickname{$pat_id}){
-      $pat_seq += 1;
-      my $pat_nick = "pat_$pat_seq";
-      $PatientToNickname{$pat_id} = "pat_$pat_seq";
-      unless(-d "$DestDir/$pat_nick"){
-        unless((mkdir "$DestDir/$pat_nick") == 1){
-          print "Couldn't mkdir $DestDir/$pat_nick ($!)\n";
-          exit;
-        }
-      }
-    }
-    my $pat_path = $PatientToNickname{$pat_id};
-    unless(exists $StudyToNickname{$study_id}){
-      $study_seq += 1;
-      my $study_nick = "study_$study_seq";
-      $StudyToNickname{$study_id} = "study_$study_seq";
-      unless(-d "$DestDir/$pat_path/$study_nick"){
-        unless((mkdir "$DestDir/$pat_path/$study_nick") == 1){
-          print "Couldn't mkdir $DestDir/$pat_path/$study_nick ($!)\n";
-          exit;
-        }
-      }
-    }
-    my $study_path = $StudyToNickname{$study_id};
-    unless(exists $SeriesToNickname{$series_id}){
-      $series_seq += 1;
-      my $series_nick = "series_$series_seq";
-      $SeriesToNickname{$series_id} = "series_$series_seq";
-      unless(-d "$DestDir/$pat_path/$study_path/$series_nick"){
-        unless((mkdir "$DestDir/$pat_path/$study_path/$series_nick") == 1){
-          print "Couldn't mkdir $DestDir/$pat_path/$study_path/$series_nick ($!)\n";
-          exit;
-        }
-      }
-    }
-    my $series_path = $SeriesToNickname{$series_id};
-    my $dest_file = "$DestDir/$pat_path/$study_path/$series_path/" .
-      "$file_id.dcm";
-    $study_struct{$sop} = {
-      from_file => $path,
-      to_file => $dest_file,
-    };
-  }, sub {}, $study);
-  return \%study_struct;
-}
-
-#############################
-## Process an Individual Edit
-
-sub ProcessIndividualEdit{
-  my($edit) = @_;
-  my $supported_edit_ops = {
-    shift_date => 1,
-    copy_date_from_tag_to_dt => 1,
-    delete_tag => 1,
-    set_tag => 1,
-    substitute => 1,
-    string_replace => 1,
-    empty_tag => 1,
-    short_hash => 1,
-    hash_unhashed_uid => 1,
-  };
-  my($op, $tag, $v1, $v2) = @$edit;
-  unless(exists $supported_edit_ops->{$op}){
-    print "Operation ($op) not supported\n";
-    exit;
-  }
-  $tag = unmetaquote($tag);
-  $v1 = unmetaquote($v1);
-  $v2 = unmetaquote($v2);
-  if($tag =~ /^[A-Za-z]*$/){
-    my $tags;
-    $look_up_tag->RunQuery(sub {
-      my($row) = @_;
-      my($tags1, $name, $keyword, $vr, $vm, $is_retired, $comments) = @$row;
-      $tags = $tags1;
-    }, sub {}, $tag, $tag);
-    unless(defined $tags){
-      print "Error: Can't identify $tag\n";
-      exit;
-    }
-    $tag = $tags;
-  }
-  my $tag_mode = "exact";
-  my $check_item_at_end = 0;
-  if($tag =~ /\[\d+\]$/){
-    $tag_mode = "item";
-    $check_item_at_end = 1;
-  }
-  if($tag =~ /^\.\.(\(....,....\))$/) {
-    $tag = $1;
-    $tag_mode = "leaf";
-  }
-  if($tag =~ /</){
-    $tag_mode = "pattern";
-  }
-  if($tag =~ /^\.\.(\(....,\"[^\"]*\",..\))$/) {
-    $tag = $1;
-    $tag_mode = "leaf";
-  }
-  if(look_for_private($tag)){
-    print "Error: Private reference ($tag) not supported\n";
-    exit;
-  }
-  if($tag =~ /x/){
-    print "Error: repeating element <$tag> not supported\n";
-    exit;
-  }
-  if($check_item_at_end && $tag_mode ne "item"){
-    print "Error: Bad item specification: $tag\n";
-    exit;
-  }
-  return {op => $op, tag =>$tag, tag_mode => $tag_mode, arg1 => $v1,
-    arg2 =>  $v2};
-}
-
-sub unmetaquote{
-  my($v) = @_;
-  if($v =~ /^<(.*)>$/) { $v = $1 }
-  elsif($v =~ /^'<(.*)>$/) { $v = $1 }
-  return $v;
-}
-
-sub look_for_private{
-  my($tag) = @_;
-  my $remain = $tag;
-  my $found_private;
-  loop:
-  while($remain ne ""){
-    if($remain =~ /^(\(....,....\))(.*)$/){
-      my $first_tag = $1; $remain = $2;
-      $first_tag =~ /\(...(.),....\)$/;
-      my $lsd = $1;
-      if($lsd =~ /[13579bdf]/){
-        $found_private = 1;
-      }
-    } elsif ($remain =~ /^(\(....,\"[^\"]*\",..\))(.*)$/){
-      my $first_tag = $1; $remain = $2;
-    } else {
-      print "Error: didn't match a tag pattern in $tag\n";
-      exit;
-    }
-    if($remain =~ /^\[[^\]]*\](.*)/){
-      $remain = $1;
-#print "remain: $remain\n";
-    }
-#    } elsif($remain){
-#      print "Error: found leftover ($remain) examining tag\n";
-#      exit;
-#    }
-  }
-  return $found_private;
-}
-#############################
-## Uncomment these lines when testing just the processing of
-## input
-## Only do this for small test cases - it generates a lot of 
-## rows in subprocess_lines and chews up a lot of time, etc.
-#print "SopsToEdit: ";
-#Debug::GenPrint($dbg, \%SopsToEdit, 1);
-#print "\nUidMapping:  ";
-#Debug::GenPrint($dbg, \%UidMapping, 1);
-#print "\nPatientToNickname:  ";
-#Debug::GenPrint($dbg, \%PatientToNickname, 1);
-#print "\nStudyToNickname:  ";
-#Debug::GenPrint($dbg, \%StudyToNickname, 1);
-#print "\nSeriesToNickname:  ";
-#Debug::GenPrint($dbg, \%SeriesToNickname, 1);
-#print "\n";
-#exit;
-#
-#
-
-my $num_sops = keys %SopsToEdit;
-print "Found list of $num_sops to edit\n";
+my $num_files = keys %{$FilesToEdit};
+print "Found list of $num_files to edit\n";
 print "Directory: $DestDir\n";
 print "Subprocess_invocation_id: $invoc_id\n";
-print "Forking background process\n";
+#print "Forking background process\n";
+#print "test only - not forking\n";
+#exit;
 #############################
 # This is code which sets up the Background Process and Starts it
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 $background->Daemonize;
 my $BackgroundPid = $$;
 # now in the background...
-$background->WriteToEmail("Starting edits on $num_sops sop_instance_uids\n" .
+$background->WriteToEmail("Starting edits on $num_files files\n" .
   "Description: $description\n" .
   "Results dir: $DestDir\n" .
   "Subprocess_invocation_id: $invoc_id\n");
@@ -545,8 +196,8 @@ sub MakeEditor{
   return $sub;
 }
 {
-  my @sops = sort keys %SopsToEdit;
+  my @files = sort keys %{$FilesToEdit};
   Dispatch::Select::Background->new(
-    MakeEditor(\@sops, \%SopsToEdit, $invoc_id))->queue;
+    MakeEditor(\@files, $FilesToEdit, $invoc_id))->queue;
 }
 Dispatch::Select::Dispatch();
