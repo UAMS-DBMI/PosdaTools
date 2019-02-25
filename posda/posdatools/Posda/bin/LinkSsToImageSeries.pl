@@ -34,6 +34,19 @@ print "Comment: StructSetFile: $ARGV[1]\n";
 print "Comment: Image Series UID: $ARGV[2]\n";
 unless($StructSetFile =~ /^\//) 
   { $StructSetFile = $RootDir."/".$StructSetFile }
+#   ###################################################
+#   Build Data Stuctures:
+#
+#$CTsByZ{<z>} = <file_name>;
+#
+#%CTsByFile{<file_name>} = <sop_instance_uid>;
+#
+#%CTsByUid{<sop_instance_uid>} = {
+#  file => <file_name>,
+#  z => <z>,
+#  study_uid => $Study_UID,
+#  series_uid => $SeriesUID,
+#};
 my $finder = sub {
   my($file_name, $df, $ds, $size, $xfr_stx, $errors) = @_;
   my $SeriesUID = $ds->ExtractElementBySig("(0020,000e)");

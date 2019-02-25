@@ -52,7 +52,7 @@ my @SeriesList = keys %SeriesInOldTp;
 
 my $num_series = @SeriesList;
 
-my$description = "First Pass Scan activity timepoint for activity $act_id " .
+my $description = "First Pass Scan activity timepoint for activity $act_id " .
   "($notify)";
 print "Background to do scan: \"$description\"\n";
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
@@ -60,6 +60,7 @@ print "Going to background\n";
 $background->Daemonize;
 my $start_time = time;
 $background->WriteToEmail("Starting PHI scan: \"$description\"\n");
+$background->WriteToEmail("$num_series series to scan\n");
 my $scan = Posda::Background::PhiScan->NewFromScan(
   \@SeriesList, $description, "Posda");
 my $end_time = time;

@@ -62,6 +62,10 @@ method MenuResponse($http, $dyn) {
     <a class="btn btn-primary" 
        href="DownloadTextAsCsv?obj_path=$self->{path}">
        Download as CSV
+    </a><br>
+    <a class="btn btn-primary" 
+       href="FixBadCsv?obj_path=$self->{path}">
+       Download as Fixed Bad CSV (from CTP)
     </a>
   });
 }
@@ -74,5 +78,12 @@ method ScriptButton($http, $dyn){
 method DownloadTextAsCsv($http, $dyn){
   $http->DownloadHeader("text/csv", "Foo.csv");
   $http->queue($self->{text});
+}
+method FixBadCsv($http, $dyn){
+  $http->DownloadHeader("text/csv", "Foo.csv");
+  my $text_to_fix = $self->{text};
+  $text_to_fix =~ s/=\(//g;
+  $text_to_fix =~ s/\),/,/g;
+  $http->queue($text_to_fix);
 }
 1;

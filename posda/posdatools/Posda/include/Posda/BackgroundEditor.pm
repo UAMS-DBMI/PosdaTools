@@ -16,10 +16,10 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
   sub new{
     my($class, $list, $hash, $invoc_id, $notify, $back) = @_;
     my $this = {
-     list_of_sops => $list,
-      sop_hash => $hash,
-      sops_in_process => {},
-      sops_completed => {},
+     list_of_files => $list,
+      file_hash => $hash,
+      files_in_process => {},
+      files_completed => {},
       compare_requests => {},
       comparing => {},
       compares_complete => {},
@@ -56,22 +56,22 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
         $num_comparing, $num_compares_complete, $num_compares_failed,
         $total_to_process);
       if(
-        exists $this->{sop_hash} &&
-        ref($this->{sop_hash}) eq "HASH"
+        exists $this->{file_hash} &&
+        ref($this->{file_hash}) eq "HASH"
       ){
-        $total_to_process = keys %{$this->{sop_hash}};
+        $total_to_process = keys %{$this->{file_hash}};
       } else { $total_to_process = 0 }
       if(
-        exists $this->{sops_in_process} &&
-        ref($this->{sops_in_process}) eq "HASH"
+        exists $this->{files_in_process} &&
+        ref($this->{files_in_process}) eq "HASH"
       ){
-        $num_in_process = keys %{$this->{sops_in_process}};
+        $num_in_process = keys %{$this->{files_in_process}};
       } else { $num_in_process = 0 }
       if(
-        exists $this->{list_of_sops} &&
-        ref($this->{list_of_sops}) eq "ARRAY"
+        exists $this->{list_of_files} &&
+        ref($this->{list_of_files}) eq "ARRAY"
       ){
-        $num_waiting = keys @{$this->{list_of_sops}};
+        $num_waiting = keys @{$this->{list_of_files}};
       } else { $num_waiting = 0 }
       if(
         exists $this->{compare_requests} &&
@@ -142,22 +142,22 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
   sub StartProcessing{
     my($this) = @_;
     delete $this->{process_pending};
-    my $num_simul = 8;
-    my $num_in_process = keys %{$this->{sops_in_process}};
-    my $num_waiting = @{$this->{list_of_sops}};
+    my $num_simul = 10;
+    my $num_in_process = keys %{$this->{files_in_process}};
+    my $num_waiting = @{$this->{list_of_files}};
     my $num_comparing = keys %{$this->{comparing}};
     my $num_queued_for_compare = keys %{$this->{compare_requests}};
     while(
       $num_in_process < $num_simul && $num_waiting > 0
     ){
-      my $next_sop = shift @{$this->{list_of_sops}};
-      my $next_struct = $this->{sop_hash}->{$next_sop};
-      $this->{sops_in_process}->{$next_sop} = $next_struct;
+      my $next_file = shift @{$this->{list_of_files}};
+      my $next_struct = $this->{file_hash}->{$next_file};
+      $this->{files_in_process}->{$next_file} = $next_struct;
       $this->SerializedSubProcess($next_struct,
         "NewSubprocessEditor.pl 2>/dev/null",
-        $this->WhenEditDone($next_sop, $next_struct));
-      $num_in_process = keys %{$this->{sops_in_process}};
-      $num_waiting = @{$this->{list_of_sops}};
+        $this->WhenEditDone($next_file, $next_struct));
+      $num_in_process = keys %{$this->{files_in_process}};
+      $num_waiting = @{$this->{list_of_files}};
     }
     if(
       $num_waiting == 0 &&
@@ -170,7 +170,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
   }
 
   sub WhenEditDone{
-    my($this, $sop, $struct) = @_;
+    my($this, $file, $struct) = @_;
     my $sub = sub {
       my($status, $ret_struct) = @_;
       my $from_file = $struct->{from_file};
@@ -181,15 +181,15 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
           from_file_path => $from_file,
           to_file_path => $to_file,
         };
-        $this->QueueCompareRequest($sop, $c_struct);
+        $this->QueueCompareRequest($file, $c_struct);
       } else {
-        $this->{compares_failed}->{$sop} = {
+        $this->{compares_failed}->{$file} = {
           edits => $struct,
           status => $status,
           report => $ret_struct,
         };
       }
-      delete $this->{sops_in_process}->{$sop};
+      delete $this->{files_in_process}->{$file};
       $this->RestartProcessing;
     };
   }
@@ -207,32 +207,33 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
       my($line) = @_;
       if($line =~ /Completed:\s*(.*)$/){
         my $remain = $1;
-        my($sop, $from_file, $to_file,$s_id, $l_id) = split(/\|/, $remain);
-        delete $this->{comparing}->{$sop};
-        $this->{compares_complete}->{$sop} = 1;
+        my($file, $from_file, $to_file,$s_id, $l_id) = split(/\|/, $remain);
+        delete $this->{comparing}->{$file};
+        $this->{compares_complete}->{$file} = 1;
       } elsif($line =~ /Failed:\s*(.*)$/){
         my $remain = $1;
-        my($sop, $mess) = split(/\|/, $remain);
-        delete $this->{comparing}->{$sop};
-        $this->{compares_failed}->{$sop} = $mess;
-        $this->{back}->WriteToEmail("Compare failed:\n\tsop:$sop\n" .
+        my($file, $mess) = split(/\|/, $remain);
+        delete $this->{comparing}->{$file};
+        $this->{compares_failed}->{$file} = $mess;
+        my $num_failed = keys %{$this->{compares_failed}};
+        if($num_failed == 10){
+          $this->{back}->WriteToEmail("...\n");
+        } elsif(($num_failed % 1000) == 0) {
+          $this->{back}->WriteToEmail("1000 failures ...\n");
+        } elsif($num_failed < 10) {
+          $this->{back}->WriteToEmail("Compare failed:\n\tfile:$file\n" .
           "\tmessage: $mess\n");
+        }
       } else {
-        print STDERR
-          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!   !!!!!!!!!!!!!!!!!\n" .
-          "!!!!!!!  You idiot!  !!!!!!!!!!!!" .
-          "Bad line: \"$line\"\n" .
-          "!!!!!!!!! Always have default case !!!!!!!!";
         $this->{back}->WriteToEmail(
-          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!!!!!!!!!!!!!!!!!!\n" .
-          "!!!!!!!  You idiot !!!!!!!!!!!!" .
-          "Bad line: \"$line\"\n" .
-          "!!!!!!!!! Always have default case !!!!!!!!\n");
+          "Bad line from Compare: \"$line\"\n" .
+          "Aborting (and finishing so email shows)\n");
+        $this->{back}->Finish;
         exit;
       }
       # here is where we check from being done
-      my $num_in_process = keys %{$this->{sops_in_process}};
-      my $num_waiting = @{$this->{list_of_sops}};
+      my $num_in_process = keys %{$this->{files_in_process}};
+      my $num_waiting = @{$this->{list_of_files}};
       my $num_comparing = keys %{$this->{comparing}};
       my $num_queued_for_compare = keys %{$this->{compare_requests}};
       if(
@@ -275,9 +276,6 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
         $this->{comparing}->{$next_to_send} = $command;
         return $command;
       } else {
-        # Here we can't check to see if all have been queued
-        # (We can't shutdown writer without losing contents
-        # backed up in pipes);
         return undef;
       }
     };

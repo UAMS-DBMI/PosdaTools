@@ -1,6 +1,6 @@
 -- Name: TableSizePosdaFiles
 -- Schema: posda_files
--- Columns: ['table_schema', 'table_name', 'row_estimate', 'total_bytes', 'index_bytes', 'total', 'toast_bytes', 'index', 'toast', 'table']
+-- Columns: ['oid', 'table_schema', 'table_name', 'row_estimate', 'total_bytes', 'index_bytes', 'total', 'toast_bytes', 'index', 'toast', 'table']
 -- Args: []
 -- Tags: ['AllCollections', 'postgres_stats', 'table_size']
 -- Description: Get a list of collections and sites
@@ -21,4 +21,6 @@ select *, pg_size_pretty(total_bytes) AS total
           LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
           WHERE relkind = 'r'
   ) a
-) a where table_schema = 'public' order by total_bytes desc
+) a where
+  table_schema = 'public' or table_schema = 'dbif_config' or table_schema = 'dicom_conv'
+order by total_bytes desc

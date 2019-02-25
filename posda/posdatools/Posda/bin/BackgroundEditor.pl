@@ -361,31 +361,32 @@ sub GetSeriesFileList{
       }
     }
     my $pat_path = $PatientToNickname{$pat_id};
-    unless(exists $StudyToNickname{$study_id}){
-      $study_seq += 1;
-      my $study_nick = "study_$study_seq";
-      $StudyToNickname{$study_id} = "study_$study_seq";
-      unless(-d "$DestDir/$pat_path/$study_nick"){
-        unless((mkdir "$DestDir/$pat_path/$study_nick") == 1){
-          print "Couldn't mkdir $DestDir/$pat_path/$study_nick ($!)\n";
+#    unless(exists $StudyToNickname{$study_id}){
+#      $study_seq += 1;
+#      my $study_nick = "study_$study_seq";
+#      $StudyToNickname{$study_id} = "study_$study_seq";
+      unless(-d "$DestDir/$pat_path/studies"){
+        unless((mkdir "$DestDir/$pat_path/studies") == 1){
+          print "Couldn't mkdir $DestDir/$pat_path/studies ($!)\n";
           exit;
         }
       }
-    }
+#    }
     my $study_path = $StudyToNickname{$study_id};
+    $study_path = "studies";
     unless(exists $SeriesToNickname{$series_id}){
       $series_seq += 1;
       my $series_nick = "series_$series_seq";
       $SeriesToNickname{$series_id} = "series_$series_seq";
-      unless(-d "$DestDir/$pat_path/$study_path/$series_nick"){
-        unless((mkdir "$DestDir/$pat_path/$study_path/$series_nick") == 1){
-          print "Couldn't mkdir $DestDir/$pat_path/$study_path/$series_nick ($!)\n";
+      unless(-d "$DestDir/$pat_path/studies/$series_nick"){
+        unless((mkdir "$DestDir/$pat_path/studies/$series_nick") == 1){
+          print "Couldn't mkdir $DestDir/$pat_path/studies/$series_nick ($!)\n";
           exit;
         }
       }
     }
     my $series_path = $SeriesToNickname{$series_id};
-    my $dest_file = "$DestDir/$pat_path/$study_path/$series_path/" .
+    my $dest_file = "$DestDir/$pat_path/studies/$series_path/" .
       "$file_id.dcm";
     $series_struct{$sop} = {
       from_file => $path,

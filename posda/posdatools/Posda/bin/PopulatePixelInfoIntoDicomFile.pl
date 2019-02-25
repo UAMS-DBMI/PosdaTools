@@ -14,8 +14,8 @@ Query('CountRowsInDicomFileWithUnpopulatedPixelInfo')->RunQuery(sub{
   my($rows) = @_;
   $num_not_populated = $rows->[0];
 },sub {});
-#print "Num populated: $num_populated\n";
-#print "Num not populated: $num_not_populated\n";
+print "Num populated: $num_populated\n";
+print "Num not populated: $num_not_populated\n";
 #exit;
 my $rows_requested = $ARGV[0];
 loop:

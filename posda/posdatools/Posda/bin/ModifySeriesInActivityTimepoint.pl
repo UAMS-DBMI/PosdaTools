@@ -54,6 +54,9 @@ while(my $line = <STDIN>){
     $SeriesToDeleteFromTp{$series_uid} = 1;
   }elsif($function eq "AddSeriesToTp"){
     $SeriesToAddToTp{$series_uid} = 1;
+  } else {
+    print "Unknown function: $function\n";
+    $errors += 1;;
   }
 }
 for my $s (keys %SeriesToHideEarlyDupSops){
@@ -300,9 +303,15 @@ $rpt2->print("who,$notify\r\n");
 $rpt2->print("\r\n");
 $ActInfo->PrintCondensedHierarchyReport($rpt2, $mod_cur_cfh);
 #########Delete Series for Creating new tp############
+my $count_before_delete = keys %SeriesInCurrentTp;
+my $count_to_delete  = keys %SeriesToDeleteFromTp;
 for my $s (keys %SeriesToDeleteFromTp){
   delete $SeriesInCurrentTp{$s};
 }
+my $count_after_delete = keys %SeriesInCurrentTp;
+$background->WriteToEmail("Deleted $count_to_delete series " .
+  "from list of $count_before_delete, leaving " .
+  "$count_after_delete\n");
 #########Add Series for Creating new tp###############
 for my $s (keys %SeriesToAddToTp){
   $SeriesInCurrentTp{$s} = 1;

@@ -5,7 +5,7 @@ use Posda::BackgroundProcess;
 use Posda::Background::PhiScan;
 
 my $usage = <<EOF;
-PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <notify>
+PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <max_rows> <notify>
 or
 PhiPublicScanTp.pl -h
 
@@ -18,11 +18,11 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 
-unless($#ARGV == 2){
+unless($#ARGV == 3){
   die "$usage\n";
 }
 
-my ($invoc_id, $act_id, $notify) = @ARGV;
+my ($invoc_id, $act_id, $max_rows, $notify) = @ARGV;
 my $num_rows = 0;
 
 my $OldActTpId;
@@ -67,14 +67,19 @@ my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $id = $scan->{phi_scan_instance_id};
 $background->WriteToEmail("Created scan id: $id in $elapsed seconds\n");
+#$background->WriteToEmail("Creating " .
+#  "\"SimplePhiReportAllMetaQuotes\" report.\n");
+$background->WriteToEmail("Scan ($id) description: $description\n");
 $background->WriteToEmail("Creating " .
-  "\"SimplePhiReportAllMetaQuotes\" report.\n");
-my $rpt1 = $background->CreateReport("Full Public Scan");
-my $lines = $scan->PrintTableFromQuery(
-  "SimplePhiReportAllMetaQuotes", $rpt1);
-my $rpt3 = $background->CreateReport("Edit Skeleton");
-$rpt3->print("element,vr,q_value,description,disp,num_series," .
-  "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
-$rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
+  "\"SimplePhiReportAllMetaQuotes\" report\n");
+$background->PrepareBackgroundReportBasedOnQuery(
+  "SimplePhiReportAllMetaQuotes", "Phi Report All", $max_rows, $id);
+#my $rpt1 = $background->CreateReport("Full Public Scan");
+#my $lines = $scan->PrintTableFromQuery(
+#  "SimplePhiReportAllMetaQuotes", $rpt1);
+#my $rpt3 = $background->CreateReport("Edit Skeleton");
+#$rpt3->print("element,vr,q_value,description,disp,num_series," .
+#  "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
+#$rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
 $background->Finish;
 

@@ -53,7 +53,7 @@ Expects lines of the form:
 
 Lines specify the following things:
  - Series edits:
-   An line with a value in obj_id specifies a series to be edited.
+   An line with a value in obj_id specifies a series, study, or file to be edited.
    Such a line is not allowed to have anything in the <operation>, <tag>,
    <val1> or <val2> fields.  Generally, there will be some lines with values
    in <obj_id> followed by some lines with values in these other
@@ -167,7 +167,7 @@ sub ProcessInput{
       split(/&/, $line);
     if($obj_id){
       if($op) {
-        $this->{Error} = "operation ($op) on same line as study ($obj_id)\n";
+        $this->{Error} = "operation ($op) on same line as object ($obj_id)\n";
         return;
       }
       if($last_line_was_edit){
@@ -177,6 +177,7 @@ sub ProcessInput{
       }
       push @$accumulating_objs, $obj_id;
       $last_line_was_obj = 1;
+      $last_line_was_edit = 0;
       next line;
     }
     if($op){
@@ -184,7 +185,7 @@ sub ProcessInput{
         $current_obj_list = $accumulating_objs;
         $accumulating_objs = [];
         unless($#{$current_obj_list} >= 0){
-          $this->{Error} = "operation($op) applies to no study\n";
+          $this->{Error} = "operation($op) applies to no objects\n";
           return;
         }
       }
@@ -195,6 +196,7 @@ sub ProcessInput{
       $this->ProcessEndOfEdits($current_obj_list, $accumulating_edits);
       $accumulating_edits = [];
       $current_obj_list = [];
+      $last_line_was_edit = 0;
     }
   }
   if($last_line_was_edit) {
@@ -334,10 +336,18 @@ sub look_for_private{
   }
   return $found_private;
 }
+sub FilesToEdit{
+  my($this) = @_;
+  return $this->{objs_to_edit};
+}
+sub EditDir{
+  my($this) = @_;
+  return $this->{dest_dir};
+}
 sub Debug{
   my($this, $out) = @_;
-  &$out("Prepared Edits: ");
-  Debug::GenPrint($out, $this, 1);
+  &$out("Object to Edit ");
+  Debug::GenPrint($out, $this->{objs_to_edit}, 1);
   &$out("\n");
 }
 1; 

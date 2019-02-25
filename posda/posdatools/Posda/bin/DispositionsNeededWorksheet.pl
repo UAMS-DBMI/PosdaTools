@@ -34,15 +34,15 @@ my $start_time = `date`;
 chomp $start_time;
 $background->WriteToEmail("Starting  DispositionsNeededWorksheet.pl at $start_time\n");
 $background->WriteToEmail("##### This is a test version of this script #####\n");
-open PIPE, "ReconcileTagNames.pl|";
-$background->WriteToEmail("Running ReconcileTagNames.pl:\n");
+open PIPE, "UpdatePrivateElementNames.pl|";
+$background->WriteToEmail("Running UpdatePrivateElementNames.pl:\n");
 while(my $line = <PIPE>){
   chomp $line;
   $background->WriteToEmail(">>>>$line\n");
 }
 my $now = `date`;
 chomp $now;
-$background->WriteToEmail("$now: finished ReconcileTagNames.pl:\n");
+$background->WriteToEmail("$now: finished UpdatePrivateElementNames.pl:\n");
 
 
 my @Rows;

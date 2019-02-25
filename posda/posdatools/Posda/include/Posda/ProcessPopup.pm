@@ -320,6 +320,9 @@ method WhenCommandFinishes($subprocess_invocation_id){
       );
     }
     $self->{ContentResponseMode} = "SubProcessResponded";
+    if($self->can("AutoRefresh")){
+      $self->AutoRefresh;
+    }
   };
   return $sub;
 }
