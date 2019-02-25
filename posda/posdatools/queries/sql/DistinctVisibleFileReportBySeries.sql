@@ -7,11 +7,23 @@
 -- 
 
 select distinct
-  project_name as collection, site_name as site, patient_id, study_instance_uid,
-  series_instance_uid, sop_instance_uid, dicom_file_type, modality, file_id
+	coalesce(project_name, 'UNKNOWN') as collection,
+	coalesce(site_name, 'UNKNOWN') as site,
+	patient_id,
+	study_instance_uid,
+	series_instance_uid,
+	sop_instance_uid,
+	dicom_file_type,
+	modality,
+	file_id
 from
-  file_patient natural join file_study natural join file_series natural join file_sop_common
-  natural join dicom_file natural join ctp_file
+	file_patient
+	natural join file_study
+	natural join file_series
+	natural join file_sop_common
+	natural join dicom_file
+	natural left join ctp_file
 where
-  series_instance_uid = ? and visibility is null
+	series_instance_uid = ?
+	and visibility is null
 order by series_instance_uid

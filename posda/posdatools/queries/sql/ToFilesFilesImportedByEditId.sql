@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['files_imported']
 -- Args: ['subprocess_invocation_id']
--- Tags: ['adding_ctp', 'find_patients', 'series_selection', 'check_edits']
+-- Tags: ['adding_ctp', 'find_patients', 'series_selection', 'check_edits', 'edit_status']
 -- Description: Get List of visible patients with CTP data
 
 select
