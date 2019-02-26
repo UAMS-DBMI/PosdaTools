@@ -21,13 +21,13 @@ api() {
 }
 
 file_process() {
-	echo "Starting Posda File Process Daemon..."
+	echo "Starting Posda Fast File Process Daemon..."
 
 	cd $APPROOT/systemd
 
 	echo "Working dir is: $(pwd)"
 
-	exec ./run_in_posda_env.sh systemd/start_PosdaFileProcessDaemon.pl
+	exec ./run_in_posda_env.sh Posda/bin/FastFileProcessDaemon.pl
 }
 
 backlog_process() {
