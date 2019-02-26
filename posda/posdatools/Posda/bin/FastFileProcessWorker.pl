@@ -71,6 +71,16 @@ sub InsertOneFile {
     print STDERR "File ($h->{path}) not found\n";
     return;
   }
+  # File is present
+  #
+  my $qp = $db->prepare(qq{
+      update file_location  
+      set file_is_present = true
+      where file_id = ?
+  });
+  $qp->execute($h->{file_id});
+
+
   my $try = Posda::Try->new($h->{path});
   if(exists $try->{dataset}){
     my $has_meta = 0;
