@@ -12,7 +12,7 @@ import os
 
 # These are default values; they should be configured
 # from whatever code imports this module!
-FILE_STORAGE_PATH = "/home/posda/cache/created" 
+FILE_STORAGE_PATH = "/home/posda/cache/created"
 TEMP_STORAGE_PATH = "/home/posda/cache/temp"
 FILE_STORAGE_ROOT = 3
 
@@ -48,7 +48,7 @@ class ImportFile(HTTPMethodView):
         # both of these are optional
         import_event_id = request.args.get('import_event_id')
         digest = request.args.get('digest')
-        
+
         if digest is None:
             raise InvalidUsage("digest is required")
 
@@ -89,7 +89,7 @@ class ImportFile(HTTPMethodView):
 
         if import_event_id is None:
             import_event_id = await create_import_event('single-file api import')
-            
+
         await create_file_import(file_id, int(import_event_id))
 
         return json({
@@ -104,9 +104,9 @@ async def create_import_event(comment):
     async with db.pool.acquire() as conn:
         record = await conn.fetchrow("""\
             insert into import_event
-            (import_type, import_comment)
+            (import_type, import_comment, import_time)
             values
-            ($1, $2)
+            ($1, $2, now())
             returning import_event_id
         """, 'posda-api import', comment)
 
@@ -187,7 +187,7 @@ async def create_or_get_file_id(digest, size):
                 where digest = $1
             """, digest)
             created = False
-        
+
         file_id = record['file_id']
 
         return (created, file_id)
