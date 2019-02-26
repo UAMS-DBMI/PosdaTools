@@ -1,6 +1,6 @@
 TAG=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=tcia/posda
-.PHONY: push
+.PHONY: push clean
 
 default: build
 
@@ -17,3 +17,6 @@ push: last_built
 # Special rule to ensure posda.env is in place
 posdatools/posda.env: posda.env
 	cp posda.env posdatools/
+
+clean:
+	rm -f last_built

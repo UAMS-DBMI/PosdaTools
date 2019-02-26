@@ -1,6 +1,6 @@
 TAG=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=tcia/posda_web
-.PHONY: push
+.PHONY: push clean
 
 default: build
 
@@ -13,3 +13,6 @@ last_built: Dockerfile default.conf
 push: last_built
 	docker image push ${IMAGE_NAME}:${TAG}
 	docker image push ${IMAGE_NAME}:latest
+
+clean:
+	rm -f last_built

@@ -1,4 +1,4 @@
-TOPTARGETS := all push
+TOPTARGETS := all push clean
 SUBDIRS := $(wildcard */.)
 
 $(TOPTARGETS): $(SUBDIRS)
