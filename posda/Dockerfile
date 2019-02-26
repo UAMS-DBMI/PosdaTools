@@ -20,7 +20,6 @@ RUN apk --update add alpine-sdk \
 					 unzip \
 					 py3-psycopg2 \
 					 py3-numpy \
-					 cmake
 					 cmake \
 					 redis
 
