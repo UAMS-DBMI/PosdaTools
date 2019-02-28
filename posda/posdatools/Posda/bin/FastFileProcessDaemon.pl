@@ -40,6 +40,11 @@ for my $i (1..WORKER_COUNT) {
   system("FastFileProcessWorker.pl &");
 }
 
+for my $i (1..WORKER_COUNT) {
+  system("FastPixelInfoWorker.pl &");
+}
+
+
 while (1) {
   my $redis_queue_size = $redis->llen('files');
 

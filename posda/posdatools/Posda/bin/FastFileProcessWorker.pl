@@ -48,6 +48,7 @@ while (1) {
     my ($file_id, $file_path) = @{decode_json($next_thing)};
     say "FFPW: Processing $file_id, $file_path";
     InsertOneFile($file_id, $file_path, $db);
+    $redis->rpush('pixel_location', $next_thing);
   }
 
   my $should_we_quit_now = $redis->get('quit');
