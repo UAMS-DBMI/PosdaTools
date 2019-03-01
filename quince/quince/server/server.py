@@ -57,7 +57,8 @@ async def get_series_info(request, file_id):
             modality,
             body_part_examined,
             series_description,
-            patient_id
+            patient_id,
+            study_instance_uid
 
         from
             file_image
@@ -71,6 +72,7 @@ async def get_series_info(request, file_id):
             natural join file_series
             natural join ctp_file
             natural join file_patient
+            natural join file_study
 
             natural left join file_slope_intercept
             natural left join slope_intercept
