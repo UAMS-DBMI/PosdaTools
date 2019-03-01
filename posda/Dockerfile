@@ -21,7 +21,8 @@ RUN apk --update add alpine-sdk \
 					 py3-psycopg2 \
 					 py3-numpy \
 					 cmake \
-					 redis
+					 redis \
+					 procps
 
 # Perl modules from Alpine repos
 RUN apk --update add perl-json \
