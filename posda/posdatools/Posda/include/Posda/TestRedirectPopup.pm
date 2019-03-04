@@ -30,7 +30,8 @@ method new($class: $sess, $path, $parameters) {
 #  "processing_status" => "Reviewed",
 #  "review_status" => "Good"
 
-  my $base_url = "http://tcia-posda-rh-1.ad.uams.edu/k/work?";
+  my $host_url = $ENV{POSDA_EXTERNAL_HOSTNAME}
+  my $base_url = "$host_url/k/work?";
   $base_url .= "review_status=$parameters->{review_status}&";
   $base_url .= "processing_status=$parameters->{processing_status}&";
   $base_url .= "dicom_file_type=$parameters->{dicom_file_type}&";
