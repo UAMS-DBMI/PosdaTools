@@ -11,6 +11,7 @@ export interface ImageDetails {
   pixel_rows: number;
   project_name: string;
   series_instance_uid: string;
+  study_instance_uid: string;
   site_name: string;
   size: 524288
   slope: number;
