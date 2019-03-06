@@ -48,6 +48,7 @@ class ImportFile(HTTPMethodView):
         # both of these are optional
         import_event_id = request.args.get('import_event_id')
         digest = request.args.get('digest')
+        localpath = request.args.get('localpath')
 
         if digest is None:
             raise InvalidUsage("digest is required")
@@ -90,7 +91,7 @@ class ImportFile(HTTPMethodView):
         if import_event_id is None:
             import_event_id = await create_import_event('single-file api import')
 
-        await create_file_import(file_id, int(import_event_id))
+        await create_file_import(file_id, int(import_event_id), localpath)
 
         return json({
             "status": "success",
@@ -158,14 +159,13 @@ async def create_file_location(file_id, root_id, rel_path):
             ($1, $2, $3)
         """, file_id, root_id, rel_path)
 
-async def create_file_import(file_id, import_event_id):
+async def create_file_import(file_id, import_event_id, localpath):
     async with db.pool.acquire() as conn:
         await conn.execute("""\
             insert into file_import
             values
             ($1, $2, $3, $4, $5, now())
-        """, import_event_id, file_id, None, None, None)
-        # TODO The 3 empty fields could be filled with something?
+        """, import_event_id, file_id, None, None, localpath)
 
 async def create_or_get_file_id(digest, size):
     created = True
