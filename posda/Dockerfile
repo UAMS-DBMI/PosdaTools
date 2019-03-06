@@ -72,17 +72,20 @@ RUN pip3 install xlsx2csv mysql-connector python-box
 # COPY kaleidoscope-base/ /k-base/
 # RUN cd /k-base && npm install && make
 
-COPY posdatools /home/posda/posdatools
-COPY posda-api/ /posda-api/
+RUN adduser -D posda
+
+COPY --chown=posda:posda posdatools /home/posda/posdatools
+COPY --chown=posda:posda posda-api/ /posda-api/
 RUN pip3 install -r /posda-api/requirements.txt
 
 WORKDIR /home/posda
 VOLUME ["/home/posda/cache"]
 COPY docker-entrypoint /
-COPY posda.env /home/posda/posdatools/
+COPY --chown=posda:posda posda.env /home/posda/posdatools/
 
 ENV PYTHONPATH /home/posda/posdatools/python
 
+USER posda:posda
 ENTRYPOINT ["/docker-entrypoint"]
 CMD ["main"]
 
