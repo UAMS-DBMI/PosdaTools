@@ -22,17 +22,22 @@ unless($#ARGV == 2) { print $usage; exit }
 my($invoc_id, $act_id, $notify) = @ARGV;
 my $start = time;
 
+#############################
+# This is code which sets up the Background Process and Starts it
+print "Going to background for processing\n";
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+$background->Daemonize;
 ####################################################
-# Derive Hierarchy from Activity Timepoint
+# Get Structure Sets In Latest Timepoint
+# and volume
+# and files linked to ROIs
 #
-my $ActTpId;
-my $ActTpComment;
-my $ActTpDate;
-my %FilesInTp;
-my %SeriesInTp;
-my %StudiesInTp;
-my %PatientsInTp;
-my %TpHierarchy;
+my %StructureSets;
+my %Patients;
+my($ActTpId, $ActTpComment, $ActTpDate);
+my %VolumeBySs;
+my %LinkedSopsBySs;
+my %VolumeErrorsBySs;
 Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   my($row) = @_;
   my($activity_id, $activity_created,
@@ -41,109 +46,122 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   $ActTpId = $activity_timepoint_id;
   $ActTpComment = $comment;
   $ActTpDate = $timepoint_created;
+  $background->WriteToEmail("LinkRtByActivityTimepoint.pl:\n" .
+    "Activity Id: $act_id\n" .
+    "Timepoint Id: $ActTpId\n" .
+    "Timepoint Date $ActTpDate\n" .
+    "Timepoint Comment $ActTpComment\n");
 }, sub {}, $act_id);
-Query('FileIdsByActivityTimepointId')->RunQuery(sub {
+Query('GetStructureSetsByActivityTimepoint')->RunQuery(sub{
   my($row) = @_;
-  $FilesInTp{$row->[0]} = 1;
+  my($file_id, $path, $pat_id) = @$row;
+  $StructureSets{$file_id}->{path} = $path;
+  $StructureSets{$file_id}->{patient} = $pat_id;
+  $Patients{$pat_id}->{$path} = 1;
 }, sub {}, $ActTpId);
-my $q = Query('PatientStudySeriesForFile');
-for my $file_id(keys %FilesInTp){
-  $q->RunQuery(sub {
+my $get_ss_vol = Query("GetStructureSetVolumeByFileId");
+my $get_linked = Query("GetLinkedSopsByStructureSetFileId");
+my $get_path_posda = Query("GetVisibleFilePathPosdaBySopInst");
+my $get_path_public = Query("GetFilePathPublicBySopInst");
+for my $ss_id (keys %StructureSets){
+  my $pat_id = $StructureSets{$ss_id}->{patient};
+  $get_ss_vol->RunQuery(sub{
     my($row) = @_;
-    my($patient_id, $study_id, $series_id, $path) = @$row;
-    $SeriesInTp{$series_id} = 1;
-    $StudiesInTp{$study_id} = 1;
-    $PatientsInTp{$patient_id} = 1;
-    $TpHierarchy{$patient_id}->{$study_id}->{$series_id}->{$path} = 1;
-  }, sub {}, $file_id);
+    my($sop_inst) = @$row;
+    $VolumeBySs{$ss_id}->{$sop_inst} = 1;
+  }, sub {}, $ss_id); 
+  $get_linked->RunQuery(sub{
+    my($row) = @_;
+    my($sop_inst) = @$row;
+    $LinkedSopsBySs{$ss_id}->{$sop_inst} = 1;
+    unless(exists $VolumeBySs{$ss_id}->{$sop_inst}){
+      unless(exists $VolumeErrorsBySs{$ss_id}){
+        $VolumeErrorsBySs{$ss_id} = 0;
+      }
+      $VolumeErrorsBySs{$ss_id} += 1;
+      $VolumeBySs{$ss_id}->{$sop_inst} = 1;
+    }
+  }, sub {}, $ss_id); 
+  my %sops_in_posda;
+  my %sops_in_public;
+  my %sops_not_found;
+  sop:
+  for my $sop (keys %{$VolumeBySs{$ss_id}}){
+    my $path_in_posda;
+    $get_path_posda->RunQuery(sub {
+      my($row) = @_;
+      my $path = $row->[0];
+      $path_in_posda = $path;
+    }, sub {}, $sop);
+    if(defined $path_in_posda){
+      $sops_in_posda{$sop} = 1;
+      $Patients{$pat_id}->{$path_in_posda} = 1;
+      next sop;
+    }
+    my $path_in_public;
+    $get_path_public->RunQuery(sub {
+      my($row) = @_;
+      my $path = $row->[0];
+      $path_in_public = $path;
+      if($path_in_public =~ /(storage.*)$/){
+        $path_in_public = "/nas/public/" . $1;
+      }
+    }, sub {}, $sop);
+    if(defined $path_in_public){
+      $sops_in_public{$sop} = 1;
+      $Patients{$pat_id}->{$path_in_public} = 1;
+      next sop;
+    }
+    $sops_not_found{$sop} = 1;
+  }
+  my $in_posda = keys %sops_in_posda;
+  my $in_public = keys %sops_in_public;
+  my $not_found = keys %sops_not_found;
+  $background->WriteToEmail("For SS $ss_id:" .
+    "  in posda: $in_posda, in public $in_public, " .
+   "not found: $not_found\n");
 }
-my $num_tp_series = keys %SeriesInTp;
-my $num_tp_studiea = keys %StudiesInTp;
-my $num_tp_patients = keys %StudiesInTp;
-print "Found $num_tp_patients patients, " .
-  "$num_tp_studiea studies, " .
-  "$num_tp_series series\n";
 
 ####################################################
+# Create directory for linking
+#
 my $sub_dir = "Act_$act_id" . "_$ActTpId";
 my $base_dir = "/nas/public/posda/cache/NewItcToolsData/submission/dicom/incoming";
 unless(-d $base_dir) {
-  print "Error: $base_dir is not a directory\n";
+  $background->WriteToEmail("Error: $base_dir is not a directory\n");
+  $background->Finish;
   exit;
 }
-print "Base directory: $base_dir\n";
 my $dir = "$base_dir/$sub_dir";
 if(-e $dir){
-  print "Error: $dir already exists\n";
+  $background->WriteToEmail("Error: $dir already exists\n");
+  $background->Finish;
   exit;
 }
 unless(mkdir($dir) == 1){
-  print "Error ($!): couldn't mkdir $dir\n";
+  $background->WriteToEmail("Error ($!): couldn't mkdir $dir\n");
+  $background->Finish;
   exit;
 }
-print "Created directory: $dir\n";
-my $errors = 0;
-for my $pat (keys %TpHierarchy){
-  unless(-d "$dir/$pat"){
-    if(mkdir("$dir/$pat") == 1){
-      print "Created dir: $dir/$pat\n";
-    } else {
-      print "Error ($!) : Couldn't create directory: $dir/$pat\n";
-      $errors += 1;
-    }
-  }
-  for my $study(keys %{$TpHierarchy{$pat}}){
-    unless(-d "$dir/$pat/$study"){
-      if(mkdir("$dir/$pat/$study") == 1){
-        print "Created dir: $dir/$pat/$study\n";
-      } else {
-        print "Error ($!) : Couldn't create directory: $dir/$pat/$study\n";
-        $errors += 1;
-      }
-    }
-    for my $series(keys %{$TpHierarchy{$pat}->{$study}}){
-      unless(-d "$dir/$pat/$study/$series"){
-        if(mkdir("$dir/$pat/$study/$series") == 1){
-          print "Created dir: $dir/$pat/$study/$series\n";
-        } else {
-          print "Error ($!) : Couldn't create directory: $dir/$pat/$study/$series\n";
-          $errors += 1;
-        }
-      }
-      for my $file (keys %{$TpHierarchy{$pat}->{$study}->{$series}}){
-        unless(-f $file){
-          print "Error: $file doesn't exist\n";
-        }
-      }
-    }
-  }
-}
-if($errors > 0){
-  print "Not linking files due to error\n";
-  exit;
-}
-#############################
-# This is code which sets up the Background Process and Starts it
-my $forground_time = time - $start;
-print "Going to background to create timepoint  after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
-$background->Daemonize;
-my $start_creation = time;
+$background->WriteToEmail("Created directory: $dir\n");
+####################################################
 ### Linking Directories Here
-my $file_seq = 0;
-for my $pat (keys %TpHierarchy){
-  for my $study (keys %{$TpHierarchy{$pat}}){
-    for my $series (keys %{$TpHierarchy{$pat}->{$study}}){
-      for my $file (keys %{$TpHierarchy{$pat}->{$study}->{$series}}){
-        my $new_file = "$dir/$pat/$study/$series/$file_seq";
-        $file_seq += 1;
-        symlink $file, $new_file;
-      }
-    }
-  }  
-}
 ###
-my $link_time = time - $start_creation;
-my $num_files = keys %FilesInTp;
-$background->WriteToEmail("Linked $num_files files in $link_time seconds.\n");
+pat:
+for my $pat (keys %Patients) {
+  my $pat_dir = "$dir/$pat";
+  unless(-d $pat_dir){
+    unless(mkdir($pat_dir) == 1){
+      $background->WriteToEmail("Couldn't create directory for pat ($pat)\n");
+      next pat;
+    }
+  }
+  my $file_seq = 0;
+  for my $f (keys $Patients{$pat}){
+    $file_seq += 1;
+    my $l_name = "$pat_dir/$file_seq.dcm";
+    symlink $f, $l_name;
+  }
+}
+
 $background->Finish;

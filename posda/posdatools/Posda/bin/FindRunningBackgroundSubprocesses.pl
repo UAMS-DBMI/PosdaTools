@@ -41,8 +41,8 @@ for my $row (@Rows){
     }
   }
   unless($found_cmd) {
-    print "$subprocess_invocation_id|$background_subprocess_id|" .
+    print "$subprocess_invocation_id,$background_subprocess_id," .
       "\"$background_pid\"," . 
-      "$command_line|$when_script_started|Stale\n";
+      "\"$command_line\",\"$when_script_started\",Stale\n";
   }
 }

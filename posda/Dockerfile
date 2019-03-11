@@ -47,43 +47,34 @@ RUN cpanm --notest REST::Client \
 				   K/KE/KEN/xls2csv-1.07.tar.gz \
 				   Redis
 
-RUN mkdir /home/posda
+# Build GDCM tools
 RUN mkdir -p /build/build
 RUN wget -O /build/master.zip https://github.com/malaterre/GDCM/archive/master.zip
 RUN unzip -d /build /build/master.zip
 RUN cd /build/build && cmake -DGDCM_BUILD_APPLICATIONS=ON -DGDCM_USE_SYSTEM_OPENJPEG=OFF ../GDCM-master && make && make install
 
+# Install needed python utils
 RUN pip3 install xlsx2csv mysql-connector python-box
-
-# # # Install Quince
-# RUN mkdir -p /quince && mkdir -p /root/quince/server && chown nginx:nginx /quince
-# COPY --chown=nginx:nginx quince/dist/ /quince/
-# COPY quince/server /root/quince/server
-# RUN pip3 install -r /root/quince/server/requirements.txt
-
-# # # Install Kaleidoscope
-# RUN mkdir -p /kaleidoscope && mkdir -p /root/kaleidoscope/server && chown nginx:nginx /kaleidoscope
-# COPY --chown=nginx:nginx kaleidoscope/dist/ /kaleidoscope/
-# COPY kaleidoscope/server /root/kaleidoscope/server
-# RUN pip3 install -r /root/kaleidoscope/server/requirements.txt
-
-# # # Install k-base
-# RUN mkdir -p /k-base && mkdir -p /home/posda/cache/k-storage
-# COPY kaleidoscope-base/ /k-base/
-# RUN cd /k-base && npm install && make
 
 RUN adduser -D posda
 
-COPY --chown=posda:posda posdatools /home/posda/posdatools
 COPY --chown=posda:posda posda-api/ /posda-api/
 RUN pip3 install -r /posda-api/requirements.txt
 
-WORKDIR /home/posda
+
+# Work around issue with volume persmissions
+RUN mkdir /home/posda/cache
+RUN chown posda:posda /home/posda/cache
 VOLUME ["/home/posda/cache"]
+
 COPY docker-entrypoint /
 COPY --chown=posda:posda posda.env /home/posda/posdatools/
 
+WORKDIR /home/posda
 ENV PYTHONPATH /home/posda/posdatools/python
+
+# Copy actual posdatools last, to speed up rebuilds
+COPY --chown=posda:posda posdatools /home/posda/posdatools
 
 USER posda:posda
 ENTRYPOINT ["/docker-entrypoint"]
