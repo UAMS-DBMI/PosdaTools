@@ -41,7 +41,7 @@ export class FileService {
 
   getRois(file_id: number):Observable<Roi[]> {
     if (undefined == this.roi_map[file_id]) {
-      this.roi_map[file_id] = this.http.get<Roi[]>("papi/v1/rois/file/" + file_id)
+      this.roi_map[file_id] = this.http.get<Roi[]>("/papi/v1/rois/file/" + file_id)
         .pipe(
           publishReplay(1),
           refCount());
