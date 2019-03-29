@@ -13,6 +13,7 @@ import hashlib
 ROOT = "http://localhost:8087/v1"
 
 
+@unittest.skip("Old tests, please ignore")
 class TestApi(unittest.TestCase):
 
     def test_root(self):
@@ -79,7 +80,7 @@ class TestApi(unittest.TestCase):
 
     def test_studies(self):
         req = requests.get(
-            ROOT + 
+            ROOT +
             "/studies/"
             "1.3.6.1.4.1.14519.5.2.1.4792.1600.108467762757913801129608477056")
         self.assertEqual(req.status_code, 200)
@@ -91,7 +92,7 @@ class TestApi(unittest.TestCase):
 
     def test_studies_series(self):
         req = requests.get(
-            ROOT + 
+            ROOT +
             "/studies/"
             "1.3.6.1.4.1.14519.5.2.1.4792.1600.108467762757913801129608477056"
             "/series")
@@ -99,17 +100,17 @@ class TestApi(unittest.TestCase):
 
         self.assertEqual(req.status_code, 200)
         self.assertEqual(obj, [
-                                {'series_instance_uid': 
-                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.114574119903422033397802325435'}, 
-                                {'series_instance_uid': 
-                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.138854165364608815979917459531'}, 
-                                {'series_instance_uid': 
-                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.145468087448161358735649950068'}, 
-                                {'series_instance_uid': 
-                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.172996149212712697622981481117'}, 
-                                {'series_instance_uid': 
-                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.220280098748387011483480028744'}, 
-                                {'series_instance_uid': 
+                                {'series_instance_uid':
+                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.114574119903422033397802325435'},
+                                {'series_instance_uid':
+                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.138854165364608815979917459531'},
+                                {'series_instance_uid':
+                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.145468087448161358735649950068'},
+                                {'series_instance_uid':
+                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.172996149212712697622981481117'},
+                                {'series_instance_uid':
+                                 '1.3.6.1.4.1.14519.5.2.1.4792.1600.220280098748387011483480028744'},
+                                {'series_instance_uid':
                                  '1.3.6.1.4.1.14519.5.2.1.4792.1600.751332489324940646100460626198'}
                             ])
 
@@ -122,7 +123,7 @@ class TestApi(unittest.TestCase):
 
     def test_series(self):
         req = requests.get(
-            ROOT + 
+            ROOT +
             "/series/"
             "1.3.6.1.4.1.14519.5.2.1.4792.1600.751332489324940646100460626198"
         )
@@ -134,7 +135,7 @@ class TestApi(unittest.TestCase):
 
     def test_series_files(self):
         req = requests.get(
-            ROOT + 
+            ROOT +
             "/series/"
             "1.3.6.1.4.1.14519.5.2.1.4792.1600.751332489324940646100460626198"
             "/files"
@@ -142,7 +143,7 @@ class TestApi(unittest.TestCase):
         obj = req.json()
 
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(obj, [{'file_id': 1152289}, 
+        self.assertEqual(obj, [{'file_id': 1152289},
                                {'file_id': 1152288}])
 
 

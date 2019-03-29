@@ -2,9 +2,11 @@
 
 import requests
 import os
+import unittest
 
 URL = 'http://localhost:8087/v1/import/'
 
+@unittest.skip("Old tests, please ignore")
 def create_import_event():
     r = requests.put(URL + "event", params={
         'source': "A test from python"
@@ -13,11 +15,13 @@ def create_import_event():
     resp = r.json()
     return resp['import_event_id']
 
+@unittest.skip("Old tests, please ignore")
 def close_import_event(import_event_id):
     r = requests.post(URL + f"event/{import_event_id}/close")
     resp = r.json()
 
 
+@unittest.skip("Old tests, please ignore")
 def add_file(filename, import_event_id):
     with open(filename, "rb") as infile:
         r = requests.put(URL + "file", params={
