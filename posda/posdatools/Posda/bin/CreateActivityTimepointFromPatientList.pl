@@ -39,7 +39,7 @@ for my $i (@InputLines){
   my $collection = $i->[0];
   my $site = $i->[1];
   my $patient_id = $i->[2];
-  Query("DistinctVisibleFileReportByPatientCollectionSite")->RunQuery(sub{
+  Query("DistinctVisibleFileReportByPatient")->RunQuery(sub{
     my($row) = @_;
     my %values;
     for my $i (@attr_names) {
@@ -48,7 +48,7 @@ for my $i (@InputLines){
       $values{$i} = $v;
     }
     push @Rows, \%values;
-  }, sub {}, $collection, $site, $patient_id);
+  }, sub {}, $patient_id);
 }
 #########new queries etc
 my %Report;
