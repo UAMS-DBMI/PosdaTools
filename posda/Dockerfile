@@ -47,14 +47,26 @@ RUN cpanm --notest REST::Client \
 				   K/KE/KEN/xls2csv-1.07.tar.gz \
 				   Redis
 
+
+# Swig is needed to build python wrapper for GDCM
+RUN apk --update add swig
+
 # Build GDCM tools
 RUN mkdir -p /build/build
 RUN wget -O /build/master.zip https://github.com/malaterre/GDCM/archive/master.zip
 RUN unzip -d /build /build/master.zip
-RUN cd /build/build && cmake -DGDCM_BUILD_APPLICATIONS=ON -DGDCM_USE_SYSTEM_OPENJPEG=OFF ../GDCM-master && make && make install
+RUN cd /build/build && \
+	cmake -DGDCM_BUILD_APPLICATIONS=ON -DGDCM_USE_SYSTEM_OPENJPEG=OFF -DGDCM_WRAP_PYTHON=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 -DGDCM_BUILD_SHARED_LIBS=ON ../GDCM-master && \
+	make -j 16 && \
+	make install
+
+# The GDCM make install does not put the generated python files
+# in the right place. Move them there
+RUN cp /usr/local/lib/*.py /usr/lib/python3.6/site-packages/ && \
+	cp /usr/local/lib/_gdcmswig.so /usr/lib/python3.6/site-packages/
 
 # Install needed python utils
-RUN pip3 install xlsx2csv mysql-connector python-box
+RUN pip3 install xlsx2csv mysql-connector python-box pydicom
 
 RUN adduser -D posda
 
