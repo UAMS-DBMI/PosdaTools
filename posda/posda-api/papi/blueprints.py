@@ -15,6 +15,7 @@ from .resources import series as se
 from .resources import files as fi
 from .resources import rois
 from .resources import importer
+from .resources import public
 
 
 def configure_blueprints(app):
@@ -44,7 +45,20 @@ def configure_blueprints(app):
         generate_import_blueprint(),
         url_prefix='/v1/import'
     )
+    app.blueprint(
+        generate_public_blueprint(),
+        url_prefix='/v1/public'
+    )
 
+def generate_public_blueprint():
+    blueprint = Blueprint('public')
+
+    blueprint.add_route(
+        public.test,
+        '/test'
+    )
+
+    return blueprint
 def generate_rois_blueprint():
     blueprint = Blueprint('rois')
 
