@@ -35,7 +35,8 @@ async def PossiblyRunningBackgroundSubprocesses(request):
         select
           subprocess_invocation_id, background_subprocess_id,
           when_script_started, when_background_entered, command_line,
-          now()-when_background_entered as time_in_background, background_pid
+          (now()-when_background_entered)::text as time_in_background,
+          background_pid
         from
           subprocess_invocation natural join background_subprocess
         where
@@ -53,7 +54,7 @@ async def background_subprocess_stats_by_user_this_week(request):
         select
          invoking_user
          ,count(subprocess_invocation_id) as count_background
-         ,avg(when_script_ended-when_background_entered) as avg_time_in_background
+         ,avg(when_script_ended-when_background_entered)::text as avg_time_in_background
         from
           subprocess_invocation natural join background_subprocess
         where
