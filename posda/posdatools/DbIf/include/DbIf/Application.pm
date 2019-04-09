@@ -28,6 +28,7 @@ use DBI;
 use Posda::DebugLog;
 use Posda::UUID;
 use Posda::Subprocess;
+use Posda::BackgroundQuery;
 use Data::Dumper;
 
 use HTML::Entities;
@@ -948,6 +949,7 @@ method ListQueries($http, $dyn){
         <td>$i</td>
         <td>
           <?dyn="NotSoSimpleButton" op="SetActiveQuery" caption="Set Active" query_name="$i" sync="Update();"?>
+          <?dyn="NotSoSimpleButton" op="OpenBackgroundQuery" caption="Run in Background" query_name="$i" sync="Update();"?>
           <?dyn="DrawQueryModificationButtons" query_name="$i"?>
         </td>
       </tr>
@@ -1234,6 +1236,21 @@ method OpHelp($http, $dyn) {
 
   my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
   my $child_obj = DbIf::PopupHelp->new($self->{session},
+                                              $child_path, $details);
+  $self->StartJsChildWindow($child_obj);
+}
+
+method OpenBackgroundQuery($http, $dyn){
+
+  my $details = {
+    query_name => $dyn->{query_name},
+    user => $self->get_user,
+    SavedQueriesDir => $self->{SavedQueriesDir},
+    BindingCache => $self->{BindingCache},
+  };
+
+  my $child_path = $self->child_path("BackgroundQuery_$dyn->{cmd}");
+  my $child_obj = Posda::BackgroundQuery->new($self->{session},
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }
@@ -2583,7 +2600,7 @@ method RenderActivityDropDown($http, $dyn){
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
   my @sorted_ids = $self->SortedActivityIds($self->{Activities});
   for my $i (@sorted_ids){
-    push @activity_list, [$i , "$self->{Activities}->{$i}->{desc}" .
+    push @activity_list, [$i , "$i: $self->{Activities}->{$i}->{desc}" .
       " ($self->{Activities}->{$i}->{user})"];
   }
   $self->SelectByValue($http, {
