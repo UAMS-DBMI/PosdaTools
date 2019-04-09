@@ -1,0 +1,30 @@
+<div class="module" >
+  <table style="width:100%">
+    <tr>
+      <td colspan="8">
+        <h1>Possibly Running Background Subprocesses</h1>
+      </td>
+      </tr>
+    <tr>
+      <th>Sub Invocation Id</th>
+      <th>Sub ID</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Entered Background</th>
+      <th>Command</th>
+      <th>Time in Background</th>
+      <th>PID</th>
+    </tr>
+    <tr *ngFor= "let my_rows of my_prbs">
+      <td>{{my_rows.subprocess_invocation_id}}</td>
+      <td>{{my_rows.background_subprocess_id}}</td>
+      <td>{{my_rows.when_script_started}}</td>
+      <td>{{my_rows.when_script_ended}}</td>
+      <td>{{my_rows.when_background_entered}}</td>
+      <td>{{my_rows.command_line}}</td>
+      <td>{{my_rows.time_in_background}}</td>
+      <td>{{my_rows.background_pid}}</td>
+    </tr>
+
+  </table>
+</div>

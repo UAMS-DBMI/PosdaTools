@@ -1,0 +1,14 @@
+.container{
+  display:flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+}
+.box1{
+  padding: 2em;
+  flex: 1 1 0;
+}
+
+.my_title{
+  color: #607d8b;
+}

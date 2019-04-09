@@ -1,0 +1,16 @@
+<h1 class="my_title">{{title}}</h1>
+<!---
+<nav>
+  <a routerLink="/dbifqueries">Slow DBIF Queries</a>
+</nav> ----->
+
+<!-----<router-outlet></router-outlet>------>
+<div class="container">
+    <app-dbifqueries [days]="1" class="box1"></app-dbifqueries>
+    <app-dbifqueries [days]="7" class="box1"></app-dbifqueries>
+</div>
+
+<div class="container">
+    <app-prbs class="box1"></app-prbs>
+    <app-bsbu class="box1"></app-bsbu>
+</div>
