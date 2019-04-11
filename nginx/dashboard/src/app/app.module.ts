@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { DBIFqueriesComponent } from './dbifqueries/dbifqueries.component';
 import { PRBSComponent } from './prbs/prbs.component';
 import { BSBUComponent } from './bsbu/bsbu.component';
+import { FwtComponent } from './fwt/fwt.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DBIFqueriesComponent,
     PRBSComponent,
-    BSBUComponent
+    BSBUComponent,
+    FwtComponent
   ],
   imports: [
     BrowserModule,

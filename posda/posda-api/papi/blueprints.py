@@ -65,6 +65,10 @@ def generate_dashboard_blueprint():
         dashboard.background_subprocess_stats_by_user_this_week,
         '/bsbu'
     )
+    blueprint.add_route(
+        dashboard.files_without_type,
+        '/fwt'
+    )
 
     return blueprint
 
