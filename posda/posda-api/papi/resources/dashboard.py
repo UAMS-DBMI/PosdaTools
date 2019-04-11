@@ -67,3 +67,11 @@ async def background_subprocess_stats_by_user_this_week(request):
     return json_records(
         await db.fetch(query)
     )
+
+async def files_without_type(request):
+    query = """\
+        select * from files_without_type;
+    """
+    return json_records(
+        await db.fetch(query)
+    )

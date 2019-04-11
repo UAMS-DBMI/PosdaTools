@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import {Slow_dbif_queries_class} from './dbifqueries/slow_dbif_queries_class';
 import {Prbs} from './prbs/prbs';
 import {Bsbu} from './bsbu/bsbu';
+import {Fwt} from './fwt/fwt';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,11 @@ export class ApiService {
   get_background_subprocess_stats_by_user_this_week():Observable<Bsbu[]>{
     var url = '/papi/v1/dashboard/bsbu';
     return this.http.get<Bsbu[]>(url);
+  }
+
+  getFilesWithoutType():Observable<Fwt[]>{
+    var url = '/papi/v1/dashboard/fwt';
+    return this.http.get<Fwt[]>(url);
   }
 
 
