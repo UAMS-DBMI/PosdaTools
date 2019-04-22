@@ -2563,6 +2563,10 @@ method UpdatesInserts($http, $dyn){
 #############################
 #Here Bill is putting in the "Activities" Page assortment
 method Activities($http, $dyn){
+  unless(defined $self->{ActivitySelected}){ $self->{ActivitySelected} = "<none>" }
+  if($self->{ActivitySelected} ne "<none>"){
+    return $self->NewActivitiesPage($http, $dyn);
+  }
   $self->RefreshActivities;
   $self->RefreshEngine($http, $dyn, qq{
     <h2>Activities</h2>
@@ -2692,6 +2696,403 @@ method RefreshActivities{
     };
   }, sub {});
   $self->{Activities} = \%Activities;
+}
+#############################
+# New Activities Page
+method NewActivitiesPage($http, $dyn){
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+  });
+  $self->DrawActivitySelected($http, $dyn);
+  $self->DrawClearActivityButton($http, $dyn);
+  $http->queue("&nbsp;&nbsp;Mode:&nbsp;");
+  $self->DrawActivityModeSelector($http, $dyn);
+  $http->queue(qq{</div><hr>});
+  my $method = $self->{ActivityModes}->{$self->{ActivityModeSelected}};
+  if($self->can($method)){
+    $self->$method($http, $dyn);
+  } else {
+    $http->queue("method \"$method\" is not yet defined\n");
+  }
+}
+method DrawActivitySelected($http, $dyn){
+  $http->queue("Activity $self->{ActivitySelected}: ");
+  $http->queue("$self->{Activities}->{$self->{ActivitySelected}}->{desc}");
+}
+method DrawClearActivityButton($http, $dyn){
+  $self->NotSoSimpleButton($http, {
+    op => "ClearActivity",
+    caption => "Choose Another Activity",
+    sync => "Update();",
+  });
+}
+method ClearActivity($http, $dyn){
+  $self->{ActivitySelected} = "<none>";
+}
+method DrawActivityModeSelector($http, $dyn){
+  unless(defined $self->{ActivityModeSelected}){
+    $self->{ActivityModeSelected} = 0;
+  }
+  my @activity_mode_list = (
+    [0, "ShowActivityTimeline"],
+    [1, "Inbox"],
+    [2, "ActivityOperations"],
+  );
+  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+  for my $i (@activity_mode_list){
+    $self->{ActivityModes}->{$i->[0]} = $i->[1];
+  }
+  $http->queue("<div width=100>");
+  $self->SelectByValue($http, {
+    op => 'SetActivityMode',
+    width => '100',
+  });
+  for my $i (@activity_mode_list){
+    $http->queue("<option value=\"$i->[0]\"");
+    if($i->[0] eq $self->{ActivityModeSelected}){
+      $http->queue(" selected")
+    }
+    $http->queue(">$i->[1]</option>");
+  }
+
+  $http->queue(qq{
+    </select> </div>
+  });
+}
+method SetActivityMode($http, $dyn){
+  $self->{ActivityModeSelected} = $dyn->{value};
+  $self->AutoRefresh;
+}
+method ShowActivityTimeline($http, $dyn){
+  my @time_line;
+  Query('InboxContentByActivityIdWithCompletion')->RunQuery(sub{
+    my($row) = @_;
+    push @time_line, $row;
+  }, sub {}, $self->{ActivitySelected});
+  my @time_points;
+  Query('ActivityTimepointsForActivityWithFileCount')->RunQuery(sub{
+    my($row) = @_;
+    push @time_points, $row;
+  }, sub {}, $self->{ActivitySelected});
+  $self->{NewActivityTimeline}->{timeline} = \@time_line;
+  $self->{NewActivityTimeline}->{timepoints} = \@time_points;
+  $http->queue("<table class=\"table table-striped table-condensed\">");
+  $http->queue("<tr><th rowspan=2>id</th>" .
+    "<th rowspan=2>operation</th>" .
+    "<th rowspan=2>start</th>" .
+    "<th rowspan=2>duration</th>" .
+    "<th rowspan=2>ol</th>" .
+    "<th>tp</th>" .
+    "<th colspan=2>");
+  $self->NotSoSimpleButton($http, {
+    op => "CompareTimepoints",
+    caption => "cmp",
+    sync => "Update();",
+  });
+  $http->queue("</th>" .
+    "<th>tp</th>" .
+    "<th rowspan=2>view</th>" .
+    "<th rowspan=2>user</th>" .
+    "<th rowspan=2>command</th>" ,
+    "</tr>");
+  $http->queue("<tr><th>id</th><th>fr</th><th>to</th><th>files</th></tr>");
+  my @time_line_cp = @time_line;
+  my @time_points_cp = @time_points;
+  my $next_event = shift(@time_line_cp);
+  my $next_tp = shift(@time_points_cp);
+  while(defined($next_event)){
+    my $i = $next_event;
+    my($user_name, $id, $operation_name, $when, $ended,
+      $duration, $file_id, $sub_id, $command_line,
+      $spreadsheet_file_id) = @$next_event;
+    my($tp,$tp_files);
+    if($next_tp->[4] ge $when && $next_tp->[4] le $ended){
+      $tp = $next_tp->[3];
+      $tp_files = $next_tp->[7];
+      $next_tp = shift(@time_points_cp);
+    } else {
+      $tp = undef;
+      $tp_files = undef;
+    }
+    $http->queue("<tr>");
+    $http->queue("<td>$id</td>");
+    my($hrs_min_etc, $sec);
+    $http->queue("<td>$operation_name</td>");
+    my $start_t = substr($when, 0, 22);
+    $http->queue("<td>$start_t</td>");
+    my $dur = $duration;
+    if($dur =~ /(.*:)(\d+\.\d+)$/){
+      $dur = $1 . sprintf("%02.2f", $2);
+    }
+    $http->queue("<td>$dur</td>");
+    $http->queue("<td>");
+    $http->queue($self->CountOverlappingEvents($next_event, \@time_line_cp));
+    $http->queue("</td>");
+    $http->queue("<td>");
+    if(defined $tp) {
+      $http->queue("$tp");
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    if($tp){
+      my $url = $self->RadioButtonSync("from",$tp,
+        "ProcessRadioButton",
+        (defined($self->{NewActivityTimeline}->{from}) && $self->{NewActivityTimeline}->{from} == $tp) ? 1 : 0,
+        "&control=NewActivityTimeline","Update();");
+      $http->queue($url);
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    if($tp){
+      my $url = $self->RadioButtonSync("to",$tp,
+        "ProcessRadioButton",
+        (defined($self->{NewActivityTimeline}->{to}) && $self->{NewActivityTimeline}->{to} == $tp) ? 1 : 0,
+        "&control=NewActivityTimeline","Update();");
+      $http->queue($url);
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    if(defined $tp_files) {
+      $http->queue("$tp_files");
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "ShowEmail",
+      caption => "email",
+      file_id => $i->[6],
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "ShowResponse",
+      caption => "resp",
+      sub_id => $i->[7],
+      sync => "Update();",
+    });
+    if(defined $spreadsheet_file_id){
+      $self->NotSoSimpleButton($http, {
+        op => "ShowInput",
+        caption => "input",
+        file_id => $i->[9],
+        sync => "Update();",
+      });
+   }
+    $http->queue("</td>");
+    $http->queue("<td>$i->[0]");
+    $http->queue("<td>$i->[8]");
+    $http->queue("</tr>");
+    $next_event = shift(@time_line_cp);
+  }
+  $http->queue("</table>");
+}
+method ShowEmail($http, $dyn){
+  my $class = 'Posda::PopupTextViewer';
+  eval "require $class";
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    file_id =>  $dyn->{file_id},
+  };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "ShowEmail_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+method ShowResponse($http, $dyn){
+  my $class = 'DbIf::ShowSubprocessLines';
+  eval "require $class";
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    sub_id =>  $dyn->{sub_id},
+  };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "DbIf::ShowSubprocessLines failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "ShowSubprocessResponse$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+method ShowInput($http, $dyn){
+  my $class = 'Posda::PopupTextViewer';
+  eval "require $class";
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    file_id =>  $dyn->{file_id},
+  };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "ShowInput_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+method ProcessRadioButton($http, $dyn){
+  my $value = $dyn->{value};
+  my $control = $dyn->{control};
+  my $group = $dyn->{group};
+  my $checked = $dyn->{checked};
+  $self->{$control}->{$group} = $value;
+}
+method CountOverlappingEvents($event, $event_list){
+  my $count = 0;
+  for my $i (@$event_list){
+    if(
+      ($i->[3] ge $event->[3] && $i->[3] le $event->[4]) ||
+      ($i->[4] ge $event->[3] && $i->[4] le $event->[4])
+    ){ $count += 1; }
+  }
+  return $count;
+}
+method CompareTimepoints($http, $dyn){
+  my $class = "Posda::ProcessPopup";
+  eval "require $class";
+  my $params = {
+    button => "CompareTimepoints",
+    from_timepoint_id => $self->{NewActivityTimeline}->{from},
+    to_timepoint_id => $self->{NewActivityTimeline}->{to},
+    activity_id => $self->{ActivitySelected}
+  };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "CompareTimepoint_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+method ActivityOperations($http, $dyn){
+  my @buttons =  (
+    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 0, 0],
+    [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
+    [ "VisualReviewFromTimepoint", "Schedule Visual Review", 0, 2],
+    [ "PhiReviewFromTimepoint", "Schedule PHI Scan", 0, 3],
+    [ "ConsistencyFromTimePoint", "Check Consistency", 0, 4],
+    [ "LinkRtFromTimepoint", "Link RT Data for ItcTools", 0, 5],
+    [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
+    [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
+    [ "SummarizeStructLinkage", "Summarize Structure Set Linkages for a File", 1, 1],
+    [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
+    [ "CondensedActivityTimepointReport", "Produce Condensed Activity Timepoint Report", 1, 3],
+    [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
+    [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
+    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
+    [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
+    [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
+    [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
+    [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
+    [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
+  );
+  my @Cols;
+  for my $i (@buttons){
+    my($op, $cap, $col, $row) = @$i;
+    unless(defined $Cols[$col]) {
+      $Cols[$col] = [];
+    }
+    $Cols[$col]->[$row] = [$op, $cap];
+  }
+  $self->{NewActivities}->{ops} = {};
+  $http->queue('<table class="table table-striped table-condensed">');
+  my $c0c = @{$Cols[0]};
+  my $c1c = @{$Cols[1]};
+  my $c2c = @{$Cols[2]};
+  while($c0c > 0 || $c1c > 0 || $c2c > 0 ){
+    $http->queue("<tr>");
+    if($c0c > 0){
+      my $foo = shift(@{$Cols[0]});
+      $c0c = @{$Cols[0]};
+      my($op, $cap) = @$foo;
+      $self->{NewActivities}->{ops}->{$op} = $cap;
+      $http->queue("<td>");
+      $self->NotSoSimpleButton($http, {
+        op => "InvokeOperation",
+        caption => $cap,
+        operation => $op,
+        sync => "Update();",
+      });
+      $http->queue("</td>");
+    } else {
+      $http->queue("<td></td>");
+    }
+    if($c1c > 0){
+      my $foo = shift(@{$Cols[1]});
+      $c1c = @{$Cols[1]};
+      my($op, $cap) = @$foo;
+      $self->{NewActivities}->{ops}->{$op} = $cap;
+      $http->queue("<td>");
+      $self->NotSoSimpleButton($http, {
+        op => "InvokeOperation",
+        caption => $cap,
+        operation => $op,
+        sync => "Update();",
+      });
+      $http->queue("</td>");
+    } else {
+      $http->queue("<td></td>");
+    }
+    if($c2c > 0){
+      my $foo = shift(@{$Cols[2]});
+      $c2c = @{$Cols[2]};
+      my($op, $cap) = @$foo;
+      $self->{NewActivities}->{ops}->{$op} = $cap;
+      $http->queue("<td>");
+      $self->NotSoSimpleButton($http, {
+        op => "InvokeOperation",
+        caption => $cap,
+        operation => $op,
+        sync => "Update();",
+      });
+      $http->queue("</td>");
+    } else {
+      $http->queue("<td></td>");
+    }
+    $http->queue("</tr>");
+  }
+  $http->queue("</table>");
+}
+method InvokeOperation($http, $dyn){
+  my $class = "Posda::ProcessPopup";
+  eval "require $class";
+  my $params = {
+    button => $dyn->{operation},
+    activity_id => $self->{ActivitySelected},
+    notify => $self->get_user,
+  };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "StartBackground_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
 }
 #############################
 #Here Bill is putting in the "ShowBackground"
