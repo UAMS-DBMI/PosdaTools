@@ -53,13 +53,13 @@ sub GetAttrs{
           my($time, $id) = @_;
           unless(defined $time) { return undef };
           if(
-            $time && 
+            $time &&
             $time =~ /^(\d\d)(\d\d)(\d\d)$/
           ){
             $time = "$1:$2:$3";
             return $time;
           } elsif (
-            $time && 
+            $time &&
             $time =~ /^(\d\d)(\d\d)(\d\d)\.(\d+)$/
           ){
             $time = "$1:$2:$3.$4";
@@ -103,7 +103,7 @@ sub GetAttrs{
   }
   return \%ret;
 }
-sub Patient{ 
+sub Patient{
   my($db, $ds, $id, $hist, $errors) = @_;
   my $patient_parms = {
    dob   => "(0010,0030)",
@@ -499,7 +499,7 @@ sub ImagePixel{
         $same = 0;
       }
     }
-    if($same) { 
+    if($same) {
       $image_id = $h->{image_id};
       $hist->{already_existing_image} = 1;
       last image_row ;
@@ -633,7 +633,7 @@ sub SlopeIntercept{
   my $slope = $ds->ExtractElementBySig("(0028,1053)");
   my $intercept = $ds->ExtractElementBySig("(0028,1052)");
   my $units = $ds->ExtractElementBySig("(0054,1001)");
-  unless(defined($slope) && defined($intercept)){ 
+  unless(defined($slope) && defined($intercept)){
     print STDERR "no slope intercept for file $id\n";
     push (@$errors, "no slope intercept for file $id");
     return;
@@ -902,15 +902,15 @@ sub StructureSet{
     my $cntr_img_item = $match->[3];
     my $to_for = $ds->ExtractElementBySig("(3006,0010)[$for_item](0020,0052)");
     my $v_parms = {
-      study_instance_uid => 
+      study_instance_uid =>
         "(3006,0010)[$for_item](3006,0012)[$stdy_item](0008,1155)",
-      series_instance_uid => 
+      series_instance_uid =>
         "(3006,0010)[$for_item](3006,0012)[$stdy_item](3006,0014)" .
         "[$series_item](0020,000e)",
-      sop_class => 
+      sop_class =>
         "(3006,0010)[$for_item](3006,0012)[$stdy_item](3006,0014)" .
         "[$series_item](3006,0016)[$cntr_img_item](0008,1150)",
-      sop_instance => 
+      sop_instance =>
         "(3006,0010)[$for_item](3006,0012)[$stdy_item](3006,0014)" .
         "[$series_item](3006,0016)[$cntr_img_item](0008,1155)",
     };
@@ -1089,11 +1089,11 @@ sub RoiContour{
       for my $m21 (@{$m2->{list}}){
         my $cii = $m21->[0];
         my $ci_parms = {
-          sop_class => 
+          sop_class =>
             "(3006,0039)[$rci](3006,0040)[$ci](3006,0016)[$cii](0008,1150)",
-          sop_inst => 
+          sop_inst =>
             "(3006,0039)[$rci](3006,0040)[$ci](3006,0016)[$cii](0008,1155)",
-          frame => 
+          frame =>
             "(3006,0039)[$rci](3006,0040)[$ci](3006,0016)[$cii](0008,1160)",
         };
         my $parms = GetAttrs($ds, $ci_parms, {
@@ -1574,7 +1574,7 @@ sub RtToleranceTables{
       my $j = $mq->[0];
       my $bldt_parms = {
         beam_limit_dev_type => "(300a,0040)[$i](300a,0048)[$j](300a,00b8)",
-        beam_limit_dev_pos_tolerance => 
+        beam_limit_dev_pos_tolerance =>
           "(300a,0040)[$i](300a,0048)[$j](300a,004a)",
       };
       my $parms = GetAttrs($ds, $bldt_parms, {}, $errors);
@@ -1829,7 +1829,7 @@ sub RtPatientSetup{
       for my $m5 (@{$s5->{list}}){
         my $j = $m5->[0];
         my $ins_prmc = $db->prepare(
-          "insert into rt_plan_respirationr_motion_comp(\n" .
+          "insert into rt_plan_respiratory_motion_comp(\n" .
           "  plan_id,\n" .
           "  patient_setup_num,\n" .
           "  sequence_index,\n" .
@@ -1848,13 +1848,13 @@ sub RtPatientSetup{
           ")"
         );
         my $prmc_parms = {
-          respiratory_motion_comp_technique => 
+          respiratory_motion_comp_technique =>
             "(300a,0180)[$i](300a,0410)[$j](0018,9170)",
-          respiratory_signal_source => 
+          respiratory_signal_source =>
             "(300a,0180)[$i](300a,0410)[$j](0018,9171)",
-          respiratory_motion_com_tech_desc => 
+          respiratory_motion_com_tech_desc =>
             "(300a,0180)[$i](300a,0410)[$j](0018,9185)",
-          respiratory_signal_source_id => 
+          respiratory_signal_source_id =>
             "(300a,0180)[$i](300a,0410)[$j](0018,9186)",
         };
         my $parms = GetAttrs($ds, $prmc_parms, {}, $errors);
@@ -1924,7 +1924,7 @@ sub RtFractionScheme{
     };
     my $parms = GetAttrs($ds, $rfpfg_parms, $ModList, $errors);
     unless(defined $parms->{fraction_group_number}){
-      push(@$errors, 
+      push(@$errors,
         "Undefined fraction group number (300a,0070)[$i](300a,0071)");
       next fraction_group;
     }
@@ -2401,7 +2401,7 @@ sub RtBeams{
         sop_class_uid => "(300a,00b0)[$i](300c,0042)[$j](0008,1150)",
         sop_instance_uid => "(300a,00b0)[$i](300c,0042)[$j](0008,1155)",
         reference_image_number => "(300a,00b0)[$i](300c,0042)[$j](300a,00c8)",
-        start_cum_meterset_weight => 
+        start_cum_meterset_weight =>
           "(300a,00b0)[$i](300c,0042)[$j](300c,0008)",
         end_cum_meterset_weight => "(300a,00b0)[$i](300c,0042)[$j](300c,0009)",
       };
@@ -2417,7 +2417,7 @@ sub RtBeams{
         next image_referenced_from_beam;
       }
       unless(defined $parms->{reference_image_number}){
-        push(@$errors, 
+        push(@$errors,
           "no reference_image_number $irfb_parms->{reference_image_number}");
         next image_referenced_from_beam;
       }
@@ -2730,13 +2730,13 @@ sub RtBeams{
         ")"
       );
       my $bb_parms = {
-        referenced_roi_number => 
+        referenced_roi_number =>
           "(300a,00b0)[$i](300c,00b0)[$j](3006,0084)",
-        bolus_id => 
+        bolus_id =>
           "(300a,00b0)[$i](300c,00b0)[$j](300a,00dc)",
-        bolus_accessory_code => 
+        bolus_accessory_code =>
           "(300a,00b0)[$i](300c,00b0)[$j](300a,00f9)",
-        bolus_description => 
+        bolus_description =>
           "(300a,00b0)[$i](300c,00b0)[$j](300a,00dd)"
       };
       my $ModList = {
@@ -3576,9 +3576,9 @@ sub RTDvh{
         for my $i (@{$rt_dvh_dvh_list}){
           my $dvh_dvh_i = $i->[0];
           my $dvh_dvh_roi_parms = {
-            referenced_roi => 
+            referenced_roi =>
               "(3004,0050)[$dvh_i](3004,0060)[$dvh_dvh_i](3006,0084)",
-            roi_contribution_type  => 
+            roi_contribution_type  =>
               "(3004,0050)[$dvh_i](3004,0060)[$dvh_dvh_i](3004,0062)",
           };
           $ModList = {};
@@ -3649,7 +3649,7 @@ sub SRSeries{
   my($db, $ds, $id, $hist, $errors) = @_;
   print "SrSeries Module not yet implemented\n";
 }
-sub Retired{ 
+sub Retired{
   my($db, $ds, $id, $hist, $errors) = @_;
   print "Retired Module not yet implemented\n";
 }
@@ -3657,7 +3657,7 @@ sub RealWorldMapping{
   my($db, $ds, $id, $hist, $errors) = @_;
   print "RealWorldMapping Module not yet implemented\n";
 }
-sub UnImplemented{ 
+sub UnImplemented{
   my($db, $ds, $id, $hist, $errors) = @_;
   print "UnImplemented Module not yet implemented\n";
 }
