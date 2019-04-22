@@ -13,8 +13,9 @@ select
   comment, creating_user, count(distinct file_id) as file_count
 from
   activity a join activity_timepoint t using(activity_id)
-  join activity_timepoint_file using (activity_timepoint_id)
+  left join activity_timepoint_file using (activity_timepoint_id)
 where
   activity_id = ?
 group by activity_id, a.when_created, brief_description,
   activity_timepoint_id, t.when_created, comment, creating_user
+order by t.when_created desc
