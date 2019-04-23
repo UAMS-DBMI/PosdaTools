@@ -69,7 +69,10 @@ def generate_dashboard_blueprint():
         dashboard.files_without_type,
         '/fwt'
     )
-
+    blueprint.add_route(
+        dashboard.get_file_time_chart,
+        '/ftc'
+    )
     return blueprint
 
 def generate_rois_blueprint():

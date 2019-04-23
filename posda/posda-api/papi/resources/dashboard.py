@@ -70,7 +70,24 @@ async def background_subprocess_stats_by_user_this_week(request):
 
 async def files_without_type(request):
     query = """\
-        select * from files_without_type;
+        select * from files_without_type
+        limit 20;
+    """
+    return json_records(
+        await db.fetch(query)
+    )
+
+async def get_file_time_chart(request):
+    query = """\
+    select
+    	*
+    from
+    	file_imports_over_time
+    where
+    	importyear is not null
+    order by
+    	importyear
+    	,importmonth;
     """
     return json_records(
         await db.fetch(query)

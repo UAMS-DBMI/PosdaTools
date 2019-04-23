@@ -5,6 +5,7 @@ import {Slow_dbif_queries_class} from './dbifqueries/slow_dbif_queries_class';
 import {Prbs} from './prbs/prbs';
 import {Bsbu} from './bsbu/bsbu';
 import {Fwt} from './fwt/fwt';
+import {Ftc} from './file-time-chart/ftc';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,11 @@ export class ApiService {
   getFilesWithoutType():Observable<Fwt[]>{
     var url = '/papi/v1/dashboard/fwt';
     return this.http.get<Fwt[]>(url);
+  }
+
+  get_file_time_chart():Observable<Ftc[]>{
+    var url = '/papi/v1/dashboard/ftc';
+    return this.http.get<Ftc[]>(url);
   }
 
 
