@@ -1,0 +1,20 @@
+<div class="module" >
+  <table style="width:100%">
+    <tr>
+      <td colspan="3">
+        <h1>Background Subprocesses by User for this week</h1>
+      </td>
+      </tr>
+    <tr>
+      <th>Invoking User</th>
+      <th>Count</th>
+      <th>Avg Runtime</th>
+    </tr>
+    <tr *ngFor= "let my_rows of my_bsbu">
+      <td>{{my_rows.invoking_user}}</td>
+      <td>{{my_rows.count_background}}</td>
+      <td>{{my_rows.avg_time_in_background}}</td>
+    </tr>
+
+  </table>
+</div>

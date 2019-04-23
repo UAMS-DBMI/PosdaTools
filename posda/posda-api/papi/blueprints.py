@@ -15,6 +15,7 @@ from .resources import series as se
 from .resources import files as fi
 from .resources import rois
 from .resources import importer
+from .resources import dashboard
 
 
 def configure_blueprints(app):
@@ -44,6 +45,35 @@ def configure_blueprints(app):
         generate_import_blueprint(),
         url_prefix='/v1/import'
     )
+    app.blueprint(
+        generate_dashboard_blueprint(),
+        url_prefix='/v1/dashboard'
+    )
+
+def generate_dashboard_blueprint():
+    blueprint = Blueprint('dashboard')
+
+    blueprint.add_route(
+        dashboard.slow_dbif_queries,
+        '/slow_dbif_queries/<days>'
+    )
+    blueprint.add_route(
+        dashboard.PossiblyRunningBackgroundSubprocesses,
+        '/prbs'
+    )
+    blueprint.add_route(
+        dashboard.background_subprocess_stats_by_user_this_week,
+        '/bsbu'
+    )
+    blueprint.add_route(
+        dashboard.files_without_type,
+        '/fwt'
+    )
+    blueprint.add_route(
+        dashboard.get_file_time_chart,
+        '/ftc'
+    )
+    return blueprint
 
 def generate_rois_blueprint():
     blueprint = Blueprint('rois')

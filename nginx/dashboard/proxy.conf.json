@@ -1,0 +1,10 @@
+{
+	"/vapi": {
+		"target": "http://localhost",
+		"secure": false
+	},
+	"/papi": {
+		"target": "http://localhost",
+		"secure": false
+	}
+}

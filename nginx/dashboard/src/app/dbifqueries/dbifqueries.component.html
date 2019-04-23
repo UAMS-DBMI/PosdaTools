@@ -1,0 +1,30 @@
+<div class="module" >
+  <table style="width:100%">
+    <tr>
+      <td colspan="7">
+        <h1 *ngIf="days=='7'">Slow DBIF Queries in the last week </h1>
+        <h1 *ngIf="days=='1'">Slow DBIF Queries in the last 24 hours</h1>
+        <h1 *ngIf="days!='7' && days!='1'">Slow DBIF Queries in the last {{days}} days.</h1>
+      </td>
+      </tr>
+    <tr>
+      <th>ID</th>
+      <th>Query</th>
+      <th>Invoking User</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Rows</th>
+      <th>Query Time</th>
+    </tr>
+    <tr *ngFor= "let my_rows of my_slow_queries">
+      <td>{{my_rows.query_invoked_by_dbif_id}}</td>
+      <td>{{my_rows.query_name}}</td>
+      <td>{{my_rows.invoking_user}}</td>
+      <td>{{my_rows.query_start_time}}</td>
+      <td>{{my_rows.query_end_time}}</td>
+      <td>{{my_rows.number_of_rows}}</td>
+      <td>{{my_rows.query_time}}</td>
+    </tr>
+
+  </table>
+</div>

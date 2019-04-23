@@ -1,0 +1,6 @@
+{
+	"/papi": {
+		"target": "http://tcia-posda-rh-2.ad.uams.edu/",
+		"secure": false
+	}
+}

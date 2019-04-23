@@ -1,0 +1,9 @@
+{
+	"/papi": {
+		"target": "http://localhost:8087",
+		"secure": false,
+    "pathRewrite": {
+      "^/papi": ""
+    }
+	}
+}

@@ -1,0 +1,11 @@
+<div *ngIf="ready" class="module" >
+      <h1>Files Over Time</h1>
+      <canvas baseChart width="400" height="400"
+        [datasets]="lineChartData"
+        [labels]="lineChartLabels"
+        [colors]="lineChartColors"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+        [plugins]="lineChartPlugins">
+      </canvas>
+</div>
