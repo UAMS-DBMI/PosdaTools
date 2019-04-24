@@ -1,0 +1,17 @@
+.module {
+  padding: 20px;
+  text-align: center;
+  border-radius: 2px;
+  background-color: #CC0000;
+  color: #660000;
+}
+
+h1 {
+text-align: center;
+}
+td {
+text-align: left;
+}
+th {
+text-align: left;
+}
