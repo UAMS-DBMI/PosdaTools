@@ -23,7 +23,7 @@ export class FileTimeChartComponent implements OnInit {
   public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [];
-  public lineChartOptions: (ChartOptions & { responsive: any }) = {
+  public lineChartOptions: ChartOptions = {
     responsive: true,
   };
 
