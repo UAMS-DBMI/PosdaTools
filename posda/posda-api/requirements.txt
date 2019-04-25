@@ -4,5 +4,4 @@ aiofiles
 chardet
 
 requests
-green
 numpy

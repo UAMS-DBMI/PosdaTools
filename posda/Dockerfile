@@ -28,6 +28,7 @@ RUN apk --update add alpine-sdk \
 RUN apk --update add perl-json \
 					 perl-data-uuid \
 					 perl-dbd-pg \
+					 perl-dbd-mysql \
 					 perl-switch \
 					 perl-term-readkey \
 					 perl-text-csv \
@@ -68,27 +69,28 @@ RUN cp /usr/local/lib/*.py /usr/lib/python3.6/site-packages/ && \
 # Install needed python utils
 RUN pip3 install xlsx2csv mysql-connector python-box pydicom
 
-RUN adduser -D posda
+RUN addgroup -g 2123 fakeposda
+RUN adduser -D -G fakeposda posda
 
-COPY --chown=posda:posda posda-api/ /posda-api/
+COPY --chown=posda:fakeposda posda-api/ /posda-api/
 RUN pip3 install -r /posda-api/requirements.txt
 
 
 # Work around issue with volume persmissions
 RUN mkdir /home/posda/cache
-RUN chown posda:posda /home/posda/cache
+RUN chown posda:fakeposda /home/posda/cache
 VOLUME ["/home/posda/cache"]
 
 COPY docker-entrypoint /
-COPY --chown=posda:posda posda.env /home/posda/posdatools/
+COPY --chown=posda:fakeposda posda.env /home/posda/posdatools/
 
 WORKDIR /home/posda
 ENV PYTHONPATH /home/posda/posdatools/python
 
 # Copy actual posdatools last, to speed up rebuilds
-COPY --chown=posda:posda posdatools /home/posda/posdatools
+COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
 
-USER posda:posda
+USER posda:fakeposda
 ENTRYPOINT ["/docker-entrypoint"]
 CMD ["main"]
 
