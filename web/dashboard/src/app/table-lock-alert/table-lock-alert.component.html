@@ -1,21 +1,23 @@
-<div class="module" *ngIf="my_tla.length > 0">
-  <table style="width:100%">
-    <tr>
-      <td colspan="8">
-        <h1>Locked Table Alert</h1>
-      </td>
+<div *ngIf="my_tla">
+  <div class="module" *ngIf="my_tla.length > 0">
+    <table style="width:100%">
+      <tr>
+        <td colspan="8">
+          <h1>Locked Table Alert</h1>
+        </td>
+        </tr>
+      <tr>
+        <th>PID</th>
+        <th>Usename</th>
+        <th>Blocked By</th>
+        <th>Blocked Query</th>
       </tr>
-    <tr>
-      <th>PID</th>
-      <th>Usename</th>
-      <th>Blocked By</th>
-      <th>Blocked Query</th>
-    </tr>
-    <tr *ngFor= "let my_rows of my_tla">
-      <td>{{my_rows.pid}}</td>
-      <td>{{my_rows.usename}}</td>
-      <td>{{my_rows.blocked_by}}</td>
-      <td>{{my_rows.blocked_query}}</td>
-    </tr>
-  </table>
+      <tr *ngFor= "let my_rows of my_tla">
+        <td>{{my_rows.pid}}</td>
+        <td>{{my_rows.usename}}</td>
+        <td>{{my_rows.blocked_by}}</td>
+        <td>{{my_rows.blocked_query}}</td>
+      </tr>
+    </table>
+  </div>
 </div>

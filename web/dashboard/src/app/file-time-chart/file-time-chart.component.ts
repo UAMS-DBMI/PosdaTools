@@ -3,6 +3,8 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { ApiService } from '../api.service';
 import {Ftc} from "./ftc";
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-file-time-chart',
@@ -26,14 +28,14 @@ export class FileTimeChartComponent implements OnInit {
   public lineChartOptions: ChartOptions = {
     responsive: true,
   };
+  private refresher: Subscription;
 
   constructor(private myService: ApiService){ }
 
   ngOnInit() {
-
-    console.log("ftc init");
-    this.myService.get_file_time_chart()
-     .subscribe(rows => this.setData(rows));
+    this.refresher = timer(0, (1000 * 60 * 5)).pipe(
+      switchMap(() => this.myService.get_file_time_chart())
+    ).subscribe(rows => this.setData(rows));
   }
 
   setData(mydataset:Ftc[]){
@@ -50,5 +52,7 @@ export class FileTimeChartComponent implements OnInit {
     this.lineChartLabels = dates;
     this.ready = true;
   }
+
+
 
 }
