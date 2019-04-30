@@ -10,6 +10,7 @@ import { PRBSComponent } from './prbs/prbs.component';
 import { BSBUComponent } from './bsbu/bsbu.component';
 import { FwtComponent } from './fwt/fwt.component';
 import { FileTimeChartComponent } from './file-time-chart/file-time-chart.component';
+import { TableLockAlertComponent } from './table-lock-alert/table-lock-alert.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { FileTimeChartComponent } from './file-time-chart/file-time-chart.compon
     PRBSComponent,
     BSBUComponent,
     FwtComponent,
-    FileTimeChartComponent
+    FileTimeChartComponent,
+    TableLockAlertComponent
   ],
   imports: [
     BrowserModule,
