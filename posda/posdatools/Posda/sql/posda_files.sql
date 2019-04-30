@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.7 (Ubuntu 10.7-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1066,6 +1066,26 @@ CREATE TABLE public.dbif_query_args (
 
 
 --
+-- Name: dedup_dicom_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dedup_dicom_file (
+    file_id integer,
+    dataset_digest text,
+    xfr_stx text,
+    has_meta boolean,
+    is_dicom_dir boolean,
+    has_sop_common boolean,
+    dicom_file_type text,
+    has_pixel_data boolean,
+    pixel_data_digest text,
+    pixel_data_offset integer,
+    pixel_data_length integer,
+    has_no_roi_linkages boolean
+);
+
+
+--
 -- Name: dicom_dir; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1815,6 +1835,40 @@ ALTER SEQUENCE public.file_import_study_file_import_study_id_seq OWNED BY public
 
 
 --
+-- Name: import_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.import_event (
+    import_event_id integer NOT NULL,
+    import_type text,
+    importing_user text,
+    originating_ip_addr text,
+    import_comment text,
+    import_time timestamp with time zone,
+    remote_file text,
+    volume_name text,
+    import_close_time timestamp with time zone,
+    related_id_1 integer,
+    related_id_2 integer
+);
+
+
+--
+-- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.file_imports_over_time AS
+ SELECT count(file.file_id) AS count,
+    date_part('month'::text, import_event.import_time) AS importmonth,
+    date_part('year'::text, import_event.import_time) AS importyear
+   FROM ((public.file
+     JOIN public.file_import USING (file_id))
+     JOIN public.import_event USING (import_event_id))
+  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
+  WITH NO DATA;
+
+
+--
 -- Name: file_location; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2109,6 +2163,23 @@ CREATE TABLE public.file_win_lev (
     window_level_id integer NOT NULL,
     wl_index integer NOT NULL
 );
+
+
+--
+-- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.files_without_type AS
+ SELECT file.file_id,
+    file.digest,
+    file.size,
+    file.is_dicom_file,
+    file.file_type,
+    file.processing_priority,
+    file.ready_to_process
+   FROM public.file
+  WHERE (file.file_type IS NULL)
+  WITH NO DATA;
 
 
 --
@@ -2428,25 +2499,6 @@ CREATE TABLE public.import_ct_series (
     min_file_size integer,
     avg_file_size double precision,
     processing_errors text
-);
-
-
---
--- Name: import_event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.import_event (
-    import_event_id integer NOT NULL,
-    import_type text,
-    importing_user text,
-    originating_ip_addr text,
-    import_comment text,
-    import_time timestamp with time zone,
-    remote_file text,
-    volume_name text,
-    import_close_time timestamp with time zone,
-    related_id_1 integer,
-    related_id_2 integer
 );
 
 
@@ -4627,6 +4679,13 @@ CREATE UNIQUE INDEX role_tabs_uidx ON dbif_config.role_tabs USING btree (role_na
 
 
 --
+-- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
+
+
+--
 -- Name: assocation_import_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5030,6 +5089,13 @@ CREATE INDEX file_visibility_change_idx ON public.file_visibility_change USING b
 --
 
 CREATE INDEX file_win_lev_main_idx ON public.file_win_lev USING btree (file_id, window_level_id, wl_index);
+
+
+--
+-- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
 
 
 --

@@ -9,3 +9,6 @@ insert into import_control values (
 );
 
 alter database posda_files set search_path = public, dbif_config, dicom_conv;
+
+refresh materialized view file_imports_over_time;
+refresh materialized view files_without_type;

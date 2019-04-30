@@ -6,6 +6,7 @@ import {Prbs} from './prbs/prbs';
 import {Bsbu} from './bsbu/bsbu';
 import {Fwt} from './fwt/fwt';
 import {Ftc} from './file-time-chart/ftc';
+import {Tla} from './table-lock-alert/Tla';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,11 @@ export class ApiService {
   get_file_time_chart():Observable<Ftc[]>{
     var url = '/papi/v1/dashboard/ftc';
     return this.http.get<Ftc[]>(url);
+  }
+
+  table_lock_alert():Observable<Tla[]>{
+    var url = '/papi/v1/dashboard/tla';
+    return this.http.get<Tla[]>(url);
   }
 
 

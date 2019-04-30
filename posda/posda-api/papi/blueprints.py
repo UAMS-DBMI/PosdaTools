@@ -73,6 +73,10 @@ def generate_dashboard_blueprint():
         dashboard.get_file_time_chart,
         '/ftc'
     )
+    blueprint.add_route(
+        dashboard.table_lock_alert,
+        '/tla'
+    )
     return blueprint
 
 def generate_rois_blueprint():
