@@ -6,4 +6,4 @@ docker pull tcia/posda:latest
 docker pull tcia/kaleidoscope:latest
 docker pull tcia/k-base:latest
 docker pull tcia/quince:latest
-docker pull tcia/posda_nginx:latest
+docker pull tcia/posda_web:latest

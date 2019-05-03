@@ -1,6 +1,3 @@
-# New microservices version of the system
-#
-
 version: '3.2'
 
 services:
@@ -31,12 +28,9 @@ services:
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        environment:
-            TZ: America/Chicago
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: localhost
+        env_file: 
+            - database.env
+            - common.env
 
     posda-fast-file-process:
         image: tcia/posda:latest
@@ -50,12 +44,9 @@ services:
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        environment:
-            TZ: America/Chicago
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
-            POSDA_EXTERNAL_HOSTNAME: localhost
+        env_file: 
+            - database.env
+            - common.env
 
     posda-api:
         image: tcia/posda:latest
@@ -64,10 +55,9 @@ services:
         depends_on:
             - db
             - posda
-        environment:
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
+        env_file: 
+            - database.env
+            - common.env
 
         volumes:
             - posda_cache_alpine:/home/posda/cache
@@ -86,10 +76,9 @@ services:
             - quince_files:/html
             - /mnt:/mnt
             - /nas:/nas
-        environment:
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
+        env_file: 
+            - database.env
+            - common.env
 
     kaleidoscope:
         image: tcia/kaleidoscope:latest
@@ -101,11 +90,11 @@ services:
             - posda_cache_alpine:/home/posda/cache
             - kaleidoscope_files:/html
             - ./kaleidoscope/kaleidoscope:/app
-        environment:
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
-            #DEBUG: 1
+        env_file: 
+            - database.env
+            - common.env
+        # environment:
+        #     DEBUG: 1
 
     k-base:
         image: tcia/k-base:latest
@@ -117,10 +106,9 @@ services:
             - posda_cache_alpine:/home/posda/cache
             - /mnt:/mnt
             - /nas:/nas
-        environment:
-            PGHOST: db
-            PGUSER: postgres
-            PGPASSWORD: example
+        env_file: 
+            - database.env
+            - common.env
         links:
             - quince:quince
 
