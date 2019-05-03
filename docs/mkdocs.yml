@@ -1,0 +1,3 @@
+site_name: Posda
+theme: readthedocs
+docs_dir: src
