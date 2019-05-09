@@ -57,7 +57,7 @@ class ImportFile(HTTPMethodView):
         m = hashlib.md5()
         bytes_read = 0
         while True:
-            chunk = await request.stream.get()
+            chunk = await request.stream.read()
             if chunk is None:
                 break
             m.update(chunk)
