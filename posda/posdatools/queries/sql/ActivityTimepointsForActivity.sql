@@ -1,17 +1,22 @@
 -- Name: ActivityTimepointsForActivity
 -- Schema: posda_queries
--- Columns: ['activity_id', 'activity_created', 'activity_description', 'activity_timepoint_id', 'timepoint_created', 'comment', 'creating_user']
+-- Columns: ['activity_id', 'activity_created', 'activity_description', 'activity_timepoint_id', 'timepoint_created', 'comment', 'creating_user', 'num_files']
 -- Args: ['activity_id']
 -- Tags: ['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files', 'simple_phi', 'dciodvfy', 'ctp_details', 'select_for_phi', 'visual_review_selection', 'activity_timepoints']
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 -- 
 
 select
-  activity_id, a.when_created as activity_created,
+  distinct activity_id, a.when_created as activity_created,
   brief_description as activity_description, activity_timepoint_id,
   t.when_created as timepoint_created, 
-  comment, creating_user
+  comment, creating_user, count(distinct file_id) as num_files
 from
-  activity a join activity_timepoint t using(activity_id)
+  activity a join activity_timepoint t using(activity_id) join 
+  activity_timepoint_file using(activity_timepoint_id)
 where
   activity_id = ?
+group by
+  activity_id, activity_created, activity_description, activity_timepoint_id,
+  timepoint_created, comment, creating_user
+order by activity_timepoint_id desc

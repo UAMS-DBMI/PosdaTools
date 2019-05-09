@@ -8,6 +8,7 @@ services:
             POSTGRES_PASSWORD: example
         volumes:
             - pgdata_alpine:/var/lib/postgresql/data
+            - ./database/all.sql:/docker-entrypoint-initdb.d/all.sql
         ports:
             - 5433:5432
 

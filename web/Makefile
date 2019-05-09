@@ -7,6 +7,7 @@ default: build
 build: last_built 
 
 last_built: Dockerfile default.conf
+	cd ../docs && mkdocs build
 	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 

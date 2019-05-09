@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: ['command_executed', 'invoker', 'longest', 'shortest', 'avg', 'times_invoked', 'first', 'last']
 -- Args: []
--- Tags: ['AllCollections', 'postgres_stats', 'postgres_query_stats']
+-- Tags: ['invoking_user']
 -- Description: Get a list of collections and sites
 -- 
 

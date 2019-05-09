@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Installation - Posda</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Installation";
+    var mkdocs_page_input_path = "installation.md";
+    var mkdocs_page_url = "/installation/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Posda</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Installation</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#things-to-consider">Things to consider</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#host-os">Host OS</a></li>
+        
+            <li><a class="toctree-l3" href="#type-of-installation">Type of Installation</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#install-sizes-types">Install Sizes / Types</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#small-development-installation">Small / Development Installation</a></li>
+        
+            <li><a class="toctree-l3" href="#medium-separate-storage">Medium / Separate Storage</a></li>
+        
+            <li><a class="toctree-l3" href="#large-separate-storage-and-separate-database">Large / Separate Storage and Separate Database</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#install-docker">Install Docker</a></li>
+    
+
+    <li class="toctree-l2"><a href="#clone-oneposda">Clone Oneposda</a></li>
+    
+
+    <li class="toctree-l2"><a href="#configure-storage">Configure Storage</a></li>
+    
+
+    <li class="toctree-l2"><a href="#configure-database">Configure Database</a></li>
+    
+
+    <li class="toctree-l2"><a href="#configure-common-settings">Configure Common Settings</a></li>
+    
+
+    <li class="toctree-l2"><a href="#start-posda">Start Posda</a></li>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Posda</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Installation</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>This is the installation guide for Posda.</p>
+<h2 id="things-to-consider">Things to consider</h2>
+<p>There are a handful of things you should consider before beginning
+installation, such as:</p>
+<ul>
+<li>What host OS will you use?</li>
+<li>What type of installation?</li>
+<li>Will storage be separate?</li>
+<li>Will database be separate?</li>
+</ul>
+<h3 id="host-os">Host OS</h3>
+<p>Posda is distributed as a set of <a href="https://www.docker.com">Docker</a> containers,
+which means that it will technically work on any platform Docker supports
+(including Windows, MacOS, and Linux). However, we recommend Linux be used
+for the best compatibility. MacOS is the second-best choice, and we discourage
+the use of Windows.</p>
+<p>Any Linux distribution should work, as long as you can install Docker, though
+we have tested Posda on the following:</p>
+<ul>
+<li>Ubuntu 16.04, 18.04</li>
+<li>RHEL 7</li>
+<li>Alpine</li>
+</ul>
+<h3 id="type-of-installation">Type of Installation</h3>
+<p>Posda supports a number of different types of installation. The main options
+are if separate storage will be used, and/or a separate database server. The
+reasons why you would make these choices are beyond the scope of this
+documentation, but you should make those choices before beginning installation.</p>
+<p>We have included three example configurations in this guide:</p>
+<ul>
+<li>Small - Single machine, for a small site, or development, or demonstration</li>
+<li>Medium - When separate storage is needed</li>
+<li>Large - When separate storage and database servers are needed</li>
+</ul>
+<h2 id="install-sizes-types">Install Sizes / Types</h2>
+<p>Here are three common types of installations, along with a list of which
+sections you would need to follow for each.</p>
+<h3 id="small-development-installation">Small / Development Installation</h3>
+<p>This is the appropriate set of sections you would follow to install Posda
+on a single machine, such as for development or demonstration purposes,
+or just an environment where this is all that is required.</p>
+<ul>
+<li><a href="#install-docker">Install Docker</a></li>
+<li><a href="#clone-oneposda">Clone the Repo</a></li>
+<li><a href="#configure-common-settings">Configure Common Settings</a></li>
+<li><a href="#start-posda">Start Posda</a></li>
+</ul>
+<h3 id="medium-separate-storage">Medium / Separate Storage</h3>
+<ul>
+<li><a href="#install-docker">Install Docker</a></li>
+<li><a href="#clone-oneposda">Clone the Repo</a></li>
+<li>Connect storage to Host</li>
+<li><a href="#configure-storage">Configure storage</a> in docker-compose.yaml</li>
+<li><a href="#configure-common-settings">Configure Common Settings</a></li>
+<li><a href="#start-posda">Start Posda</a></li>
+</ul>
+<h3 id="large-separate-storage-and-separate-database">Large / Separate Storage and Separate Database</h3>
+<ul>
+<li>Provision database server, install PostgreSQL</li>
+<li><a href="#install-docker">Install Docker</a></li>
+<li><a href="#clone-oneposda">Clone the Repo</a></li>
+<li>Connect storage to Host</li>
+<li><a href="#configure-storage">Configure storage</a> in docker-compose.yaml</li>
+<li><a href="#configure-database">Configure database</a></li>
+<li><a href="#configure-common-settings">Configure Common Settings</a></li>
+<li><a href="#start-posda">Start Posda</a></li>
+</ul>
+<h2 id="install-docker">Install Docker</h2>
+<p>Installing Docker is beyond the scope of this documentation. You can find
+further information at the <a href="https://docs.docker.com/install/">Docker Homepage</a>.</p>
+<p>Make sure you also install <code>docker-compose</code>. Instructions are available at
+<a href="https://docs.docker.com/compose/install/">Install Docker Compose</a>.</p>
+<h2 id="clone-oneposda">Clone Oneposda</h2>
+<p>First you will need to install <code>git</code> on your system. Once you have git, 
+simply clone Posda by typing:</p>
+<pre><code class="bash">git clone https://code.imphub.org/scm/pt/oneposda.git
+</code></pre>
+
+<p>You can place this directory anywhere you like.</p>
+<h2 id="configure-storage">Configure Storage</h2>
+<p>The bulk of the storage will be from the "Posda Cache", where all imported
+and edited DICOM files are stored. There is also the Postgres database data,
+if you are using the built-in database.</p>
+<p>By default both storage locations are managed by Docker, but you may want
+to configure the location yourself, such as on network attached storage.</p>
+<p>The main way you do this is by changing the <code>volume</code> sections within the
+various services in the <code>docker-compose.yaml</code> file.</p>
+<p>For example, if you wanted to place all of the cache (DICOM) files within
+the host directory <code>/mnt/storage/posda</code>, you would find all lines within
+<code>docker-compose.yaml</code> that look like:</p>
+<pre><code class="text">- posda_cache_alpine:/home/posda/cache
+</code></pre>
+
+<p>and change them to:</p>
+<pre><code class="text">- /mnt/storage/posda:/home/posda/cache
+</code></pre>
+
+<p>Make sure you change all occurrences!</p>
+<p>NOTE: You should ensure that the owner:group ID of the chosen location
+is <code>2123:2123</code>. </p>
+<p>If you additionally wanted to change where the built-in Postgres database
+stores its data, first choose a location (such as <code>/mnt/storage/database</code>),
+then change the line that looks like:</p>
+<pre><code class="text">- pgdata_alpine:/var/lib/postgresql/data
+</code></pre>
+
+<p>to instead be:</p>
+<pre><code class="text">- /mnt/storage/database:/var/lib/postgresql/data
+</code></pre>
+
+<h2 id="configure-database">Configure Database</h2>
+<p>If you have chosen to use a separate database host (instead of using the
+container), you will need to complete this section.</p>
+<p>First, you must remove the <code>db</code> service from the <code>docker-compose.yaml</code> file.
+Remove these lines:</p>
+<pre><code class="yaml">db:
+    image: postgres:10.1-alpine
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: example
+    volumes:
+        - pgdata_alpine:/var/lib/postgresql/data
+    ports:
+        - 5433:5432
+</code></pre>
+
+<p>Then, find every occurrence of <code>depends_on: db</code> and remove it. For example,
+remove only the <code>- db</code> line from the following:</p>
+<pre><code class="yaml">depends_on:
+    - db
+    - redis
+</code></pre>
+
+<p>Remove this everywhere it occurs, otherwise the various containers will fail
+to start.</p>
+<p>Finally, you must edit the <code>database.env</code> file, and set the appropriate values
+for the database server you have configured. You must use a role which has
+the ability to create databases. After initial configuration you can remove
+that right, if you want.</p>
+<p>Example:</p>
+<pre><code class="bash">PGHOST=my-database-host.uams.edu
+PGUSER=posda
+PGPASSWORD=s3cret!
+</code></pre>
+
+<h2 id="configure-common-settings">Configure Common Settings</h2>
+<p>Edit the file <code>common.env</code> and set the values. In particular, you should
+carefully choose <code>POSDA_EXTERNAL_HOSTNAME</code>. </p>
+<h2 id="start-posda">Start Posda</h2>
+<p>The first time you start Posda, you will want to start the <code>db</code> and <code>posda</code>
+containers first, and wait about 30 seconds after each command for
+initial setup to complete.</p>
+<p>The <code>manage</code> script is a simple wrapper around <code>docker-compose</code>, but it
+configures some things before each run, so it is recommend you use it
+rather than using <code>docker-compose</code> directly.</p>
+<p>WARNING: If you have chosen to have a separate database host, you must skip
+the first command.</p>
+<p>From the <code>oneposda</code> directory, execute:</p>
+<pre><code class="bash">./manage up -d db
+# Wait 30 seconds for the database to start
+./manage up -d posda
+# Wait 30 seconds for initial setup to complete
+./manage up -d
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

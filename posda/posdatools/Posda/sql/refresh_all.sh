@@ -2,7 +2,7 @@
 
 refresh_db() {
 	echo "Refreshing SQL file for $1"	
-	pg_dump -x -s -O $1 > $1.sql
+	pg_dump -x -s -C -O $1 > $1.sql
 }
 
 echo "This script will update all the initial db creation sql files."
