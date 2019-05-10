@@ -2571,8 +2571,22 @@ method Activities($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
     <h2>Activities</h2>
   });
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+  });
   $self->RenderActivityDropDown($http, $dyn);
+  unless(defined $self->{ActivityFilter}) { $self->{ActivityFilter} = "" }
+  $http->queue("&nbsp;Filter:&nbsp;");
+  $self->BlurEntryBox($http, {
+    name => "Filter",
+    op => "SetActivityFilter",
+    value => "$self->{ActivityFilter}"
+  });
+  $http->queue(qq{</div><hr>});
   $self->RenderNewActivityForm($http, $dyn);
+}
+method SetActivityFilter($http, $dyn){
+  $self->{ActivityFilter} = $dyn->{value};
 }
 
 method RenderNewActivityForm($http, $dyn) {
@@ -2602,8 +2616,13 @@ method RenderActivityDropDown($http, $dyn){
   }
   my @activity_list;
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
-  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+#  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+  my @sorted_ids = sort {$a <=> $b} keys %{$self->{Activities}};
+  sorted_id:
   for my $i (@sorted_ids){
+    if($self->{ActivityFilter}){
+      unless($self->{Activities}->{$i}->{desc} =~ /$self->{ActivityFilter}/){ next sorted_id }
+    }
     push @activity_list, [$i , "$i: $self->{Activities}->{$i}->{desc}" .
       " ($self->{Activities}->{$i}->{user})"];
   }
@@ -2707,6 +2726,7 @@ method NewActivitiesPage($http, $dyn){
   $self->DrawClearActivityButton($http, $dyn);
   $http->queue("&nbsp;&nbsp;Mode:&nbsp;");
   $self->DrawActivityModeSelector($http, $dyn);
+  $self->DrawActivityTaskStatus($http, $dyn);
   $http->queue(qq{</div><hr>});
   my $method = $self->{ActivityModes}->{$self->{ActivityModeSelected}};
   if($self->can($method)){
@@ -2737,6 +2757,7 @@ method DrawActivityModeSelector($http, $dyn){
     [0, "ShowActivityTimeline"],
     [1, "Inbox"],
     [2, "ActivityOperations"],
+    [3, "Queries"],
   );
   my @sorted_ids = $self->SortedActivityIds($self->{Activities});
   for my $i (@activity_mode_list){
@@ -2758,6 +2779,38 @@ method DrawActivityModeSelector($http, $dyn){
   $http->queue(qq{
     </select> </div>
   });
+}
+method DrawActivityTaskStatus($http, $dyn){
+  my @backgrounders;
+  $self->{Backgrounders} = [];
+  Query('GetActivityTaskStatus')->RunQuery(sub {
+    my($row) = @_;
+    push(@backgrounders, $row);
+  }, sub {}, $self->{ActivitySelected});
+  if($#backgrounders >= 0){
+    $self->{Backgrounders} = \@backgrounders;
+    $http->queue("<div width=200><ul>");
+    for my $i (@backgrounders){
+      $http->queue("<li>$i->[0]: $i->[1] - $i->[4]");
+      $self->NotSoSimpleButton($http, {
+        op => "DismissActivityTaskStatus",
+        caption => "dismiss",
+        subprocess_invocation_id => $i->[0],
+        sync => "Update();",
+      });
+      $http->queue("</li>");
+    }
+    $http->queue("</ul></div>");
+    $self->InvokeAfterDelay("AutoRefresh", 5);
+#    $self->AutoRefresh();
+  }
+}
+method DismissActivityTaskStatus($http, $dyn){
+  my $sub_id = $dyn->{subprocess_invocation_id};
+  my $act_id = $self->{ActivitySelected};
+  my $user = $self->get_user;
+  Query('DismissActivityTaskStatus')->RunQuery(sub{}, sub{},
+    $user, $act_id, $sub_id);
 }
 method SetActivityMode($http, $dyn){
   $self->{ActivityModeSelected} = $dyn->{value};
@@ -2986,7 +3039,7 @@ method CompareTimepoints($http, $dyn){
 }
 method ActivityOperations($http, $dyn){
   my @buttons =  (
-    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 0, 0],
+    [ "CreateActivityTimepointFromImportName", "Create Activity Timepoint from Import Name", 0, 0],
     [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
     [ "VisualReviewFromTimepoint", "Schedule Visual Review", 0, 2],
     [ "PhiReviewFromTimepoint", "Schedule PHI Scan", 0, 3],
@@ -3005,6 +3058,7 @@ method ActivityOperations($http, $dyn){
     [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
     [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
+    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
   );
   my @Cols;
   for my $i (@buttons){
@@ -3093,6 +3147,177 @@ method InvokeOperation($http, $dyn){
   my $child_obj = $class->new($self->{session},
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
+}
+method Queries($http,$dyn){
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+  });
+  $self->DrawQueryListTypeSelector($http, $dyn);
+  $self->DrawQuerySearchForm($http, $dyn);
+  $http->queue(qq{</div><hr>});
+  $self->DrawQueryListOrResults($http, $dyn);
+}
+method DrawQueryListTypeSelector($http, $dyn){
+  unless(defined $self->{NewActivityQueriesType}->{query_type}){
+    $self->{NewActivityQueriesType}->{query_type} = "recent";
+  }
+  $http->queue("<div width=100>");
+  my $url = $self->RadioButtonSync("query_type","recent",
+    "ProcessRadioButton",
+    (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
+    "&control=NewActivityQueriesType","Update();");
+  $http->queue("$url - recent&nbsp;&nbsp;"); 
+  my $url = $self->RadioButtonSync("query_type","search",
+    "ProcessRadioButton",
+    (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
+    "&control=NewActivityQueriesType","Update();");
+  $http->queue("$url - search"); 
+  $http->queue("</div>");
+}
+method DrawQuerySearchForm($http, $dyn){
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("Query Search From Goes Here");
+    $http->queue("</div>");
+  }
+}
+method DrawQueryListOrResults($http, $dyn){
+  if(exists($self->{NewQueryResults})){
+    $self->DrawQueryResults($http, $dyn);
+  } else {
+    $self->DrawQueryList($http, $dyn);
+  }
+}
+method DrawQueryList($http, $dyn){
+  my @query_list;
+#  unless(exists $self->{NewQueryList}){
+  Query('ListOfQueriesPerformedByUserWithLatestAndCount')->RunQuery(sub {
+    my($row) = @_;
+    push @query_list, $row;
+  }, sub {}, $self->get_user);
+  my @MostRecentSelects;
+  my %NewQueriesByName;
+  my @MostFrequentSelects;
+  my $i = 0;
+  while(1){
+    if($i > $#query_list) { last }
+    my $q = $query_list[$i];
+    $i++;
+    if($q->[1] =~ /^select/){
+      push @MostRecentSelects, $q->[0];
+      $NewQueriesByName{$q->[0]} = PosdaDB::Queries->GetQueryInstance($q->[0]);
+    };
+    if($i > 5) { last }
+  }
+  my @sorted_query_list = sort {$b->[3] <=> $a->[3]} @query_list;
+  $self->{NewQueryList} = \@sorted_query_list;
+  $i = 0;
+  my $j = 0;
+  while($j < 20){
+    if($i > $#sorted_query_list) { last }
+    my $q = $sorted_query_list[$i];
+    $i++;
+    unless($q->[1] =~ /^select/){ next }
+    my $qn = $q->[0];
+    if(exists $NewQueriesByName{$qn}) { next }
+    $j++;
+    push @MostFrequentSelects, $q->[0];
+    $NewQueriesByName{$q->[0]} = PosdaDB::Queries->GetQueryInstance($q->[0]);
+  }
+  $self->{MostRecentSelects} = \@MostRecentSelects;
+  $self->{MostFrequentSelects} = \@MostFrequentSelects;
+  $self->{NewQueriesByName} = \%NewQueriesByName;
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('<caption>Most recent queries</caption>');
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@MostRecentSelects){
+    $http->queue("<tr>");
+    my $q = $NewQueriesByName{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQueryBackground",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('<caption>Most common  queries</caption>');
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@MostFrequentSelects){
+    $http->queue("<tr>");
+    my $q = $NewQueriesByName{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQueryBackground",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('</table>')
+# }
+}
+method DrawQueryResults($http, $dyn){
 }
 #############################
 #Here Bill is putting in the "ShowBackground"

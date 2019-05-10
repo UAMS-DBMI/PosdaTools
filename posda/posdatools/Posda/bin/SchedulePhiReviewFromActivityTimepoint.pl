@@ -55,30 +55,35 @@ my $num_series = @SeriesList;
 my $description = "First Pass Scan activity timepoint for activity $act_id " .
   "($notify)";
 print "Background to do scan: \"$description\"\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 print "Going to background\n";
 $background->Daemonize;
 my $start_time = time;
 $background->WriteToEmail("Starting PHI scan: \"$description\"\n");
 $background->WriteToEmail("$num_series series to scan\n");
 my $scan = Posda::Background::PhiScan->NewFromScan(
-  \@SeriesList, $description, "Posda");
+  \@SeriesList, $description, "Posda", $invoc_id, $act_id);
 my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $id = $scan->{phi_scan_instance_id};
 $background->WriteToEmail("Created scan id: $id in $elapsed seconds\n");
+
+Query('UpdateActivityTaskStatus')->RunQuery(sub{}, sub{},
+  'PreparingReports', $act_id, $invoc_id);
 $background->WriteToEmail("Creating " .
   "\"SimplePublicPhiReportSelectedVrWithMetaquotes\" report.\n");
 my $rpt1 = $background->CreateReport("Selected Public VR");
 my $lines = $scan->PrintTableFromQuery(
   "SimplePublicPhiReportSelectedVrWithMetaquotes", $rpt1);
+
 $background->WriteToEmail("Creating " .
   "\"SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes\" report.\n");
 my $rpt2 = $background->CreateReport("Selected Private");
 $lines = $scan->PrintTableFromQuery(
   "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes", $rpt2);
+
 my $rpt3 = $background->CreateReport("Edit Skeleton");
 $rpt3->print("element,vr,q_value,description,disp,num_series," .
   "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
 $rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
-$background->Finish;
+$background->Finish("Completed - PHI Scan and results");
