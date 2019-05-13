@@ -11,6 +11,7 @@ import { BSBUComponent } from './bsbu/bsbu.component';
 import { FwtComponent } from './fwt/fwt.component';
 import { FileTimeChartComponent } from './file-time-chart/file-time-chart.component';
 import { TableLockAlertComponent } from './table-lock-alert/table-lock-alert.component';
+import { QrviComponent } from './qrvi/qrvi.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TableLockAlertComponent } from './table-lock-alert/table-lock-alert.com
     BSBUComponent,
     FwtComponent,
     FileTimeChartComponent,
-    TableLockAlertComponent
+    TableLockAlertComponent,
+    QrviComponent
   ],
   imports: [
     BrowserModule,

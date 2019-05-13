@@ -7,6 +7,7 @@ import {Bsbu} from './bsbu/bsbu';
 import {Fwt} from './fwt/fwt';
 import {Ftc} from './file-time-chart/ftc';
 import {Tla} from './table-lock-alert/Tla';
+import {Qrvi} from './qrvi/Qrvi';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,11 @@ export class ApiService {
   table_lock_alert():Observable<Tla[]>{
     var url = '/papi/v1/dashboard/tla';
     return this.http.get<Tla[]>(url);
+  }
+
+  get_query_runtime_versus_invocations():Observable<Qrvi[]>{
+    var url = '/papi/v1/dashboard/qrvi';
+    return this.http.get<Qrvi[]>(url);
   }
 
 
