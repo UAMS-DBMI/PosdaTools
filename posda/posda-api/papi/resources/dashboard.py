@@ -105,3 +105,22 @@ async def table_lock_alert(request):
      return json_records(
          await db.fetch(query)
      )
+
+async def get_query_runtime_versus_invocations(request):
+     query = """\
+     select
+      query_name,
+      max(query_start_time)::text  as last_invocation,
+      count(query_invoked_by_dbif_id) as num_invocations,
+      sum(query_end_time - query_start_time)::text  as total_query_time,
+      extract(epoch from avg(query_end_time - query_start_time)) as avg_query_time
+    from
+      query_invoked_by_dbif
+    where extract(day from query_start_time)::int < 31
+    group by query_name
+    order by avg_query_time  desc
+    limit 120;
+     """
+     return json_records(
+         await db.fetch(query)
+     )

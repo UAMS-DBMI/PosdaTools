@@ -11,12 +11,17 @@ async def setup(*args, **kwargs):
 async def fetch(query, parameters=[]):
     global pool
     async with pool.acquire() as conn:
+        print("\nfetching\n")
         records = await conn.fetch(query, *parameters)
+        print("records:\n")
+        print(dict(records[0]))
+        if len(records) < 1:
+            raise NotFound("no matching records found")
         return records
 
 async def fetch_one(query, parameters=[]):
     """Execute query and return only the first result
-    
+
     Raises NotFound if the query returns no matches
     """
     global pool

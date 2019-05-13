@@ -82,6 +82,10 @@ def generate_dashboard_blueprint():
         dashboard.table_lock_alert,
         '/tla'
     )
+    blueprint.add_route(
+        dashboard.get_query_runtime_versus_invocations,
+        '/qrvi'
+    )
     return blueprint
 
 def generate_iecs_blueprint():
