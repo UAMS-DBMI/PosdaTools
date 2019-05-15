@@ -20,7 +20,7 @@ import logging
 async def get_all_iecs(request, **kwargs):
     return text("listing all iecs is not allowed", status=401)
 
-# /v1/iecs/<iec>/files
+# /v1/iecs/<iec>
 async def get_iec_details(request, iec, **kwargs):
     query = """
         select *
