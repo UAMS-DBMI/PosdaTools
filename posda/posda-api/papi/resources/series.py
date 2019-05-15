@@ -45,5 +45,5 @@ async def get_all_files(request, series_id, **kwargs):
     """
 
     return json_records(
-        await db.fetch(query, [series_id])
+        {"file_ids": [x[0] for x in await db.fetch(query, [series_id])]}
     )

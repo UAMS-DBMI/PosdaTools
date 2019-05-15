@@ -16,6 +16,7 @@ from .resources import files as fi
 from .resources import rois
 from .resources import importer
 from .resources import dashboard
+from .resources import iecs
 
 
 def configure_blueprints(app):
@@ -49,6 +50,10 @@ def configure_blueprints(app):
         generate_dashboard_blueprint(),
         url_prefix='/v1/dashboard'
     )
+    app.blueprint(
+        generate_iecs_blueprint(),
+        url_prefix='/v1/iecs'
+    )
 
 def generate_dashboard_blueprint():
     blueprint = Blueprint('dashboard')
@@ -77,6 +82,20 @@ def generate_dashboard_blueprint():
         dashboard.table_lock_alert,
         '/tla'
     )
+    return blueprint
+
+def generate_iecs_blueprint():
+    blueprint = Blueprint('iecs')
+
+    blueprint.add_route(
+        iecs.get_iec_details,
+        '/<iec>'
+    )
+    blueprint.add_route(
+        iecs.get_iec_files,
+        '/<iec>/files'
+    )
+
     return blueprint
 
 def generate_rois_blueprint():
@@ -193,5 +212,6 @@ def generate_files_blueprint():
     blueprint.add_route(fi.get_iec_files, '/iec/<iec_id>')
     blueprint.add_route(fi.get_pixel_data, '/<file_id>/pixels')
     blueprint.add_route(fi.get_data, '/<file_id>/data')
+    blueprint.add_route(fi.get_details, '/<file_id>/details')
 
     return blueprint
