@@ -65,21 +65,6 @@ services:
             - /mnt:/mnt
             - /nas:/nas
 
-    quince:
-        image: tcia/quince:latest
-        restart: always
-        depends_on:
-            - db
-            - posda
-        volumes:
-            - posda_cache_alpine:/home/posda/cache
-            - quince_files:/html
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file: 
-            - database.env
-            - common.env
-
     kaleidoscope:
         image: tcia/kaleidoscope:latest
         restart: always
@@ -109,29 +94,20 @@ services:
         env_file: 
             - database.env
             - common.env
-        links:
-            - quince:quince
 
-    nginx:
+    web:
         image: tcia/posda_web:latest
         restart: always
         ports:
             - 80:80
         depends_on:
             - posda
-            - quince
             - kaleidoscope
         links:
             - posda:posda
             - posda-api:posda-api
-            - quince:quince
             - kaleidoscope:kaleidoscope
         volumes:
-            - type: volume
-              source: quince_files
-              target: /quince
-              volume:
-                nocopy: true
             - type: volume
               source: kaleidoscope_files
               target: /kaleidoscope
@@ -142,7 +118,6 @@ volumes:
     posda_cache_alpine:
     # posda_submission_root:
     pgdata_alpine:
-    quince_files:
     kaleidoscope_files:
 
 
