@@ -79,8 +79,7 @@ async def get_series_files(request, series_uid, **kwargs):
 			      and visibility is null
     """
     # use asynctar here to get all the files and return them
-    async with db.pool.acquire() as conn:
-        records = [x[0] for x in await conn.fetch(query, series_uid)]
+    records = [x[0] for x in await db.fetch(query, [series_uid])]
 
     """
     file_name = f"{series_uid}.tar.gz"
@@ -263,9 +262,7 @@ async def get_details(request, file_id, **kwargs):
         where file_image.file_id = $1
     """
 
-    async with db.pool.acquire() as conn:
-        records = await conn.fetch(query, int(file_id))
 
     return json_records(
-        records
+        await db.fetch_one(query, [int(file_id)])
     )

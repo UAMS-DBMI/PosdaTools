@@ -38,10 +38,20 @@ async def get_single_series(request, series_id, **kwargs):
 
 async def get_all_files(request, series_id, **kwargs):
     query = """
-        select distinct
-            file_id
-        from file_series
+        select file_id
+        from
+            file_series
+            natural join file_sop_common
+            natural join ctp_file
         where series_instance_uid = $1
+          and visibility is null
+        order by
+            -- sometimes instance_number is empty string or null
+            case instance_number
+                when '' then '0'
+                when null then '0'
+                else instance_number
+            end::int
     """
 
     return json_records(

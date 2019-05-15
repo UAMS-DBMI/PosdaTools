@@ -1,14 +1,23 @@
-FROM nginx:1.13.10-alpine
-
+FROM alpine:latest as builder
 RUN apk --update add nodejs-npm make
 
 COPY dashboard /dashboard
-COPY default.conf /etc/nginx/conf.d/
-COPY www /www
+COPY quince /quince
 
 RUN cd /dashboard && \
     make
 
-RUN cp -r /dashboard/dist/posda-dashboard /www/dashboard
+RUN cd /quince && \
+	make
 
-VOLUME ["/quince/", "/kaleidoscope/"]
+
+FROM nginx:1.13.10-alpine
+
+COPY default.conf /etc/nginx/conf.d/
+COPY www /www
+
+
+COPY --from=builder /dashboard/dist/posda-dashboard /www/dashboard
+COPY --from=builder /quince/dist /www/quince
+
+EXPOSE 80

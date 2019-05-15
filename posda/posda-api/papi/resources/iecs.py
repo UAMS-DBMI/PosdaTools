@@ -35,9 +35,20 @@ async def get_iec_details(request, iec, **kwargs):
 # /v1/iecs/<iec>/files
 async def get_iec_files(request, iec, **kwargs):
     query = """
-        select file_id
-        from image_equivalence_class_input_image
-        where image_equivalence_class_id = $1
+    select
+        file_id
+    from
+        image_equivalence_class_input_image
+        natural join file_sop_common
+    where
+        image_equivalence_class_id = $1
+    order by
+        -- sometimes instance_number is empty string or null
+        case instance_number
+            when '' then '0'
+            when null then '0'
+            else instance_number
+        end::int
     """
 
     return json_records(
