@@ -32,12 +32,12 @@ export class SeriesComponent implements OnInit {
       let iec = this.route.snapshot.params['iec'];
       this.iec_id = iec;
       this.show_download = true;
-      this.http.get("/vapi/iec_info/" + iec).subscribe(
+		this.http.get("/papi/v1/iecs/" + iec + "/files").subscribe(
         res => this.handleResponse(res)
       );
     } else {
       this.show_download = true;
-      this.http.get("/vapi/series_info/" + this.series_instance_uid).subscribe(
+		this.http.get("/papi/v1/series/" + this.series_instance_uid + "/files").subscribe(
         res => this.handleResponse(res)
       );
     }

@@ -3,6 +3,8 @@ from sanic.exceptions import NotFound
 # import ujson
 
 
+# Not sure what this method does, and it doesn't appear to be
+# called any longer
 def json_objects(objects):
     return json([o._asdict() for o in objects])
 

@@ -14,6 +14,7 @@ import tarfile
 import asyncio
 import aiofiles
 import mimetypes
+import logging
 
 
 async def get_all_files(request, **kwargs):
@@ -78,8 +79,7 @@ async def get_series_files(request, series_uid, **kwargs):
 			      and visibility is null
     """
     # use asynctar here to get all the files and return them
-    async with db.pool.acquire() as conn:
-        records = [x[0] for x in await conn.fetch(query, series_uid)]
+    records = [x[0] for x in await db.fetch(query, [series_uid])]
 
     """
     file_name = f"{series_uid}.tar.gz"
@@ -105,8 +105,82 @@ async def get_iec_files(request, iec_id, **kwargs):
     return await tar_files_and_stream(records, iec_id)
 
 async def get_pixel_data(request, file_id, **kwargs):
-    # TODO: make this real
-    return text("binary pixel data here")
+    query = """
+        select distinct
+            root_path || '/' || rel_path as file,
+            file_offset,
+            size,
+            bits_stored,
+            bits_allocated,
+            pixel_representation,
+            pixel_columns,
+            pixel_rows,
+            photometric_interpretation,
+
+            slope,
+            intercept,
+
+            window_width,
+            window_center,
+            pixel_pad,
+            samples_per_pixel,
+            planar_configuration
+
+        from
+            file_image
+            natural join image
+            natural join unique_pixel_data
+            natural join pixel_location
+            natural join file_location
+            natural join file_storage_root
+            natural join file_equipment
+
+            natural left join file_slope_intercept
+            natural left join slope_intercept
+
+            natural left join file_win_lev
+            natural left join window_level
+
+        where file_image.file_id = $1
+    """
+
+    async with db.pool.acquire() as conn:
+        records = await conn.fetch(query, int(file_id))
+
+    try:
+        record = records[0]
+    except IndexError:
+        logging.debug("Query returned no results. Query follows:")
+        logging.debug(query)
+        logging.debug(f"parameter file_id was: {file_id}")
+        return json({'error': 'no records returned'}, status=404)
+
+    logging.debug(record['file'])
+
+
+    path = record['file']
+    async with aiofiles.open(path, 'rb') as f:
+        await f.seek(record['file_offset'])
+        data = await f.read()
+
+    return HTTPResponse(status=200,
+                        headers={'Q-DICOM-Rows': record['pixel_rows'],
+                                 'Q-DICOM-Cols': record['pixel_columns'],
+                                 'Q-DICOM-Size': record['size'],
+                                 'Q-DICOM-Bits-Stored': record['bits_stored'],
+                                 'Q-DICOM-Bits-Allocated': record['bits_allocated'],
+                                 'Q-DICOM-PixelRep': record['pixel_representation'],
+                                 'Q-DICOM-Slope': record['slope'],
+                                 'Q-DICOM-Intercept': record['intercept'],
+                                 'Q-DICOM-Window-Center': record['window_center'],
+                                 'Q-DICOM-Window-Width': record['window_width'],
+                                 'Q-DICOM-Pixel-Pad': record['pixel_pad'],
+                                 'Q-DICOM-Samples-Per-Pixel': record['samples_per_pixel'],
+                                 'Q-DICOM-PhotoRep': record['photometric_interpretation'],
+                                 'Q-DICOM-Planar-Config': record['planar_configuration'],
+                                 },
+                        content_type="application/octet-stream",
+                        body_bytes=data)
 
 async def get_data(request, file_id, **kwargs):
     query = """
@@ -132,4 +206,63 @@ async def get_data(request, file_id, **kwargs):
         status=200,
         content_type='application/octet',
         body_bytes=data
+    )
+
+async def get_details(request, file_id, **kwargs):
+
+    query = """
+        select distinct
+            root_path || '/' || rel_path as file,
+            file_offset,
+            size,
+            bits_stored,
+            bits_allocated,
+            pixel_representation,
+            pixel_columns,
+            pixel_rows,
+            photometric_interpretation,
+
+            slope,
+            intercept,
+
+            window_width,
+            window_center,
+            pixel_pad,
+
+            project_name,
+            site_name,
+            sop_instance_uid,
+            series_instance_uid,
+            modality,
+            body_part_examined,
+            series_description,
+            patient_id,
+            study_instance_uid
+
+        from
+            file_image
+            natural left join image
+            natural left join unique_pixel_data
+            natural left join pixel_location
+            natural left join file_location
+            natural left join file_storage_root
+            natural left join file_equipment
+            natural left join file_sop_common
+            natural left join file_series
+            natural left join ctp_file
+            natural left join file_patient
+            natural left join file_study
+
+            natural left join file_slope_intercept
+            natural left join slope_intercept
+
+            natural left join file_win_lev
+            natural left join window_level
+
+        where file_image.file_id = $1
+    """
+
+
+    return json_records(
+        await db.fetch_one(query, [int(file_id)])
     )

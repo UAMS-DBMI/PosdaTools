@@ -19,7 +19,7 @@ export class FileService {
   getFile(file_id: number): Observable<Image> {
     // console.log("getFile called");
     if (undefined == this.map[file_id]) {
-      this.map[file_id] = this.http.get("/vapi/details/" + file_id,
+		this.map[file_id] = this.http.get("/papi/v1/files/" + file_id + "/pixels",
         { observe: 'response', responseType: 'arraybuffer' }).pipe(
         map(
           response => {
@@ -36,7 +36,7 @@ export class FileService {
 
 
   getDetails(file_id: number): Observable<ImageDetails> {
-    return this.http.get<ImageDetails>("/vapi/extra_details/" + file_id);
+	  return this.http.get<ImageDetails>("/papi/v1/files/" + file_id + "/details");
   }
 
   getRois(file_id: number):Observable<Roi[]> {
