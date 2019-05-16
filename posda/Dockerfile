@@ -73,7 +73,7 @@ RUN addgroup -g 2123 fakeposda
 RUN adduser -D -G fakeposda posda
 
 COPY --chown=posda:fakeposda posda-api/ /posda-api/
-RUN pip3 install -r /posda-api/requirements.txt
+RUN pip3 install -r /posda-api/requirements.frozen.txt
 
 
 # Work around issue with volume persmissions
