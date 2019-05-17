@@ -1,9 +1,10 @@
+\connect dicom_dd
 --
 -- PostgreSQL database dump
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.5
+-- Dumped by pg_dump version 10.7 (Ubuntu 10.7-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

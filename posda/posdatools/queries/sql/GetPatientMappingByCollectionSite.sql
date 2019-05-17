@@ -12,9 +12,10 @@ select
   collection_name,
   site_name,
   batch_number,
+  date_shift,
   '<' || diagnosis_date || '>' as diagnosis_date,
   '<' || baseline_date || '>' as baseline_date,
-  date_shift,
+  '<' || date_trunc('year', diagnosis_date) || '>' as year_of_diagnosis,
   baseline_date - diagnosis_date as computed_shift
 from
   patient_mapping

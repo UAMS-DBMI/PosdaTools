@@ -1,3 +1,4 @@
+\connect private_tag_kb
 --
 -- PostgreSQL database dump
 --

@@ -1,4 +1,4 @@
-COPY apps (app_id, app_name) FROM stdin;
+COPY public.apps (app_id, app_name) FROM stdin;
 1	UserAdmin
 2	PosdaCuration
 3	PhiFixer
@@ -13,9 +13,9 @@ COPY apps (app_id, app_name) FROM stdin;
 12	NewItcTools
 \.
 
-SELECT pg_catalog.setval('apps_app_id_seq', 12, true);
+SELECT pg_catalog.setval('public.apps_app_id_seq', 12, true);
 
-COPY permissions (permission_id, app_id, permission_name) FROM stdin;
+COPY public.permissions (permission_id, app_id, permission_name) FROM stdin;
 1	1	launch
 2	2	launch
 3	3	launch
@@ -46,15 +46,15 @@ COPY permissions (permission_id, app_id, permission_name) FROM stdin;
 48	10	legacy_bbennett
 \.
 
-SELECT pg_catalog.setval('permissions_permission_id_seq', 49, true);
+SELECT pg_catalog.setval('public.permissions_permission_id_seq', 49, true);
 
-COPY users (user_id, user_name, full_name, password) FROM stdin;
+COPY public.users (user_id, user_name, full_name, password) FROM stdin;
 1	admin	Default Admin Account	aJE5lY8D,2wUueoiymAn8HsfbdAp0kPfTiODV7kpeNUttYTgQGbE
 \.
 
-SELECT pg_catalog.setval('users_user_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 2, true);
 
-COPY user_permissions (user_id, permission_id) FROM stdin;
+COPY public.user_permissions (user_id, permission_id) FROM stdin;
 1	20
 1	1
 1	11

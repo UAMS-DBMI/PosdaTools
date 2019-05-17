@@ -190,16 +190,19 @@ The first time you start Posda, you will want to start the `db` and `posda`
 containers first, and wait about 30 seconds after each command for
 initial setup to complete.
 
+The `manage` script is a simple wrapper around `docker-compose`, but it
+configures some things before each run, so it is recommend you use it
+rather than using `docker-compose` directly.
+
 WARNING: If you have chosen to have a separate database host, you must skip
 the first command.
 
+From the `oneposda` directory, execute:
+
 ```bash
-docker-compose up -d db
-# Wait 30 seconds
-docker-compose up -d posda
-# Wait 30 seconds
-docker-compose up -d
+./manage up -d db
+# Wait 30 seconds for the database to start
+./manage up -d posda
+# Wait 30 seconds for initial setup to complete
+./manage up -d
 ```
-
-
-
