@@ -17,8 +17,7 @@ if (process.env.DEBUG == 1) {
 pg.pg.defaults.host = '/var/run/postgresql';
 
 
-// const API_URL = 'http://tcia-posda-rh-1/vapi';
-const API_URL = 'http://quince:8088/vapi';
+const API_URL = 'http://posda-api:8087/v1';
 
 import { Image } from './image';
 
@@ -296,8 +295,7 @@ class K {// {{{
     try {
       workerLog('IEC: ' + iec);
       winston.log('debug', iec);
-      let url = API_URL + '/iec_info/' + iec;
-      let detail_url = API_URL + '/details/';
+      let url = API_URL + '/iecs/' + iec + '/files';
 
       winston.log('debug', 'About to request url');
       let body: string = await rp(url);
@@ -324,7 +322,7 @@ class K {// {{{
   }
 
   async getAnImage(file_id: number): Promise<any> {
-    let url = API_URL + '/details/' + file_id;
+    let url = API_URL + '/files/' + file_id + '/pixels';
     let options: any = {
       url: url,
       encoding: null, // magic param to get binary back (as a Buffer, supposedly)
