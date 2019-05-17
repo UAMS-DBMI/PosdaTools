@@ -8097,6 +8097,17 @@ order by sop_instance_uid
         ;
 
             insert into queries
+            values ('GetDicomFilesByImportName', 'select
+  distinct file_id                                                                                                                                                                                                                                                                                                                                                                                                                                from
+  import_event natural join file_import natural join dicom_file
+where
+  import_type = ''posda-api import'' and import_comment = ?', ARRAY['import_comment'], 
+                    ARRAY['file_id'], ARRAY['adding_ctp', 'for_scripting'], 'posda_files', 'Get a list of to files from the dicom_edit_compare table for a particular edit instance, with file_id and visibility
+
+NB: Normally there should be no file_id (i.e. file has not been imported)')
+        ;
+
+            insert into queries
             values ('RoundInfoById', 'select
   round_id, collection,
   round_created,
@@ -13405,7 +13416,7 @@ where
         ;
 
             insert into queries
-            values ('LockFilePosda', 'LOCK file in ACCESS EXCLUSIVE mode', '{}', 
+            values ('LockFilePosda', 'select 1', '{}', 
                     '{}', ARRAY['NotInteractive', 'Backlog', 'Transaction', 'used_in_file_import_into_posda'], 'posda_files', 'Lock the file table in posda_files')
         ;
 
