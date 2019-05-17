@@ -1,4 +1,4 @@
 site_name: Posda
 theme: readthedocs
 docs_dir: src
-site_dir: ../nginx/www/docs
+site_dir: ../web/www/docs
