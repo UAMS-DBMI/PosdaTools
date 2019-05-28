@@ -211,7 +211,7 @@ sub InsertNoCopy1{
     die "Unable to fetch new file_id";
   }
   $file_id = $r->{file_id};
-  ProcessSingleFile1($db, $ds_digest, $file_id, 
+  ProcessSingleFile1($db, $ds_digest, $file_id,
     $df, $ds, $size, $xfr_stx, $errors, $fn, $ieid);
   return $file_id;
 }
@@ -266,8 +266,8 @@ sub ProcessSingleFile{
   my $has_sop_common = 0;
   my $dicom_file_type = "";
   if(
-    $has_meta && 
-    defined($df->{metaheader}->{"(0002,0002)"}) && 
+    $has_meta &&
+    defined($df->{metaheader}->{"(0002,0002)"}) &&
     $df->{metaheader}->{"(0002,0002)"} eq "1.2.840.10008.1.3.10"
   ){
     $is_dicom_dir = 1;
@@ -277,7 +277,7 @@ sub ProcessSingleFile{
   if(defined $sop_class){
     $has_sop_common = 1;
     if(exists $Posda::Dataset::DD->{SopCl}->{$sop_class}){
-      $dicom_file_type = 
+      $dicom_file_type =
         $Posda::Dataset::DD->{SopCl}->{$sop_class}->{sopcl_desc};
     } else {
       $dicom_file_type = $sop_class;
@@ -290,7 +290,7 @@ sub ProcessSingleFile{
     "where file_id = ?"
   );
   my $q1 = $db->prepare(
-    "insert into dicom_file (\n" .
+    "insert into dicom (\n" .
     "  file_id,\n" .
     "  xfr_stx,\n" .
     "  has_meta,\n" .
@@ -312,7 +312,7 @@ sub ProcessSingleFile{
   if($is_dicom_dir){
     Posda::DB::DicomDir::Import($db, $ds, $id);
   } elsif ($has_sop_common){
-    Posda::DB::DicomIod::Import($db, $ds, $id, $sop_class, 
+    Posda::DB::DicomIod::Import($db, $ds, $id, $sop_class,
       $dicom_file_type);
   } else {
     if($has_sop_common){
@@ -335,8 +335,8 @@ sub ProcessSingleFile1{
   my $has_sop_common = 0;
   my $dicom_file_type = "";
   if(
-    $has_meta && 
-    defined($df->{metaheader}->{"(0002,0002)"}) && 
+    $has_meta &&
+    defined($df->{metaheader}->{"(0002,0002)"}) &&
     $df->{metaheader}->{"(0002,0002)"} eq "1.2.840.10008.1.3.10"
   ){
     $is_dicom_dir = 1;
@@ -346,7 +346,7 @@ sub ProcessSingleFile1{
   if(defined $sop_class){
     $has_sop_common = 1;
     if(exists $Posda::Dataset::DD->{SopCl}->{$sop_class}){
-      $dicom_file_type = 
+      $dicom_file_type =
         $Posda::Dataset::DD->{SopCl}->{$sop_class}->{sopcl_desc};
     } else {
       $dicom_file_type = $sop_class;
@@ -359,7 +359,7 @@ sub ProcessSingleFile1{
     "where file_id = ?"
   );
   my $q1 = $db->prepare(
-    "insert into dicom_file (\n" .
+    "insert into dicom (\n" .
     "  file_id,\n" .
     "  dataset_digest,\n" .
     "  xfr_stx,\n" .
@@ -382,7 +382,7 @@ sub ProcessSingleFile1{
   if($is_dicom_dir){
     Posda::DB::DicomDir::Import($db, $ds, $id);
   } elsif ($has_sop_common){
-    Posda::DB::DicomIod::Import($db, $ds, $id, $sop_class, 
+    Posda::DB::DicomIod::Import($db, $ds, $id, $sop_class,
       $dicom_file_type, $ieid);
   } else {
     if($has_sop_common){
@@ -437,7 +437,7 @@ sub ProcessFilesWithLimit{
   );
   $q->execute();
   while(my $h = $q->fetchrow_hashref()){
-    my($df, $ds, $size, $xfr_stx, $errors) = 
+    my($df, $ds, $size, $xfr_stx, $errors) =
       Posda::Dataset::Try($h->{path});
     if($ds){
       my $has_meta = 0;
@@ -453,8 +453,8 @@ sub ProcessFilesWithLimit{
       my $has_sop_common = 0;
       my $dicom_file_type = "";
       if(
-        $has_meta && 
-        defined($df->{metaheader}->{"(0002,0002)"}) && 
+        $has_meta &&
+        defined($df->{metaheader}->{"(0002,0002)"}) &&
         $df->{metaheader}->{"(0002,0002)"} eq "1.2.840.10008.1.3.10"
       ){
         $is_dicom_dir = 1;
@@ -464,7 +464,7 @@ sub ProcessFilesWithLimit{
       if(defined $sop_class){
         $has_sop_common = 1;
         if(exists $Posda::Dataset::DD->{SopCl}->{$sop_class}){
-          $dicom_file_type = 
+          $dicom_file_type =
             $Posda::Dataset::DD->{SopCl}->{$sop_class}->{sopcl_desc};
         } else {
           $dicom_file_type = $sop_class;
@@ -477,7 +477,7 @@ sub ProcessFilesWithLimit{
         "where file_id = ?"
       );
       my $q1 = $db->prepare(
-        "insert into dicom_file (\n" .
+        "insert into dicom (\n" .
         "  file_id,\n" .
         "  xfr_stx,\n" .
         "  has_meta,\n" .
@@ -499,7 +499,7 @@ sub ProcessFilesWithLimit{
       if($is_dicom_dir){
         Posda::DB::DicomDir::Import($db, $ds, $h->{file_id});
       } elsif ($has_sop_common){
-        Posda::DB::DicomIod::Import($db, $ds, $h->{file_id}, $sop_class, 
+        Posda::DB::DicomIod::Import($db, $ds, $h->{file_id}, $sop_class,
           $dicom_file_type);
       } else {
         ## todo - what if its neither a DICOMDIR nor a known UID?
@@ -533,7 +533,7 @@ sub ProcessFiles{
   );
   $q->execute();
   while(my $h = $q->fetchrow_hashref()){
-    my($df, $ds, $size, $xfr_stx, $errors) = 
+    my($df, $ds, $size, $xfr_stx, $errors) =
       Posda::Dataset::Try($h->{path});
     if($ds){
       my $has_meta = 0;
@@ -549,8 +549,8 @@ sub ProcessFiles{
       my $has_sop_common = 0;
       my $dicom_file_type = "";
       if(
-        $has_meta && 
-        defined($df->{metaheader}->{"(0002,0002)"}) && 
+        $has_meta &&
+        defined($df->{metaheader}->{"(0002,0002)"}) &&
         $df->{metaheader}->{"(0002,0002)"} eq "1.2.840.10008.1.3.10"
       ){
         $is_dicom_dir = 1;
@@ -560,7 +560,7 @@ sub ProcessFiles{
       if(defined $sop_class){
         $has_sop_common = 1;
         if(exists $Posda::Dataset::DD->{SopCl}->{$sop_class}){
-          $dicom_file_type = 
+          $dicom_file_type =
             $Posda::Dataset::DD->{SopCl}->{$sop_class}->{sopcl_desc};
         } else {
           $dicom_file_type = $sop_class;
@@ -595,7 +595,7 @@ sub ProcessFiles{
       if($is_dicom_dir){
         Posda::DB::DicomDir::Import($db, $ds, $h->{file_id});
       } elsif ($has_sop_common){
-        Posda::DB::DicomIod::Import($db, $ds, $h->{file_id}, $sop_class, 
+        Posda::DB::DicomIod::Import($db, $ds, $h->{file_id}, $sop_class,
           $dicom_file_type);
       } else {
         ## todo - what if its neither a DICOMDIR nor a known UID?

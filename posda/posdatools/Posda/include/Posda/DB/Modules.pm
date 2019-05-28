@@ -104,7 +104,7 @@ sub GetAttrs{
   return \%ret;
 }
 sub Patient{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $patient_parms = {
    dob   => "(0010,0030)",
    tob   => "(0010,0032)",
@@ -136,7 +136,7 @@ sub Patient{
     "   ?, ?)"
   );
   return $ins_file_pat->execute(
-    $id,
+    $file_id,
     $parms->{patient_name},
     $parms->{patient_id},
     $parms->{id_issuer},
@@ -367,87 +367,92 @@ sub ImagePixel{
     push(@$errors, "No pixel data in ImagePixel");
     return 0;
   }
-  my $check_pix = $db->prepare(
-    "select * from unique_pixel_data where digest = ? and size = ?"
-  );
-  my $create_pix = $db->prepare(
-    "insert into unique_pixel_data (digest, size) values (?, ?)"
-  );
-  my $get_pixel_id = $db->prepare(
-    "select currval('unique_pixel_data_unique_pixel_data_id_seq') as\n" .
-    "  unique_pixel_data_id"
-  );
-  my $check_image = $db->prepare(
-    "select * from image where unique_pixel_data_id = ?"
-  );
-  my $insert_pix_loc = $db->prepare(
-    "insert into pixel_location(unique_pixel_data_id, file_id, file_offset)\n" .
-    "values (?, ?, ?)"
-  );
-  my $ins_image = $db->prepare(
-    "insert into image\n" .
-    "  (image_type, samples_per_pixel, photometric_interpretation,\n" .
-    "   pixel_rows, pixel_columns, bits_allocated,\n" .
-    "   bits_stored, high_bit, pixel_representation,\n" .
-    "   planar_configuration, number_of_frames, unique_pixel_data_id,\n" .
-    "   pixel_spacing\n" .
-    "   )\n" .
-    "values\n" .
-    "  (?, ?, ?,\n" .
-    "   ?, ?, ?,\n" .
-    "   ?, ?, ?,\n" .
-    "   ?, ?, ?,\n" .
-    "   ?\n" .
-    "   )\n"
-  );
-  my $get_image_id = $db->prepare(
-    "select currval('image_image_id_seq') as image_id"
-  );
-  my $ins_file_image = $db->prepare(
-    "insert into\n" .
-    "   file_image (file_id, image_id, content_date, content_time)\n" .
-    "values (?, ?, ?, ?)\n"
-  );
+  # my $check_pix = $db->prepare(
+  #   "select * from unique_pixel_data where digest = ? and size = ?"
+  # );
+  # my $create_pix = $db->prepare(
+  #   "insert into unique_pixel_data (digest, size) values (?, ?)"
+  # );
+  # my $get_pixel_id = $db->prepare(
+  #   "select currval('unique_pixel_data_unique_pixel_data_id_seq') as\n" .
+  #   "  unique_pixel_data_id"
+  # );
+  # my $check_image = $db->prepare(
+  #   "select * from image where unique_pixel_data_id = ?"
+  # );
+  # my $insert_pix_loc = $db->prepare(
+  #   "insert into pixel_location(unique_pixel_data_id, file_id, file_offset)\n" .
+  #   "values (?, ?, ?)"
+  # );
+  # this needs to go straight into big dicom
+  my $update_image = $db->prepare(q{{
+    update dicom set
+      image_id = (select nextval('image_image_id_seq')),
+      image_type = ?,
+      samples_per_pixel = ?,
+      photometric_interpretation = ?,
+      pixel_rows = ?,
+      pixel_columns = ?,
+      bits_allocated = ?,
+      bits_stored = ?,
+      high_bit = ?,
+      pixel_representation = ?,
+      planar_configuration = ?,
+      number_of_frames = ?,
+      pixel_spacing = ?,
+      pixel_data_digest = ?,
+      pixel_data_offset = ?,
+      pixel_data_length = ?
+    where
+      file_id = ?
+  }});
+  # my $get_image_id = $db->prepare(
+  #   "select currval('image_image_id_seq') as image_id"
+  # );
+  # my $ins_file_image = $db->prepare(
+  #   "insert into\n" .
+  #   "   file_image (file_id, image_id, content_date, content_time)\n" .
+  #   "values (?, ?, ?, ?)\n"
+  # );
   my $pix_root = $ds->{0x7fe0}->{0x10};
-  my $unique_pixel_data_id;
   my $pixel_data;
-  my $pixel_size;
-  my $pix_offset;
+  my $pixel_length;
+  my $pixel_offset;
   my $pixel_digest;
   if(
     exists($pix_root->{value}) &&
     $pix_root->{type} eq "raw" &&
-    ref($pix_root->{value}) ne "ARRAY"
+    ref($pix_root->{value}) ne "array"
   ){
     $pixel_data = $pix_root->{value};
-    $pixel_size = length($pixel_data);
-    $pix_offset = $pix_root->{file_pos};
-    my $ctx = Digest::MD5->new();
+    $pixel_length = length($pixel_data);
+    $pixel_offset = $pix_root->{file_pos};
+    my $ctx = digest::md5->new();
     $ctx->add($pixel_data);
     $pixel_digest = $ctx->hexdigest()
   }
-  if(defined $pixel_data){
-    $check_pix->execute($pixel_digest, $pixel_size);
-    my $h = $check_pix->fetchrow_hashref();
-    $check_pix->finish();
-    if($h && ref($h) eq "HASH"){
-      $unique_pixel_data_id = $h->{unique_pixel_data_id};
-      $hist->{already_existing_pixel_data} = 1;
-    }
-    unless(defined $unique_pixel_data_id){
-      $create_pix->execute($pixel_digest, $pixel_size);
-      $get_pixel_id->execute();
-      my $h = $get_pixel_id->fetchrow_hashref();
-      $get_pixel_id->finish();
-      if($h && ref($h) eq "HASH"){
-        $unique_pixel_data_id = $h->{unique_pixel_data_id};
-      }
-    }
-    if(defined $unique_pixel_data_id){
-      $insert_pix_loc->execute($unique_pixel_data_id, $file_id, $pix_offset);
-    }
-  }
-  $hist->{unique_pixel_data_id} = $unique_pixel_data_id;
+  # if(defined $pixel_data){
+  #   $check_pix->execute($pixel_digest, $pixel_size);
+  #   my $h = $check_pix->fetchrow_hashref();
+  #   $check_pix->finish();
+  #   if($h && ref($h) eq "HASH"){
+  #     $unique_pixel_data_id = $h->{unique_pixel_data_id};
+  #     $hist->{already_existing_pixel_data} = 1;
+  #   }
+  #   unless(defined $unique_pixel_data_id){
+  #     $create_pix->execute($pixel_digest, $pixel_size);
+  #     $get_pixel_id->execute();
+  #     my $h = $get_pixel_id->fetchrow_hashref();
+  #     $get_pixel_id->finish();
+  #     if($h && ref($h) eq "HASH"){
+  #       $unique_pixel_data_id = $h->{unique_pixel_data_id};
+  #     }
+  #   }
+  #   if(defined $unique_pixel_data_id){
+  #     $insert_pix_loc->execute($unique_pixel_data_id, $file_id, $pix_offset);
+  #   }
+  # }
+  #$hist->{unique_pixel_data_id} = $unique_pixel_data_id;
   # Now we have a unique_pixel_data_id
 
   my $image_parms = {
@@ -473,69 +478,60 @@ sub ImagePixel{
     content_time => "Timetag",
   };
   my $parms = GetAttrs($ds, $image_parms, $ModList, $errors);
-  $check_image->execute($unique_pixel_data_id);
-  my $image_id;
-  image_row:
-  while(my $h = $check_image->fetchrow_hashref()){
-    my $same = 1;
-    for my $i (keys %{$parms}){
-      if($i eq "content_date" || $i eq "content_time") {next}
-      if(
-        (defined($parms->{$i}) && !defined($h->{$i})) ||
-        (!defined($parms->{$i}) && defined($h->{$i})) ||
-        (
-          (defined($parms->{$i}) && defined($h->{$i})) &&
-          $parms->{$i} ne $h->{$i}
-        )
-      ){
-        my $old = $h->{$i};
-        my $new = $parms->{$i};
-        unless(defined($old)) { $old = "<undef>" }
-        unless(defined($new)) { $new = "<undef>" }
-        push(@$errors,  "Same pixel data with different $i: " .
-          "\"$old\" vs \"$new\"\n" .
-          "old_image_id: $h->{image_id}\n" .
-          "file_id: $file_id");
-        $same = 0;
-      }
-    }
-    if($same) {
-      $image_id = $h->{image_id};
-      $hist->{already_existing_image} = 1;
-      last image_row ;
-    }
-  }
-  unless(defined $image_id){
-    $ins_image->execute(
-      $parms->{image_type},
-      $parms->{samples_per_pixel},
-      $parms->{photometric_interpretation},
-      $parms->{pixel_rows},
-      $parms->{pixel_columns},
-      $parms->{bits_allocated},
-      $parms->{bits_stored},
-      $parms->{high_bit},
-      $parms->{pixel_representation},
-      $parms->{planar_configuration},
-      $parms->{number_of_frames},
-      $unique_pixel_data_id,
-      $parms->{pixel_spacing},
-    );
-    $get_image_id->execute();
-    my $h = $get_image_id->fetchrow_hashref();
-    $get_image_id->finish();
-    if($h && ref($h) eq "HASH"){
-      $image_id = $h->{image_id};
-    }
-  }
-
-  $ins_file_image->execute($file_id, $image_id,
-    $parms->{content_date}, $parms->{content_time}
+  # $check_image->execute($unique_pixel_data_id);
+  # my $image_id;
+  # image_row:
+  # while(my $h = $check_image->fetchrow_hashref()){
+  #   my $same = 1;
+  #   for my $i (keys %{$parms}){
+  #     if($i eq "content_date" || $i eq "content_time") {next}
+  #     if(
+  #       (defined($parms->{$i}) && !defined($h->{$i})) ||
+  #       (!defined($parms->{$i}) && defined($h->{$i})) ||
+  #       (
+  #         (defined($parms->{$i}) && defined($h->{$i})) &&
+  #         $parms->{$i} ne $h->{$i}
+  #       )
+  #     ){
+  #       my $old = $h->{$i};
+  #       my $new = $parms->{$i};
+  #       unless(defined($old)) { $old = "<undef>" }
+  #       unless(defined($new)) { $new = "<undef>" }
+  #       push(@$errors,  "Same pixel data with different $i: " .
+  #         "\"$old\" vs \"$new\"\n" .
+  #         "old_image_id: $h->{image_id}\n" .
+  #         "file_id: $file_id");
+  #       $same = 0;
+  #     }
+  #   }
+  #   if($same) {
+  #     $image_id = $h->{image_id};
+  #     $hist->{already_existing_image} = 1;
+  #     last image_row ;
+  #   }
+  # }
+  $update_image->execute(
+    $parms->{image_type},
+    $parms->{samples_per_pixel},
+    $parms->{photometric_interpretation},
+    $parms->{pixel_rows},
+    $parms->{pixel_columns},
+    $parms->{bits_allocated},
+    $parms->{bits_stored},
+    $parms->{high_bit},
+    $parms->{pixel_representation},
+    $parms->{planar_configuration},
+    $parms->{number_of_frames},
+    $parms->{pixel_spacing},
+    $pixel_digest,
+    $pixel_offset,
+    $pixel_length,
+    $file_id
   );
-  $hist->{image_id} = $image_id;
+  #$hist->{image_id} = $image_id;
 }
 sub ImagePlane{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   unless(defined $hist->{image_id}){
     push(@$errors, "no image_id in ImagePlane");
     return;
@@ -543,62 +539,74 @@ sub ImagePlane{
   my $IP_parms = {
      iop => "(0020,0037)",
      ipp => "(0020,0032)",
-     for_uid => "(0020,0052)",
   };
   my $ModList = {
     iop => "MultiText",
     ipp => "MultiText",
   };
   my $parms = GetAttrs($ds, $IP_parms, $ModList, $errors);
-  my $get_image_geometry = $db->prepare(
-    "select * from image_geometry where image_id = ? and " .
-    "ipp = ? and iop = ? and for_uid = ?"
+  my $update_image_geometry = $db->prepare(q{{
+    update dicom set
+      image_geometry_id = (select nextval('image_geometry_image_geometry_id_seq')),
+      ipp = ?,
+      iop = ?
+    where
+      file_id = ?
+  }});
+  $update_image_geometry->execute(
+    $params->{ipp},
+    $params->{iop},
+    $file_id
   );
-  $get_image_geometry->execute($hist->{image_id},
-    $parms->{ipp}, $parms->{iop}, $parms->{for_uid}
-  );
-  my $h = $get_image_geometry->fetchrow_hashref();
-  $get_image_geometry->finish();
-  my $image_geometry_id;
-  if(
-    $h && defined($h->{image_geometry_id})
-  ){
-    $image_geometry_id = $h->{image_geometry_id};
-    $h->{already_existing_geometry} = 1;
-  } else {
-    my $ins_image_geometry = $db->prepare(
-      "insert into image_geometry(image_id, iop, ipp, for_uid)" .
-      " values(?, ?, ?, ?)"
-    );
-    $ins_image_geometry->execute(
-      $hist->{image_id},
-      $parms->{iop},
-      $parms->{ipp},
-      $parms->{for_uid}
-    );
-    my $get_image_geometry_id = $db->prepare(
-      "select currval('image_geometry_image_geometry_id_seq') as" .
-      "  image_geometry_id"
-    );
-    $get_image_geometry_id->execute();
-    my $h = $get_image_geometry_id->fetchrow_hashref();
-    $get_image_geometry_id->finish();
-    if($h){
-      $image_geometry_id = $h->{image_geometry_id};
-    }
-  }
-  unless(defined $image_geometry_id){
-    die "couldn't define an image geometry";
-  }
-  my $ins_file_image_geometry = $db->prepare(
-    "insert into file_image_geometry(file_id, image_geometry_id)" .
-    " values(?, ?)"
-  );
-  $ins_file_image_geometry->execute($id, $image_geometry_id);
-  $h->{image_geometry_id} = $image_geometry_id;
+  # my $get_image_geometry = $db->prepare(
+  #   "select * from image_geometry where image_id = ? and " .
+  #   "ipp = ? and iop = ? and for_uid = ?"
+  # );
+  # $get_image_geometry->execute($hist->{image_id},
+  #   $parms->{ipp}, $parms->{iop}, $parms->{for_uid}
+  # );
+  # my $h = $get_image_geometry->fetchrow_hashref();
+  # $get_image_geometry->finish();
+  # my $image_geometry_id;
+  # if(
+  #   $h && defined($h->{image_geometry_id})
+  # ){
+  #   $image_geometry_id = $h->{image_geometry_id};
+  #   $h->{already_existing_geometry} = 1;
+  # } else {
+  #   my $ins_image_geometry = $db->prepare(
+  #     "insert into image_geometry(image_id, iop, ipp, for_uid)" .
+  #     " values(?, ?, ?, ?)"
+  #   );
+  #   $ins_image_geometry->execute(
+  #     $hist->{image_id},
+  #     $parms->{iop},
+  #     $parms->{ipp},
+  #     $parms->{for_uid}
+  #   );
+  #   my $get_image_geometry_id = $db->prepare(
+  #     "select currval('image_geometry_image_geometry_id_seq') as" .
+  #     "  image_geometry_id"
+  #   );
+  #   $get_image_geometry_id->execute();
+  #   my $h = $get_image_geometry_id->fetchrow_hashref();
+  #   $get_image_geometry_id->finish();
+  #   if($h){
+  #     $image_geometry_id = $h->{image_geometry_id};
+  #   }
+  # }
+  # unless(defined $image_geometry_id){
+  #   die "couldn't define an image geometry";
+  # }
+  # my $ins_file_image_geometry = $db->prepare(
+  #   "insert into file_image_geometry(file_id, image_geometry_id)" .
+  #   " values(?, ?)"
+  # );
+  # $ins_file_image_geometry->execute($file_id, $image_geometry_id);
+  # $h->{image_geometry_id} = $image_geometry_id;
 }
 sub FrameOfReference{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $for_parms = {
     for_uid => "(0020,0052)",
     position_ref_indicator => "(0020,1040)",
@@ -609,7 +617,7 @@ sub FrameOfReference{
     "insert into file_for(file_id, for_uid, position_ref_indicator)" .
     "  values (?, ?, ?)"
   );
-  $ins_for->execute($id, $parms->{for_uid}, $parms->{position_ref_indicator});
+  $ins_for->execute($file_id, $parms->{for_uid}, $parms->{position_ref_indicator});
   $hist->{frame_of_reference} = $parms->{for_uid};
 }
 sub Synchronization{
@@ -622,14 +630,14 @@ sub SlopeIntercept{
     push(@$errors, "No image_id in SlopeIntercept");
     return;
   }
-  my $g_si_w_units = $db->prepare(
-    "select * from slope_intercept\n" .
-    "where slope = ? and intercept = ? and si_units = ?"
-  );
-  my $g_si_wo_units = $db->prepare(
-    "select * from slope_intercept\n" .
-    "where slope = ? and intercept = ? and si_units is null"
-  );
+  # my $g_si_w_units = $db->prepare(
+  #   "select * from slope_intercept\n" .
+  #   "where slope = ? and intercept = ? and si_units = ?"
+  # );
+  # my $g_si_wo_units = $db->prepare(
+  #   "select * from slope_intercept\n" .
+  #   "where slope = ? and intercept = ? and si_units is null"
+  # );
   my $slope = $ds->ExtractElementBySig("(0028,1053)");
   my $intercept = $ds->ExtractElementBySig("(0028,1052)");
   my $units = $ds->ExtractElementBySig("(0054,1001)");
@@ -639,57 +647,70 @@ sub SlopeIntercept{
     return;
   }
   my $h;
-  if(defined($units)){
-    $g_si_w_units->execute($slope, $intercept, $units);
-    $h = $g_si_w_units->fetchrow_hashref();
-    $g_si_w_units->finish();
-  } else {
-    $g_si_wo_units->execute($slope, $intercept);
-    $h = $g_si_wo_units->fetchrow_hashref();
-    $g_si_wo_units->finish();
-  }
-  my $si_id;
-  if(defined($h) && ref($h) eq "HASH"){
-    $si_id = $h->{slope_intercept_id};
-  } else {
-    my $in_sl = $db->prepare(
-      "insert into slope_intercept(slope, intercept, si_units)\n" .
-      "values(?, ?, ?)"
-    );
-    $in_sl->execute($slope, $intercept, $units);
-    my $get_sl_id = $db->prepare(
-      "select currval('slope_intercept_slope_intercept_id_seq') as\n" .
-      "  slope_intercept_id"
-    );
-    $get_sl_id->execute();
-    my $h = $get_sl_id->fetchrow_hashref();
-    $get_sl_id->finish();
-    $si_id = $h->{slope_intercept_id};
-  }
-  my $g_i_sl = $db->prepare(
-    "select * from image_slope_intercept\n" .
-    "where image_id = ? and slope_intercept_id = ?"
+  # if(defined($units)){
+  #   $g_si_w_units->execute($slope, $intercept, $units);
+  #   $h = $g_si_w_units->fetchrow_hashref();
+  #   $g_si_w_units->finish();
+  # } else {
+  #   $g_si_wo_units->execute($slope, $intercept);
+  #   $h = $g_si_wo_units->fetchrow_hashref();
+  #   $g_si_wo_units->finish();
+  # }
+  # my $si_id;
+  # if(defined($h) && ref($h) eq "HASH"){
+  #   $si_id = $h->{slope_intercept_id};
+  # } else {
+  #   my $in_sl = $db->prepare(
+  #     "insert into slope_intercept(slope, intercept, si_units)\n" .
+  #     "values(?, ?, ?)"
+  #   );
+  #   $in_sl->execute($slope, $intercept, $units);
+  #   my $get_sl_id = $db->prepare(
+  #     "select currval('slope_intercept_slope_intercept_id_seq') as\n" .
+  #     "  slope_intercept_id"
+  #   );
+  #   $get_sl_id->execute();
+  #   my $h = $get_sl_id->fetchrow_hashref();
+  #   $get_sl_id->finish();
+  #   $si_id = $h->{slope_intercept_id};
+  # }
+  # my $g_i_sl = $db->prepare(
+  #   "select * from image_slope_intercept\n" .
+  #   "where image_id = ? and slope_intercept_id = ?"
+  # );
+  # $g_i_sl->execute($hist->{image_id}, $si_id);
+  # $h = $g_i_sl->fetchrow_hashref();
+  # $g_i_sl->finish();
+  # unless(
+  #   $h && ref($h) eq "HASH"
+  # ){
+  #   my $ins_i_sl = $db->prepare(
+  #     "insert into image_slope_intercept(slope_intercept_id, image_id)\n" .
+  #     "values (?, ?)"
+  #   );
+  #   $ins_i_sl->execute($si_id, $hist->{image_id});
+  # }
+  # my $ins_f_sl = $db->prepare(
+  #     "insert into file_slope_intercept(slope_intercept_id, file_id)\n" .
+  #     "values (?, ?)"
+  # );
+  # $ins_f_sl->execute($si_id, $id);
+  my $update_slope_intercept = $db->prepare(q{{
+    update dicom set
+      slope_intercept_id = (select nextval('slope_intercept_slope_intercept_id_seq')),
+      slope = ?, intercept = ?, si_units = ?
+    where
+      file_id = ?
+  }});
+  $update_slope_intercept->execute(
+    $slope,
+    $intercept,
+    $units,
+    $file_id
   );
-  $g_i_sl->execute($hist->{image_id}, $si_id);
-  $h = $g_i_sl->fetchrow_hashref();
-  $g_i_sl->finish();
-  unless(
-    $h && ref($h) eq "HASH"
-  ){
-    my $ins_i_sl = $db->prepare(
-      "insert into image_slope_intercept(slope_intercept_id, image_id)\n" .
-      "values (?, ?)"
-    );
-    $ins_i_sl->execute($si_id, $hist->{image_id});
-  }
-  my $ins_f_sl = $db->prepare(
-      "insert into file_slope_intercept(slope_intercept_id, file_id)\n" .
-      "values (?, ?)"
-  );
-  $ins_f_sl->execute($si_id, $id);
 }
 sub WindowLevel{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   unless(defined $hist->{image_id}){
     push(@$errors, "No image_id in WindowLevel");
     return;
@@ -756,7 +777,7 @@ sub WindowLevel{
         unless(defined($h) && ref($h) eq "HASH"){
           $ins_i_wl->execute($win_lev_id, $hist->{image_id});
         }
-        $ins_f_wl->execute($win_lev_id, $id, $i);
+        $ins_f_wl->execute($win_lev_id, $file_id, $i);
       }
     }
   } else {
@@ -804,12 +825,12 @@ sub WindowLevel{
       unless(defined($h) && ref($h) eq "HASH"){
         $ins_i_wl->execute($win_lev_id, $hist->{image_id});
       }
-      $ins_f_wl->execute($win_lev_id, $id, $i);
+      $ins_f_wl->execute($win_lev_id, $file_id, $i);
     }
   }
 }
 sub StructureSet{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $c_ss = $db->prepare(
     "insert\n" .
     "into structure_set\n" .
@@ -857,7 +878,7 @@ sub StructureSet{
     "values\n" .
     "  (?, ?, ?)"
   );
-  $c_f_ss->execute($id, $ss_id, $parms->{ss_inst_num});
+  $c_f_ss->execute($file_id, $ss_id, $parms->{ss_inst_num});
 
   my $mp = "(3006,0010)[<0>](3006,00c0)[<1>](3006,00c2)";
   my $rel_frames = $ds->Substitutions($mp);
@@ -1020,7 +1041,7 @@ sub CreateSsFor{
   return $ss_for_id;
 }
 sub RoiContour{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $matches = $ds->Substitutions("(3006,0039)[<0>](3006,0084)");
   rc_item:
   for my $m (@{$matches->{list}}){
@@ -1123,7 +1144,7 @@ sub RoiContour{
   }
 }
 sub RtRoiObservations{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $mp = $ds->Substitutions("(3006,0080)[<0>](3006,0082)");
   roi_obs:
   for my $m (@{$mp->{list}}){
@@ -1252,7 +1273,7 @@ sub RtRoiObservations{
   #print "RtRoiObservations Module not yet implemented\n";
 }
 sub RtPlan{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   # Set up following tables:
   #   plan
   #   file_plan
@@ -1288,37 +1309,26 @@ sub RtPlan{
     push(@$errors, "plan geometry undefined");
     return;
   }
-  my $ins_plan = $db->prepare(
-    "insert into plan(\n" .
-    "  plan_label, plan_name, plan_description,\n" .
-    "  instance_number, operators_name, rt_plan_date,\n" .
-    "  rt_plan_time, rt_treatment_protocols, plan_intent,\n" .
-    "  treatment_sites, rt_plan_geometry, ss_referenced_from_plan\n" .
-    ")values(\n" .
-    "  ?, ?, ?,\n" .
-    "  ?, ?, ?,\n" .
-    "  ?, ?, ?,\n" .
-    "  ?, ?, ?)"
-  );
-  $ins_plan->execute(
-    $parms->{plan_label},
-    $parms->{plan_name},
-    $parms->{plan_description},
-
-    $parms->{instance_number},
-    $parms->{operators_name},
-    $parms->{rt_plan_date},
-
-    $parms->{rt_plan_time},
-    $parms->{rt_treatment_protocols},
-    $parms->{plan_intent},
-
-    $parms->{treatment_sites},
-    $parms->{rt_plan_geometry},
-    $parms->{ss_referenced_from_plan},
-  );
+  my $update_plan = $db->prepare(q{{
+    update dicom set
+      plan_id = ?,
+      plan_label = ?,
+      plan_name = ?,
+      plan_description = ?,
+      instance_number = ?,
+      operators_name = ?,
+      rt_plan_date = ?,
+      rt_plan_time = ?,
+      rt_treatment_protocols = ?,
+      plan_intent = ?,
+      treatment_sites = ?,
+      rt_plan_geometry = ?,
+      ss_referenced_from_plan = ?
+    where
+      file_id = ?
+  }});
   my $get_plan_id = $db->prepare(
-    "select currval('plan_plan_id_seq') as plan_id");
+    "select nextval('plan_plan_id_seq') as plan_id");
   $get_plan_id->execute();
   my $h = $get_plan_id->fetchrow_hashref();
   unless($h && ref($h) eq "HASH" && $h->{plan_id}){
@@ -1327,13 +1337,29 @@ sub RtPlan{
   }
   my $plan_id = $h->{plan_id};
   $hist->{plan_id} = $plan_id;
-  my $ins_file_plan = $db->prepare(
-    "insert into file_plan(\n" .
-    "  plan_id, file_id\n" .
-    ")values(\n" .
-    "  ?, ?)"
+  $ins_plan->execute(
+    $plan_id,
+    $parms->{plan_label},
+    $parms->{plan_name},
+    $parms->{plan_description},
+    $parms->{instance_number},
+    $parms->{operators_name},
+    $parms->{rt_plan_date},
+    $parms->{rt_plan_time},
+    $parms->{rt_treatment_protocols},
+    $parms->{plan_intent},
+    $parms->{treatment_sites},
+    $parms->{rt_plan_geometry},
+    $parms->{ss_referenced_from_plan},
+    $file_id
   );
-  $ins_file_plan->execute($plan_id, $id);
+  # my $ins_file_plan = $db->prepare(
+  #   "insert into file_plan(\n" .
+  #   "  plan_id, file_id\n" .
+  #   ")values(\n" .
+  #   "  ?, ?)"
+  # );
+  # $ins_file_plan->execute($plan_id, $file_id);
   my $ins_drfp = $db->prepare(
     "insert into dose_referenced_from_plan(\n" .
     "  plan_id, dose_sop_instance_uid\n" .
@@ -1363,7 +1389,7 @@ sub RtPlan{
   }
 }
 sub RtPrescription{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   #  Set up following tables:
   #    rt_prescription
   #    rt_prescription_dose_ref
@@ -1486,7 +1512,7 @@ sub RtPrescription{
   }
 }
 sub RtToleranceTables{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   #  Set up following tables:
   #    rt_beam_tolerance_table
   #    rt_beam_limit_dev_tolerance
@@ -1588,7 +1614,7 @@ sub RtToleranceTables{
   }
 }
 sub RtPatientSetup{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   #  Set up following tables:
   ##    rt_plan_patient_setup
   ##    rt_plan_setup_image
@@ -1873,7 +1899,7 @@ sub RtPatientSetup{
   #print "RtPatientSetup Module not yet implemented\n";
 }
 sub RtFractionScheme{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   #  Set up following tables:
   #    rt_plan_fraction_group
   #    fraction_related_dose
@@ -2145,7 +2171,7 @@ sub RtFractionScheme{
   }
 }
 sub RtBeams{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   #  Set up following tables:
   #    rt_beam
   #    beam_limiting_device
@@ -3240,39 +3266,39 @@ sub RtBeams{
   #print "RtBeams Module not yet implemented\n";
 }
 sub SpatialRegistration{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Spatial Registration Module not yet implemented\n";
 }
 sub SpatialFiducials{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Spatial Fiducials Module not yet implemented\n";
 }
 sub DeformableSpatialRegistration{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Deformable Spatial Registration Module not yet implemented\n";
 }
 sub Segmentation{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Segmentation Module not yet implemented\n";
 }
 sub SurfaceSegmentation{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Surface Segmentation Module not yet implemented\n";
 }
 sub RtBrachy{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Message: RtBrachy Module not yet implemented\n";
 }
 sub CRImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "CRImage Module not yet implemented\n";
 }
 sub DXImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "DXImage Module not yet implemented\n";
 }
 sub CTImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $ct_parms = {
    kvp => "(0018,0060)",
    instance_number => "(0020,0013)",
@@ -3314,7 +3340,7 @@ sub CTImage{
     ");"
   );
   $ins_ct_img->execute(
-    $id, $parms->{kvp}, $parms->{instance_number},
+    $file_id, $parms->{kvp}, $parms->{instance_number},
     $parms->{scan_options}, $parms->{data_collection_diameter},
       $parms->{reconstruction_diameter},
     $parms->{dist_source_to_pat}, $parms->{dist_source_to_detect},
@@ -3326,7 +3352,7 @@ sub CTImage{
   );
 }
 sub RTDose{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $image_id = $hist->{image_id};
   my $rt_dose_parms = {
     dose_units => "(3004,0002)",
@@ -3377,7 +3403,7 @@ sub RTDose{
   $hist->{rt_dose_id} = $dose_id;
   my $ins_dose_file = $db->prepare(
     "insert into file_dose(rt_dose_id, file_id) values (?, ?)");
-  $ins_dose_file->execute($dose_id, $id);
+  $ins_dose_file->execute($dose_id, $file_id);
   my $dose_img_parms = {
     gfov => "(3004,000c)",
     scaling => "(3004,000e)",
@@ -3403,7 +3429,7 @@ sub RTDose{
   }
 }
 sub RTDvh{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   my $rt_dvh_list = $ds->Search("(3004,0050)[<0>](3004,0002)");
   unless(
     defined($rt_dvh_list) && ref($rt_dvh_list) eq "ARRAY" &&
@@ -3602,63 +3628,63 @@ sub RTDvh{
 #  print "RTDvh Module only partially implemented\n";
 }
 sub MRImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
 #  print "MRImage Module not yet implemented\n";
 }
 sub USImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "USImage Module not yet implemented\n";
 }
 sub PetImage{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "PetImage Module not yet implemented\n";
 }
 sub WaveformIdentification{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "WaveformIdentification Module not yet implemented\n";
 }
 sub Waveform{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Waveform Module not yet implemented\n";
 }
 sub AcquisitionContext{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "AcquistionContext Module not yet implemented\n";
 }
 sub ContrastBolus{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Message: ContrastBolus Module not yet implemented\n";
 }
 sub PresentationState{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "PresentationState Module not yet implemented\n";
 }
 sub Document{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Document Module not yet implemented\n";
 }
 sub KeyObjectDocument{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "KeyObjectDocument Module not yet implemented\n";
 }
 sub KeySeries{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "KeySeries Module not yet implemented\n";
 }
 sub SRSeries{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "SrSeries Module not yet implemented\n";
 }
 sub Retired{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Retired Module not yet implemented\n";
 }
 sub RealWorldMapping{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "RealWorldMapping Module not yet implemented\n";
 }
 sub UnImplemented{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "UnImplemented Module not yet implemented\n";
 }
 1;

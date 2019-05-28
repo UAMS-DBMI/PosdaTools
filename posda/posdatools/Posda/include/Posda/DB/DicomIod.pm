@@ -782,7 +782,8 @@ my $ctp_params = {
   study_year => '(0013,"CTP",50)',
 };
 sub Import{
-  my($db, $ds, $id, $sop_class, $desc, $ieid) = @_;
+  my($db, $ds, $file_id, $sop_class, $desc, $ieid) = @_;
+  #TODO: This needs to be updated to dicom_source somehow....
   my $ins_ctp = $db->prepare(
     "insert into ctp_file(\n" .
     "  file_id, project_name, trial_name, site_name, site_id,\n".
@@ -815,12 +816,12 @@ sub Import{
     (defined($ctp_parms{trial_name}) && $ctp_parms{trial_name} ne "" ) ||
     (defined($ctp_parms{site_name}) && $ctp_parms{site_name} ne "") ||
     (defined($ctp_parms{site_id}) && $ctp_parms{site_id} ne "") ||
-    (defined($ctp_parms{file_visibility}) 
+    (defined($ctp_parms{file_visibility})
       && $ctp_parms{file_visibility} ne "") ||
     (defined($ctp_parms{visibility}) && $ctp_parms{visibility} ne "")
   ){
     $ins_ctp->execute(
-      $id, $ctp_parms{project_name}, $ctp_parms{trial_name},
+      $file_id, $ctp_parms{project_name}, $ctp_parms{trial_name},
       $ctp_parms{site_name}, $ctp_parms{site_id}, $ctp_parms{file_visibility},
       $ctp_parms{batch}, $ctp_parms{study_year}
     );
@@ -835,12 +836,12 @@ sub Import{
     $parms{spec_char_set} = join("\\", @{$parms{spec_char_set}});
   }
   if(
-    defined($parms{creation_time}) && 
+    defined($parms{creation_time}) &&
     $parms{creation_time} =~ /^(\d\d)(\d\d)(\d\d)$/
   ){
     $parms{creation_time} = "$1:$2:$3";
   } elsif (
-    defined($parms{creation_time}) && 
+    defined($parms{creation_time}) &&
     $parms{creation_time} =~ /^(\d\d)(\d\d)(\d\d)\.(\d+)$/
   ){
     $parms{creation_time} = "$1:$2:$3.$4";
@@ -849,7 +850,7 @@ sub Import{
     $parms{creation_time} = undef;
   }
   if(
-    defined($parms{creation_date}) && 
+    defined($parms{creation_date}) &&
     $parms{creation_date} =~ /^(\d\d\d\d)(\d\d)(\d\d)$/
   ){
     my $y = $1; my $m = $2; my $d = $3;
@@ -874,12 +875,12 @@ sub Import{
     exists($parms{related_general_sop_class}) &&
     ref($parms{related_general_sop_class}) eq "ARRAY"
   ){
-    $parms{related_general_sop_class} = 
+    $parms{related_general_sop_class} =
       join("\\", @{$parms{related_general_sop_class}});
   }
   if(defined($parms{sop_class}) && defined($parms{sop_instance})){
     $ins_sop_common->execute(
-      $id, $parms{sop_class}, $parms{sop_instance},
+      $file_id, $parms{sop_class}, $parms{sop_instance},
       $parms{spec_char_set}, $parms{creation_date}, $parms{creation_time},
       $parms{creator_uid}, $parms{related_general_sop_class},
       $parms{original_specialized_sop_class},
@@ -892,7 +893,7 @@ sub Import{
     ){
       my $hist = { import_event_id => $ieid };
       for my $handler (@{$SopHandlers->{$sop_class}->{handlers}}){
-        &$handler($db, $ds, $id, $hist, \@errors);
+        &$handler($db, $ds, $file_id, $hist, \@errors);
       }
     }
     if(exists $SopHandlers->{$sop_class}){
@@ -905,21 +906,21 @@ sub Import{
     }
   } else {
     unless($parms{sop_class}){
-      push(@errors, "file $id has no SOP class");
+      push(@errors, "file $file_id has no SOP class");
     }
     unless($parms{sop_instance}){
-      push(@errors, "file $id has no SOP instance");
+      push(@errors, "file $file_id has no SOP instance");
     }
   }
   my $i_err = $db->prepare(
     "insert into dicom_process_errors(file_id, error_msg) values (?, ?)"
   );
   for my $i (@errors){
-    $i_err->execute($id, $i);
+    $i_err->execute($file_id, $i);
   }
 }
 sub ProcessModules{
-  my($db, $ds, $id, $sop_class) = @_;
+  my($db, $ds, $file_id, $sop_class) = @_;
   my @errors;
   if(
     exists($SopHandlers->{$sop_class}) &&
@@ -927,14 +928,14 @@ sub ProcessModules{
   ){
     my $hist = { import_event_id => 1 };
     for my $handler (@{$SopHandlers->{$sop_class}->{handlers}}){
-      &$handler($db, $ds, $id, $hist, \@errors);
+      &$handler($db, $ds, $file_id, $hist, \@errors);
     }
   }
   my $i_err = $db->prepare(
     "insert into dicom_process_errors(file_id, error_msg) values (?, ?)"
   );
   for my $i (@errors){
-    $i_err->execute($id, $i);
+    $i_err->execute($file_id, $i);
   }
 }
 1;
