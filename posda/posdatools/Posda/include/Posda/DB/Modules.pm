@@ -8,6 +8,7 @@
 package Posda::DB::Modules;
 use strict;
 use Carp;
+use Digest::MD5;
 sub GetAttrs{
   my($ds, $parms, $mod, $errors) = @_;
   my %ret;
@@ -385,7 +386,7 @@ sub ImagePixel{
   #   "values (?, ?, ?)"
   # );
   # this needs to go straight into big dicom
-  my $update_image = $db->prepare(q{{
+  my $update_image = $db->prepare(q{
     update dicom set
       image_id = (select nextval('image_image_id_seq')),
       image_type = ?,
@@ -405,7 +406,7 @@ sub ImagePixel{
       pixel_data_length = ?
     where
       file_id = ?
-  }});
+  });
   # my $get_image_id = $db->prepare(
   #   "select currval('image_image_id_seq') as image_id"
   # );
@@ -427,7 +428,7 @@ sub ImagePixel{
     $pixel_data = $pix_root->{value};
     $pixel_length = length($pixel_data);
     $pixel_offset = $pix_root->{file_pos};
-    my $ctx = digest::md5->new();
+    my $ctx = Digest::MD5->new();
     $ctx->add($pixel_data);
     $pixel_digest = $ctx->hexdigest()
   }
@@ -545,17 +546,17 @@ sub ImagePlane{
     ipp => "MultiText",
   };
   my $parms = GetAttrs($ds, $IP_parms, $ModList, $errors);
-  my $update_image_geometry = $db->prepare(q{{
+  my $update_image_geometry = $db->prepare(q{
     update dicom set
       image_geometry_id = (select nextval('image_geometry_image_geometry_id_seq')),
       ipp = ?,
       iop = ?
     where
       file_id = ?
-  }});
+  });
   $update_image_geometry->execute(
-    $params->{ipp},
-    $params->{iop},
+    $parms->{ipp},
+    $parms->{iop},
     $file_id
   );
   # my $get_image_geometry = $db->prepare(
@@ -621,11 +622,11 @@ sub FrameOfReference{
   $hist->{frame_of_reference} = $parms->{for_uid};
 }
 sub Synchronization{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   print "Synchronization Module not yet implemented\n";
 }
 sub SlopeIntercept{
-  my($db, $ds, $id, $hist, $errors) = @_;
+  my($db, $ds, $file_id, $hist, $errors) = @_;
   unless(defined $hist->{image_id}){
     push(@$errors, "No image_id in SlopeIntercept");
     return;
@@ -642,8 +643,8 @@ sub SlopeIntercept{
   my $intercept = $ds->ExtractElementBySig("(0028,1052)");
   my $units = $ds->ExtractElementBySig("(0054,1001)");
   unless(defined($slope) && defined($intercept)){
-    print STDERR "no slope intercept for file $id\n";
-    push (@$errors, "no slope intercept for file $id");
+    print STDERR "no slope intercept for file $file_id\n";
+    push (@$errors, "no slope intercept for file $file_id");
     return;
   }
   my $h;
@@ -695,13 +696,13 @@ sub SlopeIntercept{
   #     "values (?, ?)"
   # );
   # $ins_f_sl->execute($si_id, $id);
-  my $update_slope_intercept = $db->prepare(q{{
+  my $update_slope_intercept = $db->prepare(q{
     update dicom set
       slope_intercept_id = (select nextval('slope_intercept_slope_intercept_id_seq')),
       slope = ?, intercept = ?, si_units = ?
     where
       file_id = ?
-  }});
+  });
   $update_slope_intercept->execute(
     $slope,
     $intercept,
@@ -1309,7 +1310,7 @@ sub RtPlan{
     push(@$errors, "plan geometry undefined");
     return;
   }
-  my $update_plan = $db->prepare(q{{
+  my $update_plan = $db->prepare(q{
     update dicom set
       plan_id = ?,
       plan_label = ?,
@@ -1326,7 +1327,7 @@ sub RtPlan{
       ss_referenced_from_plan = ?
     where
       file_id = ?
-  }});
+  });
   my $get_plan_id = $db->prepare(
     "select nextval('plan_plan_id_seq') as plan_id");
   $get_plan_id->execute();
@@ -1337,7 +1338,7 @@ sub RtPlan{
   }
   my $plan_id = $h->{plan_id};
   $hist->{plan_id} = $plan_id;
-  $ins_plan->execute(
+  $update_plan->execute(
     $plan_id,
     $parms->{plan_label},
     $parms->{plan_name},

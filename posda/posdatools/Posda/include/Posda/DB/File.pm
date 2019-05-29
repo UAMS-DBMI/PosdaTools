@@ -289,18 +289,19 @@ sub ProcessSingleFile{
     "  file_type = 'parsed dicom file'\n" .
     "where file_id = ?"
   );
-  my $q1 = $db->prepare(
-    "insert into dicom (\n" .
-    "  file_id,\n" .
-    "  xfr_stx,\n" .
-    "  has_meta,\n" .
-    "  is_dicom_dir,\n" .
-    "  has_sop_common,\n" .
-    "  dicom_file_type\n" .
-    ")\n" .
-    "values(?, ?, ?, ?, ?, ?)"
-  );
+  my $q1 = $db->prepare(q{
+    insert into dicom
+    (file_id,
+     xfr_stx,
+     has_meta,
+     is_dicom_dir,
+     has_sop_common,
+     dicom_file_type)
+    values
+    (?, ?, ?, ?, ?, ?)
+  });
   $q->execute(1, $id);
+  print STDERR "##### SINGLE FILE NOT 1\n";
   $q1->execute($id, $xfr_stx, $has_meta,
     $is_dicom_dir, $has_sop_common, $dicom_file_type);
   my $i_err = $db->prepare(
@@ -358,19 +359,20 @@ sub ProcessSingleFile1{
     "  file_type = 'parsed dicom file'\n" .
     "where file_id = ?"
   );
-  my $q1 = $db->prepare(
-    "insert into dicom (\n" .
-    "  file_id,\n" .
-    "  dataset_digest,\n" .
-    "  xfr_stx,\n" .
-    "  has_meta,\n" .
-    "  is_dicom_dir,\n" .
-    "  has_sop_common,\n" .
-    "  dicom_file_type\n" .
-    ")\n" .
-    "values(?, ?, ?, ?, ?, ?, ?)"
-  );
+  my $q1 = $db->prepare(q{
+    insert into dicom
+    ( file_id,
+      dataset_digest,
+      xfr_stx,
+      has_meta,
+      is_dicom_dir,
+      has_sop_common,
+      dicom_file_type)
+    values
+    (?, ?, ?, ?, ?, ?, ?)
+  });
   $q->execute(1, $id);
+  print STDERR "##### SINGLE FILE 1\n";
   $q1->execute($id, $ds_digest, $xfr_stx, $has_meta,
     $is_dicom_dir, $has_sop_common, $dicom_file_type);
   my $i_err = $db->prepare(
@@ -573,7 +575,7 @@ sub ProcessFiles{
         "where file_id = ?"
       );
       my $q1 = $db->prepare(
-        "insert into dicom_file (\n" .
+        "insert into dicom (\n" .
         "  file_id,\n" .
         "  xfr_stx,\n" .
         "  has_meta,\n" .

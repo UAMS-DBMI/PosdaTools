@@ -790,6 +790,10 @@ sub Import{
     "  file_visibility, batch, study_year\n".
     ") values (?, ?, ?, ?, ?, ?, ?, ?)"
   );
+  my $ins_dicom_source = $db->prepare(q{{
+    insert into dicom_source
+      (site_name, project_name) values (?, ?)
+  }});
   my $ins_sop_common = $db->prepare(
     "insert into file_sop_common\n" .
     "  (file_id, sop_class_uid, sop_instance_uid,\n" .

@@ -68,14 +68,14 @@ sub InsertOneFile {
             file_id => $file_id };
 
   my @errors;
-  unless(-f $h->{path}) { 
+  unless(-f $h->{path}) {
     print STDERR "File ($h->{path}) not found\n";
     return;
   }
   # File is present
   #
   my $qp = $db->prepare(qq{
-      update file_location  
+      update file_location
       set file_is_present = true
       where file_id = ?
   });
@@ -125,7 +125,7 @@ sub InsertOneFile {
       "where file_id = ?"
     );
     my $q1 = $db->prepare(
-      "insert into dicom_file (\n" .
+      "insert into dicom (\n" .
       "  file_id,\n" .
       "  xfr_stx,\n" .
       "  has_meta,\n" .
