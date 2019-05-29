@@ -1,6 +1,22 @@
 Posda API Plan
 ==============
 
+New stuff for New Kaleidoscope:
+
+GET /vris?... 					search or list
+GET /vris/<vri>					details about a single VRI
+GET /vris/<vri>/counts			List of counts for each state, for the given VRI
+GET /vris/<vri>/<state>/next	Return the next IEC for the given VRI+State
+
+GET /iecs/<iec>/projection		Return the bytes of the projection image
+GET /iecs/<iec>					Get details about an IEC (already exists but will need to be expanded to return the correct data)
+POST /iecs/<iec>/<state>		Update the state
+
+
+
+
+
+
 Exiting things we need to replicate or incorporate:
 downloadable_file
 downloadable_dir

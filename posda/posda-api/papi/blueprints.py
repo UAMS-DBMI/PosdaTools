@@ -9,6 +9,8 @@
 
 from sanic import Blueprint
 
+from .auth import generate_login_blueprint
+
 from .resources import collections as co
 from .resources import studies as st
 from .resources import series as se
@@ -18,11 +20,16 @@ from .resources import importer
 from .resources import dashboard
 from .resources import vrstatus
 from .resources import iecs
+from .resources import vris
 
 
 def configure_blueprints(app):
     """Setup the main endpoints, adding each blueprint to the app"""
 
+    app.blueprint(
+        generate_login_blueprint(),
+        url_prefix='/v1/auth'
+    )
     app.blueprint(
         generate_collections_blueprint(),
         url_prefix='/v1/collections'
@@ -58,6 +65,10 @@ def configure_blueprints(app):
     app.blueprint(
         generate_iecs_blueprint(),
         url_prefix='/v1/iecs'
+    )
+    app.blueprint(
+        generate_vris_blueprint(),
+        url_prefix='/v1/vris'
     )
 
 def generate_dashboard_blueprint():
@@ -123,6 +134,28 @@ def generate_vrstatus_blueprint():
     )
     return blueprint
 
+def generate_vris_blueprint():
+    blueprint = Blueprint('vris')
+
+    blueprint.add_route(
+        vris.get_all_vris,
+        '/'
+    )
+    blueprint.add_route(
+        vris.get_vri_details,
+        '/<vri>'
+    )
+    blueprint.add_route(
+        vris.get_vri_counts,
+        '/<vri>/counts'
+    )
+    blueprint.add_route(
+        vris.get_next_iec,
+        '/<vri>/<state>/next'
+    )
+
+    return blueprint
+
 def generate_iecs_blueprint():
     blueprint = Blueprint('iecs')
 
@@ -133,6 +166,10 @@ def generate_iecs_blueprint():
     blueprint.add_route(
         iecs.get_iec_files,
         '/<iec>/files'
+    )
+    blueprint.add_route(
+        iecs.get_iec_projection,
+        '/<iec>/projection'
     )
 
     return blueprint
@@ -181,6 +218,7 @@ def generate_import_blueprint():
     )
 
     return blueprint
+
 
 def generate_collections_blueprint():
     blueprint = Blueprint('collections')

@@ -7,6 +7,7 @@ from sanic.exceptions import NotFound
 from ..util import asynctar
 from ..util import db
 from ..util import json_objects, json_records
+from ..auth import login_required
 
 import os
 from io import BytesIO
@@ -20,6 +21,7 @@ import logging
 async def get_all_files(request, **kwargs):
     return text("listing all files is not allowed", status=401)
 
+@login_required
 async def get_single_file(request, file_id, **kwargs):
     query = """
         select *

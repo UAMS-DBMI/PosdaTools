@@ -8,14 +8,8 @@ from ..util import asynctar
 from ..util import db
 from ..util import json_objects, json_records
 
-import os
-from io import BytesIO
-import tarfile
-import asyncio
-import aiofiles
-import mimetypes
-import logging
 
+from .files import get_data
 
 async def get_all_iecs(request, **kwargs):
     return text("listing all iecs is not allowed", status=401)
@@ -54,3 +48,21 @@ async def get_iec_files(request, iec, **kwargs):
     return json_records(
         {"file_ids": [x[0] for x in await db.fetch(query, [int(iec)])]}
     )
+
+# /v1/iecs/<iec>/projection
+async def get_iec_projection(request, iec, **kwargs):
+    """Return the bytes for the output image of an IEC
+
+    This is done by looking up the file_id and then calling
+    files.get_data
+    """
+    query = """
+        select file_id
+        from image_equivalence_class_out_image
+        where image_equivalence_class_id = $1
+    """
+
+    results = await db.fetch_one(query, [int(iec)])
+    file_id = results[0]
+
+    return await get_data(request, int(file_id), **kwargs)

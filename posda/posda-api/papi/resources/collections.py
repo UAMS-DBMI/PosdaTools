@@ -7,9 +7,11 @@ from ..util import asynctar
 from ..util import db
 from ..util import json_objects, json_records
 
+from ..auth import login_required
 from ..models import Collection
 
 
+@login_required
 async def get_all_collections(request, **kwargs):
     query = """
         select distinct
