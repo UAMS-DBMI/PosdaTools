@@ -284,31 +284,53 @@ sub EntryBox{
     "/>");
 }
 sub BlurEntryBox{
-  my($this, $http, $dyn) = @_;
+  my($this, $http, $dyn, $sync) = @_;
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
   my $class = "form-control";
   if (defined $dyn->{class}) {
     $class = $dyn->{class};
   }
-  $http->queue("<input class='$class' type='text'" .
-    ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
-    ($dyn->{default} ? " default=\"$dyn->{default}\"" : "") .
-    ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
-     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);Update();\" " .
-    # "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
-    # "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .
-    # "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
-    # "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
-    # "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
-    # "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
-    # "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);\" " .
-    # "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
-    # "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
-    # "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);\" " .
-    # "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
-    # "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
-    # "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
-    "/>");
+  my $index = defined($dyn->{index}) ? "+'&index=$dyn->{index}'" : "";
+  my $txt = 
+   "<input class='$class' type='text'" .
+   ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
+   ($dyn->{default} ? " default=\"$dyn->{default}\" " : "") .
+   (defined($dyn->{value}) ? " value=\"$dyn->{value}\" " : "") .
+   (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
+    "onblur=\"" . $op . "event=onblur&value='+this.value$index);$sync\" " .
+   "/>";
+print STDERR "Blur Entry Box: $txt\n";
+   $http->queue($txt);
+#  $http->queue("<input class='$class' type='text'" .
+#    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
+#    ($dyn->{default} ? " default=\"$dyn->{default}\"" : "") .
+#    ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
+#     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);$sync\" " .
+#    "/>");
+}
+sub ClasslessBlurEntryBox{
+  my($this, $http, $dyn, $sync) = @_;
+  my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
+  my $class = "form-control";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  my $txt = 
+   "<input type='text'" .
+   ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
+   ($dyn->{default} ? " default=\"$dyn->{default}\" " : "") .
+   (defined($dyn->{value}) ? " value=\"$dyn->{value}\" " : "") .
+   (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
+    "onblur=\"" . $op . "event=onblur&value='+this.value);$sync\" " .
+   "/>";
+print STDERR "Blur Entry Box: $txt\n";
+   $http->queue($txt);
+#  $http->queue("<input class='$class' type='text'" .
+#    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
+#    ($dyn->{default} ? " default=\"$dyn->{default}\"" : "") .
+#    ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
+#     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);$sync\" " .
+#    "/>");
 }
 
 =head2 DebouncedEntryBox
@@ -536,7 +558,7 @@ sub LinkedDelegateEntryBox{
   for my $i (0 .. $#parms){
     $v_string .= "$parms[$i]&";
   }
-print STDERR "value string: $v_string\"\n##################\n";
+#print STDERR "value string: $v_string\"\n##################\n";
   my $default;
   if(exists $dyn->{index}){
     $default = $this->{$dyn->{linked}}->{$dyn->{index}};

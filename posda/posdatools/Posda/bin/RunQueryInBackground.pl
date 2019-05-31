@@ -2,6 +2,7 @@
 use strict;
 use Posda::BackgroundProcess;
 use Posda::DB 'Query';
+use Posda::QueryLog;
 my $usage = <<EOF;
 RunQueryInBackground.pl <?invoc_id?> <query_name> <notify>
 or
@@ -39,6 +40,7 @@ $back->WriteToEmail("subprocess_invocation_id: $invoc_id\nquery_name: $query_nam
 for my $a(@Args){
   $back->WriteToEmail("\t$a\n");
 }
+my $QueryInvokedId = Posda::QueryLog::query_invoked($Query, $notify);
 my $start = time;
 my @Rows;
 $qh->RunQuery(sub {
@@ -48,6 +50,7 @@ $qh->RunQuery(sub {
 }, @Args);
 my $end = time;
 my $elapsed = $end - $start;
+Posda::QueryLog::query_finished($QueryInvokedId, $#Rows + 1);
 my $num_rows = @Rows;
 $back->WriteToEmail("Query $query_name returned $num_rows in $elapsed seconds\n");
 my $pipe = $back->CreateReport("Query Results");
@@ -62,7 +65,7 @@ for my $i (0 .. $#{$Query->{args}}){
   $pipe->print("$Query->{args}->[$i],$Args[$i]\n");
 }
 $pipe->print("\nRows:\n");
-for my $i (0 .. @{$Query->{columns}}){
+for my $i (0 .. $#{$Query->{columns}}){
   $pipe->print($Query->{columns}->[$i]);
   unless($i == $#{$Query->{columns}}){ $pipe->print(",")}
 }
