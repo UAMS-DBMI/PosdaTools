@@ -63,17 +63,22 @@ if($equip_exists){
 }
 my $try = Posda::Try->new($file_path);
 unless(exists $try->{dataset}){
+  print "Not a DICOM IOD\n";
   die "Not a DICOM IOD";
 }
 unless($pat_exists){
   Posda::DB::Modules::Patient($handle, $try->{dataset}, $file_id, {}, []);
+  print "patient module imported\n";
 }
 unless($study_exists){
   Posda::DB::Modules::Study($handle, $try->{dataset}, $file_id, {}, []);
+  print "study module imported\n";
 }
 unless($series_exists){
   Posda::DB::Modules::Series($handle, $try->{dataset}, $file_id, {}, []);
+  print "series module imported\n";
 }
 unless($equip_exists){
   Posda::DB::Modules::Equipment($handle, $try->{dataset}, $file_id, {}, []);
+  print "equip module imported\n";
 }

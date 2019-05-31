@@ -18,7 +18,7 @@ use parent 'Posda::PopupWindow';
 method SpecificInitialize($params) {
   $self->{title} = 'Background Query';
   $self->{query} = PosdaDB::Queries->GetQueryInstance($params->{query_name});
-  $self->{SavedQueriesDir} = "$params->{SavedQueries}";
+  #$self->{SavedQueriesDir} = "$params->{SavedQueries}";
   $self->{user} = $params->{user};
   $self->{BindingCache} = $params->{BindingCache};
   $self->{mode} = "Initial";
@@ -173,6 +173,18 @@ method InitialContentResponse($http, $dyn) {
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
+method CreateBindingCacheInfoForKeyInDb($key){
+  my $user = $self->get_user;
+  my $value = $self->{BindingCache}->{$key};
+  Query("InsertUserBoundVariable")->RunQuery(sub{
+  }, sub{}, $user, $key, $value);
+}
+method UpdateBindingValueInDb($key){
+  my $user = $self->get_user;
+  my $value = $self->{BindingCache}->{$key};
+  Query("UpdateUserBoundVariable")->RunQuery(sub{
+  },sub{}, $value, $user, $key);
+}
 method RunQueryInBackground($http, $dyn){
   my $cmd = "RunQueryInBackground.pl <?invoc_id>? \"$self->{query}->{name}\" $self->{Param}->{notify}";
   my $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
@@ -181,6 +193,15 @@ method RunQueryInBackground($http, $dyn){
   my $real_cmd = "RunQueryInBackground.pl $subprocess_invocation_id \"$self->{query}->{name}\" $self->{Param}->{notify}";
   my @args;
   for my $name (@{$self->{query}->{args}}){
+    if(exists $self->{BindingCache}->{$name}){
+      if($self->{BindingCache}->{$name} ne $self->{Input}->{$name}){
+        $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+        $self->UpdateBindingValueInDb($name);
+      }
+    } else {
+      $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+      $self->CreateBindingCacheInfoForKeyInDb($name);
+    }
     push @args, $self->{Input}->{$name};
   }
   $self->{ForRunning} = [$cmd, $real_cmd, \@args];

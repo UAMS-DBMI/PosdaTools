@@ -1,11 +1,10 @@
 -- Name: GetDicomFilesByImportName
 -- Schema: posda_files
 -- Columns: ['file_id']
--- Args: ['import_comment']
--- Tags: ['adding_ctp', 'for_scripting']
--- Description: Get a list of to files from the dicom_edit_compare table for a particular edit instance, with file_id and visibility
+-- Args: ['import_name']
+-- Tags: ['posda_files', 'sops', 'BySopInstance', 'by_file']
+-- Description: Get Collection, Site, Patient, Study Hierarchy in which SOP resides
 -- 
--- NB: Normally there should be no file_id (i.e. file has not been imported)
 
 select
   distinct file_id                                                                                                                                                                                                                                                                                                                                                                                                                                from

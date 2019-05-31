@@ -73,7 +73,7 @@ use MIME::Base64;
 $| = 1; # Force unbuffered output, when this module is imported
 
 sub new {
-  my($class, $invoc_id, $notify) = @_;
+  my($class, $invoc_id, $notify, $activity_id) = @_;
   my $this = {
     invoc_id => $invoc_id,
     notify => $notify,
@@ -85,6 +85,11 @@ sub new {
     reports => {}
   };
   bless($this, $class);
+  if($activity_id){
+    Query('InsertActivityTaskStatus')->RunQuery(sub {}, sub {},
+    $activity_id, $invoc_id);
+    $this->{activity_id} = $activity_id;
+  }
 
   # convert $notify to username if it is an email
   if ($notify =~ /@/) {
@@ -99,6 +104,20 @@ sub new {
                         $this->{child_pid}, $notify);
 
   return $this;
+}
+
+sub SetActivityStatus{
+  my($self, $status, $time_remaining) = @_;
+  unless($self->{activity_id}) { return }
+  if(defined $time_remaining) {
+    Query('UpdateActivityTaskStatusAndCompletionTime')->RunQuery(
+      sub{}, sub{}, $status, $time_remaining,
+      $self->{activity_id}, $self->{invoc_id});
+  } else {
+    Query('UpdateActivityTaskStatus')->RunQuery(
+      sub{}, sub{}, $status,
+      $self->{activity_id}, $self->{invoc_id});
+  }
 }
 
 method CreateReport($report_name) {
@@ -182,7 +201,8 @@ method WriteToEmail($line) {
   $self->{email_handle}->print($line);
 }
 
-method Finish() {
+sub Finish() {
+  my($self,$mess) = @_;
   DEBUG "called";
   # log completion time
   $self->{add_comp_time_query}->RunQuery(
@@ -244,6 +264,13 @@ method Finish() {
 
     DEBUG "Unlinking report file: $rpt->{temp_filename}";
     unlink $rpt->{temp_filename};
+  }
+  if($self->{activity_id}){
+    unless(defined $mess){
+      $mess = "Complete - no status specified";
+    }
+    Query('FinishActivityTaskStatus')->RunQuery(sub{}, sub {},
+      $mess, $self->{activity_id}, $self->{invoc_id});
   }
 }
 

@@ -3,7 +3,7 @@ package DbIf::Application;
 use DbIf::Table;
 use File::Path 'rmtree';
 use Posda::DB::PosdaFilesQueries;
-use Posda::DB 'Query';
+use Posda::DB 'Query', 'GetHandle';
 use Dispatch::BinFragReader;
 
 use Modern::Perl '2010';
@@ -19,7 +19,7 @@ use Dispatch::LineReaderWriter;
 use GenericApp::Application;
 
 use Posda::Passwords;
-use Posda::Config ('Config','Database');
+use Posda::Config ('Config', 'Database');
 use Posda::ConfigRead;
 use Posda::Inbox;
 use DBI;
@@ -199,9 +199,10 @@ method SpecificInitialize($session) {
   if (-e "$self->{SavedQueriesDir}/bindingcache.pinfo") {
     $self->{BindingCache} =
       retrieve("$self->{SavedQueriesDir}/bindingcache.pinfo");
-  } else {
-    $self->{BindingCache} = {};
+    $self->StoreBindingCacheInDb;
+    unlink("$self->{SavedQueriesDir}/bindingcache.pinfo");
   }
+  $self->{BindingCache} = $self->RetrieveBindingCacheFromDb;
 
   # Build the command list from database
   my $commands = {};
@@ -222,6 +223,39 @@ method SpecificInitialize($session) {
   $self->ConfigureTagGroups();
 
   $self->BackgroundMonitorForEmail;
+}
+method StoreBindingCacheInDb{
+  my $bc = $self->RetrieveBindingCacheFromDb;
+  for my $k (keys %{$self->{BindingCache}}){
+    unless(exists $bc->{$k}){
+      $self->CreateBindingCacheInfoForKeyInDb($k);
+      next;
+    }
+    if($self->{BindingCache}->{$k} ne $bc->{$k}){
+      $self->UpdateBindingValueInDb($k);
+    }
+  }
+}
+method RetrieveBindingCacheFromDb{
+  my $bc;
+  Query("GetUsersBoundVariables")->RunQuery(sub {
+    my($row) = @_;
+    my($user, $variable, $binding) = @$row;
+    $bc->{$variable} = $binding;
+  }, sub {}, $self->get_user);
+  return $bc;
+}
+method CreateBindingCacheInfoForKeyInDb($key){
+  my $user = $self->get_user;
+  my $value = $self->{BindingCache}->{$key};
+  Query("InsertUserBoundVariable")->RunQuery(sub{
+  }, sub{}, $user, $key, $value);
+}
+method UpdateBindingValueInDb($key){
+  my $user = $self->get_user;
+  my $value = $self->{BindingCache}->{$key};
+  Query("UpdateUserBoundVariable")->RunQuery(sub{
+  },sub{}, $value, $user, $key);
 }
 
 method BackgroundMonitorForEmail() {
@@ -1239,17 +1273,16 @@ method OpHelp($http, $dyn) {
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }
-
 method OpenBackgroundQuery($http, $dyn){
 
   my $details = {
     query_name => $dyn->{query_name},
     user => $self->get_user,
-    SavedQueriesDir => $self->{SavedQueriesDir},
+    #SavedQueriesDir => $self->{SavedQueriesDir},
     BindingCache => $self->{BindingCache},
   };
 
-  my $child_path = $self->child_path("BackgroundQuery_$dyn->{cmd}");
+  my $child_path = $self->child_path("BackgroundQuery_$dyn->{query_name}");
   my $child_obj = Posda::BackgroundQuery->new($self->{session},
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
@@ -1817,12 +1850,20 @@ method GetBindings() {
 
   my @bindings;
   for my $i (@{$self->{query}->{args}}){
-    $bc->{$i} = $self->{Input}->{$i};
+    if(exists $bc->{$i}){
+      if($bc->{$i} ne $self->{Input}->{$i}){
+        $self->{BindingCache}->{$i} = $self->{Input}->{$i};
+        $self->UpdateBindingValueInDb($i);
+      }
+    } else {
+      $self->{BindingCache}->{$i} = $self->{Input}->{$i};
+      $self->CreateBindingCacheInfoForKeyInDb($i);
+    }
     push(@bindings, $self->{Input}->{$i});
   }
 
   # Save the cache to disk
-  store $bc, "$self->{SavedQueriesDir}/bindingcache.pinfo";
+#  store $bc, "$self->{SavedQueriesDir}/bindingcache.pinfo";
 
   return \@bindings;
 }
@@ -2137,7 +2178,15 @@ method UseAsArg($http, $dyn) {
     this as an input:</p>
   });
 
-  $self->{BindingCache}->{$arg_name} = $value;
+  if(exists $self->{BindingCache}->{$arg_name}){
+    unless($self->{BindingCache}->{$arg_name} eq $value){
+      $self->{BindingCache}->{$arg_name} = $value;
+      $self->UpdateBindingValueInDb($arg_name);
+    }
+  } else {
+    $self->{BindingCache}->{$arg_name} = $value;
+    $self->CreateBindingCacheInfoForKeyInDb($arg_name);
+  }
 
   # present a list of the possible queries here
   my $queries = PosdaDB::Queries->GetQuerysWithArg($arg_name);
@@ -2535,8 +2584,20 @@ method OpenChainedQuery($http, $dyn) {
   # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
   for my $param (@$details) {
-    $self->{BindingCache}->{$param->{to_parameter_name}} =
-      $h->{$param->{from_column_name}};
+    if(exists $self->{BindingCache}->{$param->{to_parameter_name}}){
+      unless(
+        $self->{BindingCache}->{$param}->{to_parameter_name} eq
+        $h->{param}->{from_column_name}
+      ){
+        $self->{BindingCache}->{$param->{to_parameter_name}} =
+          $h->{$param->{from_column_name}};
+        $self->UpdateBindingValueInDb($param->{to_parameter_name});
+      }
+    } else {
+      $self->{BindingCache}->{$param->{to_parameter_name}} =
+        $h->{$param->{from_column_name}};
+      $self->CreateBindingCacheInfoForKeyInDb($param->{to_parameter_name});
+    }
   }
   $self->SetActiveQuery($http, {
     query_name => "$query_name",
@@ -2571,8 +2632,22 @@ method Activities($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
     <h2>Activities</h2>
   });
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+  });
   $self->RenderActivityDropDown($http, $dyn);
+  unless(defined $self->{ActivityFilter}) { $self->{ActivityFilter} = "" }
+  $http->queue("&nbsp;Filter:&nbsp;");
+  $self->BlurEntryBox($http, {
+    name => "Filter",
+    op => "SetActivityFilter",
+    value => "$self->{ActivityFilter}"
+  }, "Update();");
+  $http->queue(qq{</div><hr>});
   $self->RenderNewActivityForm($http, $dyn);
+}
+method SetActivityFilter($http, $dyn){
+  $self->{ActivityFilter} = $dyn->{value};
 }
 
 method RenderNewActivityForm($http, $dyn) {
@@ -2602,8 +2677,13 @@ method RenderActivityDropDown($http, $dyn){
   }
   my @activity_list;
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
-  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+#  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
+  my @sorted_ids = sort {$a <=> $b} keys %{$self->{Activities}};
+  sorted_id:
   for my $i (@sorted_ids){
+    if($self->{ActivityFilter}){
+      unless($self->{Activities}->{$i}->{desc} =~ /$self->{ActivityFilter}/){ next sorted_id }
+    }
     push @activity_list, [$i , "$i: $self->{Activities}->{$i}->{desc}" .
       " ($self->{Activities}->{$i}->{user})"];
   }
@@ -2624,6 +2704,7 @@ method RenderActivityDropDown($http, $dyn){
 
 method SetActivity($http, $dyn){
   $self->{ActivitySelected} = $dyn->{value};
+  $self->{BindingCache}->{activity_id} = $dyn->{value};
   my $activity_name = $self->{Activities}->{$dyn->{value}}->{desc};
   if($activity_name ne ""){
     $self->{title} = "Database Interface (<small>$dyn->{value}: $activity_name</small>)";
@@ -2707,6 +2788,7 @@ method NewActivitiesPage($http, $dyn){
   $self->DrawClearActivityButton($http, $dyn);
   $http->queue("&nbsp;&nbsp;Mode:&nbsp;");
   $self->DrawActivityModeSelector($http, $dyn);
+  $self->DrawActivityTaskStatus($http, $dyn);
   $http->queue(qq{</div><hr>});
   my $method = $self->{ActivityModes}->{$self->{ActivityModeSelected}};
   if($self->can($method)){
@@ -2737,6 +2819,7 @@ method DrawActivityModeSelector($http, $dyn){
     [0, "ShowActivityTimeline"],
     [1, "Inbox"],
     [2, "ActivityOperations"],
+    [3, "Queries"],
   );
   my @sorted_ids = $self->SortedActivityIds($self->{Activities});
   for my $i (@activity_mode_list){
@@ -2758,6 +2841,38 @@ method DrawActivityModeSelector($http, $dyn){
   $http->queue(qq{
     </select> </div>
   });
+}
+method DrawActivityTaskStatus($http, $dyn){
+  my @backgrounders;
+  $self->{Backgrounders} = [];
+  Query('GetActivityTaskStatus')->RunQuery(sub {
+    my($row) = @_;
+    push(@backgrounders, $row);
+  }, sub {}, $self->{ActivitySelected});
+  if($#backgrounders >= 0){
+    $self->{Backgrounders} = \@backgrounders;
+    $http->queue("<div width=200><ul>");
+    for my $i (@backgrounders){
+      $http->queue("<li>$i->[0]: $i->[1] - $i->[4]");
+      $self->NotSoSimpleButton($http, {
+        op => "DismissActivityTaskStatus",
+        caption => "dismiss",
+        subprocess_invocation_id => $i->[0],
+        sync => "Update();",
+      });
+      $http->queue("</li>");
+    }
+    $http->queue("</ul></div>");
+    $self->InvokeAfterDelay("AutoRefresh", 5);
+#    $self->AutoRefresh();
+  }
+}
+method DismissActivityTaskStatus($http, $dyn){
+  my $sub_id = $dyn->{subprocess_invocation_id};
+  my $act_id = $self->{ActivitySelected};
+  my $user = $self->get_user;
+  Query('DismissActivityTaskStatus')->RunQuery(sub{}, sub{},
+    $user, $act_id, $sub_id);
 }
 method SetActivityMode($http, $dyn){
   $self->{ActivityModeSelected} = $dyn->{value};
@@ -2927,7 +3042,6 @@ method ShowResponse($http, $dyn){
 }
 method ShowInput($http, $dyn){
   my $class = 'Posda::PopupTextViewer';
-  eval "require $class";
   my $params = {
     activity_id => $self->{ActivitySelected},
     file_id =>  $dyn->{file_id},
@@ -2986,7 +3100,7 @@ method CompareTimepoints($http, $dyn){
 }
 method ActivityOperations($http, $dyn){
   my @buttons =  (
-    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 0, 0],
+    [ "CreateActivityTimepointFromImportName", "Create Activity Timepoint from Import Name", 0, 0],
     [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
     [ "VisualReviewFromTimepoint", "Schedule Visual Review", 0, 2],
     [ "PhiReviewFromTimepoint", "Schedule PHI Scan", 0, 3],
@@ -3005,6 +3119,7 @@ method ActivityOperations($http, $dyn){
     [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
     [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
+    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
   );
   my @Cols;
   for my $i (@buttons){
@@ -3094,6 +3209,1012 @@ method InvokeOperation($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
+method NewQueryWait($http, $dyn){
+  $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
+}
+method Queries($http,$dyn){
+  unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
+  if(
+    exists($self->{NewQueryToDisplay})&&
+    exists($self->{ForegroundQueries}->{$self->{NewQueryToDisplay}})
+  ){
+    return $self->DisplaySelectedForegroundQuery($http, $dyn);
+  }
+  if(exists($self->{WaitingForQueryCompletion})){
+    return $self->NewQueryWait($http, $dyn);
+  }
+  if(exists($self->{SelectFromCurrentForeground})){
+    return $self->SelectFromCurrentForeground($http, $dyn);
+  }
+  unless (exists($self->{SelectedNewQuery})){
+    $http->queue(qq{
+      <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+    });
+    $self->DrawCurrentForegroundQueriesSelector($http, $dyn);
+    $self->DrawQueryListTypeSelector($http, $dyn);
+    $self->DrawQuerySearchForm($http, $dyn);
+    $http->queue(qq{</div><hr>});
+  }
+  $self->DrawQueryListOrResults($http, $dyn);
+}
+method DrawCurrentForegroundQueriesSelector($http, $dyn){
+  unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
+  my $q_count = keys %{$self->{ForegroundQueries}};
+  if($q_count > 0){
+    $self->NotSoSimpleButton($http, {
+      op => "SetCurrentForegroundSelection",
+      caption => "select from foreground",
+      sync => "Update();",
+    });
+  }
+}
+method SetCurrentForegroundSelection($http, $dyn){
+  $self->{SelectFromCurrentForeground} = 1;
+}
+method SelectFromCurrentForeground($http, $dyn){
+  #$http->queue("display list of current foreground queries");
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+});
+  delete $self->{SelectFromCurrentForeground};
+  $self->NotSoSimpleButton($http, {
+    op => "ClearCurrentForegroundSelector",
+    caption => "clear",
+    sync => "Update();",
+  });
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue("<caption>Current Foreground Queries</caption>");
+  $http->queue("<tr><th>id</th><th>query</th><th>when</th><th>state</th><th>rows</th><th>op</th></tr>");
+  for my $k (
+    sort {
+      $self->{ForegroundQueries}->{$a}->{invoked_id} <=>
+      $self->{ForegroundQueries}->{$b}->{invoked_id}
+    }
+    keys %{$self->{ForegroundQueries}}
+  ){
+    my $e = $self->{ForegroundQueries}->{$k};
+    my $num_rows = @{$e->{rows}};
+    $http->queue("<tr>");
+    $http->queue("<td>$e->{invoked_id}</td>");
+    $http->queue("<td>$e->{caption}</td>");
+    $http->queue("<td>$e->{when}</td>");
+    $http->queue("<td>$e->{status}</td>");
+    $http->queue("<td>$num_rows</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "DeleteCurrentForegroundQuery",
+      caption => "dismiss",
+      index => $k,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "SelectCurrentForegroundQuery",
+      caption => "select",
+      index => $k,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue("</table>");
+  $http->queue("</div>");
+}
+method DeleteCurrentForegroundQuery($http, $dyn){
+  my $k = $dyn->{index};
+  delete $self->{ForegroundQueries}->{$k};
+  my $num_queries = keys %{$self->{ForegroundQueries}};
+  if($num_queries == 0){
+    delete $self->{SelectFromCurrentForeground};
+  }
+}  
+method SelectCurrentForegroundQuery($http, $dyn){
+  my $k = $dyn->{index};
+  $self->{NewQueryToDisplay} = $k;
+}  
+
+method ClearCurrentForegroundSelector($http, $dyn){
+  delete $self->{SelectFromCurrentForeground};
+}
+method DrawQueryListTypeSelector($http, $dyn){
+  unless(defined $self->{NewActivityQueriesType}->{query_type}){
+    $self->{NewActivityQueriesType}->{query_type} = "recent";
+  }
+  $http->queue("<div width=100>");
+  my $url = $self->RadioButtonSync("query_type","recent",
+    "ProcessRadioButton",
+    (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
+    "&control=NewActivityQueriesType","Update();");
+  $http->queue("$url - recent&nbsp;&nbsp;"); 
+  $url = $self->RadioButtonSync("query_type","search",
+    "ProcessRadioButton",
+    (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
+    "&control=NewActivityQueriesType","Update();");
+  $http->queue("$url - search"); 
+  $http->queue("</div>");
+}
+method DrawQuerySearchForm($http, $dyn){
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("&nbsp;Args containing:&nbsp; ");
+    $self->BlurEntryBox($http, {
+      name => "NewArgList",
+      op => "SetNewArgList",
+      value => "$self->{NewArgListText}"
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("&nbsp;Columns containing:&nbsp; ");
+    $self->BlurEntryBox($http, {
+      name => "NewColList",
+      op => "SetNewColList",
+      value => "$self->{NewColListText}"
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("&nbsp;Query matching:&nbsp; ");
+    $self->BlurEntryBox($http, {
+      name => "NewTableMatchList",
+      op => "SetNewTableMatchList",
+      value => "$self->{NewTableMatchListText}"
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("&nbsp;Name matching:&nbsp; ");
+    $self->BlurEntryBox($http, {
+      name => "NewNameMatchList",
+      op => "SetNewNameMatchList",
+      value => "$self->{NewNameMatchListText}"
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("<br>");
+    $self->NotSoSimpleButton($http, {
+      op => "SearchQueries",
+      caption => "search",
+      sync => "Update();",
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue("<br>");
+    $self->NotSoSimpleButton($http, {
+      op => "ClearQueries",
+      caption => "clear",
+      sync => "Update();",
+    });
+    $http->queue("</div>");
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $http->queue($self->{QuerySearchWhereClause});
+    $http->queue("</div>");
+  }
+}
+method ClearQueries($http, $dyn){
+  $self->{NewArgList} = [];
+  $self->{NewArgListText} = "";
+  $self->{NewColList} = [];
+  $self->{NewColListText} = "";
+  $self->{NewTableMatchList} = [];
+  $self->{NewTableMatchListText} = "";
+  $self->{NewNameMatchList} = [];
+  $self->{NewNameMatchListText} = "";
+  return $self->SearchQueries($http, $dyn);
+}
+method SearchQueries($http, $dyn){
+  my @clauses;
+  if(exists($self->{NewArgList}) && ref($self->{NewArgList}) eq "ARRAY"){
+    for my $i (@{$self->{NewArgList}}){ push @clauses, $i }
+  } if(exists($self->{NewColList}) && ref($self->{NewColList}) eq "ARRAY"){ for my $i (@{$self->{NewColList}}){ push @clauses, $i }
+  }
+  if(exists($self->{NewTableMatchList}) && ref($self->{NewTableMatchList}) eq "ARRAY"){
+    for my $i (@{$self->{NewTableMatchList}}){ push @clauses, $i }
+  }
+  if(exists($self->{NewNameMatchList}) && ref($self->{NewNameMatchList}) eq "ARRAY"){
+    for my $i (@{$self->{NewNameMatchList}}){ push @clauses, $i }
+  }
+  my $where_clause = join (' and ', @clauses);
+  if($where_clause =~ /^\s*$/){
+    $self->{QuerySearchWhereClause} = "";
+    $self->{NewQueryListSearch} = {};
+    return
+  }
+  $self->{QuerySearchWhereClause} = $where_clause;
+  my $query_search_query = "select name from queries where $where_clause order by name";
+#print STDERR "query:\n$query_search_query\n";
+
+  $self->{HTTP_APP_CONFIG} = $main::HTTP_APP_CONFIG;
+  my $db_handle = DBI->connect(Database('posda_queries'));
+  my $q = $db_handle->prepare($query_search_query);
+  my $h = $q->execute;
+  my @query_names;
+  my %SearchedQueriesByName;
+  while(my $h = $q->fetchrow_hashref()){
+   push @query_names, $h->{name};
+   $SearchedQueriesByName{$h->{name}} = PosdaDB::Queries->GetQueryInstance($h->{name});
+  }
+  $self->{NewQueryListSearch} = \%SearchedQueriesByName;
+}
+method SetNewArgList($http, $dyn){
+  $self->{NewArgListText} = $dyn->{value};
+  my @a_list = split(/\s*,\s*/, $dyn->{value});
+  my @clauses;
+  for my $a (@a_list){
+    push(@clauses, "('$a' = ANY(args))");
+  }
+  $self->{NewArgList} = \@clauses;
+}
+method SetNewColList($http, $dyn){
+  $self->{NewColListText} = $dyn->{value};
+  my @a_list = split(/\s*,\s*/, $dyn->{value});
+  my @clauses;
+  for my $a (@a_list){
+    push(@clauses, "('$a' = ANY(columns))");
+  }
+  $self->{NewColList} = \@clauses;
+}
+method SetNewTableMatchList($http, $dyn){
+  $self->{NewTableMatchListText} = $dyn->{value};
+  my @a_list = split(/\s*,\s*/, $dyn->{value});
+  my @clauses;
+  for my $a (@a_list){
+    push(@clauses, "(query like '%$a%')");
+  }
+  $self->{NewTableMatchList} = \@clauses;
+}
+method SetNewNameMatchList($http, $dyn){
+  $self->{NewNameMatchListText} = $dyn->{value};
+  my @a_list = split(/\s*,\s*/, $dyn->{value});
+  my @clauses;
+  for my $a (@a_list){
+    push(@clauses, "(name like '%$a%')");
+  }
+  $self->{NewNameMatchList} = \@clauses;
+}
+method DrawQueryListOrResults($http, $dyn){
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $self->DrawQueryListOrResultsSearch($http, $dyn);
+  } else {
+    $self->DrawQueryListOrResultsRecent($http, $dyn);
+  }
+}
+method DrawQueryListOrResultsSearch($http, $dyn){
+  if(exists($self->{NewQueryResults})){
+    $self->DrawNewQueryResults($http, $dyn);
+  } else {
+    $self->DrawQueryListOrSelectedQuerySearch($http, $dyn);
+  }
+}
+method DrawQueryListOrSelectedQuerySearch($http, $dyn){
+  if(exists $self->{SelectedNewQuery}){
+    $self->DrawNewQuery($http, $dyn);
+  } else {
+    $self->DrawQueryListSearch($http, $dyn);
+  }
+}
+method RunNewQuery($http, $dyn){
+  $self->{SelectedNewQuery} = $dyn->{query_name};
+}
+method DrawNewQuery($http, $dyn){
+#  $http->queue("NewQuery goes here ($self->{SelectedNewQuery})");
+  my $query;
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $query = $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}};
+  } else {
+    $query = $self->{NewQueriesByName}->{$self->{SelectedNewQuery}};
+  }
+  
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+});
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+  });
+  #$http->queue('<div width=100 style="margin-right: 5pix">');
+  $http->queue('<div width=100 style="margin-left: 10px">');
+  $self->NotSoSimpleButton($http, {
+    op => "MakeNewQuery",
+    caption => "query",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue('</div>');
+  $http->queue('<div width=100 style="margin-left: 10px">');
+  $self->NotSoSimpleButton($http, {
+    op => "ClearNewQuery",
+    caption => "clear",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</div>");
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+});
+  $http->queue('<div width=100 style="margin-left: 10px">');
+  $http->queue("<strong>Query name:</strong> $self->{SelectedNewQuery}");
+  $http->queue("</div>");
+  $http->queue('<div width=100 style="margin-left: 10px">');
+  $http->queue('<strong>Columns returned:</strong> ');
+  for my $i (0 .. $#{$query->{columns}}){
+    $http->queue("$query->{columns}->[$i]");
+    unless($i == $#{$query->{columns}}){ $http->queue(", ") }
+  }
+  $http->queue("</div>");
+  $http->queue("</div>");
+  $http->queue("</div>");
+  $http->queue("<strong>Arguments:</strong>");
+  $http->queue(q{<table class="table">});
+  my $from_seen = 0;
+  for my $arg (@{$query->{args}}){
+    # preload the Input if arg is in cache
+    if (
+      defined $self->{BindingCache}->{$arg} and
+      not defined $self->{Input}->{$arg}
+    ) {
+      $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
+    }
+    $self->RefreshEngine($http, $dyn, qq{
+       <tr>
+         <th style="width:5%">$arg</th>
+         <td>
+           <?dyn="LinkedDelegateEntryBox" linked="Input" index="$arg"?>
+         </td>
+       </tr>
+    });
+    if ($arg eq 'from') { $from_seen = 1; }
+    if ($arg eq 'to' and $from_seen == 1) {
+      $self->DrawWidgetFromTo($http, $dyn);
+    }
+  }
+
+  $http->queue(q{</table>});
+  $http->queue(q{<hr>});
+  $self->RefreshEngine($http, $dyn,
+           "<pre><code class=\"sql\">$query->{query}</code></pre>");
+  #$self->RefreshEngine($http, $dyn, markdown($query->{query}));
+  $http->queue("</div>");
+}
+
+method MakeNewQuery($http, $dyn){
+  my $query_name = $self->{SelectedNewQuery};
+  my $query;
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $query = $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}};
+  } else {
+    $query = $self->{NewQueriesByName}->{$self->{SelectedNewQuery}};
+  }
+  $query->SetAsync();
+  my @args;
+  for my $name (@{$query->{args}}){
+    if(exists $self->{BindingCache}->{$name}){
+      if($self->{BindingCache}->{$name} ne $self->{Input}->{$name}){
+        $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+        $self->UpdateBindingValueInDb($name);
+      }
+    } else {
+      $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+      $self->CreateBindingCacheInfoForKeyInDb($name);
+    }
+    push @args, $self->{Input}->{$name};
+  }
+  my $msg = "$query_name(";
+  for my $i (0 .. $#args){
+    my $arg = $args[$i];
+    if($i == $#args){$msg .= "$arg"}
+    else {$msg .= "$arg, "}
+  }
+  $msg .= ")";
+  print STDERR"################\n$msg\n###############\n";
+  my $guid = Posda::UUID::GetGuid;
+  my $invoked_id = Posda::QueryLog::query_invoked($query, $self->get_user);
+  my $when = $self->now;;
+  $self->{ForegroundQueries}->{$guid} = {
+    caption => $msg,
+    query => $query,
+    when => $when,
+    who => $self->get_user,
+    args => \@args,
+    status => "running",
+    rows => [],
+    invoked_id => $invoked_id
+  };
+  delete $self->{SelectedNewQuery};
+  $self->{WaitingForQueryCompletion} = $msg;;
+  my $q_pack = $self->{ForegroundQueries}->{$guid};
+  $query->RunQuery(
+    func($row){
+      push @{$q_pack->{rows}}, $row;
+    },
+    func(){
+      $q_pack->{status} = "done";
+      Posda::QueryLog::query_finished($invoked_id, $#{$q_pack->{rows}} + 1);
+      if(exists $self->{WaitingForQueryCompletion}){
+        $self->{NewQueryToDisplay} = $guid;
+        $self->AutoRefresh;
+        delete $self->{WaitingForQueryCompletion};
+      }
+    },
+    func($msg){
+      $q_pack->{status} = "error";
+      $q_pack->{error_msg} = $msg;
+      if(exists $self->{WaitingForQueryCompletion}){
+        $self->{NewQueryToDisplay} = $guid;
+        $self->AutoRefresh;
+        delete $self->{WaitingForQueryCompletion};
+      }
+    },
+    @args);
+}
+sub ClearNewQuery{
+  my($self, $http, $dyn) = @_;
+  delete $self->{SelectedNewQuery};
+}
+sub DisplayNewQueryError{
+  my($self, $http, $dyn, $q) = @_;
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+});
+  $http->queue("<h1>Error</h1><pre>$q->{error_msg}</pre>");
+  $http->queue("</div>");
+  $self->NotSoSimpleButton($http, {
+    op => "UnselectForegroundQuery",
+    caption => "clear",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+}
+method NewQueryPageUp($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $new_start = $SFQ->{first_row} + $SFQ->{rows_to_show};
+  if($new_start + $SFQ->{rows_to_show} > @{$SFQ->{rows}}){
+    $new_start = @{$SFQ->{rows}} - $SFQ->{rows_to_show};
+    if($new_start < 0) { $new_start = 0 }
+  }
+  $SFQ->{first_row} = $new_start;
+}
+method NewQueryPageDown($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $new_start = $SFQ->{first_row} - $SFQ->{rows_to_show};
+  if($new_start < 0){
+    $new_start = 0;
+  }
+  $SFQ->{first_row} = $new_start;
+}
+method SetFirstRow($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $value = $dyn->{value};
+  my $max = @{$SFQ->{rows}} - $SFQ->{rows_to_show};
+  if($value < 0) { $value = 0 }
+  if($value > $max) { $value = $max }
+  $SFQ->{first_row} = $value;
+}
+method SetRowsToShow($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $value = $dyn->{value};
+  $SFQ->{rows_to_show} = $value;
+}
+method FilterQueryRows($sfq){
+  # No filtering for now
+  # return $sfq->{rows};
+  my %name_to_i;
+  for my $i (0 .. $#{$sfq->{query}->{columns}}){
+    $name_to_i{$sfq->{query}->{columns}->[$i]} = $i;
+  }
+  my @filtered_rows;
+  row:
+  for my $r (@{$sfq->{rows}}){
+    for my $k (keys %{$sfq->{filter}}){
+      unless($r->[$name_to_i{$k}] =~ /$sfq->{filter}->{$k}/){
+        next row;
+      }
+    }
+    push @filtered_rows, $r;
+  }
+  return \@filtered_rows;
+}
+method SetEditFilter($http, $queue){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  if(defined $SFQ->{filter}){
+    $self->{FilterArgs} = $SFQ->{filter};
+  } else {
+    $self->{FilterArgs} = {};
+  }
+  $self->{EditFilter} = 1;
+}
+sub DownloadUnfilteredTable{
+  my($self, $http, $dyn) = @_;
+  $self->DownloadTableFromNewQuery($http, $dyn, "unfiltered");
+}
+sub DownloadFilteredTable{
+  my($self, $http, $dyn) = @_;
+  $self->DownloadTableFromNewQuery($http, $dyn, "filtered");
+}
+sub DownloadTableFromNewQuery{
+  my($self, $http, $dyn, $mode) = @_;
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $q_name = "$SFQ->{query}->{name}.csv";
+  my $rows;
+  $http->DownloadHeader("text/csv", "$q_name");
+  $http->queue("Metadata:\r\n");
+  $http->queue("key,value\r\n");
+  $http->queue("query:,\"$SFQ->{caption}\"\r\n");
+  $http->queue("when:,$SFQ->{when}\r\n");
+  $http->queue("by:,$SFQ->{who}\r\n");
+  my $num_rows = @{$SFQ->{rows}};
+  my $num_filtered_rows = @{$SFQ->{filtered_rows}};
+  if(exists($SFQ->{filter})){
+    $http->queue("unfiltered_rows:,$num_rows\r\n");
+    $http->queue("filtered_rows:,$num_filtered_rows\r\n");
+    my $text = "";
+    for my $k (keys %{$SFQ->{filter}}){
+      $text .= "$k contains \"$SFQ->{filter}->{$k}\";\n";
+    }
+    $text =~ s/"/""/g;
+    $http->queue("filter:,\"$text\"\r\n");
+    $http->queue("\r\n");
+    if($mode eq "filtered"){
+      $rows = $SFQ->{filtered_rows};
+      $http->queue("Filtered Query Data:\r\n");
+    } else {
+      $rows = $SFQ->{rows};
+      $http->queue("Unfiltered Query Data:\r\n");
+    }
+  } else {
+    $http->queue("rows: $num_rows\r\n");
+    $http->queue("\r\n");
+    $http->queue("Query Data:\r\n");
+    $rows = $SFQ->{rows};
+  }
+  for my $i(0 .. $#{$SFQ->{query}->{columns}}){
+    my $col = $SFQ->{query}->{columns}->[$i];
+    $http->queue("\"$col\"");
+    if($i == $#{$SFQ->{query}->{columns}}){
+      $http->queue("\r\n");
+    } else { $http->queue(",") };
+  }
+  for my $i (0 .. $#{$rows}){
+    my $row = $rows->[$i];
+    for my $j (0 .. $#{$row}){
+      my $col = $row->[$j];
+      unless(defined $col) { $col = "" }
+      $col =~ s/"/""/g;
+      $http->queue("\"$col\"");
+      if($j == $#{$row}){
+        $http->queue("\r\n");
+      } else { $http->queue(",") }
+    }
+  }
+}
+sub  DisplaySelectedForegroundQuery{
+  my($self, $http, $dyn) = @_;
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  if($SFQ->{status} eq "error"){
+    return $self->DisplayNewQueryError($http, $dyn, $SFQ);
+  }
+  unless(defined $SFQ->{first_row}) { $SFQ->{first_row} = 0 }
+  unless(defined $SFQ->{rows_to_show}) { $SFQ->{rows_to_show} = 30 }
+  if(defined $SFQ->{filter}){
+    $SFQ->{filtered_rows} = $self->FilterQueryRows($SFQ);
+  } else {
+    $SFQ->{filtered_rows} = $SFQ->{rows}
+  }
+  my $num_rows = @{$SFQ->{rows}};
+  my $filtered_rows = @{$SFQ->{filtered_rows}};
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+});
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+  });
+  $http->queue(qq{ <div width=100 style="margin-bottom: 10px;margin-left: 10px"> });
+  $http->queue("<em><b>Results for:</b></em>&nbsp;&nbsp;$SFQ->{caption}&nbsp;&nbsp;&nbsp;");
+  $http->queue("</div>");
+  $http->queue(qq{ <div width=100 style="margin-bottom: 10px;margin-left: 10px"> });
+  $self->NotSoSimpleButton($http, {
+    op => "UnselectForegroundQuery",
+    caption => "back",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</div>");
+  $http->queue(qq{ <div width=100 style="margin-bottom: 10px;margin-left: 10px"> });
+  $self->NotSoSimpleButton($http, {
+    op => "SetEditFilter",
+    caption => "edit filter",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</div>");
+  $http->queue("</div>");
+
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+  });
+  $http->queue('<table width="50%" class="table">');
+  $http->queue('<tr>');
+  $http->queue('<td>');
+  my $index = $self->{NewQueryToDisplay};
+  unless(exists $self->{FilterSelection}->{$index}){ $self->{FilterSelection}->{$index} = "unfiltered" }
+  my $url = $self->RadioButtonSync("$index","unfiltered",
+    "ProcessRadioButton",
+    (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "unfiltered") ? 1 : 0,
+    "&control=FilterSelection","Update();");
+  $http->queue("$url</td>"); 
+  $http->queue("<td>Unfiltered rows: $num_rows</td>");
+  $http->queue("<td>");
+  $http->queue('<a class="btn btn-primary" href="DownloadUnfilteredTable?obj_path=' . 
+    $self->{path} . '">download</a>');
+  $http->queue("</td>");
+  $http->queue("<td>");
+  $self->NotSoSimpleButton($http, {
+    op => "ChainFilteredTable",
+    caption => "chain",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</td>");
+  my $rows = keys @{$SFQ->{rows}};
+  my $first_row = $SFQ->{first_row};
+  $http->queue('<td align="right">First row:</td><td align="left">');
+  $self->ClasslessBlurEntryBox($http, {
+    name => "FirstRow",
+    size => 5,
+    op => "SetFirstRow",
+    value => $first_row,
+  }, "Update();");
+  $http->queue("</td><td>");
+  $self->NotSoSimpleButton($http, {
+    op => "NewQueryPageDown",
+    caption => "pg-up",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</td>");
+  $http->queue('<td rowspan="2"><pre>');
+  unless(exists $SFQ->{filter}){
+    $http->queue("No filter currently defined\n\n\n\n</pre>");
+  } else {
+    $self->RenderCurrentQueryFilter($http, $dyn);
+  }
+  $http->queue('</pre></td>');
+  $http->queue('</tr>');
+  $http->queue('<tr>');
+  $http->queue('<td>');
+  my $url = $self->RadioButtonSync($index,"filtered",
+    "ProcessRadioButton",
+    (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "filtered") ? 1 : 0,
+    "&control=FilterSelection","Update();");
+  $http->queue("$url</td>"); 
+  $http->queue("<td>Filtered rows: $filtered_rows</td>");
+  $http->queue("<td>");
+  $http->queue('<a class="btn btn-primary" href="DownloadFilteredTable?obj_path=' .
+    $self->{path} . '">download</a>');
+  $http->queue("</td>");
+  $http->queue("<td>");
+  $self->NotSoSimpleButton($http, {
+    op => "ChainFilteredTable",
+    caption => "chain",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</td>");
+  $http->queue('<td align="right">Show:</td><td align="left">');
+  $self->ClasslessBlurEntryBox($http, {
+    name => "RowsToShow",
+    size => 5,
+    op => "SetRowsToShow",
+    value => $SFQ->{rows_to_show},
+  }, "Update();");
+  $http->queue('</td><td>');
+  $self->NotSoSimpleButton($http, {
+    op => "NewQueryPageUp",
+    caption => "pg-dn",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</td>");
+  $http->queue('</tr>');
+  $http->queue("</table>");
+
+  $http->queue("</div>");
+
+  if(exists($self->{EditFilter})){
+    $self->DrawEditFilterForm($http, $dyn, $SFQ);
+  }
+
+
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue("<tr>");
+  for my $i (@{$SFQ->{query}->{columns}}){
+    $http->queue("<th>$i</th>");
+  }
+  $http->queue("</tr>");
+  my $working_rows;
+  if($self->{FilterSelection}->{$self->{NewQueryToDisplay}} eq "filtered"){
+    $working_rows = $SFQ->{filtered_rows};
+  } else {
+    $working_rows = $SFQ->{rows};
+  }
+  my $num_rows = @{$working_rows};
+  my $max_row = $SFQ->{first_row} + $SFQ->{rows_to_show} - 1;
+  if($max_row > $num_rows) { $max_row = $#{$working_rows} }
+  for my $i ($SFQ->{first_row} .. $max_row){
+    $http->queue("<tr>");
+    my $row = $working_rows->[$i];
+    if(ref($row) eq 'ARRAY'){
+      for my $j (@$row){
+        if(defined $j){
+          $http->queue("<td>$j</td>");
+        } else {
+          $http->queue("<td></td>");
+        }
+      }
+    } else {
+    }
+    $http->queue("</tr>");
+  }
+  $http->queue("</tr>");
+  $http->queue("</table>");
+  $http->queue("</div>");
+}
+method RenderCurrentQueryFilter($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  $http->queue("Query Filter:<br>");
+  for my $k (keys %{$SFQ->{filter}}){
+    if(defined $SFQ->{filter}->{$k} && $SFQ->{filter}->{$k} ne ""){
+      $http->queue("   $k contains \"$SFQ->{filter}->{$k}\"<br>");
+    } else {
+      delete $SFQ->{filter}->{$k};
+    }
+  }
+}
+method DrawEditFilterForm($http, $dyn, $SFQ){
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+  });
+  for my $i (@{$SFQ->{query}->{columns}}){
+    $http->queue('<div style="display: flex; flex-direction: column; align-items: flex-beginning; ' .
+    'margin-left: 10px; margin-bottom: 5px">');
+    $http->queue("<p>$i</p>");
+    my $name = "QueryForm_$i";
+    $self->BlurEntryBox($http, {
+      name => $name,
+      index => $i,
+      op => "SetFilterArgs",
+      value => "$self->{FilterArgs}->{$i}"
+    });
+    $http->queue("</div>");
+  }
+  $http->queue('<div style="display: flex; flex-direction: column; align-items: flex-beginning; ' .
+    'margin-left: 10px; margin-bottom: 5px">');
+  $self->NotSoSimpleButton($http, {
+    op => "SetFilter",
+    caption => "set filter",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $self->NotSoSimpleButton($http, {
+    op => "ClearFilter",
+    caption => "clear filter",
+    sync => "Update();",
+    class => "btn btn-primary",
+  });
+  $http->queue("</div>");
+  $http->queue("</div>");
+}
+
+method SetFilter($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  if((keys %{$self->{FilterArgs}}) > 0){
+    $SFQ->{filter} = $self->{FilterArgs};
+  }
+  delete $self->{EditFilter};
+  delete $self->{FilterArgs};
+}
+method SetFilterArgs($http, $dyn){
+  $self->{FilterArgs}->{$dyn->{index}} = $dyn->{value};
+}
+method ClearFilter($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  delete $self->{EditFilter};
+  delete $self->{FilterArgs};
+  delete $SFQ->{filter};
+}
+sub  UnselectForegroundQuery{
+  my($self, $http, $dyn) = @_;
+  delete $self->{NewQueryToDisplay};
+}
+method DrawNewQueryResults($http, $dyn){
+  $http->queue("NewQueryResults goes here");
+}
+method DrawQueryListSearch($http, $dyn){
+  my @MostFrequentSelects = sort {$a cmp $b } keys %{$self->{NewQueryListSearch}};
+  my $num_queries = @MostFrequentSelects;
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue("<caption>Searched queries ($num_queries rows)</caption>");
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@MostFrequentSelects){
+    $http->queue("<tr>");
+    my $q = $self->{NewQueryListSearch}->{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "OpenBackgroundQuery",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('</table>')
+}
+method DrawQueryListOrResultsRecent($http, $dyn){
+  if(exists($self->{NewQueryResults})){
+    $self->DrawQueryResults($http, $dyn);
+  } else {
+    $self->DrawQueryListOrSelectedQueryRecent($http, $dyn);
+  }
+}
+method DrawQueryListOrSelectedQueryRecent($http, $dyn){
+  if(exists $self->{SelectedNewQuery}){
+    $self->DrawNewQuery($http, $dyn);
+  } else {
+    $self->DrawQueryListRecent($http, $dyn);
+  }
+}
+method DrawQueryListRecent($http, $dyn){
+  my @query_list;
+  Query('ListOfQueriesPerformedByUserWithLatestAndCount')->RunQuery(sub {
+    my($row) = @_;
+    push @query_list, $row;
+  }, sub {}, $self->get_user);
+  my @MostRecentSelects;
+  my %NewQueriesByName;
+  my @MostFrequentSelects;
+  my $i = 0;
+  while(1){
+    if($i > $#query_list) { last }
+    my $q = $query_list[$i];
+    $i++;
+    if($q->[1] =~ /^select/){
+      push @MostRecentSelects, $q->[0];
+      $NewQueriesByName{$q->[0]} = PosdaDB::Queries->GetQueryInstance($q->[0]);
+    };
+    if($i > 5) { last }
+  }
+  my @sorted_query_list = sort {$b->[3] <=> $a->[3]} @query_list;
+  $i = 0;
+  my $j = 0;
+  while($j < 20){
+    if($i > $#sorted_query_list) { last }
+    my $q = $sorted_query_list[$i];
+    $i++;
+    unless($q->[1] =~ /^select/){ next }
+    my $qn = $q->[0];
+    if(exists $NewQueriesByName{$qn}) { next }
+    $j++;
+    push @MostFrequentSelects, $q->[0];
+    $NewQueriesByName{$q->[0]} = PosdaDB::Queries->GetQueryInstance($q->[0]);
+  }
+  $self->{MostRecentSelects} = \@MostRecentSelects;
+  $self->{MostFrequentSelects} = \@MostFrequentSelects;
+  $self->{NewQueriesByName} = \%NewQueriesByName;
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('<caption>Most recent queries</caption>');
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@MostRecentSelects){
+    $http->queue("<tr>");
+    my $q = $NewQueriesByName{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "OpenBackgroundQuery",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('<caption>Most common  queries</caption>');
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@MostFrequentSelects){
+    $http->queue("<tr>");
+    my $q = $NewQueriesByName{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+        $http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "OpenBackgroundQuery",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue('<table class="table table-striped table-condensed">');
+  $http->queue('</table>')
+# }
+}
+
 #############################
 #Here Bill is putting in the "ShowBackground"
 method ShowBackground($http, $dyn){

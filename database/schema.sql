@@ -1067,32 +1067,16 @@ ALTER TABLE ONLY public.count_report ALTER COLUMN count_report_id SET DEFAULT ne
 -- PostgreSQL database dump complete
 --
 
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.8 (Ubuntu 10.8-0ubuntu0.18.04.1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- Name: posda_files; Type: DATABASE; Schema: -; Owner: -
---
-
 CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
 
 
 \connect posda_files
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 11.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1131,20 +1115,6 @@ CREATE SCHEMA dicom_conv;
 --
 
 CREATE SCHEMA quasar;
-
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 SET default_tablespace = '';
@@ -1345,7 +1315,8 @@ CREATE TABLE dbif_config.spreadsheet_operation (
     command_line text,
     operation_type text,
     input_line_format text,
-    tags text[]
+    tags text[],
+    can_chain boolean
 );
 
 
@@ -1432,6 +1403,23 @@ CREATE TABLE public.activity_posda_file (
     activity_id integer NOT NULL,
     file_id_in_posda integer NOT NULL,
     association_description text
+);
+
+
+--
+-- Name: activity_task_status; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_task_status (
+    activity_id integer NOT NULL,
+    subprocess_invocation_id integer NOT NULL,
+    status_text text,
+    start_time timestamp without time zone NOT NULL,
+    end_time timestamp without time zone,
+    last_updated timestamp without time zone,
+    expected_remaining_time interval,
+    dismissed_time timestamp without time zone,
+    dismissed_by text
 );
 
 
@@ -2152,26 +2140,6 @@ CREATE TABLE public.dbif_query_args (
     arg_index integer,
     arg_name text,
     arg_value text
-);
-
-
---
--- Name: dedup_dicom_file; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.dedup_dicom_file (
-    file_id integer,
-    dataset_digest text,
-    xfr_stx text,
-    has_meta boolean,
-    is_dicom_dir boolean,
-    has_sop_common boolean,
-    dicom_file_type text,
-    has_pixel_data boolean,
-    pixel_data_digest text,
-    pixel_data_offset integer,
-    pixel_data_length integer,
-    has_no_roi_linkages boolean
 );
 
 
@@ -2925,40 +2893,6 @@ ALTER SEQUENCE public.file_import_study_file_import_study_id_seq OWNED BY public
 
 
 --
--- Name: import_event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.import_event (
-    import_event_id integer NOT NULL,
-    import_type text,
-    importing_user text,
-    originating_ip_addr text,
-    import_comment text,
-    import_time timestamp with time zone,
-    remote_file text,
-    volume_name text,
-    import_close_time timestamp with time zone,
-    related_id_1 integer,
-    related_id_2 integer
-);
-
-
---
--- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.file_imports_over_time AS
- SELECT count(file.file_id) AS count,
-    date_part('month'::text, import_event.import_time) AS importmonth,
-    date_part('year'::text, import_event.import_time) AS importyear
-   FROM ((public.file
-     JOIN public.file_import USING (file_id))
-     JOIN public.import_event USING (import_event_id))
-  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
-  WITH NO DATA;
-
-
---
 -- Name: file_location; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3000,6 +2934,38 @@ CREATE TABLE public.file_meta (
     source_ae_title text,
     private_info_uid text,
     private_info text
+);
+
+
+--
+-- Name: file_mr; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file_mr (
+    file_id integer NOT NULL,
+    mr_scanning_seq text,
+    mr_scanning_var text,
+    mr_scan_options text,
+    mr_acq_type text,
+    mr_slice_thickness text,
+    mr_repetition_time text,
+    mr_echo_time text,
+    mr_magnetic_field_strength text,
+    mr_spacing_between_slices text,
+    mr_echo_train_length text,
+    mr_software_version text,
+    mr_flip_angle text,
+    mr_nominal_pixel_spacing text,
+    mr_patient_position text,
+    mr_acquisition_number text,
+    mr_instance_number text,
+    mr_smallest_pixel text,
+    mr_largest_value text,
+    mr_window_center text,
+    mr_window_width text,
+    mr_rescale_intercept text,
+    mr_rescale_slope text,
+    mr_rescale_type text
 );
 
 
@@ -3253,23 +3219,6 @@ CREATE TABLE public.file_win_lev (
     window_level_id integer NOT NULL,
     wl_index integer NOT NULL
 );
-
-
---
--- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.files_without_type AS
- SELECT file.file_id,
-    file.digest,
-    file.size,
-    file.is_dicom_file,
-    file.file_type,
-    file.processing_priority,
-    file.ready_to_process
-   FROM public.file
-  WHERE (file.file_type IS NULL)
-  WITH NO DATA;
 
 
 --
@@ -3589,6 +3538,25 @@ CREATE TABLE public.import_ct_series (
     min_file_size integer,
     avg_file_size double precision,
     processing_errors text
+);
+
+
+--
+-- Name: import_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.import_event (
+    import_event_id integer NOT NULL,
+    import_type text,
+    importing_user text,
+    originating_ip_addr text,
+    import_comment text,
+    import_time timestamp with time zone,
+    remote_file text,
+    volume_name text,
+    import_close_time timestamp with time zone,
+    related_id_1 integer,
+    related_id_2 integer
 );
 
 
@@ -5017,6 +4985,17 @@ ALTER SEQUENCE public.user_inbox_user_inbox_id_seq OWNED BY public.user_inbox.us
 
 
 --
+-- Name: user_variable_binding; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_variable_binding (
+    binding_user text NOT NULL,
+    bound_variable_name text NOT NULL,
+    bound_value text
+);
+
+
+--
 -- Name: visible_file_totals_at_time; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5651,6 +5630,14 @@ ALTER TABLE ONLY public.file_meta
 
 
 --
+-- Name: file_mr file_mr_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_mr
+    ADD CONSTRAINT file_mr_file_id_key UNIQUE (file_id);
+
+
+--
 -- Name: file_patient file_patient_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5766,13 +5753,6 @@ CREATE UNIQUE INDEX queries_name_index ON dbif_config.queries USING btree (name)
 --
 
 CREATE UNIQUE INDEX role_tabs_uidx ON dbif_config.role_tabs USING btree (role_name, query_tab_name);
-
-
---
--- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
 
 
 --
@@ -6182,13 +6162,6 @@ CREATE INDEX file_win_lev_main_idx ON public.file_win_lev USING btree (file_id, 
 
 
 --
--- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
-
-
---
 -- Name: fraction_reference_beam_beam_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6539,6 +6512,13 @@ CREATE INDEX unique_pixel_date_image ON public.image USING btree (unique_pixel_d
 
 
 --
+-- Name: user_variable_binding_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX user_variable_binding_index ON public.user_variable_binding USING btree (binding_user, bound_variable_name);
+
+
+--
 -- Name: window_level_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6612,6 +6592,50 @@ ALTER TABLE ONLY public.user_inbox_content
 -- PostgreSQL database dump complete
 --
 
+--
+-- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.file_imports_over_time AS
+ SELECT count(file.file_id) AS count,
+    date_part('month'::text, import_event.import_time) AS importmonth,
+    date_part('year'::text, import_event.import_time) AS importyear
+   FROM ((public.file
+     JOIN public.file_import USING (file_id))
+     JOIN public.import_event USING (import_event_id))
+  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
+  WITH NO DATA;
+
+
+--
+-- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.files_without_type AS
+ SELECT file.file_id,
+    file.digest,
+    file.size,
+    file.is_dicom_file,
+    file.file_type,
+    file.processing_priority,
+    file.ready_to_process
+   FROM public.file
+  WHERE (file.file_type IS NULL)
+  WITH NO DATA;
+
+
+--
+-- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
+
+
+--
+-- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
 -- This file is for default values that should be set for a new install,
 -- but are not part of the UI configuration or queries themselves.
 \connect posda_files

@@ -1,0 +1,27 @@
+create table file_mr(
+  file_id integer not null unique,
+  mr_scanning_seq text,
+  mr_scanning_var text,
+  mr_scan_options text,
+  mr_acq_type text,
+  mr_slice_thickness text,
+  mr_repetition_time text,
+  mr_echo_time text,
+  mr_magnetic_field_strength text,
+  mr_spacing_between_slices text,
+  mr_echo_train_length text,
+  mr_software_version text,
+  mr_flip_angle text,
+  mr_nominal_pixel_spacing text,
+  mr_patient_position text,
+  mr_acquisition_number text,
+  mr_instance_number text,
+  mr_smallest_pixel text,
+  mr_largest_value text,
+  mr_window_center text,
+  mr_window_width text,
+  mr_rescale_intercept text,
+  mr_rescale_slope text,
+  mr_rescale_type text
+);
+

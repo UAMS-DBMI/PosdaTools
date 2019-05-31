@@ -600,6 +600,23 @@ order by
         ;
 
             insert into queries
+            values ('DualFileNameReportByImportEvent', 'select
+  file_id, patient_id,
+  study_instance_uid, study_date, study_description, series_instance_uid,
+  modality, series_date, series_description, dicom_file_type, file_name,
+  root_path || ''/'' || l.rel_path as path 
+from
+  file_import natural join file_patient natural join file_series natural join
+  file_study natural join dicom_file join file_location l using(file_id) natural join
+  file_storage_root
+where
+  import_event_id = ?
+order by file_name', ARRAY['import_event_id'], 
+                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'modality', 'series_date', 'series_description', 'dicom_file_type', 'file_name', 'path'], ARRAY['import_events'], 'posda_files', 'List of values seen in scan by ElementSignature with VR and count
+')
+        ;
+
+            insert into queries
             values ('GetSeenValue', 'select * from seen_value where value = ?
 ', ARRAY['value'], 
                     ARRAY['seen_value_id', 'value'], ARRAY['UsedInPhiSeriesScan', 'NotInteractive'], 'posda_phi', 'Get Seen Value Id')
@@ -2168,6 +2185,21 @@ where
         ;
 
             insert into queries
+            values ('FinishActivityTaskStatus', 'update activity_task_status set
+  status_text = ?,
+  expected_remaining_time = null,
+  end_time = now(),
+  last_updated = now()
+where
+  activity_id = ? and
+  subprocess_invocation_id = ?', ARRAY['status_text', 'activity_id', 'subprocess_invocation_id'], 
+                    '{}', ARRAY['NotInteractive', 'Update'], 'posda_files', 'Update status_text and end_timee in activity_task_status
+For use in scripts
+Not really intended for interactive use
+')
+        ;
+
+            insert into queries
             values ('AreVisibleFilesMarkedAsBadOrUnreviewedInSeriesNew', 'select 
   collection,
   site,
@@ -2551,6 +2583,16 @@ group by collection, site, patient_id, qualified', ARRAY['collection_like', 'sit
                     ARRAY['collection', 'site', 'patient_id', 'qualified'], ARRAY['clin_qual'], 'posda_files', 'Create An Activity Timepoint
 
 ')
+        ;
+
+            insert into queries
+            values ('UpdateUserBoundVariable', 'update user_variable_binding set
+  bound_value = ?
+where
+  binding_user = ?
+  and bound_variable_name = ?
+ ', ARRAY['value', 'user', 'variable_name'], 
+                    ARRAY['user', 'variable', 'binding'], ARRAY['AllCollections', 'queries', 'activity_support', 'variabler_binding'], 'posda_queries', 'Get list of variables with bindings for a user')
         ;
 
             insert into queries
@@ -4792,6 +4834,19 @@ order by element_signature
         ;
 
             insert into queries
+            values ('ImportEventsByMatchingNameAndType', 'select
+  import_event_id, import_type,
+  import_comment, import_time, import_close_time - import_time as duration, 
+  count(distinct file_id) as num_images
+from 
+  import_event natural join file_import
+where
+  import_comment like ? and import_type like ?
+group by import_event_id, import_type, import_comment, import_time, import_close_time', ARRAY['import_comment_like', 'import_type_like'], 
+                    ARRAY['import_event_id', 'import_type', 'import_comment', 'import_time', 'duration', 'num_images'], ARRAY['import_events'], 'posda_files', 'Get Import Events by matching comment')
+        ;
+
+            insert into queries
             values ('GetSeriesForPhiInfo', 'select 
   series_instance_uid
 from 
@@ -5563,6 +5618,19 @@ From script only.  Don''t run from user interface (needs valid subprocess_invoca
   ?, ?
 )', ARRAY['file_id', 'study_instance_uid', 'study_date', 'study_time', 'referring_phy_name', 'study_id', 'accession_number', 'study_description', 'phys_of_record', 'phys_reading', 'admitting_diag'], 
                     '{}', ARRAY['bills_test', 'posda_db_populate'], 'posda_queries', 'Add a filter to a tab')
+        ;
+
+            insert into queries
+            values ('DismissActivityTaskStatus', 'update activity_task_status set
+  dismissed_time = now(),
+  dismissed_by = ?
+where
+  activity_id = ? and
+  subprocess_invocation_id = ?', ARRAY['dismissed_by', 'activity_id', 'subprocess_invocation_id'], 
+                    '{}', ARRAY['NotInteractive', 'Update'], 'posda_files', 'Update status_text and expected_completion_time in activity_task_status
+For use in scripts
+Not really intended for interactive use
+')
         ;
 
             insert into queries
@@ -7029,6 +7097,21 @@ order by when_script_started desc', ARRAY['activity_id'],
         ;
 
             insert into queries
+            values ('UpdateActivityTaskStatus', 'update activity_task_status set
+  status_text = ?,
+  last_updated = now(),
+  dismissed_time = null,
+  dismissed_by = null
+where
+  activity_id = ? and
+  subprocess_invocation_id = ?', ARRAY['status_text', 'activity_id', 'subprocess_invocation_id'], 
+                    '{}', ARRAY['NotInteractive', 'Update'], 'posda_files', 'Update status_text and expected_completion_time in activity_task_status
+For use in scripts
+Not really intended for interactive use
+')
+        ;
+
+            insert into queries
             values ('GetFileIdVisibilityByImageEquivalenceClass', 'select 
   distinct file_id, visibility
 from
@@ -8101,10 +8184,9 @@ order by sop_instance_uid
   distinct file_id                                                                                                                                                                                                                                                                                                                                                                                                                                from
   import_event natural join file_import natural join dicom_file
 where
-  import_type = ''posda-api import'' and import_comment = ?', ARRAY['import_comment'], 
-                    ARRAY['file_id'], ARRAY['adding_ctp', 'for_scripting'], 'posda_files', 'Get a list of to files from the dicom_edit_compare table for a particular edit instance, with file_id and visibility
-
-NB: Normally there should be no file_id (i.e. file has not been imported)')
+  import_type = ''posda-api import'' and import_comment = ?', ARRAY['import_name'], 
+                    ARRAY['file_id'], ARRAY['posda_files', 'sops', 'BySopInstance', 'by_file'], 'posda_files', 'Get Collection, Site, Patient, Study Hierarchy in which SOP resides
+')
         ;
 
             insert into queries
@@ -8485,14 +8567,16 @@ It is intended for short date ranges (i.e. "What came in last night?" or "What c
 
             insert into queries
             values ('ApiImportEvents', 'select
-  import_event_id, import_comment, import_time, import_close_time, count(distinct file_id) as num_images
+  import_event_id, import_comment, import_time,
+  import_close_time - import_time as duration, 
+  count(distinct file_id) as num_images,
+  (import_close_time - import_time) / count(distinct file_id) as per_sec
 from 
   import_event natural join file_import
 where
-  import_comment like ?
+  import_comment like ? and import_type = ''posda-api import''
 group by import_event_id, import_comment, import_time, import_close_time', ARRAY['import_comment_like'], 
-                    ARRAY['import_event_id', 'import_comment', 'import_time', 'import_close_time', 'num_images'], ARRAY['downloads_by_date', 'import_events', 'QIN-GBM-DSC-MRI-DRO/Barrow'], 'posda_files', 'Counts query by Collection, Site
-')
+                    ARRAY['import_event_id', 'import_comment', 'import_time', 'duration', 'num_images', 'per_sec'], ARRAY['import_events'], 'posda_files', 'Get Import Events by matching comment')
         ;
 
             insert into queries
@@ -9142,13 +9226,16 @@ where
 
             insert into queries
             values ('FilesSeriesSopsVisibilityInTimepoint', 'select 
-  file_id, patient_id, study_instance_uid, series_instance_uid, sop_instance_uid, visibility
+  file_id, patient_id, study_instance_uid, series_instance_uid, sop_instance_uid, 
+  project_name as collection, site_name as site, visibility, modality,
+  dicom_file_type as type
 from
   file_patient natural join file_study natural join file_series natural join file_sop_common
+  natural join dicom_file
   natural join ctp_file
 where file_id in (
-  select file_id from activity_timepoint where activity_timepoint_id = ?)', ARRAY['activity_timepoint_id'], 
-                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'sop_instance_uid', 'visibility'], ARRAY['compare_series'], 'posda_files', 'Get Distinct SOPs in Series with number files
+  select file_id from activity_timepoint natural join activity_timepoint_file where activity_timepoint_id = ?)', ARRAY['activity_timepoint_id'], 
+                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'sop_instance_uid', 'collection', 'site', 'visibility', 'modality', 'type'], ARRAY['compare_series'], 'posda_files', 'Get Distinct SOPs in Series with number files
 Only visible filess
 ')
         ;
@@ -10380,6 +10467,19 @@ group by
         ;
 
             insert into queries
+            values ('ApiImportEventsForPatient', 'select
+  import_event_id, import_comment, import_time,
+  import_close_time - import_time as duration, patient_id,
+  count(distinct file_id) as num_images
+from 
+  import_event natural join file_import natural join file_patient
+where
+  import_comment like ? and import_type = ''posda-api import'' and patient_id like ?
+group by import_event_id, import_comment, import_time, import_close_time, patient_id', ARRAY['import_comment_like', 'patient_id_like'], 
+                    ARRAY['import_event_id', 'import_comment', 'import_time', 'duration', 'patient_id', 'num_images'], ARRAY['import_events'], 'posda_files', 'Get Import Events by matching comment')
+        ;
+
+            insert into queries
             values ('ImportEvents', 'select
   distinct import_event_id, import_time,  count(distinct file_id) as num_files
 from
@@ -11318,17 +11418,17 @@ group by collection, time order by time desc, collection', ARRAY['interval', 'fr
 
             insert into queries
             values ('ListOfQueriesPerformedByUserWithLatestAndCount', 'select
-  query_name,
+  distinct query_name, query,
   max(query_start_time) as last_invocation, 
   count(query_invoked_by_dbif_id) as num_invocations,
   sum(query_end_time - query_start_time) as total_query_time,
   avg(query_end_time - query_start_time) as avg_query_time
 from 
-  query_invoked_by_dbif
-where invoking_user = ?
-group by query_name
+  query_invoked_by_dbif i, queries q
+where invoking_user = ? and i.query_name = q.name
+group by query_name, query
 order by last_invocation  desc', ARRAY['user'], 
-                    ARRAY['query_name', 'last_invocation', 'num_invocations', 'total_query_time', 'avg_query_time'], ARRAY['AllCollections', 'q_stats'], 'posda_queries', 'Get a list of collections and sites
+                    ARRAY['query_name', 'query', 'last_invocation', 'num_invocations', 'total_query_time', 'avg_query_time'], ARRAY['AllCollections', 'q_stats'], 'posda_queries', 'Get a list of collections and sites
 ')
         ;
 
@@ -12010,6 +12110,25 @@ group by
         ;
 
             insert into queries
+            values ('GetActivityTaskStatus', 'select
+  subprocess_invocation_id,
+  operation_name,
+  start_time,
+  last_updated,
+  status_text,
+  expected_remaining_time,
+  end_time
+from
+  activity_task_status natural join subprocess_invocation
+where
+  activity_id = ? and dismissed_time is null', ARRAY['activity_id'], 
+                    ARRAY['operation_name', 'start_time', 'last_updated', 'status_text', 'expected_remaining_time', '  end_time'], ARRAY['Insert', 'NotInteractive'], 'posda_files', 'Insert Initial Patient Status
+For use in scripts
+Not really intended for interactive use
+')
+        ;
+
+            insert into queries
             values ('DeleteLastTagFromQuery', 'update queries 
   set tags = tags[1:(array_upper(tags,1) -1)]
 where name = ?', ARRAY['name'], 
@@ -12110,6 +12229,17 @@ group by
 ', ARRAY['collection', 'site', 'patient_id'], 
                     ARRAY['collection', 'site', 'patient_id', 'modality', 'series_instance_uid', 'num_sops', 'num_files'], ARRAY['signature', 'phi_review', 'visual_review'], 'posda_files', 'Get a list of Series with images by CollectionSite
 ')
+        ;
+
+            insert into queries
+            values ('ImportEventsByMatchingName', 'select
+  import_event_id, import_comment, import_time, import_close_time, count(distinct file_id) as num_images
+from 
+  import_event natural join file_import
+where
+  import_comment like ?
+group by import_event_id, import_comment, import_time, import_close_time', ARRAY['import_comment_like'], 
+                    ARRAY['import_event_id', 'import_comment', 'import_time', 'import_close_time', 'num_images'], ARRAY['import_events'], 'posda_files', 'Get Import Events by matching comment')
         ;
 
             insert into queries
@@ -12309,6 +12439,25 @@ order by element_signature
             insert into queries
             values ('InsertFilePosdaReturnID', 'insert into file( digest, size, processing_priority, ready_to_process) values ( ?, ?, 1, false) on conflict  do nothing returning file_id;', ARRAY['digest', 'size'], 
                     ARRAY['file_id'], ARRAY['NotInteractive', 'Backlog', 'Transaction', 'used_in_file_import_into_posda'], 'posda_files', 'Insert a file without locking the table')
+        ;
+
+            insert into queries
+            values ('FileNameReportByImportEventWithMrData', 'select
+  file_id, patient_id,
+  study_instance_uid, study_date, study_description, series_instance_uid,
+  modality, series_date, series_description, dicom_file_type, file_name,
+  mr_scanning_seq, mr_scanning_var, mr_scan_options,
+  mr_acq_type, mr_slice_thickness, mr_repetition_time,
+  mr_echo_time, mr_magnetic_field_strength, mr_spacing_between_slices,
+  mr_echo_train_length, mr_software_version, mr_flip_angle
+from
+  file_import natural join file_patient natural join file_series natural join
+  file_study natural join dicom_file natural left join file_mr
+where
+  import_event_id = ?
+order by file_name', ARRAY['import_event_id'], 
+                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'modality', 'series_date', 'series_description', 'dicom_file_type', 'file_name', 'mr_scanning_seq', 'mr_scanning_var', 'mr_scan_options', 'mr_acq_type', 'mr_slice_thickness', 'mr_repetition_time', 'mr_echo_time', 'mr_magnetic_field_strength', 'mr_spacing_between_slices', 'mr_echo_train_length', 'mr_software_version', 'mr_flip_angle'], ARRAY['import_events'], 'posda_files', 'List of values seen in scan by ElementSignature with VR and count
+')
         ;
 
             insert into queries
@@ -13316,6 +13465,16 @@ group by file_id, date, cm_collection, cm_site', ARRAY['collection_like'],
         ;
 
             insert into queries
+            values ('GetInputFormatForAllCommands', 'select
+  operation_name, input_line_format, command_line
+from
+  spreadsheet_operation
+where input_line_format is not null and operation_type = ''background_process''
+  and can_chain', '{}', 
+                    ARRAY['operation_name', 'input_line_format', 'command_line'], ARRAY['spreadsheet_operations'], 'posda_files', 'Get List of visible patients with CTP data')
+        ;
+
+            insert into queries
             values ('GetCollectionCodes', 'select
  collection_name, collection_code
 from
@@ -14140,6 +14299,22 @@ group by project_name
         ;
 
             insert into queries
+            values ('UpdateActivityTaskStatusAndCompletionTime', 'update activity_task_status set
+  status_text = ?,
+  expected_remaining_time = ?,
+  last_updated = now(),
+  dismissed_time = null,
+  dismissed_by = null
+where
+  activity_id = ? and
+  subprocess_invocation_id = ?', ARRAY['status_text', 'expected_completion_time', 'activity_id', 'subprocess_invocation_id'], 
+                    '{}', ARRAY['NotInteractive', 'Update'], 'posda_files', 'Update status_text and expected_completion_time in activity_task_status
+For use in scripts
+Not really intended for interactive use
+')
+        ;
+
+            insert into queries
             values ('TagsSeenSimplePrivateWithCountAndNullDisp', 'select 
   distinct element_sig_pattern,
   vr,
@@ -14382,6 +14557,32 @@ where
   import_time < ?
   and modality = ''RTSTRUCT''', ARRAY['collection', 'site', 'from', 'to'], 
                     ARRAY['sop_instance_uid'], ARRAY['Hierarchy', 'apply_disposition', 'hash_unhashed'], 'posda_files', 'Construct list of files in a collection, site in a Patient, Study, Series Hierarchy')
+        ;
+
+            insert into queries
+            values ('InsertRowFileMr', 'insert into file_mr(
+  mr_scanning_seq, mr_scanning_var, mr_scan_options,
+  mr_acq_type, mr_slice_thickness, mr_repetition_time,
+  mr_echo_time,  mr_magnetic_field_strength, mr_spacing_between_slices,
+  mr_echo_train_length, mr_software_version, mr_flip_angle,
+  mr_nominal_pixel_spacing, mr_patient_position, mr_acquisition_number,
+  mr_instance_number, mr_smallest_pixel, mr_largest_value,
+  mr_window_center, mr_window_width, mr_rescale_intercept,
+  mr_rescale_slope, mr_rescale_type, file_id
+) values (
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?,
+  ?, ?, ?
+)
+
+', ARRAY['mr_scanning_seq', 'mr_scanning_var', 'mr_scan_options', 'mr_acq_type', 'mr_slice_thickness', 'mr_repetition_time', 'mr_echo_time', 'mr_magnetic_field_strength', 'mr_spacing_between_slices', 'mr_echo_train_length', 'mr_software_version', 'mr_flip_angle', 'mr_nominal_pixel_spacing', 'mr_patient_position', 'mr_acquisition_number', 'mr_instance_number', 'mr_smallest_pixel', 'mr_largest_pixel', 'mr_window_center', 'mr_window_width', 'mr_rescale_intercept', 'mr_rescale_slope', 'mr_rescale_type', 'file_id'], 
+                    '{}', ARRAY['mr_images'], 'posda_files', 'Insert a Row in file_mr
+')
         ;
 
             insert into queries
@@ -14784,6 +14985,26 @@ where
   visibility is null
 ', ARRAY['collection'], 
                     ARRAY['file_id', 'file_type', 'file_sub_type', 'collection', 'site', 'subject', 'visibility', 'date_last_categorized'], ARRAY['radcomp'], 'posda_files', 'Add a filter to a tab')
+        ;
+
+            insert into queries
+            values ('InsertActivityTaskStatus', 'insert into activity_task_status(
+  activity_id,
+  subprocess_invocation_id,
+  start_time,
+  status_text,
+  last_updated
+) values (
+  ?,
+  ?,
+  now(),
+   ''Initializing'',
+  now()
+)', ARRAY['activity_id', 'subprocess_invocation_id'], 
+                    '{}', ARRAY['Insert', 'NotInteractive'], 'posda_files', 'Insert Initial Patient Status
+For use in scripts
+Not really intended for interactive use
+')
         ;
 
             insert into queries
@@ -15363,6 +15584,23 @@ order by patient_id, study_instance_uid, series_instance_uid', ARRAY['collection
         ;
 
             insert into queries
+            values ('GetUnpopulatedMrFiles', 'select
+  distinct file_id, root_path || ''/'' || rel_path as path
+from 
+  file_storage_root natural join file_location
+where
+  file_id in (
+    select file_id from dicom_file d natural left join ctp_file
+    where visibility is null and dicom_file_type = ''MR Image Storage''
+    and not exists (
+      select file_id from file_mr m where m.file_id = d.file_id
+    )
+  )', '{}', 
+                    ARRAY['file_id', 'path'], ARRAY['mr_images'], 'posda_files', 'Counts query by Collection, Site
+')
+        ;
+
+            insert into queries
             values ('AllManifestsByCollection', 'select
   distinct file_id, import_time, size, root_path || ''/'' || l.rel_path as path, i.file_name as alt_path
 from
@@ -15656,7 +15894,7 @@ from
 where
   import_event_id = ?
 order by file_name', ARRAY['import_event_id'], 
-                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'modality', 'series_date', 'series_description', 'dicom_file_type', 'file_name'], ARRAY['import_events', 'QIN-GBM-DSC-MRI-DRO/Barrow'], 'posda_files', 'Counts query by Collection, Site
+                    ARRAY['file_id', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'modality', 'series_date', 'series_description', 'dicom_file_type', 'file_name'], ARRAY['import_events'], 'posda_files', 'List of values seen in scan by ElementSignature with VR and count
 ')
         ;
 
@@ -18868,6 +19106,20 @@ from visual_review_instance
   order by when_scheduled desc', '{}', 
                     ARRAY['id', 'reason', 'who_by', 'num_series', 'when_scheduled', 'num_done', 'num_equiv', 'sched_finish_time'], ARRAY['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files', 'simple_phi', 'dciodvfy', 'ctp_details', 'select_for_phi', 'visual_review_status'], 'posda_files', 'Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 ')
+        ;
+
+            insert into queries
+            values ('GetUsersBoundVariables', 'select
+  binding_user as user,
+  bound_variable_name as variable,
+  bound_value as  value
+from
+  user_variable_binding
+where
+  binding_user = ?
+
+', ARRAY['user'], 
+                    ARRAY['user', 'variable', 'binding'], ARRAY['AllCollections', 'queries', 'activity_support', 'variabler_binding'], 'posda_queries', 'Get list of variables with bindings for a user')
         ;
 
             insert into queries
@@ -23178,6 +23430,16 @@ Not really intended for interactive use
             insert into queries
             values ('GetSeenValueId', 'select currval(''seen_value_seen_value_id_seq'') as id', '{}', 
                     ARRAY['id'], ARRAY['UsedInPhiSeriesScan', 'NotInteractive'], 'posda_phi', 'Get current value of seen_value_id sequence')
+        ;
+
+            insert into queries
+            values ('InsertUserBoundVariable', 'insert into user_variable_binding(
+  binding_user, bound_variable_name, bound_value
+) values (
+  ?, ?, ?
+)
+ ', ARRAY['user', 'variable_name', 'value'], 
+                    ARRAY['user', 'variable', 'binding'], ARRAY['AllCollections', 'queries', 'activity_support', 'variabler_binding'], 'posda_queries', 'Get list of variables with bindings for a user')
         ;
 
             insert into queries
