@@ -1,4 +1,4 @@
-Refresh file_without_type
+Refresh files_without_type
 10
 posda_files
-REFRESH MATERIALIZED VIEW file_without_type;
+REFRESH MATERIALIZED VIEW files_without_type;

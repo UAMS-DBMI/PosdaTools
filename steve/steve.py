@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3 -u
 import os
 import time
 import datetime
@@ -7,18 +7,18 @@ from posda.database import Database
 
 class Job():
     def __init__(self,name,schedule,db,instructions):
-        self.name =  name
-        self.schedule = schedule
-        self.db = db
-        self.instructions = instructions
+        self.name =  name.strip()
+        self.schedule = schedule.strip()
+        self.db = db.strip()
+        self.instructions = instructions.strip()
         self.set_next_time()
 
     def time_check(self):
         return datetime.datetime.now() > self.nextTime
 
     def set_next_time(self):
-        self.nextTime = datetime.datetime.now() + timedelta(minutes=(int(schedule.strip())))
-        print ("next time is " + str(self.nextTime))
+        self.nextTime = datetime.datetime.now() + timedelta(minutes=(int(schedule)))
+        print("next time is " + str(self.nextTime))
         return
 
     def walk_briskly(self):
@@ -52,7 +52,7 @@ except Exception as e:
 
 
 while True:
-    time.sleep(300)
+    time.sleep(60)
     print("checking")
     for job in myjobs:
         if job.time_check():
