@@ -13,10 +13,16 @@ async def fetch(query, parameters=[]):
     async with pool.acquire() as conn:
         print("\nfetching\n")
         records = await conn.fetch(query, *parameters)
-        print("records:\n")
-        print(dict(records[0]))
         if len(records) < 1:
             raise NotFound("no matching records found")
+        print("records:\n")
+        print(dict(records[0]))
+        return records
+
+async def fetch_with_empty(query, parameters=[]):
+    global pool
+    async with pool.acquire() as conn:
+        records = await conn.fetch(query, *parameters)
         return records
 
 async def fetch_one(query, parameters=[]):
