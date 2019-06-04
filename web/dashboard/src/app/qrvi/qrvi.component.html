@@ -1,0 +1,8 @@
+<div *ngIf="ready" class="module" >
+      <h1>Query Runtime vs Invocations This Month</h1>
+      <canvas baseChart width="400" height="400"
+      [datasets]="scatterChartData"
+      [options]="scatterChartOptions"
+      [chartType]="scatterChartType">
+      </canvas>
+</div>

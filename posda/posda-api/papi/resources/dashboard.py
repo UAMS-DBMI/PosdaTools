@@ -26,7 +26,7 @@ async def slow_dbif_queries(request,days):
         limit 20;
     """
     return json_records(
-        await db.fetch(query,[int(days)])
+        await db.fetch_with_empty(query,[int(days)])
     )
 
 
@@ -46,7 +46,7 @@ async def PossiblyRunningBackgroundSubprocesses(request):
         limit 20;
     """
     return json_records(
-        await db.fetch(query)
+        await db.fetch_with_empty(query)
     )
 
 async def background_subprocess_stats_by_user_this_week(request):
@@ -65,7 +65,7 @@ async def background_subprocess_stats_by_user_this_week(request):
         group by invoking_user;
     """
     return json_records(
-        await db.fetch(query)
+        await db.fetch_with_empty(query)
     )
 
 async def files_without_type(request):
@@ -74,7 +74,16 @@ async def files_without_type(request):
         limit 20;
     """
     return json_records(
-        await db.fetch(query)
+        await db.fetch_with_empty(query)
+    )
+
+async def files_without_location(request):
+    query = """\
+        select * from files_without_location
+        limit 20;
+    """
+    return json_records(
+        await db.fetch_with_empty(query)
     )
 
 async def get_file_time_chart(request):
@@ -90,7 +99,7 @@ async def get_file_time_chart(request):
     	,importmonth;
     """
     return json_records(
-        await db.fetch(query)
+        await db.fetch_with_empty(query)
     )
 
 async def table_lock_alert(request):
@@ -103,5 +112,24 @@ async def table_lock_alert(request):
      where cardinality(pg_blocking_pids(pid)) > 0;
      """
      return json_records(
-         await db.fetch(query)
+        await db.fetch_with_empty(query)
+     )
+
+async def get_query_runtime_versus_invocations(request):
+     query = """\
+     select
+      query_name,
+      max(query_start_time)::text  as last_invocation,
+      count(query_invoked_by_dbif_id) as num_invocations,
+      sum(query_end_time - query_start_time)::text  as total_query_time,
+      extract(epoch from avg(query_end_time - query_start_time)) as avg_query_time
+    from
+      query_invoked_by_dbif
+    where extract(day from query_start_time)::int < 31
+    group by query_name
+    order by avg_query_time  desc
+    limit 120;
+     """
+     return json_records(
+        await db.fetch_with_empty(query)
      )

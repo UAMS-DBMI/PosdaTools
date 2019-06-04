@@ -1,0 +1,4 @@
+Refresh files_without_type
+60
+posda_files
+REFRESH MATERIALIZED VIEW files_without_type;
