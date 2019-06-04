@@ -70,6 +70,10 @@ def generate_dashboard_blueprint():
         '/fwt'
     )
     blueprint.add_route(
+        dashboard.files_without_location,
+        '/fwl'
+    )
+    blueprint.add_route(
         dashboard.get_file_time_chart,
         '/ftc'
     )

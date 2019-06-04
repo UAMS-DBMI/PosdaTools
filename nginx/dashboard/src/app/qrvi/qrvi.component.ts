@@ -21,7 +21,7 @@ export class QrviComponent implements OnInit {
     tooltips: {
      callbacks: {
        label: function(tooltipItem, data) {
-                   var this_dot = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                   var this_dot:any = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                    return this_dot.label + "\n  avg time:" + this_dot.x + "s called " + this_dot.y + " times."
                  },
      }

@@ -9,6 +9,7 @@ import { DBIFqueriesComponent } from './dbifqueries/dbifqueries.component';
 import { PRBSComponent } from './prbs/prbs.component';
 import { BSBUComponent } from './bsbu/bsbu.component';
 import { FwtComponent } from './fwt/fwt.component';
+import { FwlComponent } from './fwl/fwl.component';
 import { FileTimeChartComponent } from './file-time-chart/file-time-chart.component';
 import { TableLockAlertComponent } from './table-lock-alert/table-lock-alert.component';
 import { QrviComponent } from './qrvi/qrvi.component';
@@ -20,6 +21,7 @@ import { QrviComponent } from './qrvi/qrvi.component';
     PRBSComponent,
     BSBUComponent,
     FwtComponent,
+    FwlComponent,
     FileTimeChartComponent,
     TableLockAlertComponent,
     QrviComponent

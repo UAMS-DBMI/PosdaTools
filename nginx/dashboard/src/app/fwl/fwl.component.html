@@ -1,0 +1,27 @@
+<div class="module" >
+  <table style="width:100%">
+    <tr>
+      <td colspan="3">
+        <h1>Files Without Location</h1>
+      </td>
+      </tr>
+    <tr>
+      <th>File ID</th>
+      <th>Digest</th>
+      <th>Size</th>
+      <th>DICOM</th>
+      <th>Type</th>
+      <th>Processing Priority</th>
+      <th>Ready to Process</th>
+    </tr>
+    <tr *ngFor= "let my_rows of my_fwl">
+      <td>{{my_rows.file_id}}</td>
+      <td>{{my_rows.digest}}</td>
+      <td>{{my_rows.size}}</td>
+      <td>{{my_rows.is_dicom_file}}</td>
+      <td>{{my_rows.file_type}}</td>
+      <td>{{my_rows.processing_priority}}</td>
+      <td>{{my_rows.ready_to_process}}</td>
+    </tr>
+  </table>
+</div>
