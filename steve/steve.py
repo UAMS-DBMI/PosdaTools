@@ -18,7 +18,7 @@ class Job():
 
     def set_next_time(self):
         self.nextTime = datetime.datetime.now() + timedelta(minutes=(int(schedule)))
-        print("next time is " + str(self.nextTime))
+        #print("next time is " + str(self.nextTime))
         return
 
     def walk_briskly(self):
@@ -53,7 +53,7 @@ except Exception as e:
 
 while True:
     time.sleep(60)
-    print("checking")
+    #print("checking")
     for job in myjobs:
         if job.time_check():
             job.walk_briskly()
