@@ -16,6 +16,21 @@ services:
         image: redis:latest
         restart: always
 
+    steve:
+        image: tcia/posda:latest
+        working_dir: "/home/posda/posdatools/systemd"
+        command: "/home/posda/posdatools/systemd/run_in_posda_env.sh /steve/steve.py"
+        restart: always
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - ./steve:/steve
+            - /mnt:/mnt
+            - /nas:/nas
+        env_file: 
+            - database.env
+            - common.env
+
     posda:
         image: tcia/posda:latest
         restart: always

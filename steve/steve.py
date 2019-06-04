@@ -50,6 +50,7 @@ try:
 except Exception as e:
     print("Error: {0}".format(e))
 
+print("Steve, the job runner")
 
 while True:
     time.sleep(60)
