@@ -5,6 +5,7 @@ import {Slow_dbif_queries_class} from './dbifqueries/slow_dbif_queries_class';
 import {Prbs} from './prbs/prbs';
 import {Bsbu} from './bsbu/bsbu';
 import {Fwt} from './fwt/fwt';
+import {Fwl} from './fwl/fwl';
 import {Ftc} from './file-time-chart/ftc';
 import {Tla} from './table-lock-alert/Tla';
 import {Qrvi} from './qrvi/Qrvi';
@@ -36,6 +37,11 @@ export class ApiService {
   getFilesWithoutType():Observable<Fwt[]>{
     var url = '/papi/v1/dashboard/fwt';
     return this.http.get<Fwt[]>(url);
+  }
+
+  getFilesWithoutLocation():Observable<Fwl[]>{
+    var url = '/papi/v1/dashboard/fwl';
+    return this.http.get<Fwl[]>(url);
   }
 
   get_file_time_chart():Observable<Ftc[]>{

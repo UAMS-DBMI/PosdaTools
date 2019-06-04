@@ -77,6 +77,15 @@ async def files_without_type(request):
         await db.fetch(query)
     )
 
+async def files_without_location(request):
+    query = """\
+        select * from files_without_location
+        limit 20;
+    """
+    return json_records(
+        await db.fetch(query)
+    )
+
 async def get_file_time_chart(request):
     query = """\
     select
