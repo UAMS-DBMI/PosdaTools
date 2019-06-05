@@ -3042,6 +3042,7 @@ method ShowResponse($http, $dyn){
 }
 method ShowInput($http, $dyn){
   my $class = 'Posda::PopupTextViewer';
+  eval "require $class";
   my $params = {
     activity_id => $self->{ActivitySelected},
     file_id =>  $dyn->{file_id},
