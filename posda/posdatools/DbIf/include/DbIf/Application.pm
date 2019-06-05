@@ -2549,11 +2549,19 @@ method TableSelected($http, $dyn){
 }
 
 method OpenChainedQuery($http, $dyn) {
+print STDERR "#######################\nIn OpenChainedQuery:\n" .
+  "dyn = ";
+Debug::GenPrint($dbg, $dyn, 1);
+print STDERR "\n";
+
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
   my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
   # DEBUG Dumper($details);
+print STDERR "details = ";
+Debug::GenPrint($dbg, $details, 1);
+print STDERR "\n";
 
   # get the row as a hash?
   my $h = {};
@@ -2580,14 +2588,17 @@ method OpenChainedQuery($http, $dyn) {
       $h->{$cols->[$i]} = $row->[$i];
     }
   }
+print STDERR "row = ";
+Debug::GenPrint($dbg, $h, 1);
+print STDERR "\n";
 
   # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
   for my $param (@$details) {
     if(exists $self->{BindingCache}->{$param->{to_parameter_name}}){
       unless(
-        $self->{BindingCache}->{$param}->{to_parameter_name} eq
-        $h->{param}->{from_column_name}
+        $self->{BindingCache}->{$param->{to_parameter_name}} eq
+        $h->{$param->{from_column_name}}
       ){
         $self->{BindingCache}->{$param->{to_parameter_name}} =
           $h->{$param->{from_column_name}};
