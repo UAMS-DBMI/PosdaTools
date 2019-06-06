@@ -65,18 +65,6 @@ where
         ;
 
             insert into queries
-            values ('UnhideFile', 'update
-  ctp_file
-set
-  visibility = null
-where
-  file_id = ?
-', ARRAY['file_id'], 
-                    '{}', ARRAY['ImageEdit', 'NotInteractive'], 'posda_files', 'Hide a file
-')
-        ;
-
-            insert into queries
             values ('CreateDciodvfyUnitScan', 'insert into dciodvfy_unit_scan(
   type_of_unit,
   unit_uid,
@@ -13021,6 +13009,21 @@ where
         ;
 
             insert into queries
+            values ('PatientsByTp', 'select distinct
+    patient_id,
+	series_instance_uid
+
+from
+    activity_timepoint_file
+    natural join file_patient
+	natural join file_series
+where
+    activity_timepoint_id = ?
+', ARRAY['activity_timepoint_id'], 
+                    ARRAY['patient_id', 'series_instance_uid'], ARRAY['activity_timepoint_support'], 'posda_queries', 'Get a list of patients, and their series in a timepoint')
+        ;
+
+            insert into queries
             values ('GetPatientMappingByPatientId', 'select
   from_patient_id,
   to_patient_id,
@@ -16378,6 +16381,19 @@ where
 ', ARRAY['sop_instance_uid'], 
                     ARRAY['file_path'], ARRAY['public', 'used_in_simple_phi'], 'public', 'List of all Series By Collection, Site on Intake
 ')
+        ;
+
+            insert into queries
+            values ('CollectionSiteFromTp', 'select distinct
+    project_name as collection_name,
+    site_name
+from
+    activity_timepoint_file
+    natural join ctp_file
+where
+    activity_timepoint_id = ?
+', ARRAY['activity_timepoint_id'], 
+                    ARRAY['collection_name', 'site_name'], ARRAY['activity_timepoint_support'], 'posda_queries', 'Get the collection and site from a TP')
         ;
 
             insert into queries
