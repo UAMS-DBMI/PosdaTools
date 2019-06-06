@@ -11,7 +11,7 @@ import requests
 
 from fire import Fire
 
-URL = 'http://tcia-posda-rh-2.ad.uams.edu/papi/v1/import/'
+URL = 'http://localhost/papi/v1/import/'
 
 def md5sum(fname):
     hash_md5 = hashlib.md5()
