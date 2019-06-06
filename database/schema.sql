@@ -1067,16 +1067,12 @@ ALTER TABLE ONLY public.count_report ALTER COLUMN count_report_id SET DEFAULT ne
 -- PostgreSQL database dump complete
 --
 
-CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
-
-
-\connect posda_files
 --
 -- PostgreSQL database dump
 --
 
 -- Dumped from database version 10.1
--- Dumped by pg_dump version 11.3
+-- Dumped by pg_dump version 11.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1085,7 +1081,44 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
-SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: posda_files; Type: DATABASE; Schema: -; Owner: -
+--
+
+CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+\connect posda_files
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: posda_files; Type: DATABASE PROPERTIES; Schema: -; Owner: -
+--
+
+ALTER DATABASE posda_files SET search_path TO 'public', 'dbif_config', 'dicom_conv';
+
+
+\connect posda_files
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -2144,6 +2177,197 @@ CREATE TABLE public.dbif_query_args (
 
 
 --
+-- Name: dicom; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dicom (
+    file_id integer NOT NULL,
+    dataset_digest text,
+    xfr_stx text,
+    has_meta boolean,
+    is_dicom_dir boolean,
+    has_sop_common boolean,
+    dicom_file_type text,
+    has_pixel_data boolean,
+    pixel_data_digest text,
+    pixel_data_offset integer,
+    pixel_data_length integer,
+    has_no_roi_linkages boolean,
+    kvp text,
+    scan_options text,
+    data_collection_diameter text,
+    reconstruction_diameter text,
+    dist_source_to_detect text,
+    dist_source_to_pat text,
+    gantry_tilt text,
+    table_height text,
+    rotation_dir text,
+    exposure_time text,
+    xray_tube_current text,
+    exposure text,
+    filter_type text,
+    generator_power text,
+    convolution_kernal text,
+    table_feed_per_rot text,
+    manufacturer text,
+    institution_name text,
+    institution_addr text,
+    station_name text,
+    inst_dept_name text,
+    manuf_model_name text,
+    dev_serial_num text,
+    software_versions text,
+    spatial_resolution text,
+    last_calib_date text,
+    last_calib_time text,
+    pixel_pad integer,
+    for_uid text,
+    position_ref_indicator text,
+    file_meta integer,
+    data_set_size integer,
+    data_set_start integer,
+    media_storage_sop_class text,
+    media_storage_sop_instance text,
+    xfer_syntax text,
+    imp_class_uid text,
+    imp_version_name text,
+    source_ae_title text,
+    private_info_uid text,
+    private_info text,
+    patient_name text,
+    patient_id text,
+    id_issuer text,
+    dob date,
+    sex text,
+    time_ob time without time zone,
+    other_ids text,
+    other_names text,
+    ethnic_group text,
+    comments text,
+    patient_age text,
+    modality text,
+    series_instance_uid text,
+    series_number integer,
+    laterality text,
+    series_date date,
+    series_time time without time zone,
+    performing_phys text,
+    protocol_name text,
+    series_description text,
+    body_part_examined text,
+    patient_position text,
+    smallest_pixel_value integer,
+    largest_pixel_value integer,
+    performed_procedure_step_id text,
+    performed_procedure_step_start_date date,
+    performed_procedure_step_start_time time without time zone,
+    performed_procedure_step_desc text,
+    performed_procedure_step_comments text,
+    date_fixed boolean,
+    sop_class_uid text,
+    sop_instance_uid text,
+    specific_character_set text,
+    creation_date date,
+    creation_time time without time zone,
+    creator_uid text,
+    related_general_sop_class text,
+    original_specialized_sop_class text,
+    offset_from_utc integer,
+    instance_status text,
+    auth_date_time time with time zone,
+    auth_comment text,
+    auth_cert_num text,
+    structure_set_id integer,
+    instance_number text,
+    study_instance_uid text,
+    study_date date,
+    study_time time without time zone,
+    referring_phy_name text,
+    study_id text,
+    accession_number text,
+    study_description text,
+    phys_of_record text,
+    phys_reading text,
+    admitting_diag text,
+    rt_dose_id integer,
+    rt_dose_units text,
+    rt_dose_type text,
+    rt_dose_instance_number text,
+    rt_dose_comment text,
+    rt_dose_normalization_point text,
+    rt_dose_summation_type text,
+    rt_dose_referenced_plan_class text,
+    rt_dose_referenced_plan_uid text,
+    rt_dose_tissue_heterogeneity text,
+    rt_dose_grid_frame_offset_vector text,
+    rt_dose_grid_scaling double precision,
+    rt_dose_max_slice_spacing double precision,
+    rt_dose_min_slice_spacing double precision,
+    rt_dvh_id integer,
+    plan_id integer,
+    plan_label text,
+    plan_name text,
+    plan_description text,
+    operators_name text,
+    rt_plan_date date,
+    rt_plan_time time without time zone,
+    rt_treatment_protocols text,
+    plan_intent text,
+    treatment_sites text,
+    rt_plan_geometry text,
+    ss_referenced_from_plan text,
+    patient_setup_num integer,
+    sequence_index integer,
+    respiratory_motion_comp_technique text,
+    respiratory_signal_source text,
+    respiratory_motion_com_tech_desc text,
+    respiratory_signal_source_id text,
+    rt_prescription_id integer,
+    rt_prescription_description text,
+    slope_intercept_id integer,
+    slope text,
+    intercept text,
+    si_units text,
+    slopef double precision,
+    interceptf double precision,
+    image_id integer,
+    content_date date,
+    content_time time without time zone,
+    image_type text,
+    samples_per_pixel integer,
+    pixel_spacing text,
+    photometric_interpretation text,
+    pixel_rows integer,
+    pixel_columns integer,
+    bits_allocated integer,
+    bits_stored integer,
+    high_bit integer,
+    pixel_representation integer,
+    planar_configuration integer,
+    number_of_frames integer,
+    unique_pixel_data_id integer,
+    row_spacing double precision,
+    col_spacing double precision,
+    image_geometry_id integer,
+    iop text,
+    ipp text,
+    normalized_iop text,
+    iop_error text,
+    row_x double precision,
+    row_y double precision,
+    row_z double precision,
+    col_x double precision,
+    col_y double precision,
+    col_z double precision,
+    pos_x double precision,
+    pos_y double precision,
+    pos_z double precision,
+    source_id bigint,
+    hidden boolean
+);
+
+
+--
 -- Name: dicom_dir; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2270,23 +2494,23 @@ ALTER SEQUENCE public.dicom_edit_event_dicom_edit_event_id_seq OWNED BY public.d
 
 
 --
--- Name: dicom_file; Type: TABLE; Schema: public; Owner: -
+-- Name: dicom_file; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.dicom_file (
-    file_id integer NOT NULL,
-    dataset_digest text,
-    xfr_stx text,
-    has_meta boolean,
-    is_dicom_dir boolean,
-    has_sop_common boolean,
-    dicom_file_type text,
-    has_pixel_data boolean,
-    pixel_data_digest text,
-    pixel_data_offset integer,
-    pixel_data_length integer,
-    has_no_roi_linkages boolean
-);
+CREATE VIEW public.dicom_file AS
+ SELECT dicom.file_id,
+    dicom.dataset_digest,
+    dicom.xfr_stx,
+    dicom.has_meta,
+    dicom.is_dicom_dir,
+    dicom.has_sop_common,
+    dicom.dicom_file_type,
+    dicom.has_pixel_data,
+    dicom.pixel_data_digest,
+    dicom.pixel_data_offset,
+    dicom.pixel_data_length,
+    dicom.has_no_roi_linkages
+   FROM public.dicom;
 
 
 --
@@ -2480,6 +2704,17 @@ CREATE TABLE public.dicom_series_dir_rec (
 
 
 --
+-- Name: dicom_source; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dicom_source (
+    source_id bigint,
+    site_name text,
+    project_name text
+);
+
+
+--
 -- Name: dicom_study_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2641,29 +2876,29 @@ CREATE TABLE public.file_copy_from_public (
 
 
 --
--- Name: file_ct_image; Type: TABLE; Schema: public; Owner: -
+-- Name: file_ct_image; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_ct_image (
-    file_id integer NOT NULL,
-    kvp text,
-    instance_number text,
-    scan_options text,
-    data_collection_diameter text,
-    reconstruction_diameter text,
-    dist_source_to_detect text,
-    dist_source_to_pat text,
-    gantry_tilt text,
-    table_height text,
-    rotation_dir text,
-    exposure_time text,
-    xray_tube_current text,
-    exposure text,
-    filter_type text,
-    generator_power text,
-    convolution_kernal text,
-    table_feed_per_rot text
-);
+CREATE VIEW public.file_ct_image AS
+ SELECT dicom.file_id,
+    dicom.kvp,
+    dicom.instance_number,
+    dicom.scan_options,
+    dicom.data_collection_diameter,
+    dicom.reconstruction_diameter,
+    dicom.dist_source_to_detect,
+    dicom.dist_source_to_pat,
+    dicom.gantry_tilt,
+    dicom.table_height,
+    dicom.rotation_dir,
+    dicom.exposure_time,
+    dicom.xray_tube_current,
+    dicom.exposure,
+    dicom.filter_type,
+    dicom.generator_power,
+    dicom.convolution_kernal,
+    dicom.table_feed_per_rot
+   FROM public.dicom;
 
 
 --
@@ -2693,13 +2928,13 @@ CREATE TABLE public.file_ct_image__old (
 
 
 --
--- Name: file_dose; Type: TABLE; Schema: public; Owner: -
+-- Name: file_dose; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_dose (
-    rt_dose_id integer NOT NULL,
-    file_id integer NOT NULL
-);
+CREATE VIEW public.file_dose AS
+ SELECT dicom.rt_dose_id,
+    dicom.file_id
+   FROM public.dicom;
 
 
 --
@@ -2743,24 +2978,24 @@ CREATE TABLE public.file_ele_ref_text_value (
 
 
 --
--- Name: file_equipment; Type: TABLE; Schema: public; Owner: -
+-- Name: file_equipment; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_equipment (
-    file_id integer NOT NULL,
-    manufacturer text,
-    institution_name text,
-    institution_addr text,
-    station_name text,
-    inst_dept_name text,
-    manuf_model_name text,
-    dev_serial_num text,
-    software_versions text,
-    spatial_resolution text,
-    last_calib_date text,
-    last_calib_time text,
-    pixel_pad integer
-);
+CREATE VIEW public.file_equipment AS
+ SELECT dicom.file_id,
+    dicom.manufacturer,
+    dicom.institution_name,
+    dicom.institution_addr,
+    dicom.station_name,
+    dicom.inst_dept_name,
+    dicom.manuf_model_name,
+    dicom.dev_serial_num,
+    dicom.software_versions,
+    dicom.spatial_resolution,
+    dicom.last_calib_date,
+    dicom.last_calib_time,
+    dicom.pixel_pad
+   FROM public.dicom;
 
 
 --
@@ -2783,36 +3018,36 @@ ALTER SEQUENCE public.file_file_id_seq OWNED BY public.file.file_id;
 
 
 --
--- Name: file_for; Type: TABLE; Schema: public; Owner: -
+-- Name: file_for; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_for (
-    file_id integer NOT NULL,
-    for_uid text,
-    position_ref_indicator text
-);
-
-
---
--- Name: file_image; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.file_image (
-    file_id integer NOT NULL,
-    image_id integer NOT NULL,
-    content_date date,
-    content_time time without time zone
-);
+CREATE VIEW public.file_for AS
+ SELECT dicom.file_id,
+    dicom.for_uid,
+    dicom.position_ref_indicator
+   FROM public.dicom;
 
 
 --
--- Name: file_image_geometry; Type: TABLE; Schema: public; Owner: -
+-- Name: file_image; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_image_geometry (
-    file_id integer NOT NULL,
-    image_geometry_id integer NOT NULL
-);
+CREATE VIEW public.file_image AS
+ SELECT dicom.file_id,
+    dicom.image_id,
+    dicom.content_date,
+    dicom.content_time
+   FROM public.dicom;
+
+
+--
+-- Name: file_image_geometry; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.file_image_geometry AS
+ SELECT dicom.file_id,
+    dicom.image_geometry_id
+   FROM public.dicom;
 
 
 --
@@ -2893,6 +3128,40 @@ ALTER SEQUENCE public.file_import_study_file_import_study_id_seq OWNED BY public
 
 
 --
+-- Name: import_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.import_event (
+    import_event_id integer NOT NULL,
+    import_type text,
+    importing_user text,
+    originating_ip_addr text,
+    import_comment text,
+    import_time timestamp with time zone,
+    remote_file text,
+    volume_name text,
+    import_close_time timestamp with time zone,
+    related_id_1 integer,
+    related_id_2 integer
+);
+
+
+--
+-- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.file_imports_over_time AS
+ SELECT count(file.file_id) AS count,
+    date_part('month'::text, import_event.import_time) AS importmonth,
+    date_part('year'::text, import_event.import_time) AS importyear
+   FROM ((public.file
+     JOIN public.file_import USING (file_id))
+     JOIN public.import_event USING (import_event_id))
+  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
+  WITH NO DATA;
+
+
+--
 -- Name: file_location; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2918,23 +3187,23 @@ CREATE TABLE public.file_locationx (
 
 
 --
--- Name: file_meta; Type: TABLE; Schema: public; Owner: -
+-- Name: file_meta; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_meta (
-    file_id integer NOT NULL,
-    file_meta integer,
-    data_set_size integer,
-    data_set_start integer,
-    media_storage_sop_class text,
-    media_storage_sop_instance text,
-    xfer_syntax text,
-    imp_class_uid text,
-    imp_version_name text,
-    source_ae_title text,
-    private_info_uid text,
-    private_info text
-);
+CREATE VIEW public.file_meta AS
+ SELECT dicom.file_id,
+    dicom.file_meta,
+    dicom.data_set_size,
+    dicom.data_set_start,
+    dicom.media_storage_sop_class,
+    dicom.media_storage_sop_instance,
+    dicom.xfer_syntax,
+    dicom.imp_class_uid,
+    dicom.imp_version_name,
+    dicom.source_ae_title,
+    dicom.private_info_uid,
+    dicom.private_info
+   FROM public.dicom;
 
 
 --
@@ -2970,33 +3239,33 @@ CREATE TABLE public.file_mr (
 
 
 --
--- Name: file_patient; Type: TABLE; Schema: public; Owner: -
+-- Name: file_patient; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_patient (
-    file_id integer NOT NULL,
-    patient_name text,
-    patient_id text,
-    id_issuer text,
-    dob date,
-    sex text,
-    time_ob time without time zone,
-    other_ids text,
-    other_names text,
-    ethnic_group text,
-    comments text,
-    patient_age text
-);
+CREATE VIEW public.file_patient AS
+ SELECT dicom.file_id,
+    dicom.patient_name,
+    dicom.patient_id,
+    dicom.id_issuer,
+    dicom.dob,
+    dicom.sex,
+    dicom.time_ob,
+    dicom.other_ids,
+    dicom.other_names,
+    dicom.ethnic_group,
+    dicom.comments,
+    dicom.patient_age
+   FROM public.dicom;
 
 
 --
--- Name: file_plan; Type: TABLE; Schema: public; Owner: -
+-- Name: file_plan; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_plan (
-    plan_id integer NOT NULL,
-    file_id integer NOT NULL
-);
+CREATE VIEW public.file_plan AS
+ SELECT dicom.plan_id,
+    dicom.file_id
+   FROM public.dicom;
 
 
 --
@@ -3074,65 +3343,65 @@ CREATE TABLE public.file_roi_image_linkage (
 
 
 --
--- Name: file_series; Type: TABLE; Schema: public; Owner: -
+-- Name: file_series; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_series (
-    file_id integer NOT NULL,
-    modality text NOT NULL,
-    series_instance_uid text NOT NULL,
-    series_number integer,
-    laterality text,
-    series_date date,
-    series_time time without time zone,
-    performing_phys text,
-    protocol_name text,
-    series_description text,
-    operators_name text,
-    body_part_examined text,
-    patient_position text,
-    smallest_pixel_value integer,
-    largest_pixel_value integer,
-    performed_procedure_step_id text,
-    performed_procedure_step_start_date date,
-    performed_procedure_step_start_time time without time zone,
-    performed_procedure_step_desc text,
-    performed_procedure_step_comments text,
-    date_fixed boolean
-);
-
-
---
--- Name: file_slope_intercept; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.file_slope_intercept (
-    file_id integer NOT NULL,
-    slope_intercept_id integer NOT NULL
-);
+CREATE VIEW public.file_series AS
+ SELECT dicom.file_id,
+    dicom.modality,
+    dicom.series_instance_uid,
+    dicom.series_number,
+    dicom.laterality,
+    dicom.series_date,
+    dicom.series_time,
+    dicom.performing_phys,
+    dicom.protocol_name,
+    dicom.series_description,
+    dicom.operators_name,
+    dicom.body_part_examined,
+    dicom.patient_position,
+    dicom.smallest_pixel_value,
+    dicom.largest_pixel_value,
+    dicom.performed_procedure_step_id,
+    dicom.performed_procedure_step_start_date,
+    dicom.performed_procedure_step_start_time,
+    dicom.performed_procedure_step_desc,
+    dicom.performed_procedure_step_comments,
+    dicom.date_fixed
+   FROM public.dicom;
 
 
 --
--- Name: file_sop_common; Type: TABLE; Schema: public; Owner: -
+-- Name: file_slope_intercept; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_sop_common (
-    file_id integer NOT NULL,
-    sop_class_uid text NOT NULL,
-    sop_instance_uid text NOT NULL,
-    specific_character_set text,
-    creation_date date,
-    creation_time time without time zone,
-    creator_uid text,
-    related_general_sop_class text,
-    original_specialized_sop_class text,
-    offset_from_utc integer,
-    instance_number text,
-    instance_status text,
-    auth_date_time time with time zone,
-    auth_comment text,
-    auth_cert_num text
-);
+CREATE VIEW public.file_slope_intercept AS
+ SELECT dicom.file_id,
+    dicom.slope_intercept_id
+   FROM public.dicom;
+
+
+--
+-- Name: file_sop_common; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.file_sop_common AS
+ SELECT dicom.file_id,
+    dicom.sop_class_uid,
+    dicom.sop_instance_uid,
+    dicom.specific_character_set,
+    dicom.creation_date,
+    dicom.creation_time,
+    dicom.creator_uid,
+    dicom.related_general_sop_class,
+    dicom.original_specialized_sop_class,
+    dicom.offset_from_utc,
+    dicom.instance_number,
+    dicom.instance_status,
+    dicom.auth_date_time,
+    dicom.auth_comment,
+    dicom.auth_cert_num
+   FROM public.dicom;
 
 
 --
@@ -3167,33 +3436,33 @@ ALTER SEQUENCE public.file_storage_root_file_storage_root_id_seq OWNED BY public
 
 
 --
--- Name: file_structure_set; Type: TABLE; Schema: public; Owner: -
+-- Name: file_structure_set; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_structure_set (
-    file_id integer NOT NULL,
-    structure_set_id integer NOT NULL,
-    instance_number text
-);
+CREATE VIEW public.file_structure_set AS
+ SELECT dicom.file_id,
+    dicom.structure_set_id,
+    dicom.instance_number
+   FROM public.dicom;
 
 
 --
--- Name: file_study; Type: TABLE; Schema: public; Owner: -
+-- Name: file_study; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.file_study (
-    file_id integer NOT NULL,
-    study_instance_uid text NOT NULL,
-    study_date date,
-    study_time time without time zone,
-    referring_phy_name text,
-    study_id text,
-    accession_number text,
-    study_description text,
-    phys_of_record text,
-    phys_reading text,
-    admitting_diag text
-);
+CREATE VIEW public.file_study AS
+ SELECT dicom.file_id,
+    dicom.study_instance_uid,
+    dicom.study_date,
+    dicom.study_time,
+    dicom.referring_phy_name,
+    dicom.study_id,
+    dicom.accession_number,
+    dicom.study_description,
+    dicom.phys_of_record,
+    dicom.phys_reading,
+    dicom.admitting_diag
+   FROM public.dicom;
 
 
 --
@@ -3219,6 +3488,23 @@ CREATE TABLE public.file_win_lev (
     window_level_id integer NOT NULL,
     wl_index integer NOT NULL
 );
+
+
+--
+-- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.files_without_type AS
+ SELECT file.file_id,
+    file.digest,
+    file.size,
+    file.is_dicom_file,
+    file.file_type,
+    file.processing_priority,
+    file.ready_to_process
+   FROM public.file
+  WHERE (file.file_type IS NULL)
+  WITH NO DATA;
 
 
 --
@@ -3314,27 +3600,27 @@ CREATE TABLE public.fraction_related_dose (
 
 
 --
--- Name: image; Type: TABLE; Schema: public; Owner: -
+-- Name: image; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.image (
-    image_id integer NOT NULL,
-    image_type text,
-    samples_per_pixel integer,
-    pixel_spacing text,
-    photometric_interpretation text,
-    pixel_rows integer,
-    pixel_columns integer,
-    bits_allocated integer,
-    bits_stored integer,
-    high_bit integer,
-    pixel_representation integer,
-    planar_configuration integer,
-    number_of_frames integer,
-    unique_pixel_data_id integer,
-    row_spacing double precision,
-    col_spacing double precision
-);
+CREATE VIEW public.image AS
+ SELECT dicom.image_id,
+    dicom.image_type,
+    dicom.samples_per_pixel,
+    dicom.pixel_spacing,
+    dicom.photometric_interpretation,
+    dicom.pixel_rows,
+    dicom.pixel_columns,
+    dicom.bits_allocated,
+    dicom.bits_stored,
+    dicom.high_bit,
+    dicom.pixel_representation,
+    dicom.planar_configuration,
+    dicom.number_of_frames,
+    dicom.unique_pixel_data_id,
+    dicom.row_spacing,
+    dicom.col_spacing
+   FROM public.dicom;
 
 
 --
@@ -3406,65 +3692,27 @@ CREATE TABLE public.image_frame_offset (
 
 
 --
--- Name: image_geometry; Type: TABLE; Schema: public; Owner: -
+-- Name: image_geometry; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.image_geometry (
-    image_geometry_id integer NOT NULL,
-    image_id integer NOT NULL,
-    iop text,
-    ipp text,
-    for_uid text,
-    normalized_iop text,
-    iop_error text,
-    row_x double precision,
-    row_y double precision,
-    row_z double precision,
-    col_x double precision,
-    col_y double precision,
-    col_z double precision,
-    pos_x double precision,
-    pos_y double precision,
-    pos_z double precision
-);
-
-
---
--- Name: image_geometry_image_geometry_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.image_geometry_image_geometry_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: image_geometry_image_geometry_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.image_geometry_image_geometry_id_seq OWNED BY public.image_geometry.image_geometry_id;
-
-
---
--- Name: image_image_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.image_image_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: image_image_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.image_image_id_seq OWNED BY public.image.image_id;
+CREATE VIEW public.image_geometry AS
+ SELECT dicom.image_geometry_id,
+    dicom.image_id,
+    dicom.iop,
+    dicom.ipp,
+    dicom.for_uid,
+    dicom.normalized_iop,
+    dicom.iop_error,
+    dicom.row_x,
+    dicom.row_y,
+    dicom.row_z,
+    dicom.col_x,
+    dicom.col_y,
+    dicom.col_z,
+    dicom.pos_x,
+    dicom.pos_y,
+    dicom.pos_z
+   FROM public.dicom;
 
 
 --
@@ -3538,25 +3786,6 @@ CREATE TABLE public.import_ct_series (
     min_file_size integer,
     avg_file_size double precision,
     processing_errors text
-);
-
-
---
--- Name: import_event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.import_event (
-    import_event_id integer NOT NULL,
-    import_type text,
-    importing_user text,
-    originating_ip_addr text,
-    import_comment text,
-    import_time timestamp with time zone,
-    remote_file text,
-    volume_name text,
-    import_close_time timestamp with time zone,
-    related_id_1 integer,
-    related_id_2 integer
 );
 
 
@@ -3772,43 +4001,24 @@ CREATE TABLE public.pixel_location (
 
 
 --
--- Name: plan; Type: TABLE; Schema: public; Owner: -
+-- Name: plan; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.plan (
-    plan_id integer NOT NULL,
-    plan_label text NOT NULL,
-    plan_name text,
-    plan_description text,
-    instance_number integer,
-    operators_name text,
-    rt_plan_date date,
-    rt_plan_time time without time zone,
-    rt_treatment_protocols text,
-    plan_intent text,
-    treatment_sites text,
-    rt_plan_geometry text NOT NULL,
-    ss_referenced_from_plan text
-);
-
-
---
--- Name: plan_plan_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.plan_plan_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: plan_plan_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.plan_plan_id_seq OWNED BY public.plan.plan_id;
+CREATE VIEW public.plan AS
+ SELECT dicom.plan_id,
+    dicom.plan_label,
+    dicom.plan_name,
+    dicom.plan_description,
+    dicom.instance_number,
+    dicom.operators_name,
+    dicom.rt_plan_date,
+    dicom.rt_plan_time,
+    dicom.rt_treatment_protocols,
+    dicom.plan_intent,
+    dicom.treatment_sites,
+    dicom.rt_plan_geometry,
+    dicom.ss_referenced_from_plan
+   FROM public.dicom;
 
 
 --
@@ -4216,21 +4426,21 @@ CREATE TABLE public.rt_beam_tolerance_table (
 
 
 --
--- Name: rt_dose; Type: TABLE; Schema: public; Owner: -
+-- Name: rt_dose; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rt_dose (
-    rt_dose_id integer NOT NULL,
-    rt_dose_units text,
-    rt_dose_type text,
-    rt_dose_instance_number text,
-    rt_dose_comment text,
-    rt_dose_normalization_point text,
-    rt_dose_summation_type text,
-    rt_dose_referenced_plan_class text,
-    rt_dose_referenced_plan_uid text,
-    rt_dose_tissue_heterogeneity text
-);
+CREATE VIEW public.rt_dose AS
+ SELECT dicom.rt_dose_id,
+    dicom.rt_dose_units,
+    dicom.rt_dose_type,
+    dicom.rt_dose_instance_number,
+    dicom.rt_dose_comment,
+    dicom.rt_dose_normalization_point,
+    dicom.rt_dose_summation_type,
+    dicom.rt_dose_referenced_plan_class,
+    dicom.rt_dose_referenced_plan_uid,
+    dicom.rt_dose_tissue_heterogeneity
+   FROM public.dicom;
 
 
 --
@@ -4245,17 +4455,17 @@ CREATE TABLE public.rt_dose_gfov (
 
 
 --
--- Name: rt_dose_image; Type: TABLE; Schema: public; Owner: -
+-- Name: rt_dose_image; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rt_dose_image (
-    rt_dose_id integer NOT NULL,
-    image_id integer NOT NULL,
-    rt_dose_grid_frame_offset_vector text,
-    rt_dose_grid_scaling double precision,
-    rt_dose_max_slice_spacing double precision,
-    rt_dose_min_slice_spacing double precision
-);
+CREATE VIEW public.rt_dose_image AS
+ SELECT dicom.rt_dose_id,
+    dicom.image_id,
+    dicom.rt_dose_grid_frame_offset_vector,
+    dicom.rt_dose_grid_scaling,
+    dicom.rt_dose_max_slice_spacing,
+    dicom.rt_dose_min_slice_spacing
+   FROM public.dicom;
 
 
 --
@@ -4279,25 +4489,6 @@ CREATE TABLE public.rt_dose_ref_brachy (
     rt_dose_id integer NOT NULL,
     rt_dose_ref_bracy_setup_number integer NOT NULL
 );
-
-
---
--- Name: rt_dose_rt_dose_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rt_dose_rt_dose_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rt_dose_rt_dose_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rt_dose_rt_dose_id_seq OWNED BY public.rt_dose.rt_dose_id;
 
 
 --
@@ -4425,13 +4616,13 @@ CREATE TABLE public.rt_dvh_protocol_case_roi (
 
 
 --
--- Name: rt_dvh_rt_dose; Type: TABLE; Schema: public; Owner: -
+-- Name: rt_dvh_rt_dose; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rt_dvh_rt_dose (
-    rt_dose_id integer NOT NULL,
-    rt_dvh_id integer NOT NULL
-);
+CREATE VIEW public.rt_dvh_rt_dose AS
+ SELECT dicom.rt_dose_id,
+    dicom.rt_dvh_id
+   FROM public.dicom;
 
 
 --
@@ -4489,18 +4680,18 @@ CREATE TABLE public.rt_plan_patient_setup (
 
 
 --
--- Name: rt_plan_respiratory_motion_comp; Type: TABLE; Schema: public; Owner: -
+-- Name: rt_plan_respiratory_motion_comp; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rt_plan_respiratory_motion_comp (
-    plan_id integer NOT NULL,
-    patient_setup_num integer NOT NULL,
-    sequence_index integer NOT NULL,
-    respiratory_motion_comp_technique text,
-    respiratory_signal_source text,
-    respiratory_motion_com_tech_desc text,
-    respiratory_signal_source_id text
-);
+CREATE VIEW public.rt_plan_respiratory_motion_comp AS
+ SELECT dicom.plan_id,
+    dicom.patient_setup_num,
+    dicom.sequence_index,
+    dicom.respiratory_motion_comp_technique,
+    dicom.respiratory_signal_source,
+    dicom.respiratory_motion_com_tech_desc,
+    dicom.respiratory_signal_source_id
+   FROM public.dicom;
 
 
 --
@@ -4563,14 +4754,14 @@ CREATE TABLE public.rt_plan_setup_shielding_device (
 
 
 --
--- Name: rt_prescription; Type: TABLE; Schema: public; Owner: -
+-- Name: rt_prescription; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rt_prescription (
-    rt_prescription_id integer NOT NULL,
-    plan_id integer NOT NULL,
-    rt_prescription_description text
-);
+CREATE VIEW public.rt_prescription AS
+ SELECT dicom.rt_prescription_id,
+    dicom.plan_id,
+    dicom.rt_prescription_description
+   FROM public.dicom;
 
 
 --
@@ -4601,25 +4792,6 @@ CREATE TABLE public.rt_prescription_dose_ref (
 
 
 --
--- Name: rt_prescription_rt_prescription_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rt_prescription_rt_prescription_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rt_prescription_rt_prescription_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rt_prescription_rt_prescription_id_seq OWNED BY public.rt_prescription.rt_prescription_id;
-
-
---
 -- Name: site_codes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4630,36 +4802,17 @@ CREATE TABLE public.site_codes (
 
 
 --
--- Name: slope_intercept; Type: TABLE; Schema: public; Owner: -
+-- Name: slope_intercept; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.slope_intercept (
-    slope_intercept_id integer NOT NULL,
-    slope text NOT NULL,
-    intercept text NOT NULL,
-    si_units text,
-    slopef double precision,
-    interceptf double precision
-);
-
-
---
--- Name: slope_intercept_slope_intercept_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.slope_intercept_slope_intercept_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: slope_intercept_slope_intercept_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.slope_intercept_slope_intercept_id_seq OWNED BY public.slope_intercept.slope_intercept_id;
+CREATE VIEW public.slope_intercept AS
+ SELECT dicom.slope_intercept_id,
+    dicom.slope,
+    dicom.intercept,
+    dicom.si_units,
+    dicom.slopef,
+    dicom.interceptf
+   FROM public.dicom;
 
 
 --
@@ -5289,13 +5442,6 @@ ALTER TABLE ONLY public.file_storage_root ALTER COLUMN file_storage_root_id SET 
 
 
 --
--- Name: image image_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image ALTER COLUMN image_id SET DEFAULT nextval('public.image_image_id_seq'::regclass);
-
-
---
 -- Name: image_equivalence_class image_equivalence_class_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5303,24 +5449,10 @@ ALTER TABLE ONLY public.image_equivalence_class ALTER COLUMN image_equivalence_c
 
 
 --
--- Name: image_geometry image_geometry_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_geometry ALTER COLUMN image_geometry_id SET DEFAULT nextval('public.image_geometry_image_geometry_id_seq'::regclass);
-
-
---
 -- Name: import_event import_event_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.import_event ALTER COLUMN import_event_id SET DEFAULT nextval('public.import_event_import_event_id_seq'::regclass);
-
-
---
--- Name: plan plan_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.plan ALTER COLUMN plan_id SET DEFAULT nextval('public.plan_plan_id_seq'::regclass);
 
 
 --
@@ -5373,13 +5505,6 @@ ALTER TABLE ONLY public.roi_physical_properties ALTER COLUMN roi_phyical_propert
 
 
 --
--- Name: rt_dose rt_dose_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rt_dose ALTER COLUMN rt_dose_id SET DEFAULT nextval('public.rt_dose_rt_dose_id_seq'::regclass);
-
-
---
 -- Name: rt_dvh rt_dvh_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5391,20 +5516,6 @@ ALTER TABLE ONLY public.rt_dvh ALTER COLUMN rt_dvh_id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.rt_dvh_dvh ALTER COLUMN rt_dvh_dvh_id SET DEFAULT nextval('public.rt_dvh_dvh_rt_dvh_dvh_id_seq'::regclass);
-
-
---
--- Name: rt_prescription rt_prescription_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rt_prescription ALTER COLUMN rt_prescription_id SET DEFAULT nextval('public.rt_prescription_rt_prescription_id_seq'::regclass);
-
-
---
--- Name: slope_intercept slope_intercept_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.slope_intercept ALTER COLUMN slope_intercept_id SET DEFAULT nextval('public.slope_intercept_slope_intercept_id_seq'::regclass);
 
 
 --
@@ -5574,6 +5685,14 @@ ALTER TABLE ONLY public.dicom_edit_compare_disposition
 
 
 --
+-- Name: dicom dicom_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dicom
+    ADD CONSTRAINT dicom_pkey PRIMARY KEY (file_id);
+
+
+--
 -- Name: distinguished_pixel_digests distinguished_pixel_digests_pixel_digest_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5598,38 +5717,6 @@ ALTER TABLE ONLY public.downloadable_file
 
 
 --
--- Name: file_ct_image file_ct_image__new_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_ct_image
-    ADD CONSTRAINT file_ct_image__new_pkey PRIMARY KEY (file_id);
-
-
---
--- Name: file_equipment file_equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_equipment
-    ADD CONSTRAINT file_equipment_pkey PRIMARY KEY (file_id);
-
-
---
--- Name: file_for file_for_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_for
-    ADD CONSTRAINT file_for_pkey PRIMARY KEY (file_id);
-
-
---
--- Name: file_meta file_meta_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_meta
-    ADD CONSTRAINT file_meta_pkey PRIMARY KEY (file_id);
-
-
---
 -- Name: file_mr file_mr_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5638,43 +5725,11 @@ ALTER TABLE ONLY public.file_mr
 
 
 --
--- Name: file_patient file_patient_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_patient
-    ADD CONSTRAINT file_patient_pkey PRIMARY KEY (file_id);
-
-
---
 -- Name: file_pt_image file_pt_image_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.file_pt_image
     ADD CONSTRAINT file_pt_image_file_id_key UNIQUE (file_id);
-
-
---
--- Name: file_series file_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_series
-    ADD CONSTRAINT file_series_pkey PRIMARY KEY (file_id);
-
-
---
--- Name: file_sop_common file_sop_common_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_sop_common
-    ADD CONSTRAINT file_sop_common_pkey PRIMARY KEY (file_id);
-
-
---
--- Name: file_study file_study_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.file_study
-    ADD CONSTRAINT file_study_pkey PRIMARY KEY (file_id);
 
 
 --
@@ -5753,6 +5808,13 @@ CREATE UNIQUE INDEX queries_name_index ON dbif_config.queries USING btree (name)
 --
 
 CREATE UNIQUE INDEX role_tabs_uidx ON dbif_config.role_tabs USING btree (role_name, query_tab_name);
+
+
+--
+-- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
 
 
 --
@@ -5903,17 +5965,17 @@ CREATE INDEX dicom_edit_compare_subprocess_index ON public.dicom_edit_compare US
 
 
 --
--- Name: dicom_file_file_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX dicom_file_file_id_index ON public.dicom_file USING btree (file_id);
-
-
---
 -- Name: dicom_file_send_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dicom_file_send_idx ON public.dicom_file_send USING btree (dicom_send_event_id);
+
+
+--
+-- Name: dicom_hidden_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dicom_hidden_idx ON public.dicom USING btree (hidden);
 
 
 --
@@ -5931,6 +5993,34 @@ CREATE UNIQUE INDEX dicom_send_event_pk ON public.dicom_send_event USING btree (
 
 
 --
+-- Name: dicom_series_instance_uid_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dicom_series_instance_uid_idx ON public.dicom USING btree (series_instance_uid);
+
+
+--
+-- Name: dicom_sop_instance_uid_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dicom_sop_instance_uid_idx ON public.dicom USING btree (sop_instance_uid);
+
+
+--
+-- Name: dicom_source_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dicom_source_id_idx ON public.dicom USING btree (source_id);
+
+
+--
+-- Name: dicom_source_site_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX dicom_source_site_name_idx ON public.dicom_source USING btree (site_name, project_name);
+
+
+--
 -- Name: file_ct_image_file_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5945,20 +6035,6 @@ CREATE UNIQUE INDEX file_digest_index ON public.file USING btree (digest);
 
 
 --
--- Name: file_dose_file_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_dose_file_idx ON public.file_dose USING btree (file_id);
-
-
---
--- Name: file_dose_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_dose_idx ON public.file_dose USING btree (rt_dose_id);
-
-
---
 -- Name: file_ele_ref_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5966,45 +6042,10 @@ CREATE UNIQUE INDEX file_ele_ref_pk ON public.file_ele_ref USING btree (file_ele
 
 
 --
--- Name: file_equipment_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_equipment_file_id_idx ON public.file_equipment USING btree (file_id);
-
-
---
 -- Name: file_file_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_file_id_idx ON public.file USING btree (file_id);
-
-
---
--- Name: file_for_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_for_file_id_idx ON public.file_for USING btree (file_id);
-
-
---
--- Name: file_image_geometry_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_image_geometry_file_id_idx ON public.file_image_geometry USING btree (file_id);
-
-
---
--- Name: file_image_geometry_image_geometry_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_image_geometry_image_geometry_id_idx ON public.file_image_geometry USING btree (image_geometry_id);
-
-
---
--- Name: file_image_main_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_image_main_idx ON public.file_image USING btree (file_id, image_id);
 
 
 --
@@ -6050,34 +6091,6 @@ CREATE INDEX file_location_file_id_idx ON public.file_location USING btree (file
 
 
 --
--- Name: file_patient_file_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_patient_file_id_index ON public.file_patient USING btree (file_id);
-
-
---
--- Name: file_patient_patient_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_patient_patient_id_index ON public.file_patient USING btree (patient_id);
-
-
---
--- Name: file_plan_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_plan_file_id_idx ON public.file_plan USING btree (file_id);
-
-
---
--- Name: file_plan_plan_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_plan_plan_id_idx ON public.file_plan USING btree (plan_id);
-
-
---
 -- Name: file_roi_image_linkage_linked_sop_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6085,66 +6098,10 @@ CREATE INDEX file_roi_image_linkage_linked_sop_idx ON public.file_roi_image_link
 
 
 --
--- Name: file_series_file_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_series_file_id_index ON public.file_series USING btree (file_id);
-
-
---
--- Name: file_series_uid_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_series_uid_idx ON public.file_series USING btree (series_instance_uid);
-
-
---
--- Name: file_slope_intercept_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_slope_intercept_file_id_idx ON public.file_slope_intercept USING btree (file_id);
-
-
---
--- Name: file_slope_intercept_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_slope_intercept_id_idx ON public.file_slope_intercept USING btree (slope_intercept_id);
-
-
---
--- Name: file_sop_common_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_sop_common_file_id_idx ON public.file_sop_common USING btree (file_id);
-
-
---
--- Name: file_sop_common_sop_instance_uid_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_sop_common_sop_instance_uid_index ON public.file_sop_common USING btree (sop_instance_uid);
-
-
---
 -- Name: file_storage_root_pk; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX file_storage_root_pk ON public.file_storage_root USING btree (file_storage_root_id);
-
-
---
--- Name: file_structure_set_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_structure_set_idx ON public.file_structure_set USING btree (file_id, structure_set_id);
-
-
---
--- Name: file_study_file_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX file_study_file_id_index ON public.file_study USING btree (file_id);
 
 
 --
@@ -6159,6 +6116,13 @@ CREATE INDEX file_visibility_change_idx ON public.file_visibility_change USING b
 --
 
 CREATE INDEX file_win_lev_main_idx ON public.file_win_lev USING btree (file_id, window_level_id, wl_index);
+
+
+--
+-- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
 
 
 --
@@ -6225,27 +6189,6 @@ CREATE INDEX image_equivalence_class_vri ON public.image_equivalence_class USING
 
 
 --
--- Name: image_geometry_image_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX image_geometry_image_id_index ON public.image_geometry USING btree (image_id);
-
-
---
--- Name: image_geometry_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX image_geometry_pk ON public.image_geometry USING btree (image_geometry_id);
-
-
---
--- Name: image_image_id_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX image_image_id_pk ON public.image USING btree (image_id);
-
-
---
 -- Name: image_slope_intercept_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6299,13 +6242,6 @@ CREATE INDEX pixel_location_file_id_idx ON public.pixel_location USING btree (fi
 --
 
 CREATE INDEX pixel_location_unique_pixel_data_id_idx ON public.pixel_location USING btree (unique_pixel_data_id);
-
-
---
--- Name: plan_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX plan_pk ON public.plan USING btree (plan_id);
 
 
 --
@@ -6407,27 +6343,6 @@ CREATE INDEX rt_beam_tolerance_table_table_idx ON public.rt_beam_tolerance_table
 
 
 --
--- Name: rt_dose_image_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX rt_dose_image_idx ON public.rt_dose_image USING btree (rt_dose_id);
-
-
---
--- Name: rt_dose_image_image_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX rt_dose_image_image_idx ON public.rt_dose_image USING btree (image_id);
-
-
---
--- Name: rt_dose_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX rt_dose_pk ON public.rt_dose USING btree (rt_dose_id);
-
-
---
 -- Name: rt_dvh_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6446,27 +6361,6 @@ CREATE INDEX rt_plan_fraction_group_idx ON public.rt_plan_fraction_group USING b
 --
 
 CREATE INDEX rt_plan_patient_setup_plan_idx ON public.rt_plan_patient_setup USING btree (plan_id);
-
-
---
--- Name: rt_prescription_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX rt_prescription_pk ON public.rt_prescription USING btree (rt_prescription_id);
-
-
---
--- Name: rt_prescription_plan_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX rt_prescription_plan_idx ON public.rt_prescription USING btree (plan_id);
-
-
---
--- Name: slope_intercept_pk; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX slope_intercept_pk ON public.slope_intercept USING btree (slope_intercept_id);
 
 
 --
@@ -6505,13 +6399,6 @@ CREATE UNIQUE INDEX unique_pixel_data_pk ON public.unique_pixel_data USING btree
 
 
 --
--- Name: unique_pixel_date_image; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX unique_pixel_date_image ON public.image USING btree (unique_pixel_data_id);
-
-
---
 -- Name: user_variable_binding_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6530,6 +6417,438 @@ CREATE UNIQUE INDEX window_level_pk ON public.window_level USING btree (window_l
 --
 
 CREATE INDEX phantom_files_idx ON quasar.phantom_files USING btree (file_id);
+
+
+--
+-- Name: dicom_file dicom_file_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE dicom_file_delete AS
+    ON DELETE TO public.dicom_file DO INSTEAD  UPDATE public.dicom_file SET file_id = NULL::integer, dataset_digest = NULL::text, xfr_stx = NULL::text, has_meta = NULL::boolean, is_dicom_dir = NULL::boolean, has_sop_common = NULL::boolean, dicom_file_type = NULL::text, has_pixel_data = NULL::boolean, pixel_data_digest = NULL::text, pixel_data_offset = NULL::integer, pixel_data_length = NULL::integer, has_no_roi_linkages = NULL::boolean
+  WHERE (dicom_file.file_id = old.file_id);
+
+
+--
+-- Name: dicom_file dicom_file_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE dicom_file_insert AS
+    ON INSERT TO public.dicom_file DO INSTEAD  UPDATE public.dicom_file SET file_id = new.file_id, dataset_digest = new.dataset_digest, xfr_stx = new.xfr_stx, has_meta = new.has_meta, is_dicom_dir = new.is_dicom_dir, has_sop_common = new.has_sop_common, dicom_file_type = new.dicom_file_type, has_pixel_data = new.has_pixel_data, pixel_data_digest = new.pixel_data_digest, pixel_data_offset = new.pixel_data_offset, pixel_data_length = new.pixel_data_length, has_no_roi_linkages = new.has_no_roi_linkages
+  WHERE (dicom_file.file_id = new.file_id);
+
+
+--
+-- Name: file_ct_image file_ct_image_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_ct_image_delete AS
+    ON DELETE TO public.file_ct_image DO INSTEAD  UPDATE public.file_ct_image SET file_id = NULL::integer, kvp = NULL::text, instance_number = NULL::text, scan_options = NULL::text, data_collection_diameter = NULL::text, reconstruction_diameter = NULL::text, dist_source_to_detect = NULL::text, dist_source_to_pat = NULL::text, gantry_tilt = NULL::text, table_height = NULL::text, rotation_dir = NULL::text, exposure_time = NULL::text, xray_tube_current = NULL::text, exposure = NULL::text, filter_type = NULL::text, generator_power = NULL::text, convolution_kernal = NULL::text, table_feed_per_rot = NULL::text
+  WHERE (file_ct_image.file_id = old.file_id);
+
+
+--
+-- Name: file_ct_image file_ct_image_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_ct_image_insert AS
+    ON INSERT TO public.file_ct_image DO INSTEAD  UPDATE public.file_ct_image SET file_id = new.file_id, kvp = new.kvp, instance_number = new.instance_number, scan_options = new.scan_options, data_collection_diameter = new.data_collection_diameter, reconstruction_diameter = new.reconstruction_diameter, dist_source_to_detect = new.dist_source_to_detect, dist_source_to_pat = new.dist_source_to_pat, gantry_tilt = new.gantry_tilt, table_height = new.table_height, rotation_dir = new.rotation_dir, exposure_time = new.exposure_time, xray_tube_current = new.xray_tube_current, exposure = new.exposure, filter_type = new.filter_type, generator_power = new.generator_power, convolution_kernal = new.convolution_kernal, table_feed_per_rot = new.table_feed_per_rot
+  WHERE (file_ct_image.file_id = new.file_id);
+
+
+--
+-- Name: file_dose file_dose_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_dose_delete AS
+    ON DELETE TO public.file_dose DO INSTEAD  UPDATE public.file_dose SET rt_dose_id = NULL::integer, file_id = NULL::integer
+  WHERE (file_dose.file_id = old.file_id);
+
+
+--
+-- Name: file_dose file_dose_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_dose_insert AS
+    ON INSERT TO public.file_dose DO INSTEAD  UPDATE public.file_dose SET rt_dose_id = new.rt_dose_id, file_id = new.file_id
+  WHERE (file_dose.file_id = new.file_id);
+
+
+--
+-- Name: file_equipment file_equipment_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_equipment_delete AS
+    ON DELETE TO public.file_equipment DO INSTEAD  UPDATE public.file_equipment SET file_id = NULL::integer, manufacturer = NULL::text, institution_name = NULL::text, institution_addr = NULL::text, station_name = NULL::text, inst_dept_name = NULL::text, manuf_model_name = NULL::text, dev_serial_num = NULL::text, software_versions = NULL::text, spatial_resolution = NULL::text, last_calib_date = NULL::text, last_calib_time = NULL::text, pixel_pad = NULL::integer
+  WHERE (file_equipment.file_id = old.file_id);
+
+
+--
+-- Name: file_equipment file_equipment_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_equipment_insert AS
+    ON INSERT TO public.file_equipment DO INSTEAD  UPDATE public.file_equipment SET file_id = new.file_id, manufacturer = new.manufacturer, institution_name = new.institution_name, institution_addr = new.institution_addr, station_name = new.station_name, inst_dept_name = new.inst_dept_name, manuf_model_name = new.manuf_model_name, dev_serial_num = new.dev_serial_num, software_versions = new.software_versions, spatial_resolution = new.spatial_resolution, last_calib_date = new.last_calib_date, last_calib_time = new.last_calib_time, pixel_pad = new.pixel_pad
+  WHERE (file_equipment.file_id = new.file_id);
+
+
+--
+-- Name: file_for file_for_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_for_delete AS
+    ON DELETE TO public.file_for DO INSTEAD  UPDATE public.file_for SET file_id = NULL::integer, for_uid = NULL::text, position_ref_indicator = NULL::text
+  WHERE (file_for.file_id = old.file_id);
+
+
+--
+-- Name: file_for file_for_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_for_insert AS
+    ON INSERT TO public.file_for DO INSTEAD  UPDATE public.file_for SET file_id = new.file_id, for_uid = new.for_uid, position_ref_indicator = new.position_ref_indicator
+  WHERE (file_for.file_id = new.file_id);
+
+
+--
+-- Name: file_image file_image_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_image_delete AS
+    ON DELETE TO public.file_image DO INSTEAD  UPDATE public.file_image SET file_id = NULL::integer, image_id = NULL::integer, content_date = NULL::date, content_time = NULL::time without time zone
+  WHERE (file_image.file_id = old.file_id);
+
+
+--
+-- Name: file_image_geometry file_image_geometry_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_image_geometry_delete AS
+    ON DELETE TO public.file_image_geometry DO INSTEAD  UPDATE public.file_image_geometry SET file_id = NULL::integer, image_geometry_id = NULL::integer
+  WHERE (file_image_geometry.file_id = old.file_id);
+
+
+--
+-- Name: file_image_geometry file_image_geometry_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_image_geometry_insert AS
+    ON INSERT TO public.file_image_geometry DO INSTEAD  UPDATE public.file_image_geometry SET file_id = new.file_id, image_geometry_id = new.image_geometry_id
+  WHERE (file_image_geometry.file_id = new.file_id);
+
+
+--
+-- Name: file_image file_image_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_image_insert AS
+    ON INSERT TO public.file_image DO INSTEAD  UPDATE public.file_image SET file_id = new.file_id, image_id = new.image_id, content_date = new.content_date, content_time = new.content_time
+  WHERE (file_image.file_id = new.file_id);
+
+
+--
+-- Name: file_meta file_meta_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_meta_delete AS
+    ON DELETE TO public.file_meta DO INSTEAD  UPDATE public.file_meta SET file_id = NULL::integer, file_meta = NULL::integer, data_set_size = NULL::integer, data_set_start = NULL::integer, media_storage_sop_class = NULL::text, media_storage_sop_instance = NULL::text, xfer_syntax = NULL::text, imp_class_uid = NULL::text, imp_version_name = NULL::text, source_ae_title = NULL::text, private_info_uid = NULL::text, private_info = NULL::text
+  WHERE (file_meta.file_id = old.file_id);
+
+
+--
+-- Name: file_meta file_meta_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_meta_insert AS
+    ON INSERT TO public.file_meta DO INSTEAD  UPDATE public.file_meta SET file_id = new.file_id, file_meta = new.file_meta, data_set_size = new.data_set_size, data_set_start = new.data_set_start, media_storage_sop_class = new.media_storage_sop_class, media_storage_sop_instance = new.media_storage_sop_instance, xfer_syntax = new.xfer_syntax, imp_class_uid = new.imp_class_uid, imp_version_name = new.imp_version_name, source_ae_title = new.source_ae_title, private_info_uid = new.private_info_uid, private_info = new.private_info
+  WHERE (file_meta.file_id = new.file_id);
+
+
+--
+-- Name: file_patient file_patient_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_patient_delete AS
+    ON DELETE TO public.file_patient DO INSTEAD  UPDATE public.file_patient SET file_id = NULL::integer, patient_name = NULL::text, patient_id = NULL::text, id_issuer = NULL::text, dob = NULL::date, sex = NULL::text, time_ob = NULL::time without time zone, other_ids = NULL::text, other_names = NULL::text, ethnic_group = NULL::text, comments = NULL::text, patient_age = NULL::text
+  WHERE (file_patient.file_id = old.file_id);
+
+
+--
+-- Name: file_patient file_patient_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_patient_insert AS
+    ON INSERT TO public.file_patient DO INSTEAD  UPDATE public.file_patient SET file_id = new.file_id, patient_name = new.patient_name, patient_id = new.patient_id, id_issuer = new.id_issuer, dob = new.dob, sex = new.sex, time_ob = new.time_ob, other_ids = new.other_ids, other_names = new.other_names, ethnic_group = new.ethnic_group, comments = new.comments, patient_age = new.patient_age
+  WHERE (file_patient.file_id = new.file_id);
+
+
+--
+-- Name: file_plan file_plan_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_plan_delete AS
+    ON DELETE TO public.file_plan DO INSTEAD  UPDATE public.file_plan SET plan_id = NULL::integer, file_id = NULL::integer
+  WHERE (file_plan.file_id = old.file_id);
+
+
+--
+-- Name: file_plan file_plan_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_plan_insert AS
+    ON INSERT TO public.file_plan DO INSTEAD  UPDATE public.file_plan SET plan_id = new.plan_id, file_id = new.file_id
+  WHERE (file_plan.file_id = new.file_id);
+
+
+--
+-- Name: file_series file_series_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_series_delete AS
+    ON DELETE TO public.file_series DO INSTEAD  UPDATE public.file_series SET file_id = NULL::integer, modality = NULL::text, series_instance_uid = NULL::text, series_number = NULL::integer, laterality = NULL::text, series_date = NULL::date, series_time = NULL::time without time zone, performing_phys = NULL::text, protocol_name = NULL::text, series_description = NULL::text, operators_name = NULL::text, body_part_examined = NULL::text, patient_position = NULL::text, smallest_pixel_value = NULL::integer, largest_pixel_value = NULL::integer, performed_procedure_step_id = NULL::text, performed_procedure_step_start_date = NULL::date, performed_procedure_step_start_time = NULL::time without time zone, performed_procedure_step_desc = NULL::text, performed_procedure_step_comments = NULL::text, date_fixed = NULL::boolean
+  WHERE (file_series.file_id = old.file_id);
+
+
+--
+-- Name: file_series file_series_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_series_insert AS
+    ON INSERT TO public.file_series DO INSTEAD  UPDATE public.file_series SET file_id = new.file_id, modality = new.modality, series_instance_uid = new.series_instance_uid, series_number = new.series_number, laterality = new.laterality, series_date = new.series_date, series_time = new.series_time, performing_phys = new.performing_phys, protocol_name = new.protocol_name, series_description = new.series_description, operators_name = new.operators_name, body_part_examined = new.body_part_examined, patient_position = new.patient_position, smallest_pixel_value = new.smallest_pixel_value, largest_pixel_value = new.largest_pixel_value, performed_procedure_step_id = new.performed_procedure_step_id, performed_procedure_step_start_date = new.performed_procedure_step_start_date, performed_procedure_step_start_time = new.performed_procedure_step_start_time, performed_procedure_step_desc = new.performed_procedure_step_desc, performed_procedure_step_comments = new.performed_procedure_step_comments, date_fixed = new.date_fixed
+  WHERE (file_series.file_id = new.file_id);
+
+
+--
+-- Name: file_slope_intercept file_slope_intercept_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_slope_intercept_delete AS
+    ON DELETE TO public.file_slope_intercept DO INSTEAD  UPDATE public.file_slope_intercept SET file_id = NULL::integer, slope_intercept_id = NULL::integer
+  WHERE (file_slope_intercept.file_id = old.file_id);
+
+
+--
+-- Name: file_slope_intercept file_slope_intercept_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_slope_intercept_insert AS
+    ON INSERT TO public.file_slope_intercept DO INSTEAD  UPDATE public.file_slope_intercept SET file_id = new.file_id, slope_intercept_id = new.slope_intercept_id
+  WHERE (file_slope_intercept.file_id = new.file_id);
+
+
+--
+-- Name: file_sop_common file_sop_common_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_sop_common_delete AS
+    ON DELETE TO public.file_sop_common DO INSTEAD  UPDATE public.file_sop_common SET file_id = NULL::integer, sop_class_uid = NULL::text, sop_instance_uid = NULL::text, specific_character_set = NULL::text, creation_date = NULL::date, creation_time = NULL::time without time zone, creator_uid = NULL::text, related_general_sop_class = NULL::text, original_specialized_sop_class = NULL::text, offset_from_utc = NULL::integer, instance_number = NULL::text, instance_status = NULL::text, auth_date_time = NULL::time with time zone, auth_comment = NULL::text, auth_cert_num = NULL::text
+  WHERE (file_sop_common.file_id = old.file_id);
+
+
+--
+-- Name: file_sop_common file_sop_common_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_sop_common_insert AS
+    ON INSERT TO public.file_sop_common DO INSTEAD  UPDATE public.file_sop_common SET file_id = new.file_id, sop_class_uid = new.sop_class_uid, sop_instance_uid = new.sop_instance_uid, specific_character_set = new.specific_character_set, creation_date = new.creation_date, creation_time = new.creation_time, creator_uid = new.creator_uid, related_general_sop_class = new.related_general_sop_class, original_specialized_sop_class = new.original_specialized_sop_class, offset_from_utc = new.offset_from_utc, instance_number = new.instance_number, instance_status = new.instance_status, auth_date_time = new.auth_date_time, auth_comment = new.auth_comment, auth_cert_num = new.auth_cert_num
+  WHERE (file_sop_common.file_id = new.file_id);
+
+
+--
+-- Name: file_structure_set file_structure_set_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_structure_set_delete AS
+    ON DELETE TO public.file_structure_set DO INSTEAD  UPDATE public.file_structure_set SET file_id = NULL::integer, structure_set_id = NULL::integer, instance_number = NULL::text
+  WHERE (file_structure_set.file_id = old.file_id);
+
+
+--
+-- Name: file_structure_set file_structure_set_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_structure_set_insert AS
+    ON INSERT TO public.file_structure_set DO INSTEAD  UPDATE public.file_structure_set SET file_id = new.file_id, structure_set_id = new.structure_set_id, instance_number = new.instance_number
+  WHERE (file_structure_set.file_id = new.file_id);
+
+
+--
+-- Name: file_study file_study_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_study_delete AS
+    ON DELETE TO public.file_study DO INSTEAD  UPDATE public.file_study SET file_id = NULL::integer, study_instance_uid = NULL::text, study_date = NULL::date, study_time = NULL::time without time zone, referring_phy_name = NULL::text, study_id = NULL::text, accession_number = NULL::text, study_description = NULL::text, phys_of_record = NULL::text, phys_reading = NULL::text, admitting_diag = NULL::text
+  WHERE (file_study.file_id = old.file_id);
+
+
+--
+-- Name: file_study file_study_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE file_study_insert AS
+    ON INSERT TO public.file_study DO INSTEAD  UPDATE public.file_study SET file_id = new.file_id, study_instance_uid = new.study_instance_uid, study_date = new.study_date, study_time = new.study_time, referring_phy_name = new.referring_phy_name, study_id = new.study_id, accession_number = new.accession_number, study_description = new.study_description, phys_of_record = new.phys_of_record, phys_reading = new.phys_reading, admitting_diag = new.admitting_diag
+  WHERE (file_study.file_id = new.file_id);
+
+
+--
+-- Name: image image_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE image_delete AS
+    ON DELETE TO public.image DO INSTEAD  UPDATE public.image SET image_id = NULL::integer, image_type = NULL::text, samples_per_pixel = NULL::integer, pixel_spacing = NULL::text, photometric_interpretation = NULL::text, pixel_rows = NULL::integer, pixel_columns = NULL::integer, bits_allocated = NULL::integer, bits_stored = NULL::integer, high_bit = NULL::integer, pixel_representation = NULL::integer, planar_configuration = NULL::integer, number_of_frames = NULL::integer, unique_pixel_data_id = NULL::integer, row_spacing = NULL::double precision, col_spacing = NULL::double precision
+  WHERE (image.image_id = old.image_id);
+
+
+--
+-- Name: image_geometry image_geometry_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE image_geometry_delete AS
+    ON DELETE TO public.image_geometry DO INSTEAD  UPDATE public.image_geometry SET image_geometry_id = NULL::integer, image_id = NULL::integer, iop = NULL::text, ipp = NULL::text, for_uid = NULL::text, normalized_iop = NULL::text, iop_error = NULL::text, row_x = NULL::double precision, row_y = NULL::double precision, row_z = NULL::double precision, col_x = NULL::double precision, col_y = NULL::double precision, col_z = NULL::double precision, pos_x = NULL::double precision, pos_y = NULL::double precision, pos_z = NULL::double precision
+  WHERE (image_geometry.image_geometry_id = old.image_geometry_id);
+
+
+--
+-- Name: image_geometry image_geometry_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE image_geometry_insert AS
+    ON INSERT TO public.image_geometry DO INSTEAD  UPDATE public.image_geometry SET image_geometry_id = new.image_geometry_id, image_id = new.image_id, iop = new.iop, ipp = new.ipp, for_uid = new.for_uid, normalized_iop = new.normalized_iop, iop_error = new.iop_error, row_x = new.row_x, row_y = new.row_y, row_z = new.row_z, col_x = new.col_x, col_y = new.col_y, col_z = new.col_z, pos_x = new.pos_x, pos_y = new.pos_y, pos_z = new.pos_z
+  WHERE (image_geometry.image_geometry_id = new.image_geometry_id);
+
+
+--
+-- Name: image image_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE image_insert AS
+    ON INSERT TO public.image DO INSTEAD  UPDATE public.image SET image_id = new.image_id, image_type = new.image_type, samples_per_pixel = new.samples_per_pixel, pixel_spacing = new.pixel_spacing, photometric_interpretation = new.photometric_interpretation, pixel_rows = new.pixel_rows, pixel_columns = new.pixel_columns, bits_allocated = new.bits_allocated, bits_stored = new.bits_stored, high_bit = new.high_bit, pixel_representation = new.pixel_representation, planar_configuration = new.planar_configuration, number_of_frames = new.number_of_frames, unique_pixel_data_id = new.unique_pixel_data_id, row_spacing = new.row_spacing, col_spacing = new.col_spacing
+  WHERE (image.image_id = new.image_id);
+
+
+--
+-- Name: plan plan_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE plan_delete AS
+    ON DELETE TO public.plan DO INSTEAD  UPDATE public.plan SET plan_id = NULL::integer, plan_label = NULL::text, plan_name = NULL::text, plan_description = NULL::text, instance_number = NULL::text, operators_name = NULL::text, rt_plan_date = NULL::date, rt_plan_time = NULL::time without time zone, rt_treatment_protocols = NULL::text, plan_intent = NULL::text, treatment_sites = NULL::text, rt_plan_geometry = NULL::text, ss_referenced_from_plan = NULL::text
+  WHERE (plan.plan_id = old.plan_id);
+
+
+--
+-- Name: plan plan_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE plan_insert AS
+    ON INSERT TO public.plan DO INSTEAD  UPDATE public.plan SET plan_id = new.plan_id, plan_label = new.plan_label, plan_name = new.plan_name, plan_description = new.plan_description, instance_number = new.instance_number, operators_name = new.operators_name, rt_plan_date = new.rt_plan_date, rt_plan_time = new.rt_plan_time, rt_treatment_protocols = new.rt_treatment_protocols, plan_intent = new.plan_intent, treatment_sites = new.treatment_sites, rt_plan_geometry = new.rt_plan_geometry, ss_referenced_from_plan = new.ss_referenced_from_plan
+  WHERE (plan.plan_id = new.plan_id);
+
+
+--
+-- Name: rt_dose rt_dose_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dose_delete AS
+    ON DELETE TO public.rt_dose DO INSTEAD  UPDATE public.rt_dose SET rt_dose_id = NULL::integer, rt_dose_units = NULL::text, rt_dose_type = NULL::text, rt_dose_instance_number = NULL::text, rt_dose_comment = NULL::text, rt_dose_normalization_point = NULL::text, rt_dose_summation_type = NULL::text, rt_dose_referenced_plan_class = NULL::text, rt_dose_referenced_plan_uid = NULL::text, rt_dose_tissue_heterogeneity = NULL::text
+  WHERE (rt_dose.rt_dose_id = old.rt_dose_id);
+
+
+--
+-- Name: rt_dose_image rt_dose_image_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dose_image_delete AS
+    ON DELETE TO public.rt_dose_image DO INSTEAD  UPDATE public.rt_dose_image SET rt_dose_id = NULL::integer, image_id = NULL::integer, rt_dose_grid_frame_offset_vector = NULL::text, rt_dose_grid_scaling = NULL::double precision, rt_dose_max_slice_spacing = NULL::double precision, rt_dose_min_slice_spacing = NULL::double precision
+  WHERE (rt_dose_image.rt_dose_id = old.rt_dose_id);
+
+
+--
+-- Name: rt_dose_image rt_dose_image_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dose_image_insert AS
+    ON INSERT TO public.rt_dose_image DO INSTEAD  UPDATE public.rt_dose_image SET rt_dose_id = new.rt_dose_id, image_id = new.image_id, rt_dose_grid_frame_offset_vector = new.rt_dose_grid_frame_offset_vector, rt_dose_grid_scaling = new.rt_dose_grid_scaling, rt_dose_max_slice_spacing = new.rt_dose_max_slice_spacing, rt_dose_min_slice_spacing = new.rt_dose_min_slice_spacing
+  WHERE (rt_dose_image.rt_dose_id = new.rt_dose_id);
+
+
+--
+-- Name: rt_dose rt_dose_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dose_insert AS
+    ON INSERT TO public.rt_dose DO INSTEAD  UPDATE public.rt_dose SET rt_dose_id = new.rt_dose_id, rt_dose_units = new.rt_dose_units, rt_dose_type = new.rt_dose_type, rt_dose_instance_number = new.rt_dose_instance_number, rt_dose_comment = new.rt_dose_comment, rt_dose_normalization_point = new.rt_dose_normalization_point, rt_dose_summation_type = new.rt_dose_summation_type, rt_dose_referenced_plan_class = new.rt_dose_referenced_plan_class, rt_dose_referenced_plan_uid = new.rt_dose_referenced_plan_uid, rt_dose_tissue_heterogeneity = new.rt_dose_tissue_heterogeneity
+  WHERE (rt_dose.rt_dose_id = new.rt_dose_id);
+
+
+--
+-- Name: rt_dvh_rt_dose rt_dvh_rt_dose_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dvh_rt_dose_delete AS
+    ON DELETE TO public.rt_dvh_rt_dose DO INSTEAD  UPDATE public.rt_dvh_rt_dose SET rt_dose_id = NULL::integer, rt_dvh_id = NULL::integer
+  WHERE (rt_dvh_rt_dose.rt_dose_id = old.rt_dose_id);
+
+
+--
+-- Name: rt_dvh_rt_dose rt_dvh_rt_dose_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_dvh_rt_dose_insert AS
+    ON INSERT TO public.rt_dvh_rt_dose DO INSTEAD  UPDATE public.rt_dvh_rt_dose SET rt_dose_id = new.rt_dose_id, rt_dvh_id = new.rt_dvh_id
+  WHERE (rt_dvh_rt_dose.rt_dose_id = new.rt_dose_id);
+
+
+--
+-- Name: rt_plan_respiratory_motion_comp rt_plan_respiratory_motion_comp_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_plan_respiratory_motion_comp_delete AS
+    ON DELETE TO public.rt_plan_respiratory_motion_comp DO INSTEAD  UPDATE public.rt_plan_respiratory_motion_comp SET plan_id = NULL::integer, patient_setup_num = NULL::integer, sequence_index = NULL::integer, respiratory_motion_comp_technique = NULL::text, respiratory_signal_source = NULL::text, respiratory_motion_com_tech_desc = NULL::text, respiratory_signal_source_id = NULL::text
+  WHERE (rt_plan_respiratory_motion_comp.plan_id = old.plan_id);
+
+
+--
+-- Name: rt_plan_respiratory_motion_comp rt_plan_respiratory_motion_comp_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_plan_respiratory_motion_comp_insert AS
+    ON INSERT TO public.rt_plan_respiratory_motion_comp DO INSTEAD  UPDATE public.rt_plan_respiratory_motion_comp SET plan_id = new.plan_id, patient_setup_num = new.patient_setup_num, sequence_index = new.sequence_index, respiratory_motion_comp_technique = new.respiratory_motion_comp_technique, respiratory_signal_source = new.respiratory_signal_source, respiratory_motion_com_tech_desc = new.respiratory_motion_com_tech_desc, respiratory_signal_source_id = new.respiratory_signal_source_id
+  WHERE (rt_plan_respiratory_motion_comp.plan_id = new.plan_id);
+
+
+--
+-- Name: rt_prescription rt_prescription_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_prescription_delete AS
+    ON DELETE TO public.rt_prescription DO INSTEAD  UPDATE public.rt_prescription SET rt_prescription_id = NULL::integer, plan_id = NULL::integer, rt_prescription_description = NULL::text
+  WHERE (rt_prescription.plan_id = old.plan_id);
+
+
+--
+-- Name: rt_prescription rt_prescription_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE rt_prescription_insert AS
+    ON INSERT TO public.rt_prescription DO INSTEAD  UPDATE public.rt_prescription SET rt_prescription_id = new.rt_prescription_id, plan_id = new.plan_id, rt_prescription_description = new.rt_prescription_description
+  WHERE (rt_prescription.plan_id = new.plan_id);
+
+
+--
+-- Name: slope_intercept slope_intercept_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE slope_intercept_delete AS
+    ON DELETE TO public.slope_intercept DO INSTEAD  UPDATE public.slope_intercept SET slope_intercept_id = NULL::integer, slope = NULL::text, intercept = NULL::text, si_units = NULL::text, slopef = NULL::double precision, interceptf = NULL::double precision
+  WHERE (slope_intercept.slope_intercept_id = old.slope_intercept_id);
+
+
+--
+-- Name: slope_intercept slope_intercept_insert; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE slope_intercept_insert AS
+    ON INSERT TO public.slope_intercept DO INSTEAD  UPDATE public.slope_intercept SET slope_intercept_id = new.slope_intercept_id, slope = new.slope, intercept = new.intercept, si_units = new.si_units, slopef = new.slopef, interceptf = new.interceptf
+  WHERE (slope_intercept.slope_intercept_id = new.slope_intercept_id);
 
 
 --
@@ -6587,55 +6906,14 @@ ALTER TABLE ONLY public.user_inbox_content_operation
 ALTER TABLE ONLY public.user_inbox_content
     ADD CONSTRAINT user_inbox_content_user_inbox_id_fkey FOREIGN KEY (user_inbox_id) REFERENCES public.user_inbox(user_inbox_id);
 
+create sequence public.image_image_id_seq start 1;
+create sequence public.image_geometry_image_geometry_id_seq start 1;
+create sequence public.slope_intercept_slope_intercept_id_seq start 1;
+create sequence public.plan_plan_id_seq start 1;
 
 --
 -- PostgreSQL database dump complete
 --
-
---
--- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.file_imports_over_time AS
- SELECT count(file.file_id) AS count,
-    date_part('month'::text, import_event.import_time) AS importmonth,
-    date_part('year'::text, import_event.import_time) AS importyear
-   FROM ((public.file
-     JOIN public.file_import USING (file_id))
-     JOIN public.import_event USING (import_event_id))
-  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
-  WITH NO DATA;
-
-
---
--- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.files_without_type AS
- SELECT file.file_id,
-    file.digest,
-    file.size,
-    file.is_dicom_file,
-    file.file_type,
-    file.processing_priority,
-    file.ready_to_process
-   FROM public.file
-  WHERE (file.file_type IS NULL)
-  WITH NO DATA;
-
-
---
--- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
-
-
---
--- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
 -- This file is for default values that should be set for a new install,
 -- but are not part of the UI configuration or queries themselves.
 \connect posda_files
