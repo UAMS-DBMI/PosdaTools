@@ -3506,6 +3506,18 @@ CREATE MATERIALIZED VIEW public.files_without_type AS
   WHERE (file.file_type IS NULL)
   WITH NO DATA;
 
+CREATE MATERIALIZED VIEW public.files_without_location AS
+SELECT a.*
+FROM
+	file a
+LEFT JOIN
+	file_location b
+	on a.file_id = b.file_id
+WHERE
+	b.file_id IS NULL
+WITH NO DATA;
+
+
 
 --
 -- Name: for_registration; Type: TABLE; Schema: public; Owner: -
