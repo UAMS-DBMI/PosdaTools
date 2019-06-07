@@ -1,5 +1,5 @@
 export interface Roi {
-    name: number;
+    name: string;
     color: number[];
     points: number[][];
 }
