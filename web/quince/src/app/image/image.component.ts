@@ -131,7 +131,11 @@ export class ImageComponent implements OnInit {
           this.roi_array = res;
           this.draw();
         },
-      err => { }
+      err => {
+          this.roi_loaded = true;
+          this.roi_array = [];
+          this.draw();
+       }
     );
 
   }
