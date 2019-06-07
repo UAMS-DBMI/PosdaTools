@@ -65,19 +65,50 @@ group by review_status
         await db.fetch(query, [int(vri)])
     )
 
-# /vris/<vri>/<state>/next
-async def get_next_iec(request, vri, state, **kwargs):
+# /vris/<vri>/<state>
+# Maybe change this so that it always returns the full list of
+# iecs for each state. Then, if you're looking at unreviewed, you can
+# choose to skip an iec when you load it, if it is alreay reviewed
+# Yes ^
+async def get_iecs_for_state(request, vri, state, **kwargs):
+    """Return the list of IECs for the given VRI in the given state"""
+
+    # Map of 
+    #   state parameter => review_status
+    state_map = {
+        'good': 'Good',
+        'bad': 'Bad',
+        'blank': 'Blank',
+        'unreviewed': None,
+    }
+
+    mapped_state = state_map[state.lower()]
+
+    # Special case for unreviewed
+    if mapped_state is None:
+        query = """\
+            select
+                    image_equivalence_class_id
+            from image_equivalence_class
+            where visual_review_instance_id = $1
+              and processing_status = 'ReadyToReview'
+              and review_status is null
+        """
+        return json_records(
+            await db.fetch(query, [int(vri)])
+        )
+
+
     query = """\
-select
-	image_equivalence_class_id
-from image_equivalence_class
-where visual_review_instance_id = $1
-  and processing_status in ('ReadyToReview', 'Reviewed')
-  and review_status = $2
-limit 1
+        select
+                image_equivalence_class_id
+        from image_equivalence_class
+        where visual_review_instance_id = $1
+          and processing_status = 'Reviewed'
+          and review_status = $2
     """
 
     return json_records(
-        await db.fetch_one(query, [int(vri), state])
+        await db.fetch(query, [int(vri), mapped_state])
     )
 
