@@ -44,8 +44,13 @@
     </button>
     <button mat-raised-button (click)="reset()">Reset Window/Level</button>
     <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
-    <button mat-raised-button (click)="toggleROI()">ROI</button>
+    <button mat-raised-button [color]="roi_display ? 'accent' : 'basic'" (click)="toggleROI()">ROI</button>
     <button mat-raised-button (click)="openDetails()">Details</button>
     <button mat-raised-button (click)="openDump()">Dump</button>
+  </div>
+</div>
+<div *ngIf="roi_display" id="roi_toggles">
+  <div *ngFor="let contour of rois_seen" class="roi_box">
+      <mat-checkbox [style.color]="contour.color" [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
   </div>
 </div>
