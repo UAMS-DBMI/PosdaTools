@@ -150,8 +150,8 @@ def generate_vris_blueprint():
         '/<vri>/counts'
     )
     blueprint.add_route(
-        vris.get_next_iec,
-        '/<vri>/<state>/next'
+        vris.get_iecs_for_state,
+        '/<vri>/<state>'
     )
 
     return blueprint
