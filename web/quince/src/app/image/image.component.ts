@@ -16,6 +16,12 @@ interface Point {
   y: number;
 };
 
+interface Contour {
+  name: string;
+  enabled: boolean;
+  color: string;
+}
+
 @Component({
   selector: 'app-image',
   templateUrl: './image.component.html',
@@ -53,8 +59,9 @@ export class ImageComponent implements OnInit {
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
-  private roi_display = false;
+  public roi_display = false;
   private roi_array: Roi[];
+  public rois_seen: Contour[] = [];
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
 
@@ -123,7 +130,12 @@ export class ImageComponent implements OnInit {
           this.roi_loaded = true;
           this.roi_array = res;
           this.draw();
-        }
+        },
+      err => {
+          this.roi_loaded = true;
+          this.roi_array = [];
+          this.draw();
+       }
     );
 
   }
@@ -345,6 +357,32 @@ export class ImageComponent implements OnInit {
     }
   }
 
+  toggleAllROIs(){
+    for(let contour of this.rois_seen){
+      contour.enabled = !contour.enabled;
+    }
+    this.draw();
+  }
+
+  disableAllROIs(){
+    for(let contour of this.rois_seen){
+      contour.enabled = false;
+    }
+    this.draw();
+  }
+
+  roiEnabled(roi: Roi): boolean {
+    for(let contour of this.rois_seen){
+      if(contour.name == roi.name){
+        return contour.enabled;
+      }
+    }
+    let rgb_color = "rgb(" + roi.color[0] + ", " + roi.color[1] + ", " + roi.color[2] + ")";
+    this.rois_seen.push({ name: roi.name,
+                          enabled: true,
+                          color: rgb_color});
+    return true;
+  }
 
   drawROI() {
     if (this.current_image == undefined){
@@ -352,22 +390,28 @@ export class ImageComponent implements OnInit {
     }
     let c = this.context;
     for (let roi of this.roi_array){
+      if(this.roiEnabled(roi)){
+        c.strokeStyle = 'rgb('+ roi.color[0]+ ',' + roi.color[1]+ ',' +roi.color[2] +')';
+        c.beginPath();
+        let first = true;
+        var sx;
+        var sy;
+        for (let coordpix of roi.points){
+          let x = coordpix[0] * this.zoom_level + this.offset.x; //x
+          let y = coordpix[1] * this.zoom_level + this.offset.y; //y
 
-      c.strokeStyle = 'rgb('+ roi.color[0]+ ',' + roi.color[1]+ ',' +roi.color[2] +')';
-      c.beginPath();
-      let first = true;
-      for (let coordpix of roi.points){
-        let x = coordpix[0] * this.zoom_level + this.offset.x; //x
-        let y = coordpix[1] * this.zoom_level + this.offset.y; //y
-
-        if (first){
-          c.moveTo(x, y);
-          first = false;
-        }else{
-          c.lineTo(x, y);
+          if (first){
+            c.moveTo(x, y);
+            sx = x;
+            sy = y;
+            first = false;
+          }else{
+            c.lineTo(x, y);
+          }
         }
+        c.lineTo(sx, sy);
+        c.stroke();
       }
-      c.stroke();
     }
   }
 

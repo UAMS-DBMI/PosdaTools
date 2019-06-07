@@ -1,10 +1,10 @@
 {
 	"/vapi": {
-		"target": "http://tcia-posda-rh-1.ad.uams.edu/",
+		"target": "http://tcia-posda-rh-2.ad.uams.edu/",
 		"secure": false
 	},
 	"/papi": {
-		"target": "http://tcia-posda-rh-1.ad.uams.edu/",
+		"target": "http://tcia-posda-rh-2.ad.uams.edu/",
 		"secure": false
 	}
 }

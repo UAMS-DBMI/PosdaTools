@@ -8,6 +8,7 @@ import {
   MatIconModule,
   MatCardModule,
   MatProgressSpinnerModule,
+  MatCheckboxModule,
   } from '@angular/material';
 
 @NgModule({
@@ -20,6 +21,7 @@ import {
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
   ],
 })
 export class MyMaterialModule { }
