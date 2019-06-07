@@ -50,6 +50,12 @@
   </div>
 </div>
 <div *ngIf="roi_display" id="roi_toggles">
+  <div (click)="disableAllROIs()" class="roi_box" style="padding-top:5px">
+    <span>Disable All</span>
+  </div>
+  <div (click)="toggleAllROIs()" class="roi_box" style="padding-top:5px">
+    <span>Toggle All</span>
+  </div>
   <div *ngFor="let contour of rois_seen" class="roi_box">
       <mat-checkbox [style.color]="contour.color" [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
   </div>

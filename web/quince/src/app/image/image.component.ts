@@ -353,6 +353,20 @@ export class ImageComponent implements OnInit {
     }
   }
 
+  toggleAllROIs(){
+    for(let contour of this.rois_seen){
+      contour.enabled = !contour.enabled;
+    }
+    this.draw();
+  }
+
+  disableAllROIs(){
+    for(let contour of this.rois_seen){
+      contour.enabled = false;
+    }
+    this.draw();
+  }
+
   roiEnabled(roi: Roi): boolean {
     for(let contour of this.rois_seen){
       if(contour.name == roi.name){
