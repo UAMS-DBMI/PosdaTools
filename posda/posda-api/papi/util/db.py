@@ -11,19 +11,9 @@ async def setup(*args, **kwargs):
 async def fetch(query, parameters=[]):
     global pool
     async with pool.acquire() as conn:
-        print("\nfetching\n")
         records = await conn.fetch(query, *parameters)
-        if len(records) < 1:
-            raise NotFound("no matching records found")
-        print("records:\n")
-        print(dict(records[0]))
         return records
 
-async def fetch_with_empty(query, parameters=[]):
-    global pool
-    async with pool.acquire() as conn:
-        records = await conn.fetch(query, *parameters)
-        return records
 
 async def fetch_one(query, parameters=[]):
     """Execute query and return only the first result
