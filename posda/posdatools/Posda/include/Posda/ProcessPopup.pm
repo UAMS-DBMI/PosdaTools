@@ -55,12 +55,12 @@ my $db_handle;
 # };
 method SpecificInitialize($params) {
   my $button_name = $params->{button};
-print STDERR "Parms: ";
-Debug::GenPrint($dbg, $params, 1);
-print STDERR "\n";
-print STDERR "Self ";
-Debug::GenPrint($dbg, $self, 1);
-print STDERR "\n";
+#print STDERR "Parms: ";
+#Debug::GenPrint($dbg, $params, 1);
+#print STDERR "\n";
+#print STDERR "Self ";
+#Debug::GenPrint($dbg, $self, 1);
+#print STDERR "\n";
   for my $i (keys %{$params}){
     unless($i eq "button"){
       $self->{default_param}->{$i} = $params->{$i};
@@ -111,7 +111,15 @@ method GetColumns{
 }
 method MakeRowHashArray{
   my $cols = $self->{table}->{query}->{columns};
-  my $raw_rows = $self->{table}->{rows};
+  my $raw_rows;
+  if(
+    exists $self->{default_param}->{filter_mode} &&
+    $self->{default_param}->{filter_mode} eq "filtered"
+  ){
+    $raw_rows = $self->{table}->{filtered_rows};
+  } else {
+    $raw_rows = $self->{table}->{rows};
+  }
   my @RowHashes;
   for my $row (@$raw_rows){
     my %h;

@@ -299,7 +299,7 @@ sub BlurEntryBox{
    (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
     "onblur=\"" . $op . "event=onblur&value='+this.value$index);$sync\" " .
    "/>";
-print STDERR "Blur Entry Box: $txt\n";
+#print STDERR "Blur Entry Box: $txt\n";
    $http->queue($txt);
 #  $http->queue("<input class='$class' type='text'" .
 #    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
@@ -323,7 +323,7 @@ sub ClasslessBlurEntryBox{
    (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
     "onblur=\"" . $op . "event=onblur&value='+this.value);$sync\" " .
    "/>";
-print STDERR "Blur Entry Box: $txt\n";
+#print STDERR "Blur Entry Box: $txt\n";
    $http->queue($txt);
 #  $http->queue("<input class='$class' type='text'" .
 #    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
