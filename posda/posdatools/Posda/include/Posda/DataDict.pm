@@ -9203,6 +9203,38 @@ my $Dict = {
       "ele" => "0201",
       "group" => "0010"
     },
+    "530" => {
+      "KeyWord" => "StrainDescription",
+      "Name" => "Strain Description",
+      "VM" => "1",
+      "VR" => "UC",
+      "ele" => "0212",
+      "group" => "0010"
+    },
+    "531" => {
+      "KeyWord" => "StrainNomenclature",
+      "Name" => "Strain Nomenclature",
+      "VM" => "1",
+      "VR" => "LO",
+      "ele" => "0213",
+      "group" => "0010"
+    },
+    "537" => {
+      "KeyWord" => "StrainCodeSequence",
+      "Name" => "Strain Code Sequence",
+      "VM" => "1",
+      "VR" => "SQ",
+      "ele" => "0219",
+      "group" => "0010"
+    },
+    "546" => {
+      "KeyWord" => "GeneticModificationsDescription",
+      "Name" => "Genetic Modifications Description",
+      "VM" => "1",
+      "VR" => "UC",
+      "ele" => "0222",
+      "group" => "0010"
+    },
     "64" => {
       "KeyWord" => "PatientSex",
       "Name" => "Patient's Sex",
@@ -73010,6 +73042,11 @@ my $VRDesc = {
     striptrailing => "1",
     padtrailing => "1",
   },
+  UC => {
+    name => "Unlimited Character",
+    type => "text",
+    padtrailing => "1",
+  },
   UI => {
     name => "Unique Identifier",
     len => "64",
@@ -73026,6 +73063,11 @@ my $VRDesc = {
   UN => {
     name => "Unknown",
     type => "raw",
+  },
+  UR => {
+    name => "Universal Resource Identifier or Universal Resource Locator (URI/URL)",
+    type => "text",
+    padtrailing => "1",
   },
   US => {
     name => "Unsigned Short",

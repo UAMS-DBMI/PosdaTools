@@ -1086,10 +1086,18 @@ method SwitchToTab($http, $dyn) {
 }
 
 method OpenTableLevelPopup($http, $dyn) {
-print STDERR "In OpenTableFreePopup\n";
-  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+print STDERR "In OpenTableLevelPopup\n";
+  my $table;
+  my $parms;
+  if($self->{Mode} eq "Activities"){
+    $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+    $parms = { table => $table, button => $dyn->{cap_},
+      filter_mode => $self->{FilterSelection}->{$self->{NewQueryToDisplay}}};
+  } else {
+    $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+    $parms = { table => $table, button => $dyn->{cap_}};
+  }
 
-  my $parms = { table => $table, button => $dyn->{cap_}};
   my $unique_val = "$parms";
 
   my $class = $dyn->{class_};
@@ -1120,8 +1128,36 @@ print STDERR "In OpenDynamicPopup\n";
 for my $i (keys %{$dyn}){
   print STDERR "dyn{$i}: $dyn->{$i}\n";
 }
-  my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
-  if($table->{type} eq "FromQuery"){
+  my $table;
+  if($self->{Mode} eq "Activities") {
+    $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  } else {
+    $table = $self->{LoadedTables}->[$self->{SelectedTable}];
+  }
+  if(!exists $table->{type}){
+    my $cols = $table->{query}->{columns};
+    my $rows;
+    if($self->{FilterSelection}->{$self->{NewQueryToDisplay}} eq "unfiltered"){
+     $rows = $table->{rows};
+    } else {
+     $rows = $table->{filtered_rows};
+    }
+    my $row = $rows->[$dyn->{row}];
+
+    # build hash for popup constructor
+    my $h = {};
+    for my $i (0 .. $#{$row}) {
+      $h->{$cols->[$i]} = $row->[$i];
+    }
+    $h->{button} = $dyn->{cap_};
+
+    my $unique_val = "$h";
+
+    my $class = $dyn->{class_};
+    my $row_id = $dyn->{row};
+
+    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
+  } elsif($table->{type} eq "FromQuery"){
     my $cols = $table->{query}->{columns};
     my $rows = $table->{rows};
     my $row = $rows->[$dyn->{row}];
@@ -1163,6 +1199,8 @@ for my $i (keys %{$dyn}){
 method OpenPopup($class, $name, $params) {
 #    say STDERR "OpenDynamicPopup, executing $class using params:";
 #    print STDERR Dumper($params);
+  print STDERR "################\nOpenPopup\nclass: $class\n";
+  print STDERR "name: $name\n################\n";
 
 
   if ($class eq 'choose') {
@@ -2274,7 +2312,6 @@ sub get_background_buttons {
 
 func get_popup_hash($query_name) {
     my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
-
     # Process popups into a usable hash
     my $popup_hash = {};
     map {
@@ -2292,7 +2329,6 @@ func get_popup_hash($query_name) {
         }
       }
     } @$popups;
-
     return $popup_hash;
 }
 
@@ -2549,19 +2585,19 @@ method TableSelected($http, $dyn){
 }
 
 method OpenChainedQuery($http, $dyn) {
-print STDERR "#######################\nIn OpenChainedQuery:\n" .
-  "dyn = ";
-Debug::GenPrint($dbg, $dyn, 1);
-print STDERR "\n";
+#print STDERR "#######################\nIn OpenChainedQuery:\n" .
+#  "dyn = ";
+#Debug::GenPrint($dbg, $dyn, 1);
+#print STDERR "\n";
 
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
   my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
   # DEBUG Dumper($details);
-print STDERR "details = ";
-Debug::GenPrint($dbg, $details, 1);
-print STDERR "\n";
+#print STDERR "details = ";
+#Debug::GenPrint($dbg, $details, 1);
+#print STDERR "\n";
 
   # get the row as a hash?
   my $h = {};
@@ -2588,9 +2624,9 @@ print STDERR "\n";
       $h->{$cols->[$i]} = $row->[$i];
     }
   }
-print STDERR "row = ";
-Debug::GenPrint($dbg, $h, 1);
-print STDERR "\n";
+#print STDERR "row = ";
+#Debug::GenPrint($dbg, $h, 1);
+#print STDERR "\n";
 
   # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
@@ -3504,6 +3540,57 @@ method DrawQueryListOrSelectedQuerySearch($http, $dyn){
 method RunNewQuery($http, $dyn){
   $self->{SelectedNewQuery} = $dyn->{query_name};
 }
+method OpenNewChainedQuery($http, $dyn){
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+
+  my $id = $dyn->{chained_query_id};
+  my $query_name = $dyn->{to_query};
+
+  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
+  # DEBUG Dumper($details);
+
+  # get the row as a hash?
+  my $h = {};
+
+  my $cols = $SFQ->{query}->{columns};
+  my $rows = $SFQ->{rows};
+  my $row = $rows->[$dyn->{row}];
+
+  # build hash for popup constructor
+  for my $i (0 .. $#{$row}) {
+    $h->{$cols->[$i]} = $row->[$i];
+  }
+
+
+  # DEBUG Dumper($h);
+  # $h now holds the values of the row as a hash
+  for my $param (@$details) {
+    delete $self->{Input}->{$param->{to_parameter_name}};
+    if(exists $self->{BindingCache}->{$param->{to_parameter_name}}){
+      unless(
+        $self->{BindingCache}->{$param->{to_parameter_name}} eq
+        $h->{$param->{from_column_name}}
+      ){
+        $self->{BindingCache}->{$param->{to_parameter_name}} =
+          $h->{$param->{from_column_name}};
+        $self->UpdateBindingValueInDb($param->{to_parameter_name});
+      }
+    } else {
+      $self->{BindingCache}->{$param->{to_parameter_name}} =
+        $h->{$param->{from_column_name}};
+      $self->CreateBindingCacheInfoForKeyInDb($param->{to_parameter_name});
+    }
+  }
+  $self->{SelectedNewQuery} = $query_name;
+  delete $self->{NewQueryToDisplay};
+  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}} = 
+      PosdaDB::Queries->GetQueryInstance($query_name);
+  } else {
+    $self->{NewQueriesByName}->{$self->{SelectedNewQuery}} =
+      PosdaDB::Queries->GetQueryInstance($query_name);
+  }
+}
 method DrawNewQuery($http, $dyn){
 #  $http->queue("NewQuery goes here ($self->{SelectedNewQuery})");
   my $query;
@@ -3797,6 +3884,11 @@ sub DownloadTableFromNewQuery{
 sub  DisplaySelectedForegroundQuery{
   my($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $q_name = $SFQ->{query}->{name};
+  my $popup_hash = get_popup_hash($q_name);
+#xyzzy
+$self->{DebugPopupHash} = $popup_hash;
+  my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
   if($SFQ->{status} eq "error"){
     return $self->DisplayNewQueryError($http, $dyn, $SFQ);
   }
@@ -3931,9 +4023,26 @@ sub  DisplaySelectedForegroundQuery{
     $self->DrawEditFilterForm($http, $dyn, $SFQ);
   }
 
+#xyzzy
+  if (defined $popup_hash->{table_level_popup}) {
+    $http->queue("<p>");
+    for my $tlp (@{$popup_hash->{table_level_popup}}){
+      $self->NotSoSimpleButton($http, {
+          caption => "$tlp->{name}",
+          op => "OpenTableLevelPopup",
+          class_ => "$tlp->{class}",
+          cap_ => "$tlp->{name}",
+          sync => 'Update();'
+      });
+    }
+    $http->queue("</p>");
+  }
 
   $http->queue('<table class="table table-striped table-condensed">');
   $http->queue("<tr>");
+  if($#{$chained_queries} > -1){
+    $http->queue("<th>chain</th>");
+  }
   for my $i (@{$SFQ->{query}->{columns}}){
     $http->queue("<th>$i</th>");
   }
@@ -3950,10 +4059,39 @@ sub  DisplaySelectedForegroundQuery{
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
+    if($#{$chained_queries} > -1){
+      $http->queue("<td>");
+        for my $q (@$chained_queries) {
+          $self->NotSoSimpleButton($http, {
+              caption => "$q->{caption}",
+              op => "OpenNewChainedQuery",
+              row => "$i",
+              chained_query_id => "$q->{chained_query_id}",
+              to_query => "$q->{to_query}",
+              sync => 'Update();'
+          });
+        }
+      $http->queue("</td>");
+    }
     if(ref($row) eq 'ARRAY'){
-      for my $j (@$row){
-        if(defined $j){
-          $http->queue("<td>$j</td>");
+      for my $j (0 .. $#{$row}){
+      my $cn = $SFQ->{query}->{columns}->[$j];
+        if(defined $row->[$j]){
+          $http->queue("<td>");
+          $http->queue($row->[$j]);
+#xyzzy
+          if (defined $popup_hash->{$cn}) {
+            my $popup_details = $popup_hash->{$cn};
+            $self->NotSoSimpleButton($http, {
+                caption => "$popup_details->{name}",
+                op => "OpenDynamicPopup",
+                row => "$i",
+                class_ => "$popup_details->{class}",
+                cap_ => "$popup_details->{name}",
+                sync => 'Update();'
+            });
+          }
+          $http->queue("</td>");
         } else {
           $http->queue("<td></td>");
         }
