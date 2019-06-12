@@ -62,14 +62,12 @@ my $start_time = time;
 $background->WriteToEmail("Starting PHI scan: \"$description\"\n");
 $background->WriteToEmail("$num_series series to scan\n");
 my $scan = Posda::Background::PhiScan->NewFromScan(
-  \@SeriesList, $description, "Posda", $invoc_id, $act_id);
+  \@SeriesList, $description, "Posda", $invoc_id, $act_id, $background);
 my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $id = $scan->{phi_scan_instance_id};
 $background->WriteToEmail("Created scan id: $id in $elapsed seconds\n");
-
-Query('UpdateActivityTaskStatus')->RunQuery(sub{}, sub{},
-  'PreparingReports', $act_id, $invoc_id);
+$background->SetActivityStatus("Preparing Reports");
 $background->WriteToEmail("Creating " .
   "\"SimplePublicPhiReportSelectedVrWithMetaquotes\" report.\n");
 my $rpt1 = $background->CreateReport("Selected Public VR");

@@ -55,7 +55,7 @@ my $finalize_scan = Query("FinalizeSimpleScanInstance");
 my $get_scan_by_id = Query("GetScanInstanceById");
 my $update_act = Query('UpdateActivityTaskStatus');
 sub NewFromScan{
-  my($class, $SeriesList, $description, $database, $invoc_id, $act_id) = @_;
+  my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back) = @_;
   my $num_series = @$SeriesList;
   my $q_name = "FilesInSeries";
   if($database eq "Public") {
@@ -73,10 +73,12 @@ sub NewFromScan{
   my $num_series_being_scanned = 0;
   for my $series (@$SeriesList){
     $num_series_being_scanned += 1;
-    if(defined($act_id) && defined($invoc_id)){
-      $update_act->RunQuery(sub{}, sub{},
-      "Scanning $num_series_being_scanned series of $num_series",
-      $act_id, $invoc_id);
+    if(
+      defined($act_id) && defined($invoc_id) &&
+      defined $back && $back->can("SetActivityStatus")
+    ){
+      $back->SetActivityStatus(
+        "Scanning $num_series_being_scanned series of $num_series");
     }
     my $series_start_time = time;
     my $num_files_in_series = 0;
@@ -125,10 +127,11 @@ sub NewFromScan{
         $tag_id, $value_id, $series_scan_id, $scan_id)
     }
     close SUBP;
-    if(defined($act_id) && defined($invoc_id)){
-      $update_act->RunQuery(sub{}, sub{},
-      "Finished PHI scan",
-      $act_id, $invoc_id);
+    if(
+      defined($act_id) && defined($invoc_id) &&
+      defined $back && $back->can("SetActivityStatus")
+    ){
+      $back->SetActivityStatus("Finished PHI scan");
     }
     my $series_duration = time - $series_start_time;
     $finalize_series->RunQuery(sub {}, sub {},

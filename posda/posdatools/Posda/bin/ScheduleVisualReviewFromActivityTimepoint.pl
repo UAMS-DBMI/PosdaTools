@@ -21,6 +21,9 @@ unless($#ARGV == 2){
   die "$usage\n";
 }
 my ($invoc_id, $act_id, $notify) = @ARGV;
+print "All processing in background\n";
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
+$background->Daemonize;
 my $create_instance = Query("CreateVisualReviewInstance");
 my $get_review_instance_id = Query("GetVisualReviewInstanceId");
 
@@ -38,6 +41,8 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   $OldActTpComment = $comment;
   $OldActTpDate = $timepoint_created;
 }, sub {}, $act_id);
+$background->SetActivityStatus("Found timepoint ($OldActTpId) for " .
+  "activity: $act_id");
 Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   my($row) = @_;
   $FilesInOldTp{$row->[0]} = 1;
@@ -52,6 +57,8 @@ for my $file_id(keys %FilesInOldTp){
 my @series = keys %SeriesInOldTp;
 
 my $num_series = @series;
+$background->SetActivityStatus("Found $num_series in timepoint $OldActTpId");
+
 $create_instance->RunQuery(sub{}, sub {},
   "Activity Id: $act_id", $notify, $num_series);
 my $visual_review_instance_id;
@@ -59,14 +66,15 @@ $get_review_instance_id->RunQuery(sub{
   my($row) = @_;
   $visual_review_instance_id = $row->[0];
 },sub {});
-print "Found $num_series to process on input\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
-print "Entering background\n";
-$background->Daemonize;
 my $update_status = Query("UpdateStatusVisualReviewInstance");
 my $finalize = Query("FinalizeVisualReviewScheduling");
 my $tot_series = 0;
-for my $s (@series){
+for my $i (0 .. $#series){
+  my $ith = $i +1;
+  
+  $background->SetActivityStatus(
+    "process $ith of $num_series in timepoint $OldActTpId");
+  my $s = $series[$i];
   my $tot_equiv = 0;
   my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $visual_review_instance_id";
   open CMD, "$cmd|";
@@ -83,4 +91,4 @@ for my $s (@series){
   close CMD;
 }
 $finalize->RunQuery(sub{}, sub {}, $visual_review_instance_id);
-$background->Finish;
+$background->Finish("Schedule Complete - Manual Process Follows");;
