@@ -698,6 +698,10 @@ sub AutoRefreshOne{
   my($this) = @_;
   $this->QueueJsCmd("UpdateOne();");
 }
+sub AutoRefreshActivityTaskStatus{
+  my($this) = @_;
+  $this->QueueJsCmd("UpdateAct();");
+}
 sub StartJsChildProcess{
   my($this, $process_desc, $host, $child_name) = @_;
   unless(defined $child_name) {

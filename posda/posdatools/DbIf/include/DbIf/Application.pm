@@ -2835,7 +2835,9 @@ method NewActivitiesPage($http, $dyn){
   $self->DrawClearActivityButton($http, $dyn);
   $http->queue("&nbsp;&nbsp;Mode:&nbsp;");
   $self->DrawActivityModeSelector($http, $dyn);
+  $http->queue("<div id=\"activitytaskstatus\" width=200><ul>");
   $self->DrawActivityTaskStatus($http, $dyn);
+  $http->queue("</div>");
   $http->queue(qq{</div><hr>});
   my $method = $self->{ActivityModes}->{$self->{ActivityModeSelected}};
   if($self->can($method)){
@@ -2898,7 +2900,6 @@ method DrawActivityTaskStatus($http, $dyn){
   }, sub {}, $self->{ActivitySelected});
   if($#backgrounders >= 0){
     $self->{Backgrounders} = \@backgrounders;
-    $http->queue("<div width=200><ul>");
     for my $i (@backgrounders){
       $http->queue("<li>$i->[0]: $i->[1] - $i->[4]");
       $self->NotSoSimpleButton($http, {
@@ -2909,8 +2910,8 @@ method DrawActivityTaskStatus($http, $dyn){
       });
       $http->queue("</li>");
     }
-    $http->queue("</ul></div>");
-    $self->InvokeAfterDelay("AutoRefresh", 5);
+    $http->queue("</ul>");
+    $self->InvokeAfterDelay("AutoRefreshActivityTaskStatus", 1);
 #    $self->AutoRefresh();
   }
 }

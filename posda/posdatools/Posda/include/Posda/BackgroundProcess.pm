@@ -89,6 +89,7 @@ sub new {
     Query('InsertActivityTaskStatus')->RunQuery(sub {}, sub {},
     $activity_id, $invoc_id);
     $this->{activity_id} = $activity_id;
+    $this->{UpdStatusQ} = Query("UpdateActivityTaskStatus");
   }
 
   # convert $notify to username if it is an email
@@ -266,6 +267,11 @@ sub Finish() {
     unlink $rpt->{temp_filename};
   }
   if($self->{activity_id}){
+    if($mess eq "Schedule Complete - Manual Process Follows"){
+      Query("UpdateActivityTaskStatusForManualUpdate")->RunQuery(sub{}, sub{},
+        $mess, $self->{activity_id}, $self->{invoc_id});
+      return;
+    }
     unless(defined $mess){
       $mess = "Complete - no status specified";
     }

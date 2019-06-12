@@ -23,6 +23,10 @@ function LoginResponseReturned(text, status, xml){
   document.getElementById('login').innerHTML = text;
 }
 
+function ActivityTaskStatusReturned(text, status, xml){
+  document.getElementById('activitytaskstatus').innerHTML = text;
+}
+
 function UpdateHeader(){
   PosdaGetRemoteMethod("HeaderResponse", "" , HeaderResponseReturned);
 }
@@ -37,6 +41,10 @@ function UpdateContent(){
 
 function UpdateLogin(){
   PosdaGetRemoteMethod("LoginResponse", "" , LoginResponseReturned);
+}
+
+function UpdateActivityTaskStatus(){
+  PosdaGetRemoteMethod("DrawActivityTaskStatus", "" , ActivityTaskStatusReturned);
 }
 
 function ModeChanged(text, status, xml){
@@ -62,6 +70,9 @@ function UpdateOne(){
   UpdateMenu();
   UpdateContent();
   UpdateLogin();
+}
+function UpdateAct(){ 
+  UpdateActivityTaskStatus();
 }
 
 var spinner_opts = {

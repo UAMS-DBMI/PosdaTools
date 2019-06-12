@@ -9,9 +9,9 @@ $| = 1; # this should probably be at the top of the script, maybe in the lib?
 
 my $usage = <<EOF;
 Usage:
-CreateActivityTimepointFromImportName.pl <?bkgrnd_id?> <activity_id> "<import_name>" "<comment>" <notify>
+CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> <import_event_id> "<comment>" <notify>
   or
-CreateActivityTimepointFromImportName.pl -h
+CreateActivityTimepointFromImportEventId.pl -h
 Expects no lines on STDIN:
 EOF
 
@@ -19,18 +19,17 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){ print $usage; exit }
 
 unless($#ARGV == 4) { print $usage; exit }
 
-my($invoc_id, $act_id, $import_name, $comment, $notify) = @ARGV;
+my($invoc_id, $act_id, $import_event_id, $comment, $notify) = @ARGV;
+print "All processing in background\n";
 my $start = time;
-
 #############################
 # This is code which sets up the Background Process and Starts it
 my $forground_time = time - $start;
-print "Going to background to create timepoint  after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 my $now = `date`;
 $background->WriteToEmail("Creating timepoint from named import for $act_id:" .
-  "import_name: $import_name\n" .
+  "import_event_id: $import_event_id\n" .
   "at $now\n");
 my $start_creation = time;
 ### Creation of tables here
@@ -50,10 +49,10 @@ unless(defined $act_time_id){
   exit;
 }
 my %Files;
-Query('GetDicomFilesByImportName')->RunQuery(sub{
+Query('GetDicomFilesByImportEventId')->RunQuery(sub{
   my($row) = @_;
   $Files{$row->[0]} = 1;
-}, sub {}, $import_name);
+}, sub {}, $import_event_id);
 my $ins_file = Query("InsertActivityTimepointFile");
 for my $file_id (keys %Files){
   $ins_file->RunQuery(sub{}, sub{}, $act_time_id, $file_id);
@@ -95,4 +94,6 @@ $rpt4->print("who,$notify\r\n");
 $rpt4->print("\r\n");
 $ActInfo->PrintCondensedHierarchyReport($rpt4, $new_cfh);
 ##################################
-$background->Finish;
+my $num_files = keys %Files;
+$background->Finish("Created activity_timepoint $act_time_id with" .
+  " $num_files files");
