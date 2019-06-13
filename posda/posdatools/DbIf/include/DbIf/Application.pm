@@ -3169,6 +3169,7 @@ method ActivityOperations($http, $dyn){
     [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
     [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
+    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
   );
   my @Cols;
   for my $i (@buttons){
