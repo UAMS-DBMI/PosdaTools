@@ -187,8 +187,8 @@ if($num_mapped_patients < $num_patients){
   my $num_unmapped_patients = $num_patients - $num_mapped_patients;
   print "$num_unmapped_patients in spreadsheet not mapped\n";
 }
-print "Constructing Backgrounder($invoc_id, $notify)\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+print "Constructing Backgrounder($invoc_id, $notify, $in_activity_id)\n";
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $in_activity_id);
 $background->Daemonize;
 $background->WriteToEmail("Enter background\n". 
   "Preparing spreadsheet for editing $num_patients patients\n");
@@ -201,7 +201,10 @@ my $rpt = $background->CreateReport("EditsForInitialAnonymization");
 $rpt->print(
   "series_instance_uid,op,tag,val1,val2,Operation,description,notify\n");
 my $sent_commands = 0;
-for my $p (@mapped_patients){
+for my $i (0 .. $#mapped_patients){
+  my $p = $mapped_patients[$i];
+  my $ith = $i + 1;
+  $background->SetActivityStatus("Processing $ith (of $num_mapped_patients) mapped patient");
   my $patient_map = $PatientMapping{$p};
   my $patient_info = $patients{$p};
   for my $i (keys %{$patient_info->{series}}){
@@ -228,7 +231,7 @@ for my $p (@mapped_patients){
     }
   } else {
     $background->WriteToEmail("unidentified type for patient_map ($p)\n");
-    $background->Finish;
+    $background->Finish("Completed $num_mapped_patients mapped patients");;
     exit;
   }
 }
