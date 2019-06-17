@@ -266,10 +266,14 @@ sub ReadElementHeader {
     (
       (
         $vr eq "OB" ||
-        $vr eq "OW" ||
+        $vr eq "OD" ||
         $vr eq "OF" ||
+        $vr eq "OL" ||
+        $vr eq "OW" ||
         $vr eq "SQ" ||
         $vr eq "UT" ||
+        $vr eq "UR" ||
+        $vr eq "UC" ||
         $vr eq "UN" 
       ) ||
       !$this->{short_len}
