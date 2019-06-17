@@ -3192,6 +3192,7 @@ method ActivityOperations($http, $dyn){
       my($op, $cap) = @$foo;
       $self->{NewActivities}->{ops}->{$op} = $cap;
       $http->queue("<td>");
+#xyzzy
       $self->NotSoSimpleButton($http, {
         op => "InvokeOperation",
         caption => $cap,
@@ -3246,6 +3247,44 @@ method InvokeOperation($http, $dyn){
     activity_id => $self->{ActivitySelected},
     notify => $self->get_user,
   };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "StartBackground_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+#xyzzy
+method InvokeOperationRow($http, $dyn){
+  my $class = "Posda::ProcessPopup";
+  eval "require $class";
+  my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $params = {
+#    button => $dyn->{operation},
+    button => $dyn->{cap_},
+    activity_id => $self->{ActivitySelected},
+    notify => $self->get_user,
+  };
+  my $cols = $table->{query}->{columns};
+  my $rows;
+  if($self->{FilterSelection}->{$self->{NewQueryToDisplay}} eq "unfiltered"){
+   $rows = $table->{rows};
+  } else {
+   $rows = $table->{filtered_rows};
+  }
+  my $row = $rows->[$dyn->{row}];
+
+  # build hash for popup constructor
+  for my $i (0 .. $#{$row}) {
+    $params->{$cols->[$i]} = $row->[$i];
+  }
+
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
   if($@){
     print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
@@ -3888,7 +3927,6 @@ sub  DisplaySelectedForegroundQuery{
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $q_name = $SFQ->{query}->{name};
   my $popup_hash = get_popup_hash($q_name);
-#xyzzy
 $self->{DebugPopupHash} = $popup_hash;
   my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
   if($SFQ->{status} eq "error"){
@@ -3983,7 +4021,7 @@ $self->{DebugPopupHash} = $popup_hash;
   $http->queue('</tr>');
   $http->queue('<tr>');
   $http->queue('<td>');
-  my $url = $self->RadioButtonSync($index,"filtered",
+  $url = $self->RadioButtonSync($index,"filtered",
     "ProcessRadioButton",
     (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "filtered") ? 1 : 0,
     "&control=FilterSelection","Update();");
@@ -4055,9 +4093,9 @@ $self->{DebugPopupHash} = $popup_hash;
   } else {
     $working_rows = $SFQ->{rows};
   }
-  my $num_rows = @{$working_rows};
+  my $num_working_rows = @{$working_rows};
   my $max_row = $SFQ->{first_row} + $SFQ->{rows_to_show} - 1;
-  if($max_row > $num_rows) { $max_row = $#{$working_rows} }
+  if($max_row > $num_working_rows) { $max_row = $#{$working_rows} }
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
@@ -4081,12 +4119,12 @@ $self->{DebugPopupHash} = $popup_hash;
         if(defined $row->[$j]){
           $http->queue("<td>");
           $http->queue($row->[$j]);
-#xyzzy
           if (defined $popup_hash->{$cn}) {
             my $popup_details = $popup_hash->{$cn};
+#xyzzy
             $self->NotSoSimpleButton($http, {
                 caption => "$popup_details->{name}",
-                op => "OpenDynamicPopup",
+                op => "InvokeOperationRow",
                 row => "$i",
                 class_ => "$popup_details->{class}",
                 cap_ => "$popup_details->{name}",
