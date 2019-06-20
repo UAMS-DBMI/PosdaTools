@@ -354,9 +354,18 @@ export class ImageComponent implements OnInit {
     }
   }
 
+  /*
   toggleAllROIs(){
     for(let contour of this.rois_seen){
       contour.enabled = !contour.enabled;
+    }
+    this.draw();
+  }
+  */
+
+  enableAllROIs(){
+    for(let contour of this.rois_seen){
+      contour.enabled = true;
     }
     this.draw();
   }
@@ -533,7 +542,6 @@ export class ImageComponent implements OnInit {
   }
   public toggleROI(): void{
     this.roi_display = !this.roi_display;
-    //console.log("button");
     if (this.rois_set == undefined){
       this.setupROIMenu();
     }else{
@@ -546,7 +554,7 @@ export class ImageComponent implements OnInit {
   }
 
   public setupROIMenu(){
-    console.log("setupROIMenu");
+    //console.log("setupROIMenu");
     this.service.getAllROIsInFile(this.file_id).subscribe(
       res => {
           this.rois_set = res;
