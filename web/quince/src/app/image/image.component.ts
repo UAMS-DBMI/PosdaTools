@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { Image } from '../image';
@@ -61,6 +61,7 @@ export class ImageComponent implements OnInit {
   public rois_set: ContourSet[];
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
+  @Output() commuter = new EventEmitter<number>();
 
 
   constructor(
@@ -551,6 +552,14 @@ export class ImageComponent implements OnInit {
           this.draw();
         }
       }
+  }
+
+  public commute(contour: Contour){
+    for(let c of this.rois_set){
+      if(c.name == contour.name){
+        this.commuter.emit(c.file_ids[0]);
+      }
+    }
   }
 
   public setupROIMenu(){
