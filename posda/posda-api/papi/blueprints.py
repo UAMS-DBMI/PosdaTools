@@ -117,6 +117,14 @@ def generate_rois_blueprint():
         rois.get_contours_for_file,
         '/file/<file_id>'
     )
+    blueprint.add_route(
+        rois.get_rois_for_series,
+        '/series/<series>'
+    )
+    blueprint.add_route(
+        rois.get_series_rois_from_file,
+        '/file/<file_id>/series'
+    )
 
     return blueprint
 

@@ -10,6 +10,41 @@ from ..util import roi
 async def test(request):
     return text("test error, not allowed", status=401)
 
+
+async def get_rois_for_series(request, series, **kwargs):
+    query = """\
+        select
+            roi_num,
+            roi_name,
+            roi_color,
+            array_agg(file_sop_common.file_id)
+        from file_series
+        natural join file_sop_common
+        join file_roi_image_linkage
+            on linked_sop_instance_uid = sop_instance_uid
+        natural join roi
+        where series_instance_uid = $1
+        group by roi_num, roi_name, roi_color
+        order by roi_num
+    """
+
+    return json_records(
+        await db.fetch(query, [series])
+    )
+
+async def get_series_rois_from_file(request, file_id, **kwargs):
+    ret = await db.fetch_one("""\
+        select series_instance_uid
+        from file_series
+        where file_id = $1
+    """, [int(file_id)])
+
+    return await get_rois_for_series(
+        request,
+        ret['series_instance_uid'],
+        **kwargs
+    )
+
 async def get_contours_for_sop(request, sop, **kwargs):
     query = """\
         select
@@ -50,10 +85,10 @@ async def get_contours_for_sop(request, sop, **kwargs):
                     where file_image.file_id = file_sop_common.file_id
                     limit 1
                 ) as pixel_spacing
-        from file_sop_common 
+        from file_sop_common
         join file_roi_image_linkage fril
                 on fril.linked_sop_instance_uid = file_sop_common.sop_instance_uid
-        join file_meta 
+        join file_meta
                 on file_meta.file_id = fril.file_id
         natural join roi
         where sop_instance_uid = $1
@@ -61,7 +96,7 @@ async def get_contours_for_sop(request, sop, **kwargs):
 
     raw_contours = await db.fetch(query, [sop])
 
-    contours = [] 
+    contours = []
 
     for cont in raw_contours:
         c = await roi.get_transformed_contour(
