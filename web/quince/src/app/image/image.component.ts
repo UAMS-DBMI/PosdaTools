@@ -5,7 +5,7 @@ import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
 import { MatDialog } from '@angular/material';
 import { DumpComponent } from '../dump/dump.component';
-import { Roi } from '../roi';
+import { Roi , Contour, ContourSet} from '../roi';
 
 // extern def of this built-in js func
 declare function createImageBitmap(file: any): Promise<any>;
@@ -16,11 +16,7 @@ interface Point {
   y: number;
 };
 
-interface Contour {
-  name: string;
-  enabled: boolean;
-  color: string;
-}
+
 
 @Component({
   selector: 'app-image',
@@ -61,7 +57,8 @@ export class ImageComponent implements OnInit {
 
   public roi_display = false;
   private roi_array: Roi[];
-  public rois_seen: Contour[] = [];
+  public rois_seen: Contour[]= [];
+  public rois_set: ContourSet[];
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
 
@@ -377,10 +374,6 @@ export class ImageComponent implements OnInit {
         return contour.enabled;
       }
     }
-    let rgb_color = "rgb(" + roi.color[0] + ", " + roi.color[1] + ", " + roi.color[2] + ")";
-    this.rois_seen.push({ name: roi.name,
-                          enabled: true,
-                          color: rgb_color});
     return true;
   }
 
@@ -540,10 +533,34 @@ export class ImageComponent implements OnInit {
   }
   public toggleROI(): void{
     this.roi_display = !this.roi_display;
-    if(this.roi_display){
-      this.loadROI();
-    } else {
-      this.draw();
-    }
+    //console.log("button");
+    if (this.rois_set == undefined){
+      this.setupROIMenu();
+    }else{
+        if(this.roi_display){
+          this.loadROI();
+        } else {
+          this.draw();
+        }
+      }
+  }
+
+  public setupROIMenu(){
+    console.log("setupROIMenu");
+    this.service.getAllROIsInFile(this.file_id).subscribe(
+      res => {
+          this.rois_set = res;
+          for( let roi of this.rois_set){
+            let rgb_color = "rgb(" + roi.color[0] + ", " + roi.color[1] + ", " + roi.color[2] + ")";
+            this.rois_seen.push({ name: roi.name,
+                                   enabled: true,
+                                   color: rgb_color});
+          }
+          this.loadROI();
+        },
+      err => {
+          this.rois_set = [];
+       }
+    );
   }
 }
