@@ -15,9 +15,9 @@ async def get_rois_for_series(request, series, **kwargs):
     query = """\
         select
             roi_num,
-            roi_name,
-            roi_color,
-            array_agg(file_sop_common.file_id)
+            roi_name as name,
+            roi_color as color,
+            array_agg(file_sop_common.file_id) as file_ids
         from file_series
         natural join file_sop_common
         join file_roi_image_linkage
@@ -28,9 +28,17 @@ async def get_rois_for_series(request, series, **kwargs):
         order by roi_num
     """
 
-    return json_records(
-        await db.fetch(query, [series])
-    )
+    results = await db.fetch(query, [series])
+    rois = []
+    for result in results:
+        r = {}
+        r['roi_num'] = result['roi_num']
+        r['name'] = result['name']
+        r['color'] = roi.format_color(result['color'])
+        r['file_ids'] = result['file_ids']
+        rois.append(r)
+
+    return json(rois)
 
 async def get_series_rois_from_file(request, file_id, **kwargs):
     ret = await db.fetch_one("""\
@@ -48,6 +56,7 @@ async def get_series_rois_from_file(request, file_id, **kwargs):
 async def get_contours_for_sop(request, sop, **kwargs):
     query = """\
         select
+                roi_num,
                 roi_name,
                 roi_color,
                 file_sop_common.file_id as image_file_id,
