@@ -398,10 +398,14 @@ sub MakeExpBeElementWriter{
     my $len = length($Value);
     my $Header;
     if(
-      $vr eq "OW" ||
       $vr eq "OB" ||
+      $vr eq "OD" ||
       $vr eq "OF" ||
+      $vr eq "OL" ||
+      $vr eq "OW" ||
       $vr eq "SQ" ||
+      $vr eq "UC" ||
+      $vr eq "UR" ||
       $vr eq "UT" ||
       $vr eq "UN"
     ){
@@ -455,10 +459,14 @@ sub MakeExpLeElementWriter{
     my $len = length($Value);
     my $Header;
     if(
-      $vr eq "OW" ||
       $vr eq "OB" ||
+      $vr eq "OD" ||
       $vr eq "OF" ||
+      $vr eq "OL" ||
+      $vr eq "OW" ||
       $vr eq "SQ" ||
+      $vr eq "UC" ||
+      $vr eq "UR" ||
       $vr eq "UT" ||
       $vr eq "UN"
     ){
@@ -555,10 +563,14 @@ sub MakeExpLeLengthSeqElWriter{
     my $len = length($Value);
     my $Header;
     if(
-      $vr eq "OW" ||
       $vr eq "OB" ||
+      $vr eq "OD" ||
       $vr eq "OF" ||
+      $vr eq "OL" ||
+      $vr eq "OW" ||
       $vr eq "SQ" ||
+      $vr eq "UC" ||
+      $vr eq "UR" ||
       $vr eq "UT" ||
       $vr eq "UN"
     ){
@@ -1258,9 +1270,13 @@ sub ExplicitBroken{
     my($ele, $root, $sig, $keys, $depth) = @_;
     if(
       $ele->{VR} ne "OB" &&
-      $ele->{VR} ne "OW" &&
+      $ele->{VR} ne "OD" &&
       $ele->{VR} ne "OF" &&
+      $ele->{VR} ne "OL" &&
+      $ele->{VR} ne "OW" &&
       $ele->{VR} ne "SQ" &&
+      $ele->{VR} ne "UC" &&
+      $ele->{VR} ne "UR" &&
       $ele->{VR} ne "UT" &&
       $ele->{VR} ne "UN"
     ){
