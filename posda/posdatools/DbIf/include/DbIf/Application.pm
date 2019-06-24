@@ -3240,7 +3240,11 @@ method ActivityOperations($http, $dyn){
   $http->queue("</table>");
 }
 method InvokeOperation($http, $dyn){
-  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::ProcessPopup";
+  my $class = $dyn->{class_};
+  unless(defined $class){
+    $class = "Posda::ProcessPopup";
+  }
   eval "require $class";
   my $params = {
     button => $dyn->{operation},
@@ -3262,7 +3266,11 @@ method InvokeOperation($http, $dyn){
 }
 #xyzzy
 method InvokeOperationRow($http, $dyn){
-  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::ProcessPopup";
+  my $class = $dyn->{class_};
+  unless(defined $class){
+    $class = "Posda::ProcessPopup";
+  }
   eval "require $class";
   my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $params = {

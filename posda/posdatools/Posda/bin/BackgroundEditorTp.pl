@@ -22,9 +22,9 @@ $| = 1; # this should probably be at the top of the script, maybe in the lib?
 
 my $usage = <<EOF;
 Usage:
-BackgroundEditor.pl <?bkgrnd_id?> <activity_id> "<edit_desciption>" <notify>
+BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_desciption>" <notify>
 or
-BackgroundEditor.pl -h
+BackgroundEditorTp.pl -h
 Expects lines of the form:
 <series_instance_uid>&<op>&<tag>&<val1>&<val2>
 
