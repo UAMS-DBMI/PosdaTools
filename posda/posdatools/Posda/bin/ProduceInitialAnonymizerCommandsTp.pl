@@ -3,7 +3,7 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 my $usage = <<EOF;
-ProduceInitialAnonymizerCommandsTp.pl <bkgrnd_id> <activity_id> <notify>
+ProduceInitialAnonymizerCommandsTp.pl <bkgrnd_id> <collection> <site> <activity_id> <notify>
 or
 ProduceInitialAnonymizerCommandsTp.pl -h
 
@@ -32,11 +32,11 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
   exit;
 }
-unless($#ARGV == 2) {
+unless($#ARGV == 4) {
   print "Error: wrong number of args\n$usage\n";
   exit;
 }
-my($invoc_id, $in_activity_id, $notify) = @ARGV;
+my($invoc_id, $collection, $site, $in_activity_id, $notify) = @ARGV;
 
 # Get the most recent timepoint ID
 my $res = Query('LatestActivityTimepointsForActivity')->FetchOneHash(
@@ -68,12 +68,6 @@ for my $row (@$patients) {
   $patients{$patient_id}->{series}->{$series_instance_uid} = 1;
 }
 
-my $col_site = Query('CollectionSiteFromTp')->FetchOneHash(
-  $activity_timepoint_id
-);
-
-my $collection = $col_site->{collection_name};
-my $site = $col_site->{site_name};
 
 my $get_site_codes = Query("GetSiteCodes");
 my $get_collection_codes = Query("GetCollectionCodes");
