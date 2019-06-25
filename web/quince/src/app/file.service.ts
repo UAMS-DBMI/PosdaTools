@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Image } from './image';
-import { Roi } from './roi';
+import { Roi , ContourSet} from './roi';
 import { Observable } from 'rxjs';
 import { ImageDetails } from './image-details';
 
@@ -12,6 +12,7 @@ import { map, publishReplay, refCount } from 'rxjs/operators';
 export class FileService {
   private map: { [file_id: number]: Observable<Image>; } = {};
   private roi_map: { [file_id: number]: Observable<Roi[]>; } = {};
+  private roi_collection: { [file_id: number]: Observable<ContourSet[]>; } = {};
 
   constructor(private http: HttpClient) {}
 
@@ -39,6 +40,8 @@ export class FileService {
 	  return this.http.get<ImageDetails>("/papi/v1/files/" + file_id + "/details");
   }
 
+
+
   getRois(file_id: number):Observable<Roi[]> {
     if (undefined == this.roi_map[file_id]) {
       this.roi_map[file_id] = this.http.get<Roi[]>("/papi/v1/rois/file/" + file_id)
@@ -47,6 +50,16 @@ export class FileService {
           refCount());
     }
     return this.roi_map[file_id];
+  }
+
+  getAllROIsInFile(file_id: number):Observable<ContourSet[]> {
+    if (undefined == this.roi_collection[file_id]) {
+      this.roi_collection[file_id] = this.http.get<ContourSet[]>("/papi/v1/rois/file/" + file_id + "/series")
+        .pipe(
+          publishReplay(1),
+          refCount());
+    }
+    return this.roi_collection[file_id];
   }
 
   getDump(file_id: number): Observable<any> {

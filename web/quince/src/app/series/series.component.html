@@ -17,4 +17,4 @@
     <!-- <p>Current id: {{current_file_id}}</p> -->
   </mat-card>
 </div>
-<app-image [height]="512" [width]="512" [file_id]="current_file_id"></app-image>
+<app-image [height]="512" [width]="512" [file_id]="current_file_id" (commuter)="jumpTo($event)"></app-image>

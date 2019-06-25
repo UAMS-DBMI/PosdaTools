@@ -43,6 +43,11 @@ export class SeriesComponent implements OnInit {
     }
   }
 
+  jumpTo(file_id: number): void {
+    this.current_offset = this.file_ids.indexOf(file_id);
+    this.current_file_id = file_id;
+  }
+
   handleResponse(data: any): void {
     this.file_ids = data.file_ids;
     this.length = this.file_ids.length - 1;
