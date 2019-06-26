@@ -167,7 +167,6 @@ for my $coll(sort keys %Report){
       my $num_studies = keys %{$h->{studies}};
       my $num_series = keys %{$h->{series}};
       my $num_sops = keys %{$h->{sops}};
-      my $num_files = keys %{$h->{files}};
       $rpt->print("$coll,$site,$pat_id,$num_studies,$num_series,$num_modalities," .
         "$num_sop_class,$num_sops,$num_files\n");
     }

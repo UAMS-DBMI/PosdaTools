@@ -157,7 +157,7 @@ for my $pat (keys %Patients) {
     }
   }
   my $file_seq = 0;
-  for my $f (keys $Patients{$pat}){
+  for my $f (keys %{$Patients{$pat}}){
     $file_seq += 1;
     my $l_name = "$pat_dir/$file_seq.dcm";
     symlink $f, $l_name;

@@ -87,8 +87,8 @@ my $rpt3 = $background->CreateReport("Csv Edit Skeleton");
 $rpt3->print("type,path,q_value,num_files," .
   "p_op,q_arg1,q_arg2,q_arg3,Operation,scan_id,descriptionnotify\r\n");
 $rpt3->print(",,,,,,,,ProposeCsvEdits,$id,\"$scan->{description}\",$notify\r\n");
-my $rpt3 = $background->CreateReport("Json Edit Skeleton");
-$rpt3->print("type,path,q_value,num_files," .
+my $rpt4 = $background->CreateReport("Json Edit Skeleton");
+$rpt4->print("type,path,q_value,num_files," .
   "p_op,q_arg1,q_arg2,q_arg3,Operation,scan_id,descriptionnotify\r\n");
-$rpt3->print(",,,,,,,,ProposeJsonEdits,$id,\"$scan->{description}\",$notify\r\n");
+$rpt4->print(",,,,,,,,ProposeJsonEdits,$id,\"$scan->{description}\",$notify\r\n");
 $background->Finish;
