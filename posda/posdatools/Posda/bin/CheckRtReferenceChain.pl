@@ -238,7 +238,6 @@ if($num_full_chains > 0){
     my @comments;
     $rpt->print("\"$struct_pat\",\"$struct\",\"$plan\",\"$dose\",");
     my @struct_fors = keys %{$Structs{$struct}->{for_uids}};
-    my $struct_pat = $Structs{$struct}->{pat_id};
     if(@struct_fors == 0){
       push(@comments, "No ROI frames of reference");
     }
@@ -249,10 +248,6 @@ if($num_full_chains > 0){
       }
       push(@comments, $comment);
     }
-    my $plan_pat = $Plans{$plan}->[0];
-    my $plan_for = $Plans{$plan}->[1];
-    my $dose_pat = $Doses{$dose}->[0];
-    my $dose_for = $Doses{$dose}->[1];
     if($dose_pat eq $plan_pat && $dose_pat eq $struct_pat){
       push @comments, "patients all match";
     } else {

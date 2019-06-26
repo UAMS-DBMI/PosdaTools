@@ -242,7 +242,7 @@ $background->WriteToEmail("For Series $s:\n");
 my $num_series_to_hide = keys %SeriesToHide;
 $background->WriteToEmail("$num_series_to_hide series to hide\n");
 if($num_series_to_hide > 0){
-  for my $f (keys $CurrentTpFileInfo){
+  for my $f (keys %{$CurrentTpFileInfo}){
     my $series_uid = $CurrentTpFileInfo->{$f}->{series_instance_uid};   
     if(exists $SeriesToHide{$series_uid}){ 
       $FileIdsToHide{$f} = 1;

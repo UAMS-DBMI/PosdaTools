@@ -134,7 +134,7 @@ tag:
 for my $tag (sort keys %TagsByDispVr){
   my $ele = $tag;
   $ele =~ s/"/""/g;
-  my @disps = keys $TagsByDispVr{$tag};
+  my @disps = keys %{$TagsByDispVr{$tag}};
   my $num_disps = @disps;
   if($num_disps < 2){ next tag }
   my $tag_name = [ keys %{$tag_name_by_tag{$tag}} ]->[0];
