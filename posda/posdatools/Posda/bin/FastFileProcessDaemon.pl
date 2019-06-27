@@ -49,7 +49,7 @@ while (1) {
   my $redis_queue_size = $redis->llen('files');
 
   if ($redis_queue_size == 0) {
-    say "FFPD: Queue is empty, checking to see if we can replenish it...";
+    # say "FFPD: Queue is empty, checking to see if we can replenish it...";
     replenish_queue($db);
   }
 
@@ -89,7 +89,7 @@ sub replenish_queue {
   }
 
   if ($count == 0) {
-    say "FFPD: No files found, sleeping for 10 seconds...";
+    # say "FFPD: No files found, sleeping for 10 seconds...";
     sleep 10;
   } else {
     say "FFPD: Added $count files to the queue.";
