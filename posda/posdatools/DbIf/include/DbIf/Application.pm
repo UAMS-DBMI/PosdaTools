@@ -2978,7 +2978,7 @@ method ShowActivityTimeline($http, $dyn){
       $tp_files = undef;
     }
     $http->queue("<tr>");
-    $http->queue("<td>$id</td>");
+    $http->queue("<td>$sub_id</td>");
     my($hrs_min_etc, $sec);
     $http->queue("<td>$operation_name</td>");
     my $start_t = substr($when, 0, 22);
@@ -3156,6 +3156,7 @@ method ActivityOperations($http, $dyn){
     [ "ConsistencyFromTimePoint", "Check Consistency", 0, 4],
     [ "LinkRtFromTimepoint", "Link RT Data for ItcTools", 0, 5],
     [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
+    [ "MakeDownloadableDirectoryTp", "Make a Downloadable Directory", 0, 7],
     [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
     [ "SummarizeStructLinkage", "Summarize Structure Set Linkages for a File", 1, 1],
     [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
@@ -3163,6 +3164,7 @@ method ActivityOperations($http, $dyn){
     [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
     [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
     [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
+    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 7],
     [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
     [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
     [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
@@ -3170,6 +3172,7 @@ method ActivityOperations($http, $dyn){
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
     [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
     [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
+    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 7],
   );
   my @Cols;
   for my $i (@buttons){
@@ -4463,9 +4466,9 @@ method LoadScriptOutput($table_name) {
 #Here Bill is putting in the "DownloadTar"
 method DownloadTar($http, $dyn){
   my @dirs;
-  opendir(DIR, "/nas/public/posda/cache/linked_for_download");
+  opendir(DIR, "$ENV{POSDA_CACHE_ROOT}/linked_for_download");
   while(my $dir = readdir(DIR)){
-    unless(-d "/nas/public/posda/cache/linked_for_download/$dir"){
+    unless(-d "$ENV{POSDA_CACHE_ROOT}/linked_for_download/$dir"){
       next;
     }
     if($dir =~ /^\./) { next }
@@ -4478,13 +4481,13 @@ method DownloadTar($http, $dyn){
   } else {
     unless(
       $self->{SelectedDownloadSubdir} &&
-      -d "/nas/public/posda/cache/linked_for_download/" .
+      -d "$ENV{POSDA_CACHE_ROOT}/linked_for_download/" .
          $self->{SelectedDownloadSubdir}
     ){
       $self->{SelectedDownloadSubdir} = $dirs[0];
     }
     $self->{DownloadTar} =
-      "/nas/public/posda/cache/linked_for_download/" .
+      "$ENV{POSDA_CACHE_ROOT}/linked_for_download/" .
       $self->{SelectedDownloadSubdir};
     ########
     # here goes the selection
