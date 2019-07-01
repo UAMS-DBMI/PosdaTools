@@ -110,6 +110,7 @@ sub DiffDate{
 sub ShiftDate{
   my($this, $date_string) = @_;
   unless(defined $date_string) { return $date_string }
+  if(ref($date_string) eq "ARRAY") { return $this->ShiftArrayDate($date_string) }
   if($date_string eq "" ) { return $date_string }
   if($date_string =~ /^(........)(.*)$/){
     my $old_date_string = $1;
@@ -130,6 +131,14 @@ sub ShiftDate{
   } else {
     return $date_string;
   }
+}
+sub ShiftArrayDate{
+  my($this, $date_string_array) = @_;
+  my @ret_array;
+  for my $s (@$date_string_array){
+    push @ret_array, $this->ShiftDate;
+  }
+  return \@ret_array;
 }
 #########
 sub Apply{

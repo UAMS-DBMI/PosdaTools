@@ -265,11 +265,39 @@ for my $e (@effective_edits){
   my($etag, $eop, $earg1, $earg2) = @$e;
   if($eop eq "shift_date"){
     my $value = $ds->Get($etag);
-    if(defined $value ){
-      my $shifter = Posda::PrivateDispositions->new(
-        undef, $earg1, undef, undef);
-        my $new_value = $shifter->ShiftDate($value);
-      $ds->Insert($etag, $new_value);
+    if(ref($value) eq "ARRAY"){
+      for my $i (0 .. $#{$value}){
+        my $val = $value->[$i];
+        if(defined $val ){
+          my $shifter = Posda::PrivateDispositions->new(
+            undef, $earg1, undef, undef);
+          my $new_value;
+          eval {
+            $new_value = $shifter->ShiftDate($value);
+          };
+          if($@){
+            print STDERR "Error ($@) shifting date: $val\n" .
+              "not changed\n";;
+          } else {
+            $value->[$i] = $val
+          }
+        }
+      }
+    } else {
+      if(defined $value ){
+        my $shifter = Posda::PrivateDispositions->new(
+          undef, $earg1, undef, undef);
+        my $new_value;
+        eval {
+          $new_value = $shifter->ShiftDate($value);
+        };
+        if($@){
+          print STDERR "Error ($@) shifting date: $value\n" .
+            "not changed\n";;
+        } else {
+          $ds->Insert($etag, $new_value);
+        }
+      }
     }
   }elsif($eop eq "shift_date_by_year"){
     my $value = $ds->Get($etag);
@@ -345,10 +373,10 @@ for my $e (@effective_edits){
   }elsif($eop eq "delete_matching_group"){
     for my $gr (keys %{$ds}){
       my $group = sprintf("%4x", $gr);
-      if($etag == '60xx' && $group =~ /^60..$/){
+      if($etag eq '60xx' && $group =~ /^60..$/){
         delete $ds->{$gr};
       }
-      if($etag == '50xx' && $group =~ /^50..$/){
+      if($etag eq '50xx' && $group =~ /^50..$/){
         delete $ds->{$gr};
       }
     }
