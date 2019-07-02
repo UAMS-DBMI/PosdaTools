@@ -1,0 +1,14 @@
+<div *ngIf="ready" class="module" >
+      <h1>Visual Review Status</h1>
+        <div *ngFor= "let my_rows of pies" >
+          <h2> Visual Review: {{my_rows.visual_review_instance_id}} </h2>
+          <canvas baseChart
+            [data]="my_rows.data"
+            [labels]="my_rows.labels"
+            [chartType]="pieChartType"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend">
+          </canvas>
+        </div>
+</div>

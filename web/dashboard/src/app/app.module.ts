@@ -13,6 +13,7 @@ import { FwlComponent } from './fwl/fwl.component';
 import { FileTimeChartComponent } from './file-time-chart/file-time-chart.component';
 import { TableLockAlertComponent } from './table-lock-alert/table-lock-alert.component';
 import { QrviComponent } from './qrvi/qrvi.component';
+import { VisualReviewTrackerComponent } from './visual-review-tracker/visual-review-tracker.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { QrviComponent } from './qrvi/qrvi.component';
     FwlComponent,
     FileTimeChartComponent,
     TableLockAlertComponent,
-    QrviComponent
+    QrviComponent,
+    VisualReviewTrackerComponent
   ],
   imports: [
     BrowserModule,

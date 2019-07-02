@@ -9,6 +9,8 @@ import {Fwl} from './fwl/fwl';
 import {Ftc} from './file-time-chart/ftc';
 import {Tla} from './table-lock-alert/Tla';
 import {Qrvi} from './qrvi/Qrvi';
+import {Vr} from './visual-review-tracker/Vr';
+import {Vrs} from './visual-review-tracker/Vrs';
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +61,14 @@ export class ApiService {
     return this.http.get<Qrvi[]>(url);
   }
 
+  get_visual_review_in_progress():Observable<Vr[]>{
+    var url = '/papi/v1/dashboard/Vr';
+    return this.http.get<Vr[]>(url);
+  }
+
+  get_visual_review_status(vr_id):Observable<Vrs[]>{
+    var url = '/papi/v1/dashboard/Vrs/' + vr_id;
+    return this.http.get<Vrs[]>(url);
+  }
 
 }

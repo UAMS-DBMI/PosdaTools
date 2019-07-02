@@ -90,6 +90,14 @@ def generate_dashboard_blueprint():
         dashboard.get_query_runtime_versus_invocations,
         '/qrvi'
     )
+    blueprint.add_route(
+        dashboard.get_visual_review_in_progress,
+        '/Vr'
+    )
+    blueprint.add_route(
+        dashboard.get_visual_review_status,
+        '/Vrs/<vr_id>'
+    )
     return blueprint
 
 def generate_iecs_blueprint():

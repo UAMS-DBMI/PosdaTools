@@ -133,3 +133,39 @@ async def get_query_runtime_versus_invocations(request):
      return json_records(
         await db.fetch(query)
      )
+
+async def get_visual_review_in_progress(request):
+    query = """\
+    select
+            visual_review_instance_id,
+            subprocess_invocation_id,
+            visual_review_reason,
+            visual_review_scheduler
+        from
+            visual_review_instance a
+            natural join activity_task_status b
+        where
+            a.subprocess_invocation_id is not null
+            and b.status_text <> 'Complete'
+    """
+    return json_records(
+        await db.fetch(query)
+    )
+
+async def get_visual_review_status(request,vr_id):
+    query = """\
+        select
+            visual_review_instance_id,
+            processing_status::text,
+            (((count(*)/(select  sum(c) as t from (select count(*) as c from image_equivalence_class where visual_review_instance_id = $1  ) as sum_table)::float) * 100.0)::int) as summary
+        from
+            image_equivalence_class
+        where
+            visual_review_instance_id = $1
+        group by
+        	visual_review_instance_id,
+            processing_status
+    """
+    return json_records(
+        await db.fetch(query,[int(vr_id)])
+    )

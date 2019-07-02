@@ -1,0 +1,4 @@
+Refresh file_imports_over_time
+60
+posda_files
+REFRESH MATERIALIZED VIEW file_imports_over_time;
