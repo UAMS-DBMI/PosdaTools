@@ -2585,19 +2585,10 @@ method TableSelected($http, $dyn){
 }
 
 method OpenChainedQuery($http, $dyn) {
-#print STDERR "#######################\nIn OpenChainedQuery:\n" .
-#  "dyn = ";
-#Debug::GenPrint($dbg, $dyn, 1);
-#print STDERR "\n";
-
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
   my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
-  # DEBUG Dumper($details);
-#print STDERR "details = ";
-#Debug::GenPrint($dbg, $details, 1);
-#print STDERR "\n";
 
   # get the row as a hash?
   my $h = {};
@@ -2624,9 +2615,6 @@ method OpenChainedQuery($http, $dyn) {
       $h->{$cols->[$i]} = $row->[$i];
     }
   }
-#print STDERR "row = ";
-#Debug::GenPrint($dbg, $h, 1);
-#print STDERR "\n";
 
   # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
@@ -2978,7 +2966,7 @@ method ShowActivityTimeline($http, $dyn){
       $tp_files = undef;
     }
     $http->queue("<tr>");
-    $http->queue("<td>$id</td>");
+    $http->queue("<td>$sub_id</td>");
     my($hrs_min_etc, $sec);
     $http->queue("<td>$operation_name</td>");
     my $start_t = substr($when, 0, 22);
@@ -3156,6 +3144,7 @@ method ActivityOperations($http, $dyn){
     [ "ConsistencyFromTimePoint", "Check Consistency", 0, 4],
     [ "LinkRtFromTimepoint", "Link RT Data for ItcTools", 0, 5],
     [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
+    [ "MakeDownloadableDirectoryTp", "Make a Downloadable Directory", 0, 7],
     [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
     [ "SummarizeStructLinkage", "Summarize Structure Set Linkages for a File", 1, 1],
     [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
@@ -3163,6 +3152,7 @@ method ActivityOperations($http, $dyn){
     [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
     [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
     [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
+    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 7],
     [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
     [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
     [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
@@ -3170,6 +3160,7 @@ method ActivityOperations($http, $dyn){
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
     [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
     [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
+    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 7],
   );
   my @Cols;
   for my $i (@buttons){
@@ -3192,6 +3183,7 @@ method ActivityOperations($http, $dyn){
       my($op, $cap) = @$foo;
       $self->{NewActivities}->{ops}->{$op} = $cap;
       $http->queue("<td>");
+#xyzzy
       $self->NotSoSimpleButton($http, {
         op => "InvokeOperation",
         caption => $cap,
@@ -3239,13 +3231,59 @@ method ActivityOperations($http, $dyn){
   $http->queue("</table>");
 }
 method InvokeOperation($http, $dyn){
-  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::ProcessPopup";
+  my $class = $dyn->{class_};
+  unless(defined $class){
+    $class = "Posda::ProcessPopup";
+  }
   eval "require $class";
   my $params = {
     button => $dyn->{operation},
     activity_id => $self->{ActivitySelected},
     notify => $self->get_user,
   };
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  if($@){
+    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  my $name = "StartBackground_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+#xyzzy
+method InvokeOperationRow($http, $dyn){
+#  my $class = "Posda::ProcessPopup";
+  my $class = $dyn->{class_};
+  unless(defined $class){
+    $class = "Posda::ProcessPopup";
+  }
+  eval "require $class";
+  my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $params = {
+#    button => $dyn->{operation},
+    button => $dyn->{cap_},
+    activity_id => $self->{ActivitySelected},
+    notify => $self->get_user,
+  };
+  my $cols = $table->{query}->{columns};
+  my $rows;
+  if($self->{FilterSelection}->{$self->{NewQueryToDisplay}} eq "unfiltered"){
+   $rows = $table->{rows};
+  } else {
+   $rows = $table->{filtered_rows};
+  }
+  my $row = $rows->[$dyn->{row}];
+
+  # build hash for popup constructor
+  for my $i (0 .. $#{$row}) {
+    $params->{$cols->[$i]} = $row->[$i];
+  }
+
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
   if($@){
     print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
@@ -3888,7 +3926,6 @@ sub  DisplaySelectedForegroundQuery{
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $q_name = $SFQ->{query}->{name};
   my $popup_hash = get_popup_hash($q_name);
-#xyzzy
 $self->{DebugPopupHash} = $popup_hash;
   my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
   if($SFQ->{status} eq "error"){
@@ -3983,7 +4020,7 @@ $self->{DebugPopupHash} = $popup_hash;
   $http->queue('</tr>');
   $http->queue('<tr>');
   $http->queue('<td>');
-  my $url = $self->RadioButtonSync($index,"filtered",
+  $url = $self->RadioButtonSync($index,"filtered",
     "ProcessRadioButton",
     (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "filtered") ? 1 : 0,
     "&control=FilterSelection","Update();");
@@ -4055,9 +4092,9 @@ $self->{DebugPopupHash} = $popup_hash;
   } else {
     $working_rows = $SFQ->{rows};
   }
-  my $num_rows = @{$working_rows};
+  my $num_working_rows = @{$working_rows};
   my $max_row = $SFQ->{first_row} + $SFQ->{rows_to_show} - 1;
-  if($max_row > $num_rows) { $max_row = $#{$working_rows} }
+  if($max_row > $num_working_rows) { $max_row = $#{$working_rows} }
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
@@ -4081,12 +4118,12 @@ $self->{DebugPopupHash} = $popup_hash;
         if(defined $row->[$j]){
           $http->queue("<td>");
           $http->queue($row->[$j]);
-#xyzzy
           if (defined $popup_hash->{$cn}) {
             my $popup_details = $popup_hash->{$cn};
+#xyzzy
             $self->NotSoSimpleButton($http, {
                 caption => "$popup_details->{name}",
-                op => "OpenDynamicPopup",
+                op => "InvokeOperationRow",
                 row => "$i",
                 class_ => "$popup_details->{class}",
                 cap_ => "$popup_details->{name}",
@@ -4417,9 +4454,9 @@ method LoadScriptOutput($table_name) {
 #Here Bill is putting in the "DownloadTar"
 method DownloadTar($http, $dyn){
   my @dirs;
-  opendir(DIR, "/nas/public/posda/cache/linked_for_download");
+  opendir(DIR, "$ENV{POSDA_CACHE_ROOT}/linked_for_download");
   while(my $dir = readdir(DIR)){
-    unless(-d "/nas/public/posda/cache/linked_for_download/$dir"){
+    unless(-d "$ENV{POSDA_CACHE_ROOT}/linked_for_download/$dir"){
       next;
     }
     if($dir =~ /^\./) { next }
@@ -4432,13 +4469,13 @@ method DownloadTar($http, $dyn){
   } else {
     unless(
       $self->{SelectedDownloadSubdir} &&
-      -d "/nas/public/posda/cache/linked_for_download/" .
+      -d "$ENV{POSDA_CACHE_ROOT}/linked_for_download/" .
          $self->{SelectedDownloadSubdir}
     ){
       $self->{SelectedDownloadSubdir} = $dirs[0];
     }
     $self->{DownloadTar} =
-      "/nas/public/posda/cache/linked_for_download/" .
+      "$ENV{POSDA_CACHE_ROOT}/linked_for_download/" .
       $self->{SelectedDownloadSubdir};
     ########
     # here goes the selection
