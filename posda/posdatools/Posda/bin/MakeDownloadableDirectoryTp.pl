@@ -2,9 +2,9 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+use Posda::ActivityInfo;
 use Debug;
 my $dbg = sub { print @_ };
-
 
 my $usage = <<EOF;
 Usage:
@@ -16,43 +16,40 @@ Expects no lines on STDIN:
 
 EOF
 
-print "Under development - exiting\n";
 if($#ARGV == 0 && $ARGV[0] eq "-h"){ print $usage; exit }
 
 unless($#ARGV == 3) { print $usage; exit }
 
-my($invoc_id, $timepoint_id, $sub_dir, $notify) = @ARGV;
+my($invoc_id, $activity_id, $sub_dir, $notify) = @ARGV;
 my $start = time;
 
+my $act_info = Posda::ActivityInfo->new($activity_id);
+my $tp_id = $act_info->LatestTimepoint;
+my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
 my %Hierarchy;
-my %Patients;
-my %Studies;
-my %Series;
-my %Files;
-my $get_files = Query('FilesInSeries');
-while(my $line = <STDIN>){
-  chomp $line;
-  my($coll, $pat, $study, $series) = split(/&/, $line);
-  $Patients{$pat} = 1;
-  $Series{$series} = 1;
-  $Studies{$study} = 1;
-print "Query for FilesInSeries for $series\n";
-  $get_files->RunQuery(sub {
-    my($row) = @_;
-    my $path = $row->[0];
-print "Found path; $path\n";
-    $Hierarchy{$coll}->{$pat}->{$study}->{$series}->{$path} = 1;
-    $Files{$path} = 1;
-  }, sub {}, $series);
+for my $f (keys %$FileInfo){
+  my $coll = $FileInfo->{$f}->{collection};
+  my $pat = $FileInfo->{$f}->{patient_id};
+  my $study = $FileInfo->{$f}->{study_instance_uid};
+  my $series = $FileInfo->{$f}->{series_instance_uid};
+  my $path = $FileInfo->{$f}->{file_path};
+  $Hierarchy{$coll}->{$pat}->{$study}->{$series}->{$path} = 1;
 }
-my $num_patients = keys %Patients;
-my $num_studies = keys %Studies;
-my $num_series = keys %Series;
-my $num_files = keys %Files;
-print "Patients: $num_patients\n";
-print "Series: $num_series\n";
-print "Files: $num_files\n";
-my $dir = "/nas/public/posda/cache/linked_for_download/$sub_dir";
+
+my $cache_dir = $ENV{POSDA_CACHE_ROOT};
+unless(-d $cache_dir){
+  print "Error: Cache dir ($cache_dir) isn't a directory\n";
+  exit;
+}
+unless(-d "$cache_dir/linked_for_download"){
+  mkdir "$cache_dir/linked_for_download";
+}
+unless(-d "$cache_dir/linked_for_download"){
+  print "Error: Cache dir ($cache_dir) isn't a directory\n";
+  exit;
+}
+
+my $dir = "$cache_dir/linked_for_download/$sub_dir";
 if(-d $dir) {
   print "Error: $dir already exists\n";
   exit;
@@ -137,5 +134,5 @@ for my $coll (keys %Hierarchy){
 }
 ###
 my $link_time = time - $start_creation;
-$background->WriteToEmail("Linked $num_files files in $link_time seconds.\n");
+$background->WriteToEmail("Linked $file_seq files in $link_time seconds.\n");
 $background->Finish;
