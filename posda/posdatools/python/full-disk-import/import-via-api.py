@@ -33,12 +33,13 @@ def close_import_event(import_event_id):
     resp = r.json()
 
 
-def add_file(filename, import_event_id):
+def add_file(filename, import_event_id, original_file):
     digest = md5sum(filename)
     with open(filename, "rb") as infile:
         r = requests.put(URL + "file", params={
             'import_event_id': import_event_id,
             'digest': digest,
+            'localpath': original_file,
         }, data=infile)
 
         try:
@@ -106,7 +107,7 @@ def import_one_file(import_event_id, line_obj):
     size = line_obj['size']
 
 
-    result = add_file(file, import_event_id)
+    result = add_file(file, import_event_id, original_file)
     if result['created']:
         print("C", end='')
 

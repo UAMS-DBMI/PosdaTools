@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import json
 import subprocess
 import fire
 
 
-def gen_files(path):
-    for path, dnames, fnames in os.walk(path):
-        for file in fnames:
-            yield os.path.join(path, file)
+def gen_files():
+    for filename in sys.stdin:
+        yield filename.strip()
 
-def scan(path):
+def scan():
     # i = 0
-    for file in gen_files(path):
+    for file in gen_files():
         try:
             stat = os.stat(file)
         except FileNotFoundError:
