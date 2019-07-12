@@ -24,7 +24,7 @@ my ($invoc_id, $act_id, $notify) = @ARGV;
 print "All processing in background\n";
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
-my $create_instance = Query("CreateVisualReviewInstance");
+my $create_instance = Query("CreateVisualReviewInstanceWithInvocId");
 my $get_review_instance_id = Query("GetVisualReviewInstanceId");
 
 my $OldActTpId;
@@ -60,7 +60,7 @@ my $num_series = @series;
 $background->SetActivityStatus("Found $num_series in timepoint $OldActTpId");
 
 $create_instance->RunQuery(sub{}, sub {},
-  "Activity Id: $act_id", $notify, $num_series);
+  $invoc_id, "Activity Id: $act_id", $notify, $num_series);
 my $visual_review_instance_id;
 $get_review_instance_id->RunQuery(sub{
   my($row) = @_;
