@@ -16,6 +16,7 @@ from .resources import files as fi
 from .resources import rois
 from .resources import importer
 from .resources import dashboard
+from .resources import vrstatus
 from .resources import iecs
 
 
@@ -49,6 +50,10 @@ def configure_blueprints(app):
     app.blueprint(
         generate_dashboard_blueprint(),
         url_prefix='/v1/dashboard'
+    )
+    app.blueprint(
+        generate_vrstatus_blueprint(),
+        url_prefix='/v1/vrstatus'
     )
     app.blueprint(
         generate_iecs_blueprint(),
@@ -89,6 +94,32 @@ def generate_dashboard_blueprint():
     blueprint.add_route(
         dashboard.get_query_runtime_versus_invocations,
         '/qrvi'
+    )
+    return blueprint
+
+def generate_vrstatus_blueprint():
+    blueprint = Blueprint('vrstatus')
+
+
+    blueprint.add_route(
+        vrstatus.find_vr_ready_to_begin_status_updates,
+        '/find_vr_ready_to_begin_status_updates'
+    )
+    blueprint.add_route(
+        vrstatus.get_reviewed_percentage_for_vr,
+        '/get_reviewed_percentage_for_vr/<visual_review_instance_id>'
+    )
+    blueprint.add_route(
+        vrstatus.update_activity_status,
+        '/update_activity_status/<visual_review_instance_id>/<new_status>'
+    )
+    blueprint.add_route(
+        vrstatus.get_visible_bads_for_vr,
+        '/get_visible_bads_for_vr/<visual_review_instance_id>'
+    )
+    blueprint.add_route(
+        vrstatus.finish_activity_status,
+        '/finish_activity_status/<visual_review_instance_id>'
     )
     return blueprint
 
