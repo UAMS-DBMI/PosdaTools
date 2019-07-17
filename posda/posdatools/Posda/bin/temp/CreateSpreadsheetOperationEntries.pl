@@ -1,6 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB 'Query', 'GetHandle';
+use Debug;
+my $dbg = sub { print @_ };
 my $usage = <<EOF;
 usage:
 CreateSpreadsheetOperationEntries.pl [-i] [-r] [-h]
@@ -99,7 +101,7 @@ my $rows = {
       can_chain => undef
     },
     PhiPublicScanTp => {
-      command_line => 'PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <notify>',
+      command_line => 'PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <max_rows> <notify>',
       operation_type => 'background_process',
       input_line_format => undef,
       tags => [
@@ -259,7 +261,7 @@ for my $op_name (keys %$rows){
     unless(defined $row_v) { $row_v = "<undef>" }
     unless(defined $cur_row_v) { $cur_row_v = "<undef>" }
     unless($row_v eq $cur_row_v){
-      print "$op_name doesn't match (key $k: $row_v vs $cur_row)\n";
+      print "$op_name doesn't match (key $k: $row_v vs $cur_row_v)\n";
       $matches = 0;
       last key;
     }
@@ -290,15 +292,24 @@ for my $op_name (keys %$rows){
     unless(defined $row->{tags}) { $tag1_desc = "<undef>" }
     unless(defined $cur_row->{tags}) { $tag2_desc = "<undef>" }
     if(ref($row->{tags}) eq "ARRAY"){
-      my $n =$#{$row->{tags}};
-      $tag1_desc = "ARRAY($n)";
+      my $v = "'{";
+      for my $i (0 .. $#{$row->{tags}}){
+        my $v .= $row->{tags}->[$i];
+	unless($i == $#{$rows->{tags}}){ $v .= ","; }
+      }
+      $tag1_desc = "$v}'";
     }
     if(ref($cur_row->{tags}) eq "ARRAY"){
-      my $n =$#{$cur_row->{tags}};
-      $tag2_desc = "ARRAY($n)";
+      my $v = "'{";
+      for my $i (0 .. $#{$cur_row->{tags}}){
+        my $v .= $cur_row->{tags}->[$i];
+	unless($i == $#{$cur_rows->{tags}}){ $v .= ","; }
+      }
+      $tag2_desc = "$v}'";
     }
-    print "$op_name doesn't match in particulars ($tag1_desc vs $tag2_desc)\n";
-    $matches = 0;
+    unless($tag1_desc eq $tag2_desc){
+      print "$op_name doesn't match in particulars ($tag1_desc vs $tag2_desc)\n";
+    }
   }
   unless($matches){
     $updates->{$op_name} = $row;
@@ -311,4 +322,6 @@ if($DoInsert) {
 }
 if($DoReplace) {
   print "Replace goes here\n";
+  Debug::GenPrint($dbg, $updates, 1);
+  print "\n";
 }

@@ -4,7 +4,7 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 
 my $usage = <<EOF;
-ProposeEditsTp.pl <bkgrnd_id> <activity_id> <scan_id> <notify>
+ProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify>
   activity_id - Id of the currently selected activity
   scan_id - id of scan to query
   notify - email address for completion notification
