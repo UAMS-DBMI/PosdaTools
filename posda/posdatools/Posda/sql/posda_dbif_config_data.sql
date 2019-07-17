@@ -59,19 +59,25 @@ COPY dbif_config.background_buttons (background_button_id, operation_name, objec
 9	StartPublicToPosdaCopy	Posda::ProcessPopup	Start a waiting Public to Posda Copy	{public_posda_consistency}
 10	DciodvfyReport	Posda::ProcessPopup	Dciodvfy Report	{dciodvfy}
 11	StartFixPublicToPosdaCopy	Posda::ProcessPopup	Retry failed Public Copy	{public_posda_consistency}
+12	LookForDupSopsInPublicByCollectionSite	Posda::ProcessPopup	Look for Conflicting Sops already in Public By Collection, Site	{comparing_posda_to_public}
 13	DeletePvtExceptCtp	Posda::ProcessPopup	Copy Collection to Scratch Deleting All Private tags exept CTP tags	{bills_test}
 14	CheckRtReferenceChain	Posda::ProcessPopup	Check Rt Linkage Chain	{struct_linkages}
-16	FirstPassPhiByCollection	Posda::ProcessPopup	First Pass Phi By Collection	{simple_phi}
-15	FirstPassPhiScanAndReport	Posda::ProcessPopup	First Pass Phi by collection, site and (optional) batch	{simple_phi}
-17	FullPhiById	Posda::ProcessPopup	Full Phi Report by Scan Id	{simple_phi}
-19	RepealEdits	Posda::ProcessPopup	Repeal Edits	{find_patients,check_edits}
+56	InitialAnonymizerCommandsTp	Posda::ProcessPopup	Produce Initial Anonymization File for Timepoint	{initial_anonymization,patient_mapping,activity_timepoints}
 20	RejectEdits	Posda::ProcessPopup	Reject Edits	{find_patients,check_edits}
 21	ImportEdits	Posda::ProcessPopup	Import Edits	{find_patients,check_edits}
 22	CheckEditCurrent	Posda::ProcessPopup	Check If Edits Current	{find_patients,check_edits}
 24	NonDicomPhiScan	Posda::ProcessPopup	Phi Scan of Non-Dicom Files	{non_dicom_phi}
-23	PhiPublicScan	Posda::ProcessPopup	Public Scan By Collection, Site	{simple_phi}
 18	ProcessVisualReview	Posda::ProcessPopup	Process Visual Review Results	{visual_review_new_workflow,visual_review_reports}
-12	LookForDupSopsInPublicByCollectionSite	Posda::ProcessPopup	Look for Conflicting Sops already in Public By Collection, Site	{comparing_posda_to_public}
+51	CompareSopsTpPosdaPublicCollectionLikeSiteEqual	Posda::ProcessPopup	Compare Sops in Timpoint, Posda, and Public like Collection for Site	{activity_timepoint_support}
+52	AdHocReportForTracy	Posda::ProcessPopup	Make CPTAC Report	{clin_qual}
+53	HideFilesVisbleInBadEquivalenceClassesByVisualReviewId	Posda::ProcessPopup	Hide Files in Equivalence Classes Marked Bad	{visual_review_status}
+54	BackgroundLinkActivityToTemp	Posda::ProcessPopup	Link Files in Activity to Temp Directory	{send_series}
+19	RepealEdits	Posda::ProcessPopup	Repeal Edits	{find_patients,check_edits,edit_status}
+16	FirstPassPhiByCollection	Posda::ProcessPopup	First Pass Phi By Collection	{phi_status,simple_phi}
+15	FirstPassPhiScanAndReport	Posda::ProcessPopup	First Pass Phi by collection, site and (optional) batch	{phi_status,simple_phi}
+17	FullPhiById	Posda::ProcessPopup	Full Phi Report by Scan Id	{phi_status,simple_phi}
+23	PhiPublicScan	Posda::ProcessPopup	Public Scan By Collection, Site	{phi_status,simple_phi}
+55	CreateActivityTimepointFromImportName	Posda::ProcessPopup	Create Activity Timepoint From Import Description	{activity_timepoints}
 \.
 
 
@@ -100,6 +106,8 @@ COPY dbif_config.chained_query (chained_query_id, from_query, to_query, caption)
 18	ListClosedActivities	ReOpenActivity	re-open
 19	ActivityStuffMoreWithEmailByUser	LinkEmailToActivity	file
 20	ActivityStuffMoreWithEmailByUser	UnlinkEmailFromActivity	unfile
+21	ActivityStuffMoreWithEmailByUserDateRange	LinkEmailToActivity	file
+22	ActivityStuffMoreWithEmailByUserDateRange	UnlinkEmailFromActivity	unfile
 \.
 
 
@@ -144,6 +152,10 @@ COPY dbif_config.chained_query_cols_to_params (chained_query_id, from_column_nam
 19	user_inbox_content_id	user_inbox_content_id
 20	activity_id	activity_id
 20	user_inbox_content_id	user_inbox_content_id
+21	activity_id	activity_id
+21	user_inbox_content_id	user_inbox_content_id
+22	activity_id	activity_id
+22	user_inbox_content_id	user_inbox_content_id
 \.
 
 
@@ -215,7 +227,6 @@ COPY dbif_config.popup_buttons (popup_button_id, name, object_class, btn_col, is
 72	ListSrPosdaHidden	DbIf::ShowSr	file_path	\N	view
 75	GetEditStatusByDisposition	DbIf::EditStatus	id	f	info
 35	AllPatientDetailsWithNoCtp%	Posda::ProcessPopup	\N	t	InitialAnonymizerCommands
-76	ApiImportEvents	Posda::ProcessPopup	import_event_id	f	CreateTimepointFromImportEvent
 \.
 
 
@@ -344,10 +355,8 @@ find_patients	{find_patients,mapping_tables,for_scripting}
 download_results	{patient_queries}
 visual_review_status	{visual_review_status,visual_review_new_workflow}
 trace_edits	{trace_edits}
-activity_based	{"ACRIN-FMISO-Brain Duplicate Elimination","Curation of Lung-Fused-CT-Pathology","CPTAC Bolus September 2018","ACRIN-NSCLC-FDG-PET Curation",Exceptional-Responders_NCI_Oct2018_curation,"Test Case based on Soft-tissue-Sarcoma"}
 non_dicom_editing	{non_dicom_edit,non_dicom_phi,non_dicom_phi_status,non_dicom_import,non_dicom_reject,radcomp}
 bills_ad_hoc_scripts	{bills_ad_hoc_scripts}
-postgres_stats	{database_size,table_size,postgres_query_stats}
 select_for_visual_review	{visual_review_selection}
 visual_review_reports	{visual_review_reports}
 with_ctp_anonymization	{ctp_patients,ctp_col_site,ctp_details,check_edits,hide,check_dups}
@@ -357,9 +366,11 @@ without_ctp_anonymization	{no_ctp_patients,no_ctp_details,patient_mapping,insert
 View Structured Reports	{view_structured_reports}
 under_development	{universal,hide_events,bills_test,for_tracy,radcomp,non_dicom_phi,non_dicom_phi_status,non_dicom_edit,testing_edit_objects}
 dicom_file_table	{adding_pixels_to_dicom_file}
-activity_timepoints	{activity_timepoints,activity_timepoint_support,compare_series}
 downloads_by_date	{downloads_by_date,import_events,universal}
 edit_status	{edit_status}
+activity_timepoints	{activity_timepoints,activity_timepoint_support,compare_series,clin_qual,manifests}
+activity_based	{"ACRIN-FMISO-Brain Duplicate Elimination","Curation of Lung-Fused-CT-Pathology","CPTAC Bolus September 2018","ACRIN-NSCLC-FDG-PET Curation",Exceptional-Responders_NCI_Oct2018_curation,"Test Case based on Soft-tissue-Sarcoma",QIN-GBM-DSC-MRI-DRO/Barrow,"Reconcile Public and Posda for CPTAC"}
+postgres_stats	{database_size,table_size,postgres_query_stats,invoking_user}
 \.
 
 
@@ -541,9 +552,10 @@ CheckRtReferenceChain	CheckRtReferenceChain.pl <?bkgrnd_id?> <collection> <site>
 MakeRtReport1	MakeRtReport1.pl <?bkgrnd_id?> <notify>	background_process	<collection>&<site>&<patient_id>&<study_uid>&<series_uid>&<file_type>&<modality>&<num_files>	{bills_test}	\N
 FirstPassPhiScanAndReport	FirstPassPhiScanAndReport.pl <?bkgrnd_id?> <collection> <site> "<batch_no>" <notify>	background_process	\N	{bills_test}	\N
 FirstPassPhiByCollection	FirstPassPhiByCollection.pl <?bkgrnd_id?> <collection> <notify>	background_process	\N	{bills_test}	\N
+FullPhiById	FullPhiById.pl <?bkgrnd_id?> <scan_id> <notify> <max_rows>\n	background_process	\N	{bills_test}	\N
 BackgroundCreateEquivalenceClasses	BackgroundCreateSeriesEquivalenceClasses.pl <?bkgrnd_id?> "<why>" <notify>	background_process	<series_instance_uid>	{visual_review}	\N
 BackgroundEdit	BackgroundEditor.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N
-InitialAnonymizerCommands	ProduceInitialAnonymizerCommands.pl <?bkgrnd_id?> <notify>	background_process	<series_instance_uid>&<patient_id>&<patient_name>	{initial_anonymization,patient_mapping}	\N
+AdHocReportForTracy	MakeCptacReport.pl <?bkgrnd_id?> <notify>	background_process	\N	{clin_qual}	\N
 RepealEdits	RepealEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{find_patients}	\N
 RejectEdits	RejectEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{find_patients}	\N
 ImportEdits	ImportEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{find_patients}	\N
@@ -571,7 +583,6 @@ MakeHierarchyByPat	GetHierarchyFromPatientId.pl <?bkgrnd_id?> <notify>	backgroun
 QuickCheckPublicPosdaConsistLike	QuickPublicPosdaCompareLikeCollection.pl <?bkgrnd_id?> "<collection_pat>"  <notify>	background_process	\N	{public_posda_consistency}	\N
 ProposeAdHocMelanomaEdits	ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>	background_process	<patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>	{bills_test,bills_ad_hoc_scripts}	\N
 BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints}	\N
-BackgroundHideSeries	BackgroundHideSeriesWithIndividualStatus.pl <?bkgrnd_id?> <notify>	background_process	<series_uid>&<reason_to_hide>	{bills_test,new_workflow}	\N
 HideLateDupSopsInSeries	HideBatchLateSopDupsInSeries.pl <who> "<why>"	legacy	<series_instance_uid>	{hide_files,hide_dup_sops}	\N
 BackgroundProcessModules	BackgroundProcessModules.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<file_id>	{dicom_file_type}	\N
 HideEquivalenceClasses	HideEquivalenceClasses.pl <?bkgrnd_id?> <notify>	background_process	<image_equivalence_class_id>&<processing_status>&<review_status>	{visual_review_status}	\N
@@ -583,13 +594,15 @@ ApplyDispositions	BackgroundApplyDispositionsFromVisualScan.pl <?bkgrnd_id?> <de
 CreateActivityTimepoint	CreateActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	\N	{visual_review_status}	\N
 ProcessVisualReview	ProcessVisualReview.pl <?bkgrnd_id?> <scan_id> <notify>	background_process	\N	{visual_review_new_workflow}	\N
 BackgroundHideFiles	BackgroundHideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"	background_process	<file_id>	{compare_series}	\N
-ProposeEdits	NewProposeEdits.pl <?bkgrnd_id?> <scan_id> <notify>	background_process	<element>%<vr>%<q_value>%<num_series>%<p_op>%<q_arg1>%<q_arg2>	{simple_phi}	\N
+CreateActivityTimepointFromSeriesList	CreateActivityTimepointFromSeriesList.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	\N
+CompareTimepoints	CompareTimepoints.pl <?bkgrnd_id?> <activity_id> <from_timepoint_id> <to_timepoint_id> <notify>	background_process	\N	\N	\N
 LinkPublicCollection	LinkPublicCollection.pl <?bkgrnd_id?> <directory> <notify>	background_process	<collection>&<patient_id>&<series_instance_uid>&<dicom_file_uri>	{activity_timepoints,send_series,bills_test}	\N
 ListOfAnnotatedFiles	InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> "<comment>" <notify>	background_process	<file_id>&<file_name>&<mime_type>&<description>	{activity_timepoints,send_series_via_dicom,bills_test}	\N
 FixBadSopInstanceLungFusedCtPathology	FixBadSopInstancesLungFusedCtPathology.pl <?bkgrnd_id?> <notify>	background_process	\N	{"Curation of Lung-Fused-CT-Pathology"}	\N
 BackgroundPrivateDispositions	BackgroundPrivateDispositions.pl <?bkgrnd_id?> <to_dir> <uid_root> <offset> <notify>	background_process	<patient_id>&<study_instance_uid>&<series_instance_uid>	{edit,send_series}	\N
 BackgroundPrivateDispositionsBaseline	BackgroundPrivateDispositionsBaseline.pl <?bkgrnd_id?> <to_dir> <notify>	background_process	<patient_id>&<study_instance_uid>&<series_instance_uid>	{edit,send_series}	\N
 MakeDownloadableDirectory	MakeDownloadableDirectory.pl <?bkgrnd_id?> <sub_dir> <notify>	background_process	<collection>&<patient_id>&<study_instance_uid>&<series_instance_uid>	{send_series}	\N
+BackgroundHideSeries	BackgroundHideSeriesWithIndividualStatus.pl <?bkgrnd_id?> <notify>	background_process	<series_uid>&<reason_to_hide>	{bills_test,new_workflow,activity_support}	\N
 AnalyzeSeriesDuplicatesForTimepoint	AnalyzeTpSeriesDuplicates.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
 VisualReviewFromTimepoint	ScheduleVisualReviewFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{visual_review}	\N
 PhiReviewFromTimepoint	SchedulePhiReviewFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{visual_review}	\N
@@ -601,7 +614,6 @@ DispositionNeededWorksheet	DispositionsNeededWorksheet.pl <?bkgrnd_id?> <notify>
 AnalyzeSeriesDuplicates	AnalyzeSeriesDuplicates.pl <?bkgrnd_id?> "<collection>" <site> <notify>	background_process	\N	{"ACRIN-FMISO-Brain Duplicate Elimination",dup_sops,activity_timepoint_support}	\N
 BackgroundHideSeriesByCollection	BackgroundHideSeriesByCollection.pl <?bkgrnd_id?> "<reason>" <collection> <notify>	background_process	<series_instance_uid>	{activity_timepoint_support}	\N
 BackgroundUpdatePrivateDisposition	BackgroundUpdatePrivateDispositions.pl <?bkgrnd_id?> "<why>" <notify>	background_process	<id>&<disp>	{phi_maint}	\N
-PhiPublicScanTp	PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{simple_phi}	\N
 SummarizeStructLinkage	SummarizeStructLinkagesByFileId.pl <?bkgrnd_id?> <file_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
 BackgroundDciodvfyTp	BackgroundDciodvfyTp.pl <?bkgrnd_id?> <act_id> <type> <notify>	background_process	\N	{activity_timepoint}	\N
 DeleteSeriesFromActivityTimepoint	DeleteSeriesFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	\N
@@ -613,6 +625,7 @@ AddSeriesToActivityTimepoint	AddSeriesToActivityTimepoint.pl <?bkgrnd_id?> <acti
 BackgroundEditByStudy	BackgroundEditStudy.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<study_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N
 CompareSopsInTpToPublic	CompareSopsInTpToPublic.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints_support}	\N
 TestProcessEditByFile	TestProcessBackgroundEditFileInstructions.pl <?bkgrnd_id?> <notify>	background_process	<file_id>&<op>&<tag>&<val1>&<val2>	{testing_edit_objects}	\N
+ModifySeriesInActivityTp	ModifySeriesInActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>&<function>	{activity_timepoints}	\N
 UpdateActivityTimepoint	UpdateActivityTimepointForChange.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	\N	{timepoint_buttons}	\N
 ConsistencyFromTimePoint	AnalyzeStudySeriesConsistencyByActivity.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N
 LinkRtFromTimepoint	LinkRtByActivityTimepoint.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N
@@ -621,17 +634,24 @@ CondensedActivityTimepointReport	CondensedActivityTimepointReport.pl <?bkgrnd_id
 ImportPatientMapping	ImportPatientMapping.pl <?bkgrnd_id?> <notify>	background_process	<from_patient_id>&<to_patient_id>&<to_patient_name>&<collection_name>&<site_name>&<batch_number>&<date_shift>&<diagnosis_date>&<baseline_date>&<uid_root>	{bills_test,mapping_tables,patient_mapping}	\N
 PrivateTagReports	PrivateElementReports.pl <?bkgrnd_id?> <notify>	background_process	\N	{phi_maint}	\N
 CompareSopsTpPosdaPublicLike	CompareSopsTpPosdaPublicLike.pl <?bkgrnd_id?> "<collection_like>" <activity_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
-CompareTimepoints	CompareTimepoints.pl <?bkgrnd_id?> <activity_id> <from_timepoint_id> <to_timepoint_id> <notify>	background_process	\N	{bills_test}	\N
-CreateTimepointFromImportEvent	CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> <import_event_id> "<comment>" <notify>	background_process	\N	{activity_timepoints}	\N
-ModifySeriesInActivityTp	ModifySeriesInActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>&<function>	{activity_timepoints}	t
-CreateActivityTimepointFromSeriesList	CreateActivityTimepointFromSeriesList.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	t
+CreateActivityTimepointFromPatientList	CreateActivityTimepointFromPatientList.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<collection>&<site>&<patient_id>	{activity_timepoints}	\N
+CompareSopsTpPosdaPublicCollectionLikeSiteEqual	CompareSopsTpPosdaPublicLikeEq.pl <?bkgrnd_id?> "<collection_like>" "<site>" <activity_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
+InitialAnonymizerCommands	ProduceInitialAnonymizerCommands.pl <?bkgrnd_id?> <collection> <site> <notify>	background_process	<series_instance_uid>&<patient_id>&<patient_name>	{initial_anonymization,patient_mapping}	\N
+UpdateQualifiedPatients	UpdateQualifiedPatients.pl <?bkgrnd_id?> <notify>	background_process	<collection>&<site>&<patient_id>&<qualified>	{activity_timepoint_support}	\N
+HideFilesVisbleInBadEquivalenceClassesByVisualReviewId	HideVisibleFilesInBadIecs.pl <?bkgrnd_id?> <visual_review_instance_id> <notify>	background_process	\N	{visual_review_status}	\N
+TestProcessEditByStudy	TestProcessBackgroundEditStudyInstructions.pl <?bkgrnd_id?> <notify>	background_process	<study_instance_uid>&<op>&<tag>&<val1><val2>	{testing_edit_objects}	\N
+BackgroundLinkActivityToTemp	BackgroundLinkActivityToTemp.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{send_series}	\N
+PhiPublicScanTp	PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <max_rows> <notify>	background_process	\N	{simple_phi}	\N
+BackgroundFixRtstruct	BackgroundFixStructLinkages.pl <?bkgrnd_id?> "<comment>" <notify>	background_process	<img_series>&<struct_file_id>	{activity_timepoints}	\N
+ProposeEdits	NewProposeEdits.pl <?bkgrnd_id?> <scan_id> <notify>	background_process	<element>%<vr>%<q_value>%<num_series>%<p_op>%<q_arg1>%<q_arg2>	{simple_phi,activity_timepoints}	\N
+PopulateFileImport	PopulateFileImportForImportEvent.pl <?bkgrnd_id?> <import_event_id> <notify>	background_process	<file_name>&<digest>	{QIN-GBM-DSC-MRI-DRO/Barrow}	\N
+BackgroundUnhideSeries	BackgroundUnhideSeriesWithIndividualStatus.pl <?bkgrnd_id?> <notify>	background_process	<series_uid>&<reason_to_unhide>	{bills_test,new_workflow,activity_support}	\N
+SimpleBackgroundTestProcess	SimpleBackgroundTestSubprocess.pl <?bkgrnd_id?> "<message>" <notify>	background_process	<column1>&<column2>&<column3>	{bills_test}	\N
+InitialAnonymizerCommandsTp	ProduceInitialAnonymizerCommandsTp.pl <?bkgrnd_id?> <collection> <site> <activity_id> <notify>	background_process	\N	{initial_anonymization,patient_mapping}	\N
 CreateActivityTimepointFromImportName	CreateActivityTimepointFromImportName.pl <?bkgrnd_id?> <activity_id> "<import_name>" "<comment>" <notify>	background_process	\N	{activity_timepoints}	\N
-FullPhiById	 FullPhiById.pl <?bkgrnd_id?> <scan_id> <notify> <max_rows>	background_process	\N	{bills_test}	\N
-ProposeEditsTp	ProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify>	background_process	<element>%<vr>%<q_value>%<num_series>%<p_op>%<q_arg1>%<q_arg2>	{simple_phi,spreadsheet_operation}	\N
-BackgroundEditTp	BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_desciption>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{simple_phi,spreadsheet_operation}	\N
-RejectEditsTp	RejectEditsTp.pl <?bkgrnd_id?> <activity_id> <sub_invoc_id> <notify>	background_process	\N	{simple_phi,spreadsheet_operation}	\N
-ImportEditsTp	ImportEditsTp.pl <?bkgrnd_id?> <activity_id> <sub_invoc_id> <notify>	background_process	\N	{simple_phi,spreadsheet_operation}	\N
-MakeDownloadableDirectoryTp	MakeDownloadableDirectoryTp.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>	background_process	\N	{send_series}	\N
+ProposeEditsTp	 ProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify>	background_process	<element>%<vr>%<q_value>%<num_series>%<p_op>%<q_arg1>%<q_arg2>	{simple_phi,activity_timepoints}	\N
+BackgroundEditTp	BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_desciption>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N
+ImportEditsTp	ImportEditsTp.pl <?bkgrnd_id?> <activity_id> <subprocess_invoc_id> <notify>	background_process	\N	{edit_files}	\N
 \.
 
 
@@ -639,21 +659,21 @@ MakeDownloadableDirectoryTp	MakeDownloadableDirectoryTp.pl <?bkgrnd_id?> <activi
 -- Name: background_buttons_background_button_id_seq; Type: SEQUENCE SET; Schema: dbif_config; Owner: -
 --
 
-SELECT pg_catalog.setval('dbif_config.background_buttons_background_button_id_seq', 50, true);
+SELECT pg_catalog.setval('dbif_config.background_buttons_background_button_id_seq', 56, true);
 
 
 --
 -- Name: chained_query_chained_query_id_seq; Type: SEQUENCE SET; Schema: dbif_config; Owner: -
 --
 
-SELECT pg_catalog.setval('dbif_config.chained_query_chained_query_id_seq', 20, true);
+SELECT pg_catalog.setval('dbif_config.chained_query_chained_query_id_seq', 22, true);
 
 
 --
 -- Name: popup_buttons_popup_button_id_seq1; Type: SEQUENCE SET; Schema: dbif_config; Owner: -
 --
 
-SELECT pg_catalog.setval('dbif_config.popup_buttons_popup_button_id_seq1', 76, true);
+SELECT pg_catalog.setval('dbif_config.popup_buttons_popup_button_id_seq1', 75, true);
 
 
 --
