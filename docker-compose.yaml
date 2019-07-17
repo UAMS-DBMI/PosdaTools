@@ -90,7 +90,6 @@ services:
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - kaleidoscope_files:/html
-            - ./kaleidoscope/kaleidoscope:/app
         env_file: 
             - database.env
             - common.env
