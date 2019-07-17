@@ -2,6 +2,7 @@
 import os
 import time
 import datetime
+import subprocess
 from datetime import timedelta
 from posda.database import Database
 
@@ -17,17 +18,22 @@ class Job():
         return datetime.datetime.now() > self.nextTime
 
     def set_next_time(self):
-        self.nextTime = datetime.datetime.now() + timedelta(minutes=(int(schedule)))
-        #print("next time is " + str(self.nextTime))
+        self.nextTime = datetime.datetime.now() + timedelta(minutes=(int(self.schedule)))
+        print("next time is " + str(self.nextTime))
         return
 
     def walk_briskly(self):
 
         print(" " + self.name + " job running at " + str(datetime.datetime.now()) )
 
-        with Database(self.db) as conn:
-            cur = conn.cursor()
-            cur.execute(self.instructions)
+        if self.db in ['posda_files', 'db_config','postgress']:
+            #print("running database")
+            with Database(self.db) as conn:
+                cur = conn.cursor()
+                cur.execute(self.instructions)
+        elif self.db == 'command':
+             #print("running command")
+             subprocess.run(self.instructions)
 
         self.set_next_time()
         return
@@ -45,8 +51,8 @@ try:
                         db = file.readline()
                         instructions = file.read()
                     myjobs.append(Job(name,schedule,db,instructions))
-            elif entry.is_dir(follow_symlinks=False):
-                self.read_file_structure(entry)
+            #elif entry.is_dir(follow_symlinks=False):
+            #    self.read_file_structure(entry)
 except Exception as e:
     print("Error: {0}".format(e))
 
