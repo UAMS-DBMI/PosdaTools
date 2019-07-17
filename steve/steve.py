@@ -27,12 +27,12 @@ class Job():
         print(" " + self.name + " job running at " + str(datetime.datetime.now()) )
 
         if self.db in ['posda_files', 'db_config','postgress']:
-            print("running database")
+            #print("running database")
             with Database(self.db) as conn:
                 cur = conn.cursor()
                 cur.execute(self.instructions)
         elif self.db == 'command':
-             print("running command")
+             #print("running command")
              subprocess.run(self.instructions)
 
         self.set_next_time()
@@ -60,7 +60,7 @@ print("Steve, the job runner")
 
 while True:
     time.sleep(60)
-    print("checking")
+    #print("checking")
     for job in myjobs:
         if job.time_check():
             job.walk_briskly()
