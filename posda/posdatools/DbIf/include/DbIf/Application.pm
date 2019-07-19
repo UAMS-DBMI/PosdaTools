@@ -3230,6 +3230,7 @@ method ActivityOperations($http, $dyn){
   }
   $http->queue("</table>");
 }
+#MEMEME
 method InvokeOperation($http, $dyn){
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
@@ -3237,6 +3238,9 @@ method InvokeOperation($http, $dyn){
     $class = "Posda::ProcessPopup";
   }
   eval "require $class";
+  print STDERR Dumper($dyn);
+  #Query('IncreaseButtonPopularity')->Execute($dyn->{operation});
+  Query('IncreaseButtonPopularity')->RunQuery(sub{}, sub{},$dyn->{operation});
   my $params = {
     button => $dyn->{operation},
     activity_id => $self->{ActivitySelected},
@@ -3394,11 +3398,11 @@ method DeleteCurrentForegroundQuery($http, $dyn){
   if($num_queries == 0){
     delete $self->{SelectFromCurrentForeground};
   }
-}  
+}
 method SelectCurrentForegroundQuery($http, $dyn){
   my $k = $dyn->{index};
   $self->{NewQueryToDisplay} = $k;
-}  
+}
 
 method ClearCurrentForegroundSelector($http, $dyn){
   delete $self->{SelectFromCurrentForeground};
@@ -3412,12 +3416,12 @@ method DrawQueryListTypeSelector($http, $dyn){
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
-  $http->queue("$url - recent&nbsp;&nbsp;"); 
+  $http->queue("$url - recent&nbsp;&nbsp;");
   $url = $self->RadioButtonSync("query_type","search",
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
-  $http->queue("$url - search"); 
+  $http->queue("$url - search");
   $http->queue("</div>");
 }
 method DrawQuerySearchForm($http, $dyn){
@@ -3624,7 +3628,7 @@ method OpenNewChainedQuery($http, $dyn){
   $self->{SelectedNewQuery} = $query_name;
   delete $self->{NewQueryToDisplay};
   if($self->{NewActivityQueriesType}->{query_type} eq "search"){
-    $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}} = 
+    $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}} =
       PosdaDB::Queries->GetQueryInstance($query_name);
   } else {
     $self->{NewQueriesByName}->{$self->{SelectedNewQuery}} =
@@ -3639,7 +3643,7 @@ method DrawNewQuery($http, $dyn){
   } else {
     $query = $self->{NewQueriesByName}->{$self->{SelectedNewQuery}};
   }
-  
+
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
 });
@@ -3979,10 +3983,10 @@ $self->{DebugPopupHash} = $popup_hash;
     "ProcessRadioButton",
     (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "unfiltered") ? 1 : 0,
     "&control=FilterSelection","Update();");
-  $http->queue("$url</td>"); 
+  $http->queue("$url</td>");
   $http->queue("<td>Unfiltered rows: $num_rows</td>");
   $http->queue("<td>");
-  $http->queue('<a class="btn btn-primary" href="DownloadUnfilteredTable?obj_path=' . 
+  $http->queue('<a class="btn btn-primary" href="DownloadUnfilteredTable?obj_path=' .
     $self->{path} . '">download</a>');
   $http->queue("</td>");
   $http->queue("<td>");
@@ -4024,7 +4028,7 @@ $self->{DebugPopupHash} = $popup_hash;
     "ProcessRadioButton",
     (defined($self->{FilterSelection}) && $self->{FilterSelection}->{$index} eq "filtered") ? 1 : 0,
     "&control=FilterSelection","Update();");
-  $http->queue("$url</td>"); 
+  $http->queue("$url</td>");
   $http->queue("<td>Filtered rows: $filtered_rows</td>");
   $http->queue("<td>");
   $http->queue('<a class="btn btn-primary" href="DownloadFilteredTable?obj_path=' .
