@@ -4,6 +4,10 @@ use Posda::DB::PosdaFilesQueries;
 use Posda::BackgroundProcess;
 use Posda::ActivityInfo;
 use Posda::UUID;
+use Posda::NBIASubmit;
+use File::Basename;
+use File::Path 'make_path';
+
 our $ug = Data::UUID->new;
 sub get_uuid {
   return lc $ug->create_str();
@@ -21,6 +25,11 @@ Constructs a destination file name as follows:
 
 Actually invokes ApplyPrivateDispositionUnconditionalDate.pl to do the edits
 EOF
+
+
+
+
+
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
   exit;
@@ -33,12 +42,16 @@ unless($#ARGV == 4){
       "#####################################################\n";
 }
 my($invoc_id, $act_id, $uid_root, $offset, $notify) = @ARGV;
+
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+
 print "All processing in background\n";
 $background->Daemonize;
 
 my %Patients;
 my @Series;
+
+
 my $act_info = Posda::ActivityInfo->new($act_id);
 my $tp_id = $act_info->LatestTimepoint;
 my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
@@ -48,6 +61,7 @@ for my $f (keys %$FileInfo){
   my $study_uid = $FileInfo->{$f}->{study_instance_uid};
   $Patients{$pat_id}->{$study_uid}->{$series_uid} = 1;
 }
+
 for my $p (keys %Patients){
   for my $s (keys %{$Patients{$p}}){
     for my $se (keys %{$Patients{$p}->{$s}}){
@@ -55,6 +69,9 @@ for my $p (keys %Patients){
     }
   }
 }
+
+
+
 my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
 my @tp_errors;
 for my $s (@Series){
@@ -66,6 +83,9 @@ for my $s (@Series){
     }
   }, sub {}, $s);
 }
+
+
+
 my $num_errors = @tp_errors;
 if($num_errors > 0){
   $background->WriteToEmail("There were $num_errors in tp series\n");
@@ -78,11 +98,56 @@ if($num_errors > 0){
   exit;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 my $q1 = PosdaDB::Queries->GetQueryInstance(
   "PrivateTagsWhichArentMarked");
 my $q2 = PosdaDB::Queries->GetQueryInstance(
   "DistinctDispositionsNeededSimple");
 my $error = 0;
+
 my @new_tags;
 $q1->RunQuery(sub{
   my($row) = @_;
@@ -106,6 +171,8 @@ if(@new_tags > 0){
   $background->Finish;
   exit;
 }
+
+
 my @dispositions_needed;
 $q2->RunQuery(sub {
   my($row) = @_;
@@ -130,13 +197,14 @@ if(@dispositions_needed > 0){
   $background->Finish;
   exit;
 }
+
+
+
 my $q5 = PosdaDB::Queries->GetQueryInstance(
   "AreVisibleFilesMarkedAsBadOrUnreviewedInSeries");
 my $q6 = PosdaDB::Queries->GetQueryInstance(
   "IsThisSeriesNotVisuallyReviewed");
 for my $series (@Series){
-#  $q5->RunQuery(sub {
-#  }, sub {}, $series);
   $q6->RunQuery(sub {
     my($row) = @_;
     $background->WriteToEmail("Warning: series $series not submitted for visual review\n");
@@ -147,17 +215,21 @@ for my $series (@Series){
     $error += 1;
   }, sub {}, $series);
 }
-
 if($error){
   $background->WriteToEmail("Terminating because of errors\n");
+  $background->Finish;
   exit;
 }
+
 my $num_series = @Series;
 $background->WriteToEmail("Found list of $num_series series to send\n");
+
+# Abort if we found nothing to do
 if($num_series <= 0) {
   $background->Finish;
   exit;
 }
+
 my $date = `date`;
 chomp $date;
 
@@ -165,78 +237,45 @@ chomp $date;
 ## Compute the Destination Dir (and die if it already exists)
 #
 my $sub_dir = get_uuid();
-my $CacheDir = $ENV{POSDA_CACHE_ROOT};
-unless(-d $CacheDir){
-  print "Error: Cache dir ($CacheDir) isn't a directory\n";
-}
-my $EditDir = "$CacheDir/private_dispositions";
-unless(-d $EditDir){
-  unless(mkdir($EditDir) == 1){
-    print "Error: can't mkdir $EditDir ($!)";
-    exit;
-  }
-}
-my $DestDir = "$EditDir/$sub_dir";
-if(-e $DestDir) {
-  print "Error: Destination dir ($DestDir) already exists\n";
-  exit;
-}
-unless(mkdir($DestDir) == 1){
-  print "Error: can't mkdir $DestDir ($!)";
-  exit;
+
+my $BaseDir = $ENV{NBIA_STORAGE_ROOT}
+  or die "NBIA_STORAGE_ROOT env var is undefined! cannot continue";
+
+unless(-d $BaseDir){
+  print "Error: Base dir ($BaseDir) isn't a directory\n";
 }
 
-$background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n" .
-  "To directory: \n" .
-  "###################################\n" .
-  "$DestDir\n" .
-  "###################################\n");
-my $to_dir = $DestDir;
+$background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
+
 #######################################################################
 ### Body of script
+
 my @cmds;
-my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition");
+my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
 for my $patient_id (sort keys %Patients){
+
+
   $background->WriteToEmail("Patient: $patient_id\n");
   for my $study_uid (sort keys %{$Patients{$patient_id}}){
     $background->WriteToEmail("Study $study_uid\n");
     for my $series_uid (sort keys %{$Patients{$patient_id}->{$study_uid}}){
       $background->WriteToEmail("Series \"$series_uid\"\n");
-      my $dir = "$to_dir/$patient_id";
-      unless(-d $dir){
-        unless(mkdir $dir){
-          $background->WriteToEmail("Can't mkdir $dir");
-          $background->Finish;
-          exit;
-        }
-      }
-      $dir = "$dir/$study_uid";
-      unless(-d $dir){
-        unless(mkdir $dir){
-          $background->WriteToEmail("Can't mkdir $dir");
-          $background->Finish;
-          exit;
-        }
-      }
-      $dir = "$dir/$series_uid";
-      unless(-d $dir){
-        unless(mkdir $dir){
-          $background->WriteToEmail("Can't mkdir $dir");
-          $background->Finish;
-          exit;
-        }
-      }
       my $num_files = 0;
       $q_inst->RunQuery(sub {
-        my($row) = @_;
-        my $path = $row->[0];
-        my $sop_instance_uid = $row->[1];
-        my $modality = $row->[2];
-        my $cmd = "ApplyPrivateDispositionUnconditionalDate.pl $path " .
-          "\"$to_dir/$patient_id/" .
-          "$study_uid/" .
-          "$series_uid/$modality" . "_$sop_instance_uid.dcm\" " .
-          "$uid_root $offset ";
+        my ($row) = @_;
+        my ($path, $sop_instance_uid, $modality, $file_id) = @$row;
+
+        my $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
+
+				my $full_filename = "$BaseDir/$f_filename";
+				my $dirname = dirname($full_filename);
+				make_path($dirname);
+
+        # input_path output_path uid_root offset collection_name site_name site_id batch
+        my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
+                  qq{$file_id $path "$full_filename" $uid_root $offset } .
+                  qq{"OPC-Radiomics" "UHN" 86663098 0};
+
         push @cmds, $cmd;
         $num_files += 1;
       }, sub{}, $series_uid);
@@ -252,28 +291,53 @@ open SCRIPT2, "|/bin/sh";
 open SCRIPT3, "|/bin/sh";
 open SCRIPT4, "|/bin/sh";
 open SCRIPT5, "|/bin/sh";
+open SCRIPT6, "|/bin/sh";
+open SCRIPT7, "|/bin/sh";
+open SCRIPT8, "|/bin/sh";
+open SCRIPT9, "|/bin/sh";
+open SCRIPT0, "|/bin/sh";
 command:
 while(1){
   my $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "1. Running cmd: $cmd\n";
   print SCRIPT1 "$cmd\n";
+
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "2. Running cmd: $cmd\n";
   print SCRIPT2 "$cmd\n";
+
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "3. Running cmd: $cmd\n";
   print SCRIPT3 "$cmd\n";
+
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "4. Running cmd: $cmd\n";
   print SCRIPT4 "$cmd\n";
+
   $cmd = shift @cmds;
   unless(defined $cmd){ last command }
-  print STDERR "5. Running cmd: $cmd\n";
   print SCRIPT5 "$cmd\n";
+
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print SCRIPT6 "$cmd\n";
+
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print SCRIPT7 "$cmd\n";
+
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print SCRIPT8 "$cmd\n";
+
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print SCRIPT9 "$cmd\n";
+
+  $cmd = shift @cmds;
+  unless(defined $cmd){ last command }
+  print SCRIPT0 "$cmd\n";
+
 }
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("All commands queued\n");
@@ -282,6 +346,11 @@ close SCRIPT2;
 close SCRIPT3;
 close SCRIPT4;
 close SCRIPT5;
+close SCRIPT6;
+close SCRIPT7;
+close SCRIPT8;
+close SCRIPT9;
+close SCRIPT0;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("All subshells complete\n");
 ### Body of script
