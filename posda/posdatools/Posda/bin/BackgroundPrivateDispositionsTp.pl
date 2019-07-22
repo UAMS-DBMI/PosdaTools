@@ -53,6 +53,15 @@ my @Series;
 
 
 my $act_info = Posda::ActivityInfo->new($act_id);
+my $collection_name = $act_info->GetCollection;
+my $site_name = $act_info->GetSite;
+my $site_code = $act_info->GetSiteCode;
+
+if (not defined $site_code) {
+  $background->WriteToEmail("No entry for $site_name in site_codes table!\n");
+  $background->Finish;
+  exit;
+}
 my $tp_id = $act_info->LatestTimepoint;
 my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
 for my $f (keys %$FileInfo){
@@ -271,10 +280,9 @@ for my $patient_id (sort keys %Patients){
 				my $dirname = dirname($full_filename);
 				make_path($dirname);
 
-        # input_path output_path uid_root offset collection_name site_name site_id batch
         my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
                   qq{$file_id $path "$full_filename" $uid_root $offset } .
-                  qq{"OPC-Radiomics" "UHN" 86663098 0};
+                  qq{$collection_name $site_name $site_code 0};
 
         push @cmds, $cmd;
         $num_files += 1;
