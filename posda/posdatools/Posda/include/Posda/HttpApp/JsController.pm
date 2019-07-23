@@ -14,6 +14,7 @@ use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
+use Posda::DB 'Query';
 use IO::Socket::INET;
 
 use Posda::DebugLog 'on';
@@ -142,17 +143,17 @@ function AJAXPostForm(formId){
   url = document.getElementById(formId).action;
   for(var i = 0; i < elem.length; i++){
       if (elem[i].tagName == "SELECT"){
-          params += elem[i].name + "=" +     
-            encodeURIComponent(elem[i].options[elem[i].selectedIndex].value) 
+          params += elem[i].name + "=" +
+            encodeURIComponent(elem[i].options[elem[i].selectedIndex].value)
             + "&";
       }else{
-          params += elem[i].name + "=" + 
+          params += elem[i].name + "=" +
           encodeURIComponent(elem[i].value) + "&";
       }
   }
   xmlhttp=new XMLHttpRequest();
   xmlhttp.open("POST",url,false);
-  xmlhttp.setRequestHeader("Content-type", 
+  xmlhttp.setRequestHeader("Content-type",
     "application/x-www-form-urlencoded");
   xmlhttp.setRequestHeader("Content-length", params.length);
   xmlhttp.setRequestHeader("Connection", "close");
@@ -291,7 +292,7 @@ sub BlurEntryBox{
     $class = $dyn->{class};
   }
   my $index = defined($dyn->{index}) ? "+'&index=$dyn->{index}'" : "";
-  my $txt = 
+  my $txt =
    "<input class='$class' type='text'" .
    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
    ($dyn->{default} ? " default=\"$dyn->{default}\" " : "") .
@@ -315,7 +316,7 @@ sub ClasslessBlurEntryBox{
   if (defined $dyn->{class}) {
     $class = $dyn->{class};
   }
-  my $txt = 
+  my $txt =
    "<input type='text'" .
    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
    ($dyn->{default} ? " default=\"$dyn->{default}\" " : "") .
@@ -359,9 +360,9 @@ sub DebouncedEntryBox {
   my $params = qq{'op=$op&uniq_id=$uniq_id&value='+encodeURIComponent(this.value)};
 
   $http->queue(qq{
-    <input 
+    <input
       type="text"
-      name="$uniq_id" 
+      name="$uniq_id"
       value="$default"
       class="$class"
 
@@ -407,7 +408,7 @@ sub DelegateTextArea{
     }
     if(
       $i eq "length" || $i eq "name" || $i eq "rows" || $i eq "cols"
-    ) { 
+    ) {
       push @attrs, "$i=\"$dyn->{$i}\"";
       next
     } else {
@@ -430,7 +431,7 @@ sub DelegateTextArea{
   }
   my $default;
   my $value = $dyn->{value};
-  my $op = 
+  my $op =
     "PosdaNewPostRemoteMethod('Delegate?obj_path=' + ObjPath + '&$v_string";
   $http->queue('<textarea ' . $attr_s .
     "onblur=\"" . $op . "event=onblur', \$(this).val(), $sync);\"" .
@@ -445,7 +446,7 @@ sub LinkedDelegateTextArea{
     if($i eq "value") { next }
     if(
       $i eq "length" || $i eq "name" || $i eq "rows" || $i eq "cols"
-    ) { 
+    ) {
       push @attrs, "$i=\"$dyn->{$i}\"";
       next
     } else {
@@ -491,7 +492,7 @@ sub DelegateEntryBox{
     if($i eq "op") { next }
     if($i eq "value") { next }
     if($i eq "sync") { $sync = $dyn->{$i}; next }
-    if($i eq "length" || $i eq "name") { 
+    if($i eq "length" || $i eq "name") {
       push @attrs, "length=\"$dyn->{length}";
       next
     }
@@ -538,7 +539,7 @@ sub LinkedDelegateEntryBox{
   my @attrs;
   for my $i (keys %$dyn){
     if($i eq "op") { next }
-    if($i eq "length" || $i eq "name" || $i eq "size") { 
+    if($i eq "length" || $i eq "name" || $i eq "size") {
       push @attrs, "$i=\"$dyn->{$i}\"";
       next
     }
@@ -558,7 +559,7 @@ sub LinkedDelegateEntryBox{
   for my $i (0 .. $#parms){
     $v_string .= "$parms[$i]&";
   }
-#print STDERR "value string: $v_string\"\n##################\n";
+#yea STDERR "value string: $v_string\"\n##################\n";
   my $default;
   if(exists $dyn->{index}){
     $default = $this->{$dyn->{linked}}->{$dyn->{index}};
@@ -606,7 +607,7 @@ sub SelectByValue{
   my $style = defined $dyn->{style}? $dyn->{style}: "";
 
   $http->queue(qq{
-    <select class="$class" style="$style" 
+    <select class="$class" style="$style"
       onChange="ChangeMode('$dyn->{op}',this.options[this.selectedIndex].value);">
   });
 }
@@ -659,7 +660,7 @@ sub SelectDelegateByValue{
   my $style = defined $dyn->{style}? $dyn->{style}: "";
 
   $http->queue(
-    "<select class=\"$class\" style=\"$style\" onChange=\"PosdaGetRemoteMethod('$op', " . 
+    "<select class=\"$class\" style=\"$style\" onChange=\"PosdaGetRemoteMethod('$op', " .
     "'value=' + " .
     "this.options[this.selectedIndex].value + '$v_string', " .
     "function(){" .
@@ -716,7 +717,7 @@ sub StartJsChildProcess{
   my $url = "Refresh?obj_path=$child_path";
   my $win_width = $process_desc->{w} + 50;
   my $win_height = $process_desc->{h} + 150;
-  my $cmd = 
+  my $cmd =
     "rt('$win_name', '$url', $win_width, $win_height, 0);";
   $this->QueueJsCmd($cmd);
 }
@@ -728,7 +729,7 @@ sub StartJsChildWindow{
   my $url = "Refresh?obj_path=$child_path";
   my $win_width = $child_obj->{width} + 50;
   my $win_height = $child_obj->{height} + 150;
-  my $cmd = 
+  my $cmd =
     "rt('$win_name', '$url', $win_width, $win_height, 0);";
   $this->QueueJsCmd($cmd);
 }
@@ -743,7 +744,7 @@ sub ServerCheck{
     my $content;
     my $len = read($http->{socket}, $content, $content_len);
   }
-   
+
   if (exists $this->{_JsCmds}) {
     $this->text_header($http, { content_length => length($this->{_JsCmds}) } );
     $http->queue($this->{_JsCmds});
@@ -770,7 +771,7 @@ sub QueueCanDebug{
 }
 sub MakeHostLink{
   my($this, $caption, $method, $args, $small, $class) = @_;
-  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" . 
+  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" .
     "'$method'";
   my @a;
   my $at = "";
@@ -790,7 +791,7 @@ sub MakeHostLinkSync{
   if (not defined $class) {
     $class = "";
   }
-  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" . 
+  my $text = "<a class=\"$class\" href=\"javascript:PosdaGetRemoteMethod(" .
     "'$method'";
   my @a;
   my $at = "";
@@ -832,7 +833,7 @@ sub SimpleButton{
   my($this, $http, $dyn) = @_;
   my $string = '<input class="btn btn-default" type="button" ' .
     'onClick="javascript:PosdaGetRemoteMethod(' .
-    "'$dyn->{op}', " . 
+    "'$dyn->{op}', " .
     (exists($dyn->{parm})? "'parm=$dyn->{parm}'" : "''") .
     ', function () {' .
     (exists($dyn->{sync}) ? $dyn->{sync} : "") .
@@ -876,7 +877,7 @@ sub SubmitValueButton {
   my $class = ($dyn->{class} or 'btn btn-default');
 
   my $string = qq{
-    <input class="$class" 
+    <input class="$class"
            type="submit"
            onClick="javascript:PosdaGetRemoteMethod('$op', 'value=' + \$('#$id').val() + '&extra=$extra', function(){Update();})"
            value="$caption"
@@ -893,6 +894,7 @@ sub NotSoSimpleButton{
     if($i eq "caption") { next }
     if($i eq "sync") { next }
     if($i eq "class") { next }
+    if($i eq "pop") { next }
     push @parms, "$i=$dyn->{$i}";
   }
   my $hstring = "";
@@ -906,7 +908,16 @@ sub NotSoSimpleButton{
   }
   my $sync = exists($dyn->{sync}) ? $dyn->{sync} : "";
 
-  my $prefix = qq{<input type="button"};
+  #button popularity
+  my $pop = 0;
+  Query('CountButtonPopularity')->RunQuery(sub{my($row) = @_; $pop = $row->[0]}, sub{},$dyn->{operation});
+  #print STDERR "I am $dyn->{op} , caption $dyn->{caption},  operation |$dyn->{operation}| and my popularity is $pop \n ";
+  my $blue = 250 - (10 * $pop);
+  if ($blue < 10){
+    $blue = 10;
+  }
+  my $red = $blue + 5;
+  my $prefix = qq{<input type="button" style="background-color:rgb($blue, $red, 255)"};
   my $postfix = "";
   if(defined $dyn->{element} and $dyn->{element} eq 'a') {
     $prefix = qq{<a href="#"};
@@ -927,7 +938,7 @@ sub NotSoSimpleButton{
 
 =head2 SimpleDropdownListFromArray($http, { name, [class] }, $element_array)
 
-Draw a simple dropwdown list (select/option list), filled with 
+Draw a simple dropwdown list (select/option list), filled with
 the elements from $element_array. The "value" and the actual caption
 are set to the same value from the array.
 
@@ -944,7 +955,7 @@ method SimpleDropdownListFromArray($http, $dyn, $elements) {
   my $element_name = $dyn->{name}
     or die "missing name argument";
   my $class = ($dyn->{class} or 'form-control');
-  
+
   $http->queue(qq{<select class="$class" name="$element_name">});
 
   map {
@@ -987,9 +998,9 @@ sub SelfConfirmingButton {
   }
 
   my $caption = $dyn->{caption};
-  my $confirm_caption = 
+  my $confirm_caption =
     defined $dyn->{confirm_caption}? $dyn->{confirm_caption}: 'Yes';
-  my $decline_caption = 
+  my $decline_caption =
     defined $dyn->{decline_caption}? $dyn->{decline_caption} : 'No';
   my $op = $dyn->{op};
 
@@ -1045,8 +1056,8 @@ sub NotSoSimpleButtonButton{
     $class = $dyn->{class};
   }
   my $string = qq|
-    <button class="$class" type="button" 
-    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () {Update();});"> 
+    <button class="$class" type="button"
+    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () {Update();});">
       $dyn->{caption}
     </button>
   |;
@@ -1097,7 +1108,7 @@ sub MakeMenu{
         if(exists($m->{style}) && $m->{style} eq "small"){
           $small = 1;
         }
-        my $link = 
+        my $link =
           $this->MakeHostLink($m->{caption}, $m->{method}, $m->{args}, $small,
           "btn btn-default");
         $http->queue($link);
@@ -1109,8 +1120,8 @@ sub MakeMenu{
         }
         # Default sync method of Update()
         my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
-        my $link = 
-          $this->MakeHostLinkSync($m->{caption}, $m->{method}, 
+        my $link =
+          $this->MakeHostLinkSync($m->{caption}, $m->{method},
             $m->{args}, $small, $sync_method, "btn btn-default");
         $http->queue($link);
 
@@ -1369,7 +1380,7 @@ method MakeMenuBar($http, $menu) {
 
     $http->queue(qq{
       <div class="btn-group">
-        <button type="button" 
+        <button type="button"
                 class="$class dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
