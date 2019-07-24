@@ -1,13 +1,29 @@
-CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
-
-
-\connect posda_files
 --
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.1
--- Dumped by pg_dump version 11.3
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 10.9 (Ubuntu 10.9-0ubuntu0.18.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: posda_files; Type: DATABASE; Schema: -; Owner: -
+--
+
+CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+\connect posda_files
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -46,6 +62,20 @@ CREATE SCHEMA dicom_conv;
 --
 
 CREATE SCHEMA quasar;
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 SET default_tablespace = '';
@@ -350,7 +380,8 @@ CREATE TABLE public.activity_task_status (
     last_updated timestamp without time zone,
     expected_remaining_time interval,
     dismissed_time timestamp without time zone,
-    dismissed_by text
+    dismissed_by text,
+    manual_update boolean
 );
 
 
@@ -802,6 +833,16 @@ CREATE TABLE public.beam_wedge (
 
 
 --
+-- Name: button_popularity; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.button_popularity (
+    processname text NOT NULL,
+    created timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: clinical_trial_qualified_patient_id; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1071,6 +1112,26 @@ CREATE TABLE public.dbif_query_args (
     arg_index integer,
     arg_name text,
     arg_value text
+);
+
+
+--
+-- Name: dedup_dicom_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dedup_dicom_file (
+    file_id integer,
+    dataset_digest text,
+    xfr_stx text,
+    has_meta boolean,
+    is_dicom_dir boolean,
+    has_sop_common boolean,
+    dicom_file_type text,
+    has_pixel_data boolean,
+    pixel_data_digest text,
+    pixel_data_offset integer,
+    pixel_data_length integer,
+    has_no_roi_linkages boolean
 );
 
 
@@ -1824,6 +1885,40 @@ ALTER SEQUENCE public.file_import_study_file_import_study_id_seq OWNED BY public
 
 
 --
+-- Name: import_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.import_event (
+    import_event_id integer NOT NULL,
+    import_type text,
+    importing_user text,
+    originating_ip_addr text,
+    import_comment text,
+    import_time timestamp with time zone,
+    remote_file text,
+    volume_name text,
+    import_close_time timestamp with time zone,
+    related_id_1 integer,
+    related_id_2 integer
+);
+
+
+--
+-- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.file_imports_over_time AS
+ SELECT count(file.file_id) AS count,
+    date_part('month'::text, import_event.import_time) AS importmonth,
+    date_part('year'::text, import_event.import_time) AS importyear
+   FROM ((public.file
+     JOIN public.file_import USING (file_id))
+     JOIN public.import_event USING (import_event_id))
+  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
+  WITH NO DATA;
+
+
+--
 -- Name: file_location; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2153,6 +2248,41 @@ CREATE TABLE public.file_win_lev (
 
 
 --
+-- Name: files_without_location; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.files_without_location AS
+ SELECT a.file_id,
+    a.digest,
+    a.size,
+    a.is_dicom_file,
+    a.file_type,
+    a.processing_priority,
+    a.ready_to_process
+   FROM (public.file a
+     LEFT JOIN public.file_location b ON ((a.file_id = b.file_id)))
+  WHERE (b.file_id IS NULL)
+  WITH NO DATA;
+
+
+--
+-- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.files_without_type AS
+ SELECT file.file_id,
+    file.digest,
+    file.size,
+    file.is_dicom_file,
+    file.file_type,
+    file.processing_priority,
+    file.ready_to_process
+   FROM public.file
+  WHERE (file.file_type IS NULL)
+  WITH NO DATA;
+
+
+--
 -- Name: for_registration; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2473,25 +2603,6 @@ CREATE TABLE public.import_ct_series (
 
 
 --
--- Name: import_event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.import_event (
-    import_event_id integer NOT NULL,
-    import_type text,
-    importing_user text,
-    originating_ip_addr text,
-    import_comment text,
-    import_time timestamp with time zone,
-    remote_file text,
-    volume_name text,
-    import_close_time timestamp with time zone,
-    related_id_1 integer,
-    related_id_2 integer
-);
-
-
---
 -- Name: import_event_import_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2797,6 +2908,25 @@ CREATE TABLE public.posda_public_compare (
     long_report_file_id integer NOT NULL,
     to_file_path text NOT NULL
 );
+
+
+--
+-- Name: public_copy_status; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.public_copy_status (
+    subprocess_invocation_id integer NOT NULL,
+    file_id integer NOT NULL,
+    success boolean,
+    error_message text
+);
+
+
+--
+-- Name: TABLE public_copy_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.public_copy_status IS 'Store the status of attempts to copy files to public';
 
 
 --
@@ -4633,6 +4763,14 @@ ALTER TABLE ONLY public.patient_import_status
 
 
 --
+-- Name: public_copy_status public_copy_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.public_copy_status
+    ADD CONSTRAINT public_copy_status_pkey PRIMARY KEY (subprocess_invocation_id, file_id);
+
+
+--
 -- Name: site_codes site_codes_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4646,6 +4784,14 @@ ALTER TABLE ONLY public.site_codes
 
 ALTER TABLE ONLY public.site_codes
     ADD CONSTRAINT site_codes_site_name_key UNIQUE (site_name);
+
+
+--
+-- Name: subprocess_invocation subprocess_invocation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subprocess_invocation
+    ADD CONSTRAINT subprocess_invocation_pkey PRIMARY KEY (subprocess_invocation_id);
 
 
 --
@@ -4684,6 +4830,13 @@ CREATE UNIQUE INDEX queries_name_index ON dbif_config.queries USING btree (name)
 --
 
 CREATE UNIQUE INDEX role_tabs_uidx ON dbif_config.role_tabs USING btree (role_name, query_tab_name);
+
+
+--
+-- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
 
 
 --
@@ -5093,6 +5246,13 @@ CREATE INDEX file_win_lev_main_idx ON public.file_win_lev USING btree (file_id, 
 
 
 --
+-- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
+
+
+--
 -- Name: fraction_reference_beam_beam_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5496,6 +5656,22 @@ ALTER TABLE ONLY public.downloadable_file
 
 
 --
+-- Name: public_copy_status public_copy_status_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.public_copy_status
+    ADD CONSTRAINT public_copy_status_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: public_copy_status public_copy_status_subprocess_invocation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.public_copy_status
+    ADD CONSTRAINT public_copy_status_subprocess_invocation_id_fkey FOREIGN KEY (subprocess_invocation_id) REFERENCES public.subprocess_invocation(subprocess_invocation_id);
+
+
+--
 -- Name: user_inbox_content user_inbox_content_background_subprocess_report_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5523,47 +5699,3 @@ ALTER TABLE ONLY public.user_inbox_content
 -- PostgreSQL database dump complete
 --
 
---
--- Name: file_imports_over_time; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.file_imports_over_time AS
- SELECT count(file.file_id) AS count,
-    date_part('month'::text, import_event.import_time) AS importmonth,
-    date_part('year'::text, import_event.import_time) AS importyear
-   FROM ((public.file
-     JOIN public.file_import USING (file_id))
-     JOIN public.import_event USING (import_event_id))
-  GROUP BY (date_part('year'::text, import_event.import_time)), (date_part('month'::text, import_event.import_time))
-  WITH NO DATA;
-
-
---
--- Name: files_without_type; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.files_without_type AS
- SELECT file.file_id,
-    file.digest,
-    file.size,
-    file.is_dicom_file,
-    file.file_type,
-    file.processing_priority,
-    file.ready_to_process
-   FROM public.file
-  WHERE (file.file_type IS NULL)
-  WITH NO DATA;
-
-
---
--- Name: activity_timpepoint_file_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX activity_timpepoint_file_idx ON public.activity_timepoint_file USING btree (activity_timepoint_id, file_id);
-
-
---
--- Name: files_without_type_file_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX files_without_type_file_id_idx ON public.files_without_type USING btree (file_id);
