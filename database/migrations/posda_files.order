@@ -1,2 +1,3 @@
 add_key_to_subprocess_invocation.sql
 create_public_copy_status_table.sql
+create_button_popularity_table.sql
