@@ -1,0 +1,4 @@
+clean button popularity
+1400
+posda_files
+delete from button_popularity where (extract(days from (now() - created)) > 182);
