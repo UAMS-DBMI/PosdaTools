@@ -3230,7 +3230,7 @@ method ActivityOperations($http, $dyn){
   }
   $http->queue("</table>");
 }
-#MEMEME
+
 method InvokeOperation($http, $dyn){
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
@@ -3238,8 +3238,8 @@ method InvokeOperation($http, $dyn){
     $class = "Posda::ProcessPopup";
   }
   eval "require $class";
-  print STDERR Dumper($dyn);
-  #Query('IncreaseButtonPopularity')->Execute($dyn->{operation});
+  #print STDERR Dumper($dyn);
+  #Button Popularity'
   Query('IncreaseButtonPopularity')->RunQuery(sub{}, sub{},$dyn->{operation});
   my $params = {
     button => $dyn->{operation},

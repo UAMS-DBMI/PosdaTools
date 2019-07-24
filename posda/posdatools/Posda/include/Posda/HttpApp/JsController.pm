@@ -912,7 +912,7 @@ sub NotSoSimpleButton{
   my $pop = 0;
   Query('CountButtonPopularity')->RunQuery(sub{my($row) = @_; $pop = $row->[0]}, sub{},$dyn->{operation});
   #print STDERR "I am $dyn->{op} , caption $dyn->{caption},  operation |$dyn->{operation}| and my popularity is $pop \n ";
-  my $blue = 250 - (10 * $pop);
+  my $blue = 250 - (3 * $pop);
   if ($blue < 10){
     $blue = 10;
   }
