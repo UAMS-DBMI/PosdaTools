@@ -18,6 +18,38 @@ sub new {
   if(exists $this->{activity_id}) { return bless $this, $class }
   die "No activity $act_id";
 };
+sub _GetCollectionAndSite {
+  my ($this) = @_;
+  my $r = Query('CollectionSiteFromTp')->FetchOneHash($this->LatestTimepoint());
+  $this->{collection} = $r->{collection_name};
+  $this->{site} = $r->{site_name};
+}
+sub GetCollection {
+  my ($this) = @_;
+  if (not defined $this->{collection}) {
+    $this->_GetCollectionAndSite()
+  }
+
+  return $this->{collection};
+}
+sub GetSite {
+  my ($this) = @_;
+  if (not defined $this->{site}) {
+    $this->_GetCollectionAndSite()
+  }
+
+  return $this->{site};
+}
+sub GetSiteCode {
+  my ($this) = @_;
+
+  if (not defined $this->{site}) {
+    $this->_GetCollectionAndSite()
+  }
+
+  my $r = Query('GetSiteCodeBySite')->FetchOneHash($this->{site});
+  return $r->{site_code}
+}
 sub LatestTimepoint{
   my($this) = @_;
   my $act_time_id;

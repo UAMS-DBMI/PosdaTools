@@ -1,0 +1,38 @@
+diff --git a/coders/dcm.c b/coders/dcm.c
+index 39a0b7d3c..5586bd6ff 100644
+--- a/coders/dcm.c
++++ b/coders/dcm.c
+@@ -2711,7 +2711,8 @@ typedef struct _DCMInfo
+     significant_bits;
+ 
+   MagickBooleanType
+-    rescale;
++    rescale,
++	force_unsigned;
+ 
+   double
+     rescale_intercept,
+@@ -2899,8 +2900,9 @@ static MagickBooleanType ReadDCMPixels(Image *image,DCMInfo *info,
+                   }
+                 i++;
+               }
+-          if (info->signed_data == 1)
+-            pixel_value-=32767;
++		  if (info->force_unsigned != MagickTrue)
++			  if (info->signed_data == 1)
++				pixel_value-=32767;
+           index=pixel_value;
+           if (info->rescale != MagickFalse)
+             {
+@@ -4214,6 +4216,11 @@ static Image *ReadDCMImage(const ImageInfo *image_info,ExceptionInfo *exception)
+           option=GetImageOption(image_info,"dcm:rescale");
+           if (option != (char *) NULL)
+             info.rescale=IsStringTrue(option);
++
++          option=GetImageOption(image_info,"dcm:unsigned");
++          if (option != (char *) NULL)
++            info.force_unsigned=MagickTrue;
++
+           if ((info.window_center != 0) && (info.window_width == 0))
+             info.window_width=info.window_center;
+           status=ReadDCMPixels(image,&info,stream_info,MagickTrue,exception);

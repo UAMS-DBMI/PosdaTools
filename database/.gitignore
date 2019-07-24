@@ -1,1 +1,3 @@
-*.sql
+schema.sql
+queries.sql
+data.sql
