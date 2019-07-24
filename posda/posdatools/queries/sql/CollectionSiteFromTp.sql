@@ -5,7 +5,7 @@
 -- Tags: ['activity_timepoint_support']
 -- Description: Get the collection and site from a TP
 
-select
+select distinct
     project_name as collection_name,
     site_name
 from
@@ -13,4 +13,3 @@ from
     natural join ctp_file
 where
     activity_timepoint_id = ?
-limit 1
