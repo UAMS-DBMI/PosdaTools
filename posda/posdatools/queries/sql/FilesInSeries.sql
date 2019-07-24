@@ -10,7 +10,7 @@ select
   distinct root_path || '/' || rel_path as file
 from
   file_location natural join file_storage_root
-  natural join ctp_file
+  natural left join ctp_file
   natural join file_series
 where
   series_instance_uid = ? and visibility is null
