@@ -885,8 +885,48 @@ sub SubmitValueButton {
   };
   $http->queue($string);
 }
-
 sub NotSoSimpleButton{
+  my($this, $http, $dyn)  = @_;
+  my @parms;
+  for my $i (keys %$dyn){
+    if($i eq "op") { next }
+    if($i eq "caption") { next }
+    if($i eq "sync") { next }
+    if($i eq "class") { next }
+    if($i eq "pop") { next }
+    push @parms, "$i=$dyn->{$i}";
+  }
+  my $hstring = "";
+  for my $i (0 .. $#parms){
+    $hstring .= "$parms[$i]";
+    unless($i == $#parms) { $hstring .= "&" }
+  }
+  my $class = "btn btn-default";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  my $sync = exists($dyn->{sync}) ? $dyn->{sync} : "";
+
+  my $prefix = qq{<input type="button"};
+  my $postfix = "";
+  if(defined $dyn->{element} and $dyn->{element} eq 'a') {
+    $prefix = qq{<a href="#"};
+    $postfix = "$dyn->{caption}</a>";
+  }
+  my $title = '';
+  if (defined $dyn->{title}) {
+    $title = qq{title="$dyn->{title}"};
+  }
+
+
+  my $string = qq{$prefix class="$class"
+    onClick="javascript:PosdaGetRemoteMethod('$dyn->{op}', '$hstring', function () { $sync });" value="$dyn->{caption}"
+    $title
+    >$postfix};
+  $http->queue($string);
+}
+
+sub NotSoSimpleButtonPopularity{
   my($this, $http, $dyn)  = @_;
   my @parms;
   for my $i (keys %$dyn){
