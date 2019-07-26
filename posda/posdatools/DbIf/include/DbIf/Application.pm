@@ -3184,7 +3184,7 @@ method ActivityOperations($http, $dyn){
       $self->{NewActivities}->{ops}->{$op} = $cap;
       $http->queue("<td>");
 #xyzzy
-      $self->NotSoSimpleButton($http, {
+      $self->NotSoSimpleButtonPopularity($http, {
         op => "InvokeOperation",
         caption => $cap,
         operation => $op,
@@ -3200,7 +3200,7 @@ method ActivityOperations($http, $dyn){
       my($op, $cap) = @$foo;
       $self->{NewActivities}->{ops}->{$op} = $cap;
       $http->queue("<td>");
-      $self->NotSoSimpleButton($http, {
+      $self->NotSoSimpleButtonPopularity($http, {
         op => "InvokeOperation",
         caption => $cap,
         operation => $op,
@@ -3216,7 +3216,7 @@ method ActivityOperations($http, $dyn){
       my($op, $cap) = @$foo;
       $self->{NewActivities}->{ops}->{$op} = $cap;
       $http->queue("<td>");
-      $self->NotSoSimpleButton($http, {
+      $self->NotSoSimpleButtonPopularity($http, {
         op => "InvokeOperation",
         caption => $cap,
         operation => $op,
