@@ -103,7 +103,7 @@
       "CreationArgs": [
          11112,
          ["Config", "DicomReceiver"],
-         "POSDA_SUBMISSION_ROOT",
+         "POSDA_CACHE_ROOT/DicomReceiver",
       ],
     }
   },
