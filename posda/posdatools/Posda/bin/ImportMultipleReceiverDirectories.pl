@@ -51,6 +51,12 @@ sub InsertFile{
   $unlocker->execute;
   return $file_id;
 }
+sub FinalizeImportEvent{
+  my($db, $calling, $called, $import_event_id) = @_;
+  my $upd = $db->prepare("update import_event set import_close_time = now(), import_comment = ?\n" .
+    "where import_event_id = ?");
+  $upd->execute("$calling:$called", $import_event_id);
+}
 sub CopyOrLinkFile{
   my($db, $file_id, $digest, $root_id, $root, $fname, $errors) = @_;
   my $gfileloc = $db->prepare(
@@ -206,7 +212,7 @@ my $iie = $db->prepare(
   "  ?, ?, now()\n" .
   ")"
 );
-$iie->execute("Import From File List", $comment);
+$iie->execute("Import From Dicom Receive", $comment);
 my $giei = $db->prepare("select currval('import_event_import_event_id_seq') as id");
 $giei->execute;
 $h = $giei->fetchrow_hashref;
@@ -217,10 +223,14 @@ directory:
 for my $dir (@$dirlist){
   open my $sess, "<$dir/Session.info" or next directory;
   my @files;
+  push @files, "$dir/Session.info";
+  my($calling, $called);
   while(my $line = <$sess>){
     chomp $line;
     my @fields = split(/\|/, $line);
     if($fields[0] eq "file") { push @files, $fields[4] }
+    if($fields[0] eq "calling") { $calling = $fields[1] }
+    if($fields[0] eq "called") { $called = $fields[1] }
   }
   if(@files <= 0){
     $Results{EmptyDirsDeleted} += 1;
@@ -240,6 +250,9 @@ for my $dir (@$dirlist){
       print STDERR "Not removing $dir - imported: " .
         "$num_imported of $num_to_import\n";
     }
+print STDERR "$num_imported files imported from ($called, $calling)\n";
+    FinalizeImportEvent($db, $calling, $called, $ie_id);
+print STDERR "Import Finalized\n";
   } else {
     print STDERR "No files found in $dir - not removing\n";
   }
