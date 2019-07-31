@@ -10,6 +10,8 @@ from io import StringIO
 import tempfile
 from datetime import datetime
 
+class MissingActivityIdError(KeyError): pass
+
 class BackgroundProcess:
     """Represents a background process
 
@@ -17,14 +19,16 @@ class BackgroundProcess:
     as well as preparing reports and email.
     """
 
-    def __init__(self, invoc_id, notify_address):
+    def __init__(self, invoc_id, notify_address, activity_id=None):
         self.invoc_id = invoc_id
         self.notify_address = notify_address
+        self.activity_id = activity_id
         self.reports = {}
 
         self.parent_pid = None
         self.child_pid = None
         self.input_line_query = None
+        self.input_line_count = 0
 
         for row in Query("CreateBackgroundSubprocess").run(
                 subprocess_invocation_id=invoc_id,
@@ -32,6 +36,10 @@ class BackgroundProcess:
                 foreground_pid=os.getpid(),
                 user_to_notify=notify_address):
             self.background_id = row.background_subprocess_id
+
+        if activity_id is not None:
+            Query('InsertActivityTaskStatus').execute(activity_id, invoc_id)
+
 
         self._log_args()
 
@@ -98,12 +106,13 @@ class BackgroundProcess:
         self.reports[name] = tempfile.NamedTemporaryFile(mode="w", delete=False)
         return self.reports[name]
 
-    def finish(self):
+    def finish(self, final_status_message: str=None) -> None:
         """Indicate that the BackgroundProcess has finished.
 
         Log the completion time to the database, close all
         reports, load them into Posda and print the API URL to the email,
-        then send the email.
+        then send the email. Update Activity Task Status if we were
+        created with an activity_id.
         """
         Query("AddCompletionTimeToBackgroundProcess").execute(
             background_subprocess_id=self.background_id
@@ -111,6 +120,20 @@ class BackgroundProcess:
         self.finish_time = datetime.now()
         print("Background process ended at:", self.finish_time)
         print("Total time elapsed:", self.finish_time - self.start_time)
+
+        if self.activity_id is not None:
+            query = "FinishActivityTaskStatus"
+            if final_status_message == "Schedule Complete - Manual Process Follows":
+                query = "UpdateActivityTaskStatusForManualUpdate"
+
+            if final_status_message is None:
+                final_status_message = "Complete - no status specified"
+
+            Query(query).execute(
+                final_status_message,
+                self.activity_id,
+                self.invoc_id
+            )
 
         for report_name, report in self.reports.items():
             report.close()
@@ -123,3 +146,23 @@ class BackgroundProcess:
                    "Posda job complete",
                    self.email.getvalue())
 
+
+    def set_activity_status(self, status: str, time_remaining: str=None) -> None:
+        if self.activity_id is None:
+            raise MissingActivityIdError("This BackgroundProcess was created "
+                                         "without an activity_id, so Activity "
+                                         "Status cannot be set.")
+
+        if time_remaining is not None:
+            Query("UpdateActivityTaskStatusAndCompletionTime").execute(
+                status_text=status,
+                expected_completion_time=time_remaining,
+                activity_id=self.activity_id,
+                subprocess_invocation_id=self.invoc_id
+            )
+        else:
+            Query("UpdateActivityTaskStatus").execute(
+                status_text=status,
+                activity_id=self.activity_id,
+                subprocess_invocation_id=self.invoc_id
+            )

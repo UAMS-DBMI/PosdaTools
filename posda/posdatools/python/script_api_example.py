@@ -1,47 +1,51 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/python3 -u
 
-from posda.config import Database
+from posda.database import Database
 from posda.queries import Query
+from posda.background.process import BackgroundProcess
 
 db = Database("nonexistant")
 
-# with Query("DistinctSeriesByCollectionSite").run(
-#         'Radiomics', 
-#         'MAASTRO') as r:
-#     for row in r:
-#         print(row)
-#         break
 
-# TODO: add a way to toggle off the NamedTupleCursor, for more speed?
-# with Query("DistinctSeriesByCollectionSite").run(
-#         site_name='MAASTRO',
-#         project_name='Radiomics') as r:
-#     for row in r:
-#         print(row)
-#         print(row.series_instance_uid)
-#         break
-
-for row in Query("DistinctSeriesByCollectionSite").run(
-        site_name='MAASTRO',
-        project_name='Radiomics'):
-    print(row)
-    break
+def print_distinct_series_by_collsite(collection, site):
+    for row in Query("DistinctSeriesByCollectionSite").run(
+            site_name=site,
+            project_name=collection):
+        print(row)
+        break
+    else:
+        print(f"No collection/site {collection}//{site}")
 
 
-# hide some files
-hide_file = Query("HideFile")
+def hide_some_files(collection, site):
+    # hide some files
+    hide_file = Query("HideFile")
 
-for row in Query("FilesInCollectionSiteForSend").run(
-        collection='Radiomics',
-        site='MAASTRO'):
+    for row in Query("FilesInCollectionSiteForSend").run(
+            collection=collection,
+            site=site):
 
-    count = hide_file.execute(row.file_id)
-    print(f"{row.file_id}: {count} row(s) updated")
+        count = hide_file.execute(row.file_id)
+        print(f"{row.file_id}: {count} row(s) updated")
 
 
-# unhide all files
-with Database("posda_files").cursor() as cur:
-    cur.execute("update ctp_file "
-                "set visibility = null "
-                "where visibility = 'hidden'")
+def unhide_all():
+    with Database("posda_files").cursor() as cur:
+        cur.execute("update ctp_file "
+                    "set visibility = null "
+                    "where visibility = 'hidden'")
 
+        print(cur.rowcount, "files unhidden")
+
+
+background = BackgroundProcess(1, 'admin', 1)
+background.print_to_email("test email write")
+background.daemonize()
+
+background.set_activity_status('test!')
+
+print_distinct_series_by_collsite("LDCT", "Lahey")
+hide_some_files("LDCT", "Lahey")
+unhide_all()
+
+background.finish("final status is this")
