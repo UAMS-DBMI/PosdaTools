@@ -1,4 +1,9 @@
 import hashlib
+import sys
+
+def printe(*args, **kwargs):
+    """Print to standard error"""
+    print(*args, **kwargs, file=sys.stderr)
 
 def md5sum(fname):
     hash_md5 = hashlib.md5()

@@ -42,7 +42,7 @@ def Database(name):
         dsn = DB_CONFIG[name]
     except KeyError:
         # TODO: add logging module
-        print(f"Warning: There is no configured database {self.name}, "
+        print(f"Warning: There is no configured database {name}, "
                "assuming you want a direct connection to postgres.")
         dsn = dict(database=name, driver='postgres')
 
