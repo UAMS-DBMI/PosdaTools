@@ -194,7 +194,7 @@ my $comment = $spec->{comment};
 my $dirlist = $spec->{dirlist};
 my $db = DBI->connect("dbi:Pg:dbname=$db_name");
 unless($db) { die "Can't connect to $db_name" }
-my $get_root = $db->prepare("select * from file_storage_root where current");
+my $get_root = $db->prepare("select * from file_storage_root where storage_class = 'created'");
 $get_root->execute;
 my $h = $get_root->fetchrow_hashref;
 $get_root->finish;
