@@ -17,7 +17,7 @@ select sop_instance_uid from (
 select
   distinct sop_instance_uid, count(distinct file_id) 
 from
-  file_sop_common natural join file_series natural join ctp_file
+  file_sop_common natural join file_series natural left join ctp_file
 where
   series_instance_uid = ? and visibility is null
 group by sop_instance_uid
