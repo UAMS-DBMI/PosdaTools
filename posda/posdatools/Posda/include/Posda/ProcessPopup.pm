@@ -103,6 +103,9 @@ method GetParams{
 }
 method GetColumns{
   my $start = $self->{input_line_format};
+  if (not defined $start) {
+    $start = '';
+  }
   $self->{Columns} = [];
   while($start =~ /^[^<]*<([^>]+)>(.*)$/){
     push @{$self->{Columns}}, $1;

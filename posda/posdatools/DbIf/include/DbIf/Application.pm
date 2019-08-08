@@ -352,7 +352,6 @@ method DismissInboxItemButtonClick($http, $dyn) {
 
 method FileInboxItemButtonClick($http, $dyn) {
   my $message_id = $dyn->{message_id};
-  print STDERR "File Inbox Button Clicked ($message_id)\n";
   my $q = Query('InsertActivityInboxContent');
   $q->RunQuery(sub {}, sub{}, $self->{ActivitySelected}, $message_id);
   $self->{inbox}->SetDismissed($message_id);
@@ -2957,7 +2956,8 @@ method ShowActivityTimeline($http, $dyn){
       $duration, $file_id, $sub_id, $command_line,
       $spreadsheet_file_id) = @$next_event;
     my($tp,$tp_files);
-    if($next_tp->[4] ge $when && $next_tp->[4] le $ended){
+    if((defined $next_tp->[4]) &&
+      $next_tp->[4] ge $when && $next_tp->[4] le $ended){
       $tp = $next_tp->[3];
       $tp_files = $next_tp->[7];
       $next_tp = shift(@time_points_cp);
@@ -3305,6 +3305,7 @@ method NewQueryWait($http, $dyn){
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
 }
 method Queries($http,$dyn){
+  $self->ClearQueries($http, $dyn);
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
   if(
     exists($self->{NewQueryToDisplay})&&
@@ -3408,6 +3409,9 @@ method ClearCurrentForegroundSelector($http, $dyn){
   delete $self->{SelectFromCurrentForeground};
 }
 method DrawQueryListTypeSelector($http, $dyn){
+  if (not defined $self->{NewActivityQueriesType}) {
+    $self->{NewActivityQueriesType} = {};
+  }
   unless(defined $self->{NewActivityQueriesType}->{query_type}){
     $self->{NewActivityQueriesType}->{query_type} = "recent";
   }
@@ -3417,6 +3421,7 @@ method DrawQueryListTypeSelector($http, $dyn){
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
   $http->queue("$url - recent&nbsp;&nbsp;");
+  
   $url = $self->RadioButtonSync("query_type","search",
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
@@ -3425,7 +3430,8 @@ method DrawQueryListTypeSelector($http, $dyn){
   $http->queue("</div>");
 }
 method DrawQuerySearchForm($http, $dyn){
-  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+  if((defined $self->{NewActivityQueriesType}) &&
+    $self->{NewActivityQueriesType}->{query_type} eq "search"){
     $http->queue('<div width=100 style="margin-left: 10px">');
     $http->queue("&nbsp;Args containing:&nbsp; ");
     $self->BlurEntryBox($http, {
@@ -3561,7 +3567,8 @@ method SetNewNameMatchList($http, $dyn){
   $self->{NewNameMatchList} = \@clauses;
 }
 method DrawQueryListOrResults($http, $dyn){
-  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+  if((defined $self->{NewActivityQueriesType}) &&
+    $self->{NewActivityQueriesType}->{query_type} eq "search"){
     $self->DrawQueryListOrResultsSearch($http, $dyn);
   } else {
     $self->DrawQueryListOrResultsRecent($http, $dyn);
