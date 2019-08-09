@@ -53,6 +53,8 @@ for my $line (@lines){
   if($diagnosis_date =~ /^<(.*)>$/) { $diagnosis_date = $1 }
   if($baseline_date eq "<undef>"){ $baseline_date = undef }
   if($baseline_date =~ /^<(.*)>$/) { $baseline_date = $1 }
+  if($date_shift =~ /^<(.*)>$/) { $date_shift = $1 }
+  if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
   $q->RunQuery(sub {}, sub{},
