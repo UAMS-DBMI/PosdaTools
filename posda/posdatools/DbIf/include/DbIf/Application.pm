@@ -5016,7 +5016,8 @@ method Tables($http, $dyn){
   $self->RefreshEngine($http, $dyn, '</table>');
 }
 
-func apply_command($command, $colmap, $row) {
+sub apply_command{
+  my($command, $colmap, $row) = @_;
   if (not defined $command) {
     return undef
   }
@@ -5072,7 +5073,13 @@ method ExecuteCommand($http, $dyn) {
 
       $cols->{$col_name} = $col1;
     }
-
+    my $parm_map;
+    for my $i (@{$op->{parms}}){
+      unless(exists $colmap->{$i}) { next }
+      my $index_of_parm = $colmap->{$i};
+      my $new_value = $table->{rows}->[0]->[$index_of_parm];;
+      $parm_map->{$i} = $new_value; 
+    }
     # now generate the cmdline like normal
     my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);
 
@@ -5080,6 +5087,11 @@ method ExecuteCommand($http, $dyn) {
     my $first_col_name = [keys %{$cols}]->[0];
     for my $i (0..$#{$cols->{$first_col_name}}) {
       my $pipe_parm_format = $op->{pipe_parms};
+      for my $p (keys %$parm_map){
+        my $v = $parm_map->{$p};
+        unless(defined $v) { next }
+        $pipe_parm_format =~ s/<$p>/$v/g;
+      }
       for my $var (@column_vars) {
         my $v = $cols->{$var}->[$i];
         $pipe_parm_format =~ s/<$var>/$v/g;
