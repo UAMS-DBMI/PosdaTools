@@ -1,4 +1,4 @@
-package Posda::ProcessPopup; 
+package Posda::ProcessPopup;
 use Modern::Perl;
 use Method::Signatures::Simple;
 
@@ -41,7 +41,7 @@ my $db_handle;
 #   operation_type => <operation_type>;
 #   help_info => [ <operation_name>, <command_line>, <operaton_type,
 #       <input_line_format>, <tags>
-#   ], 
+#   ],
 #   Params => [ <param_name_1>, .. <param_name_n>],
 #   MetaParams => [ <meta_param_name_1>, .. <meta_param_name_n>],
 #   Columns => [<col_1>, <col_2>, ... <col_n>],
@@ -103,9 +103,6 @@ method GetParams{
 }
 method GetColumns{
   my $start = $self->{input_line_format};
-  if (not defined $start) {
-    $start = '';
-  }
   $self->{Columns} = [];
   while($start =~ /^[^<]*<([^>]+)>(.*)$/){
     push @{$self->{Columns}}, $1;
@@ -167,7 +164,7 @@ method ProcessQuery{
 method Help($http, $dyn){
   my $child_path = $self->child_path("PopupHelp_$self->{operation_name}");
   my $details = $self->{help_info};
-  my $child_obj = DbIf::PopupHelp->new($self->{session}, 
+  my $child_obj = DbIf::PopupHelp->new($self->{session},
     $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }

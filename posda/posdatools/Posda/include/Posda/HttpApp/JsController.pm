@@ -287,7 +287,7 @@ sub EntryBox{
 sub BlurEntryBox{
   my($this, $http, $dyn, $sync) = @_;
   if (not defined $sync) {
-    $sync = "Update();";
+    $sync = "";
   }
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
   my $class = "form-control";

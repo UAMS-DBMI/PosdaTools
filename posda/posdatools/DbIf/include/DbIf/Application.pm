@@ -3305,7 +3305,6 @@ method NewQueryWait($http, $dyn){
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
 }
 method Queries($http,$dyn){
-  $self->ClearQueries($http, $dyn);
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
   if(
     exists($self->{NewQueryToDisplay})&&
@@ -3421,7 +3420,7 @@ method DrawQueryListTypeSelector($http, $dyn){
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
   $http->queue("$url - recent&nbsp;&nbsp;");
-  
+
   $url = $self->RadioButtonSync("query_type","search",
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
@@ -3500,7 +3499,8 @@ method SearchQueries($http, $dyn){
   my @clauses;
   if(exists($self->{NewArgList}) && ref($self->{NewArgList}) eq "ARRAY"){
     for my $i (@{$self->{NewArgList}}){ push @clauses, $i }
-  } if(exists($self->{NewColList}) && ref($self->{NewColList}) eq "ARRAY"){ for my $i (@{$self->{NewColList}}){ push @clauses, $i }
+  } if(exists($self->{NewColList}) && ref($self->{NewColList}) eq "ARRAY"){
+    for my $i (@{$self->{NewColList}}){ push @clauses, $i }
   }
   if(exists($self->{NewTableMatchList}) && ref($self->{NewTableMatchList}) eq "ARRAY"){
     for my $i (@{$self->{NewTableMatchList}}){ push @clauses, $i }
