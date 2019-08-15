@@ -4,15 +4,12 @@ import os
 import subprocess
 
 from ..util import md5sum
+from ..util import printe
 from .file import insert_file
 
 def get_parameters():
     test = sys.stdin.read()
     return json.loads(test)
-
-def printe(*args, **kwargs):
-    """Print to standard error"""
-    print(*args, **kwargs, file=sys.stderr)
 
 
 def get_stdin_input():
