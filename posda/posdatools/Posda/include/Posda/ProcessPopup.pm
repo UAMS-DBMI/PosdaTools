@@ -300,14 +300,15 @@ method StartSubprocess($http, $dyn){
   }
   my $cmd_to_invoke = $self->{ExpandedCommand};
   $cmd_to_invoke =~ s/<\?bkgrnd_id\?>/$new_id/eg;
-#  print STDERR "###########################\n";
-#  print STDERR "NewCommandToInvoke: $cmd_to_invoke\n";
-#  print STDERR "###########################\n";
+  print STDERR "###########################\n";
+  print STDERR "NewCommandToInvoke: $cmd_to_invoke\n";
+  print STDERR "###########################\n";
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd_to_invoke,
     $self->{LineList},
     $self->WhenCommandFinishes($new_id)
   );
+  print STDERR "Started Line reader\n";
   $self->{ContentResponseMode} = "WaitingForResponse";
 }
 

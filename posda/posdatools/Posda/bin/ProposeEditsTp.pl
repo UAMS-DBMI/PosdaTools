@@ -4,10 +4,12 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 
 my $usage = <<EOF;
-ProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify>
+ProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify> "<sep_char>"
   activity_id - Id of the currently selected activity
   scan_id - id of scan to query
   notify - email address for completion notification
+  sep_char - is the separator between fields (represented as "%" below)
+             in lines on STDIN 
 
 Expects lines on STDIN:
 <<element>>%<vr>%<<q_value>>%<num_series>%<p_op>%<<q_arg1>>%<<q_arg2>>
@@ -25,10 +27,10 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 
-unless($#ARGV == 3){
+unless($#ARGV == 4){
   die "$usage\n";
 }
-my($invoc_id, $activity_id, $scan_id, $notify) = @ARGV;
+my($invoc_id, $activity_id, $scan_id, $notify, $sep_char) = @ARGV;
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 
@@ -37,7 +39,7 @@ while(my $line = <STDIN>){
   chomp $line;
   $background->LogInputLine($line);
   my($element, $vr, $q_value, $num_series, $p_op, $q_arg1, $q_arg2) = 
-    split(/%/, $line);
+    split(/$sep_char/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 } elsif($element){
     print "Warning - element: \"$element\" not metaquoted\n";
   }
