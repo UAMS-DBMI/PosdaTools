@@ -81,7 +81,7 @@ $lines = $scan->PrintTableFromQuery(
   "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes", $rpt2);
 
 my $rpt3 = $background->CreateReport("Edit Skeleton");
-$rpt3->print("element,vr,q_value,description,disp,num_series," .
+$rpt3->print("element,vr,q_value,edit_description,disp,num_series," .
   "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
 $rpt3->print(",,,,,,,,,ProposeEditsTp,$act_id,$id,$notify,\"%\"\r\n");
 $background->Finish("Completed - PHI Scan and results");

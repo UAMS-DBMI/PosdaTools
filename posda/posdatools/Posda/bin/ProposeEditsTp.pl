@@ -127,7 +127,7 @@ my $rpt = $background->CreateReport("EditSpreadsheet");
 my $num_edit_groups = keys %SeriesByEditGroups;
 $background->WriteToEmail("$num_edit_groups distinct edit groups found\n");
 $rpt->print("series_instance_uid,num_files," .
-  "op,tag,val1,val2,Operation,description,notify,activity_id\n");
+  "op,tag,val1,val2,Operation,edit_description,notify,activity_id\n");
 my $first_line = 1;
 for my $c (sort keys %SeriesByEditGroups){
   for my $s (keys %{$SeriesByEditGroups{$c}}){
