@@ -19,6 +19,7 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){ print $usage; exit }
 unless($#ARGV == 3) { print $usage; exit }
 
 my($invoc_id, $act_id, $comment, $notify) = @ARGV;
+
 ###### Globals
 my $OldActTpId;
 my $OldActTpComment;
@@ -36,36 +37,24 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   $OldActTpComment = $comment;
   $OldActTpDate = $timepoint_created;
 }, sub {}, $act_id);
-Query('FileIdsByActivityTimepointId')->RunQuery(sub {
-  my($row) = @_;
-  $FilesInOldTp{$row->[0]} = 1;
-}, sub {}, $OldActTpId);
-my $q = Query('SeriesForFile');
-for my $file_id(keys %FilesInOldTp){
-  $q->RunQuery(sub {
-    my($row) = @_;
-    $SeriesInOldTp{$row->[0]} = 1;
-  }, sub {}, $file_id);
-}
 
 my @attr_names = (
   'collection', 'site', 'patient_id', 'study_instance_uid',
   'series_instance_uid', 'sop_instance_uid', 'dicom_file_type', 'modality',
   'file_id');
 my @Rows;
-#########new queries etc
-for my $series_instance_uid (keys %SeriesInOldTp){
-  Query("DistinctVisibleFileReportBySeries")->RunQuery(sub{
-    my($row) = @_;
-    my %values;
-    for my $i (@attr_names) {
-      my $v = shift (@$row);
-      unless(defined $v) { $v = '<undef>' }
-      $values{$i} = $v;
-    }
-    push @Rows, \%values;
-  }, sub {}, $series_instance_uid);
-}
+
+Query("getVisibleActivityTimepointFilesForActivity")->RunQuery(sub{
+  my($row) = @_;
+  my %values;
+  for my $i (@attr_names) {
+    my $v = shift (@$row);
+    unless(defined $v) { $v = '<undef>' }
+    $values{$i} = $v;
+  }
+  push @Rows, \%values;
+}, sub {}, $act_id );
+
 ######### More Globals
 my %Report;
 my %Patients;
