@@ -195,7 +195,7 @@ if(@dispositions_needed > 0){
   $rpt->print("id,tag,vr,name\n");
   for my $i (@dispositions_needed){
     for my $j ($#{$i}){
-      my $v = $j->[$i];
+      my $v = $i->[$j];
       if(defined $v) { $rpt->print("$v") } else {$rpt->print("<undef>") }
       unless($j == $#{$i}){
         $rpt->print(",");
