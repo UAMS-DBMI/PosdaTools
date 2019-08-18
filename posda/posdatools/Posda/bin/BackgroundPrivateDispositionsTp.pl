@@ -43,7 +43,7 @@ unless($#ARGV == 4){
 }
 my($invoc_id, $act_id, $uid_root, $offset, $notify) = @ARGV;
 
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 
 print "All processing in background\n";
 $background->Daemonize;
