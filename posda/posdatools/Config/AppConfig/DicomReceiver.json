@@ -80,7 +80,7 @@
       "num_invoked": 3,
       "num_performed": 3,
       "incoming_message_handler": "std",
-      "pres_contexts": "ImpOrExp",
+      "pres_contexts": "ImpOnly",
       "end_handler": "populate_posda_db",
     },
   },
@@ -1244,6 +1244,14 @@
       "1.2.840.10008.5.1.4.45.1" : {
         "1.2.840.10008.1.2" : "1",
       },
+      "1.2.840.10008.1.1" : {
+        "1.2.840.10008.1.2" : "1"
+      }
+    },
+    "verify": {
+      "1.2.840.10008.1.1" : {
+        "1.2.840.10008.1.2" : "1"
+      }
     },
     "query_find": {
       "1.2.840.10008.5.1.4.1.2.2.1" : {
