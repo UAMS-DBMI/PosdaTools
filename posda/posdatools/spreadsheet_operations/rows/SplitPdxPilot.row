@@ -1,0 +1,6 @@
+:operation_name: SplitPdxPilot
+:command_line: GeneratePdxEdits.pl <?bkgrnd_id?> <rel_dest_root> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<new_patient_id>&<new_study_desc>&<new_series_desc>
+:tags: ['bills_test']
+:can_chain: 

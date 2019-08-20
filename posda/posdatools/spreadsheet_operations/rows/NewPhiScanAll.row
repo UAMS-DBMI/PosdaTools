@@ -1,0 +1,6 @@
+:operation_name: NewPhiScanAll
+:command_line: NewPhiScanAll.pl <?bkgrnd_id?> "<description>" <db> <max_lines> <notify>
+:operation_type: background_process
+:input_line_format: <series_uid>
+:tags: ['bills_test', 'new_workflow']
+:can_chain: 

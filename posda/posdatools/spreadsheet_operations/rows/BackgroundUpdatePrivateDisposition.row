@@ -1,0 +1,6 @@
+:operation_name: BackgroundUpdatePrivateDisposition
+:command_line: BackgroundUpdatePrivateDispositions.pl <?bkgrnd_id?> "<why>" <notify>
+:operation_type: background_process
+:input_line_format: <id>&<disp>
+:tags: ['phi_maint']
+:can_chain: 

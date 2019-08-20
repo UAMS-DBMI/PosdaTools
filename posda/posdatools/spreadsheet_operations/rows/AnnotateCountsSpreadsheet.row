@@ -1,0 +1,6 @@
+:operation_name: AnnotateCountsSpreadsheet
+:command_line: AnnotateCountsSpreadsheet.pl <?bkgrnd_id?> "<notify>"
+:operation_type: background_process
+:input_line_format: <PID>|<ImageType>|<Modality>|<Images>|<StudyDate>|<StudyDescription>|<SeriesDescription>|<SeriesNumber>|<StudyInstanceUID>|<SeriesInstanceUID>|<Mfr>|<Model>|<software_versions>
+:tags: ['bills_test']
+:can_chain: 

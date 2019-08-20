@@ -1,0 +1,6 @@
+:operation_name: CompareDuplicateSopFirstInSeries
+:command_line: CompareDupSopSeriesList.pl
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['dup_sops']
+:can_chain: 

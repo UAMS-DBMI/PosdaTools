@@ -1,0 +1,6 @@
+:operation_name: CompareTimepoints
+:command_line: CompareTimepoints.pl <?bkgrnd_id?> <activity_id> <from_timepoint_id> <to_timepoint_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: []
+:can_chain: 

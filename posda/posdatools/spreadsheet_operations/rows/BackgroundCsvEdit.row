@@ -1,0 +1,6 @@
+:operation_name: BackgroundCsvEdit
+:command_line: BackgroundCsvEditor.pl <?bkgrnd_id?> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <file_id>&<op>&<path>&<val1>&<val2>&<val3>
+:tags: ['edit', 'non_dicom_edit']
+:can_chain: 

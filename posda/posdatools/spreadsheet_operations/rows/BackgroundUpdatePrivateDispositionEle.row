@@ -1,0 +1,6 @@
+:operation_name: BackgroundUpdatePrivateDispositionEle
+:command_line: BackgroundUpdatePrivateDispositionsEle.pl <?bkgrnd_id?> "<why>" <notify>
+:operation_type: background_process
+:input_line_format: <element_sig_pattern>&<disp>
+:tags: ['phi_maint']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: LinkPublicCollection
+:command_line: LinkPublicCollection.pl <?bkgrnd_id?> <directory> <notify>
+:operation_type: background_process
+:input_line_format: <collection>&<patient_id>&<series_instance_uid>&<dicom_file_uri>
+:tags: ['activity_timepoints', 'send_series', 'bills_test']
+:can_chain: 

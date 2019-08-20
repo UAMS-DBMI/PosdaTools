@@ -1,0 +1,6 @@
+:operation_name: ModifySeriesInActivityTp
+:command_line: ModifySeriesInActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>&<function>
+:tags: ['activity_timepoints']
+:can_chain: 

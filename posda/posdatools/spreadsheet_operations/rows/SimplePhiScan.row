@@ -1,0 +1,6 @@
+:operation_name: SimplePhiScan
+:command_line: PhiSimpleScan.pl "<description>" <file_query_name> <notify>
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['simple_phi']
+:can_chain: 

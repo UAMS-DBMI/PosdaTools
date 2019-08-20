@@ -1,0 +1,6 @@
+:operation_name: AnonymizerToEditor
+:command_line: AnonymizerToEditor.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <operation_scope>&<operation>&<tag>&<value1>&<value2>&<patient_id>&<study_instance_uid>&<series_instance_uid>&<unmapped_uid>&<mapped_uid>
+:tags: ['bills_test']
+:can_chain: 

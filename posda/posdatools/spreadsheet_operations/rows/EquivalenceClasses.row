@@ -1,0 +1,6 @@
+:operation_name: EquivalenceClasses
+:command_line: BatchCreateSeriesEquivalenceClasses.pl <notify>
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['visual_review']
+:can_chain: 

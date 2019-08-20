@@ -1,0 +1,6 @@
+:operation_name: CopyBySeriesToScratch
+:command_line: CopyBySeriesToScratch.pl <to_dir> <notify>
+:operation_type: legacy
+:input_line_format: <patient_id>&<study_instance_uid>&<series_instance_uid>
+:tags: ['send_series', 'apply_disposition']
+:can_chain: 

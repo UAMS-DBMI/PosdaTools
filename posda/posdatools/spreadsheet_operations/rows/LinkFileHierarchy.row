@@ -1,0 +1,6 @@
+:operation_name: LinkFileHierarchy
+:command_line: LinkFileHierarchy.pl <Destination>
+:operation_type: legacy
+:input_line_format: <patient_id>  <study_instance_uid> <series_instance_uid>
+:tags: []
+:can_chain: 

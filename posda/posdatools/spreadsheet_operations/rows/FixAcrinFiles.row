@@ -1,0 +1,6 @@
+:operation_name: FixAcrinFiles
+:command_line: CsvFixAcrin.pl <?bkgrnd_id?> <to_dir> <uid_root> <low_date> <high_date> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<study_uid>&<series_uid>&<offset_pat_id>&<offset>
+:tags: ['bills_test']
+:can_chain: 

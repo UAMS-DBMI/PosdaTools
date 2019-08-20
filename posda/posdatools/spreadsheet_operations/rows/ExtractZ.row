@@ -1,0 +1,6 @@
+:operation_name: ExtractZ
+:command_line: ExtractZ.pl
+:operation_type: legacy
+:input_line_format: <file_id>&<unique_pixel_data_id>&<ipp>
+:tags: []
+:can_chain: 

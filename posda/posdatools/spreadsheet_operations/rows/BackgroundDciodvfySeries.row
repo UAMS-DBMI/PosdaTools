@@ -1,0 +1,6 @@
+:operation_name: BackgroundDciodvfySeries
+:command_line: BackgroundDciodvfySeries.pl <?bkgrnd_id?> "<description>" <type> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['dciodvfy']
+:can_chain: 

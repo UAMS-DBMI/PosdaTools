@@ -1,0 +1,6 @@
+:operation_name: FileAndDismissNotifications
+:command_line: FileAndDismissNotification.pl <?bkgrnd_id?> <activity_id> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <id>
+:tags: ['activity_support']
+:can_chain: 

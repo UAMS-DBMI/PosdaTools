@@ -1,0 +1,6 @@
+:operation_name: CompareDuplicateSops
+:command_line: CompareDupSopList.pl
+:operation_type: legacy
+:input_line_format: <sop_instance_uid>
+:tags: ['dup_sops']
+:can_chain: 

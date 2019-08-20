@@ -1,0 +1,6 @@
+:operation_name: TestCommand
+:command_line: TestCommand.pl <host> <port> <called> <calling> <series_instance_uid>
+:operation_type: legacy
+:input_line_format: 
+:tags: []
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: HelloWorldPerl
+:command_line: BackgroundHelloWorldWithInput.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['foo']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: RadcompPrivateDisp
+:command_line: BackgroundPrivateDispositionsByPatShift.pl <?bkgrnd_id?> <to_dir> <uid_root> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<study_uid>&<series_uid>&<offset>
+:tags: ['bills_test']
+:can_chain: 

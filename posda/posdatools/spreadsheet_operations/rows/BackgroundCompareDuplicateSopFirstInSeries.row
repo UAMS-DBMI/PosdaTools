@@ -1,0 +1,6 @@
+:operation_name: BackgroundCompareDuplicateSopFirstInSeries
+:command_line: BackgroundCompareDupSopSeriesList.pl <file_name> "<notify>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['dup_sops']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: BackgroundCompareSopsInMultipleSeries
+:command_line: BackgroundCompareSopsInMultipleSeries.pl <file_name> "<notify>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>&<sop_instance_uid>&<file_id>&<file_path>
+:tags: ['sops_different_series']
+:can_chain: 

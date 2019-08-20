@@ -1,0 +1,6 @@
+:operation_name: PopulateFileImport
+:command_line: PopulateFileImportForImportEvent.pl <?bkgrnd_id?> <import_event_id> <notify>
+:operation_type: background_process
+:input_line_format: <file_name>&<digest>
+:tags: ['QIN-GBM-DSC-MRI-DRO/Barrow']
+:can_chain: 

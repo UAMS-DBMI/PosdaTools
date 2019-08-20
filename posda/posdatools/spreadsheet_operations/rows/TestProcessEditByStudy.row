@@ -1,0 +1,6 @@
+:operation_name: TestProcessEditByStudy
+:command_line: TestProcessBackgroundEditStudyInstructions.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <study_instance_uid>&<op>&<tag>&<val1><val2>
+:tags: ['testing_edit_objects']
+:can_chain: 

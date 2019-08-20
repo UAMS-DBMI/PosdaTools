@@ -1,0 +1,6 @@
+:operation_name: PhiScan
+:command_line: NewPhiScan.pl <?bkgrnd_id?> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['scan_status', 'phi_status', 'new_phi']
+:can_chain: 

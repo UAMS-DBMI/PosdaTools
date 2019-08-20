@@ -1,0 +1,6 @@
+:operation_name: ApplyDispositions
+:command_line: BackgroundApplyDispositionsFromVisualScan.pl <?bkgrnd_id?> <dest_dir> <uid_root> <date_offset> <notify>
+:operation_type: background_process
+:input_line_format: <id>&<processing_status>&<review_status>&<dicom_file_type>
+:tags: ['visual_review_status']
+:can_chain: 

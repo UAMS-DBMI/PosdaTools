@@ -1,0 +1,6 @@
+:operation_name: QuickCheckPublicPosdaConsistLike
+:command_line: QuickPublicPosdaCompareLikeCollection.pl <?bkgrnd_id?> "<collection_pat>"  <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['public_posda_consistency']
+:can_chain: 

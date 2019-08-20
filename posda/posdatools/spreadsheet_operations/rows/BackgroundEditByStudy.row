@@ -1,0 +1,6 @@
+:operation_name: BackgroundEditByStudy
+:command_line: BackgroundEditStudy.pl <?bkgrnd_id?> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <study_instance_uid>&<op>&<tag>&<val1>&<val2>
+:tags: ['activity_timepoints']
+:can_chain: 

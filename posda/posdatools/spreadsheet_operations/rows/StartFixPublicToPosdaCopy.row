@@ -1,0 +1,6 @@
+:operation_name: StartFixPublicToPosdaCopy
+:command_line: BackgroundFixPublicToPosdaCopy.pl <?bkgrnd_id?> <copy_id> "<why>", <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['public_posda_consistency']
+:can_chain: 

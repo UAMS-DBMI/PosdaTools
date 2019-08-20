@@ -1,0 +1,6 @@
+:operation_name: BackgroundOnlyEditDicomSeries
+:command_line: BackgroundOnlyEditDicomSeries.pl <?bkgrnd_id?> "/nas/public/posda/scratch/staging/<rel_dest_root>" "<desciption>" <notify>
+:operation_type: background_process
+:input_line_format: <unmapped_uid>&<mapped_uid>&<series_instance_uid>&<operation>&<tag>&<val1>&<val2>
+:tags: ['bills_test']
+:can_chain: 

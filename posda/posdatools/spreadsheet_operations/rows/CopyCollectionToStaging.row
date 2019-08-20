@@ -1,0 +1,6 @@
+:operation_name: CopyCollectionToStaging
+:command_line: CopyCollectionToStaging.pl <?bkgrnd_id?> <collection> "/nas/public/posda/scratch/staging/<rel_dir>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['bills_test']
+:can_chain: 

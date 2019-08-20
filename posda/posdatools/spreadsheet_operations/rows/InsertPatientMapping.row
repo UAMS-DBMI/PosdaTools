@@ -1,0 +1,6 @@
+:operation_name: InsertPatientMapping
+:command_line: ProcessCollectionSiteWorksheet.pl <?bkgrnd_id?>
+:operation_type: background_process
+:input_line_format: <site_code>&<collection_code>&<site_id>&<site_name>&<collection_name>
+:tags: ['bills_test', 'mapping_tables', 'patient_mapping']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: BackgroundCompareFromTo
+:command_line: BackgroundCompareFromToFiles.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <sop_instance_uid>&<from_file>&<to_file>
+:tags: ['dup_sops', 'edit_files']
+:can_chain: 

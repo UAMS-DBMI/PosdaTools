@@ -1,0 +1,6 @@
+:operation_name: BackgroundHideFiles
+:command_line: BackgroundHideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['compare_series']
+:can_chain: 

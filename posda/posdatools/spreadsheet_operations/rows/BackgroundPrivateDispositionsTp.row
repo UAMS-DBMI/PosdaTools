@@ -1,0 +1,6 @@
+:operation_name: BackgroundPrivateDispositionsTp
+:command_line: BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['activity_timepoints']
+:can_chain: 

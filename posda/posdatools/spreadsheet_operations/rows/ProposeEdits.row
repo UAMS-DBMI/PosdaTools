@@ -1,0 +1,6 @@
+:operation_name: ProposeEdits
+:command_line: NewProposeEdits.pl <?bkgrnd_id?> <scan_id> <notify>
+:operation_type: background_process
+:input_line_format: <element>%<vr>%<q_value>%<num_series>%<p_op>%<q_arg1>%<q_arg2>
+:tags: ['simple_phi', 'activity_timepoints']
+:can_chain: 

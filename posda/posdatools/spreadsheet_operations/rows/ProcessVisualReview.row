@@ -1,0 +1,6 @@
+:operation_name: ProcessVisualReview
+:command_line: ProcessVisualReview.pl <?bkgrnd_id?> <scan_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['visual_review_new_workflow']
+:can_chain: 

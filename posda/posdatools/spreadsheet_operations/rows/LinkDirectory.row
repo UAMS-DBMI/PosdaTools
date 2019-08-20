@@ -1,0 +1,6 @@
+:operation_name: LinkDirectory
+:command_line: MakeLinkedDirectory.pl <target_dir>
+:operation_type: legacy
+:input_line_format: <path>, <sop_instance_uid>
+:tags: ['send_series']
+:can_chain: 

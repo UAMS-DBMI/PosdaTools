@@ -1,0 +1,6 @@
+:operation_name: MakeHierarchyBySeries
+:command_line: GetSeriesHierarchyBySeriesWithFileTypeAndModality.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <series_jnstance_uid>
+:tags: ['bills_test', 'activity_timepoints']
+:can_chain: 

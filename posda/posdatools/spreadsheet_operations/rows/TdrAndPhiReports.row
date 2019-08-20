@@ -1,0 +1,6 @@
+:operation_name: TdrAndPhiReports
+:command_line: PrepareTdrAndPhiReport.pl
+:operation_type: legacy
+:input_line_format: <id>&<TdrReportFile>&<PhiReportFile>&<notify>
+:tags: ['phi_review']
+:can_chain: 

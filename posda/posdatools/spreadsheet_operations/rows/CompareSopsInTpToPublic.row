@@ -1,0 +1,6 @@
+:operation_name: CompareSopsInTpToPublic
+:command_line: CompareSopsInTpToPublic.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['activity_timepoints_support']
+:can_chain: 

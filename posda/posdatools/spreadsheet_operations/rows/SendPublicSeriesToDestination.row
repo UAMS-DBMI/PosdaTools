@@ -1,0 +1,6 @@
+:operation_name: SendPublicSeriesToDestination
+:command_line: SendPublicSetOfSeriesToDestination.pl <host> <port> <called> <calling>
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['send_series']
+:can_chain: 

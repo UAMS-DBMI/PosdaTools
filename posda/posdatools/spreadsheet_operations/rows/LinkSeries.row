@@ -1,0 +1,6 @@
+:operation_name: LinkSeries
+:command_line: BackgroundLinkSeries.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<study_instance_uid>&<series_instance_uid>
+:tags: ['patient_queries']
+:can_chain: 

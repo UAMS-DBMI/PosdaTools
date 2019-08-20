@@ -1,0 +1,6 @@
+:operation_name: SimpleBackgroundTestProcess
+:command_line: SimpleBackgroundTestSubprocess.pl <?bkgrnd_id?> "<message>" <notify>
+:operation_type: background_process
+:input_line_format: <column1>&<column2>&<column3>
+:tags: ['bills_test']
+:can_chain: 

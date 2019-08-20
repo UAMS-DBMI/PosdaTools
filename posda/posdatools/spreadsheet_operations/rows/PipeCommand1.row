@@ -1,0 +1,6 @@
+:operation_name: PipeCommand1
+:command_line: PipeCommand1.pl <var1> <var2> 1 2 3
+:operation_type: legacy
+:input_line_format: <vals1>,<vals2>,<vals3>
+:tags: []
+:can_chain: 

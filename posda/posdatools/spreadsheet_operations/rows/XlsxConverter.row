@@ -1,0 +1,6 @@
+:operation_name: XlsxConverter
+:command_line: XlsxConverter.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['radcomp']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: ImportNonDicomEdits
+:command_line: ImportNonDicomEditedFiles.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['non_dicom_edit']
+:can_chain: 
