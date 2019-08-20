@@ -1,0 +1,6 @@
+:operation_name: ImportPatientMapping
+:command_line: ImportPatientMapping.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <from_patient_id>&<to_patient_id>&<to_patient_name>&<collection_name>&<site_name>&<batch_number>&<date_shift>&<diagnosis_date>&<baseline_date>&<uid_root>
+:tags: ['bills_test', 'mapping_tables', 'patient_mapping']
+:can_chain: 

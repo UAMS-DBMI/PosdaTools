@@ -1,0 +1,6 @@
+:operation_name: BatchEditBySop
+:command_line: BatchEditDicomFile.pl <?bkgrnd_id?> /nas/public/posda/edited/<rel_dest_root> <who> "<edit_description>" <notify>
+:operation_type: background_process
+:input_line_format: <command>&<arg1>&<arg2>&<arg3>&<arg4>
+:tags: ['edit_files']
+:can_chain: 

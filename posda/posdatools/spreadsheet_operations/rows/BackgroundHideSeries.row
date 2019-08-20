@@ -1,0 +1,6 @@
+:operation_name: BackgroundHideSeries
+:command_line: BackgroundHideSeriesWithIndividualStatus.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <series_uid>&<reason_to_hide>
+:tags: ['bills_test', 'new_workflow', 'activity_support']
+:can_chain: 

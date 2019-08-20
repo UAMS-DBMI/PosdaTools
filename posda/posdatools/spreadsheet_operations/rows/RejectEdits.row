@@ -1,0 +1,6 @@
+:operation_name: RejectEdits
+:command_line: RejectEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['find_patients']
+:can_chain: 

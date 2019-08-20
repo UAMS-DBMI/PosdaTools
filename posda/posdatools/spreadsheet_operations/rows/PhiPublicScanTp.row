@@ -1,0 +1,6 @@
+:operation_name: PhiPublicScanTp
+:command_line: PhiPublicScanTp.pl <?bkgrnd_id?> <activity_id> <max_rows> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['simple_phi']
+:can_chain: 

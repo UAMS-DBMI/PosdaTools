@@ -1,0 +1,6 @@
+:operation_name: BackgroundCompareDupSops
+:command_line: BackgroundCompareDupSopList.pl <file_name> "<notify>"
+:operation_type: legacy
+:input_line_format: <sop_instance_uid>&<file_id>&<path>&<first_loaded>
+:tags: ['dup_sops']
+:can_chain: 

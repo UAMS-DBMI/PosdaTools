@@ -1,0 +1,6 @@
+:operation_name: UpdateQualifiedPatients
+:command_line: UpdateQualifiedPatients.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <collection>&<site>&<patient_id>&<qualified>
+:tags: ['activity_timepoint_support']
+:can_chain: 

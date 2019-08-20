@@ -1,0 +1,6 @@
+:operation_name: TestProcessEditByFile
+:command_line: TestProcessBackgroundEditFileInstructions.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <file_id>&<op>&<tag>&<val1>&<val2>
+:tags: ['testing_edit_objects']
+:can_chain: 

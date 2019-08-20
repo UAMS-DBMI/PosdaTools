@@ -1,0 +1,6 @@
+:operation_name: MakeHierarchyByPat
+:command_line: GetHierarchyFromPatientId.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>
+:tags: ['bills_test']
+:can_chain: 

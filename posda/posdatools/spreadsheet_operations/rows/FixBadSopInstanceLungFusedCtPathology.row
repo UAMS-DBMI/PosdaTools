@@ -1,0 +1,6 @@
+:operation_name: FixBadSopInstanceLungFusedCtPathology
+:command_line: FixBadSopInstancesLungFusedCtPathology.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['Curation of Lung-Fused-CT-Pathology']
+:can_chain: 

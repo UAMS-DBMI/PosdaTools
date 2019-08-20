@@ -1,0 +1,6 @@
+:operation_name: CreateActivityTimepointFromPatientList
+:command_line: CreateActivityTimepointFromPatientList.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <collection>&<site>&<patient_id>
+:tags: ['activity_timepoints']
+:can_chain: 

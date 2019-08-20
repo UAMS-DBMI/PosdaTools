@@ -1,0 +1,6 @@
+:operation_name: FixCtInExceptionalRespondersWithNullNumberOfFrames
+:command_line: FixCtErwWithNullNumberOfFrames.pl <?bkgrnd_id?> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['Exceptional-Responders_NCI_Oct2018_curation']
+:can_chain: 

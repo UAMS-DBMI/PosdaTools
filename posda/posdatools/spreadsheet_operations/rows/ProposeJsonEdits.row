@@ -1,0 +1,6 @@
+:operation_name: ProposeJsonEdits
+:command_line: ProposeJsonEdits.pl <?bkgrnd_id?> <scan_id> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <type>&<path>&<q_value>&<num_files>&<p_op>&<q_arg1>&<q_arg2>&<q_arg3>
+:tags: ['non_dicom_edit']
+:can_chain: 

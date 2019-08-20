@@ -1,0 +1,6 @@
+:operation_name: UpdatePrivateDispositions
+:command_line: UpdatePrivateDisposition.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <element_signature>&<vr>&<disposition>
+:tags: ['phi_maint']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: AddInitialStatus
+:command_line: PopulatePatStat.pl
+:operation_type: legacy
+:input_line_format: <patient_id>, <status>
+:tags: ['patient_status']
+:can_chain: 

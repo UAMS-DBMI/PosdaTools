@@ -1,0 +1,6 @@
+:operation_name: DeletePvtExceptCtp
+:command_line: DeletePrivateFromCollection.pl <?bkgrnd_id?> <collection> /nas/public/posda/scratch/converted/<rel_to_dir> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['bills_test']
+:can_chain: 

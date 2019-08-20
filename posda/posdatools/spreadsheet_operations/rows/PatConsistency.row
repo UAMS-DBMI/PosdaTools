@@ -1,0 +1,6 @@
+:operation_name: PatConsistency
+:command_line: CheckPatConsistency.pl "<collection>" <patient_id>
+:operation_type: legacy
+:input_line_format: 
+:tags: []
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: SetUpPublicToPosdaCopy
+:command_line: SetUpPublicToPosdaCopy.pl <?bkgrnd_id?> <collection> <notify> "<why_done>"
+:operation_type: background_process
+:input_line_format: 
+:tags: ['pubic_posda_consistency']
+:can_chain: 

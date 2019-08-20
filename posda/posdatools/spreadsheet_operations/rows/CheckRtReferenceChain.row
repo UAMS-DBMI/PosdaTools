@@ -1,0 +1,6 @@
+:operation_name: CheckRtReferenceChain
+:command_line: CheckRtReferenceChain.pl <?bkgrnd_id?> <collection> <site> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['struct_linkages']
+:can_chain: 

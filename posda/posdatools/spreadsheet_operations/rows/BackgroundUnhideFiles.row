@@ -1,0 +1,6 @@
+:operation_name: BackgroundUnhideFiles
+:command_line: BackgroundUnhideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"
+:operation_type: background_process
+:input_line_format: <file_id>&<old_visibility>
+:tags: ['activity_timepoint_support']
+:can_chain: 

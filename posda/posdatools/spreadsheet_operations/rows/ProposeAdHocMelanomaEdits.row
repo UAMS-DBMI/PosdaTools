@@ -1,0 +1,6 @@
+:operation_name: ProposeAdHocMelanomaEdits
+:command_line: ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>
+:tags: ['bills_test', 'bills_ad_hoc_scripts']
+:can_chain: 

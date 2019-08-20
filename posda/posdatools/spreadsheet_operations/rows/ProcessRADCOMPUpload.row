@@ -1,0 +1,6 @@
+:operation_name: ProcessRADCOMPUpload
+:command_line: CategorizeRadcompFiles.pl <?bkgrnd_id?> <collection> <site> <notify>
+:operation_type: background_process
+:input_line_format: <import_event_id>
+:tags: ['radcomp']
+:can_chain: 

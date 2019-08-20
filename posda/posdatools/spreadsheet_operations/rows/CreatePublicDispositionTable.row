@@ -1,0 +1,6 @@
+:operation_name: CreatePublicDispositionTable
+:command_line: CreatePublicDispositionTable.pl <sop_class_uid> "<Description>" <who>
+:operation_type: legacy
+:input_line_format: <Tag>^<VR>^<Disposition>^<NameChain>
+:tags: []
+:can_chain: 

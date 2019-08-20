@@ -1,0 +1,6 @@
+:operation_name: HideSeriesWithStatus
+:command_line: HideBatchSeriesWithStatus.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['hide_files', 'hide_dup_sops']
+:can_chain: 

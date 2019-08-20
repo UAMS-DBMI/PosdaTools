@@ -1,0 +1,6 @@
+:operation_name: SymLinkToIntake
+:command_line: SymLinkToIntake.pl /cache/bbennett/Symlinks
+:operation_type: legacy
+:input_line_format: <PID>, <Modality>, <SopInstance>, <FilePath>
+:tags: []
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: FirstPassPhiByCollection
+:command_line: FirstPassPhiByCollection.pl <?bkgrnd_id?> <collection> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['bills_test']
+:can_chain: 

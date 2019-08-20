@@ -1,0 +1,6 @@
+:operation_name: MakeDownloadableDirectoryTp
+:command_line: MakeDownloadableDirectoryTp.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['send_series']
+:can_chain: 

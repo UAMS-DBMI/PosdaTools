@@ -1,0 +1,6 @@
+:operation_name: LookForDupSopsInPublicByCollectionSite
+:command_line: LookForPublicDupSops.pl <?bkgrnd_id?> "<collection>" "<site>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['comparing_posda_to_public']
+:can_chain: 

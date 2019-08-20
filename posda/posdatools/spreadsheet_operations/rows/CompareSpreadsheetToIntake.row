@@ -1,0 +1,6 @@
+:operation_name: CompareSpreadsheetToIntake
+:command_line: compare_spreadsheet_to_intake.py <?bkgrnd_id?> "<collection>" "<site>" "<notify>"
+:operation_type: background_process
+:input_line_format: <filename>,<collection>,<site>,<patient>,<series>,<sop>,<md5sum>,<size>
+:tags: ['background']
+:can_chain: 

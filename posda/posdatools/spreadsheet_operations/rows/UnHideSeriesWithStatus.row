@@ -1,0 +1,6 @@
+:operation_name: UnHideSeriesWithStatus
+:command_line: UnhideBatchSeriesWithStatus.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['hide_files']
+:can_chain: 

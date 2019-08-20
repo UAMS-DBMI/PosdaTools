@@ -1,0 +1,6 @@
+:operation_name: CreateActivityTimepointFromImportName
+:command_line: CreateActivityTimepointFromImportName.pl <?bkgrnd_id?> <activity_id> "<import_name>" "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['activity_timepoints']
+:can_chain: 

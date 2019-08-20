@@ -1,0 +1,6 @@
+:operation_name: BackgroundLinkPublicSeries
+:command_line: BackgroundLinkPublicSeries.pl <?bkgrnd_id?> /nas/public/posda/scratch/staging/<to_rel_dir> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<study_instance_uid>&<series_instance_uid>
+:tags: ['send_series']
+:can_chain: 

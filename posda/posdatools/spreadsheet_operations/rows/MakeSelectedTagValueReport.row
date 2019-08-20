@@ -1,0 +1,6 @@
+:operation_name: MakeSelectedTagValueReport
+:command_line: MakeSelectedTagValueReport.pl /cache/UserData/DbIf/PreparedReports/<report_file_name> <notify>
+:operation_type: legacy
+:input_line_format: <element_signature>&<vr>&<disposition>&<name_chain>&<num_phi_values>&<num_simple_phi_values>
+:tags: ['phi_maint']
+:can_chain: 

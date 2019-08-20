@@ -1,0 +1,6 @@
+:operation_name: BackgroundDoProposedEdits
+:command_line: BackgroundDoProposedEdits.pl <?bkgrnd_id?> /nas/public/posda/edited/<rel_dest_root> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <unmapped_id>&<mapped_id>&<series_instance_uid>&<num_files>&<operations>&<tag>&<val1>&<val2>
+:tags: ['edit_files']
+:can_chain: 

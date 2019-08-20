@@ -1,0 +1,6 @@
+:operation_name: ImportFromDicomFileEdit
+:command_line: ImportEditedFilesFromDicomEditCompare.pl <?bkgrnd_id?> <sub_invoc_id> <files_per_round> <max_queue_size> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['edit_files']
+:can_chain: 

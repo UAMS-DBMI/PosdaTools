@@ -1,0 +1,6 @@
+:operation_name: BackgroundUpdatePrivatedDispositonVr
+:command_line: BackgroundUpdatePrivateDispositionsVr.pl <?bkgrnd_id?> "<why>" <notify>
+:operation_type: background_process
+:input_line_format: <element_sig_pattern>&<vr>&<disp>
+:tags: ['phi_maint']
+:can_chain: 

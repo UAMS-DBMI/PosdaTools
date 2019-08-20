@@ -1,0 +1,6 @@
+:operation_name: DciodvfyReport
+:command_line: BackgroundDciodvfyReport.pl <?bkgrnd_id?> <scan_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['dciodvfy']
+:can_chain: 

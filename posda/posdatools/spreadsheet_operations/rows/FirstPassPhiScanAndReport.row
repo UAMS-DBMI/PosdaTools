@@ -1,0 +1,6 @@
+:operation_name: FirstPassPhiScanAndReport
+:command_line: FirstPassPhiScanAndReport.pl <?bkgrnd_id?> <collection> <site> "<batch_no>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['bills_test']
+:can_chain: 

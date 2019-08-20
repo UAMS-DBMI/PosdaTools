@@ -1,0 +1,6 @@
+:operation_name: MakeWeeklyFilesReport
+:command_line: MakeWeeklyLoadReport.pl <?bkgrnd_id?> <notify> <from> <to>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['downloads_by_date']
+:can_chain: 

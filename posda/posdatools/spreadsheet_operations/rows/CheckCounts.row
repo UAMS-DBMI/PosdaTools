@@ -1,0 +1,6 @@
+:operation_name: CheckCounts
+:command_line: CompareCounts.pl <?bkgrnd_id?> "<collection>" "<site>" <notify>
+:operation_type: background_process
+:input_line_format: <id>&<study>&<series>&<num_files>
+:tags: ['bills_test']
+:can_chain: 

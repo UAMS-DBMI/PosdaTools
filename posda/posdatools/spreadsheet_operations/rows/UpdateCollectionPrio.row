@@ -1,0 +1,6 @@
+:operation_name: UpdateCollectionPrio
+:command_line: UpdateBacklogPriorities.pl
+:operation_type: legacy
+:input_line_format: <collection>&<priority>
+:tags: ['backlog_status']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: BackgroundHideEarlyDupSops
+:command_line: BackgroundHideEarlyDupSopsInSeries.pl <?bkgrnd_id?> <notify> "<reason>"
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['activity_timepoint_support']
+:can_chain: 
