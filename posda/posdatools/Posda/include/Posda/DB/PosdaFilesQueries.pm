@@ -220,7 +220,7 @@ sub _RunQueryBlocking {
     $self->Prepare($dbh);
   }
 
-  my $select = ($self->{query} =~ /^select/i)? 1:0;
+  my $select = ($self->{query} =~ /^\s*select/i)? 1:0;
 
   my $rows_affected = $self->Execute(@_);
 
