@@ -1,9 +1,9 @@
 -- Name: SeriesInHierarchyBySeriesExtendedFurther
 -- Schema: posda_files
--- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'series_date', 'series_description', 'modality', 'dicom_file_type', 'num_files']
+-- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'series_description', 'series_date', 'modality', 'dicom_file_type', 'num_files']
 -- Args: ['series_instance_uid']
 -- Tags: ['by_series_instance_uid', 'posda_files', 'sops']
--- Description: Get Collection, Site, Patient, Study Hierarchy in which series resides
+-- Description:  Get Collection, Site, Patient, Study Hierarchy in which series resides
 --
 
 select distinct
