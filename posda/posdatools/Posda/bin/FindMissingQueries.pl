@@ -2,7 +2,7 @@
 use strict;
 use Posda::DB qw(Query);
 use Debug;
-my $dbg = sub { print @_ };
+my $dbg = sub { print STDERR @_ };
 sub ParseArray{
   my($str) = @_;
   unless(defined $str) { return [] }
@@ -141,7 +141,7 @@ Query('GetAllQueries')->RunQuery(sub {
   my($row) = @_;
   my($name, $query, $args, $columns, $tags, $schema, $description) =
     @$row;
-  $Queries{$row->[0]} = {
+  $Queries{$name} = {
     name => $name,
     query => $query,
     args => $args,
@@ -150,8 +150,8 @@ Query('GetAllQueries')->RunQuery(sub {
     schema => $schema,
     description => $description,
   };
-  unless (defined($Queries{$row->[0]}->{columns})){
-    $Queries{$row->[0]}->{columns} = [];
+  unless (defined($Queries{$name}->{columns})){
+    $Queries{$name}->{columns} = [];
   }
 }, sub{});
 for my $i (keys %Queries){
@@ -207,6 +207,9 @@ for my $i (keys %Queries){
     }
   } else {
     print "$i is in DB, not in queries directory\n";;
+    print STDERR "foo: ";
+    Debug::GenPrint($dbg, $Queries{$i}, 1);
+    print STDERR "\n";
   }
 }
 for my $i (keys %QueryFiles){
