@@ -1,3 +1,25 @@
+FROM alpine:latest as d3tbuild
+
+RUN apk add --update --no-cache \
+	imake \
+	makedepend \
+	alpine-sdk \
+	coreutils \
+	tar \
+	gzip \
+	bzip2
+
+RUN mkdir /build
+RUN wget -O /build/tools.tar.bz2 https://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20190724083540.tar.bz2
+RUN cd /build && \
+	tar xf tools.tar.bz2 && \
+	cd dicom3tools_1.00.snapshot.20190724083540 && \
+	./Configure && \
+	imake -I./config && \
+	make World && \
+	make && \
+	make install
+
 FROM alpine:latest
 
 # Base system deps
@@ -89,6 +111,8 @@ ENV PYTHONPATH /home/posda/posdatools/python
 
 # Copy actual posdatools last, to speed up rebuilds
 COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
+
+COPY --from=d3tbuild /usr/local/bin/* /usr/local/bin/
 
 USER posda:fakeposda
 ENTRYPOINT ["/docker-entrypoint"]
