@@ -1,0 +1,6 @@
+:operation_name: NonDicomPhiScan
+:command_line: NonDicomPhiScan.pl <?bkgrnd_id?> <collection> <site> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['non_dicom_phi']
+:can_chain: 

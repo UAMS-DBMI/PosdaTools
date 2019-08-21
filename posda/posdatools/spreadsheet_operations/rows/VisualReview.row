@@ -1,0 +1,6 @@
+:operation_name: VisualReview
+:command_line: ScheduleVisualReview.pl <?bkgrnd_id?> "<why>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['visual_review']
+:can_chain: 

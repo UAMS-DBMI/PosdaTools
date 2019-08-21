@@ -1,0 +1,6 @@
+:operation_name: BackgroundPlanLinkageCheck
+:command_line: BackgroundPlanLinkageCheck.pl <?bkgrnd_id?> <notify_email>
+:operation_type: background_process
+:input_line_format: <file_id>&<collection>&<site>&<patient_id>&<series_instance_uid>
+:tags: ['background']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: BulkHashStructUids
+:command_line: BulkHashStructUids.pl <dir> <uid_root> <notify>
+:operation_type: legacy
+:input_line_format: <sop_instance_uid>
+:tags: ['hash_unhashed']
+:can_chain: 

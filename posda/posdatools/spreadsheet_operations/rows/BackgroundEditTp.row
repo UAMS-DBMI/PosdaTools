@@ -1,0 +1,6 @@
+:operation_name: BackgroundEditTp
+:command_line: BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_description>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>&<op>&<tag>&<val1>&<val2>
+:tags: ['activity_timepoints']
+:can_chain: 

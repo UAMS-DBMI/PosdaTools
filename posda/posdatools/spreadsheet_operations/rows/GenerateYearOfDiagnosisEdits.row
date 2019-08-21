@@ -1,0 +1,6 @@
+:operation_name: GenerateYearOfDiagnosisEdits
+:command_line: GenerateEditsForYearsOfDiagnosis.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<year>
+:tags: ['bills_ad_hoc_scripts']
+:can_chain: 

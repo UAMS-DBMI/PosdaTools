@@ -1,0 +1,6 @@
+:operation_name: OnlyIn
+:command_line: OnlyIn.pl Posda Intake
+:operation_type: legacy
+:input_line_format: <SeriesInPosda>, <SeriesInIntake>
+:tags: []
+:can_chain: 

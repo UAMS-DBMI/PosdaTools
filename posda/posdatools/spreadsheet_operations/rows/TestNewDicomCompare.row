@@ -1,0 +1,6 @@
+:operation_name: TestNewDicomCompare
+:command_line: TestNewDicomCompare.pl <?bkgrnd_id?> <edit_file_id> <notify>
+:operation_type: background_process
+:input_line_format: <sop_instance_uid>&<from_file>&<to_file>
+:tags: ['bills_test']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: BackOutEdit
+:command_line: BackOutFromDicomEditCompare.pl <?bkgrnd_id?> <sub_invoc_id> <user> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['edit_files']
+:can_chain: 

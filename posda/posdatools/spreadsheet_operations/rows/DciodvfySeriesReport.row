@@ -1,0 +1,6 @@
+:operation_name: DciodvfySeriesReport
+:command_line: BackgroundDciodvfySeriesReport.pl <?bkgrnd_id?> "<description>" <scan_id> /cache/UserData/DbIf/PreparedReports/<report_file_name> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['dciodvfy']
+:can_chain: 

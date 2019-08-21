@@ -1,0 +1,6 @@
+:operation_name: ChangePatientStatus
+:command_line: UpdatePatStat.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <patient_id>, <old_status>, <new_status>
+:tags: ['patient_status']
+:can_chain: 

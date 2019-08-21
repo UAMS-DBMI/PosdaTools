@@ -1,0 +1,6 @@
+:operation_name: QuickCheckPosdaPublicConsistency
+:command_line: QuickPublicPosdaCompare.pl <?bkgrnd_id?> "<collection>"  <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['public_posda_consistency']
+:can_chain: 

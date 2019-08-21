@@ -1,0 +1,6 @@
+:operation_name: CompareIntakeFilesToPublicFiles
+:command_line: CompareIntakeFilesToPublicFiles.pl <report_file> <notify>
+:operation_type: legacy
+:input_line_format: <sop_instance_uid> <file_in_intake> <file_in_public>
+:tags: ['compare_collection_site']
+:can_chain: 

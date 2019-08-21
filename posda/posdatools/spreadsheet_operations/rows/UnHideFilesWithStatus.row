@@ -1,0 +1,6 @@
+:operation_name: UnHideFilesWithStatus
+:command_line: UnHideFilesWithStatus.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <file_id>&<old_visibility>
+:tags: ['hide_files', 'hide_dup_sops']
+:can_chain: 

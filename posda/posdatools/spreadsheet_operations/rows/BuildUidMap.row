@@ -1,0 +1,6 @@
+:operation_name: BuildUidMap
+:command_line: BuildUidMap.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <unmapped_uid>
+:tags: ['bills_test']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: RetryFailedProjections
+:command_line: RetryFailedProjections.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <image_equivalence_class_id>&<processing_status>&<review_status>
+:tags: ['visual_review_status']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: NewFirstPassPhi
+:command_line: NewFirstPassPhiScan.pl <?bkgrnd_id?> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['bills_test', 'new_workflow']
+:can_chain: 

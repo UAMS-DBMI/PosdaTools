@@ -1,0 +1,6 @@
+:operation_name: UpdateSimplePrivateDisposition
+:command_line: UpdateSimplePrivateDisposition.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <id>&<disp>
+:tags: ['phi_maint']
+:can_chain: 

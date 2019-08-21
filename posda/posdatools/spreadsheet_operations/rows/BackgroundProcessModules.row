@@ -1,0 +1,6 @@
+:operation_name: BackgroundProcessModules
+:command_line: BackgroundProcessModules.pl <?bkgrnd_id?> "<description>" <notify>
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['dicom_file_type']
+:can_chain: 

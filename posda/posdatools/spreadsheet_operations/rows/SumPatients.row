@@ -1,0 +1,6 @@
+:operation_name: SumPatients
+:command_line: SumPatients.pl <?bkgrnd_id?> "/cache/UserData/DbIf/PreparedReports/<report_file>" <notify>
+:operation_type: background_process
+:input_line_format: <id>&<study>&<series>&<num_files>
+:tags: ['bills_test']
+:can_chain: 

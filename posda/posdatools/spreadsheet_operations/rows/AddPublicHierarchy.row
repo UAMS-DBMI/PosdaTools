@@ -1,0 +1,6 @@
+:operation_name: AddPublicHierarchy
+:command_line: AddHierarchyToSpreadsheetByPublicSop.pl <new_root>
+:operation_type: legacy
+:input_line_format: <file>&<Element>&<OldValue>&<NewValue>
+:tags: []
+:can_chain: 

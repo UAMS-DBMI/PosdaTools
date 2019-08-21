@@ -1,0 +1,6 @@
+:operation_name: HidePatientWithStatus
+:command_line: HideBatchPatientWithStatus.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <patient_id>
+:tags: ['hide_files', 'hide_dup_sops']
+:can_chain: 

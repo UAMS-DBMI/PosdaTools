@@ -1,0 +1,6 @@
+:operation_name: BackgroundPrivateDispositions
+:command_line: BackgroundPrivateDispositions.pl <?bkgrnd_id?> <to_dir> <uid_root> <offset> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<study_instance_uid>&<series_instance_uid>
+:tags: ['edit', 'send_series']
+:can_chain: 

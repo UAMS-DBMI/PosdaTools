@@ -1,0 +1,6 @@
+:operation_name: SummarizeStructLinkage
+:command_line: SummarizeStructLinkagesByFileId.pl <?bkgrnd_id?> <file_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['activity_timepoint_support']
+:can_chain: 

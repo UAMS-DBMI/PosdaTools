@@ -1,0 +1,6 @@
+:operation_name: SendSeriesToDestination
+:command_line: SendSetOfSeriesToDestination.pl <host> <port> <called> <calling> <user> "<reason>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>
+:tags: ['send_series']
+:can_chain: 

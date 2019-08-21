@@ -1,0 +1,6 @@
+:operation_name: ImportEditedFiles
+:command_line: ImportEditedFiles.pl <?bkgrnd_id?> <report_file_id> "/cache/UserData/DbIf/PreparedReports/<import_report>" "<edit_comment>" <notify>
+:operation_type: background_process
+:input_line_format: <sop_instance_uid>&<from_digest>&<to_file>&<to_digest>&<status>
+:tags: ['edit_files']
+:can_chain: 

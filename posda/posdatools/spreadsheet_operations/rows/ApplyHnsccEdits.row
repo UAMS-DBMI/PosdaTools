@@ -1,0 +1,6 @@
+:operation_name: ApplyHnsccEdits
+:command_line: ApplyHnsccEdits.pl
+:operation_type: legacy
+:input_line_format: <new_file>&<element>&<new_value>
+:tags: []
+:can_chain: 

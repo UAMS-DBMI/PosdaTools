@@ -1,0 +1,6 @@
+:operation_name: AddSeriesToActivityTimepoint
+:command_line: AddSeriesToActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['activity_timepoint_support']
+:can_chain: 

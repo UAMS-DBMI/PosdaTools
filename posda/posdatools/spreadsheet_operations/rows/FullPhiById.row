@@ -1,0 +1,6 @@
+:operation_name: FullPhiById
+:command_line: FullPhiById.pl <?bkgrnd_id?> <scan_id> <notify> <max_rows>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['bills_test']
+:can_chain: 

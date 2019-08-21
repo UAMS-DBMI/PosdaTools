@@ -1,0 +1,6 @@
+:operation_name: UpdateKnowlegeBase
+:command_line: UpdateKnowledgeBase.pl <who> "<why>"
+:operation_type: legacy
+:input_line_format: <Tag>^<VR>^<Disposition>^<NameChain>
+:tags: []
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: ScanDirPhi
+:command_line: PhiDirScan.pl <dir> "<description>"
+:operation_type: legacy
+:input_line_format: 
+:tags: ['phi_review']
+:can_chain: 

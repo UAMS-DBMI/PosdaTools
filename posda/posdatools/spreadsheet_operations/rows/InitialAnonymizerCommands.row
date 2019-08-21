@@ -1,0 +1,6 @@
+:operation_name: InitialAnonymizerCommands
+:command_line: ProduceInitialAnonymizerCommands.pl <?bkgrnd_id?> <collection> <site> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>&<patient_id>&<patient_name>
+:tags: ['initial_anonymization', 'patient_mapping']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: AdHocTestSetConversion
+:command_line: AdHocSecondaryCaptureConverter.pl <?bkgrnd_id?> <notify> <source_dir> <dest_dir>
+:operation_type: background_process
+:input_line_format: <pat_code>&<anon_pat_id>&<uid_root>&<pat_sex>
+:tags: ['Bills Test']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: StartPublicToPosdaCopy
+:command_line: BackgroundPublicToPosdaCopy.pl <?bkgrnd_id?> <copy_id> "<why>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['pubic_posda_consistency']
+:can_chain: 

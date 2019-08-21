@@ -1,0 +1,6 @@
+:operation_name: MakeRtReport1
+:command_line: MakeRtReport1.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <collection>&<site>&<patient_id>&<study_uid>&<series_uid>&<file_type>&<modality>&<num_files>
+:tags: ['bills_test']
+:can_chain: 

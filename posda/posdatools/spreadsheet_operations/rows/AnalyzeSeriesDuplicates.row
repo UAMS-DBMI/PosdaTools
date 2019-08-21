@@ -1,0 +1,6 @@
+:operation_name: AnalyzeSeriesDuplicates
+:command_line: AnalyzeSeriesDuplicates.pl <?bkgrnd_id?> "<collection>" <site> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['ACRIN-FMISO-Brain Duplicate Elimination', 'dup_sops', 'activity_timepoint_support']
+:can_chain: 

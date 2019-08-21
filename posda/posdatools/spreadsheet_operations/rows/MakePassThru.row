@@ -1,0 +1,6 @@
+:operation_name: MakePassThru
+:command_line: MakePassThru.pl <?bkgrnd_id?> <visual_review_id> <notify>
+:operation_type: background_process
+:input_line_format: <processing_status>&<review_status>&<dicom_file_type>
+:tags: ['visual_review_status']
+:can_chain: 

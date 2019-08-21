@@ -1,0 +1,6 @@
+:operation_name: BackgroundHideSeriesByCollection
+:command_line: BackgroundHideSeriesByCollection.pl <?bkgrnd_id?> "<reason>" <collection> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['activity_timepoint_support']
+:can_chain: 

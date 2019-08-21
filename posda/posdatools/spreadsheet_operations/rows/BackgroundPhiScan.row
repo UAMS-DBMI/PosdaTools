@@ -1,0 +1,6 @@
+:operation_name: BackgroundPhiScan
+:command_line: PhiBackgroundScan.pl <?bkgrnd_id?> "<description>" <file_query_name> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['background', 'simple_phi']
+:can_chain: 

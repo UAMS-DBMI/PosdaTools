@@ -1,0 +1,6 @@
+:operation_name: ScanPhi
+:command_line: PhiScan.pl <type> "<description>"
+:operation_type: legacy
+:input_line_format: <series_instance_uid>, <signature>
+:tags: ['phi_review']
+:can_chain: 
