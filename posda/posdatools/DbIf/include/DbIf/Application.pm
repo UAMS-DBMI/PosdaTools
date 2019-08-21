@@ -3152,7 +3152,7 @@ method ActivityOperations($http, $dyn){
     [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
     [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
     [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
-    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 7],
+    [ "BackgroundHelloWorld.pl", "Perl Hello World Background", 1, 7],
     [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
     [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
     [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
@@ -3160,7 +3160,7 @@ method ActivityOperations($http, $dyn){
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
     [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
     [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
-    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 7],
+    [ "BackgroundHelloWorld.py", "Python Hello World Background", 2, 7],
   );
   my @Cols;
   for my $i (@buttons){
