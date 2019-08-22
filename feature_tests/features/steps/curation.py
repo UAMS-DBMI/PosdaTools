@@ -23,7 +23,6 @@ def step_impl(context):
 
     #switch to popup
     time.sleep(3)
-    print(context.browser.window_handles)
     context.browser.switch_to.window(context.browser.window_handles[1])
     assert "Loading" in context.browser.find_element_by_xpath("//h1").text
     time.sleep(10)
@@ -40,7 +39,6 @@ def step_impl(context):
 def step_impl(context):
     #currently returns extra, but is still useable as a measure of if the number has increased
     context.activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))
-    print(context.activity_count)
 
 @when(u'we create an activity')
 def step_impl(context):
@@ -52,5 +50,4 @@ def step_impl(context):
 @then(u'one new activity should exist in dropdown')
 def step_impl(context):
     new_activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))
-    print(new_activity_count)
     assert new_activity_count == (context.activity_count + 1)
