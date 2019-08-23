@@ -1,9 +1,9 @@
 -- Name: GetAllQueries
--- Schema: posda_queries
+-- Schema: posda_files
 -- Columns: ['name', 'query', 'args', 'columns', 'tags', 'schema', 'description']
 -- Args: []
 -- Tags: ['queries']
--- Description: Add a filter to a tab
+-- Description: Get all named queries
 --
 
 select

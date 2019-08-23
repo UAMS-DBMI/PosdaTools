@@ -2,7 +2,7 @@
 use strict;
 use Posda::DB qw(Query);
 use Debug;
-my $dbg = sub { print @_ };
+my $dbg = sub { print STDERR @_ };
 sub ParseArray{
   my($str) = @_;
   unless(defined $str) { return [] }
@@ -15,6 +15,19 @@ sub ParseArray{
     push @ret, $e;
   }
   return \@ret;
+}
+sub CompareArray{
+  my($a1, $a2) = @_;
+  unless(ref($a1) eq 'ARRAY' && ref($a2) eq "ARRAY"){
+    if(!defined($a1) && !defined($a2)) {return 1}
+    if(defined($a1) && !defined($a2)) { return 0 }
+    if(!defined($a1) && defined($a2)) { return 0 }
+  }
+  unless($#{$a1} == $#{$a2}) { return 0 }
+  for my $i (0 .. $#{$a1}){
+    unless($a1->[$i] eq $a2->[$i]) { return 0 }
+  }
+  return 1;
 }
 sub ParseQueryFile{
   my($file_name) = @_;
@@ -43,11 +56,11 @@ sub ParseQueryFile{
     } elsif ($mode eq "Columns"){
       chomp $line;
       if($line =~ /^-- Columns: \[(.*)\]\s*$/){
-        $h->{args} = ParseArray($1);
+        $h->{columns} = ParseArray($1);
         $mode = 'Args';
       } else {
-        if($line =~ /^-- Columns: None$/){
-          $h->{args} = ParseArray($1);
+        if($line =~ /^-- Columns: (None)$/){
+          $h->{columns} = ParseArray($1);
           $mode = 'Args';
         } else {
           print "Unable to parse $file_name - bad columns format:\n\"$line\"\n";
@@ -105,6 +118,16 @@ sub ParseQueryFile{
   $h->{query} = $query;
   return $h;
 }
+sub PrintArray{
+  my($array, $fh) = @_;
+  if(ref($array) eq "ARRAY" && $#{$array} >= 0){
+    for my $i (0 .. $#{$array}){
+      print $fh "'$array->[$i]'";
+      unless($i eq $#{$array}){ print $fh ", " }
+    }
+  }
+}
+
 my $dir = '/home/posda/posdatools/queries/sql';
 opendir DIR, $dir or die "Can't opendir $dir";;
 my %QueryFiles;
@@ -118,7 +141,7 @@ Query('GetAllQueries')->RunQuery(sub {
   my($row) = @_;
   my($name, $query, $args, $columns, $tags, $schema, $description) =
     @$row;
-  $Queries{$row->[0]} = {
+  $Queries{$name} = {
     name => $name,
     query => $query,
     args => $args,
@@ -127,6 +150,9 @@ Query('GetAllQueries')->RunQuery(sub {
     schema => $schema,
     description => $description,
   };
+  unless (defined($Queries{$name}->{columns})){
+    $Queries{$name}->{columns} = [];
+  }
 }, sub{});
 for my $i (keys %Queries){
   if(exists $QueryFiles{$i}){
@@ -139,9 +165,9 @@ for my $i (keys %Queries){
     $q2 =~ s/^\s*//;
     unless($q1 eq $q2){
       print "$i has non matching query values:\n";
-      print "####################\n$q1\n";
-      print "####################\n$q2\n";
-      print "####################\n";
+      print "In DB   ################\n$q1\n";
+      print "---------------------- -\n$q2\n";
+      print "In File ################\n";
     }
     my $desc1 = $Queries{$i}->{description};
     my $desc2 = $QueryFiles{$i}->{description};
@@ -151,12 +177,39 @@ for my $i (keys %Queries){
     $desc2 =~ s/^\s*//;
     unless($desc1 eq $desc2){
       print "$i has non matching description:\n";
-      print "####################\n$desc1\n";
-      print "####################\n$desc2\n";
-      print "####################\n";
+      print "In DB ##############\n$desc1\n";
+      print "--------------------\n$desc2\n";
+      print "In File ############\n";
+    }
+    unless(CompareArray($Queries{$i}->{args}, $QueryFiles{$i}->{args})){
+      print "$i has non matching args values:\n";
+      print "In DB ################\n[";
+      PrintArray($Queries{$i}->{args}, *STDOUT);
+      print "]\n-------------------\n[";
+      PrintArray($QueryFiles{$i}->{args}, *STDOUT);
+      print "]\nIn Dir###########\n";
+    }
+    unless(CompareArray($Queries{$i}->{columns}, $QueryFiles{$i}->{columns})){
+      print "$i has non matching columns values:\n";
+      print "In DB ################\n[";
+      PrintArray($Queries{$i}->{columns}, *STDOUT);
+      print "]\n-------------------\n[";
+      PrintArray($QueryFiles{$i}->{columns}, *STDOUT);
+      print "]\nIn Dir###########\n";
+    }
+    unless(CompareArray($Queries{$i}->{tags}, $QueryFiles{$i}->{tags})){
+      print "$i has non matching tags values:\n";
+      print "In DB ################\n[";
+      PrintArray($Queries{$i}->{tags}, *STDOUT);
+      print "]\n-------------------\n[";
+      PrintArray($QueryFiles{$i}->{tags}, *STDOUT);
+      print "]\nIn Dir###########\n";
     }
   } else {
     print "$i is in DB, not in queries directory\n";;
+    print STDERR "foo: ";
+    Debug::GenPrint($dbg, $Queries{$i}, 1);
+    print STDERR "\n";
   }
 }
 for my $i (keys %QueryFiles){

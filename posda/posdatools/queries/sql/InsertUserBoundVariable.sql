@@ -1,9 +1,10 @@
 -- Name: InsertUserBoundVariable
 -- Schema: posda_queries
--- Columns: ['user', 'variable', 'binding']
+-- Columns: []
 -- Args: ['user', 'variable_name', 'value']
 -- Tags: ['AllCollections', 'queries', 'activity_support', 'variabler_binding']
--- Description: Get list of variables with bindings for a user
+-- Description: Insert a bound variable
+--
 
 insert into user_variable_binding(
   binding_user, bound_variable_name, bound_value

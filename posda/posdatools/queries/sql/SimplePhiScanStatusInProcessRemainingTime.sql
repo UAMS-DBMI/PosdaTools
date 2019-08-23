@@ -1,9 +1,9 @@
 -- Name: SimplePhiScanStatusInProcessRemainingTime
 -- Schema: posda_phi_simple
--- Columns: ['id', 'description', 'start_time', 'duration', 'to_scan', 'scanned', 'percentage', 'remaining_time', 'file_query']
+-- Columns: ['id', 'start_time', 'duration', 'description', 'to_scan', 'scanned', 'remaining_time', 'percentage', 'file_query']
 -- Args: []
 -- Tags: ['tag_usage', 'simple_phi', 'phi_status', 'scan_status']
--- Description: Status of PHI scans
+-- Description:  Status of PHI scans
 --
 
 select
