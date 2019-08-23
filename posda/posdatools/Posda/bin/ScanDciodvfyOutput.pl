@@ -11,7 +11,7 @@ unless($#ARGV == 0){
 unless(-f $ARGV[0]) {
   die "$ARGV[0] is not a file\n";
 }
-my $dciodvfy = "/opt/dicom3tools/bin/dciodvfy";
+my $dciodvfy = "dciodvfy";
 my $cmd = "$dciodvfy \"$ARGV[0]\" 2>&1|sort -u";
 open PIPE, "$cmd|";
 my %UnrecognizedTags;
