@@ -686,7 +686,8 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
         $background->WriteToEmail($report);
         print STDERR $report;
         if($this->{WeAreDone}) {
-         $background->Finish("Done $num_edited changed, $num_failed failed in $elapsed seconds");
+         $background->Finish("Done $num_compares_complete changed," .
+           " $num_compares_failed failed in $elapsed seconds");
          exit;
         };
       }
