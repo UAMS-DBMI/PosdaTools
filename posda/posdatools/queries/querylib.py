@@ -5,7 +5,7 @@ import os
 CONNECTION = None
 DSN="dbname=posda_files"
 
-if 'PGHOST' in os.environ:
+if 'PGHOST' in os.environ and os.environ['PGHOST'] != 'localhost':
     print(f"WARNING: PGHOST is set to {os.environ['PGHOST']}! "
           "This operation WILL NOT BE LOCAL!")
     user_response = input("Type YES to continue: ")
