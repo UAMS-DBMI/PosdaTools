@@ -22,8 +22,8 @@ sub CompareArray{
     if(!defined($a1) && !defined($a2)) {return 1}
     if(defined($a1) && !defined($a2)) { return 0 }
     if(!defined($a1) && defined($a2)) { return 0 }
-    unless($#{$a1} == $#{$a2}) { return 0 }
   }
+  unless($#{$a1} == $#{$a2}) { return 0 }
   for my $i (0 .. $#{$a1}){
     unless($a1->[$i] eq $a2->[$i]) { return 0 }
   }
