@@ -76,7 +76,7 @@ sub ParseQueryFile{
     } elsif ($mode eq "Columns"){
       chomp $line;
       if($line =~ /^-- Columns: \[(.*)\]\s*$/){
-        $h->{args} = ParseArray($1);
+        $h->{columns} = ParseArray($1);
         $mode = 'Args';
       } else {
         if($line =~ /^-- Columns: None$/){

@@ -8,9 +8,9 @@ my $dbg = sub { print @_ };
 
 my $usage = <<EOF;
 Usage:
-MakeDownloadableDirectoryFromTimepoint.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>
+MakeDownloadableDirectoryTp.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>
   or
-MakeDownloadableDirectoryFromTimepoint.pl -h
+MakeDownloadableDirectoryTp.pl -h
 
 Expects no lines on STDIN:
 

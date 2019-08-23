@@ -685,7 +685,10 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
         $report .= "#############################\n";
         $background->WriteToEmail($report);
         print STDERR $report;
-        if($this->{WeAreDone}) { exit };
+        if($this->{WeAreDone}) {
+         $background->Finish("Done $num_edited changed, $num_failed failed in $elapsed seconds");
+         exit;
+        };
       }
       unless($this->{WeAreDone}){
         $disp->timer(10);
@@ -939,7 +942,6 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     $background->WriteToEmail("$num_edited edited, $num_failed failed in " .
       "$elapsed seconds\n");
     $background->WriteToEmail("Invocation Id: $this->{invoc_id}\n");
-    $background->Finish("Done $num_edited changed, $num_failed failed in $elapsed seconds");
     $this->{WeAreDone} = 1;
   }
 }
