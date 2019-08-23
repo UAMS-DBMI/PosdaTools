@@ -53,8 +53,9 @@ if($search_files =~ /Intake/){
       }
       return $mapped;
     } else {
-      print STDERR "bad file $path";
-      return undef;
+      # this is likely a path from the new NBIA DICOM Submit API, 
+      # which means no mapping is necessary.
+      return $path;
     }
   };
 }
