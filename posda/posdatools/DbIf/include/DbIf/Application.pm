@@ -2667,7 +2667,7 @@ method Activities($http, $dyn){
     <h2>Activities</h2>
   });
   $http->queue(qq{
-    <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
+    <div  style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
   });
   $self->RenderActivityDropDown($http, $dyn);
   unless(defined $self->{ActivityFilter}) { $self->{ActivityFilter} = "" }
@@ -2723,6 +2723,7 @@ method RenderActivityDropDown($http, $dyn){
   }
   $self->SelectByValue($http, {
     op => 'SetActivity',
+    id => "ActivityDropDown",
   });
   for my $i (@activity_list){
     $http->queue("{<option value=\"$i->[0]\"");
@@ -2865,6 +2866,7 @@ method DrawActivityModeSelector($http, $dyn){
   $self->SelectByValue($http, {
     op => 'SetActivityMode',
     width => '100',
+    id => 'SetActivityMode',
   });
   for my $i (@activity_mode_list){
     $http->queue("<option value=\"$i->[0]\"");

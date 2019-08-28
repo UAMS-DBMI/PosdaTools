@@ -195,6 +195,7 @@ method InitialBackgroundContentResponse($http, $dyn){
      });
      $self->LinkedDelegateEntryBox($http, {
        length => 30,
+       id => "" . ($self->{Params}->[$p]) . "EntryBox",
        index => $self->{Params}->[$p],
        linked => "ParamValues",
      });
