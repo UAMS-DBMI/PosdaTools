@@ -542,7 +542,7 @@ sub LinkedDelegateEntryBox{
   my @attrs;
   for my $i (keys %$dyn){
     if($i eq "op") { next }
-    if($i eq "length" || $i eq "name" || $i eq "size") {
+    if($i eq "length" || $i eq "name" || $i eq "size" || $i eq "id") {
       push @attrs, "$i=\"$dyn->{$i}\"";
       next
     }
@@ -608,9 +608,10 @@ sub SelectByValue{
 
   my $class = defined $dyn->{class}? $dyn->{class}: "form-control";
   my $style = defined $dyn->{style}? $dyn->{style}: "";
+  my $id = defined $dyn->{id}? $dyn->{id}: "";
 
   $http->queue(qq{
-    <select class="$class" style="$style"
+    <select class="$class" style="$style"  id="$id"
       onChange="ChangeMode('$dyn->{op}',this.options[this.selectedIndex].value);">
   });
 }
