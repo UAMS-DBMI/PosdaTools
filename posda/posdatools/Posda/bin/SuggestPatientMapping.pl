@@ -2,6 +2,8 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+#use Debug;
+#my $dbg = sub {print STDERR @_};
 
 my $usage = <<EOF;
 SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>
@@ -294,22 +296,27 @@ for my $row (@Collections){
     $back->WriteToEmail("ERROR: collection code $row->{collection_code} has two rows in collection table\n");
     $Error = 1;
   } else {
-    $CollectionCodeToCollectionName{$row->{Collection_code}} = $row->{Collection_name};
+    $CollectionCodeToCollectionName{$row->{collection_code}} = $row->{collection_name};
   }
   if(exists $CollectionNameToCollectionCode{$row->{collection_name}}){
     $back->WriteToEmail("ERROR: collection name $row->{collection_name} has two rows in collection table\n");
     $Error = 1;
   } else {
-    $CollectionNameToCollectionCode{$row->{Collection_name}} = $row->{Collection_code};
+    $CollectionNameToCollectionCode{$row->{collection_name}} = $row->{collection_code};
   }
 }
-if(exists($CollectionNameToCollectionCode{$col_name})){
-  unless($CollectionNameToCollectionCode{$col_name} eq $crc){
-    $back->WriteToEmail("ERROR: proposed collection name $col_name has confliciting code " .
-      "($CollectionNameToCollectionCode{$col_name}) vs proposed ($crc)\n");
+if(exists($CollectionCodeToCollectionName{$crc})){
+  if($CollectionCodeToCollectionName{$crc} eq $col_name){
+    $back->WriteToEmail("Found existing collection_codes row: $col_name = $crc\n");
+    #print STDERR "Found existing collection_codes row: $col_name = $crc\n";
+  } else {
+    $back->WriteToEmail("ERROR: proposed collection code $crc has confliciting name " .
+      "($CollectionCodeToCollectionName{$crc}) vs proposed ($col_name)\n");
     $Error = 1;
   }
 } else {
+  $back->WriteToEmail("No collection_code row for $crc\n");
+  #print STDERR "No collection_code row for $crc\n";
   $CreateCollectionRow = 1;
 }
 if(exists $SiteCodeToSiteName{$src}){
@@ -323,11 +330,20 @@ if(exists $SiteCodeToSiteName{$src}){
 }
 if($Error){
   $back ->Finish("Aborting - see errors in notification");
+  exit;
 }
 if($CreateCollectionRow){
-  Query('InsertIntoCollectionCodes')->RunQuery(sub{
-  }, sub {}, $col_name, $crc);
-  $back->WriteToEmail("Created collection_codes row ($col_name, $crc)\n");
+  eval {
+    Query('InsertIntoCollectionCodes')->RunQuery(sub{
+    }, sub {}, $col_name, $crc);
+  };
+  if($@){
+    $back->WriteToEmail("Failed to create collection_code row: $@");
+    $back->Finish("Error");
+    exit;
+  } else {
+    $back->WriteToEmail("Created collection_codes row ($col_name, $crc)\n");
+  }
 } else {
   $back->WriteToEmail("Using existing collection_codes row ($col_name, $crc)\n");
 }
@@ -351,8 +367,8 @@ Query('GetPatientMappingForSiteCode')->RunQuery(sub{
     from_patient_id => $from_patient_id,
     to_patient_id => $to_patient_id,
     to_patient_name => $to_patient_name,
-    collection_name => $collection_name,
-    site_name => $site_name,
+    collection => $collection_name,
+    site => $site_name,
     batch_number => $batch_number,
     diagnosis_date => $diagnosis_date,
     baseline_date => $baseline_date,
@@ -368,8 +384,8 @@ Query('GetPatientMappingForSiteCode')->RunQuery(sub{
     "baseline_date", "date_shift", "uid_root", "site_code"
   );
   for my $i (@headings){
-    unless(defined $PatientMappingsForSiteCode{$i}){
-      $PatientMappingsForSiteCode{$i} = "<undef>";
+    unless(defined $PatientMappingsForSiteCode{$from_patient_id}->{$i}){
+      $PatientMappingsForSiteCode{$from_patient_id}->{$i} = "<undef>";
     }
   }
 }, sub {}, $site_code);
@@ -392,9 +408,12 @@ for my $pat (keys %PatientMinStudyDate){
   if($pat_map_specified){
     my $max = 1000;
     if($num_dig) { $max = 10^$num_dig; }
-    my $r = int rand($max);
+    my $r = 0; 
+    while($r == 0){
+      $r = int rand($max);
+    }
     my $mapped;
-    if($num_dig != ""){
+    if($num_dig ne ""){
       $mapped = sprintf("$pat_map_prefix%0$num_dig" . "d$pat_map_suffix", $r);
     } else {
       $mapped = "$pat_map_prefix$r$pat_map_suffix";
@@ -404,7 +423,7 @@ for my $pat (keys %PatientMinStudyDate){
       $r = int rand($max);
       if($r == 0) { next random }
       if($num_dig != ""){
-        $mapped = sprintdf("$pat_map_prefix%0$num_dig" . "d$pat_map_suffix");
+        $mapped = sprintf("$pat_map_prefix%0$num_dig" . "d$pat_map_suffix");
       } else {
         $mapped = "$pat_map_prefix$r$pat_map_suffix";
       }
@@ -442,18 +461,30 @@ for my $head (@headings){
   $rpt->print("$head,");
 }
 $rpt->print("Operation,activity_id,comment,notify\r\n");
-my @sorted_pats = sort {
+my @sorted_pats;
+#print STDERR "sorted_pats: ";
+#Debug::GenPrint($dbg, \%PatientMappingsForSiteCode, 1);
+#print STDERR "\n";
+if((keys %PatientMappingsForSiteCode) > 0){
+  @sorted_pats = sort {
     if ($PatientMappingsForSiteCode{$a}->{in_patient_mapping} < $PatientMappingsForSiteCode{$b}->{in_patient_mapping}) {return -1}
     if ($PatientMappingsForSiteCode{$a}->{in_patient_mapping} > $PatientMappingsForSiteCode{$b}->{in_patient_mapping}) {return 1}
     if ($PatientMappingsForSiteCode{$a}->{from_patient_id} le $PatientMappingsForSiteCode{$b}->{from_patient_id}) {return -1}
     if ($PatientMappingsForSiteCode{$a}->{from_patient_id} ge $PatientMappingsForSiteCode{$b}->{from_patient_id}) {return 1}
     return 0;
- } keys %PatientMappingsForSiteCode;
+  } keys %PatientMappingsForSiteCode;
+} else {
+  $back->WriteToEmail("No patients for mapping\n");
+}
 for my $i (0 .. $#sorted_pats){
   my $h = $PatientMappingsForSiteCode{$sorted_pats[$i]};
   for my $j (0 .. $#headings){
     my $v = $h->{$headings[$j]};
-    if($MetaQuote->{$headings[$j]}) { $v = "<$v>" }
+    if($MetaQuote->{$headings[$j]}) {
+      unless($v =~ /^<.*>$/) {
+        $v = "<$v>"
+      }
+    }
     $v =~ s/"/""/g;
     $rpt->print("\"$v\"");
     unless($j == $#headings){ $rpt->print(",") }

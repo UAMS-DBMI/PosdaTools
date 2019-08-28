@@ -193,7 +193,7 @@ if($num_mapped_patients < $num_patients){
 }
 my $rpt = $background->CreateReport("EditsForInitialAnonymization");
 $rpt->print(
-  "series_instance_uid,op,tag,val1,val2,Operation,activity_id,description,notify\n");
+  "series_instance_uid,op,tag,val1,val2,Operation,activity_id,edit_description,notify\n");
 my $sent_commands = 0;
 for my $i (0 .. $#mapped_patients){
   my $p = $mapped_patients[$i];
