@@ -12,7 +12,7 @@ where import_event_id in (
   select
     import_event_id
   from 
-    import_event natural join file_import
+    import_event
   where
     import_comment like ? and import_type like ?
 )

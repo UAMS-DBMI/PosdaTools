@@ -3146,7 +3146,7 @@ method ActivityOperations($http, $dyn){
     [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
     [ "MakeDownloadableDirectoryTp", "Make a Downloadable Directory", 0, 7],
     [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
-    [ "SummarizeStructLinkage", "Summarize Structure Set Linkages for a File", 1, 1],
+    [ "SuggestPatientMappings", "Suggest Patient Mapping for Timepoint", 1, 1],
     [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
     [ "CondensedActivityTimepointReport", "Produce Condensed Activity Timepoint Report", 1, 3],
     [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],

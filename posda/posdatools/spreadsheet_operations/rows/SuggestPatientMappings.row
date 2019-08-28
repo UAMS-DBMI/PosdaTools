@@ -1,0 +1,6 @@
+:operation_name: SuggestPatientMappings
+:command_line: SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>
+:tags: []
+:can_chain: 
