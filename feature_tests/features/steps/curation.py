@@ -103,9 +103,9 @@ def step_impl(context):
     startbutton = context.browser.find_element_by_xpath("//input[@value='Start Subprocess']")
     startbutton.click()
     time.sleep(5)
-    close_button_row = context.browser.find_element_by_xpath("//tr/td[text()='Signed in as']/..")
-    closebutton = close_button_row.find_element_by_xpath(".//div/button")
-    closebutton.click()
+    #close_button_row = context.browser.find_element_by_xpath("//tr/td[text()='Signed in as']/..")
+    #closebutton = close_button_row.find_element_by_xpath(".//div/button")
+    #closebutton.click()
 
 @then(u'we recieve an inbox notice of success')
 def step_impl(context):
