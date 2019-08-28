@@ -70,7 +70,7 @@ unless($q_result){
   my $err = $q->errstr;
   Error("Can't execute query\n\t$err\nquery:\n$query_spec->{query}");
 }
-if($query_spec->{query} =~ /^select/){
+if($query_spec->{query} =~ /^\s*select/){
   my @rows;
   while(my $h = $q->fetchrow_hashref){
     my @r;
