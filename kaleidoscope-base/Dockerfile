@@ -13,10 +13,16 @@ RUN apk --update add alpine-sdk \
 					 file \
 					 tzdata
 
-COPY k-base/ /k-base/
-COPY run.sh /k-base/
+RUN addgroup -g 2123 fakeposda
+RUN adduser -D -G fakeposda posda
+
+COPY --chown=posda:fakeposda k-base/ /k-base/
+COPY --chown=posda:fakeposda run.sh /k-base/
 RUN cd /k-base && npm install && make
 
+
+WORKDIR /k-base
+USER posda:fakeposda
 VOLUME ["/home/posda/cache"]
 
 CMD ["/k-base/run.sh"]
