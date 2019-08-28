@@ -14,7 +14,9 @@ where import_event_id in (
   from 
     import_event
   where
-    import_comment like ? and import_type like ?
+    import_comment like ? 
+    and
+    import_type like ?
 )
 order by import_event_id desc
 
