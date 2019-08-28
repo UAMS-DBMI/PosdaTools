@@ -520,6 +520,7 @@ StartFixPublicToPosdaCopy	BackgroundFixPublicToPosdaCopy.pl <?bkgrnd_id?> <copy_
 LookForDupSopsInPublicByCollectionSite	LookForPublicDupSops.pl <?bkgrnd_id?> "<collection>" "<site>" <notify>	background_process	\N	{comparing_posda_to_public}	\N
 BuildUidMap	BuildUidMap.pl <?bkgrnd_id?> <notify>	background_process	<unmapped_uid>	{bills_test}	\N
 BackgroundLinkSeriesToStaging	BackgroundLinkSeriesToStaging.pl <?bkgrnd_id?> /nas/public/posda/scratch/staging/<to_rel_dir> <notify>	background_process	<patient_id>&<study_instance_uid>&<series_instance_uid>	{send_series}	\N
+MakeHierarchyByPat	GetHierarchyFromPatientId.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>	{bills_test}	\N
 AnonymizerToEditor	AnonymizerToEditor.pl <?bkgrnd_id?> <notify>	background_process	<operation_scope>&<operation>&<tag>&<value1>&<value2>&<patient_id>&<study_instance_uid>&<series_instance_uid>&<unmapped_uid>&<mapped_uid>	{bills_test}	\N
 DeletePvtExceptCtp	DeletePrivateFromCollection.pl <?bkgrnd_id?> <collection> /nas/public/posda/scratch/converted/<rel_to_dir> <notify>	background_process	\N	{bills_test}	\N
 HidePatientWithStatus	HideBatchPatientWithStatus.pl <who> "<why>"	legacy	<patient_id>	{hide_files,hide_dup_sops}	\N
@@ -559,7 +560,6 @@ FileAndDismissNotifications	FileAndDismissNotification.pl <?bkgrnd_id?> <activit
 ImportNonDicomEdits	ImportNonDicomEditedFiles.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{non_dicom_edit}	\N
 GenerateYearOfDiagnosisEdits	GenerateEditsForYearsOfDiagnosis.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>&<year>	{bills_ad_hoc_scripts}	\N
 RadcompPrivateDisp	BackgroundPrivateDispositionsByPatShift.pl <?bkgrnd_id?> <to_dir> <uid_root> <notify>	background_process	<patient_id>&<study_uid>&<series_uid>&<offset>	{bills_test}	\N
-MakeHierarchyByPat	GetHierarchyFromPatientId.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>	{bills_test}	\N
 QuickCheckPublicPosdaConsistLike	QuickPublicPosdaCompareLikeCollection.pl <?bkgrnd_id?> "<collection_pat>"  <notify>	background_process	\N	{public_posda_consistency}	\N
 ProposeAdHocMelanomaEdits	ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>	background_process	<patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>	{bills_test,bills_ad_hoc_scripts}	\N
 BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints}	\N
@@ -595,6 +595,7 @@ BackgroundHideSeriesByCollection	BackgroundHideSeriesByCollection.pl <?bkgrnd_id
 BackgroundUpdatePrivateDisposition	BackgroundUpdatePrivateDispositions.pl <?bkgrnd_id?> "<why>" <notify>	background_process	<id>&<disp>	{phi_maint}	\N
 SummarizeStructLinkage	SummarizeStructLinkagesByFileId.pl <?bkgrnd_id?> <file_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
 BackgroundDciodvfyTp	BackgroundDciodvfyTp.pl <?bkgrnd_id?> <act_id> <type> <notify>	background_process	\N	{activity_timepoint}	\N
+PipeCommand1	PipeCommand1.pl <var1> <var2> 1 2 3	legacy	<vals1>,<vals2>,<vals3>	{}	\N
 DeleteSeriesFromActivityTimepoint	DeleteSeriesFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	\N
 FilesInTpNotInPublic	FilesInLatestActivityNotInPublic.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints_support}	\N
 BackgroundUnhideFiles	BackgroundUnhideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"	background_process	<file_id>&<old_visibility>	{activity_timepoint_support}	\N
@@ -634,7 +635,6 @@ StudyConsistency	CheckStudyConsistency.pl <study_instance_uid>	legacy	\N	{}	\N
 PatConsistency	CheckPatConsistency.pl "<collection>" <patient_id>	legacy	\N	{}	\N
 OnlyIn	OnlyIn.pl Posda Intake	legacy	<SeriesInPosda>, <SeriesInIntake>	{}	\N
 TestCommand	TestCommand.pl <host> <port> <called> <calling> <series_instance_uid>	legacy	\N	{}	\N
-PipeCommand1	PipeCommand1.pl <var1> <var2> 1 2 3	legacy	<vals1>,<vals2>,<vals3>	{}	\N
 SymLinkToIntake	SymLinkToIntake.pl /cache/bbennett/Symlinks	legacy	<PID>, <Modality>, <SopInstance>, <FilePath>	{}	\N
 UpdateKnowlegeBase	UpdateKnowledgeBase.pl <who> "<why>"	legacy	<Tag>^<VR>^<Disposition>^<NameChain>	{}	\N
 LinkFileHierarchy	LinkFileHierarchy.pl <Destination>	legacy	<patient_id>  <study_instance_uid> <series_instance_uid>	{}	\N
@@ -653,6 +653,8 @@ MakeDownloadableDirectoryTp	MakeDownloadableDirectoryTp.pl <?bkgrnd_id?> <activi
 HelloWorldPerl	BackgroundHelloWorldWithInput.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>	{foo}	\N
 HelloWorldPython	BackgroundHelloWorldWithInput.py <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>	{foo}	\N
 RejectEditsTp	RejectEditsTp.pl <?bkgrnd_id?> <activity_id> <subprocess_invoc_id> <notify>	background_process		{find_patients}	\N
+SuggestPatientMappings	SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>	background_process	<patient_id>	{}	\N
+UpdateOrCreatePatientMapping	UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <activity_id> "<comment>" <overwrite> <notify>	background_process	<in_patient_mapping>&<from_patient_id>&<collection>&<site>&<to_patient_id>&<to_patient_name>&<diagnosis_date>&<min_study_date>&<uid_root>&<batch_number>&<site_code>&<baseline_date>&<date_shift>	{patient_mapping}	\N
 \.
 
 
