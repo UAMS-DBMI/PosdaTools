@@ -31,7 +31,7 @@
   * ![alt text](testing_docs_images/Importer4.png "Posda Importer Directory Info")
 * Choose your Environment (Local for testing, Production for actual work, your options are handled in the config files)
 * Click "Create Import Event and Begin"
-* Wait for files to complete importing, since this is test data it should have 0 errors. Real data will often have issues to investigate using the Logs.
+* Wait for files to complete importing, since this is test data it should have 0 errors. Real datasets will sometimes have issues to investigate using the Logs.
 * Once the DicomTestSet data is fully imported you may close the application
 
 ### Option 2: Using DICOM Send
@@ -67,16 +67,21 @@
 ## Create the Activity Timepoint
 * Select your new Activity from the DropDown
   * ![alt text](testing_docs_images/selectAct.png "Select Activity")
-  * Your screen will refresh to the Activity Timeline
+  * Your screen will refresh to the  Activity Timeline
 * Change the Mode to Queries
   * ![alt text](testing_docs_images/selectActOpt.png "Select ActivityOperations")
   * Select Search
+  * ![alt text](testing_docs_images/searchRadio.png "Search Query")
   * This screen can find data queries that return useful information, You can search by query name or even by returned columns.
-  * We will search for Name Matching `SeriesByMatchingImportEventInfo`
+  * We will search for Name Matching `SeriesByMatchingImportEventsWithEventInfo`
   * Click Search
-  * Once the query returns Click the Foreground button
   * ![alt text](testing_docs_images/search.png "Search Query")
+  * Once the query returns Click the Foreground button
+  * ![alt text](testing_docs_images/foreground.png "Search Query")
   * Click query
+  * Wait for the query to complete
+    * If insufficient time has passed since the import you made need to wait and rerun this Query
+    * To rerun click Back, then click Foreground and then click Query like before
   * Select CreateTimepointFromSeriesList
     * input the parameters including the ID of your Activity
     * wait for  the query to finish
@@ -94,4 +99,3 @@
   * ![alt text](testing_docs_images/selectActOpt.png "Select ActivityOperations")
   * Click the `Suggest Patient Mappings For Timepoint` Button
   * ![alt text](testing_docs_images/suggestMap.png "Suggest Mappings")
-  
