@@ -202,4 +202,66 @@
     * You may then need to View or Edit the resulting reports or spreadsheet
     * Or perform other steps needed in the message (some steps involve Accepting or Reject results)
 
-## Initial Anonymizer
+## Initial Anonymization
+* On the Activity Operations page, Click `Produce Initial Anonymizer for Timepoint`
+* ![alt text](testing_docs_images/anon.png "Produce Initial Anonymizer for Timepoint")
+* Enter the collection and site
+* Click Expand
+* ![alt text](testing_docs_images/anon2.png "Produce Initial Anonymizer for Timepoint Inputs")
+* Click `Start Subprocess`
+* Once the process is in the background, close the window
+* View the results in the Inbox
+* File the Message
+* Return to the Activity Timeline
+* Click email
+* ![alt text](testing_docs_images/time4.png "Timeline")
+* Click the link to download the `EditsForInitialAnonymization` spreadsheet
+* ![alt text](testing_docs_images/download4.png "Download")
+* Save and Open the file
+* ![alt text](testing_docs_images/file3.png "File")
+* For this example we will not make any edits. Close the file.
+* Click upload
+* Drag the file into the upload box. (Or click the box to open the file selection window)
+* Click Tables
+* ![alt text](testing_docs_images/perform3.png "Perform Operations")
+* If everything looks right, Click `Execute Planned Operations` to begin the operation
+* Wait for the operation to Begin
+* Return to the Activity Timeline while you wait (Activity on the left, Mode:ShowActivityTimeline)
+* Notice the in-progress step is updating its status
+* ![alt text](testing_docs_images/bgedits.png "Status Updating")
+* When it completes the Inbox will highlight red with a new Message
+* View and file your message as you have done before (Inbox, Message Id, File This Message, Yes)
+* Then return to the Activity Timeline (Activity on the left, Mode:ShowActivityTimeline)
+* You should see that the timeline now shows the InitalAnonimizerCommandsTp and BackgroundEditTp steps that you have completed
+* Click email next in the BackgroundEditTp
+* View the `EditDifferences` report.
+* You can view the Edits that are staged in this report.
+* ![alt text](testing_docs_images/Edits.png "Edits")
+* If these Edits look correct click `Accept Edits, Import and Delete Temporary Files`.
+* (If things are ever missing or incorrect you can instead Reject the changes and rerun the proceeding steps)
+* ![alt text](testing_docs_images/accept.png "Accept")
+* The input is already filled in, Click Expand
+* Click Start Subprocess
+* You can close the popup once it says `Entering Background`
+* When it completes the Inbox will highlight red with a new Message
+* View and file your message as you have done before (Inbox, Message Id, File This Message, Yes)
+* Now we have mostly completed the initial anonimizer step, but the changes made in this process could have changed the series and timepoint associations
+* So we must recreate the Activity Timepoint by rerunning CreateActivityTimepointFromSeriesList
+* Return to the Activity screen, Change the Mode to Query
+* This will likely open to the query you last used (If not look at the CreateActivityTimepointFromSeriesList above)
+* Click Back, and then Query to rerun the same query we ran previously
+* The results should be updated with your changes
+* Click CreateActivityTimepointFromSeriesList
+  * ![alt text](testing_docs_images/CreateActivityTimepointFromSeriesList.png "CreateActivityTimepointFromSeriesList")   
+  * input the ID of your Activity (Make sure to use the Activity ID we have used up to this point)
+  * input a comment `After Initial Anonymization`
+  * Click Expand
+  * Click Start Subprocess
+  * wait for  the query to Begin
+  * Once the screen updates to "Going to background" it is safe to close the popup
+* Inbox will become Red when the process completes
+* View the results in the Inbox
+* File the Message
+* Return to the Activity Timeline
+* Notice since this record is a timepoint edit, we get a new count of the files!
+* ![alt text](testing_docs_images/time5.png "TImeline")   
