@@ -78,24 +78,46 @@
   * ![alt text](testing_docs_images/search.png "Search Query")
   * Once the query returns Click the Foreground button
   * ![alt text](testing_docs_images/foreground.png "Search Query")
+  * in the boxes add `%` to represent *any*
+  * ![alt text](testing_docs_images/percents.png "Query parameters")   
   * Click query
   * Wait for the query to complete
-    * If insufficient time has passed since the import you made need to wait and rerun this Query
-    * To rerun click Back, then click Foreground and then click Query like before
-  * Select CreateTimepointFromSeriesList
+  * ![alt text](testing_docs_images/results.png "Query results")  
+  * Click CreateActivityTimepointFromSeriesList
+    * ![alt text](testing_docs_images/CreateActivityTimepointFromSeriesList.png "CreateActivityTimepointFromSeriesList")   
     * input the parameters including the ID of your Activity
-    * wait for  the query to finish
-  * Inbox will become Red
+    * ![alt text](testing_docs_images/parameters.png "Input parameters")   
+    * Click Expand
+    * Click Start Subprocess
+    * ![alt text](testing_docs_images/startsub.png "Start Subprocess")   
+    * wait for  the query to Begin
+    * Once the screen updates to "Going to background" it is safe to close the popup
+    * ![alt text](testing_docs_images/closepopup.png "Safe to Close")   
+  * Inbox will become Red when the process completes
   * Go to Inbox
-  * Select the Message
-  * Select File this Message
+  * This is your posda mail inbox, you will receive query result notifications here
+  * ![alt text](testing_docs_images/redinbox.png "New Message in Inbox")   
+  * Select the Message to view it
+  * ![alt text](testing_docs_images/viewmail.png "View Message in Inbox")  
+  * These are the results of the query you ran. In order to access them later in the Activity screen we will File the message.
+  * Select `File this Message`
+  * ![alt text](testing_docs_images/filemessage.png "File Message in Inbox")  
   * Click Yes
 
+## View the Activity Timeline
+* Click Activity on the left menu
+  * ![alt text](testing_docs_images/selectAct.png "Select Activity")
 * Change the Mode to ActivityTimeline
   * ![alt text](testing_docs_images/selectActOpt.png "Select ActivityOperations")
   * You should now see the first step of your process documented!
+  * ![alt text](testing_docs_images/firsttimeline.png "See first timeline entry")
+  * Notice that you can see the current filecount of 628.
+  * If you click email, you can see the message we files earlier. From there you can click the link to download a Timepoint Creation Report.
+  * ![alt text](testing_docs_images/email1.png "View Email")
 
+## Patient Mapping
 * Change the Mode to ActivityOperations
   * ![alt text](testing_docs_images/selectActOpt.png "Select ActivityOperations")
   * Click the `Suggest Patient Mappings For Timepoint` Button
   * ![alt text](testing_docs_images/suggestMap.png "Suggest Mappings")
+  * Note: The buttons on this page become blue the more they are used. This way you can visually note which actions are taken most often by your team.
