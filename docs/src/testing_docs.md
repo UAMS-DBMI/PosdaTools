@@ -257,11 +257,103 @@
   * input a comment `After Initial Anonymization`
   * Click Expand
   * Click Start Subprocess
-  * wait for  the query to Begin
+  * Wait for the query to Begin
   * Once the screen updates to "Going to background" it is safe to close the popup
 * Inbox will become Red when the process completes
 * View the results in the Inbox
 * File the Message
 * Return to the Activity Timeline
 * Notice since this record is a timepoint edit, we get a new count of the files!
-* ![alt text](testing_docs_images/time5.png "TImeline")   
+* ![alt text](testing_docs_images/time5.png "Timeline")   
+
+
+## Visual Review
+* Go to the Activity Operations Page (Activity on the left, Mode:ActivityOperations)
+* Click Schedule Visual Review
+* ![alt text](testing_docs_images/schedVR.png "Schedule VR")   
+* Click Expand
+* Click Start SubProcess
+* Go to the Inbox
+* File the message
+* Return to the Activity screen
+* The status of the Visual Review Processing should be updating
+* ![alt text](testing_docs_images/VRstat1.png "VR Processing")  
+* Wait for all of the files to be ReadyToReview
+* ![alt text](testing_docs_images/ready.png "VR Processing")  
+* Go to the Activity Queries Page (Activity on the left, Mode:Queries)
+* If viewing a query hit Back
+* Click the Search radiobutton if it is not already highlighted
+* ![alt text](testing_docs_images/search.png "Search Query")
+* Search by name for `VisualReviewScanInstances`
+* Run the query in the foreground (Foreground, then query)
+* The results should include a Details button, click it
+* ![alt text](testing_docs_images/DETAILS.png "Details")
+* This will let you run the `VisualReviewStatusById` query, using the previous results as input.
+* Click query
+* Here are the results
+* ![alt text](testing_docs_images/vrstatbyid.png "Details")
+* We have in our data set 2 different Dicom File Types. There are 3 series of CTs and 3 series of Secondary Captures.
+* These have been divided into 4 and 3 Image Equivalency Classes respectively. IECs are a subset of a series intended to separate out scouts and other set of images in different planes.
+* Click Review on the CT row to launch the Visual Review tool, Kaleidoscope
+* ![alt text](testing_docs_images/rev.png "Review")
+* ![alt text](testing_docs_images/kaliedoscope.png "Kaleidoscope")
+* This is Kaleidoscope
+* In the screenshot above, you can see that IEC 1 has 44 images, of Patient 007, examining the kidney
+* The 3 images are compilations of frames different levels, which allow you to search for PHI across many frames at once
+* To see the whole IEC, one frame at a time, Click `Open in Quince` at the IEC level
+* This opens the lightweight Quince Dicom Viewer
+* ![alt text](testing_docs_images/quince.png "Quince")
+* You can play the frames as a video, scroll manually, adjust the window and level manually or with presets, and more
+* Anytime Kaleidoscope does not provide enough info to check for PHI launch Quince to review further
+* Close Quince
+* As you can see there is another Launch Quince Button, this one is for the whole Series rather than just the current IECs
+* If your image has no visible PHI, click Good
+* ![alt text](testing_docs_images/quince.png "Quince")
+* It will automatically move you to the next IEC
+* Review these IECs, then close Kaleidoscope
+* Next Review the Secondary Captures as you did CTs, Some of the Secondary Capture Images will be labeled Bad
+* Since this is a test set all of this PHI is phony, but in real settings this will be real PHI
+* When finished reviewing, hit Back and rerun the `VisualReviewStatusById` query
+* Notice the review statuses have updated!
+* ![alt text](testing_docs_images/vrreviewed.png "Reviewed")
+* On the row that is marked Bad, click Details
+* This will run `VisualReviewStatusDetails` with the parameters filled for the rows
+* Click query
+* Now you can see the details of the "Bad" IECs
+* ![alt text](testing_docs_images/bads.png "Bad Details")
+* There are 3 series with over 400 total files
+* Next we will Hide these files
+* Click `HideEquivalenceClasses`
+* ![alt text](testing_docs_images/hide.png "Hide")
+* Click Expand
+* Click Start Subprocess
+* Go to the Inbox
+* File the message
+* Go to the Activity Operations screen
+* In order to properly record our changes, we must Update the Timepoint
+* Click `UpdateActivityTimepoint`
+* ![alt text](testing_docs_images/update.png "Update Timepoint")
+* Add the comment `After Hide` to record the reason for the update
+* Click Expand
+* Click Start Subprocess
+* Once the popup says "Going to background to create timepoint," you may close the popup
+* Once it is completed, this may take some time on real datasets, view the Inbox
+* File the message
+
+## PHI Review
+* This step is similar to the Initial Anonymizer
+* Click `Schedule PHI Scan` in the Activity Operations screen
+* Follow the steps as normal
+* Take the resulting spreadsheet and check for PHI hidden in the DICOM tags
+* If you find any PHI fill in the Operation column and put the replacement data in the correct columns
+* Then Upload the spreadsheet
+* Go to Tables and execute the Operations
+* Check your results when it completes
+* If the number of changes are different than you expected, Reject the changes and try again
+
+## Apply Dispositions
+* Run this like you have the previous Operations
+
+## Continue Curation
+* Run other steps as necessary such as checking for duplicate SOPs
+* Some steps like `Public Phi Scan Based on Current TP by Activity` cannot be preformed in test databases because they require an NBIA connection to compare data against
