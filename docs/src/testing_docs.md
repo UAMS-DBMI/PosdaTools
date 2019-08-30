@@ -1,4 +1,5 @@
-# This is the test guide for Posda.
+# Posda Test Guide (8/2019)
+
 
 # Things to consider
 * Make sure your preferred browser will allow pop-ups from the posda application.
@@ -6,16 +7,22 @@
 * Ensure your version of Posda to be tested is installed and running
 * Ensure you have the Posda Importer GUI installed on the machine you intend to test
 
+
+
 # If running locally from scratch
 * locate the oneposda directory
 * open a terminal
 * type `./init` this will update your docker image
 * type `./manage up` this will bring up your database and applications
 
+
 # Download the DicomTestSet test data
 * Found here: https://pathology.cancerimagingarchive.net/download/other/DicomTestSet.tgz
 
+
+
 # Import the Data for Creation
+
 
 ### Option 1: Using the Posda GUI importer
 * Locate your copy of the DicomTestSet
@@ -38,11 +45,14 @@
 * Wait for files to complete importing, since this is test data it should have 0 errors. Real datasets will sometimes have issues to investigate using the Logs.
 * Once the DicomTestSet data is fully imported you may close the application
 
+
 ### Option 2: Using DICOM Send
 * Open the DicomTestSet directory in your preferred DICOM editor
 * Setup the location for PosdaLocal in your preferences
 * Select a subset of files to Send
 * Click Send
+
+
 
 # Open Posda and Login
 * Go to the URL in your browser (if local, go to localhost)
@@ -57,11 +67,16 @@
 * Once logged in the list of Apps your account has direct access to appears
   >> ![alt text](testing_docs_images/PosdaApps.png "Posda Apps")
 
+
+
 # Open DBIF
 * In the row labeled Dbif (Database Interface) click Launch
 * Wait for the popup window to load
 * If nothing happens confirm that your browser is allowing popups from localhost
   >> ![alt text](testing_docs_images/DBIF.png "DBIF")
+
+
+
 
 # Create the Activity
 * Go to Activity in the left side bar
@@ -70,6 +85,9 @@
 * Create a New Activity by entering the name in the input text box
 * Then Click Save
   >> ![alt text](testing_docs_images/createAct.png "Create Activity")
+
+
+
 
 # Create the Activity Timepoint
 * Select your new Activity from the DropDown
@@ -215,7 +233,7 @@
   >> ![alt text](testing_docs_images/upload.png "Upload")
 
 * Drag your saved file into the box, or click on the box to bring up a file selection window and choose your file.
-  >> ![alt text](testing_docs_images/upload2.png "Upload")
+  >> ![alt text](testing_docs_images/Upload2.png "Upload")
 
 * The screen will display the upload progress of the file. When it is complete it should look like in the image below.
   >> ![alt text](testing_docs_images/upload3.png "Upload")
@@ -240,15 +258,17 @@
 * You should see that the timeline now shows the UpdateOrCreatePatientMapping step that you just completed and filed.
 * You've now completed the Patient Mappings step!
 * The next steps of curation will proceed in a similar fashion.
-* You will run a process
-* File the result message
-* Download the spreadsheet from the filed message
-* Edit the spreadsheet and save it
-* Upload the edited sheet
-* Run the operations from the spreadsheet
-* File the completion Message
-  * You may then need to View or Edit the resulting reports or spreadsheet
-  * Or perform other steps needed in the message (some steps involve Accepting or Reject results)
+  * You will run a process
+  * File the result message
+  * Download the spreadsheet from the filed message
+  * Edit the spreadsheet and save it
+  * Upload the edited sheet
+  * Run the operations from the spreadsheet
+  * File the completion Message
+    * You may then need to View or Edit the resulting reports or spreadsheet
+    * Or perform other steps needed in the message (some steps involve Accepting or Reject results)
+
+
 
 # Initial Anonymization
 * On the Activity Operations page, Click `Produce Initial Anonymizer for Timepoint`
@@ -411,6 +431,8 @@
 * Once it is completed, this may take some time on real datasets, view the Inbox
 * File the message
 
+
+
 # PHI Review
 * This step is similar to the Initial Anonymizer
 * Click `Schedule PHI Scan` in the Activity Operations screen
@@ -422,8 +444,12 @@
 * Check your results when it completes
 * If the number of changes are different than you expected, Reject the changes and try again
 
+
+
 # Apply Dispositions
 * Run this like you have the previous Operations
+
+
 
 # Continue Curation
 * Run other steps as necessary such as checking for duplicate SOPs
