@@ -20,10 +20,10 @@
 ### Option 1: Using the Posda GUI importer
 * Locate your copy of the DicomTestSet
 * Open the Posda Importer GUI
-> ![alt text](testing_docs_images/Importer1.png "Posda Importer GUI Start Screen")
+  >> ![alt text](testing_docs_images/Importer1.png "Posda Importer GUI Start Screen")
 
 * Click "Create New Import"
-> ![alt text](testing_docs_images/Importer2.png "Posda Importer New Import Screen")
+  >> ![alt text](testing_docs_images/Importer2.png "Posda Importer New Import Screen")
 
 * Beginning on the left side of the window, Choose a name for the import
 * Click Select Directory
