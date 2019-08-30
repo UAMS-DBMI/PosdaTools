@@ -22,7 +22,8 @@
 * Open the Posda Importer GUI
   * ![alt text](testing_docs_images/Importer1.png "Posda Importer GUI Start Screen")
 * Click "Create New Import"
-  <img src="testing_docs_images/Importer2.png" style="border: 3px solid black" alt="Posda Importer New Import Screen" width="720x" />
+  > ![image](testing_docs_images/Importer2.png "Posda Importer New Import Screen")
+
 * Beginning on the left side of the window, Choose a name for the import
 * Click Select Directory
   * ![alt text](testing_docs_images/Importer3.png "Posda Importer Directory Selection")
