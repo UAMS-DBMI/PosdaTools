@@ -230,7 +230,7 @@ if($num_files_already_imported_to_unhide > 0){
   $background->WriteToEmail(
     "Unhiding $num_files_already_imported_to_unhide files\n");
   my $start = time;
-  open HIDE, "|UnhideFilesWithStatus.pl $notify \"Unhiding from files " .
+  open HIDE, "|UnhideFilesWithStatus.pl $notify \"Unhiding to files " .
     "in dicom_edit_compare($subproc_invoc_id)\"";
   for my $file_id (keys %ToFilesToUnhide){
     my($proj_name, $visibility) = @{$ToFilesToUnhide{$file_id}};
@@ -289,7 +289,7 @@ while(1){
 print STDERR "No files left to import\n";
 my $end_import_time = time;
 my $elapsed_in_import = $end_import_time - $import_start_time;
-$background->SetActivityStatus("Import complete");
+$background->SetActivityStatus("Waiting for imports to clear");
 $background->WriteToEmail("Total time spent in import: $elapsed_in_import (" .
   "$total_sleep_time waiting on backlog)\n");
 close IMPORT;
@@ -318,11 +318,76 @@ while($max_file_id > $max_imported_file_id){
 my $process_wait_time = time - $close_time;
 $background->WriteToEmail("Waited $process_wait_time for " .
   "import processing to clear\n");
-##TODO
+
+$background->SetActivityStatus("Checking Errors and rebuilding timepoint");
+
+################### New code here
 #Check all "to" files imported OK and visible
+my $num_unimported_to_files = 0;
+Query('FindUnimportedFiles')->RunQuery(sub{
+  $num_unimported_to_files += 1;
+}, sub{}, $subproc_invoc_id);
+if($num_unimported_to_files > 0){
+  $background->WriteToEmail("$num_unimported_to_files failed to import\n");
+  $background->Finish("Failed - check report");
+  exit;
+}
+my %HiddenToFiles;
+Query("FindHiddenToFiles")->RunQuery(sub{
+  my($row) = @_;
+  $HiddenToFiles{$row->[0]} = 1;
+},sub{}, $subproc_invoc_id);
+my $hidden_to_files = keys %HiddenToFiles;
+if($hidden_to_files > 0){
+  $background->WriteToEmail("Warning: $hidden_to_files \"to\" files are already hidden\n");
+}
+
 #Check All "from" files are hidden
-#Change Current disposition to "Import Complete - deleting to files"
-##end TODO
+my $num_visible_from_files;
+Query("FindVisibleFromFiles")->RunQuery(sub{
+  $num_visible_from_files += 1;
+},sub{}, $subproc_invoc_id);
+if($num_visible_from_files > 0){
+  $background->WriteToEmail("Warning: $num_visible_from_files \"from\" failed to hide\n");
+}
+my $old_tp;
+Query('LatestActivityTimepointForActivity')->RunQuery(sub{
+  my($row) = @_;
+  $old_tp = $row->[0];
+}, sub {}, $activity_id);
+unless(defined $old_tp){
+  $background->WriteToEmail("ERROR: couldn't get current timepoint for activity $activity_id\n");
+  $background->Finish("Failed - check report");
+  exit;
+}
+my $comment = "New Timepoint for ImportedEdits $subproc_invoc_id";
+Query("CreateActivityTimepoint")->RunQuery(sub {}, sub {},
+  $activity_id, $0, $comment, $notify);
+my $new_tp;
+Query("GetActivityTimepointId")->RunQuery(sub {
+  my($row) = @_;
+  $new_tp = $row->[0];
+}, sub{});
+unless(defined $new_tp){
+  $background->WriteToEmail("ERROR: Unable to get new activity timepoint id.\n");
+  $background->Finish("Failed - check report");
+  exit;
+}
+$background->WriteToEmail("Activity Timepoint Ids: old = $old_tp, new = $new_tp\n");
+$background->SetActivityStatus("Adding visible files from old tp to new tp");
+my $q = Query('InsertActivityTimepointFile');
+Query('VisibleFilesInTimepoint')->RunQuery(sub {
+  my($row) = @_;
+  $q->RunQuery(sub{}, sub{}, $new_tp, $row->[0]);
+}, sub{}, $old_tp);
+
+$background->SetActivityStatus("Adding visible \"to\" files to new tp");
+Query('FindVisibleFromFiles')->RunQuery(sub {
+  my($row) = @_;
+  $q->RunQuery(sub{}, sub{}, $new_tp, $row->[0]);
+}, sub{}, $subproc_invoc_id);
+################### End new code
+
 #Delete directory
 my $start_delete = time;
 $background->WriteToEmail("To Delete -\n" .
@@ -338,7 +403,5 @@ my $upd = Query("UpdateDicomEditCompareDispositionStatus");
 $upd->RunQuery(sub{}, sub{}, "Import Complete - to files deleted",
    $subproc_invoc_id);
 $background->PrepareBackgroundReportBasedOnQuery(
-  "SummaryOfFromFiles", "Summary of From Files", 1000, $subproc_invoc_id);
-$background->PrepareBackgroundReportBasedOnQuery(
-  "SummaryOfToFiles", "Summary of To Files", 1000, $subproc_invoc_id);
+  "TimepointCreationReport", "Timepoint Creation Report", 1000, $subproc_invoc_id);
 $background->Finish("Completed file import");
