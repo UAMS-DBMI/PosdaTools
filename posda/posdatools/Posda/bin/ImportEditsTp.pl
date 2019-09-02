@@ -332,6 +332,7 @@ if($num_unimported_to_files > 0){
   $background->Finish("Failed - check report");
   exit;
 }
+$background->WriteToEmail("No unimported to files\n");
 my %HiddenToFiles;
 Query("FindHiddenToFiles")->RunQuery(sub{
   my($row) = @_;
@@ -340,6 +341,8 @@ Query("FindHiddenToFiles")->RunQuery(sub{
 my $hidden_to_files = keys %HiddenToFiles;
 if($hidden_to_files > 0){
   $background->WriteToEmail("Warning: $hidden_to_files \"to\" files are already hidden\n");
+} else {
+  $background->WriteToEmail("No \"to\" files are already hidden\n");
 }
 
 #Check All "from" files are hidden
@@ -349,6 +352,8 @@ Query("FindVisibleFromFiles")->RunQuery(sub{
 },sub{}, $subproc_invoc_id);
 if($num_visible_from_files > 0){
   $background->WriteToEmail("Warning: $num_visible_from_files \"from\" failed to hide\n");
+} else {
+  $background->WriteToEmail("No \"from\" failed to hide\n");
 }
 my $old_tp;
 Query('LatestActivityTimepointForActivity')->RunQuery(sub{
@@ -376,16 +381,22 @@ unless(defined $new_tp){
 $background->WriteToEmail("Activity Timepoint Ids: old = $old_tp, new = $new_tp\n");
 $background->SetActivityStatus("Adding visible files from old tp to new tp");
 my $q = Query('InsertActivityTimepointFile');
+my $num_copied_from_old = 0;
 Query('VisibleFilesInTimepoint')->RunQuery(sub {
   my($row) = @_;
   $q->RunQuery(sub{}, sub{}, $new_tp, $row->[0]);
+  $num_copied_from_old += 1;
 }, sub{}, $old_tp);
-
+$background->WriteToEmail("$num_copied_from_old files copied from old_tp ($old_tp) " .
+  "to new_tp ($new_tp)\n");
 $background->SetActivityStatus("Adding visible \"to\" files to new tp");
-Query('FindVisibleFromFiles')->RunQuery(sub {
+my $added_from_edit = 0;
+Query('FindVisibleToFiles')->RunQuery(sub {
   my($row) = @_;
   $q->RunQuery(sub{}, sub{}, $new_tp, $row->[0]);
+  $added_from_edit += 1;
 }, sub{}, $subproc_invoc_id);
+$background->WriteToEmail("$added_from_edit added to new_tp ($new_tp) as edit results\n");
 ################### End new code
 
 #Delete directory
@@ -403,5 +414,5 @@ my $upd = Query("UpdateDicomEditCompareDispositionStatus");
 $upd->RunQuery(sub{}, sub{}, "Import Complete - to files deleted",
    $subproc_invoc_id);
 $background->PrepareBackgroundReportBasedOnQuery(
-  "TimepointCreationReport", "Timepoint Creation Report", 1000, $subproc_invoc_id);
+  "TimepointCreationReport", "Timepoint Creation Report (activity_id $activity_id, tp_id $new_tp)", 1000, $new_tp);
 $background->Finish("Completed file import");
