@@ -87,13 +87,14 @@ for my $op_name (keys %SsOpRows){
       "command_line", "operation_type",
       "input_line_format"
     ){
-      unless(
-        $SsOpRows{$op_name}->{$col} eq
-        $SsOpFiles{$op_name}->{$col}
-      ){
+      my $row_v = $SsOpRows{$op_name}->{$col};
+      my $file_v = $SsOpFiles{$op_name}->{$col};
+      unless(defined $row_v) { $row_v = "" }
+      unless(defined $file_v) { $file_v = "" }
+      unless($row_v eq $file_v){
         print "$op_name has non matching $col values:\n";
-        print "In DB   ############\n$SsOpRows{$op_name}->{$col}\n";
-        print "--------------------\n$SsOpFiles{$op_name}->{$col}\n";
+        print "In DB   ############\n$row_v\n";
+        print "--------------------\n$file_v\n";
         print "In File ############\n";
       }
     }
