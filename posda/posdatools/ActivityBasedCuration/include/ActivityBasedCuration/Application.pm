@@ -220,16 +220,14 @@ sub RetrieveBindingCacheFromDb{
   return $bc;
 }
 sub CreateBindingCacheInfoForKeyInDb{
-  my($self) = @_;
-  my($key) = @_;
+  my($self, $key) = @_;
   my $user = $self->get_user;
   my $value = $self->{BindingCache}->{$key};
   Query("InsertUserBoundVariable")->RunQuery(sub{
   }, sub{}, $user, $key, $value);
 }
-sub UpdateBindingValueInDb($key){
-  my($self) = @_;
-  my($key) = @_;
+sub UpdateBindingValueInDb{
+  my($self, $key) = @_;
   my $user = $self->get_user;
   my $value = $self->{BindingCache}->{$key};
   Query("UpdateUserBoundVariable")->RunQuery(sub{
@@ -3498,7 +3496,6 @@ method RunNewQuery($http, $dyn){
 }
 method OpenNewChainedQuery($http, $dyn){
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
-
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
