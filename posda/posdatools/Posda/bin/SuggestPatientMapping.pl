@@ -178,20 +178,32 @@ Query('GetPatientMappingForPatientsInTimepoint')->RunQuery(sub{
   my($from_patient_id, $to_patient_id, $to_patient_name, $collection_name,
       $site_name, $batch_number, $diagnosis_date, $baseline_date, $date_shift,
       $uid_root, $site_code) = @$row;
-    push @ExistingMappings, {
-      from_patient_id => $from_patient_id,
-      to_patient_id => $to_patient_id,
-      to_patient_name => $to_patient_name,
-      collection_name => $collection_name,
-      site_name => $site_name,
-      batch_number => $batch_number,
-      diagnosis_date => $diagnosis_date,
-      baseline_date => $baseline_date,
-      date_shift => $date_shift,
-      uid_root => $uid_root,
-      site_code => $site_code,
-    };
-  }, sub {}, $activity_id);
+  if(
+    defined($diagnosis_date) &&
+    $diagnosis_date =~ /^(\d\d\d\d-\d\d-\d\d)/
+  ){
+    $diagnosis_date = $1;
+  }
+  if(
+    defined($baseline_date) &&
+    $baseline_date =~ /^(\d\d\d\d-\d\d-\d\d)/
+  ){ 
+    $baseline_date = $1;
+  }
+  push @ExistingMappings, {
+    from_patient_id => $from_patient_id,
+    to_patient_id => $to_patient_id,
+    to_patient_name => $to_patient_name,
+    collection_name => $collection_name,
+    site_name => $site_name,
+    batch_number => $batch_number,
+    diagnosis_date => $diagnosis_date,
+    baseline_date => $baseline_date,
+    date_shift => $date_shift,
+    uid_root => $uid_root,
+    site_code => $site_code,
+  };
+}, sub {}, $activity_id);
 if($col_name eq ""){
   $back->WriteToEmail("No collection mapping specified\n" .
     "Just get a list potential mappings\n");

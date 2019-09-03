@@ -83,13 +83,14 @@ print "Files: $num_files\n";
 # This is code which sets up the Background Process and Starts it
 my $forground_time = time - $start;
 print "Going to background to create timepoint  after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 my $now = `date`;
 $background->WriteToEmail("Creating timepoint from series list: $comment\n" .
   "at $now\n");
 my $start_creation = time;
 ### Creation of tables here
+$background->SetActivityStatus("Creating Timepoint");
 my $cre = Query("CreateActivityTimepoint");
 $cre->RunQuery(sub {}, sub {},
   $act_id, $0, $comment, $notify);
@@ -101,10 +102,11 @@ $gid->RunQuery(sub {
 }, sub{});
 unless(defined $act_time_id){
   $background->WriteToEmail("Unable to get activity timepoint id.\n");
-  $background->Finish;
+  $background->Finish("Error: Failed to create timepoint");
   exit;
 }
 $background->WriteToEmail("Activity Timepoint Id: $act_time_id\n");
+$background->SetActivityStatus("Inserting files into timepoint $act_time_id");
 my $ins_file = Query("InsertActivityTimepointFile");
 for my $file_id (keys %Files){
   $ins_file->RunQuery(sub{}, sub{}, $act_time_id, $file_id);
@@ -113,6 +115,7 @@ my $creation_time = time;
 my $creation = $creation_time - $start_creation;
 $background->WriteToEmail("Created tables in $creation seconds.\n");
 $background->WriteToEmail("Preparing report.\n");
+$background->SetActivityStatus("Creating timepoint report");
 my $rpt = $background->CreateReport("Timepoint Creation Report");
 $rpt->print("key,value\r\n");
 $rpt->print("script,\"$0\"\r\n");
@@ -156,4 +159,4 @@ for my $coll(sort keys %Report){
   }
 }
 $background->WriteToEmail("Prepared report in $rpt_time seconds.\n");
-$background->Finish;
+$background->Finish("Done - timepoint $act_time_id created");

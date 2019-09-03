@@ -119,7 +119,7 @@ for my $s (keys %EditsBySeries){
   my @edit_keys = sort keys %{$EditsBySeries{$s}};
   for my $k (0 .. $#edit_keys){
     $EditGroupSummary .= $edit_keys[$k];
-    unless($k == $#edit_keys){ $EditGroupSummary .= "%" }
+    unless($k == $#edit_keys){ $EditGroupSummary .= "$sep_char" }
   }
   $SeriesByEditGroups{$EditGroupSummary}->{$s} = 1;
 }
@@ -141,7 +141,7 @@ for my $c (sort keys %SeriesByEditGroups){
     }
   }
   $background->WriteToEmail("Command group: $c\n");
-  my @edits = split /%/, $c;
+  my @edits = split /$sep_char/, $c;
   for my $edit (@edits){
   $background->WriteToEmail("Edit: $edit\n");
     my($op, $tag, $arg1, $arg2) = split(/\|/, $edit);

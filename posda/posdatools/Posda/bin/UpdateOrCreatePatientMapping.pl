@@ -231,6 +231,7 @@ print STDERR "\n";
     my $in_inp = $inp->{$k};
     my $in_db = $db->{$k};
     if($trunc_date{$k}){ $in_db =~ s/ 00:00:00$// }
+    if($trunc_date{$k}){ $in_inp =~ s/ 00:00:00$// }
     if($in_inp ne $in_db){
       $back->WriteToEmail("k = $k; in_db = $in_db; in_inp = $inp\n");
       print STDERR "k = $k; in_db = $in_db; in_inp = $inp\n";
