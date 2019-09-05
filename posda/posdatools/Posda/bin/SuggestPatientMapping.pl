@@ -419,7 +419,7 @@ for my $pat (keys %PatientMinStudyDate){
   }
   if($pat_map_specified){
     my $max = 1000;
-    if($num_dig) { $max = 10^$num_dig; }
+    if($num_dig) { $max = 10**$num_dig; }
     my $r = 0; 
     while($r == 0){
       $r = int rand($max);
@@ -430,17 +430,20 @@ for my $pat (keys %PatientMinStudyDate){
     } else {
       $mapped = "$pat_map_prefix$r$pat_map_suffix";
     }
+    my $tries = 0;
     random:
     while(exists $MappedPatientIds{$mapped}){
+      $tries += 1;
+      if($tries > 10000){die "too many tries"}
       $r = int rand($max);
       if($r == 0) { next random }
       if($num_dig != ""){
-        $mapped = sprintf("$pat_map_prefix%0$num_dig" . "d$pat_map_suffix");
+        $mapped = sprintf("$pat_map_prefix%0$num_dig" . "d$pat_map_suffix", $r);
       } else {
         $mapped = "$pat_map_prefix$r$pat_map_suffix";
       }
     }
-    $MappedPatientIds{$pat} = 1;
+    $MappedPatientIds{$mapped} = 1;
     $PatientMappingsForSiteCode{$pat}->{to_patient_id} = $mapped;
     $PatientMappingsForSiteCode{$pat}->{to_patient_name} = $mapped;
   } elsif($map_mrn){
