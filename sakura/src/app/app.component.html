@@ -1,6 +1,9 @@
 <h1>Posda</h1>
-<h2>{{user}}</h2>
-<form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+<h2 *ngIf="user != null">User {{user}}</h2>
+<form id="login_form"
+      *ngIf="user == null"
+      [formGroup]="loginForm"
+      (ngSubmit)="login(loginForm.value)">
   <div>
     <label for="username">
       Username

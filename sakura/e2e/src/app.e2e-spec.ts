@@ -7,15 +7,17 @@ describe('Sakura App', () => {
     expect(browser.getTitle()).toEqual('Posda');
   });
 
-  it('should allow admin to login', () => {
-    debugger;
+  it('should allow admin to login and remain logged in', () => {
     browser.get(browser.baseUrl);
     element(by.id('username')).sendKeys('admin');
     element(by.id('password')).sendKeys('admin');
     element(by.id('login')).click();
 
     expect(element(by.css('h2')).getText()).
-      toEqual('admin');
+      toContain('admin');
+    browser.get(browser.baseUrl);
+    expect(element(by.css('h2')).getText()).
+      toContain('admin');
   });
 
   afterEach(async () => {
