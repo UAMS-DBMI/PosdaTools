@@ -8,12 +8,13 @@ describe('Sakura App', () => {
   });
 
   it('should allow admin to login', () => {
+    debugger;
     browser.get(browser.baseUrl);
-    element(by.model('username')).sendKeys('admin');
-    element(by.model('password')).sendKeys('admin');
+    element(by.id('username')).sendKeys('admin');
+    element(by.id('password')).sendKeys('admin');
     element(by.id('login')).click();
 
-    expect(element(by.binding('user')).getText()).
+    expect(element(by.css('h2')).getText()).
       toEqual('admin');
   });
 
