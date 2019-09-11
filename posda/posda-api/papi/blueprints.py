@@ -17,6 +17,7 @@ from .resources import rois
 from .resources import importer
 from .resources import dashboard
 from .resources import vrstatus
+from .resources import send_to_public_status
 from .resources import iecs
 
 
@@ -120,6 +121,28 @@ def generate_vrstatus_blueprint():
     blueprint.add_route(
         vrstatus.finish_activity_status,
         '/finish_activity_status/<visual_review_instance_id>'
+    )
+    return blueprint
+
+def generate_send_to_public_status_blueprint():
+    blueprint = Blueprint('send_to_public_status')
+
+
+    blueprint.add_route(
+        send_to_public_status.find_send_ready_to_begin_status_updates,
+        '/find_send_ready_to_begin_status_updates'
+    )
+    blueprint.add_route(
+        send_to_public_status.get_success_percentage_for_send,
+        '/get_success_percentage_for_send/<subprocess_invocation_id>'
+    )
+    blueprint.add_route(
+        send_to_public_status.update_activity_status,
+        '/update_activity_status/<subprocess_invocation_id>/<new_status>'
+    )
+    blueprint.add_route(
+        send_to_public_status.finish_activity_status,
+        '/finish_activity_status/<subprocess_invocation_id>'
     )
     return blueprint
 
