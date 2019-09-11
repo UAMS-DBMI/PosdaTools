@@ -8,6 +8,7 @@ use DBI;
 
 use Posda::Config 'Database';
 use Dispatch::EventHandler;
+use Dispatch::TopHalfAsyncQuery;
 
 use Posda::DebugLog 'on';
 use Data::Dumper;
@@ -150,6 +151,11 @@ method SetAsync($async) {
   $self->{async} = $async;
 }
 
+method SetNewAsync() {
+
+  $self->{new_async} = 1;
+}
+
 # Execute the query
 # Call signature is:
 #   RunQuery($row_callback, $end_callback, $err_callback, @bind_variables);
@@ -169,7 +175,9 @@ method SetAsync($async) {
 sub RunQuery {
   my $self = shift;
 
-  if ($self->{async}) {
+  if ($self->{new_async}) {
+    return $self->_RunQueryNewAsync(@_);
+  } elsif ($self->{async}){
     return $self->_RunQueryAsync(@_);
   } else {
     return $self->_RunQueryBlocking(@_);
@@ -296,6 +304,50 @@ sub _RunQueryAsync {
         }
         &$end_callback();
       }
+    }
+  );
+}
+sub _RunQueryNewAsync {
+  my($self) = shift;
+  my $row_callback = shift;
+  my $end_callback = shift;
+  my $error_callback = shift;
+
+  # error_callback might actually be the first bind variable, or
+  # even undef. If it's not code put it back!
+
+  if (ref($error_callback) ne 'CODE') {
+    if (defined $error_callback) {
+      unshift @_, $error_callback;
+    }
+
+    $error_callback = sub {
+      my $message = shift;
+      print STDERR "Error in query, but no error_callback passed!\n$message\n";
+    }
+  }
+
+  $self->{bindings} = [@_];
+
+  my $parameters =  {
+    connect => $self->{connect},
+    args => $self->{args},
+    columns => $self->{columns},
+    tags => $self->{tags},
+    description => $self->{description},
+    query => $self->{query},
+    bindings => $self->{bindings},
+    name => $self->{name},
+  };
+  my $ev = Dispatch::TopHalfAsyncQuery->new_serialized_cmd(
+    $parameters, 
+    sub {
+      my($row) = @_;
+      &$row_callback($row);
+    },
+    sub{
+      my($status) = @_;
+      &$end_callback($status);
     }
   );
 }
