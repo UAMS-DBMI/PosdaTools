@@ -1221,15 +1221,26 @@ sub ReadMetaHeader{
     push(@errors, "Part 10 header appears to be implicit xfer syntax");
     $this->ReadElementHeader();
   }
+  my $meta_header_has_length_to_end = 1;
   unless($this->{grp} == 2 && $this->{ele} == 0){
-    die "First Element in name meta header isn't (0002,0000)\n\n --";
+    push(@errors, "First Element in name meta header isn't (0002,0000)");
+    $meta_header_has_length_to_end = 0;
+    #print STDERR "Metaheader has no length to end!!!!\n";
+
+#    die "First Element in name meta header isn't (0002,0000)\n\n --";
   }
   my $length_offset = $fh->tell;
   my $value = $this->ReadElementValue();
   my $length_to_end = $value;
   $this->{length} = $value;
-  my $here = $fh->tell;
-  my $apparent_start_of_dataset = $here + $value;
+  unless($meta_header_has_length_to_end){
+    $this->{length} = 1000; #no too bad as ugly disgusting kludges go...
+  }
+  my $apparent_start_of_dataset;
+  if($meta_header_has_length_to_end){
+    my $here = $fh->tell;
+    $apparent_start_of_dataset = $here + $value;
+  }
   my $last_tag = $this->{tag};
   my $metaheader = {
     $this->{tag} => $value,
@@ -1238,22 +1249,28 @@ sub ReadMetaHeader{
     my $start_of_tag = $fh->tell;
     $this->ReadElementHeader();
     unless($this->{grp} == 2){
-      my $diff = $apparent_start_of_dataset - $start_of_tag;
-      my $real_length = $length_to_end - $diff;
-      if($this->{grp} == 8 || $this->{grp} == 4){
-        push(@errors, "Group $this->{grp} found in file metaheader " .
-          "(offset $start_of_tag vs $apparent_start_of_dataset)\n" .
-          "change dataset length at: $length_offset " .
-          "from $length_to_end to $real_length ($diff)"
-        );
-        seek $fh, $start_of_tag, 0;
-        last;
+      if($meta_header_has_length_to_end){
+        my $diff = $apparent_start_of_dataset - $start_of_tag;
+        my $real_length = $length_to_end - $diff;
+        if($this->{grp} == 8 || $this->{grp} == 4){
+          push(@errors, "Group $this->{grp} found in file metaheader " .
+            "(offset $start_of_tag vs $apparent_start_of_dataset)\n" .
+            "change dataset length at: $length_offset " .
+            "from $length_to_end to $real_length ($diff)"
+          );
+          seek $fh, $start_of_tag, 0;
+          last;
+        } else {
+          die "Group $this->{grp} found in file metaheader " .
+            "(offset $start_of_tag vs $apparent_start_of_dataset)\n" .
+            "change dataset length at: $length_offset\n" .
+            "from $length_to_end to $real_length ($diff)\n" .
+            "\n  --";
+        }
       } else {
-        die "Group $this->{grp} found in file metaheader " .
-          "(offset $start_of_tag vs $apparent_start_of_dataset)\n" .
-          "change dataset length at: $length_offset\n" .
-          "from $length_to_end to $real_length ($diff)\n" .
-          "\n  --";
+        seek $fh, $start_of_tag, 0;
+        $this->{length} = 0;
+        last;
       }
     }
     unless($last_tag lt $this->{tag}){
@@ -1272,11 +1289,13 @@ sub ReadMetaHeader{
   my $EndOfData = tell($fh);
   seek $fh, $StartOfData, 0;
   my $FileSize = $EndOfData - $StartOfData;
-  unless(exists $metaheader->{"(0002,0010)"}){
-    die "Metaheader contains no xfer syntax\n\n --";
-  }
   my $ret = {};
-  $ret->{xfrstx} = $metaheader->{"(0002,0010)"};
+  if(exists $metaheader->{"(0002,0010)"}){
+    $ret->{xfrstx} = $metaheader->{"(0002,0010)"};
+  } else{
+    $ret->{xfrstx} = '1.2.840.10008.1.2.1';
+    push @errors, "Metaheader contains no xfer syntax";
+  }
   $ret->{DataSetStart} = $StartOfData;
   $ret->{DataSetSize} = $FileSize;
   $ret->{metaheader} = $metaheader;
