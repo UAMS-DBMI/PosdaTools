@@ -119,6 +119,18 @@ sub SetActivityStatus{
       sub{}, sub{}, $status,
       $self->{activity_id}, $self->{invoc_id});
   }
+
+  if($status eq "Schedule Complete - Manual Process Follows"){
+    $self->SetActivityManualUpdate($status);
+    return;
+  }
+}
+
+sub SetActivityManualUpdate {
+  my ($self, $message) = @_;
+
+  Query("UpdateActivityTaskStatusForManualUpdate")->RunQuery(sub{}, sub{},
+    $message, $self->{activity_id}, $self->{invoc_id});
 }
 
 method CreateReport($report_name) {
@@ -268,8 +280,7 @@ sub Finish() {
   }
   if($self->{activity_id}){
     if($mess eq "Schedule Complete - Manual Process Follows"){
-      Query("UpdateActivityTaskStatusForManualUpdate")->RunQuery(sub{}, sub{},
-        $mess, $self->{activity_id}, $self->{invoc_id});
+      $self->SetActivityManualUpdate($mess);
       return;
     }
     unless(defined $mess){

@@ -270,6 +270,8 @@ $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
 #######################################################################
 ### Body of script
 
+$background->SetActivityManualUpdate("Processing beginning - Manual Process Follows");
+
 my @cmds;
 my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
 for my $patient_id (sort keys %Patients){

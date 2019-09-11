@@ -11,13 +11,13 @@ async def test(request):
 
 async def find_send_ready_to_begin_status_updates(request):
     query = """\
-        select
-            subprocess_invocation_id
+        select distinct
+                subprocess_invocation_id
         from
-          activity_task_status
+                activity_task_status
+                natural join public_copy_status
         where
-            manual_update = true
-            and status_text = "SOMETHING"
+                manual_update = true
     """
     return json_records(
         await db.fetch(query)
