@@ -21,6 +21,7 @@ from .resources import dashboard
 from .resources import vrstatus
 from .resources import iecs
 from .resources import vris
+from .resources import queries
 
 
 def configure_blueprints(app):
@@ -70,6 +71,26 @@ def configure_blueprints(app):
         generate_vris_blueprint(),
         url_prefix='/v1/vris'
     )
+    app.blueprint(
+        generate_queries_blueprint(),
+        url_prefix='/v1/queries'
+    )
+
+def generate_queries_blueprint():
+    blueprint = Blueprint('queries')
+
+    blueprint.add_route(
+        queries.get_all_queries,
+        '/'
+    )
+
+    blueprint.add_route(
+        queries.ExecuteQuery.as_view(),
+        '/execute'
+    )
+
+    return blueprint
+
 
 def generate_dashboard_blueprint():
     blueprint = Blueprint('dashboard')

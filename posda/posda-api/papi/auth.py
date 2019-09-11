@@ -160,6 +160,10 @@ class LoginView(HTTPMethodView):
         user = request.form.get('username')
         password = request.form.get('password')
 
+
+        if user is None or password is None:
+            return fail("missing username or password as form parameters")
+
         slug = await _get_password_form_db(user)
 
         if not check_pw(password, slug):

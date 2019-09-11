@@ -17,7 +17,11 @@ main() {
 
 api() {
 	echo "Start Posda API Server...";
-	exec python3 /posda-api/main.py
+	cd $APPROOT/systemd
+
+	echo "Working dir is: $(pwd)"
+
+	exec ./run_in_posda_env.sh python3 /posda-api/main.py
 }
 
 file_process() {
