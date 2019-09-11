@@ -11,6 +11,15 @@ import posda
 from posda.queries import Query
 
 
+async def get_query_details(query_name):
+    result = await db.fetch_one("""
+        select *
+        from queries
+        where name = $1
+    """, [query_name])
+
+    return result
+
 async def get_all_queries(request, **kwargs):
     tags = request.args.get("tags")
     args = request.args.get("args")
@@ -46,21 +55,20 @@ async def get_all_queries(request, **kwargs):
         await db.fetch(query, bind_vars)
     )
 
+async def get_query(request, query_name, **kwargs):
+    query = await get_query_details(query_name)
+
+    return json({
+        'status': 'success',
+        'details': dict(query),
+    })
+
 
 class ExecuteQuery(HTTPMethodView):
-    async def get_query_details(self, query_name):
-        result = await db.fetch_one("""
-            select *
-            from queries
-            where name = $1
-        """, [query_name])
 
-        return result
+    async def post(self, request, query_name):
 
-    async def post(self, request):
-        query_name = request.args.get('query_name')
-
-        query = await self.get_query_details(query_name)
+        query = await get_query_details(query_name)
 
         # print(request.json)
 

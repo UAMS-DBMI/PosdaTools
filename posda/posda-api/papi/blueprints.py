@@ -86,7 +86,12 @@ def generate_queries_blueprint():
 
     blueprint.add_route(
         queries.ExecuteQuery.as_view(),
-        '/execute'
+        '/<query_name>/execute'
+    )
+
+    blueprint.add_route(
+        queries.get_query,
+        '/<query_name>/details'
     )
 
     return blueprint
