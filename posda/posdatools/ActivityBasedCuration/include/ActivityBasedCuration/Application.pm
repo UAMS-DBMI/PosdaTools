@@ -2341,6 +2341,10 @@ method InvokeOperationRow($http, $dyn){
   }
   if($class eq "Quince") { $class = "ActivityBasedCuration::Quince" }
   eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
   my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $params = {
 #    button => $dyn->{operation},
@@ -2363,10 +2367,6 @@ method InvokeOperationRow($http, $dyn){
   }
 
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  if($@){
-    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
-    return;
-  }
   my $name = "StartBackground_$self->{sequence_no}";
   $self->{sequence_no}++;
 
