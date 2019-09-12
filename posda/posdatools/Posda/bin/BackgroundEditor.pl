@@ -26,7 +26,9 @@ BackgroundEditor.pl <bkgrnd_id> <edit_desciption> <notify>
 or
 BackgroundEditor.pl -h
 Expects lines of the form:
-<series_instance_uid>&<op>&<tag>&<val1>&<val2>
+<series_instance_uid><op><tag><val1><val2>
+Note that the above line contains ASCII Field Seperator (FS) characters
+between each argument. If you cannot see them, try using less or vim.
 
 Lines specify the following things:
  - Series edits:
@@ -271,7 +273,7 @@ line:
 while(my $line = <STDIN>){
   chomp $line;
   my($series_uid, $op, $tag, $v1, $v2) =
-    split(/&/, $line);
+    split(//, $line);
   if($series_uid){
     if($op) {
       print "Error: operation ($op) on same line as series ($series_uid)\n";
