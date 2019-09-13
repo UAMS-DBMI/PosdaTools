@@ -51,7 +51,7 @@ async def get_success_percentage_for_send(request, subprocess_invocation_id):
             success
             """
     return json_records(
-        await db.fetch(query,[int(visual_review_instance_id)])
+        await db.fetch(query,[int(subprocess_invocation_id)])
     )
 
 async def update_activity_status(request, subprocess_invocation_id,new_status):
@@ -65,7 +65,7 @@ async def update_activity_status(request, subprocess_invocation_id,new_status):
             and subprocess_invocation_id = $1
     """
     return json_records(
-        await db.fetch(query,[int(visual_review_instance_id),new_status])
+        await db.fetch(query,[int(subprocess_invocation_id),new_status])
     )
 
 async def finish_activity_status(request, subprocess_invocation_id):
@@ -79,5 +79,5 @@ async def finish_activity_status(request, subprocess_invocation_id):
             and subprocess_invocation_id = $1
     """
     return json_records(
-        await db.fetch(query,[int(visual_review_instance_id)])
+        await db.fetch(query,[int(subprocess_invocation_id)])
     )

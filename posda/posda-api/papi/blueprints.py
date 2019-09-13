@@ -57,6 +57,10 @@ def configure_blueprints(app):
         url_prefix='/v1/vrstatus'
     )
     app.blueprint(
+        generate_send_to_public_status_blueprint(),
+        url_prefix='/v1/send_to_public_status'
+    )
+    app.blueprint(
         generate_iecs_blueprint(),
         url_prefix='/v1/iecs'
     )
