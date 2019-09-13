@@ -18,12 +18,9 @@ def main():
         _, filename = sr
         print(filename)
 
-        subprocess.run(["convert",
-                        "-define", "dcm:rescale=true",
-                        "-define", "dcm:unsigned=true",
+        subprocess.run(["dcm2jpg",
                         filename,
-                        "-set", "filename:f", "%i",
-                        "%[filename:f][512;512;-1][0].jpeg"])
+                        f"{filename.decode()}[512;512;-1][0].jpeg"])
 
 
 

@@ -28,11 +28,14 @@ RUN apk --update add \
 	libgomp \
 	libgcc \
 	python3 \
-	redis
+	redis \
+	openjdk8-jre-base
 
 COPY --from=builder /opt/im /opt/im
+COPY dcm4che-5.18.1-bin.zip /
+RUN unzip /dcm4che-5.18.1-bin.zip -d /opt && rm -f /dcm4che-5.18.1-bin.zip
 
-ENV PATH="/opt/im/bin:${PATH}"
+ENV PATH="/opt/im/bin:/opt/dcm4che-5.18.1/bin:${PATH}"
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
