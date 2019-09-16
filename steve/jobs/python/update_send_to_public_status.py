@@ -14,9 +14,20 @@ for record in resp:
 
     my_status = " "
     for entry in resp2:
-        my_status += entry['summary'] + ' '
+        if entry['summary'] is not None:
+            my_status += entry['summary'] + ' '
 
-    if (my_status == " false 0% true 100% " or " true 100% false 0% "):
+    #find percentages and see if they add to 100
+    index1 = (my_status.strip()).find(' ')
+    index2 = (my_status.strip()).find('%')
+    index3 = (my_status.strip()).rfind(' ')
+    index4 = (my_status.strip()).rfind('%')
+
+    numOne = int( (my_status.strip())[index1:index2])
+    numTwo = int( (my_status.strip())[index3:index4])
+
+
+    if (numOne + numTwo == 100):
         my_status = "Complete"
 
     #update activity_status for record
