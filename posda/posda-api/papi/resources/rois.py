@@ -97,10 +97,13 @@ async def get_contours_for_sop(request, sop, **kwargs):
         from file_sop_common
         join file_roi_image_linkage fril
                 on fril.linked_sop_instance_uid = file_sop_common.sop_instance_uid
+        join ctp_file
+                on fril.file_id = ctp_file.file_id
         join file_meta
                 on file_meta.file_id = fril.file_id
         natural join roi
         where sop_instance_uid = $1
+          and ctp_file.visibility is null
     """
 
     raw_contours = await db.fetch(query, [sop])
