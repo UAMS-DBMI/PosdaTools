@@ -108,7 +108,7 @@
 * Once the query returns Click the Foreground button
   >> ![alt text](testing_docs_images/foreground.png "Search Query")
 
-* in the boxes add `%` to represent *any*
+* If you do not know your parameters, in the boxes add `%` to represent *any*
   >> ![alt text](testing_docs_images/percents.png "Query parameters")   
 
 * Click query
@@ -328,6 +328,22 @@
 * This will likely open to the query you last used (If not look at the CreateActivityTimepointFromSeriesList above)
 * Click Back, and then Query to rerun the same query we ran previously
 * The results should be updated with your changes
+* If there are multiple IDs in the results, we will need to filter to only the newest ID
+  >> ![alt text](testing_docs_images/twoIds.png "Two Ids")
+
+* Click the `Edit Filter` button
+    >> ![alt text](testing_docs_images/EditFilter1.png "Edit Filter")  
+
+* Add the new ID in the ID parameter box and Click `Set Filter`
+    >> ![alt text](testing_docs_images/EditFilter2.png "Edit Filter")  
+
+* On the far right we can see the filter now exists
+* Click to view only the `Filtered Rows`
+    >> ![alt text](testing_docs_images/EditFilter3.png "Edit Filter")  
+
+* Now the results should be filtered!
+    >> ![alt text](testing_docs_images/EditFilter4.png "Edit Filter")  
+
 * Click CreateActivityTimepointFromSeriesList
   >> ![alt text](testing_docs_images/CreateActivityTimepointFromSeriesList.png "CreateActivityTimepointFromSeriesList")   
 
@@ -431,7 +447,13 @@
 * Once it is completed, this may take some time on real datasets, view the Inbox
 * File the message
 
+# Continue Curation
+* This ends the step by step tutorial
+* Hopefully this Guide gave you a general idea how the Posda Application functions
+* From this point, run other steps as necessary for your specific data (such as checking for duplicate SOPs)
+* Some steps like `Public Phi Scan Based on Current TP by Activity` cannot be preformed in test databases because they require an NBIA connection to compare data against
 
+#Some other common curation steps include:
 
 # PHI Review
 * This step is similar to the Initial Anonymizer
@@ -444,13 +466,6 @@
 * Check your results when it completes
 * If the number of changes are different than you expected, Reject the changes and try again
 
-
-
 # Apply Dispositions
 * Run this like you have the previous Operations
-
-
-
-# Continue Curation
-* Run other steps as necessary such as checking for duplicate SOPs
-* Some steps like `Public Phi Scan Based on Current TP by Activity` cannot be preformed in test databases because they require an NBIA connection to compare data against
+* This is the step used to send the clean data to your Public view
