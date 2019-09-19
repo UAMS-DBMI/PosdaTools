@@ -4,7 +4,7 @@
 -- Args: []
 -- Tags: ['tag_usage', 'simple_phi', 'phi_status', 'scan_status']
 -- Description:  Status of PHI scans
---
+
 
 select
   phi_scan_instance_id as id,

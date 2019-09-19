@@ -4,7 +4,7 @@
 -- Args: ['activity_timepoint_id']
 -- Tags: ['activity_timepoint']
 -- Description: Get list of patients by activity_timepoint_id
---
+
 
 select distinct patient_id
 from file_patient natural left join ctp_file

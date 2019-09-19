@@ -4,7 +4,7 @@
 -- Args: []
 -- Tags: ['queries']
 -- Description: Get all named queries
---
+
 
 select
   name, query, args, columns, tags, schema, description

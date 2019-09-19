@@ -4,7 +4,7 @@
 -- Args: ['name']
 -- Tags: ['bills_test']
 -- Description: Get query by name
---
+
 
 select name, query, args, columns, tags, schema, description
 from queries where name = ?

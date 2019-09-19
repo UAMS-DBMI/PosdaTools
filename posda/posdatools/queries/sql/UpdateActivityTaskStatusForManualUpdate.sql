@@ -6,7 +6,7 @@
 -- Description: Update status_text and expected_completion_time in activity_task_status
 -- For use in scripts
 -- Not really intended for interactive use
---
+
 
 update activity_task_status set
   status_text = ?,

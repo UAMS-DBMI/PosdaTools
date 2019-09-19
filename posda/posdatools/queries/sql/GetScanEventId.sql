@@ -1,6 +1,6 @@
 -- Name: GetScanEventId
 -- Schema: posda_phi
--- Columns: ['id']
+-- Columns: []
 -- Args: []
 -- Tags: ['UsedInPhiSeriesScan', 'NotInteractive']
 -- Description: List of values seen in scan by VR (with count of elements)

@@ -3,8 +3,7 @@
 -- Columns: ['collection', 'site', 'patient', 'num_studies', 'num_series', 'num_sop_classes', 'num_modalities', 'num_sops', 'num_files']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['activity_timepoints']
--- Description: Get visible files in timepoint
---
+-- Description:  Get visible files in timepoint
 
 select                                                                                                                                    
   project_name as collection, 

@@ -4,7 +4,7 @@
 -- Args: ['series_instance_uid']
 -- Tags: ['by_series_instance_uid', 'posda_files', 'sops']
 -- Description:  Get Collection, Site, Patient, Study Hierarchy in which series resides
---
+
 
 select distinct
   project_name as collection,

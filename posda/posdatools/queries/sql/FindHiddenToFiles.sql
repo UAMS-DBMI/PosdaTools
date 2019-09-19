@@ -3,10 +3,9 @@
 -- Columns: ['file_id']
 -- Args: ['subprocess_invocation_id']
 -- Tags: ['populate_posda_files', 'bills_test']
--- Description: Gets a list of "to" files in an DICOM edit compare which been hidden
+-- Description:  Gets a list of "to" files in an DICOM edit compare which been hidden
 -- 
 -- (by file_digest)
---
 
 select
   file_id

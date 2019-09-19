@@ -4,7 +4,7 @@
 -- Args: ['activity_id']
 -- Tags: ['adding_ctp', 'for_scripting', 'patient_mapping', 'activity_timepoint']
 -- Description: Get patient mappings for patients in timepoint
---
+
 
 select
   from_patient_id,

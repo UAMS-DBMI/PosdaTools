@@ -4,7 +4,7 @@
 -- Args: ['import_comment_like', 'import_type_like']
 -- Tags: ['find_series', 'import_events']
 -- Description: Get Series by Import Events by matching 
---
+
 
 select distinct import_event_id, import_type, import_comment, import_time, series_instance_uid from
   file_series natural join file_import natural join import_event

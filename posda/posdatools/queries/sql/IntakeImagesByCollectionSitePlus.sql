@@ -1,13 +1,12 @@
 -- Name: IntakeImagesByCollectionSitePlus
 -- Schema: intake
--- Columns: ['patient_id', 'sop_instance_uid', 'study_instance_uid', 'series_instance_uid']
+-- Columns: None
 -- Args: ['collection', 'site']
 -- Tags: ['intake']
 -- Description: N
 -- o
 -- n
 -- e
---
 
 select
   p.patient_id,

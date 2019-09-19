@@ -3,8 +3,7 @@
 -- Columns: ['file_id']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['activity_timepoints']
--- Description: Get visible files in timepoint
---
+-- Description:  Get visible files in timepoint
 
 select
   distinct file_id
