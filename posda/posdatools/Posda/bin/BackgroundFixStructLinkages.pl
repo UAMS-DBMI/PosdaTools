@@ -107,6 +107,7 @@ for my $item (@Worklist){
   },sub {}, $ss_file_id);
   my $dest_file = "$DestDir/${modality}_$sop.dcm";
   my $cmd = "TestStructFixer.pl $img_series $ss_file_id $dest_file";
+  $background->WriteToEmail("cmd: $cmd\n");
   unless(open CMD, "$cmd|"){
     $background->WriteToEmail("Can't open cmd: $cmd\n");
     next item;

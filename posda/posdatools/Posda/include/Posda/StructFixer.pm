@@ -99,15 +99,17 @@ sub LinkStructSet{
     "(3006,0039)[<0>](3006,0040)[<1>](3006,0042)", "CLOSED_PLANAR"
   );
   my $num_links = @{$ct_cont_ref->{list}};
+  z_value:
   for my $inst (@{$ct_cont_ref->{list}}){
     my $r_i = $inst->[$ct_cont_ref->{index_list}->{"<0>"}];
     my $rc_i = $inst->[$ct_cont_ref->{index_list}->{"<1>"}];
     my $z = $ds->ExtractElementBySig(
       "(3006,0039)[$r_i](3006,0040)[$rc_i](3006,0050)[2]"
     );
+    unless($z ne "") { next z_value }
     my $closest_z = $z;
     unless(defined $this->{ImgsByZ}->{$z}){
-      BuildCtMap($z);
+      $this->BuildCtMap($z);
       $closest_z = $this->{CtMap}->{$z};
     }
     my $dist = abs($closest_z - $z);
