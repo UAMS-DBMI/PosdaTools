@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::DB 'Query';
 use Posda::Try;
 use Digest::MD5;
 use Posda::UUID;
@@ -8,17 +9,19 @@ use Time::Piece;
 use Posda::NBIASubmit;
 
 my $usage = <<EOF;
-ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <collection_name> <site_name> <site_id> <batch>
+ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
   date's always offset
+  Collection and Site are read from the file
+  Site Code must be defined in site_codes
   Once written, the NBIA Submissions API is called with the filename
 EOF
 
-unless($#ARGV == 9) { die $usage }
+unless($#ARGV == 6) { die $usage }
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
-    $offset, $collection_name, $site_name, $site_id, $batch) = @ARGV;
+    $offset, $batch) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -128,9 +131,19 @@ $get_disp->RunQuery(sub {
     $HashByElement{$row->[0]} = 1;
   }
 }, sub {}, 'h');
+
 my $try = Posda::Try->new($from_file);
 unless(exists $try->{dataset}){ die "$from_file is not a DICOM file" }
 my $ds = $try->{dataset};
+
+# Get the Collection and Site from the file, for use in NBIASubmit later
+my $collection_name = $ds->Get('(0013,"CTP",10)');
+my $site_name = $ds->Get('(0013,"CTP",12)');
+
+my $temp_results = Query('GetSiteCodeBySite')->FetchOneHash($site_name);
+my $site_id = $temp_results->{site_code};
+
+
 #print "Editing file $from_file\n";
 for my $e (keys %DeleteByElement){
   #print "\tDeleting: $e\n";

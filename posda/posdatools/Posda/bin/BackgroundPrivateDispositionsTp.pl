@@ -57,6 +57,8 @@ my $collection_name = $act_info->GetCollection;
 my $site_name = $act_info->GetSite;
 my $site_code = $act_info->GetSiteCode;
 
+# Although site_code is not used in this script, this test is left here
+# because the sub cmd will fail silently if no site_code is defined!!
 if (not defined $site_code) {
   $background->WriteToEmail("No entry for $site_name in site_codes table!\n");
   $background->Finish;
@@ -282,7 +284,7 @@ for my $patient_id (sort keys %Patients){
 
         my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
                   qq{$file_id $path "$full_filename" $uid_root $offset } .
-                  qq{$collection_name $site_name $site_code 0};
+                  qq{0};
 
         push @cmds, $cmd;
         $num_files += 1;
