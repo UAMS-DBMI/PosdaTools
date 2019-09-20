@@ -29,7 +29,8 @@ RUN apk --update add \
 	libgcc \
 	python3 \
 	redis \
-	openjdk8-jre-base
+	openjdk8-jre-base \
+    py3-psycopg2
 
 COPY --from=builder /opt/im /opt/im
 COPY dcm4che-5.18.1-bin.zip /
