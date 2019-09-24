@@ -144,9 +144,11 @@ def step_impl(context):
 @when(u'we add SeriesByMatchingImportEventsWithEventInfo parameters')
 def step_impl(context):
     param1 = context.browser.find_element_by_xpath("//th[text()='import_comment_like']/../td/input")
-    param1.send_keys("%") #FIX
+    if param1.get_attribute("value") != '%':
+        param1.send_keys("%")
     param2 = context.browser.find_element_by_xpath("//th[text()='import_type_like']/../td/input")
-    param2.send_keys("%") #FIX
+    if param2.get_attribute("value") != '%':
+        param2.send_keys("%")
 
 @when(u'we click Query')
 def step_impl(context):
@@ -163,7 +165,7 @@ def step_impl(context):
 @when(u'we input the parameters including the ID of your Activity')
 def step_impl(context):
     param1 = context.browser.find_element_by_id("activity_idEntryBox")
-    param1.send_keys("4") #FIX
+    param1.send_keys(context.activity_count)
     param2 = context.browser.find_element_by_id("commentEntryBox")
     param2.send_keys("feature testing")
 
@@ -204,10 +206,11 @@ def step_impl(context):
 @when(u'we select Timeline')
 def step_impl(context):
     selector = Select(context.browser.find_element_by_id("SetActivityMode"))
-    selector.select_by_value("3")
+    selector.select_by_value("0")
     time.sleep(2)
 
 
 @then(u'we see a timeline message with correct file count')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then we see a timeline message with correct file count')
+    time.sleep(5)
+    assert context.browser.find_element_by_xpath('//tr/td[text()="CreateActivityTimepointFromSeriesList"]/../td[text()="628"]')
