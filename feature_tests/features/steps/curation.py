@@ -53,7 +53,7 @@ def step_impl(context):
 
 @when(u'we count the existing activities')
 def step_impl(context):
-    #currently returns 2 extra
+    #subtract 2 
     context.activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))-2
 
 @when(u'we create an activity')
@@ -65,8 +65,9 @@ def step_impl(context):
 
 @then(u'one new activity should exist in dropdown')
 def step_impl(context):
-    new_activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))
-    assert new_activity_count == (context.activity_count + 1)
+    old_count = context.activity_count
+    context.activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))-2
+    assert context.activity_count == (old_count + 1)
 
 @when(u'we select an activity')
 def step_impl(context):
