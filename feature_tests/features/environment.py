@@ -4,7 +4,7 @@ from selenium import webdriver
 @fixture
 def selenium_browser_firefox(context):
     context.browser = webdriver.Firefox()
-    context.browser.implicitly_wait(5) # seconds
+    context.browser.implicitly_wait(15) # seconds
     yield context.browser
     context.browser.quit()
 

@@ -41,8 +41,7 @@ def step_impl(context):
     time.sleep(3)
     context.browser.switch_to.window(context.browser.window_handles[1])
     assert "Loading" in context.browser.find_element_by_xpath("//h1").text
-    time.sleep(10)
-    assert "Database" in context.browser.title
+    assert "Database Interface" in context.browser.find_element_by_xpath("//center/h1").text
 
 @when(u'we click activity')
 def step_impl(context):
@@ -53,7 +52,7 @@ def step_impl(context):
 
 @when(u'we count the existing activities')
 def step_impl(context):
-    #subtract 2 
+    #subtract 2
     context.activity_count = len(context.browser.find_elements_by_xpath("//h2[text()='Activities']/../div/select/option"))-2
 
 @when(u'we create an activity')

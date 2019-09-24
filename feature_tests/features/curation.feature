@@ -34,6 +34,14 @@ Feature: Curation workflow test using RSNA
       And we Click Expand
       And we Click Start Subprocess
       And we close popup and switch windows
+  Scenario: file inbox message
+    Given Test data was imported
+      And an activity exists
+      And Your browser is allowing popups
+    When we open dbif
+      And we click activity
+      And we count the existing activities
+      And we select an activity
       And we file the inbox message
       And we click activity
       And we select Timeline
