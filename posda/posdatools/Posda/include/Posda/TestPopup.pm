@@ -3,7 +3,6 @@ package Posda::TestPopup;
 
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -23,12 +22,14 @@ sub make_ht_dbg{
 }
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Popup Params Viewer';
   $self->{params} = $params;
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>Popup Text Viewer</h2>");
   $http->queue("<p>Params viewer</p>");
 
@@ -38,7 +39,8 @@ method ContentResponse($http, $dyn) {
   $http->queue("</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
 1;
 

@@ -3,7 +3,6 @@ package DbIf::ShowSubprocessLines;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -14,7 +13,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Popup Response Line  Viewer';
 
   my $sub_id = $params->{sub_id};
@@ -28,7 +28,8 @@ method SpecificInitialize($params) {
   }, sub {}, $self->{sub_id});
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>Popup Text Viewer</h2>");
   $http->queue("<p>Viewing response to subprocess invocation:$self->{file_id}</p>");
 
@@ -39,7 +40,8 @@ method ContentResponse($http, $dyn) {
   $http->queue("</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <a class="btn btn-primary" 
        href="DownloadTextAsTxt?obj_path=$self->{path}">
@@ -47,13 +49,15 @@ method MenuResponse($http, $dyn) {
     </a>
   });
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
-method DownloadTextAsTxt($http, $dyn){
+sub DownloadTextAsTxt {
+  my ($self, $http, $dyn) = @_;
   $http->DownloadHeader("text/plain", "Foo.txt");
   for my $line(@{$self->{lines}}){
     $http->queue("$line\n");

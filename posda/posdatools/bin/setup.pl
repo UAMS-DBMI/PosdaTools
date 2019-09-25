@@ -43,7 +43,6 @@ if (not defined $ENV{POSDA_ROOT}) {
 say "Testing for all required Perl modules...";
 eval {
   require Modern::Perl;
-  require Method::Signatures::Simple;
   require JSON;
   require Data::UUID;
   require DBD::Pg;
@@ -63,7 +62,6 @@ if ($@) {
 
 # mimic 'use'
 require Modern::Perl; Modern::Perl->import('2010');
-require Method::Signatures::Simple; Method::Signatures::Simple->import;
 require JSON; JSON->import;
 require DBD::Pg; DBD::Pg->import;
 require Term::ReadKey; Term::ReadKey->import;

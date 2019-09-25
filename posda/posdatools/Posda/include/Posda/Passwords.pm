@@ -1,10 +1,10 @@
 package Posda::Passwords;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use Digest::SHA 'sha256_base64';
 
-func make_salt($len) {
+sub make_salt {
+  my ($len) = @_;
   if (not defined $len) {
     $len = 8;  # default length
   }
@@ -18,16 +18,19 @@ func make_salt($len) {
   return $result;
 }
 
-func encode($password) {
+sub encode {
+  my ($password) = @_;
   my $salt = make_salt();
   return _encode($salt, $password);
 }
 
-func _encode($salt, $password) {
+sub _encode {
+  my ($salt, $password) = @_;
   return "$salt," . sha256_base64($salt . $password);
 }
 
-func is_valid($enc_password, $candidate_password) {
+sub is_valid {
+  my ($enc_password, $candidate_password) = @_;
   my ($salt, $text) = split(',', $enc_password);
 
   my $new_text = _encode($salt, $candidate_password);

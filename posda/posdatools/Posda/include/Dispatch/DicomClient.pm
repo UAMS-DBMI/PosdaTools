@@ -115,7 +115,8 @@ sub ClearToSend{
   if($this->{StatusObj} && $this->{StatusObj}->can("ClearToSend")){
     $this->{StatusObj}->ClearToSend;
   } else {
-    die "no ClearToSend method in $this->{StatusObj}";
+    die "no ClearToSend sub in {
+  my ($self) = @_;StatusObj}";
   }
 }
 sub GoodBye{
@@ -123,7 +124,8 @@ sub GoodBye{
   if($this->{StatusObj} && $this->{StatusObj}->can("ConnectionGone")){
     $this->{StatusObj}->ConnectionGone;
   } else {
-    die "no ConnectionGone method in $this->{StatusObj}";
+    die "no ConnectionGone sub in {
+  my ($self) = @_;StatusObj}";
   }
 }
 sub StartAssoc{

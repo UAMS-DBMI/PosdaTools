@@ -7,7 +7,6 @@
 #
 use strict;
 package Dispatch::EventHandler;
-use Method::Signatures::Simple;
 use Socket;
 use Dispatch::Select;
 use File::Path;
@@ -262,16 +261,18 @@ sub KillProcessAndChildren{
   my $count = kill 9, @kill_list;
 }
 
-func JSONSubProcess($command, $finished_callback) {
+sub JSONSubProcess {
+  my ($command, $finished_callback) = @_;
   # Execute the given command using Dispatch::LineReader
   # Assume the returned lines form a single JSON object
   # Decode that object and pass it to $finished_callback
   my @lines;
   Dispatch::LineReader->new_cmd($command,
-    func ($line) {
+    sub {
+  my ($line) = @_;
       push @lines, $line;
     },
-    func () {
+    sub {
       my $json = join(' ', @lines);
       my $obj = decode_json($json);
 

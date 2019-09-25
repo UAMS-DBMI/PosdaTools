@@ -7,7 +7,6 @@ package Posda::PopupCompareFiles;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 
@@ -20,7 +19,8 @@ use Data::Dumper;
 
 my $db_handle;
 
-func get_filename($file_id) {
+sub get_filename {
+  my ($file_id) = @_;
   # TODO: Add error handling
   my $qh = $db_handle->prepare(qq{
     select root_path || '/' || rel_path
@@ -36,7 +36,8 @@ func get_filename($file_id) {
   return $rows->[0]->[0];
 }
 
-method new($class: $session, $path, $params) {
+sub new {
+  my ($class, $session, $path, $params) = @_;
   # TODO: handle case where params are not given
   my $from_file_id = $params->{from_file};
   my $to_file_id = $params->{to_file};

@@ -3,21 +3,23 @@ package AppController::StatusInfo;
 # A module for getting various stats about the running app
 #
 
-use Method::Signatures::Simple;
 use DBI;
 use DBD::Pg ':async';
 
 
-func _get_db_connection($database_name) {
+sub _get_db_connection {
+  my ($database_name) = @_;
   DBI->connect("DBI:Pg:database=$database_name");
 }
 
-func _execute_query_async($conn, $query, $callback) {
+sub _execute_query_async {
+  my ($conn, $query, $callback) = @_;
   my $statement = $conn->prepare($query, {pg_async => PG_ASYNC}) or die "$!";
   $statement->execute() or die $!;
 
   # now we have to Dispatch to the background
-  my $back = Dispatch::Select::Background->new(func($disp) {
+  my $back = Dispatch::Select::Background->new(sub {
+  my ($disp) = @_;
     if ($statement->pg_ready()) {
       # results are ready
 
@@ -40,7 +42,8 @@ func _execute_query_async($conn, $query, $callback) {
   $back->queue();
 }
 
-func get_recent_uploads_async($database_name, $callback) {
+sub get_recent_uploads_async {
+  my ($database_name, $callback) = @_;
 
   my $query = qq{
     select
@@ -80,7 +83,8 @@ func get_recent_uploads_async($database_name, $callback) {
   _execute_query_async(_get_db_connection($database_name), $query, $callback);
 }
 
-func get_db_backlog_async($database_name, $callback) {
+sub get_db_backlog_async {
+  my ($database_name, $callback) = @_;
   my $query = qq{
     select
       minute,
@@ -101,7 +105,8 @@ func get_db_backlog_async($database_name, $callback) {
   _execute_query_async(_get_db_connection($database_name), $query, $callback);
 }
 
-func get_rec_backlog_async($database_name, $callback) {
+sub get_rec_backlog_async {
+  my ($database_name, $callback) = @_;
   my $query = qq{
     select
       minute,

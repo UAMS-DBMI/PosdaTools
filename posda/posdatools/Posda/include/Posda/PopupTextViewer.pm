@@ -3,7 +3,6 @@ package Posda::PopupTextViewer;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -14,7 +13,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Popup Text Viewer';
 
   my $file_id = $params->{file_id};
@@ -37,7 +37,8 @@ sub HeaderResponse{
 }
 
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>Popup Text Viewer</h2>");
   $http->queue("<p>Viewing $self->{file_id} ($self->{filename})</p>");
 
@@ -57,7 +58,8 @@ method ContentResponse($http, $dyn) {
   $http->queue("<pre>$file_content</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <a class="btn btn-primary" 
        href="DownloadTextAsCsv?obj_path=$self->{path}">
@@ -69,17 +71,20 @@ method MenuResponse($http, $dyn) {
     </a>
   });
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
-method DownloadTextAsCsv($http, $dyn){
+sub DownloadTextAsCsv {
+  my ($self, $http, $dyn) = @_;
   $http->DownloadHeader("text/csv", "Foo.csv");
   $http->queue($self->{text});
 }
-method FixBadCsv($http, $dyn){
+sub FixBadCsv {
+  my ($self, $http, $dyn) = @_;
   $http->DownloadHeader("text/csv", "Foo.csv");
   my $text_to_fix = $self->{text};
   $text_to_fix =~ s/=\(//g;

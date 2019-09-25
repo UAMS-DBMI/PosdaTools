@@ -1,15 +1,15 @@
 package Posda::Nicknames2Factory;
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Posda::Nicknames2;
 use DBI;
 
-func get($project_name, $site_name, $subj_id) {
+sub get {
+  my ($project_name, $site_name, $subj_id) = @_;
   Posda::Nicknames2::get($project_name, $site_name, $subj_id);
 }
 
-func clear() {
+sub clear {
   Posda::Nicknames2::clear();
 }
 

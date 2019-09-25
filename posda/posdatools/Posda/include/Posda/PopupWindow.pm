@@ -1,7 +1,6 @@
 package Posda::PopupWindow;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
@@ -28,7 +27,8 @@ my $expander = qq{<?dyn="BaseHeader"?>
 </html>
 };
 
-method new($class: $sess, $path, $parameters) {
+sub new {
+  my ($class, $sess, $path, $parameters) = @_;
 
   my $self = Dispatch::NamedObject->new($sess, $path);
   bless $self, $class;
@@ -94,16 +94,19 @@ my $content = qq{
   </div>
 };
 
-method Content($http, $dyn) {
+sub Content {
+  my ($self, $http, $dyn) = @_;
   $self->{LaunchParams} = $dyn;
   $self->RefreshEngine($http, $dyn, $content);
 }
 
-method GetJavascriptRoot() {
+sub GetJavascriptRoot {
+  my ($self) = @_;
   return $self->{JavascriptRoot};
 }
 
-method JsContent($http, $dyn) {
+sub JsContent {
+  my ($self, $http, $dyn) = @_;
   return $self->parent()->JsContent($http, $dyn);
 }
 
@@ -111,12 +114,14 @@ method JsContent($http, $dyn) {
 # Override below here
 ###############################################################################
 
-# method SpecificInitialize() {
+# sub SpecificInitialize {
+# my ($self) = @_;
 #   $self->{Mode} = "Initialized";
 #   $self->{menustuff} = "Menu";
 # }
 
-# method ContentResponse($http, $dyn) {
+# sub ContentResponse {
+# my ($self, $http, $dyn) = @_;
 #   $self->NotSoSimpleButtonButton($http, {
 #     op => "TestOp",
 #     caption => "Button click me",
@@ -124,11 +129,13 @@ method JsContent($http, $dyn) {
 #   $http->queue(Dumper($self->{LaunchParams}));
 # }
 
-# method MenuResponse($http, $dyn) {
+# sub MenuResponse {
+# my ($self, $http, $dyn) = @_;
 #   $http->queue($self->{menustuff});
 # }
 
-# method TestOp($http, $dyn) {
+# sub TestOp {
+# my ($self, $http, $dyn) = @_;
 #   say STDERR "TestOp called";
 #   $self->{menustuff} = "TestOp Called";
 # }

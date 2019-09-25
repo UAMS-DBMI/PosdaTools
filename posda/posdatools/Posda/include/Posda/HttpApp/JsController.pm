@@ -9,7 +9,6 @@
 
 use strict;
 package Posda::HttpApp::JsController;
-use Method::Signatures::Simple;
 use Time::HiRes qw( time );
 use Dispatch::NamedObject;
 use Dispatch::LineReader;
@@ -17,7 +16,6 @@ use Posda::HttpApp::HttpObj;
 use Posda::DB 'Query';
 use IO::Socket::INET;
 
-use Posda::DebugLog 'on';
 use Data::Dumper;
 
 use vars qw( @ISA );
@@ -823,7 +821,8 @@ sub MakeJavascriptLink{
   return $text;
 }
 
-method ReallySimpleButton($http, $dyn) {
+sub ReallySimpleButton {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <button class="btn btn-default"
             onClick="$dyn->{onClick}">
@@ -856,7 +855,8 @@ sub SimpleButton{
 # ONLY seralize inputs that have a 'name' attribute. Make sure you
 # give your elements a name (and not just an id) or no data will be
 # sent to the method!
-method SimpleJQueryForm($http, $dyn) {
+sub SimpleJQueryForm {
+  my ($self, $http, $dyn) = @_;
   my $class = ($dyn->{class} or 'form');
   my $id = ($dyn->{id} or 'SimpleJQueryForm');
   my $op = ($dyn->{op} or die 'op required');
@@ -994,7 +994,8 @@ are set to the same value from the array.
  Returns: Nothing.
 
 =cut
-method SimpleDropdownListFromArray($http, $dyn, $elements) {
+sub SimpleDropdownListFromArray {
+  my ($self, $http, $dyn, $elements) = @_;
   my $element_name = $dyn->{name}
     or die "missing name argument";
   my $class = ($dyn->{class} or 'form-control');
@@ -1384,7 +1385,8 @@ sub ReadTransactionResponse{
   return $sub;
 }
 
-method MakeMenuBar($http, $menu) {
+sub MakeMenuBar {
+  my ($self, $http, $menu) = @_;
   # Generate a jquery-based button bar from the given menu hash
   #
   # $menu should look like this:

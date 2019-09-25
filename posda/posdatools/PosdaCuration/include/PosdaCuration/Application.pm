@@ -1,7 +1,6 @@
 package PosdaCuration::Application;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Posda::DataDict;
 use PosdaCuration::GeneralPurposeEditor;
@@ -580,7 +579,8 @@ sub ContinueDbCollectionsAndExtractions{
   return $sub;
 };
 
-method DrawMainButtonBar($http, $dyn) {
+sub DrawMainButtonBar {
+  my ($self, $http, $dyn) = @_;
   $self->MakeMenuBar($http, [
     {caption => 'Intake',
      items => [
@@ -910,7 +910,8 @@ sub FixDifferences {
   }
 }
 
-method Intake_Check_or_Clear() {
+sub Intake_Check_or_Clear {
+  my ($self) = @_;
   if(exists $self->{IntakeCheckHierarchy}) {
     return {caption => 'Clear Check', op => 'ClearIntakeData'};
   } else {
@@ -918,7 +919,8 @@ method Intake_Check_or_Clear() {
   }
 }
 
-method Public_Check_or_Clear() {
+sub Public_Check_or_Clear {
+  my ($self) = @_;
   if(exists $self->{PublicCheckHierarchy}) {
     return {caption => 'Clear Check', op => 'ClearPublicData'};
   } else {

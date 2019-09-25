@@ -27,7 +27,7 @@ sub add_header {
   my($this, $line) = @_;
   $this->{header} .= "$this->{indent}$line";
 }
-sub add_func {
+sub add_sub {
   my($this, $line) = @_;
   $this->{func} .= "$this->{indent}$line";
 }

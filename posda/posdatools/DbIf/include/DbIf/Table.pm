@@ -1,7 +1,6 @@
 package DbIf::Table;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use List::MoreUtils 'first_index';
 use File::Basename 'basename';
@@ -9,7 +8,7 @@ use File::Basename 'basename';
 use Data::Dumper;
 
 ##########################################
-func test() {
+sub test {
   say 'testing';
 
   # simple
@@ -59,7 +58,8 @@ func test() {
 
 }
 ##########################################
-func from_csv($filename, $struct, $start_time) {
+sub from_csv {
+  my ($filename, $struct, $start_time) = @_;
   my $rows = $struct->{rows};
   my $columns = shift @$rows;
 
@@ -76,7 +76,8 @@ func from_csv($filename, $struct, $start_time) {
   return $table;
 }
 
-func from_query($query, $struct, $start_time) {
+sub from_query {
+  my ($query, $struct, $start_time) = @_;
   my $table = DbIf::Table->new(
     'FromQuery',
     $start_time,
@@ -87,7 +88,8 @@ func from_query($query, $struct, $start_time) {
   $table->{query} = $query;
   return $table;
 }
-method new($class: $type, $start_time, $columns, $rows) {
+sub new {
+  my ($class, $type, $start_time, $columns, $rows) = @_;
   if (not defined $rows) { $rows = [] }
   if (not defined $columns) { $columns = [] }
   if (not defined $start_time) { $start_time = time }
@@ -105,7 +107,8 @@ method new($class: $type, $start_time, $columns, $rows) {
 
   return $self;
 }
-method print() {
+sub print {
+  my ($self) = @_;
   say qq{#####################################################################
 DbIf::Table:
   Type: $self->{type}
@@ -124,18 +127,21 @@ Full data follows.
   say '#####################################################################';
 }
 
-method clear_filters() {
+sub clear_filters {
+  my ($self) = @_;
   $self->{filters} = undef;
   $self->apply_filters;
 }
 
-method add_filter($column_name, $filter_regex) {
+sub add_filter {
+  my ($self, $column_name, $filter_regex) = @_;
   $self->{filters}->{$column_name} = $filter_regex;
   $self->apply_filters;
 
 }
 
-method apply_filters() {
+sub apply_filters {
+  my ($self) = @_;
   if (not defined $self->{original_rows}) {
     $self->{original_rows} = $self->{rows};
   }
@@ -149,7 +155,8 @@ method apply_filters() {
 
 }
 
-method apply_single_filter($column_name, $filter_regex) {
+sub apply_single_filter {
+  my ($self, $column_name, $filter_regex) = @_;
   if (not defined $filter_regex or
       $filter_regex eq '') {
       return;

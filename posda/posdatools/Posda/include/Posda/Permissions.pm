@@ -1,7 +1,6 @@
 package Posda::Permissions;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use autodie;
 
 use Posda::Config 'Database';
@@ -11,7 +10,8 @@ use Data::Dumper;
 use DBI;
 
 
-method new($class: $username) {
+sub new {
+  my ($class, $username) = @_;
   my $self = {username => $username};
   bless $self, $class;
 
@@ -19,7 +19,8 @@ method new($class: $username) {
   return $self;
 }
 
-method _init() {
+sub _init {
+  my ($self) = @_;
   DEBUG 1;
   # Connect to DB, load all permission data for this user
   my $dbh = DBI->connect(Database('posda_auth'));
@@ -51,7 +52,8 @@ method _init() {
   $dbh->disconnect;
 }
 
-method has_permission($app, $permission) {
+sub has_permission {
+  my ($self, $app, $permission) = @_;
   DEBUG @_, $self->{username};
   if (defined $self->{permissions}->{$app}->{$permission}) {
     return 1;
@@ -60,14 +62,17 @@ method has_permission($app, $permission) {
   }
 }
 
-method has_permission_partial($app) {
+sub has_permission_partial {
+  my ($self, $app) = @_;
   # a simple partial function/closure to bind to a specific app
-  return func($perm) {
+  return sub {
+  my ($perm) = @_;
     return $self->has_permission($app, $perm);
   }
 }
 
-method launchable_apps() {
+sub launchable_apps {
+  my ($self) = @_;
   # return a listref of apps the user has permission to launch
   my @apps = grep {
     defined $self->{permissions}->{$_}->{launch};

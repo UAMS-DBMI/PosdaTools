@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config 'Database';
 
@@ -41,7 +40,8 @@ my $ins_req = $dbh->prepare(
 );
 
 
-func GetSubmitterId($collection, $site, $subj) {
+sub GetSubmitterId {
+  my ($collection, $site, $subj) = @_;
 
   $sub_q->execute($collection, $site, $subj);
   my $h = $sub_q->fetchrow_hashref;
@@ -60,7 +60,8 @@ func GetSubmitterId($collection, $site, $subj) {
   return $hid->{currval}, undef;
 }
 
-func InsertRequest($submitter, $file, $digest, $data, $size) {
+sub InsertRequest {
+  my ($submitter, $file, $digest, $data, $size) = @_;
   return $ins_req->execute($submitter, $file, $digest, $data, $size);
 };
 

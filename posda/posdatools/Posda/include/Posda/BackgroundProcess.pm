@@ -1,14 +1,14 @@
 { package Posda::BackgroundProcess::Report; #{{{
 
   use Modern::Perl;
-  use Method::Signatures::Simple;
 
   use Posda::DebugLog;
   use Data::Dumper;
 
   use File::Temp qw/ tempfile /;
 
-  method new($class: $report_name) {
+  sub new {
+  my ($class, $report_name) = @_;
     my ($fh, $filename) = tempfile();
 
     my $self = {
@@ -24,17 +24,20 @@
     return $self;
   }
 
-  method print() {
+  sub print {
+  my ($self) = @_;
     $self->{file_handle}->print(@_);
   }
 
-  method close() {
+  sub close {
+  my ($self) = @_;
     close($self->{file_handle});
     $self->_insert_report_file;
     $self->{open} = 0;
   }
 
-  method _insert_report_file() {
+  sub _insert_report_file {
+  my ($self) = @_;
     my $file_path = $self->{temp_filename};
 
     my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$file_path" "BackgroundProcess Report"`;
@@ -57,7 +60,6 @@
 package Posda::BackgroundProcess;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 
 use Posda::DB qw/ Query ResetDBHandles /;
@@ -121,7 +123,8 @@ sub SetActivityStatus{
   }
 }
 
-method CreateReport($report_name) {
+sub CreateReport {
+  my ($self, $report_name) = @_;
   if (not defined $report_name) {
     $report_name = 'Default Report';
   }
@@ -134,11 +137,13 @@ method CreateReport($report_name) {
   return $self->{reports}->{$report_name};
 }
 
-method Daemonize() {
+sub Daemonize {
+  my ($self) = @_;
   $self->ForkAndExit;
 }
 
-method ForkAndExit() {
+sub ForkAndExit {
+  my ($self) = @_;
   ResetDBHandles();
   $self->{input_line_query} = undef;
 
@@ -197,7 +202,8 @@ method ForkAndExit() {
   return; # only the grandchild returns
 }
 
-method WriteToEmail($line) {
+sub WriteToEmail {
+  my ($self, $line) = @_;
   DEBUG "writing to email: $line";
   $self->{email_handle}->print($line);
 }
@@ -280,7 +286,8 @@ sub Finish() {
   }
 }
 
-method LogError($error) {
+sub LogError {
+  my ($self, $error) = @_;
   #TODO: something is wrong with this!
   print STDERR "Logging error: $error\n";
   $self->{add_sub_error_query}->RunQuery(sub{}, sub{},
@@ -387,7 +394,8 @@ method PrepareBackgroundReportBasedOnQuery(
   }
 }
 
-method MakeBackgroundReport($header, $rows, $name){
+sub MakeBackgroundReport {
+  my ($self, $header, $rows, $name) = @_;
   my $rpt = $self->CreateReport($name);
   for my $i (0 .. $#{$header}){
     my $f = $header->[$i];
@@ -410,7 +418,8 @@ method MakeBackgroundReport($header, $rows, $name){
 # Insert a clickable button into the email, at the current location
 # Note that the op will ultimately execute within DbIf::Application
 # and Update() is always called.
-method InsertEmailButton($caption, $op, $param_hash, $class) {
+sub InsertEmailButton {
+  my ($self, $caption, $op, $param_hash, $class) = @_;
 print STDERR "################\n";
 
   if (not defined $class) {
@@ -436,7 +445,8 @@ print STDERR "################\n";
 # Private methods =========================================================={{{
 
 
-method _log_input_count($count) {
+sub _log_input_count {
+  my ($self, $count) = @_;
   $self->{add_time_rows_query}->RunQuery(sub {}, sub{},
     $count, $self->{grandchild_pid}, $self->{background_id}
   );
@@ -472,29 +482,34 @@ sub _start_process {
 #}}}
 # Deprecated methods ======================================================={{{
 
-method LogCompletionTime() { # Deprecated
+sub LogCompletionTime {
+  my ($self) = @_; # Deprecated
   say STDERR "LogCompletionTime() is deprecated! Use Finish() instead.";
   $self->Finish();
 }
 
-method LogInputCount($count) { # Deprecated
+sub LogInputCount {
+  my ($self, $count) = @_; # Deprecated
   say STDERR "LogInputCount is deprecated; it no longer needs to be called";
   return 1;
 }
 
-method GetReportFileID() { # Deprecated
+sub GetReportFileID {
+  my ($self) = @_; # Deprecated
   say STDERR "GetReportFileID() is deprecated, and no longer returns a valid value!";
   return 0;
 }
 
-method GetReportDownloadableURL() { # Deprecated
+sub GetReportDownloadableURL {
+  my ($self) = @_; # Deprecated
   return "DEPRECATED";
 }
 
 # This method is kept only for backwards compatability. It should not
 # be used! Instead call CreateReport() to get a file handle for
 # a named report and write to it instead.
-method WriteToReport($line) {
+sub WriteToReport {
+  my ($self, $line) = @_;
   say STDERR "Posda::BackgroundProcess->WriteToReport() is deprecated!";
 
   my $fh = $self->CreateReport('Default Report');

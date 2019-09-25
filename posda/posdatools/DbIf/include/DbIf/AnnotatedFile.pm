@@ -3,7 +3,6 @@ package DbIf::AnnotatedFile;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -14,12 +13,14 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Downloader for Annotated Files';
   $self->{params} = $params
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>Downloader for Annotated Files</h2>");
   $http->queue("<pre>");
   for my $i (keys %{$self->{params}}){
@@ -28,7 +29,8 @@ method ContentResponse($http, $dyn) {
   $http->queue("</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <a class="btn btn-primary" 
        href="DownloadThisFile?obj_path=$self->{path}">
@@ -36,13 +38,15 @@ method MenuResponse($http, $dyn) {
     </a>
   });
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
-method DownloadThisFile($http, $dyn){
+sub DownloadThisFile {
+  my ($self, $http, $dyn) = @_;
   my $file_id = $self->{params}->{file_id};
   my $filename;
   Query('GetFilePath')->RunQuery(sub{

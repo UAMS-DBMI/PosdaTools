@@ -19,7 +19,6 @@ Posda::Inbox - A module for interacting with the Posda Inbox.
 =cut
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::DebugLog;
 
@@ -32,7 +31,8 @@ use Regexp::Common "URI";
 use FileHandle;
 
 
-method new($class: $username) {
+sub new {
+  my ($class, $username) = @_;
 
   my $self = {
     username => $username,
@@ -44,7 +44,8 @@ method new($class: $username) {
 
 # Utility methods ##########################################################{{{
 
-method send_real_email_notification($username) {
+sub send_real_email_notification {
+  my ($self, $username) = @_;
   my $send_email = Config('real_email');
   if (defined $send_email && $send_email == 1) {
     my $email_handle = FileHandle->new(
@@ -55,16 +56,19 @@ method send_real_email_notification($username) {
     close($email_handle);
   }
 }
-method get_handle() {
+sub get_handle {
+  my ($self) = @_;
   my $db_handle = DBI->connect(Database('posda_queries'));
   return $db_handle;
 }
 
-method release_handle($handle) {
+sub release_handle {
+  my ($self, $handle) = @_;
   $handle->disconnect();
 }
 
-method execute_and_fetchall($query, $args) {
+sub execute_and_fetchall {
+  my ($self, $query, $args) = @_;
   my $handle = $self->get_handle;
 
   my $qh = $handle->prepare($query);
@@ -79,7 +83,8 @@ method execute_and_fetchall($query, $args) {
   return $rows;
 }
 
-method execute_and_fetchone($query, $args) {
+sub execute_and_fetchone {
+  my ($self, $query, $args) = @_;
   my $handle = $self->get_handle;
 
   my $qh = $handle->prepare($query);
@@ -94,7 +99,8 @@ method execute_and_fetchone($query, $args) {
   return $rows;
 }
 
-method execute($query, $args) {
+sub execute {
+  my ($self, $query, $args) = @_;
   my $handle = $self->get_handle;
 
   my $qh = $handle->prepare($query);
@@ -108,7 +114,8 @@ method execute($query, $args) {
   return $rows_affected;
 }
 
-method change_status_to($message_id, $new_status, $operation_type) {
+sub change_status_to {
+  my ($self, $message_id, $new_status, $operation_type) = @_;
   $self->execute(qq{
     update user_inbox_content
     set current_status = ?
@@ -125,7 +132,8 @@ method change_status_to($message_id, $new_status, $operation_type) {
     values (?, ?, now(), ?, ?)
   }, [$message_id, $operation_type, 'Posda::Inbox', $self->{username}]);
 }
-method get_email_addr_by_username($username) {
+sub get_email_addr_by_username {
+  my ($self, $username) = @_;
   return $self->execute_and_fetchone(qq{
     select user_email_addr
     from user_inbox
@@ -151,7 +159,8 @@ B<Arguments:>
  $how: A short note explaining the source of this email.
 
 =cut
-method SendMail($username, $report_id, $how) {
+sub SendMail {
+  my ($self, $username, $report_id, $how) = @_;
   my $result = $self->execute_and_fetchone(qq{
     insert into user_inbox_content (
       user_inbox_id,
@@ -200,7 +209,8 @@ an email notification will also be sent to the
 user's email.
 
 =cut
-method Forward($message_id, $username) {
+sub Forward {
+  my ($self, $message_id, $username) = @_;
   my $details = $self->ItemDetails($message_id);
 
   my $report_id = $details->{background_subprocess_report_id};
@@ -253,7 +263,8 @@ Return a count of unread items in the current user's inbox.
 A message is B<unread> if date_dismissed is null, and the current_status is 
 set to one of the statuses: entered, new
 =cut
-method UnreadCount() {
+sub UnreadCount {
+  my ($self) = @_;
   return $self->execute_and_fetchone(qq{
     select count(*)
     from user_inbox_content
@@ -269,7 +280,8 @@ method UnreadCount() {
 Return a count of undismissed items in the current user's inbox.
 
 =cut
-method UndismissedCount() {
+sub UndismissedCount {
+  my ($self) = @_;
   return $self->execute_and_fetchone(qq{
     select count(*)
     from user_inbox_content
@@ -285,7 +297,8 @@ Return a list of all items in the current user's Inbox. This includes
 dismissed items.
 
 =cut
-method AllItems() {
+sub AllItems {
+  my ($self) = @_;
   return $self->execute_and_fetchall(qq{
     select
       user_inbox_content_id,
@@ -305,7 +318,8 @@ Return a list of all items in the current user's Inbox that have not been
 dismissed.
 
 =cut
-method AllUndismissedItems() {
+sub AllUndismissedItems {
+  my ($self) = @_;
   return $self->execute_and_fetchall(qq{
     select
       user_inbox_content_id,
@@ -331,7 +345,8 @@ method AllUndismissedItems() {
 Returns a hashref with details about Inbox item identified by $message_id.
 
 =cut
-method ItemDetails($message_id) {
+sub ItemDetails {
+  my ($self, $message_id) = @_;
   return $self->execute_and_fetchone(qq{
     select * 
     from 
@@ -349,7 +364,8 @@ Return an arrayref of the last 15 operations that were performed on
 the Inbox item identified by $message_id.
 
 =cut
-method RecentOperations($message_id) {
+sub RecentOperations {
+  my ($self, $message_id) = @_;
   return $self->execute_and_fetchall(qq{
     select *
     from user_inbox_content_operation
@@ -369,7 +385,8 @@ after retrieving the filename, so you probably should not call this inside
 a tight loop.
 
 =cut
-method ReportFilename($file_id) {
+sub ReportFilename {
+  my ($self, $file_id) = @_;
   my $db_handle = DBI->connect(Database('posda_files'));
 
   my $dbh = $db_handle->prepare(qq{
@@ -397,7 +414,8 @@ B<NOTE:> This method calls Posda::Inbox::ReportFilename, which creates
 an extra database connection. See notes above.
 
 =cut
-method ReportContent($file_id) {
+sub ReportContent {
+  my ($self, $file_id) = @_;
   my $filename = $self->ReportFilename($file_id);
   my $file_content = read_file($filename);
   return $file_content;
@@ -409,7 +427,8 @@ Set an Inbox item, identified by $message_id, to the 'read' status.
 This method also adds an entry into the user_inbox_content_operation table.
 
 =cut
-method SetRead($message_id) {
+sub SetRead {
+  my ($self, $message_id) = @_;
   $self->change_status_to($message_id, 'read', 'message read');
 }
 
@@ -421,7 +440,8 @@ and set the date_dismissed to now.
 This method also adds an entry into the user_inbox_content_operation table.
 
 =cut
-method SetDismissed($message_id) {
+sub SetDismissed {
+  my ($self, $message_id) = @_;
   $self->change_status_to($message_id, 'dismissed', 'message dismissed');
   $self->execute(qq{
     update user_inbox_content
@@ -436,7 +456,8 @@ Return an arrayref containing a list of all usernames which
 are valid targets for sending email to.
 
 =cut
-method GetAllUsernames() {
+sub GetAllUsernames {
+  my ($self) = @_;
   return $self->execute_and_fetchall(qq{
     select user_name
     from user_inbox

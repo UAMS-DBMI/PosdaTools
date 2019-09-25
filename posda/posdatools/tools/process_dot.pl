@@ -1,5 +1,4 @@
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use autodie;
 

@@ -1,6 +1,5 @@
 package Posda::TestRedirectPopup; 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
@@ -13,7 +12,8 @@ use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController" );
 
 
-method new($class: $sess, $path, $parameters) {
+sub new {
+  my ($class, $sess, $path, $parameters) = @_;
 
   my $self = Dispatch::NamedObject->new($sess, $path);
   bless $self, $class;
@@ -77,10 +77,12 @@ method new($class: $sess, $path, $parameters) {
   return $self;
 }
 
-method DeleteMe($http, $dyn){
+sub DeleteMe {
+  my ($self, $http, $dyn) = @_;
   Dispatch::Select::Background->new($self->MakeDeleter($http, $dyn))->timer(10);
 }
-method MakeDeleter($http, $dyn){
+sub MakeDeleter {
+  my ($self, $http, $dyn) = @_;
   my $sub = sub{
     unless($self->{deleted}){
       $self->DeleteSelf;

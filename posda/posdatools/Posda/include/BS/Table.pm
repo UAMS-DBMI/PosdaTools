@@ -1,12 +1,12 @@
 package BS::Table;
 
-use Method::Signatures::Simple;
 use Modern::Perl '2010';
 
 
 # Generate a Bootstrap table dynamically,
 # from an arrayref of hashrefs
-func from_hashes($list_of_hashes) {
+sub from_hashes {
+  my ($list_of_hashes) = @_;
   my @lines;
 
   push @lines, q/<table class="table">/;

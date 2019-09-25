@@ -1,7 +1,6 @@
 package Posda::QueryLog;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config 'Database';
 use DBI;
@@ -9,7 +8,7 @@ use Data::Dumper;
 
 our $connection;
 
-func connect_to_db() {
+sub connect_to_db {
   if (not defined $connection) {
     $connection = DBI->connect(Database('posda_queries'));
   }
@@ -17,7 +16,8 @@ func connect_to_db() {
 
 # Record a query_invoked event, returning an ID that can be used later
 # to record it being finalized
-func query_invoked($query, $user) {
+sub query_invoked {
+  my ($query, $user) = @_;
   connect_to_db();
   my $start_time = time;
 
@@ -37,7 +37,8 @@ func query_invoked($query, $user) {
   return $invoked_id;
 }
 
-func query_finished($invoked_id, $rowcount) {
+sub query_finished {
+  my ($invoked_id, $rowcount) = @_;
   connect_to_db();
   $connection->do(qq{
     update query_invoked_by_dbif
@@ -47,7 +48,8 @@ func query_finished($invoked_id, $rowcount) {
   }, {}, time, $rowcount, $invoked_id);
 }
 
-func insert_query_args($invoked_by_id, $index, $name, $value) {
+sub insert_query_args {
+  my ($invoked_by_id, $index, $name, $value) = @_;
   $connection->do("insert into dbif_query_args values (?, ?, ?, ?)", {},
     $invoked_by_id, $index, $name, $value);
 }

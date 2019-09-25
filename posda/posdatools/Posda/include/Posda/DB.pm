@@ -11,24 +11,26 @@ require Exporter;
 @EXPORT_OK = ('Query', 'QueryAsync', 'ResetDBHandles', 'GetHandle');
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Posda::DB::PosdaFilesQueries; # this actually imports PosdaDB::Queries
 use Posda::Config 'Database';
 
 
-func Query($query_name) {
+sub Query {
+  my ($query_name) = @_;
   return PosdaDB::Queries->GetQueryInstance($query_name);
 }
 
-func QueryAsync($query_name) {
+sub QueryAsync {
+  my ($query_name) = @_;
   return PosdaDB::Queries->GetQueryInstanceAsync($query_name);
 }
 
-func ResetDBHandles() {
+sub ResetDBHandles {
   return PosdaDB::Queries->reset_db_handles();
 }
-func GetHandle($schema_name){
+sub GetHandle {
+  my ($schema_name) = @_;
   return PosdaDB::Queries::_get_handle_main(Database($schema_name));
 }
 1;

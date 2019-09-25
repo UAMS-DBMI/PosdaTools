@@ -1,7 +1,6 @@
 package PosdaDB::Queries;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use JSON;
 use DBI;
@@ -16,7 +15,8 @@ use Data::Dumper;
 my $db_handle;
 my $db_handle_cache = {};
 
-method reset_db_handles{
+sub reset_db_handles {
+  my ($self) = @_;
   for my $i (keys %$db_handle_cache){
     $db_handle_cache->{$i}->disconnect;
     delete $db_handle_cache->{$i};
@@ -34,7 +34,8 @@ sub _get_handle {
   return $db_handle;
 }
 
-func _get_handle_main($connect) {
+sub _get_handle_main {
+  my ($connect) = @_;
   if (not defined $db_handle_cache->{$connect}) {
     $db_handle_cache->{$connect} = DBI->connect($connect)
       or die "Could not connect to DB with connect string: $connect";
@@ -43,14 +44,17 @@ func _get_handle_main($connect) {
   return $db_handle_cache->{$connect};
 }
 
-method GetQueryInstance($class: $name) {
+sub GetQueryInstance {
+  my ($class, $name) = @_;
   return PosdaDB::Queries->new($name, 0);
 };
-method GetQueryInstanceAsync($class: $name) {
+sub GetQueryInstanceAsync {
+  my ($class, $name) = @_;
   return PosdaDB::Queries->new($name, 1);
 };
 
-method new($class: $name, $async) {
+sub new {
+  my ($class, $name, $async) = @_;
   my $self = {
     dbh => undef,
     async => $async
@@ -63,11 +67,13 @@ method new($class: $name, $async) {
   return $self;
 };
 
-method MakeStorable() {
+sub MakeStorable {
+  my ($self) = @_;
   $self->{dbh} = undef;
 }
 
-method Save() {
+sub Save {
+  my ($self) = @_;
   my $dbh = _get_handle();
   DEBUG "Saving query...";
   my $query = qq{
@@ -92,7 +98,8 @@ method Save() {
                $self->{name});
 }
 
-func Clone($source_name, $dest_name) {
+sub Clone {
+  my ($source_name, $dest_name) = @_;
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
     insert into queries
@@ -105,7 +112,8 @@ func Clone($source_name, $dest_name) {
 
 }
 
-func Delete($name) {
+sub Delete {
+  my ($name) = @_;
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
     delete from queries where name = ?
@@ -114,7 +122,8 @@ func Delete($name) {
   $qh->execute($name);
 }
 
-method _load_query($name) {
+sub _load_query {
+  my ($self, $name) = @_;
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
     select * 
@@ -142,7 +151,8 @@ method _load_query($name) {
 
 }
 
-method SetAsync($async) {
+sub SetAsync {
+  my ($self, $async) = @_;
 
   if (not defined $async) {
     $async = 1;
@@ -151,7 +161,8 @@ method SetAsync($async) {
   $self->{async} = $async;
 }
 
-method SetNewAsync() {
+sub SetNewAsync {
+  my ($self) = @_;
 
   $self->{new_async} = 1;
 }
@@ -398,7 +409,8 @@ sub Execute{
 # Class methods
 #
 
-func record_spreadsheet_upload($is_executable, $user, $file_id, $rowcount) {
+sub record_spreadsheet_upload {
+  my ($is_executable, $user, $file_id, $rowcount) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
@@ -414,11 +426,11 @@ func record_spreadsheet_upload($is_executable, $user, $file_id, $rowcount) {
 
 }
 
-func invoke_subprocess(
+sub invoke_subprocess {
+  my (
   $from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
   $query_invoked_by_dbif_id, $button_name, $command_line, $user,
-  $operation_name
-) {
+  $operation_name) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
@@ -437,7 +449,8 @@ func invoke_subprocess(
   return $results->[0]->[0];
 }
 
-func set_subprocess_pid($subprocess_invocation_id, $pid) {
+sub set_subprocess_pid {
+  my ($subprocess_invocation_id, $pid) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
@@ -449,7 +462,8 @@ func set_subprocess_pid($subprocess_invocation_id, $pid) {
   $qh->execute($pid, $subprocess_invocation_id);
 }
 
-func record_subprocess_lines($subprocess_invocation_id, $lines) {
+sub record_subprocess_lines {
+  my ($subprocess_invocation_id, $lines) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
@@ -463,7 +477,8 @@ func record_subprocess_lines($subprocess_invocation_id, $lines) {
 }
 
 
-method GetChainedQueries($class: $query) {
+sub GetChainedQueries {
+  my ($class, $query) = @_;
 
   # TODO: Add some type of caching to this method!
 
@@ -481,7 +496,8 @@ method GetChainedQueries($class: $query) {
   return $results;
 };
 
-method GetChainedQueryDetails($class: $chained_query_id) {
+sub GetChainedQueryDetails {
+  my ($class, $chained_query_id) = @_;
 
   # TODO: Add some type of caching to this method!
 
@@ -502,7 +518,8 @@ method GetChainedQueryDetails($class: $chained_query_id) {
 }
 
 
-method GetRoles($class:) {
+sub GetRoles {
+  my ($self) = @_;
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
     select role_name
@@ -519,7 +536,8 @@ method GetRoles($class:) {
   } @$results];
 }
 
-method GetTabsByRole($class: $role){
+sub GetTabsByRole {
+  my ($class, $role) = @_;
 
   # TODO: Add some type of caching to this method!
 
@@ -544,7 +562,8 @@ method GetTabsByRole($class: $role){
 
   return $results;
 };
-method GetTabs($class:){
+sub GetTabs {
+  my ($self) = @_;
 
   # TODO: Add some type of caching to this method!
 
@@ -567,7 +586,8 @@ method GetTabs($class:){
   return $results;
 };
 
-method GetTabFilters($class: $tab) {
+sub GetTabFilters {
+  my ($class, $tab) = @_;
   # TODO: Add some type of caching to this method!
 
   my $dbh = _get_handle();
@@ -588,7 +608,8 @@ method GetTabFilters($class: $tab) {
 
 }
 
-method GetList($class:){
+sub GetList {
+  my ($self) = @_;
 
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
@@ -607,7 +628,8 @@ method GetList($class:){
 };
 
 # Get queires with at least one of the given tags
-method GetQueriesWithTags($class: $tags) {
+sub GetQueriesWithTags {
+  my ($class, $tags) = @_;
   # TODO: if $tags not arrayref error
 
   my $dbh = _get_handle();
@@ -630,7 +652,8 @@ method GetQueriesWithTags($class: $tags) {
 
 }
 
-method GetOperationsWithTags($class: $tags) {
+sub GetOperationsWithTags {
+  my ($class, $tags) = @_;
   # TODO: if $tags not arrayref error
 
   my $dbh = _get_handle();
@@ -655,7 +678,8 @@ method GetOperationsWithTags($class: $tags) {
 
 }
 
-method GetOperations($class:) {
+sub GetOperations {
+  my ($self) = @_;
 
   my $dbh = _get_handle();
 
@@ -672,7 +696,8 @@ method GetOperations($class:) {
 
 }
 
-method GetOperationDetails($class: $operation_name) {
+sub GetOperationDetails {
+  my ($class, $operation_name) = @_;
 
   my $dbh = _get_handle();
 
@@ -690,7 +715,8 @@ method GetOperationDetails($class: $operation_name) {
 
 }
 
-method GetPopupsForQuery($query_name) {
+sub GetPopupsForQuery {
+  my ($self, $query_name) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
@@ -727,7 +753,8 @@ method GetPopupsForQuery($query_name) {
 #   $Queries = {};
 # }
 
-method GetQuerysWithArg($class: $arg) {
+sub GetQuerysWithArg {
+  my ($class, $arg) = @_;
   my $dbh = _get_handle();
   # The && operator returns matches that intersect 
   # (special postgres array syntax)
@@ -750,7 +777,8 @@ method GetQuerysWithArg($class: $arg) {
 }
 
 
-method GetTags($class: $name) {
+sub GetTags {
+  my ($class, $name) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
