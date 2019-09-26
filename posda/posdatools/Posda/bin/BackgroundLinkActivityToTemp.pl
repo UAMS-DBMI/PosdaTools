@@ -63,6 +63,9 @@ my $act_info = Posda::ActivityInfo->new($activity_id);
 my $collection_name = $act_info->GetCollection;
 my $site_name = $act_info->GetSite;
 my $site_code = $act_info->GetSiteCode;
+my $collection_code = $act_info->GetCollectionCode;
+
+my $site_id = "$collection_code$site_code";
 
 my $tp_id = $act_info->LatestTimepoint;
 my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
@@ -97,6 +100,13 @@ for my $pat (keys %Hierarchy){
 				my $dirname = dirname($full_filename);
 				make_path($dirname);
 
+        # We often want to replace files that are already in NBIA,
+        # so if the destination file already exists, delete it first
+        # otherwise symlink() will report failure
+        if (-e $full_filename) {
+          unlink($full_filename);
+        }
+
         my $result = symlink($path, $full_filename);
         if($result) {
           $files_linked += 1;
@@ -107,7 +117,7 @@ for my $pat (keys %Hierarchy){
             $f_info->{file_id},
             $collection_name,
             $site_name,
-            $site_code,
+            $site_id,
             0,  # batch
             $full_filename
           );
