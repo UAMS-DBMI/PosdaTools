@@ -50,6 +50,16 @@ sub GetSiteCode {
   my $r = Query('GetSiteCodeBySite')->FetchOneHash($this->{site});
   return $r->{site_code}
 }
+sub GetCollectionCode {
+  my ($this) = @_;
+
+  if (not defined $this->{collection}) {
+    $this->_GetCollectionAndSite()
+  }
+
+  my $r = Query('GetCollectionCodeByCollection')->FetchOneHash($this->{collection});
+  return $r->{collection_code}
+}
 sub LatestTimepoint{
   my($this) = @_;
   my $act_time_id;

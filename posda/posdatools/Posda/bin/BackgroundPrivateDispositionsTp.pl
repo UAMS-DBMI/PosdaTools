@@ -56,6 +56,7 @@ my $act_info = Posda::ActivityInfo->new($act_id);
 my $collection_name = $act_info->GetCollection;
 my $site_name = $act_info->GetSite;
 my $site_code = $act_info->GetSiteCode;
+my $collection_code = $act_info->GetCollectionCode;
 
 # Although site_code is not used in this script, this test is left here
 # because the sub cmd will fail silently if no site_code is defined!!
@@ -64,6 +65,15 @@ if (not defined $site_code) {
   $background->Finish;
   exit;
 }
+
+if (not defined $collection_code) {
+  $background->WriteToEmail("No entry for $collection_name in collection_codes table!\n");
+  $background->Finish;
+  exit;
+}
+
+
+
 my $tp_id = $act_info->LatestTimepoint;
 my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
 for my $f (keys %$FileInfo){

@@ -16,6 +16,7 @@ ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file>
   date's always offset
   Collection and Site are read from the file
   Site Code must be defined in site_codes
+  Collection Code must be defined in collection_codes
   Once written, the NBIA Submissions API is called with the filename
 EOF
 
@@ -141,7 +142,14 @@ my $collection_name = $ds->Get('(0013,"CTP",10)');
 my $site_name = $ds->Get('(0013,"CTP",12)');
 
 my $temp_results = Query('GetSiteCodeBySite')->FetchOneHash($site_name);
-my $site_id = $temp_results->{site_code};
+my $site_code = $temp_results->{site_code};
+
+my $temp_results2 = Query('GetCollectionCodeByCollection')->FetchOneHash($collection_name);
+my $collection_code = $temp_results2->{collection_code};
+
+# NBIA's idea of a site_id is our collection_code + site_code
+my $site_id = "$collection_code$site_code";
+
 
 
 #print "Editing file $from_file\n";
