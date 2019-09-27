@@ -94,8 +94,12 @@ RUN pip3 install xlsx2csv mysql-connector python-box pydicom
 RUN addgroup -g 2123 fakeposda
 RUN adduser -D -G fakeposda posda
 
-COPY --chown=posda:fakeposda posda-api/ /posda-api/
-RUN pip3 install -r /posda-api/requirements.frozen.txt
+# COPY --chown=posda:fakeposda posda-api/ /posda-api/
+# RUN pip3 install -r /posda-api/requirements.frozen.txt
+
+COPY --chown=posda:fakeposda fastapi/app /fastapi/
+COPY --chown=posda:fakeposda fastapi/start_api.sh /
+RUN pip3 install -r /fastapi/requirements.txt
 
 
 # Work around issue with volume persmissions

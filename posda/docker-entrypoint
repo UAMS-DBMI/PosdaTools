@@ -17,7 +17,8 @@ main() {
 
 api() {
 	echo "Start Posda API Server...";
-	exec python3 /posda-api/main.py
+	cd /fastapi
+	exec /start_api.sh
 }
 
 file_process() {
