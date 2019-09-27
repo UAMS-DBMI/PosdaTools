@@ -396,7 +396,7 @@
 * Click Review on the CT row to launch the Visual Review tool, Kaleidoscope
   >> ![alt text](testing_docs_images/rev.png "Review")
 
-  >> ![alt text](testing_docs_images/kaliedoscope.png "Kaleidoscope")
+  >> ![alt text](testing_docs_images/kaliedoscope1.png "Kaleidoscope")
 
 * This is Kaleidoscope
 * In the screenshot above, you can see that IEC 1 has 44 images, of Patient 007, examining the kidney
