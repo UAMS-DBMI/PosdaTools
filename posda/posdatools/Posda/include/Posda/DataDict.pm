@@ -74590,6 +74590,10 @@ my $SopCl = {
     "sopcl_desc" => "Key Object Selection Document Storage",
     "type" => "SOP Class"
   },
+  "1.2.840.10008.5.1.4.1.1.88.71" => {
+    "sopcl_desc" => "Acquisition Context SR Storage",
+    "type" => "SOP Class"
+  },
   "1.2.840.10008.5.1.4.1.1.88.65" => {
     "sopcl_desc" => "Chest CAD SR Storage",
     "type" => "SOP Class"

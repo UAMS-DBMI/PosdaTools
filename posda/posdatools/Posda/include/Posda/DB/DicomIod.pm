@@ -563,6 +563,15 @@ my $SopHandlers = {
       \&Posda::DB::Modules::KeyObjectDocument,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.88.71' =>{
+    name => 'Acquisition Context SR Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
   '1.2.840.10008.5.1.4.1.1.128' =>{
     name => 'Positron Emission Tomography Image Storage',
     handlers => [
