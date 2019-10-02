@@ -1,6 +1,6 @@
--- Name: GetActivityTaskStatus
+-- Name: GetActivityTaskStatusAll
 -- Schema: posda_files
--- Columns: ['subprocess_invocation_id', 'operation_name', 'start_time', 'last_updated', 'status_text', 'expected_remaining_time', '  end_time']
+-- Columns: ['subprocess_invocation_id', 'operation_name', 'start_time', 'last_updated', 'status_text']
 -- Args: ['activity_id']
 -- Tags: ['Insert', 'NotInteractive']
 -- Description: Insert Initial Patient Status
@@ -13,11 +13,9 @@ select
   operation_name,
   start_time,
   last_updated,
-  status_text,
-  expected_remaining_time,
-  end_time
+  status_text
 from
   activity_task_status natural join subprocess_invocation
 where
-  activity_id = ? and dismissed_time is null
+  activity_id = ?
 order by subprocess_invocation_id
