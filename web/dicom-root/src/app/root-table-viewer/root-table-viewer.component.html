@@ -1,0 +1,85 @@
+<form >
+  <mat-label>Search for a submission </mat-label>
+  <div>
+    <mat-form-field >
+      <mat-select [(value)]="selected1">
+        <mat-option>None</mat-option>
+        <mat-option value="site_code">Site Code</mat-option>
+        <mat-option value="collection_code">Collection Code</mat-option>
+        <mat-option value="site_name">Site Name</mat-option>
+        <mat-option value="collection_name">Collection Name</mat-option>
+        <mat-option value="patient_id_prefix">patient_id_prefix</mat-option>
+        <mat-option value="body_part">body_part</mat-option>
+        <mat-option value="access_type">access_type</mat-option>
+        <mat-option value="baseline_date">baseline_date</mat-option>
+        <mat-option value="date_shift">date_shift</mat-option>
+      </mat-select>
+            <mat-hint>You can change this option ^</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Search Criteria" [formControl]="searchFormControl1"
+             [errorStateMatcher]="matcher">
+      <!---   <mat-error *ngIf="searchFormControl1.hasError('required')">
+        Cannot search for blank!
+      </mat-error>--->
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field >
+      <mat-select [(value)]="selected2">
+        <mat-option>None</mat-option>
+        <mat-option value="site_code">Site Code</mat-option>
+        <mat-option value="collection_code">Collection Code</mat-option>
+        <mat-option value="site_name">Site Name</mat-option>
+        <mat-option value="collection_name">Collection Name</mat-option>
+        <mat-option value="patient_id_prefix">patient_id_prefix</mat-option>
+        <mat-option value="body_part">body_part</mat-option>
+        <mat-option value="access_type">access_type</mat-option>
+        <mat-option value="baseline_date">baseline_date</mat-option>
+        <mat-option value="date_shift">date_shift</mat-option>
+      </mat-select>
+      <mat-hint>You can change this option ^</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field >
+      <input matInput placeholder="Search Criteria" [formControl]="searchFormControl2"
+             [errorStateMatcher]="matcher">
+      <!---  <mat-error *ngIf="searchFormControl2.hasError('required')">
+        Cannot search for blank!
+      </mat-error>  --->
+    </mat-form-field>
+  </div>
+</form>
+<br>
+<div>
+  <button mat-raised-button (click)="performSearch()" color="primary"  >Search</button>
+  <button mat-raised-button (click)="showAll()" color="primary"  >ShowAll</button>
+</div>
+<div *ngIf="results.length > 0">
+  <table  style="width:100%" >
+    <tr>
+    <tr>
+      <th>Collection Code</th>
+      <th>Collection Name</th>
+      <th>Site Code</th>
+      <th>Site Name</th>
+      <th>Patient Id Prefix</th>
+      <th>Body Part</th>
+      <th>Access Type</th>
+      <th>Baseline Date</th>
+      <th>Date Shift</th>
+    </tr>
+    <tr *ngFor= "let my_rows of results">
+      <td>{{my_rows.collection_code}}</td>
+      <td>{{my_rows.collection_name}}</td>
+      <td>{{my_rows.site_code}}</td>
+      <td>{{my_rows.site_name}}</td>
+      <td>{{my_rows.patient_id_prefix}}</td>
+      <td>{{my_rows.body_part}}</td>
+      <td>{{my_rows.access_type}}</td>
+      <td>{{my_rows.baseline_date}}</td>
+      <td>{{my_rows.date_shift}}</td>
+    </tr>
+  </table>
+</div>
