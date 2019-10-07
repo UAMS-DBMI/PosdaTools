@@ -1,0 +1,36 @@
+h2, table{
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+form{
+    padding-top: 40px;
+}
+mat-label{
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+
+}
+th {
+  text-align: left;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  padding-top: 30px;
+  padding-bottom: 15px;
+  font-weight: normal;
+  font-size: 20px;
+  font-variant: small-caps;
+}
+td {
+  border-bottom: 1px solid #eee;
+}
+.th {
+  padding-right: 10px;
+  font-weight: bold;
+}
+
+mat-form-field {
+  min-width: 200px;
+  padding-right: 20px;
+
+}
+
+button{
+  margin-right: 10px;
+}

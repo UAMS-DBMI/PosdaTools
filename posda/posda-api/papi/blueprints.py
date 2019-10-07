@@ -17,6 +17,7 @@ from .resources import rois
 from .resources import importer
 from .resources import dashboard
 from .resources import vrstatus
+from .resources import dicom_roots
 from .resources import iecs
 
 
@@ -54,6 +55,10 @@ def configure_blueprints(app):
     app.blueprint(
         generate_vrstatus_blueprint(),
         url_prefix='/v1/vrstatus'
+    )
+    app.blueprint(
+        generate_dicom_roots_blueprint(),
+        url_prefix='/v1/dicom_roots'
     )
     app.blueprint(
         generate_iecs_blueprint(),
@@ -123,6 +128,23 @@ def generate_vrstatus_blueprint():
     )
     return blueprint
 
+def generate_dicom_roots_blueprint():
+    blueprint = Blueprint('dicom_roots')
+
+    blueprint.add_route(
+        dicom_roots.searchRootsWithOneParam,
+        '/searchRootsWithOneParam/<param1>/<param2>/'
+    )
+    blueprint.add_route(
+        dicom_roots.searchRootsWithTwoParams,
+        '/searchRootsWithTwoParams/<param1>/<param2>/<param3>/<param4>/'
+    )
+    blueprint.add_route(
+        dicom_roots.searchAll,
+        '/searchAll/'
+    )
+    return blueprint
+
 def generate_iecs_blueprint():
     blueprint = Blueprint('iecs')
 
@@ -134,7 +156,6 @@ def generate_iecs_blueprint():
         iecs.get_iec_files,
         '/<iec>/files'
     )
-
     return blueprint
 
 def generate_rois_blueprint():
