@@ -78,7 +78,7 @@ sub Save {
   DEBUG "Saving query...";
   my $query = qq{
     update queries
-    set 
+    set
         query = ?,
         args = ?,
         columns = ?,
@@ -126,7 +126,7 @@ sub _load_query {
   my ($self, $name) = @_;
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
-    select * 
+    select *
     from queries
     where name = ?
   });
@@ -136,7 +136,7 @@ sub _load_query {
     die "############\nQuery: $name isn't defined\n#########";
   }
 
-  my ($name_, $query, $args, 
+  my ($name_, $query, $args,
       $columns, $tags, $schema, $description) = @{$qh->fetchrow_arrayref()};
 
   # TODO: Is there a prettier way to merge hashes?
@@ -170,18 +170,18 @@ sub SetNewAsync {
 # Execute the query
 # Call signature is:
 #   RunQuery($row_callback, $end_callback, $err_callback, @bind_variables);
-# 
+#
 # The query is executed sync or async depending on the setting,
 # and $row_callback is called for each row returned. $end_callback
 # is called after all rows have been processed.
 #
 # If there is an error, $err_callback is called and passed the error
-# message. 
+# message.
 #
 # NOTE: $err_callback is technically optional, but this behavior may
 # be deprecated in the future.
 #
-# If the query is an INSERT or UPDATE, $row_callback is called 
+# If the query is an INSERT or UPDATE, $row_callback is called
 # one time, and passed [$row_count_affected].
 sub RunQuery {
   my $self = shift;
@@ -298,7 +298,7 @@ sub _RunQueryAsync {
     name => $self->{name},
   };
   $ev->SerializedSubProcess(
-    $parameters, 
+    $parameters,
     "SubProcessQuery.pl",
     sub {
       my $status = shift;
@@ -351,7 +351,7 @@ sub _RunQueryNewAsync {
     name => $self->{name},
   };
   my $ev = Dispatch::TopHalfAsyncQuery->new_serialized_cmd(
-    $parameters, 
+    $parameters,
     sub {
       my($row) = @_;
       &$row_callback($row);
@@ -426,17 +426,16 @@ sub record_spreadsheet_upload {
 
 }
 
-func invoke_subprocess(
-  $from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
-  $query_invoked_by_dbif_id, $button_name, $command_line, $user,
-  $operation_name
-) {
+sub invoke_subprocess {
+  my ( $from_spreadsheet, $from_button, $spreadsheet_uploaded_id,
+       $query_invoked_by_dbif_id, $button_name, $command_line, $user,
+       $operation_name) = @_;
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
     insert into subprocess_invocation
-    (from_spreadsheet, from_button, spreadsheet_uploaded_id, 
-     query_invoked_by_dbif_id, button_name, command_line, 
+    (from_spreadsheet, from_button, spreadsheet_uploaded_id,
+     query_invoked_by_dbif_id, button_name, command_line,
      invoking_user, when_invoked, operation_name)
     values (?, ?, ?, ?, ?, ?, ?, now(), ?)
     returning subprocess_invocation_id
@@ -485,7 +484,7 @@ sub GetChainedQueries {
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
     select caption, chained_query_id, to_query
-    from chained_query 
+    from chained_query
     where from_query = ?
   });
 
@@ -531,7 +530,7 @@ sub GetRoles {
   my $results = $qh->fetchall_arrayref({});
 
   # return a simple arrayref
-  return [map { 
+  return [map {
     $_->{role_name}
   } @$results];
 }
@@ -569,7 +568,7 @@ sub GetTabs {
 
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
-    select 
+    select
       query_tab_name,
       query_tab_description,
       defines_dropdown,
@@ -592,7 +591,7 @@ sub GetTabFilters {
 
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
-    select 
+    select
       filter_name,
       sort_order
     from query_tabs_query_tag_filter
@@ -613,7 +612,7 @@ sub GetList {
 
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{
-    select name 
+    select name
     from queries
   });
 
@@ -633,11 +632,11 @@ sub GetQueriesWithTags {
   # TODO: if $tags not arrayref error
 
   my $dbh = _get_handle();
-  # The && operator returns matches that intersect 
+  # The && operator returns matches that intersect
   # (special postgres array syntax)
   my $qh = $dbh->prepare(qq{
-    select name 
-    from queries 
+    select name
+    from queries
     where tags && ?;
   });
 
@@ -657,11 +656,11 @@ sub GetOperationsWithTags {
   # TODO: if $tags not arrayref error
 
   my $dbh = _get_handle();
-  # The && operator returns matches that intersect 
+  # The && operator returns matches that intersect
   # (special postgres array syntax)
   my $qh = $dbh->prepare(qq{
-    select * 
-    from spreadsheet_operation 
+    select *
+    from spreadsheet_operation
     where tags && ?
     order by operation_name
   });
@@ -684,8 +683,8 @@ sub GetOperations {
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
-    select * 
-    from spreadsheet_operation 
+    select *
+    from spreadsheet_operation
   });
 
   $qh->execute();
@@ -702,8 +701,8 @@ sub GetOperationDetails {
   my $dbh = _get_handle();
 
   my $qh = $dbh->prepare(qq{
-    select * 
-    from spreadsheet_operation 
+    select *
+    from spreadsheet_operation
     where operation_name = ?
   });
 
@@ -756,11 +755,11 @@ sub GetPopupsForQuery {
 sub GetQuerysWithArg {
   my ($class, $arg) = @_;
   my $dbh = _get_handle();
-  # The && operator returns matches that intersect 
+  # The && operator returns matches that intersect
   # (special postgres array syntax)
   my $qh = $dbh->prepare(qq{
     select name, description
-    from queries 
+    from queries
     where ? = ANY(args)
   });
 
@@ -869,7 +868,7 @@ sub GetAllArgs{
 #     print STDERR "##########\n$@\n###########\n";
 #     return undef;
 #   }
- 
+
 #   unless(exists $data->{queries} && ref($data->{queries}) eq "HASH"){
 #     print STDERR "No queries defined in $file\n";
 #     return undef;

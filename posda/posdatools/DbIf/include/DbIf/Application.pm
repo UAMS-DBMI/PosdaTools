@@ -5273,7 +5273,7 @@ sub ExecuteCommand {
       unless(exists $colmap->{$i}) { next }
       my $index_of_parm = $colmap->{$i};
       my $new_value = $table->{rows}->[0]->[$index_of_parm];;
-      $parm_map->{$i} = $new_value; 
+      $parm_map->{$i} = $new_value;
     }
     # now generate the cmdline like normal
     my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);
@@ -5936,9 +5936,8 @@ sub SopNnsFetched {
   };
   return $sub;
 }
-method SeriesBySopsFetched(
-  $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub SeriesBySopsFetched {
+  my ($self, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
     my %series_info;
@@ -5969,9 +5968,8 @@ method SeriesBySopsFetched(
   };
   return $sub;
 }
-method StudiesBySeries(
-  $series_where, $nn_type, $table_n
-){
+sub StudiesBySeries {
+  my ($self,$series_where, $nn_type, $table_n) = @_;
 print STDERR "StudiesBySeries($series_where, $nn_type, $table_n)\n";
   my $q = {
     schema => "posda_files",
@@ -6023,9 +6021,8 @@ sub StudiesFetchedBySeries {
   };
   return $sub;
 }
-method NicknamesBySeries(
-  $series_where, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub NicknamesBySeries {
+  my ($self,$series_where, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
   my $q = {
     query => "select\n" .
       "  project_name, site_name, subj_id, series_nickname,\n" .
@@ -6046,9 +6043,8 @@ method NicknamesBySeries(
       $series_where, $series_info, $sop_info ,$file_info, $dig_info, $nn_type, $table_n)
   );
 }
-method SeriesNicknamesFetched(
-  $series_where, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub SeriesNicknamesFetched {
+  my ($self, $series_where, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
@@ -6087,9 +6083,8 @@ method SeriesNicknamesFetched(
   };
   return $sub;
 }
-method StudiesBySeriesFetched(
-  $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub StudiesBySeriesFetched {
+  my ($self, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
@@ -6129,9 +6124,8 @@ method StudiesBySeriesFetched(
   };
   return $sub;
 }
-method StudyNnsFetched(
-  $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub StudyNnsFetched {
+  my ($self, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded" && $struct->{Status} eq "OK"){
@@ -6156,9 +6150,8 @@ method StudyNnsFetched(
   };
   return $sub;
 }
-method RenderNicknames(
-  $study_info, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n
-){
+sub RenderNicknames {
+  my ($self,$study_info, $series_info, $sop_info, $file_info, $dig_info, $nn_type, $table_n) = @_;
 print "Render Nicknames: $nn_type, $table_n\n";
 $self->{DebugNickname} = {
   study_info => $study_info,

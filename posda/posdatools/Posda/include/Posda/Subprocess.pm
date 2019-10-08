@@ -1,5 +1,5 @@
 package Posda::Subprocess;
-# 
+#
 # A class for spawning Background Subprocesses
 #
 
@@ -39,12 +39,11 @@ sub new {
   }, $class;
 }
 
-method execute_from_dbif(
-  $user,
-  $spreadsheet_uploaded_id,
-  $query_invoked_by_dbif_id,
-  $done_callback
-) {
+sub execute_from_dbif {
+  my ($self, $user,
+      $spreadsheet_uploaded_id,
+      $query_invoked_by_dbif_id,
+      $done_callback ) = @_;
   $self->set_options({
     user => $user,
     from_spreadsheet => 1,
@@ -183,16 +182,15 @@ sub get_command_hash {
 }
 
 # Standard name-based execute
-method execute(
+sub execute{
+  my ($self,
   $done_callback,
 
   # optional params
   $from_spreadsheet,
   $from_button,
   $query_invoked_by_dbif_id,
-  $button_name
-
-) {
+  $button_name) = @_;
   DEBUG "called";
 
   my $op_details = PosdaDB::Queries->GetOperationDetails($self->{name});
@@ -218,7 +216,8 @@ method execute(
   );
 }
 
-method execute_generic(
+sub execute_generic {
+  my ($self,
   $command_line,
   $op_name,
   $user,
@@ -230,8 +229,7 @@ method execute_generic(
   $from_spreadsheet,
   $from_button,
   $query_invoked_by_dbif_id,
-  $button_name
-) {
+  $button_name) = @_;
   DEBUG "called";
 
   # Set default values
@@ -267,7 +265,7 @@ method execute_generic(
         # TODO: Is this really useful? the way write_and_read_all()
         # works, the subprocess should always be dead by the time
         # we get here. This is in the spec, but maybe it should be
-        # modified? 
+        # modified?
         PosdaDB::Queries::set_subprocess_pid(
           $subprocess_invocation_id, $pid);
         PosdaDB::Queries::record_subprocess_lines(
