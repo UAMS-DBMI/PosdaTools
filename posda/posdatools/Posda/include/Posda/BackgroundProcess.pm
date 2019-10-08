@@ -19,7 +19,7 @@
     };
     bless $self, $class;
 
-    DEBUG Dumper($self);
+    #DEBUG Dumper($self);
 
     return $self;
   }
@@ -216,19 +216,19 @@ sub ForkAndExit {
 
 sub WriteToEmail {
   my ($self, $line) = @_;
-  DEBUG "writing to email: $line";
+  #DEBUG "writing to email: $line";
   $self->{email_handle}->print($line);
 }
 
 sub Finish() {
   my($self,$mess) = @_;
-  DEBUG "called";
+  #DEBUG "called";
   # log completion time
   $self->{add_comp_time_query}->RunQuery(
     sub{}, sub{}, $self->{background_id});
 
   $self->{script_end_time} = time;
-  DEBUG "script_end_time = $self->{script_end_time}";
+  #DEBUG "script_end_time = $self->{script_end_time}";
   my $end_time = DateTime->from_epoch(epoch => $self->{script_end_time});
   $self->WriteToEmail("Background process ended at: $end_time\n");
   $self->WriteToEmail("Total time elapsed: " . 
@@ -243,7 +243,7 @@ sub Finish() {
       if ($rpt->{open}) {
 
         # close report file handles (except email)
-        DEBUG "Automatically closing report $rpt->{name}";
+        #DEBUG "Automatically closing report $rpt->{name}";
         $rpt->close;
 
         # add download links for those reports to the mail
@@ -278,10 +278,10 @@ sub Finish() {
         $report->{background_subprocess_report_id},
         'Posda::BackgroundProcess'
       );
-      DEBUG "email report's id is: $report->{background_subprocess_report_id}";
+      #DEBUG "email report's id is: $report->{background_subprocess_report_id}";
     }
 
-    DEBUG "Unlinking report file: $rpt->{temp_filename}";
+    #DEBUG "Unlinking report file: $rpt->{temp_filename}";
     unlink $rpt->{temp_filename};
   }
   if($self->{activity_id}){
@@ -318,12 +318,11 @@ sub GetBackgroundID{
   return $this->{background_id};
 }
 
-method PrepareBackgroundReportBasedOnQuery(
-  $query,
-  $report_name,
-  $max_rows
-) {
-  shift; shift; shift; # Discard first 3 params
+sub PrepareBackgroundReportBasedOnQuery {
+  my $self = shift;
+  my $query = shift;
+  my $report_name = shift;
+  my $max_rows = shift;
   my @params = @_;     # The rest are query arguments
 
   my @rows;
