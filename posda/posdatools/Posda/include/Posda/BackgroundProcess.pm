@@ -8,7 +8,7 @@
   use File::Temp qw/ tempfile /;
 
   sub new {
-  my ($class, $report_name) = @_;
+    my ($class, $report_name) = @_;
     my ($fh, $filename) = tempfile();
 
     my $self = {
@@ -25,19 +25,19 @@
   }
 
   sub print {
-  my ($self) = @_;
+    my $self = shift;
     $self->{file_handle}->print(@_);
   }
 
   sub close {
-  my ($self) = @_;
+    my ($self) = @_;
     close($self->{file_handle});
     $self->_insert_report_file;
     $self->{open} = 0;
   }
 
   sub _insert_report_file {
-  my ($self) = @_;
+    my ($self) = @_;
     my $file_path = $self->{temp_filename};
 
     my $result = `ImportSingleFileIntoPosdaAndReturnId.pl "$file_path" "BackgroundProcess Report"`;
@@ -159,7 +159,7 @@ sub ForkAndExit {
   ResetDBHandles();
   $self->{input_line_query} = undef;
 
-  # This appears to be the proper way to fork, and release discriptors 
+  # This appears to be the proper way to fork, and release discriptors
   # so the parent is released but the child still functions
   shutdown STDOUT, 1;
   if(fork){
@@ -231,7 +231,7 @@ sub Finish() {
   #DEBUG "script_end_time = $self->{script_end_time}";
   my $end_time = DateTime->from_epoch(epoch => $self->{script_end_time});
   $self->WriteToEmail("Background process ended at: $end_time\n");
-  $self->WriteToEmail("Total time elapsed: " . 
+  $self->WriteToEmail("Total time elapsed: " .
     ($self->{script_end_time} - $self->{script_start_time}) . "\n");
 
   for my $h (sort keys %{$self->{reports}}) {
@@ -264,7 +264,7 @@ sub Finish() {
   for my $h (keys %{$self->{reports}}) {
     my $rpt = $self->{reports}->{$h};
 
-    # FetchOneHash because CreateBackgroundReport returns the ID of the 
+    # FetchOneHash because CreateBackgroundReport returns the ID of the
     # created report
     my $report = $add_report_query->FetchOneHash(
         $self->{background_id}, $rpt->{file_id}, $h
@@ -274,7 +274,7 @@ sub Finish() {
       # Add mail to user inbox
       my $inbox = Posda::Inbox->new('nobody');
       $inbox->SendMail(
-        $self->{notify}, 
+        $self->{notify},
         $report->{background_subprocess_report_id},
         'Posda::BackgroundProcess'
       );
@@ -334,7 +334,7 @@ sub PrepareBackgroundReportBasedOnQuery {
     my($row) = @_;
     $num_rows += 1;
     my @fields = @$row;
-    # move this test outside 
+    # move this test outside
     unless($#fields == $#$header){
       my $num_fields = @fields;
       my $num_header = @$header;
@@ -440,7 +440,7 @@ print STDERR "################\n";
     "$_=$param_hash->{$_}"
   } keys %$param_hash);
 
-  my $remote_method = 
+  my $remote_method =
     "PosdaGetRemoteMethod('$op', '$params', function(){Update()})";
 
   my $button_html = qq{
