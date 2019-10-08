@@ -4,6 +4,5 @@ package BS;
 #
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 1;

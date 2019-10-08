@@ -7,7 +7,6 @@ use Posda::DB 'Query', 'GetHandle';
 use Dispatch::BinFragReader;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use Storable;
 use File::Basename 'basename';
 use DateTime;
@@ -50,7 +49,8 @@ my $dbg = sub {print STDERR @_ };
 use vars '@ISA';
 @ISA = ("GenericApp::Application");
 
-func titlize($string) {
+sub titlize {
+  my ($string) = @_;
   join(' ', map {ucfirst} split('_', $string));
 }
 
@@ -212,7 +212,8 @@ sub BackgroundMonitorForEmail {
   #TODO: make this display unread if there are unread,
   #      or undismissed if if there are no unread
   #      or none if there are no unread AND no undismissed
-  Dispatch::Select::Background->new(func($disp) {
+  Dispatch::Select::Background->new(sub {
+  my ($disp) = @_;
     my $count = $self->{inbox}->UnreadCount;
 
     my $last_count = 0;
@@ -827,7 +828,8 @@ sub DrawSpreadsheetOperationList {
   });
 }
 
-method OpHelp($http, $dyn) {
+sub OpHelp {
+  my ($self, $http, $dyn) = @_;
 
   my $details = $self->{spreadsheet_op_list}->{$dyn->{cmd}};
 
@@ -837,7 +839,8 @@ method OpHelp($http, $dyn) {
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }
-method OpenBackgroundQuery($http, $dyn){
+sub OpenBackgroundQuery {
+  my ($self, $http, $dyn) = @_;
 
   my $details = {
     query_name => $dyn->{query_name},
@@ -857,18 +860,21 @@ method OpenBackgroundQuery($http, $dyn){
 # Delegated methods
 ###
 
-method DeleteHashKeyList($http, $dyn) {
+sub DeleteHashKeyList {
+  my ($self, $http, $dyn) = @_;
   DEBUG Dumper($dyn);
   my $type = $dyn->{type};
   my $index = $dyn->{index};
 
   splice @{$self->{query}->{$type}}, $index, 1;
 }
-method AddToHashKeyList($http, $dyn) {
+sub AddToHashKeyList {
+  my ($self, $http, $dyn) = @_;
   push @{$self->{query}->{tags}}, $dyn->{value};
 }
 
-method AddToEditList($http, $dyn) {
+sub AddToEditList {
+  my ($self, $http, $dyn) = @_;
   my $source = $dyn->{extra};
   my $value = $dyn->{value};
 
@@ -879,7 +885,8 @@ method AddToEditList($http, $dyn) {
 
 
 # do we really need to handle this with a post?
-method TextAreaChanged($http, $dyn){
+sub TextAreaChanged {
+  my ($self, $http, $dyn) = @_;
   DEBUG Dumper($dyn);
   # Read the POST data (this method needs to be POSTed to!)
   my $buff;
@@ -890,7 +897,8 @@ method TextAreaChanged($http, $dyn){
 }
 
 
-method DrawWidgetFromTo($http, $dyn) {
+sub DrawWidgetFromTo {
+  my ($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, qq{
     <tr>
       <th style="width:5%">quick options</th>
@@ -903,7 +911,8 @@ method DrawWidgetFromTo($http, $dyn) {
     </tr>
   });
 }
-method SetWidgetFromTo($http, $dyn) {
+sub SetWidgetFromTo {
+  my ($self, $http, $dyn) = @_;
   my $val = $dyn->{val};
   if ($val eq "today") {
     my $today = DateTime->now(time_zone=>'local')->date;
@@ -932,11 +941,13 @@ method SetWidgetFromTo($http, $dyn) {
 }
 
 
-method DeleteQuery($http,$dyn){
+sub DeleteQuery {
+  my ($self, $http,$dyn) = @_;
   $self->{Mode} = "DeleteQueryPending";
   $self->{QueryPendingDelete} = $dyn->{query_name};
 }
-method DeleteQueryPending($http, $dyn){
+sub DeleteQueryPending {
+  my ($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, qq{
     <p>
       Do you want to delete query named $self->{QueryPendingDelete}?
@@ -946,17 +957,20 @@ method DeleteQueryPending($http, $dyn){
     <?dyn="NotSoSimpleButton" op="CancelDeleteQuery" caption="No, don't delete" sync="Update();"?>
   });
 }
-method ReallyDeleteQuery($http, $dyn){
+sub ReallyDeleteQuery {
+  my ($self, $http, $dyn) = @_;
  PosdaDB::Queries::Delete($self->{QueryPendingDelete});
  delete $self->{QueryPendingDelete};
  $self->{Mode} = "ListQueries";
 }
-method CancelDeleteQuery($http, $dyn){
+sub CancelDeleteQuery {
+  my ($self, $http, $dyn) = @_;
  delete $self->{QueryPendingDelete};
  $self->{Mode} = "ListQueries";
 }
 
-method GetBindings() {
+sub GetBindings {
+  my ($self) = @_;
   my $bc = $self->{BindingCache};
 
   my @bindings;
@@ -980,7 +994,8 @@ method GetBindings() {
 }
 
 
-method UpdateInsertCompleted($query, $struct){
+sub UpdateInsertCompleted {
+  my ($self, $query, $struct) = @_;
   unless(exists $self->{CompletedUpdatesAndInserts}){
     $self->{CompletedUpdatesAndInserts} = [] }
   push(@{$self->{CompletedUpdatesAndInserts}}, {
@@ -994,7 +1009,8 @@ method UpdateInsertCompleted($query, $struct){
   }
 }
 
-method CreateTableFromQuery($query, $struct, $start_at) {
+sub CreateTableFromQuery {
+  my ($self, $query, $struct, $start_at) = @_;
   # create LoadedTable array
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
 
@@ -1019,19 +1035,22 @@ method CreateTableFromQuery($query, $struct, $start_at) {
   push(@{$self->{LoadedTables}}, $new_table);
 }
 
-method SelectNewestTable() {
+sub SelectNewestTable {
+  my ($self) = @_;
   my $index = $#{$self->{LoadedTables}};
   if($self->{Mode} eq "QueryWait"){
     $self->SelectTable({}, { index => $index });
   }
 }
 
-method CreateAndSelectTableFromQuery($query, $struct, $start_at){
+sub CreateAndSelectTableFromQuery {
+  my ($self, $query, $struct, $start_at) = @_;
   $self->CreateTableFromQuery($query, $struct, $start_at);
   $self->SelectNewestTable();
 }
 
-method DownloadPreparedReport($http, $dyn) {
+sub DownloadPreparedReport {
+  my ($self, $http, $dyn) = @_;
   my $filename = $dyn->{filename};
   my $shortname = $dyn->{shortname};
 
@@ -1080,7 +1099,8 @@ sub SendFile{
   return $sub;
 }
 
-method DownloadTableAsCsv($http, $dyn){
+sub DownloadTableAsCsv {
+  my ($self, $http, $dyn) = @_;
   my $table = $self->{LoadedTables}->[$dyn->{table}];
   my $q_name;
 
@@ -1097,16 +1117,18 @@ method DownloadTableAsCsv($http, $dyn){
   Dispatch::BinFragReader->new_serialized_cmd(
     $cmd,
     $table,
-    func($frag) {
+    sub {
+  my ($frag) = @_;
       $http->queue("$frag");
     },
-    func() {
+    sub {
       # do nothing, on purpose
     }
   );
 }
 
-method StoreQuery($query, $filename) {
+sub StoreQuery {
+  my ($self, $query, $filename) = @_;
   # my $new_q = {};
   # for my $i (keys %$query){
   #   unless($i eq 'columns'
@@ -1119,7 +1141,8 @@ method StoreQuery($query, $filename) {
   delete $query->{dbh};
   store $query, $filename;
 }
-method SaveTableAsReport($http, $dyn){
+sub SaveTableAsReport {
+  my ($self, $http, $dyn) = @_;
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   my $dir = $self->{PreparedReportsDir};
   my $public = $dyn->{public};
@@ -1144,21 +1167,24 @@ method SaveTableAsReport($http, $dyn){
   Dispatch::BinFragReader->new_serialized_cmd(
     $cmd,
     $table,
-    func($frag) {
+    sub {
+  my ($frag) = @_;
       print $fh $frag;
     },
-    func() {
+    sub {
       close $fh;
       $self->QueueJsCmd("alert('Report saved!');");
     }
   );
 }
 
-method SetUseAsArg($http, $dyn) {
+sub SetUseAsArg {
+  my ($self, $http, $dyn) = @_;
   $self->{Mode} = 'UseAsArg';
   $self->{UseAsArgOps} = $dyn;
 }
-method UseAsArg($http, $dyn) {
+sub UseAsArg {
+  my ($self, $http, $dyn) = @_;
   my $arg_name = $self->{UseAsArgOps}->{arg};
   my $value = $self->{UseAsArgOps}->{value};
   $http->queue(qq{
@@ -1226,7 +1252,8 @@ method UseAsArg($http, $dyn) {
   });
 }
 
-method InsertSaveReportModal($http, $name, $table) {
+sub InsertSaveReportModal {
+  my ($self, $http, $name, $table) = @_;
   $http->queue(qq{
     <button type="button" class="btn btn-default"
             data-toggle="modal" data-target="#saveReportModal">
@@ -1281,7 +1308,8 @@ sub get_background_buttons {
   return $results;
 }
 
-func get_popup_hash($query_name) {
+sub get_popup_hash {
+  my ($query_name) = @_;
     my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
     # Process popups into a usable hash
     my $popup_hash = {};
@@ -1303,7 +1331,8 @@ func get_popup_hash($query_name) {
     return $popup_hash;
 }
 
-method DrawFilterableFieldHeading($http, $column_name, $column_number) {
+sub DrawFilterableFieldHeading {
+  my ($self, $http, $column_name, $column_number) = @_;
   $http->queue(qq{<th>$column_name});
   $self->DebouncedEntryBox($http, {
       uniq_id => $column_name,
@@ -1313,7 +1342,8 @@ method DrawFilterableFieldHeading($http, $column_name, $column_number) {
 
 }
 
-method Test1Change($http, $dyn) {
+sub Test1Change {
+  my ($self, $http, $dyn) = @_;
   say STDERR Dumper($dyn);
 
   # Test applying a filter to the current table
@@ -1329,7 +1359,8 @@ method Test1Change($http, $dyn) {
   $self->AutoRefresh;
 }
 
-method TableSelected($http, $dyn){
+sub TableSelected {
+  my ($self, $http, $dyn) = @_;
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
   if($table->{type} eq "FromQuery"){
     my $query = $table->{query};
@@ -1555,7 +1586,8 @@ method TableSelected($http, $dyn){
   }
 }
 
-method OpenChainedQuery($http, $dyn) {
+sub OpenChainedQuery {
+  my ($self, $http, $dyn) = @_;
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
@@ -1611,7 +1643,8 @@ method OpenChainedQuery($http, $dyn) {
 }
 
 
-method UpdateInsertStatus($http, $dyn){
+sub UpdateInsertStatus {
+  my ($self, $http, $dyn) = @_;
   my $index = $self->{SelectedUpdateInsert};
   my $update_struct = $self->{CompletedUpdatesAndInserts}->[$index];
 
@@ -1625,11 +1658,13 @@ method UpdateInsertStatus($http, $dyn){
     </p>
   });
 }
-method UpdatesInserts($http, $dyn){
+sub UpdatesInserts {
+  my ($self, $http, $dyn) = @_;
 }
 #############################
 #Here Bill is putting in the "Activities" Page assortment
-method Activities($http, $dyn){
+sub Activities {
+  my ($self, $http, $dyn) = @_;
   unless(defined $self->{ActivitySelected}){ $self->{ActivitySelected} = "<none>" }
   if($self->{ActivitySelected} ne "<none>"){
     return $self->NewActivitiesPage($http, $dyn);
@@ -1652,11 +1687,13 @@ method Activities($http, $dyn){
   $http->queue(qq{</div><hr>});
   $self->RenderNewActivityForm($http, $dyn);
 }
-method SetActivityFilter($http, $dyn){
+sub SetActivityFilter {
+  my ($self, $http, $dyn) = @_;
   $self->{ActivityFilter} = $dyn->{value};
 }
 
-method RenderNewActivityForm($http, $dyn) {
+sub RenderNewActivityForm {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <h3>Insert a new activity</h3>
     <div class="col-md-4">
@@ -1677,7 +1714,8 @@ method RenderNewActivityForm($http, $dyn) {
     </div>
   });
 }
-method RenderActivityDropDown($http, $dyn){
+sub RenderActivityDropDown {
+  my ($self, $http, $dyn) = @_;
   unless(defined $self->{ActivitySelected}){
     $self->{ActivitySelected} = "<none>";
   }
@@ -1708,7 +1746,8 @@ method RenderActivityDropDown($http, $dyn){
   });
 }
 
-method SetActivity($http, $dyn){
+sub SetActivity {
+  my ($self, $http, $dyn) = @_;
   $self->{ActivitySelected} = $dyn->{value};
   $self->{BindingCache}->{activity_id} = $dyn->{value};
   my $activity_name = $self->{Activities}->{$dyn->{value}}->{desc};
@@ -1722,7 +1761,8 @@ method SetActivity($http, $dyn){
 #  $self->AutoRefresh;
 }
 
-method newActivity($http, $dyn){
+sub newActivity {
+  my ($self, $http, $dyn) = @_;
   my $desc = $dyn->{value};
   if($desc =~/^\s*$/){ return }
   my $user = $self->get_user;
@@ -1730,7 +1770,8 @@ method newActivity($http, $dyn){
   my $q = Query('CreateActivity');
   $q->RunQuery(sub {}, sub {}, $desc, $user);
 }
-method SortedActivityIds($h){
+sub SortedActivityIds {
+  my ($self, $h) = @_;
   return sort {
     if(
       $h->{$a}->{user} eq $self->get_user &&
@@ -1768,7 +1809,8 @@ method SortedActivityIds($h){
     return $h->{$a}->{opened} cmp $h->{$b}->{opened}
   } keys %$h;
 }
-method RefreshActivities{
+sub RefreshActivities {
+  my ($self) = @_;
   my $q = Query('GetOpenActivities');
   my %Activities;
   $self->{Activities} = {};
@@ -1786,7 +1828,8 @@ method RefreshActivities{
 }
 #############################
 # New Activities Page
-method NewActivitiesPage($http, $dyn){
+sub NewActivitiesPage {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
   });
@@ -1805,21 +1848,25 @@ method NewActivitiesPage($http, $dyn){
     $http->queue("method \"$method\" is not yet defined\n");
   }
 }
-method DrawActivitySelected($http, $dyn){
+sub DrawActivitySelected {
+  my ($self, $http, $dyn) = @_;
   $http->queue("Activity $self->{ActivitySelected}: ");
   $http->queue("$self->{Activities}->{$self->{ActivitySelected}}->{desc}");
 }
-method DrawClearActivityButton($http, $dyn){
+sub DrawClearActivityButton {
+  my ($self, $http, $dyn) = @_;
   $self->NotSoSimpleButton($http, {
     op => "ClearActivity",
     caption => "Choose Another Activity",
     sync => "Update();",
   });
 }
-method ClearActivity($http, $dyn){
+sub ClearActivity {
+  my ($self, $http, $dyn) = @_;
   $self->{ActivitySelected} = "<none>";
 }
-method DrawActivityModeSelector($http, $dyn){
+sub DrawActivityModeSelector {
+  my ($self, $http, $dyn) = @_;
   unless(defined $self->{ActivityModeSelected}){
     $self->{ActivityModeSelected} = 0;
   }
@@ -1849,7 +1896,8 @@ method DrawActivityModeSelector($http, $dyn){
     </select> </div>
   });
 }
-method DrawActivityTaskStatus($http, $dyn){
+sub DrawActivityTaskStatus {
+  my ($self, $http, $dyn) = @_;
   my @backgrounders;
   $self->{Backgrounders} = [];
   Query('GetActivityTaskStatus')->RunQuery(sub {
@@ -1873,18 +1921,21 @@ method DrawActivityTaskStatus($http, $dyn){
 #    $self->AutoRefresh();
   }
 }
-method DismissActivityTaskStatus($http, $dyn){
+sub DismissActivityTaskStatus {
+  my ($self, $http, $dyn) = @_;
   my $sub_id = $dyn->{subprocess_invocation_id};
   my $act_id = $self->{ActivitySelected};
   my $user = $self->get_user;
   Query('DismissActivityTaskStatus')->RunQuery(sub{}, sub{},
     $user, $act_id, $sub_id);
 }
-method SetActivityMode($http, $dyn){
+sub SetActivityMode {
+  my ($self, $http, $dyn) = @_;
   $self->{ActivityModeSelected} = $dyn->{value};
   $self->AutoRefresh;
 }
-method ShowActivityTimeline($http, $dyn){
+sub ShowActivityTimeline {
+  my ($self, $http, $dyn) = @_;
   my @time_line;
   Query('InboxContentByActivityIdWithCompletion')->RunQuery(sub{
     my($row) = @_;
@@ -2007,7 +2058,8 @@ method ShowActivityTimeline($http, $dyn){
   }
   $http->queue("</table>");
 }
-method ShowEmail($http, $dyn){
+sub ShowEmail {
+  my ($self, $http, $dyn) = @_;
   my $class = 'Posda::PopupTextViewer';
   eval "require $class";
   my $params = {
@@ -2027,7 +2079,8 @@ method ShowEmail($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ShowResponse($http, $dyn){
+sub ShowResponse {
+  my ($self, $http, $dyn) = @_;
   my $class = 'DbIf::ShowSubprocessLines';
   eval "require $class";
   my $params = {
@@ -2047,7 +2100,8 @@ method ShowResponse($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ShowInput($http, $dyn){
+sub ShowInput {
+  my ($self, $http, $dyn) = @_;
   my $class = 'Posda::PopupTextViewer';
   eval "require $class";
   my $params = {
@@ -2067,14 +2121,16 @@ method ShowInput($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ProcessRadioButton($http, $dyn){
+sub ProcessRadioButton {
+  my ($self, $http, $dyn) = @_;
   my $value = $dyn->{value};
   my $control = $dyn->{control};
   my $group = $dyn->{group};
   my $checked = $dyn->{checked};
   $self->{$control}->{$group} = $value;
 }
-method CountOverlappingEvents($event, $event_list){
+sub CountOverlappingEvents {
+  my ($self, $event, $event_list) = @_;
   my $count = 0;
   for my $i (@$event_list){
     if(
@@ -2084,7 +2140,8 @@ method CountOverlappingEvents($event, $event_list){
   }
   return $count;
 }
-method CompareTimepoints($http, $dyn){
+sub CompareTimepoints {
+  my ($self, $http, $dyn) = @_;
   my $class = "Posda::ProcessPopup";
   eval "require $class";
   my $params = {
@@ -2106,7 +2163,8 @@ method CompareTimepoints($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ActivityOperations($http, $dyn){
+sub ActivityOperations {
+  my ($self, $http, $dyn) = @_;
   my @buttons =  (
     [ "CreateActivityTimepointFromImportName", "Create Activity Timepoint from Import Name", 0, 0],
     [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
@@ -2202,7 +2260,8 @@ method ActivityOperations($http, $dyn){
   $http->queue("</table>");
 }
 
-method InvokeOperation($http, $dyn){
+sub InvokeOperation {
+  my ($self, $http, $dyn) = @_;
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
@@ -2231,7 +2290,8 @@ method InvokeOperation($http, $dyn){
   $self->StartJsChildWindow($child_obj);
 }
 #xyzzy
-method InvokeOperationRow($http, $dyn){
+sub InvokeOperationRow {
+  my ($self, $http, $dyn) = @_;
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
@@ -2273,10 +2333,12 @@ method InvokeOperationRow($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method NewQueryWait($http, $dyn){
+sub NewQueryWait {
+  my ($self, $http, $dyn) = @_;
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
 }
-method Queries($http,$dyn){
+sub Queries {
+  my ($self, $http,$dyn) = @_;
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
   if(
     exists($self->{NewQueryToDisplay})&&
@@ -2301,7 +2363,8 @@ method Queries($http,$dyn){
   }
   $self->DrawQueryListOrResults($http, $dyn);
 }
-method DrawCurrentForegroundQueriesSelector($http, $dyn){
+sub DrawCurrentForegroundQueriesSelector {
+  my ($self, $http, $dyn) = @_;
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
   my $q_count = keys %{$self->{ForegroundQueries}};
   if($q_count > 0){
@@ -2312,10 +2375,12 @@ method DrawCurrentForegroundQueriesSelector($http, $dyn){
     });
   }
 }
-method SetCurrentForegroundSelection($http, $dyn){
+sub SetCurrentForegroundSelection {
+  my ($self, $http, $dyn) = @_;
   $self->{SelectFromCurrentForeground} = 1;
 }
-method SelectFromCurrentForeground($http, $dyn){
+sub SelectFromCurrentForeground {
+  my ($self, $http, $dyn) = @_;
   #$http->queue("display list of current foreground queries");
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
@@ -2802,7 +2867,8 @@ sub DrawNewQuery{
   $http->queue("</div>");
 }
 
-method MakeNewQuery($http, $dyn){
+sub MakeNewQuery {
+  my ($self, $http, $dyn) = @_;
   my $query_name = $self->{SelectedNewQuery};
   my $query;
   if($self->{NewActivityQueriesType}->{query_type} eq "search"){
@@ -2850,10 +2916,12 @@ method MakeNewQuery($http, $dyn){
   #$self->{WaitingForQueryCompletion} = $msg;
   my $q_pack = $self->{ForegroundQueries}->{$guid};
   $query->RunQuery(
-    func($row){
+    sub {
+  my ($row) = @_;
       push @{$q_pack->{rows}}, $row;
     },
-    func($msg){
+    sub {
+  my ($msg) = @_;
       if($msg =~ /^RESULT:(.*)$/s){
         $q_pack->{status} = "done";
         $q_pack->{completion_msg} = $1;
@@ -2887,10 +2955,12 @@ sub RefreshQuery{
   #$self->{WaitingForQueryCompletion} = $msg;
   my $q_pack = $self->{ForegroundQueries}->{$guid};
   $query->RunQuery(
-    func($row){
+    sub {
+  my ($row) = @_;
       push @{$q_pack->{rows}}, $row;
     },
-    func($msg){
+    sub {
+  my ($msg) = @_;
       if($msg =~ /^RESULT:(.*)$/s){
         $q_pack->{status} = "done";
         $q_pack->{completion_msg} = $1;
@@ -2932,7 +3002,8 @@ sub DisplayNewQueryError{
     class => "btn btn-primary",
   });
 }
-method NewQueryPageUp($http, $dyn){
+sub NewQueryPageUp {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $new_start = $SFQ->{first_row} + $SFQ->{rows_to_show};
   if($new_start + $SFQ->{rows_to_show} > @{$SFQ->{rows}}){
@@ -2941,7 +3012,8 @@ method NewQueryPageUp($http, $dyn){
   }
   $SFQ->{first_row} = $new_start;
 }
-method NewQueryPageDown($http, $dyn){
+sub NewQueryPageDown {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $new_start = $SFQ->{first_row} - $SFQ->{rows_to_show};
   if($new_start < 0){
@@ -2949,7 +3021,8 @@ method NewQueryPageDown($http, $dyn){
   }
   $SFQ->{first_row} = $new_start;
 }
-method SetFirstRow($http, $dyn){
+sub SetFirstRow {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $value = $dyn->{value};
   my $max = @{$SFQ->{rows}} - $SFQ->{rows_to_show};
@@ -2957,12 +3030,14 @@ method SetFirstRow($http, $dyn){
   if($value > $max) { $value = $max }
   $SFQ->{first_row} = $value;
 }
-method SetRowsToShow($http, $dyn){
+sub SetRowsToShow {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $value = $dyn->{value};
   $SFQ->{rows_to_show} = $value;
 }
-method FilterQueryRows($sfq){
+sub FilterQueryRows {
+  my ($self, $sfq) = @_;
   # No filtering for now
   # return $sfq->{rows};
   my %name_to_i;
@@ -2981,7 +3056,8 @@ method FilterQueryRows($sfq){
   }
   return \@filtered_rows;
 }
-method SetEditFilter($http, $queue){
+sub SetEditFilter {
+  my ($self, $http, $queue) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   if(defined $SFQ->{filter}){
     $self->{FilterArgs} = $SFQ->{filter};
@@ -3310,7 +3386,8 @@ $self->{DebugPopupHash} = $popup_hash;
   $http->queue("</table>");
   $http->queue("</div>");
 }
-method RenderCurrentQueryFilter($http, $dyn){
+sub RenderCurrentQueryFilter {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   $http->queue("Query Filter:<br>");
   for my $k (keys %{$SFQ->{filter}}){
@@ -3321,7 +3398,8 @@ method RenderCurrentQueryFilter($http, $dyn){
     }
   }
 }
-method DrawEditFilterForm($http, $dyn, $SFQ){
+sub DrawEditFilterForm {
+  my ($self, $http, $dyn, $SFQ) = @_;
   $http->queue(qq{
     <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
   });
@@ -3356,7 +3434,8 @@ method DrawEditFilterForm($http, $dyn, $SFQ){
   $http->queue("</div>");
 }
 
-method SetFilter($http, $dyn){
+sub SetFilter {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   if((keys %{$self->{FilterArgs}}) > 0){
     $SFQ->{filter} = $self->{FilterArgs};
@@ -3364,10 +3443,12 @@ method SetFilter($http, $dyn){
   delete $self->{EditFilter};
   delete $self->{FilterArgs};
 }
-method SetFilterArgs($http, $dyn){
+sub SetFilterArgs {
+  my ($self, $http, $dyn) = @_;
   $self->{FilterArgs}->{$dyn->{index}} = $dyn->{value};
 }
-method ClearFilter($http, $dyn){
+sub ClearFilter {
+  my ($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   delete $self->{EditFilter};
   delete $self->{FilterArgs};
@@ -3384,10 +3465,12 @@ sub DismissCurrentForegroundQuery{
   delete $self->{ForegroundQueries}->{$index};
   delete $self->{FilterSelection}->{$index};
 }
-method DrawNewQueryResults($http, $dyn){
+sub DrawNewQueryResults {
+  my ($self, $http, $dyn) = @_;
   $http->queue("NewQueryResults goes here");
 }
-method DrawQueryListSearch($http, $dyn){
+sub DrawQueryListSearch {
+  my ($self, $http, $dyn) = @_;
   my @MostFrequentSelects = sort {$a cmp $b } keys %{$self->{NewQueryListSearch}};
   my $num_queries = @MostFrequentSelects;
   $http->queue('<table class="table table-striped table-condensed">');
@@ -3436,21 +3519,24 @@ method DrawQueryListSearch($http, $dyn){
   $http->queue('<table class="table table-striped table-condensed">');
   $http->queue('</table>')
 }
-method DrawQueryListOrResultsRecent($http, $dyn){
+sub DrawQueryListOrResultsRecent {
+  my ($self, $http, $dyn) = @_;
   if(exists($self->{NewQueryResults})){
     $self->DrawQueryResults($http, $dyn);
   } else {
     $self->DrawQueryListOrSelectedQueryRecent($http, $dyn);
   }
 }
-method DrawQueryListOrSelectedQueryRecent($http, $dyn){
+sub DrawQueryListOrSelectedQueryRecent {
+  my ($self, $http, $dyn) = @_;
   if(exists $self->{SelectedNewQuery}){
     $self->DrawNewQuery($http, $dyn);
   } else {
     $self->DrawQueryListRecent($http, $dyn);
   }
 }
-method DrawQueryListRecent($http, $dyn){
+sub DrawQueryListRecent {
+  my ($self, $http, $dyn) = @_;
   my @query_list;
   Query('ListOfQueriesPerformedByUserWithLatestAndCount')->RunQuery(sub {
     my($row) = @_;
@@ -3580,7 +3666,8 @@ method DrawQueryListRecent($http, $dyn){
 
 #############################
 #Here Bill is putting in the "ShowBackground"
-method ShowBackground($http, $dyn){
+sub ShowBackground {
+  my ($self, $http, $dyn) = @_;
  $self->SemiSerializedSubProcess(
   "FindRunningBackgroundSubprocesses.pl|CsvStreamToPerlStruct.pl",
   $self->LoadScriptOutput("running_subprocesses"));
@@ -3611,7 +3698,8 @@ method ShowBackground($http, $dyn){
     $http->queue("Running subprocesses not found");
   }
 }
-method LoadScriptOutput($table_name) {
+sub LoadScriptOutput {
+  my ($self, $table_name) = @_;
   my $sub = sub{
     my($status, $struct) = @_;
     if($status eq "Succeeded"){
@@ -3626,7 +3714,8 @@ method LoadScriptOutput($table_name) {
 #############################
 #############################
 #Here Bill is putting in the "DownloadTar"
-method DownloadTar($http, $dyn){
+sub DownloadTar {
+  my ($self, $http, $dyn) = @_;
   my @dirs;
   opendir(DIR, "$ENV{POSDA_CACHE_ROOT}/linked_for_download");
   while(my $dir = readdir(DIR)){
@@ -3686,10 +3775,12 @@ method DownloadTar($http, $dyn){
     sync => "Update();",
   });
 }
-method SetSelectedDownloadSubdir($http, $dyn){
+sub SetSelectedDownloadSubdir {
+  my ($self, $http, $dyn) = @_;
   $self->{SelectedDownloadSubdir} = $dyn->{value};
 }
-method DownloadTarOfThisDirectory($http, $dyn){
+sub DownloadTarOfThisDirectory {
+  my ($self, $http, $dyn) = @_;
   my $dir = $self->{DownloadTar};
   my $fh;
   if(open $fh, "(cd $dir && tar -chf - .)|") {
@@ -3702,23 +3793,27 @@ method DownloadTarOfThisDirectory($http, $dyn){
     print STDERR "Yikes: ($!) in DownloadTarOfThisDirectory\n";
   }
 }
-method DeleteThisDirectory($http, $dyn){
+sub DeleteThisDirectory {
+  my ($self, $http, $dyn) = @_;
   rmtree($self->{DownloadTar});
 }
 
 #############################
-method Upload($http, $dyn){
+sub Upload {
+  my ($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, qq{
   <form action="<?dyn="StoreFileUri"?>"
     enctype="multipart/form-data" method="POST" class="dropzone">
   </form>
   });
 }
-method StoreFileUri($http, $dyn){
+sub StoreFileUri {
+  my ($self, $http, $dyn) = @_;
   $http->queue("StoreFile?obj_path=$self->{path}");
 }
 
-method StoreFile($http, $dyn){
+sub StoreFile {
+  my ($self, $http, $dyn) = @_;
   my $method = $http->{method};
   my $content_type = $http->{header}->{content_type};
   unless($method eq "POST" && $content_type =~ /multipart/){
@@ -3733,7 +3828,8 @@ method StoreFile($http, $dyn){
   &{$self->UploadDone($http, $dyn)}($file);
 }
 
-method UploadDone($http, $dyn){
+sub UploadDone {
+  my ($self, $http, $dyn) = @_;
   my $sub = sub {
     my($file) = @_;
     unless(exists($self->{UploadQueue})){ $self->{UploadQueue} = [] }
@@ -3756,7 +3852,8 @@ method UploadDone($http, $dyn){
   return $sub;
 }
 
-method ServeUploadQueue() {
+sub ServeUploadQueue {
+  my ($self) = @_;
   unless($#{$self->{UploadQueue}} >= 0){ return }
   my $up_load_file = shift @{$self->{UploadQueue}};
   my $command = "ExtractUpload.pl \"$up_load_file\" \"$self->{TempDir}\"";
@@ -3765,7 +3862,8 @@ method ServeUploadQueue() {
     $self->ConvertLinesComplete($hash));
 }
 
-method ReadConvertLine($hash){
+sub ReadConvertLine {
+  my ($self, $hash) = @_;
   my $sub = sub {
     my($line) = @_;
     if($line =~ /^(.*):\s*(.*)$/){
@@ -3775,7 +3873,8 @@ method ReadConvertLine($hash){
   };
   return $sub;
 }
-method ConvertLinesComplete($hash){
+sub ConvertLinesComplete {
+  my ($self, $hash) = @_;
   my $sub = sub {
     push(@{$self->{UploadedFiles}}, $hash);
     # If the file was a CSV, go ahead and load it as a table now
@@ -3794,7 +3893,8 @@ method ConvertLinesComplete($hash){
   return $sub;
 }
 
-method ProcessCompressedFile($hash) {
+sub ProcessCompressedFile {
+  my ($self, $hash) = @_;
   my $mime_type = $hash->{'mime-type'};
   my $filename = $hash->{'Output file'};
 
@@ -3810,12 +3910,14 @@ method ProcessCompressedFile($hash) {
     filename => $filename
   });
 
-  $sub->execute(func($ret) {
+  $sub->execute(sub {
+  my ($ret) = @_;
       say STDERR Dumper($ret);
   });
 }
 
-method Files($http, $dyn){
+sub Files {
+  my ($self, $http, $dyn) = @_;
   unless(exists $self->{UploadedFiles}) { $self->{UploadedFiles} = [] }
   my $num_files = @{$self->{UploadedFiles}};
   if($num_files == 0){
@@ -3877,18 +3979,21 @@ method Files($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
-method LoadCsvIntoTable($http, $dyn){
+sub LoadCsvIntoTable {
+  my ($self, $http, $dyn) = @_;
   $self->{Mode} = "LoadCsvIntoTable";
   my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output file"};
 
   $self->LoadCSVIntoTable_NoMode($file);
 }
-method LoadCSVIntoTable_NoMode($file) {
+sub LoadCSVIntoTable_NoMode {
+  my ($self, $file) = @_;
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
   $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
 }
 
-method ImportFileIntoPosda($http, $dyn){
+sub ImportFileIntoPosda {
+  my ($self, $http, $dyn) = @_;
   my $index = $dyn->{index};
   my $f_info = $self->{UploadedFiles}->[$index];
   my $file = $f_info->{"Output file"};
@@ -3909,7 +4014,8 @@ method ImportFileIntoPosda($http, $dyn){
   close COMMAND;
 }
 
-method CsvLoaded($file){
+sub CsvLoaded {
+  my ($self, $file) = @_;
   my $sub = sub {
     my($status, $struct) = @_;
     if($status eq "Succeeded"){
@@ -3951,7 +4057,8 @@ method CsvLoaded($file){
         Dispatch::LineReaderWriter->write_and_read_all(
           "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" \"DbIf file upload\"",
           [""],
-          func($return) {
+          sub {
+  my ($return) = @_;
             for my $i (@$return) {
               if ($i =~ /File id: (.*)/) {
                 $new_table_entry->{posda_file_id} = $1;
@@ -3975,7 +4082,8 @@ method CsvLoaded($file){
   return $sub;
 }
 
-method Reports($http, $dyn) {
+sub Reports {
+  my ($self, $http, $dyn) = @_;
   # load list of reports from the dir
   my $report_dir = $self->{PreparedReportsDir};
   my $common_dir = $self->{PreparedReportsCommonDir};
@@ -4071,7 +4179,8 @@ method Reports($http, $dyn) {
 
 }
 
-method LoadPreparedReport($http, $dyn) {
+sub LoadPreparedReport {
+  my ($self, $http, $dyn) = @_;
   my $dir;
   if ($dyn->{ftype} eq 'common') {
     $dir = $self->{PreparedReportsCommonDir};
@@ -4085,7 +4194,7 @@ method LoadPreparedReport($http, $dyn) {
   # couldn't call existing method because we need more control
   my $cmd = "CsvToPerlStruct.pl \"$file\"";
   my $final_callback = $self->CsvLoaded($file);
-  $self->SemiSerializedSubProcess($cmd, func() {
+  $self->SemiSerializedSubProcess($cmd, sub {
     &$final_callback(@_);
     my $index = $#{$self->{LoadedTables}};
     $self->{SelectedTable} = $index;
@@ -4096,7 +4205,8 @@ method LoadPreparedReport($http, $dyn) {
   $self->{Mode} = "QueryWait";
 }
 
-method Tables($http, $dyn){
+sub Tables {
+  my ($self, $http, $dyn) = @_;
   # created LoadedTables array
   unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
   my $num_tables = @{$self->{LoadedTables}};
@@ -4201,7 +4311,8 @@ sub apply_command{
   return $final;
 }
 
-method ExecuteCommand($http, $dyn) {
+sub ExecuteCommand {
+  my ($self, $http, $dyn) = @_;
   $self->{SelectedTable} = $dyn->{index};
   my $table = $self->{LoadedTables}->[$dyn->{index}];
 
@@ -4282,13 +4393,15 @@ method ExecuteCommand($http, $dyn) {
   $self->{Mode} = 'OperationsSummary';
 }
 
-method ExecutePlannedOperations($http, $dyn) {
+sub ExecutePlannedOperations {
+  my ($self, $http, $dyn) = @_;
   $self->{TotalPlannedOperations} = scalar @{$self->{PlannedOperations}};
   $self->UpdateWaitingOnOps($http, $dyn);
 
   $self->ExecuteNextOperation();
 }
-method UpdateWaitingOnOps($http, $dyn) {
+sub UpdateWaitingOnOps {
+  my ($self, $http, $dyn) = @_;
   my $total = $self->{TotalPlannedOperations};
   my $left = scalar @{$self->{PlannedOperations}};
 
@@ -4298,7 +4411,8 @@ method UpdateWaitingOnOps($http, $dyn) {
   $self->AutoRefresh();
 }
 
-method ExecuteNextOperation() {
+sub ExecuteNextOperation {
+  my ($self) = @_;
   my $operations = $self->{PlannedOperations};
 
   my $op = shift @$operations;
@@ -4312,11 +4426,12 @@ method ExecuteNextOperation() {
 
   Dispatch::LineReader->new_cmd(
     $op,
-    func($line) {
+    sub {
+  my ($line) = @_;
       # save into output buffer
       push @{$self->{Results}}, $line;
     },
-    func() {
+    sub {
       # queue the next one?
       say "finished op: $op";
       $self->UpdateWaitingOnOps();
@@ -4326,7 +4441,8 @@ method ExecuteNextOperation() {
 
 }
 
-method ExecutePlannedPipeOperations($http, $dyn) {
+sub ExecutePlannedPipeOperations {
+  my ($self, $http, $dyn) = @_;
   my $table = $self->{LoadedTables}->[$self->{SelectedTable}];
 
   my $cmd = $self->{PlannedPipeOperation};
@@ -4350,7 +4466,8 @@ method ExecutePlannedPipeOperations($http, $dyn) {
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd,
     $stdin,
-    func($return, $pid) {
+    sub {
+  my ($return, $pid) = @_;
       $self->{Results} = $return;
       $self->{Mode} = 'ResultsAreIn';
       $self->AutoRefresh;
@@ -4372,7 +4489,8 @@ method ExecutePlannedPipeOperations($http, $dyn) {
   $self->{Mode} = 'WaitingOnOperation';
 }
 
-method WaitingOnOperation($http, $dyn) {
+sub WaitingOnOperation {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<p>Waiting on operations to finish...</p>");
   my $total = $self->{TotalPlannedOperations};
   my $left = $self->{RemainingOpCount};
@@ -4381,7 +4499,8 @@ method WaitingOnOperation($http, $dyn) {
   }
 }
 
-method ResultsAreIn($http, $dyn) {
+sub ResultsAreIn {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<p>results are in!");
   $self->NotSoSimpleButton($http, {
     caption => "Save as CSV",
@@ -4394,7 +4513,8 @@ method ResultsAreIn($http, $dyn) {
   } @{$self->{Results}};
 }
 
-method SaveResultsAsCsv($http, $dyn){
+sub SaveResultsAsCsv {
+  my ($self, $http, $dyn) = @_;
   my $file = "$self->{TempDir}/OpResults_$self->{Sequence}.csv";
   $self->{Sequence} += 1;
   my $length = 0;
@@ -4413,7 +4533,8 @@ method SaveResultsAsCsv($http, $dyn){
   push @{$self->{UploadedFiles}}, $fdesc;
 }
 
-method PipeOperationsSummary($http, $dyn) {
+sub PipeOperationsSummary {
+  my ($self, $http, $dyn) = @_;
   # display a list of planned operations
   $http->queue(qq{
     <h3>Planned Pipe Operation</h3>
@@ -4496,7 +4617,8 @@ method PipeOperationsSummary($http, $dyn) {
 
 }
 
-method OperationsSummary($http, $dyn) {
+sub OperationsSummary {
+  my ($self, $http, $dyn) = @_;
   # display a list of planned operations
   $http->queue(qq{
     <h3>Planned Operations</h3>
@@ -4531,7 +4653,8 @@ method OperationsSummary($http, $dyn) {
   });
 }
 
-method SelectTable($http, $dyn){
+sub SelectTable {
+  my ($self, $http, $dyn) = @_;
   $self->{SelectedTable} = $dyn->{index};
   # push new table onto the history stack
   $self->PushToHistory($dyn->{index});
@@ -4539,7 +4662,8 @@ method SelectTable($http, $dyn){
   $self->{LoadedTables}->[$dyn->{index}]->clear_filters;
   $self->{Mode} = "TableSelected";
 }
-method PushToHistory($index) {
+sub PushToHistory {
+  my ($self, $index) = @_;
   DEBUG $index;
   if (not defined $self->{TableHistory}) {
     $self->{TableHistory} = [];

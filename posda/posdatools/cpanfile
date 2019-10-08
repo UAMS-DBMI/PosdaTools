@@ -1,7 +1,6 @@
 # Posda requirements
 
 requires 'Modern::Perl';
-requires 'Method::Signatures::Simple';
 requires 'JSON';
 requires 'DBD::Pg';
 requires 'Switch';

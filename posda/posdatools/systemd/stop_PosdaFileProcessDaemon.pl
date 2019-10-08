@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use DBI;
 use Posda::Config 'Database';

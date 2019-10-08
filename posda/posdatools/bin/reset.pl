@@ -1,7 +1,6 @@
 use lib 'Posda/include/';
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 use JSON;
 use Term::ReadKey;
 use DBD::Pg;

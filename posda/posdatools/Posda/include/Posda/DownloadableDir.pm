@@ -4,7 +4,6 @@ use overload
   '""' => 'stringify';
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Data::UUID;
 use DBI;
@@ -15,7 +14,8 @@ our $URL = Config('api_url');
 our $ug = Data::UUID->new;
 
 
-method new($class: $path) {
+sub new {
+  my ($class, $path) = @_;
   my $self = {
     path => $path
   };
@@ -26,11 +26,13 @@ method new($class: $path) {
   return $self;
 }
 
-method stringify() {
+sub stringify {
+  my ($self) = @_;
   return $self->{link};
 }
 
-method _make() {
+sub _make {
+  my ($self) = @_;
   my $uuid = get_uuid();
 
   my $dbh = DBI->connect(Database('posda_files'));
@@ -54,12 +56,13 @@ method _make() {
   $self->{security_hash} = $uuid;
 }
 
-func get_uuid() {
+sub get_uuid {
 	return lc $ug->create_str();
 }
 
 # Deprecated, included for backward compatability
-func make($path) {
+sub make {
+  my ($path) = @_;
   return Posda::DownloadableDir->new($path);
 }
 

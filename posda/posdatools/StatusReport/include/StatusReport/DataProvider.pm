@@ -4,7 +4,6 @@ package StatusReport::DataProvider;
 #
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Dispatch::NamedObject;
 use Dispatch::Select;
@@ -20,18 +19,21 @@ use vars '@ISA';
 
 @ISA = ("Dispatch::NamedObject");
 
-method new($class: $sess, $path) {
+sub new {
+  my ($class, $sess, $path) = @_;
   my $this = Dispatch::NamedObject->new($sess, $path);
 
   bless $this, $class;
   return $this;
 }
 
-method RecBacklog($http, $dyn) {
+sub RecBacklog {
+  my ($self, $http, $dyn) = @_;
   $http->TextHeader();
 
   AppController::StatusInfo::get_rec_backlog_async(
-    Config('appstats_db_name'), func($results) {
+    Config('appstats_db_name'), sub {
+  my ($results) = @_;
     # results come back as list of hashrefs, need to convert to static list
     my $ret = [];
     for my $row (@{$results}) {
@@ -42,11 +44,13 @@ method RecBacklog($http, $dyn) {
   });
 }
 
-method DBBacklog($http, $dyn) {
+sub DBBacklog {
+  my ($self, $http, $dyn) = @_;
   $http->TextHeader();
 
   AppController::StatusInfo::get_db_backlog_async(
-    Config('appstats_db_name'), func($results) {
+    Config('appstats_db_name'), sub {
+  my ($results) = @_;
     # results come back as list of hashrefs, need to convert to static list
     my $ret = [];
     for my $row (@{$results}) {
@@ -57,11 +61,13 @@ method DBBacklog($http, $dyn) {
   });
 }
 
-method UploadCountTable($http, $dyn) {
+sub UploadCountTable {
+  my ($self, $http, $dyn) = @_;
   $http->TextHeader();
 
   AppController::StatusInfo::get_recent_uploads_async(
-    Config('files_db_name'), func($results) {
+    Config('files_db_name'), sub {
+  my ($results) = @_;
     $http->queue(BS::Table::from_hashes($results));
   });
 }

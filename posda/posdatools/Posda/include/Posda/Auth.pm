@@ -1,7 +1,6 @@
 package Posda::Auth;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config', 'Database');
 use Posda::LDAPAuth;
@@ -9,7 +8,8 @@ use Posda::Passwords;
 
 use DBI;
 
-func is_authorized($username, $password) {
+sub is_authorized {
+  my ($username, $password) = @_;
   my $auth_type = Config('auth_type');
 
   # Use LDAP or Database, based on POSDA_AUTH_TYPE env var
@@ -22,7 +22,8 @@ func is_authorized($username, $password) {
   }
 }
 
-func db_auth($username, $password) {
+sub db_auth {
+  my ($username, $password) = @_;
   my $dbh = DBI->connect(Database('posda_auth'));
 
   my $stmt = $dbh->prepare(qq{

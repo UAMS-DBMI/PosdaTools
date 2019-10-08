@@ -4,7 +4,6 @@ use overload
   '""' => 'stringify';
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Data::UUID;
 use DBI;
@@ -14,7 +13,8 @@ use Posda::Config ('Database', 'Config');
 our $URL = Config('api_url');
 our $ug = Data::UUID->new;
 
-method new($class: $file_id, $mime_type, $valid_until) {
+sub new {
+  my ($class, $file_id, $mime_type, $valid_until) = @_;
   my $self = {
     file_id => $file_id,
     mime_type => $mime_type,
@@ -28,15 +28,17 @@ method new($class: $file_id, $mime_type, $valid_until) {
   return $self;
 }
 
-method stringify() {
+sub stringify {
+  my ($self) = @_;
   return $self->{link};
 }
 
-func get_uuid() {
+sub get_uuid {
 	return lc $ug->create_str();
 }
 
-method _get_path() {
+sub _get_path {
+  my ($self) = @_;
   my $dbh = DBI->connect(Database('posda_files'));
   my $sth = $dbh->prepare(qq{
     select root_path || '/' || rel_path as path
@@ -56,7 +58,8 @@ method _get_path() {
   $self->{path} = $path;
 }
 
-method _make() {
+sub _make {
+  my ($self) = @_;
   my $uuid = get_uuid();
 
   my $dbh = DBI->connect(Database('posda_files'));
@@ -83,11 +86,13 @@ method _make() {
   $self->{security_hash} = $uuid;
 }
 
-func make($file_id, $mime_type, $valid_until) {
+sub make {
+  my ($file_id, $mime_type, $valid_until) = @_;
   return Posda::DownloadableFile->new($file_id, $mime_type, $valid_until);
 }
 
-func make_csv($file_id, $valid_until) {
+sub make_csv {
+  my ($file_id, $valid_until) = @_;
   return make($file_id, 'text/csv', $valid_until);
 }
 

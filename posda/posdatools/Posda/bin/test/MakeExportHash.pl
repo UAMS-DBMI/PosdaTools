@@ -9,7 +9,8 @@ for my $line (<STDIN>){
 }
 for my $f (sort keys %Files){
   print "File: $f\n";
-  for my $func (sort keys %{$Files{$f}}){
+  for my $sub {
+  my (sort keys %{$Files{$f}}) = @_;
     print "\t$func\n";
   }
 }

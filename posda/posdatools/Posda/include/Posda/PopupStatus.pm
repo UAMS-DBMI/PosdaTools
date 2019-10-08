@@ -3,7 +3,6 @@ package Posda::PopupStatus;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'QueryAsync';
@@ -13,7 +12,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method StartQuery($q_name, $args){
+sub StartQuery {
+  my ($self, $q_name, $args) = @_;
   my $q = QueryAsync($q_name);
   my $cols = $q->{columns};
   my $q_args = $q->{args};
@@ -27,7 +27,8 @@ method StartQuery($q_name, $args){
     $self->HandleQueryEnd($q_name),
     @$args);
 }
-method LoadScriptOutput($table_name){
+sub LoadScriptOutput {
+  my ($self, $table_name) = @_;
   $self->{scripts_running}->{$table_name} = 1;
   my $sub = sub{
     my($status, $struct) = @_;
@@ -42,7 +43,8 @@ method LoadScriptOutput($table_name){
   };
   return $sub;
 }
-method HandleRow($q_name){
+sub HandleRow {
+  my ($self, $q_name) = @_;
   my $sub = sub {
     my($row) = @_;
     unless(exists $self->{query_results}->{$q_name}){
@@ -53,7 +55,8 @@ method HandleRow($q_name){
   };
   return $sub;
 }
-method HandleQueryEnd($q_name){
+sub HandleQueryEnd {
+  my ($self, $q_name) = @_;
   my $sub = sub {
     delete $self->{queries_running}->{$q_name};
   };
@@ -61,7 +64,8 @@ method HandleQueryEnd($q_name){
   return $sub;
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   my @queries_running = keys %{$self->{queries_running}};
   my @scripts_running = keys %{$self->{scripts_running}};
   my @scripts_results = keys %{$self->{script_results}};

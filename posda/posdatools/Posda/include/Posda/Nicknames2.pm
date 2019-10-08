@@ -2,7 +2,6 @@
 
 package Posda::Nicknames2;
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use Data::Dumper;
 use DBI;
 
@@ -13,7 +12,7 @@ my $cache = {};
 my $connection;
 
 
-func __get_db_connection() {
+sub __get_db_connection {
   if (not defined $connection) {
     $connection = DBI->connect("dbi:Pg:dbname=" . DBNAME);
   }
@@ -23,7 +22,8 @@ func __get_db_connection() {
 
 # Static method to return Nicknames2 objects from
 # the cache, and always reusing the database connection
-func get($project_name, $site_name, $subj_id) {
+sub get {
+  my ($project_name, $site_name, $subj_id) = @_;
   my $key = "$project_name||$site_name||$subj_id";
   if (not defined $cache->{$key}) {
     $cache->{$key} = Posda::Nicknames2->new(
@@ -34,13 +34,14 @@ func get($project_name, $site_name, $subj_id) {
   return $cache->{$key};
 }
 
-func clear() {
+sub clear {
   undef $cache;
 }
 
 
 #{{{ Public Methods
-method new($class: $connection, $project_name, $site_name, $subj_id) {
+sub new {
+  my ($class, $connection, $project_name, $site_name, $subj_id) = @_;
   my $self = {
     project_name => $project_name,
     site_name => $site_name,
@@ -58,37 +59,45 @@ method new($class: $connection, $project_name, $site_name, $subj_id) {
 }
 
 ## Deprecated methods
-method Sop($sop_instance_uid, $modality) {
+sub Sop {
+  my ($self, $sop_instance_uid, $modality) = @_;
   say STDERR "Posda::Nicknames2::Sop deprecated, use FromSop instead!";
   return $self->FromSop($sop_instance_uid, $modality);
 }
-method Study($study_instance_uid) {
+sub Study {
+  my ($self, $study_instance_uid) = @_;
   say STDERR "Posda::Nicknames2::Study deprecated, use FromStudy instead!";
   return $self->FromStudy($study_instance_uid);
 }
-method Series($series_instance_uid) {
+sub Series {
+  my ($self, $series_instance_uid) = @_;
   say STDERR "Posda::Nicknames2::Series deprecated, use FromSeries instead!";
   return $self->FromSeries($series_instance_uid);
 }
-method File($sop_instance_uid, $digest, $modality) {
+sub File {
+  my ($self, $sop_instance_uid, $digest, $modality) = @_;
   say STDERR "Posda::Nicknames2::File deprecated, use FromFile instead!";
   return $self->FromFile($sop_instance_uid, $digest, $modality);
 }
-method ToStudyUID($study_nn) {
+sub ToStudyUID {
+  my ($self, $study_nn) = @_;
   say STDERR "Posda::Nicknames2::ToStudyUID deprecated, use ToStudy instead!";
   return $self->ToStudy($study_nn);
 }
-method ToSeriesUID($series_nn) {
+sub ToSeriesUID {
+  my ($self, $series_nn) = @_;
   say STDERR "Posda::Nicknames2::ToSeriesUID deprecated, use ToSeries instead!";
   return $self->ToSeries($series_nn);
 }
-method ToSopUID($sop_nn) {
+sub ToSopUID {
+  my ($self, $sop_nn) = @_;
   say STDERR "Posda::Nicknames2::ToSopUID deprecated, use ToSop instead!";
   return $self->ToSop($sop_nn);
 }
 ## End Deprecated methods
 
-method FromUnknown($uid) {
+sub FromUnknown {
+  my ($self, $uid) = @_;
   my $results = [];
 
   # try file
@@ -176,7 +185,8 @@ method FromUnknown($uid) {
   return $results;
 }
 
-method FromStudy($study_instance_uid) {
+sub FromStudy {
+  my ($self, $study_instance_uid) = @_;
 
   unless (defined $study_instance_uid) {
     die "Posda::Nicknames2::FromStudy called with undefined parameters!";
@@ -193,7 +203,8 @@ method FromStudy($study_instance_uid) {
 
 }
 
-method FromSeries($series_instance_uid) {
+sub FromSeries {
+  my ($self, $series_instance_uid) = @_;
 
   unless (defined $series_instance_uid) {
     die "Posda::Nicknames2::FromSeries called with undefined parameters!";
@@ -209,7 +220,8 @@ method FromSeries($series_instance_uid) {
   return $self->{series_cache}->{$series_instance_uid};
 }
 
-method FromFile($sop_instance_uid, $digest, $modality) {
+sub FromFile {
+  my ($self, $sop_instance_uid, $digest, $modality) = @_;
 
   unless (defined $sop_instance_uid and 
           defined $digest and defined $modality) {
@@ -229,7 +241,8 @@ method FromFile($sop_instance_uid, $digest, $modality) {
   return $self->{file_cache}->{$sop_instance_uid}->{$digest}->{$modality};
 }
 
-method ToStudy($study_nn) {
+sub ToStudy {
+  my ($self, $study_nn) = @_;
 
   unless (defined $study_nn) {
     die "Posda::Nicknames2::ToStudy called with undefined parameters!";
@@ -239,7 +252,8 @@ method ToStudy($study_nn) {
     $self->{site_name}, $self->{subj_id}, $study_nn);
 }
 
-method ToSeries($series_nn) {
+sub ToSeries {
+  my ($self, $series_nn) = @_;
 
   unless (defined $series_nn) {
     die "Posda::Nicknames2::ToSeries called with undefined parameters!";
@@ -251,7 +265,8 @@ method ToSeries($series_nn) {
                              $series_nn);
 }
 
-method ToSop($sop_nn) {
+sub ToSop {
+  my ($self, $sop_nn) = @_;
 
   unless (defined $sop_nn) {
     die "Posda::Nicknames2::ToSopUID called with undefined parameters!";
@@ -263,7 +278,8 @@ method ToSop($sop_nn) {
                              $sop_nn);
 }
 
-method FromSop($sop_instance_uid, $modality) {
+sub FromSop {
+  my ($self, $sop_instance_uid, $modality) = @_;
 
   unless (defined $sop_instance_uid ) { #and defined $modality) {
     die "Posda::Nicknames2::FromSop called with undefined parameters!";
@@ -276,7 +292,8 @@ method FromSop($sop_instance_uid, $modality) {
                         $modality);
 }
 
-method FromFor($sop_instance_uid) {
+sub FromFor {
+  my ($self, $sop_instance_uid) = @_;
 
   unless (defined $sop_instance_uid) {
     die "Posda::Nicknames2::FromFor called with undefined parameters!";
@@ -288,7 +305,8 @@ method FromFor($sop_instance_uid) {
                         $sop_instance_uid);
 }
 
-method ToFor($sop_instance_uid) {
+sub ToFor {
+  my ($self, $sop_instance_uid) = @_;
 
   unless (defined $sop_instance_uid) {
     die "Posda::Nicknames2::ToFor called with undefined parameters!";
@@ -300,7 +318,8 @@ method ToFor($sop_instance_uid) {
                       $sop_instance_uid);
 }
 
-method ToFiles($nickname) {
+sub ToFiles {
+  my ($self, $nickname) = @_;
 
   unless (defined $nickname) {
     die "Posda::Nicknames2::ToFiles called with undefined parameters!";
@@ -314,11 +333,13 @@ method ToFiles($nickname) {
 #}}}
 
 #{{{ Private Methods
-method __init() {
+sub __init {
+  my ($self) = @_;
   $self->__load_statements();
 }
 
-method __statement($name) {
+sub __statement {
+  my ($self, $name) = @_;
   if (not defined $self->{statement_cache}->{$name}) {
     $self->{statement_cache}->{$name} = 
       $self->{ndb}->prepare($self->{sql_statements}->{$name});
@@ -327,7 +348,8 @@ method __statement($name) {
   return $self->{statement_cache}->{$name};
 }
 
-method __load_statements() {
+sub __load_statements {
+  my ($self) = @_;
   $self->{sql_statements}->{start_trans} = "begin";
   $self->{sql_statements}->{unlock} = "commit";
   $self->{sql_statements}->{abort} = "rollback";

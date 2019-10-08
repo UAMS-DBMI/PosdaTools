@@ -1,7 +1,6 @@
 package Posda::LDAPAuth;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Posda::Config 'Config';
 
@@ -15,7 +14,8 @@ my $LDAP_DEBUG = Config('ldap_debug');
 
 # Test if the given username/password is valid, using LDAP
 # Returns 0 if either value is incorrect, 1 if correct.
-func ldap_auth($username, $password) {
+sub ldap_auth {
+  my ($username, $password) = @_;
   my $ldap = Net::LDAP->new($LDAP_URL);
 
   # Double-interpolate from the filter var

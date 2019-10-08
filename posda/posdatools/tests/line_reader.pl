@@ -5,7 +5,6 @@
 use lib 'Posda/include/';
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Dispatch::LineReader;
 use Dispatch::Select;
@@ -17,10 +16,11 @@ ok(1 + 1 == 2 , 'warmup to make sure everything is sane');
 my @lines;
 
 Dispatch::LineReader->new_cmd("echo '1\n2\n3'",
-  func ($line) {
+  sub {
+  my ($line) = @_;
     push @lines, $line;
   },
-  func () {
+  sub {
     ok(scalar @lines, 'line reader read lines and called finish');
     ok(join('|', @lines) eq '1|2|3', 'correct lines were returned');
   });
@@ -29,10 +29,11 @@ Dispatch::LineReader->new_cmd("echo '1\n2\n3'",
 my @second_lines;
 # test a second copy just to make sure dispatch is working
 Dispatch::LineReader->new_cmd("echo a single line",
-  func ($line) {
+  sub {
+  my ($line) = @_;
     push @second_lines, $line;
   },
-  func () {
+  sub {
     ok(scalar @second_lines == 1, 'only a single line was generated');
   });
 

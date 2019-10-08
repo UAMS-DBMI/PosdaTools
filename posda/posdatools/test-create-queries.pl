@@ -1,5 +1,4 @@
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use queries;
 use DBI;
@@ -13,7 +12,8 @@ my $qh = $dbh->prepare(qq{
 
 });
 
-func insert_query($name, $query) {
+sub insert_query {
+  my ($name, $query) = @_;
   # say $name;
   # say Dumper($query);
   $qh->execute($name, 

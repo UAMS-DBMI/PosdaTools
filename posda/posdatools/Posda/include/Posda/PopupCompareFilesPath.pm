@@ -7,7 +7,6 @@ package Posda::PopupCompareFilesPath;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 
@@ -21,7 +20,8 @@ use Data::Dumper;
 my $db_handle;
 
 
-method new($class: $session, $path, $params) {
+sub new {
+  my ($class, $session, $path, $params) = @_;
   # TODO: handle case where params are not given
   my $from_filename = $params->{from_file};
   my $to_filename = $params->{to_file};

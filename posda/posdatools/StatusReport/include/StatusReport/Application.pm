@@ -7,7 +7,6 @@ use vars '@ISA';
 @ISA = ("GenericApp::Application");
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use GenericApp::Application;
 use StatusReport::DataProvider;
@@ -15,19 +14,22 @@ use StatusReport::DataProvider;
 use Posda::Config 'Config';
 
 
-method SpecificInitialize() {
+sub SpecificInitialize {
+  my ($self) = @_;
   $self->{Mode} = "Initialized";
   StatusReport::DataProvider->new($self->{session}, 'DataProvider');
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $self->ReallySimpleButton($http, {
     caption => "Refresh",
     onClick => "javascript:RefreshCharts();"
   });
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <h2>Status Report</h2>
 

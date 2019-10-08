@@ -1,6 +1,5 @@
 #! /usr/bin/perl -w
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::DB::PosdaFilesQueries;
 use DBI;
@@ -19,7 +18,8 @@ my $wq = PosdaDB::Queries->GetQueryInstance("GetWinLev");
 
 # $pq->Execute($ARGV[1]);
 $pq->RunQuery(
-  func($h) {
+  sub {
+  my ($h) = @_;
     my $slope;
     my $intercept;
     my @window_width;
@@ -29,20 +29,22 @@ $pq->RunQuery(
 
     # Get the slope and intercept for this file
     $sq->RunQuery(
-      func($h1) {
+      sub {
+  my ($h1) = @_;
         $slope = $h1->[0];
         $intercept = $h1->[1];
       },
-      func() {},
+      sub {},
       $file_id);
 
     # Get the window lev for this file(s?)
     $wq->RunQuery(
-      func($h1) {
+      sub {
+  my ($h1) = @_;
         push(@window_width, $h1->[0]);
         push(@window_center, $h1->[1]);
       },
-      func() {},
+      sub {},
       $file_id
     );
 
@@ -64,5 +66,5 @@ $pq->RunQuery(
     }
     print "$slope|$intercept|$window_width[0]|$window_center[0]|end\n";
   },
-  func() {},
+  sub {},
   $ARGV[1]);

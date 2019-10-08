@@ -2,9 +2,9 @@ package Posda::Error;
 # Simple base class for Posda Errors
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
-method new($class: $message) {
+sub new {
+  my ($class, $message) = @_;
   return bless {
     message => $message
   }, $class;

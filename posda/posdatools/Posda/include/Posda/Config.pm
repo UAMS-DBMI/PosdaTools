@@ -5,7 +5,6 @@ require Exporter;
 @EXPORT_OK = ('Config', 'Database', 'DatabaseName');
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Env;
 use JSON;
@@ -32,7 +31,8 @@ my $loading_rules = {
   },
 };
 
-func _get($var) {
+sub _get {
+  my ($var) = @_;
   my $var_name = "POSDA_$var";
 
   if (defined $ENV{$var_name}) {
@@ -44,7 +44,8 @@ func _get($var) {
   }
 }
 
-func _load($var) {
+sub _load {
+  my ($var) = @_;
   if (defined $loading_rules->{$var}) {
     return $loading_rules->{$var}();
   }
@@ -53,7 +54,8 @@ func _load($var) {
   return _get(uc($var));
 }
 
-func Config($var) {
+sub Config {
+  my ($var) = @_;
   if (not defined $vars->{$var}) {
     $vars->{$var} = _load($var);
   }
@@ -63,7 +65,8 @@ func Config($var) {
 my $driver_map = { postgres => 'Pg',
                    mysql => 'mysql', };
 
-func Database($name) {
+sub Database {
+  my ($name) = @_;
   my $db_info = Config('databases')->{$name};
 
   if (not defined $db_info) {
@@ -90,7 +93,8 @@ func Database($name) {
   return $prefix . join(';', @params);
 }
 
-func DatabaseName($name) {
+sub DatabaseName {
+  my ($name) = @_;
   my $db_info = Config('databases')->{$name};
   return $db_info->{database};
 }
