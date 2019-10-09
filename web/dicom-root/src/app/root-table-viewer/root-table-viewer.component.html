@@ -63,20 +63,22 @@
 </div>
 <div *ngIf="addMode">
   <button mat-button (click)="exitAddMode()"   >Cancel</button>
+  <form [formGroup]=myNewRootForms (ngSubmit)="add(myNewRootForms.value)">
   <table  style="width:100%" >
-    <tr>
-      <td><input matInput placeholder="Collection Code" [formControl]="input_collection_code" formControlName="input_collection_code" ></td>
-      <td><input matInput placeholder="Collection Name" [formControl]="input_collection_name" formControlName="input_collection_name" ></td>
-      <td><input matInput placeholder="Site Code" [formControl]="input_site_code" formControlName="input_site_code"></td>
-      <td><input matInput placeholder="Site Name" [formControl]="input_site_name" formControlName="input_site_name"></td>
-      <td><input matInput placeholder="Patient Id Prefix" [formControl]="input_patient_id_prefix" formControlName="input_patient_id_prefix"></td>
-      <td><input matInput placeholder="Body Part" [formControl]="input_body_part" formControlName="input_body_part"></td>
-      <td><input matInput placeholder="Access Type" [formControl]="input_access_type" formControlName="input_access_type"></td>
-      <td><input matInput placeholder="Baseline Date (XX-XX-XXXX)" [formControl]="input_baseline_date" formControlName="input_baseline_date"></td>
-      <td><input matInput placeholder="Date Shift" [formControl]="input_date_shift" formControlName="input_date_shift"></td>
+    <tr [formGroup]=myNewRootForms>
+      <td><input matInput placeholder="Collection Code" formControlName="input_collection_code" ></td>
+      <td><input matInput placeholder="Collection Name" formControlName="input_collection_name" ></td>
+      <td><input matInput placeholder="Site Code" formControlName="input_site_code"></td>
+      <td><input matInput placeholder="Site Name" formControlName="input_site_name"></td>
+      <td><input matInput placeholder="Patient Id Prefix" formControlName="input_patient_id_prefix"></td>
+      <td><input matInput placeholder="Body Part" formControlName="input_body_part"></td>
+      <td><input matInput placeholder="Access Type" formControlName="input_access_type"></td>
+      <td><input matInput placeholder="Baseline Date (XX-XX-XXXX)" formControlName="input_baseline_date"></td>
+      <td><input matInput placeholder="Date Shift" formControlName="input_date_shift"></td>
     </tr>
   </table>
-    <button mat-button (click)="Add()">Apply</button>
+    <input type="submit" mat-button>
+  </form>
 </div>
 <div *ngIf="results.length > 0">
   <table  style="width:100%" >
