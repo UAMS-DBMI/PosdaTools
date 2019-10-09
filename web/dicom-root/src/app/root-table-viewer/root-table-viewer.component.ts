@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, ReactiveFormsModule, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormControl, ReactiveFormsModule, FormGroupDirective, NgForm, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {Submission} from './submission';
 import { ApiService } from '../api.service';
@@ -34,31 +34,22 @@ export class RootTableViewerComponent implements OnInit {
     //Validators.required
   ]);
 
-  private myNewRootForms:FormControl[];
-  private input_collection_code= new FormControl('', [Validators.required]);
-  private input_collection_name= new FormControl('', [Validators.required]);
-  private input_site_code= new FormControl('', [ Validators.required]);
-  private input_site_name= new FormControl('', [ Validators.required]);
-  private input_patient_id_prefix= new FormControl('', []);
-  private input_body_part= new FormControl('', []);
-  private input_access_type= new FormControl('', []);
-  private input_baseline_date= new FormControl('', []);
-  private input_date_shift= new FormControl('', []);
+  private myNewRootForms:FormGroup;
 
 
-
-  constructor(private myService: ApiService) {
+  constructor(private myService: ApiService, private formBuilder: FormBuilder) {
     this.results =[];
-
-    this.myNewRootForms.push(this.input_collection_code);
-    this.myNewRootForms.push(this.input_collection_name);
-    this.myNewRootForms.push(this.input_site_code);
-    this.myNewRootForms.push(this.input_site_name);
-    this.myNewRootForms.push(this.input_patient_id_prefix);
-    this.myNewRootForms.push(this.input_body_part);
-    this.myNewRootForms.push(this.input_access_type);
-    this.myNewRootForms.push(this.input_baseline_date);
-    this.myNewRootForms.push(this.input_date_shift);
+    this.myNewRootForms = formBuilder.group({
+      input_collection_code: ['', [Validators.required]],
+      input_collection_name: ['', [Validators.required]],
+      input_site_code: '',
+      input_site_name: '',
+      input_patient_id_prefix: '',
+      input_body_part: '',
+      input_access_type: '',
+      input_baseline_date: '',
+      input_date_shift: '',
+    });
   }
 
   ngOnInit() {
@@ -83,15 +74,17 @@ export class RootTableViewerComponent implements OnInit {
 
   public enterAddMode(){
     this.addMode = true;
-    for ( let control of this.myNewRootForms) {
-      if (control.formControlName == "input_" + this.selected1)
-        control.value = this.searchFormControl1.value;
-      if (control.formControlName == "input_" + this.selected2)
-        control.value = this.searchFormControl2.value;
-    }
+    if (this.myNewRootForms.contains("input_" + this.selected1))
+      this.myNewRootForms.get("input_" + this.selected1).setValue(this.searchFormControl1.value);
+    if (this.myNewRootForms.contains("input_" + this.selected2))
+      this.myNewRootForms.get("input_" + this.selected2).setValue(this.searchFormControl2.value);
   }
 
   public exitAddMode(){
     this.addMode = false;
+  }
+
+  public add(addForm){
+    console.log(addForm);
   }
 }
