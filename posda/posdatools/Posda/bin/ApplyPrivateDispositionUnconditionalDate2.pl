@@ -148,7 +148,7 @@ my $temp_results2 = Query('GetCollectionCodeByCollection')->FetchOneHash($collec
 my $collection_code = $temp_results2->{collection_code};
 
 # NBIA's idea of a site_id is our site_code + collection_code
-my $site_id = "$side_code$collection_code";
+my $site_id = "$site_code$collection_code";
 
 
 
