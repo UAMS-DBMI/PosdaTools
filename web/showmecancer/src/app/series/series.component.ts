@@ -13,7 +13,7 @@ export class SeriesComponent implements OnInit {
   private iec_id: string;
   public show_download: boolean = false;
   private file_ids: number[];
-  public current_offset: number;
+  public current_offset: number = 0;
   public current_file_id: number;
   public length: number = 500;
 
@@ -44,8 +44,10 @@ export class SeriesComponent implements OnInit {
   }
 
   jumpTo(file_id: number): void {
-    this.current_offset = this.file_ids.indexOf(file_id);
-    this.current_file_id = file_id;
+    //if(this.file_ids.indexOf(file_id) > -1){
+      this.current_offset = this.file_ids.indexOf(file_id);
+      this.current_file_id = file_id;
+    //}
   }
 
   handleResponse(data: any): void {

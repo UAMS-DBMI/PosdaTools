@@ -7,6 +7,7 @@
       (mousedown)="onMouseDown($event)"
       (mouseup)="onMouseUp($event)"
       (wheel)="onMouseWheel($event)"
+      (click)="onClick($event)"
     ></canvas>
     <mat-slider #wwidth vertical thumbLabel
       class="slider-tall"
@@ -49,7 +50,7 @@
     <button mat-raised-button (click)="openDump()">Dump</button>
   </div>
 </div>
-<div *ngIf="roi_display" id="roi_toggles">
+<div *ngIf="roi_display && rois_ready" id="roi_toggles">
   <div (click)="disableAllROIs()" class="roi_box" style="padding-top:5px">
     <span>Disable All</span>
   </div>

@@ -7,7 +7,7 @@
         class="slider"
         min="0"
         [max]="length"
-        [value]="current_offset"
+        [(ngModel)]="current_offset"
         (input)="onChange($event)"
       ></mat-slider>
       <button mat-icon-button (click)="movePrevious()"><mat-icon>keyboard_arrow_left</mat-icon></button>

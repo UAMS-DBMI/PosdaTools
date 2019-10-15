@@ -44,6 +44,7 @@ export class ImageComponent implements OnInit {
   private pixel_pad: number = -1024;
 
   private mouse_down: boolean = false;
+  private mouse_moved: boolean = false;
   private init_mouse_coords: number[] = [0, 0];
 
   private file_id: number;
@@ -55,14 +56,16 @@ export class ImageComponent implements OnInit {
   private zoom_level: number = 1;
   private offset: Point = { x: 0, y: 0 };
 
-  public roi_display = false;
+  public roi_display = true;
   private roi_array: Roi[];
   public rois_seen: Contour[]= [];
   public rois_set: ContourSet[];
+  public rois_ready: boolean = false;
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
   @Output() commuter = new EventEmitter<number>();
 
+  private gtv_targets = [];
 
   constructor(
     private service: FileService,
@@ -76,7 +79,7 @@ export class ImageComponent implements OnInit {
     if (file_id != undefined) {
       this.file_id = file_id;
       if(this.roi_display){
-          this.loadROI();
+          this.setupROIMenu();
       }
       this.loadFile();
     }
@@ -95,7 +98,11 @@ export class ImageComponent implements OnInit {
 
     this.last_file_id = this.file_id;
     if(this.roi_display){
-        this.loadROI();
+        if(this.rois_ready == false){
+          this.setupROIMenu();
+        } else {
+          this.loadROI();
+        }
     }
     this.loadFile();
   }
@@ -392,6 +399,7 @@ export class ImageComponent implements OnInit {
       return;
     }
     let c = this.context;
+    this.gtv_targets = [];
     for (let roi of this.roi_array){
       if(this.roiEnabled(roi)){
         c.strokeStyle = 'rgb('+ roi.color[0]+ ',' + roi.color[1]+ ',' +roi.color[2] +')';
@@ -414,6 +422,28 @@ export class ImageComponent implements OnInit {
         }
         c.lineTo(sx, sy);
         c.stroke();
+      }
+      if(roi.name.toLowerCase().indexOf("gtv") > -1){
+        var path = new Path2D();
+        let first = true;
+        var sx;
+        var sy;
+        for (let coordpix of roi.points){
+          let x = coordpix[0] * this.zoom_level + this.offset.x; //x
+          let y = coordpix[1] * this.zoom_level + this.offset.y; //y
+
+          if (first){
+            path.moveTo(x, y);
+            sx = x;
+            sy = y;
+            first = false;
+          }else{
+            path.lineTo(x, y);
+          }
+        }
+        path.lineTo(sx, sy);
+        path.closePath();
+        this.gtv_targets.push(path);
       }
     }
   }
@@ -440,8 +470,35 @@ export class ImageComponent implements OnInit {
     this.draw();
   }
 
+  find_gtv(rois:Roi[]):Roi {
+    for(let cur of rois){
+      if(cur.name.indexOf("GTV") > -1){
+        return cur;
+      }
+    }
+    return rois[0];
+  }
+
+  onClick(event: any): void {
+    if(this.mouse_moved == false){
+      console.log(event);
+      console.log(this.gtv_targets);
+      for(let path of this.gtv_targets){
+        let hit = this.context.isPointInPath(path, event.clientX, event.clientY);
+        console.log(hit);
+        if(hit){
+          this.context.fillStyle = 'green';
+        } else {
+          this.context.fillStyle = 'red';
+        }
+        this.context.fill(path);
+      }
+    }
+  }
+
   onMouseDown(event: any): void {
     this.mouse_down = true;
+    this.mouse_moved = false;
     this.init_mouse_coords = [event.screenX, event.screenY];
   }
   onMouseUp(event: any): void {
@@ -449,6 +506,7 @@ export class ImageComponent implements OnInit {
   }
   onMouseMove(event: any): void {
     if (event.buttons > 0) {
+      this.mouse_moved = true;
       let delta_x = event.screenX - this.init_mouse_coords[0];
       let delta_y = event.screenY - this.init_mouse_coords[1];
 
@@ -556,7 +614,7 @@ export class ImageComponent implements OnInit {
 
   public commute(contour: Contour){
     for(let c of this.rois_set){
-      if(c.name == contour.name){
+      if(c.name == contour.name && c.file_ids.length > 0){
         this.commuter.emit(c.file_ids[0]);
       }
     }
@@ -570,9 +628,10 @@ export class ImageComponent implements OnInit {
           for( let roi of this.rois_set){
             let rgb_color = "rgb(" + roi.color[0] + ", " + roi.color[1] + ", " + roi.color[2] + ")";
             this.rois_seen.push({ name: roi.name,
-                                   enabled: true,
+                                   enabled: false,
                                    color: rgb_color});
           }
+          this.rois_ready = true;
           this.loadROI();
         },
       err => {
