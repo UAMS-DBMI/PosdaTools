@@ -378,6 +378,15 @@ export class ImageComponent implements OnInit {
     this.draw();
   }
 
+  enableAllGTVs(){
+    for(let contour of this.rois_seen){
+      if(contour.name.toLowerCase().indexOf("gtv") > -1){
+        contour.enabled = true;
+      }
+    }
+    this.draw();
+  }
+
   disableAllROIs(){
     for(let contour of this.rois_seen){
       contour.enabled = false;
@@ -479,13 +488,16 @@ export class ImageComponent implements OnInit {
     return rois[0];
   }
 
+  getMousePosition(event: any): Point {
+    var rect = this.canvas.getBoundingClientRect();
+    return {x: event.clientX - rect.left, y: event.clientY - rect.top};
+  }
+
   onClick(event: any): void {
     if(this.mouse_moved == false){
-      console.log(event);
-      console.log(this.gtv_targets);
+      let click = this.getMousePosition(event);
       for(let path of this.gtv_targets){
-        let hit = this.context.isPointInPath(path, event.clientX, event.clientY);
-        console.log(hit);
+        let hit = this.context.isPointInPath(path, click.x, click.y);
         if(hit){
           this.context.fillStyle = 'green';
         } else {
