@@ -20,10 +20,12 @@ async def get_rois_for_series(request, series, **kwargs):
             array_agg(file_sop_common.file_id) as file_ids
         from file_series
         natural join file_sop_common
+        join ctp_file on ctp_file.file_id = file_sop_common.file_id
         join file_roi_image_linkage
             on linked_sop_instance_uid = sop_instance_uid
         natural join roi
         where series_instance_uid = $1
+        and ctp_file_visibility is null
         group by roi_num, roi_name, roi_color
         order by roi_num
     """
