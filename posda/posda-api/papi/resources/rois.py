@@ -25,7 +25,7 @@ async def get_rois_for_series(request, series, **kwargs):
             on linked_sop_instance_uid = sop_instance_uid
         natural join roi
         where series_instance_uid = $1
-        and ctp_file_visibility is null
+        and ctp_file.visibility is null
         group by roi_num, roi_name, roi_color
         order by roi_num
     """
