@@ -1,6 +1,10 @@
 <mat-card>
   <mat-card-title>Show Me Cancer</mat-card-title>
-  <mat-card-content *ngFor="let body_part of body_parts">
-    <button mat-icon-button (click)="random_series(body_part)">{{body_part}}</button>
-  </mat-card-content>
+  <mat-action-list>
+    <button mat-list-item
+      *ngFor="let body_part of body_parts"
+      (click)="random_series(body_part)">
+        {{body_part}}
+    </button>
+  </mat-action-list>
 </mat-card>
