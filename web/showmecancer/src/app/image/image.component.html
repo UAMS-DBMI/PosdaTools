@@ -49,16 +49,20 @@
     <button mat-raised-button (click)="openDetails()">Details</button>
     <button mat-raised-button (click)="openDump()">Dump</button>
   </div>
-</div>
-<div *ngIf="roi_display && rois_ready" id="roi_toggles">
-  <div (click)="disableAllROIs()" class="roi_box" style="padding-top:5px">
-    <span>Disable All</span>
-  </div>
-  <div (click)="enableAllROIs()" class="roi_box" style="padding-top:5px">
-    <span>Enable All</span>
-  </div>
-  <div *ngFor="let contour of rois_seen" class="roi_box">
-      <mat-checkbox [style.color]="contour.color" [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
-      <button mat-icon-button (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
-  </div>
+  <mat-card *ngIf="roi_display && rois_ready" id="roi_toggles">
+    <mat-chip-list>
+      <mat-chip (click)="disableAllROIs()">
+        Disable All
+      </mat-chip>
+      <mat-chip (click)="enableAllROIs()">
+        Enable All
+      </mat-chip>
+    </mat-chip-list>
+    <mat-list>
+      <mat-list-item *ngFor="let contour of rois_seen">
+          <mat-checkbox [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
+          <button mat-icon-button [style.color]="contour.color" (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
 </div>

@@ -29,14 +29,3 @@ canvas {
 .buttons button {
   margin: 2px;
 }
-
-#roi_toggles {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.roi_box {
-  border: 1px black solid;
-  padding: 2px;
-  text-shadow: 0 0 1px #7a7a7a;
-}
