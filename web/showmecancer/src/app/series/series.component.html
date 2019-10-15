@@ -1,0 +1,20 @@
+<div id="container">
+  <mat-card class="seriescard">
+    <div style="display: flex">
+      <button mat-icon-button (click)="play()"><mat-icon>play_arrow</mat-icon></button>
+      <button mat-icon-button (click)="stop()"><mat-icon>pause</mat-icon></button>
+      <mat-slider #series_position thumbLabel
+        class="slider"
+        min="0"
+        [max]="length"
+        [value]="current_offset"
+        (input)="onChange($event)"
+      ></mat-slider>
+      <button mat-icon-button (click)="movePrevious()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button (click)="moveNext()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+      <a *ngIf="show_download" [href]="download_link()"><button mat-icon-button><mat-icon>save_alt</mat-icon></button></a>
+    </div>
+    <!-- <p>Current id: {{current_file_id}}</p> -->
+  </mat-card>
+</div>
+<app-image [height]="512" [width]="512" [file_id]="current_file_id" (commuter)="jumpTo($event)"></app-image>

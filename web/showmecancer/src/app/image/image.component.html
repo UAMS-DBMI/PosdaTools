@@ -1,0 +1,63 @@
+<div id="container">
+  <div style="width: 562px; height: 562px;">
+    <canvas #canvas
+      [height]="512"
+      [width]="512"
+      (mousemove)="onMouseMove($event)"
+      (mousedown)="onMouseDown($event)"
+      (mouseup)="onMouseUp($event)"
+      (wheel)="onMouseWheel($event)"
+    ></canvas>
+    <mat-slider #wwidth vertical thumbLabel
+      class="slider-tall"
+      min="-1000"
+      max="1000"
+      [value]="getWindowWidth()"
+      (input)="onChangeWidth($event)"
+    ></mat-slider>
+    <mat-slider #wcenter thumbLabel
+      class="slider-wide"
+      min="-1000"
+      max="1000"
+        [value]="getWindowCenter()"
+        (input)="onChangeCenter($event)"
+    ></mat-slider>
+  </div>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="winlev(2000, 300)">Bone</button>
+    <button mat-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
+
+    <button mat-menu-item (click)="winlev(350, 50)">Abdomen</button>
+    <button mat-menu-item (click)="winlev(450, 50)">Pelvis</button>
+    <button mat-menu-item (click)="winlev(350, 50)">Mediastinum</button>
+    <button mat-menu-item (click)="winlev(1600, -600)">Lung</button>
+    <button mat-menu-item (click)="winlev(4000, 400)">Sinus</button>
+    <button mat-menu-item (click)="winlev(180, 80)">Larynx</button>
+    <button mat-menu-item (click)="winlev(120, 40)">Brain Posterior</button>
+    <button mat-menu-item (click)="winlev(80, 40)">Brain</button>
+    <button mat-menu-item (click)="winlev(600, 250)">MR</button>
+    <button mat-menu-item (click)="winlev(255, 128)">Ultrasound</button>
+  </mat-menu>
+  <div class="buttons">
+    <button mat-raised-button [matMenuTriggerFor]="appMenu">
+      Presets
+    </button>
+    <button mat-raised-button (click)="reset()">Reset Window/Level</button>
+    <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
+    <button mat-raised-button [color]="roi_display ? 'accent' : 'basic'" (click)="toggleROI()">ROI</button>
+    <button mat-raised-button (click)="openDetails()">Details</button>
+    <button mat-raised-button (click)="openDump()">Dump</button>
+  </div>
+</div>
+<div *ngIf="roi_display" id="roi_toggles">
+  <div (click)="disableAllROIs()" class="roi_box" style="padding-top:5px">
+    <span>Disable All</span>
+  </div>
+  <div (click)="enableAllROIs()" class="roi_box" style="padding-top:5px">
+    <span>Enable All</span>
+  </div>
+  <div *ngFor="let contour of rois_seen" class="roi_box">
+      <mat-checkbox [style.color]="contour.color" [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
+      <button mat-icon-button (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
+  </div>
+</div>
