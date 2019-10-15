@@ -14,6 +14,8 @@ import {
   MatListModule,
   } from '@angular/material';
 
+import {ScrollingModule} from '@angular/cdk/scrolling';
+
 @NgModule({
   exports: [
     MatSliderModule,
@@ -28,6 +30,7 @@ import {
     MatDividerModule,
     MatChipsModule,
     MatListModule,
+    ScrollingModule,
   ],
 })
 export class MyMaterialModule { }

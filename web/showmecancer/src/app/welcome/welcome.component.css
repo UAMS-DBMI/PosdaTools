@@ -1,0 +1,28 @@
+a {
+  color: #c2185b;
+  text-decoration: none;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 900px;
+}
+
+.card p {
+  font-size: 18px;
+}
+
+.title {
+  font-size: 28;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.button_row {
+  display: flex;
+  justify-content: space-evenly;
+}

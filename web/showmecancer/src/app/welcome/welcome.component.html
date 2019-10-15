@@ -1,10 +1,26 @@
-<mat-card>
-  <mat-card-title>Show Me Cancer</mat-card-title>
-  <mat-action-list>
-    <button mat-list-item
-      *ngFor="let body_part of body_parts"
-      (click)="random_series(body_part)">
-        {{body_part}}
-    </button>
-  </mat-action-list>
-</mat-card>
+<div class="container">
+  <mat-card class="card">
+    <mat-card-content>
+      <p>
+      This is an educational experiment to give students a view of tumours in many different types of medical imaging.
+      This tool contains thousands of different patients and series from dozens studies.
+      The data is provided by <a target="_" href="https://thecancerimagingarchive.net">The Cancer Imaging Archive</a>.
+      </p>
+      <p>
+      The goal is to find and click on the <a target="_" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1434601/pdf/ci040153.pdf">gross tumour volume (GTV)</a>.
+      All of contours for the image can be found on the right and clicking the bus will jump to the first slice containing that contour, they can also be shown or hidden.
+      Finally the red button in the upper right will return to this page.
+      </p>
+    </mat-card-content>
+    <mat-card-title class="title">Site Examined</mat-card-title>
+    <div class="button_row">
+      <button
+        *ngFor="let body_part of body_parts"
+        mat-raised-button
+        color="primary"
+        (click)="random_series(body_part)">
+          {{body_part}}
+      </button>
+    </div>
+  </mat-card>
+</div>

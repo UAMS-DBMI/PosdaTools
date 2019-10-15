@@ -1,3 +1,4 @@
+<div id="overcontainer">
 <div id="container">
   <div style="width: 562px; height: 562px;">
     <canvas #canvas
@@ -45,27 +46,30 @@
     </button>
     <button mat-raised-button (click)="reset()">Reset Window/Level</button>
     <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
-    <button mat-raised-button [color]="roi_display ? 'accent' : 'basic'" (click)="toggleROI()">ROI</button>
     <button mat-raised-button (click)="openDetails()">Details</button>
     <button mat-raised-button (click)="openDump()">Dump</button>
+    <button mat-raised-button [color]="roi_display ? 'accent' : 'basic'" (click)="toggleROI()">ROI</button>
   </div>
-  <mat-card *ngIf="roi_display && rois_ready" id="roi_toggles">
-    <mat-chip-list>
-      <mat-chip (click)="disableAllROIs()">
-        Disable All
-      </mat-chip>
-      <mat-chip (click)="enableAllROIs()">
-        Enable All
-      </mat-chip>
-      <mat-chip (click)="enableAllGTVs()">
-        Enable All GTVs
-      </mat-chip>
-    </mat-chip-list>
-    <mat-list>
-      <mat-list-item *ngFor="let contour of rois_seen">
-          <mat-checkbox [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
-          <button mat-icon-button [style.color]="contour.color" (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
-      </mat-list-item>
-    </mat-list>
-  </mat-card>
+</div>
+<mat-card *ngIf="roi_display && rois_ready" id="roi_toggles">
+  <mat-chip-list>
+    <mat-chip (click)="disableAllROIs()">
+      Disable All
+    </mat-chip>
+    <mat-chip (click)="enableAllROIs()">
+      Enable All
+    </mat-chip>
+    <mat-chip (click)="enableAllGTVs()">
+      Enable All GTVs
+    </mat-chip>
+  </mat-chip-list>
+  <cdk-virtual-scroll-viewport itemSize="48" class="scroll_test">
+  <mat-list>
+    <mat-list-item *cdkVirtualFor="let contour of rois_seen">
+        <mat-checkbox [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
+        <button mat-icon-button [style.color]="contour.color" (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
+    </mat-list-item>
+  </mat-list>
+  </cdk-virtual-scroll-viewport>
+</mat-card>
 </div>

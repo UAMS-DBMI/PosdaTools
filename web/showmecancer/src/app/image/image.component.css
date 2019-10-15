@@ -17,6 +17,11 @@ canvas {
   margin-top: 10px;
 }
 
+#overcontainer {
+  display: flex;
+  justify-content: center;
+}
+
 #zoomdiv {
   display: inline;
 }
@@ -28,4 +33,8 @@ canvas {
 
 .buttons button {
   margin: 2px;
+}
+
+.scroll_test {
+  height: 550px;
 }
