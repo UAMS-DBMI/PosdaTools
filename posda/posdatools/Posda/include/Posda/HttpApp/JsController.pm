@@ -955,12 +955,12 @@ sub NotSoSimpleButtonPopularity{
   my $pop = 0;
   Query('CountButtonPopularity')->RunQuery(sub{my($row) = @_; $pop = $row->[0]}, sub{},$dyn->{operation});
   #print STDERR "I am $dyn->{op} , caption $dyn->{caption},  operation |$dyn->{operation}| and my popularity is $pop \n ";
-  my $blue = 250 - (3 * $pop);
-  if ($blue < 10){
-    $blue = 10;
+  my $red = 250 - (2 * $pop);
+  if ($red < 100){
+    $red = 100;
   }
-  my $red = $blue + 5;
-  my $prefix = qq{<input type="button" style="background-color:rgb($blue, $red, 255)"};
+  my $green = $red + 5;
+  my $prefix = qq{<input type="button" style="background-color:rgb($red, $green, 255)"};
   my $postfix = "";
   if(defined $dyn->{element} and $dyn->{element} eq 'a') {
     $prefix = qq{<a href="#"};
