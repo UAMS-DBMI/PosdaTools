@@ -55,7 +55,7 @@
 </form>
 <br>
 <div>
-  <button mat-raised-button (click)="performSearch()" color="primary"  >Search</button>
+  <button mat-raised-button (click)="performSearch()" (keyup.enter)="performSearch()" color="primary"  >Search</button>
   <button mat-raised-button (click)="showAll()" color="primary"  >ShowAll</button>
 </div>
 <div *ngIf="!addMode">
@@ -66,8 +66,8 @@
   <form [formGroup]=myNewRootForms (ngSubmit)="add(myNewRootForms.value)">
   <table  style="width:100%" >
     <tr [formGroup]=myNewRootForms>
-      <td><input matInput placeholder="Collection Code" formControlName="input_collection_code" ></td>
-      <td><input matInput placeholder="Collection Name" formControlName="input_collection_name" ></td>
+      <td><input matInput placeholder="Collection Code" formControlName="input_collection_code"></td>
+      <td><input matInput placeholder="Collection Name" formControlName="input_collection_name"></td>
       <td><input matInput placeholder="Site Code" formControlName="input_site_code"></td>
       <td><input matInput placeholder="Site Name" formControlName="input_site_name"></td>
       <td><input matInput placeholder="Patient Id Prefix" formControlName="input_patient_id_prefix"></td>
@@ -77,33 +77,58 @@
       <td><input matInput placeholder="Date Shift" formControlName="input_date_shift"></td>
     </tr>
   </table>
-    <input type="submit" mat-button>
+      <button mat-button type="submit">Add This Submission</button>
   </form>
 </div>
-<div *ngIf="results.length > 0">
-  <table  style="width:100%" >
-    <tr>
-    <tr>
-      <th>Collection Code</th>
-      <th>Collection Name</th>
-      <th>Site Code</th>
-      <th>Site Name</th>
-      <th>Patient Id Prefix</th>
-      <th>Body Part</th>
-      <th>Access Type</th>
-      <th>Baseline Date</th>
-      <th>Date Shift</th>
-    </tr>
-    <tr *ngFor= "let my_rows of results">
-      <td>{{my_rows.collection_code}}</td>
-      <td>{{my_rows.collection_name}}</td>
-      <td>{{my_rows.site_code}}</td>
-      <td>{{my_rows.site_name}}</td>
-      <td>{{my_rows.patient_id_prefix}}</td>
-      <td>{{my_rows.body_part}}</td>
-      <td>{{my_rows.access_type}}</td>
-      <td>{{my_rows.baseline_date}}</td>
-      <td>{{my_rows.date_shift}}</td>
-    </tr>
+
+
+
+  <table mat-table matSort [dataSource]="results">
+
+    <ng-container matColumnDef="collection_code">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Code </th>
+      <td mat-cell *matCellDef="let element"> {{element.collection_code}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="collection_name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.collection_name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="site_code">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Site Code </th>
+      <td mat-cell *matCellDef="let element"> {{element.site_code}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="site_name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Name</th>
+      <td mat-cell *matCellDef="let element"> {{element.site_name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="patient_id_prefix">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Patient Id Prefix </th>
+      <td mat-cell *matCellDef="let element"> {{element.patient_id_prefix}} </td>
+    </ng-container>
+    <ng-container matColumnDef="body_part">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Body Part </th>
+      <td mat-cell *matCellDef="let element"> {{element.body_part}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="access_type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Access Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.access_type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="baseline_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Baseline Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.baseline_date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date_shift">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Shift</th>
+      <td mat-cell *matCellDef="let element"> {{element.date_shift}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
   </table>
-</div>

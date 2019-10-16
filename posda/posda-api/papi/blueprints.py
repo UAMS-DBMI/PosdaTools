@@ -132,16 +132,8 @@ def generate_dicom_roots_blueprint():
     blueprint = Blueprint('dicom_roots')
 
     blueprint.add_route(
-        dicom_roots.searchRootsWithOneParam,
-        '/searchRootsWithOneParam/<param1>/<param2>/'
-    )
-    blueprint.add_route(
-        dicom_roots.searchRootsWithTwoParams,
-        '/searchRootsWithTwoParams/<param1>/<param2>/<param3>/<param4>/'
-    )
-    blueprint.add_route(
-        dicom_roots.searchAll,
-        '/searchAll/'
+        dicom_roots.searchRoots,
+        '/searchRoots'
     )
     return blueprint
 
