@@ -8,6 +8,8 @@ import { MyMaterialModule } from './material.module';
 import { ApiService } from './api.service';
 import { RootTableViewerComponent } from './root-table-viewer/root-table-viewer.component';
 import { HttpClientModule }    from '@angular/common/http';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { HttpClientModule }    from '@angular/common/http';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatTableModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -13,16 +13,20 @@ th {
   font-family: Roboto,"Helvetica Neue",sans-serif;
   padding-top: 30px;
   padding-bottom: 15px;
+
   font-weight: normal;
   font-size: 20px;
   font-variant: small-caps;
 }
-td {
+
+td.mat-cell {
   border-bottom: 1px solid #eee;
+  margin: 15px;
+  padding-right: 25px;
 }
-.th {
+
+th {
   padding-right: 10px;
-  font-weight: bold;
 }
 
 mat-form-field {
@@ -33,4 +37,8 @@ mat-form-field {
 
 button{
   margin-right: 10px;
+}
+
+ng-containerbutton{
+  margin-right: 30px;
 }

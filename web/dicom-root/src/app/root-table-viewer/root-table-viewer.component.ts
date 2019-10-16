@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import {FormControl, ReactiveFormsModule, FormGroupDirective, NgForm, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {Submission} from './submission';
-import { ApiService } from '../api.service';
+import { ApiService, Search } from '../api.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
 
 /** Error when invalid control is dirty, touched, or submitted. From material website */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -24,7 +26,7 @@ export class RootTableViewerComponent implements OnInit {
   private input1 = "";
   private input2 = "";
   private matcher = new MyErrorStateMatcher();
-  private results:Submission[];
+  private results;
   private addMode = false;
 
   private searchFormControl1 = new FormControl('', [
@@ -35,10 +37,12 @@ export class RootTableViewerComponent implements OnInit {
   ]);
 
   private myNewRootForms:FormGroup;
+  //private columnsToDisplay:String[] = ["collection_code"];
+  private columnsToDisplay:String[] = ["collection_code","collection_name","site_code","site_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
 
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(private myService: ApiService, private formBuilder: FormBuilder) {
-    this.results =[];
     this.myNewRootForms = formBuilder.group({
       input_collection_code: ['', [Validators.required]],
       input_collection_name: ['', [Validators.required]],
@@ -53,23 +57,35 @@ export class RootTableViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.myNewRootForms.valueChanges.subscribe(val => {
+     console.log(val);
+    });
+    this.showAll();
   }
 
 
 
   public performSearch(){
+    var searches:Search[] = [];
     var param1 = this.selected1;
-    var param2 = this.searchFormControl1.value;
+    var param2 = this.searchFormControl1.value + '%';
+    searches.push(new Search(param1, param2));
     var param3 = this.selected2;
     var param4 = this.searchFormControl2.value;
-    if (param4 == undefined || param4 == "")
-      this.myService.searchRootsWithOneParam(param1,param2).subscribe(rows => this.results=rows);
-    else
-      this.myService.searchRootsWithTwoParams(param1,param2,param3,param4).subscribe(rows => this.results=rows);
+    if (param4 != undefined && param4 != ""){
+      param4 = param4 + '%';
+      searches.push(new Search(param3, param4));
+    }
+    this.myService.searchRootsQ(searches).subscribe(rows => this.setDataSource(rows));
   }
 
   public showAll(){
-    this.myService.searchAll().subscribe(rows => this.results=rows);
+    this.myService.searchRoots().subscribe(rows => this.setDataSource(rows));
+  }
+
+  private setDataSource(results:Submission[]){
+    this.results = new MatTableDataSource<Submission>(results);
+    this.results.sort = this.sort;
   }
 
   public enterAddMode(){
@@ -86,5 +102,13 @@ export class RootTableViewerComponent implements OnInit {
 
   public add(addForm){
     console.log(addForm);
+    //add site if new
+    //add collection if new
+    //add submission
   }
+
+  public check(){
+    console.log("checking");
+  }
+
 }
