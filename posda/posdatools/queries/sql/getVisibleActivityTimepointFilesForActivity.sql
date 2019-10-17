@@ -3,7 +3,7 @@
 -- Columns: ['collection', 'site', 'patient_id', 'study_instance_uid', 'series_instance_uid', 'sop_instance_uid', 'dicom_file_type', 'modality', 'file_id']
 -- Args: ['activity_id']
 -- Tags: ['NotInteractive']
--- Description: Fetches Activity Timepoint data for creating a new timepoint from an old one as an update.
+-- Description:  Fetches Activity Timepoint data for creating a new timepoint from an old one as an update.
 -- For use in scripts.
 -- Not really intended for interactive use.
 

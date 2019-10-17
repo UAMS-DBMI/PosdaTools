@@ -3,7 +3,7 @@
 -- Columns: ['digest']
 -- Args: ['subprocess_invocation_id']
 -- Tags: ['populate_posda_files', 'bills_test']
--- Description:  Gets a list of "to" files in an DICOM edit compare which have not been imported
+-- Description:   Gets a list of "to" files in an DICOM edit compare which have not been imported
 -- 
 -- (by file_digest)
 

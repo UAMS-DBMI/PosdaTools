@@ -3,7 +3,7 @@
 -- Columns: ['roi_num', 'roi_name', 'roi_color', 'image_file_id', 'file_id', 'data_set_start', 'contour_file_offset', 'contour_length', 'num_points', 'true_offset']
 -- Args: ['sop_instance_uid']
 -- Tags: ['LinkageChecks', 'used_in_struct_linkage_check']
--- Description: Get list of Roi with info by file_id
+-- Description:  Get list of Roi with info by file_id
 -- 
 -- 
 

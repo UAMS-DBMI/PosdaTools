@@ -5,6 +5,7 @@
 -- Tags: ['activity_timepoint']
 -- Description: Get Series Linked to RTSTRUCTs in timepoint
 
+
 select distinct series_instance_uid, count(distinct file_id) as num_files 
 from file_sop_common natural join file_series natural join ctp_file
 where sop_instance_uid in (                                                                                                                                          

@@ -1,9 +1,10 @@
 -- Name: UpdateUserBoundVariable
 -- Schema: posda_queries
--- Columns: ['user', 'variable', 'binding']
+-- Columns: []
 -- Args: ['value', 'user', 'variable_name']
 -- Tags: ['AllCollections', 'queries', 'activity_support', 'variabler_binding']
--- Description: Get list of variables with bindings for a user
+-- Description: Update the value of a bound variable
+
 
 update user_variable_binding set
   bound_value = ?

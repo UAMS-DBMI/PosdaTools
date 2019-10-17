@@ -3,7 +3,7 @@
 -- Columns: ['subprocess_invocation_id', 'background_subprocess_id', 'user_inbox_content_id', 'background_subprocess_report_id', 'file_id', 'report_type', 'activity_id', 'when_script_started', 'when_background_entered', 'when_script_ended', 'invoking_user', 'user_to_notify', 'button_name', 'operation_name', 'command_line']
 -- Args: ['user_name like', 'from', 'to']
 -- Tags: ['activity_timepoint_support']
--- Description: Create An Activity Timepoint
+-- Description:  Create An Activity Timepoint
 -- 
 -- 
 
