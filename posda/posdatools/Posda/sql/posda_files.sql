@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.9 (Ubuntu 10.9-0ubuntu0.18.04.1)
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -323,7 +323,8 @@ CREATE TABLE public.activity (
     brief_description text,
     when_created timestamp with time zone,
     who_created text,
-    when_closed timestamp with time zone
+    when_closed timestamp with time zone,
+    third_party_analysis_url text
 );
 
 
