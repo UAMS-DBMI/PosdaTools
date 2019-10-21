@@ -67,6 +67,11 @@ my $collection_code = $act_info->GetCollectionCode;
 
 my $site_id = "$collection_code$site_code";
 
+
+my $temp_results3 = Query('GetTPAURLBySubprocess')->FetchOneHash($activity_id);
+my $tpa_url = $temp_results3->{third_party_analysis_url};
+
+
 my $tp_id = $act_info->LatestTimepoint;
 my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
 for my $f (keys %{$FileInfo}){
@@ -119,7 +124,8 @@ for my $pat (keys %Hierarchy){
             $site_name,
             $site_id,
             0,  # batch
-            $full_filename
+            $full_filename,
+            $tpa_url
           );
         }
       }

@@ -156,6 +156,9 @@ my $site_code = $temp_results->{site_code};
 my $temp_results2 = Query('GetCollectionCodeByCollection')->FetchOneHash($collection_name);
 my $collection_code = $temp_results2->{collection_code};
 
+my $temp_results3 = Query('GetTPAURLBySubprocess')->FetchOneHash($subprocess_invocation_id);
+my $tpa_url = $temp_results3->{third_party_analysis_url};
+
 # NBIA's idea of a site_id is our site_code + collection_code
 my $site_id = "$site_code$collection_code";
 
@@ -310,5 +313,6 @@ Posda::NBIASubmit::AddToSubmitAndThumbQs(
   $site_name,
   $site_id,
   $batch,
-  $to_file
+  $to_file,
+  $tpa_url
 );

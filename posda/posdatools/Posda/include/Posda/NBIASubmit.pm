@@ -26,21 +26,22 @@ sub GenerateFilename {
 
 sub AddToSubmitAndThumbQs {
   my ($subprocess_invocation_id, $file_id, $project_name,
-      $site_name, $site_id, $batch, $filename) = @_;
+      $site_name, $site_id, $batch, $filename, $third_party_analysis_url) = @_;
 
   AddToSubmissionQueue($subprocess_invocation_id, $file_id,
-                       $project_name, $site_name, $site_id, $batch, $filename);
+                       $project_name, $site_name, $site_id, $batch, $filename,
+                       $third_party_analysis_url);
   AddToThumbnailQueue($filename);
 }
 
 sub AddToSubmissionQueue {
   my ($subprocess_invocation_id, $file_id, $project_name, $site_name,
-      $site_id, $batch, $filename) = @_;
+      $site_id, $batch, $filename, $third_party_analysis_url) = @_;
 
   ConnectToRedis();
   $redis->lpush('submission_required',
     to_json([$subprocess_invocation_id, $file_id, $project_name, $site_name,
-             $site_id, $batch, $filename]));
+             $site_id, $batch, $filename, $third_party_analysis_url]));
 }
 
 sub AddToThumbnailQueue {

@@ -32,6 +32,7 @@ class File(NamedTuple):
     site_id: int
     batch: int
     filename: str
+    third_party_analysis_url: str
 
 
 def main_loop(redis_db, psql_db):
@@ -76,11 +77,19 @@ def submit_file(f):
 
 
 def _submit_file(f):
+
+    if len(f.third_party_analysis_url) > 0:
+        tpa = "yes"
+    else:
+        tpa = ""
+
     payload = {'project': f.collection,
                'siteName': f.site,
                'siteID': f.site_id,
                'batch': f.batch,
                'uri': f.filename,
+               'thirdPartyAnalysis': tpa,
+               'descriptionURI': f.third_party_analysis_url,
                }
     headers = {
         "Authorization": "Bearer {}".format(TOKEN),
