@@ -67,4 +67,6 @@ COPY public.user_permissions (user_id, permission_id) FROM stdin;
 1	48
 1	47
 1	46
+1	49
+1	50
 \.
