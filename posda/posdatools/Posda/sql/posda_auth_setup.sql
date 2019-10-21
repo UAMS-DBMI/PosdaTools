@@ -11,6 +11,7 @@ COPY public.apps (app_id, app_name) FROM stdin;
 10	DbIf
 11	Kaleidoscope
 12	NewItcTools
+13	ActivityBasedCuration
 \.
 
 SELECT pg_catalog.setval('public.apps_app_id_seq', 12, true);
@@ -44,6 +45,8 @@ COPY public.permissions (permission_id, app_id, permission_name) FROM stdin;
 46	10	curator
 47	10	workflow_1
 48	10	legacy_bbennett
+49	13	launch
+50	13	debug
 \.
 
 SELECT pg_catalog.setval('public.permissions_permission_id_seq', 49, true);
