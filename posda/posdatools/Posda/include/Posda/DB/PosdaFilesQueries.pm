@@ -59,6 +59,7 @@ method new($class: $name, $async) {
   bless $self, $class;
 
   $self->_load_query($name);
+  $self->_log_retrival($name);
 
   return $self;
 };
@@ -114,6 +115,19 @@ func Delete($name) {
   $qh->execute($name);
 }
 
+sub _log_retrival {
+  my ($self, $query_name) = @_;
+
+  my $dbh = _get_handle();
+  my $qh = $dbh->prepare(qq{
+    insert into
+    query_log (when_retrieved, query_name)
+    values (now(), ?)
+  });
+
+  my $rows = $qh->execute($query_name);
+
+}
 method _load_query($name) {
   my $dbh = _get_handle();
   my $qh = $dbh->prepare(qq{

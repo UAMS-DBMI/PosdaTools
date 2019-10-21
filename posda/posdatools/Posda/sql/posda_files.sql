@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.9 (Ubuntu 10.9-0ubuntu0.18.04.1)
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -323,7 +323,8 @@ CREATE TABLE public.activity (
     brief_description text,
     when_created timestamp with time zone,
     who_created text,
-    when_closed timestamp with time zone
+    when_closed timestamp with time zone,
+    third_party_analysis_url text
 );
 
 
@@ -2998,6 +2999,44 @@ ALTER SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED B
 
 
 --
+-- Name: query_log; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.query_log (
+    query_log_id integer NOT NULL,
+    when_retrieved timestamp without time zone,
+    query_name text
+);
+
+
+--
+-- Name: TABLE query_log; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.query_log IS 'A table to track Posda::DB Query usage';
+
+
+--
+-- Name: query_log_query_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.query_log_query_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: query_log_query_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.query_log_query_log_id_seq OWNED BY public.query_log.query_log_id;
+
+
+--
 -- Name: related_roi_observations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4399,6 +4438,13 @@ ALTER TABLE ONLY public.query_invoked_by_dbif ALTER COLUMN query_invoked_by_dbif
 
 
 --
+-- Name: query_log query_log_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.query_log ALTER COLUMN query_log_id SET DEFAULT nextval('public.query_log_query_log_id_seq'::regclass);
+
+
+--
 -- Name: report_inserted report_inserted_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4768,6 +4814,14 @@ ALTER TABLE ONLY public.patient_import_status
 
 ALTER TABLE ONLY public.public_copy_status
     ADD CONSTRAINT public_copy_status_pkey PRIMARY KEY (subprocess_invocation_id, file_id);
+
+
+--
+-- Name: query_log query_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.query_log
+    ADD CONSTRAINT query_log_pkey PRIMARY KEY (query_log_id);
 
 
 --
