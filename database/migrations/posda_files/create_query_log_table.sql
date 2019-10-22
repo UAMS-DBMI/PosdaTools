@@ -5,7 +5,6 @@
 
 */
 create table query_log (
-	query_log_id serial primary key,
 	when_retrieved timestamp,
 	query_name text
 );
