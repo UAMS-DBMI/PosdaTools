@@ -76,6 +76,15 @@ sub ShiftIntegerDate{
 }
 sub ShiftDate{
   my($date_string) = @_;
+
+  # Sometimes the when we read the tag it is
+  # returned as an array. I believe this is almost
+  # always a mistake, and only the first value
+  # in the array is valid, so only use it.
+  if (ref($date_string) eq "ARRAY") {
+    $date_string = shift @{$date_string};
+  }
+
   if($date_string =~ /^(........)(.*)$/){
     my $old_date_string = $1;
     my $old_more = $2;
