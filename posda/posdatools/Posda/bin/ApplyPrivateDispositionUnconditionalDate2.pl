@@ -231,7 +231,13 @@ for my $e (keys %OffsetDate){
 #print STDERR "**********\nOffsetDate\nelement: $e\n";
   my $date = $ds->Get($e);
   if(defined($date) && $date ne ""){
-    my $new_date = ShiftDate($date);
+    my $new_date;
+    eval {
+      $new_date = ShiftDate($date);
+    };
+    if ($@) {
+      die "%%%E Could not parse date '$date' in $e\n";
+    }
     if($new_date ne $date){
       #print "\tElement: $e\n";
       #print "\t$date => $new_date\n";
@@ -248,7 +254,16 @@ for my $e (keys %OffsetDateByPattern){
 #      print STDERR "tag: $tag\n";
       my $date = $ds->Get($tag);
       if(defined($date) && $date ne ""){
-        my $new_date = ShiftDate($date);
+
+        my $new_date;
+        eval {
+          $new_date = ShiftDate($date);
+        };
+
+        if ($@) {
+          die "%%%E Could not parse date '$date' in $e\n";
+        }
+
         if($new_date ne $date){
 #          print STDERR "\tElement: $tag\n";
 #          print STDERR "\t$date => $new_date\n";
