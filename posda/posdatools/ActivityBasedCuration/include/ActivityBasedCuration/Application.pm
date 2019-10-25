@@ -1769,17 +1769,18 @@ method SortedActivityIds($h){
   } keys %$h;
 }
 method RefreshActivities{
-  my $q = Query('GetOpenActivities');
+  my $q = Query('GetOpenActivitiesThirdParty');
   my %Activities;
   $self->{Activities} = {};
   $q->RunQuery(sub {
     my($row) = @_;
-    my($act_id, $b_desc, $created, $who, $closed) = @$row;
+    my($act_id, $b_desc, $created, $who, $closed, $tp_url) = @$row;
     $Activities{$act_id} = {
       user => $who,
       closed => $closed,
       opened => $created,
-      desc => $b_desc
+      desc => $b_desc,
+      third_party_analysis_url => $tp_url,
     };
   }, sub {});
   $self->{Activities} = \%Activities;
@@ -1806,9 +1807,65 @@ method NewActivitiesPage($http, $dyn){
   }
 }
 method DrawActivitySelected($http, $dyn){
+  my $activity = $self->{Activities}->{$self->{ActivitySelected}};
+  $http->queue("<div id=\"selected_activity\">");
   $http->queue("Activity $self->{ActivitySelected}: ");
-  $http->queue("$self->{Activities}->{$self->{ActivitySelected}}->{desc}");
+  $http->queue("$activity->{desc}<br>");
+  $http->queue("Is third party: ");
+  $http->queue("Yes ");
+  my $yes = $self->RadioButtonSync("IsThirdParty", "yes",
+    "SetThirdPartyStatus",
+    (defined($activity->{third_party_analysis_url}) ? 1 : 0),
+    "&control=NewActivityTimeline","Update();");
+  $http->queue($yes);
+  $http->queue(" No ");
+  my $no = $self->RadioButtonSync("IsThirdParty","no",
+    "SetThirdPartyStatus",
+    (defined($activity->{third_party_analysis_url}) ? 0 : 1),
+    "&control=NewActivityTimeline","Update();");
+  $http->queue($no);
+  if(defined($activity->{third_party_analysis_url})){
+    $http->queue("<br>third party analysis url:<br>");
+    $self->BlurEntryBox($http, {
+      name => "ThirdPartyUrl",
+      op => "SetThirdPartyUrl",
+      value => "$activity->{third_party_analysis_url}"
+    }, "Update();");
+  }
+  $http->queue("</div>");
 }
+
+sub SetThirdPartyStatus{
+  my($self, $http, $dyn) = @_;
+  my $yn = $dyn->{value};
+  my $activity = $self->{Activities}->{$self->{ActivitySelected}};
+  if($yn eq "no"){
+    $activity->{third_party_analysis_url} = undef;
+    $self->SyncActivity;
+  }
+  if($yn eq "yes"){
+    unless(defined $activity->{third_party_analysis_url}){
+      $activity->{third_party_analysis_url} = "enter url";
+    }
+  }
+}
+
+sub SetThirdPartyUrl{
+  my($self, $http, $dyn) = @_;
+  my $url = $dyn->{value};
+  if($url eq "") { $url = undef }
+  my $activity = $self->{Activities}->{$self->{ActivitySelected}};
+  $activity->{third_party_analysis_url} = $url;
+  $self->SyncActivity;
+}
+
+sub SyncActivity{
+  my($self) = @_;
+  my $activity = $self->{Activities}->{$self->{ActivitySelected}};
+  Query('SetActivityThirdPartyUrl')->RunQuery(sub{}, sub {},
+    $activity->{third_party_analysis_url}, $self->{ActivitySelected});
+}
+
 method DrawClearActivityButton($http, $dyn){
   $self->NotSoSimpleButton($http, {
     op => "ClearActivity",
@@ -2718,9 +2775,9 @@ sub DrawNewQuery{
   my $q_name = $self->{SelectedNewQuery};
   my $query;
   if(
-    exists($self->{NewQuerySearchList}) &&
-    ref($self->{NewQuerySearchList}) eq "HASH" &&
-    exists($self->{NewQuerySearchList}->{$q_name})
+    exists($self->{NewQueryListSearch}) &&
+    ref($self->{NewQueryListSearch}) eq "HASH" &&
+    exists($self->{NewQueryListSearch}->{$q_name})
   ){
     $query = $self->{NewQueryListSearch}->{$q_name};
   } elsif (
@@ -2729,6 +2786,8 @@ sub DrawNewQuery{
     exists($self->{NewQueriesByName}->{$q_name})
   ){
     $query = $self->{NewQueriesByName}->{$q_name};
+  } else {
+    warn "Query name '$q_name' not found at " . __LINE__ . "\n";
   }
 
   $http->queue(qq{
