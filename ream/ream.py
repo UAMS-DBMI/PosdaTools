@@ -77,8 +77,12 @@ def submit_file(f):
 
 
 def _submit_file(f):
+    tpa_url = f.third_party_analysis_url
 
-    if len(f.third_party_analysis_url) > 0:
+    if tpa_url is None:
+        tpa_url = ''
+
+    if len(tpa_url) > 0:
         tpa = "yes"
     else:
         tpa = ""
@@ -89,7 +93,7 @@ def _submit_file(f):
                'batch': f.batch,
                'uri': f.filename,
                'thirdPartyAnalysis': tpa,
-               'descriptionURI': f.third_party_analysis_url,
+               'descriptionURI': tpa_url,
                }
     headers = {
         "Authorization": "Bearer {}".format(TOKEN),
