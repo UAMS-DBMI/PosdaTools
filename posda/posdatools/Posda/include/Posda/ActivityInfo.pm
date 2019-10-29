@@ -60,15 +60,17 @@ sub GetCollectionCode {
   my $r = Query('GetCollectionCodeByCollection')->FetchOneHash($this->{collection});
   return $r->{collection_code}
 }
-sub LatestTimepoint{
+
+sub LatestTimepoint {
   my($this) = @_;
-  my $act_time_id;
-  Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
-    my($row) = @_;
-    $act_time_id = $row->[3];
-  }, sub {}, $this->{activity_id});
-  return $act_time_id;
+
+  my $res = Query('LatestActivityTimepointsForActivity')
+            ->FetchOneHash($this->{activity_id});
+
+  return $res->{activity_timepoint_id};
 }
+
+# TODO this appears unused, not refactoring
 sub GetTimePointList{
   my($this) = @_;
   my @activity_timepoints;
@@ -94,49 +96,47 @@ sub GetTimePointList{
   }, sub{}, $this->{activity_id});
   return \@activity_timepoints, \%activity_tp_info;
 }
-sub GetFileIdsInTimepoint{
-  my($this, $tp_id) = @_;
-  my @file_ids;
-  Query('FileIdsByActivityTimepointId')->RunQuery(sub {
-    my($row) = @_;
-    push(@file_ids, $row->[0]);
-  }, sub{}, $tp_id);
-  return \@file_ids;
-}
+
 sub GetFileInfoForTp{
   my($this, $tp_id) = @_;
-  my $file_ids = $this->GetFileIdsInTimepoint($tp_id);
+  
   my %FileInfo;
-  my $q = Query('WhereFileSitsExt');
-  for my $f (@$file_ids){
-    $q->RunQuery(sub {
-      my($row) = @_;
-      my($collection, $site, $visibility, $patient_id, $study_instance_uid,
-        $series_instance_uid, $sop_instance_uid, $sop_class_uid,
-        $modality, $dicom_file_type, $path,
-        $earliest_import_day,
-        $latest_import_day) = @$row;
-      if(exists $FileInfo{$f}){
-        die "Duplicate files in timepoint $tp_id";
-      }
-      $FileInfo{$f}->{collection} = $collection;
-      $FileInfo{$f}->{site} = $site;
-      $FileInfo{$f}->{visibility} = $visibility;
-      $FileInfo{$f}->{patient_id} = $patient_id;
-      $FileInfo{$f}->{study_instance_uid} = $study_instance_uid;
-      $FileInfo{$f}->{series_instance_uid} = $series_instance_uid;
-      $FileInfo{$f}->{sop_instance_uid} = $sop_instance_uid;
-      $FileInfo{$f}->{sop_class_uid} = $sop_class_uid;
-      $FileInfo{$f}->{modality} = $modality;
-      $FileInfo{$f}->{dicom_file_type} = $dicom_file_type;
-      $FileInfo{$f}->{file_path} = $path;
-      $FileInfo{$f}->{earliest_import} = $earliest_import_day;
-      $FileInfo{$f}->{latest_import} = $latest_import_day;
-      $FileInfo{$f}->{file_id} = $f;
-    }, sub {}, $f);
-  }
+  my $results = Query('FileDetailsForTimepoint')->FetchResults($tp_id);
+  map {
+    my($file_id,
+       $collection,
+       $site,
+       $visibility,
+       $patient_id,
+       $study_instance_uid,
+       $series_instance_uid,
+       $sop_instance_uid,
+       $sop_class_uid,
+       $modality,
+       $dicom_file_type,
+       $path,
+       $earliest_import_day,
+       $latest_import_day) = @$_;
+
+    $FileInfo{$file_id}->{collection} = $collection;
+    $FileInfo{$file_id}->{site} = $site;
+    $FileInfo{$file_id}->{visibility} = $visibility;
+    $FileInfo{$file_id}->{patient_id} = $patient_id;
+    $FileInfo{$file_id}->{study_instance_uid} = $study_instance_uid;
+    $FileInfo{$file_id}->{series_instance_uid} = $series_instance_uid;
+    $FileInfo{$file_id}->{sop_instance_uid} = $sop_instance_uid;
+    $FileInfo{$file_id}->{sop_class_uid} = $sop_class_uid;
+    $FileInfo{$file_id}->{modality} = $modality;
+    $FileInfo{$file_id}->{dicom_file_type} = $dicom_file_type;
+    $FileInfo{$file_id}->{file_path} = $path;
+    $FileInfo{$file_id}->{earliest_import} = $earliest_import_day;
+    $FileInfo{$file_id}->{latest_import} = $latest_import_day;
+    $FileInfo{$file_id}->{file_id} = $file_id;
+  } @$results;
+
   return \%FileInfo;
 }
+
 sub MakeFileHierarchyFromInfo{
   my($this, $info) = @_;
   my %H;
