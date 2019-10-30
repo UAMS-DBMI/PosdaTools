@@ -4,6 +4,12 @@ import { Observable, of } from 'rxjs';
 import { Submission} from './root-table-viewer/submission';
 import { RootTableViewerComponent } from './root-table-viewer/root-table-viewer.component';
 
+
+class CodeName {
+  code: string;
+  name: string;
+}
+
 export class Search {
 
   term: string;
@@ -15,14 +21,21 @@ export class Search {
   }
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  constructor(
-  private http: HttpClient,
-  ) { }
+  httpOptions = {
+     headers: new HttpHeaders({
+       'Content-Type':  'application/json',
+     }
+   )};
+
+  constructor(private http: HttpClient) {
+
+  }
 
 
   searchRootsQ(params: Search[]):Observable<Submission[]>{
@@ -41,4 +54,31 @@ export class ApiService {
     return this.http.get<Submission[]>(url);
   }
 
+  findSiteNameFromCode(sc: string){
+    var url = '/papi/v1/dicom_roots/findSiteNameFromCode/' + sc;
+    return this.http.get(url,{responseType: 'text'});
+  }
+
+  findCollectionNameFromCode(cc: string){
+    var url = '/papi/v1/dicom_roots/findCollectionNameFromCode/' + cc;
+    return this.http.get(url,{responseType: 'text'});
+  }
+
+  addNewSite(code:string, name:string){
+    var url = '/papi/v1/dicom_roots/addNewSite';
+    let c = {code: code, name: name};
+    return this.http.post(url,c,this.httpOptions);
+  }
+
+  addNewCollection(code:string, name:string){
+    var url = '/papi/v1/dicom_roots/addNewCollection';
+    let c = {code: code, name: name};
+    return this.http.post(url,c,this.httpOptions);
+  }
+
+  addNewSubmission(form:any){
+    //var url = '/papi/v1/dicom_roots/addNewSubmission/' + sc + '/' + cc + '/' + pip + '/' + bp + '/' + at + '/' + bd + '/' + ds;
+    var url = '/papi/v1/dicom_roots/addNewSubmission'
+    return this.http.post(url,form,this.httpOptions);
+  }
 }

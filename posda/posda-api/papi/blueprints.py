@@ -135,6 +135,18 @@ def generate_dicom_roots_blueprint():
         dicom_roots.searchRoots,
         '/searchRoots'
     )
+    blueprint.add_route(
+        dicom_roots.findCollectionNameFromCode,
+        '/findCollectionNameFromCode/<cc>'
+    )
+    blueprint.add_route(
+        dicom_roots.findSiteNameFromCode,
+        '/findSiteNameFromCode/<sc>'
+    )
+    blueprint.add_route(
+        dicom_roots.addNewSubmission,
+        '/addNewSubmission', methods=['POST']
+    )
     return blueprint
 
 def generate_iecs_blueprint():

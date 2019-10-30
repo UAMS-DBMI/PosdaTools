@@ -7,8 +7,8 @@
       <mat-select [(value)]="selected1">
         <mat-option>None</mat-option>
         <mat-option value="site_code">Site Code</mat-option>
-        <mat-option value="collection_code">Collection Code</mat-option>
         <mat-option value="site_name">Site Name</mat-option>
+        <mat-option value="collection_code">Collection Code</mat-option>
         <mat-option value="collection_name">Collection Name</mat-option>
         <mat-option value="patient_id_prefix">patient_id_prefix</mat-option>
         <mat-option value="body_part">body_part</mat-option>
@@ -22,6 +22,7 @@
     <mat-form-field>
       <input matInput placeholder="Search Criteria" [formControl]="searchFormControl1"
              [errorStateMatcher]="matcher">
+      <mat-hint>You can use % as a wildcard</mat-hint>
       <!---   <mat-error *ngIf="searchFormControl1.hasError('required')">
         Cannot search for blank!
       </mat-error>--->
@@ -32,8 +33,8 @@
       <mat-select [(value)]="selected2">
         <mat-option>None</mat-option>
         <mat-option value="site_code">Site Code</mat-option>
-        <mat-option value="collection_code">Collection Code</mat-option>
         <mat-option value="site_name">Site Name</mat-option>
+        <mat-option value="collection_code">Collection Code</mat-option>
         <mat-option value="collection_name">Collection Name</mat-option>
         <mat-option value="patient_id_prefix">patient_id_prefix</mat-option>
         <mat-option value="body_part">body_part</mat-option>
@@ -47,6 +48,7 @@
     <mat-form-field >
       <input matInput placeholder="Search Criteria" [formControl]="searchFormControl2"
              [errorStateMatcher]="matcher">
+      <mat-hint>You can use % as a wildcard</mat-hint>
       <!---  <mat-error *ngIf="searchFormControl2.hasError('required')">
         Cannot search for blank!
       </mat-error>  --->
@@ -56,20 +58,22 @@
 <br>
 <div>
   <button mat-raised-button (click)="performSearch()" (keyup.enter)="performSearch()" color="primary"  >Search</button>
-  <button mat-raised-button (click)="showAll()" color="primary"  >ShowAll</button>
+  <button mat-raised-button (click)="showAll()" color="primary"  >Show All</button>
+  <button mat-raised-button (click)="clear()" color="primary"  >Clear</button>
 </div>
 <div *ngIf="!addMode">
   <button mat-button (click)="enterAddMode()"  >Add New + </button>
 </div>
+<div class="feedback">{{AdditionFeedback}}</div>
 <div *ngIf="addMode">
   <button mat-button (click)="exitAddMode()"   >Cancel</button>
   <form [formGroup]=myNewRootForms (ngSubmit)="add(myNewRootForms.value)">
   <table  style="width:100%" >
     <tr [formGroup]=myNewRootForms>
-      <td><input matInput placeholder="Collection Code" formControlName="input_collection_code"></td>
-      <td><input matInput placeholder="Collection Name" formControlName="input_collection_name"></td>
-      <td><input matInput placeholder="Site Code" formControlName="input_site_code"></td>
+      <td> <mat-hint class="newwarn">{{newSiteWarn}}</mat-hint><input matInput placeholder="Site Code" formControlName="input_site_code"></td>
       <td><input matInput placeholder="Site Name" formControlName="input_site_name"></td>
+      <td> <mat-hint class="newwarn">{{newCollWarn}}</mat-hint><input matInput placeholder="Collection Code" formControlName="input_collection_code"></td>
+      <td><input matInput placeholder="Collection Name" formControlName="input_collection_name"></td>
       <td><input matInput placeholder="Patient Id Prefix" formControlName="input_patient_id_prefix"></td>
       <td><input matInput placeholder="Body Part" formControlName="input_body_part"></td>
       <td><input matInput placeholder="Access Type" formControlName="input_access_type"></td>
@@ -85,16 +89,6 @@
 
   <table mat-table matSort [dataSource]="results">
 
-    <ng-container matColumnDef="collection_code">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Code </th>
-      <td mat-cell *matCellDef="let element"> {{element.collection_code}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="collection_name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.collection_name}} </td>
-    </ng-container>
-
     <ng-container matColumnDef="site_code">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Site Code </th>
       <td mat-cell *matCellDef="let element"> {{element.site_code}} </td>
@@ -103,6 +97,16 @@
     <ng-container matColumnDef="site_name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Name</th>
       <td mat-cell *matCellDef="let element"> {{element.site_name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="collection_code">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Code </th>
+      <td mat-cell *matCellDef="let element"> {{element.collection_code}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="collection_name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Collection Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.collection_name}} </td>
     </ng-container>
 
     <ng-container matColumnDef="patient_id_prefix">
