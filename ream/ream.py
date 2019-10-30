@@ -15,7 +15,7 @@ USER=os.environ['REAM_USER']
 PASS=os.environ['REAM_PASS']
 CLIENTID=os.environ['REAM_CLIENTID']
 CLIENTSECRET=os.environ['REAM_CLIENTSECRET']
-RETRY_COUNT=os.environ['REAM_RETRY_COUNT']
+RETRY_COUNT=int(os.environ['REAM_RETRY_COUNT'])
 PSQL_DB_NAME=os.environ['REAM_PSQL_DB_NAME']
 
 TOKEN=None

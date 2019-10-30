@@ -42,3 +42,11 @@ button{
 ng-containerbutton{
   margin-right: 30px;
 }
+
+.newwarn {
+  color: purple;
+}
+
+.feedback {
+  color: purple;
+}

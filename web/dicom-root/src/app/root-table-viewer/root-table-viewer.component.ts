@@ -21,13 +21,16 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class RootTableViewerComponent implements OnInit {
 
-  private selected1 = "collection_name";
-  private selected2 = "site_name";
+  private selected1 = "site_name";
+  private selected2 = "collection_name";
   private input1 = "";
   private input2 = "";
   private matcher = new MyErrorStateMatcher();
   private results;
   private addMode = false;
+  private newSiteWarn = "";
+  private newCollWarn = "";
+  private AdditionFeedback = "";
 
   private searchFormControl1 = new FormControl('', [
     //Validators.required
@@ -38,16 +41,16 @@ export class RootTableViewerComponent implements OnInit {
 
   private myNewRootForms:FormGroup;
   //private columnsToDisplay:String[] = ["collection_code"];
-  private columnsToDisplay:String[] = ["collection_code","collection_name","site_code","site_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
+  private columnsToDisplay:String[] = ["site_code","site_name","collection_code","collection_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(private myService: ApiService, private formBuilder: FormBuilder) {
     this.myNewRootForms = formBuilder.group({
-      input_collection_code: ['', [Validators.required]],
-      input_collection_name: ['', [Validators.required]],
       input_site_code: '',
       input_site_name: '',
+      input_collection_code: '',
+      input_collection_name: '',
       input_patient_id_prefix: '',
       input_body_part: '',
       input_access_type: '',
@@ -57,13 +60,32 @@ export class RootTableViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.myNewRootForms.valueChanges.subscribe(val => {
-     console.log(val);
-    });
+    //this.myNewRootForms.valueChanges.subscribe(val => {
+    // console.log(val);
+    //});
     this.showAll();
+    this.onChanges();
   }
 
+  onChanges(): void {
+    this.myNewRootForms.get('input_site_code').valueChanges.subscribe(val => {
+      if(val.length == 4){
+        this.myService.findSiteNameFromCode(val).subscribe(
+          text => this.myNewRootForms.get('input_site_name').setValue(text),
+          err =>  this.newSiteWarn = "This will create a new Site!"
+        );
+      }
+    });
 
+    this.myNewRootForms.get('input_collection_code').valueChanges.subscribe(val => {
+      if(val.length == 4){
+        this.myService.findCollectionNameFromCode(val).subscribe(
+          text => this.myNewRootForms.get('input_collection_name').setValue(text),
+          err => this.newCollWarn = "This will create a new Collection!",
+        );
+      }
+    });
+  }
 
   public performSearch(){
     var searches:Search[] = [];
@@ -88,6 +110,10 @@ export class RootTableViewerComponent implements OnInit {
     this.results.sort = this.sort;
   }
 
+  public clear(){
+    this.results = [];
+  }
+
   public enterAddMode(){
     this.addMode = true;
     if (this.myNewRootForms.contains("input_" + this.selected1))
@@ -98,13 +124,52 @@ export class RootTableViewerComponent implements OnInit {
 
   public exitAddMode(){
     this.addMode = false;
+    this.newCollWarn = "";
+    this.newSiteWarn = "";
   }
 
   public add(addForm){
     console.log(addForm);
-    //add site if new
-    //add collection if new
+
+    // var sc = this.myNewRootForms.get('input_site_code').value
+    // var sname = this.myNewRootForms.get('input_site_name').value
+    // var cc = this.myNewRootForms.get('input_collection_code').value
+    // var cname = this.myNewRootForms.get('input_collection_name').value
+    //var pip = this.myNewRootForms.get('input_patient_id_prefix').value
+    //var bp = this.myNewRootForms.get('input_body_part').value
+    //var at = this.myNewRootForms.get('input_access_type').value
+    //var bd = this.myNewRootForms.get('input_baseline_date').value
+    //var ds = this.myNewRootForms.get('input_date_shift').value
+
+    // //add site if new
+    // this.myService.findSiteNameFromCode(sc).subscribe(
+    //   ret => {},
+    //   err => this.myService.addNewSite(sc, sname).subscribe(
+    //     ret => {}
+    //   )
+    // )
+    // //add collection if new
+    // this.myService.findCollectionNameFromCode(cc).subscribe(
+    //   ret => {},
+    //   err => this.myService.addNewCollection(cc, cname).subscribe(
+    //     ret => {}
+    //   )
+    // )
+
     //add submission
+    this.myService.addNewSubmission(this.myNewRootForms.value).subscribe(
+      success =>
+        {
+          this.exitAddMode();
+          this.AdditionFeedback = "Success! Submission Added!";
+        },
+      err =>
+        {
+          this.exitAddMode();
+          this.AdditionFeedback = "*********ERROR*********";
+        },
+    )
+
   }
 
   public check(){
