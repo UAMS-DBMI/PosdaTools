@@ -7,8 +7,10 @@ import os
 import hashlib
 from enum import Enum
 from typing import List
+import time
 
 import requests
+import fire
 
 URL = 'http://web/papi/v1/import/'
 
@@ -97,6 +99,11 @@ def render_projection(cursor, iec: int) -> None:
         """, [iec, file_id])
 
         # update iec table to ReadyToReview
+        cursor.execute("""                  
+            update image_equivalence_class
+            set processing_status = 'ReadyToReview'
+            where image_equivalence_class_id = %s
+        """, [iec]) 
 
         # clean up temp files
         os.unlink(outfile.name)
@@ -114,21 +121,72 @@ def get_iecs_in_visual_review(cursor, visual_review_id: int) -> List[int]:
 
     return [iec for iec, in cursor]
 
-def main(visual_review_instance_id: int) -> None:
+def get_iecs_from_queue(cursor) -> List[int]:
+    cursor.execute("""\
+        update image_equivalence_class i
+        set processing_status = 'in-progress'
+        where i.image_equivalence_class_id in (
+          select image_equivalence_class_id
+          from image_equivalence_class
+          where processing_status = 'ReadyToProcess'
+          limit 1
+          for update skip locked
+        )
+        returning i.image_equivalence_class_id
+    """)
+
+    return [iec for iec, in cursor]
+
+def record_error(cursor, iec: int, e: Exception) -> None:
+    # update iec table to error
+    cursor.execute("""                  
+        update image_equivalence_class
+        set processing_status = 'error',
+            review_status = %s,
+            update_date = now()
+
+        where image_equivalence_class_id = %s
+    """, [str(e), iec]) 
+
+def run_forever(cur):
+    # k-base mode
+
+    while True:
+        iecs = get_iecs_from_queue(cur)
+
+        if len(iecs) == 0:
+            # print("Nothing to do, waiting 5 seconds")
+            time.sleep(5)  # wait 5 seconds
+
+        for iec in iecs:
+            try:
+                render_projection(cur, iec)
+            except Exception as e:
+                record_error(cur, iec, e)
+
+
+def main(visual_review_instance_id: int = None) -> None:
     conn = psycopg2.connect("dbname=posda_files")
     conn.autocommit = True
     cur = conn.cursor()
 
-    iecs = get_iecs_in_visual_review(cur, visual_review_instance_id)
-    print(f"Found {len(iecs)} IECs in visual review {visual_review_instance_id}.")
-    if len(iecs) > 0:
-        print("Rendering projections...")
+    if visual_review_instance_id is None:
+        run_forever(cur)
+    else:
+        # single visual review mode
+        iecs = get_iecs_in_visual_review(cur, visual_review_instance_id)
+        print(f"Found {len(iecs)} IECs in visual review {visual_review_instance_id}.")
+        if len(iecs) > 0:
+            print("Rendering projections...")
 
-    for iec in iecs:
-        render_projection(cur, iec)
+        for iec in iecs:
+            try:
+                render_projection(cur, iec)
+            except Exception as e:
+                record_error(cur, iec, e)
 
     conn.close()
 
 
 if __name__ == '__main__':
-    main(2)
+    fire.Fire(main)
