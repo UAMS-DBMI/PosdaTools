@@ -137,7 +137,7 @@ sub GetFileInfoForTp{
   return \%FileInfo;
 }
 
-sub MakeFileHierarchyFromInfo{
+sub MakeFileHierarchyFromInfo {
   my($this, $info) = @_;
   my %H;
   for my $f (keys %$info){
@@ -148,7 +148,8 @@ sub MakeFileHierarchyFromInfo{
   }
   return \%H;
 }
-sub MakeCondensedHierarchyFromInfo{
+
+sub MakeCondensedHierarchyFromInfo {
   my($this, $info) = @_;
   my %Report;
   for my $f (keys %$info){
@@ -175,7 +176,8 @@ sub MakeCondensedHierarchyFromInfo{
   }
   return \%Report;
 }
-sub PrintCondensedHierarchyReport{
+
+sub PrintCondensedHierarchyReport {
   my($this, $rpt, $hier) = @_;
   $rpt->print("collection,site,patient_id,num_studies,num_series," .
     "num_modalities,num_sop_classes,num_sops,num_files,visible,hidden\r\n");
@@ -199,13 +201,15 @@ sub PrintCondensedHierarchyReport{
     }
   }
 }
-sub MakeFileHierarchyForLatestTimepoint{
+
+sub MakeFileHierarchyForLatestTimepoint {
   my($this) = @_;
   my $tp = $this->LatestTimepoint;
   unless(defined $tp) { die "No timepoint defined for $this->{activity_id}" }
   return $this->MakeFileHierarchyFromInfo($this->GetFileInfoForTp($tp));
 }
-sub PrintHierarchyReport{
+
+sub PrintHierarchyReport {
   my($this, $rpt, $hier) = @_;
   my @cols = ("collection", "site", "patient_id", "study_instance_uid", 
     "series_instance_uid", "num_sops", "num_files", "visible", "hidden");
@@ -253,7 +257,8 @@ sub PrintHierarchyReport{
     }
   }
 }
-sub CreateTpFromSeriesList{
+
+sub CreateTpFromSeriesList {
   my($this, $series_list, $comment, $notify) = @_;
   my @attr_names = (
     'collection', 'site', 'patient_id', 'study_instance_uid',
@@ -294,7 +299,8 @@ sub CreateTpFromSeriesList{
   }
   return $act_time_id, \%FileIds;
 }
-sub SeriesDupReport{
+
+sub SeriesDupReport {
   my($this, $FileInfo) = @_;
   my %Series;
   my %SeriesWithDups;
