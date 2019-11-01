@@ -4,6 +4,7 @@ from sanic.views import HTTPMethodView
 
 from ..util import db
 from ..util import json_objects, json_records, json
+from asyncpg.exceptions import UniqueViolationError
 
 
 async def test(request):
@@ -35,21 +36,6 @@ async def searchRoots(request):
         await db.fetch(query,values)
     )
 
-
-# async def findCollectionNameFromCode(request,cc):
-#     query = """\
-#      select
-#          collection_name
-#      from
-#          collection_codes
-#      where
-#          collection_code = $1
-#      """
-#     return json_records(
-#      await db.fetch(query)
-#     )
-
-
 async def findCollectionNameFromCode(request,cc):
    async with db.pool.acquire() as conn:
        record = await conn.fetchrow("""\
@@ -78,6 +64,7 @@ async def findSiteNameFromCode(request,sc):
 
 async def addNewSubmission(request):
     async with db.pool.acquire() as conn:
+
         record = await conn.fetch("""\
             select
              site_name
@@ -87,7 +74,20 @@ async def addNewSubmission(request):
              site_code = $1
             """,request.json.get('input_site_code'))
         if len(record) == 0:
-            await conn.execute(" insert into site_codes (site_code, site_name) VALUES ($1, $2)", request.json.get('input_site_code'),  request.json.get('input_site_name'))
+            try:
+                await conn.execute(" insert into site_codes (site_code, site_name) VALUES ($1, $2)", request.json.get('input_site_code'),  request.json.get('input_site_name'))
+            except UniqueViolationError:
+                return response.json(
+                {'message': "Your site code or site name is already in use. Please choose a unique code and name \n"},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                                )
+            except Exception as e:
+                return response.json(
+                {'message': "An unexpected error occured: \n" + e.message},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                )
 
         record = await conn.fetch("""\
            select
@@ -98,26 +98,52 @@ async def addNewSubmission(request):
             collection_code = $1
            """,request.json.get('input_collection_code'))
         if len(record) == 0:
-            await conn.execute(" insert into collection_codes (collection_code, collection_name) VALUES ($1, $2)", request.json.get('input_collection_code'), request.json.get('input_collection_name'))
-
+            try:
+                await conn.execute(" insert into collection_codes (collection_code, collection_name) VALUES ($1, $2)", request.json.get('input_collection_code'), request.json.get('input_collection_name'))
+            except UniqueViolationError:
+                return response.json(
+                {'message': "Your collection code or collection name is already in use. Please choose a unique code and name \n"},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                )
+            except Exception as e:
+                return response.json(
+                {'message': "An unexpected error occured: \n" + e.message},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                )
 
         ds = 0
         if request.json.get('input_date_shift') != '':
                 ds = request.json.get(int('input_date_shift'))
 
         #after those 2 finish:
-        await conn.execute("""\
-            insert
-                into submissions
-                (site_code, collection_code , patient_id_prefix, body_part,access_type, baseline_date, date_shift )
-                VALUES
-                ($1, $2, $3 , $4, $5, $6, $7)""",
-            request.json.get('input_site_code'),
-            request.json.get('input_collection_code'),
-            request.json.get('input_patient_id_prefix'),
-            request.json.get('input_body_part'),
-            request.json.get('input_access_type'),
-            request.json.get('input_baseline_date '),
-            ds
-            )
+        try:
+            await conn.execute("""\
+                insert
+                    into submissions
+                    (site_code, collection_code , patient_id_prefix, body_part,access_type, baseline_date, date_shift )
+                    VALUES
+                    ($1, $2, $3 , $4, $5, $6, $7)""",
+                request.json.get('input_site_code'),
+                request.json.get('input_collection_code'),
+                request.json.get('input_patient_id_prefix'),
+                request.json.get('input_body_part'),
+                request.json.get('input_access_type'),
+                request.json.get('input_baseline_date '),
+                ds
+                )
+        except UniqueViolationError:
+            #return text("Your entry is already in use. Please choose a unique site + collection", status=500)
+            return response.json(
+                {'message':"\n Your entry is already in use. Please choose a unique site + collection."},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                )
+        except Exception as e:
+            return response.json(
+                {'message': "An unexpected error occured: \n" + e.message},
+                headers={'X-Served-By': 'sanic'},
+                status=500
+                )
         return  HTTPResponse(status=201)

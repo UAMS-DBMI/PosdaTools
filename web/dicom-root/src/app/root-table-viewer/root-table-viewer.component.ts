@@ -47,10 +47,10 @@ export class RootTableViewerComponent implements OnInit {
 
   constructor(private myService: ApiService, private formBuilder: FormBuilder) {
     this.myNewRootForms = formBuilder.group({
-      input_site_code: '',
-      input_site_name: '',
-      input_collection_code: '',
-      input_collection_name: '',
+      input_site_code: new FormControl ('',[Validators.required]),
+      input_site_name: new FormControl('',[Validators.required]),
+      input_collection_code: new FormControl('',[Validators.required]),
+      input_collection_name: new FormControl('',[Validators.required]),
       input_patient_id_prefix: '',
       input_body_part: '',
       input_access_type: '',
@@ -112,6 +112,7 @@ export class RootTableViewerComponent implements OnInit {
 
   public clear(){
     this.results = [];
+    this.AdditionFeedback = "";
   }
 
   public enterAddMode(){
@@ -129,47 +130,24 @@ export class RootTableViewerComponent implements OnInit {
   }
 
   public add(addForm){
-    console.log(addForm);
+    if (this.myNewRootForms.valid){
+      //add submission
+      this.myService.addNewSubmission(this.myNewRootForms.value).subscribe(
+        success =>
+          {
+            this.exitAddMode();
+            this.AdditionFeedback = "Success! Submission Added!";
+          },
+        err =>
+          {
+            this.exitAddMode();
+            this.AdditionFeedback = "**ERROR**\n" + err.error.message;
+          },
+      )
 
-    // var sc = this.myNewRootForms.get('input_site_code').value
-    // var sname = this.myNewRootForms.get('input_site_name').value
-    // var cc = this.myNewRootForms.get('input_collection_code').value
-    // var cname = this.myNewRootForms.get('input_collection_name').value
-    //var pip = this.myNewRootForms.get('input_patient_id_prefix').value
-    //var bp = this.myNewRootForms.get('input_body_part').value
-    //var at = this.myNewRootForms.get('input_access_type').value
-    //var bd = this.myNewRootForms.get('input_baseline_date').value
-    //var ds = this.myNewRootForms.get('input_date_shift').value
-
-    // //add site if new
-    // this.myService.findSiteNameFromCode(sc).subscribe(
-    //   ret => {},
-    //   err => this.myService.addNewSite(sc, sname).subscribe(
-    //     ret => {}
-    //   )
-    // )
-    // //add collection if new
-    // this.myService.findCollectionNameFromCode(cc).subscribe(
-    //   ret => {},
-    //   err => this.myService.addNewCollection(cc, cname).subscribe(
-    //     ret => {}
-    //   )
-    // )
-
-    //add submission
-    this.myService.addNewSubmission(this.myNewRootForms.value).subscribe(
-      success =>
-        {
-          this.exitAddMode();
-          this.AdditionFeedback = "Success! Submission Added!";
-        },
-      err =>
-        {
-          this.exitAddMode();
-          this.AdditionFeedback = "*********ERROR*********";
-        },
-    )
-
+    }else{
+      this.AdditionFeedback = "**ERROR**\n Site Code, Site Name, Collection Code, and Colleciton Name are required." ;
+    }
   }
 
   public check(){
