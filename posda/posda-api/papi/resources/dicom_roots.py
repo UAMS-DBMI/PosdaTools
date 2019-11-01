@@ -6,10 +6,6 @@ from ..util import db
 from ..util import json_objects, json_records, json
 from asyncpg.exceptions import UniqueViolationError
 
-
-async def test(request):
-    return text("test error, not allowed", status=401)
-
 async def searchRoots(request):
     whereclause = "where 1 = 1 "
     values = []
@@ -115,7 +111,7 @@ async def addNewSubmission(request):
 
         ds = 0
         if request.json.get('input_date_shift') != '':
-                ds = request.json.get(int('input_date_shift'))
+            ds = request.json.get(int('input_date_shift'))
 
         #after those 2 finish:
         try:

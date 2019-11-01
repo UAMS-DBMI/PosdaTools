@@ -71,7 +71,10 @@ export class RootTableViewerComponent implements OnInit {
     this.myNewRootForms.get('input_site_code').valueChanges.subscribe(val => {
       if(val.length == 4){
         this.myService.findSiteNameFromCode(val).subscribe(
-          text => this.myNewRootForms.get('input_site_name').setValue(text),
+          text => {
+              this.myNewRootForms.get('input_site_name').setValue(text);
+              this.newSiteWarn = "";
+            },
           err =>  this.newSiteWarn = "This will create a new Site!"
         );
       }
@@ -80,7 +83,10 @@ export class RootTableViewerComponent implements OnInit {
     this.myNewRootForms.get('input_collection_code').valueChanges.subscribe(val => {
       if(val.length == 4){
         this.myService.findCollectionNameFromCode(val).subscribe(
-          text => this.myNewRootForms.get('input_collection_name').setValue(text),
+          text => {
+              this.myNewRootForms.get('input_collection_name').setValue(text);
+              this.newSiteWarn = "";
+            },
           err => this.newCollWarn = "This will create a new Collection!",
         );
       }

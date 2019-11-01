@@ -8,5 +8,5 @@ import {ErrorStateMatcher} from '@angular/material/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'DICOM Roots Editor';
+
 }

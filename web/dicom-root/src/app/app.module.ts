@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule, FormGroupDirective, NgForm, Validators} from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyMaterialModule } from './material.module';
@@ -18,7 +17,6 @@ import {MatSortModule} from '@angular/material/sort';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     MyMaterialModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
