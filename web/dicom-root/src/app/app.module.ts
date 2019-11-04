@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MyMaterialModule } from './material.module';
 import { ApiService } from './api.service';
 import { RootTableViewerComponent } from './root-table-viewer/root-table-viewer.component';
 import { HttpClientModule }    from '@angular/common/http';
@@ -16,8 +15,7 @@ import {MatSortModule} from '@angular/material/sort';
     RootTableViewerComponent
   ],
   imports: [
-    BrowserModule,
-    MyMaterialModule,
+    BrowserModule,  
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,

@@ -1,18 +1,11 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import {FormControl, ReactiveFormsModule, FormGroupDirective, NgForm, Validators, FormGroup, FormBuilder} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
 import {Submission} from './submission';
 import { ApiService, Search } from '../api.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 
-/** Error when invalid control is dirty, touched, or submitted. From material website */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
-}
+
 
 @Component({
   selector: 'app-root-table-viewer',
@@ -25,7 +18,6 @@ export class RootTableViewerComponent implements OnInit {
   private selected2 = "collection_name";
   private input1 = "";
   private input2 = "";
-  private matcher = new MyErrorStateMatcher();
   private results;
   private addMode = false;
   private newSiteWarn = "";
@@ -123,16 +115,20 @@ export class RootTableViewerComponent implements OnInit {
 
   public enterAddMode(){
     this.addMode = true;
-    if (this.myNewRootForms.contains("input_" + this.selected1))
+    if (this.myNewRootForms.contains("input_" + this.selected1) && this.searchFormControl1.value != '' && this.searchFormControl1.value.indexOf('%') == -1){
       this.myNewRootForms.get("input_" + this.selected1).setValue(this.searchFormControl1.value);
-    if (this.myNewRootForms.contains("input_" + this.selected2))
+    }
+    if (this.myNewRootForms.contains("input_" + this.selected2)  && this.searchFormControl2.value != '' && this.searchFormControl2.value.indexOf('%') == -1){
       this.myNewRootForms.get("input_" + this.selected2).setValue(this.searchFormControl2.value);
+    }
   }
 
   public exitAddMode(){
     this.addMode = false;
     this.newCollWarn = "";
     this.newSiteWarn = "";
+    this.AdditionFeedback = "";
+
   }
 
   public add(addForm){

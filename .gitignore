@@ -5,3 +5,4 @@ common.env
 database.env
 nbia.env
 api.env
+.rediscli_history

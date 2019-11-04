@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Submission} from './root-table-viewer/submission';
-import { RootTableViewerComponent } from './root-table-viewer/root-table-viewer.component';
-
 
 class CodeName {
   code: string;
