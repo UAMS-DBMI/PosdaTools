@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Iterator
 from .queries import Query
+from .database import Database
 
 class Activity:
     activity_id: int
@@ -45,7 +46,13 @@ class Activity:
     def all_timepoints(self) -> List[int]:
         pass
 
-    def all_file_ids(self) -> List[int]:
-        pass
+    def all_file_ids(self) -> Iterator[int]:
+        with Database("posda_files").cursor() as cur:
+            cur.execute("""\
+                select file_id
+                from activity_timepoint_file
+                where activity_timepoint_id = %s
+            """, [self.latest_timepoint()])
 
-
+            for file_id, in cur:
+                yield file_id
