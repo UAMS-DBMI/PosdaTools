@@ -14,26 +14,26 @@ import {MatSort} from '@angular/material/sort';
 })
 export class RootTableViewerComponent implements OnInit {
 
-  private selected1 = "site_name";
-  private selected2 = "collection_name";
+  public selected1 = "site_name";
+  public selected2 = "collection_name";
   private input1 = "";
   private input2 = "";
-  private results;
-  private addMode = false;
-  private newSiteWarn = "";
-  private newCollWarn = "";
-  private AdditionFeedback = "";
+  public results;
+  public addMode = false;
+  public newSiteWarn = "";
+  public newCollWarn = "";
+  public AdditionFeedback = "";
 
-  private searchFormControl1 = new FormControl('', [
+  public searchFormControl1 = new FormControl('', [
     //Validators.required
   ]);
-  private searchFormControl2 = new FormControl('', [
+  public searchFormControl2 = new FormControl('', [
     //Validators.required
   ]);
 
-  private myNewRootForms:FormGroup;
+  public myNewRootForms:FormGroup;
   //private columnsToDisplay:String[] = ["collection_code"];
-  private columnsToDisplay:String[] = ["site_code","site_name","collection_code","collection_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
+  public columnsToDisplay:String[] = ["site_code","site_name","collection_code","collection_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 

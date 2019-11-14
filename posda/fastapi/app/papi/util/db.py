@@ -1,4 +1,5 @@
 import asyncpg
+from asyncpg.exceptions import UniqueViolationError
 
 pool = None
 database = 'posda_files'
@@ -8,6 +9,12 @@ class NotFound(RuntimeError): pass
 class Database:
     def __init__(self):
         pass
+
+    async def execute(self, query, parameters=[]):
+        global pool
+
+        async with pool.acquire() as conn:
+            return await conn.execute(query, *parameters)
 
     async def fetch(self, query, parameters=[]):
         global pool

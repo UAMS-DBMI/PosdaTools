@@ -14,6 +14,11 @@ COPY quince /quince
 RUN cd /quince && \
 	make
 
+FROM node:current-alpine as roots-builder
+RUN apk --update add make
+COPY dicom-root /roots
+RUN cd /roots && \
+	make
 
 FROM nginx:1.13.10-alpine
 
@@ -23,5 +28,6 @@ COPY www /www
 
 COPY --from=dashboard-builder /dashboard/dist/posda-dashboard /www/dashboard
 COPY --from=quince-builder /quince/dist /www/quince
+COPY --from=roots-builder /roots/dist/dicom-root /www/roots
 
 EXPOSE 80

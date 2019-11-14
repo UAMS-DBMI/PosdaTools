@@ -17,6 +17,7 @@ from papi.routes import dashboard
 from papi.routes import rois
 from papi.routes import importer
 from papi.routes import send_to_public_status
+from papi.routes import dicom_roots
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -58,6 +59,7 @@ router_v1.include_router(dashboard.router, prefix="/dashboard")
 router_v1.include_router(rois.router, prefix="/rois")
 router_v1.include_router(importer.router, prefix="/import")
 router_v1.include_router(send_to_public_status.router, prefix="/send_to_public_status")
+router_v1.include_router(dicom_roots.router, prefix="/dicom_roots")
 
 app.include_router(auth.router)
 app.include_router(router_v1, prefix="/v1")

@@ -21,7 +21,7 @@
 
     <mat-form-field>
       <input matInput placeholder="Search Criteria" [formControl]="searchFormControl1"
-             [errorStateMatcher]="matcher">
+             >
       <mat-hint>You can use % as a wildcard</mat-hint>
       <!---   <mat-error *ngIf="searchFormControl1.hasError('required')">
         Cannot search for blank!
@@ -47,7 +47,7 @@
 
     <mat-form-field >
       <input matInput placeholder="Search Criteria" [formControl]="searchFormControl2"
-             [errorStateMatcher]="matcher">
+             >
       <mat-hint>You can use % as a wildcard</mat-hint>
       <!---  <mat-error *ngIf="searchFormControl2.hasError('required')">
         Cannot search for blank!
