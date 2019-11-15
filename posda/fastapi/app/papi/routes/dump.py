@@ -1,4 +1,4 @@
-script_location = '/posda-api/dicom_dump.sh'
+script_location = '/fastapi/dump_dicom.sh'
 
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
