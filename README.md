@@ -15,4 +15,4 @@ See the README files of each subdirectory for build requirements.
 ## Running
 Simply type:
 
-`docker-compose up`
+`./manage up -d`
