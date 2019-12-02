@@ -118,8 +118,8 @@ sub user{
 }
 my $content = qq{
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
+  <div class="container-fluid" id="div-navbar">
+    <div class="navbar-header" id="div-logo">
       <a class="navbar-brand" href="#">
         Posda.com
       </a>
@@ -130,11 +130,11 @@ my $content = qq{
   </div>
 </nav>
 
-  <div class="container-fluid">
+  <div class="container-fluid" id="div-app-layout">
     <div id="header" class="page-header">
-      <center><h1><?dyn="title"?></h1></center>
+      <?dyn="BigTitle"?>
     </div>
-    <div class="row">
+    <div class="row" id="div-menu-content">
       <div id="menu" class="col-md-2">
       Menu
       </div>
@@ -143,6 +143,13 @@ my $content = qq{
     </div>
   </div>
 };
+
+sub BigTitle{
+  my($this, $http, $dyn) = @_;
+ $http->queue('<center><h1>');
+ $this->title($http, $dyn);
+ $http->queue('</h1></center>');
+}
 
 sub Content{
   my($this, $http, $dyn) = @_;
