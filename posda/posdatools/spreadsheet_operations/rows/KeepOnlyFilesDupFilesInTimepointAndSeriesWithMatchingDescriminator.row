@@ -1,0 +1,6 @@
+:operation_name: KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator
+:command_line: KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>:<descriminator>:<value>
+:tags: ['dup_sops', 'background']
+:can_chain: 
