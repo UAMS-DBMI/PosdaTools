@@ -258,6 +258,35 @@ sub PollTimer{
   };
   return $sub;
 }
+sub NewEntryBox{
+  my($this, $http, $dyn, $sync) = @_;
+  unless(defined($sync)){ $sync = "" }
+  
+  my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
+  my $class = "form-control";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  $http->queue("<input class='$class' type='text'" .
+    ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
+    ($dyn->{id} ? " id=\"$dyn->{id}\"" : "") .
+    ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
+    # "onblur=\"" . $op . "event=onblur&amp;value='+this.value);$sync;\" " .
+    "onchange=\"" . $op . "event=onchange&amp;value='+this.value);$sync;\" " .
+    # "onclick=\"" . $op . "event=onclick&amp;value='+this.value);$sync;\" " .
+    # "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);$sync;\" " .
+    # "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);$sync;\" " .
+    # "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);$sync;\" " .
+    # "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);$sync;\" " .
+    "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);$sync;\" " .
+    # "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);$sync;\" " .
+    # "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);$sync;\" " .
+    # "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);$sync;\" " .
+    # "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);$sync;\" " .
+     "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);$sync;\" " .
+    "onselect=\"" . $op . "event=onselect&amp;value='+this.value);$sync;\" " .
+    "/>");
+}
 sub EntryBox{
   my($this, $http, $dyn) = @_;
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
@@ -267,6 +296,7 @@ sub EntryBox{
   }
   $http->queue("<input class='$class' type='text'" .
     ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
+    ($dyn->{id} ? " id=\"$dyn->{id}\"" : "") .
     ($dyn->{default} ? " value=\"$dyn->{default}\"" : "") .
     # "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
     "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
@@ -298,6 +328,7 @@ sub BlurEntryBox{
   my $txt =
    "<input class='$class' type='text'" .
    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
+   ($dyn->{id} ? " id=\"$dyn->{id}\"" : "") .
    ($dyn->{default} ? " default=\"$dyn->{default}\" " : "") .
    (defined($dyn->{value}) ? " value=\"$dyn->{value}\" " : "") .
    (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
@@ -605,12 +636,16 @@ sub SelectByValue{
   unless(defined $dyn->{op}) {
     $dyn->{op} = "ChangeMode";
   }
+  my $id;
+  if(defined $dyn->{id}){
+    $id = " id=\"$dyn->{id}\"";
+  }
 
   my $class = defined $dyn->{class}? $dyn->{class}: "form-control";
   my $style = defined $dyn->{style}? $dyn->{style}: "";
 
   $http->queue(qq{
-    <select class="$class" style="$style"
+    <select class="$class"$id style="$style"
       onChange="ChangeMode('$dyn->{op}',this.options[this.selectedIndex].value);">
   });
 }
@@ -705,6 +740,10 @@ sub AutoRefreshOne{
 sub AutoRefreshActivityTaskStatus{
   my($this) = @_;
   $this->QueueJsCmd("UpdateAct();");
+}
+sub AutoRefreshDiv{
+  my($this, $method, $div_name) = @_;
+  $this->QueueJsCmd("UpdateDiv(\"$method\",\"$div_name\");");
 }
 sub StartJsChildProcess{
   my($this, $process_desc, $host, $child_name) = @_;
@@ -874,13 +913,16 @@ sub SubmitValueButton {
   my($this, $http, $dyn) = @_;
 
   my $id = $dyn->{element_id} or die "No element_id specified";
+  my $this_id = "";
+  if(defined $dyn->{id}) { $this_id = " id=\"$dyn->{id}\"" }
+  else { print STDERR "No id defined\n" }
   my $op = $dyn->{op} or die "No op specified";
   my $caption = $dyn->{caption} or die "No caption specified";
   my $extra = ($dyn->{extra} or '');
   my $class = ($dyn->{class} or 'btn btn-default');
 
   my $string = qq{
-    <input class="$class"
+    <input class="$class"$this_id
            type="submit"
            onClick="javascript:PosdaGetRemoteMethod('$op', 'value=' + \$('#$id').val() + '&extra=$extra', function(){Update();})"
            value="$caption"
@@ -892,6 +934,7 @@ sub NotSoSimpleButton{
   my($this, $http, $dyn)  = @_;
   my @parms;
   for my $i (keys %$dyn){
+    if($i eq "id") { next }
     if($i eq "op") { next }
     if($i eq "caption") { next }
     if($i eq "sync") { next }
@@ -911,9 +954,11 @@ sub NotSoSimpleButton{
   my $sync = exists($dyn->{sync}) ? $dyn->{sync} : "";
 
   my $prefix = qq{<input type="button"};
+  if(defined $dyn->{id}) {$prefix .= " id=\"$dyn->{id}\""}
   my $postfix = "";
   if(defined $dyn->{element} and $dyn->{element} eq 'a') {
     $prefix = qq{<a href="#"};
+    if(defined $dyn->{id}) {$prefix .= " id=\"$dyn->{id}\""}
     $postfix = "$dyn->{caption}</a>";
   }
   my $title = '';
@@ -934,6 +979,7 @@ sub NotSoSimpleButtonPopularity{
   my @parms;
   for my $i (keys %$dyn){
     if($i eq "op") { next }
+    if($i eq "id") { next }
     if($i eq "caption") { next }
     if($i eq "sync") { next }
     if($i eq "class") { next }
@@ -960,7 +1006,9 @@ sub NotSoSimpleButtonPopularity{
     $red = 100;
   }
   my $green = $red + 5;
-  my $prefix = qq{<input type="button" style="background-color:rgb($red, $green, 255)"};
+  my $id_text = "";
+  if(defined $dyn->{id}) {$id_text = " id=\"$dyn->{id}\"" }
+  my $prefix = "<input type=\"button\"$id_text style=\"background-color:rgb($red, $green, 255)\"";
   my $postfix = "";
   if(defined $dyn->{element} and $dyn->{element} eq 'a') {
     $prefix = qq{<a href="#"};
@@ -1132,8 +1180,12 @@ sub DelegateButton{
 }
 sub MakeMenu{
   my($this, $http, $dyn, $list) = @_;
-  $http->queue(qq{<div class="btn-group-vertical spacer-bottom" role="group">});
-  for my $m (@$list){
+  $http->queue(qq{<div class="btn-group-vertical spacer-bottom" role="group"});
+  if(defined $dyn->{id}) { $http->queue(" id=\"$dyn->{id}\"") }
+  $http->queue(">");
+  for my $i (0 .. $#{$list}){
+#  for my $m (@$list){
+    my $m = $list->[$i];
     if(not defined $m->{condition} or $m->{condition}){
       if (not defined $m->{type} or $m->{type} eq "button") {
         my $sync_method = defined $m->{sync}? $m->{sync}: "Update();";
@@ -1145,7 +1197,17 @@ sub MakeMenu{
           $m->{class} = "$m->{class} $m->{extra_class}";
         }
         $m->{element} = 'a';
+          
+        unless(exists $m->{id}){
+          if(exists $dyn->{id}){
+            $m->{id} = "$dyn->{id}_$i";
+          }
+        }
         $this->NotSoSimpleButton($http, $m);
+      } elsif ($m->{type} eq "download"){
+        $http->queue("<a class=\"btn btn-default\" " .
+          "href=\"$m->{op}?obj_path=$this->{path}\">" .
+          "$m->{caption}</a>");
       } elsif ($m->{type} eq "host_link"){
         my $small;
         if(exists($m->{style}) && $m->{style} eq "small"){
@@ -1249,11 +1311,12 @@ sub RadioButtonDelegate{
   return $input;
 }
 sub RadioButtonSync{
-  my($this, $group, $value, $op, $checked, $parm, $sync) = @_;
+  my($this, $group, $value, $op, $checked, $parm, $sync, $id) = @_;
   my $parms = "";
   if(defined($parm)) {$parms = "&$parm" }
   my $input = '<input type="radio" group="' . $group .
     '" value="' . $value . '"' .
+    (defined($id) ? " id=\"$id\"" : "") .
     ($checked ? ' checked="checked"' : '') .
     ' onClick="javascript:PosdaGetRemoteMethod(' .
     "'$op', " . "'group=$group&value=$value$parm&checked='+this.checked" .

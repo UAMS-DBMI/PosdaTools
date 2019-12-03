@@ -47,6 +47,23 @@ function UpdateActivityTaskStatus(){
   PosdaGetRemoteMethod("DrawActivityTaskStatus", "" , ActivityTaskStatusReturned);
 }
 
+function UpdateDiv(div_text, method_text){
+  PosdaGetRemoteMethod(method_text, "", makeDivUpdater(div_text));
+}
+
+function makeDivUpdater(div_text){
+  var that = this;
+  that.div_text = div_text;
+  return function(text, status, xml){
+    var foo = document.getElementById(that.div_text);
+    if(foo != null) {
+      document.getElementById(that.div_text).innerHTML = text;
+    } else {
+      // console.log("Attempt to update unknown div: " + div_text);
+    }
+  }
+}
+
 function ModeChanged(text, status, xml){
   if(status != 200) {
     alert("Mode change failed");
