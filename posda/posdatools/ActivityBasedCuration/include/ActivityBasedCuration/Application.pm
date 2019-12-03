@@ -2372,6 +2372,7 @@ method CompareTimepoints($http, $dyn){
   $self->StartJsChildWindow($child_obj);
 }
 method ActivityOperations($http, $dyn){
+<<<<<<< HEAD
   my @buttons;
   my $palette_desc = $ActivityBasedCuration::ButtonDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
   my $el_table = \%ActivityBasedCuration::ButtonDefinition::ElementOccurance;
@@ -2391,6 +2392,33 @@ method ActivityOperations($http, $dyn){
 print STDERR "buttons: ";
 Debug::GenPrint($dbg, \@buttons, 1);
 print STDERR "\n";
+  my @buttons =  (
+    [ "CreateActivityTimepointFromImportName", "Create Activity Timepoint from Import Name", 0, 0],
+    [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
+    [ "VisualReviewFromTimepoint", "Schedule Visual Review", 0, 2],
+    [ "PhiReviewFromTimepoint", "Schedule PHI Scan", 0, 3],
+    [ "ConsistencyFromTimePoint", "Check Consistency", 0, 4],
+    [ "LinkRtFromTimepoint", "Link RT Data for ItcTools", 0, 5],
+    [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
+    [ "MakeDownloadableDirectoryTp", "Make a Downloadable Directory", 0, 7],
+    [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
+    [ "SuggestPatientMappings", "Suggest Patient Mapping for Timepoint", 1, 1],
+    [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
+    [ "CondensedActivityTimepointReport", "Produce Condensed Activity Timepoint Report", 1, 3],
+    [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
+    [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
+    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
+    [ "BackgroundHelloWorld.pl", "Perl Hello World Background", 1, 7],
+    [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
+    [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
+    [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
+    [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
+    [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
+    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
+    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
+    [ "UncompressFilesTp", "Uncompress Compressed Files in Timepoint", 2, 7],
+    [ "BackgroundHelloWorld.py", "Python Hello World Background", 2, 7],
+  );
   my @Cols;
   for my $i (@buttons){
     my($op, $cap, $col, $row) = @$i;

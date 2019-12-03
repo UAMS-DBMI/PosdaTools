@@ -4,7 +4,7 @@
 -- Args: ['activity_id']
 -- Tags: ['duplicates', 'Duplicate SOPS']
 -- Description: Return a count of duplicate SOP Instance UIDs
-
+-- 
 
 select
   sop_instance_uid
