@@ -1,0 +1,6 @@
+:operation_name: SeriesWithDupSopsDifferentSopClassTp
+:command_line: SeriesWithDupSopsDifferentSopClassTp.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <foo>
+:tags: ['background']
+:can_chain: 

@@ -1,7 +1,0 @@
-sanic
-asyncpg
-aiofiles
-chardet
-
-requests
-numpy

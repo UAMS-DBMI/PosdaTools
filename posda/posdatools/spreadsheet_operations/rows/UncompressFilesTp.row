@@ -1,0 +1,6 @@
+:operation_name: UncompressFilesTp
+:command_line: UncompressFilesTp.py <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['uncompress', 'activity_timepoint']
+:can_chain: 

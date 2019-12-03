@@ -1,5 +1,5 @@
 :operation_name: CreateActivityTimepointFromCollectionSite
-:command_line: CreateActivityTimepointFromCollectionSite.pl <?bkgrnd_id?> <collection> <site> <activity_id> "<comment>" <notify>
+:command_line: CreateActivityTimepointFromCollectionSite.pl <?bkgrnd_id?> <activity_id> <collection> <site> "<comment>" <notify>
 :operation_type: background_process
 :input_line_format: 
 :tags: ['timepoint_buttons']

@@ -1084,6 +1084,8 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } elsif($from_vr eq "OB" && $to_vr eq "CS"){
     return("text", $value_s);
+  } elsif($from_vr eq "DS" && $to_vr eq "DA"){
+    return("text", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "SH"){
     return("text", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "SH"){

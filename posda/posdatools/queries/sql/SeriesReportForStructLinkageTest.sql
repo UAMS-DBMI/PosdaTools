@@ -8,7 +8,7 @@
 -- 
 
 select
-  file_id, (
+  distinct file_id, (
     select root_path 
     from file_storage_root
     where file_storage_root.file_storage_root_id = file_location.file_storage_root_id

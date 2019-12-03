@@ -1,0 +1,7 @@
+fastapi
+asyncpg
+pytest
+requests
+aiofiles
+numpy
+uvicorn

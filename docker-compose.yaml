@@ -103,10 +103,11 @@ services:
         env_file: 
             - database.env
             - common.env
+            - api.env
 
         volumes:
             - posda_cache_alpine:/home/posda/cache
-            - ./posda/posda-api:/posda-api
+            - ./posda/fastapi/app:/fastapi
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
