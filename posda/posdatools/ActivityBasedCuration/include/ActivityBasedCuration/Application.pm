@@ -2188,7 +2188,7 @@ method ActivityOperations($http, $dyn){
     [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
     [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
     [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
-    [ "BackgroundHelloWorld.py", "Python Hello World Background", 2, 7],
+    [ "UncompressFilesTp", "Uncompress Compressed Files in Timepoint", 2, 7],
   );
   my @Cols;
   for my $i (@buttons){

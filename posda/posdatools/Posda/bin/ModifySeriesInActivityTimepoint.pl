@@ -257,7 +257,7 @@ if($num_series_to_hide > 0){
 my $num_files_to_hide = keys %FileIdsToHide;
 if($num_files_to_hide > 0){
   my $start_hide = time;
-  open HIDER, "|HideFilesWithStatus.pl $notify " .
+  open HIDER, "|HideFilesWithStatusIrrespectiveOfCtp.pl $notify " .
     "\"see background invocation $invoc_id\"" or 
     die "Can't open pipe to HideFilesWithStatus";
   for my $f (keys %FileIdsToHide){

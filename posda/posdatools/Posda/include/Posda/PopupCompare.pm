@@ -38,7 +38,7 @@ method SpecificInitialize($params) {
     natural join file_series 
     natural join file_location
     natural join file_storage_root
-    natural join ctp_file
+    natural left join ctp_file
     where sop_instance_uid = ? and 
     visibility is null;
   });

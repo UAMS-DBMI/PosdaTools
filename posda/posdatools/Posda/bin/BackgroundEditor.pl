@@ -275,6 +275,7 @@ while(my $line = <STDIN>){
   my($series_uid, $op, $tag, $v1, $v2) =
     split(//, $line);
   if($series_uid){
+    if($series_uid =~ /^<(.*)>$/){ $series_uid = $1 }
     if($op) {
       print "Error: operation ($op) on same line as series ($series_uid)\n";
       exit;
