@@ -258,11 +258,26 @@ sub PollTimer{
   };
   return $sub;
 }
-sub NewEntryBox{
+sub NewDelegateEntryBox{
   my($this, $http, $dyn, $sync) = @_;
   unless(defined($sync)){ $sync = "" }
+  my @parms;
+  push @parms, "Delegator=$this->{path}";
+  if(exists $dyn->{op}){
+    push @parms, "Delegated=$dyn->{op}";
+  } else {
+    push @parms, "Delegated=StoreLinkedValue";
+  }
+  my $v_string;
+  for my $i (0 .. $#parms){
+    $v_string .= "$parms[$i]&";
+  }
+  my $default;
+  my $value = $dyn->{value};
+  my $op =
+    "PosdaNewPostRemoteMethod('Delegate?obj_path=' + ObjPath + '&$v_string', '";
   
-  my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
+ # my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
   my $class = "form-control";
   if (defined $dyn->{class}) {
     $class = $dyn->{class};
@@ -285,6 +300,35 @@ sub NewEntryBox{
     # "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);$sync;\" " .
      "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);$sync;\" " .
     "onselect=\"" . $op . "event=onselect&amp;value='+this.value);$sync;\" " .
+    "/>");
+}
+sub NewEntryBox{
+  my($this, $http, $dyn, $sync) = @_;
+  unless(defined($sync)){ $sync = "" }
+  
+  my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
+  my $class = "form-control";
+  if (defined $dyn->{class}) {
+    $class = $dyn->{class};
+  }
+  $http->queue("<input class='$class' type='text'" .
+    ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
+    ($dyn->{id} ? " id=\"$dyn->{id}\"" : "") .
+    ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
+    # "onblur=\"" . $op . "index=$dyn->{index}&event=onblur&amp;value='+this.value);$sync;\" " .
+    "onchange=\"" . $op . "index=$dyn->{index}&event=onchange&amp;value='+this.value);$sync;\" " .
+    # "onclick=\"" . $op . "index=$dyn->{index}&event=onclick&amp;value='+this.value);$sync;\" " .
+    # "ondblclick=\"" . $op . "index=$dyn->{index}&event=ondblclick&amp;value='+this.value);$sync;\" " .
+    # "onfocus=\"" . $op . "index=$dyn->{index}&event=onfocus&amp;value='+this.value);$sync;\" " .
+    # "onmousedown=\"" . $op . "index=$dyn->{index}&event=onmousedown&amp;value='+this.value);$sync;\" " .
+    # "onmousemove=\"" . $op . "index=$dyn->{index}&event=onmousemove&amp;value='+this.value);$sync;\" " .
+    "onmouseout=\"" . $op . "index=$dyn->{index}&event=onmouseout&amp;value='+this.value);$sync;\" " .
+    # "onmouseover=\"" . $op . "index=$dyn->{index}&event=onmouseover&amp;value='+this.value);$sync;\" " .
+    # "onmouseup=\"" . $op . "index=$dyn->{index}&event=onmouseup&amp;value='+this.value);$sync;\" " .
+    # "onkeydown=\"" . $op . "index=$dyn->{index}&event=onkeydown&amp;value='+this.value);$sync;\" " .
+    # "onkeypress=\"" . $op . "index=$dyn->{index}&event=onkeypress&amp;value='+this.value);$sync;\" " .
+     "onkeyup=\"" . $op . "index=$dyn->{index}&event=onkeyup&amp;value='+this.value);$sync;\" " .
+    "onselect=\"" . $op . "index=$dyn->{index}&event=onselect&amp;value='+this.value);$sync;\" " .
     "/>");
 }
 sub EntryBox{

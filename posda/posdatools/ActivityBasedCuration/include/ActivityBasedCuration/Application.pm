@@ -237,21 +237,21 @@ sub BackgroundMonitorForEmail {
     my $count = $self->{inbox}->UnreadCount;
 
     my $last_count = 0;
-    if (defined $self->{MenuByMode}->{Default}->[0]->{count}) {
-      $last_count = $self->{MenuByMode}->{Default}->[0]->{count};
+    if (defined $self->{MenuByMode}->{Default}->[3]->{count}) {
+      $last_count = $self->{MenuByMode}->{Default}->[3]->{count};
     }
 
     if ($count > 0 && $count != $last_count) {
-      $self->{MenuByMode}->{Default}->[0]->{class} = 'btn btn-danger';
-      $self->{MenuByMode}->{Default}->[0]->{caption} = "Inbox ($count)";
-      $self->{MenuByMode}->{Default}->[0]->{count} = $count;
+      $self->{MenuByMode}->{Default}->[3]->{class} = 'btn btn-danger';
+      $self->{MenuByMode}->{Default}->[3]->{caption} = "Inbox ($count)";
+      $self->{MenuByMode}->{Default}->[3]->{count} = $count;
       $self->AutoRefresh;
     }
 
     if ($count == 0 && $count != $last_count) {
-      $self->{MenuByMode}->{Default}->[0]->{class} = 'btn btn-default';
-      $self->{MenuByMode}->{Default}->[0]->{caption} = "Inbox";
-      $self->{MenuByMode}->{Default}->[0]->{count} = $count;
+      $self->{MenuByMode}->{Default}->[3]->{class} = 'btn btn-default';
+      $self->{MenuByMode}->{Default}->[3]->{caption} = "Inbox";
+      $self->{MenuByMode}->{Default}->[3]->{count} = $count;
       $self->AutoRefresh;
     }
 
