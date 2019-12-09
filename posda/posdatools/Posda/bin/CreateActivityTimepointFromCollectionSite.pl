@@ -18,7 +18,7 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){ print $usage; exit }
 
 unless($#ARGV == 5) { print $usage; exit }
 
-my($invoc_id, $coll, $site, $act_id, $comment, $notify) = @ARGV;
+my($invoc_id, $act_id, $coll, $site, $comment, $notify) = @ARGV;
 my $start = time;
 
 my @attr_names = (
