@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.8 (Ubuntu 10.8-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -86,7 +86,8 @@ CREATE TABLE public.pt (
     pt_consensus_vr text,
     pt_consensus_vm text,
     pt_consensus_name text,
-    pt_consensus_disposition text
+    pt_consensus_disposition text,
+    pt_consensus_description text
 );
 
 

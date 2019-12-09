@@ -6,7 +6,7 @@
 -- Description: Insert Initial Patient Status
 -- For use in scripts
 -- Not really intended for interactive use
---
+
 
 select
   subprocess_invocation_id,

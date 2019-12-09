@@ -757,7 +757,7 @@ EOF
     caption => "Create Timepoint From Series List",
     spreadsheet_operation => "CreateActivityTimepointFromSeriesList",
     operation => "OpenNewTableLevelPopup",
-    obj_class => "Posda::TestPopup",
+    obj_class => "Posda::NewProcessPopup",
     queries => {
       DistinctVisibleSeriesByCollectionSite => 1,
       DistinctSeriesByPatientId => 1,

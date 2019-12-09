@@ -4,7 +4,7 @@
 -- Args: ['activity_id']
 -- Tags: ['activity_timepoint']
 -- Description: Get Summary of series in latest timepoint for activity
---
+
 
 select distinct patient_id, series_instance_uid, modality, dicom_file_type, count(distinct file_id) as num_files
 from file_series natural join file_patient natural join dicom_file natural left join ctp_file

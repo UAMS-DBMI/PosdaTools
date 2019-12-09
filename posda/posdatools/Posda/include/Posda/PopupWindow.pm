@@ -85,10 +85,10 @@ my $content = qq{
 
   <div class="container-fluid">
     <div class="row">
-      <div id="menu" class="col-md-1">
+      <div id="menu" class="col-md-2">
       Menu
       </div>
-      <div id="content" class="col-md-9">
+      <div id="content" class="col-md-10">
       </div>
     </div>
   </div>

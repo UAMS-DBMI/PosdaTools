@@ -4,7 +4,7 @@
 -- Args: ['activity_id', 'foo']
 -- Tags: ['by_collection', 'find_series', 'compare_collection_site', 'search_series', 'edit_files', 'simple_phi', 'dciodvfy', 'ctp_details', 'select_for_phi', 'visual_review_selection', 'activity_timepoints']
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
---
+
 
 select
   distinct activity_id, a.when_created as activity_created,
