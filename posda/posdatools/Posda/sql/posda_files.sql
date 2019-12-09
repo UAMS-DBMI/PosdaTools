@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.1
+-- Dumped from database version 9.6.3
 -- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
@@ -76,6 +76,24 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: storage_path(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.storage_path(file_id_in integer) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+declare path text;
+begin
+	select root_path || '/' || rel_path into path
+	from file_location
+	natural join file_storage_root
+	where file_id = file_id_in;
+	return path;
+end;
+$$;
 
 
 SET default_tablespace = '';
@@ -3003,7 +3021,6 @@ ALTER SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED B
 --
 
 CREATE TABLE public.query_log (
-    query_log_id integer NOT NULL,
     when_retrieved timestamp without time zone,
     query_name text
 );
@@ -3014,26 +3031,6 @@ CREATE TABLE public.query_log (
 --
 
 COMMENT ON TABLE public.query_log IS 'A table to track Posda::DB Query usage';
-
-
---
--- Name: query_log_query_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.query_log_query_log_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: query_log_query_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.query_log_query_log_id_seq OWNED BY public.query_log.query_log_id;
 
 
 --
@@ -3102,6 +3099,24 @@ CREATE TABLE public.roi (
     roi_obser_desc text,
     roi_obser_label text
 );
+
+
+--
+-- Name: roi_body_parts; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.roi_body_parts AS
+ SELECT file_series.series_instance_uid,
+    file_series.body_part_examined
+   FROM ((((public.file_series
+     JOIN public.file_sop_common USING (file_id))
+     JOIN public.file_roi_image_linkage ON ((file_roi_image_linkage.linked_sop_instance_uid = file_sop_common.sop_instance_uid)))
+     JOIN public.ctp_file ON ((ctp_file.file_id = file_sop_common.file_id)))
+     JOIN public.roi USING (roi_id))
+  WHERE ((roi.roi_name ~~ 'GTV%'::text) AND (ctp_file.visibility IS NULL))
+  GROUP BY file_series.series_instance_uid, file_series.body_part_examined
+ HAVING (array_length(array_agg(file_sop_common.file_id), 1) > 0)
+  WITH NO DATA;
 
 
 --
@@ -4438,13 +4453,6 @@ ALTER TABLE ONLY public.query_invoked_by_dbif ALTER COLUMN query_invoked_by_dbif
 
 
 --
--- Name: query_log query_log_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.query_log ALTER COLUMN query_log_id SET DEFAULT nextval('public.query_log_query_log_id_seq'::regclass);
-
-
---
 -- Name: report_inserted report_inserted_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4814,14 +4822,6 @@ ALTER TABLE ONLY public.patient_import_status
 
 ALTER TABLE ONLY public.public_copy_status
     ADD CONSTRAINT public_copy_status_pkey PRIMARY KEY (subprocess_invocation_id, file_id);
-
-
---
--- Name: query_log query_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.query_log
-    ADD CONSTRAINT query_log_pkey PRIMARY KEY (query_log_id);
 
 
 --
@@ -5216,6 +5216,13 @@ CREATE INDEX file_plan_plan_id_idx ON public.file_plan USING btree (plan_id);
 
 
 --
+-- Name: file_roi_image_linkage_file_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_roi_image_linkage_file_id ON public.file_roi_image_linkage USING btree (file_id);
+
+
+--
 -- Name: file_roi_image_linkage_linked_sop_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5283,6 +5290,13 @@ CREATE INDEX file_structure_set_idx ON public.file_structure_set USING btree (fi
 --
 
 CREATE INDEX file_study_file_id_index ON public.file_study USING btree (file_id);
+
+
+--
+-- Name: file_study_uid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_study_uid ON public.file_study USING btree (study_instance_uid);
 
 
 --
