@@ -4,7 +4,7 @@
 -- Args: ['value', 'user', 'variable_name']
 -- Tags: ['AllCollections', 'queries', 'activity_support', 'variabler_binding']
 -- Description: Update the value of a bound variable
---
+
 
 
 update user_variable_binding set

@@ -4,7 +4,7 @@
 -- Args: []
 -- Tags: ['AllCollections', 'universal']
 -- Description: Get a list of configured pop-up buttons
---
+
 
 select 
   name, object_class, btn_name as operation_name,

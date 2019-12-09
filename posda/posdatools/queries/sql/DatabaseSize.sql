@@ -5,7 +5,7 @@
 -- Tags: ['postgres_status']
 -- Description: Show active queries for a database
 -- Works for PostgreSQL 9.4.5 (Current Mac)
---
+
 
 
 select d.datname AS name,  pg_catalog.pg_get_userbyid(d.datdba) AS owner,
