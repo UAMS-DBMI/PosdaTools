@@ -737,8 +737,8 @@ EOF
     is_posda_button => 1,
     action => [invoke_operation => [quote => "InitialAnonymizerCommandsTp"]],
   },
-  btn_activity_op_HelloWorldPython => {
-    caption => "Python Hello World Background",
+  btn_activity_op_UpdateTimepointAfterEdit => {
+    caption => "Update Timepoint After Edit",
     class => "btn btn-default",
     occurance => {
       where =>"tbl_ActivityOperations",
@@ -748,7 +748,7 @@ EOF
     tag => "input",
     type => "button",
     is_posda_button => 1,
-    action => [invoke_operation => [quote => "HelloWorldPython"]],
+    action => [invoke_operation => [quote => "UpdateTimepointAfterEdit"]],
   },
 );
 
