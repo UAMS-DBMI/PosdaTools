@@ -126,7 +126,7 @@ sub ContentResponse {
   } elsif($self->{mode} eq "waiting"){
     $self->WaitingForResponse($http, $dyn);
   } elsif($self->{mode} eq "response_available"){
-    $self->SubprocessResponded($http, $dyn);
+    $self->SubProcessResponded($http, $dyn);
   } else {
     $http->queue("Unknown mode: $self->{mode}");
   }
@@ -285,7 +285,7 @@ sub WhenCommandFinishes{
         $line
       );
     }
-    $self->{mode} = "response_complete";
+    $self->{mode} = "response_available";
     if($self->can("AutoRefresh")){
       $self->AutoRefresh;
     }
