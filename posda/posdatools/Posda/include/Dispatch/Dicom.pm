@@ -21,7 +21,7 @@ my $dbg = sub {print STDERR @_ };
     };
     bless $this, $class;
     if($ENV{POSDA_DEBUG}){
-      print "NEW: $this\n";
+      print STDERR "NEW: $this\n";
     }
     return $this;
   }
@@ -30,6 +30,10 @@ my $dbg = sub {print STDERR @_ };
     unless(defined $this->{pdv_header}){
       unless(length($dcm_conn->{buff}) eq $dcm_conn->{to_read}){
         return;
+       }
+      print STDERR "pdv with $this->{pdu_remaining} $dcm_conn->{to_read} to read in pdv and buff\n";
+      if($this->{pdu_remaining} < 6){
+        die "Augh! trying to read pdv header with only $this->{pdu_remaining} bytes left in pdu";
       }
       $this->{pdu_remaining} -= 6;
       my $len = length($dcm_conn->{buff});
@@ -84,14 +88,16 @@ my $dbg = sub {print STDERR @_ };
           delete $dcm_conn->{pdu_type};
         }
       }
+    } else {
+      print STDERR "pdv with no message\n";
     }
-    $dcm_conn->{buff} = "";
+#    $dcm_conn->{buff} = "";
     return;
   }
   sub DESTROY{
     my($this) = @_;
     if($ENV{POSDA_DEBUG}){
-      print "DESTROY: $this\n";
+      print STDERR "DESTROY: $this\n";
     }
   }
 }
@@ -114,7 +120,7 @@ my $dbg = sub {print STDERR @_ };
     };
     bless $this, $class;
     if($ENV{POSDA_DEBUG}){
-      print "NEW: $this\n";
+      print STDERR "NEW: $this\n";
     }
     return $this;
   }
@@ -133,7 +139,7 @@ my $dbg = sub {print STDERR @_ };
     };
     bless $this, $class;
     if($ENV{POSDA_DEBUG}){
-      print "NEW: $this\n";
+      print STDERR "NEW: $this\n";
     }
     return $this;
   }
@@ -183,7 +189,7 @@ my $dbg = sub {print STDERR @_ };
     $this->{output_queue}->queue($this->{assoc_rq}->encode());
     $this->DebugMsg("queued assoc_rq");
     if($ENV{DEBUG_POSDA}){
-      print "NEW: $this\n";
+      print STDERR "NEW: $this\n";
     }
     return $this;
   }
@@ -220,7 +226,7 @@ my $dbg = sub {print STDERR @_ };
     $this->CreateOutputQueue($this->{socket});
     $this->{output_queue}->queue($this->{assoc_rq}->encode());
     if($ENV{DEBUG_POSDA}){
-      print "NEW: $this\n";
+      print STDERR "NEW: $this\n";
     }
     return $this;
   }
@@ -341,6 +347,7 @@ my $dbg = sub {print STDERR @_ };
       unless(defined $this->{pdu_size}){
         ### here we have read a pdu header
         my($pdu_type, $uk, $pdu_length) = unpack("CCN", $this->{buff});
+        print STDERR "pdu_type: $pdu_type, pdu_length: $pdu_length\n";
         $this->DebugMsg("pdu header type: $pdu_type len: $pdu_length");
         if($pdu_type == 3){
           my $contents;
@@ -399,7 +406,7 @@ my $dbg = sub {print STDERR @_ };
           $this->{start_waiting_for_message}, 
           [Time::HiRes::gettimeofday]
         );
-        print "Queued a response after a wait of $elapsed seconds\n";
+        print STDERR "Queued a response after a wait of $elapsed seconds\n";
       }
       $this->{waiting_for_message}->post_and_clear();
       delete $this->{waiting_for_message};
@@ -415,7 +422,7 @@ my $dbg = sub {print STDERR @_ };
           $this->{start_waiting_for_message}, 
           [Time::HiRes::gettimeofday]
         );
-        print "Queued a message after a wait of $elapsed seconds\n";
+        print STDERR "Queued a message after a wait of $elapsed seconds\n";
       }
       $this->{waiting_for_message}->post_and_clear();
       delete $this->{waiting_for_message};
@@ -448,7 +455,7 @@ my $dbg = sub {print STDERR @_ };
           $this->{start_waiting_for_message}, 
           [Time::HiRes::gettimeofday]
         );
-        print "Re-opened message queue after a wait of $elapsed seconds\n";
+        print STDERR "Re-opened message queue after a wait of $elapsed seconds\n";
       }
       $this->{waiting_for_message}->post_and_clear();
       delete $this->{waiting_for_message};
@@ -545,6 +552,7 @@ my $dbg = sub {print STDERR @_ };
       unless(defined $this->{pdu_type}){
         my($pdu_type, $uk, $pdu_length) = unpack("CCN", $this->{buff});
         $this->DebugMsg("pdu header type: $pdu_type len: $pdu_length");
+        print STDERR "pdu_type: $pdu_type, pdu_length: $pdu_length\n";
         $this->{pdu_type} = $pdu_type;
         $this->{buff} = "";
         $this->{pdu_length} = $pdu_length;
@@ -573,6 +581,7 @@ my $dbg = sub {print STDERR @_ };
         $disp->Remove("reader");
         $this->Abort("Invalid Pdu (Assoc-RJ) in Sta6");
       } elsif($pdu_type == 4){ # Data-TF
+        print STDERR "Creating PdataAssembler($this->{pdu_length})\n";
         $this->{pdata_assembler} = 
           Dispatch::Dicom::PdataAssembler->new($this->{pdu_length});
         $this->{to_read} = 6;
@@ -708,6 +717,7 @@ my $dbg = sub {print STDERR @_ };
         ### here we have read a pdu header
         my($pdu_type, $uk, $pdu_length) = unpack("CCN", $this->{buff});
         $this->DebugMsg("pdu header type: $pdu_type len: $pdu_length");
+        print STDERR "pdu_type: $pdu_type, pdu_length: $pdu_length\n";
         unless($pdu_type == 1){
           $disp->Remove("reader");
           $this->Abort("invalid type pdu: $pdu_type in Sta2");
@@ -798,6 +808,7 @@ my $dbg = sub {print STDERR @_ };
         ### here we have read a pdu header
         my($pdu_type, $uk, $pdu_length) = unpack("CCN", $this->{buff});
         $this->DebugMsg("pdu header type: $pdu_type len: $pdu_length");
+        print STDERR "pdu_type: $pdu_type, pdu_length: $pdu_length\n";
         $this->{pdu_type} = $pdu_type;
         $this->{buff} = "";
         $this->{pdu_length} = $pdu_length;
