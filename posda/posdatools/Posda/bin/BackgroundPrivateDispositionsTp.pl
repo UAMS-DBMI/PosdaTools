@@ -13,10 +13,11 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 my $usage = <<EOF;
-BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify>
+BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions>
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
   email sent to <notify>
+  skip private dispositions if <skip_dispositions> is set to 1
 
 Expects nothing on <STDIN>
 
@@ -35,13 +36,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $script_start_time = time;
-unless($#ARGV == 4){
+unless($#ARGV == 5){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify) = @ARGV;
+my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions) = @ARGV;
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 
@@ -265,114 +266,121 @@ my $BaseDir = $ENV{NBIA_STORAGE_ROOT}
 unless(-d $BaseDir){
   print "Error: Base dir ($BaseDir) isn't a directory\n";
 }
+## Joseph start of if statement
+unless($skip_dispositions) {
+  $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
 
-$background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
+  #######################################################################
+  ### Body of script
 
-#######################################################################
-### Body of script
-
-my @cmds;
-my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
-for my $patient_id (sort keys %Patients){
+  my @cmds;
+  my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
+  for my $patient_id (sort keys %Patients){
 
 
-  $background->WriteToEmail("Patient: $patient_id\n");
-  for my $study_uid (sort keys %{$Patients{$patient_id}}){
-    $background->WriteToEmail("Study $study_uid\n");
-    for my $series_uid (sort keys %{$Patients{$patient_id}->{$study_uid}}){
-      $background->WriteToEmail("Series \"$series_uid\"\n");
-      my $num_files = 0;
-      $q_inst->RunQuery(sub {
-        my ($row) = @_;
-        my ($path, $sop_instance_uid, $modality, $file_id) = @$row;
+    $background->WriteToEmail("Patient: $patient_id\n");
+    for my $study_uid (sort keys %{$Patients{$patient_id}}){
+      $background->WriteToEmail("Study $study_uid\n");
+      for my $series_uid (sort keys %{$Patients{$patient_id}->{$study_uid}}){
+        $background->WriteToEmail("Series \"$series_uid\"\n");
+        my $num_files = 0;
+        $q_inst->RunQuery(sub {
+          my ($row) = @_;
+          my ($path, $sop_instance_uid, $modality, $file_id) = @$row;
 
-        my $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
+          my $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
 
-				my $full_filename = "$BaseDir/$f_filename";
-				my $dirname = dirname($full_filename);
-				make_path($dirname);
+  				my $full_filename = "$BaseDir/$f_filename";
+  				my $dirname = dirname($full_filename);
+  				make_path($dirname);
 
-        my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-                  qq{$file_id $path "$full_filename" $uid_root $offset } .
-                  qq{0};
+          my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
+                    qq{$file_id $path "$full_filename" $uid_root $offset } .
+                    qq{0};
 
-        push @cmds, $cmd;
-        $num_files += 1;
-      }, sub{}, $series_uid);
-      $background->WriteToEmail("Num_files $num_files\n");
+          push @cmds, $cmd;
+          $num_files += 1;
+        }, sub{}, $series_uid);
+        $background->WriteToEmail("Num_files $num_files\n");
+      }
     }
   }
+  my $num_commands = @cmds;
+  $background->WriteToEmail(`date`);
+  $background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
+  open SCRIPT1, "|/bin/sh";
+  open SCRIPT2, "|/bin/sh";
+  open SCRIPT3, "|/bin/sh";
+  open SCRIPT4, "|/bin/sh";
+  open SCRIPT5, "|/bin/sh";
+  open SCRIPT6, "|/bin/sh";
+  open SCRIPT7, "|/bin/sh";
+  open SCRIPT8, "|/bin/sh";
+  open SCRIPT9, "|/bin/sh";
+  open SCRIPT0, "|/bin/sh";
+  command:
+  while(1){
+    my $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT1 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT2 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT3 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT4 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT5 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT6 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT7 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT8 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT9 "$cmd\n";
+
+    $cmd = shift @cmds;
+    unless(defined $cmd){ last command }
+    print SCRIPT0 "$cmd\n";
+
+  }
+  $background->WriteToEmail(`date`);
+  $background->WriteToEmail("All commands queued\n");
+  close SCRIPT1;
+  close SCRIPT2;
+  close SCRIPT3;
+  close SCRIPT4;
+  close SCRIPT5;
+  close SCRIPT6;
+  close SCRIPT7;
+  close SCRIPT8;
+  close SCRIPT9;
+  close SCRIPT0;
+  $background->WriteToEmail(`date`);
+  $background->WriteToEmail("All subshells complete\n");
+} else {
+  $background->WriteToEmail("$date\nSkipping ApplyPrivateDispositions\n");
 }
-my $num_commands = @cmds;
-$background->WriteToEmail(`date`);
-$background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
-open SCRIPT1, "|/bin/sh";
-open SCRIPT2, "|/bin/sh";
-open SCRIPT3, "|/bin/sh";
-open SCRIPT4, "|/bin/sh";
-open SCRIPT5, "|/bin/sh";
-open SCRIPT6, "|/bin/sh";
-open SCRIPT7, "|/bin/sh";
-open SCRIPT8, "|/bin/sh";
-open SCRIPT9, "|/bin/sh";
-open SCRIPT0, "|/bin/sh";
-command:
-while(1){
-  my $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT1 "$cmd\n";
 
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT2 "$cmd\n";
+## Joseph - end of dispositions
 
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT3 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT4 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT5 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT6 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT7 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT8 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT9 "$cmd\n";
-
-  $cmd = shift @cmds;
-  unless(defined $cmd){ last command }
-  print SCRIPT0 "$cmd\n";
-
-}
-$background->WriteToEmail(`date`);
-$background->WriteToEmail("All commands queued\n");
-close SCRIPT1;
-close SCRIPT2;
-close SCRIPT3;
-close SCRIPT4;
-close SCRIPT5;
-close SCRIPT6;
-close SCRIPT7;
-close SCRIPT8;
-close SCRIPT9;
-close SCRIPT0;
-$background->WriteToEmail(`date`);
-$background->WriteToEmail("All subshells complete\n");
 ### Body of script
 ###################################################################
 my $end = time;
