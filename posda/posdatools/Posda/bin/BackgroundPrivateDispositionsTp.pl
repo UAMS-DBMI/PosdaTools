@@ -13,10 +13,11 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 my $usage = <<EOF;
-BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify>
+BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions>
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
   email sent to <notify>
+  skip private dispositions if <skip_dispositions> is set to 1
 
 Expects nothing on <STDIN>
 
@@ -35,13 +36,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $script_start_time = time;
-unless($#ARGV == 4){
+unless($#ARGV == 5){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify) = @ARGV;
+my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions) = @ARGV;
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 
@@ -268,10 +269,11 @@ unless(-d $BaseDir){
 
 $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
 
+if($skip_dispositions) {
+  $background->WriteToEmail("$date\nPrivate Dispositions will be skipped\n");
+}
 #######################################################################
 ### Body of script
-
-$background->SetActivityManualUpdate("Processing beginning - Manual Process Follows");
 
 my @cmds;
 my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
@@ -295,7 +297,7 @@ for my $patient_id (sort keys %Patients){
 				make_path($dirname);
 
         my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-                  qq{$file_id $path "$full_filename" $uid_root $offset } .
+                  qq{$file_id $path "$full_filename" $uid_root $offset $skip_dispositions} .
                   qq{0};
 
         push @cmds, $cmd;
@@ -375,6 +377,7 @@ close SCRIPT9;
 close SCRIPT0;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("All subshells complete\n");
+
 ### Body of script
 ###################################################################
 my $end = time;
