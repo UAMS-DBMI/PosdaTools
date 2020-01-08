@@ -138,7 +138,7 @@ for my $pat (keys %Patients){
       $baseline_date,
       $date_shift,
       $computed_shift) = @$row;
-    if(exists $PatientMapping{$to_patient_id}){
+    if(exists $PatientMapping{$from_patient_id}){
       push @mapping_errors, ["More than one mapping", $pat];
       $error += 1;
     }
