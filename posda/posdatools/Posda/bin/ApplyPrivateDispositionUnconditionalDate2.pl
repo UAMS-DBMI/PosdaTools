@@ -9,7 +9,7 @@ use Time::Piece;
 use Posda::NBIASubmit;
 
 my $usage = <<EOF;
-ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch>
+ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
@@ -18,11 +18,12 @@ ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file>
   Site Code must be defined in site_codes
   Collection Code must be defined in collection_codes
   Once written, the NBIA Submissions API is called with the filename
+  skip private dispositions if <skip_dispositions> is set to 1
 EOF
 
-unless($#ARGV == 6) { die $usage }
+unless($#ARGV == 7) { die $usage }
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
-    $offset, $batch) = @ARGV;
+    $offset, $batch, $skip_dispositions) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -112,35 +113,37 @@ my %HashByPattern;
 $DeleteByElement{'(0013,"CTP",11)'} = 1;
 $DeleteByElement{'(0013,"CTP",12)'} = 1;
 
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  if($row->[0] =~ /\[/){
-    $DeleteByPattern{$row->[0]} = 1;
-  } else {
-    $DeleteByElement{$row->[0]} = 1;
-  }
-}, sub {}, 'd');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  my $tag = $row->[0];
-  if($tag =~ /</){
-    $OffsetDateByPattern{$tag} = 1;
-  }else {
-    $OffsetDate{$tag} = 1;
-  }
-}, sub {}, 'o');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  $OffsetInteger{$row->[0]} = 1;
-}, sub {}, 'oi');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  if($row->[0] =~ /\[/){
-    $HashByPattern{$row->[0]} = 1;
-  } else {
-    $HashByElement{$row->[0]} = 1;
-  }
-}, sub {}, 'h');
+unless($skip_dispositions){
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    if($row->[0] =~ /\[/){
+      $DeleteByPattern{$row->[0]} = 1;
+    } else {
+      $DeleteByElement{$row->[0]} = 1;
+    }
+  }, sub {}, 'd');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    my $tag = $row->[0];
+    if($tag =~ /</){
+      $OffsetDateByPattern{$tag} = 1;
+    }else {
+      $OffsetDate{$tag} = 1;
+    }
+  }, sub {}, 'o');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    $OffsetInteger{$row->[0]} = 1;
+  }, sub {}, 'oi');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    if($row->[0] =~ /\[/){
+      $HashByPattern{$row->[0]} = 1;
+    } else {
+      $HashByElement{$row->[0]} = 1;
+    }
+  }, sub {}, 'h');
+}
 
 my $try = Posda::Try->new($from_file);
 unless(exists $try->{dataset}){ die "$from_file is not a DICOM file" }
