@@ -297,7 +297,7 @@ for my $patient_id (sort keys %Patients){
 				make_path($dirname);
 
         my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-                  qq{$file_id $path "$full_filename" $uid_root $offset $skip_dispositions} .
+                  qq{$file_id $path "$full_filename" $uid_root $offset $skip_dispositions } .
                   qq{0};
 
         push @cmds, $cmd;
