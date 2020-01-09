@@ -9,21 +9,16 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 unless($#ARGV == 1) { die $usage }
-my @FileList;
-while(my $line = <STDIN>){
-  chomp $line;
-  my($file_id, $old_visibility) = split /&/, $line;
-  push @FileList, [$file_id, $old_visibility];
-}
 my $get_ctp = PosdaDB::Queries->GetQueryInstance("GetCtpFileRow");
 my $hide = PosdaDB::Queries->GetQueryInstance('HideFile');
 my $hide_no_ctp = PosdaDB::Queries->GetQueryInstance('HideFileWithNoCtp');
 my $ins_vc = PosdaDB::Queries->GetQueryInstance('InsertVisibilityChange');
-for my $i (@FileList){
-  my($file_id, $old_visibility) = @$i;
+while(my $line = <STDIN>){
+  chomp $line;
+  my($file_id, $old_visibility) = split /&/, $line;
   if($old_visibility eq ""){ $old_visibility = undef }
   if($old_visibility eq "<undef>"){ $old_visibility = undef }
-  my $has_ctp = 0;;
+  my $has_ctp = 0;
   $get_ctp->RunQuery(sub{
     my($row) = @_;
     $has_ctp = 1;
