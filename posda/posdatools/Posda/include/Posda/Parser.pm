@@ -1104,6 +1104,10 @@ sub CoerceBadVRs{
       $value_s .= "\0";
     }
     return("text", $value_s);
+  } elsif($from_vr eq "LO" && $to_vr eq "CS"){
+    return("text", $value_s);
+  } elsif($from_vr eq "CS" && $to_vr eq "LO"){
+    return("text", $value_s);
   } else {
     return (undef, undef);
     print STDERR "Can't coerce a $from_vr to a $to_vr\n";

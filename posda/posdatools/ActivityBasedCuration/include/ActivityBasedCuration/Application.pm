@@ -517,8 +517,13 @@ sub MakeMenuByMode{
     @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);
   }
   if(
-    (($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries") ||
-     $self->{Mode} eq "Queries")  &&
+    (
+      (
+        defined($self->{ActivityModes}->{$self->{ActivityModeSelected}}) &&
+        $self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries"
+      ) ||
+      $self->{Mode} eq "Queries"
+    )  &&
     exists $self->{NewQueryToDisplay}
   ){
     my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
