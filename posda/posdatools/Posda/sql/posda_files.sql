@@ -4243,6 +4243,18 @@ CREATE TABLE quasar.phantom_files (
 
 
 --
+-- Name: site_ids; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.site_ids (
+    collection_name text,
+    site_name text,
+    pk_id text,
+    site_id text
+);
+
+
+--
 -- Name: background_buttons background_button_id; Type: DEFAULT; Schema: dbif_config; Owner: -
 --
 
