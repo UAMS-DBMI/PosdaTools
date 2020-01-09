@@ -2377,7 +2377,6 @@ method CompareTimepoints($http, $dyn){
   $self->StartJsChildWindow($child_obj);
 }
 method ActivityOperations($http, $dyn){
-<<<<<<< HEAD
   my @buttons;
   my $palette_desc = $ActivityBasedCuration::ButtonDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
   my $el_table = \%ActivityBasedCuration::ButtonDefinition::ElementOccurance;
