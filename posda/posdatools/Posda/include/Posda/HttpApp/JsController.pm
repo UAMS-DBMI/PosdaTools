@@ -1324,6 +1324,7 @@ sub CheckBoxDelegate{
   $parms->{Delegator} = $this->{path};
   $parms->{Delegated} = $parms->{op};
   my $sync = $parms->{sync};
+  unless(defined($sync)) { $sync = "" }
   my $v_string = "group=$group&value=$value";
   for my $i (keys %$parms){
     unless($i eq "checked" || $i eq "sync") {

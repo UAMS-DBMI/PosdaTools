@@ -707,46 +707,13 @@ sub ContentResponse {
   }
 }
 
-sub GetLoadedTables() {
-  my($self) = @_;
-  my @tables;
-  for my $in(0 .. $#{$self->{LoadedTables}}){
-    my $i = $self->{LoadedTables}->[$in];
-    my $type = $i->{type};
-    my $type_disp;
-    my $num_rows;
-    my $name;
-    if($type eq "FromCsv") {
-      $type_disp = "From CSV Upload";
-      $num_rows = @{$i->{rows}} - 1;
-      $name = $i->{basename};
-    } elsif ($type eq "FromQuery"){
-      $type_disp = "From DB Query";
-      $num_rows = @{$i->{rows}};
-      $name = "$i->{query}->{schema}:$i->{query}->{name}(";
-      for my $bi (0 .. $#{$i->{query}->{bindings}}){
-        my $b = $i->{query}->{bindings}->[$bi];
-        $name .= "\"$b\"";
-        unless($bi == $#{$i->{query}->{bindings}}){
-          $name .= ", ";
-        }
-      }
-      $name .= ")";
-    }
-    push @tables, $name;
-  }
-
-  return @tables;
-}
-
-
 sub OpenNewTableLevelPopup{
   my($self, $http, $dyn) = @_;
 print STDERR "In OpenNewTableLevelPopup\n";
   my $params;
   my $tb_id = $self->{NewQueryToDisplay};
   $params = {
-     bindings => $self->{BindingCache}, 
+     bindings => $self->{BindingCache},
      notify => $self->get_user,
   };
   if(defined $self->{ActivitySelected}){
@@ -787,226 +754,8 @@ print STDERR "In OpenNewTableLevelPopup\n";
   $self->StartJsChildWindow($child_obj);
 }
 
-sub OpenTableLevelPopup{
-  my($self, $http, $dyn) = @_;
-print STDERR "In OpenTableLevelPopup\n";
-  my $table;
-  my $parms;
-  if($self->{Mode} eq "Activities"){
-    $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
-    $parms = { table => $table, button => $dyn->{cap_},
-      filter_mode => $self->{FilterSelection}->{$self->{NewQueryToDisplay}}};
-  } else {
-    $table = $self->{LoadedTables}->[$self->{SelectedTable}];
-    $parms = { table => $table, button => $dyn->{cap_}};
-  }
-
-  my $unique_val = "$parms";
-
-  my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable$unique_val", $parms);
-}
-
-my $table_free_seq = 0;
-sub OpenTableFreePopup {
-  my($self, $http, $dyn) = @_;
-print STDERR "In OpenTableFreePopup\n";
-  my $parms = { button => $dyn->{cap_}};
-  for my $i (keys %{$dyn}){
-    unless(
-      $i eq "cap_" || $i eq "class_" ||
-      $i eq "obj_path" || $i eq "op" || $i eq "ts"
-    ){
-      $parms->{$i} = $dyn->{$i};
-    }
-  }
-  $table_free_seq += 1;
-  my $unique_val = "seq_$table_free_seq";
-
-  my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
-}
-
-sub OpenDynamicPopup {
-  my($self, $http, $dyn) = @_;
-for my $i (keys %{$dyn}){
-  print STDERR "dyn{$i}: $dyn->{$i}\n";
-}
-  my $table;
-  if($self->{Mode} eq "Activities") {
-    $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
-  } else {
-    $table = $self->{LoadedTables}->[$self->{SelectedTable}];
-  }
-  if(!exists $table->{type}){
-    my $cols = $table->{query}->{columns};
-    my $rows;
-    if($self->{FilterSelection}->{$self->{NewQueryToDisplay}} eq "unfiltered"){
-     $rows = $table->{rows};
-    } else {
-     $rows = $table->{filtered_rows};
-    }
-    my $row = $rows->[$dyn->{row}];
-
-    # build hash for popup constructor
-    my $h = {};
-    for my $i (0 .. $#{$row}) {
-      $h->{$cols->[$i]} = $row->[$i];
-    }
-    $h->{button} = $dyn->{cap_};
-
-    my $unique_val = "$h";
-
-    my $class = $dyn->{class_};
-    my $row_id = $dyn->{row};
-
-    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
-  } elsif($table->{type} eq "FromQuery"){
-    my $cols = $table->{query}->{columns};
-    my $rows = $table->{rows};
-    my $row = $rows->[$dyn->{row}];
-
-    # build hash for popup constructor
-    my $h = {};
-    for my $i (0 .. $#{$row}) {
-      $h->{$cols->[$i]} = $row->[$i];
-    }
-    $h->{button} = $dyn->{cap_};
-
-    my $unique_val = "$h";
-
-    my $class = $dyn->{class_};
-    my $row_id = $dyn->{row};
-
-    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
-  } elsif ($table->{type} eq 'FromCsv') {
-
-    my $file = $table->{file};
-    my $rows = $table->{rows};
-    my $row = $rows->[$dyn->{row}];
-    my $cols = $rows->[0]; # column names in first row
-
-    # build hash for popup constructor
-    my $h = {};
-    for my $i (0 .. $#{$row}) {
-      $h->{$cols->[$i]} = $row->[$i];
-    }
-    my $unique_val = "$h";
-
-    my $class = $dyn->{class_};
-    my $row_id = $dyn->{row};
-
-    $self->OpenPopup($class, "${class}_Row$row_id$unique_val", $h);
-  }
-}
-
-sub OpenPopup {
-  my($self, $class, $name, $params) = @_;
-#    say STDERR "OpenDynamicPopup, executing $class using params:";
-#    print STDERR Dumper($params);
-  print STDERR "################\nOpenPopup\nclass: $class\n";
-  print STDERR "name: $name\n################\n";
 
 
-  if ($class eq 'choose') {
-    $class = Posda::FileViewerChooser::choose($params->{file_id});
-    delete $params->{spreadsheet_file_id};
-  } elsif ($class eq 'choose_from'){
-    $params->{file_id} = $params->{from_file_id};
-    $class = Posda::FileViewerChooser::choose($params->{file_id});
-  } elsif ($class eq 'choose_to'){
-    $params->{file_id} = $params->{to_file_id};
-    $class = Posda::FileViewerChooser::choose($params->{file_id});
-  } elsif ($class eq 'choose_spreadsheet'){
-    $params->{file_id} = $params->{spreadsheet_file_id};
-    $class = Posda::FileViewerChooser::choose($params->{file_id});
-  }
-  unless(defined $class){ return }
-
-  # if Quince, do it differently:
-  if ($class eq 'Quince') {
-    $self->OpenQuince($name, $params);
-    return;
-  }
-
-  eval "require $class";
-  if($@){
-    print STDERR "Class failed to compile\n\t$@\n";
-    return;
-  }
-
-  my $child_path = $self->child_path($name);
-  my $child_obj = $class->new($self->{session},
-                              $child_path, $params);
-  $self->StartJsChildWindow($child_obj);
-}
-
-sub OpenQuince {
-  my($self, $name, $params) = @_;
-  my $external_hostname = Config('external_hostname');
-  my $quince_url = "http://$external_hostname/viewer";
-  my $mode;
-  my $val;
-
-  if (defined $params->{file_id}) {
-    $mode = 'file';
-    $val = $params->{file_id};
-  } elsif (defined $params->{series_instance_uid}) {
-    $mode = 'series';
-    $val = $params->{series_instance_uid};
-  }
-
-  my $cmd = "rt('$name', '$quince_url/$mode/$val', 600, 800, 0);";
-  $self->QueueJsCmd($cmd);
-}
-
-sub DrawSpreadsheetOperationList {
-  my($self, $http, $dyn, $selected_tags) = @_;
-  my @q_list = @{PosdaDB::Queries->GetOperationsWithTags($selected_tags)};
-  $http->queue(qq{
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        Spreadsheet Operations associated with the selected tags
-      </div>
-
-        <table class="table">
-          <tr>
-            <th>Name</th>
-            <th>Command Line</th>
-            <th>Input Format</th>
-            <th>Help</th>
-          </tr>
-  });
-  $self->{spreadsheet_op_list} = {};
-  for my $row (@q_list) {
-    my ($name, $cmdline, $op_type, $input_fmt, $tags) = @$row;
-    $self->{spreadsheet_op_list}->{$name} = $row;
-
-    if (not defined $input_fmt) {
-      $input_fmt = '';
-    }
-
-    # Escape html codes
-    $name = encode_entities($name);
-    $cmdline = encode_entities($cmdline);
-    $op_type = encode_entities($op_type);
-    $input_fmt = encode_entities($input_fmt);
-
-    $self->RefreshEngine($http, $dyn, qq{
-      <tr>
-        <td>$name</td>
-        <td>$cmdline</td>
-        <td>$input_fmt</td>
-        <td><?dyn="NotSoSimpleButton" op="OpHelp" caption="H" cmd="$name" sync="Update();"?></td>
-      </tr>
-    });
-
-  }
-  $http->queue(qq{
-        </table>
-    </div>
-  });
-}
 
 method OpHelp($http, $dyn) {
 
@@ -1113,29 +862,6 @@ method SetWidgetFromTo($http, $dyn) {
 }
 
 
-method DeleteQuery($http,$dyn){
-  $self->{Mode} = "DeleteQueryPending";
-  $self->{QueryPendingDelete} = $dyn->{query_name};
-}
-method DeleteQueryPending($http, $dyn){
-  $self->RefreshEngine($http, $dyn, qq{
-    <p>
-      Do you want to delete query named $self->{QueryPendingDelete}?
-    </p>
-
-    <?dyn="NotSoSimpleButton" op="ReallyDeleteQuery" caption="Yes, Delete it" sync="Update();"?>
-    <?dyn="NotSoSimpleButton" op="CancelDeleteQuery" caption="No, don't delete" sync="Update();"?>
-  });
-}
-method ReallyDeleteQuery($http, $dyn){
- PosdaDB::Queries::Delete($self->{QueryPendingDelete});
- delete $self->{QueryPendingDelete};
- $self->{Mode} = "ListQueries";
-}
-method CancelDeleteQuery($http, $dyn){
- delete $self->{QueryPendingDelete};
- $self->{Mode} = "ListQueries";
-}
 
 method GetBindings() {
   my $bc = $self->{BindingCache};
@@ -3891,10 +3617,18 @@ method DeleteThisDirectory($http, $dyn){
 #############################
 method Upload($http, $dyn){
   $self->RefreshEngine($http, $dyn, qq{
+  <div style="display: flex; flex-direction: column; align-items: flex-beginning;
+    margin-left: 10px; margin-bottom: 5px">
+  <div id="load_form">
   <form action="<?dyn="StoreFileUri"?>"
     enctype="multipart/form-data" method="POST" class="dropzone">
   </form>
+  </div>
+  <div id="file_report">
+  </div>
+  </div>
   });
+  $self->AutoRefreshDiv('file_report','Files');
 }
 method StoreFileUri($http, $dyn){
   $http->queue("StoreFile?obj_path=$self->{path}");
@@ -3934,6 +3668,7 @@ method UploadDone($http, $dyn){
     }
     $http->queue("<a href=\"Refresh?obj_path=$self->{path}\">Go back</a>");
     $http->queue("<hr><pre>");
+    $self->AutoRefreshDiv('file_report','Files');
   };
   return $sub;
 }
@@ -3957,19 +3692,58 @@ method ReadConvertLine($hash){
   };
   return $sub;
 }
+method ImportFileIntoPosda($http, $dyn){
+  my $index = $dyn->{index};
+  my $f_info = $self->{UploadedFiles}->[$index];
+  my $file = $f_info->{"Output file"};
+  my $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" " .
+    "\"Importing Uploaded file into Posda\"";
+  open COMMAND, "$cmd|";
+  my $file_id;
+  my $error;
+  while(my $line = <COMMAND>){
+    chomp $line;
+    if($line =~ /^File id: (.*)$/){
+      $f_info->{file_id} = $1;
+    } elsif ($line =~ /^Error: (.*)$/) {
+      $f_info->{import_error} = $1;
+    }
+  }
+  $self->AutoRefresh;
+  close COMMAND;
+}
 method ConvertLinesComplete($hash){
   my $sub = sub {
     push(@{$self->{UploadedFiles}}, $hash);
-    # If the file was a CSV, go ahead and load it as a table now
-    if (
-      $hash->{'mime-type'} eq 'text/csv' ||
-      $hash->{'mime-type'} eq 'application/vnd.ms-excel'
-    ) {
-      $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
+    # Go ahead and load file into Posda DB
+    my $file = $hash->{"Output file"};
+    my $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" " .
+      "\"Importing Uploaded file into Posda\"";
+    open COMMAND, "$cmd|";
+    my $file_id;
+    my $error;
+    while(my $line = <COMMAND>){
+      chomp $line;
+      if($line =~ /^File id: (.*)$/){
+        $hash->{file_id} = $1;
+      } elsif ($line =~ /^Error: (.*)$/) {
+        $hash->{import_error} = $1;
+      }
     }
-    if ($hash->{'mime-type'} =~ /zip/) {
+    close COMMAND;
+
+    # If the file was a CSV, go ahead and load it as a table now
+    unless(1){
+      if (
+        $hash->{'mime-type'} eq 'text/csv' ||
+        $hash->{'mime-type'} eq 'application/vnd.ms-excel'
+      ) {
+        $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
+      }
+      if ($hash->{'mime-type'} =~ /zip/) {
       DEBUG "Looks like this is a zip/gzip file!";
-      $self->ProcessCompressedFile($hash);
+        $self->ProcessCompressedFile($hash);
+      }
     }
     $self->InvokeAfterDelay("ServeUploadQueue", 0);
   };
@@ -3997,7 +3771,200 @@ method ProcessCompressedFile($hash) {
   });
 }
 
-method Files($http, $dyn){
+sub SetFileDescription{
+  my($this, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $data = $dyn->{value};
+  $this->{UploadedFiles}->[$index]->{description} = $data;
+}
+
+sub UploadedFileCheckBox{
+  my($this, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $checked = $dyn->{checked};
+  $this->{UploadedFiles}->[$index]->{check_box} = $checked;
+}
+
+sub DismissSelectedUploads{
+  my($this, $http, $dyn) = @_;
+  my @Remaining;
+  for my $f (@{$this->{UploadedFiles}}){
+    unless($f->{check_box} eq "true"){
+      push @Remaining, $f;
+    }
+  }
+  $this->{UploadedFiles} = \@Remaining;
+}
+
+sub ChainUploadedSpreadsheet{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $file_id = $self->{UploadedFiles}->[$index]->{file_id};
+  my $path;
+  Query("FilePathByFileId")->RunQuery(sub{
+    my($row) = @_;
+    $path = $row->[0];
+  }, sub {}, $file_id);
+  my $cmd = "CsvToPerlStruct.pl \"$path\"";
+  $self->SemiSerializedSubProcess($cmd, $self->ChainCsvLoaded($file_id, $index));
+  $self->{WaitingOnChainCsvConversion} = 1;
+}
+sub ChainCsvLoaded{
+  my($self, $file_id, $index) = @_;
+  my $sub = sub {
+    my($status, $struct) = @_;
+    if($status eq "Succeeded"){
+      delete $self->{WaitingOnChainCsvConversion};
+      $self->{ChainedUploadedSpreadsheetAvailable} = {
+        file_id => $file_id,
+        index => $index,
+        struct => $struct,
+      };
+    } else {
+      $self->{ChainCsvLoadedError} = $struct;
+    }
+    $self->AutoRefreshDiv('file_report','Files');
+  };
+  return $sub;
+}
+sub ProcessConvertedUploadedSpreadsheet{
+  my($self, $http, $dyn) = @_;
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  my $params = {
+    input_file_id => $dyn->{file_id},
+    bindings => $self->{BindingCache},
+    current_settings => { notify => $self->get_user },
+  };
+  if(defined($self->{ActivitySelected}) && $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+  my @rows;
+  my $cols = $dyn->{struct}->{rows}->[0];
+  for my $i (1 .. $#{$dyn->{struct}->{rows}}){
+    my $h;
+    my $e = $dyn->{struct}->{rows}->[$i];
+    for my $j (0 .. $#{$e}){
+      $h->{$cols->[$j]} = $e->[$j];
+    }
+    push @rows, $h;
+  }
+  $params->{rows} = \@rows;
+  $params->{cols} = $cols;
+  if(exists $params->{rows}->[0]->{Operation}){
+    my $operation = 
+      $self->GetOperationDescription($params->{rows}->[0]->{Operation});
+    if(defined $operation){
+      $params->{command} = $operation;
+      return $self->ProcessConvertedUploadedNamedSpreadsheet($http, $dyn, $params);
+    }
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Annotate_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+sub ProcessConvertedUploadedNamedSpreadsheet{
+  my($self, $http, $dyn, $params) = @_;
+  my %arg_map;
+  my $fr = $params->{rows}->[0];
+  for my $arg (@{$params->{command}->{args}}){
+    if(exists($fr->{$arg}) && defined($fr->{$arg})){
+      $arg_map{$arg} = $fr->{$arg};
+    }
+  }
+  $params->{prior_ss_args} = \%arg_map;
+  my $class = 'Posda::NewerProcessPopup';
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Loaded_Spreadsheet_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+sub GetOperationDescription{
+  my($this, $operation_name) = @_;
+  my $operation;
+  Query('GetSpreadsheetOperationByName')->RunQuery(sub{
+    my($row) = @_;
+    my($operation_name, $command_line, $operation_type, 
+      $input_line_format, $tags, $can_chain) = @$row;
+    $operation->{operation_name} = $operation_name;
+    $operation->{command_line} = $command_line;
+    $operation->{operation_type} = $operation_type;
+    $operation->{input_line_format} = $input_line_format;
+  }, sub{}, $operation_name);
+  if(defined $operation){
+    my($fields, $args, $meta_args) = $this->BuildFieldsAndArgs($operation);
+    $operation->{fields} = $fields;
+    $operation->{args} = $args;
+    $operation->{meta_args} = $meta_args;
+    return $operation
+  }
+  return undef;
+}
+sub BuildFieldsAndArgs{
+  my($this, $operation) = @_;
+  my(@fields, @args, @meta_args);
+  my $remaining = $operation->{command_line};
+  while($remaining =~ /[^<]*<([^>]+)>(.*)$/){
+    my $arg = $1;
+    $remaining = $2;
+    if($arg =~ /^\?(.*)\?$/){
+      my $meta_arg = $1;
+      push @meta_args, $meta_arg
+    } else {
+      my $arg = $1;
+      push @args, $arg;
+    }
+  }
+  $remaining = $operation->{input_line_format};
+  while($remaining =~ /[^<]*<([^>]+)>(.*)$/){
+    my $field = $1;
+    $remaining = $2;
+    push @fields, $field;
+  }
+  return \@fields, \@args, \@meta_args;
+}
+
+sub Files{
+  my($self, $http, $dyn) = @_;
+  if(exists $self->{ChainCsvLoadedError}){
+    print STDERR "ChainCscLoadedError: ";
+    Debug::GenPrint($dbg, $self->{ChainCsvLoadedError}, 1);
+    print STDERR "\n";
+    delete $self->{ChainCsvLoadedError};
+  }
+  if(exists $self->{WaitingOnChainCsvConversion}) {
+    $http->queue("Waiting on Csv Conversion");
+    return;
+  }
+  if(exists $self->{ChainedUploadedSpreadsheetAvailable}){
+    my $ndyn = $self->{ChainedUploadedSpreadsheetAvailable};
+    delete $self->{ChainedUploadedSpreadsheetAvailable};
+    return $self->ProcessConvertedUploadedSpreadsheet($http, $ndyn);
+  }
   unless(exists $self->{UploadedFiles}) { $self->{UploadedFiles} = [] }
   my $num_files = @{$self->{UploadedFiles}};
   if($num_files == 0){
@@ -4005,10 +3972,15 @@ method Files($http, $dyn){
   }
   $self->RefreshEngine($http, $dyn,
     '<table class="table table-striped table-condensed">' .
-    '<tr><th colspan="5"><p>Files Uploaded</p></th></tr>'.
-    '<tr><th><p>File</p></th><th><p>Size</p></th><th><p>Type</p></th>' .
-    '<th><p>File Type</p></th>' .
-    '<th><p>Op</p></th></tr>');
+    '<tr><th colspan="6"><p>Files Uploaded</p></th></tr>'.
+    '<tr><th><p>file_name</p></th><th><p>size</p></th><th><p>mime_type</p></th>' .
+    '<th><p>description</p></th><th>' .
+    '<?dyn="NotSoSimpleButton" ' .
+    'caption="Dismiss" ' .
+    'op="DismissSelectedUploads" ' .
+    "sync=\"UpdateDiv('file_report','Files');\" " .
+    'class="btn btn-primary"?>' .
+    '</th><th><p>file_id</p></th></tr>');
   file:
   for my $in(0 .. $#{$self->{UploadedFiles}}){
     my $i = $self->{UploadedFiles}->[$in];
@@ -4033,32 +4005,115 @@ method Files($http, $dyn){
     $self->RefreshEngine($http, $dyn, '<tr>' .
       "<td><p>$file</p></td>" .
       "<td><p>$size</p></td><td><p>");
+    
     $self->RefreshEngine($http, $dyn, $type .
+      (
+        ($type eq "text/csv") ?
+          '<?dyn="NotSoSimpleButton" ' .
+          'caption="chain" ' .
+          'op="ChainUploadedSpreadsheet" ' .
+          "index=\"$in\" " .
+          "sync=\"UpdateDiv('file_report','Files');\" " .
+         'class="btn btn-primary"?>' 
+        : 
+         ""
+      ) .
       "</p></td><td><p>");
-    $self->RefreshEngine($http, $dyn, $i->{file_type} .
-      "</p></td><td><p>");
-    if($type eq "text/csv"){
-      $self->NotSoSimpleButton($http, {
-        caption => "Load as Table",
-        op => "LoadCsvIntoTable",
-        index => $in
-      });
-    } else {
-      if(exists $self->{UploadedFiles}->[$in]->{file_id}){
-        $http->queue("File id: " .
-          $self->{UploadedFiles}->[$in]->{file_id});
-      } else {
-        $self->NotSoSimpleButton($http, {
-          caption => "Save into DB",
-          op => "ImportFileIntoPosda",
-          index => $in
-        });
-      }
-    }
+      unless(defined $i->{description}) {$i->{description} = $i->{file_type}}
+      $self->BlurEntryBox($http, {
+        name => "Filter",
+        op => "SetFileDescription",
+        id => "FileDescriptionEntryBox_$in",
+        index => $in,
+        value => "$i->{description}",
+        size => 30,
+      }, "");
+    $self->RefreshEngine($http, $dyn, "</p></td><td><p>");
+    $http->queue(
+      $self->CheckBoxDelegate("group", "value",
+       ($i->{check_box} eq "true") ? 1: 0, 
+      {
+        op => "UploadedFileCheckBox",
+        index => $in,
+      })
+    );
+    $http->queue("</p></td>");
+    $http->queue("<td><p>");
+    $http->queue($self->{UploadedFiles}->[$in]->{file_id});
     $self->RefreshEngine($http, $dyn, '</p></td></tr>');
   }
+  $self->RefreshEngine($http, $dyn,
+    '<tr><td colspan="4"></td><td><p>' .
+    '<?dyn="NotSoSimpleButton" ' .
+    'caption="Annotation" ' .
+    'op="AnnotateSelectedUploads" ' .
+    "sync=\"UpdateDiv('file_report','Files');\" " .
+    'class="btn btn-primary"?></p>' .
+    '</td></tr>');
   $self->RefreshEngine($http, $dyn, '</table>');
 }
+
+sub AnnotateSelectedUploads{
+  my($self, $http, $dyn) = @_;
+#  my $class = "Posda::NewProcessPopup";
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  my @selected_files;
+  for my $f (@{$self->{UploadedFiles}}){
+    if($f->{check_box} eq "true"){
+      my $name = $f->{"Output file"};
+      if($name =~ /\/([^\/]+)$/){
+        $name = $1;
+      }
+      my $nf = {
+        file_id => $f->{file_id},
+        mime_type => $f->{"mime-type"},
+        description => $f->{description},
+        file_name => $name,
+      };
+      push @selected_files, $nf;
+    }
+  }
+  my $params = {
+    bindings => $self->{BindingCache},
+    current_settings => { notify => $self->get_user },
+    rows => \@selected_files,
+  };
+  if(defined($self->{ActivitySelected}) && $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Annotate_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  
+  my $operation = {
+    operation_name => "AnnotateTimeline",
+    command_line => "InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> \"<comment>\" <notify>",
+    operation_type => "background_subprocess",
+    input_line_format => "<file_id>&<file_name>&<mime_type>&<description>",
+    create_file_from_rows => 1,
+  };
+  my($fields, $args, $meta_args) = $self->BuildFieldsAndArgs($operation);
+  $operation->{fields} = $fields;
+  $operation->{args} = $args;
+  $operation->{meta_args} = $meta_args;
+  $params->{command} = $operation;
+  $params->{cols} = $params->{command}->{fields};
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
 method LoadCsvIntoTable($http, $dyn){
   $self->{Mode} = "LoadCsvIntoTable";
   my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output file"};
@@ -4070,26 +4125,6 @@ method LoadCSVIntoTable_NoMode($file) {
   $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
 }
 
-method ImportFileIntoPosda($http, $dyn){
-  my $index = $dyn->{index};
-  my $f_info = $self->{UploadedFiles}->[$index];
-  my $file = $f_info->{"Output file"};
-  my $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" " .
-    "\"Importing Uploaded file into Posda\"";
-  open COMMAND, "$cmd|";
-  my $file_id;
-  my $error;
-  while(my $line = <COMMAND>){
-    chomp $line;
-    if($line =~ /^File id: (.*)$/){
-      $f_info->{file_id} = $1;
-    } elsif ($line =~ /^Error: (.*)$/) {
-      $f_info->{import_error} = $1;
-    }
-  }
-  $self->AutoRefresh;
-  close COMMAND;
-}
 
 method CsvLoaded($file){
   my $sub = sub {
