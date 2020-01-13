@@ -381,4 +381,5 @@ $background->WriteToEmail("All subshells complete\n");
 my $end = time;
 my $duration = $end - $script_start_time;
 $background->WriteToEmail( "finished conversion in $duration seconds\n");
+$background->WriteToEmail("<a href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>");
 $background->Finish;

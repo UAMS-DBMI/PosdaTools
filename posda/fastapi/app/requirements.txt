@@ -5,3 +5,4 @@ requests
 aiofiles
 numpy
 uvicorn
+jinja2
