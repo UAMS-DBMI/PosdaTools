@@ -3165,6 +3165,7 @@ $self->{DebugPopupNewHash} = \%ActivityBasedCuration::ButtonDefinition::QueryToP
       $ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton{$q_name};
   }
   my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
+$self->{chained_queries} = $chained_queries;
   unless(defined $SFQ->{first_row}) { $SFQ->{first_row} = 0 }
   unless(defined $SFQ->{rows_to_show}) { $SFQ->{rows_to_show} = 30 }
   if(defined $SFQ->{filter}){
