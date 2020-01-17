@@ -222,6 +222,13 @@ window.onload = function(){
   NewQueueRepeatingServerCmd('ServerCheck', 500);
   Update();
 }
+function ChangeSelection(myNewSelected){
+  var substohide = document.getElementsByClassName("subdiv");
+  for (var i=0,len=substohide.length|0;i<len; i=i+1|0){
+    substohide[i].style.display = "none"
+  }
+  document.getElementById(myNewSelected).style.display= "block";
+}
 EOF
 sub InitApp{
   my($class, $sess, $app_name) = @_;
@@ -276,7 +283,7 @@ sub NewDelegateEntryBox{
   my $value = $dyn->{value};
   my $op =
     "PosdaNewPostRemoteMethod('Delegate?obj_path=' + ObjPath + '&$v_string', '";
-  
+
  # my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
   my $class = "form-control";
   if (defined $dyn->{class}) {
@@ -305,7 +312,7 @@ sub NewDelegateEntryBox{
 sub NewEntryBox{
   my($this, $http, $dyn, $sync) = @_;
   unless(defined($sync)){ $sync = "" }
-  
+
   my $op = "PosdaGetRemoteMethod('$dyn->{op}', '";
   my $class = "form-control";
   if (defined $dyn->{class}) {
@@ -1241,7 +1248,7 @@ sub MakeMenu{
           $m->{class} = "$m->{class} $m->{extra_class}";
         }
         $m->{element} = 'a';
-          
+
         unless(exists $m->{id}){
           if(exists $dyn->{id}){
             $m->{id} = "$dyn->{id}_$i";

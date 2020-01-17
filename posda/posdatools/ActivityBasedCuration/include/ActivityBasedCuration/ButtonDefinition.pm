@@ -1,4 +1,4 @@
-#!/bin/perl -w 
+#!/bin/perl -w  
 package ActivityBasedCuration::ButtonDefinition;
 use Debug;
 my $dbg = sub {print @_};
@@ -7,9 +7,9 @@ use vars qw( $Description %ElementOccurance %ButtonOccurance
   %PaletteOccurance %QueryButtons %QueryProcessingButtons %QueryToProcessingButton);
 
 $Definition = <<EOF;
-Definition of Button Descriptor Structure 
+Definition of Button Descriptor Structure
 The ButtonDescriptorStructure is a recursive hash/array structure which
-contains a defintion of all of the buttons which occur in the 
+contains a defintion of all of the buttons which occur in the
 ActivityBasedCuration application in Posda.  It replaces the data
 currently found in the following database tables:
 
@@ -26,20 +26,20 @@ to a "button_occurance":
      - In a palatte of buttons (like the current "ActivityOperations")
      - At the top of a query results display.  These are for operations
        to be performed for a list of query results.  Normally these are
-       spreadsheet operations of type "background_process" with the 
+       spreadsheet operations of type "background_process" with the
        query results serving as input to the background subprocess. They
        could, however, serve as input to a foreground (possibly interactive)
        process (like an SR Viewer).
      - At the beginning of a row in query display.  Currently these
        buttons are "chained queries".  They use the contents of the
        selected row as input to a second query.  They could also use
-       the contents of the current row as input to a "background_process", 
+       the contents of the current row as input to a "background_process",
        or "interactive_viewer".
      - In a cell of a query display.  In this case, currently, it invokes
        an interactive viewer.  Somethimes this interactive viewer is a
        separate program (like Quince or Kaleidoscope), sometimes a Posda
        sub-program (like Dicom Compare).  In practice, it is probably
-       best to treat both cases as a Posda sub-program (see the 
+       best to treat both cases as a Posda sub-program (see the
        ActivityBasedCuration::Quince module)
  - How to display the button: the caption, and the style (perhaps other
    attributes TBD.
@@ -55,7 +55,7 @@ Generally, all of the information is contained in a single hash:
 );
 The id musy be unique, and is an alpha_numeric string (with underscores).
 
-A element descriptor is itself a hash, which captures the attributes of the 
+A element descriptor is itself a hash, which captures the attributes of the
 element:
 {
   class => <class>,
@@ -80,7 +80,7 @@ EOF
       where => "div-navbar",
       index => 0,
     },
-  }, 
+  },
   "div-app-layout" => {
     class => "container-fluid",
     tag => "div",
@@ -412,7 +412,7 @@ EOF
     occurance => {
       where => "div_ShowActivityTimeline",
       condition => [and =>
-        [eq => "Mode", [quote => "Activities"]], 
+        [eq => "Mode", [quote => "Activities"]],
         [eq => "ActivityMode", [quote => "ShowActivityTimeline"]],
         [has => [subprocess_invocation => "sub_id"], [quote => "spreadsheet_id"]],
       ],
@@ -763,7 +763,7 @@ EOF
       DistinctSeriesByPatientId => 1,
       SeriesByMatchingImportEventsWithEventInfo => 1,
       SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
-    },    
+    },
   },
 );
 for my $k(keys %ElementOccurance){

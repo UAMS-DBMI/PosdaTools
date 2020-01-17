@@ -6,6 +6,7 @@ use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query', 'GetHandle';
 use Dispatch::BinFragReader;
 use ActivityBasedCuration::ButtonDefinition;
+use ActivityBasedCuration::WorkflowDefinition;
 
 use Modern::Perl '2010';
 use Method::Signatures::Simple;
@@ -47,6 +48,7 @@ use Text::Markdown 'markdown';
 
 use Debug;
 my $dbg = sub {print STDERR @_ };
+my $selected_option;
 
 use vars '@ISA';
 @ISA = ("GenericApp::Application");
@@ -75,7 +77,7 @@ sub SpecificInitialize {
         sync => 'Update();'
       },
       {
-        caption => "Activity Ops",
+        caption => "Workflow",
         op => 'SetMode',
         mode => 'ActivityOperations',
         sync => 'Update();'
@@ -517,13 +519,8 @@ sub MakeMenuByMode{
     @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);
   }
   if(
-    (
-      (
-        defined($self->{ActivityModes}->{$self->{ActivityModeSelected}}) &&
-        $self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries"
-      ) ||
-      $self->{Mode} eq "Queries"
-    )  &&
+    (($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries") ||
+     $self->{Mode} eq "Queries")  &&
     exists $self->{NewQueryToDisplay}
   ){
     my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
@@ -2376,124 +2373,62 @@ method CompareTimepoints($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
+
+
+#ACTIVITY OPERATION WOOO
 method ActivityOperations($http, $dyn){
   my @buttons;
-  my $palette_desc = $ActivityBasedCuration::ButtonDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
-  my $el_table = \%ActivityBasedCuration::ButtonDefinition::ElementOccurance;
-  for my $btn (
-    sort {
-      $el_table->{$a}->{occurance}->{col} <=> $el_table->{$b}->{occurance}->{col} ||
-      $el_table->{$a}->{occurance}->{row} <=> $el_table->{$b}->{occurance}->{row}
+  my $palette_desc = $ActivityBasedCuration::WorkflowDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
+  my $el_table = \@ActivityBasedCuration::WorkflowDefinition::ActivityCategories;
+  my $selected_option = "1_associate";
+
+  $http->queue('<div id="div_ActivityOperations">');
+  #$http->queue('<script type="text/javascript"> function ChangeSelection(myNewSelected){ document.getElementByClass(subdiv).style.display = "none"; document.getElementById(myNewSelected).style.display= "block"; }</script>');
+  for my $i (@$el_table){
+    #$http->queue(Dumper($el_table));
+    $http->queue("<div id=\"category_$i->{id}\">");
+    $http->queue("<button onclick=\"ChangeSelection('sub_$i->{id}')\" class=\"btn btn-default  btn-lg btn-block\"  > $i->{name}  </button>");
+    $http->queue('</div>');
+
+    #if ($i->{id} == $selected_option){
+    $http->queue("<div id=\"sub_$i->{id}\" class=\"subdiv\" style=\"display: none;\">");
+    $http->queue("<blockquote><p>$i->{description}</p>");
+    if ($i->{note}){
+      $http->queue("<p> <mark>Note: $i->{note}</mark></p>");
     }
-    keys %$palette_desc
-  ){
-    push @buttons, [
-      $el_table->{$btn}->{action}->[1]->[1],
-      $el_table->{$btn}->{caption},
-      $el_table->{$btn}->{occurance}->{col}, 
-      $el_table->{$btn}->{occurance}->{row}];
-  }
-print STDERR "buttons: ";
-Debug::GenPrint($dbg, \@buttons, 1);
-print STDERR "\n";
-  my @buttons =  (
-    [ "CreateActivityTimepointFromImportName", "Create Activity Timepoint from Import Name", 0, 0],
-    [ "CreateActivityTimepointFromCollectionSite", "Create Activity Timepoint", 0, 1],
-    [ "VisualReviewFromTimepoint", "Schedule Visual Review", 0, 2],
-    [ "PhiReviewFromTimepoint", "Schedule PHI Scan", 0, 3],
-    [ "ConsistencyFromTimePoint", "Check Consistency", 0, 4],
-    [ "LinkRtFromTimepoint", "Link RT Data for ItcTools", 0, 5],
-    [ "CheckStructLinkagesTp", "Check Structure Set Linkages", 0, 6],
-    [ "MakeDownloadableDirectoryTp", "Make a Downloadable Directory", 0, 7],
-    [ "PhiPublicScanTp", "Public Phi Scan Based on Current TP by Activity", 1, 0],
-    [ "SuggestPatientMappings", "Suggest Patient Mapping for Timepoint", 1, 1],
-    [ "BackgroundDciodvfyTp", "Run Dciodvfy for Time Point", 1, 2],
-    [ "CondensedActivityTimepointReport", "Produce Condensed Activity Timepoint Report", 1, 3],
-    [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
-    [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
-    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
-    [ "BackgroundHelloWorld.pl", "Perl Hello World Background", 1, 7],
-    [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
-    [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],
-    [ "BackgroundPrivateDispositionsTp", "Apply Background Dispositions To Timepoint (non baseline date)", 2, 2],
-    [ "BackgroundPrivateDispositionsTpBaseline", "Apply Background Dispositions To Timepoint (baseline date)", 2, 3],
-    [ "CompareSopsTpPosdaPublicLike", "Compare Sops in Timepoint, Posda, and Public like Collection", 2, 4],
-    [ "UpdateActivityTimepoint", "Update Activity Timepoint", 2, 5],
-    [ "InitialAnonymizerCommandsTp", "Produce Initial Anonymizer For Timepoint", 2, 6],
-    [ "UncompressFilesTp", "Uncompress Compressed Files in Timepoint", 2, 7],
-    [ "BackgroundHelloWorld.py", "Python Hello World Background", 2, 7],
-  );
-  my @Cols;
-  for my $i (@buttons){
-    my($op, $cap, $col, $row) = @$i;
-    unless(defined $Cols[$col]) {
-      $Cols[$col] = [];
-    }
-    $Cols[$col]->[$row] = [$op, $cap];
-  }
-  $self->{NewActivities}->{ops} = {};
-  $http->queue('<table class="table table-striped table-condensed" id="tbl_ActivityOperations">');
-  my $c0c = @{$Cols[0]};
-  my $c1c = @{$Cols[1]};
-  my $c2c = @{$Cols[2]};
-  while($c0c > 0 || $c1c > 0 || $c2c > 0 ){
-    $http->queue("<tr>");
-    if($c0c > 0){
-      my $foo = shift(@{$Cols[0]});
-      $c0c = @{$Cols[0]};
-      my($op, $cap) = @$foo;
-      $self->{NewActivities}->{ops}->{$op} = $cap;
-      $http->queue("<td>");
-#xyzzy
-      $self->NotSoSimpleButtonPopularity($http, {
+    #$http->queue("<p> Possible Operations: </p>");
+
+    if ($i->{operation1}){
+      $self->NotSoSimpleButton($http, {
         op => "InvokeOperation",
-        caption => $cap,
-        operation => $op,
-        id => "btn_activity_op_$op",
+        id => "btn_activity_op_$i->{operation1}->{action}",
+        caption => $i->{operation1}->{caption},
+        operation => $i->{operation1}->{action},
         sync => "Update();",
       });
       $http->queue("</td>");
     } else {
       $http->queue("<td></td>");
     }
-    if($c1c > 0){
-      my $foo = shift(@{$Cols[1]});
-      $c1c = @{$Cols[1]};
-      my($op, $cap) = @$foo;
-      $self->{NewActivities}->{ops}->{$op} = $cap;
-      $http->queue("<td>");
-      $self->NotSoSimpleButtonPopularity($http, {
+    if ($i->{operation2}){
+      $self->NotSoSimpleButton($http, {
         op => "InvokeOperation",
-        id => "btn_activity_op_$op",
-        caption => $cap,
-        operation => $op,
+        id => "btn_activity_op_$i->{operation2}->{action}",
+        caption => $i->{operation2}->{caption},
+        operation => $i->{operation2}->{action},
         sync => "Update();",
       });
       $http->queue("</td>");
     } else {
       $http->queue("<td></td>");
     }
-    if($c2c > 0){
-      my $foo = shift(@{$Cols[2]});
-      $c2c = @{$Cols[2]};
-      my($op, $cap) = @$foo;
-      $self->{NewActivities}->{ops}->{$op} = $cap;
-      $http->queue("<td>");
-      $self->NotSoSimpleButtonPopularity($http, {
-        op => "InvokeOperation",
-        id => "btn_activity_op_$op",
-        caption => $cap,
-        operation => $op,
-        sync => "Update();",
-      });
-      $http->queue("</td>");
-    } else {
-      $http->queue("<td></td>");
-    }
-    $http->queue("</tr>");
+    $http->queue('</div>');
+    #}
   }
-  $http->queue("</table>");
+  $http->queue('</blockquote></div>');
+
 }
+
 
 method InvokeOperation($http, $dyn){
 #  my $class = "Posda::ProcessPopup";
@@ -2504,7 +2439,7 @@ method InvokeOperation($http, $dyn){
   eval "require $class";
   #print STDERR Dumper($dyn);
   #Button Popularity'
-  Query('IncreaseButtonPopularity')->RunQuery(sub{}, sub{},$dyn->{operation});
+  #Query('IncreaseButtonPopularity')->RunQuery(sub{}, sub{},$dyn->{operation});
   my $params = {
     button => $dyn->{operation},
     activity_id => $self->{ActivitySelected},
