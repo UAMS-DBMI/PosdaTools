@@ -94,16 +94,16 @@ sub SpecificInitialize {
         mode => 'Inbox',
         sync => 'Update();',
       },
-    ],
-    DefaultTail => [
-      {
-        type => "hr"
-      },
       {
         caption => "Upload",
         op => 'SetMode',
         mode => 'Upload',
         sync => 'Update();'
+      },
+    ],
+    DefaultTail => [
+      {
+        type => "hr"
       },
       {
         caption => "Download",
@@ -115,18 +115,6 @@ sub SpecificInitialize {
         caption => "ShowBackground",
         op => 'SetMode',
         mode => 'ShowBackground',
-        sync => 'Update();'
-      },
-      {
-        caption => "Files",
-        op => 'SetMode',
-        mode => 'Files',
-        sync => 'Update();'
-      },
-      {
-        caption => "Tables",
-        op => 'SetMode',
-        mode => 'Tables',
         sync => 'Update();'
       },
     ],
@@ -542,6 +530,7 @@ sub MakeMenuByMode{
           op => $q_desc->{operation},
           "class_" => $q_desc->{obj_class},
           "cap_" => "$q_desc->{spreadsheet_operation}",
+          _btn_id => "btn_popup_$q_name" . "_$q_desc->{name}",
         }
       }
     }
@@ -634,6 +623,13 @@ sub QueryDisplayMenu{
       #mode => 'SaveQuery',
       sync => 'Update();'
     },
+    {
+      caption => "Chain",
+      op => 'ChainQueryToSpreadsheet',
+      id => 'query_menu_ChainToSpreadsheet',
+      #mode => 'SaveQuery',
+      sync => 'Update();'
+    },
   ];
   return $ret;
 }
@@ -665,11 +661,11 @@ sub DownloadSpecifiedFileById {
   my $shortname = $dyn->{targ_name};
   my $file_id = $dyn->{file_id};
   my $mime_type = $dyn->{mime_type};
-print STDERR "DownloadSpecifiedFileById(" .
-  "$file_id, \"$shortname\", \"$mime_type\")";
-for my $i (keys %$dyn){
-  print STDERR "dyn{$i} = \"$dyn->{$i}\"\n";
-}
+#print STDERR "DownloadSpecifiedFileById(" .
+#  "$file_id, \"$shortname\", \"$mime_type\")";
+#for my $i (keys %$dyn){
+#  print STDERR "dyn{$i} = \"$dyn->{$i}\"\n";
+#}
   my $filename;
   Query('GetFilePath')->RunQuery(sub{
     my($row) = @_;
@@ -683,7 +679,7 @@ for my $i (keys %$dyn){
       $self->SendFile($http),
     $fh)->Add("reader");
   } else {
-    print STDERR "Can't open file $filename\n";
+#    print STDERR "Can't open file $filename\n";
   }
 
 }
@@ -709,48 +705,155 @@ sub ContentResponse {
 
 sub OpenNewTableLevelPopup{
   my($self, $http, $dyn) = @_;
-print STDERR "In OpenNewTableLevelPopup\n";
   my $params;
   my $tb_id = $self->{NewQueryToDisplay};
+  my $query = $self->{ForegroundQueries}->{$tb_id};
   $params = {
      bindings => $self->{BindingCache},
-     notify => $self->get_user,
   };
+  my $invocation = {
+    type => "QueryMenuTableBasedButton",
+    button_id => $dyn->{_btn_id}, 
+    Operation => $dyn->{cap_},, 
+    query_caption => $query->{caption},
+    when_query_invoked => $query->{when},
+    who_invoked_query => $query->{who},
+  };
+  $params->{invocation} = $invocation;
+  if($self->{FilterSelection}->{$tb_id} eq "filtered"){
+    $invocation->{is_filtered} = 1;
+    $invocation->{filter_caption} = $self->TextRenderQueryFilter($query->{filter});
+    $invocation->{num_filtered_rows} = @{$query->{filtered_rows}};
+  } else {
+    $invocation->{rows} = @{$query->{rows}};
+  }
+  $params->{current_settings}->{notify} = $self->get_user;
   if(defined $self->{ActivitySelected}){
-    $params->{activity_id} = $self->{ActivitySelected};
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
     Query("LatestActivityTimepointForActivity")->RunQuery(sub{
       my($row) = @_;
-      $params->{activity_timepoint_id} = $row->[0];
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
     }, sub {}, $self->{ActivitySelected});
   }
   my $filter_sel = $self->{FilterSelection}->{$tb_id};
+  my $rows_array;
   if($filter_sel eq "filtered"){
-    $params->{rows} = $self->{ForegroundQueries}->{$tb_id}->{filtered_rows};
-    $params->{filter} = $self->{filter};
-    $params->{filter} = $self->{filter};
+    $rows_array = $self->{ForegroundQueries}->{$tb_id}->{filtered_rows};
   } else {
-    $params->{rows} = $self->{ForegroundQueries}->{$tb_id}->{rows};
+    $rows_array = $self->{ForegroundQueries}->{$tb_id}->{rows};
   }
-  my $cols = $self->{ForegroundQueries}->{$tb_id}->{query}->{columns};
-  my %col_conv;
-  for my $i (0 .. $#{$cols}){
-    $col_conv{$cols->[$i]} = $i;
+  $params->{cols} = $self->{ForegroundQueries}->{$tb_id}->{query}->{columns};
+  my @rows;
+  for my $r (@{$rows_array}){
+    my $hash;
+    for my $i (0 .. $#{$params->{cols}}){
+      $hash->{$params->{cols}->[$i]} = $r->[$i];
+    }
+    push @rows, $hash;
   }
-  $params->{col_conv} = \%col_conv;
-  $params->{command} = $self->{Commands}->{$dyn->{cap_}};
-
-
-  my $class = $dyn->{class_};
-  eval "require $class";
-  if($@){
-    print STDERR "Class failed to compile\n\t$@\n";
+  $params->{rows}= \@rows;
+  my $command = 
+    $self->GetOperationDescription($invocation->{Operation});
+  if(defined $command){
+    $params->{command} = $command;
+  } else {
+    my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+    eval "require $class";
+    if($@){
+      print STDERR "$class failed to compile\n\t$@\n";
+      return;
+    }
+    unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+    my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+    $params->{Operations} = $self->{Commands};
+    $self->{sequence_no}++;
+  
+    my $child_path = $self->child_path($name);
+    my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+    $self->StartJsChildWindow($child_obj);
     return;
   }
-  my $name = "foo";
+
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "Class Posda::NewerProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "TableLevelPopup_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
 
   my $child_path = $self->child_path($name);
   my $child_obj = $class->new($self->{session},
                               $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+sub ChainQueryToSpreadsheet{
+  my($self, $http, $dyn)  = @_;
+  my $params;
+  my $tb_id = $self->{NewQueryToDisplay};
+  my $query = $self->{ForegroundQueries}->{$tb_id};
+  $params = {
+     bindings => $self->{BindingCache},
+  };
+  my $invocation = {
+    type => "QueryMenuTableBasedButton",
+    button_id => $dyn->{_btn_id}, 
+    Operation => $dyn->{cap_},, 
+    query_caption => $query->{caption},
+    when_query_invoked => $query->{when},
+    who_invoked_query => $query->{who},
+  };
+  $params->{invocation} = $invocation;
+  if($self->{FilterSelection}->{$tb_id} eq "filtered"){
+    $invocation->{is_filtered} = 1;
+    $invocation->{filter_caption} = $self->TextRenderQueryFilter($query->{filter});
+    $invocation->{num_filtered_rows} = @{$query->{filtered_rows}};
+  } else {
+    $invocation->{rows} = @{$query->{rows}};
+  }
+  $params->{current_settings}->{notify} = $self->get_user;
+  if(defined $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+  my $filter_sel = $self->{FilterSelection}->{$tb_id};
+  my $rows_array;
+  if($filter_sel eq "filtered"){
+    $rows_array = $self->{ForegroundQueries}->{$tb_id}->{filtered_rows};
+  } else {
+    $rows_array = $self->{ForegroundQueries}->{$tb_id}->{rows};
+  }
+  $params->{cols} = $self->{ForegroundQueries}->{$tb_id}->{query}->{columns};
+  my @rows;
+  for my $r (@{$rows_array}){
+    my $hash;
+    for my $i (0 .. $#{$params->{cols}}){
+      $hash->{$params->{cols}->[$i]} = $r->[$i];
+    }
+    push @rows, $hash;
+  }
+  $params->{rows}= \@rows;
+  my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+  $params->{Operations} = $self->{Commands};
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                            $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
 
@@ -1645,7 +1748,7 @@ method newActivity($http, $dyn){
   my $desc = $dyn->{value};
   if($desc =~/^\s*$/){ return }
   my $user = $self->get_user;
-  print STDERR "In new activity $user: $desc\n";
+#  print STDERR "In new activity $user: $desc\n";
   my $q = Query('CreateActivity');
   $q->RunQuery(sub {}, sub {}, $desc, $user);
 }
@@ -2893,7 +2996,7 @@ sub DisplayNewQueryError{
   my($self, $http, $dyn, $q) = @_;
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
-});
+  });
   $http->queue("<h1>Error</h1><p>Query invocation: $q->{caption}</p><pre>$q->{completion_msg}</pre>");
   $http->queue("</div>");
   $self->NotSoSimpleButton($http, {
@@ -3237,6 +3340,19 @@ method RenderCurrentQueryFilter($http, $dyn){
       delete $SFQ->{filter}->{$k};
     }
   }
+}
+sub TextRenderQueryFilter{
+  my($this, $q_filter) = @_;
+  my $SFQ = $this->{ForegroundQueries}->{$this->{NewQueryToDisplay}};
+  my $resp = "QueryFilter:\n";
+  for my $k (keys %{$SFQ->{filter}}){
+    if(defined $SFQ->{filter}->{$k} && $SFQ->{filter}->{$k} ne ""){
+      $resp .= "   $k contains \"$SFQ->{filter}->{$k}\"<br>";
+    } else {
+      delete $SFQ->{filter}->{$k};
+    }
+  }
+  return $resp;
 }
 method DrawEditFilterForm($http, $dyn, $SFQ){
   $http->queue(qq{
@@ -3615,7 +3731,8 @@ method DeleteThisDirectory($http, $dyn){
 }
 
 #############################
-method Upload($http, $dyn){
+sub Upload{
+  my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, qq{
   <div style="display: flex; flex-direction: column; align-items: flex-beginning;
     margin-left: 10px; margin-bottom: 5px">
@@ -3625,11 +3742,16 @@ method Upload($http, $dyn){
   </form>
   </div>
   <div id="file_report">
+  <?dyn="Files"?>
   </div>
   </div>
   });
-  $self->AutoRefreshDiv('file_report','Files');
+  $self->InvokeAfterDelay("RefreshFileDiv", 0);
 }
+sub RefreshFileDiv{
+  my($this) = @_;
+  $this->AutoRefreshDiv('file_report','Files');
+};
 method StoreFileUri($http, $dyn){
   $http->queue("StoreFile?obj_path=$self->{path}");
 }
@@ -3668,7 +3790,7 @@ method UploadDone($http, $dyn){
     }
     $http->queue("<a href=\"Refresh?obj_path=$self->{path}\">Go back</a>");
     $http->queue("<hr><pre>");
-    $self->AutoRefreshDiv('file_report','Files');
+    $self->InvokeAfterDelay("RefreshFileDiv", 0);
   };
   return $sub;
 }
@@ -3823,20 +3945,15 @@ sub ChainCsvLoaded{
     } else {
       $self->{ChainCsvLoadedError} = $struct;
     }
-    $self->AutoRefreshDiv('file_report','Files');
+    #$self->AutoRefreshDiv('file_report','Files');
+    $self->InvokeAfterDelay("RefreshFileDiv", 0);
   };
   return $sub;
 }
 sub ProcessConvertedUploadedSpreadsheet{
   my($self, $http, $dyn) = @_;
-  my $class = "Posda::NewerProcessPopup";
-  eval "require $class";
-  if($@){
-    print STDERR "$class failed to compile\n\t$@\n";
-    return;
-  }
   my $params = {
-    input_file_id => $dyn->{file_id},
+#    input_file_id => $dyn->{file_id},
     bindings => $self->{BindingCache},
     current_settings => { notify => $self->get_user },
   };
@@ -3867,8 +3984,19 @@ sub ProcessConvertedUploadedSpreadsheet{
       return $self->ProcessConvertedUploadedNamedSpreadsheet($http, $dyn, $params);
     }
   }
+  $params->{invocation} = {
+    type => "UploadedUnnamedSpreadsheet",
+    file_id => $dyn->{file_id},
+  };
+  my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  my $name = "Annotate_$self->{sequence_no}";
+  my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+  $params->{Operations} = $self->{Commands};
   $self->{sequence_no}++;
 
   my $child_path = $self->child_path($name);
@@ -3881,6 +4009,10 @@ sub ProcessConvertedUploadedNamedSpreadsheet{
   my($self, $http, $dyn, $params) = @_;
   my %arg_map;
   my $fr = $params->{rows}->[0];
+  $params->{invocation} = {
+    type => "UploadedNamedSpreadsheet",
+    file_id => $dyn->{file_id},
+  };
   for my $arg (@{$params->{command}->{args}}){
     if(exists($fr->{$arg}) && defined($fr->{$arg})){
       $arg_map{$arg} = $fr->{$arg};
