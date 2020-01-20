@@ -68,6 +68,7 @@ sub SpecificInitialize {
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
     $self->{AllArgs}->{$a} = 1;
   }
+  $self->{WorkflowQueries} = \%ActivityBasedCuration::ButtonDefinition::WorkflowQueries;
   $self->{MenuByMode} = {
     Default => [
       {
@@ -2205,60 +2206,124 @@ method CompareTimepoints($http, $dyn){
 
 
 #ACTIVITY OPERATION WOOO
-method ActivityOperations($http, $dyn){
+sub ActivityOperations{
+  my($self, $http, $dyn) = @_;
   my @buttons;
-  my $palette_desc = $ActivityBasedCuration::WorkflowDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
+#  my $palette_desc = $ActivityBasedCuration::WorkflowDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
   my $el_table = \@ActivityBasedCuration::WorkflowDefinition::ActivityCategories;
   my $selected_option = "1_associate";
 
   $http->queue('<div id="div_ActivityOperations">');
-  #$http->queue('<script type="text/javascript"> function ChangeSelection(myNewSelected){ document.getElementByClass(subdiv).style.display = "none"; document.getElementById(myNewSelected).style.display= "block"; }</script>');
   for my $i (@$el_table){
     #$http->queue(Dumper($el_table));
     $http->queue("<div id=\"category_$i->{id}\">");
     $http->queue("<button onclick=\"ChangeSelection('sub_$i->{id}')\" class=\"btn btn-default  btn-lg btn-block\"  > $i->{name}  </button>");
     $http->queue('</div>');
 
-    #if ($i->{id} == $selected_option){
     $http->queue("<div id=\"sub_$i->{id}\" class=\"subdiv\" style=\"display: none;\">");
     $http->queue("<blockquote><p>$i->{description}</p>");
     if ($i->{note}){
       $http->queue("<p> <mark>Note: $i->{note}</mark></p>");
     }
-    #$http->queue("<p> Possible Operations: </p>");
-
-    if ($i->{operation1}){
-      $self->NotSoSimpleButton($http, {
-        op => "InvokeOperation",
-        id => "btn_activity_op_$i->{operation1}->{action}",
-        caption => $i->{operation1}->{caption},
-        operation => $i->{operation1}->{action},
-        sync => "Update();",
-      });
-      $http->queue("</td>");
-    } else {
-      $http->queue("<td></td>");
+    if (exists $i->{operations}){
+    $http->queue("<p> Possible Operations: </p>");
+      $http->queue('<ul>');
+      for my $j (@{$i->{operations}}){
+        $http->queue("<li>");
+        $self->NotSoSimpleButton($http, {
+          op => "InvokeNewOperation",
+          id => "btn_activity_op_$j->{action}",
+          caption => $j->{caption},
+          operation => $j->{action},
+          sync => "Update();",
+        });
+        $http->queue("</li>");
+      }
+      $http->queue("</ul>");
     }
-    if ($i->{operation2}){
-      $self->NotSoSimpleButton($http, {
-        op => "InvokeOperation",
-        id => "btn_activity_op_$i->{operation2}->{action}",
-        caption => $i->{operation2}->{caption},
-        operation => $i->{operation2}->{action},
-        sync => "Update();",
-      });
-      $http->queue("</td>");
-    } else {
-      $http->queue("<td></td>");
+    if (exists $i->{queries}){
+    $http->queue("<p> Possible Queries: </p>");
+      $http->queue('<ul>');
+      for my $j (@{$i->{queries}}){
+        $http->queue("<li>");
+        $self->NotSoSimpleButton($http, {
+          op => "$j->{operation}",
+          id => "btn_activity_qg$j->{query_list_name}",
+          caption => $j->{caption},
+          query_list_name => $j->{query_list_name},
+          sync => "Update();",
+        });
+        $http->queue("</li>");
+      }
+      $http->queue("</ul>");
     }
-    $http->queue('</div>');
-    #}
+    $http->queue('</blockquote></div>');
   }
-  $http->queue('</blockquote></div>');
-
 }
 
+sub InvokeNewOperation{
+  my($self, $http, $dyn) = @_;
+  my $params;
+  my $operation = $dyn->{operation};
+  $params = {
+     bindings => $self->{BindingCache},
+  };
+  my $invocation = {
+    type => "WorkflowButton",
+    Operation => $dyn->{operation},
+    caption => $dyn->{caption},
+  };
+  $params->{invocation} = $invocation;
+  $params->{current_settings}->{notify} = $self->get_user;
+  if(defined $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+  my $command = 
+    $self->GetOperationDescription($invocation->{Operation});
 
+  unless(defined $command){
+    die "Command is not defined for $invocation->{Operation}";
+  }
+  if(defined $command){
+    $params->{command} = $command;
+  } else {
+    my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+    eval "require $class";
+    if($@){
+      print STDERR "$class failed to compile\n\t$@\n";
+      return;
+    }
+    unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+    my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+    $params->{Operations} = $self->{Commands};
+    $self->{sequence_no}++;
+  
+    my $child_path = $self->child_path($name);
+    my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+    $self->StartJsChildWindow($child_obj);
+    return;
+  }
+
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "Class Posda::NewerProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "TableLevelPopup_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
 method InvokeOperation($http, $dyn){
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
@@ -2287,7 +2352,6 @@ method InvokeOperation($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-#xyzzy
 method InvokeOperationRow($http, $dyn){
 #  my $class = "Posda::ProcessPopup";
   my $class = $dyn->{class_};
@@ -2333,7 +2397,8 @@ method InvokeOperationRow($http, $dyn){
 method NewQueryWait($http, $dyn){
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
 }
-method Queries($http,$dyn){
+sub Queries{
+  my($self, $http, $dyn) = @_;
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }
   if(
     exists($self->{NewQueryToDisplay})&&
@@ -2376,7 +2441,8 @@ method DrawCurrentForegroundQueriesSelector($http, $dyn){
 method SetCurrentForegroundSelection($http, $dyn){
   $self->{SelectFromCurrentForeground} = 1;
 }
-method SelectFromCurrentForeground($http, $dyn){
+sub SelectFromCurrentForeground{
+  my($self, $http, $dyn) = @_;
   #$http->queue("display list of current foreground queries");
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
@@ -2533,13 +2599,20 @@ sub DrawQueryListTypeSelector{
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "search") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
-  $http->queue("$url - search");
+  $http->queue("$url - search&nbsp;&nbsp;");
+  $url = $self->RadioButtonSync("query_type","workflow",
+    "ProcessRadioButton",
+    (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "workflow") ? 1 : 0,
+    "&control=NewActivityQueriesType","Update();");
+  $http->queue("$url - workflow");
   $http->queue("</div>");
 }
 sub DrawQuerySearchForm{
   my($self, $http, $dyn) = @_;
-  if((defined $self->{NewActivityQueriesType}) &&
-    $self->{NewActivityQueriesType}->{query_type} eq "search"){
+  if(
+    (defined $self->{NewActivityQueriesType}) &&
+    $self->{NewActivityQueriesType}->{query_type} eq "search"
+  ){
     $http->queue('<div width=100 style="margin-left: 10px">');
     $http->queue("&nbsp;Args containing:&nbsp; ");
     $self->NewEntryBox($http, {
@@ -2588,7 +2661,38 @@ sub DrawQuerySearchForm{
       sync => "Update();",
     });
     $http->queue("</div>");
+  } elsif(
+    (defined $self->{NewActivityQueriesType}) &&
+    $self->{NewActivityQueriesType}->{query_type} eq "workflow"
+  ){
+    $http->queue('<div width=100 style="margin-left: 10px">');
+    $self->SelectDelegateByValue($http, {
+      op => 'SetWorkflowMode',
+      id => "SelectWorkflowMode",
+      sync => "UpdateDiv('div_QuerySearchListOrResults', 'DrawQueryListOrResults');Update();",
+    });
+    
+    unless(defined($self->{WorkflowSelected})){ $self->{WorkflowSelected} = "<none>" }
+    for my $i ("<none>", sort keys %{$self->{WorkflowQueries}}){
+      $http->queue("<option value=\"$i\"");
+      if($i eq $self->{WorkflowSelected}){
+        $http->queue(" selected")
+      }
+      if($i eq "<none>"){
+        $http->queue(">Select Workflow Group</option>");
+      } else {
+        $http->queue(">$self->{WorkflowQueries}->{$i}->[0]</option>");
+      }
+    }
+    $http->queue(qq{
+      </select>
+    });
+    $http->queue("</div>");
   }
+}
+sub SetWorkflowMode{
+  my($self, $http, $dyn) = @_;
+  $self->{WorkflowSelected} = $dyn->{value};
 }
 sub ClearQueries{
   my($self, $http, $dyn) = @_;
@@ -2685,19 +2789,108 @@ sub SetNewNameMatchList{
 sub DrawQueryListOrResults{
   my($self, $http, $dyn) = @_;
   if((defined $self->{NewActivityQueriesType}) &&
-    $self->{NewActivityQueriesType}->{query_type} eq "search"){
+    $self->{NewActivityQueriesType}->{query_type} eq "search"
+  ){
     $self->DrawQueryListOrResultsSearch($http, $dyn);
   } elsif((defined $self->{NewActivityQueriesType}) &&
-    $self->{NewActivityQueriesType}->{query_type} eq "active"){
+    $self->{NewActivityQueriesType}->{query_type} eq "active"
+  ){
     if(exists $self->{SelectedNewQuery}){
       $self->DrawQueryListOrResultsSearch($http, $dyn);
     } else {
       $self->SelectFromCurrentForeground($http, $dyn);
     }
 #    $self->DrawQueryListOrResultsSearch($http, $dyn);
+  } elsif((defined $self->{NewActivityQueriesType}) &&
+    $self->{NewActivityQueriesType}->{query_type} eq "workflow"
+  ){
+    if(exists $self->{SelectedNewQuery}){
+      $self->DrawQueryListOrResultsSearch($http, $dyn);
+    } else {
+      $self->SelectFromCurrentWorkflow($http, $dyn);
+    }
   } else {
     $self->DrawQueryListOrResultsRecent($http, $dyn);
   }
+}
+#xyzzy
+sub SelectQueryGroup{
+  my($self, $http, $dyn) = @_;
+  my $query_list_name = $dyn->{query_list_name};
+  $self->{Mode} = "Queries";
+  $self->{WorkflowSelected} = $query_list_name;
+  $self->{NewActivityQueriesType}->{query_type} = "workflow";
+  delete $self->{NewQueryToDisplay};
+}
+sub SelectFromCurrentWorkflow{
+  my($self, $http, $dyn) = @_;
+  unless(defined($self->{WorkflowSelected}) && $self->{WorkflowSelected} ne "<none>"){
+    $http->queue("Please Select a Workflow");
+    return;
+  }
+  $http->queue(qq{
+    <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
+  });
+#  $http->queue("<p>$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[0]</p>");
+  my @query_list = @{$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[1]};
+  workflow_query:
+  for my $qn (@query_list){
+    my $qd;
+    unless(exists $self->{NewQueriesByName}->{$qn}){
+      eval  { $qd = PosdaDB::Queries->GetQueryInstance($qn) };
+      if($@) {
+        $http->queue("<pre>$@</pre>");
+        next workflow_query;
+      }
+      $self->{NewQueriesByName}->{$qn} = $qd;
+    }
+  }
+  $http->queue('<table class="table table-striped table-condensed" id="tbl_QueryListRecent">');
+  $http->queue("<caption>$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[0]</caption>");
+  $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
+    "<th>make query</th></tr>");
+  for my $i (@query_list){
+    $http->queue("<tr>");
+    my $q = $self->{NewQueriesByName}->{$i};
+    $http->queue("<td>$i</td>");
+    $http->queue("<td>");
+    my $args = $q->{args};
+    for my $i (0 .. $#{$args}){
+      $http->queue($args->[$i]);
+      unless($i == $#{$args}){
+	$http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    my $cols = $q->{columns};
+    for my $i (0 .. $#{$cols}){
+      $http->queue($cols->[$i]);
+      unless($i == $#{$cols}){
+	$http->queue(", ");
+      }
+    }
+    $http->queue("</td>");
+    $http->queue("<td>");
+    $self->NotSoSimpleButton($http, {
+      op => "RunNewQuery",
+      id => "btn_foreground_$i",
+      caption => "foreground",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "OpenBackgroundQuery",
+      id => "btn_background_$i",
+      caption => "background",
+      query_name => $i,
+      sync => "Update();",
+    });
+    $http->queue("</td>");
+    $http->queue("</tr>");
+  }
+  $http->queue('</table>');
+  $http->queue("</div>");
 }
 sub DrawQueryListOrResultsSearch{
   my($self, $http, $dyn) = @_;

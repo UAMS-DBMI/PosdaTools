@@ -1,12 +1,14 @@
 #!/bin/perl -w 
+use strict;
 package ActivityBasedCuration::ButtonDefinition;
+use ActivityBasedCuration::WorkflowDefinition;
 use ActivityBasedCuration::ElementDescriptions;
 use Debug;
-my $dbg = sub {print @_};
+my $dbg = sub {print STDERR @_};
 
 use vars qw( $ButtonDefinition %ElementOccurance %ButtonOccurance
   %PaletteOccurance %QueryButtons %QueryProcessingButtons %QueryToProcessingButton
-  %QueryChaining);
+  %QueryChaining %WorkflowQueries %QueryDisplayButtons);
 
 $ButtonDefinition = <<EOF;
 
@@ -566,7 +568,7 @@ for my $k(keys %ElementOccurance){
       exists($d->{occurance}->{where}) &&
       ref($d->{occurance}->{where}) eq ""
     ){
-      $w = $d->{occurance}->{where};
+      my $w = $d->{occurance}->{where};
       if(
         exists $ElementOccurance{$w} &&
         exists $ElementOccurance{$w}->{occurance}->{is_posda_button_palette}
@@ -575,10 +577,10 @@ for my $k(keys %ElementOccurance){
           $PaletteOccurance{$w} = {};
         }
         $PaletteOccurance{$w}->{buttons}->{$k} = 1;
-      }
-    } elsif(exists $d->{occurance}->{is_posda_button_palette}){
-      unless(exists $PaletteOccurance{$w}){
-        $PaletteOccurance{$w} = {};
+      } elsif(exists $d->{occurance}->{is_posda_button_palette}){
+        unless(exists $PaletteOccurance{$w}){
+          $PaletteOccurance{$w} = {};
+        }
       }
     }
   }
@@ -590,10 +592,17 @@ for my $i (keys %QueryProcessingButtons){
   }
 }
 
-
-print "PaletteOccurance: ";
-Debug::GenPrint($dbg, \%PaletteOccurance, 1);
-print "\n";
-print "ButtonOccurance: ";
-Debug::GenPrint($dbg, \%ButtonOccurance, 1);
-print "\n";
+for my $h (@ActivityBasedCuration::WorkflowDefinition::ActivityCategories){
+  if(exists $h->{queries} && ref($h->{queries}) eq "ARRAY"){
+    for my $q (@{$h->{queries}}){
+      $WorkflowQueries{$q->{query_list_name}} = [$q->{caption}, $q->{query_list}];
+    }
+  }
+}
+1;
+#print "PaletteOccurance: ";
+#Debug::GenPrint($dbg, \%PaletteOccurance, 1);
+#print "\n";
+#print "ButtonOccurance: ";
+#Debug::GenPrint($dbg, \%ButtonOccurance, 1);
+#print "\n";
