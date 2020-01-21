@@ -359,22 +359,14 @@ EOF
       SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
     },
   },
-  qpb_CreateActivityTimepointFromImportName => {
-    caption => "Create Timepoint From Import Name",
-    spreadsheet_operation => "CreateActivityTimepointFromImportName",
+  qpb_CreateActivityTimepointFromImportID => {
+    caption => "Create Timepoint From Import Event ID List",
+    spreadsheet_operation => "CreateActivityTimepointFromImportEventId",
     operation => "OpenNewTableLevelPopup",
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       ImportEventsByMatchingName => 1,
       ImportEventsByMatchingNameAndType => 1,
-    },
-  },
-  qpb_CreateActivityTimepointFromPatientList => {
-    caption => "Create Timepoint From Patient List",
-    spreadsheet_operation => "CreateActivityTimepointFromPatientList",
-    operation => "OpenNewTableLevelPopup",
-    obj_class => "Posda::NewerProcessPopup",
-    queries => {
       ImportEventsWithTypeAndPatientId => 1,
     },
   },
