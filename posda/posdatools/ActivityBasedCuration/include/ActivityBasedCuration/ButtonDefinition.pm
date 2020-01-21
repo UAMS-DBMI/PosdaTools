@@ -1,4 +1,4 @@
-#!/bin/perl -w 
+#!/bin/perl -w
 use strict;
 package ActivityBasedCuration::ButtonDefinition;
 use ActivityBasedCuration::WorkflowDefinition;
@@ -351,8 +351,32 @@ EOF
       DistinctVisibleSeriesByCollectionSite => 1,
       DistinctSeriesByPatientId => 1,
       SeriesByMatchingImportEventsWithEventInfo => 1,
+      SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID => 1,
+      SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed => 1,
+      SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID => 1,
+      SeriesByMatchingImportEventsWithEventInfoCondensed => 1,
+      SeriesByMatchingImportEventsWithEventInfoAndFileCountAll => 1,
       SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
-    },    
+    },
+  },
+  qpb_CreateActivityTimepointFromImportName => {
+    caption => "Create Timepoint From Import Name",
+    spreadsheet_operation => "CreateActivityTimepointFromImportName",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      ImportEventsByMatchingName => 1,
+      ImportEventsByMatchingNameAndType => 1,
+    },
+  },
+  qpb_CreateActivityTimepointFromPatientList => {
+    caption => "Create Timepoint From Patient List",
+    spreadsheet_operation => "CreateActivityTimepointFromPatientList",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      ImportEventsWithTypeAndPatientId => 1,
+    },
   },
   qpb_BogusQueryHandlingButton => {
     caption => "Linked to non-existent operation",
@@ -361,7 +385,7 @@ EOF
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
-    },    
+    },
   },
   qpb_AnalyzeSeriesDuplicates => {
     caption => "Analyze Series Duplicates",
@@ -370,7 +394,7 @@ EOF
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       SeriesWithDupSopsByCollectionSiteNew => 1,
-    },    
+    },
   },
   qbp_BackgroundApplyPrivateDispositions => {
     caption => "Apply Private Dispositions",
@@ -380,7 +404,7 @@ EOF
     queries => {
       DistinctStudySeriesByCollection => 1,
       DistinctStudySeriesByCollectionSite => 1,
-    },    
+    },
   },
   qbp_BackgroundDciodvfySeries => {
     caption => "Run dciodvfy for series",
@@ -390,7 +414,7 @@ EOF
     queries => {
       DistinctSeriesByCollection => 1,
       DistinctSeriesByCollectionSite => 1,
-    },    
+    },
   },
   qbp_HideEquivalenceClasses => {
     caption => "Hide Equivalence Classes",
@@ -399,7 +423,7 @@ EOF
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       VisualReviewStatusDetails => 1,
-    },    
+    },
   },
   qbp_ChangeReviewStatus => {
     caption => "Change Review Status",
@@ -408,7 +432,7 @@ EOF
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       VisualReviewStatusDetails => 1,
-    },    
+    },
   },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::ProcessPopup
