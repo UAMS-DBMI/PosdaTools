@@ -8,7 +8,9 @@ my $dbg = sub {print STDERR @_};
 
 use vars qw( $ButtonDefinition %ElementOccurance %ButtonOccurance
   %PaletteOccurance %QueryButtons %QueryProcessingButtons %QueryToProcessingButton
-  %QueryChaining %WorkflowQueries %QueryDisplayButtons);
+  %QueryChaining %WorkflowQueries %QueryDisplayButtons %QueryChainColumnButtons
+  %QueryButtonsByQueryColumn %QueryButtonsByQueryPatColumn %QueryChainingByQuery
+  %QueryChainingDetails);
 
 $ButtonDefinition = <<EOF;
 
@@ -73,399 +75,253 @@ EOF
       pid => "pid",
     },
   },
+  qc_10 => {
+    caption => "Details",
+    chained_query_id => 10,
+    from_query => "VisualReviewStatusById",
+    to_query => "VisualReviewStatusDetails",
+    arg_map => {
+      review_status => "review_status",
+      processing_status => "processing_status",
+      id => "visual_review_instance_id",
+      dicom_file_type => "dicom_file_type",
+    },
+  },
+  qc_8 => {
+    caption => "Details",
+    from_query => "VisualReviewScanInstances",
+    to_query => "VisualReviewStatusById",
+    arg_map => {
+      id => "id",
+    },
+  },
+  qc_7 => {
+    caption => "GetSeries",
+    from_query => "VisibleColSiteWithCtpLikeSite",
+    to_query => "DistinctSeriesByCollectionSite",
+    arg_map => {
+      collection => "project_name",
+      site => "site_name",
+    },
+  },
+  qc_9 => {
+    caption => "Details",
+    from_query => "ListActivities",
+    to_query => "InboxContentByActivityId",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_12 => {
+    caption => "close",
+    from_query => "ListOpenActivities",
+    to_query => "CloseActivity",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_13 => {
+    caption => "close",
+    from_query => "ListOpenActivitiesWithItems",
+    to_query => "InboxContentByActivityId",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_14 => {
+    caption => "close",
+    from_query => "ListOpenActivitiesWithItems",
+    to_query => "CloseActivity",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_15 => {
+    caption => "Details",
+    from_query => "ListClosedActivities",
+    to_query => "InboxContentByActivityId",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_16 => {
+    caption => "re-open",
+    from_query => "ListClosedActivitiesWithItems",
+    to_query => "ReOpenActivity",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_17=> {
+    caption => "Details",
+    from_query => "ListClosedActivitiesWithItems",
+    to_query => "InboxContentByActivityId",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_11=> {
+    caption => "Details",
+    from_query => "ListOpenActivities",
+    to_query => "InboxContentByActivityId",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
+  qc_18=> {
+    caption => "re-open",
+    from_query => "ListClosedActivities",
+    to_query => "ReOpenActivity",
+    arg_map => {
+      activity_id => "activity_id",
+    },
+  },
 );
-#chained_query_id	caption	from_query	to_query	from_column_name	to_parameter_name
-#7	Get Series	VisibleColSiteWithCtpLikeSite	DistinctSeriesByCollectionSite	collection	project_name
-#7	Get Series	VisibleColSiteWithCtpLikeSite	DistinctSeriesByCollectionSite	site	site_name
-#8	Details	VisualReviewScanInstances	VisualReviewStatusById	id	id
-#9	Details	ListActivities	InboxContentByActivityId	activity_id	activity_id
-#12	close	ListOpenActivities	CloseActivity	activity_id	activity_id
-#12	close	ListOpenActivities	CloseActivity	activity_id	activity_id
-#13	Details	ListOpenActivitiesWithItems	InboxContentByActivityId	activity_id	activity_id
-#14	close	ListOpenActivitiesWithItems	CloseActivity	activity_id	activity_id
-#15	Details	ListClosedActivities	InboxContentByActivityId	activity_id	activity_id
-#16	re-open	ListClosedActivitiesWithItems	ReOpenActivity	activity_id	activity_id
-#17	Details	ListClosedActivitiesWithItems	InboxContentByActivityId	activity_id	activity_id
-#10	Details	VisualReviewStatusById	VisualReviewStatusDetails	review_status	review_status
-#10	Details	VisualReviewStatusById	VisualReviewStatusDetails	processing_status	processing_status
-#10	Details	VisualReviewStatusById	VisualReviewStatusDetails	id	visual_review_instance_id
-#10	Details	VisualReviewStatusById	VisualReviewStatusDetails	dicom_file_type	dicom_file_type
-#11	Details	ListOpenActivities	InboxContentByActivityId	activity_id	activity_id
-#18	re-open	ListClosedActivities	ReOpenActivity	activity_id	activity_id
 
-%QueryDisplayButtons = (
-  popup_2 => {
-    query_name => "SopsDupsInDifferentSeriesByCollectionSite",
-    object_class => "Posda::PopupImageViewer",
-    column_name => "file_id",
+%QueryChainColumnButtons = (
+  qc_c_2 => {
+    query => "SopsDupsInDifferentSeriesByCollectionSite",
+    obj => "Posda::PopupImageViewer",
+    type => "ChainColumnToPopup",
+    col_name => "file_id",
     caption => "View",
   },
-  popup_3 => {
-    query_name => "SopsDupsInDifferentSeriesByCollectionSite",
-    object_class => "Posda::PopupCompare",
-    column_name => "sop_instance_uid",
+  qc_cc_3 => {
+    query => "SopsDupsInDifferentSeriesByCollectionSite",
+    type => "ChainColumnToPopup",
+    obj => "Posda::PopupCompare",
+    col_name => "sop_instance_uid",
     caption => "Compare",
   },
-  popup_4 => {
-    query_name => "DupSopsByCollectionSiteDateRange",
-    object_class => "Posda::PopupCompare",
-    column_name => "sop_instance_uid",
+  qc_cc_4 => {
+    query => "DupSopsByCollectionSiteDateRange",
+    type => "ChainColumnToPopup",
+    obj => "Posda::PopupCompare",
+    col_name => "sop_instance_uid",
     caption => "Compare",
   },
-  popup_5 => {
-    query_name => "DuplicateFilesBySop",
-    object_class => "Posda::PopupCompare",
-    column_name => "sop_instance_uid",
+  qc_cc_5 => {
+    query => "DuplicateFilesBySop",
+    type => "ChainColumnToPopup",
+    obj => "Posda::PopupCompare",
+    col_name => "sop_instance_uid",
     caption => "Compare",
   },
-  popup_6 => {
-    query_name => "DuplicateFilesBySop",
-    object_class => "Posda::PopupCompare",
-    column_name => "sop_instance_uid",
+  qc_cc_6 => {
+    query => "DuplicateFilesBySop",
+    type => "ChainColumnToPopup",
+    obj => "Posda::PopupCompare",
+    col_name => "sop_instance_uid",
     caption => "Compare",
   },
-  popup_7 => {
-    query_name => "DuplicateFilesBySop",
-    object_class => "Posda::PopupCompare",
-    column_name => "sop_instance_uid",
+  qc_cc_7 => {
+    query => "DuplicateFilesBySop",
+    type => "ChainColumnToPopup",
+    obj => "Posda::PopupCompare",
+    col_name => "sop_instance_uid",
     caption => "Compare",
   },
-  popup_9 => {
-    query_name => "GetSimilarDupContourCounts",
-    object_class => "Posda::PopupCompare",
-    caption => "Compare",
-  },
-  popup_10 => {
-    query_name => "DistinctSeriesByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundPhiScan",
-    operation => "BackgroundPhiScan",
-  },
-  popup_11 => {
-    query_name => "DistinctSeriesByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundDciodvfySeries",
-    operation => "BackgroundDciodvfySeries",
-  },
-  popup_12 => {
-    query_name => "DistinctSeriesByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "DciodvfySeriesReport",
-    operation => "DciodvfySeriesReport",
-  },
-  popup_13 => {
-    query_name => "DistinctStudySeriesByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundApplyPrivateDispositions",
-    operation => "BackgroundApplyPrivateDispositions",
-  },
-  popup_14 => {
-    query_name => "GetDoses",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundDoseLinkageCheck",
-    operation => "BackgroundDoseLinkageCheck",
-  },
-  popup_15 => {
-    query_name => "GetPlans",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundPlanLinkageCheck",
-    operation => "BackgroundPlanLinkageCheck",
-  },
-  popup_16 => {
-    query_name => "GetSsByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundStructLinkageCheck",
-    operation => "BackgroundStructLinkageCheck",
-  },
-  popup_17 => {
-    query_name => "DistinctStudySeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundApplyPrivateDispositions",
-    operation => "BackgroundApplyPrivateDispositions",
-  },
-  popup18 => {
-    query_name => "DistinctSeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundPhiScan",
-    operation => "BackgroundPhiScan",
-  },
-  popup_19 => {
-    query_name => "DistinctSeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundDciodvfySeries",
-    operation => "BackgroundDciodvfySeries",
-  },
-  popup_20 => {
-    query_name => "DistinctSeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "DciodvfySeriesReport",
-    operation => "DciodvfySeriesReport",
-  },
-  popup_21 => {
-    query_name => "DistinctSeriesByCollectionSitePublic",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundPhiScan",
-    operation => "BackgroundPhiScan",
-  },
-  popup_22 => {
-    query_name => "%",
-    object_class => "Quince",
-    column_name => "series_instance_uid",
+  qc_cc_22 => {
+    query_pat => "%",
+    type => "ChainColumnToPopup",
+    obj => "Quince",
+    col_name => "series_instance_uid",
     caption => "view",
   },
-  popup_8 => {
-    query_name => "%",
-    object_class => "choose",
-    column_name => "file_id",
+  qc_cc_8 => {
+    query_pat => "%",
+    type => "ChainColumnToPopup",
+    obj => "choose_from_file_type",
+    col_name => "file_id",
     caption => "view",
   },
-  popup_73 => {
-    query_name => "foo",
-    object_class => "Posda::TestPopup",
-    column_name => "id",
+  qc_cc_73 => {
+    query =>"foo",
+    type => "ChainColumnToPopup",
+    obj => "Posda::TestPopup",
+    col_name => "id",
     caption => "test",
   },
-  popup_74 => {
-    query_name => "VisualReviewStatusById",
-    object_class => "Posda::TestRedirectPopup",
-    column_name => "id",
+  qc_cc_74 => {
+    query => "VisualReviewStatusById",
+    type => "ChainColumnToPopup",
+    obj => "Posda::TestRedirectPopup",
+    col_name => "id",
     caption => "review",
   },
-  popup_67 => {
-    query_name => "VisualReviewScanInstances",
-    object_class => "Posda::ProcessPopup",
-    column_name => "fubar",
-    caption => "CreateActivityTimepoint",
-    operation => "CreateActivityTimepoint",
+  qc_cc_67 => {
+    query => "VisualReviewScanInstances",
+    type => "ChainColumnToPopup",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "fubar",
+    spreadsheet_operation => "CreateActivityTimepoint",
+    caption => "Create Activity Timepoint",
   },
-  popup_36 => {
-    query_name => "ColSiteDetails",
-    object_class => "Posda::ProcessPopup",
-    caption => "PhiScan",
-    operation => "PhiScan",
-  },
-  popup_37 => {
-    query_name => "DistinctSeriesByPatient",
-    object_class => "Posda::ProcessPopup",
-    caption => "LinkSeries",
-    operation => "LinkSeries",
-  },
-  popup_38 => {
-    query_name => "DistinctSeriesByPatient",
-    object_class => "Posda::ProcessPopup",
-    caption => "PhiScan",
-    operation => "PhiScan",
-  },
-  popup_39 => {
-    query_name => "DistinctSeriesByPatientAdvanced",
-    object_class => "Posda::ProcessPopup",
-    caption => "CheckConsistency",
-    operation => "CheckConsistency",
-  },
-  popup_40 => {
-    query_name => "DistinctSeriesByPatientAdvanced",
-    object_class => "Posda::ProcessPopup",
-    caption => "DicomValidation",
-    operation => "DicomValidation",
-  },
-  popup_41 => {
-    query_name => "DistinctSeriesByPatientAdvanced",
-    object_class => "Posda::ProcessPopup",
-    caption => "LinkForDownload",
-    operation => "LinkForDownload",
-  },
-  popup_42 => {
-    query_name => "DistinctSeriesByPatientAdvanced",
-    object_class => "Posda::ProcessPopup",
-    caption => "PrivateDispositions",
-    operation => "PrivateDispositions",
-  },
-  popup_43 => {
-    query_name => "PatientDetailsWithBlankCtp",
-    object_class => "Posda::ProcessPopup",
-    caption => "InitialAnonymizerCommands",
-    operation => "InitialAnonymizerCommands",
-  },
-  popup_44 => {
-    query_name => "PatientDetailsWithNoCtp",
-    object_class => "Posda::ProcessPopup",
-    caption => "InitialAnonymizerCommands",
-    operation => "InitialAnonymizerCommands",
-  },
-  popup_45 => {
-    query_name => "SummaryOfToFiles",
-    object_class => "Posda::ProcessPopup",
-    caption => "LinkSeries",
-    operation => "LinkSeries",
-  },
-  popup_46 => {
-    query_name => "SummaryOfToFilesForPatient",
-    object_class => "Posda::ProcessPopup",
-    caption => "LinkSeries",
-    operation => "LinkSeries",
-  },
-  popup_63 => {
-    query_name => "InboxContentByActivityId",
-    object_class => "DbIf::ShowSubprocessLines",
-    column_name => "sub_id",
+  qc_cc_63 => {
+    query => "InboxContentByActivityId",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSubprocessLines",
+    col_name => "sub_id",
     caption => "view",
   },
-  popup_47 => {
-    query_name => "GetZipUploadEventsByDateRangeNonDicomOnly",
-    object_class => "Posda::ProcessPopup",
-    caption => "ProcessRADCOMPUpload",
-    operation => "ProcessRADCOMPUpload",
-  },
-  popup_49 => {
-    query_name => "GetXlsToConvert",
-    object_class => "Posda::ProcessPopup",
-    caption => "XlsConverter",
-    operation => "XlsConverter",
-  },
-  popup_50 => {
-    query_name => "GetXlsxToConvert",
-    object_class => "Posda::ProcessPopup",
-    caption => "XlsxConverter",
-    operation => "XlsxConverter",
-  },
-  popup_48 => {
-    query_name => "GetDocxToConvert",
-    object_class => "Posda::ProcessPopup",
-    caption => "RadcompSubmissionConverter",
-    operation => "RadcompSubmissionConverter",
-  },
-  popup_51 => {
-    query_name => "GeFromToFilesFromNonDicomEditCompare",
-    object_class => "choose_to",
-    column_name => "to_file_id",
+  qc_cc_51 => {
+    query => "GeFromToFilesFromNonDicomEditCompare",
+    type => "ChainColumnToPopup",
+    obj => "choose_from_file_type",
+    col_name => "to_file_id",
+    col_to_param => {
+      to_file_id => "file_id",
+    },
     caption => "view",
   },
-  popup_52 => {
-    query_name => "GeFromToFilesFromNonDicomEditCompare",
-    object_class => "choose_from",
-    column_name => "from_file_id",
+  qc_cc_52 => {
+    query => "GeFromToFilesFromNonDicomEditCompare",
+    type => "ChainColumnToPopup",
+    obj => "choose_from_file_type",
+    col_name => "from_file_id",
+    col_to_param => {
+      from_file_id => "file_id",
+    },
     caption => "view",
   },
-  popup_53 => {
-    query_name => "AllPatientDetailsWithNoCtpLike",
-    object_class => "Posda::ProcessPopup",
-    caption => "InitialAnonymizerCommands",
-    operation => "InitialAnonymizerCommands",
-  },
-  popup_55 => {
-    query_name => "DistinctSeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "VisualReview",
-    operation => "VisualReview",
-  },
-  popup_56 => {
-    query_name => "SeriesWithDupSopsByCollectionSiteNew",
-    object_class => "Posda::ProcessPopup",
-    caption => "AnalyzeSeriesDuplicates",
-    operation => "AnalyzeSeriesDuplicates",
-  },
-  popup_57 => {
-    query_name => "GetFilesWithNoSeriesInfoByCollection",
-    object_class => "Posda::ProcessPopup",
-    caption => "BackgroundProcessModules",
-    operation => "BackgroundProcessModules",
-  },
-  popup_58 => {
-    query_name => "InboxContentAll",
-    object_class => "Posda::ProcessPopup",
-    caption => "FileAndDismissNotifications",
-    operation => "FileAndDismissNotifications",
-  },
-  popup_59 => {
-    query_name => "VisualReviewStatusById",
-    object_class => "Posda::ProcessPopup",
-    caption => "MakePassThru",
-    operation => "MakePassThru",
-  },
-  popup_61 => {
-    query_name => "VisualReviewStatusById",
-    object_class => "Posda::ProcessPopup",
-    caption => "ProcessVisualReview",
-    operation => "ProcessVisualReview",
-  },
-  popup_62 => {
-    query_name => "VisualReviewStatusById",
-    object_class => "Posda::ProcessPopup",
-    caption => "SendBlankToDest",
-    operation => "SendBlankToDest",
-  },
-  popup_64 => {
-    query_name => "VisualReviewStatusDetails",
-    object_class => "Posda::ProcessPopup",
-    caption => "RetryFailedProjections",
-    operation => "RetryFailedProjections",
-  },
-  popup_54 => {
-    query_name => "InboxContentByActivityId",
-    object_class => "choose_spreadsheet",
-    column_name => "spreadsheet_file_id",
+  qc_cc_54 => {
+    query => "InboxContentByActivityId",
+    type => "ChainColumnToPopup",
+    obj => "choose_from_file_type",
+    col_name => "spreadsheet_file_id",
+    col_to_param => {
+      spreadsheet_file_id => "file_id",
+    },
     caption => "view",
   },
-  popup_60 => {
-    query_name => "VisualReviewStatusDetails",
-    object_class => "Posda::ProcessPopup",
-    caption => "HideEquivalenceClasses",
-    operation => "HideEquivalenceClasses",
-  },
-  popup_65 => {
-    query_name => "VisualReviewStatusDetails",
-    object_class => "Posda::ProcessPopup",
-    caption => "ChangeReviewStatus",
-    operation => "ChangeReviewStatus",
-  },
-  popup_66 => {
-    query_name => "VisualReviewStatusById",
-    object_class => "Posda::ProcessPopup",
-    caption => "ApplyDispositions",
-    operation => "ApplyDispositions",
-  },
-  popup_68 => {
-    query_name => "DistinctVisibleSeriesByCollectionSite",
-    object_class => "Posda::ProcessPopup",
-    caption => "CreateActivityTimepointFromSeriesList",
-    operation1 => "CreateActivityTimepointFromSeriesList",
-  },
-  popup_69 => {
-    query_name => "DistinctSeriesByPatientId",
-    object_class => "Posda::ProcessPopup",
-    caption => "CreateActivityTimepointFromSeriesList",
-    operation => "CreateActivityTimepointFromSeriesList",
-  },
-  popup_70 => {
-    query_name => "ListSrPublic",
-    object_class => "DbIf::ShowSr",
-    column_name => "dicom_file_uri",
+  qc_cc_70 => {
+    query => "ListSrPublic",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSr",
+    col_name => "dicom_file_uri",
     caption => "view",
   },
-  popup_71 => {
-    query_name => "ListSrPosda",
-    object_class => "DbIf::ShowSr",
-    column_name => "file_path",
+  qc_cc_71 => {
+    query => "ListSrPosda",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSr",
+    col_name => "file_path",
     caption => "view",
   },
-  popup_72 => {
-    query_name => "ListSrPosdaHidden",
-    object_class => "DbIf::ShowSr",
-    column_name => "file_path",
+  qc_cc_72 => {
+    query => "ListSrPosdaHidden",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSr",
+    col_name => "file_path",
     caption => "view",
   },
-  popup_75 => {
-    query_name => "GetEditStatusByDisposition",
-    object_class => "DbIf::EditStatus",
-    column_name => "id",
+  qc_cc_75 => {
+    query => "GetEditStatusByDisposition",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::EditStatus",
+    col_name => "id",
     caption => "info",
   },
-  popup_35 => {
-    query_name => "AllPatientDetailsWithNoCtp%",
-    object_class => "Posda::ProcessPopup",
-    caption => "InitialAnonymizerCommands",
-    operation => "InitialAnonymizerCommands",
-  }
 );
 
 %QueryProcessingButtons = (
@@ -559,50 +415,30 @@ EOF
 # XlsxConverter                         │ GetXlsxToConvert                          │ Posda::ProcessPopup
 
 
-
-for my $k(keys %ElementOccurance){
-  my $d = $ElementOccurance{$k};
-  if(exists $d->{is_posda_button}){
-    $ButtonOccurance{$k} = 1;
-    if(
-      exists($d->{occurance}->{where}) &&
-      ref($d->{occurance}->{where}) eq ""
-    ){
-      my $w = $d->{occurance}->{where};
-      if(
-        exists $ElementOccurance{$w} &&
-        exists $ElementOccurance{$w}->{occurance}->{is_posda_button_palette}
-      ){
-        unless(exists $PaletteOccurance{$w}){
-          $PaletteOccurance{$w} = {};
-        }
-        $PaletteOccurance{$w}->{buttons}->{$k} = 1;
-      } elsif(exists $d->{occurance}->{is_posda_button_palette}){
-        unless(exists $PaletteOccurance{$w}){
-          $PaletteOccurance{$w} = {};
-        }
-      }
-    }
-  }
-}
 for my $i (keys %QueryProcessingButtons){
   for my $q (keys %{$QueryProcessingButtons{$i}->{queries}}){
     unless(exists $QueryToProcessingButton{$q}){ $QueryToProcessingButton{$q} = [] }
     push @{$QueryToProcessingButton{$q}}, $QueryProcessingButtons{$i};
   }
 }
-
-for my $h (@ActivityBasedCuration::WorkflowDefinition::ActivityCategories){
-  if(exists $h->{queries} && ref($h->{queries}) eq "ARRAY"){
-    for my $q (@{$h->{queries}}){
-      $WorkflowQueries{$q->{query_list_name}} = [$q->{caption}, $q->{query_list}];
-    }
+  #%QueryButtonsByQueryColumn %QueryButtonsByQueryPatColumn);
+for my $i (keys %QueryChainColumnButtons){
+  my $r = $QueryChainColumnButtons{$i};
+  if(exists $r->{query_pat}){
+    $QueryButtonsByQueryPatColumn{$r->{query_pat}}->{$r->{col_name}} = $i;
+  } elsif (exists $r->{query}){
+    $QueryButtonsByQueryColumn{$r->{query}}->{$r->{col_name}} = $i;
   }
 }
+for my $i (keys %QueryChaining){
+   my $r = $QueryChaining{$i};
+  $QueryChainingByQuery{$r->{from_query}} = $i;
+  my $m = $r->{arg_map};
+  my @map;
+  for my $k (keys %{$m}){
+    push @map, { $k => $m->{$k} };
+  }
+  $QueryChainingDetails{$i} = \@map;
+}
+
 1;
-#print "PaletteOccurance: ";
-#Debug::GenPrint($dbg, \%PaletteOccurance, 1);
-#print "\n";
-#print "ButtonOccurance: ";
-#Debug::GenPrint($dbg, \%ButtonOccurance, 1);
-#print "\n";

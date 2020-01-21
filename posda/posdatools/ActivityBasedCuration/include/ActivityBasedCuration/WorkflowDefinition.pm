@@ -1,49 +1,49 @@
 #!/bin/perl -w
+use strict;
 package ActivityBasedCuration::WorkflowDefinition;
 use Debug;
 my $dbg = sub {print @_};
+use vars qw(@ActivityCategories %WorkflowQueries);
 
 @ActivityCategories = (
   {
     id => "1_associate",
     name => "Associate Imported Data with an Activity Timepoint",
     note => "You must first Import Data into Posda and create an Activity!",
-    description => "Curation workflow tasks performed on a collection are grouped together into an Activity Timepoint to allow for better management and analysis.  This step is tying the data to the Activity.",
+    description => "Curation workflow tasks performed on a collection are " .
+      "grouped together into an Activity Timepoint to allow for better " .
+      "management and analysis.  This step is tying the data to the Activity.",
     queries => [
       {
         caption => "Suggested Queries for Series",
         operation => "SelectQueryGroup",
         query_list_name => "FindSeries",
-        query_list => ["SeriesByMatchingImportEventsWithEventInfo", "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-            "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed", "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-            "SeriesByMatchingImportEventsWithEventInfoCondensed", "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
-        ],
       },
       {
         caption => "Suggested Queries for Import Events",
         operation => "SelectQueryGroup",
         query_list_name => "FindImportEvents",
-        query_list => ["ImportEventsByMatchingName","ImportEventsByMatchingNameAndType","ImportEventsWithTypeAndPatientId"],
       },
     ],
   },
   {
     id => "2_count",
     name => "Run Count Checks",
-    description => "Verification of the number of files sent to confirm with the sending site that everything arrived as expected.",
+    description => "Verification of the number of files sent to confirm " .
+      "with the sending site that everything arrived as expected.",
     queries => [
       {
         caption => "Suggested Queries for Count Checks",
         operation => "SelectQueryGroup",
         query_list_name => "RunCountChecks",
-        query_list => ["CountsByCollectionDateRange","CountsByCollectionSiteDateRange","CountsByPatientId","CountsByPatientStatus","CountsByCollectionLike"],
       },
     ],
   },
   {
     id => "3_dupes",
     name => "Check for Duplicate SOPs",
-    description => "This process builds a report to alert you to duplicated data or data where multiple entities are using the same identifiers.",
+    description => "This process builds a report to alert you to " .
+      "duplicated data or data where multiple entities are using the same identifiers.",
     operations => [
       {
         operation => "InvokeNewOperation",
@@ -69,7 +69,10 @@ my $dbg = sub {print @_};
     id => "5_ianon",
     name => "Initial Anonymization",
     note => " This step should not be needed if your data was imported through CTP",
-    description => "Once the mapping is in place, we can run the initial anonymization step. Again, this step can often be skipped if the data is already initially de-identified, such as when it was sent from CTP(A tool some sites use that sends and partially de-identifies data).",
+    description => "Once the mapping is in place, we can run the initial " .
+      "anonymization step. Again, this step can often be skipped if the data is " .
+      "already initially de-identified, such as when it was sent from CTP(A tool " .
+      "some sites use that sends and partially de-identifies data).",
     operations => [
      {
         operation => "InvokeNewOperation",
@@ -106,7 +109,6 @@ my $dbg = sub {print @_};
         caption => "Suggested Queries for Visual Review Status",
         operation => "SelectQueryGroup",
         query_list_name => "VisualReviewStatus",
-        query_list =>  ["VisualReviewScanInstances"],
       }
     ],
   },
@@ -124,7 +126,8 @@ my $dbg = sub {print @_};
   {
     id => "9_phirev",
     name => "PHI Review",
-    description => "This will create a report. Any PHI found should be edited in the report and the report should be uploaded and processed.",
+    description => "This will create a report. Any PHI found should be " .
+      "edited in the report and the report should be uploaded and processed.",
     operations => [
       {
         caption => "Schedule PHI Scan",
@@ -136,7 +139,8 @@ my $dbg = sub {print @_};
     id => "10_structlinkcheck",
     name => "Check Struct Linkage",
     note => "Radiation Therapy Data only",
-    description => "Verify that the ROIs and Structures are properly linked to the image files and pixel data. ",
+    description => "Verify that the ROIs and Structures are properly " .
+      "linked to the image files and pixel data. ",
     operations => [
       {
         caption => "Check Structure Set Linkage",
@@ -159,7 +163,8 @@ my $dbg = sub {print @_};
   {
     id => "12_send",
     name => "Send to Server (NBIA)",
-    description => "Confirm data is fully cleaned and ready to be sent to the publicly accessibly server and send the data.",
+    description => "Confirm data is fully cleaned and ready to be sent to " .
+      "the publicly accessibly server and send the data.",
     operations => [
       {
         caption => "Apply Background Dispositions to Timepoint (non baseline date)",
@@ -208,4 +213,42 @@ my $dbg = sub {print @_};
       },
     ],
   },
+);
+
+%WorkflowQueries = (
+  FindImportEvents => [
+    "Suggested Queries for Import Events",
+    [
+      "ImportEventsByMatchingName",
+      "ImportEventsByMatchingNameAndType",
+      "ImportEventsWithTypeAndPatientId",
+    ],
+  ],
+  FindSeries => [
+    "Suggested Queries for Series",
+    [
+      "SeriesByMatchingImportEventsWithEventInfo",
+      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
+      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+      "SeriesByMatchingImportEventsWithEventInfoCondensed",
+      "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+    ],
+  ],
+  RunCountChecks => [
+    "Suggested Queries for Count Checks",
+    [
+      "CountsByCollectionDateRange",
+      "CountsByCollectionSiteDateRange",
+      "CountsByPatientId",
+      "CountsByPatientStatus",
+      "CountsByCollectionLike",
+    ],
+  ],
+  VisualReviewStatus => [
+    "Suggested Queries for Visual Review Status",
+    [
+      "VisualReviewScanInstances",
+    ],
+  ],
 );

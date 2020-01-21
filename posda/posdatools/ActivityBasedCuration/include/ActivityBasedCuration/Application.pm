@@ -68,7 +68,16 @@ sub SpecificInitialize {
   for my $a (@{PosdaDB::Queries->GetAllArgs()}) {
     $self->{AllArgs}->{$a} = 1;
   }
-  $self->{WorkflowQueries} = \%ActivityBasedCuration::ButtonDefinition::WorkflowQueries;
+  $self->{QueryChaining} = \%ActivityBasedCuration::ButtonDefinition::QueryChaining;
+  $self->{QueryChainingDetails} = \%ActivityBasedCuration::ButtonDefinition::QueryChainingDetails;
+  $self->{QueryChainingByQuery} = \%ActivityBasedCuration::ButtonDefinition::QueryChainingByQuery;
+  $self->{QueryToProcessingButton} = \%ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton;
+  $self->{QueryChainColumnButtons} = \%ActivityBasedCuration::ButtonDefinition::QueryChainColumnButtons;
+  $self->{QueryButtonsByQueryColumn} =
+     \%ActivityBasedCuration::ButtonDefinition::QueryButtonsByQueryColumn;
+  $self->{QueryButtonsByQueryPatColumn} =
+     \%ActivityBasedCuration::ButtonDefinition::QueryButtonsByQueryPatColumn;
+  $self->{WorkflowQueries} = \%ActivityBasedCuration::WorkflowDefinition::WorkflowQueries;
   $self->{MenuByMode} = {
     Default => [
       {
@@ -1292,7 +1301,35 @@ sub get_background_buttons {
   return $results;
 }
 
-func get_popup_hash($query_name) {
+sub get_popup_hash_new{
+  my($self, $query_name) = @_;
+  my %popup_hash;
+  my %grps;
+  for my $i (keys %{$self->{QueryButtonsByQueryColumn}->{$query_name}}){
+    $grps{$i} = $self->{QueryButtonsByQueryColumn}->{$query_name}->{$i};
+  }
+  for my $k (keys %{$self->{QueryButtonsByQueryPatColumn}}){
+    if(sql_match($k, $query_name)){
+      for my $i (keys %{$self->{QueryButtonsByQueryPatColumn}->{$k}}){
+        $grps{$i} = $self->{QueryButtonsByQueryPatColumn}->{$k}->{$i};
+      }
+    }
+  }
+  for my $i (keys %grps){
+    $popup_hash{$i} = $self->{QueryChainColumnButtons}->{$grps{$i}};
+  }
+  return \%popup_hash
+}
+
+sub sql_match{
+  my($pat, $val) = @_;
+  if($pat eq '%') { return 1 }
+  die ("sql_match not fully implemented");
+}
+
+sub get_popup_hash{
+    my($query_name) = @_;
+#die "get_popup_hash is obsolete";
     my $popups = PosdaDB::Queries->GetPopupsForQuery($query_name);
     # Process popups into a usable hash
     my $popup_hash = {};
@@ -1349,7 +1386,15 @@ method TableSelected($http, $dyn){
     my $at = $table->{at};
 
     my $popup_hash = get_popup_hash($query->{name});
-    my $chained_queries = PosdaDB::Queries->GetChainedQueries($query->{name});
+#    my $chained_queries = PosdaDB::Queries->GetChainedQueries($query->{name});
+#$self->{chained_queries} = $chained_queries;
+    my @chained_queries;
+    for my $i (keys %{$self->{QueryChaining}}){
+      my $r = $self->{QueryChaining}->{$i};
+      if($r->{from_query} eq $query->{name}){
+        push @chained_queries, $r;
+      }
+    }
 
     $self->RefreshEngine($http, $dyn, qq{
       <div>
@@ -1415,7 +1460,7 @@ method TableSelected($http, $dyn){
       $self->DrawFilterableFieldHeading($http, $i, $col_num);
       $col_num += 1;
     }
-    if ($#{$chained_queries} > -1) {
+    if ($#chained_queries > -1) {
       $http->queue("<th>Chained</th>");
     }
     $http->queue('</tr>');
@@ -1474,8 +1519,8 @@ method TableSelected($http, $dyn){
         });
         $http->queue('</td>');
       }
-      if (defined $chained_queries) {
-        for my $q (@$chained_queries) {
+      if ($#chained_queries >= 0) {
+        for my $q (@chained_queries) {
           $http->queue('<td>');
           $self->NotSoSimpleButton($http, {
               caption => "$q->{caption}",
@@ -1810,7 +1855,8 @@ method RefreshActivities{
 }
 #############################
 # New Activities Page
-method NewActivitiesPage($http, $dyn){
+sub NewActivitiesPage{
+  my($self, $http, $dyn) = @_;
   $http->queue(qq{
     <div style="display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 5px">
   });
@@ -1832,7 +1878,8 @@ method NewActivitiesPage($http, $dyn){
     $http->queue("method \"$method\" is not yet defined\n");
   }
 }
-method DrawActivitySelected($http, $dyn){
+sub DrawActivitySelected{
+  my($self, $http, $dyn) = @_;
   my $activity = $self->{Activities}->{$self->{ActivitySelected}};
   $http->queue("<div id=\"selected_activity\">");
   $http->queue("Activity $self->{ActivitySelected}: ");
@@ -1893,7 +1940,8 @@ sub SyncActivity{
     $activity->{third_party_analysis_url}, $self->{ActivitySelected});
 }
 
-method DrawClearActivityButton($http, $dyn){
+sub DrawClearActivityButton{
+  my($self, $http, $dyn) = @_;
   $self->NotSoSimpleButton($http, {
     op => "ClearActivity",
     id => "ClearCurrentActivity",
@@ -1901,11 +1949,13 @@ method DrawClearActivityButton($http, $dyn){
     sync => "UpdateDiv('header', 'BigTitle');Update();",
   });
 }
-method ClearActivity($http, $dyn){
+sub ClearActivity{
+  my($self, $http, $dyn) = @_;
   $self->SetActivity("<none>");
 #  $self->{ActivitySelected} = "<none>";
 }
-method DrawActivityModeSelector($http, $dyn){
+sub DrawActivityModeSelector{
+  my($self, $http, $dyn) = @_;
   unless(defined $self->{ActivityModeSelected}){
     $self->{ActivityModeSelected} = 0;
   }
@@ -1935,7 +1985,8 @@ method DrawActivityModeSelector($http, $dyn){
     </select> </div>
   });
 }
-method DrawActivityTaskStatus($http, $dyn){
+sub DrawActivityTaskStatus{
+  my($self, $http, $dyn) = @_;
   my @backgrounders;
   $self->{Backgrounders} = [];
   Query('GetActivityTaskStatus')->RunQuery(sub {
@@ -1961,23 +2012,27 @@ method DrawActivityTaskStatus($http, $dyn){
 #    $self->AutoRefresh();
   }
 }
-method AutoRefreshActivityTaskStatus(){
+sub AutoRefreshActivityTaskStatus{
+  my($self) = @_;
   if($self->{Mode} eq "Activities"){
     $self->AutoRefreshDiv("activitytaskstatus", "DrawActivityTaskStatus");
   }
 }
-method DismissActivityTaskStatus($http, $dyn){
+sub DismissActivityTaskStatus{
+  my($self, $http, $dyn) = @_;
   my $sub_id = $dyn->{subprocess_invocation_id};
   my $act_id = $self->{ActivitySelected};
   my $user = $self->get_user;
   Query('DismissActivityTaskStatus')->RunQuery(sub{}, sub{},
     $user, $act_id, $sub_id);
 }
-method SetActivityMode($http, $dyn){
+sub SetActivityMode{
+  my($self, $http, $dyn) = @_;
   $self->{ActivityModeSelected} = $dyn->{value};
   $self->AutoRefresh;
 }
-method ShowActivityTimeline($http, $dyn){
+sub ShowActivityTimeline{
+  my($self, $http, $dyn) = @_;
   my @time_line;
   Query('InboxContentByActivityIdWithCompletion')->RunQuery(sub{
     my($row) = @_;
@@ -2104,7 +2159,8 @@ method ShowActivityTimeline($http, $dyn){
   }
   $http->queue("</table>");
 }
-method ShowEmail($http, $dyn){
+sub ShowEmail{
+  my($self, $http, $dyn) = @_;
   my $class = 'Posda::PopupTextViewer';
   eval "require $class";
   my $params = {
@@ -2124,7 +2180,8 @@ method ShowEmail($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ShowResponse($http, $dyn){
+sub ShowResponse{
+  my($self, $http, $dyn) = @_;
   my $class = 'DbIf::ShowSubprocessLines';
   eval "require $class";
   my $params = {
@@ -2144,7 +2201,8 @@ method ShowResponse($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ShowInput($http, $dyn){
+sub ShowInput{
+  my($self, $http, $dyn) = @_;
   my $class = 'Posda::PopupTextViewer';
   eval "require $class";
   my $params = {
@@ -2164,14 +2222,16 @@ method ShowInput($http, $dyn){
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
-method ProcessRadioButton($http, $dyn){
+sub ProcessRadioButton{
+  my($self, $http, $dyn) = @_;
   my $value = $dyn->{value};
   my $control = $dyn->{control};
   my $group = $dyn->{group};
   my $checked = $dyn->{checked};
   $self->{$control}->{$group} = $value;
 }
-method CountOverlappingEvents($event, $event_list){
+sub CountOverlappingEvents{
+  my($self, $event, $event_list) = @_;
   my $count = 0;
   for my $i (@$event_list){
     if(
@@ -2181,7 +2241,8 @@ method CountOverlappingEvents($event, $event_list){
   }
   return $count;
 }
-method CompareTimepoints($http, $dyn){
+sub CompareTimepoints{
+  my($self, $http, $dyn) = @_;
   my $class = "Posda::ProcessPopup";
   eval "require $class";
   my $params = {
@@ -2209,7 +2270,6 @@ method CompareTimepoints($http, $dyn){
 sub ActivityOperations{
   my($self, $http, $dyn) = @_;
   my @buttons;
-#  my $palette_desc = $ActivityBasedCuration::WorkflowDefinition::PaletteOccurance{tbl_ActivityOperations}->{buttons};
   my $el_table = \@ActivityBasedCuration::WorkflowDefinition::ActivityCategories;
   my $selected_option = "1_associate";
 
@@ -2918,7 +2978,10 @@ sub OpenNewChainedQuery{
   my $id = $dyn->{chained_query_id};
   my $query_name = $dyn->{to_query};
 
-  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
+#  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
+#$self->{querychaindetailsid} = $id;
+#$self->{querychaindetails} = $details;
+  my $details = $self->{QueryChainingDetails}->{$id};
   # DEBUG Dumper($details);
 
   # get the row as a hash?
@@ -3347,18 +3410,27 @@ sub  DisplayFinishedSelectedForegroundQuery{
   my($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $q_name = $SFQ->{query}->{name};
-  my $popup_hash = get_popup_hash($q_name);
+#  my $popup_hash = get_popup_hash($q_name);
+#  $self->{popup_hash_new} = $self->get_popup_hash_new($q_name);
+  my $popup_hash = $self->get_popup_hash_new($q_name);
 #  if(exists $popup_hash->{table_level_popup} && ref($popup_hash->{table_level_popup}) eq "ARRAY"){
 #    $self->{QueryMenuTableBasedButtons}->{$q_name} = $popup_hash->{table_level_popup};
 #  }
-#$self->{DebugPopupHash} = $popup_hash;
-$self->{DebugPopupNewHash} = \%ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton;
-  if(exists $ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton{$q_name}){
+#$self->{popup_hash} = $popup_hash;
+#$self->{DebugPopupNewHash} = \%ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton;
+  if(exists $self->{QueryToProcessingButton}->{$q_name}){
     $self->{QueryMenuTableBasedButtons}->{$q_name} = 
-      $ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton{$q_name};
+      $self->{QueryToProcessingButton}->{$q_name};
   }
-  my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
-$self->{chained_queries} = $chained_queries;
+#  my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
+#$self->{chained_queries} = $chained_queries;
+  my @chained_queries;
+  for my $i (keys %{$self->{QueryChaining}}){
+    my $r = $self->{QueryChaining}->{$i};
+    if($r->{from_query} eq $q_name){
+      push @chained_queries, $r;
+    }
+  }
   unless(defined $SFQ->{first_row}) { $SFQ->{first_row} = 0 }
   unless(defined $SFQ->{rows_to_show}) { $SFQ->{rows_to_show} = 30 }
   if(defined $SFQ->{filter}){
@@ -3447,7 +3519,7 @@ $self->{chained_queries} = $chained_queries;
 
   $http->queue('<table class="table table-striped table-condensed">');
   $http->queue("<tr>");
-  if($#{$chained_queries} > -1){
+  if($#chained_queries > -1){
     $http->queue("<th>chain</th>");
   }
   for my $i (@{$SFQ->{query}->{columns}}){
@@ -3466,9 +3538,9 @@ $self->{chained_queries} = $chained_queries;
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
-    if($#{$chained_queries} > -1){
+    if($#chained_queries > -1){
       $http->queue("<td>");
-	for my $q (@$chained_queries) {
+	for my $q (@chained_queries) {
 	  $self->NotSoSimpleButton($http, {
 	      caption => "$q->{caption}",
 	      op => "OpenNewChainedQuery",
@@ -3501,13 +3573,13 @@ $self->{chained_queries} = $chained_queries;
 	  $http->queue($t);
 	  if (defined $popup_hash->{$cn}) {
 	    my $popup_details = $popup_hash->{$cn};
-#xyzzy
+#xyzzy --- Here to work on column buttons
 	    $self->NotSoSimpleButton($http, {
-		caption => "$popup_details->{name}",
+		caption => "$popup_details->{caption}",
 		op => "InvokeOperationRow",
 		row => "$i",
-		class_ => "$popup_details->{class}",
-		cap_ => "$popup_details->{name}",
+		class_ => "$popup_details->{obj}",
+		cap_ => "$popup_details->{caption}",
 		sync => 'Update();'
 	    });
 	  }
