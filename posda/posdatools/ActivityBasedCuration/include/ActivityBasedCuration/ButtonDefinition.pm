@@ -392,6 +392,24 @@ EOF
       DistinctSeriesByCollectionSite => 1,
     },    
   },
+  qbp_HideEquivalenceClasses => {
+    caption => "Hide Equivalence Classes",
+    spreadsheet_operation => "HideEquivalenceClasses",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      VisualReviewStatusDetails => 1,
+    },    
+  },
+  qbp_ChangeReviewStatus => {
+    caption => "Change Review Status",
+    spreadsheet_operation => "ChangeReviewStatus",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      VisualReviewStatusDetails => 1,
+    },    
+  },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::ProcessPopup
 # BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::ProcessPopup
@@ -400,7 +418,6 @@ EOF
 # BackgroundPlanLinkageCheck            │ GetPlans                                  │ Posda::ProcessPopup
 # BackgroundProcessModules              │ GetFilesWithNoSeriesInfoByCollection      │ Posda::ProcessPopup
 # BackgroundStructLinkageCheck          │ GetSsByCollection                         │ Posda::ProcessPopup
-# ChangeReviewStatus                    │ VisualReviewStatusDetails                 │ Posda::ProcessPopup
 # CheckConsistency                      │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
 # Compare                               │ GetSimilarDupContourCounts                │ Posda::PopupCompare
 # CreateActivityTimepointFromSeriesList │ DistinctSeriesByPatientId                 │ Posda::ProcessPopup
@@ -409,7 +426,6 @@ EOF
 # DciodvfySeriesReport                  │ DistinctSeriesByCollectionSite            │ Posda::ProcessPopup
 # DicomValidation                       │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
 # FileAndDismissNotifications           │ InboxContentAll                           │ Posda::ProcessPopup
-# HideEquivalenceClasses                │ VisualReviewStatusDetails                 │ Posda::ProcessPopup
 # InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtp%               │ Posda::ProcessPopup
 # InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtpLike            │ Posda::ProcessPopup
 # InitialAnonymizerCommands             │ PatientDetailsWithBlankCtp                │ Posda::ProcessPopup
