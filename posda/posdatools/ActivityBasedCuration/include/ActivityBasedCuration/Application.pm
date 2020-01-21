@@ -2873,7 +2873,6 @@ sub DrawQueryListOrResults{
     $self->DrawQueryListOrResultsRecent($http, $dyn);
   }
 }
-#xyzzy
 sub SelectQueryGroup{
   my($self, $http, $dyn) = @_;
   my $query_list_name = $dyn->{query_list_name};
@@ -2891,7 +2890,6 @@ sub SelectFromCurrentWorkflow{
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
   });
-#  $http->queue("<p>$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[0]</p>");
   my @query_list = @{$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[1]};
   workflow_query:
   for my $qn (@query_list){
@@ -3410,20 +3408,11 @@ sub  DisplayFinishedSelectedForegroundQuery{
   my($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $q_name = $SFQ->{query}->{name};
-#  my $popup_hash = get_popup_hash($q_name);
-#  $self->{popup_hash_new} = $self->get_popup_hash_new($q_name);
   my $popup_hash = $self->get_popup_hash_new($q_name);
-#  if(exists $popup_hash->{table_level_popup} && ref($popup_hash->{table_level_popup}) eq "ARRAY"){
-#    $self->{QueryMenuTableBasedButtons}->{$q_name} = $popup_hash->{table_level_popup};
-#  }
-#$self->{popup_hash} = $popup_hash;
-#$self->{DebugPopupNewHash} = \%ActivityBasedCuration::ButtonDefinition::QueryToProcessingButton;
   if(exists $self->{QueryToProcessingButton}->{$q_name}){
     $self->{QueryMenuTableBasedButtons}->{$q_name} = 
       $self->{QueryToProcessingButton}->{$q_name};
   }
-#  my $chained_queries = PosdaDB::Queries->GetChainedQueries($SFQ->{query}->{name});
-#$self->{chained_queries} = $chained_queries;
   my @chained_queries;
   for my $i (keys %{$self->{QueryChaining}}){
     my $r = $self->{QueryChaining}->{$i};
