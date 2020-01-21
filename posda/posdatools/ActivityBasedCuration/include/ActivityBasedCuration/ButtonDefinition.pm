@@ -18,6 +18,7 @@ EOF
 
 %QueryChaining = (
   qc_1 => {
+    chained_query_id => "qc_1",
     caption => "files",
     from_query => "PixelTypes",
     to_query => "FileIdByPixelType",
@@ -32,6 +33,7 @@ EOF
     },
   },
   qc_2 => {
+    chained_query_id => "qc_2",
     caption => "Info",
     from_query => "HideEvents",
     to_query => "HideEventInfo",
@@ -43,6 +45,7 @@ EOF
   },
   qc_3 => {
     caption => "files",
+    chained_query_id => "qc_3",
     from_query => "WhatHasComeInRecentlyWithSubject",
     to_query => "ToExamineRecentFiles",
     arg_map => {
@@ -52,6 +55,7 @@ EOF
     },
   },
   qc_4 => {
+    chained_query_id => "qc_4",
     caption => "Image Data Consistent?",
     from_query => "CtSeriesWithCtImageInfoByCollection",
     to_query => "CtImageDataConsistencyAcrossSeries",
@@ -61,6 +65,7 @@ EOF
   },
   qc_5 => {
     caption => "rpt",
+    chained_query_id => "qc_5",
     from_query => "CtSeriesWithCtImageInfoByCollection",
     to_query => "SeriesReport",
     arg_map => {
@@ -68,6 +73,7 @@ EOF
     },
   },
   qc_6 => {
+    chained_query_id => "qc_6",
     caption => "drill",
     from_query => "QueriesRunning",
     to_query => "GetQuery",
@@ -77,7 +83,7 @@ EOF
   },
   qc_10 => {
     caption => "Details",
-    chained_query_id => 10,
+    chained_query_id => "qc_10",
     from_query => "VisualReviewStatusById",
     to_query => "VisualReviewStatusDetails",
     arg_map => {
@@ -88,6 +94,7 @@ EOF
     },
   },
   qc_8 => {
+    chained_query_id => "qc_8",
     caption => "Details",
     from_query => "VisualReviewScanInstances",
     to_query => "VisualReviewStatusById",
@@ -96,6 +103,7 @@ EOF
     },
   },
   qc_7 => {
+    chained_query_id => "qc_7",
     caption => "GetSeries",
     from_query => "VisibleColSiteWithCtpLikeSite",
     to_query => "DistinctSeriesByCollectionSite",
@@ -105,6 +113,7 @@ EOF
     },
   },
   qc_9 => {
+    chained_query_id => "qc_9",
     caption => "Details",
     from_query => "ListActivities",
     to_query => "InboxContentByActivityId",
@@ -113,6 +122,7 @@ EOF
     },
   },
   qc_12 => {
+    chained_query_id => "qc_12",
     caption => "close",
     from_query => "ListOpenActivities",
     to_query => "CloseActivity",
@@ -121,6 +131,7 @@ EOF
     },
   },
   qc_13 => {
+    chained_query_id => "qc_13",
     caption => "close",
     from_query => "ListOpenActivitiesWithItems",
     to_query => "InboxContentByActivityId",
@@ -129,6 +140,7 @@ EOF
     },
   },
   qc_14 => {
+    chained_query_id => "qc_14",
     caption => "close",
     from_query => "ListOpenActivitiesWithItems",
     to_query => "CloseActivity",
@@ -137,6 +149,7 @@ EOF
     },
   },
   qc_15 => {
+    chained_query_id => "qc_15",
     caption => "Details",
     from_query => "ListClosedActivities",
     to_query => "InboxContentByActivityId",
@@ -145,6 +158,7 @@ EOF
     },
   },
   qc_16 => {
+    chained_query_id => "qc_16",
     caption => "re-open",
     from_query => "ListClosedActivitiesWithItems",
     to_query => "ReOpenActivity",
@@ -153,6 +167,7 @@ EOF
     },
   },
   qc_17=> {
+    chained_query_id => "qc_17",
     caption => "Details",
     from_query => "ListClosedActivitiesWithItems",
     to_query => "InboxContentByActivityId",
@@ -161,6 +176,7 @@ EOF
     },
   },
   qc_11=> {
+    chained_query_id => "qc_11",
     caption => "Details",
     from_query => "ListOpenActivities",
     to_query => "InboxContentByActivityId",
@@ -169,6 +185,7 @@ EOF
     },
   },
   qc_18=> {
+    chained_query_id => "qc_18",
     caption => "re-open",
     from_query => "ListClosedActivities",
     to_query => "ReOpenActivity",

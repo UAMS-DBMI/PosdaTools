@@ -2977,9 +2977,10 @@ sub OpenNewChainedQuery{
   my $query_name = $dyn->{to_query};
 
 #  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
-#$self->{querychaindetailsid} = $id;
-#$self->{querychaindetails} = $details;
   my $details = $self->{QueryChainingDetails}->{$id};
+$self->{querychaindetailsid} = $id;
+$self->{querychaindetails} = $details;
+# $self->{Details} = $details;
   # DEBUG Dumper($details);
 
   # get the row as a hash?
@@ -2998,20 +2999,24 @@ sub OpenNewChainedQuery{
   # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
   for my $param (@$details) {
-    delete $self->{Input}->{$param->{to_parameter_name}};
-    if(exists $self->{BindingCache}->{$param->{to_parameter_name}}){
-      unless(
-        $self->{BindingCache}->{$param->{to_parameter_name}} eq
-        $h->{$param->{from_column_name}}
-      ){
-        $self->{BindingCache}->{$param->{to_parameter_name}} =
-          $h->{$param->{from_column_name}};
-        $self->UpdateBindingValueInDb($param->{to_parameter_name});
+    for my $from_column_name (keys %$param){
+      my $to_parameter_name = $param->{$from_column_name};
+      if(exists $self->{BindingCache}->{$to_parameter_name}){
+        unless(
+          $self->{BindingCache}->{$to_parameter_name} eq
+          $h->{$from_column_name}
+        ){
+          $self->{BindingCache}->{$to_parameter_name} =
+            $h->{$from_column_name};
+          delete $self->{Input}->{$to_parameter_name};
+          $self->UpdateBindingValueInDb($to_parameter_name);
+        }
+      } else {
+        $self->{BindingCache}->{$to_parameter_name} =
+          $h->{$from_column_name};
+        delete $self->{Input}->{$to_parameter_name};
+        $self->CreateBindingCacheInfoForKeyInDb($to_parameter_name);
       }
-    } else {
-      $self->{BindingCache}->{$param->{to_parameter_name}} =
-        $h->{$param->{from_column_name}};
-      $self->CreateBindingCacheInfoForKeyInDb($param->{to_parameter_name});
     }
   }
   $self->{SelectedNewQuery} = $query_name;
@@ -3527,6 +3532,7 @@ sub  DisplayFinishedSelectedForegroundQuery{
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
+$self->{chained_queries} = \@chained_queries;
     if($#chained_queries > -1){
       $http->queue("<td>");
 	for my $q (@chained_queries) {
