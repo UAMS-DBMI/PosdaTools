@@ -4,7 +4,7 @@
 --
 
 -- Dumped from database version 10.1
--- Dumped by pg_dump version 11.3
+-- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -13,7 +13,6 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
-SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -529,13 +528,11 @@ BackgroundOnlyEditDicomSeries	BackgroundOnlyEditDicomSeries.pl <?bkgrnd_id?> "/n
 BackgroundCopySeriesToStaging	BackgroundCopySeriesToStaging.pl <?bkgrnd_id?> /nas/public/posda/scratch/staging/<to_rel_dir> <notify>	background_process	<patient_id>&<study_instance_uid>&<series_instance_uid>	{send_series}	\N
 CheckCollectionAgainstPatientId	CheckCollectionAgainstPatientId.pl <?bkgrnd_id?> <notify>	background_process	<collection>&<patient_id>	{bills_test}	\N
 BackgroundLinkPublicSeries	BackgroundLinkPublicSeries.pl <?bkgrnd_id?> /nas/public/posda/scratch/staging/<to_rel_dir> <notify>	background_process	<patient_id>&<study_instance_uid>&<series_instance_uid>	{send_series}	\N
-BackgroundPrivateDispositionsTp	BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify>	background_process	\N	{activity_timepoints}	\N
 CheckRtReferenceChain	CheckRtReferenceChain.pl <?bkgrnd_id?> <collection> <site> <notify>	background_process	\N	{struct_linkages}	\N
 MakeRtReport1	MakeRtReport1.pl <?bkgrnd_id?> <notify>	background_process	<collection>&<site>&<patient_id>&<study_uid>&<series_uid>&<file_type>&<modality>&<num_files>	{bills_test}	\N
 FirstPassPhiScanAndReport	FirstPassPhiScanAndReport.pl <?bkgrnd_id?> <collection> <site> "<batch_no>" <notify>	background_process	\N	{bills_test}	\N
 FirstPassPhiByCollection	FirstPassPhiByCollection.pl <?bkgrnd_id?> <collection> <notify>	background_process	\N	{bills_test}	\N
 BackgroundCreateEquivalenceClasses	BackgroundCreateSeriesEquivalenceClasses.pl <?bkgrnd_id?> "<why>" <notify>	background_process	<series_instance_uid>	{visual_review}	\N
-BackgroundEdit	BackgroundEditor.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N
 AdHocReportForTracy	MakeCptacReport.pl <?bkgrnd_id?> <notify>	background_process	\N	{clin_qual}	\N
 RepealEdits	RepealEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{find_patients}	\N
 RejectEdits	RejectEdits.pl <?bkgrnd_id?> <subprocess_invoc_id> <notify>	background_process	\N	{find_patients}	\N
@@ -562,11 +559,9 @@ GenerateYearOfDiagnosisEdits	GenerateEditsForYearsOfDiagnosis.pl <?bkgrnd_id?> <
 RadcompPrivateDisp	BackgroundPrivateDispositionsByPatShift.pl <?bkgrnd_id?> <to_dir> <uid_root> <notify>	background_process	<patient_id>&<study_uid>&<series_uid>&<offset>	{bills_test}	\N
 QuickCheckPublicPosdaConsistLike	QuickPublicPosdaCompareLikeCollection.pl <?bkgrnd_id?> "<collection_pat>"  <notify>	background_process	\N	{public_posda_consistency}	\N
 ProposeAdHocMelanomaEdits	ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>	background_process	<patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>	{bills_test,bills_ad_hoc_scripts}	\N
-BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints}	\N
 HideLateDupSopsInSeries	HideBatchLateSopDupsInSeries.pl <who> "<why>"	legacy	<series_instance_uid>	{hide_files,hide_dup_sops}	\N
 BackgroundProcessModules	BackgroundProcessModules.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<file_id>	{dicom_file_type}	\N
 HideEquivalenceClasses	HideEquivalenceClasses.pl <?bkgrnd_id?> <notify>	background_process	<image_equivalence_class_id>&<processing_status>&<review_status>	{visual_review_status}	\N
-CreateActivityTimepointFromCollectionSite	CreateActivityTimepointFromCollectionSite.pl <?bkgrnd_id?> <collection> <site> <activity_id> "<comment>" <notify>	background_process	\N	{timepoint_buttons}	\N
 MakePassThru	MakePassThru.pl <?bkgrnd_id?> <visual_review_id> <notify>	background_process	<processing_status>&<review_status>&<dicom_file_type>	{visual_review_status}	\N
 RetryFailedProjections	RetryFailedProjections.pl <?bkgrnd_id?> <notify>	background_process	<image_equivalence_class_id>&<processing_status>&<review_status>	{visual_review_status}	\N
 ChangeReviewStatus	ChangeReviewStatus.pl <?bkgrnd_id?> <review_status> <processing_status> <notify>	background_process	<image_equivalence_class_id>&<processing_status>&<review_status>	{visual_review_status}	\N
@@ -596,6 +591,7 @@ BackgroundUpdatePrivateDisposition	BackgroundUpdatePrivateDispositions.pl <?bkgr
 SummarizeStructLinkage	SummarizeStructLinkagesByFileId.pl <?bkgrnd_id?> <file_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
 BackgroundDciodvfyTp	BackgroundDciodvfyTp.pl <?bkgrnd_id?> <act_id> <type> <notify>	background_process	\N	{activity_timepoint}	\N
 PipeCommand1	PipeCommand1.pl <var1> <var2> 1 2 3	legacy	<vals1>,<vals2>,<vals3>	{}	\N
+CreateActivityTimepointFromCollectionSite	CreateActivityTimepointFromCollectionSite.pl <?bkgrnd_id?> <activity_id> <collection> <site> "<comment>" <notify>	background_process		{timepoint_buttons}	\N
 DeleteSeriesFromActivityTimepoint	DeleteSeriesFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	\N
 FilesInTpNotInPublic	FilesInLatestActivityNotInPublic.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints_support}	\N
 BackgroundUnhideFiles	BackgroundUnhideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"	background_process	<file_id>&<old_visibility>	{activity_timepoint_support}	\N
@@ -655,6 +651,14 @@ HelloWorldPython	BackgroundHelloWorldWithInput.py <?bkgrnd_id?> <activity_id> <n
 RejectEditsTp	RejectEditsTp.pl <?bkgrnd_id?> <activity_id> <subprocess_invoc_id> <notify>	background_process		{find_patients}	\N
 SuggestPatientMappings	SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>	background_process	<patient_id>	{}	\N
 UpdateOrCreatePatientMapping	UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <activity_id> "<comment>" <overwrite> <notify>	background_process	<in_patient_mapping>&<from_patient_id>&<collection>&<site>&<to_patient_id>&<to_patient_name>&<diagnosis_date>&<min_study_date>&<uid_root>&<batch_number>&<site_code>&<baseline_date>&<date_shift>	{patient_mapping}	\N
+BackgroundPrivateDispositionsTp	BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> "<uid_root>" "<offset>" "<notify>" "<skip_dispositions>"	background_process		{activity_timepoints}	\N
+BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id> <notify> "<skip_dispositions>"	background_process		{activity_timepoints}	\N
+BackgroundEdit	BackgroundEditor.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<series_instance_uid><op><tag><val1><val2>	{activity_timepoints,uses_field_separator}	\N
+KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator	KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>:<descriminator>:<value>	{dup_sops,background}	\N
+UncompressFilesTp	UncompressFilesTp.py <?bkgrnd_id?> <activity_id> <notify>	background_process		{uncompress,activity_timepoint}	\N
+ImportAndEnsureVisible	ImportAndEnsureVisible.py <?bkgrnd_id?> <activity_id> <notify>	background_process	<path>	{import}	\N
+UpdateTimepointAfterEdit	UpdateTimepointAfterEdit.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <subprocess_invocation_id> <notify>	background_process		{update_timepoint,activities}	\N
+SeriesWithDupSopsDifferentSopClassTp	SeriesWithDupSopsDifferentSopClassTp.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<foo>	{background}	\N
 \.
 
 
