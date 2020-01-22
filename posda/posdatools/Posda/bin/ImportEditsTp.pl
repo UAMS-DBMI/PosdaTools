@@ -62,7 +62,8 @@ Query: GetPosdaQueueSize
 When the file handle to ImportMultiple files in Posda, this script will get the
 maximum file_id and then wait until that file has been processed before it
 exits.  This will insure that all imported files have been processed.
-Query: GetMaxFileId
+Query: GetCountOfUnimportedFilesInEdit
+Query: GetMaxFileIdForDicomEditCompare
 Query: GetMaxProcessedFileId
 
 Finally, it will insure that all of the "to" files are imported, and visible, 
@@ -296,19 +297,42 @@ close IMPORT;
 my $close_time = time;
 my $wait_on_close = $close_time - $end_import_time;
 $background->WriteToEmail("$wait_on_close waiting for import to clear\n");
+###
+# Wait until the number of unimported files in dicom_edit_compare for this edit  is zero
+###
+my $get_num_unimported = Query('GetCountOfUnimportedFilesInEdit');
+my $num;
+$get_num_unimported->RunQuery(sub {
+  my($row) = @_;
+  $num = $row->[0];
+}, sub {}, $subproc_invoc_id);
+$background->WriteToEmail("$num unimported at begining of wait for imports\n");;
+while($num < 0){
+  $background->SetActivityStatus("$num imports in queue");
+  sleep 10;
+  $get_num_unimported->RunQuery(sub {
+    my($row) = @_;
+    $num = $row->[0];
+  }, sub {}, $subproc_invoc_id);
+}
 my $max_file_id;
 my $max_imported_file_id;
-my $get_max = Query("GetMaxFileId");
+###Change this to get max file id of "to files"
+my $get_max = Query("GetMaxFileIdForDicomEditCompare");
+#
 my $get_max_processed = Query("GetMaxProcessedFileId");
 $get_max->RunQuery(sub {
   my($row) = @_;
   $max_file_id = $row->[0];
-}, sub {});
+}, sub {}, $subproc_invoc_id);
 $get_max_processed->RunQuery(sub {
   my($row) = @_;
   $max_imported_file_id = $row->[0];
 }, sub {});
+$background->WriteToEmail("Initial max_file_imported: $max_file_id\n");
+$background->WriteToEmail("Initial max_file_processed: $max_imported_file_id\n");
 while($max_file_id > $max_imported_file_id){
+  $background->SetActivityStatus("max_imp_file_id: $max_imported_file_id, max_ed_file_id: $max_file_id");
   sleep 10;
   $get_max_processed->RunQuery(sub {
     my($row) = @_;
@@ -415,4 +439,6 @@ $upd->RunQuery(sub{}, sub{}, "Import Complete - to files deleted",
    $subproc_invoc_id);
 $background->PrepareBackgroundReportBasedOnQuery(
   "TimepointCreationReport", "Timepoint Creation Report (activity_id $activity_id, tp_id $new_tp)", 1000, $new_tp);
+$background->PrepareBackgroundReportBasedOnQuery(
+  "FilesSeriesNumFIlesAndSopsVisibilityInTimepoint", "More Detailed Timepoint Creation Report (activity_id $activity_id, tp_id $new_tp)", 1000, $new_tp);
 $background->Finish("Completed file import");

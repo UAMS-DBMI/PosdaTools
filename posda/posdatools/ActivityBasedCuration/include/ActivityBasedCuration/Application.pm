@@ -713,6 +713,67 @@ sub ContentResponse {
   }
 }
 
+my $table_free_seq = 0;
+sub OpenTableFreePopup{
+  my($self, $http, $dyn) = @_;
+print STDERR "In OpenTableFreePopup\n";
+  my $parms = { button => $dyn->{cap_}};
+  for my $i (keys %{$dyn}){
+    unless(
+      $i eq "cap_" || $i eq "class_" ||
+      $i eq "obj_path" || $i eq "op" || $i eq "ts"
+    ){
+      $parms->{$i} = $dyn->{$i};
+    }
+  }
+  $table_free_seq += 1;
+  my $unique_val = "seq_$table_free_seq";
+
+  my $class = $dyn->{class_};
+  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
+}
+
+sub OpenPopup {
+  my($self, $class, $name, $params) = @_;
+#    say STDERR "OpenDynamicPopup, executing $class using params:";
+#    print STDERR Dumper($params);
+  print STDERR "################\nOpenPopup\nclass: $class\n";
+  print STDERR "name: $name\n################\n";
+
+
+  if ($class eq 'choose') {
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+    delete $params->{spreadsheet_file_id};
+  } elsif ($class eq 'choose_from'){
+    $params->{file_id} = $params->{from_file_id};
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  } elsif ($class eq 'choose_to'){
+    $params->{file_id} = $params->{to_file_id};
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  } elsif ($class eq 'choose_spreadsheet'){
+    $params->{file_id} = $params->{spreadsheet_file_id};
+    $class = Posda::FileViewerChooser::choose($params->{file_id});
+  }
+  unless(defined $class){ return }
+
+  # if Quince, do it differently:
+  if ($class eq 'Quince') {
+    $self->OpenQuince($name, $params);
+    return;
+  }
+
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
 sub OpenNewTableLevelPopup{
   my($self, $http, $dyn) = @_;
   my $params;
