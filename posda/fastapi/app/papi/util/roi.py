@@ -45,8 +45,11 @@ async def get_contour_data_from_file(filename, offset, length):
 
 def format_color(color):
     default_color = (0, 0, 0)
-    c = color.split('\\')
-    if len(c) != 3:
+    if color is not None :
+        c = color.split('\\')
+        if len(c) != 3:
+            return default_color
+    else:
         return default_color
 
     return tuple([int(i) for i in c])
