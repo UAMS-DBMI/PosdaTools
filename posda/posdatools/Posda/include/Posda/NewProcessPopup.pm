@@ -108,7 +108,7 @@ sub SetDefaultArgs{
 sub ContentResponse {
   my($self, $http, $dyn) = @_;
   if($self->{mode} eq "initial"){
-  $self->RefreshEngine($http, $dyn, 
+  $self->RefreshEngine($http, $dyn,
     '<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">' .
     '<div id="div_ProcessSummary">' .
     '<?dyn="DrawProcessSummary"?>' .
@@ -212,6 +212,7 @@ sub MenuResponse{
       op => "StartSubprocess",
       caption => "Start",
       sync => "Update();",
+      css_class => "btn btn-success",
     });
     $self->DelegateButton($http, {
       op => "Cancel",

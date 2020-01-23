@@ -1208,10 +1208,15 @@ sub NotSoSimpleButtonButton{
 sub DelegateButton{
   my($this, $http, $dyn)  = @_;
   my @parms;
+  my $css_class = "btn btn-default";
   for my $i (keys %$dyn){
     if($i eq "op") { next }
     if($i eq "caption") { next }
     if($i eq "sync") { next }
+    if($i eq "css_class") {
+      $css_class = $dyn->{css_class};
+      next;
+    }
     push @parms, "$i=$dyn->{$i}";
   }
   push(@parms, "Delegator=$this->{path}");
@@ -1221,7 +1226,7 @@ sub DelegateButton{
     $hstring .= "$parms[$i]";
     unless($i == $#parms) { $hstring .= "&" }
   }
-  my $string = '<input type="button" class="btn btn-default" ' .
+  my $string = "<input type=\"button\" class=\"$css_class\" " .
     'onClick="javascript:PosdaGetRemoteMethod(' .
     "'Delegate', '$hstring', " .
     'function () {' .
