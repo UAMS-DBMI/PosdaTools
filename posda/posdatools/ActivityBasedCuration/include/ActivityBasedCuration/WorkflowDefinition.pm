@@ -241,7 +241,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       "CountsByCollectionDateRange",
       "CountsByCollectionSiteDateRange",
       "CountsByPatientId",
-      "CountsByPatientStatus",
+      "PatientStatusCounts",
       "CountsByCollectionLike",
     ],
   ],
