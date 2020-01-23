@@ -1,1 +1,7 @@
 last_built
+docker-compose.yaml
+ream.env
+common.env
+database.env
+nbia.env
+api.env

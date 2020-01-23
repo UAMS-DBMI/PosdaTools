@@ -1,6 +1,29 @@
 #!/usr/bin/env bash
 
 echo "Setting up development environment..."
+if [ ! -f docker-compose.yaml ]; then
+  cp config/docker-compose.yaml .
+fi
+
+if [ ! -f api.env ]; then
+  cp config/api.env .
+fi
+
+if [ ! -f database.env ]; then
+  cp config/database.env .
+fi
+
+if [ ! -f nbia.env ]; then
+  cp config/nbia.env .
+fi
+
+if [ ! -f common.env ]; then
+  cp config/common.env .
+fi
+
+if [ ! -f ream.env ]; then
+  cp config/ream.env .
+fi
 
 docker pull tcia/posda:latest
 docker pull tcia/kaleidoscope:latest
