@@ -1,6 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-echo "Setting up development environment..."
+echo "Setting up your environment..."
+
 if [ ! -f docker-compose.yaml ]; then
   cp config/docker-compose.yaml .
 fi
@@ -28,5 +29,6 @@ fi
 docker pull tcia/posda:latest
 docker pull tcia/kaleidoscope:latest
 docker pull tcia/k-base:latest
-docker pull tcia/quince:latest
+docker pull tcia/ream:latest
+docker pull tcia/lanterna:latest
 docker pull tcia/posda_web:latest
