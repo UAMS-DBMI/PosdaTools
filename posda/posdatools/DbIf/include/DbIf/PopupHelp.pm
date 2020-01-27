@@ -1,7 +1,6 @@
 package DbIf::PopupHelp;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::Config ('Config','Database');
@@ -20,7 +19,8 @@ use vars qw( @ISA );
 
 my $db_handle;
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   my ($name, $cmdline, $op_type, $input_fmt, $tags) = @$params;
   $self->{title} = "Help for command: $name";
   $self->{name} = $name;
@@ -59,10 +59,11 @@ method SpecificInitialize($params) {
     my @lines;
     Dispatch::LineReader->new_cmd(
       "$command -h 2>&1",  # Because the commands print -h to STDERR
-      func($line) {
+      sub {
+  my ($line) = @_;
         push @lines, $line;
       },
-      func() {
+      sub {
         DEBUG "Finished reading command -h"; 
         $self->{lines} = \@lines;
         $self->AutoRefresh;
@@ -79,7 +80,8 @@ method SpecificInitialize($params) {
   }
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <h2>$self->{command} Help</h2>
     <div class="panel panel-info">
@@ -146,7 +148,8 @@ method ContentResponse($http, $dyn) {
   });
 }
 
-method GetCommandCode($filename) {
+sub GetCommandCode {
+  my ($self, $filename) = @_;
   if (not defined $self->{command_code}) {
     $self->{command_code} = 
       encode_entities($self->GetCommandCode_PreCache($filename));
@@ -155,7 +158,8 @@ method GetCommandCode($filename) {
   return $self->{command_code};
 }
 
-method GetCommandCode_PreCache($filename) {
+sub GetCommandCode_PreCache {
+  my ($self, $filename) = @_;
   my $possible_locations = [
     'Posda/bin',
     'bin'
@@ -191,7 +195,8 @@ method GetCommandCode_PreCache($filename) {
   }
 }
 
-func read_contents($filename) {
+sub read_contents {
+  my ($filename) = @_;
   my $content;
   local $/ = undef;
 
@@ -208,7 +213,8 @@ func read_contents($filename) {
   }
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
 
 1;

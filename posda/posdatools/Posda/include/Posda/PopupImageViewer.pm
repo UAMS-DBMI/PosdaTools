@@ -1,7 +1,6 @@
 package Posda::PopupImageViewer;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::Config ('Config','Database');
@@ -18,7 +17,8 @@ use vars qw( @ISA );
 
 my $db_handle;
 
-method LoadFromSOP($db_handle, $sop) {
+sub LoadFromSOP {
+  my ($self, $db_handle, $sop) = @_;
   my $qh = $db_handle->prepare(qq{
     select distinct
         root_path || '/' || rel_path as file, 
@@ -70,7 +70,8 @@ method LoadFromSOP($db_handle, $sop) {
   return $rows;
 
 }
-method LoadFromFID($db_handle, $fid) {
+sub LoadFromFID {
+  my ($self, $db_handle, $fid) = @_;
   my $qh = $db_handle->prepare(qq{
     select distinct
         root_path || '/' || rel_path as file, 
@@ -123,7 +124,8 @@ method LoadFromFID($db_handle, $fid) {
 
 }
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = "Popup Image Viewer";
   # Determine temp dir
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
@@ -181,7 +183,8 @@ method SpecificInitialize($params) {
   };
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   my $uri = URI->new();
   $uri->query_form($self->{image_params});
   my $extra = substr $uri->as_string(), 1;
@@ -214,7 +217,8 @@ method ContentResponse($http, $dyn) {
   
 }
 
-method GetImage($http, $dyn) {
+sub GetImage {
+  my ($self, $http, $dyn) = @_;
   # say STDERR Dumper($dyn);
   my $temp_file = "$self->{temp_path}/$self->{sop_uid}.png";
 
@@ -227,14 +231,17 @@ method GetImage($http, $dyn) {
 
 }
 
-method SetWidth($http, $dyn) {
+sub SetWidth {
+  my ($self, $http, $dyn) = @_;
   $self->{image_params}->{width} = $dyn->{val};
 }
-method SetCenter($http, $dyn) {
+sub SetCenter {
+  my ($self, $http, $dyn) = @_;
   $self->{image_params}->{center} = $dyn->{val};
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
 
 1;

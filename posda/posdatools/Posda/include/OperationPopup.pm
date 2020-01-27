@@ -1,6 +1,5 @@
 package Posda::OperationPopup;
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::PopupImageViewer;
@@ -59,7 +58,8 @@ use vars qw( @ISA );
 
 #
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   my $button_name = $params->{button};
 #print STDERR "Parms: ";
 #Debug::GenPrint($dbg, $params, 1);
@@ -88,7 +88,8 @@ method SpecificInitialize($params) {
     $self->{ParamValues}->{notify} = $self->get_user;
   }
 }
-method GetParams{
+sub GetParams {
+  my ($self) = @_;
   my $start = $self->{command_line};
   my @Parms;
   my @MetaParms;
@@ -107,7 +108,8 @@ method GetParams{
   $self->{Params} = \@Parms;
   $self->{MetaParams} = \@MetaParms;
 }
-method GetColumns{
+sub GetColumns {
+  my ($self) = @_;
   my $start = $self->{input_line_format};
   $self->{Columns} = [];
   while($start =~ /^[^<]*<([^>]+)>(.*)$/){
@@ -115,7 +117,8 @@ method GetColumns{
     $start = $2;
   }
 }
-method MakeRowHashArray{
+sub MakeRowHashArray {
+  my ($self) = @_;
   my $cols = $self->{table}->{query}->{columns};
   my $raw_rows;
   if(
@@ -136,7 +139,8 @@ method MakeRowHashArray{
   }
   $self->{RowHashArray} = \@RowHashes;
 }
-method MakeLineList{
+sub MakeLineList {
+  my ($self) = @_;
   my $format = $self->{input_line_format};
   my $columns = $self->{Columns};
   my @Lines;
@@ -149,7 +153,8 @@ method MakeLineList{
   }
   $self->{LineList} = \@Lines;
 }
-method ProcessQuery{
+sub ProcessQuery {
+  my ($self) = @_;
   my $sub = sub {
     my($row) = @_;
     $self->{command_line} = $row->[0];
@@ -167,7 +172,8 @@ method ProcessQuery{
   return $sub;
 }
 
-method Help($http, $dyn){
+sub Help {
+  my ($self, $http, $dyn) = @_;
   my $child_path = $self->child_path("PopupHelp_$self->{operation_name}");
   my $details = $self->{help_info};
   my $child_obj = DbIf::PopupHelp->new($self->{session},
@@ -175,7 +181,8 @@ method Help($http, $dyn){
   $self->StartJsChildWindow($child_obj);
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   if($self->{operation_type} ne "background_process"){
     $self->BadOperationType($http, $dyn);
   } else {
@@ -191,7 +198,8 @@ method ContentResponse($http, $dyn) {
   }
 }
 
-method InitialBackgroundContentResponse($http, $dyn){
+sub InitialBackgroundContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("Mode: $self->{ContentResponseMode}");
   $http->queue("<p>Enter Parameters Below:</p><table class=\"table\">");
   for my $p (0 .. $#{$self->{Params}}){
@@ -219,9 +227,11 @@ method InitialBackgroundContentResponse($http, $dyn){
   });
 }
 
-method Cancel($http,$dyn) { $http->queue("OK")}
+sub Cancel {
+  my ($self, $http,$dyn) = @_; $http->queue("OK")}
 
-method SetExpandMode($http, $dyn){
+sub SetExpandMode {
+  my ($self, $http, $dyn) = @_;
   my $command_line = $self->{command_line};
   for my $p (@{$self->{Params}}){
     $command_line =~ s/<$p>/$self->{ParamValues}->{$p}/eg;
@@ -230,11 +240,13 @@ method SetExpandMode($http, $dyn){
   $self->{ContentResponseMode} = "ExpandedBackgroundContentResponse";
 }
 
-method ClearExpandMode($http, $dyn){
+sub ClearExpandMode {
+  my ($self, $http, $dyn) = @_;
   $self->{ContentResponseMode} = "InitialBackgroundContentResponse";
 }
 
-method ExpandedBackgroundContentResponse($http, $dyn){
+sub ExpandedBackgroundContentResponse {
+  my ($self, $http, $dyn) = @_;
   my $lines = $self->{LineList};
   my $num_lines = @$lines;
   $http->queue("Command: $self->{operation_name} ");
@@ -283,14 +295,17 @@ method ExpandedBackgroundContentResponse($http, $dyn){
   });
 }
 
-method BadOperationType($http, $dyn){
+sub BadOperationType {
+  my ($self, $http, $dyn) = @_;
   $http->queue("Bad operation type: $self->{operation_type}");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
 
-method StartSubprocess($http, $dyn){
+sub StartSubprocess {
+  my ($self, $http, $dyn) = @_;
   my $id = $self->{table}->{query}->{invoked_id};
   my $btn_name = $self->{button_name};
   my $command_line = $self->{ExpandedCommand};
@@ -318,7 +333,8 @@ method StartSubprocess($http, $dyn){
   $self->{ContentResponseMode} = "WaitingForResponse";
 }
 
-method WhenCommandFinishes($subprocess_invocation_id){
+sub WhenCommandFinishes {
+  my ($self, $subprocess_invocation_id) = @_;
   my $sub = sub {
     my($results, $pid) = @_;
     $self->{Results} = $results;
@@ -342,11 +358,13 @@ method WhenCommandFinishes($subprocess_invocation_id){
   return $sub;
 }
 
-method WaitingForResponse($http, $dyn){
+sub WaitingForResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<p>Waiting on sub_process</p>");
 }
 
-method SubProcessResponded($http, $dyn){
+sub SubProcessResponded {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<p>Subprocess response:</p><pre>");
   for my $i (@{$self->{Results}}){
     $http->queue("$i\n");

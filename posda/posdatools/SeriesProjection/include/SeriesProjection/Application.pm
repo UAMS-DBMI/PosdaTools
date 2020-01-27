@@ -7,7 +7,6 @@ use vars '@ISA';
 @ISA = ("GenericApp::Application");
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use Storable 'dclone';
 
 use GenericApp::Application;
@@ -22,7 +21,8 @@ use Data::Dumper;
 use DBI;
 
 
-method SpecificInitialize() {
+sub SpecificInitialize {
+  my ($self) = @_;
   DEBUG 1;
   $self->{Mode} = 'Welcome';
   $self->{user} = $self->get_user();
@@ -32,7 +32,8 @@ method SpecificInitialize() {
 
 # This is supposed to insert css but can be used
 # to insert anything directly into <head>
-method CssStyle($http, $dyn) {
+sub CssStyle {
+  my ($self, $http, $dyn) = @_;
   DEBUG 1;
   $self->SUPER::CssStyle($http, $dyn);
   $http->queue(qq{
@@ -42,7 +43,8 @@ method CssStyle($http, $dyn) {
 }
 
 # Insert JS inline here
-method JsContent($http, $dyn) {
+sub JsContent {
+  my ($self, $http, $dyn) = @_;
   DEBUG 1;
   $self->SUPER::JsContent($http, $dyn);
   $http->queue(qq{
@@ -59,7 +61,8 @@ method JsContent($http, $dyn) {
 }
 
 
-method GetNextFileForReview() {
+sub GetNextFileForReview {
+  my ($self) = @_;
   DEBUG 1;
 
   if (defined $self->{CurrentIEC}) {
@@ -104,7 +107,8 @@ method GetNextFileForReview() {
 # Cannot rely on the same method as unreviewed because we
 # are not changing the processing_status. Must use a seperate curosr
 # for tracking this.
-method GetNextReviewedFileForReview($review_status) {
+sub GetNextReviewedFileForReview {
+  my ($self, $review_status) = @_;
   if (not defined $self->{GoodReviewCursor}) {
     DEBUG "Running Query";
     my $sth = $self->{dbh}->prepare(qq{
@@ -138,7 +142,8 @@ method GetNextReviewedFileForReview($review_status) {
 
 }
 
-method LoadDataForIEC($iec_id) {
+sub LoadDataForIEC {
+  my ($self, $iec_id) = @_;
   DEBUG $iec_id;
   my $dbh = $self->{dbh};
 
@@ -194,7 +199,8 @@ method LoadDataForIEC($iec_id) {
 }
 
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $self->MakeMenu($http, $dyn,
     [
       { caption => "Start Over",
@@ -221,24 +227,28 @@ method MenuResponse($http, $dyn) {
     ]);
 }
 
-method StartOver($http, $dyn) {
+sub StartOver {
+  my ($self, $http, $dyn) = @_;
   delete $self->{GoodReviewCursor};
   $self->SetMode(0, {mode => 'Welcome'});
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   if ($self->can($self->{Mode})) {
     my $meth = $self->{Mode};
     $self->$meth($http, $dyn);
   }
 }
 
-method SetMode($http, $dyn) {
+sub SetMode {
+  my ($self, $http, $dyn) = @_;
   DEBUG Dumper($dyn);
   $self->{Mode} = $dyn->{mode};
 }
 
-method Welcome($http, $dyn) {
+sub Welcome {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <p>
       Select a mode.
@@ -269,19 +279,23 @@ method Welcome($http, $dyn) {
       },
     ]);
 }
-method ReviewGoodSeries($http, $dyn) {
+sub ReviewGoodSeries {
+  my ($self, $http, $dyn) = @_;
   $self->{ReviewMode} = 'Good';
   return $self->ReviewReviewedSeries($http, $dyn);
 }
-method ReviewBadSeries($http, $dyn) {
+sub ReviewBadSeries {
+  my ($self, $http, $dyn) = @_;
   $self->{ReviewMode} = 'Bad';
   return $self->ReviewReviewedSeries($http, $dyn);
 }
-method ReviewBrokenSeries($http, $dyn) {
+sub ReviewBrokenSeries {
+  my ($self, $http, $dyn) = @_;
   $self->{ReviewMode} = 'Broken';
   return $self->ReviewReviewedSeries($http, $dyn);
 }
-method ReviewReviewedSeries($http, $dyn) {
+sub ReviewReviewedSeries {
+  my ($self, $http, $dyn) = @_;
 
   # get the list of available project/site combos
   my $available = [$self->{dbh}->selectall_arrayref(qq{
@@ -356,7 +370,8 @@ method ReviewReviewedSeries($http, $dyn) {
   });
 }
 
-method Welcome2($http, $dyn) {
+sub Welcome2 {
+  my ($self, $http, $dyn) = @_;
   $self->{ReviewMode} = 'unreviewed';
   # get the list of available project/site combos
   my $available = [$self->{dbh}->selectall_arrayref(qq{
@@ -430,7 +445,8 @@ method Welcome2($http, $dyn) {
   });
 }
 
-method SelectCollection($http, $dyn) {
+sub SelectCollection {
+  my ($self, $http, $dyn) = @_;
   my $collection = $dyn->{collection};
   my $site = $dyn->{site};
 
@@ -442,11 +458,13 @@ method SelectCollection($http, $dyn) {
 
 }
 
-method Review($http, $dyn) {
+sub Review {
+  my ($self, $http, $dyn) = @_;
   $self->RenderCurrentSeries($http, $dyn);
 }
 
-method WeHaveToGoBack($http, $dyn) {
+sub WeHaveToGoBack {
+  my ($self, $http, $dyn) = @_;
   if (not defined $self->{history}) {
     return;
   }
@@ -458,7 +476,8 @@ method WeHaveToGoBack($http, $dyn) {
   $self->LoadDataForIEC($self->{CurrentIEC});
 }
 
-method SetGood($http, $dyn) {
+sub SetGood {
+  my ($self, $http, $dyn) = @_;
   my $dbh = $self->{dbh};
 
   $dbh->do(qq{
@@ -473,7 +492,8 @@ method SetGood($http, $dyn) {
   $self->GetNextFileForReview();
   $self->AutoRefresh;
 }
-method SetBad($http, $dyn) {
+sub SetBad {
+  my ($self, $http, $dyn) = @_;
   my $dbh = $self->{dbh};
 
   $dbh->do(qq{
@@ -488,7 +508,8 @@ method SetBad($http, $dyn) {
   $self->GetNextFileForReview();
   $self->AutoRefresh;
 }
-method SetBroken($http, $dyn) {
+sub SetBroken {
+  my ($self, $http, $dyn) = @_;
   my $dbh = $self->{dbh};
 
   $dbh->do(qq{
@@ -504,7 +525,8 @@ method SetBroken($http, $dyn) {
   $self->AutoRefresh;
 }
 
-method RenderCurrentSeries($http, $dyn) {
+sub RenderCurrentSeries {
+  my ($self, $http, $dyn) = @_;
   if (not defined $self->{CurrentFile}) {
     $http->queue(qq{
       <p class="alert alert-info">
@@ -595,7 +617,8 @@ method RenderCurrentSeries($http, $dyn) {
   # $self->ListFiles($http, $dyn);
 }
 
-method StartPapaya() {
+sub StartPapaya {
+  my ($self) = @_;
 
   my $list = '';
   for my $i (@{$self->{DicomFiles}}) {
@@ -606,13 +629,15 @@ method StartPapaya() {
   $self->QueueJsCmd("papaya.Container.startPapaya();");
 }
 
-method ListFiles($http, $dyn) {
+sub ListFiles {
+  my ($self, $http, $dyn) = @_;
   for my $i (@{$self->{DicomFiles}}) {
     $http->queue("<li>$i</li>");
   }
 }
 
-method GetFile($http, $dyn) {
+sub GetFile {
+  my ($self, $http, $dyn) = @_;
   my $filename = $dyn->{path};
   
   # determine mime type

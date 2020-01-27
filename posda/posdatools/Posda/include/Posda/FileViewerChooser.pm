@@ -2,7 +2,6 @@ package Posda::FileViewerChooser;
 # I choose what viewer to use for a file, based on file_id
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::DB 'Query';
 use Posda::DebugLog;
@@ -18,7 +17,8 @@ our $dicom_class = 'Quince';
 
 # returns a class for a popup viewer that should be
 # used for viewing the given file_id
-func choose($file_id) {
+sub choose {
+  my ($file_id) = @_;
   DEBUG $file_id;
 
   # get the mime type of the file

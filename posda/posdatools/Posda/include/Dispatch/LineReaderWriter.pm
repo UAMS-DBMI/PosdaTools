@@ -1,6 +1,5 @@
 package Dispatch::LineReaderWriter;
 
-use Method::Signatures::Simple;
 use Modern::Perl;
 
 use Dispatch::Select;
@@ -11,7 +10,8 @@ use Encode;
 # a time, and collecting the output into an array,
 # and pass that finished array to $finished_callback
 # at the end.
-func write_and_read_all($class: $cmd, $data, $finished_callback) {
+sub write_and_read_all {
+  my ($class, $cmd, $data, $finished_callback) = @_;
   # create an instance of EventHandler.
   # It lacks a new() for who-knows-why and I don't
   # want to subclass it.
@@ -19,7 +19,8 @@ func write_and_read_all($class: $cmd, $data, $finished_callback) {
 
   my($fh, $pid) = $handler->ReadWriteChild($cmd);
   Dispatch::Select::Socket->new(
-    func($dispatch, $sock) {
+    sub {
+  my ($dispatch, $sock) = @_;
       if (my $line = shift @$data) {
         my $bytes_written = syswrite $sock, encode("utf8", "$line\n");
       } else {
@@ -33,10 +34,11 @@ func write_and_read_all($class: $cmd, $data, $finished_callback) {
   # Attach a line reader directly to the fh
   my @results;
   Dispatch::LineReader->new_fh($fh,
-    func($line) {
+    sub {
+  my ($line) = @_;
       push @results, $line;
     },
-    func() {
+    sub {
       ($finished_callback)->(\@results, $pid);
     }, 
     $pid

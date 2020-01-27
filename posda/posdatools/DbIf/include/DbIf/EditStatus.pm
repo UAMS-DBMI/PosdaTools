@@ -3,7 +3,6 @@ package DbIf::EditStatus;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'QueryAsync', 'Query';
@@ -13,7 +12,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupStatus';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Edit Status';
   $self->{count} = 0;
   $self->StartTimer;
@@ -33,12 +33,14 @@ method SpecificInitialize($params) {
     $self->LoadScriptOutput("running_subprocesses"));
 }
 
-method StartTimer{
+sub StartTimer {
+  my ($self) = @_;
   $self->{backgrounder} = Dispatch::Select::Background->new($self->TimeIncrementor);
   $self->{backgrounder}->timer(10);
   
 }
-method TimeIncrementor{
+sub TimeIncrementor {
+  my ($self) = @_;
   my $sub = sub{
     unless(exists $self->{backgrounder}) { return }
     $self->{count} += 10;
@@ -47,17 +49,20 @@ method TimeIncrementor{
   }
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<small>run time: $self->{count}</small>");
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
 
-method InitializedResponse($http, $dyn){
+sub InitializedResponse {
+  my ($self, $http, $dyn) = @_;
   my $edit_status = $self->{query_results}->{GetEditStatusByEditId}->[0]->[6];
   my $files_to_edit = $self->{query_results}->{GetEditStatusByEditId}->[0]->[3];
   my $files_changed = $self->{query_results}->{GetEditStatusByEditId}->[0]->[4];

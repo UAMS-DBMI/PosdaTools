@@ -9,7 +9,6 @@ use Debug;
 
 package Posda::CompareFiles;
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Fcntl;
 use Posda::DebugLog 'on';
@@ -206,7 +205,8 @@ sub ADumpFinished{
   return $sub;
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("menu");
 }
 

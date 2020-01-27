@@ -1,9 +1,8 @@
 package Posda::Subprocess;
-# 
+#
 # A class for spawning Background Subprocesses
 #
 
-use Method::Signatures::Simple;
 use Modern::Perl;
 use Posda::DB::PosdaFilesQueries;
 use Dispatch::LineReaderWriter;
@@ -16,7 +15,7 @@ use Data::Dumper;
 # - from a button (ProcessPopup)
 # - from code (such as after a drag-and-drop event)
 #
-# func example() {
+# sub example {
 #   my $subprocess = Posda::Subprocess->new("TestOperation");
 #   $subprocess->set_params($param_map);
 #   $subprocess->execute($stdin, $spreadsheet_uploaded_id, $done_callback);
@@ -31,7 +30,8 @@ use Data::Dumper;
 
 # }
 
-method new($class: $name) {
+sub new {
+  my ($class, $name) = @_;
   return bless {
     name => $name,
     user => 'nobody',
@@ -39,12 +39,11 @@ method new($class: $name) {
   }, $class;
 }
 
-method execute_from_dbif(
-  $user,
-  $spreadsheet_uploaded_id,
-  $query_invoked_by_dbif_id,
-  $done_callback
-) {
+sub execute_from_dbif {
+  my ($self, $user,
+      $spreadsheet_uploaded_id,
+      $query_invoked_by_dbif_id,
+      $done_callback) = @_;
   $self->set_options({
     user => $user,
     from_spreadsheet => 1,
@@ -57,7 +56,8 @@ method execute_from_dbif(
 }
 
 # Fill in default values for a button-based execution
-method execute_from_button($user, $button_name, $done_callback) {
+sub execute_from_button {
+  my ($self, $user, $button_name, $done_callback) = @_;
   $self->set_options({
     user => $user,
     from_spreadsheet => 0,
@@ -68,7 +68,8 @@ method execute_from_button($user, $button_name, $done_callback) {
   $self->execute($done_callback);
 }
 
-method new_from_spreadsheet_op($class: $name) {
+sub new_from_spreadsheet_op {
+  my ($class, $name) = @_;
   my $self = $class->new($name);
   my $commands = get_command_hash();
   $self->set_commandline($commands->{$name}->{cmdline});
@@ -81,7 +82,8 @@ method new_from_spreadsheet_op($class: $name) {
   return $self;
 }
 
-method set_options($option_hash) {
+sub set_options {
+  my ($self, $option_hash) = @_;
   my $oh = $option_hash;
 
   if (defined $oh->{user}) {
@@ -110,11 +112,13 @@ method set_options($option_hash) {
 
 }
 
-method set_commandline($commandline) {
+sub set_commandline {
+  my ($self, $commandline) = @_;
   $self->{cmdline} = $commandline;
 }
 
-method set_params($param_hash) {
+sub set_params {
+  my ($self, $param_hash) = @_;
   DEBUG "called";
   my $final = $self->{cmdline};
 
@@ -132,11 +136,13 @@ method set_params($param_hash) {
   $self->{cmdline} = $final;
 }
 
-method set_stdin($stdin) {
+sub set_stdin {
+  my ($self, $stdin) = @_;
   $self->{stdin} = $stdin;
 }
 
-method set_params_old($command, $colmap, $row) {
+sub set_params_old {
+  my ($self, $command, $colmap, $row) = @_;
   if (not defined $command) {
     return undef
   }
@@ -157,7 +163,7 @@ method set_params_old($command, $colmap, $row) {
 }
 
 # TODO: adjust this name
-func get_command_hash() {
+sub get_command_hash {
   # Build the command list from database
   my $commands = {};
   map {
@@ -176,17 +182,13 @@ func get_command_hash() {
 }
 
 # Standard name-based execute
-method execute(
-  $done_callback,
-
-  # optional params
-  $from_spreadsheet,
-  $from_button,
-  $query_invoked_by_dbif_id,
-  $button_name
-
-) {
-  DEBUG "called";
+sub execute {
+  my ($self, $done_callback,
+    # optional params
+    $from_spreadsheet,
+    $from_button,
+    $query_invoked_by_dbif_id,
+    $button_name) = @_;
 
   my $op_details = PosdaDB::Queries->GetOperationDetails($self->{name});
   DEBUG Dumper($op_details);
@@ -211,7 +213,8 @@ method execute(
   );
 }
 
-method execute_generic(
+sub execute_generic {
+  my ($self,
   $command_line,
   $op_name,
   $user,
@@ -223,8 +226,7 @@ method execute_generic(
   $from_spreadsheet,
   $from_button,
   $query_invoked_by_dbif_id,
-  $button_name
-) {
+  $button_name) = @_;
   DEBUG "called";
 
   # Set default values
@@ -251,7 +253,8 @@ method execute_generic(
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd,
     $stdin,
-    func($return, $pid) {
+    sub {
+  my ($return, $pid) = @_;
       $self->{Results} = $return;
       DEBUG "Results are in!";
 
@@ -259,7 +262,7 @@ method execute_generic(
         # TODO: Is this really useful? the way write_and_read_all()
         # works, the subprocess should always be dead by the time
         # we get here. This is in the spec, but maybe it should be
-        # modified? 
+        # modified?
         PosdaDB::Queries::set_subprocess_pid(
           $subprocess_invocation_id, $pid);
         PosdaDB::Queries::record_subprocess_lines(

@@ -3,7 +3,6 @@ package Posda::BackgroundQuery;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -15,7 +14,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'Background Query';
   $self->{query} = PosdaDB::Queries->GetQueryInstance($params->{query_name});
   #$self->{SavedQueriesDir} = "$params->{SavedQueries}";
@@ -30,7 +30,8 @@ sub HeaderResponse{
 
 }
 
-method ContentResponse($http, $dyn){
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   if($self->{mode} eq "Initial"){
     return $self->InitialContentResponse($http, $dyn);
   } elsif($self->{mode} eq "waiting"){
@@ -38,7 +39,8 @@ method ContentResponse($http, $dyn){
   }
   $self->ResultsAreIn($http, $dyn);
 }
-method InitialContentResponse($http, $dyn) {
+sub InitialContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>Run Background Query</h2>");
   my $from_seen = 0;
   my $descrip = {
@@ -173,19 +175,22 @@ method InitialContentResponse($http, $dyn) {
   }
   $self->RefreshEngine($http, $dyn, '</table>');
 }
-method CreateBindingCacheInfoForKeyInDb($key){
+sub CreateBindingCacheInfoForKeyInDb {
+  my ($self, $key) = @_;
   my $user = $self->get_user;
   my $value = $self->{BindingCache}->{$key};
   Query("InsertUserBoundVariable")->RunQuery(sub{
   }, sub{}, $user, $key, $value);
 }
-method UpdateBindingValueInDb($key){
+sub UpdateBindingValueInDb {
+  my ($self, $key) = @_;
   my $user = $self->get_user;
   my $value = $self->{BindingCache}->{$key};
   Query("UpdateUserBoundVariable")->RunQuery(sub{
   },sub{}, $value, $user, $key);
 }
-method RunQueryInBackground($http, $dyn){
+sub RunQueryInBackground {
+  my ($self, $http, $dyn) = @_;
   my $cmd = "RunQueryInBackground.pl <?invoc_id>? \"$self->{query}->{name}\" $self->{Param}->{notify}";
   my $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
     1, 0, undef, undef, "RunQueryInBackground",
@@ -208,7 +213,8 @@ method RunQueryInBackground($http, $dyn){
   Dispatch::LineReaderWriter->write_and_read_all(
     $self->{ForRunning}->[1],
     $self->{ForRunning}->[2],
-    func($return, $pid) {
+    sub {
+  my ($return, $pid) = @_;
       $self->{Results} = $return;
       $self->{Mode} = 'ResultsAreIn';
       $self->AutoRefresh;
@@ -229,10 +235,12 @@ method RunQueryInBackground($http, $dyn){
 
   $self->{mode} = "waiting";
 }
-method WaitingContentResponse($http, $dyn){
+sub WaitingContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("Waiting");
 }
-method ResultsAreIn($http, $dyn){
+sub ResultsAreIn {
+  my ($self, $http, $dyn) = @_;
   $http->queue("results:<pre>");
   if(exists $self->{Results} && ref($self->{Results}) eq "ARRAY"){
     for my $line (@{$self->{Results}}){
@@ -242,15 +250,18 @@ method ResultsAreIn($http, $dyn){
   $http->queue("</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
-method DrawWidgetFromTo($http, $dyn) {
+sub DrawWidgetFromTo {
+  my ($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, qq{
     <tr>
       <th style="width:5%">quick options</th>
@@ -263,7 +274,8 @@ method DrawWidgetFromTo($http, $dyn) {
     </tr>
   });
 }
-method SetWidgetFromTo($http, $dyn) {
+sub SetWidgetFromTo {
+  my ($self, $http, $dyn) = @_;
   my $val = $dyn->{val};
   if ($val eq "today") {
     my $today = DateTime->now(time_zone=>'local')->date;

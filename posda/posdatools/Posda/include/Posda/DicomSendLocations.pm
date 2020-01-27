@@ -1,14 +1,13 @@
 package Posda::DicomSendLocations;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 
 use Env;
 use JSON;
 
 our $cache;
 
-func get() {
+sub get {
   if (not defined $cache) {
     $cache = _load();
   }
@@ -16,7 +15,7 @@ func get() {
   return $cache;
 }
 
-func _load() {
+sub _load {
   local $/;
   open( my $fh, '<', $ENV{POSDA_DICOM_SEND_CONFIG});
   my $json_text = <$fh>;

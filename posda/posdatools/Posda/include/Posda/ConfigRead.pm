@@ -1,10 +1,10 @@
 package Posda::ConfigRead;
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use JSON;
 
-method new($class: $dir) {
+sub new {
+  my ($class, $dir) = @_;
   my $self = {
     dir => $dir
   };
@@ -14,7 +14,8 @@ method new($class: $dir) {
   return $self;
 }
 
-method ReadJsonFile($file) {
+sub ReadJsonFile {
+  my ($self, $file) = @_;
   my $text = "";
   my $data;
   my $cf;
@@ -58,7 +59,8 @@ method ReadJsonFile($file) {
   return $data;
 }
 
-method ReadJsonFiles($dir) {
+sub ReadJsonFiles {
+  my ($self, $dir) = @_;
   my $dh;
 
   unless(opendir $dh, $dir) {

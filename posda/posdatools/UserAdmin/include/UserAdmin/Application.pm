@@ -7,7 +7,6 @@ use vars '@ISA';
 @ISA = ("GenericApp::Application");
 
 use Modern::Perl '2010';
-use Method::Signatures::Simple;
 use Storable 'dclone';
 
 use GenericApp::Application;
@@ -19,7 +18,8 @@ use Posda::DebugLog 'on';
 use Data::Dumper;
 
 
-method SpecificInitialize() {
+sub SpecificInitialize {
+  my ($self) = @_;
   $self->{dbh} = DBI->connect(Database('posda_auth'));
   # Needed for creating user_inbox entry
   $self->{queries_dbh} = DBI->connect(Database('posda_queries'));
@@ -29,7 +29,8 @@ method SpecificInitialize() {
   $self->{Mode} = "RenderUserList";
 }
 
-method GetAllPermissionList() {
+sub GetAllPermissionList {
+  my ($self) = @_;
   my $stmt = $self->{dbh}->prepare(qq{
     select *
     from permissions
@@ -48,7 +49,8 @@ method GetAllPermissionList() {
   return $perms;
 }
 
-method GetAppPermMap() {
+sub GetAppPermMap {
+  my ($self) = @_;
   my $stmt = $self->{dbh}->prepare(qq{
    select * from permissions natural join apps
   });
@@ -67,21 +69,24 @@ method GetAppPermMap() {
   return $map;
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $self->NotSoSimpleButtonButton($http, {
     caption => 'User List',
     op => 'GoToUserList',
   });
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   if ($self->can($self->{Mode})) {
     my $meth = $self->{Mode};
     $self->$meth($http, $dyn);
   }
 }
 
-method RenderChangesSaved($http, $dyn) {
+sub RenderChangesSaved {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <div class="alert alert-success">
       Changes saved!
@@ -94,7 +99,8 @@ method RenderChangesSaved($http, $dyn) {
   });
 }
 
-method RenderConfirmDelete($http, $dyn) {
+sub RenderConfirmDelete {
+  my ($self, $http, $dyn) = @_;
   DEBUG 1;
   if ($self->{Mode} ne 'RenderConfirmDelete') {
     $self->{Mode} = 'RenderConfirmDelete';
@@ -122,7 +128,8 @@ method RenderConfirmDelete($http, $dyn) {
     </div>
   });
 }
-method RenderUserDeleted($http, $dyn) {
+sub RenderUserDeleted {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <div class="alert alert-success">
       User deleted!
@@ -135,7 +142,8 @@ method RenderUserDeleted($http, $dyn) {
   });
 }
 
-method RenderUserCreated($http, $dyn) {
+sub RenderUserCreated {
+  my ($self, $http, $dyn) = @_;
   $http->queue(qq{
     <div class="alert alert-success">
       User created!
@@ -152,7 +160,8 @@ method RenderUserCreated($http, $dyn) {
   });
 }
 
-method RenderUserList($http, $dyn) {
+sub RenderUserList {
+  my ($self, $http, $dyn) = @_;
   my $users = $self->GetUserList();
 
   $http->queue(qq{
@@ -235,7 +244,8 @@ method RenderUserList($http, $dyn) {
 
 }
 
-method RenderAssignPerms($http, $dyn) {
+sub RenderAssignPerms {
+  my ($self, $http, $dyn) = @_;
   if ($self->{Mode} ne 'RenderAssignPerms') {
     $self->{Mode} = 'RenderAssignPerms';
     return;
@@ -322,7 +332,8 @@ method RenderAssignPerms($http, $dyn) {
     });
   }
 }
-method UpdatePassword($http, $dyn) {
+sub UpdatePassword {
+  my ($self, $http, $dyn) = @_;
   my $user = $self->{SelectedUsername};
   my $pass = $dyn->{NewUserPass};
 
@@ -340,7 +351,8 @@ method UpdatePassword($http, $dyn) {
   $self->{Mode} = 'RenderChangesSaved';
 }
 
-method UpdateSelection($http, $dyn) {
+sub UpdateSelection {
+  my ($self, $http, $dyn) = @_;
   my @selections;
   map {
     if(/(.*)%7C(.*)/) {
@@ -381,7 +393,8 @@ method UpdateSelection($http, $dyn) {
   $self->{Mode} = 'RenderChangesSaved';
 }
 
-method CreateNewUser($http, $dyn) {
+sub CreateNewUser {
+  my ($self, $http, $dyn) = @_;
   my $name = lc $dyn->{NewUserName}; #username forced to lowercase
   my $email = $dyn->{NewEmail};
   my $pass = $dyn->{NewUserPass} or 'no_pass';
@@ -409,7 +422,8 @@ method CreateNewUser($http, $dyn) {
 
 }
 
-method DeleteUser($http, $dyn) {
+sub DeleteUser {
+  my ($self, $http, $dyn) = @_;
   my $user = $self->{DeletingUser};
   delete $self->{DeletingUser};
 
@@ -434,17 +448,20 @@ method DeleteUser($http, $dyn) {
 
 }
 
-method TestButton($http, $dyn) {
+sub TestButton {
+  my ($self, $http, $dyn) = @_;
   DEBUG $dyn->{username};
   $self->{SelectedUsername} = $dyn->{username};
   $self->{Mode} = 'RenderAssignPerms';
 }
 
-method GoToUserList($http, $dyn) {
+sub GoToUserList {
+  my ($self, $http, $dyn) = @_;
   $self->{Mode} = 'RenderUserList';
 }
 
-method GetUserList() {
+sub GetUserList {
+  my ($self) = @_;
   my $stmt = $self->{dbh}->prepare(qq{
     select
       user_name
@@ -463,7 +480,8 @@ method GetUserList() {
   return \@users;
 }
 
-method GetPermissionList($user) {
+sub GetPermissionList {
+  my ($self, $user) = @_;
   my $stmt = $self->{dbh}->prepare(qq{
     select
       app_name,

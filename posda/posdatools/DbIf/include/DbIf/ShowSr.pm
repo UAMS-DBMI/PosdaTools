@@ -3,7 +3,6 @@ package DbIf::ShowSr;
 #
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
@@ -14,7 +13,8 @@ use Regexp::Common "URI";
 use parent 'Posda::PopupWindow';
 
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = 'DICOM SR Viewer';
   $self->{mode} = 'Text';
 
@@ -30,7 +30,8 @@ method SpecificInitialize($params) {
   }
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $http->queue("<h2>DICOM SR Viewer ($self->{mode})</h2>");
   $http->queue("<p>File: $self->{converted_path}</p>");
 
@@ -49,7 +50,8 @@ method ContentResponse($http, $dyn) {
   $http->queue("</pre>");
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
   $self->NotSoSimpleButton($http, {
      op => "ViewTextSummary",
      caption => "Text",
@@ -77,22 +79,27 @@ method MenuResponse($http, $dyn) {
     </a>
   });
 }
-method ScriptButton($http, $dyn){
+sub ScriptButton {
+  my ($self, $http, $dyn) = @_;
   my $parent = $self->parent;
   if($parent->can("ScriptButton")){
     $parent->ScriptButton($http, $dyn);
   }
 }
-method ViewTextSummary($http, $dyn){
+sub ViewTextSummary {
+  my ($self, $http, $dyn) = @_;
   $self->{mode} = "Text";
 }
-method ViewStruct($http, $dyn){
+sub ViewStruct {
+  my ($self, $http, $dyn) = @_;
   $self->{mode} = "Struct";
 }
-method ViewDicom($http, $dyn){
+sub ViewDicom {
+  my ($self, $http, $dyn) = @_;
   $self->{mode} = "DICOM";
 }
-method DownloadTextAsTxt($http, $dyn){
+sub DownloadTextAsTxt {
+  my ($self, $http, $dyn) = @_;
   $http->DownloadHeader("text/plain", "Foo.txt");
   my $dumper = "DumpSr.pl";
   if($self->{mode} eq "Struct"){

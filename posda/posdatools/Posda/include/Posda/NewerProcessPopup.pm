@@ -1,6 +1,5 @@
 package Posda::NewerProcessPopup;
 #use Modern::Perl;
-#use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::PopupImageViewer;

@@ -1,7 +1,6 @@
 package Posda::PopupCompare;
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::PopupWindow;
 use Posda::PopupImageViewer;
@@ -21,7 +20,8 @@ use vars qw( @ISA );
 
 my $db_handle;
 
-method SpecificInitialize($params) {
+sub SpecificInitialize {
+  my ($self, $params) = @_;
   $self->{title} = "Popup Compare Tool";
   # Determine temp dir
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
@@ -55,7 +55,8 @@ method SpecificInitialize($params) {
 
 }
 
-method ContentResponse($http, $dyn) {
+sub ContentResponse {
+  my ($self, $http, $dyn) = @_;
   $self->SimpleJQueryForm($http, {
       op => 'CompareSubmit',
   });
@@ -109,7 +110,8 @@ method ContentResponse($http, $dyn) {
   });
 }
 
-method CompareSubmit($http, $dyn) {
+sub CompareSubmit {
+  my ($self, $http, $dyn) = @_;
   say STDERR Dumper($dyn);
   my @from_parts = split('\|', $dyn->{compareFrom});
   my @to_parts = split('\|', $dyn->{compareTo});
@@ -128,10 +130,12 @@ method CompareSubmit($http, $dyn) {
   $self->StartJsChildWindow($compare_child);
 }
 
-method MenuResponse($http, $dyn) {
+sub MenuResponse {
+  my ($self, $http, $dyn) = @_;
 }
 
-method OpenViewer($http, $dyn) {
+sub OpenViewer {
+  my ($self, $http, $dyn) = @_;
   my $child_path = $self->child_path("ViewerPopup_$dyn->{value}");
   my $child_obj = Posda::PopupImageViewer->new($self->{session}, 
                                               $child_path, {file_id => $dyn->{value}});
