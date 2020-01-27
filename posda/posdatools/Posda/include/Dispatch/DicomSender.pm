@@ -39,8 +39,7 @@ use Posda::HttpApp::HttpObj;
     if($obj && $obj->can("ClearToSend")){
       $obj->ClearToSend;
     } else {
-      die "no ClearToSend sub in {
-  my ($self) = @_;StatusObj}";
+      die "no ClearToSend method in $this->{StatusObj}";
     }
   }
   sub GoodBye{
@@ -49,12 +48,11 @@ use Posda::HttpApp::HttpObj;
     if($obj && $obj->can("ConnectionGone")){
       $obj->ConnectionGone;
     } else {
-      die "no ConnectionGone sub in {
-  my ($self) = @_;StatusObj}";
+      die "no ConnectionGone method in $this->{StatusObj}";
     }
   }
   sub StartAssoc{
-    my($this, $server, $port, 
+    my($this, $server, $port,
       $calling, $called, $sops, $xfr_stxs, $debug) = @_;
     if(exists $this->{association}){
       $this->Message("Already have an association open");

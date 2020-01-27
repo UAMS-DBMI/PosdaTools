@@ -39,6 +39,5 @@ $get_path->RunQuery(sub {
 }, sub {}, $file_id);
 unless(defined $file){ die "No path found" }
 my $try = Posda::Try->new($file);
-unless(defined $try->{dataset}){ die "$path didn't parse as DICOM" }
+unless(defined $try->{dataset}){ die "$get_path didn't parse as DICOM" }
 my $ds = $try->{dataset};
-

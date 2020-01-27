@@ -7,7 +7,6 @@
 # or at http://posda.com/License.html
 #
 use Modern::Perl;
-use Method::Signatures::Simple;
 use Try::Tiny;
 
 use Posda::DB::PosdaFilesQueries;
@@ -39,7 +38,7 @@ our $giei;
 our $FileStorageRoots;
 #}}}
 # Functions {{{
-func preload_queries() {
+sub preload_queries {
   DEBUG "Loading queries";
   $start_t = Query("StartTransactionPosda");
   $locker = Query("LockFilePosda");
@@ -97,7 +96,7 @@ sub set_file_ready_to_process {
   $mpfltp->RunQuery(sub {}, sub {}, $file_id);
 }
 
-func get_file_storage_roots() {
+sub get_file_storage_roots {
   my $q_file_storage_roots = Query("GetPosdaFileStorageRoots");
   my $FileStorageRoots;
   map {
@@ -110,7 +109,8 @@ func get_file_storage_roots() {
   return $FileStorageRoots;
 }
 
-func find_matching_root($roots, $path) {
+sub find_matching_root {
+  my ($roots, $path) = @_;
   # find the correct root
   DEBUG "Searching for root for path: $path";
   my ($root_id, $root_path, $rel_path);
@@ -133,7 +133,8 @@ func find_matching_root($roots, $path) {
   return [$root_id, $root_path, $rel_path];
 }
 
-func set_file_location($file_id, $root_id, $rel_path) {
+sub set_file_location {
+  my ($file_id, $root_id, $rel_path) = @_;
   # First determine if this file already has a location set
   my $existing_location = $gfileloc->FetchOneHash($file_id);
   if (not defined $existing_location) { 
@@ -144,7 +145,8 @@ func set_file_location($file_id, $root_id, $rel_path) {
   }
 }
 
-func create_import_event($message, $comment) {
+sub create_import_event {
+  my ($message, $comment) = @_;
   # Create import_event  TODO: make this one query
   $insert_import_event->RunQuery(sub{}, sub{}, $message, $comment);
   ####GetImportEventId
@@ -156,7 +158,8 @@ func create_import_event($message, $comment) {
   return $ie_id;
 }
 
-func process_one_file($path, $import_event_id) {
+sub process_one_file {
+  my ($path, $import_event_id) = @_;
   my($root_id, $root_path, $rel_path) = 
     @{find_matching_root($FileStorageRoots, $path)};
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 use Modern::Perl;
-use Method::Signatures::Simple;
 
 use Posda::Config 'Database';
 
@@ -41,7 +40,8 @@ my $ins_req = $dbh->prepare(
 );
 
 
-func GetSubmitterId($collection, $site, $subj) {
+sub GetSubmitterId {
+  my ($collection, $site, $subj) = @_;
 
   $sub_q->execute($collection, $site, $subj);
   my $h = $sub_q->fetchrow_hashref;
@@ -60,13 +60,15 @@ func GetSubmitterId($collection, $site, $subj) {
   return $hid->{currval}, undef;
 }
 
-func InsertRequest($submitter, $file, $digest, $data, $size) {
+sub InsertRequest {
+  my ($submitter, $file, $digest, $data, $size) = @_;
   return $ins_req->execute($submitter, $file, $digest, $data, $size);
 };
 
-func insert($filename, $digest, 
-            $collection, $site, $subject, 
-            $receive_date, $size) {
+sub insert {
+  my ($filename, $digest,
+      $collection, $site, $subject,
+      $receive_date, $size) = @_;
 
     # get the submitter id
     my $submitter_id = GetSubmitterId($collection, $site, $subject);
@@ -102,7 +104,7 @@ if(-e $FILES_SEEN) {
   open my $fh1, "<$FILES_SEEN";
   while(my $line = <$fh1>){
     chomp $line;
-    my($rel_path, $digest, $collection, 
+    my($rel_path, $digest, $collection,
        $site, $subj, $rcv_ts, $size, $sent_at) =
       split(/\|/, $line);
     $FilesAlreadySeen{$rel_path} = 1;
