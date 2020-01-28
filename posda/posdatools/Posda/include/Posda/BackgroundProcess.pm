@@ -25,7 +25,7 @@
   }
 
   sub print {
-  my ($self) = @_;
+    my $self = shift;
     $self->{file_handle}->print(@_);
   }
 
