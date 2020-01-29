@@ -356,9 +356,10 @@ sub DrawForwardForm {
 #  say STDERR Dumper(\@all_users);
 
   if (not defined $self->{_ForwardInboxButtonClicked}) {
-    $self->NotSoSimpleButtonButton($http, {
+    $self->NotSoSimpleButton($http, {
       caption => "Forward this message",
       op => "ForwardInboxItemButtonClick",
+      sync => "Update();",
     });
   } else {
     $http->queue(qq{
@@ -999,10 +1000,10 @@ method DrawWidgetFromTo($http, $dyn) {
     <tr>
       <th style="width:5%">quick options</th>
       <td>
-        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="today" caption="Today" class="btn btn-warning"?>
-        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="yesterday" caption="Yesterday" class="btn btn-warning"?>
-        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="lastweek" caption="Last 7 Days" class="btn btn-warning"?>
-        <?dyn="NotSoSimpleButtonButton" op="SetWidgetFromTo" val="lastmonth" caption="Last 30 Days" class="btn btn-warning"?>
+        <?dyn="NotSoSimpleButton" op="SetWidgetFromTo" val="today" caption="Today" class="btn btn-warning" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" op="SetWidgetFromTo" val="yesterday" caption="Yesterday" class="btn btn-warning" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" op="SetWidgetFromTo" val="lastweek" caption="Last 7 Days" class="btn btn-warning" sync="Update();"?>
+        <?dyn="NotSoSimpleButton" op="SetWidgetFromTo" val="lastmonth" caption="Last 30 Days" class="btn btn-warning" sync="Update();"?>
       </td>
     </tr>
   });
@@ -2194,14 +2195,14 @@ sub ShowActivityTimeline{
       id => "tl_show_email_$sub_id",
       caption => "email",
       file_id => $i->[6],
-      sync => "Update();",
+#      sync => "Update();",
     });
     $self->NotSoSimpleButton($http, {
       op => "ShowResponse",
       caption => "resp",
       id => "tl_show_resp_$sub_id",
       sub_id => $i->[7],
-      sync => "Update();",
+#      sync => "Update();",
     });
     if(defined $spreadsheet_file_id){
       $self->NotSoSimpleButton($http, {
@@ -2209,7 +2210,7 @@ sub ShowActivityTimeline{
         id => "tl_show_input_$sub_id",
         caption => "input",
         file_id => $i->[9],
-        sync => "Update();",
+#        sync => "Update();",
       });
    }
     $http->queue("</td>");
