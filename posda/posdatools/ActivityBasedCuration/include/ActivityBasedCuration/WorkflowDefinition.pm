@@ -48,7 +48,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         operation => "InvokeNewOperation",
         caption => "Analyze Series in Time Point with Duplicates",
-        action =>  "AnalyzeSeriesDuplicates",
+        action =>  "AnalyzeSeriesDuplicatesForTimepoint",
       },
     ],
   },

@@ -119,7 +119,7 @@ my $rows = {
       can_chain => undef
     },
     BackgroundDciodvfyTp => {
-      command_line => 'BackgroundDciodvfyTp.pl <?bkgrnd_id?> <act_id> <type> <notify>',
+      command_line => 'BackgroundDciodvfyTp.pl <?bkgrnd_id?> <activity_id> <type> <notify>',
       operation_type => 'background_process',
       input_line_format => undef,
       tags => [
@@ -267,12 +267,12 @@ for my $op_name (keys %$rows){
     }
   }
   if(
-    $matches && 
+    $matches &&
     (
       ( !defined ref($row->{tags}) && !defined ref($cur_row->{tags}))
       ||
       (
-        ref($row->{tags}) eq "ARRAY" && 
+        ref($row->{tags}) eq "ARRAY" &&
         ref($cur_row->{tags}) eq "ARRAY" &&
         $#{$row->{tags}} == $#{$cur_row->{tags}}
       )

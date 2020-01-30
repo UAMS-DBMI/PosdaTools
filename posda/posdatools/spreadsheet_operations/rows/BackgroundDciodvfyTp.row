@@ -1,6 +1,6 @@
 :operation_name: BackgroundDciodvfyTp
-:command_line: BackgroundDciodvfyTp.pl <?bkgrnd_id?> <act_id> <type> <notify>
+:command_line: BackgroundDciodvfyTp.pl <?bkgrnd_id?> <activity_id> <type> <notify>
 :operation_type: background_process
-:input_line_format: 
+:input_line_format:
 :tags: ['activity_timepoint']
-:can_chain: 
+:can_chain:
