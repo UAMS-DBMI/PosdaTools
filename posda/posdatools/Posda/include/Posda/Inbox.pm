@@ -20,7 +20,6 @@ Posda::Inbox - A module for interacting with the Posda Inbox.
 
 use Modern::Perl;
 
-use Posda::DebugLog;
 
 use DBI;
 

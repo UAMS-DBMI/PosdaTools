@@ -26,7 +26,6 @@ use Posda::Inbox;
 use DBI;
 
 
-use Posda::DebugLog;
 use Posda::UUID;
 use Posda::Subprocess;
 use Posda::BackgroundQuery;
@@ -304,7 +303,6 @@ sub Inbox {
 
 sub DisplayInboxItem {
   my($self, $http, $dyn) = @_;
-  DEBUG "Setting selected Inbox Item to: $dyn->{message_id}";
 
   $self->{SelectedInboxItem} = $dyn->{message_id};
   $self->{Mode} = "InboxItem";
@@ -967,7 +965,6 @@ sub OpenBackgroundQuery {
 
 sub DeleteHashKeyList {
   my ($self, $http, $dyn) = @_;
-  DEBUG Dumper($dyn);
   my $type = $dyn->{type};
   my $index = $dyn->{index};
 
@@ -983,7 +980,6 @@ sub AddToEditList {
   my $source = $dyn->{extra};
   my $value = $dyn->{value};
 
-  DEBUG "Adding '$value' to $source";
 
   push @{$self->{query}->{$source}}, $value;
 }
@@ -992,13 +988,11 @@ sub AddToEditList {
 # do we really need to handle this with a post?
 sub TextAreaChanged {
   my ($self, $http, $dyn) = @_;
-  DEBUG Dumper($dyn);
   # Read the POST data (this method needs to be POSTed to!)
   my $buff;
   my $c = read $http->{socket}, $buff, $http->{header}->{content_length};
 
   $self->{query}->{$dyn->{id}} = $buff;
-  DEBUG $buff;
 }
 
 
@@ -1132,7 +1126,6 @@ sub DownloadPreparedReport {
   my $filename = $dyn->{filename};
   my $shortname = $dyn->{shortname};
 
-  DEBUG $filename;
 
   my $fh;
   if(open $fh, $filename) {
@@ -1215,7 +1208,6 @@ sub StoreQuery {
   #     $new_q->{$i} = $query->{$i};
   #   }
   # }
-  DEBUG "Storing query to: $filename";
   delete $query->{dbh};
   store $query, $filename;
 }
@@ -1225,7 +1217,6 @@ sub SaveTableAsReport {
   my $dir = $self->{PreparedReportsDir};
   my $public = $dyn->{public};
   if (defined $public) {
-    DEBUG "Saving to public!";
     $dir = $self->{PreparedReportsCommonDir};
   }
   my $filename = $dyn->{saveName};
@@ -1238,7 +1229,6 @@ sub SaveTableAsReport {
   # TODO: need to find a valid non-conflicting filename here
 
   my $file = "$dir/$filename";
-  DEBUG "Saving to: $file";
 
   open my $fh, ">$file" or die "Can't open $file for writing ($!)";
   my $cmd = "PerlStructToCsv.pl";
@@ -1732,7 +1722,6 @@ sub OpenChainedQuery {
     }
   }
 
-  # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
   for my $param (@$details) {
     if(exists $self->{BindingCache}->{$param->{to_parameter_name}}){
@@ -3086,7 +3075,6 @@ sub OpenNewChainedQuery{
 $self->{querychaindetailsid} = $id;
 $self->{querychaindetails} = $details;
 # $self->{Details} = $details;
-  # DEBUG Dumper($details);
 
   # get the row as a hash?
   my $h = {};
@@ -3101,7 +3089,6 @@ $self->{querychaindetails} = $details;
   }
 
 
-  # DEBUG Dumper($h);
   # $h now holds the values of the row as a hash
   for my $param (@$details) {
     for my $from_column_name (keys %$param){
@@ -4263,7 +4250,6 @@ sub ConvertLinesComplete {
         $self->LoadCSVIntoTable_NoMode($hash->{'Output file'});
       }
       if ($hash->{'mime-type'} =~ /zip/) {
-      DEBUG "Looks like this is a zip/gzip file!";
         $self->ProcessCompressedFile($hash);
       }
     }
@@ -5312,7 +5298,6 @@ sub SelectTable {
 }
 sub PushToHistory {
   my ($self, $index) = @_;
-  DEBUG $index;
   if (not defined $self->{TableHistory}) {
     $self->{TableHistory} = [];
   }

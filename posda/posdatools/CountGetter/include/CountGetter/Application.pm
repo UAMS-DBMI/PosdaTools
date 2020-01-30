@@ -228,7 +228,6 @@ sub MenuResponse{
   my($this, $http, $dyn) = @_;
   # The menu should be built from a set of defaults,
   # unless the ContentResponse set some extra things
-  DEBUG "MenuResponse called";
 
 
   $http->queue(qq{
@@ -270,7 +269,6 @@ sub NewScan{
 
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
-  DEBUG "ContentResponse called";
   if($this->{Mode} eq "ScanningDir"){
     return $http->queue("busy");
   }
@@ -369,7 +367,6 @@ sub ContentResponse{
 }
 sub DownloadCSV{
   my($this, $http, $dyn) = @_;
-  DEBUG "Generating CSV";
   $http->DownloadHeader("text/csv", "CountGetter.csv");
 
   $http->queue("Subject,File Type,Count\n");
@@ -647,7 +644,6 @@ sub CrankNextDirectory{
     $this->{PresentationContextCounts} = [];
     for my $as (keys %{$this->{SopClass}}){
       for my $xs (keys %{$this->{SopClass}->{$as}}){
-        DEBUG "xs is: $xs";
         push @{$this->{PresentationContexts}}, [$as, [$xs]];
         push @{$this->{PresentationContextCounts}}, 
           $this->{SopClass}->{$as}->{$xs};

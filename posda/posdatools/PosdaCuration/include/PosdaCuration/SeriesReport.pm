@@ -399,7 +399,6 @@ sub CompareFiles{
   my $to_digests = $this->{nn}->ToFiles($to_file_nn);
   my $to_file = $this->parent->FilenameFromDigests($to_digests);
 
-  DEBUG "Here's where we compare $from_file to $to_file";
   my $child_path = $this->child_path("compare_${from_file_nn}_$to_file_nn");
   my $child_obj = $this->get_obj($child_path);
   unless(defined $child_obj){

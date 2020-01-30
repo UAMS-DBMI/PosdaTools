@@ -240,7 +240,6 @@ sub MenuResponse{
 }
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
-  DEBUG "ContentResponse called";
   if($this->{Mode} eq "ScanningDir"){
     return $http->queue("busy");
   }
@@ -337,7 +336,6 @@ sub ContentResponse{
 }
 sub SendToDropDown{
   my($this, $http, $dyn) = @_;
-  DEBUG "SendToDropDown called";
 
   my $dicom_destinations = Posda::DicomSendLocations::get();
   my @dest_keys = sort keys %$dicom_destinations;
@@ -366,7 +364,6 @@ sub SendToDropDown{
 sub SendTheseFiles{
   my($this, $http, $dyn) = @_;
 
-  DEBUG "Beginning send of files";
 
   my $dicom_destinations = Posda::DicomSendLocations::get();
 
@@ -378,14 +375,12 @@ sub SendTheseFiles{
   my $calling = $dest->{calling_ae};
   my $called = $dest->{called_ae};
 
-  DEBUG "$host, $port, $calling, $called\n";
 
   # Now build the NewDicomSender class
   # NewDicomSender call signature: 
   # $host, $port, $called, $calling, $file_list
   $this->{NewDicomSender} = Posda::NewDicomSender->new($host, $port, $called, $calling, \@{$this->{FoundFiles}});
 
-  DEBUG "Sender call completed. Everything should be fine, now?";
   # Should probably go into a Sending mode now, but let's try this?
   $this->{Mode} = "Sending";
 
@@ -394,7 +389,6 @@ sub SendTheseFiles{
 sub SetDicomDest{
   my($this, $http, $dyn) = @_;
 
-  DEBUG "SelectedDicomDestination set to $dyn->{value}";
   $this->{SelectedDicomDestination} = $dyn->{value};
 }
 sub SendToDropDown2{

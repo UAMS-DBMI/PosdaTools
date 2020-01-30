@@ -4,7 +4,6 @@ package Posda::FileViewerChooser;
 use Modern::Perl;
 
 use Posda::DB 'Query';
-use Posda::DebugLog;
 
 {
   package ChooserError;
@@ -19,7 +18,6 @@ our $dicom_class = 'Quince';
 # used for viewing the given file_id
 sub choose {
   my ($file_id) = @_;
-  DEBUG $file_id;
 
   # get the mime type of the file
   my $result = Query('FileType')->FetchOneHash($file_id);
@@ -29,14 +27,11 @@ sub choose {
   my $type = $result->{file_type};
 
 
-  DEBUG "Type recieved was: $type";
 
   defined $type or $type = '';
   if ($type =~ /text/i) {
-    DEBUG "This appears to be a text type";
     return $text_class;
   } else {
-    DEBUG "This appears to be a non-text type; assuming it is DICOM";
     return $dicom_class;
   }
 }

@@ -11,7 +11,6 @@ use Try::Tiny;
 
 use Posda::DB::PosdaFilesQueries;
 use Posda::DB 'Query';
-use Posda::DebugLog;
 
 use Digest::MD5;
 use File::Copy;
@@ -39,7 +38,6 @@ our $FileStorageRoots;
 #}}}
 # Functions {{{
 sub preload_queries {
-  DEBUG "Loading queries";
   $start_t = Query("StartTransactionPosda");
   $locker = Query("LockFilePosda");
   $unlocker = Query("EndTransactionPosda");
@@ -112,7 +110,6 @@ sub get_file_storage_roots {
 sub find_matching_root {
   my ($roots, $path) = @_;
   # find the correct root
-  DEBUG "Searching for root for path: $path";
   my ($root_id, $root_path, $rel_path);
   fsr:
   for my $i (keys %{$roots}) {
@@ -120,10 +117,8 @@ sub find_matching_root {
       $root_id = $roots->{$i}->{id};
       $root_path = $i;
       $rel_path = $1;
-      DEBUG "Found matching root: $root_id|$root_path|$rel_path";
       last fsr
     } else {
-      DEBUG "Root did not match: $i";
     }
   }
   if (not defined $root_id) {
@@ -139,9 +134,7 @@ sub set_file_location {
   my $existing_location = $gfileloc->FetchOneHash($file_id);
   if (not defined $existing_location) { 
     $ifl->RunQuery(undef, undef, $file_id, $root_id, $rel_path);
-    DEBUG "Created new file_location record";
   } else {
-    DEBUG "File already has a location, skipping!";
   }
 }
 
@@ -213,7 +206,6 @@ and print a report (as above) to STDOUT for each file.
 EOF
 
 unless ($#ARGV == 1) {
-  DEBUG "Argument count looks wrong, exiting with usage.";
   die $usage;
 }
 my $path = $ARGV[0];
@@ -223,7 +215,6 @@ preload_queries(); # load only after arguments are checked
 $FileStorageRoots = get_file_storage_roots();
 
 if ($path eq '-') {
-  DEBUG "Reading filenames from STDIN";
   my $import_id = create_import_event("multi file import", $comment);
   print "Import id: $import_id\n";
   while (<STDIN>) {

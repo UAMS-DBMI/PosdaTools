@@ -153,7 +153,6 @@ my $Dispatch = {
     print $socket "\n";
     return 1;
   },
-  DEBUG => sub {
     my($socket, $query, $Input) = @_;
     if($Dbh->{AutoCommit}){
       $socket->print("AutoCommit\n");

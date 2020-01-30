@@ -6,7 +6,6 @@ package Posda::Subprocess;
 use Modern::Perl;
 use Posda::DB::PosdaFilesQueries;
 use Dispatch::LineReaderWriter;
-use Posda::DebugLog;
 
 use Data::Dumper;
 
@@ -73,7 +72,6 @@ sub new_from_spreadsheet_op {
   my $self = $class->new($name);
   my $commands = get_command_hash();
   $self->set_commandline($commands->{$name}->{cmdline});
-  DEBUG "Commands: ", Dumper($commands);
 
   if (not defined $self->{cmdline}) {
     die "$name does not seem to be a spreadsheet op?";
@@ -119,14 +117,12 @@ sub set_commandline {
 
 sub set_params {
   my ($self, $param_hash) = @_;
-  DEBUG "called";
   my $final = $self->{cmdline};
 
   if (not defined $final) {
     die "Missing commandline";
   }
 
-  DEBUG "final is: ", Dumper($final);
 
   map {
     my $new_value = $param_hash->{$_};
@@ -191,13 +187,10 @@ sub execute {
     $button_name) = @_;
 
   my $op_details = PosdaDB::Queries->GetOperationDetails($self->{name});
-  DEBUG Dumper($op_details);
 
   my $command_line = $self->{cmdline};
   my $op_name = $self->{name};
 
-  DEBUG "op_name: $op_name";
-  DEBUG "command_line: $command_line";
 
   $self->execute_generic(
     $command_line,
@@ -227,7 +220,6 @@ sub execute_generic {
   $from_button,
   $query_invoked_by_dbif_id,
   $button_name) = @_;
-  DEBUG "called";
 
   # Set default values
   $from_spreadsheet = defined $from_spreadsheet? $from_spreadsheet: 0;
@@ -256,7 +248,6 @@ sub execute_generic {
     sub {
   my ($return, $pid) = @_;
       $self->{Results} = $return;
-      DEBUG "Results are in!";
 
       if (defined $subprocess_invocation_id) {
         # TODO: Is this really useful? the way write_and_read_all()

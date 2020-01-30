@@ -10,8 +10,6 @@ package Posda::DebugLog;
 #
 # Usage example:
 #
-# DEBUG "this is a debug message";
-# DEBUG $some_var
 #
 
 use Posda::Config 'Config';

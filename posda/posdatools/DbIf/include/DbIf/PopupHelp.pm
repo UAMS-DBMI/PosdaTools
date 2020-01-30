@@ -4,7 +4,6 @@ use Modern::Perl;
 
 use Posda::PopupWindow;
 use Posda::Config ('Config','Database');
-use Posda::DebugLog;
 
 use Dispatch::LineReader;
 
@@ -64,7 +63,6 @@ sub SpecificInitialize {
         push @lines, $line;
       },
       sub {
-        DEBUG "Finished reading command -h"; 
         $self->{lines} = \@lines;
         $self->AutoRefresh;
       }

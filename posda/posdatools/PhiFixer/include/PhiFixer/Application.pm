@@ -635,7 +635,6 @@ sub ApplyDispositionToAll {
     $this->{Disposed}->{$selected_tag} = 1;
   }
 
-  DEBUG "ApplyDispositionToAll: $selected_tag => $disposition";
 
   # remove the selected tag from the list
   splice(@{$this->{PrivateTagsToReview}}, $this->{SelectedPriv}, 1);
@@ -887,9 +886,6 @@ sub hash_temp {
 sub translate_dispositions {
   my ($this, $tags, $from_file, $to_file) = @_;
   # Translate the dispos into actions for the subprocess editor
-  # DEBUG $tags;
-  # DEBUG $from_file;
-  # DEBUG $to_file;
 
   # the possible actions
   my $action_map = {
@@ -935,7 +931,6 @@ sub translate_dispositions {
 
 sub FixAllYes {
   my ($this, $http, $dyn) = @_;
-  DEBUG "FixAllYes beings";
 
   # first some things that we'll need
   # $this->{Collection};
@@ -958,7 +953,6 @@ sub FixAllYes {
       }
     }
   }
-  DEBUG "private tags added";
 
   # Add the PHI tags/files to the list
   for my $tag (keys %{$this->{DisposedPHI}}) {
@@ -977,7 +971,6 @@ sub FixAllYes {
       }
     }
   }
-  DEBUG "phi tags added";
 
 
   #TODO: this is a good candidate for backgrounding
@@ -1050,16 +1043,13 @@ sub FixAllYes {
       };
 
       my $pinfo = "$revision_dir/creation.pinfo";
-      DEBUG "Saving pinfo to: $pinfo";
       store($fix_hash, $pinfo);
 
       $this->TestTestTestAfterLock($args{Id}, $pinfo);
 
     });
-    DEBUG "processed for $subj";
   }
 
-  DEBUG "completed";
   $this->{ContentMode} = "AllDoneHere";
   $this->AutoRefresh;
 }
@@ -1075,7 +1065,6 @@ sub AllDoneHere {
 
 sub RequestLockForEdit {
   my ($this, $subj, $at_end) = @_;
-  DEBUG "RequestLockForEdit";
 
   my $collection = $this->{Collection};
   my $site = $this->{Site};
@@ -1096,7 +1085,6 @@ sub RequestLockForEdit {
 sub LockExtractionDirectory {
   my ($this, $args, $when_done) = @_;
   # delete $this->{DirectoryLocks};
-  DEBUG "LockExtractionDirectory";
   my @lines;
   push(@lines, "LockForEdit");
   for my $k (keys %$args){
@@ -1104,8 +1092,6 @@ sub LockExtractionDirectory {
     push(@lines, "$k: $args->{$k}");
   }
 
-  # DEBUG "Locking with these lines:";
-  # DEBUG Dumper(@lines);
 
   if($this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     [@lines],
@@ -1132,9 +1118,6 @@ sub TestTestTestAfterLock {
     "Commands: $commands"
   ];
 
-  # DEBUG "==========================";
-  # DEBUG Dumper($new_args);
-  # DEBUG "==========================";
   $this->SimpleTransaction($this->{Environment}->{ExtractionManagerPort},
     $new_args,
     $this->TestWhenDoneTest());
@@ -1142,7 +1125,6 @@ sub TestTestTestAfterLock {
 
 sub TestWhenDoneTest {
   return sub {
-    DEBUG "TestTestTest completed?";
   };
 }
 
@@ -1589,14 +1571,12 @@ sub DisposeTag {
   }
 
   if ($undisposed_exist) {  # This is a ComplexDisposition
-    DEBUG "ComplexDisposition!";
     my $undisposed_remain = 0;
 
     for my $val (keys %{$this->{DispoChecks}}) {
       if ($this->{DispoChecks}->{$val} == 1){
         $this->{ComplexDispo}->{$tag}->{$val} = $disposition;
         $this->{DispoChecks}->{$val} = 2;  # mark it as done
-        DEBUG "DisposeComplex $tag - $val => $disposition";
       } elsif ($this->{DispoChecks}->{$val} == 0) {
         $undisposed_remain = 1;
       }

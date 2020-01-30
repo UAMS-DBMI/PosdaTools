@@ -55,7 +55,6 @@ sub new{
   $this->{ToNickname} = $to_file_nn;
   $this->{ToFile} = $to_file;
   bless $this, $class;
-  # DEBUG Dumper($this);
   $this->Initialize;
   return $this;
 }
@@ -136,14 +135,12 @@ sub JsContent{
   while(my $line = <$fh>) { $http->queue($line) }
 }
 sub Initialize{
-  # DEBUG @_;
   my($this) = @_;
   # $this->{LoginTemp} = $this->FetchFromAbove("GetLoginTemp");
   $this->AutoRefresh;
   $this->StartDumps;
 }
 sub StartDumps{
-  # DEBUG @_;
   my($this) = @_;
   my $from = $this->{FromFile};
   my $from_dump_file;
@@ -176,7 +173,6 @@ sub StartDumps{
     $this->ADumpFinished("to"));
   $this->{DumpInProgress}->{from} = 1;
   $this->{ToDumpFile} = $to_dump_file;
-  # DEBUG "done?";
 }
 sub Refresher{
   my($this) = @_;
@@ -198,7 +194,6 @@ sub DumpLineHandler{
 sub ADumpFinished{
   my($this, $which) = @_;
   my $sub = sub {
-    # DEBUG "ADumpFinished running: $which";
     delete $this->{DumpInProgress}->{$which};
     $this->AutoRefresh;
   };
@@ -227,7 +222,6 @@ sub LineHandler{
   my($this, $http) = @_;
   my $sub = sub {
     my($line) = @_;
-    # DEBUG $line;
     $http->queue("$line\n");
   };
   return $sub;

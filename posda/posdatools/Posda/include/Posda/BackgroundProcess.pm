@@ -2,7 +2,6 @@
 
   use Modern::Perl;
 
-  use Posda::DebugLog;
   use Data::Dumper;
 
   use File::Temp qw/ tempfile /;
@@ -19,7 +18,6 @@
     };
     bless $self, $class;
 
-    DEBUG Dumper($self);
 
     return $self;
   }
@@ -65,7 +63,6 @@ use Modern::Perl;
 use Posda::DB qw/ Query ResetDBHandles /;
 use Posda::DownloadableFile;
 use Posda::Inbox;
-use Posda::DebugLog;
 
 use File::Temp qw/ tempfile /;
 use DateTime;
@@ -216,19 +213,16 @@ sub ForkAndExit {
 
 sub WriteToEmail {
   my ($self, $line) = @_;
-  DEBUG "writing to email: $line";
   $self->{email_handle}->print($line);
 }
 
 sub Finish() {
   my($self,$mess) = @_;
-  DEBUG "called";
   # log completion time
   $self->{add_comp_time_query}->RunQuery(
     sub{}, sub{}, $self->{background_id});
 
   $self->{script_end_time} = time;
-  DEBUG "script_end_time = $self->{script_end_time}";
   my $end_time = DateTime->from_epoch(epoch => $self->{script_end_time});
   $self->WriteToEmail("Background process ended at: $end_time\n");
   $self->WriteToEmail("Total time elapsed: " .
@@ -243,7 +237,6 @@ sub Finish() {
       if ($rpt->{open}) {
 
         # close report file handles (except email)
-        DEBUG "Automatically closing report $rpt->{name}";
         $rpt->close;
 
         # add download links for those reports to the mail
@@ -278,10 +271,8 @@ sub Finish() {
         $report->{background_subprocess_report_id},
         'Posda::BackgroundProcess'
       );
-      DEBUG "email report's id is: $report->{background_subprocess_report_id}";
     }
 
-    DEBUG "Unlinking report file: $rpt->{temp_filename}";
     unlink $rpt->{temp_filename};
   }
   if($self->{activity_id}){

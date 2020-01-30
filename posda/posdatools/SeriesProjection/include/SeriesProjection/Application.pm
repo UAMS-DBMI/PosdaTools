@@ -23,7 +23,6 @@ use DBI;
 
 sub SpecificInitialize {
   my ($self) = @_;
-  DEBUG 1;
   $self->{Mode} = 'Welcome';
   $self->{user} = $self->get_user();
 
@@ -34,7 +33,6 @@ sub SpecificInitialize {
 # to insert anything directly into <head>
 sub CssStyle {
   my ($self, $http, $dyn) = @_;
-  DEBUG 1;
   $self->SUPER::CssStyle($http, $dyn);
   $http->queue(qq{
     <link rel="stylesheet" type="text/css" href="/papaya/papaya.css" />
@@ -45,7 +43,6 @@ sub CssStyle {
 # Insert JS inline here
 sub JsContent {
   my ($self, $http, $dyn) = @_;
-  DEBUG 1;
   $self->SUPER::JsContent($http, $dyn);
   $http->queue(qq{
     var params = [];
@@ -63,7 +60,6 @@ sub JsContent {
 
 sub GetNextFileForReview {
   my ($self) = @_;
-  DEBUG 1;
 
   if (defined $self->{CurrentIEC}) {
     unshift @{$self->{history}}, $self->{CurrentIEC};
@@ -98,7 +94,6 @@ sub GetNextFileForReview {
       {}, ($self->{SelectedCollection}, $self->{SelectedSite}))]->[0]->[0]->[0];
 
 
-  DEBUG $iec_id;
 
   $self->{CurrentIEC} = $iec_id;
   $self->LoadDataForIEC($iec_id);
@@ -110,7 +105,6 @@ sub GetNextFileForReview {
 sub GetNextReviewedFileForReview {
   my ($self, $review_status) = @_;
   if (not defined $self->{GoodReviewCursor}) {
-    DEBUG "Running Query";
     my $sth = $self->{dbh}->prepare(qq{
       select distinct image_equivalence_class_id
 
@@ -135,7 +129,6 @@ sub GetNextReviewedFileForReview {
   my $row = $self->{GoodReviewCursor}->fetchrow_arrayref();
   my $iec = $row->[0];
 
-  DEBUG Dumper($iec);
 
   $self->{CurrentIEC} = $iec;
   $self->LoadDataForIEC($iec);
@@ -144,7 +137,6 @@ sub GetNextReviewedFileForReview {
 
 sub LoadDataForIEC {
   my ($self, $iec_id) = @_;
-  DEBUG $iec_id;
   my $dbh = $self->{dbh};
 
   my $file = [$dbh->selectall_arrayref(qq{
@@ -243,7 +235,6 @@ sub ContentResponse {
 
 sub SetMode {
   my ($self, $http, $dyn) = @_;
-  DEBUG Dumper($dyn);
   $self->{Mode} = $dyn->{mode};
 }
 

@@ -5,7 +5,6 @@ use Posda::BackgroundProcess;
 use Posda::UUID;
 use Posda::Config 'Config';
 use Posda::DB 'Query';
-use Posda::DebugLog;
 
 use List::Util 'max';
 use Data::Dumper;
@@ -114,7 +113,6 @@ for my $error (@errors) {
 
 for my $i (@file_ids) {
   $report->print("Added file_id: $i\n");
-  DEBUG "Added file_id: $i";
 }
 
 my $max_file_id = max @file_ids;
@@ -125,7 +123,6 @@ my $q_check_file = Query("IsFileProcessed");
 my $continue = 1;
 
 while ($continue) {
-  DEBUG "Sleeping for 60 seconds, while we wait for $max_file_id to be ready.";
   sleep 60;
   my $val = $q_check_file->FetchOneHash($max_file_id);
   $continue = not $val->{processed};

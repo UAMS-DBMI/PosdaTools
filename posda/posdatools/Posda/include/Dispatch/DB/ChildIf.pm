@@ -148,7 +148,6 @@ my $Dispatch = {
     Log("Query: $query took $execute_time seconds");
     return 1;
   },
-  DEBUG => sub {
     my($socket, $query, $Input) = @_;
     if($Dbh->{AutoCommit}){
       $socket->print("AutoCommit\n");

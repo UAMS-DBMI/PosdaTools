@@ -49,7 +49,6 @@ sub new{
   $this->{ToNickname} = $to_file_nn;
   $this->{ToFile} = $to_file;
   bless $this, $class;
-  DEBUG Dumper($this);
   $this->Initialize;
   return $this;
 }

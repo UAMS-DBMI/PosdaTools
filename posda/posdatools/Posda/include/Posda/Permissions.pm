@@ -21,7 +21,6 @@ sub new {
 
 sub _init {
   my ($self) = @_;
-  DEBUG 1;
   # Connect to DB, load all permission data for this user
   my $dbh = DBI->connect(Database('posda_auth'));
   my $stmt = $dbh->prepare(qq{
@@ -54,7 +53,6 @@ sub _init {
 
 sub has_permission {
   my ($self, $app, $permission) = @_;
-  DEBUG @_, $self->{username};
   if (defined $self->{permissions}->{$app}->{$permission}) {
     return 1;
   } else {

@@ -101,7 +101,6 @@ sub RenderChangesSaved {
 
 sub RenderConfirmDelete {
   my ($self, $http, $dyn) = @_;
-  DEBUG 1;
   if ($self->{Mode} ne 'RenderConfirmDelete') {
     $self->{Mode} = 'RenderConfirmDelete';
     $self->{DeletingUser} = $dyn->{username};
@@ -400,7 +399,6 @@ sub CreateNewUser {
   my $pass = $dyn->{NewUserPass} or 'no_pass';
 
   my $enc_pass = Posda::Passwords::encode($pass);
-  DEBUG "$name, $email, $pass, $enc_pass";
 
   my $stmt = $self->{dbh}->prepare(qq{
     insert into users (user_name, full_name, password)
@@ -450,7 +448,6 @@ sub DeleteUser {
 
 sub TestButton {
   my ($self, $http, $dyn) = @_;
-  DEBUG $dyn->{username};
   $self->{SelectedUsername} = $dyn->{username};
   $self->{Mode} = 'RenderAssignPerms';
 }

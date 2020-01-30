@@ -94,9 +94,7 @@ sub new {
   };
   bless $this, $class;
 
-  # DEBUG "FilesToSend contains:";
   # foreach my $item (@{$this->{FilesToSend}}) {
-  #   DEBUG "$item->{file}";
   # }
 
   $this->Initialize;
@@ -243,7 +241,6 @@ sub FileSent{
   my($this, $file) = @_;
   my $sub = sub {
     my($obj, $status) = @_;
-    DEBUG "A file has been sent.";
     my $f = $this->{FilesInFlight}->{$file};
     $f->{disposition} = "Send Status: $status";
     delete $this->{FilesInFlight}->{$file};
@@ -327,7 +324,6 @@ sub ConnectionCallback{
   my($this) = @_;
   my $sub = sub {
     my($con) = @_;
-        DEBUG "ConnectionCallback called";
     $this->{State} = "AssociationConnected";
     $this->{association_ac} = $this->{Association}->{assoc_ac};
     $this->ReportStatus;
@@ -339,7 +335,6 @@ sub DisconnectCallback{
   my($this) = @_;
   my $sub = sub {
     my($con) = @_;
-    DEBUG "DisconnectCallback called";
     my $status;
     if(exists $con->{Abort}){
       $status = $con->{Abort}->{mess};
@@ -360,7 +355,6 @@ sub ReleaseCallback{
   my($this) = @_;
   my $sub = sub {
     my($con) = @_;
-    DEBUG "ReleaseCallback called";
     $this->{State} = "PeerRequestedRelease";
     $this->ReportStatus;
     $this->AbortSending;

@@ -76,7 +76,6 @@ sub MakeStorable {
 sub Save {
   my ($self) = @_;
   my $dbh = _get_handle();
-  DEBUG "Saving query...";
   my $query = qq{
     update queries
     set

@@ -11,7 +11,6 @@ use Dispatch::EventHandler;
 use Dispatch::Select;
 use File::Path;
 use Posda::Config 'Config';
-use Posda::DebugLog;
 
 use vars qw( @ISA );
 my $RoutingDebug = "";
@@ -330,7 +329,6 @@ sub CanDebug{
   if (defined $this->{Environment}->{ApplicationName} and defined $sess->{permissions}) {
     return $sess->{permissions}->has_permission($this->{Environment}->{ApplicationName},'debug');
   } else {
-    DEBUG "CanDebug called before user logged in, or on object with no environment!";
     return 0;
   }
 }
