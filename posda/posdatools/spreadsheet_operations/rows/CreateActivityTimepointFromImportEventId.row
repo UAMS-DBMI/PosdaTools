@@ -1,4 +1,4 @@
-:operation_name: CreateActivityTimepointFromImportId
+:operation_name: CreateActivityTimepointFromImportEventId
 :command_line: CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
 :operation_type: background_process
 :input_line_format: <import_event_id>
