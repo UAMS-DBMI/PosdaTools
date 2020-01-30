@@ -313,8 +313,7 @@ sub PrepareBackgroundReportBasedOnQuery {
   my ($self,
       $query,
       $report_name,
-      $max_rows) = @_;
-    shift; shift; shift; # Discard first 3 params
+      $max_rows) = (shift, shift, shift, shift);
   my @params = @_;     # The rest are query arguments
 
   my @rows;
