@@ -411,7 +411,19 @@ sub Execute{
   unless($#_ == $#{$this->{args}}){
     my $req = $#{$this->{args}};
     my $sup = $#_;
-    die "arg mismatch ($this->{name}): $sup vs $req";
+
+
+    my $i = 1;
+    my $traceback = "";
+    while(caller($i)){
+      my @foo = caller($i);
+      $i++;
+      my $file = $foo[1];
+      my $line = $foo[2];
+      $traceback .= "\n\tline $line of $file";
+    }
+
+    die "arg mismatch ($this->{name}): $sup vs $req; $traceback";
   }
 #  print STDERR "Execute $this->{name}:\n";
   return $this->{handle}->execute(@_);
