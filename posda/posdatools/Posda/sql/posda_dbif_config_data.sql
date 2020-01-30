@@ -4,7 +4,7 @@
 --
 
 -- Dumped from database version 10.1
--- Dumped by pg_dump version 10.5
+-- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -13,6 +13,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -558,6 +559,7 @@ ImportNonDicomEdits	ImportNonDicomEditedFiles.pl <?bkgrnd_id?> <subprocess_invoc
 GenerateYearOfDiagnosisEdits	GenerateEditsForYearsOfDiagnosis.pl <?bkgrnd_id?> <notify>	background_process	<patient_id>&<year>	{bills_ad_hoc_scripts}	\N
 RadcompPrivateDisp	BackgroundPrivateDispositionsByPatShift.pl <?bkgrnd_id?> <to_dir> <uid_root> <notify>	background_process	<patient_id>&<study_uid>&<series_uid>&<offset>	{bills_test}	\N
 QuickCheckPublicPosdaConsistLike	QuickPublicPosdaCompareLikeCollection.pl <?bkgrnd_id?> "<collection_pat>"  <notify>	background_process	\N	{public_posda_consistency}	\N
+BackgroundUnhideFiles	BackgroundUnhideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"	background_process	<file_id>&<old_visibility>	{activity_timepoint_support}	\N
 ProposeAdHocMelanomaEdits	ProposeAdHocMelanomaEdits.pl <?bkgrnd_id?> <shift> <old_uid_root> <new_uid_root> <notify>	background_process	<patient_id>&<series_uid>&<study_date>&<num_files>&<pat_id_for_diag_date>&<diag_date>	{bills_test,bills_ad_hoc_scripts}	\N
 HideLateDupSopsInSeries	HideBatchLateSopDupsInSeries.pl <who> "<why>"	legacy	<series_instance_uid>	{hide_files,hide_dup_sops}	\N
 BackgroundProcessModules	BackgroundProcessModules.pl <?bkgrnd_id?> "<description>" <notify>	background_process	<file_id>	{dicom_file_type}	\N
@@ -589,12 +591,10 @@ AnalyzeSeriesDuplicates	AnalyzeSeriesDuplicates.pl <?bkgrnd_id?> "<collection>" 
 BackgroundHideSeriesByCollection	BackgroundHideSeriesByCollection.pl <?bkgrnd_id?> "<reason>" <collection> <notify>	background_process	<series_instance_uid>	{activity_timepoint_support}	\N
 BackgroundUpdatePrivateDisposition	BackgroundUpdatePrivateDispositions.pl <?bkgrnd_id?> "<why>" <notify>	background_process	<id>&<disp>	{phi_maint}	\N
 SummarizeStructLinkage	SummarizeStructLinkagesByFileId.pl <?bkgrnd_id?> <file_id> <notify>	background_process	\N	{activity_timepoint_support}	\N
-BackgroundDciodvfyTp	BackgroundDciodvfyTp.pl <?bkgrnd_id?> <activity_id> <type> <notify>	background_process	\N	{activity_timepoint}	\N
 PipeCommand1	PipeCommand1.pl <var1> <var2> 1 2 3	legacy	<vals1>,<vals2>,<vals3>	{}	\N
 CreateActivityTimepointFromCollectionSite	CreateActivityTimepointFromCollectionSite.pl <?bkgrnd_id?> <activity_id> <collection> <site> "<comment>" <notify>	background_process		{timepoint_buttons}	\N
 DeleteSeriesFromActivityTimepoint	DeleteSeriesFromActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoints}	\N
 FilesInTpNotInPublic	FilesInLatestActivityNotInPublic.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{activity_timepoints_support}	\N
-BackgroundUnhideFiles	BackgroundUnhideFilesWithStatus.pl <?bkgrnd_id?> <notify> "<reason>"	background_process	<file_id>&<old_visibility>	{activity_timepoint_support}	\N
 FixFilesWithNullNumberOfFrames	FixFilesWithNullNumberOfFrames.pl <?bkgrnd_id?> "<comment>" <notify>	background_process	\N	{Exceptional-Responders_NCI_Oct2018_curation}	\N
 FixCtInExceptionalRespondersWithNullNumberOfFrames	FixCtErwWithNullNumberOfFrames.pl <?bkgrnd_id?> "<comment>" <notify>	background_process	\N	{Exceptional-Responders_NCI_Oct2018_curation}	\N
 AddSeriesToActivityTimepoint	AddSeriesToActivityTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{activity_timepoint_support}	\N
@@ -659,6 +659,8 @@ UncompressFilesTp	UncompressFilesTp.py <?bkgrnd_id?> <activity_id> <notify>	back
 ImportAndEnsureVisible	ImportAndEnsureVisible.py <?bkgrnd_id?> <activity_id> <notify>	background_process	<path>	{import}	\N
 UpdateTimepointAfterEdit	UpdateTimepointAfterEdit.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <subprocess_invocation_id> <notify>	background_process		{update_timepoint,activities}	\N
 SeriesWithDupSopsDifferentSopClassTp	SeriesWithDupSopsDifferentSopClassTp.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<foo>	{background}	\N
+BackgroundDciodvfyTp	BackgroundDciodvfyTp.pl <?bkgrnd_id?> <activity_id> <type> <notify>	background_process		{activity_timepoint}	\N
+CreateActivityTimepointFromImportId	CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<import_event_id>	{activity_timepoints}	\N
 \.
 
 
@@ -686,3 +688,4 @@ SELECT pg_catalog.setval('dbif_config.popup_buttons_popup_button_id_seq1', 76, t
 --
 -- PostgreSQL database dump complete
 --
+
