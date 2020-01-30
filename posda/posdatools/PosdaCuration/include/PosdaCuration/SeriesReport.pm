@@ -10,7 +10,6 @@ use Debug;
 package PosdaCuration::SeriesReport;
 use Modern::Perl '2010';
 use Fcntl;
-use Posda::DebugLog 'on';
 
 
 use vars qw( @ISA );

@@ -4,7 +4,6 @@ use Modern::Perl '2010';
 use autodie;
 
 use Posda::Config 'Database';
-use Posda::DebugLog 'off';
 use Data::Dumper;
 
 use DBI;

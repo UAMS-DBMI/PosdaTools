@@ -14,7 +14,6 @@ use GenericApp::Application;
 use Posda::Passwords;
 use Posda::Config ('Config', 'Database');
 
-use Posda::DebugLog 'on';
 use Data::Dumper;
 
 

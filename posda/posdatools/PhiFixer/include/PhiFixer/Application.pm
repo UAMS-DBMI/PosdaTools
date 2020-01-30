@@ -6,7 +6,6 @@ use GenericApp::Application;
 
 use Modern::Perl '2010';
 
-use Posda::DebugLog 'on';
 
 use PhiFixer::PrivateTagInfo;
 use PhiFixer::DicomRootInfo;

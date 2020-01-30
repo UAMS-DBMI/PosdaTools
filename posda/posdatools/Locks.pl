@@ -7,7 +7,6 @@ use lib 'Posda/include/';
 use Modern::Perl '2010';
 
 use Data::Dumper;
-use Posda::DebugLog 'on';
 use IO::Socket::INET;
 
 my $root = '/cache/posda/Data/HierarchicalExtractions/data';

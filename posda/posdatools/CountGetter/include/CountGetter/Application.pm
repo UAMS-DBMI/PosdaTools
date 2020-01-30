@@ -9,7 +9,6 @@ use Posda::HttpApp::Authenticator;
 use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
-use Posda::DebugLog 'on';
 use Posda::DataDict;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;

@@ -6,7 +6,6 @@ use PosdaCuration::SeriesReport;
 use PosdaCuration::CompareFiles;
 use PosdaCuration::CompareRevisions;
 use Data::Dumper;
-use Posda::DebugLog 'on';
 
 use constant INCONSISTENT => '&lt;inconsistent&gt;';
 

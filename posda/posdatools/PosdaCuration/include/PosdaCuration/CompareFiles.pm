@@ -12,7 +12,6 @@ my $dbg = sub { print @_ };
 package PosdaCuration::CompareFiles;
 
 use Fcntl;
-use Posda::DebugLog 'off';
 use Data::Dumper;
 
 use vars qw( @ISA );

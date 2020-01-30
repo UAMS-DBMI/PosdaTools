@@ -13,7 +13,6 @@ use Posda::FileCollectionAnalysis;
 use Posda::Nicknames;
 use Posda::UUID;
 use Posda::NewDicomSender;
-use Posda::DebugLog 'on';
 use Posda::DicomSendLocations;
 use Dispatch::NamedFileInfoManager;
 use Dispatch::LineReader;

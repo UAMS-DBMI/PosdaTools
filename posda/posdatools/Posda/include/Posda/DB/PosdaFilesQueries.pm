@@ -9,7 +9,6 @@ use Posda::Config 'Database';
 use Dispatch::EventHandler;
 use Dispatch::TopHalfAsyncQuery;
 
-use Posda::DebugLog 'on';
 use Data::Dumper;
 
 my $db_handle;

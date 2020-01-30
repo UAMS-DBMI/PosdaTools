@@ -11,7 +11,6 @@ package Posda::CompareFiles;
 use Modern::Perl;
 
 use Fcntl;
-use Posda::DebugLog 'on';
 use Data::Dumper;
 
 use vars qw( @ISA );

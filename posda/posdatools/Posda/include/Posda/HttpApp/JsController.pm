@@ -16,7 +16,6 @@ use Posda::HttpApp::HttpObj;
 use Posda::DB 'Query';
 use IO::Socket::INET;
 
-use Posda::DebugLog 'on';
 use Data::Dumper;
 
 use vars qw( @ISA );

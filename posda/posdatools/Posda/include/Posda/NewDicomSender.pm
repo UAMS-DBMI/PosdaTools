@@ -8,7 +8,6 @@ use Dispatch::Dicom::MessageAssembler;
 use Posda::Command;
 
 package Posda::NewDicomSender;
-use Posda::DebugLog 'on';
 
 use vars qw( @ISA );
 @ISA = ( "Dispatch::EventHandler" );

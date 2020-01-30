@@ -15,7 +15,6 @@ use Data::UUID;
 
 use Posda::Nicknames2;
 
-use Posda::DebugLog 'on';
 
 use List::Util;
 
