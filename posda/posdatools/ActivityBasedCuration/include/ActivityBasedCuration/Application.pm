@@ -172,13 +172,17 @@ sub SpecificInitialize {
   map {
     my ($name, $cmdline, $type, $input_line, $tags, $can_chain) = @$_;
 
+    if (not defined $input_line) {
+      $input_line = "";
+    }
+
     $commands->{$name} = { cmdline => $cmdline,
                            parms => [$cmdline =~ /<([^<>]+)>/g],
                            pipe_parmlist => [$input_line =~ /<([^<>]+)>/g],
                            operation_name => $name,
                            can_chain => $can_chain,
                          };
-    if (defined $input_line) {
+    if (defined $input_line and $input_line ne "") {
       $commands->{$name}->{pipe_parms} = $input_line;
     }
     $commands->{$name}->{type} = $type;
