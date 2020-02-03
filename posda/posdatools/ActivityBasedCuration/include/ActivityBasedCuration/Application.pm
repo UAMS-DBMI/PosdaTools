@@ -640,6 +640,8 @@ sub QueryDisplayMenu{
     {
       caption => "Chain",
       op => 'ChainQueryToSpreadsheet',
+      btn_id => 'query_menu_ChainToSpreadsheet',
+      cap_ => 'Chain',
       id => 'query_menu_ChainToSpreadsheet',
       #mode => 'SaveQuery',
       sync => 'Update();'
@@ -810,6 +812,7 @@ sub OpenNewTableLevelPopup{
       $params->{current_settings}->{activity_timepoint_id} = $row->[0];
     }, sub {}, $self->{ActivitySelected});
   }
+  $invocation->{query_invocation_id} = $self->{ForegroundQueries}->{$tb_id}->{invoked_id};;
   my $filter_sel = $self->{FilterSelection}->{$tb_id};
   my $rows_array;
   if($filter_sel eq "filtered"){
@@ -876,8 +879,8 @@ sub ChainQueryToSpreadsheet{
   };
   my $invocation = {
     type => "QueryMenuTableBasedButton",
-    button_id => $dyn->{_btn_id}, 
-    Operation => $dyn->{cap_},, 
+    button_id => $dyn->{btn_id}, 
+    Operation => $dyn->{cap_},
     query_caption => $query->{caption},
     when_query_invoked => $query->{when},
     who_invoked_query => $query->{who},
@@ -915,6 +918,7 @@ sub ChainQueryToSpreadsheet{
     push @rows, $hash;
   }
   $params->{rows}= \@rows;
+  $invocation->{query_invocation_id} = $query->{invoked_id};
   my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
   eval "require $class";
   if($@){
@@ -3076,8 +3080,8 @@ sub OpenNewChainedQuery{
 
 #  my $details = PosdaDB::Queries->GetChainedQueryDetails($id);
   my $details = $self->{QueryChainingDetails}->{$id};
-$self->{querychaindetailsid} = $id;
-$self->{querychaindetails} = $details;
+#$self->{querychaindetailsid} = $id;
+#$self->{querychaindetails} = $details;
 # $self->{Details} = $details;
 
   # get the row as a hash?
@@ -3639,7 +3643,7 @@ sub  DisplayFinishedSelectedForegroundQuery{
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
-$self->{chained_queries} = \@chained_queries;
+#$self->{chained_queries} = \@chained_queries;
     if($#chained_queries > -1){
       $http->queue("<td>");
 	for my $q (@chained_queries) {

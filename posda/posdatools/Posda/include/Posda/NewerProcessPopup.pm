@@ -236,6 +236,11 @@ sub MenuResponse{
 
 sub StartSubprocess{
   my ($self, $http, $dyn) = @_;
+##
+# Todo: Check Invocation to see if file_id exists
+#  If not, and input is required, create an input file
+#  from the rows.
+##
   my $id = $self->{table}->{query}->{invoked_id};
   my $btn_name = $self->{button_name};
   my $operation_name = $self->{params}->{command}->{operation_name};;
