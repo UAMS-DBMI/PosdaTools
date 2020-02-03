@@ -89,7 +89,6 @@ sub ChooseOperation{
   my($this, $http, $dyn) = @_;
   my $op = $dyn->{chosen};
   $this->{params}->{command} = ActivityBasedCuration::Application->GetOperationDescription($op);
-  $this->{params}->{command}->{create_file_from_rows} = 1;
   delete $this->{params}->{command}->{input_file_id};
   delete $this->{Operations};
   delete $this->{args};

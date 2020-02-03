@@ -640,6 +640,8 @@ sub QueryDisplayMenu{
     {
       caption => "Chain",
       op => 'ChainQueryToSpreadsheet',
+      btn_id => 'query_menu_ChainToSpreadsheet',
+      cap_ => 'Chain',
       id => 'query_menu_ChainToSpreadsheet',
       #mode => 'SaveQuery',
       sync => 'Update();'
@@ -675,6 +677,11 @@ sub DownloadSpecifiedFileById {
   my $shortname = $dyn->{targ_name};
   my $file_id = $dyn->{file_id};
   my $mime_type = $dyn->{mime_type};
+#print STDERR "DownloadSpecifiedFileById(" .
+#  "$file_id, \"$shortname\", \"$mime_type\")";
+#for my $i (keys %$dyn){
+#  print STDERR "dyn{$i} = \"$dyn->{$i}\"\n";
+#}
   my $filename;
   Query('GetFilePath')->RunQuery(sub{
     my($row) = @_;
@@ -793,6 +800,7 @@ sub OpenNewTableLevelPopup{
       $params->{current_settings}->{activity_timepoint_id} = $row->[0];
     }, sub {}, $self->{ActivitySelected});
   }
+  $invocation->{query_invocation_id} = $self->{ForegroundQueries}->{$tb_id}->{invoked_id};;
   my $filter_sel = $self->{FilterSelection}->{$tb_id};
   my $rows_array;
   if($filter_sel eq "filtered"){
@@ -810,7 +818,7 @@ sub OpenNewTableLevelPopup{
     push @rows, $hash;
   }
   $params->{rows}= \@rows;
-  my $command =
+  my $command = 
     $self->GetOperationDescription($invocation->{Operation});
   if(defined $command){
     $params->{command} = $command;
@@ -825,7 +833,7 @@ sub OpenNewTableLevelPopup{
     my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
     $params->{Operations} = $self->{Commands};
     $self->{sequence_no}++;
-
+  
     my $child_path = $self->child_path($name);
     my $child_obj = $class->new($self->{session},
                               $child_path, $params);
@@ -859,8 +867,8 @@ sub ChainQueryToSpreadsheet{
   };
   my $invocation = {
     type => "QueryMenuTableBasedButton",
-    button_id => $dyn->{_btn_id},
-    Operation => $dyn->{cap_},,
+    button_id => $dyn->{btn_id}, 
+    Operation => $dyn->{cap_},
     query_caption => $query->{caption},
     when_query_invoked => $query->{when},
     who_invoked_query => $query->{who},
@@ -898,6 +906,7 @@ sub ChainQueryToSpreadsheet{
     push @rows, $hash;
   }
   $params->{rows}= \@rows;
+  $invocation->{query_invocation_id} = $query->{invoked_id};
   my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
   eval "require $class";
   if($@){
@@ -2443,7 +2452,7 @@ sub InvokeNewOperation{
     my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
     $params->{Operations} = $self->{Commands};
     $self->{sequence_no}++;
-
+  
     my $child_path = $self->child_path($name);
     my $child_obj = $class->new($self->{session},
                               $child_path, $params);
@@ -2818,7 +2827,7 @@ sub DrawQuerySearchForm{
       id => "SelectWorkflowMode",
       sync => "UpdateDiv('div_QuerySearchListOrResults', 'DrawQueryListOrResults');Update();",
     });
-
+    
     unless(defined($self->{WorkflowSelected})){ $self->{WorkflowSelected} = "<none>" }
     for my $i ("<none>", sort keys %{$self->{WorkflowQueries}}){
       $http->queue("<option value=\"$i\"");
@@ -3628,7 +3637,7 @@ sub  DisplayFinishedSelectedForegroundQuery{
   for my $i ($SFQ->{first_row} .. $max_row){
     $http->queue("<tr>");
     my $row = $working_rows->[$i];
-$self->{chained_queries} = \@chained_queries;
+#$self->{chained_queries} = \@chained_queries;
     if($#chained_queries > -1){
       $http->queue("<td>");
 	for my $q (@chained_queries) {
@@ -4519,7 +4528,7 @@ sub Files{
     $self->RefreshEngine($http, $dyn, '<tr>' .
       "<td><p>$file</p></td>" .
       "<td><p>$size</p></td><td><p>");
-
+    
     $self->RefreshEngine($http, $dyn, $type .
       (
         ($type eq "text/csv") ?
@@ -4609,7 +4618,7 @@ sub AnnotateSelectedUploads{
   $self->{sequence_no}++;
 
   my $child_path = $self->child_path($name);
-
+  
   my $operation = {
     operation_name => "AnnotateTimeline",
     command_line => "InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> \"<comment>\" <notify>",
