@@ -9,11 +9,11 @@ Posda::Inbox - A module for interacting with the Posda Inbox.
  my $inbox = Posda::Inbox->new('some_username');
 
  # get count of unread items
- $inbox->UnreadCount;  
+ $inbox->UnreadCount;
 
  # Send a new email to some_other_user; the content of the mail message
  # is stored in a background report with ID 7
- $inbox->SendMail('some_other_user', 7, 'Test'); 
+ $inbox->SendMail('some_other_user', 7, 'Test');
 
 =head1 METHODS
 =cut
@@ -48,7 +48,7 @@ sub send_real_email_notification {
   my $send_email = Config('real_email');
   if (defined $send_email && $send_email == 1) {
     my $email_handle = FileHandle->new(
-      '|mail -s "New Posda Inbox Item!" ' 
+      '|mail -s "New Posda Inbox Item!" '
       . $self->get_email_addr_by_username($username));
     unless($email_handle) { die "Couldn't open email handle ($!)" }
     $email_handle->print("A new message has arrived in your Posda Inbox!\n");
@@ -144,22 +144,23 @@ sub get_email_addr_by_username {
 
 =head2 SendMail($username, $background_subprocess_report_id, $how)
 
-Add a new email item to the inbox of $username. 
+Add a new email item to the inbox of $username.
 
-If the environment var POSDA_REAL_EMAIL is set to 1, 
+If the environment var POSDA_REAL_EMAIL is set to 1,
 an email notification will also be sent to the
 user's email.
 
 B<Arguments:>
 
  $username: The username who's inbox will get the mail item.
- $background_subprocess_report_id: ID of the report that contains the 
+ $background_subprocess_report_id: ID of the report that contains the
   email content.
  $how: A short note explaining the source of this email.
 
 =cut
 sub SendMail {
-  my ($self, $username, $report_id, $how) = @_;
+  print STDERR( "####SENDING MAIL #####");
+  my ($self, $username, $report_id, $how, $activity_id) = @_;
   my $result = $self->execute_and_fetchone(qq{
     insert into user_inbox_content (
       user_inbox_id,
@@ -169,12 +170,12 @@ sub SendMail {
       date_entered,
       date_dismissed
     ) values (
-      (select user_inbox_id 
+      (select user_inbox_id
        from user_inbox
        where user_name = ?), ?, ?, ?, now(), null
     )
     returning user_inbox_content_id
-  }, [$username, 
+  }, [$username,
       $report_id,
       'entered',
       "created by $how"]);
@@ -189,12 +190,19 @@ sub SendMail {
     ) values (
       ?, ?, now(), ?, ?
     )
-  }, [$result->{user_inbox_content_id}, 
+  }, [$result->{user_inbox_content_id},
       'entered',
       $how,
       $self->{username}]);
 
   $self->send_real_email_notification($username);
+
+  print STDERR( "####Time to file #####");
+  print STDERR( $activity_id );
+  if (defined $activity_id){
+    my $q = Query('InsertActivityInboxContent');
+    $q->RunQuery(sub {}, sub{}, $activity_id, $result->{user_inbox_content_id});
+  }
 
   return $rows;
 }
@@ -203,7 +211,7 @@ sub SendMail {
 
 Forward the message identified by $message_id to $username.
 
-If the environment var POSDA_REAL_EMAIL is set to 1, 
+If the environment var POSDA_REAL_EMAIL is set to 1,
 an email notification will also be sent to the
 user's email.
 
@@ -225,12 +233,12 @@ sub Forward {
       date_entered,
       date_dismissed
     ) values (
-      (select user_inbox_id 
+      (select user_inbox_id
        from user_inbox
        where user_name = ?), ?, ?, ?, now(), null
     )
     returning user_inbox_content_id
-  }, [$username, 
+  }, [$username,
       $report_id,
       'entered',
       $note]);
@@ -245,7 +253,7 @@ sub Forward {
     ) values (
       ?, ?, now(), ?, ?
     )
-  }, [$result->{user_inbox_content_id}, 
+  }, [$result->{user_inbox_content_id},
       'entered',
       'manually forwarded', # TODO: add the original how here?
       $self->{username}]);
@@ -259,7 +267,7 @@ sub Forward {
 
 Return a count of unread items in the current user's inbox.
 
-A message is B<unread> if date_dismissed is null, and the current_status is 
+A message is B<unread> if date_dismissed is null, and the current_status is
 set to one of the statuses: entered, new
 =cut
 sub UnreadCount {
@@ -304,7 +312,7 @@ sub AllItems {
       background_subprocess_report_id,
       current_status,
       date_entered
-    from user_inbox_content 
+    from user_inbox_content
     natural join user_inbox
     where user_name = ?
     order by date_entered desc
@@ -327,11 +335,11 @@ sub AllUndismissedItems {
       date_entered,
       operation_name
 
-    from user_inbox_content 
+    from user_inbox_content
     natural join user_inbox
-    natural left join background_subprocess_report 
-    natural left join background_subprocess 
-    natural left join subprocess_invocation 
+    natural left join background_subprocess_report
+    natural left join background_subprocess
+    natural left join subprocess_invocation
 
     where user_name = ?
       and date_dismissed is null
@@ -347,12 +355,12 @@ Returns a hashref with details about Inbox item identified by $message_id.
 sub ItemDetails {
   my ($self, $message_id) = @_;
   return $self->execute_and_fetchone(qq{
-    select * 
-    from 
-      user_inbox_content 
-      natural join background_subprocess_report 
-      natural join background_subprocess 
-      natural join subprocess_invocation 
+    select *
+    from
+      user_inbox_content
+      natural join background_subprocess_report
+      natural join background_subprocess
+      natural join subprocess_invocation
     where user_inbox_content_id = ?
   }, [$message_id]);
 }
