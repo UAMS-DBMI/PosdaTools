@@ -163,6 +163,13 @@ sub now_dir{
   return sprintf("%04d-%02d-%02d_%02d_%02d_%02d", $yr+1900, $mon + 1,
     $mday, $hr, $min, $sec);
 }
+sub epoch_str{
+  my($this, $epc) = @_;
+  my($sec, $min, $hr, $mday, $mon, $yr, $wday, $yday, $isdst) = 
+    localtime($epc);
+  return sprintf("%04d-%02d-%02d:%02d:%02d:%02d", $yr+1900, $mon + 1,
+    $mday, $hr, $min, $sec);
+}
 sub HarvestPid{
   my $this  = shift @_;
   my $pid = shift @_;

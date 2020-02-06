@@ -13,7 +13,7 @@ use Digest::MD5;
 use File::Copy;
 use File::Path qw(remove_tree make_path);
 use File::Compare;
-use Storable;
+use Storable qw( store_fd fd_retrieve );
 
 sub InsertFile{
   my($db, $digest, $size) = @_;
@@ -182,13 +182,13 @@ sub HandleFile{
     return 0;
   }
   FileIsReady($db, $file_id);
-  return 1;
+  return $file_id;
 }
 ############################################################
 # Execution Starts here
 ############################################################
 # Read Worklist as Serialized Perl Structure from STDIN
-my $spec = Storable::fd_retrieve(\*STDIN);
+my $spec = fd_retrieve(\*STDIN);
 my $db_name = $spec->{db};
 my $comment = $spec->{comment};
 my $dirlist = $spec->{dirlist};
@@ -219,41 +219,72 @@ $h = $giei->fetchrow_hashref;
 $giei->finish;
 my $ie_id = $h->{id};
 my %Results;
+$Results{num_dirs} = @{$dirlist};
+$Results{import_event_id} = $ie_id;
+$Results{start} = time; 
+my($Called, $Calling);
 directory:
 for my $dir (@$dirlist){
   open my $sess, "<$dir/Session.info" or next directory;
   my @files;
   push @files, "$dir/Session.info";
-  my($calling, $called);
+  my($calling, $called, $start_time, $elapsed_time);
   while(my $line = <$sess>){
     chomp $line;
     my @fields = split(/\|/, $line);
     if($fields[0] eq "file") { push @files, $fields[4] }
     if($fields[0] eq "calling") { $calling = $fields[1] }
     if($fields[0] eq "called") { $called = $fields[1] }
+    if($fields[0] eq "start time") { $start_time = $fields[1] }
+    if($fields[0] eq "elapsed time") { $elapsed_time = $fields[1] }
   }
   if(@files <= 0){
     $Results{EmptyDirsDeleted} += 1;
     next directory;
   }
+  my $num_files = @files;
+  $Results{$dir} = {
+    num_to_import => $num_files,
+    num_imported => 0,
+    calling => $calling,
+    called => $called,
+    start_time => $start_time,
+    elapsed_time => $elapsed_time,
+  };
+  $Called = $called;
+  $Calling = $calling;
+  my($max_file_id, $min_file_id, $sess_file_id);
   if(@files > 0){
     my $num_to_import = @files;
     my $num_imported = 0;
     for my $f (@files){
-      if(HandleFile($db, $f, $ie_id, $root_id, $root)){
+      if(my $f_id = HandleFile($db, $f, $ie_id, $root_id, $root)){
+        unless(defined $max_file_id) { $max_file_id = $f_id }
+        unless(defined $min_file_id) { $min_file_id = $f_id }
+        if($f_id > $max_file_id) { $max_file_id = $f_id }
+        if($f_id < $min_file_id) { $min_file_id = $f_id }
         $num_imported += 1;
+        $Results{$dir}->{num_imported} += 1;
+        if($f eq "$dir/Session.info"){ $sess_file_id = $f_id }
       }
     }
+    $Results{$dir}->{max_file_id} = $max_file_id;
+    $Results{$dir}->{min_file_id} = $min_file_id;
+    $Results{$dir}->{sess_file_id} = $sess_file_id;
     if($num_imported == $num_to_import){
       remove_tree($dir)
     } else {
       print STDERR "Not removing $dir - imported: " .
         "$num_imported of $num_to_import\n";
+      $Results{$dir}->{Error} = "Not removing $dir - imported: " .
+        "$num_imported of $num_to_import";
     }
-print STDERR "$num_imported files imported from ($called, $calling)\n";
-    FinalizeImportEvent($db, $calling, $called, $ie_id);
-print STDERR "Import Finalized\n";
   } else {
     print STDERR "No files found in $dir - not removing\n";
+    $Results{$dir}->{Error} = "No files found in $dir - not removing";
   }
 }
+FinalizeImportEvent($db, $Calling, $Called, $ie_id);
+print STDERR "Import Finalized\n";
+$Results{end} = time; 
+store_fd(\%Results, \*STDOUT);
