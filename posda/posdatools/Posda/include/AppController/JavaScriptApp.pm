@@ -23,6 +23,7 @@ use Switch;
 }
 {
   package AppController::JavaScriptApp;
+  use Posda::DB qw( Query );
 
   use Posda::Config ('Config', 'Database');
   use Posda::Passwords;
@@ -236,14 +237,14 @@ EOF
           args => { mode => "avail_apps" },
           sync => "Update();",
         },
-        {
-          type => "host_link_sync",
-          condition => $this->{capability}->{IsAdmin},
-          caption => "Show BOM",
-          method => "SetMenuMode",
-          args => { mode => "bom" },
-          sync => "Update();",
-        },
+#        {
+#          type => "host_link_sync",
+#          condition => $this->{capability}->{IsAdmin},
+#          caption => "Show BOM",
+#          method => "SetMenuMode",
+#          args => { mode => "bom" },
+#          sync => "Update();",
+#        },
         {
           type => "host_link_sync",
           condition => 1,
@@ -252,23 +253,23 @@ EOF
           args => { mode => "dicom_receiver" },
           sync => "Update();",
         },
-        {
-          type => "host_link_sync",
-          condition => $logged_in,
-          caption => "Password",
-          method => "SetMenuMode",
-          args => { mode => "password" },
-          sync => "Update();",
-        },
-        {
-          type => "host_link_sync",
-          condition => !$logged_in,
-          caption => "Create Account",
-          method => "SetMenuMode",
-          args => { mode => "create_account" },
-          sync => "Update();",
-          class => "btn-primary",
-        },
+#        {
+#          type => "host_link_sync",
+#          condition => $logged_in,
+#          caption => "Password",
+#          method => "SetMenuMode",
+#          args => { mode => "password" },
+#          sync => "Update();",
+#        },
+#        {
+#          type => "host_link_sync",
+#          condition => !$logged_in,
+#          caption => "Create Account",
+#          method => "SetMenuMode",
+#          args => { mode => "create_account" },
+#          sync => "Update();",
+#          class => "btn-primary",
+#        },
       ]
     );
 
@@ -818,13 +819,13 @@ EOF
         method => "SetMenuMode",
         args => { mode => "avail_apps" }
       },
-      {
-        type => "host_link_sync",
-        condition => 1,
-        caption => "Show Bom",
-        method => "SetMenuMode",
-        args => { mode => "bom" }
-      },
+#      {
+#        type => "host_link_sync",
+#        condition => 1,
+#        caption => "Show Bom",
+#        method => "SetMenuMode",
+#        args => { mode => "bom" }
+#      },
       {
         type => "host_link_sync",
         condition => 1,
@@ -879,6 +880,125 @@ EOF
     $this->MakeMenu($http, $dyn, $dr_menu);
   }
   sub DicomReceiverContent{
+    my($this, $http, $dyn) = @_;
+    $this->RefreshEngine($http, $dyn,
+      '<div style="display: flex; flex-direction: column; ' .
+        'align-items: flex-begin; margin-left: 10px; margin-right: 10px;" ' .
+        'id="div_QueryResults">' .
+        '<div id="div_ActiveConnections">' .
+          '<?dyn="ActiveConnectionsContent"?>' .
+        '</div>'.
+        '<div id="div_AssociationQueue">' .
+          '<?dyn="AssociationQueueContent"?>' .
+        '</div>'.
+        '<div id="div_RunningImports">' .
+          '<?dyn="RunningImportsContent"?>' .
+        '</div>'.
+        '<div id="div_CompletedImports">' .
+          '<?dyn="CompletedImportsContent"?>' .
+        '</div>'.
+      '</div>'
+    );
+  }
+  sub CompletedImportsContent{
+    my($this, $http, $dyn) = @_;
+    my $obj = $this->{StaticObjs}->{DicomReceiver};
+    my $max_file_id;
+    Query("GetMaxProcessedFileId")->RunQuery(sub{
+      my($row) = @_;
+      $max_file_id = $row->[0];
+    }, sub{});
+    unless(exists($obj->{SerializedResults})){
+      $obj->{SerializedResults} = [];
+    }
+    my $num_completed = @{$obj->{SerializedResults}};
+    if($num_completed == 0) {
+      $http->queue("<p>No undismissed completed imports</p>");
+      return;
+    }
+    $http->queue("<p>$num_completed imports completed</p>");
+    $this->RefreshEngine($http, $dyn,
+      'Imports:<br><table class="table table-striped table-condensed" ' .
+      'border="1"><tr>' .
+      '<th>i</th><th>at</th><th>for</th><th>id</th><th>#dirs</th>' .
+      '<th># files</th><th>processingstatus</th></tr>');
+    for my $i (0 .. $#{$obj->{SerializedResults}}){
+      my $ip1 = $i+1;
+      my $h = $obj->{SerializedResults}->[$i]->[1];
+      $http->queue("<tr>");
+      $http->queue("<td>$ip1</td>");
+      $http->queue("<td>");
+      $http->queue($this->epoch_str($h->{start}));
+      $http->queue("</td>");
+      $http->queue("<td>");
+      $http->queue($h->{end} - $h->{start} . " sec");
+      $http->queue("</td>");
+      $http->queue("<td>$h->{import_event_id}</td>");
+      $http->queue("<td>$h->{num_dirs}</td>");
+      my $max_imp_fid;
+      my $file_count = 0;
+      for my $k (keys %$h){
+        my $h1 = $h->{$k};
+        if(ref($h1) eq "HASH" && defined($h1->{max_file_id}) && defined($h1->{num_imported})){
+          $file_count += $h1->{num_imported};
+          unless(defined $max_imp_fid) { $max_imp_fid = $h1->{max_file_id} }
+          if($h1->{max_file_id} > $max_imp_fid) { $max_imp_fid = $h1->{max_file_id} }
+        }
+      }
+      $http->queue("<td>$file_count</td>");
+      my $remaining = $max_imp_fid - $max_file_id;
+      if($remaining > 0){
+        $http->queue("<td>$remaining remaining</td>");
+      } else {
+        $http->queue("<td>processing complete</td>");
+        $http->queue("<td>");
+        $this->NotSoSimpleButton($http, {
+          caption => "dismiss",
+          op => "DismissImportEventInfo",
+          index => $i,
+          id => "btn_DismissImportEventInfo_$i",
+          sync => "Update();",
+        });
+        $http->queue("</td>");
+      }
+      $http->queue("</tr>");
+    }
+    $http->queue("</table>");
+  }
+  sub DismissImportEventInfo{
+    my($this, $http, $dyn) = @_;
+    my $obj = $this->{StaticObjs}->{DicomReceiver};
+    my $index = $dyn->{index};
+    splice(@{$obj->{SerializedResults}}, $index, 1);
+  }
+  sub AssociationQueueContent{
+    my($this, $http, $dyn) = @_;
+    my $obj = $this->{StaticObjs}->{DicomReceiver};
+    unless(exists($obj->{PostProcessingQueue})){
+      $obj->{PostProcessingQueue} = [];
+    }
+    my $num_waiting = @{$obj->{PostProcessingQueue}};
+    if($num_waiting == 0) {
+      $http->queue("<p>No association directories waiting to be processed</p>");
+      return;
+    }
+    $http->queue("<p>$num_waiting association directories waiting to be processed</p>");
+
+  }
+  sub RunningImportsContent{
+    my($this, $http, $dyn) = @_;
+    my $obj = $this->{StaticObjs}->{DicomReceiver};
+    unless(exists($obj->{RunningPostProcesses})){
+      $obj->{RunningPostProcesses} = {};
+    }
+    my $num_running = keys %{$obj->{RunningPostProcesses}};
+    if($num_running == 0) {
+      $http->queue("<p>No imports currently in process</p>");
+      return;
+    }
+    $http->queue("<p>$num_running imports in process</p>");
+  }
+  sub OldDicomReceiverContent{
     my($this, $http, $dyn) = @_;
     my $obj = $this->{StaticObjs}->{DicomReceiver};
     if(exists $this->{ActiveAe}){
@@ -959,12 +1079,14 @@ EOF
       "goes here");
   }
   sub ActiveConnectionsContent{
-    my($this, $http, $dyn, $obj) = @_;
+    my($this, $http, $dyn) = @_;
+    my $obj = $this->{StaticObjs}->{DicomReceiver};
     if(scalar(keys %{$obj->{ActiveConnections}}) <= 0){
-      return $http->queue("No active connections");
+      return $http->queue("<p>No active connections</p>");
     }
     $this->RefreshEngine($http, $dyn,
-      'Active Connections:<br><table border="1"><tr>' .
+      'Active Connections:<br><table class="table table-striped table-condensed" ' .
+      'border="1"><tr>' .
       '<th>Index</th><th>Calling AE</th><th>Called AE</th>' .
       '<th>Connection From</th><th># Proposed PCs</th>' .
       '<th># Accepted PCs</th><th># Files</th><th># Echos</th></tr>');

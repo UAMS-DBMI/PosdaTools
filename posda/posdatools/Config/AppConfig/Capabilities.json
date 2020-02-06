@@ -2,8 +2,6 @@
   "Default": {
     "Apps": {
       "DicomLookup" : 1,
-      "DicomXmlBrowsing" : 1,
-      "StatusReport" : 1
     }
   }
 }

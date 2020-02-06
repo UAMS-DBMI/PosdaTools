@@ -506,9 +506,13 @@ sub ProcessingEnd{
 sub SerializedProcessingEnd{
   my($this, $count, $begin_time, $cmd_name) = @_;
   my $sub = sub {
-    my($resp) = @_;
+    my($resp, $struct) = @_;
     my $now = time;
     my $elapsed = $now - $begin_time;
+    unless(exists $this->{SerializedResults}){
+      $this->{SerializedResults} = [];
+    }
+    push @{$this->{SerializedResults}}, [$resp, $struct];
     print STDERR "############################\n";
     print STDERR "Imported $count directories\n";
     print STDERR "Elapsed time: $elapsed\n";
