@@ -38,7 +38,7 @@ Does the following:
     b) all the to files
     Queries: CreateActivityTimepoint, GetActivityTimepointId
       InsertActivityTimepointFile
-      VisibleFilesInTimepoint     
+      VisibleFilesInTimepoint
       FindVisibleToFiles
 
 EOF
@@ -175,7 +175,7 @@ my $op = "ScriptButton";
 my $caption = "Reject Edits and Delete Temporary Files";
 my $param_hash = {
   op => "OpenTableFreePopup",
-  class_ => "Posda::ProcessPopup",
+  class_ => "Posda::NewerProcessPopup",
   cap_ => "RejectEditsTp",
   subprocess_invoc_id => $invoc_id,
   activity_id => $activity_id,
@@ -186,7 +186,7 @@ $op = "ScriptButton";
 $caption = "Accept Edits, Import and Delete Temporary Files";
 $param_hash = {
   op => "OpenTableFreePopup",
-  class_ => "Posda::ProcessPopup",
+  class_ => "Posda::NewerProcessPopup",
   cap_ => "ImportEditsTp",
   subprocess_invoc_id => $invoc_id,
   activity_id => $activity_id,

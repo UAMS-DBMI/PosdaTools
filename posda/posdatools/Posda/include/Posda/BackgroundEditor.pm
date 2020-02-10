@@ -100,7 +100,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
       unless(defined $this->{update_q}){
         $this->{update_q} = Query("UpdateDicomEditCompareDisposition");
       }
-      $this->{update_q}->RunQuery(sub {}, sub {}, 
+      $this->{update_q}->RunQuery(sub {}, sub {},
         $total_to_process, $num_compares_complete,
         $num_compares_failed, $this->{invoc_id});
       if($this->{WeAreDone}) {
@@ -127,7 +127,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
         $report .= "#############################\n";
         $this->{back}->WriteToEmail($report);
         print STDERR $report;
-        if($this->{WeAreDone}) { 
+        if($this->{WeAreDone}) {
           $this->{back}->Finish;
           exit;
         };
@@ -360,7 +360,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
     my $caption = "Reject Edits and Delete Temporary Files";
     my $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "RejectEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $this->{notify}
@@ -370,7 +370,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
     $caption = "Accept Edits, Import and Delete Temporary Files";
     $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "ImportEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $this->{notify}

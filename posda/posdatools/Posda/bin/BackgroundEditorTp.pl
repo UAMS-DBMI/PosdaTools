@@ -35,9 +35,9 @@ Lines specify the following things:
    <val1> or <val2> fields.  Generally, there will be some lines with values
    in <series_instance_uid> followed by some lines with values in these other
    fields.  The edits specified in lines following these series specifications
-   are specified in lines which have values in for <operation> and <tag>, and 
+   are specified in lines which have values in for <operation> and <tag>, and
    may also have values in <val1> and <val2> (if the operation has parameters).
-   The first line with a value in series_instance_uid following a list of 
+   The first line with a value in series_instance_uid following a list of
    operations resets the list of series (e.g.):
      <series1>
      <series2>
@@ -49,7 +49,7 @@ Lines specify the following things:
 
       <op1> <tag1> and <op2> <tag2> are applied to <series1> and <series2>
       <op3> <tag3> is applied to <series3> and <series4>
-  
+
 Tags may be specified in any of the following ways (e.g):
   (0010,0010) - specifies the tag (0010,0010) tag_mode "exact"
   PatientName - Also specifies the tag (0010,0010) tag mode "exact",
@@ -65,29 +65,29 @@ Tags may be specified in any of the following ways (e.g):
   (0054,0016)[0](0018,1079) - Identifies the (0018,1079) tag which occurs in
      the zero-ith (aka the first) element of the (0054,0016) sequence
      tag_mode "exact"
-  ..(0018,1079) - Identifies all (0018,1079) tags which occur anywhere, 
+  ..(0018,1079) - Identifies all (0018,1079) tags which occur anywhere,
      either at root, or in any sequence.  tag_mode "exact"
   (0013,"CTP",10) - Identifies the tag (0013,xx10) which occurs in a group
      0013 in which (0013,0010) has the value "CTP ".
      tag_mode "private"
   (0013,1010) - Identifies the tag (0013,1010), which may also be (and usually
-     is) the tag identified by (0013,"CTP",10).  It is generally foolish to 
-     count on this, but sometimes necessary to delve a little deeper 
+     is) the tag identified by (0013,"CTP",10).  It is generally foolish to
+     count on this, but sometimes necessary to delve a little deeper
      (perhaps you intend to create some erroneously encoded files?)
      tag_mode "exact"
      This is not currently supported in this version and will cause an error.
-     It may be suported in future versions, but has a serious conflict with 
+     It may be suported in future versions, but has a serious conflict with
      support for "private" tag modes and both modes may not be supported in a
      single edit session.
    Along these lines, tag patterns which specify exact private tags
      eg "(00e1,1039)[<0>](0008,1110)[<1>](0008,1155)"
      are considered abominations and flagged as errors.
      patterns like:
-     '(00e1,"ELSCINT1",39)[<0>](0008,1110)[<1>](0008,1155)' are fine, as are 
+     '(00e1,"ELSCINT1",39)[<0>](0008,1110)[<1>](0008,1155)' are fine, as are
      patterns like:
      (00e1,"ELSCINT1",39)[<0>](0008,1110)[0](0008,1155), or
      (00e1,"ELSCINT1",39)[0](0008,1110)[<0>](0008,1155)
-   Also, repeating tags (e.g. (60xx,0051)) are not supported.  They may 
+   Also, repeating tags (e.g. (60xx,0051)) are not supported.  They may
       actually work if you enter the full tag value, but generally Posda support
       for repeating tags is a little sketchy.
    There is a horrible kludge to support deleting repeating blocks. A tag of one
@@ -101,7 +101,7 @@ Tags may be specified in any of the following ways (e.g):
       This is specifically to support the op move_owner_block ("CTP", "10") (note arg is hex string, not number)
 
 
-The contents of the fields <tag>, <value1>, and <value2> may by enclosed in 
+The contents of the fields <tag>, <value1>, and <value2> may by enclosed in
   "meta-quotes" (i.e. "<(0010,0010)>" for "(0010,0010)".  This is to prevent
   Excel from doing unnatural things to the values contained within.  If you
   want to specify a value which is actually includes meta-quotes, you have
@@ -115,12 +115,12 @@ The contents of the fields <tag>, <value1>, and <value2> may by enclosed in
   A lone single quote before the left metaquote will be deleted along with
   the metaquotes.
 
-Edited files will be stored underneath the specified <dest_root> in the 
+Edited files will be stored underneath the specified <dest_root> in the
 following hierarchy:
   <dest_dir>/pat_<n>/study_<n1>/series_<n2>/<file_id>.dcm
 
 where "pat_<n>" (for some n) corresponds to a unique "from" patient (in posda),
-"study_<n1>" (for some n1) corresponds to a unique "from" study (in posda), 
+"study_<n1>" (for some n1) corresponds to a unique "from" study (in posda),
 "series_<n2>" (for some n2) corresponds to a unique "from" series (in posda),
 and "<file_id>" is the "from" file_id (in posda).  Since any of these may be
 changed in editing (they are usually, but not necessarily, changed consistently
@@ -130,7 +130,7 @@ As in all things, if you don't know what you are doing, you should:
   1) Ask yourself why you are doing it, or
   2) Ask someone to help, so you have some idea what you're doing, and
   3) Be very careful doing it.
-I'm not sure about the whether the above is ((1 or 2) and 3) or 
+I'm not sure about the whether the above is ((1 or 2) and 3) or
   (1 or (2 and 3)) or whether it matters.
 
 On the other hand, this script can't do a lot of damage, all it does is create
@@ -518,7 +518,7 @@ sub look_for_private{
 #############################
 ## Uncomment these lines when testing just the processing of
 ## input
-## Only do this for small test cases - it generates a lot of 
+## Only do this for small test cases - it generates a lot of
 ## rows in subprocess_lines and chews up a lot of time, etc.
 #print "SopsToEdit: ";
 #Debug::GenPrint($dbg, \%SopsToEdit, 1);
@@ -656,7 +656,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       unless(defined $this->{update_q}){
         $this->{update_q} = Query("UpdateDicomEditCompareDisposition");
       }
-      $this->{update_q}->RunQuery(sub {}, sub {}, 
+      $this->{update_q}->RunQuery(sub {}, sub {},
         $total_to_process, $num_compares_complete,
         $num_compares_failed, $invoc_id);
       if($this->{WeAreDone}) {
@@ -919,8 +919,9 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     my $caption = "Reject Edits and Delete Temporary Files";
     my $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "RejectEditsTp",
+      command => "ImportEditsTp",
       subprocess_invoc_id => $this->{invoc_id},
       activity_id => $activity_id,
       notify => $notify
@@ -930,7 +931,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     $caption = "Accept Edits, Import and Delete Temporary Files";
     $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "ImportEditsTp",
       subprocess_invoc_id => $this->{invoc_id},
       activity_id => $activity_id,
@@ -948,7 +949,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
 }
 ##############  This is the end of editor object which handles events
 
-# 
+#
 # The code which follows is used to create an instance of this object
 # and turn it over to the Dispatcher
 #

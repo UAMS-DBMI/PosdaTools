@@ -34,9 +34,9 @@ Lines specify the following things:
    <val1>, <val2>, or <val3> fields.  Generally, there will be some lines with values
    in <file_id> followed by some lines with values in these other
    <file_id>.  The edits specified in lines following these series specifications
-   are specified in lines which have values in for <operation> and <tag>, and 
+   are specified in lines which have values in for <operation> and <tag>, and
    may also have values in <val1> and <val2> (if the operation has parameters).
-   The first line with a value in series_instance_uid following a list of 
+   The first line with a value in series_instance_uid following a list of
    operations resets the list of series (e.g.):
      <file1>
      <file2>
@@ -48,11 +48,11 @@ Lines specify the following things:
 
       <op1> <path1> and <op2> <tag2> are applied to <file1> and <file2>
       <op3> <path3> is applied to <file3> and <file4>
-  
+
 Paths are specified in as follows
   [<row>][<col]
 
-The contents of the fields <path>, <val1>, <val2>, and <vale2> may by enclosed in 
+The contents of the fields <path>, <val1>, <val2>, and <vale2> may by enclosed in
   "meta-quotes" (i.e. "<(0010,0010)>" for "(0010,0010)".  This is to prevent
   Excel from doing unnatural things to the values contained within.  If you
   want to specify a value which is actually includes meta-quotes, you have
@@ -66,12 +66,12 @@ The contents of the fields <path>, <val1>, <val2>, and <vale2> may by enclosed i
   A lone single quote before the left metaquote will be deleted along with
   the metaquotes.
 
-Edited files will be stored underneath the specified \$ENV{POSDA_CACHE_ROOT} in the 
+Edited files will be stored underneath the specified \$ENV{POSDA_CACHE_ROOT} in the
 following hierarchy:
   <posda_cache_root>/<uuid>/<file_id>_edited.dcm
 
 where "<posda_cache_root>" is the value in the environment variable POSDA_CACHE_ROOT,
-"<uuid>" is a uuid generated for a temp directory, and "<file_id>" is the 
+"<uuid>" is a uuid generated for a temp directory, and "<file_id>" is the
 "from" file_id (in posda).
 Again caveat usor.
 
@@ -79,15 +79,15 @@ As in all things, if you don't know what you are doing, you should:
   1) Ask yourself why you are doing it, or
   2) Ask someone to help, so you have some idea what you're doing, and
   3) Be very careful doing it.
-I'm not sure about the whether the above is ((1 or 2) and 3) or 
+I'm not sure about the whether the above is ((1 or 2) and 3) or
   (1 or (2 and 3)) or whether it matters.
 
 On the other hand, this script can't do a lot of damage, all it does is create
-new files in the <posda_cache_root> directory.  
+new files in the <posda_cache_root> directory.
 Edit operations currently supported:
   insert_and_map_id(<path>, <id_to_map>)
   fix_and_map_id(<path>, <id_to_map>)
-  map_id(<path>) 
+  map_id(<path>)
   fix_and_map_date(<path>, <new_date_yyyy/mm/dd>)
   map_date(<path>) should contain date in yyyy/mm/dd format
   delete_path(<path>)
@@ -302,7 +302,7 @@ print "Subprocess_invocation_id: $invoc_id\n";
 #############################
 ## Uncomment these lines when testing just the processing of
 ## input
-## Only do this for small test cases - it generates a lot of 
+## Only do this for small test cases - it generates a lot of
 ## rows in subprocess_lines and chews up a lot of time, etc.
 #print "EditsByFile ";
 #Debug::GenPrint($dbg, \%EditsByFile, 1);
@@ -427,7 +427,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       unless(defined $this->{update_q}){
         $this->{update_q} = Query("UpdateNonDicomEditCompareDisposition");
       }
-      $this->{update_q}->RunQuery(sub {}, sub {}, 
+      $this->{update_q}->RunQuery(sub {}, sub {},
       $total_to_process, $num_compares_complete,
       $num_compares_failed, $invoc_id);
       if($this->{WeAreDone}) {
@@ -654,7 +654,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     my $caption = "Reject Edits and Delete Temporary Files";
     my $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "RejectNonDicomEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $notify
@@ -664,7 +664,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     $caption = "Accept Edits, Import and Delete Temporary Files";
     $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "ImportNonDicomEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $notify
@@ -682,7 +682,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
 }
 ##############  This is the end of editor object which handles events
 
-# 
+#
 # The code which follows is used to create an instance of this object
 # and turn it over to the Dispatcher
 #

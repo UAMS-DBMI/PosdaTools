@@ -666,6 +666,7 @@ sub ScriptButton {
   if($self->can("$dyn->{op}")){
     my $op = $dyn->{op};
     return $self->$op($http, $dyn);
+    print STDERR "TEST ######### $dyn->{op}\n";
   }
   print STDERR "Script button - Unknown op: $dyn->{op}\n";
 }
@@ -720,27 +721,15 @@ sub ContentResponse {
 my $table_free_seq = 0;
 sub OpenTableFreePopup{
   my($self, $http, $dyn) = @_;
-print STDERR "In OpenTableFreePopup\n";
-  my $parms = { button => $dyn->{cap_}};
-  for my $i (keys %{$dyn}){
-    unless(
-      $i eq "cap_" || $i eq "class_" ||
-      $i eq "obj_path" || $i eq "op" || $i eq "ts"
-    ){
-      $parms->{$i} = $dyn->{$i};
-    }
-  }
-  $table_free_seq += 1;
-  my $unique_val = "seq_$table_free_seq";
-
-  my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
+  $dyn->{operation} = $dyn->{cap_};
+  $self->{debug_dyn} = $dyn;
+  return $self->InvokeNewOperation($http, $dyn);
 }
 
 sub OpenPopup {
   my($self, $class, $name, $params) = @_;
 #    say STDERR "OpenDynamicPopup, executing $class using params:";
-#    print STDERR Dumper($params);
+  print STDERR Dumper($params);
   print STDERR "################\nOpenPopup\nclass: $class\n";
   print STDERR "name: $name\n################\n";
 
@@ -788,8 +777,8 @@ sub OpenNewTableLevelPopup{
   };
   my $invocation = {
     type => "QueryMenuTableBasedButton",
-    button_id => $dyn->{_btn_id}, 
-    Operation => $dyn->{cap_},, 
+    button_id => $dyn->{_btn_id},
+    Operation => $dyn->{cap_},,
     query_caption => $query->{caption},
     when_query_invoked => $query->{when},
     who_invoked_query => $query->{who},
@@ -827,7 +816,7 @@ sub OpenNewTableLevelPopup{
     push @rows, $hash;
   }
   $params->{rows}= \@rows;
-  my $command = 
+  my $command =
     $self->GetOperationDescription($invocation->{Operation});
   if(defined $command){
     $params->{command} = $command;
@@ -842,7 +831,7 @@ sub OpenNewTableLevelPopup{
     my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
     $params->{Operations} = $self->{Commands};
     $self->{sequence_no}++;
-  
+
     my $child_path = $self->child_path($name);
     my $child_obj = $class->new($self->{session},
                               $child_path, $params);
@@ -876,8 +865,8 @@ sub ChainQueryToSpreadsheet{
   };
   my $invocation = {
     type => "QueryMenuTableBasedButton",
-    button_id => $dyn->{_btn_id}, 
-    Operation => $dyn->{cap_},, 
+    button_id => $dyn->{_btn_id},
+    Operation => $dyn->{cap_},,
     query_caption => $query->{caption},
     when_query_invoked => $query->{when},
     who_invoked_query => $query->{who},
@@ -2336,7 +2325,7 @@ sub CountOverlappingEvents{
 }
 sub CompareTimepoints{
   my($self, $http, $dyn) = @_;
-  my $class = "Posda::ProcessPopup";
+  my $class = "Posda::NewerProcessPopup";
   eval "require $class";
   my $params = {
     button => "CompareTimepoints",
@@ -2435,7 +2424,13 @@ sub InvokeNewOperation{
       $params->{current_settings}->{activity_timepoint_id} = $row->[0];
     }, sub {}, $self->{ActivitySelected});
   }
-  my $command = 
+
+  #used for the accept/reject edits buttons that appear in emails
+  if(defined $dyn->{subprocess_invoc_id}){
+   $params->{current_settings}->{subprocess_invoc_id} = $dyn->{subprocess_invoc_id};
+  }
+
+  my $command =
     $self->GetOperationDescription($invocation->{Operation});
 
   unless(defined $command){
@@ -2454,7 +2449,7 @@ sub InvokeNewOperation{
     my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
     $params->{Operations} = $self->{Commands};
     $self->{sequence_no}++;
-  
+
     my $child_path = $self->child_path($name);
     my $child_obj = $class->new($self->{session},
                               $child_path, $params);
@@ -2479,10 +2474,10 @@ sub InvokeNewOperation{
 }
 sub InvokeOperation {
   my ($self, $http, $dyn) = @_;
-#  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
-    $class = "Posda::ProcessPopup";
+    $class = "Posda::NewerProcessPopup";
   }
   eval "require $class";
   #print STDERR Dumper($dyn);
@@ -2508,10 +2503,10 @@ sub InvokeOperation {
 }
 sub InvokeOperationRow {
   my ($self, $http, $dyn) = @_;
-#  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
-    $class = "Posda::ProcessPopup";
+    $class = "Posda::NewerProcessPopup";
   }
   if($class eq "Quince") { $class = "ActivityBasedCuration::Quince" }
   eval "require $class";
@@ -2829,7 +2824,7 @@ sub DrawQuerySearchForm{
       id => "SelectWorkflowMode",
       sync => "UpdateDiv('div_QuerySearchListOrResults', 'DrawQueryListOrResults');Update();",
     });
-    
+
     unless(defined($self->{WorkflowSelected})){ $self->{WorkflowSelected} = "<none>" }
     for my $i ("<none>", sort keys %{$self->{WorkflowQueries}}){
       $http->queue("<option value=\"$i\"");
@@ -3522,7 +3517,7 @@ sub  DisplayFinishedSelectedForegroundQuery{
   my $q_name = $SFQ->{query}->{name};
   my $popup_hash = $self->get_popup_hash_new($q_name);
   if(exists $self->{QueryToProcessingButton}->{$q_name}){
-    $self->{QueryMenuTableBasedButtons}->{$q_name} = 
+    $self->{QueryMenuTableBasedButtons}->{$q_name} =
       $self->{QueryToProcessingButton}->{$q_name};
   }
   my @chained_queries;
@@ -4369,7 +4364,7 @@ sub ProcessConvertedUploadedSpreadsheet{
   $params->{rows} = \@rows;
   $params->{cols} = $cols;
   if(exists $params->{rows}->[0]->{Operation}){
-    my $operation = 
+    my $operation =
       $self->GetOperationDescription($params->{rows}->[0]->{Operation});
     if(defined $operation){
       $params->{command} = $operation;
@@ -4430,9 +4425,10 @@ sub ProcessConvertedUploadedNamedSpreadsheet{
 sub GetOperationDescription{
   my($this, $operation_name) = @_;
   my $operation;
+  print STDERR "In GetOperationDescription - $operation_name /n";
   Query('GetSpreadsheetOperationByName')->RunQuery(sub{
     my($row) = @_;
-    my($operation_name, $command_line, $operation_type, 
+    my($operation_name, $command_line, $operation_type,
       $input_line_format, $tags, $can_chain) = @$row;
     $operation->{operation_name} = $operation_name;
     $operation->{command_line} = $command_line;
@@ -4529,7 +4525,7 @@ sub Files{
     $self->RefreshEngine($http, $dyn, '<tr>' .
       "<td><p>$file</p></td>" .
       "<td><p>$size</p></td><td><p>");
-    
+
     $self->RefreshEngine($http, $dyn, $type .
       (
         ($type eq "text/csv") ?
@@ -4538,8 +4534,8 @@ sub Files{
           'op="ChainUploadedSpreadsheet" ' .
           "index=\"$in\" " .
           "sync=\"UpdateDiv('file_report','Files');\" " .
-         'class="btn btn-primary"?>' 
-        : 
+         'class="btn btn-primary"?>'
+        :
          ""
       ) .
       "</p></td><td><p>");
@@ -4555,7 +4551,7 @@ sub Files{
     $self->RefreshEngine($http, $dyn, "</p></td><td><p>");
     $http->queue(
       $self->CheckBoxDelegate("group", "value",
-       ($i->{check_box} eq "true") ? 1: 0, 
+       ($i->{check_box} eq "true") ? 1: 0,
       {
         op => "UploadedFileCheckBox",
         index => $in,
@@ -4619,7 +4615,7 @@ sub AnnotateSelectedUploads{
   $self->{sequence_no}++;
 
   my $child_path = $self->child_path($name);
-  
+
   my $operation = {
     operation_name => "AnnotateTimeline",
     command_line => "InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> \"<comment>\" <notify>",
@@ -4991,7 +4987,7 @@ sub ExecuteCommand {
       unless(exists $colmap->{$i}) { next }
       my $index_of_parm = $colmap->{$i};
       my $new_value = $table->{rows}->[0]->[$index_of_parm];;
-      $parm_map->{$i} = $new_value; 
+      $parm_map->{$i} = $new_value;
     }
     # now generate the cmdline like normal
     my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);

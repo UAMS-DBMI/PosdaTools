@@ -130,7 +130,7 @@ Query('GetTheBaseCtSeriesForLGCP')->RunQuery(sub {
 #############################
 ## Uncomment these lines when testing just the processing of
 ## input
-## Only do this for small test cases - it generates a lot of 
+## Only do this for small test cases - it generates a lot of
 ## rows in subprocess_lines and chews up a lot of time, etc.
 #print "FilesToEdit ";
 #Debug::GenPrint($dbg, \%FilesToEdit, 1);
@@ -258,7 +258,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       unless(defined $this->{update_q}){
         $this->{update_q} = Query("UpdateDicomEditCompareDisposition");
       }
-      $this->{update_q}->RunQuery(sub {}, sub {}, 
+      $this->{update_q}->RunQuery(sub {}, sub {},
         $total_to_process, $num_compares_complete,
         $num_compares_failed, $invoc_id);
       if($this->{WeAreDone}) {
@@ -510,7 +510,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     my $caption = "Reject Edits and Delete Temporary Files";
     my $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "RejectEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $notify
@@ -520,7 +520,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     $caption = "Accept Edits, Import and Delete Temporary Files";
     $param_hash = {
       op => "OpenTableFreePopup",
-      class_ => "Posda::ProcessPopup",
+      class_ => "Posda::NewerProcessPopup",
       cap_ => "ImportEdits",
       subprocess_invoc_id => $this->{invoc_id},
       notify => $notify
@@ -538,7 +538,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
 }
 ##############  This is the end of editor object which handles events
 
-# 
+#
 # The code which follows is used to create an instance of this object
 # and turn it over to the Dispatcher
 #

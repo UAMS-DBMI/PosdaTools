@@ -427,41 +427,41 @@ EOF
     },
   },
 );
-# BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::ProcessPopup
-# BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::ProcessPopup
-# BackgroundPhiScan                     │ DistinctSeriesByCollectionSite            │ Posda::ProcessPopup
-# BackgroundPhiScan                     │ DistinctSeriesByCollectionSitePublic      │ Posda::ProcessPopup
-# BackgroundPlanLinkageCheck            │ GetPlans                                  │ Posda::ProcessPopup
-# BackgroundProcessModules              │ GetFilesWithNoSeriesInfoByCollection      │ Posda::ProcessPopup
-# BackgroundStructLinkageCheck          │ GetSsByCollection                         │ Posda::ProcessPopup
-# CheckConsistency                      │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
+# BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
+# BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup
+# BackgroundPhiScan                     │ DistinctSeriesByCollectionSite            │ Posda::NewerProcessPopup
+# BackgroundPhiScan                     │ DistinctSeriesByCollectionSitePublic      │ Posda::NewerProcessPopup
+# BackgroundPlanLinkageCheck            │ GetPlans                                  │ Posda::NewerProcessPopup
+# BackgroundProcessModules              │ GetFilesWithNoSeriesInfoByCollection      │ Posda::NewerProcessPopup
+# BackgroundStructLinkageCheck          │ GetSsByCollection                         │ Posda::NewerProcessPopup
+# CheckConsistency                      │ DistinctSeriesByPatientAdvanced           │ Posda::NewerProcessPopup
 # Compare                               │ GetSimilarDupContourCounts                │ Posda::PopupCompare
-# CreateActivityTimepointFromSeriesList │ DistinctSeriesByPatientId                 │ Posda::ProcessPopup
-# CreateActivityTimepointFromSeriesList │ DistinctVisibleSeriesByCollectionSite     │ Posda::ProcessPopup
-# DciodvfySeriesReport                  │ DistinctSeriesByCollection                │ Posda::ProcessPopup
-# DciodvfySeriesReport                  │ DistinctSeriesByCollectionSite            │ Posda::ProcessPopup
-# DicomValidation                       │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
-# FileAndDismissNotifications           │ InboxContentAll                           │ Posda::ProcessPopup
-# InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtp%               │ Posda::ProcessPopup
-# InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtpLike            │ Posda::ProcessPopup
-# InitialAnonymizerCommands             │ PatientDetailsWithBlankCtp                │ Posda::ProcessPopup
-# InitialAnonymizerCommands             │ PatientDetailsWithNoCtp                   │ Posda::ProcessPopup
-# LinkForDownload                       │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
-# LinkSeries                            │ DistinctSeriesByPatient                   │ Posda::ProcessPopup
-# LinkSeries                            │ SummaryOfToFiles                          │ Posda::ProcessPopup
-# LinkSeries                            │ SummaryOfToFilesForPatient                │ Posda::ProcessPopup
-# MakePassThru                          │ VisualReviewStatusById                    │ Posda::ProcessPopup
-# PhiScan                               │ ColSiteDetails                            │ Posda::ProcessPopup
-# PhiScan                               │ DistinctSeriesByPatient                   │ Posda::ProcessPopup
-# PrivateDispositions                   │ DistinctSeriesByPatientAdvanced           │ Posda::ProcessPopup
-# ProcessRADCOMPUpload                  │ GetZipUploadEventsByDateRangeNonDicomOnly │ Posda::ProcessPopup
-# ProcessVisualReview                   │ VisualReviewStatusById                    │ Posda::ProcessPopup
-# RadcompSubmissionConverter            │ GetDocxToConvert                          │ Posda::ProcessPopup
-# RetryFailedProjections                │ VisualReviewStatusDetails                 │ Posda::ProcessPopup
-# SendBlankToDest                       │ VisualReviewStatusById                    │ Posda::ProcessPopup
-# VisualReview                          │ DistinctSeriesByCollectionSite            │ Posda::ProcessPopup
-# XlsConverter                          │ GetXlsToConvert                           │ Posda::ProcessPopup
-# XlsxConverter                         │ GetXlsxToConvert                          │ Posda::ProcessPopup
+# CreateActivityTimepointFromSeriesList │ DistinctSeriesByPatientId                 │ Posda::NewerProcessPopup
+# CreateActivityTimepointFromSeriesList │ DistinctVisibleSeriesByCollectionSite     │ Posda::NewerProcessPopup
+# DciodvfySeriesReport                  │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup
+# DciodvfySeriesReport                  │ DistinctSeriesByCollectionSite            │ Posda::NewerProcessPopup
+# DicomValidation                       │ DistinctSeriesByPatientAdvanced           │ Posda::NewerProcessPopup
+# FileAndDismissNotifications           │ InboxContentAll                           │ Posda::NewerProcessPopup
+# InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtp%               │ Posda::NewerProcessPopup
+# InitialAnonymizerCommands             │ AllPatientDetailsWithNoCtpLike            │ Posda::NewerProcessPopup
+# InitialAnonymizerCommands             │ PatientDetailsWithBlankCtp                │ Posda::NewerProcessPopup
+# InitialAnonymizerCommands             │ PatientDetailsWithNoCtp                   │ Posda::NewerProcessPopup
+# LinkForDownload                       │ DistinctSeriesByPatientAdvanced           │ Posda::NewerProcessPopup
+# LinkSeries                            │ DistinctSeriesByPatient                   │ Posda::NewerProcessPopup
+# LinkSeries                            │ SummaryOfToFiles                          │ Posda::NewerProcessPopup
+# LinkSeries                            │ SummaryOfToFilesForPatient                │ Posda::NewerProcessPopup
+# MakePassThru                          │ VisualReviewStatusById                    │ Posda::NewerProcessPopup
+# PhiScan                               │ ColSiteDetails                            │ Posda::NewerProcessPopup
+# PhiScan                               │ DistinctSeriesByPatient                   │ Posda::NewerProcessPopup
+# PrivateDispositions                   │ DistinctSeriesByPatientAdvanced           │ Posda::NewerProcessPopup
+# ProcessRADCOMPUpload                  │ GetZipUploadEventsByDateRangeNonDicomOnly │ Posda::NewerProcessPopup
+# ProcessVisualReview                   │ VisualReviewStatusById                    │ Posda::NewerProcessPopup
+# RadcompSubmissionConverter            │ GetDocxToConvert                          │ Posda::NewerProcessPopup
+# RetryFailedProjections                │ VisualReviewStatusDetails                 │ Posda::NewerProcessPopup
+# SendBlankToDest                       │ VisualReviewStatusById                    │ Posda::NewerProcessPopup
+# VisualReview                          │ DistinctSeriesByCollectionSite            │ Posda::NewerProcessPopup
+# XlsConverter                          │ GetXlsToConvert                           │ Posda::NewerProcessPopup
+# XlsxConverter                         │ GetXlsxToConvert                          │ Posda::NewerProcessPopup
 
 
 for my $i (keys %QueryProcessingButtons){

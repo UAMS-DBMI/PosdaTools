@@ -3221,7 +3221,7 @@ sub CountOverlappingEvents {
 }
 sub CompareTimepoints {
   my ($self, $http, $dyn) = @_;
-  my $class = "Posda::ProcessPopup";
+  my $class = "Posda::NewerProcessPopup";
   eval "require $class";
   my $params = {
     button => "CompareTimepoints",
@@ -3341,10 +3341,10 @@ sub ActivityOperations {
 
 sub InvokeOperation {
   my ($self, $http, $dyn) = @_;
-#  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
-    $class = "Posda::ProcessPopup";
+    $class = "Posda::NewerProcessPopup";
   }
   eval "require $class";
   #print STDERR Dumper($dyn);
@@ -3371,10 +3371,10 @@ sub InvokeOperation {
 #xyzzy
 sub InvokeOperationRow {
   my ($self, $http, $dyn) = @_;
-#  my $class = "Posda::ProcessPopup";
+#  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
   unless(defined $class){
-    $class = "Posda::ProcessPopup";
+    $class = "Posda::NewerProcessPopup";
   }
   eval "require $class";
   my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
