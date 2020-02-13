@@ -10,11 +10,10 @@ from .auth import logged_in_user, User
 
 from ..util import Database
 
-from ..util import asynctar
+from ..util import asynctar, asynczip
 
 import os
 from io import BytesIO
-import tarfile
 import aiofiles
 import logging
 import tempfile
@@ -34,44 +33,6 @@ async def get_single_file(file_id: int, db: Database = Depends()):
 
     return await db.fetch_one(query, [file_id])
 
-async def tar_files_and_stream(records, file_name):
-    return None
-    # with tempfile.NamedTemporaryFile(mode="w+b", suffix=".tar.gz", delete=True
-    # file_path = f"/tmp/{file_name}.tar.gz"
-    # tar = tarfile.open(file_path, mode='w|gz', dereference=True)
-    # out = await aiofiles.open(file_path, mode='rb')
-    # for filename in records:
-    #     arcname = os.path.join(file_name, os.path.basename(filename))
-    #     f = await aiofiles.open(filename, mode='rb')
-    #     test = BytesIO(await f.read())
-
-    #     info = tarfile.TarInfo(arcname)
-    #     info.size = test.getbuffer().nbytes
-
-    #     tar.addfile(info, fileobj=test)
-    #     while True:
-    #         chunk = await out.read(1024 * 512)
-    #         if(not chunk):
-    #             break
-    #         await response.write(chunk)
-
-    # tar.close()
-    # while True:
-    #     chunk = await out.read(1024 * 512)
-    #     if(not chunk):
-    #         break
-    #     await response.write(chunk)
-
-    # f.close()
-    # out.close()
-    # os.remove(file_path)
-
-    # # return response.stream(streaming_fn,
-    # #                        content_type='application/gzip',
-    # #                        headers={'Content-Disposition': f'attachment; filename="{file_name}.tar.gz"'})
-    # return FileResponse(file_path, filename=f"{file_name}.tar.gz")
-
-
 @router.get("/series/{series_instance_uid}")
 async def get_series_files(series_instance_uid: str, db: Database = Depends()):
     query = """
@@ -84,13 +45,12 @@ async def get_series_files(series_instance_uid: str, db: Database = Depends()):
 			    where series_instance_uid = $1
 			      and visibility is null
     """
-    # use asynctar here to get all the files and return them
     records = [x[0] for x in await db.fetch(query, [series_instance_uid])]
 
-    file_name = f"{series_instance_uid}.tar.gz"
-    return asynctar.stream_files(records, file_name)
+    file_name = f"{series_instance_uid}.zip"
+    return await asynczip.stream_files(records, file_name)
 
-@router.get("/{iec}/files")
+@router.get("/iec/{iec}")
 async def get_iec_files(iec: int, db: Database = Depends()):
     query = """
 	select root_path || '/' || rel_path as file
@@ -102,9 +62,9 @@ async def get_iec_files(iec: int, db: Database = Depends()):
 			    where image_equivalence_class_id = $1
 			      and visibility is null
     """
-    records = db.fetch(query, [iec])
+    records = await db.fetch(query, [iec])
 
-    return await asynctar.stream_files(records, f"{iec}.tar.gz")
+    return await asynczip.stream_files([r['file'] for r in records], f"{iec}.zip")
 
 @router.get("/{file_id}/pixels")
 async def get_pixel_data(file_id: int, db: Database = Depends()):
