@@ -6,6 +6,8 @@ use Posda::PopupImageViewer;
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
 
+use File::Temp 'tempfile';
+
 use DBI;
 use URI;
 use HTML::Entities;
@@ -247,29 +249,31 @@ sub StartSubprocess{
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
 
-  #make spreadsheet Here
+  #make spreadsheet here
   my $spreadsheet_string = "";
+  my ($fh,$tempfilename) = tempfile();
   for my $felds (@{$self->{params}->{command}->{fields}}) {
-    $spreadsheet_string .= "$felds,";
+    print $fh "$felds,";
   }
   $spreadsheet_string .= "Operation,";
   for my $argKey (keys %{$self->{args}}){
-    $spreadsheet_string .= "$argKey,";
+    print $fh "$argKey,";
   }
   my $line1 = 0;
   for $datalines (@{$self->{InputLines}}) {
-    $spreadsheet_string .= "\n $datalines,";
+    print $fh "\n $datalines,";
     if ($line1 == 0){
       $line1 = 1;
-      $spreadsheet_string .= " $self->{params}->{command}->{operation_name},";
+      print $fh " $self->{params}->{command}->{operation_name},";
       for my $argValue (keys %{$self->{args}}){
-        $spreadsheet_string .= "$self->{args}->{$argValue}->[1],";
+        print $fh "$self->{args}->{$argValue}->[1],";
       }
     }
   }
-  #print STDERR "############ SHEET INFO ###############\n";
-  #print STDERR "$spreadsheet_string";
-  #print STDERR "\n###########################\n";
+  close $fh;
+  #call API
+  unlink $tempfilename;
+
 
   my $new_id = Query("CreateSubprocessInvocationButton")
                ->FetchOneHash($id, $btn_name, $command_line,
