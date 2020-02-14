@@ -312,7 +312,7 @@ sub StartSubprocess {
   my $invoking_user = $self->get_user;
 
   my $new_id = Query("CreateSubprocessInvocationButton")
-               ->FetchOneHash($id, $btn_name, $command_line,
+               ->FetchOneHash($id, $btn_name, $command_line, undef
                               $invoking_user, $btn_name)
                ->{subprocess_invocation_id};
 

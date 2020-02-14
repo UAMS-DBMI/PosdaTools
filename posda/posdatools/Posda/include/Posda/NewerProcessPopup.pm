@@ -5,7 +5,9 @@ use Posda::PopupWindow;
 use Posda::PopupImageViewer;
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
+use Posda::DB::PosdaFilesQueries;
 use Posda::File::Import 'insert_file';
+
 
 use File::Temp 'tempfile';
 
@@ -246,15 +248,17 @@ sub StartSubprocess{
   my $invoking_user = $self->get_user;
 
   #create spreadsheet
-  my $spreadsheet_string = "";
   my ($fh,$tempfilename) = tempfile();
+
+  #column row
   for my $felds (@{$self->{params}->{command}->{fields}}) {
     print $fh "$felds,";
   }
-  $spreadsheet_string .= "Operation,";
+  print $fh  "Operation,";
   for my $argKey (keys %{$self->{args}}){
     print $fh "$argKey,";
   }
+  #data rows
   my $line1 = 0;
   for $datalines (@{$self->{InputLines}}) {
     print $fh "\n$datalines,";
@@ -266,30 +270,43 @@ sub StartSubprocess{
       }
     }
   }
+  #data row when there are no input lines
+  if ($#{$self->{InputLines}} == -1){
+    print $fh "\n";
+    for my $felds (@{$self->{params}->{command}->{fields}}) {
+      print $fh ",";
+    }
+    print $fh "$self->{params}->{command}->{operation_name},";
+    for my $argValue (keys %{$self->{args}}){
+      print $fh "$self->{args}->{$argValue}->[1],";
+    }
+  }
   close $fh;
 
-  #call API
+  #call API to import
   my $spreadsheet_f_id;
   my $resp = Posda::File::Import::insert_file($tempfilename);
   if ($resp->is_error){
-      print STDERR "OH NO I'm DYING";
       die $resp->error;
   }else{
     $spreadsheet_f_id =  $resp->file_id;
-    print STDERR "YEEEAAAHHH my file_id = " . $spreadsheet_f_id;
   }
-
   unlink $tempfilename;
 
+  #save to spreadsheet uploaded
+  my $spreadsheet_table_id = PosdaDB::Queries::record_spreadsheet_upload(1, $invoking_user, $spreadsheet_f_id, ($#{$self->{InputLines}}+1));
 
+  #save to subprocess invocation
   my $new_id = Query("CreateSubprocessInvocationButton")
-               ->FetchOneHash($id, $btn_name, $command_line,
+               ->FetchOneHash($id, $btn_name, $command_line, $spreadsheet_table_id,
                               $invoking_user, $operation_name)
                ->{subprocess_invocation_id};
 
   unless($new_id) {
     die "Couldn't create row in subprocess_invocation";
   }
+
+
   my $cmd_to_invoke = $self->{ExpandedCommand};
   $cmd_to_invoke =~ s/<\?bkgrnd_id\?>/$new_id/eg;
   print STDERR "###########################\n";
