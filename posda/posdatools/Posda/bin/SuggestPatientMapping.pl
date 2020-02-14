@@ -21,7 +21,7 @@ SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site
     "Collection_patient_<seq>" will generate distinct <seq> values to map patient_id uniquely. The length of the rendering of the <seq> is controlled
     by the <num_dig> parameter.  If no <num_dig> is specified, it will be rendered with no leading zeros.  This will result in mapped patient_ids
     which don't "line up" (and, more importantly, don't sort well).
-          WARNING: Using the <num_dig> parameter inconsistently can result in two distinct patients 
+          WARNING: Using the <num_dig> parameter inconsistently can result in two distinct patients
           (e.g "ColPat_0001" and "ColPat_001") who appear to represent the intended to be the patient.
           (and have even worse sorting characteristics)  Choose a num_dig wisely for a collection and
           stick to it.
@@ -32,7 +32,6 @@ SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site
   notify - posda user to be notified of results
 
 Expects lines on STDIN:
-<patient_id>
 ...
 
 Note:  The user is required to fill out the patient_mapping table.  This script merely suggest possible values.  If
@@ -52,7 +51,7 @@ Note:  The user is required to fill out the patient_mapping table.  This script 
     Either of these values you specified would have generated mappings inconsistent with mapping values already in the patient_mapping table
     You specified baseline_date.  The script supplies earliest_study_date which is often a good proxy for this.  If it is an acceptable proxy,
       you can copy the whole column.
-  
+
 EOF
 sub can_map_mrn{
   return 0;
@@ -187,7 +186,7 @@ Query('GetPatientMappingForPatientsInTimepoint')->RunQuery(sub{
   if(
     defined($baseline_date) &&
     $baseline_date =~ /^(\d\d\d\d-\d\d-\d\d)/
-  ){ 
+  ){
     $baseline_date = $1;
   }
   push @ExistingMappings, {
@@ -209,7 +208,7 @@ if($col_name eq ""){
     "Just get a list potential mappings\n");
   my $num_mappings = @ExistingMappings;
   my @headings = (
-    "from_patient_id", "to_patient_id", "to_patient_name", 
+    "from_patient_id", "to_patient_id", "to_patient_name",
     "collection_name", "site_name", "batch_number", "diagnosis_date",
     "baseline_date", "date_shift", "uid_root", "site_code"
   );
@@ -232,7 +231,7 @@ if($col_name eq ""){
       $rpt->print("\r\n");
     }
   } else {
-    $back->WriteToEmail("There are no existing mappings for patients in timepoint\n");  
+    $back->WriteToEmail("There are no existing mappings for patients in timepoint\n");
   }
   my $num_collections = @Collections;
   @headings = (
@@ -257,7 +256,7 @@ if($col_name eq ""){
       $rpt->print("\r\n");
     }
   } else {
-    $back->WriteToEmail("There are no existing Collections in collection_codes table\n");  
+    $back->WriteToEmail("There are no existing Collections in collection_codes table\n");
   }
   my $num_sites = @Sites;
   @headings = (
@@ -282,7 +281,7 @@ if($col_name eq ""){
       $rpt->print("\r\n");
     }
   } else {
-    $back->WriteToEmail("There are no existing Sites in site_codes table\n");  
+    $back->WriteToEmail("There are no existing Sites in site_codes table\n");
   }
   $back ->Finish("Done - no collection, site specified");
   exit;
@@ -391,7 +390,7 @@ Query('GetPatientMappingForSiteCode')->RunQuery(sub{
   };
   $MappedPatientIds{$to_patient_id} = 1;
   my @headings = (
-    "from_patient_id", "to_patient_id", "to_patient_name", 
+    "from_patient_id", "to_patient_id", "to_patient_name",
     "collection_name", "site_name", "batch_number", "diagnosis_date",
     "baseline_date", "date_shift", "uid_root", "site_code"
   );
@@ -420,7 +419,7 @@ for my $pat (keys %PatientMinStudyDate){
   if($pat_map_specified){
     my $max = 1000;
     if($num_dig) { $max = 10**$num_dig; }
-    my $r = 0; 
+    my $r = 0;
     while($r == 0){
       $r = int rand($max);
     }
@@ -460,7 +459,7 @@ for my $pat (keys %PatientMinStudyDate){
 my $rpt = $back->CreateReport("Mapping Suggestions");
 my @headings = (
   "in_patient_mapping", "from_patient_id", "collection", "site", "to_patient_id",
-  "to_patient_name", "diagnosis_date", "min_study_date", 
+  "to_patient_name", "diagnosis_date", "min_study_date",
   "uid_root", "batch_number", "site_code", "baseline_date",
   "date_shift"
 );
