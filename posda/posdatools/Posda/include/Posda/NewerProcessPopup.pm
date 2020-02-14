@@ -5,6 +5,7 @@ use Posda::PopupWindow;
 use Posda::PopupImageViewer;
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
+use Posda::File::Import 'insert_file';
 
 use File::Temp 'tempfile';
 
@@ -244,7 +245,7 @@ sub StartSubprocess{
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
 
-  #make spreadsheet here
+  #create spreadsheet
   my $spreadsheet_string = "";
   my ($fh,$tempfilename) = tempfile();
   for my $felds (@{$self->{params}->{command}->{fields}}) {
@@ -256,17 +257,28 @@ sub StartSubprocess{
   }
   my $line1 = 0;
   for $datalines (@{$self->{InputLines}}) {
-    print $fh "\n $datalines,";
+    print $fh "\n$datalines,";
     if ($line1 == 0){
       $line1 = 1;
-      print $fh " $self->{params}->{command}->{operation_name},";
+      print $fh "$self->{params}->{command}->{operation_name},";
       for my $argValue (keys %{$self->{args}}){
         print $fh "$self->{args}->{$argValue}->[1],";
       }
     }
   }
   close $fh;
+
   #call API
+  my $spreadsheet_f_id;
+  my $resp = Posda::File::Import::insert_file($tempfilename);
+  if ($resp->is_error){
+      print STDERR "OH NO I'm DYING";
+      die $resp->error;
+  }else{
+    $spreadsheet_f_id =  $resp->file_id;
+    print STDERR "YEEEAAAHHH my file_id = " . $spreadsheet_f_id;
+  }
+
   unlink $tempfilename;
 
 
