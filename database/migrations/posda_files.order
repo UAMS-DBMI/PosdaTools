@@ -2,3 +2,4 @@ add_key_to_subprocess_invocation.sql
 create_public_copy_status_table.sql
 create_button_popularity_table.sql
 add_third_party_analysis_to_activity.sql
+drop_not_null_on_modality.sql

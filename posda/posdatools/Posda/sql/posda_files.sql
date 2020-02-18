@@ -2124,7 +2124,7 @@ CREATE TABLE public.file_roi_image_linkage (
 
 CREATE TABLE public.file_series (
     file_id integer NOT NULL,
-    modality text NOT NULL,
+    modality text,
     series_instance_uid text NOT NULL,
     series_number integer,
     laterality text,
