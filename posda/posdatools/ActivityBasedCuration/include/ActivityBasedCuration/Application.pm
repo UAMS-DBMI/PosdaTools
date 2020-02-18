@@ -666,7 +666,6 @@ sub ScriptButton {
   if($self->can("$dyn->{op}")){
     my $op = $dyn->{op};
     return $self->$op($http, $dyn);
-    print STDERR "TEST ######### $dyn->{op}\n";
   }
   print STDERR "Script button - Unknown op: $dyn->{op}\n";
 }
@@ -676,11 +675,6 @@ sub DownloadSpecifiedFileById {
   my $shortname = $dyn->{targ_name};
   my $file_id = $dyn->{file_id};
   my $mime_type = $dyn->{mime_type};
-#print STDERR "DownloadSpecifiedFileById(" .
-#  "$file_id, \"$shortname\", \"$mime_type\")";
-#for my $i (keys %$dyn){
-#  print STDERR "dyn{$i} = \"$dyn->{$i}\"\n";
-#}
   my $filename;
   Query('GetFilePath')->RunQuery(sub{
     my($row) = @_;
@@ -694,7 +688,7 @@ sub DownloadSpecifiedFileById {
       $self->SendFile($http),
     $fh)->Add("reader");
   } else {
-#    print STDERR "Can't open file $filename\n";
+   print STDERR "Can't open file $filename\n";
   }
 
 }
@@ -728,10 +722,10 @@ sub OpenTableFreePopup{
 
 sub OpenPopup {
   my($self, $class, $name, $params) = @_;
-#    say STDERR "OpenDynamicPopup, executing $class using params:";
-  print STDERR Dumper($params);
-  print STDERR "################\nOpenPopup\nclass: $class\n";
-  print STDERR "name: $name\n################\n";
+  # say STDERR "OpenDynamicPopup, executing $class using params:";
+  # print STDERR Dumper($params);
+  # print STDERR "################\nOpenPopup\nclass: $class\n";
+  # print STDERR "name: $name\n################\n";
 
 
   if ($class eq 'choose') {
