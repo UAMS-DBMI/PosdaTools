@@ -21,6 +21,42 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Retired,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.11.2' => {
+    name => 'Color Softcopy Presentation State Storage SOP Class',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
+  '1.2.840.10008.5.1.4.1.1.104.1' => {
+    name => 'Encapsulated PDF Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
+  '1.2.840.10008.5.1.4.1.1.130' => {
+    name => 'Enhanced PET Image Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
+  '1.2.840.10008.5.1.4.1.1.88.67' => {
+    name => 'X-Ray Radiation Dose SR Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
   '1.2.840.10008.5.1.4.1.1.1' =>{
     name => 'Computed Radiography Image Storage',
     handlers => [
