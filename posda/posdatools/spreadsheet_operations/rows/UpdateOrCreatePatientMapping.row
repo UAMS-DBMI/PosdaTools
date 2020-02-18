@@ -1,6 +1,6 @@
 :operation_name: UpdateOrCreatePatientMapping
-:command_line: UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <activity_id> "<comment>" <overwrite> <notify>
+:command_line: UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <activity_id> "<comment>" "<overwrite>" <notify>
 :operation_type: background_process
 :input_line_format: <in_patient_mapping>&<from_patient_id>&<collection>&<site>&<to_patient_id>&<to_patient_name>&<diagnosis_date>&<min_study_date>&<uid_root>&<batch_number>&<site_code>&<baseline_date>&<date_shift>
 :tags: ['patient_mapping']
-:can_chain: 
+:can_chain:
