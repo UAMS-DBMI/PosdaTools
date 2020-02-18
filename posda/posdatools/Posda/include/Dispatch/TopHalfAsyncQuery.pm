@@ -15,8 +15,7 @@ sub new_serialized_cmd{
   socketpair($parent, $child, AF_UNIX, SOCK_STREAM, PF_UNSPEC) or
     die("socketpair: $!");
   my $child_pid = fork;
-  unless(defined $child_pid) { die "Couldn't fork in new_serialized_cmd" }
-print STDERR "Child Pid: $child_pid\n";
+  unless(defined $child_pid) { die "Couldn't fork in new_serialized_cmd" } print STDERR "Child Pid: $child_pid\n";
   $oldfh = select($parent); $| = 1; select($oldfh);
   $oldfh = select($child); $| = 1; select($oldfh);
   if($child_pid == 0){
@@ -130,6 +129,7 @@ sub Frag_reader{
       delete $this->{fh};
       delete $this->{pid};
       delete $this->{line_h};
+      delete $this->{paused};
       my $end_h = $this->{end_h};
       delete $this->{end_h};
       &{$get_lines}();
@@ -154,7 +154,12 @@ sub resume{
     print STDERR "not paused in resume";
   }
   $this->{paused} = 0;
-  $this->{reader}->Add("reader");
+  if(defined $this->{reader}){
+    $this->{reader}->Add("reader");
+  } else {
+    print STDERR "Reader not defined in paused state!!!!\n";
+    $this->TearDown;
+  }
 }
 sub pause{
   my($this) = @_;
@@ -162,19 +167,24 @@ sub pause{
     print STDERR "paused in pause";
   }
   $this->{paused} = 1;
-  $this->{reader}->Remove("reader");
+  if(defined $this->{reader}){
+    $this->{reader}->Remove("reader");
+  } else {
+    print STDERR "Reader not defined in running state!!!!\n";
+    $this->TearDown;
+  }
 }
 sub TearDown{
   my($this) = @_;
   if($this->{reader} && $this->{reader}->can("Remove")){
     $this->{reader}->Remove;
     delete $this->{reader};
-    delete $this->{line_h};
-    if($this->{end_h} && ref $this->{end_h} eq "CODE"){
-      my $end_h = $this->{end_h};
-      delete $this->{end_h};
-      &$end_h();
-    }
+  }
+  delete $this->{line_h};
+  if($this->{end_h} && ref $this->{end_h} eq "CODE"){
+    my $end_h = $this->{end_h};
+    delete $this->{end_h};
+    &$end_h();
   }
   if($this->{pid}){
     kill 1, $this->{pid};

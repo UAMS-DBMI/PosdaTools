@@ -80,6 +80,7 @@ if($query_spec->{query} =~ /^\s*select/){
     for my $i (0 .. $#{$query_spec->{columns}}){
       my $k = $query_spec->{columns}->[$i];
       my $v = $h->{$k};
+      unless(defined $v) { $v = "" }
       $v =~ s/([\n\|])/"%" . unpack("H2", $1)/eg;
       print $v;
       unless($i == $#{$query_spec->{columns}}){ print "|" }

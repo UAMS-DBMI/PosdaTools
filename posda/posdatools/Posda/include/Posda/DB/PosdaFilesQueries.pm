@@ -207,6 +207,15 @@ sub RunQuery {
   }
 }
 
+sub CancelNewAsyncQuery{
+  my $self = shift;
+  unless($self->{new_async}){
+    print STDERR "Can only cancel new async queries\n";
+    return undef;
+  }
+  $self->{BottomHalfFh}->Abort;
+}
+
 
 sub FetchOneHash {
   # Fetch the first row of results as a hash
@@ -373,6 +382,7 @@ sub _RunQueryNewAsync {
       &$end_callback($status);
     }
   );
+  $self->{BottomHalfFh} = $ev;
 }
 
 sub GetDescription{

@@ -527,7 +527,10 @@ sub MakeMenuByMode{
   ){
     my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
     my $query_menu;
-    if($q_info->{status} eq "done"){
+    if(
+      $q_info->{status} eq "done" || $q_info->{status} eq "ended" ||
+      $q_info->{status} eq "paused"
+    ){
       $query_menu = $self->QueryDisplayMenu;
     } else {
       $query_menu = $self->QueryDisplayMenuRunning;
@@ -2610,6 +2613,7 @@ sub SelectFromCurrentForeground{
     sync => "Update();",
   });
   $http->queue("</th></tr>");
+  my %status_counts;
   for my $k (
     sort {
       $self->{ForegroundQueries}->{$a}->{invoked_id} <=>
@@ -2618,6 +2622,7 @@ sub SelectFromCurrentForeground{
     keys %{$self->{ForegroundQueries}}
   ){
     my $e = $self->{ForegroundQueries}->{$k};
+    $status_counts{$e->{status}} += 1;
     my $id = $e->{invoked_id};
     my $num_rows = @{$e->{rows}};
     $http->queue("<tr>");
@@ -2634,13 +2639,20 @@ sub SelectFromCurrentForeground{
       index => $k,
       sync => "Update();",
     });
-    $self->NotSoSimpleButton($http, {
-      op => "DeleteCurrentForegroundQuery",
-      id => "btn_DeleteCurrentQuery_$id",
-      caption => "dismiss",
-      index => $k,
-      sync => "Update();",
-    });
+    if(
+      $e->{status} eq "done" ||
+      $e->{status} eq "error" ||
+      $e->{status} eq "ended" ||
+      $e->{status} eq "aborted" 
+    ){
+      $self->NotSoSimpleButton($http, {
+        op => "DeleteCurrentForegroundQuery",
+        id => "btn_DeleteCurrentQuery_$id",
+        caption => "dismiss",
+        index => $k,
+        sync => "Update();",
+      });
+    }
     if($e->{status} eq "running"){
       $self->NotSoSimpleButton($http, {
         op => "PauseRunningQuery",
@@ -2650,8 +2662,8 @@ sub SelectFromCurrentForeground{
         sync => "Update();",
       });
       $self->NotSoSimpleButton($http, {
-        op => "CancelRunningQuery",
-        id => "btn_CancelCurrentQuery_$id",
+        op => "AbortRunningQuery",
+        id => "btn_AbortQuery_$id",
         caption => "abort",
         index => $k,
         sync => "Update();",
@@ -2665,8 +2677,8 @@ sub SelectFromCurrentForeground{
         sync => "Update();",
       });
       $self->NotSoSimpleButton($http, {
-        op => "CancelRunningQuery",
-        id => "btn_CancelCurrentQuery_$id",
+        op => "EndPausedQuery",
+        id => "btn_EndPausedQuery_$id",
         caption => "end",
         index => $k,
         sync => "Update();",
@@ -2674,14 +2686,14 @@ sub SelectFromCurrentForeground{
     } elsif ($e->{status} eq "done"){
       $self->NotSoSimpleButton($http, {
         op => "RefreshQuery",
-        id => "btn_RefreshCurrentQuery_$id",
+        id => "btn_RefreshQuery_$id",
         caption => "refresh",
         index => $k,
         sync => "Update();",
       });
       $self->NotSoSimpleButton($http, {
         op => "RerunQuery",
-        id => "btn_RerunCurrentQuery_$id",
+        id => "btn_RerunQuery_$id",
         caption => "re-run",
         index => $k,
         sync => "Update();",
@@ -2692,13 +2704,55 @@ sub SelectFromCurrentForeground{
   }
   $http->queue("</table>");
   $http->queue("</div>");
+  unless(defined $status_counts{running}){ $status_counts{running} = 0 }
+  if($status_counts{running} > 0){
+    $self->AutoRefreshDiv('div_QuerySearchListOrResults','DrawQueryListOrResults');
+  }
+}
+sub EndPausedQuery{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $q = $self->{ForegroundQueries}->{$index};
+  unless($q->{status} eq "paused"){
+    print STDERR "Can only end paused queries\n";
+    return;
+  }
+  my $th = $q->{query}->{BottomHalfFh};
+  $th->Abort;
+  $q->{status} = "ended";
+}
+sub AbortRunningQuery{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $q = $self->{ForegroundQueries}->{$index};
+  unless($q->{status} eq "running"){
+    print STDERR "Can only abort running queries\n";
+    return;
+  }
+  my $th = $q->{query}->{BottomHalfFh};
+  $th->Abort;
+  $q->{status} = "aborted";
+  $q->{completion_msg} = "Aborted at user request";
 }
 sub DeleteAllForegroundQuery{
   my($self, $http, $dyn) = @_;
   for my $i (keys %{$self->{ForegroundQueries}}){
-    delete $self->{ForegroundQueries}->{$i};
+    my $e = $self->{ForegroundQueries}->{$i};
+    if(
+      $e->{status} eq "done" ||
+      $e->{status} eq "ended" ||
+      $e->{status} eq "error" ||
+      $e->{status} eq "aborted"
+    ){
+       delete $self->{ForegroundQueries}->{$i};
+    }
   }
-  delete $self->{SelectFromCurrentForeground};
+  my $num = keys %{$self->{ForegroundQueries}};
+  print STDERR "####################\nNum: $num\n";
+  if($num == 0){
+    delete $self->{SelectFromCurrentForeground};
+    $self->{NewActivityQueriesType}->{query_type} = "recent";
+  }
 }
 sub DeleteCurrentForegroundQuery{
   my($self, $http, $dyn) = @_;
@@ -2707,6 +2761,7 @@ sub DeleteCurrentForegroundQuery{
   my $num_queries = keys %{$self->{ForegroundQueries}};
   if($num_queries == 0){
     delete $self->{SelectFromCurrentForeground};
+    $self->{NewActivityQueriesType}->{query_type} = "recent";
   }
 }
 sub SelectCurrentForegroundQuery{
@@ -3133,21 +3188,22 @@ sub DrawNewQuery{
 #  $http->queue("NewQuery goes here ($self->{SelectedNewQuery})");
   my $q_name = $self->{SelectedNewQuery};
   my $query;
-  if(
-    exists($self->{NewQueryListSearch}) &&
-    ref($self->{NewQueryListSearch}) eq "HASH" &&
-    exists($self->{NewQueryListSearch}->{$q_name})
-  ){
-    $query = $self->{NewQueryListSearch}->{$q_name};
-  } elsif (
-    exists($self->{NewQueriesByName}) &&
-    ref($self->{NewQueriesByName}) eq "HASH" &&
-    exists($self->{NewQueriesByName}->{$q_name})
-  ){
-    $query = $self->{NewQueriesByName}->{$q_name};
-  } else {
-    warn "Query name '$q_name' not found at " . __LINE__ . "\n";
-  }
+#  if(
+#    exists($self->{NewQueryListSearch}) &&
+#    ref($self->{NewQueryListSearch}) eq "HASH" &&
+#    exists($self->{NewQueryListSearch}->{$q_name})
+#  ){
+#    $query = $self->{NewQueryListSearch}->{$q_name};
+#  } elsif (
+#    exists($self->{NewQueriesByName}) &&
+#    ref($self->{NewQueriesByName}) eq "HASH" &&
+#    exists($self->{NewQueriesByName}->{$q_name})
+#  ){
+#    $query = $self->{NewQueriesByName}->{$q_name};
+#  } else {
+#    warn "Query name '$q_name' not found at " . __LINE__ . "\n";
+#  }
+  $query = PosdaDB::Queries->GetQueryInstance($q_name);
 
   $http->queue(qq{
     <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">
@@ -3304,7 +3360,7 @@ sub RefreshQuery{
   $self->{ForegroundQueries}->{$guid}->{rows} = [];
 
   delete $self->{SelectedNewQuery};
-  $self->{NewQueryToDisplay} = $guid;
+  #$self->{NewQueryToDisplay} = $guid;
   #$self->{WaitingForQueryCompletion} = $msg;
   my $q_pack = $self->{ForegroundQueries}->{$guid};
   $query->RunQuery(
@@ -3495,10 +3551,10 @@ sub DownloadTableFromNewQuery{
 sub  DisplaySelectedForegroundQuery{
   my($self, $http, $dyn) = @_;
   my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
-  if($SFQ->{status} eq 'done'){
+  if($SFQ->{status} eq 'done' || $SFQ->{status} eq "ended" || $SFQ->{status} eq "paused"){
     return $self->DisplayFinishedSelectedForegroundQuery($http, $dyn);
   }
-  if($SFQ->{status} eq "error"){
+  if($SFQ->{status} eq "error" || $SFQ->{status} eq "aborted"){
     return $self->DisplayNewQueryError($http, $dyn, $SFQ);
   }
   if($SFQ->{status} eq "running"){
@@ -3537,7 +3593,10 @@ sub  DisplayFinishedSelectedForegroundQuery{
     <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
   });
   $http->queue(qq{ <div width=100 style="margin-bottom: 10px;margin-left: 10px"> });
-  $http->queue("<em><b>Results for:</b></em>&nbsp;&nbsp;$SFQ->{caption}&nbsp;&nbsp;&nbsp;");
+  $http->queue("<em><b>");
+  if($SFQ->{status} ne "done"){ $http->queue("Partial ($SFQ->{status}) ") }
+  else { $http->queue("Full ") }
+  $http->queue("Results for:</b></em>&nbsp;&nbsp;$SFQ->{caption}&nbsp;&nbsp;&nbsp;");
   $http->queue("</div>");
   my $index = $self->{NewQueryToDisplay};
   unless(exists $self->{FilterSelection}->{$index}){
@@ -3753,6 +3812,41 @@ sub ClearFilter {
   delete $self->{FilterArgs};
   delete $SFQ->{filter};
 }
+
+sub PauseRunningQuery{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $e = $self->{ForegroundQueries}->{$index};
+  unless($e->{status} eq "running"){
+    print STDERR "can't pause a query that isn't running\n";
+    return;
+  }
+  my $p = $e->{query}->{BottomHalfFh};
+  if($p->pause){
+    $e->{status} = "paused";
+  } else {
+    $e->{status} = "error";
+    $e->{completion_msg} = "connection died: pause";
+  }
+}
+
+sub UnPauseRunningQuery{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{index};
+  my $e = $self->{ForegroundQueries}->{$index};
+  my $p = $e->{query}->{BottomHalfFh};
+  unless($e->{status} eq "paused"){
+    print STDERR "can't resume a query that isn't paused\n";
+    return;
+  }
+  if($p->resume){
+    $e->{status} = "running";
+  } else {
+    $e->{status} = "error";
+    $e->{completion_msg} = "connection died: resume";
+  }
+}
+
 sub  UnselectForegroundQuery{
   my($self, $http, $dyn) = @_;
   delete $self->{NewQueryToDisplay};
