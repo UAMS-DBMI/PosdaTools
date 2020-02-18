@@ -1141,24 +1141,13 @@ print STDERR "In OpenTableLevelPopup\n";
 }
 
 my $table_free_seq = 0;
-sub OpenTableFreePopup {
-  my ($self, $http, $dyn) = @_;
-print STDERR "In OpenTableFreePopup\n";
-  my $parms = { button => $dyn->{cap_}};
-  for my $i (keys %{$dyn}){
-    unless(
-      $i eq "cap_" || $i eq "class_" ||
-      $i eq "obj_path" || $i eq "op" || $i eq "ts"
-    ){
-      $parms->{$i} = $dyn->{$i};
-    }
-  }
-  $table_free_seq += 1;
-  my $unique_val = "seq_$table_free_seq";
-
-  my $class = $dyn->{class_};
-  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
+sub OpenTableFreePopup{
+  my($self, $http, $dyn) = @_;
+  $dyn->{operation} = $dyn->{cap_};
+  $self->{debug_dyn} = $dyn;
+  return $self->InvokeNewOperation($http, $dyn);
 }
+
 
 sub OpenDynamicPopup {
   my ($self, $http, $dyn) = @_;
@@ -2720,6 +2709,53 @@ sub OpenChainedQuery {
   });
 }
 
+sub GetOperationDescription{
+  my($this, $operation_name) = @_;
+  my $operation;
+  print STDERR "In GetOperationDescription - $operation_name /n";
+  Query('GetSpreadsheetOperationByName')->RunQuery(sub{
+    my($row) = @_;
+    my($operation_name, $command_line, $operation_type,
+      $input_line_format, $tags, $can_chain) = @$row;
+    $operation->{operation_name} = $operation_name;
+    $operation->{command_line} = $command_line;
+    $operation->{operation_type} = $operation_type;
+    $operation->{input_line_format} = $input_line_format;
+  }, sub{}, $operation_name);
+  if(defined $operation){
+    my($fields, $args, $meta_args) = $this->BuildFieldsAndArgs($operation);
+    $operation->{fields} = $fields;
+    $operation->{args} = $args;
+    $operation->{meta_args} = $meta_args;
+    return $operation
+  }
+  return undef;
+}
+
+sub BuildFieldsAndArgs{
+  my($this, $operation) = @_;
+  my(@fields, @args, @meta_args);
+  my $remaining = $operation->{command_line};
+  while($remaining =~ /[^<]*<([^>]+)>(.*)$/){
+    my $arg = $1;
+    $remaining = $2;
+    if($arg =~ /^\?(.*)\?$/){
+      my $meta_arg = $1;
+      push @meta_args, $meta_arg
+    } else {
+      my $arg = $1;
+      push @args, $arg;
+    }
+  }
+  $remaining = $operation->{input_line_format};
+  while($remaining =~ /[^<]*<([^>]+)>(.*)$/){
+    my $field = $1;
+    $remaining = $2;
+    push @fields, $field;
+  }
+  return \@fields, \@args, \@meta_args;
+}
+
 
 sub UpdateInsertStatus {
   my ($self, $http, $dyn) = @_;
@@ -3337,6 +3373,76 @@ sub ActivityOperations {
     $http->queue("</tr>");
   }
   $http->queue("</table>");
+}
+
+sub InvokeNewOperation{
+  my($self, $http, $dyn) = @_;
+  my $params;
+  my $operation = $dyn->{operation};
+  $params = {
+     bindings => $self->{BindingCache},
+  };
+  my $invocation = {
+    type => "WorkflowButton",
+    Operation => $dyn->{operation},
+    caption => $dyn->{caption},
+  };
+  $params->{invocation} = $invocation;
+  $params->{current_settings}->{notify} = $self->get_user;
+  if(defined $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+
+  #used for the accept/reject edits buttons that appear in emails
+  if(defined $dyn->{subprocess_invoc_id}){
+   $params->{current_settings}->{subprocess_invoc_id} = $dyn->{subprocess_invoc_id};
+  }
+
+  my $command =
+    $self->GetOperationDescription($invocation->{Operation});
+
+  unless(defined $command){
+    die "Command is not defined for $invocation->{Operation}";
+  }
+  if(defined $command){
+    $params->{command} = $command;
+  } else {
+    my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+    eval "require $class";
+    if($@){
+      print STDERR "$class failed to compile\n\t$@\n";
+      return;
+    }
+    unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+    my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+    $params->{Operations} = $self->{Commands};
+    $self->{sequence_no}++;
+
+    my $child_path = $self->child_path($name);
+    my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+    $self->StartJsChildWindow($child_obj);
+    return;
+  }
+
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "Class Posda::NewerProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "TableLevelPopup_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
 }
 
 sub InvokeOperation {
