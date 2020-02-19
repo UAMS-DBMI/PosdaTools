@@ -509,13 +509,14 @@ sub MakeMenuByMode{
   # of menu entires, and for some modes, additional entries
   # are appended on.
 
+print STDERR "#####################\nMode: $mode\n#####################\n";
   my $default_menu = $self->{MenuByMode}->{Default};
   my $mode_menu = $self->{MenuByMode}->{$mode};
   my $default_men_tail = $self->{MenuByMode}->{DefaultTail};
 
   my @final_menu;
 
-  if (not defined $mode_menu) {
+  if (!defined($mode_menu)) {
     @final_menu = @$default_menu;
   } else {
     @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);

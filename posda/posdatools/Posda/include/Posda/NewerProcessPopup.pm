@@ -156,10 +156,10 @@ sub DrawParameterForm{
 
 sub SetArg{
   my($self, $http, $dyn) = @_;
-print STDERR "In SetArg:\n";
-for my $i (keys %$dyn){
-  print STDERR "  dyn{$i} = '$dyn->{$i}'\n";
-}
+#print STDERR "In SetArg:\n";
+#for my $i (keys %$dyn){
+#  print STDERR "  dyn{$i} = '$dyn->{$i}'\n";
+#}
   if($self->{args}->{$dyn->{index}}->[1] ne $dyn->{value}){
     $self->{args}->{$dyn->{index}} = ["entered", $dyn->{value}];
   }
@@ -309,15 +309,15 @@ sub StartSubprocess{
 
   my $cmd_to_invoke = $self->{ExpandedCommand};
   $cmd_to_invoke =~ s/<\?bkgrnd_id\?>/$new_id/eg;
-  print STDERR "###########################\n";
-  print STDERR "NewCommandToInvoke: $cmd_to_invoke\n";
-  print STDERR "###########################\n";
+#  print STDERR "###########################\n";
+#  print STDERR "NewCommandToInvoke: $cmd_to_invoke\n";
+#  print STDERR "###########################\n";
   Dispatch::LineReaderWriter->write_and_read_all(
     $cmd_to_invoke,
     $self->{InputLines},
     $self->WhenCommandFinishes($new_id)
   );
-  print STDERR "Started Line reader\n";
+#  print STDERR "Started Line reader\n";
   $self->{mode} = "waiting";
 }
 
