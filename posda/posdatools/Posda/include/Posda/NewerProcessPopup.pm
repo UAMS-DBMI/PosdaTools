@@ -255,7 +255,7 @@ sub StartSubprocess{
     print $fh "$felds,";
   }
   print $fh  "Operation,";
-  for my $argKey (keys %{$self->{args}}){
+  for my $argKey (sort keys %{$self->{args}}){
     print $fh "$argKey,";
   }
   #data rows
@@ -265,7 +265,7 @@ sub StartSubprocess{
     if ($line1 == 0){
       $line1 = 1;
       print $fh "$self->{params}->{command}->{operation_name},";
-      for my $argValue (keys %{$self->{args}}){
+      for my $argValue (sort keys %{$self->{args}}){
         print $fh "$self->{args}->{$argValue}->[1],";
       }
     }
@@ -277,7 +277,7 @@ sub StartSubprocess{
       print $fh ",";
     }
     print $fh "$self->{params}->{command}->{operation_name},";
-    for my $argValue (keys %{$self->{args}}){
+    for my $argValue (sort keys %{$self->{args}}){
       print $fh "$self->{args}->{$argValue}->[1],";
     }
   }
