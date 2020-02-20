@@ -211,6 +211,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Make a Downloadable Directory",
         action =>  "MakeDownloadableDirectoryTp",
       },
+      {
+        caption => "Copy SOP Class and SOP instance from Meta-header",
+        action =>  "FixReallyBadDicomFilesInTimepoint",
+      },
     ],
   },
 );

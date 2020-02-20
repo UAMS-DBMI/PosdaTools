@@ -1,0 +1,6 @@
+:operation_name: FixReallyBadDicomFilesInTimepoint
+:command_line: FixReallyBadDicomFilesInTimepoint.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['ad_hoc_process']
+:can_chain: 
