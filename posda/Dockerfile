@@ -68,7 +68,8 @@ RUN cpanm --notest REST::Client \
 				   Modern::Perl \
 				   Method::Signatures::Simple \
 				   K/KE/KEN/xls2csv-1.07.tar.gz \
-				   Redis
+				   Redis \
+				   HTTP::Request::StreamingUpload
 
 
 # Swig is needed to build python wrapper for GDCM
