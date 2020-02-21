@@ -662,6 +662,8 @@ CreateActivityTimepointFromImportId	CreateActivityTimepointFromImportEventId.pl 
 SuggestPatientMappings	SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>	background_process		{}	\N
 CreateActivityTimepointFromImportEventId	CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<import_event_id>	{activity_timepoints}	\N
 UpdateOrCreatePatientMapping	UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <activity_id> "<comment>" "<overwrite>" <notify>	background_process	<in_patient_mapping>&<from_patient_id>&<collection>&<site>&<to_patient_id>&<to_patient_name>&<diagnosis_date>&<min_study_date>&<uid_root>&<batch_number>&<site_code>&<baseline_date>&<date_shift>	{patient_mapping}	\N
+InsertPrivateTagKb	InsertPrivateTagKb.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<pt_signature>&<pt_consensus_vr>&<pt_consensus_name>&<pt_consensus_vm>&<pt_consensus_description>&<pt_consensus_disposition>	{private_tag_kb}	\N
+FixReallyBadDicomFilesInTimepoint	FixReallyBadDicomFilesInTimepoint.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <notify>	background_process		{ad_hoc_process}	\N
 \.
 
 
