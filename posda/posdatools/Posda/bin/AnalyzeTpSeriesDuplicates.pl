@@ -49,7 +49,7 @@ unless($#ARGV == 2) { print $usage; exit }
 my($invoc_id, $activity_id, $notify) = @ARGV;
 # This is code which sets up the Background Process and Starts it
 print "Going to background to analyze\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 $background->Daemonize;
 my $start_analysis = time;
 my $ActInfo = Posda::ActivityInfo->new($activity_id);
