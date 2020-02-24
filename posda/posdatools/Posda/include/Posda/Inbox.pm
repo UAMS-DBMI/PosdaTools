@@ -159,7 +159,7 @@ B<Arguments:>
 
 =cut
 sub SendMail {
-  print STDERR( "####SENDING MAIL #####");
+  print STDERR "####SENDING MAIL #####";
   my ($self, $username, $report_id, $how, $activity_id) = @_;
   my $result = $self->execute_and_fetchone(qq{
     insert into user_inbox_content (
@@ -197,15 +197,16 @@ sub SendMail {
 
   $self->send_real_email_notification($username);
 
-  print STDERR( "####Time to file #####");
-  print STDERR( $activity_id );
+  print STDERR "\n####Time to file #####\n";
+  print STDERR $activity_id ;
+
   if (defined $activity_id){
     my $q = Query('InsertActivityInboxContent');
     $q->RunQuery(sub {}, sub{}, $activity_id, $result->{user_inbox_content_id});
   }
 
-  return $rows;
-}
+   return $rows;
+ }
 
 =head2 Forward($message_id, $username)
 
