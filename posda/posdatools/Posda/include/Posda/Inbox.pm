@@ -28,7 +28,7 @@ use Posda::Config ('Database', 'Config');
 use File::Slurp;
 use Regexp::Common "URI";
 use FileHandle;
-
+use Posda::DB 'Query';
 
 sub new {
   my ($class, $username) = @_;
@@ -159,7 +159,8 @@ B<Arguments:>
 
 =cut
 sub SendMail {
-  print STDERR "####SENDING MAIL #####";
+  print STDERR "\n####SENDING MAIL #####\n";
+
   my ($self, $username, $report_id, $how, $activity_id) = @_;
   my $result = $self->execute_and_fetchone(qq{
     insert into user_inbox_content (
@@ -197,26 +198,18 @@ sub SendMail {
 
   $self->send_real_email_notification($username);
 
-<<<<<<< HEAD
   print STDERR "\n####Time to file #####\n";
-  print STDERR $activity_id ;
+  print STDERR  $activity_id ;
+  print STDERR "\n####Time to file #####\n";
 
-=======
-  print STDERR( "####Time to file #####");
-  print STDERR( $activity_id );
->>>>>>> ab2904ff02b57840b0fe4a25779ef8800b132912
   if (defined $activity_id){
     my $q = Query('InsertActivityInboxContent');
     $q->RunQuery(sub {}, sub{}, $activity_id, $result->{user_inbox_content_id});
+    print STDERR "\n#### I tried to file it #####\n";
   }
 
-<<<<<<< HEAD
-   return $rows;
- }
-=======
-  return $rows;
+return $rows;
 }
->>>>>>> ab2904ff02b57840b0fe4a25779ef8800b132912
 
 =head2 Forward($message_id, $username)
 

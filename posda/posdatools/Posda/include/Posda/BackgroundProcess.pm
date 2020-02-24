@@ -263,9 +263,10 @@ sub Finish() {
         $self->{background_id}, $rpt->{file_id}, $h
     );
 
-    print STDERR "########### Time to send an email ##########";
+    print STDERR "\n########### Time to send an email ##########\n";
     print STDERR $self->{activity_id};
-
+    print STDERR "\n########### Time to send an email ##########\n";
+    
     if ($h eq 'Email') {
       # Add mail to user inbox
       my $inbox = Posda::Inbox->new('nobody');
