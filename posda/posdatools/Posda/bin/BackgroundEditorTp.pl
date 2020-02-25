@@ -15,8 +15,9 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 
-use Debug;
-my $dbg = sub { print STDERR @_ };
+
+#use Debug;
+#my $dbg = sub { print STDERR @_ };
 #my $dbg = sub { print @_ };
 $| = 1; # this should probably be at the top of the script, maybe in the lib?
 
@@ -536,6 +537,10 @@ sub look_for_private{
 #
 
 my $num_sops = keys %SopsToEdit;
+if($num_sops <= 0){
+  print "No sops found to edit\n";
+  die "No sops found to edit";
+}
 print "Found list of $num_sops to edit\n";
 print "Directory: $DestDir\n";
 print "Subprocess_invocation_id: $invoc_id\n";
@@ -568,6 +573,30 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
 
 {
   package Editor;
+  sub make_debug_http{
+    my($http) = @_;
+    my $sub = sub {
+    my($txt) = @_;
+      $http->queue($txt);
+    };
+    return $sub;
+  }
+  sub make_debug_fh{
+    my($fh) = @_;
+    my $sub = sub {
+      my($txt) = @_;
+      $fh->print($txt);
+    };
+    return $sub;
+  }
+  sub make_debug_bg{
+    my($bg) = @_;
+    my $sub = sub {
+      my($txt) = @_;
+      $bg->WriteToEmail($txt);
+    };
+    return $sub;
+  }
   use Posda::DB 'Query';
   use vars qw( @ISA );
   @ISA = ( "Dispatch::EventHandler" );
@@ -712,10 +741,10 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
       my $next_sop = shift @{$this->{list_of_sops}};
       my $next_struct = $this->{sop_hash}->{$next_sop};
       $this->{sops_in_process}->{$next_sop} = $next_struct;
-#print STDERR "Starting edit in BackgroundEditor.pl\n";
-#print STDERR "params: ";
-#Debug::GenPrint($dbg, $next_struct, 1);
-#print STDERR "\n";
+#$background->WriteToEmail("Starting edit in BackgroundEditor.pl\n");
+#$background->WriteToEmail("params: ");
+#Debug::GenPrint(make_debug_bg($background), $next_struct, 1);
+#$background->WriteToEmail("\n");
       $this->SerializedSubProcess($next_struct,
         "NewSubprocessEditor.pl 2>/dev/null",
 #        "NewSubprocessEditor.pl",

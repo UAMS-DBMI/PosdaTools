@@ -782,6 +782,14 @@ sub OpenNewTableLevelPopup{
     who_invoked_query => $query->{who},
   };
   $params->{invocation} = $invocation;
+  $params->{current_settings}->{notify} = $self->get_user;
+  if(defined $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
   if($self->{FilterSelection}->{$tb_id} eq "filtered"){
     $invocation->{is_filtered} = 1;
     $invocation->{filter_caption} = $self->TextRenderQueryFilter($query->{filter});
@@ -942,6 +950,14 @@ sub OpenBackgroundQuery {
     #SavedQueriesDir => $self->{SavedQueriesDir},
     BindingCache => $self->{BindingCache},
   };
+  $details->{current_settings} = { notify => $self->get_user };
+  if(defined($self->{ActivitySelected}) && $self->{ActivitySelected}){
+    $details->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $details->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
 
   my $child_path = $self->child_path("BackgroundQuery_$dyn->{query_name}");
   my $child_obj = Posda::BackgroundQuery->new($self->{session},
@@ -3035,7 +3051,8 @@ sub SelectFromCurrentWorkflow{
   });
   my @query_list = @{$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[1]};
   workflow_query:
-  for my $qn (@query_list){
+  for my $i (@query_list){
+    my $qn = $i->{query};
     my $qd;
     unless(exists $self->{NewQueriesByName}->{$qn}){
       eval  { $qd = PosdaDB::Queries->GetQueryInstance($qn) };
@@ -3050,10 +3067,12 @@ sub SelectFromCurrentWorkflow{
   $http->queue("<caption>$self->{WorkflowQueries}->{$self->{WorkflowSelected}}->[0]</caption>");
   $http->queue("<tr><th>name</th><th>params</th><th>columns returned</th>" .
     "<th>make query</th></tr>");
-  for my $i (@query_list){
+  for my $ii (@query_list){
+    my $cap  = $ii->{caption};
+    my $query_name = $ii->{query};
     $http->queue("<tr>");
-    my $q = $self->{NewQueriesByName}->{$i};
-    $http->queue("<td>$i</td>");
+    my $q = $self->{NewQueriesByName}->{$query_name};
+    $http->queue("<td>$query_name</td>");
     $http->queue("<td>");
     my $args = $q->{args};
     for my $i (0 .. $#{$args}){
@@ -3075,16 +3094,16 @@ sub SelectFromCurrentWorkflow{
     $http->queue("<td>");
     $self->NotSoSimpleButton($http, {
       op => "RunNewQuery",
-      id => "btn_foreground_$i",
+      id => "btn_foreground_$query_name ",
       caption => "foreground",
-      query_name => $i,
+      query_name => $query_name ,
       sync => "Update();",
     });
     $self->NotSoSimpleButton($http, {
       op => "OpenBackgroundQuery",
-      id => "btn_background_$i",
+      id => "btn_background_$query_name",
       caption => "background",
-      query_name => $i,
+      query_name => $query_name,
       sync => "Update();",
     });
     $http->queue("</td>");
@@ -3112,6 +3131,7 @@ sub DrawQueryListOrSelectedQuerySearch{
 sub RunNewQuery{
   my($self, $http, $dyn) = @_;
   $self->{SelectedNewQuery} = $dyn->{query_name};
+  $self->{Input} = {};
 }
 sub OpenNewChainedQuery{
   my($self, $http, $dyn) = @_;
@@ -3249,10 +3269,30 @@ sub DrawNewQuery{
   my $from_seen = 0;
   for my $arg (@{$query->{args}}){
     # preload the Input if arg is in cache
-    if (
+    if(
+      $arg eq "activity_id" &&
+      not defined $self->{Input}->{$arg} &&
+      defined $self->{ActivitySelected}
+    ){
+      $self->{Input}->{$arg} = $self->{ActivitySelected};
+    } elsif (
+      $arg eq "activity_timepoint_id" &&
+      not defined $self->{Input}->{$arg} &&
+      defined $self->{ActivitySelected}
+    ){
+      Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+        my($row) = @_;
+        $self->{Input}->{$arg} = $row->[0];
+      }, sub {}, $self->{ActivitySelected});
+    } elsif (
+      $arg eq "notify" &&
+      not defined $self->{Input}->{$arg}
+    ){
+      $self->{Input}->{$arg} = $self->get_user;
+    } elsif (
       defined $self->{BindingCache}->{$arg} and
       not defined $self->{Input}->{$arg}
-    ) {
+    ){
       $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
     }
     $self->RefreshEngine($http, $dyn, qq{

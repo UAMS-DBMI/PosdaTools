@@ -201,6 +201,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "CondensedActivityTimepointReport",
       },
     ],
+    queries => [
+       {
+        caption => "Activity Report Queries",
+        operation => "SelectQueryGroup",
+        query_list_name => "ActivityReports",
+      },
+    ],
   },
   {
     id => "14_other",
@@ -223,36 +230,98 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   FindImportEvents => [
     "Suggested Queries for Import Events",
     [
-      "ImportEventsByMatchingName",
-      "ImportEventsByMatchingNameAndType",
-      "ImportEventsWithTypeAndPatientId",
+      {
+        caption => "ImportEventsByMatchingName",
+        query => "ImportEventsByMatchingName",
+      },
+      {
+        caption => "ImportEventsByMatchingNameAndType",
+        query => "ImportEventsByMatchingNameAndType",
+      },
+      {
+        caption =>"ImportEventsWithTypeAndPatientId",
+        query =>"ImportEventsWithTypeAndPatientId",
+      },
     ],
   ],
   FindSeries => [
     "Suggested Queries for Series",
     [
-      "SeriesByMatchingImportEventsWithEventInfo",
-      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
-      "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-      "SeriesByMatchingImportEventsWithEventInfoCondensed",
-      "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      {
+        caption => "SeriesByMatchingImportEventsWithEventInfo",
+        query => "SeriesByMatchingImportEventsWithEventInfo",
+      },
+      {
+        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+      },
+      {
+        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
+        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
+      },
+      {
+        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
+      },
+      {
+        caption => "SeriesByMatchingImportEventsWithEventInfoCondensed",
+        query => "SeriesByMatchingImportEventsWithEventInfoCondensed",
+      },
+      {
+        caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+        query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
     ],
   ],
   RunCountChecks => [
     "Suggested Queries for Count Checks",
     [
-      "CountsByCollectionDateRange",
-      "CountsByCollectionSiteDateRange",
-      "CountsByPatientId",
-      "PatientStatusCounts",
-      "CountsByCollectionLike",
+      {
+	caption => "CountsByCollectionDateRange",
+        query => "CountsByCollectionDateRange",
+      },
+      {
+        caption => "CountsByCollectionSiteDateRange",
+        query => "CountsByCollectionSiteDateRange",
+      },
+      {
+        caption => "CountsByPatientId",
+        query => "CountsByPatientId",
+      },
+      {
+        caption => "PatientStatusCounts",
+        query => "PatientStatusCounts",
+      },
+      {
+        caption => "CountsByCollectionLike",
+        query => "CountsByCollectionLike",
+      },
     ],
   ],
   VisualReviewStatus => [
     "Suggested Queries for Visual Review Status",
     [
-      "VisualReviewScanInstances",
+      {
+        caption => "VisualReviewScanInstances",
+        query => "VisualReviewScanInstances",
+      },
+    ],
+  ],
+  ActivityReports => [
+    "Suggested Queries for Activity Timepoint Reports",
+    [
+      {
+        caption => "VerboseActivityTimepointReport",
+        query => "VerboseActivityTimepointReport",
+      },
+      {
+        caption => "FilesSeriesNumFIlesAndSopsVisibilityInTimepoint",
+        query => "FilesSeriesNumFIlesAndSopsVisibilityInTimepoint",
+      },
+      {
+        caption => "TimepointCreationReport",
+        query => "TimepointCreationReport",
+      },
     ],
   ],
 );

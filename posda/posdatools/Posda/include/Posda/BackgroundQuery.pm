@@ -21,6 +21,7 @@ sub SpecificInitialize {
   #$self->{SavedQueriesDir} = "$params->{SavedQueries}";
   $self->{user} = $params->{user};
   $self->{BindingCache} = $params->{BindingCache};
+  $self->{params} = $params;
   $self->{mode} = "Initial";
 }
 
@@ -136,9 +137,12 @@ sub InitialContentResponse {
 	$http->queue("<tr><td>Query args:</td></tr>");
         for my $arg (@{$self->{query}->{args}}){
           # preload the Input if arg is in cache
-          if (defined $self->{BindingCache}->{$arg} and
-              not defined $self->{Input}->{$arg}) {
-            $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
+          if (not defined $self->{Input}->{$arg}){
+            if(defined $self->{params}->{current_settings}->{$arg}){
+              $self->{Input}->{$arg} = $self->{params}->{current_settings}->{$arg};
+            } elsif (defined $self->{BindingCache}->{$arg}){
+              $self->{Input}->{$arg} = $self->{BindingCache}->{$arg};
+            }
           }
           $self->RefreshEngine($http, $dyn, qq{
             <tr>
