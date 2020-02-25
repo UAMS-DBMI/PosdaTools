@@ -287,7 +287,7 @@ sub StartSubprocess{
   my $spreadsheet_f_id;
   my $resp = Posda::File::Import::insert_file($tempfilename);
   if ($resp->is_error){
-      die $resp->error;
+      die $resp->message;
   }else{
     $spreadsheet_f_id =  $resp->file_id;
   }

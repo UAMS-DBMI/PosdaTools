@@ -721,7 +721,23 @@ sub OpenTableFreePopup{
   my($self, $http, $dyn) = @_;
   $dyn->{operation} = $dyn->{cap_};
   $self->{debug_dyn} = $dyn;
-  return $self->InvokeNewOperation($http, $dyn);
+  if($dyn->{"class_"} eq "Posda::NewerProcessPopup"){
+    return $self->InvokeNewOperation($http, $dyn);
+  }
+  my $parms = { button => $dyn->{cap_}};
+  for my $i (keys %{$dyn}){
+    unless(
+      $i eq "cap_" || $i eq "class_" ||
+      $i eq "obj_path" || $i eq "op" || $i eq "ts"
+    ){
+      $parms->{$i} = $dyn->{$i};
+    }
+  }
+  $table_free_seq += 1;
+  my $unique_val = "seq_$table_free_seq";
+
+  my $class = $dyn->{class_};
+  $self->OpenPopup($class, "${class}_FullTable_$unique_val", $parms);
 }
 
 sub OpenPopup {
