@@ -8,7 +8,6 @@ use Posda::DB 'Query';
 use Posda::DB::PosdaFilesQueries;
 use Posda::File::Import 'insert_file';
 
-
 use File::Temp 'tempfile';
 
 use DBI;
@@ -246,52 +245,62 @@ sub StartSubprocess{
   my $operation_name = $self->{params}->{command}->{operation_name};;
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
+  my $spreadsheet_f_id;
 
-  #create spreadsheet
-  my ($fh,$tempfilename) = tempfile();
+  #Did this operation come from a spreasheet?
+  if ($self->{params}->{invocation}->{type} eq "UploadedUnnamedSpreadsheet" || $self->{params}->{invocation}->{type} eq "UploadedNamedSpreadsheet"){
 
-  #column row
-  for my $felds (@{$self->{params}->{command}->{fields}}) {
-    print $fh "$felds,";
-  }
-  print $fh  "Operation,";
-  for my $argKey (sort keys %{$self->{args}}){
-    print $fh "$argKey,";
-  }
-  #data rows
-  my $line1 = 0;
-  for $datalines (@{$self->{InputLines}}) {
-    print $fh "\n$datalines,";
-    if ($line1 == 0){
-      $line1 = 1;
+    # it came from a spreadsheet, so associate it with that one
+    $spreadsheet_f_id = $self->{params}->{invocation}->{file_id};
+
+  }else{
+    # it came from a button, so we create a spreasheet to be able to rerun the process or create worker nodes
+
+    #create spreadsheet
+    my ($fh,$tempfilename) = tempfile();
+
+    #column row
+    for my $felds (@{$self->{params}->{command}->{fields}}) {
+      print $fh "$felds,";
+    }
+    print $fh  "Operation,";
+    for my $argKey (sort keys %{$self->{args}}){
+      print $fh "$argKey,";
+    }
+    #data rows
+    my $line1 = 0;
+    for $datalines (@{$self->{InputLines}}) {
+      print $fh "\n$datalines,";
+      if ($line1 == 0){
+        $line1 = 1;
+        print $fh "$self->{params}->{command}->{operation_name},";
+        for my $argValue (sort keys %{$self->{args}}){
+          print $fh "$self->{args}->{$argValue}->[1],";
+        }
+      }
+    }
+    #data row when there are no input lines
+    if ($#{$self->{InputLines}} == -1){
+      print $fh "\n";
+      for my $felds (@{$self->{params}->{command}->{fields}}) {
+        print $fh ",";
+      }
       print $fh "$self->{params}->{command}->{operation_name},";
       for my $argValue (sort keys %{$self->{args}}){
         print $fh "$self->{args}->{$argValue}->[1],";
       }
     }
-  }
-  #data row when there are no input lines
-  if ($#{$self->{InputLines}} == -1){
-    print $fh "\n";
-    for my $felds (@{$self->{params}->{command}->{fields}}) {
-      print $fh ",";
-    }
-    print $fh "$self->{params}->{command}->{operation_name},";
-    for my $argValue (sort keys %{$self->{args}}){
-      print $fh "$self->{args}->{$argValue}->[1],";
-    }
-  }
-  close $fh;
+    close $fh;
 
-  #call API to import
-  my $spreadsheet_f_id;
-  my $resp = Posda::File::Import::insert_file($tempfilename);
-  if ($resp->is_error){
-      die $resp->message;
-  }else{
-    $spreadsheet_f_id =  $resp->file_id;
+    #call API to import
+    my $resp = Posda::File::Import::insert_file($tempfilename);
+    if ($resp->is_error){
+        die $resp->error;
+    }else{
+      $spreadsheet_f_id =  $resp->file_id;
+    }
+    unlink $tempfilename;
   }
-  unlink $tempfilename;
 
   #save to spreadsheet uploaded
   my $spreadsheet_table_id = PosdaDB::Queries::record_spreadsheet_upload(1, $invoking_user, $spreadsheet_f_id, ($#{$self->{InputLines}}+1));
