@@ -198,14 +198,15 @@ sub SendMail {
 
   $self->send_real_email_notification($username);
 
-  print STDERR "\n####Time to file #####\n";
-  print STDERR  $activity_id ;
-  print STDERR "\n####Time to file #####\n";
+  #print STDERR "\n####Time to file #####\n";
+  #print STDERR  $activity_id ;
+  #print STDERR "\n####Time to file #####\n";
 
   if (defined $activity_id){
     my $q = Query('InsertActivityInboxContent');
     $q->RunQuery(sub {}, sub{}, $activity_id, $result->{user_inbox_content_id});
-    print STDERR "\n#### I tried to file it #####\n";
+    #print STDERR "\n#### I tried to file it #####\n";
+    $self->SetFiled($result->{user_inbox_content_id});
   }
 
    return $rows;

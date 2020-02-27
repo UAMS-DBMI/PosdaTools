@@ -444,15 +444,25 @@ sub InboxItem {
       message_id => $message_id
     });
   }
+  my $alreadyfiled = $self->execute_and_fetchone(qq{
+    select activity_id
+    from activity_inbox_content
+    where user_inbox_content_id  = ?
+  }, [$message_id]);
 
-  if (not defined $msg_details->{date_dismissed}) {
+  if (not defined $msg_details->{date_dismissed} and not defined $alreadyfiled ) {
     $self->SelfConfirmingButton($http, {
       uniq_id => 'file_button',
       caption => 'File this message',
       op => 'FileInboxItemButtonClick',
       message_id => $message_id
     });
+  }elsif (defined $alreadyfiled){
+    $http->queue(qq{
+      <p> This message has already been filed.</p>
+    });
   }
+
 
   $self->DrawForwardForm($http, $dyn);
   # $self->SelfConfirmingButton($http, {
@@ -2644,7 +2654,7 @@ sub SelectFromCurrentForeground{
       $e->{status} eq "done" ||
       $e->{status} eq "error" ||
       $e->{status} eq "ended" ||
-      $e->{status} eq "aborted" 
+      $e->{status} eq "aborted"
     ){
       $self->NotSoSimpleButton($http, {
         op => "DeleteCurrentForegroundQuery",
