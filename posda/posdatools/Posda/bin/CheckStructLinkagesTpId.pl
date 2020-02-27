@@ -24,7 +24,7 @@ unless($#ARGV == 2){
 
 my ($invoc_id, $act_id, $notify) = @ARGV;
 
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 
 print "Going straight to background\n";
 
@@ -277,7 +277,7 @@ sub SopsInVol{
 }
 sub SopsLinkedToRoi{
   #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
+  #    ->{<sop_inst_uid>}->{<sop_class_uid>} =
   #  [ <num_contours>, <num_points> ];
   my($RowInfo) = @_;
   my %RoisPerSopByContourType;
@@ -299,7 +299,7 @@ sub SopsLinkedToRoi{
 }
 sub InternalLinkages{
   #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
+  #    ->{<sop_inst_uid>}->{<sop_class_uid>} =
   #  [ <num_contours>, <num_points> ];
   #  $RowInfo{SopsInVolStruct}->{$sop_inst_uid} = [
   #    $sop_class, $study_inst, $series_inst, $for_uid
@@ -352,7 +352,7 @@ sub InternalLinkages{
             "different class in volume";
           $Errors{$mess} = 1;
           $errors_logged += 1;
-        } 
+        }
       }
     }
   }
@@ -479,7 +479,7 @@ sub VolumeFilesInPosda{
       my($frame_of_ref, $iop, $ipp, $pixel_spacing,
         $pixel_rows, $pixel_columns) = @$row;
       $SopsFoundInVol{$sop} = [
-        $frame_of_ref, $iop, $ipp, $pixel_spacing, 
+        $frame_of_ref, $iop, $ipp, $pixel_spacing,
         $pixel_rows, $pixel_columns
       ];
       $num_rows += 1;
@@ -488,7 +488,7 @@ sub VolumeFilesInPosda{
     if($num_rows == 1) {$sops_found += 1}
   }
   $RowInfo->{SopInfoFoundInVolPosda} = \%SopsFoundInVol;
-  $RowInfo->{VolumeFilesInPosda} = 
+  $RowInfo->{VolumeFilesInPosda} =
     "Found: $sops_found; Not found: $sops_not_found";
 }
 sub VolumeFilesInPublic{
@@ -511,7 +511,7 @@ sub VolumeFilesInPublic{
       my($frame_of_ref, $iop, $ipp, $pixel_spacing,
         $pixel_rows, $pixel_columns) = @$row;
       $SopsFoundInVol{$sop} = [
-        $frame_of_ref, $iop, $ipp, $pixel_spacing, 
+        $frame_of_ref, $iop, $ipp, $pixel_spacing,
         $pixel_rows, $pixel_columns
       ];
       $num_rows += 1;
@@ -520,12 +520,12 @@ sub VolumeFilesInPublic{
     if($num_rows >= 1) {$sops_found += 1}
   }
   $RowInfo->{SopInfoFoundInVolPublic} = \%SopsFoundInVol;
-  $RowInfo->{VolumeFilesInPublic} = 
+  $RowInfo->{VolumeFilesInPublic} =
     "Found: $sops_found; Not found: $sops_not_found";
 }
 sub RoiFilesInPosda{
   #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
+  #    ->{<sop_inst_uid>}->{<sop_class_uid>} =
   #  [ <num_contours>, <num_points> ];
   my($RowInfo) = @_;
   my %SopsFoundInRoi;
@@ -539,7 +539,7 @@ sub RoiFilesInPosda{
         my($frame_of_ref, $iop, $ipp, $pixel_spacing,
           $pixel_rows, $pixel_columns) = @$row;
         $SopsFoundInRoi{$type}->{$sop} = [
-          $frame_of_ref, $iop, $ipp, $pixel_spacing, 
+          $frame_of_ref, $iop, $ipp, $pixel_spacing,
           $pixel_rows, $pixel_columns
         ];
         $num_rows += 1;
@@ -572,7 +572,7 @@ sub RoiFilesInPosda{
 }
 sub RoiFilesInPublic{
   #  $RowInfo{RoisPerSopByContourType}->{<contour_type>}
-  #    ->{<sop_inst_uid>}->{<sop_class_uid>} = 
+  #    ->{<sop_inst_uid>}->{<sop_class_uid>} =
   #  [ <num_contours>, <num_points> ];
   my($RowInfo) = @_;
   my %SopsFoundInRoi;
@@ -586,7 +586,7 @@ sub RoiFilesInPublic{
         my($frame_of_ref, $iop, $ipp, $pixel_spacing,
           $pixel_rows, $pixel_columns) = @$row;
         $SopsFoundInRoi{$type}->{$sop} = [
-          $frame_of_ref, $iop, $ipp, $pixel_spacing, 
+          $frame_of_ref, $iop, $ipp, $pixel_spacing,
           $pixel_rows, $pixel_columns
         ];
         $num_rows += 1;
