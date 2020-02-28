@@ -25,7 +25,7 @@ my $start;
 #############################
 # This is code which sets up the Background Process and Starts it
 print "Going to background to create report\n";
-my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $back->Daemonize;
 
 my $act = Posda::ActivityInfo->new($act_id);
@@ -39,7 +39,7 @@ my $TpHierarchy = $act->MakeFileHierarchyFromInfo($FileInfo);
 #print "\n";
 $back->WriteToEmail("ScriptInLatestActivityNotInPublic.pl\n".
   "activity_id: $act_id\n" .
-  "time_point_id: $tp_id\n"); 
+  "time_point_id: $tp_id\n");
 my %SopsInPosda;
 for my $f (keys %$FileInfo){
   my $i = $FileInfo->{$f};

@@ -193,6 +193,7 @@ sub SpecificInitialize {
 
   $self->BackgroundMonitorForEmail;
 }
+
 sub StoreBindingCacheInDb{
   my($self) = @_;
   my $bc = $self->RetrieveBindingCacheFromDb;
@@ -444,25 +445,6 @@ sub InboxItem {
       message_id => $message_id
     });
   }
-  my $alreadyfiled = $self->execute_and_fetchone(qq{
-    select activity_id
-    from activity_inbox_content
-    where user_inbox_content_id  = ?
-  }, [$message_id]);
-
-  if (not defined $msg_details->{date_dismissed} and not defined $alreadyfiled ) {
-    $self->SelfConfirmingButton($http, {
-      uniq_id => 'file_button',
-      caption => 'File this message',
-      op => 'FileInboxItemButtonClick',
-      message_id => $message_id
-    });
-  }elsif (defined $alreadyfiled){
-    $http->queue(qq{
-      <p> This message has already been filed.</p>
-    });
-  }
-
 
   $self->DrawForwardForm($http, $dyn);
   # $self->SelfConfirmingButton($http, {
@@ -471,6 +453,19 @@ sub InboxItem {
   #   op => 'ForwardInboxItemButtonClick',
   #   message_id => $message_id
   # });
+
+  if (not defined $msg_details->{date_dismissed} and $self->{inbox}->IsItFiled($message_id) == 0 ) {
+    $self->SelfConfirmingButton($http, {
+      uniq_id => 'file_button',
+      caption => 'File this message',
+      op => 'FileInboxItemButtonClick',
+      message_id => $message_id
+    });
+  }elsif ($self->{inbox}->IsItFiled($message_id) == 1){
+    $http->queue(qq{
+      <p> This message has already been filed.</p>
+    });
+  }
 
   my $recent_operations = $self->{inbox}->RecentOperations($message_id);
   $http->queue(qq{

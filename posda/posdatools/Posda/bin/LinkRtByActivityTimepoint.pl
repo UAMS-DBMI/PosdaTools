@@ -25,7 +25,7 @@ my $start = time;
 #############################
 # This is code which sets up the Background Process and Starts it
 print "Going to background for processing\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 ####################################################
 # Get Structure Sets In Latest Timepoint
@@ -69,7 +69,7 @@ for my $ss_id (keys %StructureSets){
     my($row) = @_;
     my($sop_inst) = @$row;
     $VolumeBySs{$ss_id}->{$sop_inst} = 1;
-  }, sub {}, $ss_id); 
+  }, sub {}, $ss_id);
   $get_linked->RunQuery(sub{
     my($row) = @_;
     my($sop_inst) = @$row;
@@ -81,7 +81,7 @@ for my $ss_id (keys %StructureSets){
       $VolumeErrorsBySs{$ss_id} += 1;
       $VolumeBySs{$ss_id}->{$sop_inst} = 1;
     }
-  }, sub {}, $ss_id); 
+  }, sub {}, $ss_id);
   my %sops_in_posda;
   my %sops_in_public;
   my %sops_not_found;

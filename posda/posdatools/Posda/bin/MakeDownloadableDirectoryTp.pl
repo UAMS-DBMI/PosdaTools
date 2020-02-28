@@ -113,7 +113,7 @@ if($errors > 0){
 # This is code which sets up the Background Process and Starts it
 my $forground_time = time - $start;
 print "Going to background to link files  after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 $background->Daemonize;
 my $start_creation = time;
 ### Linking Directories Here

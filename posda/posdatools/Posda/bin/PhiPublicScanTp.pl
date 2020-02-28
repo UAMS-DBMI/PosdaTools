@@ -56,7 +56,7 @@ my $description = "Public Scan of activity $act_id, tp $OldActTpId ($notify)";
 my $num_series = @SeriesList;
 print "Found $num_series\n";
 print "Background to do scan: \"$description\"\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 print "Going to background\n";
 $background->Daemonize;
 my $start_time = time;
@@ -82,4 +82,3 @@ $background->PrepareBackgroundReportBasedOnQuery(
 #  "p_op,q_arg1,q_arg2,Operation,scan_id,notify\r\n");
 #$rpt3->print(",,,,,,,,,ProposeEdits,$id,$notify\r\n");
 $background->Finish;
-

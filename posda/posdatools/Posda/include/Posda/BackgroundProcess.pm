@@ -262,10 +262,6 @@ sub Finish() {
     my $report = $add_report_query->FetchOneHash(
         $self->{background_id}, $rpt->{file_id}, $h
     );
-
-    print STDERR "\n########### Time to send an email ##########\n";
-    print STDERR $self->{activity_id};
-    print STDERR "\n########### Time to send an email ##########\n";
     
     if ($h eq 'Email') {
       # Add mail to user inbox

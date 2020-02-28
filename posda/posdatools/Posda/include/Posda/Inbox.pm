@@ -159,7 +159,7 @@ B<Arguments:>
 
 =cut
 sub SendMail {
-  print STDERR "\n####SENDING MAIL #####\n";
+  #print STDERR "\n####SENDING MAIL #####\n";
 
   my ($self, $username, $report_id, $how, $activity_id) = @_;
   my $result = $self->execute_and_fetchone(qq{
@@ -198,15 +198,10 @@ sub SendMail {
 
   $self->send_real_email_notification($username);
 
-  #print STDERR "\n####Time to file #####\n";
-  #print STDERR  $activity_id ;
-  #print STDERR "\n####Time to file #####\n";
-
+  #autofile
   if (defined $activity_id){
     my $q = Query('InsertActivityInboxContent');
     $q->RunQuery(sub {}, sub{}, $activity_id, $result->{user_inbox_content_id});
-    #print STDERR "\n#### I tried to file it #####\n";
-    $self->SetFiled($result->{user_inbox_content_id});
   }
 
    return $rows;
@@ -475,5 +470,22 @@ sub GetAllUsernames {
     from user_inbox
   });
 }
+=head2 IsItFiled()
 
+Return a 1 if the message has already been filed
+
+=cut
+sub IsItFiled {
+  my ($self,$message_id) = @_;
+  my $alreadyfiled = $self->execute_and_fetchone(qq{
+    select activity_id
+    from activity_inbox_content
+    where user_inbox_content_id  = ?
+  }, [$message_id]);
+  if(defined $alreadyfiled){
+    return 1;
+  }else{
+    return 0;
+  }
+}
 1;
