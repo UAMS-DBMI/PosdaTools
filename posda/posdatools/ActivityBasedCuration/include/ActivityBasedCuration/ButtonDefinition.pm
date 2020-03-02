@@ -410,7 +410,7 @@ EOF
   },
   qbp_HideEquivalenceClasses => {
     caption => "Hide Equivalence Classes",
-    spreadsheet_operation => "HideEquivalenceClasses",
+    spreadsheet_operation => "HideEquivalenceClassesTp",
     operation => "OpenNewTableLevelPopup",
     obj_class => "Posda::NewerProcessPopup",
     queries => {
