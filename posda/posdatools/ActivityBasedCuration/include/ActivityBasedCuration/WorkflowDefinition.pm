@@ -159,6 +159,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "LinkRtFromTimepoint",
       },
     ],
+    queries => [
+       {
+        caption => "Series Linked to RtStructs",
+        operation => "SelectQueryGroup",
+        query_list_name => "LinkedRtStructs",
+      },
+    ],
   },
   {
     id => "12_send",
@@ -321,6 +328,15 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "TimepointCreationReport",
         query => "TimepointCreationReport",
+      },
+    ],
+  ],
+  LinkedRtStructs => [
+    "Suggested Queries for Series with Linked RT Structs",
+    [
+      {
+        caption => "LinkedSeriesForStructsInTimepoint",
+        query => "LinkedSeriesForStructsInTimepoint",
       },
     ],
   ],
