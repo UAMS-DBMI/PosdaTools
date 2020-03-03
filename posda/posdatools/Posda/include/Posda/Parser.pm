@@ -1088,6 +1088,8 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "SH"){
     return("text", $value_s);
+  } elsif($from_vr eq "PN" && $to_vr eq "LO"){
+    return("text", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "SH"){
     my $ref = ref($value_s);
     if($ref eq "ARRAY"){
