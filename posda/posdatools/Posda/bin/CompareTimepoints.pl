@@ -4,7 +4,7 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 my $usage = <<EOF;
 CompareTimepoints.pl <?bkgrnd_id?> <activity_id> <from_timepoint_id> <to_timepoint_id> <notify>
-or 
+or
 CompareTimepoints.pl -h
 
 Expects no input on STDIN
@@ -23,7 +23,7 @@ print "Going to background to compare time points for activity $act_id\n" ,
   "from:   $from_tp\n" .
   "  to:   $to_tp\n" .
   "notify: $notify\n";
-my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $back->Daemonize;
 $back->WriteToEmail("In background to compare time points for activity $act_id\n" ,
   "from:   $from_tp\n" .
@@ -33,7 +33,7 @@ my %AllFiles;
 my %FromFiles;
 Query("FilesSeriesSopsVisibilityInTimepoint")->RunQuery(sub {
   my($row) = @_;
-  my($file_id, $pat_id, $stdy_id, $ser_id, $sop, 
+  my($file_id, $pat_id, $stdy_id, $ser_id, $sop,
     $coll, $site, $vis, $mod, $type) = @$row;
   unless(defined $vis) { $vis = "<undef>" }
   $AllFiles{$file_id} = {

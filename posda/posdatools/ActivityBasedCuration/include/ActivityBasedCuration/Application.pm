@@ -2358,14 +2358,18 @@ sub CompareTimepoints{
   my $class = "Posda::NewerProcessPopup";
   eval "require $class";
   my $params = {
-    button => "CompareTimepoints",
-    from_timepoint_id => $self->{NewActivityTimeline}->{from},
-    to_timepoint_id => $self->{NewActivityTimeline}->{to},
-    activity_id => $self->{ActivitySelected}
+    command => $self->GetOperationDescription("CompareTimepoints"),
+    current_settings => {
+      button => "CompareTimepoints",
+      from_timepoint_id => $self->{NewActivityTimeline}->{from},
+      to_timepoint_id => $self->{NewActivityTimeline}->{to},
+      activity_id => $self->{ActivitySelected},
+      notify => $self->get_user
+    }
   };
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
   if($@){
-    print STDERR "Posda::TestProcessPopup failed to compile\n\t$@\n";
+    print STDERR "Posda::NewerProcessPopup failed to compile\n\t$@\n";
     return;
   }
   my $name = "CompareTimepoint_$self->{sequence_no}";
@@ -2676,7 +2680,7 @@ sub SelectFromCurrentForeground{
       $e->{status} eq "done" ||
       $e->{status} eq "error" ||
       $e->{status} eq "ended" ||
-      $e->{status} eq "aborted" 
+      $e->{status} eq "aborted"
     ){
       $self->NotSoSimpleButton($http, {
         op => "DeleteCurrentForegroundQuery",
