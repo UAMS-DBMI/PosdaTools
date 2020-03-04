@@ -94,7 +94,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "7_vr",
+    id => "7_dciodvfy",
+    name => "Verify DICOM IOD (Dciodvfy)",
+    description => "Verify the IOD is correct for DICOM standard.",
+    operations => [
+      {
+        caption => "Dciodvfy",
+        action =>  "BackgroundDciodvfyTp",
+      },
+    ],
+  },
+  {
+    id => "8_vr",
     name => "Visual Review",
     description => "Examine the pixel data for Personal Health Information.",
     operations => [
@@ -110,17 +121,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         operation => "SelectQueryGroup",
         query_list_name => "VisualReviewStatus",
       }
-    ],
-  },
-  {
-    id => "8_dciodvfy",
-    name => "Verify DICOM IOD (Dciodvfy)",
-    description => "Verify the IOD is correct for DICOM standard.",
-    operations => [
-      {
-        caption => "Dciodvfy",
-        action =>  "BackgroundDciodvfyTp",
-      },
     ],
   },
   {
