@@ -1,0 +1,6 @@
+:operation_name: BackgroundHideFilesWithStatusTp
+:command_line: BackgroundHideFilesWithStatusTp.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <file_id>&<visibility>
+:tags: ['update_timepoint', 'activities']
+:can_chain: 

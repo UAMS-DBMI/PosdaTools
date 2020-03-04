@@ -1,0 +1,6 @@
+:operation_name: FindCorrespondingPosdaPublicPath
+:command_line: CorrespondingFilesPosdaPublic.pl <?bkgrnd_id?> <notify>
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['public_posda_compare']
+:can_chain: 

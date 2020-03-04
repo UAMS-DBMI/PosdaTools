@@ -1,0 +1,6 @@
+:operation_name: HideFilesBySeriesAndPatient
+:command_line: BackgroundHideFilesBySeriesAndPatient.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<series_instance_uid>
+:tags: ['hide_files']
+:can_chain: 

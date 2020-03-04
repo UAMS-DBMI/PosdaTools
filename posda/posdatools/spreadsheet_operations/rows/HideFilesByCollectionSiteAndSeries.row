@@ -1,0 +1,6 @@
+:operation_name: HideFilesByCollectionSiteAndSeries
+:command_line: HideFilesByCollectionSiteAndSeries.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <collection>&<site>&<series_instance_uid>
+:tags: ['update_timepoint', 'activities']
+:can_chain: 
