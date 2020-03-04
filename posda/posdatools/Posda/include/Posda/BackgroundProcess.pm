@@ -262,14 +262,15 @@ sub Finish() {
     my $report = $add_report_query->FetchOneHash(
         $self->{background_id}, $rpt->{file_id}, $h
     );
-
+    
     if ($h eq 'Email') {
       # Add mail to user inbox
       my $inbox = Posda::Inbox->new('nobody');
       $inbox->SendMail(
         $self->{notify},
         $report->{background_subprocess_report_id},
-        'Posda::BackgroundProcess'
+        'Posda::BackgroundProcess',
+        $self->{activity_id}
       );
     }
 

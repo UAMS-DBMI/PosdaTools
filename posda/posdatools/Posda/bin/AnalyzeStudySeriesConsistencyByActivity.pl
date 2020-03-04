@@ -95,7 +95,7 @@ my $num_tp_studiea = keys %StudiesInOldTp;
 print "Found $num_tp_studiea studies, $num_tp_series series\n";
 my $forground_time = time - $start;
 print "Going to background to analyze after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 $background->WriteToEmail("Checking Study/Series Consistency by Activity\n");
 $background->WriteToEmail("Activity id: $act_id\n");
@@ -119,7 +119,7 @@ Query("FindInconsistentSeriesIgnoringTimeAll")->RunQuery(sub{
       'protocol_name', 'series_description', 'operators_name',
       'body_part_examined', 'patient_position', 'smallest_pixel_value',
       'largest_pixel_value', 'performed_procedure_step_id',
-      'performed_procedure_step_start_date', 
+      'performed_procedure_step_start_date',
       'performed_procedure_step_start_time', 'performed_procedure_step_desc',
       'performed_procedure_step_comments');
     for my $i (@attr_names) {

@@ -193,6 +193,7 @@ sub SpecificInitialize {
 
   $self->BackgroundMonitorForEmail;
 }
+
 sub StoreBindingCacheInDb{
   my($self) = @_;
   my $bc = $self->RetrieveBindingCacheFromDb;
@@ -445,15 +446,6 @@ sub InboxItem {
     });
   }
 
-  if (not defined $msg_details->{date_dismissed}) {
-    $self->SelfConfirmingButton($http, {
-      uniq_id => 'file_button',
-      caption => 'File this message',
-      op => 'FileInboxItemButtonClick',
-      message_id => $message_id
-    });
-  }
-
   $self->DrawForwardForm($http, $dyn);
   # $self->SelfConfirmingButton($http, {
   #   uniq_id => 'forward_button',
@@ -461,6 +453,19 @@ sub InboxItem {
   #   op => 'ForwardInboxItemButtonClick',
   #   message_id => $message_id
   # });
+
+  if (not defined $msg_details->{date_dismissed} and $self->{inbox}->IsItFiled($message_id) == 0 ) {
+    $self->SelfConfirmingButton($http, {
+      uniq_id => 'file_button',
+      caption => 'File this message',
+      op => 'FileInboxItemButtonClick',
+      message_id => $message_id
+    });
+  }elsif ($self->{inbox}->IsItFiled($message_id) == 1){
+    $http->queue(qq{
+      <p class="alert alert-success">This message has already been filed.</p>
+    });
+  }
 
   my $recent_operations = $self->{inbox}->RecentOperations($message_id);
   $http->queue(qq{
@@ -2676,7 +2681,7 @@ sub SelectFromCurrentForeground{
       $e->{status} eq "done" ||
       $e->{status} eq "error" ||
       $e->{status} eq "ended" ||
-      $e->{status} eq "aborted" 
+      $e->{status} eq "aborted"
     ){
       $self->NotSoSimpleButton($http, {
         op => "DeleteCurrentForegroundQuery",

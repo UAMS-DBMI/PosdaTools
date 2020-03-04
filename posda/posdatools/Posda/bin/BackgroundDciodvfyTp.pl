@@ -73,7 +73,7 @@ my $num_series = keys %SeriesInTp;
 my $description = "Dciodvy scan activity $act_id, timpoint: $ActTpId";
 my $date = `date`;
 #  print a message and go to background
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 $background->WriteToEmail("$date\nStarting Simple PHI Scan\n" .
   "Description: $description\n" .
@@ -89,7 +89,7 @@ my $update_inst = PosdaDB::Queries->GetQueryInstance(
   "SetDciodvfyScanInstanceNumScanned");
 my $finalize_inst = PosdaDB::Queries->GetQueryInstance(
   "FinalizeDciodvfyScanInstance");
-$create_scan->RunQuery(sub {}, sub {}, 
+$create_scan->RunQuery(sub {}, sub {},
   $type_of_unit, $description, $num_series);
 my $scan_id;
 $get_scan_id->RunQuery(sub {
@@ -214,10 +214,10 @@ sub ConvertString{
     return "Tag: $error_tag : has bad value multiplicity : $error_value vs $error_index : per $error_module";
   } elsif($error_type eq 'CantBeNegative'){
     return "Tag: $error_tag : has illegal negative value: $error_value\n";
-  } elsif($error_type eq 'AttributesPresentWhenConditionNotSatisfied'){ 
+  } elsif($error_type eq 'AttributesPresentWhenConditionNotSatisfied'){
     return "Tag: $error_tag : is conditional and is present when condition not satisfied : per $error_module module";
   } elsif($error_type eq 'InvalidElementLength'){
-    return "Tag: $error_tag : has value ($error_value) with invalid length ($error_index vs $error_reason)";                     
+    return "Tag: $error_tag : has value ($error_value) with invalid length ($error_index vs $error_reason)";
   } elsif($error_type eq 'UnrecognizedPublicTag'){
     return "Unrecognized public tag: $error_tag";
   } elsif($error_type eq 'InvalidValueForVr'){
@@ -227,4 +227,3 @@ sub ConvertString{
   }
   return $string;
 }
-

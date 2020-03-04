@@ -54,7 +54,7 @@ my $num_tp_studiea = keys %StudiesInTp;
 print "Found $num_tp_studiea studies, $num_tp_series series\n";
 my $forground_time = time - $start;
 print "Going to background to analyze after $forground_time seconds\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
 my $now = `date`;
 ###
