@@ -463,7 +463,7 @@ sub InboxItem {
     });
   }elsif ($self->{inbox}->IsItFiled($message_id) == 1){
     $http->queue(qq{
-      <p> This message has already been filed.</p>
+      <p class="alert alert-success">This message has already been filed.</p>
     });
   }
 
