@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -76,6 +76,16 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: access_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.access_type AS ENUM (
+    'public',
+    'limited'
+);
 
 
 --
@@ -3900,6 +3910,42 @@ CREATE TABLE public.submission (
 
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.submissions (
+    submission_id integer NOT NULL,
+    collection_code text,
+    site_code text,
+    patient_id_prefix text,
+    body_part text,
+    access_type public.access_type,
+    baseline_date timestamp without time zone,
+    date_shift integer
+);
+
+
+--
+-- Name: submissions_submission_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.submissions_submission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: submissions_submission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.submissions_submission_id_seq OWNED BY public.submissions.submission_id;
+
+
+--
 -- Name: subprocess_invocation; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4556,6 +4602,13 @@ ALTER TABLE ONLY public.structure_set ALTER COLUMN structure_set_id SET DEFAULT 
 
 
 --
+-- Name: submissions submission_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions ALTER COLUMN submission_id SET DEFAULT nextval('public.submissions_submission_id_seq'::regclass);
+
+
+--
 -- Name: subprocess_invocation subprocess_invocation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4850,6 +4903,22 @@ ALTER TABLE ONLY public.site_codes
 
 ALTER TABLE ONLY public.site_codes
     ADD CONSTRAINT site_codes_site_name_key UNIQUE (site_name);
+
+
+--
+-- Name: submissions submissions_collection_code_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_collection_code_site_code_key UNIQUE (collection_code, site_code);
+
+
+--
+-- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_pkey PRIMARY KEY (submission_id);
 
 
 --
@@ -5749,6 +5818,22 @@ ALTER TABLE ONLY public.public_copy_status
 
 ALTER TABLE ONLY public.public_copy_status
     ADD CONSTRAINT public_copy_status_subprocess_invocation_id_fkey FOREIGN KEY (subprocess_invocation_id) REFERENCES public.subprocess_invocation(subprocess_invocation_id);
+
+
+--
+-- Name: submissions submissions_collection_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_collection_code_fkey FOREIGN KEY (collection_code) REFERENCES public.collection_codes(collection_code);
+
+
+--
+-- Name: submissions submissions_site_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_site_code_fkey FOREIGN KEY (site_code) REFERENCES public.site_codes(site_code);
 
 
 --
