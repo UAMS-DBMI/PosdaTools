@@ -2462,7 +2462,10 @@ sub InvokeNewOperation{
 
   #used for the accept/reject edits buttons that appear in emails
   if(defined $dyn->{subprocess_invoc_id}){
-   $params->{current_settings}->{subprocess_invoc_id} = $dyn->{subprocess_invoc_id};
+   $params->{prior_ss_args}->{subprocess_invoc_id} = $dyn->{subprocess_invoc_id};
+  }
+  if(defined $dyn->{activity_id}){
+   $params->{prior_ss_args}->{activity_id} = $dyn->{activity_id};
   }
 
   my $command =
