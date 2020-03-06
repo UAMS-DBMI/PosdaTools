@@ -4685,7 +4685,7 @@ sub Files{
 
     $self->RefreshEngine($http, $dyn, $type .
       (
-        ($type eq "text/csv") ?
+        ($type eq "text/csv" || $type eq "application/vnd.ms-excel") ?
           '<?dyn="NotSoSimpleButton" ' .
           'caption="chain" ' .
           'op="ChainUploadedSpreadsheet" ' .
