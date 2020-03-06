@@ -229,6 +229,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Copy SOP Class and SOP instance from Meta-header",
         action =>  "FixReallyBadDicomFilesInTimepoint",
       },
+      {
+        caption => "Generate List of Weekly Uploads By File Type",
+        action =>  "MakeWeeklyFilesReport",
+      },
+      {
+        caption => "Make Worksheet For Dispositions Needed",
+        action =>  "DispositionNeededWorksheet",
+      },
+      {
+        caption => "Create Private Tag VR and Disposition Reports",
+        action =>  "PrivateTagReports",
+      },
     ],
   },
 );
