@@ -253,14 +253,14 @@ EOF
           args => { mode => "dicom_receiver" },
           sync => "Update();",
         },
-#        {
-#          type => "host_link_sync",
-#          condition => $logged_in,
-#          caption => "Password",
-#          method => "SetMenuMode",
-#          args => { mode => "password" },
-#          sync => "Update();",
-#        },
+       {
+         type => "host_link_sync",
+         condition => $logged_in,
+         caption => "Password",
+         method => "SetMenuMode",
+         args => { mode => "password" },
+         sync => "Update();",
+       },
 #        {
 #          type => "host_link_sync",
 #          condition => !$logged_in,
