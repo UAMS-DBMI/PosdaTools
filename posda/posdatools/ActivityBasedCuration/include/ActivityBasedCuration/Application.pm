@@ -39,7 +39,7 @@ use Posda::PopupCompareFiles;
 use Posda::PopupCompareFilesPath;
 use Posda::FileViewerChooser;
 
-use DbIf::PopupHelp;
+use ActivityBasedCuration::PopupHelp;
 use Posda::QueryLog;
 
 use Text::Markdown 'markdown';
@@ -514,7 +514,7 @@ sub MakeMenuByMode{
   # of menu entires, and for some modes, additional entries
   # are appended on.
 
-print STDERR "#####################\nMode: $mode\n#####################\n";
+#print STDERR "#####################\nMode: $mode\n#####################\n";
   my $default_menu = $self->{MenuByMode}->{Default};
   my $mode_menu = $self->{MenuByMode}->{$mode};
   my $default_men_tail = $self->{MenuByMode}->{DefaultTail};
@@ -527,8 +527,9 @@ print STDERR "#####################\nMode: $mode\n#####################\n";
     @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);
   }
   if(
-    (($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries") ||
-     $self->{Mode} eq "Queries")  &&
+    (defined($self->{ActivityModeSelected}) &&
+      ($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries"
+    ) || $self->{Mode} eq "Queries")  &&
     exists $self->{NewQueryToDisplay}
   ){
     my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
@@ -953,12 +954,16 @@ sub ChainQueryToSpreadsheet{
 
 sub OpHelp {
   my ($self, $http, $dyn) = @_;
+  for my $i (keys %$dyn){
+    print STDERR "dyn{$i} = $dyn->{$i}\n";
+  }
+  return;
 
-  my $details = $self->{spreadsheet_op_list}->{$dyn->{cmd}};
+  my $details = $self->{Commands}->{$dyn->{cmd}};
 
 
   my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
-  my $child_obj = DbIf::PopupHelp->new($self->{session},
+  my $child_obj = ActivityBasedCuration::PopupHelp->new($self->{session},
                                               $child_path, $details);
   $self->StartJsChildWindow($child_obj);
 }
@@ -1109,31 +1114,31 @@ sub UpdateInsertCompleted {
   }
 }
 
-sub CreateTableFromQuery {
-  my ($self, $query, $struct, $start_at) = @_;
-  # create LoadedTable array
-  unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
-
-  # This code creates a copy of the query, but without
-  # the dbh (database handle). There was some problem with
-  # using storable's freeze if the handle existed. We don't
-  # just delete the handle, in case the query needs to be re-used later.
-  #
-  # I am not sure why we drop the columns and then recreate them?
-  my $new_q = {};
-  for my $i (keys %$query){
-    unless($i eq 'columns'
-        or $i eq 'dbh' # if the handle is included it will fail to Freeze
-    ){
-      $new_q->{$i} = $query->{$i};
-    }
-  }
-  my @cols = @{$query->{columns}};
-  $new_q->{columns} = \@cols;
-
-  my $new_table = DbIf::Table::from_query($new_q, $struct, $start_at);
-  push(@{$self->{LoadedTables}}, $new_table);
-}
+#sub CreateTableFromQuery {
+#  my ($self, $query, $struct, $start_at) = @_;
+#  # create LoadedTable array
+#  unless(exists $self->{LoadedTables}) { $self->{LoadedTables} = [] }
+#
+#  # This code creates a copy of the query, but without
+#  # the dbh (database handle). There was some problem with
+#  # using storable's freeze if the handle existed. We don't
+#  # just delete the handle, in case the query needs to be re-used later.
+#  #
+#  # I am not sure why we drop the columns and then recreate them?
+#  my $new_q = {};
+#  for my $i (keys %$query){
+#    unless($i eq 'columns'
+#        or $i eq 'dbh' # if the handle is included it will fail to Freeze
+#    ){
+#      $new_q->{$i} = $query->{$i};
+#    }
+#  }
+#  my @cols = @{$query->{columns}};
+#  $new_q->{columns} = \@cols;
+#
+#  my $new_table = DbIf::Table::from_query($new_q, $struct, $start_at);
+#  push(@{$self->{LoadedTables}}, $new_table);
+#}
 
 sub SelectNewestTable {
   my ($self) = @_;
@@ -2299,7 +2304,7 @@ sub ShowEmail{
 }
 sub ShowResponse{
   my($self, $http, $dyn) = @_;
-  my $class = 'DbIf::ShowSubprocessLines';
+  my $class = 'ActivityBasedCuration::ShowSubprocessLines';
   eval "require $class";
   my $params = {
     activity_id => $self->{ActivitySelected},
@@ -2307,7 +2312,7 @@ sub ShowResponse{
   };
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
   if($@){
-    print STDERR "DbIf::ShowSubprocessLines failed to compile\n\t$@\n";
+    print STDERR "ActivityBasedCuration::ShowSubprocessLines failed to compile\n\t$@\n";
     return;
   }
   my $name = "ShowSubprocessResponse$self->{sequence_no}";
@@ -3348,12 +3353,12 @@ sub DrawNewQuery{
 sub MakeNewQuery {
   my ($self, $http, $dyn) = @_;
   my $query_name = $self->{SelectedNewQuery};
-  my $query;
-  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
-    $query = $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}};
-  } else {
-    $query = $self->{NewQueriesByName}->{$self->{SelectedNewQuery}};
-  }
+  my $query = Query($query_name);
+#  if($self->{NewActivityQueriesType}->{query_type} eq "search"){
+#    $query = $self->{NewQueryListSearch}->{$self->{SelectedNewQuery}};
+#  } else {
+#    $query = $self->{NewQueriesByName}->{$self->{SelectedNewQuery}};
+#  }
   $query->SetNewAsync();
   my @args;
   for my $name (@{$query->{args}}){
@@ -3447,7 +3452,7 @@ sub RefreshQuery{
         $q_pack->{status} = "error";
         $q_pack->{completion_msg} = $1;
       }
-      if($self->{NewQueryToDisplay} == $guid){
+      if(defined($self->{NewQueryToDisplay}) && $self->{NewQueryToDisplay} == $guid){
         $self->AutoRefresh;
       }
     },
@@ -4791,87 +4796,87 @@ sub AnnotateSelectedUploads{
   $self->StartJsChildWindow($child_obj);
 }
 
-sub LoadCsvIntoTable {
-  my ($self, $http, $dyn) = @_;
-  $self->{Mode} = "LoadCsvIntoTable";
-  my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output file"};
+#sub LoadCsvIntoTable {
+#  my ($self, $http, $dyn) = @_;
+#  $self->{Mode} = "LoadCsvIntoTable";
+#  my $file = $self->{UploadedFiles}->[$dyn->{index}]->{"Output file"};
+#
+#  $self->LoadCSVIntoTable_NoMode($file);
+#}
+#sub LoadCSVIntoTable_NoMode {
+#  my ($self, $file) = @_;
+#  my $cmd = "CsvToPerlStruct.pl \"$file\"";
+#  $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
+#}
 
-  $self->LoadCSVIntoTable_NoMode($file);
-}
-sub LoadCSVIntoTable_NoMode {
-  my ($self, $file) = @_;
-  my $cmd = "CsvToPerlStruct.pl \"$file\"";
-  $self->SemiSerializedSubProcess($cmd, $self->CsvLoaded($file));
-}
 
-
-sub CsvLoaded {
-  my ($self, $file) = @_;
-  my $sub = sub {
-    my($status, $struct) = @_;
-    if($status eq "Succeeded"){
-      if($struct->{status} eq "OK"){
-        unless(
-          # create LoadedTables array
-          exists $self->{LoadedTables} &&
-          ref($self->{LoadedTables}) eq "ARRAY"
-        ){ $self->{LoadedTables} = [] }
-
-        ## Get the basename of the file
-        #my $basename;
-        #my $fn = $file;
-        #if($fn =~ /\/([^\/]+)$/){
-        #  $basename = $1;
-        #} else {
-        #  $basename = $fn;
-        #}
-
-        ## test if there is a query file to load
-        #my $queryfile = "$file.query";
-        #my $query;
-
-        ## if $queryfile exists, load it
-        #if (-e $queryfile) {
-        #  $query = retrieve $queryfile;
-        #}
-
-        #if (defined $query) {
-        #  $new_table_entry->{query} = $query;
-        #  $new_table_entry->{type} = "FromQuery";
-        #  #delete the first row, as it is query headers
-        #  delete $new_table_entry->{rows}->[0];
-        #}
-
-        my $new_table_entry = DbIf::Table::from_csv($file, $struct, time);
-
-        # import the new file into posda
-        Dispatch::LineReaderWriter->write_and_read_all(
-          "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" \"DbIf file upload\"",
-          [""],
-          sub {
-  my ($return) = @_;
-            for my $i (@$return) {
-              if ($i =~ /File id: (.*)/) {
-                $new_table_entry->{posda_file_id} = $1;
-                # record upload event
-                my $upload_id = PosdaDB::Queries::record_spreadsheet_upload(
-                  0, $self->get_user, $1, $#{$new_table_entry->{rows}});
-                $new_table_entry->{spreadsheet_uploaded_id} = $upload_id;
-              } else {
-                say STDERR "Error inserting file into posda! $i";
-              }
-            }
-          }
-        );
-
-        push(@{$self->{LoadedTables}}, $new_table_entry);
-      } else {
-      }
-    } else {
-    }
-  };
-  return $sub;
-}
+#sub CsvLoaded {
+#  my ($self, $file) = @_;
+#  my $sub = sub {
+#    my($status, $struct) = @_;
+#    if($status eq "Succeeded"){
+#      if($struct->{status} eq "OK"){
+#        unless(
+#          # create LoadedTables array
+#          exists $self->{LoadedTables} &&
+#          ref($self->{LoadedTables}) eq "ARRAY"
+#        ){ $self->{LoadedTables} = [] }
+#
+#        ## Get the basename of the file
+#        #my $basename;
+#        #my $fn = $file;
+#        #if($fn =~ /\/([^\/]+)$/){
+#        #  $basename = $1;
+#        #} else {
+#        #  $basename = $fn;
+#        #}
+#
+#        ## test if there is a query file to load
+#        #my $queryfile = "$file.query";
+#        #my $query;
+#
+#        ## if $queryfile exists, load it
+#        #if (-e $queryfile) {
+#        #  $query = retrieve $queryfile;
+#        #}
+#
+#        #if (defined $query) {
+#        #  $new_table_entry->{query} = $query;
+#        #  $new_table_entry->{type} = "FromQuery";
+#        #  #delete the first row, as it is query headers
+#        #  delete $new_table_entry->{rows}->[0];
+#        #}
+#
+#        my $new_table_entry = DbIf::Table::from_csv($file, $struct, time);
+#
+#        # import the new file into posda
+#        Dispatch::LineReaderWriter->write_and_read_all(
+#          "ImportSingleFileIntoPosdaAndReturnId.pl \"$file\" \"DbIf file upload\"",
+#          [""],
+#          sub {
+#  my ($return) = @_;
+#            for my $i (@$return) {
+#              if ($i =~ /File id: (.*)/) {
+#                $new_table_entry->{posda_file_id} = $1;
+#                # record upload event
+#                my $upload_id = PosdaDB::Queries::record_spreadsheet_upload(
+#                  0, $self->get_user, $1, $#{$new_table_entry->{rows}});
+#                $new_table_entry->{spreadsheet_uploaded_id} = $upload_id;
+#              } else {
+#                say STDERR "Error inserting file into posda! $i";
+#              }
+#            }
+#          }
+#        );
+#
+#        push(@{$self->{LoadedTables}}, $new_table_entry);
+#      } else {
+#      }
+#    } else {
+#    }
+#  };
+#  return $sub;
+#}
 
 sub Reports {
   my ($self, $http, $dyn) = @_;
@@ -5102,95 +5107,95 @@ sub apply_command{
   return $final;
 }
 
-sub ExecuteCommand {
-  my ($self, $http, $dyn) = @_;
-  $self->{SelectedTable} = $dyn->{index};
-  my $table = $self->{LoadedTables}->[$dyn->{index}];
+#sub ExecuteCommand {
+#  my ($self, $http, $dyn) = @_;
+#  $self->{SelectedTable} = $dyn->{index};
+#  my $table = $self->{LoadedTables}->[$dyn->{index}];
+#
+#  # TODO: rethink this, with new DbIf::Table this might
+#  # be easier!
+#
+#  # generate a map of column name to col index
+#  my $colmap = {};
+#  map {
+#    my $item = $table->{columns}->[$_];
+#    $colmap->{$item} = $_;
+#  } (0 .. $#{$table->{columns}});
+#
+#  # Test for pipe edge case
+#  my $first_row_op = $table->{rows}->[0]->[$colmap->{Operation}];
+#  if (defined $self->{Commands}->{$first_row_op}->{pipe_parms}) {
+#    my $op = $self->{Commands}->{$first_row_op};
+#
+#    say "First row is a Pipeop!";
+#
+#    # get list of columns that are "column vars"
+#    my @column_vars = $op->{pipe_parms} =~ /<([^<>]+)>/g;
+#
+#    # transform column_var columns into lists
+#    my $cols = {};
+#    for my $col_name (@column_vars) {
+#      my $col_idx = $colmap->{$col_name};
+#
+#      my $col1 = [];
+#      for my $row (@{$table->{rows}}) {
+#        push @$col1, $row->[$col_idx];
+#      }
+#
+#      $cols->{$col_name} = $col1;
+#    }
+#    my $parm_map;
+#    for my $i (@{$op->{parms}}){
+#      unless(exists $colmap->{$i}) { next }
+#      my $index_of_parm = $colmap->{$i};
+#      my $new_value = $table->{rows}->[0]->[$index_of_parm];;
+#      $parm_map->{$i} = $new_value;
+#    }
+#    # now generate the cmdline like normal
+#    my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);
+#
+#    my @planned_operations;
+#    my $first_col_name = [keys %{$cols}]->[0];
+#    for my $i (0..$#{$cols->{$first_col_name}}) {
+#      my $pipe_parm_format = $op->{pipe_parms};
+#      for my $p (keys %$parm_map){
+#        my $v = $parm_map->{$p};
+#        unless(defined $v) { next }
+#        $pipe_parm_format =~ s/<$p>/$v/g;
+#      }
+#      for my $var (@column_vars) {
+#        my $v = $cols->{$var}->[$i];
+#        $pipe_parm_format =~ s/<$var>/$v/g;
+#      }
+#      push @planned_operations, $pipe_parm_format;
+#    }
+#
+#    $self->{PlannedOperations} = \@planned_operations;
+#    $self->{PlannedPipeOperation} = $final_cmd;
+#    $self->{PlannedPipeOp} = $op;
+#    $self->{Mode} = 'PipeOperationsSummary';
+#    return;
+#  }
+#
+#  # generate summary of commands to be run
+#  my @operations = map {
+#    my $op = $_->[$colmap->{Operation}];
+#    apply_command($self->{Commands}->{$op}, $colmap, $_);
+#  } @{$table->{rows}};
+#
+#  # remove any that failed
+#  $self->{PlannedOperations} = [grep { defined $_ } @operations];
+#
+#  $self->{Mode} = 'OperationsSummary';
+#}
 
-  # TODO: rethink this, with new DbIf::Table this might
-  # be easier!
-
-  # generate a map of column name to col index
-  my $colmap = {};
-  map {
-    my $item = $table->{columns}->[$_];
-    $colmap->{$item} = $_;
-  } (0 .. $#{$table->{columns}});
-
-  # Test for pipe edge case
-  my $first_row_op = $table->{rows}->[0]->[$colmap->{Operation}];
-  if (defined $self->{Commands}->{$first_row_op}->{pipe_parms}) {
-    my $op = $self->{Commands}->{$first_row_op};
-
-    say "First row is a Pipeop!";
-
-    # get list of columns that are "column vars"
-    my @column_vars = $op->{pipe_parms} =~ /<([^<>]+)>/g;
-
-    # transform column_var columns into lists
-    my $cols = {};
-    for my $col_name (@column_vars) {
-      my $col_idx = $colmap->{$col_name};
-
-      my $col1 = [];
-      for my $row (@{$table->{rows}}) {
-        push @$col1, $row->[$col_idx];
-      }
-
-      $cols->{$col_name} = $col1;
-    }
-    my $parm_map;
-    for my $i (@{$op->{parms}}){
-      unless(exists $colmap->{$i}) { next }
-      my $index_of_parm = $colmap->{$i};
-      my $new_value = $table->{rows}->[0]->[$index_of_parm];;
-      $parm_map->{$i} = $new_value;
-    }
-    # now generate the cmdline like normal
-    my $final_cmd = apply_command($op, $colmap, $table->{rows}->[0]);
-
-    my @planned_operations;
-    my $first_col_name = [keys %{$cols}]->[0];
-    for my $i (0..$#{$cols->{$first_col_name}}) {
-      my $pipe_parm_format = $op->{pipe_parms};
-      for my $p (keys %$parm_map){
-        my $v = $parm_map->{$p};
-        unless(defined $v) { next }
-        $pipe_parm_format =~ s/<$p>/$v/g;
-      }
-      for my $var (@column_vars) {
-        my $v = $cols->{$var}->[$i];
-        $pipe_parm_format =~ s/<$var>/$v/g;
-      }
-      push @planned_operations, $pipe_parm_format;
-    }
-
-    $self->{PlannedOperations} = \@planned_operations;
-    $self->{PlannedPipeOperation} = $final_cmd;
-    $self->{PlannedPipeOp} = $op;
-    $self->{Mode} = 'PipeOperationsSummary';
-    return;
-  }
-
-  # generate summary of commands to be run
-  my @operations = map {
-    my $op = $_->[$colmap->{Operation}];
-    apply_command($self->{Commands}->{$op}, $colmap, $_);
-  } @{$table->{rows}};
-
-  # remove any that failed
-  $self->{PlannedOperations} = [grep { defined $_ } @operations];
-
-  $self->{Mode} = 'OperationsSummary';
-}
-
-sub ExecutePlannedOperations {
-  my ($self, $http, $dyn) = @_;
-  $self->{TotalPlannedOperations} = scalar @{$self->{PlannedOperations}};
-  $self->UpdateWaitingOnOps($http, $dyn);
-
-  $self->ExecuteNextOperation();
-}
+#sub ExecutePlannedOperations {
+#  my ($self, $http, $dyn) = @_;
+#  $self->{TotalPlannedOperations} = scalar @{$self->{PlannedOperations}};
+#  $self->UpdateWaitingOnOps($http, $dyn);
+#
+#  $self->ExecuteNextOperation();
+#}
 sub UpdateWaitingOnOps {
   my ($self, $http, $dyn) = @_;
   my $total = $self->{TotalPlannedOperations};

@@ -13,6 +13,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     description => "Curation workflow tasks performed on a collection are " .
       "grouped together into an Activity Timepoint to allow for better " .
       "management and analysis.  This step is tying the data to the Activity.",
+    operations => [
+      {
+        operation => "InvokeNewOperation",
+        caption => "Create Activity From Collection Site",
+        action =>  "CreateActivityTimepointFromCollectionSite",
+      },
+    ],
     queries => [
       {
         caption => "Suggested Queries for Series",

@@ -219,9 +219,9 @@ sub MenuResponse{
       sync => "CloseThisWindow();",
     });
     $self->NotSoSimpleButton($http, {
-      op => "Help",
+      op => "OpHelp",
       caption => "Help",
-      cmd => $self->{operation_name},
+      cmd => $self->{params}->{command}->{operation_name},
       sync => "Update();",
     });
   } elsif($self->{mode} eq "waiting") {
@@ -368,4 +368,16 @@ sub SubProcessResponded{
   }
   $http->queue("</pre>");
 }
+sub OpHelp {
+  my ($self, $http, $dyn) = @_;
+
+  my $details = [ $dyn->{cmd} ];
+
+
+  my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
+  my $child_obj = ActivityBasedCuration::PopupHelp->new($self->{session},
+                                              $child_path, $details);
+  $self->parent->StartJsChildWindow($child_obj);
+}
+
 1;

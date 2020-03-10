@@ -149,6 +149,12 @@ sub ContentResponse {
        chosen => "$op",
        sync => 'Update();',
     });
+    $self->NotSoSimpleButton($http, {
+      op => "OpHelp",
+      caption => "Help",
+      cmd => $op,
+      sync => "Update();",
+    });
     $http->queue("</td>");
     $http->queue("</tr>");
   }
@@ -174,12 +180,6 @@ sub MenuResponse{
       caption => "Cancel",
       sync => "CloseThisWindow();",
     });
-    $self->NotSoSimpleButton($http, {
-      op => "Help",
-      caption => "Help",
-      cmd => $self->{operation_name},
-      sync => "Update();",
-    });
   } elsif($self->{mode} eq "waiting") {
     $http->queue("waiting");
   } elsif($self->{mode} eq "response_available") {
@@ -193,5 +193,18 @@ sub MenuResponse{
   }
   $http->queue("</div>");
 }
+
+sub OpHelp {
+  my ($self, $http, $dyn) = @_;
+
+  my $details = [ $dyn->{cmd} ];
+
+
+  my $child_path = $self->child_path("PopupHelp_$dyn->{cmd}");
+  my $child_obj = ActivityBasedCuration::PopupHelp->new($self->{session},
+                                              $child_path, $details);
+  $self->parent->StartJsChildWindow($child_obj);
+}
+
 
 1;

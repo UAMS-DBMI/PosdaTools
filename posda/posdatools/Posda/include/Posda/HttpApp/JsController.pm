@@ -316,24 +316,27 @@ sub NewEntryBox{
   if (defined $dyn->{class}) {
     $class = $dyn->{class};
   }
+#  unless(defined $dyn->{index}){
+#    print STDERR "index undefined in NewEntryBox\n";
+#  }
   $http->queue("<input class='$class' type='text'" .
     ($dyn->{name} ? " name=\"$dyn->{name}\"" : "") .
     ($dyn->{id} ? " id=\"$dyn->{id}\"" : "") .
     ($dyn->{value} ? " value=\"$dyn->{value}\"" : "") .
     # "onblur=\"" . $op . "index=$dyn->{index}&event=onblur&amp;value='+this.value);$sync;\" " .
-    "onchange=\"" . $op . "index=$dyn->{index}&event=onchange&amp;value='+this.value);$sync;\" " .
+    "onchange=\"" . $op . ((defined $dyn->{index}) ? "index=$dyn->{index}&" : "") . "event=onchange&amp;value='+this.value);$sync;\" " .
     # "onclick=\"" . $op . "index=$dyn->{index}&event=onclick&amp;value='+this.value);$sync;\" " .
     # "ondblclick=\"" . $op . "index=$dyn->{index}&event=ondblclick&amp;value='+this.value);$sync;\" " .
     # "onfocus=\"" . $op . "index=$dyn->{index}&event=onfocus&amp;value='+this.value);$sync;\" " .
     # "onmousedown=\"" . $op . "index=$dyn->{index}&event=onmousedown&amp;value='+this.value);$sync;\" " .
     # "onmousemove=\"" . $op . "index=$dyn->{index}&event=onmousemove&amp;value='+this.value);$sync;\" " .
-    "onmouseout=\"" . $op . "index=$dyn->{index}&event=onmouseout&amp;value='+this.value);$sync;\" " .
+    "onmouseout=\"" . $op . ((defined $dyn->{index}) ? "index=$dyn->{index}&" : "") . "event=onmouseout&amp;value='+this.value);$sync;\" " .
     # "onmouseover=\"" . $op . "index=$dyn->{index}&event=onmouseover&amp;value='+this.value);$sync;\" " .
     # "onmouseup=\"" . $op . "index=$dyn->{index}&event=onmouseup&amp;value='+this.value);$sync;\" " .
     # "onkeydown=\"" . $op . "index=$dyn->{index}&event=onkeydown&amp;value='+this.value);$sync;\" " .
     # "onkeypress=\"" . $op . "index=$dyn->{index}&event=onkeypress&amp;value='+this.value);$sync;\" " .
-     "onkeyup=\"" . $op . "index=$dyn->{index}&event=onkeyup&amp;value='+this.value);$sync;\" " .
-    "onselect=\"" . $op . "index=$dyn->{index}&event=onselect&amp;value='+this.value);$sync;\" " .
+     "onkeyup=\"" . $op . ((defined $dyn->{index}) ? "index=$dyn->{index}&" : "" ) . "event=onkeyup&amp;value='+this.value);$sync;\" " .
+    "onselect=\"" . $op . ((defined $dyn->{index}) ? "index=$dyn->{index}&" : "" ) . "event=onselect&amp;value='+this.value);$sync;\" " .
     "/>");
 }
 sub EntryBox{
@@ -688,7 +691,7 @@ sub SelectByValue{
   my $id;
   if(defined $dyn->{id}){
     $id = " id=\"$dyn->{id}\"";
-  }
+  } else { $id = "" }
 
   my $class = defined $dyn->{class}? $dyn->{class}: "form-control";
   my $style = defined $dyn->{style}? $dyn->{style}: "";
@@ -991,7 +994,11 @@ sub NotSoSimpleButton{
     if($i eq "sync") { next }
     if($i eq "class") { next }
     if($i eq "pop") { next }
-    push @parms, "$i=$dyn->{$i}";
+    my $v = "";
+    if(defined $dyn->{$i}){
+      $v = $dyn->{$i};
+    }
+    push @parms, "$i=$v";
   }
   my $hstring = "";
   for my $i (0 .. $#parms){
