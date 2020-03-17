@@ -26,12 +26,12 @@ TEMP_STORAGE_PATH = "/home/posda/cache/temp"
 FILE_STORAGE_ROOT = 3
 
 @router.put("/event")
-async def import_event(source: str, origin: str = None, db: Database = Depends()):
+async def import_event(source: str, origin: str = None, expected_count: int = None, db: Database = Depends()):
     # NOTE: source was mistakenly named but is kept for backwards
     #       compatibility.
     # In reality, source = import_comment
     #             origin = actual source of the import
-    import_event_id = await create_import_event(db, source, origin)
+    import_event_id = await create_import_event(db, source, origin, expected_count)
 
     return {
         'status': 'success',
@@ -102,14 +102,14 @@ async def import_file(request: Request, digest: str, import_event_id: int = None
         "created": created,
     }
 
-async def create_import_event(db, comment, origin):
+async def create_import_event(db, comment, origin = None, expected_count = None):
     record = await db.fetch_one("""\
         insert into import_event
-        (import_type, import_comment, import_time, import_origin)
+        (import_type, import_comment, import_time, import_origin, import_expected_count)
         values
-        ($1, $2, now(), $3)
+        ($1, $2, now(), $3, $4)
         returning import_event_id
-    """, ['posda-api import', comment, origin])
+    """, ['posda-api import', comment, origin, expected_count])
 
     return record['import_event_id']
 
