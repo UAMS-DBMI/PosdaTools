@@ -4,3 +4,4 @@ create_button_popularity_table.sql
 add_third_party_analysis_to_activity.sql
 create_submissions_table.sql
 drop_not_null_on_modality.sql
+add_origin_to_import_event.sql
