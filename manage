@@ -23,13 +23,13 @@ Supported operations:
 case "$1" in
   restart)
     shift
-    git rev-parse --short HEAD > posda/posdatools/versionInfo.txt
+    git describe --tags > posda/posdatools/versionInfo.txt
     exec docker-compose restart $*
     ;;
   up)
     shift
     make -C posda posdatools/posda.env
-    git rev-parse --short HEAD > posda/posdatools/versionInfo.txt
+    git describe --tags > posda/posdatools/versionInfo.txt
     exec docker-compose up $*
     ;;
 
