@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.1
+-- Dumped from database version 9.6.3
 -- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
@@ -1928,7 +1928,9 @@ CREATE TABLE public.import_event (
     volume_name text,
     import_close_time timestamp with time zone,
     related_id_1 integer,
-    related_id_2 integer
+    related_id_2 integer,
+    import_origin text,
+    import_expected_count integer
 );
 
 
@@ -3930,7 +3932,6 @@ CREATE TABLE public.submissions (
 --
 
 CREATE SEQUENCE public.submissions_submission_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4232,6 +4233,19 @@ CREATE SEQUENCE public.window_level_window_level_id_seq
 --
 
 ALTER SEQUENCE public.window_level_window_level_id_seq OWNED BY public.window_level.window_level_id;
+
+
+--
+-- Name: files_to_archive; Type: TABLE; Schema: quasar; Owner: -
+--
+
+CREATE TABLE quasar.files_to_archive (
+    file_id integer,
+    done boolean,
+    in_progress boolean DEFAULT false,
+    error boolean DEFAULT false,
+    error_message text
+);
 
 
 --
@@ -5763,6 +5777,13 @@ CREATE UNIQUE INDEX user_variable_binding_index ON public.user_variable_binding 
 --
 
 CREATE UNIQUE INDEX window_level_pk ON public.window_level USING btree (window_level_id);
+
+
+--
+-- Name: fta_idx; Type: INDEX; Schema: quasar; Owner: -
+--
+
+CREATE INDEX fta_idx ON quasar.files_to_archive USING btree (file_id, done, in_progress, error);
 
 
 --
