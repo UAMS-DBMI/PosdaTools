@@ -39,7 +39,7 @@ my $redirect = <<EOF;
   HTTP/1.0 201 Created
   Location: <?dyn="echo" field="url"?>
   Content-Type: text/html
-  
+
   <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -81,6 +81,8 @@ my $bad_config = <<EOF;
 <?dyn="BadConfigReport"?>
 EOF
 
+my $version = 0;
+
   sub new {
     my($class, $sess, $path) = @_;
     my $this = Dispatch::NamedObject->new($sess, $path);
@@ -102,9 +104,9 @@ EOF
     my $height = $this->{Identity}->{height};
     $this->{height} = $height;
     $this->{width} = $width;
-    $this->{menu_width} = 
+    $this->{menu_width} =
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
-    $this->{login_width} = 
+    $this->{login_width} =
       $main::HTTP_APP_CONFIG->{config}->{Identity}->{LogoWidth};
     $this->{content_width} = $this->{width} - $this->{menu_width};
     $this->SetInitialExpertAndDebug("bbennett");
@@ -193,7 +195,7 @@ EOF
     my($this, $http, $dyn) = @_;
 #    if($this->CanDebug){
       $this->RefreshEngine($http, $dyn, qq{
-        <button class="btn btn-sm btn-info" 
+        <button class="btn btn-sm btn-info"
          onClick="javascript:rt('DebugWindow','Refresh?obj_path=Debug'
          ,1600,1200,0);">
           Debug
@@ -356,30 +358,30 @@ EOF
 
         <div class="form-group">
           <label for="new_username">Username</label>
-          <input type="text" class="form-control" 
-                 id="new_username" name="new_username" 
+          <input type="text" class="form-control"
+                 id="new_username" name="new_username"
                  placeholder="Username">
         </div>
         <div class="form-group">
           <label for="new_realname">Real Name</label>
-          <input type="text" class="form-control" 
+          <input type="text" class="form-control"
                  id="new_realname" name="new_realname"
                  placeholder="Real Name">
         </div>
         <p class="alert alert-warning">
-          Real Name is needed to identify you! 
-          Accounts created without a Real Name 
+          Real Name is needed to identify you!
+          Accounts created without a Real Name
           may be deleted without notice.
         </p>
         <div class="form-group">
           <label for="new_password">Password</label>
-          <input type="password" class="form-control" 
+          <input type="password" class="form-control"
                  id="new_password" name="new_password"
                  placeholder="Password">
         </div>
         <div class="form-group">
           <label for="repeat_password">Repeat Password</label>
-          <input type="password" class="form-control" 
+          <input type="password" class="form-control"
                  id="repeat_password" name="repeat_password"
                  placeholder="Password">
         </div>
@@ -474,6 +476,10 @@ EOF
   sub TitleAndInfoResponse{
     my($this, $http, $dyn) = @_;
     unless(defined $this->{menu_mode}){ $this->{menu_mode} = "avail_apps" }
+    my $f;
+    open($f,'<','versionInfo.txt');
+    $version = <$f>;
+    close($f);
     if($this->{menu_mode} eq "bom"){
       $this->RefreshEngine($http, $dyn,
         '<h2 style="margin-top:0; margin-left:0">' .
@@ -485,7 +491,8 @@ EOF
       $this->RefreshEngine($http, $dyn,
         '<h2 style="margin-top:0; margin-left:0">' .
         '<?dyn="title"?>: ' .
-        'Available applications </h2>');
+        'Available applications </h2>' .
+        "<small>v: $version </small>");
     } elsif($this->{menu_mode} eq "password"){
       $this->RefreshEngine($http, $dyn,
         '<h2 style="margin-top:0; margin-left:0">' .
@@ -559,7 +566,7 @@ EOF
 
 
     if(scalar(keys %$default_apps) >= 1){
-      $this->RefreshEngine($http, $dyn, 
+      $this->RefreshEngine($http, $dyn,
         '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
         $table_headers
       );
@@ -567,14 +574,14 @@ EOF
     }
 
     my $user = $this->get_user;
-    unless(defined $user) { 
-      return 
+    unless(defined $user) {
+      return
     };
     # unless(exists $this->{Capabilities}->{$user}->{Apps}){ return }
 
     # get list of apps user can launch
     my $user_apps = $this->{permissions}->launchable_apps();
-    $this->RefreshEngine($http, $dyn, 
+    $this->RefreshEngine($http, $dyn,
       "<tr><td colspan=3><h4>Apps Available to $user</h4></td</tr>" .
       $table_headers);
     $this->AppTableRows($http, $dyn, $user_apps);
@@ -591,14 +598,14 @@ EOF
     }
 
     for my $app (
-      sort 
+      sort
       {$this->{Apps}->{$a}->{sort_order} <=> $this->{Apps}->{$b}->{sort_order}}
       keys %{$this->{Apps}}
     ){
       if(exists $privs->{$app}){
         $this->RefreshEngine($http, $dyn, "<tr><td>$app</td>" .
           "<td>$this->{Apps}->{$app}->{Description}</td>" .
-          "<td><?dyn=\"SimpleButton\"" . 
+          "<td><?dyn=\"SimpleButton\"" .
           'caption="Launch" op="LaunchApp" parm="' . $app . '"?></td></tr>');
       }
     }
@@ -639,7 +646,7 @@ EOF
   sub MakeBomMenu{
     my($this, $http, $dyn) = @_;
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
-    my $bom_menu = [ 
+    my $bom_menu = [
       {
         type => "host_link_sync",
         condition => 1,
@@ -811,7 +818,7 @@ EOF
   ################### Dicom Receiver Stuff ############################
   sub MakeDrMenu{
     my($this, $http, $dyn) = @_;
-    my $dr_menu = [ 
+    my $dr_menu = [
       {
         type => "host_link_sync",
         condition => 1,
@@ -841,7 +848,7 @@ EOF
     my $obj = $this->{StaticObjs}->{DicomReceiver};
     if(scalar(keys %{$obj->{ActiveConnections}}) > 0){
       push(@$dr_menu, {
-        type => "host_link_sync", 
+        type => "host_link_sync",
         condition => 1,
         caption => "Active Connections:",
         method => "ShowActiveConnections",
@@ -1124,7 +1131,7 @@ EOF
   sub MakePassMenu{
     my($this, $http, $dyn) = @_;
     unless(defined $this->{BomMode}) { $this->{BomMode} = "ShowBom" }
-    my $pass_menu = [ 
+    my $pass_menu = [
       {
         type => "host_link_sync",
         condition => 1,
@@ -1187,17 +1194,17 @@ EOF
       <form onSubmit="PosdaGetRemoteMethod('PasswordChange', 'old='+this.elements['OldPassword'].value+'&amp;newp='+this.elements['NewPassword'].value+'&amp;rpt=' +this.elements['RepeatPassword'].value, function(){Update();});return false;">
         <div class="form-group">
           <label for="OldPassword">Current Password</label>
-          <input type="password" class="form-control" 
+          <input type="password" class="form-control"
                  id="OldPassword" placeholder="Current Password">
         </div>
         <div class="form-group">
           <label for="NewPassword">New Password</label>
-          <input type="password" class="form-control" 
+          <input type="password" class="form-control"
                  id="NewPassword" placeholder="New Password">
         </div>
         <div class="form-group">
           <label for="RepeatPassword">Repeat New Password</label>
-          <input type="password" class="form-control" 
+          <input type="password" class="form-control"
                  id="RepeatPassword" placeholder="New Password">
         </div>
         <button type="submit" class="btn btn-warning">Change Password</button>
