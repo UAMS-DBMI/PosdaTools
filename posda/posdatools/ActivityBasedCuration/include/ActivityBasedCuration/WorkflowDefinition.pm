@@ -248,6 +248,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Create Private Tag VR and Disposition Reports",
         action =>  "PrivateTagReports",
       },
+      {
+        caption => "Create New Timepoint from Old Timepoint Id",
+        action =>  "CopyPriorTimepoint",
+      },
     ],
   },
 );
