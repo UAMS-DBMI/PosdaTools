@@ -140,7 +140,8 @@ my $version = 0;
 <div id="content" style="overflow:auto; background-color:#F8F8F8;height:<?dyn="height"?>px;width:<?dyn="content_width"?>px;float:left;">
 &lt;Content&gt;</div>
 <div id="footer" style="background-color:#E8E8FF;clear:both;text-align:center;">
-&copy; Posda 2020 <a href=https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6261183/>doi: 10.1007/s10278-018-0097-4</a> </div>
+  <a target="_blank" onclick="javascript:event.target.port=80" href="/copyright_info.html">Copyright 2020, Board of Trustees of the University of Arkansas</a>
+</div>
 </div>
 EOF
 
