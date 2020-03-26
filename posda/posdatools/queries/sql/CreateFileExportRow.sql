@@ -7,7 +7,11 @@
 --
 
 insert into file_export (
+<<<<<<< HEAD
  export_event_id, file_id, when_queued
+=======
+ export_even_id, file_id, when_qiueued
+>>>>>>> Initial working copy of ExportTimepoint operation
 ) values (
   ?,  ?, now()
 )
