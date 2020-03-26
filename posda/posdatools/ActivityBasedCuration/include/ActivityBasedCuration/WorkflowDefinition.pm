@@ -188,6 +188,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Apply Background Dispositions to Timepoint (baseline date)",
         action =>  "BackgroundPrivateDispositionsTpBaseline",
       },
+      {
+        caption => "Query An Export of All Files in Timepoint",
+        action =>  "ExportTimepoint",
+      },
     ],
   },
   {
