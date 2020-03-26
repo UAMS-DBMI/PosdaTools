@@ -1,0 +1,6 @@
+:operation_name: ExportTimepoint
+:command_line: ExportTimepoint.pl <?bkgrnd_id?> <activity_id> "<destination_name>"  <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['export']
+:can_chain: 
