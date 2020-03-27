@@ -7,7 +7,7 @@
 --
 
 insert into file_export (
- export_even_id, file_id, when_qiueued
+ export_event_id, file_id, when_queued
 ) values (
   ?,  ?, now()
 )
