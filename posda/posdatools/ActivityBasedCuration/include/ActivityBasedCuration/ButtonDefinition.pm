@@ -460,6 +460,15 @@ EOF
       VisualReviewStatusDetails => 1,
     },
   },
+  qbp_RetryFailedProjections => {
+    caption => "Retry Failed Projections",
+    spreadsheet_operation => "RetryFailedProjections",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      VisualReviewStatusDetails => 1,
+    },
+  },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
 # BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup
