@@ -367,4 +367,21 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   ],
+  ExportEvents => [
+    "Suggested Queries for ExportEvents",
+    [
+      {
+        caption => "Pending Exports",
+        query => "PendingExportRequests",
+      },
+      {
+        caption => "Running Exports",
+        query => "RunningExportRequests",
+      },
+      {
+        caption => "Completed Exports",
+        query => "CompletedExportRequests",
+      },
+    ],
+  ],
 );
