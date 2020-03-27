@@ -189,7 +189,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "BackgroundPrivateDispositionsTpBaseline",
       },
       {
-        caption => "Query An Export of All Files in Timepoint",
+        caption => "Queue An Export of All Files in Timepoint",
         action =>  "ExportTimepoint",
       },
     ],
