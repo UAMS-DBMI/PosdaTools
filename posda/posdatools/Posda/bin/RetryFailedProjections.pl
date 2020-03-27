@@ -23,7 +23,10 @@ while(my $line = <STDIN>){
   chomp $line;
   my($image_equivalence_class_id, $processing_status, $review_status) =
     split(/&/, $line);
-  if($review_status eq "<undef>" && $processing_status eq "error") {
+  if(
+    ($review_status eq "<undef>" || $review_status eq "") && 
+    $processing_status eq "error"
+  ) {
     $EquivClasses{$image_equivalence_class_id} = 1;
   } else {
     $dont_change{$image_equivalence_class_id} = 1;
