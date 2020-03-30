@@ -193,6 +193,24 @@ EOF
       activity_id => "activity_id",
     },
   },
+  qc_19=> {
+    chained_query_id => "qc_19",
+    caption => "dismiss",
+    from_query => "PendingExportRequests",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_20=> {
+    chained_query_id => "qc_20",
+    caption => "dismiss",
+    from_query => "PendingExportRequestsByActivity",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
 );
 
 %QueryChainColumnButtons = (
@@ -338,6 +356,22 @@ EOF
     obj => "DbIf::EditStatus",
     col_name => "id",
     caption => "info",
+  },
+  qc_cc_76 => {
+    query => "PendingExportRequestsForActivity",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "start",
+    operation => "StartExportEvent"
+  },
+  qc_cc_77 => {
+    query => "PendingExportRequests",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "start",
+    operation => "StartExportEvent"
   },
 );
 
