@@ -57,7 +57,51 @@ RUN cd /build/build && \
 	make -j 16 && \
 	make install
 
+###############################################################################
+# Build Openslide (no package for alpine exists :( )
+###############################################################################
+FROM alpine:3.11.3 as osbuild
 
+ARG OPENSLIDE_VERSION=3.4.1
+ARG OPENSLIDE_URL=https://github.com/openslide/openslide/releases/download
+
+RUN apk add --update \
+	alpine-sdk \
+	wget \
+	zlib-dev \
+	libxml2-dev \
+	jpeg-dev \
+	openjpeg-dev \
+	tiff-dev \
+	glib-dev \
+	gdk-pixbuf-dev \
+	sqlite-dev \
+	libjpeg-turbo-dev \
+	libexif-dev \
+	lcms2-dev \
+	fftw-dev \
+	giflib-dev \
+	libpng-dev \
+	libwebp-dev \
+	orc-dev \
+	poppler-dev \
+	librsvg-dev \
+	libgsf-dev \
+	openexr-dev
+
+WORKDIR /usr/local/src
+
+RUN wget ${OPENSLIDE_URL}/v${OPENSLIDE_VERSION}/openslide-${OPENSLIDE_VERSION}.tar.gz \
+	&& tar xf openslide-${OPENSLIDE_VERSION}.tar.gz \
+    && cd openslide-${OPENSLIDE_VERSION} \
+	&& ./configure \
+	&& make \
+	&& make install
+
+
+###############################################################################
+# Build Final Image
+###############################################################################
 FROM alpine:3.11.3
 
 # Base system deps
@@ -78,6 +122,7 @@ RUN apk --update add alpine-sdk \
 					 unzip \
 					 py3-psycopg2 \
 					 py3-numpy \
+					 py3-pillow \
 					 redis \
 					 procps
 
@@ -135,6 +180,17 @@ COPY --from=gdcmbuild /usr/local/lib/*.py /usr/lib/python3.8/site-packages/
 COPY --from=gdcmbuild /usr/local/lib/_gdcmswig.so /usr/lib/python3.8/site-packages/
 COPY --from=gdcmbuild /usr/local/bin/* /usr/local/bin/
 COPY --from=gdcmbuild /usr/local/lib/* /usr/local/lib/
+
+# copy openslide into place
+COPY --from=osbuild /usr/local/bin/* /usr/local/bin/
+COPY --from=osbuild /usr/local/lib/* /usr/local/lib/
+COPY --from=osbuild /usr/local/include/* /usr/local/include/
+# extra packages needed for openslide
+RUN apk add gdk-pixbuf openjpeg
+
+# Extra python libs
+RUN pip3 install pandas openslide-python
+
 
 # Copy actual posdatools last, to speed up rebuilds
 COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
