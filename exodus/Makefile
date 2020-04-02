@@ -1,2 +1,2 @@
 last_update: Dockerfile
-	docker build . -t tcia/ream:latest
+	docker build . -t tcia/exodus:latest
