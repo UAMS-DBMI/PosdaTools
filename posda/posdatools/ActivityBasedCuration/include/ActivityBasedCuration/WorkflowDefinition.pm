@@ -193,6 +193,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "ExportTimepoint",
       },
     ],
+    queries => [
+       {
+        caption => "Suggested Queries For Export Events",
+        operation => "SelectQueryGroup",
+        query_list_name => "ExportEvents",
+      },
+    ],
   },
   {
     id => "13_compare",
