@@ -21,8 +21,10 @@ class SubmitFailedError(RuntimeError): pass
 
 def main_loop(psql_db):
     global IMPORT_IDS
+    sleep_time = 1
 
     while True:
+        last_failed = True
         (export_event_id, base_url, configuration) = psql_db.execute("""
             select export_event_id, base_url, configuration
             from export_event
@@ -55,10 +57,19 @@ def main_loop(psql_db):
         try:
             submit_file(file_id, file_path, base_url, configuration)
             update_success(psql_db, file_id, export_event_id)
+            last_failed = True
         except SubmitFailedError as e:
             # probably should put this onto a failed-file list now?
             print(e)
             insert_errors(psql_db, file_id, export_event_id, e)
+
+            
+        if last_failed:
+            sleep(sleep_time)
+            if sleep_time < 30:
+                sleep_time += 1
+        else:
+            sleep_time = 1
 
 def create_import_event(psql_db, base_url, configuration, export_event_id):
     global IMPORT_IDS
