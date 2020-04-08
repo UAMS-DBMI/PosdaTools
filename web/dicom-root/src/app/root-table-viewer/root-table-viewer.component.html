@@ -67,6 +67,9 @@
 <div class="feedback">{{AdditionFeedback}}</div>
 <div *ngIf="addMode">
   <button mat-button (click)="exitAddMode()"   >Cancel</button>
+  <button mat-button (click)="createSC()"   >New Site Code</button>
+  <button mat-button (click)="createCC()"   >New Collection Code</button>
+  <button mat-button (click)="createDS()"   >New Date Shift</button>
   <form [formGroup]=myNewRootForms (ngSubmit)="add(myNewRootForms.value)">
   <table  style="width:100%" >
     <tr [formGroup]=myNewRootForms>
