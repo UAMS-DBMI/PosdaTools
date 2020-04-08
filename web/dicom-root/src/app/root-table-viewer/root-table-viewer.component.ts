@@ -139,7 +139,6 @@ export class RootTableViewerComponent implements OnInit {
   }
   public createDS(){
     var ds = Math.floor(Math.random() * (7300 - 1825 + 1) ) + 1825;
-    var good = false;
     this.myNewRootForms.get('input_date_shift').setValue(ds);
   }
 
