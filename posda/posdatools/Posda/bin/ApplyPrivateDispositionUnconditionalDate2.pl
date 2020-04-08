@@ -231,6 +231,7 @@ for my $p (keys %HashByPattern){
 #        $p =~ s/$i->{$j}/<$j>/;
 #      }
       my $u = $ds->Get($new_e);
+      if($u =~ /^(.*)\0$/) { $u = $1 }
       if(defined $u && $u ne "" && $u =~ /^[0-9\.]+$/){
         my $nu = HashUID($u);
         unless($nu eq $u){
