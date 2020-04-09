@@ -189,7 +189,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "BackgroundPrivateDispositionsTpBaseline",
       },
       {
-<<<<<<< HEAD
         caption => "Queue An Export of All Files in Timepoint",
         action =>  "ExportTimepoint",
       },
@@ -200,11 +199,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         operation => "SelectQueryGroup",
         query_list_name => "ExportEvents",
       },
-=======
-        caption => "Query An Export of All Files in Timepoint",
-        action =>  "ExportTimepoint",
-      },
->>>>>>> Initial working copy of ExportTimepoint operation
     ],
   },
   {
