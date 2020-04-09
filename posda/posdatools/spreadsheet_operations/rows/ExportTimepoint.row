@@ -1,5 +1,5 @@
 :operation_name: ExportTimepoint
-:command_line: ExportTimepoint.pl <?bkgrnd_id?> <activity_id> "<destination_name>"  <notify>
+:command_line: ExportTimepoint.pl <?bkgrnd_id?> <activity_id> "<destination_name>" "<only_group_13>" "<only_dicom>" "<apply_dispositions>" "<base_line>" "<days_to_shift>" "<uid_root>" <notify>
 :operation_type: background_process
 :input_line_format: 
 :tags: ['export']

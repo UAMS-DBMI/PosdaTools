@@ -1,7 +1,7 @@
--- Name: GetPatientMappingByPatientId
+-- Name: GetPatientMappingForFilesInTimepoint
 -- Schema: posda_files
 -- Columns: ['from_patient_id', 'to_patient_id', 'to_patient_name', 'collection_name', 'site_name', 'batch_number', 'uid_root', 'diagnosis_date', 'baseline_date', 'date_shift', 'computed_shift']
--- Args: ['patient_id']
+-- Args: ['activity_timepoint_id']
 -- Tags: ['patient_mapping', 'export_event']
 -- Description: Retrieve entries from patient_mapping table
 --
@@ -21,6 +21,8 @@ select
 from
   patient_mapping
 where
-  to_patient_id = ?
-
+  to_patient_id in (
+    select distinct patient_id from file_patient natural join activity_timepoint_file
+    where activity_timepoint_id = ?
+)
   
