@@ -24,12 +24,6 @@ create type request_status_type as enum (
         'retry failures'
 );
 comment on type request_status_type is 'Options for user-originated requests for status change';
-create type dispositions_type as enum (
-       'apply_dispositions_if_not_applied_and_mark_applied',
-       'dont_apply_dispositions_dont_change_disposition_status',
-       'dont_apply_dispositions_and_mark_applied',
-       'dont_apply_dispositions_and_mark_not_applied'
-);
 create table export_destination (
         export_destination_name text primary key,
         protocol text not null,
@@ -57,6 +51,8 @@ create table export_event (
         request_pending boolean not null default false,
         request_status request_status_type,
         export_status export_status_type,
+        destination_import_event_id integer,
+        destination_import_event_closed boolean,
         transfer_status_id integer references transfer_status(transfer_status_id) -- for detailed human readable text
 );
 comment on table export_event is 'Track exports from Posda to other systems';
@@ -77,6 +73,5 @@ create table export_file_dispositions_params(
         export_file_dispositions_params_id serial primary key,
         offset_days integer,
         uid_root text,
-        batch text,
-        disposition dispositions_type
+        only_modify_group_13 boolean
 );

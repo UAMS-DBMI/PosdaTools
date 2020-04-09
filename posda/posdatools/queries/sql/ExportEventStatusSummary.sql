@@ -1,13 +1,15 @@
 -- Name: ExportEventStatusSummary
 -- Schema: posda_files
--- Columns: ['export_event_id', 'waiting', 'pending', 'success', 'failed_temporary', 'failed_permanent']
+-- Columns: ['export_event_id', 'activity_id', 'export_destination_name', 'export_status', 'creation_time', 'start_time', 'end_time', 'waiting', 'pending', 'success', 'failed_temporary', 'failed_permanent']
 -- Args: []
--- Tags: []
+-- Tags: ['export_event']
 -- Description: get  summary of transfer statuses from export_event, file_export
 --
 
 select
-  distinct e.export_event_id, 
+  distinct e.export_event_id, activity_id,
+  e.export_destination_name, e.export_status,
+  e.creation_time, e.start_time, e.end_time, 
   (
     select count(file_id) from file_export f 
     where transfer_status is null and f.export_event_id = e.export_event_id
@@ -29,4 +31,4 @@ select
     where e.export_event_id = f.export_event_id and transfer_status = 'failed permanent'
   ) as failed_permanent
 
-from export_event e
+from export_event e join activity_task_status using(subprocess_invocation_id)
