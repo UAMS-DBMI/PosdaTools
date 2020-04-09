@@ -74,60 +74,9 @@ my %FailedTemporaryFiles;
 my %FailedPermanentFiles;
 my %WaitingFiles;
 my %FilesInBadState;
-Query("FileExportForEvent")->RunQuery(sub{
-  my($row) = @_;
-  my($file_id, $has_disp_parms, $when_queued, $when_transferred,
-    $transfer_status, $transfer_status_message, $offset, $root, $batch) =
-    @{$row};
-  if(!defined $when_transferred){
-    my $stat = {
-      when_queued => $when_queued,
-      transfer_status => $transfer_status,
-      transfer_status_message => $transfer_status_message,
-    };
-    if($has_disp_parms){
-      $stat->{has_disp_parms} = 1;
-      $stat->{offset} = $offset;
-      $stat->{root} = $root;
-      $stat->{batch} = $batch;
-    }
-    if($transfer_status eq "pending"){
-      $PendingFiles{$file_id} = $stat;
-    } else {
-      $WaitingFiles{$file_id} = $stat;
-    }
-  } else {
-    my $stat = {
-      when_queued => $when_queued,
-      when_transfered => $when_transferred,
-      transfer_status => $transfer_status,
-      transfer_status_message => $transfer_status_message,
-    };
-    if($has_disp_parms){
-      $stat->{has_disp_parms} = 1;
-      $stat->{offset} = $offset;
-      $stat->{root} = $root;
-      $stat->{batch} = $batch;
-    }
-    if($transfer_status eq "pending"){
-      $PendingFiles{$file_id} = $stat;
-    } elsif ($transfer_status eq "success"){
-      $TransferredFiles{$file_id} = $stat;
-    } elsif ($transfer_status eq "failed temporary"){
-      $FailedTemporaryFiles{$file_id} = $stat;
-    } elsif ($transfer_status eq "failed permanent"){
-      $FailedPermanentFiles{$file_id} = $stat;
-    } else {
-      $FilesInBadState{$file_id} = $stat;
-    }
-  }
-},sub{}, $export_event_id);
-my $num_waiting = keys %WaitingFiles;
-my $num_pending = keys %PendingFiles;
-my $num_success = keys %TransferredFiles;
-my $num_failed_temp = keys %FailedTemporaryFiles;
-my $num_failed_perm = keys %FailedPermanentFiles;
-my $num_bad_state = keys %FilesInBadState;;
+my($num_waiting, $num_pending, $num_success, $num_failed_temp,
+ $num_failed_perm, $num_bad_state);
+UpdateFileTransferStatus();
 #  print a message and go to background
 print 
   "Export_event: $export_event_id, num_files: $num_files " .
@@ -191,16 +140,11 @@ while($num_waiting > 0){
   my $ftt_info = $WaitingFiles{$ftt};
 
   $set_file_status->RunQuery(sub {}, sub {}, $export_event_id, $ftt);
-  ## to do - set pending status in file_edit
  
-  $PendingFiles{$ftt} = $ftt_info;
-  delete $WaitingFiles{$ftt};
-  my $num_waiting = keys %WaitingFiles;
-  my $num_pending = keys %PendingFiles;
-  my $num_success = keys %TransferredFiles;
-  my $num_failed_temp = keys %FailedTemporaryFiles;
-  my $num_failed_perm = keys %FailedPermanentFiles;
-  my $num_bad_state = keys %FilesInBadState;;
+  Query("SetFileExportPending")->RunQuery(sub{},sub{},
+    $export_event_id, $ftt);
+
+  UpdateFileTransferStatus();
   $bg->SetActivityStatus("In progess W: $num_waiting, P: " .
     "$num_pending, S: $num_success, Ft: $num_failed_temp, " .
     "Fp: $num_failed_perm, B: $num_bad_state");
@@ -216,14 +160,15 @@ while($num_waiting > 0){
     }, sub{}, $ftt);
     $prot_hand->TransferAnImage($export_event_id, $ftt, $file_path);
   }
+  UpdateFileTransferStatus();
 }
 my $end_status;
 if($num_failed_perm > 0){
-  $end_status = "failed permanent";
+  $end_status = "finished failure";
 } elsif($num_failed_temp > 0){
-  $end_status = "failed temporary";
+  $end_status = "finished failure";
 } else {
-  $end_status = "success";
+  $end_status = "finished success";
 }
 
 Query("EndExportEvent")->RunQuery(sub{}, sub{}, $end_status, $export_event_id);
@@ -243,6 +188,68 @@ sub PauseTransfer{
     "Fp: $num_failed_perm, B: $num_bad_state");
   exit;
 }
+sub UpdateFileTransferStatus{
+  %WaitingFiles = ();
+  %PendingFiles = ();
+  %TransferredFiles = ();
+  %FailedTemporaryFiles = ();
+  %FailedPermanentFiles = ();
+  %FilesInBadState = ();
+  Query("FileExportForEvent")->RunQuery(sub{
+    my($row) = @_;
+    my($file_id, $has_disp_parms, $when_queued, $when_transferred,
+      $transfer_status, $transfer_status_message, $offset, $root, $batch) =
+      @{$row};
+    if(!defined $when_transferred){
+      my $stat = {
+        when_queued => $when_queued,
+        transfer_status => $transfer_status,
+        transfer_status_message => $transfer_status_message,
+      };
+      if($has_disp_parms){
+        $stat->{has_disp_parms} = 1;
+        $stat->{offset} = $offset;
+        $stat->{root} = $root;
+        $stat->{batch} = $batch;
+      }
+      if(defined($transfer_status) && $transfer_status eq "pending"){
+        $PendingFiles{$file_id} = $stat;
+      } else {
+        $WaitingFiles{$file_id} = $stat;
+      }
+    } else {
+      my $stat = {
+        when_queued => $when_queued,
+        when_transfered => $when_transferred,
+        transfer_status => $transfer_status,
+        transfer_status_message => $transfer_status_message,
+      };
+      if($has_disp_parms){
+        $stat->{has_disp_parms} = 1;
+        $stat->{offset} = $offset;
+        $stat->{root} = $root;
+        $stat->{batch} = $batch;
+      }
+      if($transfer_status eq "pending"){
+        $PendingFiles{$file_id} = $stat;
+      } elsif ($transfer_status eq "success"){
+        $TransferredFiles{$file_id} = $stat;
+      } elsif ($transfer_status eq "failed temporary"){
+        $FailedTemporaryFiles{$file_id} = $stat;
+      } elsif ($transfer_status eq "failed permanent"){
+        $FailedPermanentFiles{$file_id} = $stat;
+      } else {
+        $FilesInBadState{$file_id} = $stat;
+      }
+    }
+  },sub{}, $export_event_id);
+  $num_waiting = keys %WaitingFiles;
+  $num_pending = keys %PendingFiles;
+  $num_success = keys %TransferredFiles;
+  $num_failed_temp = keys %FailedTemporaryFiles;
+  $num_failed_perm = keys %FailedPermanentFiles;
+  $num_bad_state = keys %FilesInBadState;;
+}
 
 sub PauseRequested {
   my($export_event_id) = @_;
@@ -251,6 +258,6 @@ sub PauseRequested {
     my($row) = @_;
     $req = $row->[0];
   }, sub {}, $export_event_id);
-  if($req eq "pause") { return 1}
+  if(defined($req) && $req eq "pause") { return 1}
   return 0;
 } 

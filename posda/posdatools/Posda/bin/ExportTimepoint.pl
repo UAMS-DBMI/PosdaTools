@@ -248,7 +248,7 @@ sub GetFileDispositionsRow{
   #my $ifd = Query("InsertFileDispositionsRow");
   #my $gfd_id = Query("GetFileDispositionsRowId");
 print STDERR ("($l_offset, $l_uid_root, $o_13)\n");
-  unless($l_offset =~ /^[+-\s]*[\d]+\s*$/) {
+  unless($l_offset =~ /^[\+\-\s]*[\d]+\s*$/) {
     die "date doesn't look like integer";
   }
   my $id;
