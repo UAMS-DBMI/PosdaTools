@@ -3,12 +3,12 @@
 -- Columns: []
 -- Args: ['export_event_id']
 -- Tags: ['export_event']
--- Description: Mark an export_event as started
+-- Description:  Mark an export_event as started
 --
 
 update export_event set
   start_time = now(),
-  transfer_status = 'transferring',
+  export_status = 'transfering',
   transfer_status_id = null,
   request_pending = false
 where
