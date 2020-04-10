@@ -463,7 +463,7 @@ sub ProcessIndividualEdit{
   if($tag eq "60xx" || $tag eq "50xx"){
     $tag_mode = "group_pattern";
   }
-  if($tag =~ /^[0-9a-f][0-9a-f][0-9a-f][13579bdf]$/){
+  if($tag =~ /^\([0-9a-f][0-9a-f][0-9a-f][13579bdf]$/){
     $tag_mode = "private_group";
   }
 #  if($tag =~ /x/){
@@ -474,6 +474,14 @@ sub ProcessIndividualEdit{
   if($check_item_at_end && $tag_mode ne "item"){
     print "Error: Bad item specification: $tag\n";
     exit;
+  }
+  if($tag_mode eq "exact"){
+    if($tag =~ /^\(.*\)$/){
+      #OK
+    } else {
+      print "tag $tag doesn't have enclosing parens\n";
+      exit;
+    }
   }
   return {op => $op, tag =>$tag, tag_mode => $tag_mode, arg1 => $v1,
     arg2 =>  $v2};
