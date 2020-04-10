@@ -4587,7 +4587,7 @@ sub ProcessConvertedUploadedNamedSpreadsheet{
 sub GetOperationDescription{
   my($this, $operation_name) = @_;
   my $operation;
-  print STDERR "In GetOperationDescription - $operation_name /n";
+#  print STDERR "In GetOperationDescription - $operation_name \n";
   Query('GetSpreadsheetOperationByName')->RunQuery(sub{
     my($row) = @_;
     my($operation_name, $command_line, $operation_type,
