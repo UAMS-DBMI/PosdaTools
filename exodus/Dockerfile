@@ -1,6 +1,7 @@
 FROM alpine:latest
 RUN apk --update --no-cache add \
 	python3 \
+	redis \
     postgresql-dev gcc python3-dev musl-dev
 
 
