@@ -4,6 +4,8 @@ import json
 import time
 import os
 import hashlib
+import redis
+from typing import NamedTuple
 
 import requests
 import psycopg2
@@ -14,45 +16,24 @@ USER=os.environ['EXODUS_USER']
 PASS=os.environ['EXODUS_PASS']
 RETRY_COUNT=int(os.environ['EXODUS_RETRY_COUNT'])
 PSQL_DB_NAME=os.environ['EXODUS_PSQL_DB_NAME']
-IMPORT_IDS={}
 
 class SubmitFailedError(RuntimeError): pass
 
+class File(NamedTuple):
+    export_event_id: int
+    import_event_id: int
+    file_id: int
+    temp_file: str
 
 def main_loop(psql_db):
-    global IMPORT_IDS
-    sleep_time = 1
 
     while True:
-        last_failed = True
-        (export_event_id, base_url, configuration) = psql_db.execute("""
-            select export_event_id, base_url, configuration
-            from export_event
-            natural join export_destination
-            where export_status = 'transfering'
-            and protocol = 'posda'
-            order by export_event_id
-            limit 1
-        """)
-        print("Uploading file from {} export event".format(export_event_id))
-        print(configuration)
+        sr = redis_db.brpop("posda_to_posda_transfer", 5)
+        if sr is None:
+            continue
 
-        (file_id, file_path) = psql_db.execute("""
-            select file_id, root_path || '/' || rel_path as path
-            from file_export
-            natural join file_location
-            natural join file_storage_root
-            where export_event_id = 1
-            and transfer_status = 'pending'
-            limit 1
-        """)
-
-        print("Uploading file {} from {}".format(file_id, file_path))
-
-        if export_event_id not in IMPORT_IDS:
-            create_import_event(psql_db, base_url, configuration, export_event_id)
-
-        configuration['import_event_id'] = IMPORT_IDS[export_event_id]
+        _, value = sr
+        file = File(*json.loads(value))
 
         try:
             submit_file(file_id, file_path, base_url, configuration)
@@ -62,14 +43,6 @@ def main_loop(psql_db):
             # probably should put this onto a failed-file list now?
             print(e)
             insert_errors(psql_db, file_id, export_event_id, e)
-
-            
-        if last_failed:
-            sleep(sleep_time)
-            if sleep_time < 30:
-                sleep_time += 1
-        else:
-            sleep_time = 1
 
 def create_import_event(psql_db, base_url, configuration, export_event_id):
     global IMPORT_IDS
