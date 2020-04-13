@@ -22,7 +22,6 @@ class File(NamedTuple):
     import_event_id: int
     file_id: int
     file_path: str
-    temp_file: str
     base_url: str
 
 def main_loop(redis_db, psql_db):
@@ -36,7 +35,7 @@ def main_loop(redis_db, psql_db):
         file = File(*json.loads(value))
 
         try:
-            submit_file(file, configuration)
+            submit_file(file)
             update_success(psql_db, file.file_id, file.export_event_id)
             last_failed = True
         except SubmitFailedError as e:
@@ -44,19 +43,12 @@ def main_loop(redis_db, psql_db):
             print(e)
             insert_errors(psql_db, file.file_id, file.export_event_id, e)
 
-def create_import_event(psql_db, base_url, configuration, export_event_id):
-    global IMPORT_IDS
-    headers = configuration.copy()
-    headers['source'] = "External posda->posda transfer"
-    req = requests.post(base_url + "/v1/import/event", headers=headers)
-    IMPORT_IDS[export_event_id] = req.json()['import_event_id']
-
 def update_success(psql_db, file_id, export_event_id):
     try:
         psql_db.execute("""
             update file_export set
-              when_transferred = NOW()
-              and transfer_status = 'success'
+              when_transferred = now(),
+              transfer_status = 'success'
             where export_event_id = %s
               and file_id = %s
         """, [export_event_id, file_id])
@@ -70,50 +62,56 @@ def insert_errors(psql_db, file_id, export_event_id, errors):
             insert into transfer_status
             values (default, %s)
             returning transfer_status_id
-        """, [str(error)])
+        """, [str(errors)])
     except psycopg2.IntegrityError:
         (transfer_status_id) = psql_db.execute("""
             select transfer_status_id
             from transfer_status
             where transfer_status_message = %s
-        """, [str(error)])
+        """, [str(errors)])
     if transfer_status_id is None:
         print("Unable to create or get transfer_status_id for following error")
-        print(e)
+        print(str(errors))
     try:
         psql_db.execute("""
             update file_export set
-              when_transferred = NOW()
-              and transfer_status = 'failed permanent'
-              and transfer_status_id = %s
+              when_transferred = now(),
+              transfer_status = 'failed permanent',
+              transfer_status_id = %s
             where export_event_id = %s
               and file_id = %s
         """, [transfer_status_id, export_event_id, file_id])
     except Exception as e:
         print(e)
 
+def md5sum(filename):
+    md5 = hashlib.md5()
+    with open(filename, 'rb') as f:
+        for chunk in iter(lambda: f.read(128 * md5.block_size), b''):
+            md5.update(chunk)
+    return md5.hexdigest()
+
 def submit_file(file):
     """Submit the file, try several times before giving up"""
     errors = []
-    for i in range(RETRY_COUNT):
-        try:
-            files = {'file': open(file.file_path, 'rb')}
-            headers = configuration.copy()
-            md5 = hashlib.md5()
-            md5.update(files['file'])
-            headers['digest']= md5.hexdigest()
-            return _submit_file(file.file_id, file.file_path, file.base_url, headers)
-        except SubmitFailedError as e:
-            errors.append(e)
-            break
-        except IOError as e:
-            errors.append(e)
+    # for i in range(RETRY_COUNT):
+    try:
+        params = {'import_event_id': file.import_event_id,
+                  'digest': md5sum(file.file_path)}
+        return _submit_file(file.file_id, file.file_path, file.base_url, params)
+    except SubmitFailedError as e:
+        errors.append(e)
+        # break
+    except IOError as e:
+        errors.append(e)
 
     raise SubmitFailedError(("Failed to submit the file; error details follow", file, errors))
 
 
-def _submit_file(file_id, files, base_url, headers):
-    req = requests.post(base_url + "/v1/import/file", headers=headers, files=files)
+def _submit_file(file_id, file_path, base_url, params):
+    infile = open(file_path, "rb")
+    req = requests.put(base_url + "/papi/v1/import/file", params=params, data=infile)
+    infile.close()
 
     if req.status_code == 200:
         print(file_id)

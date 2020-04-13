@@ -85,7 +85,7 @@ my($num_waiting, $num_pending, $num_success, $num_failed_temp,
  $num_failed_perm, $num_bad_state);
 UpdateFileTransferStatus();
 #  print a message and go to background
-print 
+print
   "Export_event: $export_event_id, num_files: $num_files " .
   "to $export_destination_name ($protocol, $base_url)\n" .
   "created by subprocess $creation_id, at: $creation_time, status: $act_status\n" .
@@ -132,7 +132,7 @@ if($protocol eq "posda"){
   $prot_parms = { import_comment => $import_comment };
 }
 
-my $prot_hand = $prot_hand_class->new($export_event_id, $num_files,
+my $prot_hand = $prot_hand_class->new($export_event_id, $base_url, $num_files,
   $export_destination_config, $prot_parms);
 my $start = time;
 my $date = `date`;
@@ -156,7 +156,7 @@ while($num_waiting > 0){
   my $ftt_info = $WaitingFiles{$ftt};
 
   $set_file_status->RunQuery(sub {}, sub {}, $export_event_id, $ftt);
- 
+
   Query("SetFileExportPending")->RunQuery(sub{},sub{},
     $export_event_id, $ftt);
 
@@ -166,8 +166,10 @@ while($num_waiting > 0){
     "Fp: $num_failed_perm, B: $num_bad_state");
   if(defined($ftt_info->{has_disp_parms})){
     my $temp_file = ApplyDispositions($ftt, $ftt_info);
-    $prot_hand->TransferAnImage($export_event_id, $ftt, $temp_file);
-    unlink($temp_file);
+    $prot_hand->TransferAnImage($ftt, $temp_file);
+    # TODO: FIX FIX FIX
+    # THIS CAN'T BE UNLINKED HERE OR THE FILE WILL BE GONE
+    #unlink($temp_file);
   } else {
     my $file_path;
     Query("GetFilePath")->RunQuery(sub {
@@ -276,4 +278,4 @@ sub PauseRequested {
   }, sub {}, $export_event_id);
   if(defined($req) && $req eq "pause") { return 1}
   return 0;
-} 
+}

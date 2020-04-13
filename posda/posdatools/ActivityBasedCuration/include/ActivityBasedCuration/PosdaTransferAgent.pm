@@ -11,17 +11,52 @@ use Posda::DB qw(Query);
 
 use constant REDIS_HOST => 'redis:6379';
 
-sub TransferAnImage{
-  my($this, $file_id, $file_location, $protocol_specific_file_params) = @_;
+sub new {
+  my($class, $export_event_id, $base_url, $num_files, $configuration, $protocol_specific_params) = @_;
+  my $self = $class->SUPER::new($export_event_id, $base_url, $num_files, $configuration, $protocol_specific_params);
+
+  # TODO: add check
   #check to see if an import_event_id exists and create if it doesn't
+  CreateImportEvent($self);
+
+  $self->{redis} = Redis->new(server => REDIS_HOST);
+
+  return bless $self, $class;
+}
+
+sub CreateImportEvent{
+  my($this) = @_;
+
   my $client = REST::Client->new();
-  $client->setHost($this->{config}->{base_url});
+  $client->setHost($this->{base_url});
 
-  #check to see if redis is configured
+  my $form_data = $client->buildQuery({
+      source => "posda_to_posda_transfer",
+      comment => $this->{params}->{import_comment},
+      expected_count => $this->{num_files},
+  });
 
-  print STDERR "Adding to redis $file_id -> $export_event_id ($temp_file)\n";
-  # TODO: pull the file out of the hash here
+  $client->PUT("/papi/v1/import/event$form_data");
+
+  my $resp_code = $client->responseCode();
+  if ($resp_code != 200) {
+    die $resp_code, $client->responseContent(), "\n";
+  }
+
+  my $response = from_json($client->responseContent());
+  print "Created import event $response->{import_event_id}";
+  $this->{import_event_id} = $response->{import_event_id};
+}
+
+sub TransferAnImage{
+  my($this, $file_id, $file_location) = @_;
+
+  #print STDERR "Adding to redis $file_id -> $this->{export_event_id} ($file_location)\n";
   $this->{redis}->lpush('posda_to_posda_transfer',
-                to_json([$export_event_id, $file_id, $temp_file]));
+                        to_json([$this->{export_event_id},
+                                 $this->{import_event_id},
+                                 $file_id,
+                                 $file_location,
+                                 $this->{base_url}]));
 };
 1;

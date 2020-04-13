@@ -5,4 +5,5 @@ common.env
 database.env
 nbia.env
 api.env
+exodus.env
 .rediscli_history
