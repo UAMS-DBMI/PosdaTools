@@ -23,7 +23,9 @@ class File(NamedTuple):
     export_event_id: int
     import_event_id: int
     file_id: int
+    file_path: str
     temp_file: str
+    base_url: str
 
 def main_loop(psql_db):
 
@@ -36,13 +38,13 @@ def main_loop(psql_db):
         file = File(*json.loads(value))
 
         try:
-            submit_file(file_id, file_path, base_url, configuration)
-            update_success(psql_db, file_id, export_event_id)
+            submit_file(file, configuration)
+            update_success(psql_db, file.file_id, file.export_event_id)
             last_failed = True
         except SubmitFailedError as e:
             # probably should put this onto a failed-file list now?
             print(e)
-            insert_errors(psql_db, file_id, export_event_id, e)
+            insert_errors(psql_db, file.file_id, file.export_event_id, e)
 
 def create_import_event(psql_db, base_url, configuration, export_event_id):
     global IMPORT_IDS
@@ -92,24 +94,24 @@ def insert_errors(psql_db, file_id, export_event_id, errors):
     except Exception as e:
         print(e)
 
-def submit_file(file_id, file_path, base_url, configuration):
+def submit_file(file):
     """Submit the file, try several times before giving up"""
     errors = []
     for i in range(RETRY_COUNT):
         try:
-            files = {'file': open(file_path, 'rb')}
+            files = {'file': open(file.file_path, 'rb')}
             headers = configuration.copy()
             md5 = hashlib.md5()
             md5.update(files['file'])
             headers['digest']= md5.hexdigest()
-            return _submit_file(file_id, file_path, base_url, headers)
+            return _submit_file(file.file_id, file.file_path, file.base_url, headers)
         except SubmitFailedError as e:
             errors.append(e)
             break
         except IOError as e:
             errors.append(e)
 
-    raise SubmitFailedError(("Failed to submit the file; error details follow", f, errors))
+    raise SubmitFailedError(("Failed to submit the file; error details follow", file, errors))
 
 
 def _submit_file(file_id, files, base_url, headers):
