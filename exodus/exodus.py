@@ -10,8 +10,6 @@ from typing import NamedTuple
 import requests
 import psycopg2
 
-
-EXPORT_ID=os.environ['EXODUS_EXPORT_ID']
 USER=os.environ['EXODUS_USER']
 PASS=os.environ['EXODUS_PASS']
 RETRY_COUNT=int(os.environ['EXODUS_RETRY_COUNT'])
@@ -27,7 +25,7 @@ class File(NamedTuple):
     temp_file: str
     base_url: str
 
-def main_loop(psql_db):
+def main_loop(redis_db, psql_db):
 
     while True:
         sr = redis_db.brpop("posda_to_posda_transfer", 5)
@@ -72,15 +70,15 @@ def insert_errors(psql_db, file_id, export_event_id, errors):
             insert into transfer_status
             values (default, %s)
             returning transfer_status_id
-        """, [str(error))
+        """, [str(error)])
     except psycopg2.IntegrityError:
         (transfer_status_id) = psql_db.execute("""
             select transfer_status_id
             from transfer_status
             where transfer_status_message = %s
-        """, [str(error))
+        """, [str(error)])
     if transfer_status_id is None:
-        print "Unable to create or get transfer_status_id for following error"
+        print("Unable to create or get transfer_status_id for following error")
         print(e)
     try:
         psql_db.execute("""
@@ -126,12 +124,15 @@ def _submit_file(file_id, files, base_url, headers):
 def main():
     print("exodus, starting up...")
 
+    redis_db = redis.StrictRedis(host="redis", db=0)
+    print("connected to redis")
+
     psql_db_conn = psycopg2.connect(dbname=PSQL_DB_NAME)
     psql_db_conn.autocommit = True
     psql_db_cur = psql_db_conn.cursor()
     print("connected to postgres")
 
-    main_loop(psql_db_cur)
+    main_loop(redis_db, psql_db_cur)
 
 
 if __name__ == "__main__":
