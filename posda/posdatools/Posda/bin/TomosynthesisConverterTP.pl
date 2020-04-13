@@ -19,13 +19,12 @@ Currently just a skeleton based on FixReallyBadDicomFilesInTimepoint and ApplyPr
 
 --
 Uses named queries:
-   InvalidTomosynthesisFilesInTimepoint
+   VeryBadDicomFilesInTimepoint
    FileIdsByActivityTimepointId
    CreateActivityTimepoint
    InsertActivityTimepointFile
 
-Uses script GetSopInfoFromMeta.pl to get SOP Class and Instance from group 0002
-Uses script ChangeDicomElements.pl to add tags to group 0008
+Uses script ChangeDicomElements.pl to update tags to make the file valid
 EOF
 
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
@@ -44,9 +43,9 @@ my($invoc_id, $activity_id, $activity_timepoint_id, $notify) = @ARGV;
 
 print "Going to background\n";
 
-#my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
+# $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 #$back->Daemonize;
-my $q = Query("InvalidTomosynthesisFilesInTimepoint");
+my $q = Query("VeryBadDicomFilesInTimepoint");
 my $oq = Query("FileIdsByActivityTimepointId");
 my $i = 0;
 #$back->WriteToEmail("Initial line written to email\n");
@@ -81,6 +80,7 @@ for my $file (keys %Files){
   my $path = $Files{$file};
   my($sop_class, $sop_inst);
   my $cmd = "GetSopInfoFromMeta.pl $path";
+
   open FILE, "$cmd|";
   while (my $line = <FILE>){
     chomp $line;
@@ -92,20 +92,29 @@ for my $file (keys %Files){
     }
   }
   close FILE;
-  unless(defined($sop_class) && defined($sop_inst)){
-    $num_failed += 1;
-    next file;
-  }
+
+  my $laterality;
+  if (index(substr($path, -15), 'r') != -1) {
+    $laterality = 'R';
+   }else{
+     $laterality = 'L'
+   }
+
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
-  $cmd = "ChangeDicomElements.pl $path $dest_file \"(0008,0016)\" $sop_class " .
+  $cmd = "ChangeDicomElements.pl $path $dest_file \"(0018,1000)\" 12345 " .
+    "\"(0018,1020)\" 12345" .
+    "\"(0018,9004)\" RESEARCH" .
+    "\"(0008,9205)\" MONOCHROME" .
+    "\"(0008,9206)\" SAMPLED" .
+    "\"(0008,9207)\" TOMOSYNTHESIS" .
+    "\"(0054,0220)\" 399368009" .
+    "\"(0018,0050)\" 49.0" .
+    "\"(0020, 9071)\" $laterality" .
+    "\"(0008,2220)\" $laterality" .
+    "\"(0008,0016)\" $sop_class " .
     "\"(0008,0018)\" $sop_inst";
-  #$back->WriteToEmail(">$cmd\n");
-  open FILE, "$cmd|";
-  while(my $line = <FILE>){
-    #$back->WriteToEmail($line);
-  }
-  close FILE;
-  $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Copying SOP from Meta header\"";
+
+  $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
   my $result = `$cmd`;
   my $new_file_id;
   if($result =~ /File id: (.*)/){
@@ -113,21 +122,20 @@ for my $file (keys %Files){
   }
   unlink $dest_file;
   unless(defined($new_file_id)){
-    #$back->WriteToEmail("Unable to import file $dest_file\n($result)\n");
+    print STDERR "Unable to import file $dest_file\n($result)\n";
   }
   if($new_file_id != $file){
     $Conversions{$file} = $new_file_id;
     $num_converted += 1;
   } else {
-    #$back->WriteToEmail("Meet the new file, same as the old file ($new_file_id)\n");
+    print STDERR "Meet the new file, same as the old file ($new_file_id)\n";
   }
 }
-#$back->WriteToEmail("Processed $num_done files\n" .
-#  "Failed to get meta for $num_failed\n" .
-#  "Converted $num_converted\n");
+print STDERR "Processed $num_done files\n" .
+  "Failed to get meta for $num_failed\n" .
+  "Converted $num_converted\n");
 if($num_converted > 0){
   my %FilesInNewTp;
-  #$back->SetActivityStatus("Making new timepoint with $num_converted conversions");
   my $comment = "New Timepoint for ImportedEdits $invoc_id";
   Query("CreateActivityTimepoint")->RunQuery(sub {}, sub {},
     $activity_id, $0, $comment, $notify);
