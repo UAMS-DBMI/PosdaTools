@@ -123,6 +123,25 @@ export class RootTableViewerComponent implements OnInit {
     }
   }
 
+  public createSC(){
+    let sc = String(Math.floor(Math.random() * (9999 - 1000 + 1) ) + 1000);//max 9999, min 1000 inclusive
+    this.myService.findSiteNameFromCode(sc).subscribe(
+      text => this.createSC(),
+      err  => this.myNewRootForms.get('input_site_code').setValue(sc)
+    );
+  }
+  public createCC(){
+    let cc = String(Math.floor(Math.random() * (9999 - 1000 + 1) ) + 1000);
+    this.myService.findCollectionNameFromCode(cc).subscribe(
+      text => this.createCC(),
+      err => this.myNewRootForms.get('input_collection_code').setValue(cc)
+    );
+  }
+  public createDS(){
+    var ds = Math.floor(Math.random() * (7300 - 1825 + 1) ) + 1825;
+    this.myNewRootForms.get('input_date_shift').setValue(ds);
+  }
+
   public exitAddMode(){
     this.addMode = false;
     this.newCollWarn = "";
@@ -145,7 +164,7 @@ export class RootTableViewerComponent implements OnInit {
             this.exitAddMode();
             this.AdditionFeedback = "**ERROR**\n" + err.error.message;
           },
-      )
+      );
 
     }else{
       this.AdditionFeedback = "**ERROR**\n Site Code, Site Name, Collection Code, and Colleciton Name are required." ;
