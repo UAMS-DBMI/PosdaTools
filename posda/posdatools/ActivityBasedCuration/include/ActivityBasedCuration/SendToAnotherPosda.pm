@@ -3,6 +3,7 @@ package ActivityBasedCuration::SendToAnotherPosda;
 use ActivityBasedCuration::WorkflowDefinition;
 use ActivityBasedCuration::ElementDescriptions;
 use Redis;
+use JSON;
 use Debug;
 my $dbg = sub {print STDERR @_};
 
