@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-package ActivityBasedCuration::SimulateSlowSend;
+package ActivityBasedCuration::NbiaTransferAgent;
 use ActivityBasedCuration::TransferAgent;
 use vars qw( @ISA );
 @ISA = ("ActivityBasedCuration::TransferAgent");

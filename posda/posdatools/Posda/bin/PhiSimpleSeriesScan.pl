@@ -5,7 +5,7 @@ use Posda::Dataset;
 use Dispatch::EventHandler;
 use Dispatch::LineReader;
 my $usage = <<EOF;
-PhiSimpleSeriesScan.pl  <series_instance_uid> <scan_inst_id> <query_name>
+PhiSimpleSeriesScan.pl  <series_instance_uid> <query_name>
   series_instance_uid  - series_instance_uid
   query_name           - name of query for files in series
 

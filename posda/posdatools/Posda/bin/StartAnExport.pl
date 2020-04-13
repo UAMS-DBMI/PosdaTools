@@ -2,10 +2,13 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+use JSON;
 my $usage = <<EOF;
-StartAnExport.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id>  <notify>
+StartAnExport.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id> "<import_comment>" <notify>
   activity_id - activity id
   export_event_id -  export_event_id
+  <import_comment> - comment to supply to importer for Posda-to-Posda
+    (optional - defaults to "activity: <activity_desc> (<activity_id>, <export_event_id>)")
   notify - email address for completion notification
 
 Expects nothing on STDIN
@@ -24,13 +27,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 
-unless($#ARGV == 3){
+unless($#ARGV == 4){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $export_event_id, $notify) = @ARGV;
+my($invoc_id, $act_id, $export_event_id, $import_comment, $notify) = @ARGV;
 my($creation_id, $export_destination_name, $creation_time,
   $request_pending, $request_status, $act_status, $num_files);
 Query("PendingExportRequestsForActivity")->RunQuery(sub {
@@ -62,11 +65,15 @@ Query("ExportDestinationInfo")->RunQuery(sub{
   my($row) = @_;
   $protocol = $row->[0];
   $base_url = $row->[1];
-  $config_string = $row->[1];
+  $config_string = $row->[2];
 }, sub {}, $export_destination_name);
 unless(defined $protocol){
   print "Unable to locate export_destination $export_destination_name\n";
   exit;
+}
+my $export_destination_config;
+if(defined $config_string) {
+  $export_destination_config = decode_json($config_string);
 }
 my %PendingFiles;
 my %TransferredFiles;
@@ -92,8 +99,8 @@ print "$num_waiting files waiting to be transferred\n" .
   "$num_bad_state files are in a bad transfer state.\n";
 
 my $protocol_handlers = {
-  posda => "ActivityBasedCuration::SendToAnotherPosda",
-  public => "ActivityBasedCuration::SendToPublic",
+  posda => "ActivityBasedCuration::PosdaTransferAgent",
+  nbia => "ActivityBasedCuration::NbiaTransferAgent",
   simulate_slow_transfer => "ActivityBasedCuration::SimulateSlowSend",
 };
 unless(defined $protocol_handlers->{$protocol}){
@@ -114,10 +121,19 @@ if($@){
 #exit;
 
 print "\nEntering background\n";
+my $prot_parms;
+if($protocol eq "posda"){
+  if($import_comment eq ""){
+    Query{"GetActivityInfo"}->RunQuery(sub{
+      my($row) = @_;
+      $import_comment = "Activity: $row->[1] ($act_id, $export_event_id)";
+    }, sub {}, $act_id);
+  }
+  $prot_parms = { import_comment => $import_comment };
+}
 
-my $prot_hand = $prot_hand_class->new($export_event_id,
-  \%WaitingFiles, \%PendingFiles, \%TransferredFiles,
-  \%FailedTemporaryFiles, \%FailedPermanentFiles);
+my $prot_hand = $prot_hand_class->new($export_event_id, $num_files,
+  $export_destination_config, $prot_parms);
 my $start = time;
 my $date = `date`;
 my $bg = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
@@ -158,7 +174,7 @@ while($num_waiting > 0){
       my($row) = @_;
       $file_path = $row->[0];
     }, sub{}, $ftt);
-    $prot_hand->TransferAnImage($export_event_id, $ftt, $file_path);
+    $prot_hand->TransferAnImage($ftt, $file_path);
   }
   UpdateFileTransferStatus();
 }
