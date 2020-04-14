@@ -8,15 +8,25 @@ use Posda::UUID;
 use Time::Piece;
 
 my $usage = <<EOF;
-ApplyDispositionsSubprocess.pl <from_file> <to_file> <uid_root> <offset>
+ApplyDispositionsSubprocess.pl <from_file> <to_file> <uid_root> <offset> <only_13>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
   date's always offset
+  if(<only_13>) only set group 13 tags, don't really apply dispositions
+
+Prints to STDOUT:
+  "SUCCESS" if dispositions applied correctly
+  "ERROR: <message>" if dispositions failed to apply
 EOF
 
-unless($#ARGV == 4) { die $usage }
-my ($from_file, $to_file, $uid_root, $offset) = @ARGV;
+unless($#ARGV == 4) {
+  my $num_args = @ARGV;
+  print "ERROR: wrong number of args ($num_args vs 5) " .
+    "in ApplyDispositionsSubprocess.pl\n";
+  die $usage;
+}
+my ($from_file, $to_file, $uid_root, $offset, $only_13) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -90,38 +100,43 @@ $DeleteByElement{'(0013,"CTP",12)'} = 1;
 
 # Set up dispositions
 
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  if($row->[0] =~ /\[/){
-    $DeleteByPattern{$row->[0]} = 1;
-  } else {
-    $DeleteByElement{$row->[0]} = 1;
-  }
-}, sub {}, 'd');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  my $tag = $row->[0];
-  if($tag =~ /</){
-    $OffsetDateByPattern{$tag} = 1;
-  }else {
-    $OffsetDate{$tag} = 1;
-  }
-}, sub {}, 'o');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  $OffsetInteger{$row->[0]} = 1;
-}, sub {}, 'oi');
-$get_disp->RunQuery(sub {
-  my($row) = @_;
-  if($row->[0] =~ /\[/){
-    $HashByPattern{$row->[0]} = 1;
-  } else {
-    $HashByElement{$row->[0]} = 1;
-  }
-}, sub {}, 'h');
+unless($only_13){
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    if($row->[0] =~ /\[/){
+      $DeleteByPattern{$row->[0]} = 1;
+    } else {
+      $DeleteByElement{$row->[0]} = 1;
+    }
+  }, sub {}, 'd');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    my $tag = $row->[0];
+    if($tag =~ /</){
+      $OffsetDateByPattern{$tag} = 1;
+    }else {
+      $OffsetDate{$tag} = 1;
+    }
+  }, sub {}, 'o');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    $OffsetInteger{$row->[0]} = 1;
+  }, sub {}, 'oi');
+  $get_disp->RunQuery(sub {
+    my($row) = @_;
+    if($row->[0] =~ /\[/){
+      $HashByPattern{$row->[0]} = 1;
+    } else {
+      $HashByElement{$row->[0]} = 1;
+    }
+  }, sub {}, 'h');
+}
 
 my $try = Posda::Try->new($from_file);
-unless(exists $try->{dataset}){ die "$from_file is not a DICOM file" }
+unless(exists $try->{dataset}){
+  print "ERROR: $from_file is not a DICOM file\n";
+  die "$from_file is not a DICOM file"
+}
 my $ds = $try->{dataset};
 
 
@@ -195,6 +210,7 @@ for my $e (keys %OffsetDate){
       $new_date = ShiftDate($date);
     };
     if ($@) {
+      print "ERROR: exception in Time::Piece\n";
       die "%%%E Could not parse date '$date' in $e\n";
     }
     if($new_date ne $date){
@@ -216,6 +232,7 @@ for my $e (keys %OffsetDateByPattern){
         };
 
         if ($@) {
+          print "ERROR: exception in Time::Piece\n";
           die "%%%E Could not parse date '$date' in $e\n";
         }
 
@@ -241,7 +258,8 @@ eval {
   $ds->WritePart10($to_file, $try->{xfr_stx}, "POSDA", undef, undef);
 };
 if($@){
-  print STDERR "Can't write $to_file ($@)\n";
-  exit;
+  print "ERROR: Can't write to $to_file\n";
+  die "Can't write $to_file ($@)\n";
 }
+print "SUCCESS\n";
 

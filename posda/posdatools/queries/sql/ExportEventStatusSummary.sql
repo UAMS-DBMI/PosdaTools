@@ -32,3 +32,4 @@ select
   ) as failed_permanent
 
 from export_event e join activity_task_status using(subprocess_invocation_id)
+where e.dismissed_time is null

@@ -211,6 +211,15 @@ EOF
       export_event_id => "export_event_id",
     },
   },
+  qc_21=> {
+    chained_query_id => "qc_21",
+    caption => "dismiss",
+    from_query => "ExportEventStatusSummary",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
 );
 
 %QueryChainColumnButtons = (

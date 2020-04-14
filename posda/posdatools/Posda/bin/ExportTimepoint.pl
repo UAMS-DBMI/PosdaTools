@@ -233,11 +233,12 @@ $bg->Finish("Done: queued $num_files to export_event $export_event_id");
 
 sub GetFileDispositionsRow{
   my($file_id) = @_;
-  if($only_13){
-    return [ undef, undef, "true" ];
-  }
   my $l_uid_root = $uid_root;
   my $l_offset = $offset;
+  if($o_13 eq "true"){
+    $l_uid_root = "";
+    $l_offset = "";
+  }
   if($base_line){
     print STDERR "looking up offset, uid_root from patient_mapping\n";
     ($l_offset, $l_uid_root) = GetFileDispositionsRowBaseline($file_id);
@@ -249,19 +250,29 @@ sub GetFileDispositionsRow{
   #my $gfd_id = Query("GetFileDispositionsRowId");
 print STDERR ("($l_offset, $l_uid_root, $o_13)\n");
   unless($l_offset =~ /^[\+\-\s]*[\d]+\s*$/) {
-    die "date doesn't look like integer";
+    if($l_offset eq ""){
+      $l_offset = 0;
+    }  else {
+      die "date doesn't look like integer";
+    }
   }
   my $id;
   $gfd->RunQuery(sub{
     my($row) = @_;
     $id = $row->[0];
   }, sub{}, $l_offset, $l_uid_root, $o_13);
+if(defined($id)){
+  print "Existing id for params: $id\n";
+}
   if($id){ return $id }
   $ifd->RunQuery(sub{}, sub{}, $l_offset, $l_uid_root, $o_13);
   $gfd_id->RunQuery(sub{
     my($row) = @_;
     $id = $row->[0];
   }, sub {});
+if(defined($id)){
+  print "Created id for params: $id\n";
+}
   if($id){ return $id }
   die "unable to create export_file_dispositions_params row";
 } 
