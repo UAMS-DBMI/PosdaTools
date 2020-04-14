@@ -15,6 +15,17 @@ sub new {
   my($class, $export_event_id, $base_url, $num_files, $configuration, $protocol_specific_params) = @_;
   my $self = $class->SUPER::new($export_event_id, $base_url, $num_files, $configuration, $protocol_specific_params);
 
+  # see if there is an api key
+  if (defined $self->{config}->{apikey}) {
+    $self->{apikey} = $self->{config}->{apikey};
+  }
+
+  if (defined $self->{config}->{origin}) {
+    $self->{origin} = $self->{config}->{origin};
+  } else {
+    $self->{origin} = "undefined posda_to_posda_transfer";
+  }
+
   # TODO: add check
   #check to see if an import_event_id exists and create if it doesn't
   CreateImportEvent($self);
@@ -31,12 +42,12 @@ sub CreateImportEvent{
   $client->setHost($this->{base_url});
 
   my $form_data = $client->buildQuery({
-      source => "posda_to_posda_transfer",
-      comment => $this->{params}->{import_comment},
+      origin => $this->{origin},
+      source => $this->{params}->{import_comment},
       expected_count => $this->{num_files},
   });
 
-  $client->PUT("/papi/v1/import/event$form_data");
+  $client->PUT("/v1/import/event$form_data", undef, {apikey => $this->{apikey}});
 
   my $resp_code = $client->responseCode();
   if ($resp_code != 200) {
@@ -44,8 +55,26 @@ sub CreateImportEvent{
   }
 
   my $response = from_json($client->responseContent());
-  print "Created import event $response->{import_event_id}";
+  print STDERR "Created import event $response->{import_event_id}";
   $this->{import_event_id} = $response->{import_event_id};
+}
+
+sub CloseImportEvent{
+  my($this) = @_;
+
+  my $client = REST::Client->new();
+  $client->setHost($this->{base_url});
+
+  $client->POST("/v1/import/event/$this->{import_event_id}/close",
+                undef,
+                {apikey => $this->{apikey}});
+
+  my $resp_code = $client->responseCode();
+  if ($resp_code != 200) {
+    die $resp_code, $client->responseContent(), "\n";
+  }
+
+  print STDERR "Closed import event $this->{import_event_id}";
 }
 
 sub TransferAnImage{
@@ -58,6 +87,7 @@ sub TransferAnImage{
                                  $file_id,
                                  $file_location,
                                  $this->{base_url},
+                                 $this->{apikey},
                                  $delete_after_transfer]));
 };
 1;

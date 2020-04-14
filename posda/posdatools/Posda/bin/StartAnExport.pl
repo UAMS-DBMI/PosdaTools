@@ -126,7 +126,7 @@ print "\nEntering background\n";
 my $prot_parms;
 if($protocol eq "posda"){
   if($import_comment eq ""){
-    Query{"GetActivityInfo"}->RunQuery(sub{
+    Query("GetActivityInfo")->RunQuery(sub{
       my($row) = @_;
       $import_comment = "Activity: $row->[1] ($act_id, $export_event_id)";
     }, sub {}, $act_id);
@@ -280,8 +280,6 @@ sub PauseRequested {
   }, sub {}, $export_event_id);
   if(defined($req) && $req eq "pause") { return 1}
   return 0;
-<<<<<<< HEAD
-=======
 }
 sub ApplyDispositions{
   my($file_id, $f_info, $file_path) = @_;
@@ -299,5 +297,4 @@ sub ApplyDispositions{
   close DISP;
   close $fh;
   return $RespLines[0], $temp_file_path;
->>>>>>> origin/InitialExportEvent
 }
