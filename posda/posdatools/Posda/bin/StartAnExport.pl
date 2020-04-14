@@ -3,6 +3,8 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 use JSON;
+use File::Temp qw/ tempfile /;
+
 my $usage = <<EOF;
 StartAnExport.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id> "<import_comment>" <notify>
   activity_id - activity id
@@ -164,19 +166,18 @@ while($num_waiting > 0){
   $bg->SetActivityStatus("In progess W: $num_waiting, P: " .
     "$num_pending, S: $num_success, Ft: $num_failed_temp, " .
     "Fp: $num_failed_perm, B: $num_bad_state");
+  my $file_path;
+  Query("GetFilePath")->RunQuery(sub {
+    my($row) = @_;
+    $file_path = $row->[0];
+  }, sub{}, $ftt);
   if(defined($ftt_info->{has_disp_parms})){
-    my $temp_file = ApplyDispositions($ftt, $ftt_info);
-    $prot_hand->TransferAnImage($ftt, $temp_file);
-    # TODO: FIX FIX FIX
-    # THIS CAN'T BE UNLINKED HERE OR THE FILE WILL BE GONE
-    #unlink($temp_file);
+    my($status, $temp_file) = ApplyDispositions($ftt, $ftt_info, $file_path);
+    if($status eq "SUCCESS" && -f $temp_file){
+      $prot_hand->TransferAnImage($ftt, $temp_file, 1);
+    }
   } else {
-    my $file_path;
-    Query("GetFilePath")->RunQuery(sub {
-      my($row) = @_;
-      $file_path = $row->[0];
-    }, sub{}, $ftt);
-    $prot_hand->TransferAnImage($ftt, $file_path);
+    $prot_hand->TransferAnImage($ftt, $file_path, 0);
   }
   UpdateFileTransferStatus();
 }
@@ -216,7 +217,7 @@ sub UpdateFileTransferStatus{
   Query("FileExportForEvent")->RunQuery(sub{
     my($row) = @_;
     my($file_id, $has_disp_parms, $when_queued, $when_transferred,
-      $transfer_status, $transfer_status_message, $offset, $root, $batch) =
+      $transfer_status, $transfer_status_message, $offset, $root, $batch, $only_13) =
       @{$row};
     if(!defined $when_transferred){
       my $stat = {
@@ -229,6 +230,7 @@ sub UpdateFileTransferStatus{
         $stat->{offset} = $offset;
         $stat->{root} = $root;
         $stat->{batch} = $batch;
+        $stat->{only_13} = $only_13;
       }
       if(defined($transfer_status) && $transfer_status eq "pending"){
         $PendingFiles{$file_id} = $stat;
@@ -278,4 +280,24 @@ sub PauseRequested {
   }, sub {}, $export_event_id);
   if(defined($req) && $req eq "pause") { return 1}
   return 0;
+<<<<<<< HEAD
+=======
+}
+sub ApplyDispositions{
+  my($file_id, $f_info, $file_path) = @_;
+  my($fh, $temp_file_path) = tempfile();
+
+  my $cmd = "ApplyDispositionsSubprocess.pl \"$file_path\" " .
+    "\"$temp_file_path\" \"$f_info->{root}\" " .
+    "\"$f_info->{offset}\" \"$f_info->{only_13}\"";
+  open DISP, "$cmd|";
+  my @RespLines;
+  while(my $line = <DISP>){
+    chomp $line;
+    push @RespLines, $line;
+  }
+  close DISP;
+  close $fh;
+  return $RespLines[0], $temp_file_path;
+>>>>>>> origin/InitialExportEvent
 }

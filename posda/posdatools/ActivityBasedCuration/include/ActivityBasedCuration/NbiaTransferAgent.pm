@@ -7,7 +7,7 @@ use vars qw( @ISA );
 use Posda::DB qw(Query);
 
 sub TransferAnImage{
-  my($this, $file_id, $file_location, $protocol_specific_file_params) = @_;
+  my($this, $file_id, $file_location, $delete_after_transfer, $protocol_specific_file_params) = @_;
 
   if(defined($this->{config}->{sleep_time})){
     sleep $this->{config}->{sleep_time};
@@ -15,5 +15,8 @@ sub TransferAnImage{
 
   Query("SetFileExportComplete")->RunQuery(sub{},sub{},
     "success", $this->{export_event_id}, $file_id);
+  if($delete_after_transfer){
+    unlink($file_location);
+  }
 };
 1;

@@ -23,7 +23,7 @@ sub new {
 # Override this method
 
 sub TransferAnImage{
-  my($this, $file_id, $file_location) = @_;
+  my($this, $file_id, $file_location, $delete_after_transfer) = @_;
   die "The method TransferAnImage needs to be overridden is classes " .
     "derived from ActivityBasedCuration::TransferAgent";
 };

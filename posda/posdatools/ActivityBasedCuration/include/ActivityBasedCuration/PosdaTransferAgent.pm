@@ -49,7 +49,7 @@ sub CreateImportEvent{
 }
 
 sub TransferAnImage{
-  my($this, $file_id, $file_location) = @_;
+  my($this, $file_id, $file_location, $delete_after_transfer) = @_;
 
   #print STDERR "Adding to redis $file_id -> $this->{export_event_id} ($file_location)\n";
   $this->{redis}->lpush('posda_to_posda_transfer',
@@ -57,6 +57,7 @@ sub TransferAnImage{
                                  $this->{import_event_id},
                                  $file_id,
                                  $file_location,
-                                 $this->{base_url}]));
+                                 $this->{base_url},
+                                 $delete_after_transfer]));
 };
 1;

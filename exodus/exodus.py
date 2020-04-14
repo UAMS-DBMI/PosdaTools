@@ -23,6 +23,7 @@ class File(NamedTuple):
     file_id: int
     file_path: str
     base_url: str
+    delete_after_transfer: int
 
 def main_loop(redis_db, psql_db):
 
@@ -98,7 +99,11 @@ def submit_file(file):
     try:
         params = {'import_event_id': file.import_event_id,
                   'digest': md5sum(file.file_path)}
-        return _submit_file(file.file_id, file.file_path, file.base_url, params)
+        return _submit_file(file.file_id,
+                            file.file_path,
+                            file.base_url,
+                            params,
+                            file.delete_after_transfer == 1)
     except SubmitFailedError as e:
         errors.append(e)
         # break
@@ -108,13 +113,15 @@ def submit_file(file):
     raise SubmitFailedError(("Failed to submit the file; error details follow", file, errors))
 
 
-def _submit_file(file_id, file_path, base_url, params):
+def _submit_file(file_id, file_path, base_url, params, delete_after_transfer):
     infile = open(file_path, "rb")
     req = requests.put(base_url + "/papi/v1/import/file", params=params, data=infile)
     infile.close()
 
     if req.status_code == 200:
         print(file_id)
+        if(delete_after_transfer):
+            os.remove(file_path)
         return
     else:
         raise SubmitFailedError((req.status_code, req.content))
