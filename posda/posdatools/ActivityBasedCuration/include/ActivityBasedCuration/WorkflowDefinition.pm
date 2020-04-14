@@ -389,6 +389,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Completed Exports",
         query => "CompletedExportRequests",
       },
+      {
+        caption => "Export Event Summary",
+        query => "ExportEventStatusSummary",
+      },
     ],
   ],
 );
