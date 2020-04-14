@@ -87,7 +87,7 @@ my($num_waiting, $num_pending, $num_success, $num_failed_temp,
  $num_failed_perm, $num_bad_state);
 UpdateFileTransferStatus();
 #  print a message and go to background
-print 
+print
   "Export_event: $export_event_id, num_files: $num_files " .
   "to $export_destination_name ($protocol, $base_url)\n" .
   "created by subprocess $creation_id, at: $creation_time, status: $act_status\n" .
@@ -126,7 +126,7 @@ print "\nEntering background\n";
 my $prot_parms;
 if($protocol eq "posda"){
   if($import_comment eq ""){
-    Query{"GetActivityInfo"}->RunQuery(sub{
+    Query("GetActivityInfo")->RunQuery(sub{
       my($row) = @_;
       $import_comment = "Activity: $row->[1] ($act_id, $export_event_id)";
     }, sub {}, $act_id);
@@ -134,7 +134,7 @@ if($protocol eq "posda"){
   $prot_parms = { import_comment => $import_comment };
 }
 
-my $prot_hand = $prot_hand_class->new($export_event_id, $num_files,
+my $prot_hand = $prot_hand_class->new($export_event_id, $base_url, $num_files,
   $export_destination_config, $prot_parms);
 my $start = time;
 my $date = `date`;
@@ -158,7 +158,7 @@ while($num_waiting > 0){
   my $ftt_info = $WaitingFiles{$ftt};
 
   $set_file_status->RunQuery(sub {}, sub {}, $export_event_id, $ftt);
- 
+
   Query("SetFileExportPending")->RunQuery(sub{},sub{},
     $export_event_id, $ftt);
 
@@ -280,11 +280,11 @@ sub PauseRequested {
   }, sub {}, $export_event_id);
   if(defined($req) && $req eq "pause") { return 1}
   return 0;
-} 
+}
 sub ApplyDispositions{
   my($file_id, $f_info, $file_path) = @_;
   my($fh, $temp_file_path) = tempfile();
-  
+
   my $cmd = "ApplyDispositionsSubprocess.pl \"$file_path\" " .
     "\"$temp_file_path\" \"$f_info->{root}\" " .
     "\"$f_info->{offset}\" \"$f_info->{only_13}\"";
