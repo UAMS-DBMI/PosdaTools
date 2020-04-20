@@ -194,7 +194,12 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
     queries => [
-       {
+      {
+        caption => "Suggested Queries For Export Events By Activity",
+        operation => "SelectQueryGroup",
+        query_list_name => "ExportEventsByActivity",
+      },
+      {
         caption => "Suggested Queries For Export Events",
         operation => "SelectQueryGroup",
         query_list_name => "ExportEvents",
@@ -374,6 +379,31 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   ],
+  ExportEventsByActivity => [
+    "Suggested Queries for ExportEvents By Activity",
+    [
+      {
+        caption => "Pending Exports",
+        query => "PendingExportRequestsByActivity",
+      },
+#      {
+#        caption => "Running Exports",
+#        query => "RunningExportRequestsByActivity",
+#      },
+#      {
+#        caption => "Completed Exports",
+#        query => "CompletedExportRequestsByActivity",
+#      },
+      {
+        caption => "Export Event Summary",
+        query => "ExportEventStatusSummaryByActivity",
+      },
+      {
+        caption => "Export Events Awaiting Closure",
+        query => "ExportEventsAwaitingClosureByActivity",
+      },
+    ],
+  ],
   ExportEvents => [
     "Suggested Queries for ExportEvents",
     [
@@ -392,6 +422,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Export Event Summary",
         query => "ExportEventStatusSummary",
+      },
+      {
+        caption => "Dismissed Export Event Summary",
+        query => "DismissedExportEventStatusSummary",
+      },
+      {
+        caption => "Export Events Awaiting Closure",
+        query => "ExportEventsAwaitingClosure",
       },
     ],
   ],

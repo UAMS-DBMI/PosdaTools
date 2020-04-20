@@ -26,9 +26,11 @@ sub new {
     $self->{origin} = "undefined posda_to_posda_transfer";
   }
 
-  # TODO: add check
-  #check to see if an import_event_id exists and create if it doesn't
-  CreateImportEvent($self);
+  if(exists $protocol_specific_params->{destination_import_event_id}){
+    $self->{import_event_id} = $protocol_specific_params->{destination_import_event_id};
+  } else {
+    CreateImportEvent($self);
+  }
 
   $self->{redis} = Redis->new(server => REDIS_HOST);
 
@@ -57,6 +59,8 @@ sub CreateImportEvent{
   my $response = from_json($client->responseContent());
   print STDERR "Created import event $response->{import_event_id}";
   $this->{import_event_id} = $response->{import_event_id};
+  Query("SetDestinationImportEventId")->RunQuery(sub{}, sub{},
+    $response->{import_event_id}, $this->{export_event_id});
 }
 
 sub CloseImportEvent{
@@ -71,10 +75,12 @@ sub CloseImportEvent{
 
   my $resp_code = $client->responseCode();
   if ($resp_code != 200) {
-    die $resp_code, $client->responseContent(), "\n";
+    my $content = $client->responseContent();
+    return "ERROR: $resp_code: $content";
   }
+  Query("CloseImportEvent")->RunQuery(sub{}, sub{}, $this->{export_event_id});
 
-  print STDERR "Closed import event $this->{import_event_id}";
+  return "SUCCESS: Closed import event $this->{import_event_id} ($this->{export_event_id})";
 }
 
 sub TransferAnImage{

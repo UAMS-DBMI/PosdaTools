@@ -6,36 +6,26 @@ use JSON;
 use File::Temp qw/ tempfile /;
 
 my $usage = <<EOF;
-StartAnExport.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id> "<import_comment>" <notify>
+CloseExportEvent.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id> <notify>
   activity_id - activity id
   export_event_id -  export_event_id
-  <import_comment> - comment to supply to importer for Posda-to-Posda
-    (optional - defaults to "activity: <activity_desc> (<activity_id>, <export_event_id>)")
   notify - email address for completion notification
 
 Expects nothing on STDIN
 
-Uses the following queries:
-  PendingExportRequestsForActivity
-  ExportDestinationInfo
-  StartExport
-  EndExport
-  GetExportRequest
-  SetFileExportPending
-  FileExportForEvent
 EOF
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print $usage;
   exit;
 }
 
-unless($#ARGV == 4){
+unless($#ARGV == 3){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $export_event_id, $import_comment, $notify) = @ARGV;
+my($invoc_id, $act_id, $export_event_id,  $notify) = @ARGV;
 my($creation_id, $export_destination_name, $creation_time,
   $request_pending, $request_status, $act_status, $num_files);
 Query("PendingExportRequestsForActivity")->RunQuery(sub {

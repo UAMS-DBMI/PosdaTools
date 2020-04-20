@@ -1,7 +1,7 @@
--- Name: ExportEventStatusSummary
+-- Name: ExportEventStatusSummaryByActivity
 -- Schema: posda_files
 -- Columns: ['export_event_id', 'activity_id', 'export_destination_name', 'export_status', 'creation_time', 'start_time', 'end_time', 'waiting', 'pending', 'success', 'failed_temporary', 'failed_permanent', 'destination_import_event_id', 'destination_import_event_closed']
--- Args: []
+-- Args: ['activity_id']
 -- Tags: ['export_event']
 -- Description:  get  summary of transfer statuses from export_event, file_export
 --
@@ -34,4 +34,4 @@ select
   destination_import_event_closed
 
 from export_event e join activity_task_status using(subprocess_invocation_id)
-where e.dismissed_time is null
+where e.dismissed_time is null and activity_id = ?

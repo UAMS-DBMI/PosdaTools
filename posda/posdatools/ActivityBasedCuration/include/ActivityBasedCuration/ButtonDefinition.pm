@@ -132,7 +132,7 @@ EOF
   },
   qc_13 => {
     chained_query_id => "qc_13",
-    caption => "close",
+    caption => "Details",
     from_query => "ListOpenActivitiesWithItems",
     to_query => "InboxContentByActivityId",
     arg_map => {
@@ -216,6 +216,24 @@ EOF
     caption => "dismiss",
     from_query => "ExportEventStatusSummary",
     to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_22=> {
+    chained_query_id => "qc_22",
+    caption => "dismiss",
+    from_query => "ExportEventStatusSummaryByActivity",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_23=> {
+    chained_query_id => "qc_23",
+    caption => "undismiss",
+    from_query => "DismissedExportEventStatusSummary",
+    to_query => "UnDismissExportEvent",
     arg_map => {
       export_event_id => "export_event_id",
     },
@@ -367,7 +385,7 @@ EOF
     caption => "info",
   },
   qc_cc_76 => {
-    query => "PendingExportRequestsForActivity",
+    query => "PendingExportRequestsByActivity",
     type => "ChainColumnToSubprocess",
     obj => "Posda::NewerProcessPopup",
     col_name => "export_event_id",
@@ -381,6 +399,22 @@ EOF
     col_name => "export_event_id",
     caption => "start",
     operation => "StartExportEvent"
+  },
+  qc_cc_78 => {
+    query => "ExportEventsAwaitingClosure",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "close",
+    operation => "CloseExportEvent"
+  },
+  qc_cc_79 => {
+    query => "ExportEventsAwaitingClosureByActivity",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "close",
+    operation => "CloseExportEvent"
   },
 );
 
