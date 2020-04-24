@@ -133,10 +133,10 @@
     ]
   },
   "public" : {
-    "database" : "nbiadb",
+    "database" : "ncia",
     "driver"   : "mysql",
-    "host"     : "aries-nbia-1.ad.uams.edu",
-    "user"     : "posda",
+    "host"     : "tcia-public-rh-1.ad.uams.edu",
+    "user"     : "nciauser",
     "password" : "nciA#112"
   },
   "intake" : {
