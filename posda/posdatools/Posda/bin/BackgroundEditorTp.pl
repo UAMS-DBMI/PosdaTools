@@ -479,8 +479,10 @@ sub ProcessIndividualEdit{
     if($tag =~ /^\(.*\)$/){
       #OK
     } else {
-      print "tag $tag doesn't have enclosing parens\n";
-      exit;
+      if($tag =~ /^....,....$/){
+        print "tag $tag doesn't have enclosing parens\n";
+        exit;
+      }
     }
   }
   return {op => $op, tag =>$tag, tag_mode => $tag_mode, arg1 => $v1,
