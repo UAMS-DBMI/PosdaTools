@@ -1,7 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB 'Query';
+use Posda::Dataset;
 use Posda::BackgroundProcess;
+use Data::Dumper;
 use File::Temp qw/ tempfile /;
 my $usage = <<EOF;
 TomosynthesisConverterTP.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <notify>
@@ -19,7 +21,7 @@ Currently just a skeleton based on FixReallyBadDicomFilesInTimepoint and ApplyPr
 
 --
 Uses named queries:
-   VeryBadDicomFilesInTimepoint
+   GetPathsForActivity
    FileIdsByActivityTimepointId
    CreateActivityTimepoint
    InsertActivityTimepointFile
@@ -45,34 +47,30 @@ print "Going to background\n";
 
 # $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 #$back->Daemonize;
-my $q = Query("VeryBadDicomFilesInTimepoint");
-my $oq = Query("FileIdsByActivityTimepointId");
+my $oq = Query("GetPathsForActivity");
 my $i = 0;
 #$back->WriteToEmail("Initial line written to email\n");
 my $start = time;
 my %Files;
-my %OtherFilesInTp;
 my %Conversions;
 #$back->SetActivityStatus("Querying for Files");
-$q->RunQuery(sub{
+# $oq->RunQuery(sub{
+#   my($row) = @_;
+#   my $f = $row->[0];
+#   %Files{$f} = 1;
+# }, sub{}, $activity_timepoint_id);
+$oq->RunQuery(sub{
   my($row) = @_;
   my($file_id, $path) = @$row;
   $Files{$file_id} = $path;
 }, sub {}, $activity_timepoint_id);
-$oq->RunQuery(sub{
-  my($row) = @_;
-  my $f = $row->[0];
-  unless(exists $Files{$f}){
-    $OtherFilesInTp{$f} = 1;
-  }
-}, sub{}, $activity_timepoint_id);
 my $num_files = keys %Files;
-my $num_other_files = keys %OtherFilesInTp;
-#$back->WriteToEmail("Found $num_files Invalid Tomosynthesis DICOM files in timepoint\n" .
-  "Found $num_other_files other files in timepoint");
 my $num_done = 0;
 my $num_failed = 0;
 my $num_converted = 0;
+
+print STDERR "\n Do I have any files? I see $num_files \n";
+print STDERR Dumper(\%Files);
 file:
 for my $file (keys %Files){
   $num_done += 1;
@@ -90,39 +88,74 @@ for my $file (keys %Files){
     if($line =~ /^SOP Instance:\s*(.*)\s*$/){
       $sop_inst = $1;
     }
+
   }
   close FILE;
+
+
+  my($df, $ds, $size, $xfr_stx, $errors)  = Posda::Dataset::Try($path);
+  unless($ds) { die "$path didn't parse into a dataset"; }
+
+  my $bodypartthickness = $ds->GetEle("(0018,11a0)")->{value};
+  my $rescale_intercept = $ds->GetEle("(0028,1052)")->{value};
+  my $rescale_slope = $ds->GetEle("(0028,1053)")->{value};
+  my $rescale_type = $ds->GetEle("(0028,1054)")->{value};
+  #my $window_center = $ds->GetEle("(0028,1050)")->{value};
+  #my $window_width = $ds->GetEle("(0028,1051)")->{value};
+  #my $image_type1  = $ds->GetEle("(0008,0008)")->{value};
+
+  print STDERR "\n body part thickness $bodypartthickness \n rescale_intercept $rescale_intercept \n rescale_slope $rescale_slope \n rescale_type $rescale_type ";
+  # \n window_center $window_center[0] \n window_width $window_width[0] \n image_type1 $image_type1[0]";
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
     $laterality = 'R';
    }else{
-     $laterality = 'L'
+     $laterality = 'L';
    }
 
-  my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
-  $cmd = "ChangeDicomElements.pl $path $dest_file \"(0018,1000)\" 12345 " .
-    "\"(0018,1020)\" 12345" .
-    "\"(0018,9004)\" RESEARCH" .
-    "\"(0008,9205)\" MONOCHROME" .
-    "\"(0008,9206)\" SAMPLED" .
-    "\"(0008,9207)\" TOMOSYNTHESIS" .
-    "\"(0054,0220)\" 399368009" .
-    "\"(0018,0050)\" 49.0" .
-    "\"(0020, 9071)\" $laterality" .
-    "\"(0008,2220)\" $laterality" .
-    "\"(0008,0016)\" $sop_class " .
-    "\"(0008,0018)\" $sop_inst";
 
-  $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
+
+  print STDERR "\n SOP STUFF  $sop_class  $sop_inst  \n";
+  my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
+  $cmd = "ChangeDicomElements.pl $path $dest_file " .
+    "\"(0018,1000)\" 12345 " .
+    "\"(0018,1020)\" 12345 " .
+    "\"(0018,9004)\" RESEARCH " .
+    "\"(0008,9205)\" MONOCHROME " .
+    "\"(0008,9206)\" SAMPLED " .
+    "\"(0008,9207)\" TOMOSYNTHESIS " .
+    "\"(0054,0220)\" 399368009 " .
+    "\"(5200,9230)[0](0018,0050)\" $bodypartthickness " .
+    "\"(5200,9230)[0](0020,9111)\"  1 " .
+    "\"(5200,9230)[0](0020,9113)\"  1 " .
+    "\"(5200,9230)[2](0020,9116)\"  1 " .
+    "\"(5200,9229)[0](0020,9071)[0](0020,9072)\" $laterality " .
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)\" 76752008 " .
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)\" SCT " .
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)\" Breast " .
+    "\"(0008,2220)\" $laterality " .
+    "\"(5200,9230)[0](0028,9145)[0](0028,1052)\" $rescale_intercept " .
+    "\"(5200,9230)[0](0028,9145)[0](0028,1053)\" $rescale_slope " .
+    "\"(5200,9230)[0](0028,9145)[0](0028,1054)\" $rescale_type " .
+    "\"(0008,0016)\" $sop_class " .
+    "\"(0008,0018)\" $sop_inst ";
+
+    #"\"(5200,9230)[1](0028,9132)[0](0028,1050)\" $window_center[0] " .
+    #"\"(5200,9230)[1](0028,9132)[0](0028,1051)\" $window_width[0] " .
+    #"\"(0018,9504)[0](0008,9007)[0](0008,0008)\" $image_type1\"\"TOMOSYNTHESIS\"\"NONE " ..
+
   my $result = `$cmd`;
-  my $new_file_id;
+  print STDERR "\n Result STUFF  $result ";
+  $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
+  $result = `$cmd`;
+  print STDERR "\n Result STUFF  $result ";  my $new_file_id;
   if($result =~ /File id: (.*)/){
     $new_file_id = $1;
   }
   unlink $dest_file;
   unless(defined($new_file_id)){
-    print STDERR "Unable to import file $dest_file\n($result)\n";
+    print STDERR "\n Unable to import file $dest_file\n($result) \n";
   }
   if($new_file_id != $file){
     $Conversions{$file} = $new_file_id;
@@ -131,9 +164,7 @@ for my $file (keys %Files){
     print STDERR "Meet the new file, same as the old file ($new_file_id)\n";
   }
 }
-print STDERR "Processed $num_done files\n" .
-  "Failed to get meta for $num_failed\n" .
-  "Converted $num_converted\n");
+print STDERR "Processed $num_done files\n Failed to get meta for $num_failed\n Converted $num_converted\n";
 if($num_converted > 0){
   my %FilesInNewTp;
   my $comment = "New Timepoint for ImportedEdits $invoc_id";
@@ -149,6 +180,7 @@ if($num_converted > 0){
     #$back->Finish("Failed - check report");
     exit;
   }
+
   #$back->WriteToEmail("Activity Timepoint Ids: old = $activity_timepoint_id, new = $new_tp\n");
   my $num_copied = 0;
   my $num_replaced = 0;
@@ -166,25 +198,6 @@ if($num_converted > 0){
     $ins->RunQuery(sub{}, sub{}, $new_tp, $new_file);
     $FilesInNewTp{$new_file} = 1;
   }
-  #$back->WriteToEmail("Copied $num_copied files from old timepoint\n" .
-    "Inserted $num_replaced converted files\n");
-  my $num_other_copied = 0;
-  if($num_other_files > 0){
-    #$back->WriteToEmail("Copying other files (not bad/edited) to new tp\n");
-    other_file:
-    for my $of (keys %OtherFilesInTp){
-      if(exists $FilesInNewTp{$of}){
-        #$back->WriteToEmail("Hmmm..  other file ($of) is already in new tp\n");
-        next other_file;
-      }
-      $ins->RunQuery(sub{}, sub{}, $new_tp, $of);
-      $num_other_copied += 1;
-    }
-    #$back->WriteToEmail("Copied $num_other_copied of $num_other_files " .
-    #  "other (not bad/edited) to new tp");
-  }
-} else {
-  #$back->WriteToEmail("No conversions, so no new timepoint\n");
 }
 my $elapsed = time - $start;
 #$back->WriteToEmail("Processed $num_done files in $elapsed seconds");
