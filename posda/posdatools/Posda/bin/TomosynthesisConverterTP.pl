@@ -17,7 +17,7 @@ Expects nothing on <STDIN>
 In progress converter to make invalid DICOM Tomosynthesis files valid.
 Created for the Duke collection.
 
-Currently just a skeleton based on FixReallyBadDicomFilesInTimepoint and ApplyPrivateDispositionUnconditionalDate2
+Based on FixReallyBadDicomFilesInTimepoint
 
 --
 Uses named queries:
@@ -45,20 +45,12 @@ my($invoc_id, $activity_id, $activity_timepoint_id, $notify) = @ARGV;
 
 print "Going to background\n";
 
-# $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
-#$back->Daemonize;
 my $oq = Query("GetPathsForActivity");
 my $i = 0;
-#$back->WriteToEmail("Initial line written to email\n");
 my $start = time;
 my %Files;
 my %Conversions;
-#$back->SetActivityStatus("Querying for Files");
-# $oq->RunQuery(sub{
-#   my($row) = @_;
-#   my $f = $row->[0];
-#   %Files{$f} = 1;
-# }, sub{}, $activity_timepoint_id);
+
 $oq->RunQuery(sub{
   my($row) = @_;
   my($file_id, $path) = @$row;
@@ -74,7 +66,6 @@ print STDERR Dumper(\%Files);
 file:
 for my $file (keys %Files){
   $num_done += 1;
-  #$back->SetActivityStatus("Processing File $num_done of $num_files ($num_failed failures)");
   my $path = $Files{$file};
   my($sop_class, $sop_inst);
   my $cmd = "GetSopInfoFromMeta.pl $path";
@@ -100,12 +91,12 @@ for my $file (keys %Files){
   my $rescale_intercept = $ds->GetEle("(0028,1052)")->{value};
   my $rescale_slope = $ds->GetEle("(0028,1053)")->{value};
   my $rescale_type = $ds->GetEle("(0028,1054)")->{value};
-  #my $window_center = $ds->GetEle("(0028,1050)")->{value};
-  #my $window_width = $ds->GetEle("(0028,1051)")->{value};
-  #my $image_type1  = $ds->GetEle("(0008,0008)")->{value};
+  my @window_center = $ds->GetEle("(0028,1050)")->{value};
+  my @window_width = $ds->GetEle("(0028,1051)")->{value};
+  my @image_type  = $ds->GetEle("(0008,0008)")->{value};
+  my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE"};
 
-  print STDERR "\n body part thickness $bodypartthickness \n rescale_intercept $rescale_intercept \n rescale_slope $rescale_slope \n rescale_type $rescale_type ";
-  # \n window_center $window_center[0] \n window_width $window_width[0] \n image_type1 $image_type1[0]";
+  #print STDERR "\n window stuff   \n    ";
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
@@ -113,8 +104,6 @@ for my $file (keys %Files){
    }else{
      $laterality = 'L';
    }
-
-
 
   print STDERR "\n SOP STUFF  $sop_class  $sop_inst  \n";
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
@@ -138,15 +127,14 @@ for my $file (keys %Files){
     "\"(5200,9230)[0](0028,9145)[0](0028,1052)\" $rescale_intercept " .
     "\"(5200,9230)[0](0028,9145)[0](0028,1053)\" $rescale_slope " .
     "\"(5200,9230)[0](0028,9145)[0](0028,1054)\" $rescale_type " .
+    "\"(5200,9230)[1](0028,9132)[0](0028,1050)\" $window_center[0][0] " .
+    "\"(5200,9230)[1](0028,9132)[0](0028,1051)\" $window_width[0][0] " .
+    #"\"(0018,9504)[0](0008,9007)\" @frame_type " .  broken
     "\"(0008,0016)\" $sop_class " .
     "\"(0008,0018)\" $sop_inst ";
 
-    #"\"(5200,9230)[1](0028,9132)[0](0028,1050)\" $window_center[0] " .
-    #"\"(5200,9230)[1](0028,9132)[0](0028,1051)\" $window_width[0] " .
-    #"\"(0018,9504)[0](0008,9007)[0](0008,0008)\" $image_type1\"\"TOMOSYNTHESIS\"\"NONE " ..
-
   my $result = `$cmd`;
-  print STDERR "\n Result STUFF  $result ";
+  #print STDERR "\n Result STUFF  $cmd ";
   $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
   $result = `$cmd`;
   print STDERR "\n Result STUFF  $result ";  my $new_file_id;
@@ -176,12 +164,9 @@ if($num_converted > 0){
     $new_tp = $row->[0];
   }, sub{});
   unless(defined $new_tp){
-    #$back->WriteToEmail("ERROR: Unable to get new activity timepoint id.\n");
-    #$back->Finish("Failed - check report");
     exit;
   }
 
-  #$back->WriteToEmail("Activity Timepoint Ids: old = $activity_timepoint_id, new = $new_tp\n");
   my $num_copied = 0;
   my $num_replaced = 0;
   my $ins = Query('InsertActivityTimepointFile');
@@ -194,11 +179,8 @@ if($num_converted > 0){
       $num_copied += 1;
       $new_file = $old_file;
     }
-    #$back->WriteToEmail("Inserting $new_file into activity_timepoint $new_tp\n");
     $ins->RunQuery(sub{}, sub{}, $new_tp, $new_file);
     $FilesInNewTp{$new_file} = 1;
   }
 }
 my $elapsed = time - $start;
-#$back->WriteToEmail("Processed $num_done files in $elapsed seconds");
-#$back->Finish("Processed $num_done files in $elapsed seconds");
