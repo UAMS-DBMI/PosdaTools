@@ -73,20 +73,18 @@ for my $file (keys %Files){
   open FILE, "$cmd|";
   while (my $line = <FILE>){
     chomp $line;
-    if($line =~ /^SOP Class:\s*(.*)\s*$/){
-      $sop_class = $1;
-    }
     if($line =~ /^SOP Instance:\s*(.*)\s*$/){
       $sop_inst = $1;
     }
-
   }
   close FILE;
 
+  $sop_class = "1.2.840.10008.5.1.4.1.1.13.1.3"; #TOMOSYNTHESIS
 
   my($df, $ds, $size, $xfr_stx, $errors)  = Posda::Dataset::Try($path);
   unless($ds) { die "$path didn't parse into a dataset"; }
 
+  my $numframes  = $ds->GetEle("(0028,0008)")->{value};
   my $bodypartthickness = $ds->GetEle("(0018,11a0)")->{value};
   my $rescale_intercept = $ds->GetEle("(0028,1052)")->{value};
   my $rescale_slope = $ds->GetEle("(0028,1053)")->{value};
@@ -105,11 +103,26 @@ for my $file (keys %Files){
      $laterality = 'L';
    }
 
+  my $multiframe_setter = "";
+
+  for my $i (0..($numframes-1)){
+    $multiframe_setter .= "\"(5200,9230)[$i](0028,9145)[0](0028,1052)\" $rescale_intercept " .
+    "\"(5200,9230)[$i](0028,9145)[0](0028,1053)\" $rescale_slope " .
+    "\"(5200,9230)[$i](0028,9145)[0](0028,1054)\" $rescale_type " .
+    "\"(5200,9230)[$i](0028,9132)[0](0028,1050)\" $window_center[0][0] " .
+    "\"(5200,9230)[$i](0028,9132)[0](0028,1051)\" $window_width[0][0] " .
+    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[0]\" $image_type[0][0] " .
+    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[1]\" $image_type[0][1] " .
+    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[2]\" TOMOSYNTHESIS " .
+    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[3]\" NONE ";
+  }
+
   print STDERR "\n SOP STUFF  $sop_class  $sop_inst  \n";
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
   $cmd = "ChangeDicomElements.pl $path $dest_file " .
     "\"(0018,1000)\" 12345 " .
     "\"(0018,1020)\" 12345 " .
+    "\"(0020,0013)\" 1 " .
     "\"(0018,9004)\" RESEARCH " .
     "\"(0008,9205)\" MONOCHROME " .
     "\"(0008,9206)\" SAMPLED " .
@@ -118,20 +131,15 @@ for my $file (keys %Files){
     "\"(5200,9230)[0](0018,0050)\" $bodypartthickness " .
     "\"(5200,9230)[0](0020,9111)\"  1 " .
     "\"(5200,9230)[0](0020,9113)\"  1 " .
-    "\"(5200,9230)[2](0020,9116)\"  1 " .
+    "\"(5200,9230)[0](0020,9116)\"  1 " .
     "\"(5200,9229)[0](0020,9071)[0](0020,9072)\" $laterality " .
     "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)\" 76752008 " .
     "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)\" SCT " .
     "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)\" Breast " .
     "\"(0008,2220)\" $laterality " .
-    "\"(5200,9230)[0](0028,9145)[0](0028,1052)\" $rescale_intercept " .
-    "\"(5200,9230)[0](0028,9145)[0](0028,1053)\" $rescale_slope " .
-    "\"(5200,9230)[0](0028,9145)[0](0028,1054)\" $rescale_type " .
-    "\"(5200,9230)[1](0028,9132)[0](0028,1050)\" $window_center[0][0] " .
-    "\"(5200,9230)[1](0028,9132)[0](0028,1051)\" $window_width[0][0] " .
-    #"\"(0018,9504)[0](0008,9007)\" @frame_type " .  broken
     "\"(0008,0016)\" $sop_class " .
-    "\"(0008,0018)\" $sop_inst ";
+    "\"(0008,0018)\" $sop_inst " .
+    $multiframe_setter;
 
   my $result = `$cmd`;
   #print STDERR "\n Result STUFF  $cmd ";
