@@ -2,8 +2,15 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
-#use Debug;
-#my $dbg = sub {print STDERR @_};
+use REST::Client;
+use MIME::Base64;
+use JSON;
+
+# TODO: These settings should be moved out to docker-compose.yaml!
+my $URL = 'http://dwetlsqldev.ad.uams.edu:90/pat_mrn';
+#http://dwetlsqldev:90/pat_mrn/103-1700016
+my $URL_USER = 'posda_deid';
+my $URL_PASS = 'p#3DA$!9K';
 
 my $usage = <<EOF;
 SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>
@@ -53,14 +60,35 @@ Note:  The user is required to fill out the patient_mapping table.  This script 
       you can copy the whole column.
 
 EOF
+
+# Prepare the REST client for MRN mapping
+my $client = REST::Client->new();
+$client->setHost($URL);
+
+my $auth_headers = {
+    Authorization => 'Basic ' . encode_base64($URL_USER . ':' . $URL_PASS, '')
+};
+
 sub can_map_mrn{
-  return 0;
+  return 1;
 }
 sub map_mrn {
-  my($mrn) = @_;
-  my $mapped;
-  # make api call to map mrn into mapped
-  return $mapped;
+  my ($mrn, $col_code) = @_;
+
+  my $resp = $client->GET("$col_code-$mrn", $auth_headers);
+
+  if ($resp->responseCode() == 200) {
+    my $response_obj = decode_json($resp->responseContent());
+    my $mapped = $response_obj->{data}->{synthetic_id};
+
+    if ($mapped eq '0') {
+      return "no mapping";
+    }
+
+    return $mapped;
+  } else {
+    return $resp->responseContent();  # probably not authorized
+  }
 }
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
@@ -83,16 +111,16 @@ if($col_name ne "" && $crc ne "" && $site_name ne "" && $src ne ""){
   print "Bad params: one of col_name, site_name, crc, or src is not blank, but one is blank\n";
   exit;
 }
-if($defined_col_site){
-  unless ($crc =~ /^[1-9]\d\d\d$/) {
-    print "crc should be four digit decimal with leading non-zero\n";
-    exit;
-  }
-  unless ($crc =~ /^[1-9]\d\d\d$/) {
-    print "crc should be four digit decimal with leading non-zero\n";
-    exit;
-  }
-}
+#if($defined_col_site){
+#  unless ($crc =~ /^[1-9]\d\d\d$/) {
+#    print "crc should be four digit decimal with leading non-zero\n";
+#    exit;
+#  }
+#  unless ($crc =~ /^[1-9]\d\d\d$/) {
+#    print "crc should be four digit decimal with leading non-zero\n";
+#    exit;
+#  }
+#}
 my $baseline_specified = 0;
 my $baseline_date;
 my $shift_specified = 0;
@@ -116,8 +144,9 @@ if($pat_map_pat ne ""){
   if($pat_map_pat eq "<map_mrn>"){
     if(can_map_mrn()){
       $map_mrn = 1;
+    } else {
+      print "<map_mrn> is not supported (ignored)\n";
     }
-    print "<map_mrn> is not supported (ignored)\n";
   } elsif($pat_map_pat =~ /^([a-zA-Z].*)<seq>(.*)$/){
     $pat_map_specified = 1;
     $pat_map_prefix = $1;
@@ -446,7 +475,8 @@ for my $pat (keys %PatientMinStudyDate){
     $PatientMappingsForSiteCode{$pat}->{to_patient_id} = $mapped;
     $PatientMappingsForSiteCode{$pat}->{to_patient_name} = $mapped;
   } elsif($map_mrn){
-    my $mapped = map_mrn($pat);
+    my $mapped = map_mrn($pat, $crc);
+    $back->WriteToEmail("Mapped mrn: $pat => $mapped\n");
     $PatientMappingsForSiteCode{$pat}->{to_patient_id} = $mapped;
     $PatientMappingsForSiteCode{$pat}->{to_patient_name} = $mapped;
   }
