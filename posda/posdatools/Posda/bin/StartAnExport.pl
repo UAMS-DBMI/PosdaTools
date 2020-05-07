@@ -4,6 +4,17 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 use JSON;
 use File::Temp qw/ tempfile /;
+use Posda::NBIASubmit;
+use File::Basename;
+use File::Path 'make_path';
+#use Debug;
+#my $dbg = sub {print STDERR @_};
+
+our $ug = Data::UUID->new;
+sub get_uuid {
+  return lc $ug->create_str();
+}
+
 
 my $usage = <<EOF;
 StartAnExport.pl.pl <?bkgrnd_id?> <activity_id> <export_event_id> "<import_comment>" <notify>
@@ -88,6 +99,20 @@ if(exists $export_destination_config->{high_water}){
 if(exists $export_destination_config->{sleep_interval}){
   $sleep_interval = $export_destination_config->{sleep_interval};
 }
+my $BaseDir;
+if($protocol eq "nbia"){
+  my $sub_dir = get_uuid();
+  $BaseDir = $ENV{NBIA_STORAGE_ROOT};
+  unless($BaseDir){
+    print "NBIA_STORAGE_ROOT env var is undefined! cannot continue\n";
+    exit;
+  }
+  unless(-d $BaseDir){
+    print "Error: Base dir ($BaseDir) isn't a directory\n";
+    exit;
+  }
+}
+
 my %PendingFiles;
 my %TransferredFiles;
 my %FailedTemporaryFiles;
@@ -143,6 +168,7 @@ if($protocol eq "posda"){
     }, sub {}, $act_id);
   }
   $prot_parms = { import_comment => $import_comment };
+} elsif ($protocol eq "nbia"){
 }
 
 my $prot_hand = $prot_hand_class->new($export_event_id, $base_url, $num_files,
@@ -163,6 +189,7 @@ Query("StartExport")->RunQuery(sub{}, sub {}, $export_event_id);
 
 my $set_file_status = Query("SetFileExportPending");
 my $throttled = 0;
+my $nbia_xfer_q = Query("GetNbiaTransferParams");
 main_loop:
 while($num_waiting > 0){
   if(PauseRequested($export_event_id)) { PauseTransfer($export_event_id) }
@@ -181,6 +208,30 @@ while($num_waiting > 0){
   }
   my $ftt = [keys %WaitingFiles]->[0];
   my $ftt_info = $WaitingFiles{$ftt};
+  my $ft_params = {};
+  if($protocol eq "nbia"){
+    #Posda::NBIASubmit::AddToSubmitAndThumbQs(
+    #  $subprocess_invocation_id,
+    #  $file_id,
+    #  $collection_name,
+    #  $site_name,
+    #  $site_id,
+    #  $batch,
+    #  $to_file,
+    #  $tpa_url
+    #);
+    $nbia_xfer_q->RunQuery(sub{
+      my($row) = @_;
+      my($coll, $site, $site_id, $sop_instance_uid, $tpa_url) = @$row;
+      $ft_params->{collection_name} = $coll;
+      $ft_params->{site} = $site;
+      $ft_params->{site_id} = $site_id;
+      $ft_params->{sop_instance_uid} = $sop_instance_uid;
+      $ft_params->{tpa_url} = $tpa_url;
+      $ft_params->{batch} = undef;
+      $ft_params->{file_id} = $ftt;
+    }, sub {}, $act_id, $ftt);
+  }
 
   $set_file_status->RunQuery(sub {}, sub {}, $export_event_id, $ftt);
 
@@ -197,12 +248,12 @@ while($num_waiting > 0){
     $file_path = $row->[0];
   }, sub{}, $ftt);
   if(defined($ftt_info->{has_disp_parms})){
-    my($status, $temp_file) = ApplyDispositions($ftt, $ftt_info, $file_path);
+    my($status, $temp_file) = ApplyDispositions($ftt, $ftt_info, $file_path, $protocol, $ft_params);
     if($status eq "SUCCESS" && -f $temp_file){
-      $prot_hand->TransferAnImage($ftt, $temp_file, 1);
+      $prot_hand->TransferAnImage($ftt, $temp_file, 1, $ft_params);
     }
   } else {
-    $prot_hand->TransferAnImage($ftt, $file_path, 0);
+    $prot_hand->TransferAnImage($ftt, $file_path, 0, $ft_params);
   }
   UpdateFileTransferStatus();
 }
@@ -232,6 +283,7 @@ sub PauseTransfer{
     "Fp: $num_failed_perm, B: $num_bad_state");
   exit;
 }
+
 sub UpdateFileTransferStatus{
   %WaitingFiles = ();
   %PendingFiles = ();
@@ -307,8 +359,19 @@ sub PauseRequested {
   return 0;
 }
 sub ApplyDispositions{
-  my($file_id, $f_info, $file_path) = @_;
-  my($fh, $temp_file_path) = tempfile();
+  my($file_id, $f_info, $file_path, $protocol, $ft) = @_;
+  my($fh, $temp_file_path);
+  if($protocol eq "nbia"){
+    my $f_filename = &Posda::NBIASubmit::GenerateFilename($ft->{sop_instance_uid});
+    $temp_file_path = "$BaseDir/$f_filename";
+    my $dirname = dirname($temp_file_path);
+    make_path($dirname);
+    unless(open $fh, ">$temp_file_path"){
+      return "ERROR: Can't open file in nbia style ApplyDispositions ($!)";
+    }
+  } else {
+    ($fh, $temp_file_path) = tempfile();
+  }
 
   my $cmd = "ApplyDispositionsSubprocess.pl \"$file_path\" " .
     "\"$temp_file_path\" \"$f_info->{root}\" " .
@@ -323,3 +386,16 @@ sub ApplyDispositions{
   close $fh;
   return $RespLines[0], $temp_file_path;
 }
+
+sub GetNbiaParms{
+  my($q, $file_id, $hash) = @_;
+  $q->RunQuery(sub{
+    my($row) = @_;
+    my($coll, $site, $site_id, $tpa_url) = @_;
+    $hash->{collection_name} = $coll;
+    $hash->{site} = $site;
+    $hash->{site_id} = $site_id;
+    $hash->{tpa_url} = $tpa_url;
+  }, sub {}, $file_id);
+}
+
