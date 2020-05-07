@@ -190,6 +190,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   },
+
   {
     id => "13_compare",
     name => "Compare data to Server (NBIA)",
@@ -205,6 +206,26 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   },
+  {
+    id => "15_pathology",
+    name => "Pathology",
+    description => "Activities related to Pathology curation",
+    operations => [
+      {
+        caption => "Extract Metadata",
+        action =>  "PathExtractMetadata",
+      },
+      {
+        caption => "Quality Check (HistoQC)",
+        action =>  "PathExtractMetadata",
+      },
+      {
+        caption => "Anonymize (Remove Slide Label)",
+        action =>  "PathExtractMetadata",
+      },
+    ],
+  },
+
   {
     id => "14_report",
     name => "Produce Activity Report",

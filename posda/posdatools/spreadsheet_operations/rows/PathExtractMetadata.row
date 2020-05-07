@@ -1,0 +1,6 @@
+:operation_name: PathExtractMetadata
+:command_line: pathology_extract_metadata.pl <?bkgrnd_id?> <notify> <activity_id>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['timepoint_buttons']
+:can_chain: 

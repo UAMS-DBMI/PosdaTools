@@ -195,6 +195,15 @@ RUN pip3 install pandas openslide-python
 # Copy actual posdatools last, to speed up rebuilds
 COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
 
+# TODO: move this up
+RUN apk add --update docker-cli
+
+# Allow the posda user to use docker, with sudo
+# TODO: This needs to be adjusted to only allow running docker!
+RUN echo "%fakeposda ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+
+
 USER posda:fakeposda
 ENTRYPOINT ["/docker-entrypoint"]
 CMD ["main"]
