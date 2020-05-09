@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3 -u
 
 import psycopg2
 import tempfile
@@ -7,10 +7,13 @@ import os
 import hashlib
 from enum import Enum
 from typing import List
+import time
 
 import requests
+import fire
 
 URL = 'http://web/papi/v1/import/'
+DEBUG = True
 
 class ProjectionType(Enum):
     MIN = "-minimum"
@@ -89,6 +92,8 @@ def render_projection(cursor, iec: int) -> None:
 
         # import final file into posda and get file_id
         file_id = add_file("full.jpg")
+        if DEBUG:
+            print(f"file_id: {file_id}")
 
         # insert row into output_image table
         cursor.execute("""
@@ -97,6 +102,11 @@ def render_projection(cursor, iec: int) -> None:
         """, [iec, file_id])
 
         # update iec table to ReadyToReview
+        cursor.execute("""
+            update image_equivalence_class
+            set processing_status = 'ReadyToReview'
+            where image_equivalence_class_id = %s
+        """, [iec])
 
         # clean up temp files
         os.unlink(outfile.name)
@@ -114,10 +124,10 @@ def get_iecs_in_visual_review(cursor, visual_review_id: int) -> List[int]:
 
     return [iec for iec, in cursor]
 
-def main(visual_review_instance_id: int) -> None:
-    conn = psycopg2.connect("dbname=posda_files")
-    conn.autocommit = True
+def process_single_vr(visual_review_instance_id: int) -> None:
+    conn = connect()
     cur = conn.cursor()
+
 
     iecs = get_iecs_in_visual_review(cur, visual_review_instance_id)
     print(f"Found {len(iecs)} IECs in visual review {visual_review_instance_id}.")
@@ -129,6 +139,71 @@ def main(visual_review_instance_id: int) -> None:
 
     conn.close()
 
+def connect():
+    conn = psycopg2.connect("dbname=posda_files")
+    conn.autocommit = True
+    # cur = conn.cursor()
+
+    return conn
+
+
+def log_error(cur, iec: int, e: Exception):
+    print(f"Magicka ERROR: IEC {iec} failed, err is: {e}")
+    query = """
+        update image_equivalence_class i
+        set processing_status = 'error'
+        where i.image_equivalence_class_id = %s
+    """
+    cur.execute(query, [iec])
+
+
+def process_all_unprocessed():
+    conn = connect()
+    cur = conn.cursor()
+
+    query = """
+        update image_equivalence_class i
+        set processing_status = 'in-progress'
+        where i.image_equivalence_class_id in (
+          select image_equivalence_class_id
+          from image_equivalence_class
+          where processing_status = 'ReadyToProcess'
+          limit 1
+          for update skip locked
+        )
+        returning i.*
+    """
+
+    while True:
+        cur.execute(query)
+        row = cur.fetchone()
+        if row is None:
+            time.sleep(5)  # sleep 5 seconds
+            continue
+
+        iec, *rest = row
+        try:
+            render_projection(cur, iec)
+        except Exception as e:
+            log_error(cur, iec, e)
+
+
+def main(visual_review_instance_id: int = None) -> None:
+    """If visual_review_instance_id is specified, 
+    process that Visual Review and exit.
+
+    If visual_review_instance_id is not specified,
+    begin processing all IECs in ReadyToProcess status,
+    and never exit."""
+
+    if visual_review_instance_id is not None:
+        print("Processing single VR...")
+        process_single_vr(visual_review_instance_id)
+    else:
+        print("Processing all unprocessed IECs...")
+        process_all_unprocessed()
+
 
 if __name__ == '__main__':
-    main(2)
+    # main(2)
+    fire.Fire(main)
