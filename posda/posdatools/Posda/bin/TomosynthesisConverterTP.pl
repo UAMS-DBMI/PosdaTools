@@ -70,6 +70,8 @@ for my $file (keys %Files){
   my($sop_class, $sop_inst);
   my $cmd = "GetSopInfoFromMeta.pl $path";
 
+  #Find values in header
+  my $my_inst = 1; #default value if not found in header
   open FILE, "$cmd|";
   while (my $line = <FILE>){
     chomp $line;
@@ -79,11 +81,9 @@ for my $file (keys %Files){
   }
   close FILE;
 
-  $sop_class = "1.2.840.10008.5.1.4.1.1.13.1.3"; #TOMOSYNTHESIS
-
+  #Find values at top level that should be moved to lower levels
   my($df, $ds, $size, $xfr_stx, $errors)  = Posda::Dataset::Try($path);
   unless($ds) { die "$path didn't parse into a dataset"; }
-
   my $numframes  = $ds->GetEle("(0028,0008)")->{value};
   my $bodypartthickness = $ds->GetEle("(0018,11a0)")->{value};
   my $rescale_intercept = $ds->GetEle("(0028,1052)")->{value};
@@ -93,8 +93,11 @@ for my $file (keys %Files){
   my @window_width = $ds->GetEle("(0028,1051)")->{value};
   my @image_type  = $ds->GetEle("(0008,0008)")->{value};
   my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE"};
-
-  #print STDERR "\n window stuff   \n    ";
+  my $ppa  = $ds->GetEle("(0018,1510)")->{value};
+  my $empty_seq = [];
+  #Remove VOI LUT values from top level
+  $ds->DeleteElementBySig("(0028,1050)");
+  $ds->DeleteElementBySig("(0028,1051)");
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
@@ -103,46 +106,75 @@ for my $file (keys %Files){
      $laterality = 'L';
    }
 
+  $sop_class = "1.2.840.10008.5.1.4.1.1.13.1.3"; #TOMOSYNTHESIS
+
   my $multiframe_setter = "";
 
+  #per frame attributes
   for my $i (0..($numframes-1)){
-    $multiframe_setter .= "\"(5200,9230)[$i](0028,9145)[0](0028,1052)\" $rescale_intercept " .
-    "\"(5200,9230)[$i](0028,9145)[0](0028,1053)\" $rescale_slope " .
-    "\"(5200,9230)[$i](0028,9145)[0](0028,1054)\" $rescale_type " .
-    "\"(5200,9230)[$i](0028,9132)[0](0028,1050)\" $window_center[0][0] " .
-    "\"(5200,9230)[$i](0028,9132)[0](0028,1051)\" $window_width[0][0] " .
-    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[0]\" $image_type[0][0] " .
-    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[1]\" $image_type[0][1] " .
-    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[2]\" TOMOSYNTHESIS " .
-    "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[3]\" NONE ";
+    $multiframe_setter .= "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[0]\" $image_type[0][0] " . #X-Ray 3D Frame Type Sequence Frame Type
+        "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[1]\" $image_type[0][1] " . #X-Ray 3D Frame Type Sequence Frame Type
+        "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[2]\" TOMOSYNTHESIS " .     #X-Ray 3D Frame Type Sequence Frame Type
+        "\"(5200,9230)[$i](0018,9504)[0](0008,9007)[3]\" NONE ";               #X-Ray 3D Frame Type Sequence Frame Type
+        "\"(5200,9230)[$i](0020,9111)\"  $empty_seq " .      #Frame Content Sequence
+        "\"(5200,9230)[$i](0020,9113)\"  $empty_seq " .      #Plane Position Sequence
+        "\"(5200,9230)[$i](0020,9116)\"  $empty_seq " .      #Plane Orientation Sequence
+        "\"(5200,9230)[$i](0018,1510)\"  $ppa ";   #Positioner Primary Angle
   }
 
   print STDERR "\n SOP STUFF  $sop_class  $sop_inst  \n";
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
   $cmd = "ChangeDicomElements.pl $path $dest_file " .
-    "\"(0018,1000)\" 12345 " .
-    "\"(0018,1020)\" 12345 " .
-    "\"(0020,0013)\" 1 " .
-    "\"(0018,9004)\" RESEARCH " .
-    "\"(0008,9205)\" MONOCHROME " .
-    "\"(0008,9206)\" SAMPLED " .
-    "\"(0008,9207)\" TOMOSYNTHESIS " .
-    "\"(0054,0220)\" 399368009 " .
-    "\"(5200,9230)[0](0018,0050)\" $bodypartthickness " .
-    "\"(5200,9230)[0](0020,9111)\"  1 " .
-    "\"(5200,9230)[0](0020,9113)\"  1 " .
-    "\"(5200,9230)[0](0020,9116)\"  1 " .
-    "\"(5200,9229)[0](0020,9071)[0](0020,9072)\" $laterality " .
-    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)\" 76752008 " .
-    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)\" SCT " .
-    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)\" Breast " .
-    "\"(0008,2220)\" $laterality " .
-    "\"(0008,0016)\" $sop_class " .
-    "\"(0008,0018)\" $sop_inst " .
+    #Top level attributes
+    "\"(0018,1000)\" 12345 " .          #Device Serial Number
+    "\"(0018,1020)\" 12345 " .          #Software Version(s)
+    "\"(0020,0013)\" 1 " .              #Instance Number
+    "\"(0018,9004)\" RESEARCH " .       #Content Qualification
+    "\"(0008,9205)\" MONOCHROME " .     #Pixel Presentation
+    "\"(0008,9206)\" SAMPLED " .        #Volumetric Properties
+    "\"(0008,9207)\" TOMOSYNTHESIS " .  #Volume Based Calculation Technique
+    "\"(0054,0220)\" 399368009 " .      #View Code Sequence
+    "\"(0008,0016)\" $sop_class " .     #SOP Class
+    "\"(0008,0018)\" $sop_inst " .      #SOP Instance
+    #Shared functional groups
+    "\"(5200,9229)[0](0028,9110)[0](0018,0050)\" $bodypartthickness " .       #Slice Thickness
+    "\"(5200,9229)[0](0028,9145)[0](0028,1053)\" $rescale_slope " .           #Rescale Slope
+    "\"(5200,9229)[0](0028,9145)[0](0028,1054)\" $rescale_type " .            #Rescale Type
+    "\"(5200,9229)[0](0028,9145)[0](0028,1052)\" $rescale_intercept " .       #Rescale Intercept
+    "\"(5200,9229)[0](0020,9071)[0](0020,9072)\" $laterality " .              #Frame Laterality
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)\" 76752008 " .   #Frame Anatomy Sequence - Anatomic Region Sequence - Code Value
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)\" SCT " .        #Frame Anatomy Sequence - Anatomic Region Sequence - Coding Scheme Designator
+    "\"(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)\" Breast " .     #Frame Anatomy Sequence - Anatomic Region Sequence - Code Meaning
+    "\"(5200,9229)[0](0028,9132)[0](0028,1050)\" $window_center[0][0] " .     #Frame VOI LUT Sequence - Window Center
+    "\"(5200,9229)[0](0028,9132)[0](0028,1051)\" $window_width[0][0] " .      #Frame VOI LUT Sequence - Window Width
+    #Per frame functional groups
     $multiframe_setter;
 
   my $result = `$cmd`;
   #print STDERR "\n Result STUFF  $cmd ";
+  my $from = $path;
+  my $to = $dest_file;
+  #unless($from =~ /^\//) {$from = getcwd."/$from"}
+  #unless($to =~ /^\//) {$to = getcwd."/$to"}
+
+
+  my $pairs = $#ARGV/2;
+  if($pairs > 0){
+    for my $i (1 .. $pairs){
+      my $pair_id = $i * 2;
+      my $sig = $ARGV[$pair_id];
+      my $value = $ARGV[$pair_id + 1];
+      print "$sig => $value\n";
+      $ds->Insert($sig, $value);
+    }
+  }
+  if($df){
+    $ds->WritePart10($to, $xfr_stx, "POSDA", undef, undef);
+  } else {
+    $ds->WriteRawDicom($to, $xfr_stx);
+  }
+
+
   $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
   $result = `$cmd`;
   print STDERR "\n Result STUFF  $result ";  my $new_file_id;
