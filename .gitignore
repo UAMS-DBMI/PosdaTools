@@ -6,3 +6,4 @@ database.env
 nbia.env
 api.env
 .rediscli_history
+tags

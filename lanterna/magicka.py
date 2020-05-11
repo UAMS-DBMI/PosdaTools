@@ -8,12 +8,18 @@ import hashlib
 from enum import Enum
 from typing import List
 import time
+from threading import Thread
+from queue import Queue, Empty
 
 import requests
 import fire
 
 URL = 'http://web/papi/v1/import/'
-DEBUG = True
+DEBUG = True 
+Q = Queue()
+P = None
+
+class Dcm4cheError(RuntimeError): pass
 
 class ProjectionType(Enum):
     MIN = "-minimum"
@@ -75,10 +81,21 @@ def render_projection(cursor, iec: int) -> None:
     
     # get their paths
     # assemble into a filelist
-    with tempfile.NamedTemporaryFile(delete=False) as outfile:
+    with tempfile.TemporaryDirectory() as outdir:
+    # with tempfile.NamedTemporaryFile(delete=False) as outfile:
+        # TODO call dcm2jpg on all the files here, first, putting
+        # them into temp files? then write into the outfile
+
+        outfile = open(os.path.join(outdir, "filelist"), "w")
         for i, (path,) in enumerate(cursor):
-            outfile.write(path.encode())
-            outfile.write(b'\n')
+            jpeg_file = os.path.join(outdir, f"{i}.jpg")
+            try:
+                dcm2jpg(path, jpeg_file)
+            except Dcm4cheError as e:
+                print(f"Magicka ERROR: IEC {iec} one frame failed, err is: {e}")
+
+            outfile.write(jpeg_file)
+            outfile.write('\n')
         outfile.close()
         print(f"Found {i} images in this IEC.")
 
@@ -188,6 +205,45 @@ def process_all_unprocessed():
             log_error(cur, iec, e)
 
 
+def setup_dcm4che():
+    global Q
+    global P
+    def enqueue_output(out, queue):
+        for line in iter(out.readline, b''):
+            queue.put(line.decode().strip())
+        out.close()
+
+    P = subprocess.Popen("dcm2jpg2", stdout=subprocess.PIPE, stdin=subprocess.PIPE, bufsize=0)
+    t = Thread(target=enqueue_output, args=(P.stdout, Q))
+    t.daemon = True # thread dies if the program dies
+    t.start()
+
+    # read 2 lines from p, startup messages
+    l1 = Q.get(timeout=1)
+    l2 = Q.get(timeout=1)
+
+def dcm2jpg(src, dst):
+    """Convert a dcm to jpg, using dcm4che's dcm2jpg"""
+
+    P.stdin.write(f"{src}|{dst}\n".encode())
+
+    output = None
+    errors = []
+    try:
+        # read the first (expected) line, wait a while for it
+        output = Q.get(timeout=5)
+        if not "->" in output:
+            # read any other lines (from a stack trace, for example)
+            errors.append(output)
+            while True:
+                errors.append(Q.get(timeout=.1))
+    except Empty: # Empty is raised when the queue is empty
+        pass
+
+
+    if len(errors) > 0:
+        raise Dcm4cheError(' '.join(errors))
+
 def main(visual_review_instance_id: int = None) -> None:
     """If visual_review_instance_id is specified, 
     process that Visual Review and exit.
@@ -195,6 +251,8 @@ def main(visual_review_instance_id: int = None) -> None:
     If visual_review_instance_id is not specified,
     begin processing all IECs in ReadyToProcess status,
     and never exit."""
+
+    setup_dcm4che()
 
     if visual_review_instance_id is not None:
         print("Processing single VR...")
@@ -205,5 +263,4 @@ def main(visual_review_instance_id: int = None) -> None:
 
 
 if __name__ == '__main__':
-    # main(2)
     fire.Fire(main)
