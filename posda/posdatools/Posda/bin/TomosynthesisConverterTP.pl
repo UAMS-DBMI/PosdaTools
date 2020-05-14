@@ -93,7 +93,8 @@ for my $file (keys %Files){
   my @image_type  = $ds->GetEle("(0008,0008)")->{value};
   my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE"};
   my $ppa  = $ds->GetEle("(0018,1510)")->{value};
-  my $empty_seq = [];
+  my $empty = [];
+
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
@@ -117,6 +118,7 @@ for my $file (keys %Files){
   $ds->Insert("(0054,0220)", "399368009");          #View Code Sequence
   $ds->Insert("(0008,0016)", $sop_class);           #SOP Class
   $ds->Insert("(0008,0018)", $sop_inst);            #SOP Instance
+  $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);   #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
 
   #Shared functional groups
   $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);              #Slice Thickness
@@ -132,20 +134,27 @@ for my $file (keys %Files){
 
   #Per frame functional groups
   for my $i (0..($numframes-1)){
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[0]", $image_type[0][0]);           #X-Ray 3D Frame Type Sequence Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[1]",  $image_type[0][1]);          #X-Ray 3D Frame Type Sequence Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[2]", "TOMOSYNTHESIS");             #X-Ray 3D Frame Type Sequence Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[3]", "NONE");                      #X-Ray 3D Frame Type Sequence Frame Type
-    $ds->Insert("(5200,9230)[$i](0020,9111)", $empty_seq);                                   #Frame Content Sequence
-    $ds->Insert("(5200,9230)[$i](0020,9113)", $empty_seq);                                   #Plane Position Sequence
-    $ds->Insert("(5200,9230)[$i](0020,9116)", $empty_seq);                                   #Plane Orientation Sequence
-    $ds->Insert("(5200,9230)[$i](0018,1510)", $ppa);                                         #Positioner Primary Angle
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[0]", $image_type[0][0]);           #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[1]",  $image_type[0][1]);          #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[2]", "TOMOSYNTHESIS");             #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[3]", "NONE");                      #X-Ray 3D Frame Type Sequence - Frame Type
+
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9205)", $empty);                         #X-Ray 3D Frame Type Sequence - Pixel Presentation
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", $empty);                         #X-Ray 3D Frame Type Sequence - Volumetric Properties
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", $empty);                         #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
+
+    $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", $empty);                         #Frame Content Sequence - Frame Acquisition Number
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)", $empty);                         #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)", $empty);                         #Plane Orientation Sequence - Image Orientation Patient
   }
 
-  #Remove VOI LUT values from top level
+  #Remove values from top level
   $ds->DeleteElementBySig("(0028,1050)");
   $ds->DeleteElementBySig("(0028,1051)");
-
+  $ds->DeleteElementBySig("(0028,1052)");
+  $ds->DeleteElementBySig("(0028,1053)");
+  $ds->DeleteElementBySig("(0028,1054)");
+  $ds->DeleteElementBySig("(0018,1510)");
 
   if($df){
     $ds->WritePart10($dest_file, $xfr_stx, "POSDA", undef, undef);
