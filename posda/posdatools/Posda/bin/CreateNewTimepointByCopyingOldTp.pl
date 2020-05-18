@@ -11,7 +11,7 @@ Expects nothing on STDIN
 
 Creates a new timepoint with all of the files in the old timepoint
 
-For each hidden file in the old timepoint this script will:
+For each file in the new timepoint this script will:
 1) Unhide the old file
 2) Hide all other files with the same SOP Instance UID which are not hidden
 
@@ -101,31 +101,11 @@ $bg->WriteToEmail("Copied $num_copied files from " .
   "timepoint $old_tp_id to timepoint " .
   "$new_activity_timepoint_id\n");
 
-##
-## Find Dup Sops of hidden files in new timepoint
-##
-my %FilesToHide;
-my $tot_hidden = keys %HiddenFilesInOld;
-my $q2 = Query("GetVisibleDupSopsOfFileByFileId");
-for my $file_id (keys %HiddenFilesInOld){
-  $q2->RunQuery(sub{
-    my($row) = @_;
-    my $fth = $row->[0];
-    if($fth eq $file_id) {
-    } else {
-      $FilesToHide{$fth} = 1;
-    }
-  }, sub{}, $file_id);
-}
-my $num_to_hide = keys %FilesToHide;
-$bg->WriteToEmail("Found $num_to_hide dup SOPs out of " .
-  "$tot_hidden hidden files\n");
-
 
 ##
 ## Unhide Hidden files in new timepoint
 ##
-
+my $tot_hidden = keys %HiddenFilesInOld;
 $bg->WriteToEmail("Unhiding $tot_hidden hidden files copied\n");
 open UNHIDE, "|UnhideFilesWithStatus.pl $notify " .
   "\"Copying from tp $old_tp_id to tp $new_activity_timepoint_id\"";
@@ -137,12 +117,24 @@ close UNHIDE;
 $bg->WriteToEmail ("Unhid $tot_hidden files in tp $new_activity_timepoint_id\n");
 
 ##
-## Hide Dup Sops of files in new timepoint
+## Get a list of SOP duplicates for all files in new timepoint
 ##
+
+my %DuplicateSopFiles;
+Query("DuplicatesOfSopsInTp")->RunQuery(sub{
+  my($row) = @_;
+  $DuplicateSopFiles{$row->[0]} = 1;
+}, sub {}, $new_activity_timepoint_id, $new_activity_timepoint_id);
+
+##
+## Hide all of the Duplicate SOPs outside the timepoint
+##
+my $num_to_hide = keys %DuplicateSopFiles;
+
 open HIDE, "|HideFilesWithStatusIrrespectiveOfCtp.pl $notify " .
-  "\"Hiding files which are dups of copied hidden files from tp $old_tp_id to " .
-  "tp $new_activity_timepoint_id\"";
-for my $file_id (keys %FilesToHide){
+  "\"Hiding files which are dups of files from tp " .
+  "$new_activity_timepoint_id\"";
+for my $file_id (keys %DuplicateSopFiles){
   print HIDE "$file_id&<undef>\n";
 }
 $bg->SetActivityStatus("Waiting for hide of $num_to_hide files to clear");
