@@ -1,0 +1,6 @@
+:operation_name: ComparePosdaPrivateDataDictToPrivateTagKb
+:command_line: CompareNewPrivateTagDbToOld.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['private_tag_kb']
+:can_chain: 
