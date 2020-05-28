@@ -4,69 +4,67 @@ use Posda::DB::PosdaFilesQueries;
 use Posda::Dataset;
 use Dispatch::EventHandler;
 use Dispatch::LineReader;
+use Posda::DB 'Query';
 my $usage = <<EOF;
-PhiSimpleSeriesScan.pl  <series_instance_uid> <query_name>
+PhiSimpleSeriesScan.pl  <series_instance_uid> <activity_id>
   series_instance_uid  - series_instance_uid
-  query_name           - name of query for files in series
+  activity_id          - activity ID
 
-
-The query must have one parameter (series_instance_uid)
-and must return a list of files.
-Queries which fill the bill:
-  FilesInSeries
-  IntakeFilesInSeries
-  PublicFilesInSeries
-This script contains the horrible kludge for Public and Intake
-mapping the file path which is invoked by the name of the
-query matching either Intake or public.
+uses query  FilesInSeriesAndTP
 EOF
 unless($#ARGV == 1){ die $usage }
-my($series_inst, $search_files) = @ARGV;
+my($series_inst, $act_id) = @ARGV;
+my $query = "FilesInSeriesAndTP";
 my @FilesToScan;
-my $get_files = PosdaDB::Queries->GetQueryInstance($search_files);
+my $current_timepoint_id;
+Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+  my($row) = @_;
+  $current_timepoint_id = $row->[0];
+}, sub {}, $act_id);
+my $get_files = PosdaDB::Queries->GetQueryInstance($query);
 my $trans = sub { return $_[0] };
-if($search_files =~ /Intake/){
-  $trans = sub {
-    my($path) = @_;
-    if($path =~ /^(\/mnt)\/sdd1\/(.*)$/){
-      my $root = $1;
-      my $rel = $2;
-      my $mapped = "$root/intake1-data/$rel";
-      unless(-f $mapped) {
-        print STDERR "not found: $mapped\n";
-        return undef;
-      }
-      return $mapped;
-    } else {
-      print STDERR "bad file $path";
-      return undef;
-    }
-  };
-} elsif($search_files =~ /Public/){
-  $trans = sub {
-    my($path) = @_;
-    if($path =~ /^\/usr\/local\/apps\/ncia\/CTP-server\/CTP\/(.*)$/){
-      my $rel = $1;
-      my $mapped = "/mnt/public-nfs/$rel";
-      unless(-f $mapped) {
-        print STDERR "not found: $mapped\n";
-        return undef;
-      }
-      return $mapped;
-    } else {
-      # this is likely a path from the new NBIA DICOM Submit API,
-      # which means no mapping is necessary.
-      return $path;
-    }
-  };
-}
+# if($search_files =~ /Intake/){
+#   $trans = sub {
+#     my($path) = @_;
+#     if($path =~ /^(\/mnt)\/sdd1\/(.*)$/){
+#       my $root = $1;
+#       my $rel = $2;
+#       my $mapped = "$root/intake1-data/$rel";
+#       unless(-f $mapped) {
+#         print STDERR "not found: $mapped\n";
+#         return undef;
+#       }
+#       return $mapped;
+#     } else {
+#       print STDERR "bad file $path";
+#       return undef;
+#     }
+#   };
+# } elsif($search_files =~ /Public/){
+#   $trans = sub {
+#     my($path) = @_;
+#     if($path =~ /^\/usr\/local\/apps\/ncia\/CTP-server\/CTP\/(.*)$/){
+#       my $rel = $1;
+#       my $mapped = "/mnt/public-nfs/$rel";
+#       unless(-f $mapped) {
+#         print STDERR "not found: $mapped\n";
+#         return undef;
+#       }
+#       return $mapped;
+#     } else {
+#       # this is likely a path from the new NBIA DICOM Submit API,
+#       # which means no mapping is necessary.
+#       return $path;
+#     }
+#   };
+# }
 $get_files->RunQuery(sub {
   my($row) = @_;
   my $file = $row->[0];
   my $path = &$trans($file);
   push @FilesToScan, $path;
 #  print "File: $file\n";
-}, sub {}, $series_inst);
+}, sub {}, $series_inst,$current_timepoint_id);
 #######################################
 
 {

@@ -261,13 +261,18 @@ unless(mkdir($DestDir) == 1){
 ## %SopsToEdit and %UidMapping
 #
 
-my $get_list_of_sops_and_files = Query("GetFilesAndSopsBySeries");
+my $get_list_of_sops_and_files = Query("GetFilesAndSopsBySeriesAndTP");
 my $look_up_tag = Query("LookUpTag");
 my $last_line_was_series = 0;
 my $last_line_was_edit = 0;
 my $accumulating_series = [];
 my $current_series = [];
 my $accumulating_edits = [];
+my $current_timepoint_id;
+Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+  my($row) = @_;
+  $current_timepoint_id = $row->[0];
+}, sub {}, $activity_id);
 line:
 while(my $line = <STDIN>){
   chomp $line;
@@ -393,7 +398,7 @@ sub GetSeriesFileList{
       from_file => $path,
       to_file => $dest_file,
     };
-  }, sub {}, $series);
+  }, sub {}, $series,$current_timepoint_id);
   return \%series_struct;
 }
 
