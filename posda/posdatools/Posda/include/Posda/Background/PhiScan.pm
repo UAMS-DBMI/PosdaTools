@@ -2,8 +2,8 @@ use strict;
 package Posda::Background::PhiScan;
 use Posda::DB 'Query';
 my $doc = <<EOF;
-Instances of Posda::Background::PhiScan  essentially represent rows in the 
-phi_scan_instance table in the posda_phi_simple database, which in turn 
+Instances of Posda::Background::PhiScan  essentially represent rows in the
+phi_scan_instance table in the posda_phi_simple database, which in turn
 represent PHI scans of DICOM files.
 
 Such an instance of this class can be created in one of two different ways:
@@ -30,7 +30,7 @@ Constructors:
  - NewFromScan(series_list, database, description) -- creates new scan and
    returns (after a potentially long time) an object representing the new scan.
  - NewFromId(id) -- creates a new scan from an existing scan_id.  This will
-   only succeed if the scan completed successfully. (i.e. num_series == 
+   only succeed if the scan completed successfully. (i.e. num_series ==
    num_series_scanned and end_time is not null).
 Report Methods:
  - TableFromQuery(query_name) -- returns a table produced by making the
@@ -57,14 +57,14 @@ my $update_act = Query('UpdateActivityTaskStatus');
 sub NewFromScan{
   my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back) = @_;
   my $num_series = @$SeriesList;
-  my $q_name = "FilesInSeries";
+  my $q_name = "FilesInSeriesandTP";
   if($database eq "Public") {
     $q_name = "PublicFilesInSeries";
   } elsif($database ne "Posda"){
     die "Database must be either Posda or Public";
   }
   my $get_series_count = Query($q_name);
-  $create_scan->RunQuery(sub {}, sub{}, $description, $num_series, $q_name);
+  $create_scan->RunQuery(sub {}, sub{}, $description, $num_series, $q_name, $act_id);
   my $scan_id;
   $get_scan_id->RunQuery(sub {
     my($row) = @_;
