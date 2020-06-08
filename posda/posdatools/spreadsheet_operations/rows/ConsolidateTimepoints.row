@@ -1,0 +1,6 @@
+:operation_name: ConsolidateTimepoints
+:command_line: ConsolidateActivityTimepoints.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <activity_timepoint_id>
+:tags: ['activity_timepoints']
+:can_chain: 
