@@ -132,7 +132,7 @@ EOF
   },
   qc_13 => {
     chained_query_id => "qc_13",
-    caption => "close",
+    caption => "Details",
     from_query => "ListOpenActivitiesWithItems",
     to_query => "InboxContentByActivityId",
     arg_map => {
@@ -191,6 +191,51 @@ EOF
     to_query => "ReOpenActivity",
     arg_map => {
       activity_id => "activity_id",
+    },
+  },
+  qc_19=> {
+    chained_query_id => "qc_19",
+    caption => "dismiss",
+    from_query => "PendingExportRequests",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_20=> {
+    chained_query_id => "qc_20",
+    caption => "dismiss",
+    from_query => "PendingExportRequestsByActivity",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_21=> {
+    chained_query_id => "qc_21",
+    caption => "dismiss",
+    from_query => "ExportEventStatusSummary",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_22=> {
+    chained_query_id => "qc_22",
+    caption => "dismiss",
+    from_query => "ExportEventStatusSummaryByActivity",
+    to_query => "DismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
+    },
+  },
+  qc_23=> {
+    chained_query_id => "qc_23",
+    caption => "undismiss",
+    from_query => "DismissedExportEventStatusSummary",
+    to_query => "UnDismissExportEvent",
+    arg_map => {
+      export_event_id => "export_event_id",
     },
   },
 );
@@ -338,6 +383,38 @@ EOF
     obj => "DbIf::EditStatus",
     col_name => "id",
     caption => "info",
+  },
+  qc_cc_76 => {
+    query => "PendingExportRequestsByActivity",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "start",
+    operation => "StartExportEvent"
+  },
+  qc_cc_77 => {
+    query => "PendingExportRequests",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "start",
+    operation => "StartExportEvent"
+  },
+  qc_cc_78 => {
+    query => "ExportEventsAwaitingClosure",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "close",
+    operation => "CloseExportEvent"
+  },
+  qc_cc_79 => {
+    query => "ExportEventsAwaitingClosureByActivity",
+    type => "ChainColumnToSubprocess",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "export_event_id",
+    caption => "close",
+    operation => "CloseExportEvent"
   },
 );
 

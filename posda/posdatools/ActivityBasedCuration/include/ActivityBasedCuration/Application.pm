@@ -2548,10 +2548,87 @@ sub InvokeOperation {
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
+#xyzzy
+sub NewerProcessPopupFromRow{
+  my ($self, $http, $dyn) = @_;
+  my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  my $params;
+  $params = {
+     bindings => $self->{BindingCache},
+  };
+  my $invocation = {
+    type => "InvokeOperationRow",
+    Operation => $dyn->{operation},
+    caption => $dyn->{caption},
+  };
+  $params->{invocation} = $invocation;
+  $params->{current_settings}->{notify} = $self->get_user;
+  if(defined $self->{ActivitySelected}){
+    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+      my($row) = @_;
+      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+    }, sub {}, $self->{ActivitySelected});
+  }
+  # get params from row as prior_ss_args
+  my $cols = $SFQ->{query}->{columns};
+  my $rows = $SFQ->{rows};
+  my $row = $rows->[$dyn->{row}];
+  for my $ci (0 .. $#{$cols}){
+    my $cn = $cols->[$ci];
+    my $v = $row->[$ci];
+    $params->{prior_ss_args}->{$cn} = $v;
+  }
+
+  my $command =
+    $self->GetOperationDescription($invocation->{Operation});
+
+  unless(defined $command){
+    die "Command is not defined for $invocation->{Operation}";
+  }
+  if(defined $command){
+    $params->{command} = $command;
+  } else {
+    my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
+    eval "require $class";
+    if($@){
+      print STDERR "$class failed to compile\n\t$@\n";
+      return;
+    }
+    unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+    my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
+    $params->{Operations} = $self->{Commands};
+    $self->{sequence_no}++;
+
+    my $child_path = $self->child_path($name);
+    my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+    $self->StartJsChildWindow($child_obj);
+    return;
+  }
+
+  my $class = "Posda::NewerProcessPopup";
+  eval "require $class";
+  if($@){
+    print STDERR "Class Posda::NewerProcessPopup failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "TableLevelPopup_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
 sub InvokeOperationRow {
   my ($self, $http, $dyn) = @_;
 #  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
+  if($class eq "Posda::NewerProcessPopup"){
+    return $self->NewerProcessPopupFromRow($http, $dyn);
+  }
   unless(defined $class){
     $class = "Posda::NewerProcessPopup";
   }
@@ -3803,7 +3880,8 @@ $self->{chained_queries} = \@chained_queries;
 		op => "InvokeOperationRow",
 		row => "$i",
 		class_ => "$popup_details->{obj}",
-		cap_ => "$popup_details->{caption}",
+		operation => "$popup_details->{operation}",
+                column => $cn,
 		sync => 'Update();'
 	    });
 	  }

@@ -3037,7 +3037,7 @@ sub Insert{
       };
     }
   } else {
-    die "Sig ($sig) didn't match";
+    die "Sig \"$sig\" didn't match";
   }
   #  Here we have $grp, $owner, $ele set up
   if($remain eq ""){

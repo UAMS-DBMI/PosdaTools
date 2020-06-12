@@ -27,7 +27,7 @@ services:
             - ./steve:/steve
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
 
@@ -40,14 +40,42 @@ services:
             - ./ream:/ream
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - ream.env
 
+    exodus:
+        image: tcia/exodus:latest
+        restart: always
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - ./exodus:/exodus
+            - /mnt:/mnt
+            - /nas:/nas
+        env_file:
+            - database.env
+            - common.env
+            - exodus.env
+
     thumbs:
         image: tcia/lanterna:latest
         command: "/scripts/thumbs.py"
+        restart: always
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - ./lanterna:/scripts
+            - /mnt:/mnt
+            - /nas:/nas
+        env_file:
+            - database.env
+            - common.env
+
+    magicka:
+        image: tcia/lanterna:latest
+        command: "/scripts/magicka.py"
         restart: always
         volumes:
             - posda_cache_alpine:/home/posda/cache
@@ -72,7 +100,7 @@ services:
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - nbia.env
@@ -89,7 +117,7 @@ services:
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
 
@@ -100,7 +128,7 @@ services:
         depends_on:
             - db
             - posda
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - api.env
@@ -121,25 +149,11 @@ services:
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - kaleidoscope_files:/html
-        env_file: 
+        env_file:
             - database.env
             - common.env
         # environment:
         #     DEBUG: 1
-
-    k-base:
-        image: tcia/k-base:latest
-        restart: always
-        depends_on:
-            - db
-            - posda
-        volumes:
-            - posda_cache_alpine:/home/posda/cache
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file: 
-            - database.env
-            - common.env
 
     web:
         image: tcia/posda_web:latest
@@ -165,5 +179,3 @@ volumes:
     # posda_submission_root:
     pgdata_alpine:
     kaleidoscope_files:
-
-

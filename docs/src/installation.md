@@ -90,6 +90,12 @@ git clone https://code.imphub.org/scm/pt/oneposda.git
 
 You can place this directory anywhere you like.
 
+After it has finished downloading move into the directory and initialize your configuration, this will also download the docker containers.
+
+```bash
+cd oneposda
+./init
+```
 
 ## Configure Storage
 The bulk of the storage will be from the "Posda Cache", where all imported

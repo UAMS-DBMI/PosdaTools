@@ -82,6 +82,15 @@ sub SpecificInitialize{
       $self->{args}->{$arg}  = ["not present",  ""],
     }
   }
+  my $cmd = $self->{params}->{command}->{command_line};
+  if($cmd =~ /^([^\s]*)\s/){
+    $prog = $1;
+    my $effective_prog;
+    open FOO, "which $prog|";
+    while(my $line = <FOO>){ $effective_prog .= $line };
+    chomp $effective_prog;
+    $self->{EffectiveProg} = $effective_prog;
+  }
   $self->SetDefaultInput;
   $self->{mode} = "initial";
 }
@@ -172,7 +181,11 @@ sub DrawRenderedCommandLine{
   }
   $self->{ExpandedCommand} = $expanded_command;
   my $encoded_command = encode_entities($self->{ExpandedCommand});
-  $http->queue("<hr>Expanded Command:<pre>$encoded_command</pre>");
+  if($self->{EffectiveProg} ne ""){
+    $http->queue("<hr>Expanded Command:<pre>$encoded_command</pre>");
+  } else {
+    $http->queue("<hr>Expanded Command (not found):<pre>$encoded_command</pre>");
+  }
 }
 
 sub DrawRenderedInputData{
@@ -207,12 +220,16 @@ sub MenuResponse{
   $http->queue(
     '<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">');
   if($self->{mode} eq "initial"){
-    $self->DelegateButton($http, {
-      op => "StartSubprocess",
-      caption => "Start",
-      sync => "Update();",
-      css_class => "btn btn-success",
-    });
+    if($self->{EffectiveProg} ne ""){
+      $self->DelegateButton($http, {
+        op => "StartSubprocess",
+        caption => "Start",
+        sync => "Update();",
+        css_class => "btn btn-success",
+      });
+    } else {
+      $http->queue("Program not found");
+    }
     $self->DelegateButton($http, {
       op => "Cancel",
       caption => "Cancel",
