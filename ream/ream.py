@@ -70,6 +70,10 @@ def submit_file(f):
             return _submit_file(f)
         except SubmitFailedError as e:
             errors.append(e)
+        except requests.exceptions.ConnectionError as e:
+            errors.append(e)
+            print("WAIT: Server rejected connection, waiting 1 second for retry...")
+            time.sleep(1)  # wait a bit for the server to get over it's funk
         except LoginExpiredError:
             TOKEN = login_to_api()
 
