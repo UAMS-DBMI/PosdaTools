@@ -3,7 +3,7 @@
 -- Columns: ['export_event_id', 'export_destination_name', 'export_status', 'request_pending', 'request_status', 'status']
 -- Args: ['export_event_id']
 -- Tags: ['export_event', 'export_name']
--- Description: get  summary of transfer statuses from export_event, file_export
+-- Description:  get  summary of transfer statuses from export_event, file_export
 --
 
 select

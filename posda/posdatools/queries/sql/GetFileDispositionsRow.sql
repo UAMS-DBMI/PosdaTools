@@ -3,7 +3,7 @@
 -- Columns: ['export_file_dispositions_params_id']
 -- Args: ['offset_days', 'uid_root', 'only_modify_group_13']
 -- Tags: ['export_event']
--- Description: See if export_file_dispositions_row exists with desired values and return its id
+-- Description:  See if export_file_dispositions_row exists with desired values and return its id
 --
 
 select

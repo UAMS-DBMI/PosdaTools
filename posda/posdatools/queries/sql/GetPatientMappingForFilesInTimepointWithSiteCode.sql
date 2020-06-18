@@ -3,7 +3,7 @@
 -- Columns: ['from_patient_id', 'to_patient_id', 'to_patient_name', 'collection_name', 'site_name', 'site_code', 'uid_root', 'diagnosis_date', 'baseline_date', 'date_shift', 'computed_shift']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['patient_mapping', 'export_event']
--- Description: Retrieve entries from patient_mapping table
+-- Description:  Retrieve entries from patient_mapping table
 --
 
 select

@@ -3,7 +3,7 @@
 -- Columns: ['export_destination_name', 'destination_import_event_id', 'destination_import_event_closed', 'protocol', 'base_url', 'configuration', 'num_files']
 -- Args: ['export_event_id']
 -- Tags: ['export_event']
--- Description:  get information about an export destination by name
+-- Description:   get information about an export destination by name
 --
 
 select

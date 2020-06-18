@@ -3,7 +3,7 @@
 -- Columns: ['file_id', 'file_type']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['activity_timepoints', 'export_event']
--- Description:  Get files in timepoint
+-- Description:   Get files in timepoint
 --
 
 select

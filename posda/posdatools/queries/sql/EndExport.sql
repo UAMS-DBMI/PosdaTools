@@ -3,7 +3,7 @@
 -- Columns: []
 -- Args: ['transfer_status_type', 'export_event_id']
 -- Tags: ['export_event']
--- Description: Mark final status of export_event
+-- Description:  Mark final status of export_event
 --
 
 update export_event set

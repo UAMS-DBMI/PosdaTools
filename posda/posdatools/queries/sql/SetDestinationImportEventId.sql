@@ -3,7 +3,7 @@
 -- Columns: []
 -- Args: ['destination_import_event_id', 'export_event_id']
 -- Tags: ['export_event']
--- Description: Enter destination_import_event_id into export_event table
+-- Description:  Enter destination_import_event_id into export_event table
 --
 
 update export_event set

@@ -3,7 +3,7 @@
 -- Columns: ['export_event_id', 'activity_id', 'subprocess_invocation_id', 'export_destination_name', 'creation_time', 'request_pending', 'request_status', 'activity_task_status', 'num_files']
 -- Args: []
 -- Tags: ['export_event']
--- Description: Get a list of export events which are "pending" I.e. created, not started, not dismissed
+-- Description:  Get a list of export events which are "pending" I.e. created, not started, not dismissed
 --
 
 select

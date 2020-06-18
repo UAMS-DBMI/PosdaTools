@@ -3,7 +3,7 @@
 -- Columns: ['file_id', 'patient_id']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['export_event']
--- Description: get the export_event_id of a newly created export_event
+-- Description:  get the export_event_id of a newly created export_event
 --
 
 select

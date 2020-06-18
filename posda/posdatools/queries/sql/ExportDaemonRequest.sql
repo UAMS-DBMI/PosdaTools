@@ -3,7 +3,7 @@
 -- Columns: []
 -- Args: ['request_status', 'export_event_id']
 -- Tags: ['export_event']
--- Description: submit a request to Export Daemon
+-- Description:  submit a request to Export Daemon
 --
 
 update export_event set

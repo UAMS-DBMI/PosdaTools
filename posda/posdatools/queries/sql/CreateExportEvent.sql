@@ -3,7 +3,7 @@
 -- Columns: ['export_event_id']
 -- Args: ['submitter_type', 'subprocess_invocation_id', 'export_destination']
 -- Tags: ['export_event']
--- Description: Creates an export event
+-- Description:  Creates an export event
 --
 
 insert into export_event (

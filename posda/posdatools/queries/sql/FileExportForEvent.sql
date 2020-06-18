@@ -3,7 +3,7 @@
 -- Columns: ['file_id', 'null_if_no_disp_parms', 'when_queued', 'when_transferred', 'transfer_status', 'transfer_status_message', 'offset_days', 'uid_root', 'batch', 'only_13']
 -- Args: ['export_event_id']
 -- Tags: ['export_event']
--- Description: Get list of files with status and disposition params by export_event_id
+-- Description:  Get list of files with status and disposition params by export_event_id
 --
 
 select

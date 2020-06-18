@@ -617,14 +617,16 @@ sub DecodeElementValue {
             ->{$this->{grp}}->{$pvt_ele};
 #########
 #  Do we really want to do this:
-#        if(defined $this->{vr} && $this->{vr} ne $ele_info->{VR}) {
-#          $this->{vr_to_convert_to} = $ele_info->{VR};
-#        }
+        if(defined $this->{vr} && $this->{vr} ne $ele_info->{VR}) {
+          $this->{vr_to_convert_to} = $ele_info->{VR};
+        }
 # in addition to this: 
         $this->{vm} = $ele_info->{VM};
 #????????
 #  In effect, do we want to promote a tag VR mismatch with the private DD
 #  to the same level as a tag mismatch with the public DD??
+#
+# Apparently yes (BB 2020-06-02)
 #########
       }
     }
@@ -1068,6 +1070,8 @@ sub CoerceBadVRs{
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
+  }elsif($from_vr eq "IS" && $to_vr eq "DS"){
+    return("text", $value_s);
   }elsif($from_vr eq "OB" && $to_vr eq "FD"){
     return ("double", [unpack("d*", $value_s)]);
   }elsif($from_vr eq "OB" && $to_vr eq "FL"){

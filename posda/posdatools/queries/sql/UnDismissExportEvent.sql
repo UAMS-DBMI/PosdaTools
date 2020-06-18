@@ -3,7 +3,7 @@
 -- Columns: []
 -- Args: ['export_event_id']
 -- Tags: []
--- Description:  Dismiss an export event
+-- Description:   Dismiss an export event
 --
 
 update export_event set

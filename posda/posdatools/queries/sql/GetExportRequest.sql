@@ -3,7 +3,7 @@
 -- Columns: ['request_status']
 -- Args: ['export_event_id']
 -- Tags: ['export_event']
--- Description: Check if a request is pending and return request_status if so
+-- Description:  Check if a request is pending and return request_status if so
 --
 
 select

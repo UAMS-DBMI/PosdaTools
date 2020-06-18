@@ -3,7 +3,7 @@
 -- Columns: ['export_event_id', 'activity_id', 'export_destination_name', 'protocol', 'export_status', 'destination_import_event_id', 'destination_import_event_closed', 'waiting', 'pending', 'success', 'failed_temporary', 'failed_permanent']
 -- Args: []
 -- Tags: ['export_event']
--- Description:  get  summary of transfer statuses from export_event, file_export
+-- Description:   get  summary of transfer statuses from export_event, file_export
 --
 
 select

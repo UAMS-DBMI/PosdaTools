@@ -3,7 +3,7 @@
 -- Columns: []
 -- Args: ['export_event_id', 'file_id']
 -- Tags: ['export_event']
--- Description: Mark final status of export_event
+-- Description:  Mark final status of export_event
 --
 
 update file_export set
