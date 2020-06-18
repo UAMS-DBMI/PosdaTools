@@ -332,6 +332,13 @@ EOF
     col_name => "file_path",
     caption => "view",
   },
+  qc_cc_72_1 => {
+    query => "ListSrTimepoint",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSr",
+    col_name => "file_path",
+    caption => "view",
+  },
   qc_cc_75 => {
     query => "GetEditStatusByDisposition",
     type => "ChainColumnToPopup",
@@ -359,8 +366,19 @@ EOF
       SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
     },
   },
-  qpb_CreateActivityTimepointFromImportID => {
-    caption => "Create Timepoint From Import Event ID List",
+  qpb_CreateActivityTimepointFromImportId => {
+    caption => "Create Timepoint From DICOM Files in Import Event List",
+    spreadsheet_operation => "CreateActivityTimepointFromImportId",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      ImportEventsByMatchingName => 1,
+      ImportEventsByMatchingNameAndType => 1,
+      ImportEventsWithTypeAndPatientId => 1,
+    },
+  },
+  qpb_CreateActivityTimepointFromImportEventId => {
+    caption => "Create Timepoint From All Files in Import Event List",
     spreadsheet_operation => "CreateActivityTimepointFromImportEventId",
     operation => "OpenNewTableLevelPopup",
     obj_class => "Posda::NewerProcessPopup",

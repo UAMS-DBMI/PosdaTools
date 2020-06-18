@@ -1,0 +1,6 @@
+:operation_name: StartExportEvent
+:command_line: StartAnExport.pl <?bkgrnd_id?> <activity_id> <export_event_id> "<import_comment>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['export']
+:can_chain: 
