@@ -31,8 +31,8 @@ sub TransferAnImage{
   Query("SetFileExportComplete")->RunQuery(sub{},sub{},
     "success", $this->{export_event_id}, $file_id);
   if($delete_after_transfer){
-    print STDERR "Modified file (deleted): $file_location\n";
-    unlink($file_location);
+    print STDERR "Modified file (NOT deleted, but should have been): $file_location\n";
+    #unlink($file_location);
   } else {
     print STDERR "Modified file (not deleted): $file_location\n";
   }

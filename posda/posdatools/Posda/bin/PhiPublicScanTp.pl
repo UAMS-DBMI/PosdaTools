@@ -62,7 +62,7 @@ $background->Daemonize;
 my $start_time = time;
 $background->WriteToEmail("Starting PHI scan: \"$description\"\n");
 my $scan = Posda::Background::PhiScan->NewFromScan(
-  \@SeriesList, $description, "Public");
+  \@SeriesList, $description, "Public", $invoc_id, $act_id, $background);
 my $end_time = time;
 my $elapsed = $end_time - $start_time;
 my $id = $scan->{phi_scan_instance_id};
