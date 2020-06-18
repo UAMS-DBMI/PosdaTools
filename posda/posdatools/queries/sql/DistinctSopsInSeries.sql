@@ -5,7 +5,7 @@
 -- Tags: ['by_series_instance_uid', 'duplicates', 'posda_files', 'sops']
 -- Description: Get Distinct SOPs in Series with number files
 -- Only visible filess
--- 
+--
 
 select distinct sop_instance_uid, count(*)
 from file_sop_common
@@ -13,9 +13,9 @@ where file_id in (
   select
     distinct file_id
   from
-    file_series natural join ctp_file
+    file_series natural left join ctp_file
   where
-    series_instance_uid = ? and visibility is null
+    series_instance_uid = ?
 )
 group by sop_instance_uid
 order by count desc
