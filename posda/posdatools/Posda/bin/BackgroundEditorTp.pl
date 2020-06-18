@@ -756,8 +756,8 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
 #Debug::GenPrint(make_debug_bg($background), $next_struct, 1);
 #$background->WriteToEmail("\n");
       $this->SerializedSubProcess($next_struct,
-        "NewSubprocessEditor.pl 2>/dev/null",
-#        "NewSubprocessEditor.pl",
+#        "NewSubprocessEditor.pl 2>/dev/null",
+        "NewSubprocessEditor.pl",
         $this->WhenEditDone($next_sop, $next_struct));
       $num_in_process = keys %{$this->{sops_in_process}};
       $num_waiting = @{$this->{list_of_sops}};

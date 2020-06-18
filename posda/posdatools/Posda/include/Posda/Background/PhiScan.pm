@@ -27,7 +27,7 @@ Attributes:
  - file_query -- "PublicFilsesInSeries" if scan of Public database or
    "FilesInSeries" if scan of Posda database.
 Constructors:
- - NewFromScan(series_list, database, description) -- creates new scan and
+ - NewFromScan(series_list, database, description, background_obj) -- creates new scan and
    returns (after a potentially long time) an object representing the new scan.
  - NewFromId(id) -- creates a new scan from an existing scan_id.  This will
    only succeed if the scan completed successfully. (i.e. num_series == 
@@ -78,7 +78,7 @@ sub NewFromScan{
       defined $back && $back->can("SetActivityStatus")
     ){
       $back->SetActivityStatus(
-        "Scanning $num_series_being_scanned series of $num_series");
+        "Scanning ($q_name) $num_series_being_scanned series of $num_series");
     }
     my $series_start_time = time;
     my $num_files_in_series = 0;
@@ -93,6 +93,12 @@ sub NewFromScan{
       my($row) = @_;
       $series_scan_id = $row->[0];
     }, sub {});
+#    if(
+#      defined($act_id) && defined($invoc_id) &&
+#      defined $back && $back->can("WriteToEmail")
+#    ){
+#      $back->WriteToEmail("command: PhiSimpleSeriesScan.pl $series $q_name|\n");
+#    }
     open SUBP, "PhiSimpleSeriesScan.pl $series $q_name|";
     while(my $line = <SUBP>){
       chomp $line;

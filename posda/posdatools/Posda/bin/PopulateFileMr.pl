@@ -29,11 +29,11 @@ my $TagList = [
 ["(0028,1054)", "Rescale Type", "mr_rescale_type"],
 ];
 my %file_ids;
-Query("GetUnpopulatedMrFiles")->RunQuery(sub {
+Query("GetUnpopulatedMrFilesInActivity")->RunQuery(sub {
   my($row) = @_;
   my($id, $path) = @$row;
   $file_ids{$id} = $path;
-},sub {});
+},sub {}, $ARGV[0]);
 my $num_files = keys %file_ids;
 print "$num_files found to update\n";
 my $q = Query("InsertRowFileMr");
