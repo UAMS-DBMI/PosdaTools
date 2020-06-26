@@ -348,8 +348,12 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     "Suggested Queries for Visual Review Status",
     [
       {
-        caption => "VisualReviewScanInstances",
+        caption => "VisualReviewScanInstances (generally obsolete)",
         query => "VisualReviewScanInstances",
+      },
+      {
+        caption => "VisualReviewForActivity",
+        query => "GetVisualReviewByActivityId",
       },
     ],
   ],
