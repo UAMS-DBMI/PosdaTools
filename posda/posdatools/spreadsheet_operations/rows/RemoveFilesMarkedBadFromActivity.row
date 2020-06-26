@@ -1,0 +1,6 @@
+:operation_name: RemoveFilesMarkedBadFromActivity
+:command_line: RemoveFilesMarkedBadFromActivity.pl <?bkgrnd_id?> <activity_id> <visual_review_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['visual_review']
+:can_chain: 

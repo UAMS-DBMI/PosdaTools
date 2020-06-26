@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::DB qw(Query);
 use Posda::BackgroundProcess;
 use Posda::ActivityInfo;
 use Posda::UUID;
@@ -92,31 +93,48 @@ for my $p (keys %Patients){
   }
 }
 
+my %SopsInTimepoint;
+Query("DistinctSopsInLatestTimepoint")->RunQuery(sub{
+  my($row) = @_;
+  $SopsInTimepoint{$row->[0]} = 1;
+}, sub {}, $act_id);
 
 
-my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
-my @tp_errors;
-for my $s (@Series){
-  $g_ser_file_ids->RunQuery(sub{
-    my($row) = @_;
-    my $f = $row->[0];
-    unless(exists $FileInfo->{$f}){
-      push(@tp_errors, [$s, $f]);
+#my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
+#my @tp_errors;
+#for my $s (@Series){
+#  $g_ser_file_ids->RunQuery(sub{
+#    my($row) = @_;
+#    my $f = $row->[0];
+#    unless(exists $FileInfo->{$f}){
+#      push(@tp_errors, [$s, $f]);
+#    }
+#  }, sub {}, $s);
+#}
+
+my %tp_errors;
+Query("SeriesSopActivityForAllSopsInLatestAcivityTpOfActivity")->RunQuery(sub {
+  my($row) = @_;
+  my($series_instance_uid, $sop_instance_uid, $in_act_id) = @$row;
+  unless(exists $SopsInTimepoint{$sop_instance_uid}){
+    if(exists($tp_errors{$sop_instance_uid})){
+      $tp_errors{$series_instance_uid} += 1;
+    } else {
+      $tp_errors{$series_instance_uid} = 1;
     }
-  }, sub {}, $s);
-}
+  }
+}, sub {}, $act_id);
 
 
-
-my $num_errors = @tp_errors;
+my $num_errors = keys %tp_errors;
 if($num_errors > 0){
   $background->WriteToEmail("There were $num_errors in tp series\n");
   my $rpt_w = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
-  $rpt_w->print("series_instance_uid,file_id\n");
-  for my $i (@tp_errors){
-    $rpt_w->print("$i->[0], $i->[1]\n");
+  $rpt_w->print("series_instance_uid,num_files\n");
+  for my $i (sort keys %tp_errors){
+    $rpt_w->print("$i, $tp_errors{$i}\n");
   }
-  $background->WriteToEmail("Warning: There are series in timepoint with files not in timepoint\n");
+  $background->WriteToEmail("Warning: There are series in timepoint with SOPs not in timepoint\n");
 #  $background->Finish;
 #  exit;
 }

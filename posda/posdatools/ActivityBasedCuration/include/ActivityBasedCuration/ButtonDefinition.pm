@@ -238,6 +238,15 @@ EOF
       export_event_id => "export_event_id",
     },
   },
+  qc_24=> {
+    chained_query_id => "qc_23",
+    caption => "chain",
+    from_query => "GetVisualReviewByActivityId",
+    to_query => "VisualReviewStatusById",
+    arg_map => {
+      visual_review_instance_id => "id",
+    },
+  },
 );
 
 %QueryChainColumnButtons = (
@@ -503,15 +512,6 @@ EOF
       DistinctSeriesByCollectionSite => 1,
     },
   },
-  qbp_HideEquivalenceClasses => {
-    caption => "Hide Equivalence Classes",
-    spreadsheet_operation => "HideEquivalenceClassesTp",
-    operation => "OpenNewTableLevelPopup",
-    obj_class => "Posda::NewerProcessPopup",
-    queries => {
-      VisualReviewStatusDetails => 1,
-    },
-  },
   qbp_ChangeReviewStatus => {
     caption => "Change Review Status",
     spreadsheet_operation => "ChangeReviewStatus",
@@ -529,6 +529,18 @@ EOF
     queries => {
       VisualReviewStatusDetails => 1,
     },
+  },
+  qbp_RemoveFilesMarkedBadFromActivity => {
+    caption => "Remove Bad Sops from Timepoint",
+    spreadsheet_operation => "RemoveFilesMarkedBadFromActivity",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      VisualReviewStatusById => 1,
+    },
+    params => {
+      visual_review_id => 0,
+    }
   },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
