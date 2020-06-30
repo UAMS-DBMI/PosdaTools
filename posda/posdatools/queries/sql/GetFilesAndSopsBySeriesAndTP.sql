@@ -11,7 +11,7 @@ select distinct
     series_instance_uid,
     sop_instance_uid,
     file_id,
-    root_path || '' / '' || rel_path as path
+    root_path || '/' || rel_path as path
 from
     file_patient
     natural join file_study

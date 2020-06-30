@@ -1,4 +1,4 @@
--- Name: FilesInSeriesTP
+-- Name: FilesInSeriesAndTP
 -- Schema: posda_files
 -- Columns: ['file']
 -- Args: ['series_instance_uid', 'activity_timepoint_id']
@@ -7,7 +7,7 @@
 -- 
 
 select
-distinct root_path || ''/'' || rel_path as file
+distinct root_path || '/' || rel_path as file
 from
 file_location natural join file_storage_root
 natural left join ctp_file
