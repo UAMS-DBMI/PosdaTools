@@ -239,7 +239,7 @@ EOF
     },
   },
   qc_24=> {
-    chained_query_id => "qc_23",
+    chained_query_id => "qc_24",
     caption => "chain",
     from_query => "GetVisualReviewByActivityId",
     to_query => "VisualReviewStatusById",
