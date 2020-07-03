@@ -33,14 +33,22 @@ sub SpecificInitialize {
   $db_handle = DBI->connect(Database('posda_files'));
 
   my $qh = $db_handle->prepare(qq{
-    select distinct file_id, series_instance_uid, root_path || '/' || rel_path
-    from file_sop_common 
-    natural join file_series 
-    natural join file_location
+    select distinct file_id, series_instance_uid,
+    root_path || '/' || l.rel_path as path,
+    import_event_id, import_comment, import_time,
+    visibility, max(activity_timepoint_id) as activity_timepoint_id
+    from file_sop_common
+    natural join file_series
+    natural join file_location l
     natural join file_storage_root
     natural left join ctp_file
-    where sop_instance_uid = ? and 
-    visibility is null;
+    join file_import using(file_id)
+    join import_event using(import_event_id)
+    join activity_timepoint_file using (file_id)
+    where sop_instance_uid = ?
+    group by 
+    file_id, series_instance_uid, path, import_event_id,
+    import_comment, import_time, visibility;
   });
 
   $qh->execute($sop_uid);
@@ -67,6 +75,10 @@ sub ContentResponse {
     <tr>
       <th>file_id</th>
       <th>series_instance_uid</th>
+      <th>import_time</th>
+      <th>import_comment</th>
+      <th>visibility</th>
+      <th>activity_timepoint</th>
       <th>from</th>
       <th>to</th>
     </tr>
@@ -89,6 +101,10 @@ sub ContentResponse {
     $http->queue(qq{
         </td>
         <td>$r->[1]</td>
+        <td>$r->[5]</td>
+        <td>$r->[4]</td>
+        <td>$r->[6]</td>
+        <td>$r->[7]</td>
         <td><input type="radio" name="compareFrom" value="$r->[0]|$r->[2]"></td>
         <td><input type="radio" name="compareTo" value="$r->[0]|$r->[2]"></td>
       </tr>
@@ -99,6 +115,7 @@ sub ContentResponse {
     <tr>
     <td></td>
     <td></td>
+    <td colspan="4">
     <td colspan="2">
       <button type="submit" class="btn btn-default">Compare</button>
     </td>

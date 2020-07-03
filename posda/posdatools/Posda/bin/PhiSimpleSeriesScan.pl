@@ -5,18 +5,19 @@ use Posda::Dataset;
 use Dispatch::EventHandler;
 use Dispatch::LineReader;
 my $usage = <<EOF;
-PhiSimpleSeriesScan.pl  <series_instance_uid> <scan_inst_id> <query_name>
+PhiSimpleSeriesScan.pl  <series_instance_uid> <query_name>
   series_instance_uid  - series_instance_uid
   query_name           - name of query for files in series
 
-The query must have one parameter (series_instance_uid), and
-must return a list of files.
+
+The query must have one parameter (series_instance_uid)
+and must return a list of files.
 Queries which fill the bill:
   FilesInSeries
   IntakeFilesInSeries
   PublicFilesInSeries
 This script contains the horrible kludge for Public and Intake
-mapping the file path which is invoked by the name of the 
+mapping the file path which is invoked by the name of the
 query matching either Intake or public.
 EOF
 unless($#ARGV == 1){ die $usage }
@@ -53,7 +54,7 @@ if($search_files =~ /Intake/){
       }
       return $mapped;
     } else {
-      # this is likely a path from the new NBIA DICOM Submit API, 
+      # this is likely a path from the new NBIA DICOM Submit API,
       # which means no mapping is necessary.
       return $path;
     }

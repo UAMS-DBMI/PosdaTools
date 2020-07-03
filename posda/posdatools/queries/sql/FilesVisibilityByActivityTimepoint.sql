@@ -3,7 +3,7 @@
 -- Columns: ['file_id', 'visibility']
 -- Args: ['activity_timepoint_id']
 -- Tags: ['duplicates', 'dup_sops', 'hide_dup_sops', 'sops_different_series']
--- Description: List of files with visibility in timepoint
+-- Description:  Return a count of duplicate SOP Instance UIDs
 --
 
 select

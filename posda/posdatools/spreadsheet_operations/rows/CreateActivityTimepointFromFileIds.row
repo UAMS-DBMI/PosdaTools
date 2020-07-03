@@ -1,0 +1,6 @@
+:operation_name: CreateActivityTimepointFromFileIds
+:command_line: CreateActivityTimepointFromFileIds.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['activity_timepoints']
+:can_chain: 

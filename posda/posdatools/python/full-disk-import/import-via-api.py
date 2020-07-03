@@ -20,9 +20,9 @@ def md5sum(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-def create_import_event():
+def create_import_event(import_comment):
     r = requests.put(URL + "event", params={
-        'source': "A test from python" # TODO: fix this
+        'source': import_comment
     })
 
     resp = r.json()
@@ -117,9 +117,12 @@ def import_one_file(import_event_id, line_obj):
         os.unlink(file)
 
 
-def main(filename):
+def main(filename, import_comment="CLI API Import", base_url="http://localhost"):
+    global URL
 
-    import_event_id = create_import_event()
+    URL = f"{base_url}/papi/v1/import/"
+
+    import_event_id = create_import_event(import_comment)
 
     # Each line of a plist should be a json-encoded dictionary
     with open(filename) as infile:

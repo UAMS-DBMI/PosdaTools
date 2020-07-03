@@ -33,10 +33,12 @@ RUN apk --update add \
     py3-psycopg2
 
 COPY --from=builder /opt/im /opt/im
-COPY dcm4che-5.18.1-bin.zip /
-RUN unzip /dcm4che-5.18.1-bin.zip -d /opt && rm -f /dcm4che-5.18.1-bin.zip
+COPY dcm4che-5.22.1-bin.zip /
+RUN unzip /dcm4che-5.22.1-bin.zip -d /opt && rm -f /dcm4che-5.22.1-bin.zip
+COPY dcm4che-tool-dcm2jpg-5.22.1.jar /opt/dcm4che-5.22.1/lib/dcm4che-tool-dcm2jpg-5.22.1.2.jar
+COPY dcm2jpg2 /opt/dcm4che-5.22.1/bin/
 
-ENV PATH="/opt/im/bin:/opt/dcm4che-5.18.1/bin:${PATH}"
+ENV PATH="/opt/im/bin:/opt/dcm4che-5.22.1/bin:${PATH}"
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt

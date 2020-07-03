@@ -81,4 +81,11 @@ if($num_lost_files > 0){
 } else {
   $back->WriteToEmail("All files in TP are in Public\n");
 }
-$back->Finish;
+my $rpt1 = $back->CreateReport("List of FileIds");
+$rpt1->print("file_id\n");
+for my $f (keys %FilesOnlyInPosda){
+  $rpt1->print("$f\n");
+}
+my $num_files = keys %FilesOnlyInPosda;
+
+$back->Finish("$num_files found");

@@ -188,6 +188,22 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Apply Background Dispositions to Timepoint (baseline date)",
         action =>  "BackgroundPrivateDispositionsTpBaseline",
       },
+      {
+        caption => "Queue An Export of All Files in Timepoint",
+        action =>  "ExportTimepoint",
+      },
+    ],
+    queries => [
+      {
+        caption => "Suggested Queries For Export Events By Activity",
+        operation => "SelectQueryGroup",
+        query_list_name => "ExportEventsByActivity",
+      },
+      {
+        caption => "Suggested Queries For Export Events",
+        operation => "SelectQueryGroup",
+        query_list_name => "ExportEvents",
+      },
     ],
   },
   {
@@ -332,8 +348,12 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     "Suggested Queries for Visual Review Status",
     [
       {
-        caption => "VisualReviewScanInstances",
+        caption => "VisualReviewScanInstances (generally obsolete)",
         query => "VisualReviewScanInstances",
+      },
+      {
+        caption => "VisualReviewForActivity",
+        query => "GetVisualReviewByActivityId",
       },
     ],
   ],
@@ -360,6 +380,60 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "LinkedSeriesForStructsInTimepoint",
         query => "LinkedSeriesForStructsInTimepoint",
+      },
+    ],
+  ],
+  ExportEventsByActivity => [
+    "Suggested Queries for ExportEvents By Activity",
+    [
+      {
+        caption => "Pending Exports",
+        query => "PendingExportRequestsByActivity",
+      },
+#      {
+#        caption => "Running Exports",
+#        query => "RunningExportRequestsByActivity",
+#      },
+#      {
+#        caption => "Completed Exports",
+#        query => "CompletedExportRequestsByActivity",
+#      },
+      {
+        caption => "Export Event Summary",
+        query => "ExportEventStatusSummaryByActivity",
+      },
+      {
+        caption => "Export Events Awaiting Closure",
+        query => "ExportEventsAwaitingClosureByActivity",
+      },
+    ],
+  ],
+  ExportEvents => [
+    "Suggested Queries for ExportEvents",
+    [
+      {
+        caption => "Pending Exports",
+        query => "PendingExportRequests",
+      },
+      {
+        caption => "Running Exports",
+        query => "RunningExportRequests",
+      },
+      {
+        caption => "Completed Exports",
+        query => "CompletedExportRequests",
+      },
+      {
+        caption => "Export Event Summary",
+        query => "ExportEventStatusSummary",
+      },
+      {
+        caption => "Dismissed Export Event Summary",
+        query => "DismissedExportEventStatusSummary",
+      },
+      {
+        caption => "Export Events Awaiting Closure",
+        query => "ExportEventsAwaitingClosure",
       },
     ],
   ],

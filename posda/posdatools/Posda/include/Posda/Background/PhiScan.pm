@@ -2,8 +2,8 @@ use strict;
 package Posda::Background::PhiScan;
 use Posda::DB 'Query';
 my $doc = <<EOF;
-Instances of Posda::Background::PhiScan  essentially represent rows in the 
-phi_scan_instance table in the posda_phi_simple database, which in turn 
+Instances of Posda::Background::PhiScan  essentially represent rows in the
+phi_scan_instance table in the posda_phi_simple database, which in turn
 represent PHI scans of DICOM files.
 
 Such an instance of this class can be created in one of two different ways:
@@ -27,10 +27,10 @@ Attributes:
  - file_query -- "PublicFilsesInSeries" if scan of Public database or
    "FilesInSeries" if scan of Posda database.
 Constructors:
- - NewFromScan(series_list, database, description) -- creates new scan and
+ - NewFromScan(series_list, database, description, background_obj) -- creates new scan and
    returns (after a potentially long time) an object representing the new scan.
  - NewFromId(id) -- creates a new scan from an existing scan_id.  This will
-   only succeed if the scan completed successfully. (i.e. num_series == 
+   only succeed if the scan completed successfully. (i.e. num_series ==
    num_series_scanned and end_time is not null).
 Report Methods:
  - TableFromQuery(query_name) -- returns a table produced by making the
@@ -56,8 +56,13 @@ my $get_scan_by_id = Query("GetScanInstanceById");
 my $update_act = Query('UpdateActivityTaskStatus');
 sub NewFromScan{
   my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back) = @_;
+  my $current_timepoint_id;
+  Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+    my($row) = @_;
+    $current_timepoint_id = $row->[0];
+  }, sub {}, $act_id);
   my $num_series = @$SeriesList;
-  my $q_name = "FilesInSeries";
+  my $q_name = "FilesInSeriesAndTP";
   if($database eq "Public") {
     $q_name = "PublicFilesInSeries";
   } elsif($database ne "Posda"){
@@ -78,14 +83,14 @@ sub NewFromScan{
       defined $back && $back->can("SetActivityStatus")
     ){
       $back->SetActivityStatus(
-        "Scanning $num_series_being_scanned series of $num_series");
+        "Scanning ($q_name) $num_series_being_scanned series of $num_series");
     }
     my $series_start_time = time;
     my $num_files_in_series = 0;
     $get_series_count->RunQuery(sub {
       my($row) = @_;
       $num_files_in_series += 1;
-    }, sub {}, $series);
+    }, sub {}, $series, $current_timepoint_id);
     $create_series_scan->RunQuery(sub {}, sub {}, $scan_id,
       $series);
     my $series_scan_id;
@@ -93,7 +98,7 @@ sub NewFromScan{
       my($row) = @_;
       $series_scan_id = $row->[0];
     }, sub {});
-    open SUBP, "PhiSimpleSeriesScan.pl $series $q_name|";
+    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id |";
     while(my $line = <SUBP>){
       chomp $line;
       my($tagp, $vr, $value) = split(/\|/, $line);

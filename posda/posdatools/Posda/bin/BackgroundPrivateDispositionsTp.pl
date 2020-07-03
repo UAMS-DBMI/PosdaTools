@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Posda::DB::PosdaFilesQueries;
+use Posda::DB qw(Query);
 use Posda::BackgroundProcess;
 use Posda::ActivityInfo;
 use Posda::UUID;
@@ -92,32 +93,50 @@ for my $p (keys %Patients){
   }
 }
 
+my %SopsInTimepoint;
+Query("DistinctSopsInLatestTimepoint")->RunQuery(sub{
+  my($row) = @_;
+  $SopsInTimepoint{$row->[0]} = 1;
+}, sub {}, $act_id);
 
 
-my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
-my @tp_errors;
-for my $s (@Series){
-  $g_ser_file_ids->RunQuery(sub{
-    my($row) = @_;
-    my $f = $row->[0];
-    unless(exists $FileInfo->{$f}){
-      push(@tp_errors, [$s, $f]);
+#my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
+#my @tp_errors;
+#for my $s (@Series){
+#  $g_ser_file_ids->RunQuery(sub{
+#    my($row) = @_;
+#    my $f = $row->[0];
+#    unless(exists $FileInfo->{$f}){
+#      push(@tp_errors, [$s, $f]);
+#    }
+#  }, sub {}, $s);
+#}
+
+my %tp_errors;
+Query("SeriesSopActivityForAllSopsInLatestAcivityTpOfActivity")->RunQuery(sub {
+  my($row) = @_;
+  my($series_instance_uid, $sop_instance_uid, $in_act_id) = @$row;
+  unless(exists $SopsInTimepoint{$sop_instance_uid}){
+    if(exists($tp_errors{$sop_instance_uid})){
+      $tp_errors{$series_instance_uid} += 1;
+    } else {
+      $tp_errors{$series_instance_uid} = 1;
     }
-  }, sub {}, $s);
-}
+  }
+}, sub {}, $act_id);
 
 
-
-my $num_errors = @tp_errors;
+my $num_errors = keys %tp_errors;
 if($num_errors > 0){
   $background->WriteToEmail("There were $num_errors in tp series\n");
-  my $rpt = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
-  $rpt->print("series_instance_uid,file_id\n");
-  for my $i (@tp_errors){
-    $rpt->print("$i->[0], $i->[1]\n");
+  my $rpt_w = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
+  $rpt_w->print("series_instance_uid,num_files\n");
+  for my $i (sort keys %tp_errors){
+    $rpt_w->print("$i, $tp_errors{$i}\n");
   }
-  $background->Finish;
-  exit;
+  $background->WriteToEmail("Warning: There are series in timepoint with SOPs not in timepoint\n");
+#  $background->Finish;
+#  exit;
 }
 
 
@@ -220,28 +239,72 @@ if(@dispositions_needed > 0){
   exit;
 }
 
+####
+#### Visual Review Checking
+####
 
+### Get visual review for this activity
+my $visual_review_id;
+my $num_visual_reviews = 0;
+Query("GetVisualReviewByActivityId")->RunQuery(sub{
+  my($row) = @_;
+  $visual_review_id = $row->[0];
+  $num_visual_reviews += 1;
+}, sub{}, $act_id);
 
-my $q5 = PosdaDB::Queries->GetQueryInstance(
-  "AreVisibleFilesMarkedAsBadOrUnreviewedInSeries");
-my $q6 = PosdaDB::Queries->GetQueryInstance(
-  "IsThisSeriesNotVisuallyReviewed");
-for my $series (@Series){
-  $q6->RunQuery(sub {
-    my($row) = @_;
-    $background->WriteToEmail("Warning: series $series not submitted for visual review\n");
-  }, sub {}, $series);
-  $q5->RunQuery(sub{
-    my($row) = @_;
-    $background->WriteToEmail("Error series $series has unreviewed or bad files\n");
-    $error += 1;
-  }, sub {}, $series);
+if ($num_visual_reviews == 1){
+  unless (defined $visual_review_id){
+    $background->WriteToEmail("Internal Error: visual review id undefined\n");
+    $background->Finish;
+    exit;
+  }
+  $background->WriteToEmail("WARNING: There were $num_visual_reviews " .
+    "visual reviews for this activity\n" .
+    "visual review verification may be inaccurate.\n"
+  );
+} else {
+  unless(defined $visual_review_id){
+    print "Can't find visual_review for this activity\n":
+    $background->WriteToEmail("Internal Error: visual review id undefined\n");
+    $background->Finish;
+    exit;
+  }
 }
-if($error){
-  $background->WriteToEmail("Terminating because of errors\n");
+my $num_sops_not_reviewed;
+Query("VerifyAllSopsInTpAreInVR")->RunQuery(sub {
+  $num_sops_not_reviewed += 1;
+}, sub {}, $act_id, $visual_review_id);
+if($num_sops_not_reviewed > 0){
+  $background->WriteToEmail("There are $num_sops_not_reviewed SOPs in the activity " .
+    "which were not reviewed\n");
   $background->Finish;
   exit;
 }
+my $unfinished_reviews = 0;
+Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
+  $unfinished_reviews += 1;
+}, sub{}, $activity_id, $visual_review_id);
+if ($unfinished_reviews > 0){
+  $background->WriteToEmail("There are $unfinished_reviews SOPs in the activity " .
+    "have review status other than Good or Bad\n");
+  $background->Finish;
+  exit;
+}
+my $bad_status = 0;
+Query("SopsInTimepointWithBadVR")->RunQuery(sub {
+  $bad_status += 1;
+}, sub{}, $activity_id, $visual_review_id);
+if ($bad_status > 0){
+  $background->WriteToEmail("There are $bad_status SOPs in the activity " .
+    "have review status of Bad\n");
+  $background->Finish;
+  exit;
+}
+####
+#### End - Visual Review Checking
+####
+
+
 
 my $num_series = @Series;
 $background->WriteToEmail("Found list of $num_series series to send\n");
