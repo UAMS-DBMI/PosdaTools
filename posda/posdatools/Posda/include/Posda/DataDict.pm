@@ -7,7 +7,9 @@
 # or at http://posda.com/License.html
 #
 package Posda::DataDict;
-my $Dict = {
+use vars qw($Dict $PvtDict $VRDesc $XferSyntax $SopCl
+   $DefaultPrivateGroupTags $ReverseDefaultPrivateGroupTags);
+$Dict = {
   "0" => {
     "0" => {
       "KeyWord" => "CommandGroupLength",
@@ -10629,22 +10631,6 @@ my $Dict = {
       "VM" => "1",
       "VR" => "ST",
       "ele" => "0051",
-      "group" => "0012"
-    },
-    "82" => {
-      "KeyWord" => "LongitudinalTemporalOffsetFromEvent",
-      "Name" => "Longitudinal Temporal Offset From Event",
-      "VM" => "1",
-      "VR" => "FD",
-      "ele" => "0052",
-      "group" => "0012"
-    },
-    "83" => {
-      "KeyWord" => "Longitudinal Temporal Event Type",
-      "Name" => "Longitudinal Temporal Event Type",
-      "VM" => "1",
-      "VR" => "CS",
-      "ele" => "0053",
       "group" => "0012"
     },
     "96" => {
@@ -30537,7 +30523,7 @@ my $Dict = {
   }
 };
 require Posda::PvtDataDict;
-my $VRDesc = {
+$VRDesc = {
   AE => {
     name => "Application Entity",
     len => "16",
@@ -30715,7 +30701,7 @@ my $VRDesc = {
     padtrailing => "1",
   },
 };
-my $XferSyntax = {
+$XferSyntax = {
   "1.2.826.0.1.3680043.2.494.1.1" => {
     name => "Implicit VR Big Endian",
     short_len => "0",
@@ -31088,7 +31074,7 @@ my $XferSyntax = {
     std => "0",
   },
 };
-my $SopCl = {
+$SopCl = {
   "1.2.840.10008.1.1" => {
     "sopcl_desc" => "Verification SOP Class",
     "type" => "SOP Class"
@@ -32570,10 +32556,10 @@ my $SopCl = {
     "type" => "SOP Class"
   }
 };
-my $DefaultPrivateGroupTags = {
+$DefaultPrivateGroupTags = {
 #  16 => "NIRS_Melco",
 };
-my $ReverseDefaultPrivateGroupTags = {
+$ReverseDefaultPrivateGroupTags = {
 #  "NIRS_Melco" => 16,
 };
 sub add_default_private_mapping{

@@ -8,6 +8,8 @@
 #
 use strict;
 package Posda::Parser;
+use Debug;
+my $dbg = sub {print STDERR @_};
 use FileHandle;
 my $native_moto = 
   (unpack("S", pack("C2", 1, 2)) == 0x0102) ? 1 : 0;
@@ -609,12 +611,20 @@ sub DecodeElementValue {
       my $pvt_ele = $this->{ele} & 0xff;
       $private_id =~ s/\s*$//;
       $private_id =~ s/^\s*//;
-      if( exists $Posda::Dataset::DD->{PvtDict}->{$private_id}
-          ->{$this->{grp}}->{$pvt_ele}
+      if(
+        exists($Posda::Dataset::DD->{PvtDict}->{$private_id}) &&
+        exists($Posda::Dataset::DD->{PvtDict}->{$private_id}->{$this->{grp}}) &&
+        exists($Posda::Dataset::DD->{PvtDict}->{$private_id}->{$this->{grp}}->{$pvt_ele})
       ){
+#        print STDERR "##################\nprivate tag found in DD: $this->{tag}\n" .
+#          " private_id: $private_id\n" .
+#          " pvt_ele: $pvt_ele\n" .
+#          "##################\n";
         my $ele_info = 
           $Posda::Dataset::DD->{PvtDict}->{$private_id}
             ->{$this->{grp}}->{$pvt_ele};
+        my $private_sig = sprintf("(%04x,\"%s\",%02x)", $this->{grp}, $private_id, $pvt_ele);
+        $this->{tag} = $private_sig;
 #########
 #  Do we really want to do this:
         if(defined $this->{vr} && $this->{vr} ne $ele_info->{VR}) {
@@ -628,6 +638,18 @@ sub DecodeElementValue {
 #
 # Apparently yes (BB 2020-06-02)
 #########
+      } else {
+        my $private_sig = sprintf("(%04x,\"%s\",%02x)", $this->{grp}, $private_id, $pvt_ele);
+        push(@{$this->{errors}}, "Warning private tag not in DD $private_sig");
+          $this->{ele_info} = {
+            VR => $this->{vr},
+            VM => "1-n",
+            ele => sprintf("%02x", $pvt_ele),
+            group => sprintf("%04x", $this->{grp}),
+            Name => "Unknown Priv Ele",
+          };
+        $this->{vm} = "1-n";
+        $this->{tag} = $private_sig;
       }
     }
   }
@@ -1067,6 +1089,9 @@ sub EleHandler{
 sub CoerceBadVRs{
   my($this, $from_vr, $to_vr, $vm, $value_s) = @_;
   if($from_vr eq $to_vr) { return $value_s }
+if(exists $this->{pvt_index}){
+  print STDERR "###########\nCoercing Private tag ($this->{tag}, $from_vr => $to_vr, \"$value_s\")\n";
+}
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
