@@ -264,7 +264,6 @@ if ($num_visual_reviews == 1){
   );
 } else {
   unless(defined $visual_review_id){
-    print "Can't find visual_review for this activity\n":
     $background->WriteToEmail("Internal Error: visual review id undefined\n");
     $background->Finish;
     exit;
@@ -283,7 +282,7 @@ if($num_sops_not_reviewed > 0){
 my $unfinished_reviews = 0;
 Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
   $unfinished_reviews += 1;
-}, sub{}, $activity_id, $visual_review_id);
+}, sub{}, $act_id, $visual_review_id);
 if ($unfinished_reviews > 0){
   $background->WriteToEmail("There are $unfinished_reviews SOPs in the activity " .
     "have review status other than Good or Bad\n");
@@ -293,7 +292,7 @@ if ($unfinished_reviews > 0){
 my $bad_status = 0;
 Query("SopsInTimepointWithBadVR")->RunQuery(sub {
   $bad_status += 1;
-}, sub{}, $activity_id, $visual_review_id);
+}, sub{}, $act_id, $visual_review_id);
 if ($bad_status > 0){
   $background->WriteToEmail("There are $bad_status SOPs in the activity " .
     "have review status of Bad\n");

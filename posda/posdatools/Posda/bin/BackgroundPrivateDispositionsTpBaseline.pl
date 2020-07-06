@@ -94,30 +94,57 @@ for my $p (keys %Patients){
 # in the series in the timepoint but not in the actual timepoint
 # TODO this isn't necessarily an error, right?
 #my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
-my @tp_errors;
-for my $s (@Series){
-  $g_ser_file_ids->RunQuery(sub{
-    my($row) = @_;
-    my $f = $row->[0];
-    unless(exists $FileInfo->{$f}){
-      push(@tp_errors, [$s, $f]);
-    }
-  }, sub {}, $s);
-}
+#my @tp_errors;
+#for my $s (@Series){
+#  $g_ser_file_ids->RunQuery(sub{
+#    my($row) = @_;
+#    my $f = $row->[0];
+#    unless(exists $FileInfo->{$f}){
+#      push(@tp_errors, [$s, $f]);
+#    }
+#  }, sub {}, $s);
+#}
 
 # Aborts early if there were any errors detected above
 # TODO do we really want this, always?
-my $num_errors = @tp_errors;
+#my $num_errors = @tp_errors;
+#if($num_errors > 0){
+#  $background->WriteToEmail("There were $num_errors in tp series\n");
+#  my $rpt = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
+#  $rpt->print("series_instance_uid,file_id\n");
+#  for my $i (@tp_errors){
+#    $rpt->print("$i->[0], $i->[1]\n");
+#  }
+#  $background->Finish;
+#  exit;
+#}
+my %tp_errors;
+#Query("SeriesSopActivityForAllSopsInLatestAcivityTpOfActivity")->RunQuery(sub {
+#  my($row) = @_;
+##  my($series_instance_uid, $sop_instance_uid, $in_act_id) = @$row;
+#  unless(exists $SopsInTimepoint{$sop_instance_uid}){
+#    if(exists($tp_errors{$sop_instance_uid})){
+#      $tp_errors{$series_instance_uid} += 1;
+#    } else {
+#      $tp_errors{$series_instance_uid} = 1;
+#    }
+#  }
+#}, sub {}, $act_id);
+
+
+my $num_errors = keys %tp_errors;
 if($num_errors > 0){
   $background->WriteToEmail("There were $num_errors in tp series\n");
-  my $rpt = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
-  $rpt->print("series_instance_uid,file_id\n");
-  for my $i (@tp_errors){
-    $rpt->print("$i->[0], $i->[1]\n");
+  my $rpt_w = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
+  $rpt_w->print("series_instance_uid,num_files\n");
+  for my $i (sort keys %tp_errors){
+    $rpt_w->print("$i, $tp_errors{$i}\n");
   }
+  $background->WriteToEmail("Warning: There are series in timepoint with SOPs not in timepoint\n");
 #  $background->Finish;
 #  exit;
 }
+
 
 my $q3 = PosdaDB::Queries->GetQueryInstance(
   "GetPatientMappingByPatientId");
@@ -245,7 +272,7 @@ if ($num_visual_reviews == 1){
   );
 } else {
   unless(defined $visual_review_id){
-    print "Can't find visual_review for this activity\n":
+    print "Can't find visual_review for this activity\n";
     $background->WriteToEmail("Internal Error: visual review id undefined\n");
     $background->Finish;
     exit;
@@ -264,7 +291,7 @@ if($num_sops_not_reviewed > 0){
 my $unfinished_reviews = 0;
 Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
   $unfinished_reviews += 1;
-}, sub{}, $activity_id, $visual_review_id);
+}, sub{}, $act_id, $visual_review_id);
 if ($unfinished_reviews > 0){ 
   $background->WriteToEmail("There are $unfinished_reviews SOPs in the activity " .
     "have review status other than Good or Bad\n");
@@ -274,7 +301,7 @@ if ($unfinished_reviews > 0){
 my $bad_status = 0;
 Query("SopsInTimepointWithBadVR")->RunQuery(sub {
   $bad_status += 1;
-}, sub{}, $activity_id, $visual_review_id);
+}, sub{}, $act_id, $visual_review_id);
 if ($bad_status > 0){
   $background->WriteToEmail("There are $bad_status SOPs in the activity " .
     "have review status of Bad\n");

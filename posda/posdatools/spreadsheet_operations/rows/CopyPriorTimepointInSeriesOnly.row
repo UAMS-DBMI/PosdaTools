@@ -1,0 +1,6 @@
+:operation_name: CopyPriorTimepointInSeriesOnly
+:command_line: CopyPriorTimepointInSeriesOnly.pl <?bkgrnd_id?> <activity_id> <old_tp_id> <notify>
+:operation_type: background_subprocess
+:input_line_format: <series_instance_uid>
+:tags: ['activity_timepoints']
+:can_chain: 
