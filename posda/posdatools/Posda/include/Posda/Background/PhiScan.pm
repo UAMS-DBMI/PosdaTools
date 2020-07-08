@@ -107,7 +107,7 @@ sub NewFromScan{
       my($row) = @_;
       $series_scan_id = $row->[0];
     }, sub {});
-    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id |";
+    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id $database |";
     while(my $line = <SUBP>){
       chomp $line;
       my($tagp, $vr, $value) = split(/\|/, $line);

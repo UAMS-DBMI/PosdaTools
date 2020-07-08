@@ -6,15 +6,20 @@ use Dispatch::EventHandler;
 use Dispatch::LineReader;
 use Posda::DB 'Query';
 my $usage = <<EOF;
-PhiSimpleSeriesScan.pl  <series_instance_uid> <activity_id>
+PhiSimpleSeriesScan.pl  <series_instance_uid> <activity_id> <database>
   series_instance_uid  - series_instance_uid
   activity_id          - activity ID
+  database             - Public or Posda
 
 uses query  FilesInSeriesAndTP
 EOF
-unless($#ARGV == 1){ die $usage }
-my($series_inst, $act_id) = @ARGV;
+unless($#ARGV == 2){ die $usage }
+my($series_inst, $act_id, $scandb) = @ARGV;
+
 my $query = "FilesInSeriesAndTP";
+if ($scandb eq "Public") {
+  $query = "PublicFilesInSeries";
+}
 my @FilesToScan;
 my $current_timepoint_id;
 Query("LatestActivityTimepointForActivity")->RunQuery(sub{
@@ -58,13 +63,23 @@ my $trans = sub { return $_[0] };
 #     }
 #   };
 # }
-$get_files->RunQuery(sub {
-  my($row) = @_;
-  my $file = $row->[0];
-  my $path = &$trans($file);
-  push @FilesToScan, $path;
-#  print "File: $file\n";
-}, sub {}, $series_inst,$current_timepoint_id);
+
+if ($scandb eq "Public") {
+  $get_files->RunQuery(sub {
+    my($row) = @_;
+    my $file = $row->[0];
+    my $path = &$trans($file);
+    push @FilesToScan, $path;
+  }, sub {}, $series_inst);
+} else {
+  $get_files->RunQuery(sub {
+    my($row) = @_;
+    my $file = $row->[0];
+    my $path = &$trans($file);
+    push @FilesToScan, $path;
+  }, sub {}, $series_inst, $current_timepoint_id);
+}
+
 #######################################
 
 {
