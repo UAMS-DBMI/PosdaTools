@@ -640,15 +640,19 @@ sub DecodeElementValue {
 #########
       } else {
         my $private_sig = sprintf("(%04x,\"%s\",%02x)", $this->{grp}, $private_id, $pvt_ele);
+        my $fake_vm = "1-n";
+        if($Posda::Dataset::DD->{VRDesc}->{$this->{vr}}->{type} eq "text"){
+          $fake_vm = 1;
+        }
         push(@{$this->{errors}}, "Warning private tag not in DD $private_sig");
           $this->{ele_info} = {
             VR => $this->{vr},
-            VM => "1-n",
+            VM => $fake_vm,
             ele => sprintf("%02x", $pvt_ele),
             group => sprintf("%04x", $this->{grp}),
             Name => "Unknown Priv Ele",
           };
-        $this->{vm} = "1-n";
+        $this->{vm} = $fake_vm;
         $this->{tag} = $private_sig;
       }
     }
