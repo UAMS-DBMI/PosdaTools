@@ -87,10 +87,19 @@ sub NewFromScan{
     }
     my $series_start_time = time;
     my $num_files_in_series = 0;
-    $get_series_count->RunQuery(sub {
-      my($row) = @_;
-      $num_files_in_series += 1;
-    }, sub {}, $series, $current_timepoint_id);
+
+    if ($database eq 'Public') {
+      $get_series_count->RunQuery(sub {
+        my($row) = @_;
+        $num_files_in_series += 1;
+      }, sub {}, $series, $current_timepoint_id);
+    } else {
+      $get_series_count->RunQuery(sub {
+        my($row) = @_;
+        $num_files_in_series += 1;
+      }, sub {}, $series);
+    }
+
     $create_series_scan->RunQuery(sub {}, sub {}, $scan_id,
       $series);
     my $series_scan_id;
