@@ -7,6 +7,7 @@ use Posda::UUID;
 use Posda::NBIASubmit;
 use File::Basename;
 use File::Path 'make_path';
+use Posda::DB 'Query';
 
 our $ug = Data::UUID->new;
 sub get_uuid {
