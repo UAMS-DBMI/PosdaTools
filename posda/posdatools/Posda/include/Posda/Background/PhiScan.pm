@@ -88,7 +88,7 @@ sub NewFromScan{
     my $series_start_time = time;
     my $num_files_in_series = 0;
 
-    if ($database eq 'Public') {
+    if ($database ne 'Public') {
       $get_series_count->RunQuery(sub {
         my($row) = @_;
         $num_files_in_series += 1;
