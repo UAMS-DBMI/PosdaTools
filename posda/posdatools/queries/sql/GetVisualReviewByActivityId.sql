@@ -11,4 +11,4 @@ select
 from
   activity_task_status join visual_review_instance using(subprocess_invocation_id)
 where activity_id = ?
-order by visual_review_instance_id desc
+order by visual_review_instance_id asc
