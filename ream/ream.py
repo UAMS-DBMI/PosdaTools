@@ -89,7 +89,7 @@ def _submit_file(f):
     if len(tpa_url) > 0:
         tpa = "yes"
     else:
-        tpa = ""
+        tpa = "NO"
 
     payload = {'project': f.collection,
                'siteName': f.site,
