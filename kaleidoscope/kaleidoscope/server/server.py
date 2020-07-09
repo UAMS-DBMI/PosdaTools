@@ -360,7 +360,195 @@ async def get_set(request, state):
 
     return json([dict(i.items()) for i in records])
 
+async def new_get_reviewed_data(state, after, dicom_file_type, visual_review_instance_id):
+    # Note: Currently this method is only called if a visual_review_instance_id
+    # was given, so we can assume it exists!
+    logging.debug(f"new_get_reviewed_data called with vr {visual_review_instance_id} "
+                  f"and after: {after}")
+
+    dicom_where = ""
+    if dicom_file_type is not None:
+        dicom_where = f"where dicom_file_type = '{dicom_file_type}'"
+    
+
+    query = f"""
+with one_file_per_iec as (
+	/*
+		For each IEC in the given Visual Review, select
+		one input file.
+
+		"distinct on()" allows us to return only 1 row
+		from within the distinct set. It is not really defined
+		which file we get, but it doesn't matter for this query.
+	*/
+	select distinct on (image_equivalence_class_id)
+		image_equivalence_class_id,
+		file_id
+	from
+		image_equivalence_class_input_image
+		natural join image_equivalence_class
+	where
+		visual_review_instance_id = {visual_review_instance_id}
+), iec_with_filetype as (
+	select
+		image_equivalence_class_id,
+		file_id
+	from
+		one_file_per_iec
+		natural join dicom_file
+        {dicom_where}
+), iec_with_project as (
+	select
+		image_equivalence_class_id,
+		project_name,
+		trial_name,
+		site_name,
+		site_id,
+		visibility,
+		file_id as input_file_id
+	from
+		iec_with_filetype
+		natural join ctp_file
+)
+
+select distinct on (image_equivalence_class_id)
+	image_equivalence_class_id,
+	image_equivalence_class.series_instance_uid,
+	equivalence_class_number,
+	processing_status,
+	review_status,
+	projection_type,
+	image_equivalence_class_out_image.file_id,
+	root_path || '/' || rel_path as path,
+	(
+		select count(file_id)
+		from image_equivalence_class_input_image i
+		where i.image_equivalence_class_id =
+		image_equivalence_class.image_equivalence_class_id
+	) as file_count,
+	body_part_examined,
+	patient_id
+
+from iec_with_project
+natural join image_equivalence_class
+natural join image_equivalence_class_out_image
+natural join file_location
+natural join file_storage_root
+join file_series on file_series.file_id = input_file_id
+join file_patient on file_patient.file_id = input_file_id
+where not hidden  -- this hidden is the IEC-level hidden, NOT file-level
+  and processing_status = 'Reviewed'
+  and review_status = '{state}'
+  and image_equivalence_class_id > $1
+order by image_equivalence_class_id
+limit 1
+    """
+
+    logging.debug(query)
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, after)
+    await pool.release(conn)
+
+    return records
+async def new_get_unreviewed_data(after, dicom_file_type, visual_review_instance_id):
+    # Note: Currently this method is only called if a visual_review_instance_id
+    # was given, so we can assume it exists!
+    logging.debug(f"new_get_unreviewed_data called with vr {visual_review_instance_id} "
+                  f"and after: {after}")
+
+    dicom_where = ""
+    if dicom_file_type is not None:
+        dicom_where = f"where dicom_file_type = '{dicom_file_type}'"
+    
+
+    query = f"""
+with one_file_per_iec as (
+	/*
+		For each IEC in the given Visual Review, select
+		one input file.
+
+		"distinct on()" allows us to return only 1 row
+		from within the distinct set. It is not really defined
+		which file we get, but it doesn't matter for this query.
+	*/
+	select distinct on (image_equivalence_class_id)
+		image_equivalence_class_id,
+		file_id
+	from
+		image_equivalence_class_input_image
+		natural join image_equivalence_class
+	where
+		visual_review_instance_id = {visual_review_instance_id}
+), iec_with_filetype as (
+	select
+		image_equivalence_class_id,
+		file_id
+	from
+		one_file_per_iec
+		natural join dicom_file
+        {dicom_where}
+), iec_with_project as (
+	select
+		image_equivalence_class_id,
+		project_name,
+		trial_name,
+		site_name,
+		site_id,
+		visibility,
+		file_id as input_file_id
+	from
+		iec_with_filetype
+		natural join ctp_file
+)
+
+select distinct on (image_equivalence_class_id)
+	image_equivalence_class_id,
+	image_equivalence_class.series_instance_uid,
+	equivalence_class_number,
+	processing_status,
+	review_status,
+	projection_type,
+	image_equivalence_class_out_image.file_id,
+	root_path || '/' || rel_path as path,
+	(
+		select count(file_id)
+		from image_equivalence_class_input_image i
+		where i.image_equivalence_class_id =
+		image_equivalence_class.image_equivalence_class_id
+	) as file_count,
+	body_part_examined,
+	patient_id
+
+from iec_with_project
+natural join image_equivalence_class
+natural join image_equivalence_class_out_image
+natural join file_location
+natural join file_storage_root
+join file_series on file_series.file_id = input_file_id
+join file_patient on file_patient.file_id = input_file_id
+where not hidden  -- this hidden is the IEC-level hidden, NOT file-level
+  and processing_status = 'ReadyToReview'
+  and image_equivalence_class_id > $1
+order by image_equivalence_class_id
+limit 1
+    """
+
+    logging.debug(query)
+
+    conn = await pool.acquire()
+    records = await conn.fetch(query, after)
+    await pool.release(conn)
+
+    return records
+
+
 async def get_unreviewed_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+
+    if visual_review_instance_id is not None:
+        return await new_get_unreviewed_data(after, dicom_file_type, visual_review_instance_id)
+
+
     where_text = ""
 
     if collection is not None:
@@ -477,6 +665,9 @@ async def get_other_data(after, collection, site, dicom_file_type, visual_review
     return await get_reviewed_data('Other', after, collection, site, dicom_file_type, visual_review_instance_id)
 
 async def get_reviewed_data(state, after, collection, site, dicom_file_type, visual_review_instance_id):
+    if visual_review_instance_id is not None:
+        return await new_get_reviewed_data(state, after, dicom_file_type, visual_review_instance_id)
+
     where_text = ""
 
     if collection is not None:
