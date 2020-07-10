@@ -21,7 +21,7 @@ Based on FixReallyBadDicomFilesInTimepoint
 
 --
 Uses named queries:
-   GetPathsForActivity
+   GetPathsForActivityTP
    FileIdsByActivityTimepointId
    CreateActivityTimepoint
    InsertActivityTimepointFile
@@ -45,7 +45,7 @@ my($invoc_id, $activity_id, $activity_timepoint_id, $notify) = @ARGV;
 
 print "Going to background\n";
 
-my $oq = Query("GetPathsForActivity");
+my $oq = Query("GetPathsForActivityTP");
 my $i = 0;
 my $start = time;
 my %Files;
