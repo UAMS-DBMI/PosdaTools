@@ -8,28 +8,28 @@ use vars qw(@ActivityCategories %WorkflowQueries);
 @ActivityCategories = (
   {
     id => "1_associate",
-    name => "Associate Imported Data with an Activity Timepoint",
+    name => "Create and Manage Activity Timepoints",
     note => "You must first Import Data into Posda and create an Activity!",
     description => "Curation workflow tasks performed on a collection are " .
       "grouped together into an Activity Timepoint to allow for better " .
       "management and analysis.  This step is tying the data to the Activity.",
     operations => [
       {
-        operation => "InvokeNewOperation",
-        caption => "Create Activity From Collection Site",
-        action =>  "CreateActivityTimepointFromCollectionSite",
+        operation => "FilesInTpNotInPublic",
+        caption => "Find files In Timepoint Not In Public",
+        action =>  "FilesInTpNotInPublic",
       },
     ],
     queries => [
       {
-        caption => "Suggested Queries for Series",
-        operation => "SelectQueryGroup",
-        query_list_name => "FindSeries",
-      },
-      {
         caption => "Suggested Queries for Import Events",
         operation => "SelectQueryGroup",
         query_list_name => "FindImportEvents",
+      },
+      {
+        caption => "Suggested Queries for Series",
+        operation => "SelectQueryGroup",
+        query_list_name => "FindSeries",
       },
     ],
   },
@@ -268,6 +268,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Create New Timepoint from Old Timepoint Id",
         action =>  "CopyPriorTimepoint",
       },
+      {
+        caption => "Correct Tomosynthesis Files",
+        action =>  "TomosynthesisConverterTP",
+      },
     ],
   },
 );
@@ -287,6 +291,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption =>"ImportEventsWithTypeAndPatientId",
         query =>"ImportEventsWithTypeAndPatientId",
+      },
+      {
+        caption =>"ApiImportEvents",
+        query =>"ApiImportEvents",
+      },
+      {
+        caption =>"ApiImportEventsForPatient",
+        query =>"ApiImportEventsForPatient",
+      },
+      {
+        caption =>"ApiImportEventsDateRange",
+        query =>"ApiImportEventsDateRange",
       },
     ],
   ],
@@ -316,6 +332,43 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
+    ],
+  ],
+  ManageTimepoint => [
+    "Suggested Queries for Import Events",
+    [
+      {
+        caption => "CopyPriorTimepoint",
+        query => "CopyPriorTimepoint",
+      },
+      {
+        caption => "CopyPriorTimepointExcludingFiles",
+        query => "CopyPriorTimepointExcludingFiles",
+      },
+      {
+        caption =>"CopyPriorTimepointInSeriesOnly",
+        query =>"CopyPriorTimepointInSeriesOnly",
+      },
+      {
+        caption =>"ConsolidateTimepoints",
+        query =>"ConsolidateTimepoints",
+      },
+      {
+        caption =>"ConsolidateActivities",
+        query =>"ConsolidateActivities",
+      },
+      {
+        caption =>"ConsolidateVisualReview",
+        query =>"ConsolidateVisualReview",
+      },
+      {
+        caption =>"FilesInTimepointExcludingPatientID",
+        query =>"FilesInTimepointExcludingPatientID",
+      },
+      {
+        caption =>"FilesInTimepointWithPatientID",
+        query =>"FilesInTimepointWithPatientID",
       },
     ],
   ],
