@@ -19,15 +19,55 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Find files In Timepoint Not In Public",
         action =>  "FilesInTpNotInPublic",
       },
+      {
+        operation => "CopyPriorTimepoint",
+        caption => "Copy Prior Timepoint",
+        action => "CopyPriorTimepoint",
+      },
+      {
+        operation => "Copy Prior Timepoint Excluding Files",
+        caption => "CopyPriorTimepointExcludingFiles",
+        action => "CopyPriorTimepointExcludingFiles",
+      },
+      {
+        operation => "CopyPriorTimepointInSeriesOnly",
+        caption =>"Copy Prior Timepoint In Series Only",
+        action =>"CopyPriorTimepointInSeriesOnly",
+      },
+      {
+        operation => "ConsolidateTimepoints",
+        caption =>"Consolidate Timepoints",
+        action =>"ConsolidateTimepoints",
+      },
+      {
+        operation => "ConsolidateActivities",
+        caption =>"Consolidate Activities",
+        action =>"ConsolidateActivities",
+      },
+    #  {
+    #    operation => "FilesInTpNotInPublic",
+    #    caption =>"ConsolidateVisualReview",
+    #    action =>"ConsolidateVisualReview",
+    #  },
+      {
+        operation => "FilesInTpNotInPublic",
+        caption =>"Copy Files In Timepoint Excluding Patient ID",
+        action =>"FilesInTimepointExcludingPatientID",
+      },
+      {
+        operation => "FilesInTimepointWithPatientID",
+        caption =>"Copy Files In Timepoint With Patient ID",
+        action =>"FilesInTimepointWithPatientID",
+      },
     ],
     queries => [
       {
-        caption => "Suggested Queries for Import Events",
+        caption => "Suggested Queries for Creating a Timepoint from Import Event IDs",
         operation => "SelectQueryGroup",
         query_list_name => "FindImportEvents",
       },
       {
-        caption => "Suggested Queries for Series",
+        caption => "Suggested Queries for Creating a Timepoint from Series UIDs",
         operation => "SelectQueryGroup",
         query_list_name => "FindSeries",
       },
@@ -332,43 +372,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
-      },
-    ],
-  ],
-  ManageTimepoint => [
-    "Suggested Queries for Import Events",
-    [
-      {
-        caption => "CopyPriorTimepoint",
-        query => "CopyPriorTimepoint",
-      },
-      {
-        caption => "CopyPriorTimepointExcludingFiles",
-        query => "CopyPriorTimepointExcludingFiles",
-      },
-      {
-        caption =>"CopyPriorTimepointInSeriesOnly",
-        query =>"CopyPriorTimepointInSeriesOnly",
-      },
-      {
-        caption =>"ConsolidateTimepoints",
-        query =>"ConsolidateTimepoints",
-      },
-      {
-        caption =>"ConsolidateActivities",
-        query =>"ConsolidateActivities",
-      },
-      {
-        caption =>"ConsolidateVisualReview",
-        query =>"ConsolidateVisualReview",
-      },
-      {
-        caption =>"FilesInTimepointExcludingPatientID",
-        query =>"FilesInTimepointExcludingPatientID",
-      },
-      {
-        caption =>"FilesInTimepointWithPatientID",
-        query =>"FilesInTimepointWithPatientID",
       },
     ],
   ],
