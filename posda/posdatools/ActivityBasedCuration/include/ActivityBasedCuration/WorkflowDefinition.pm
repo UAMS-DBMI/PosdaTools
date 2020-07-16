@@ -45,20 +45,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>"ConsolidateActivities",
       },
     #  {
-    #    operation => "FilesInTpNotInPublic",
+    #    operation => "ConsolidateVisualReview",
     #    caption =>"ConsolidateVisualReview",
     #    action =>"ConsolidateVisualReview",
     #  },
-      {
-        operation => "FilesInTpNotInPublic",
-        caption =>"Copy Files In Timepoint Excluding Patient ID",
-        action =>"FilesInTimepointExcludingPatientID",
-      },
-      {
-        operation => "FilesInTimepointWithPatientID",
-        caption =>"Copy Files In Timepoint With Patient ID",
-        action =>"FilesInTimepointWithPatientID",
-      },
     ],
     queries => [
       {
@@ -70,6 +60,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Suggested Queries for Creating a Timepoint from Series UIDs",
         operation => "SelectQueryGroup",
         query_list_name => "FindSeries",
+      },
+      {
+        caption => "Copy Files",
+        operation => "SelectQueryGroup",
+        query_list_name => "CopyFiles",
       },
     ],
   },
@@ -372,6 +367,19 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
+    ],
+  ],
+  CopyFiles => [
+    "Suggested Queries for Copying Files",
+    [
+      {
+	      caption => "Files In Timepoint With PatientId",
+        query => "FilesInTimepointWithPatientId",
+      },
+      {
+        caption => "Files In Timepoint Excluding Patient Id",
+        query => "FilesInTimepointExcludingPatientId",
       },
     ],
   ],
