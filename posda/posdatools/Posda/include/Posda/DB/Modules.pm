@@ -115,6 +115,8 @@ sub Patient{
    id_issuer => "(0010,0021)",
    ethnic_group => "(0010,2160)",
    comments => "(0010,4000)",
+   sex => "(0010,0040)",
+   patient_age => "(0010,1010)",
   };
   my $ModList = {
     dob => "Date",
@@ -128,12 +130,12 @@ sub Patient{
     "  (file_id, patient_name, patient_id,\n" .
     "   id_issuer, dob, sex,\n" .
     "   time_ob, other_ids, other_names,\n" .
-    "   ethnic_group, comments)" .
+    "   ethnic_group, comments, patient_age)" .
     "values\n" .
     "  (?, ?, ?,\n" .
     "   ?, ?, ?,\n" .
     "   ?, ?, ?,\n" .
-    "   ?, ?)"
+    "   ?, ?, ?)"
   );
   return $ins_file_pat->execute(
     $id,
@@ -147,6 +149,7 @@ sub Patient{
     $parms->{other_names},
     $parms->{ethnic_group},
     $parms->{comments},
+    $parms->{patient_age},
   );
 }
 sub Study{
