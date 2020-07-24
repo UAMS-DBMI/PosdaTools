@@ -7,3 +7,5 @@ drop_not_null_on_modality.sql
 add_origin_to_import_event.sql
 add_expected_count_to_import_event.sql
 create_export_event_related_tables.sql
+add_outdated_to_spreadsheet_operation.sql
+set_oudated_operations.sql
