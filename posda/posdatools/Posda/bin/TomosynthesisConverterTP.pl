@@ -91,8 +91,10 @@ for my $file (keys %Files){
   my @window_center = $ds->GetEle("(0028,1050)")->{value};
   my @window_width = $ds->GetEle("(0028,1051)")->{value};
   my @image_type  = $ds->GetEle("(0008,0008)")->{value};
-  my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE"};
+  my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE","SYNTHETIC"};
   my $ppa  = $ds->GetEle("(0018,1510)")->{value};
+  my $study_date = $ds->GetEle("(0008,0020)")->{value};
+  my $study_time = $ds->GetEle("(0008,0030)")->{value};
   my $empty = [];
 
 
@@ -108,9 +110,11 @@ for my $file (keys %Files){
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
 
   #Top level attributes
+  #$ds->Insert("(0008,0008)", @frame_type;          #Image Type
   $ds->Insert("(0018,1000)", "12345");              #Device Serial Number
   $ds->Insert("(0018,1020)", "12345");              #Software Version(s)
   $ds->Insert("(0020,0013)", "1");                  #Instance Number
+  $ds->Insert("(0020,0011)", $num_done);            #Series Number
   $ds->Insert("(0018,9004)", "RESEARCH");           #Content Qualification
   $ds->Insert("(0008,9205)", "MONOCHROME");         #Pixel Presentation
   $ds->Insert("(0008,9206)", "SAMPLED");            #Volumetric Properties
@@ -118,9 +122,22 @@ for my $file (keys %Files){
   $ds->Insert("(0054,0220)", "399368009");          #View Code Sequence
   $ds->Insert("(0008,0016)", $sop_class);           #SOP Class
   $ds->Insert("(0008,0018)", $sop_inst);            #SOP Instance
-  $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);   #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
 
-  #Shared functional groups
+  #X-Ray 3D Acquisition Sequence
+  $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);                                  #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
+  $ds->Insert("(0018,9507)[0](0018,1110)", $ds->GetEle("(0018,1110)")->{value});   #X-Ray 3D Acquisition Sequence -  Distance Source to Detector
+  $ds->Insert("(0018,9507)[0](0018,1111)", $ds->GetEle("(0018,1111)")->{value});   #X-Ray 3D Acquisition Sequence -  Distance Source to Patient
+  $ds->Insert("(0018,9507)[0](0018,1114)", $ds->GetEle("(0018,1114)")->{value});   #X-Ray 3D Acquisition Sequence -  Estimated Radiographic Magnification Factor
+  $ds->Insert("(0018,9507)[0](0018,1191)", $ds->GetEle("(0018,1191)")->{value});   #X-Ray 3D Acquisition Sequence -  AnodeTargetMaterial
+  # $ds->Insert("(0018,9507)[0](0018,11a0)", $bodypartthickness);                    #X-Ray 3D Acquisition Sequence -  BodyPartThickness
+  $ds->Insert("(0018,9507)[0](0018,11a2)", $ds->GetEle("(0018,11a2)")->{value});   #X-Ray 3D Acquisition Sequence -  CompressionForce
+  $ds->Insert("(0018,9507)[0](0018,7060)", $ds->GetEle("(0018,7060)")->{value});   #X-Ray 3D Acquisition Sequence -  ExposureControlMode
+  $ds->Insert("(0018,9507)[0](0018,7062)", $ds->GetEle("(0018,7062)")->{value});   #X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
+  $ds->Insert("(0018,9507)[0](0040,0314)", $ds->GetEle("(0040,0314)")->{value});   #X-Ray 3D Acquisition Sequence -  HalfValueLayer
+  $ds->Insert("(0018,9507)[0](0018,7001)", $ds->GetEle("(0018,7001)")->{value});   #X-Ray 3D Acquisition Sequence -  DetectorTemperature
+  $ds->Insert("(0018,9507)[0](0018,7050)", $ds->GetEle("(0018,7050)")->{value});   #X-Ray 3D Acquisition Sequence -  FilterMaterial
+
+    #Shared functional groups
   $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);              #Slice Thickness
   $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1053)", $rescale_slope);                  #Rescale Slope
   $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1054)", $rescale_type);                   #Rescale Type
@@ -131,6 +148,9 @@ for my $file (keys %Files){
   $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)", "Breast");          #Frame Anatomy Sequence - Anatomic Region Sequence - Code Meaning
   $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1050)", $window_center[0][0]);            #Frame VOI LUT Sequence - Window Center
   $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1051)",  $window_width[0][0]);            #Frame VOI LUT Sequence - Window Width
+  $ds->Insert("(5200,9229)[0](0008,0023)",  $study_date);                                  #MultiFrameFunctionalGroupsCommon - ContentDate
+  $ds->Insert("(5200,9229)[0](0008,0033)",  $study_time);                                  #MultiFrameFunctionalGroupsCommon - ContentTime
+
 
   #Per frame functional groups
   for my $i (0..($numframes-1)){
@@ -139,13 +159,16 @@ for my $file (keys %Files){
     $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[2]", "TOMOSYNTHESIS");             #X-Ray 3D Frame Type Sequence - Frame Type
     $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[3]", "NONE");                      #X-Ray 3D Frame Type Sequence - Frame Type
 
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9205)", $empty);                         #X-Ray 3D Frame Type Sequence - Pixel Presentation
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", $empty);                         #X-Ray 3D Frame Type Sequence - Volumetric Properties
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", $empty);                         #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9205)", "MONOCHROME");                   #X-Ray 3D Frame Type Sequence - Pixel Presentation
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", "VOLUME");                       #X-Ray 3D Frame Type Sequence - Volumetric Properties
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", "TOMOSYNTHESIS");                #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
 
-    $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", $empty);                         #Frame Content Sequence - Frame Acquisition Number
+    $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", "1");                            #Frame Content Sequence - Frame Acquisition Number
     $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)", $empty);                         #Plane Position Sequence - Image Position Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)", $empty);                         #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0008,0023)",  $study_date);                                  #MultiFrameFunctionalGroupsCommon - ContentDate
+    $ds->Insert("(5200,9230)[$i](0008,0033)",  $study_time);                                  #MultiFrameFunctionalGroupsCommon - ContentTime
+
   }
 
   #Remove values from top level
@@ -155,6 +178,17 @@ for my $file (keys %Files){
   $ds->DeleteElementBySig("(0028,1053)");
   $ds->DeleteElementBySig("(0028,1054)");
   $ds->DeleteElementBySig("(0018,1510)");
+  $ds->DeleteElementBySig("(0018,1110)");     # Distance Source to Detector
+  $ds->DeleteElementBySig("(0018,1111)");     # Distance Source to Patient
+  $ds->DeleteElementBySig("(0018,1114)");     # Estimated Radiographic Magnification Factor
+  $ds->DeleteElementBySig("(0018,1191)");
+  # $ds->DeleteElementBySig("(0018,11a0");
+  $ds->DeleteElementBySig("(0018,11a2)");
+  $ds->DeleteElementBySig("(0018,7060)");
+  $ds->DeleteElementBySig("(0018,7062)");
+  $ds->DeleteElementBySig("(0018,7001)");
+  $ds->DeleteElementBySig("(0018,7050)");
+  $ds->DeleteElementBySig("(0040,0314)");
 
   if($df){
     $ds->WritePart10($dest_file, $xfr_stx, "POSDA", undef, undef);
