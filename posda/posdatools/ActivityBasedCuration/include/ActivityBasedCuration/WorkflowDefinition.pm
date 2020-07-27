@@ -8,28 +8,63 @@ use vars qw(@ActivityCategories %WorkflowQueries);
 @ActivityCategories = (
   {
     id => "1_associate",
-    name => "Associate Imported Data with an Activity Timepoint",
+    name => "Create and Manage Activity Timepoints",
     note => "You must first Import Data into Posda and create an Activity!",
     description => "Curation workflow tasks performed on a collection are " .
       "grouped together into an Activity Timepoint to allow for better " .
       "management and analysis.  This step is tying the data to the Activity.",
     operations => [
       {
-        operation => "InvokeNewOperation",
-        caption => "Create Activity From Collection Site",
-        action =>  "CreateActivityTimepointFromCollectionSite",
+        operation => "FilesInTpNotInPublic",
+        caption => "Find files In Timepoint Not In Public",
+        action =>  "FilesInTpNotInPublic",
       },
+      {
+        operation => "CopyPriorTimepoint",
+        caption => "Copy Prior Timepoint",
+        action => "CopyPriorTimepoint",
+      },
+      {
+        operation => "Copy Prior Timepoint Excluding Files",
+        caption => "CopyPriorTimepointExcludingFiles",
+        action => "CopyPriorTimepointExcludingFiles",
+      },
+      {
+        operation => "CopyPriorTimepointInSeriesOnly",
+        caption =>"Copy Prior Timepoint In Series Only",
+        action =>"CopyPriorTimepointInSeriesOnly",
+      },
+      {
+        operation => "ConsolidateTimepoints",
+        caption =>"Consolidate Timepoints",
+        action =>"ConsolidateTimepoints",
+      },
+      {
+        operation => "ConsolidateActivities",
+        caption =>"Consolidate Activities",
+        action =>"ConsolidateActivities",
+      },
+    #  {
+    #    operation => "ConsolidateVisualReview",
+    #    caption =>"ConsolidateVisualReview",
+    #    action =>"ConsolidateVisualReview",
+    #  },
     ],
     queries => [
       {
-        caption => "Suggested Queries for Series",
+        caption => "Suggested Queries for Creating a Timepoint from Import Event IDs",
+        operation => "SelectQueryGroup",
+        query_list_name => "FindImportEvents",
+      },
+      {
+        caption => "Suggested Queries for Creating a Timepoint from Series UIDs",
         operation => "SelectQueryGroup",
         query_list_name => "FindSeries",
       },
       {
-        caption => "Suggested Queries for Import Events",
+        caption => "Copy Files",
         operation => "SelectQueryGroup",
-        query_list_name => "FindImportEvents",
+        query_list_name => "CopyFiles",
       },
     ],
   },
@@ -268,6 +303,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Create New Timepoint from Old Timepoint Id",
         action =>  "CopyPriorTimepoint",
       },
+      {
+        caption => "Correct Tomosynthesis Files",
+        action =>  "TomosynthesisConverterTP",
+      },
     ],
   },
 );
@@ -287,6 +326,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption =>"ImportEventsWithTypeAndPatientId",
         query =>"ImportEventsWithTypeAndPatientId",
+      },
+      {
+        caption =>"ApiImportEvents",
+        query =>"ApiImportEvents",
+      },
+      {
+        caption =>"ApiImportEventsForPatient",
+        query =>"ApiImportEventsForPatient",
+      },
+      {
+        caption =>"ApiImportEventsDateRange",
+        query =>"ApiImportEventsDateRange",
       },
     ],
   ],
@@ -316,6 +367,19 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
+    ],
+  ],
+  CopyFiles => [
+    "Suggested Queries for Copying Files",
+    [
+      {
+	      caption => "Files In Timepoint With PatientId",
+        query => "FilesInTimepointWithPatientId",
+      },
+      {
+        caption => "Files In Timepoint Excluding Patient Id",
+        query => "FilesInTimepointExcludingPatientId",
       },
     ],
   ],
