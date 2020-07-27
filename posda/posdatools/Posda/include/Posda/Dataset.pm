@@ -2559,6 +2559,7 @@ sub Search{
            $grp, $ele);
       }
       my $obj_list = $this->{$grp}->{$ele}->{value};
+      unless(ref($obj_list) eq "ARRAY"){ return $list }
       for my $i (0 .. $#{$obj_list}){
         my $obj = $obj_list->[$i];
         if(defined $obj){
