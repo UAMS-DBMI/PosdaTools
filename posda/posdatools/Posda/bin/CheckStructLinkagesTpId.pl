@@ -36,16 +36,16 @@ $background->WriteToEmail("Starting  PopulateFileRoiImageLinkages.pl at $start_t
 $background->WriteToEmail("##### This is a test version of this script #####\n");
 close STDOUT;
 close STDIN;
-print STDERR "Starting  PopulateFileRoiImageLinkages.pl at $start_time\n";
-open PIPE, "PopulateFileRoiImageLinkages.pl|";
-$background->WriteToEmail("Running PopulateFileRoiImageLinkages.pl:\n");
+print STDERR "Starting  PopulateFileRoiImageLinkagesByTimepoint.pl at $start_time\n";
+open PIPE, "PopulateFileRoiImageLinkagesByTimepoint.pl $act_id|";
+$background->WriteToEmail("Running PopulateFileRoiImageLinkagesByTimepoint.pl:\n");
 while(my $line = <PIPE>){
   chomp $line;
   $background->WriteToEmail(">>>>$line\n");
 }
 my $now = `date`;
 chomp $now;
-$background->WriteToEmail("$now: finished PopulateFileRoiImageLinkages.pl:\n");
+$background->WriteToEmail("$now: finished PopulateFileRoiImageLinkagesByTimepoint.pl:\n");
 
 my $OldActTpId;
 my $OldActTpComment;
