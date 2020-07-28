@@ -83,7 +83,7 @@ services:
             - ./lanterna:/scripts
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
 
@@ -100,6 +100,23 @@ services:
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
+        env_file:
+            - database.env
+            - common.env
+            - nbia.env
+
+    posda-worker:
+        image: tcia/posda:latest
+        command: worker
+        restart: always
+        depends_on:
+            - db
+            - redis
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - /mnt:/mnt
+            - /Users/joseph/work/oneposda/nas:/nas
         env_file:
             - database.env
             - common.env
