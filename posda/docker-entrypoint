@@ -21,6 +21,13 @@ api() {
 	exec /start_api.sh
 }
 
+
+worker() {
+	echo "Starting Posda Worker node...";
+	cd $APPROOT
+	exec ./worker_start.sh
+}
+
 file_process() {
 	echo "Starting Posda Fast File Process Daemon..."
 
@@ -47,7 +54,7 @@ setup() {
 
 	psql posda_files <<-END
 		insert into file_storage_root
-		values 
+		values
 		(1, '/home/posda/cache/submission_root', true, 'default import path'),
 		(2, '/home/posda/cache/k-storage', true, 'k-base generated'),
 		(3, '/home/posda/cache/created', true, 'created'),
@@ -71,6 +78,7 @@ help() {
   echo ""
   echo "main -- start the main Posda server"
   echo "api -- start the Posda API Server (python based)"
+	echo "worker -- start a Posda Worker node"
   echo "file-process -- start the Posda File Process Daemon"
   echo "backlog-process -- start the Backlog Process Daemon"
 }
@@ -84,6 +92,10 @@ case "$1" in
     shift
     api
     ;;
+	worker)
+	  shift
+		worker
+		;;
   file-process)
     shift
 	file_process
@@ -123,4 +135,3 @@ esac
 #     exec "$@"
 #     ;;
 # esac
-
