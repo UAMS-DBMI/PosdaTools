@@ -91,7 +91,7 @@ for my $file (keys %Files){
   my @window_center = $ds->GetEle("(0028,1050)")->{value};
   my @window_width = $ds->GetEle("(0028,1051)")->{value};
   my @image_type  = $ds->GetEle("(0008,0008)")->{value};
-  my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE","SYNTHETIC"};
+  # my @frame_type = { $image_type[0][0],  $image_type[0][1], "TOMOSYNTHESIS" , "NONE", "SYNTHETIC"};
   my $ppa  = $ds->GetEle("(0018,1510)")->{value};
   my $study_date = $ds->GetEle("(0008,0020)")->{value};
   my $study_time = $ds->GetEle("(0008,0030)")->{value};
@@ -110,7 +110,9 @@ for my $file (keys %Files){
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
 
   #Top level attributes
-  #$ds->Insert("(0008,0008)", @frame_type;          #Image Type
+  $ds->Insert("(0008,0008)[2]", "TOMOSYNTHESIS");       #Image Type 3
+  $ds->Insert("(0008,0008)[3]", "NONE");       #Image Type 4
+  $ds->Insert("(0008,0008)[4]", "SYNTHETIC");       #Image Type 5
   $ds->Insert("(0018,1000)", "12345");              #Device Serial Number
   $ds->Insert("(0018,1020)", "12345");              #Software Version(s)
   $ds->Insert("(0020,0013)", "1");                  #Instance Number
@@ -122,6 +124,9 @@ for my $file (keys %Files){
   $ds->Insert("(0054,0220)", "399368009");          #View Code Sequence
   $ds->Insert("(0008,0016)", $sop_class);           #SOP Class
   $ds->Insert("(0008,0018)", $sop_inst);            #SOP Instance
+  $ds->Insert("(0008,0023)",  $study_date);         #ContentDate
+  $ds->Insert("(0008,0033)",  $study_time);         #ContentTime
+
 
   #X-Ray 3D Acquisition Sequence
   $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);                                  #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
@@ -137,6 +142,7 @@ for my $file (keys %Files){
   $ds->Insert("(0018,9507)[0](0018,7001)", $ds->GetEle("(0018,7001)")->{value});   #X-Ray 3D Acquisition Sequence -  DetectorTemperature
   $ds->Insert("(0018,9507)[0](0018,7050)", $ds->GetEle("(0018,7050)")->{value});   #X-Ray 3D Acquisition Sequence -  FilterMaterial
 
+
     #Shared functional groups
   $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);              #Slice Thickness
   $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1053)", $rescale_slope);                  #Rescale Slope
@@ -148,8 +154,6 @@ for my $file (keys %Files){
   $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)", "Breast");          #Frame Anatomy Sequence - Anatomic Region Sequence - Code Meaning
   $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1050)", $window_center[0][0]);            #Frame VOI LUT Sequence - Window Center
   $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1051)",  $window_width[0][0]);            #Frame VOI LUT Sequence - Window Width
-  $ds->Insert("(5200,9229)[0](0008,0023)",  $study_date);                                  #MultiFrameFunctionalGroupsCommon - ContentDate
-  $ds->Insert("(5200,9229)[0](0008,0033)",  $study_time);                                  #MultiFrameFunctionalGroupsCommon - ContentTime
 
 
   #Per frame functional groups
@@ -166,8 +170,8 @@ for my $file (keys %Files){
     $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", "1");                            #Frame Content Sequence - Frame Acquisition Number
     $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)", $empty);                         #Plane Position Sequence - Image Position Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)", $empty);                         #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0008,0023)",  $study_date);                                  #MultiFrameFunctionalGroupsCommon - ContentDate
-    $ds->Insert("(5200,9230)[$i](0008,0033)",  $study_time);                                  #MultiFrameFunctionalGroupsCommon - ContentTime
+    #$ds->Insert("(5200,9230)[$i](0008,0023)",  $study_date);                                  #MultiFrameFunctionalGroupsCommon - ContentDate
+    #$ds->Insert("(5200,9230)[$i](0008,0033)",  $study_time);                                  #MultiFrameFunctionalGroupsCommon - ContentTime
 
   }
 
@@ -182,13 +186,38 @@ for my $file (keys %Files){
   $ds->DeleteElementBySig("(0018,1111)");     # Distance Source to Patient
   $ds->DeleteElementBySig("(0018,1114)");     # Estimated Radiographic Magnification Factor
   $ds->DeleteElementBySig("(0018,1191)");
-  # $ds->DeleteElementBySig("(0018,11a0");
+  # $ds->DeleteElementBySig("(0018,11a0");  #BodyPartThickness
   $ds->DeleteElementBySig("(0018,11a2)");
   $ds->DeleteElementBySig("(0018,7060)");
   $ds->DeleteElementBySig("(0018,7062)");
   $ds->DeleteElementBySig("(0018,7001)");
   $ds->DeleteElementBySig("(0018,7050)");
   $ds->DeleteElementBySig("(0040,0314)");
+
+  #values removed and not currently replaced
+  $ds->DeleteElementBySig("(0018,1150)"); # Exposure Time
+  $ds->DeleteElementBySig("(0018,1151)"); # X-Ray Tube Current
+  $ds->DeleteElementBySig("(0018,1152)"); # Exposure
+  $ds->DeleteElementBySig("(0018,1153)"); # Exposure in uAs
+  $ds->DeleteElementBySig("(0018,1405)"); # Relative X-Ray Exposure
+  $ds->DeleteElementBySig("(0018,1508)"); # Positioner Type
+  $ds->DeleteElementBySig("(0018,5101)"); # View Position
+  $ds->DeleteElementBySig("(0018,7000)"); # Detector Conditions Nominal Flag
+  $ds->DeleteElementBySig("(0018,7004)"); # Detector Type
+  $ds->DeleteElementBySig("(0018,701a)"); # Detector Binning
+  $ds->DeleteElementBySig("(0018,7030)"); # Field of View Origin
+  $ds->DeleteElementBySig("(0018,7032)"); # Field of View Rotation
+  $ds->DeleteElementBySig("(0018,7034)"); # Field of View Horizontal Flip
+  $ds->DeleteElementBySig("(0018,7052)"); # Filter Thickness Minimum
+  $ds->DeleteElementBySig("(0018,7054)"); # Filter Thickness Maximum
+  $ds->DeleteElementBySig("(0018,8150)"); # Exposure Time in uS
+  $ds->DeleteElementBySig("(0018,1510)"); # Positioner Primary Angle
+  $ds->DeleteElementBySig("(0020,0020)"); # Patient Orientation
+  $ds->DeleteElementBySig("(0040,0302)"); # Entrance Dose
+  $ds->DeleteElementBySig("(0040,0316)"); # Organ Dose
+  $ds->DeleteElementBySig("(0040,0318)"); # Organ Exposed
+  $ds->DeleteElementBySig("(0040,8302)"); # Entrance Dose in mGy
+
 
   if($df){
     $ds->WritePart10($dest_file, $xfr_stx, "POSDA", undef, undef);
