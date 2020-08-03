@@ -21,6 +21,7 @@ while(my $line = <STDIN>){
   my($pre,$sig,$owned_by,$t_grp,$ele,$vr,$vm,$name) = split(/&/, $line);
   $t_grp = 0 + $t_grp;
   $ele = 0 + $ele;
+  print "##$sig##\n";
   print "\$Posda::DataDict::PvtDict->{\"$owned_by\"}->{$t_grp}->{$ele} = {\n" .
     "  \"VM\" => \"$vm\",\n" .
     "  \"VR\" => \"$vr\",\n";

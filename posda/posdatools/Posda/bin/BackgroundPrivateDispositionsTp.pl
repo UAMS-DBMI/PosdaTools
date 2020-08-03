@@ -246,7 +246,7 @@ if(@dispositions_needed > 0){
 ### Get visual review for this activity
 my $visual_review_id;
 my $num_visual_reviews = 0;
-Query("GetVisualReviewByActivityId")->RunQuery(sub{
+Query("GetVisualReviewByActivityIdLatest")->RunQuery(sub{
   my($row) = @_;
   $visual_review_id = $row->[0];
   $num_visual_reviews += 1;
