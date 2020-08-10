@@ -4,6 +4,7 @@ from typing import List
 import datetime
 from starlette.responses import Response, FileResponse
 from .auth import logged_in_user, User
+from collections import defaultdict
 
 from ..util import Database, asynctar, roi
 
@@ -21,6 +22,7 @@ async def get_rois_for_series(series_instance_uid: str, db: Database = Depends()
             roi_num,
             roi_name as name,
             roi_color as color,
+            file_roi_image_linkage.file_id as roi_file_id,
             array_agg(file_sop_common.file_id) as file_ids
         from file_series
         natural join file_sop_common
@@ -28,21 +30,23 @@ async def get_rois_for_series(series_instance_uid: str, db: Database = Depends()
             on linked_sop_instance_uid = sop_instance_uid
         natural join roi
         where series_instance_uid = $1
-        group by roi_num, roi_name, roi_color
+        group by roi_num, roi_name, roi_color, file_roi_image_linkage.file_id
         order by roi_num
     """
 
     results = await db.fetch(query, [series_instance_uid])
-    rois = []
+
+    ret = defaultdict(list)
     for result in results:
         r = {}
         r['roi_num'] = result['roi_num']
         r['name'] = result['name']
         r['color'] = roi.format_color(result['color'])
         r['file_ids'] = result['file_ids']
-        rois.append(r)
 
-    return rois
+        ret[result['roi_file_id']].append(r)
+
+    return ret
 
 @router.get("/file/{file_id}/series")
 async def get_series_rois_from_file(file_id: int, db: Database = Depends()):
@@ -110,7 +114,8 @@ async def get_contours_for_sop(sop_instance_uid: str, db: Database = Depends()):
 
     raw_contours = await db.fetch(query, [sop_instance_uid])
 
-    contours = []
+    # contours = []
+    ret = defaultdict(list)
 
     for cont in raw_contours:
         c = await roi.get_transformed_contour(
@@ -123,13 +128,14 @@ async def get_contours_for_sop(sop_instance_uid: str, db: Database = Depends()):
             pixel_spacing=cont['pixel_spacing'],
         )
 
-        contours.append({
+        ret[cont['file_id']].append({
+        # contours.append({
             'name': cont['roi_name'],
             'color': roi.format_color(cont['roi_color']),
             'points': c.tolist(),
         })
 
-    return contours
+    return ret
 
 
 @router.get("/file/{file_id}")
