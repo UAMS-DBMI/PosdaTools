@@ -152,8 +152,9 @@ def main():
 
 
     #cleanup
-    # os.unlink(pixel_filename)
-    # os.unlink(output_filename)
+    if not DEBUG:
+        os.unlink(pixel_filename)
+        os.unlink(output_filename)
 
 if __name__ == '__main__':
     main()
