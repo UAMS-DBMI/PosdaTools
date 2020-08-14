@@ -1101,6 +1101,16 @@ if(exists $this->{pvt_index}){
     return ("float", $value_s);
   }elsif($from_vr eq "IS" && $to_vr eq "DS"){
     return("text", $value_s);
+  }elsif($from_vr eq "DS" && $to_vr eq "IS"){
+    if($value_s =~/(.*)\.(.*)$/){
+      my $keep = $1;
+      my $discard = $2;
+      push @{$this->{errors}}, "coercing $this->{tag} from DS to IS discard: $discard, keep: $keep";
+      $value_s = $keep;
+    } else {
+      push @{$this->{errors}}, "coercing $this->{tag}: $value_s DS => IS";
+    }
+    return("text", $value_s);
   }elsif($from_vr eq "OB" && $to_vr eq "FD"){
     return ("double", [unpack("d*", $value_s)]);
   }elsif($from_vr eq "OB" && $to_vr eq "FL"){
@@ -1123,6 +1133,8 @@ if(exists $this->{pvt_index}){
     return("text", $value_s);
   } elsif($from_vr eq "PN" && $to_vr eq "LO"){
     return("text", $value_s);
+  } elsif($from_vr eq "SS" && $to_vr eq "US"){
+    return("short", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "SH"){
     my $ref = ref($value_s);
     if($ref eq "ARRAY"){

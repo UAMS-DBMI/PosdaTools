@@ -402,6 +402,35 @@ for my $e (@effective_edits){
       }
     }
     $ds->MapToConvertPvtBack;
+  }elsif($eop eq "annotate_img"){
+    my $pix_desc = $ds->GetEle("(7fe0,0010)");
+    unless(
+      defined($pix_desc) &&
+      ref($pix_desc) eq "HASH" &&
+      defined ($pix_desc->{file_pos}) &&
+      defined ($pix_desc->{ele_len_in_file})
+    ){
+      print STDERR "No pixel data to annotate\n";
+    } else {
+      my $rows = $ds->Get("(0028,0010)");
+      my $cols = $ds->Get("(0028,0011)");
+      my $bits_allocated = $ds->Get("(0028,0100)");
+      my $bits_stored = $ds->Get("(0028,0101)");
+      my $high_bit = $ds->Get("(0028,0102)");
+      my $photometric_interpretation = $ds->Get("(0028,0004)");
+      my $pixel_representation = $ds->Get("(0028,0103)");
+      my $cmd = "annotate_img.py \"$edits->{from_file}\" \"$pix_desc->{file_pos}\" " .
+#        "\"$pix_desc->{ele_len_in_file}\" " .
+        "\"$rows\" \"$cols\" \"$bits_allocated\" \"$bits_stored\" \"$high_bit\" " .
+        "\"$photometric_interpretation\" \"$pixel_representation\" '$earg1'";
+print STDERR "###################\nCommand:\n$cmd\n###############\n";
+      my $pix = do {
+        local $/;
+        open my $fh, "$cmd|" or die "Can't open pipe from ($cmd): $!";
+        <$fh>
+      };
+      $ds->Insert("(7fe0,0010)", $pix);
+    }
   }else{
   }
 }

@@ -1,0 +1,6 @@
+:operation_name: PseudoNominizerEditsConstructor
+:command_line: PseudoNominizerEditsConstructor.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <operation_scope>&<operation>&<tag>&<value1>&<value2>&<patient_id>&<study_instance_uid>&<series_instance_uid>&<sop_instance_uid>&<unmapped_uid>&<mapped_uid>
+:tags: ['pseudonominizer']
+:can_chain: 
