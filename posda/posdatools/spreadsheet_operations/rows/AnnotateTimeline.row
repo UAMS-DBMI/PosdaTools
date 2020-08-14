@@ -1,0 +1,6 @@
+:operation_name: AnnotateTimeline
+:command_line: InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <file_id>&<file_name>&<mime_type>&<description>
+:tags: ['activity_timepoints', 'send_series_via_dicom', 'bills_test']
+:can_chain: 
