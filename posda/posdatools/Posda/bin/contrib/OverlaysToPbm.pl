@@ -150,6 +150,7 @@ for my $i (sort { $a <=> $b } keys %Overlays){
   my $rows = $decoded->{rows};
   my $cols = $decoded->{cols};
   my $file_name = $Overlays{$i}->{"1500"};
+  unless(defined $file_name){ $file_name = "unnamed" }
   $file_name =~ s/ //g;
   my $file_name_pbm = "$file_name.pbm";
   open FILE, ">$file_name_pbm" or die "can't open $file_name_pbm";
@@ -388,7 +389,7 @@ for my $file_nm (`ls *.pbm`){
 
   # Here we generate different composite commands based upon version of 
   # ImageMagick
-  if($ver == 6){
+  if($ver >= 6){
     $red_construct_temp = 
       "composite -compose CopyOpacity <mask> -size <cols>x<rows> xc:red " .
       "<red>";

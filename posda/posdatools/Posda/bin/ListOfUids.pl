@@ -5,5 +5,5 @@ my $num = $ARGV[0];
 for my $i (0 .. $num){
   my $uuid = Posda::UUID::GetUUID();
   my $len = length($uuid);
-  print "$len: $uuid\n";
+  print "$uuid\n";
 }
