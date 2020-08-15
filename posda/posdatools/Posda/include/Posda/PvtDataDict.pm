@@ -1,3 +1,19 @@
+####
+$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
+  "VM" => "",
+  "VR" => "",
+  "ele" => "00",
+  "grp" => "0000",
+  "Name" => "",
+};
+####
+$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
+  "VM" => "",
+  "VR" => "",
+  "ele" => "00",
+  "grp" => "0000",
+  "Name" => "",
+};
 ##(0003,"AEGIS_DICOM_2.00",00)##
 $Posda::DataDict::PvtDict->{"AEGIS_DICOM_2.00"}->{3}->{0} = {
   "VM" => "1-n",
@@ -63759,163 +63775,163 @@ $Posda::DataDict::PvtDict->{"PM"}->{257}->{6} = {
   "Name" => "Original Sigmoid Ratio",
 };
 ##(0113,"MI GE GNC ID STRING",00)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{0} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{0} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "00",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "mrsc_imageGnc_dwiPath",
 };
 ##(0113,"MI GE GNC ID STRING",01)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{1} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{1} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "01",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "mrsc_imageGnc_dwiVersion",
 };
 ##(0113,"MI GE GNC ID STRING",02)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{2} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{2} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "02",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiVersion",
 };
 ##(0113,"MI GE GNC ID STRING",03)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{3} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{3} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "03",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiInvocationCommand",
 };
 ##(0113,"MI GE GNC ID STRING",04)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{4} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{4} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "04",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiOriginalSeriesID",
 };
 ##(0113,"MI GE GNC ID STRING",05)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{5} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{5} = {
+  "VM" => "1",
   "VR" => "UI",
   "ele" => "05",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiOriginalSeriesUID",
 };
 ##(0113,"MI GE GNC ID STRING",06)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{6} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{6} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "06",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiProgramOutput",
 };
 ##(0113,"MI GE GNC ID STRING",07)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{7} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{7} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "07",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiErrorOutput",
 };
 ##(0113,"MI GE GNC ID STRING",08)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{8} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{8} = {
+  "VM" => "1",
   "VR" => "DT",
   "ele" => "08",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiRunDate",
 };
 ##(0113,"MI GE GNC ID STRING",09)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{9} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{9} = {
+  "VM" => "1",
   "VR" => "TM",
   "ele" => "09",
-  "grp" => "0071",
+  "grp" => "0113",
   "Name" => "gnc_dwiRunTime",
 };
 ##(0113,"MI GE GNC ID STRING",10)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{10} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{16} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0a",
-  "grp" => "0071",
+  "ele" => "10",
+  "grp" => "0113",
   "Name" => "gnc_dwiNOGNCFlag",
 };
 ##(0113,"MI GE GNC ID STRING",11)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{11} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{17} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0b",
-  "grp" => "0071",
+  "ele" => "11",
+  "grp" => "0113",
   "Name" => "gnc_dwiNOT2Flag",
 };
 ##(0113,"MI GE GNC ID STRING",12)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{12} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{18} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0c",
-  "grp" => "0071",
+  "ele" => "12",
+  "grp" => "0113",
   "Name" => "gnc_dwiCollapseFlag",
 };
 ##(0113,"MI GE GNC ID STRING",13)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{13} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{19} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0d",
-  "grp" => "0071",
+  "ele" => "13",
+  "grp" => "0113",
   "Name" => "gnc_dwiRFOVFlag",
 };
 ##(0113,"MI GE GNC ID STRING",14)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{14} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{20} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0e",
-  "grp" => "0071",
+  "ele" => "14",
+  "grp" => "0113",
   "Name" => "gnc_dwiRPGFlag",
 };
 ##(0113,"MI GE GNC ID STRING",15)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{15} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{21} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "0f",
-  "grp" => "0071",
+  "ele" => "15",
+  "grp" => "0113",
   "Name" => "gnc_dwiRPGSeriesID",
 };
 ##(0113,"MI GE GNC ID STRING",16)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{16} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{22} = {
+  "VM" => "1",
   "VR" => "UI",
-  "ele" => "10",
-  "grp" => "0071",
+  "ele" => "16",
+  "grp" => "0113",
   "Name" => "gnc_dwiRPGSeriesUID",
 };
 ##(0113,"MI GE GNC ID STRING",17)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{17} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{23} = {
+  "VM" => "1",
   "VR" => "LO",
-  "ele" => "11",
-  "grp" => "0071",
+  "ele" => "17",
+  "grp" => "0113",
   "Name" => "gnc_dwiRPGOptions",
 };
 ##(0113,"MI GE GNC ID STRING",18)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{18} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{24} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "12",
-  "grp" => "0071",
+  "ele" => "18",
+  "grp" => "0113",
   "Name" => "gnc_dwiRPG_no_registration",
 };
 ##(0113,"MI GE GNC ID STRING",20)##
-$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{113}->{20} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"MI GE GNC ID STRING"}->{275}->{32} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "14",
-  "grp" => "0071",
+  "ele" => "20",
+  "grp" => "0113",
   "Name" => "gnc_dwiManualThreshold",
 };
 ##(0117,"MRSC",10)##
@@ -64359,435 +64375,435 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{22} =
   "Name" => "Parameter description",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",18)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{18} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{24} = {
+  "VM" => "1-n",
   "VR" => "DS ",
-  "ele" => "12",
-  "grp" => "0075",
+  "ele" => "18",
+  "grp" => "0117",
   "Name" => "Floating parameter value",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",19)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{19} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{25} = {
+  "VM" => "1-n",
   "VR" => "IS ",
-  "ele" => "13",
-  "grp" => "0075",
+  "ele" => "19",
+  "grp" => "0117",
   "Name" => "Integer parameter value",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",1a)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{26} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{26} = {
+  "VM" => "1-n",
   "VR" => "LO ",
   "ele" => "1a",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "String parameter value",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",20)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{20} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{32} = {
+  "VM" => "1",
   "VR" => "SQ",
-  "ele" => "14",
-  "grp" => "0075",
+  "ele" => "20",
+  "grp" => "0117",
   "Name" => "VOILPS",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",22)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{22} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{34} = {
+  "VM" => "1",
   "VR" => "SQ",
-  "ele" => "16",
-  "grp" => "0075",
+  "ele" => "22",
+  "grp" => "0117",
   "Name" => "OMIT regions",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",24)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{24} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{36} = {
+  "VM" => "1",
   "VR" => "SQ",
-  "ele" => "18",
-  "grp" => "0075",
+  "ele" => "24",
+  "grp" => "0117",
   "Name" => "QC Sequence",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",30)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{30} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{48} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "1e",
-  "grp" => "0075",
+  "ele" => "30",
+  "grp" => "0117",
   "Name" => "Total phases",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",31)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{31} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{49} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1f",
-  "grp" => "0075",
+  "ele" => "31",
+  "grp" => "0117",
   "Name" => "Acquisition duration",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",32)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{32} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{50} = {
+  "VM" => "1-n",
   "VR" => "DS ",
-  "ele" => "20",
-  "grp" => "0075",
+  "ele" => "32",
+  "grp" => "0117",
   "Name" => "Acquisition start times",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",33)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{33} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{51} = {
+  "VM" => "1",
   "VR" => "TM",
-  "ele" => "21",
-  "grp" => "0075",
+  "ele" => "33",
+  "grp" => "0117",
   "Name" => "Injection time",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",34)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{34} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{52} = {
+  "VM" => "1-n",
   "VR" => "DS ",
-  "ele" => "22",
-  "grp" => "0075",
+  "ele" => "34",
+  "grp" => "0117",
   "Name" => "Effective acquisition delay",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",35)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{35} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{53} = {
+  "VM" => "3",
   "VR" => "IS ",
-  "ele" => "23",
-  "grp" => "0075",
+  "ele" => "35",
+  "grp" => "0117",
   "Name" => "SER timing indices",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",3a)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{58} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{58} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "3a",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Timing information method",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",3b)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{59} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{59} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "3b",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Timing information comments",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",41)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{41} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{65} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "29",
-  "grp" => "0075",
+  "ele" => "41",
+  "grp" => "0117",
   "Name" => "VOILPS ROI flag",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",42)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{42} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{66} = {
+  "VM" => "3",
   "VR" => "DS ",
-  "ele" => "2a",
-  "grp" => "0075",
+  "ele" => "42",
+  "grp" => "0117",
   "Name" => "VOILPS Center",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",43)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{43} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{67} = {
+  "VM" => "3",
   "VR" => "DS ",
-  "ele" => "2b",
-  "grp" => "0075",
+  "ele" => "43",
+  "grp" => "0117",
   "Name" => "VOILPS HalfWidth",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",44)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{44} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{68} = {
+  "VM" => "3",
   "VR" => "DS ",
-  "ele" => "2c",
-  "grp" => "0075",
+  "ele" => "44",
+  "grp" => "0117",
   "Name" => "VOILPS HalfHeight",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",45)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{45} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{69} = {
+  "VM" => "3",
   "VR" => "DS ",
-  "ele" => "2d",
-  "grp" => "0075",
+  "ele" => "45",
+  "grp" => "0117",
   "Name" => "VOILPS HalfDepth",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",46)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{46} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{70} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "2e",
-  "grp" => "0075",
+  "ele" => "46",
+  "grp" => "0117",
   "Name" => "VOILPS Type",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",50)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{50} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{80} = {
+  "VM" => "1",
   "VR" => "US",
-  "ele" => "32",
-  "grp" => "0075",
+  "ele" => "50",
+  "grp" => "0117",
   "Name" => "ProjectedROI npixels",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",51)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{51} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{81} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "33",
-  "grp" => "0075",
+  "ele" => "51",
+  "grp" => "0117",
   "Name" => "Projection axis",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",52)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{52} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{82} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "34",
-  "grp" => "0075",
+  "ele" => "52",
+  "grp" => "0117",
   "Name" => "ProjectedROI transpose flag",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",53)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{53} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{83} = {
+  "VM" => "3-n",
   "VR" => "US",
-  "ele" => "35",
-  "grp" => "0075",
+  "ele" => "53",
+  "grp" => "0117",
   "Name" => "ProjectedROI X vertices *",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",54)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{54} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{84} = {
+  "VM" => "3-n",
   "VR" => "US",
-  "ele" => "36",
-  "grp" => "0075",
+  "ele" => "54",
+  "grp" => "0117",
   "Name" => "ProjectedROI Y vertices *",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",55)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{55} = {
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{85} = {
   "VM" => "2",
   "VR" => "US",
-  "ele" => "37",
-  "grp" => "0075",
+  "ele" => "55",
+  "grp" => "0117",
   "Name" => "ProjectedROI Z range *",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",56)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{56} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{86} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "38",
-  "grp" => "0075",
+  "ele" => "56",
+  "grp" => "0117",
   "Name" => "ProjectedROI type",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",57)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{57} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{87} = {
+  "VM" => "1",
   "VR" => "LO",
-  "ele" => "39",
-  "grp" => "0075",
+  "ele" => "57",
+  "grp" => "0117",
   "Name" => "ProjectedROI label",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",90)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{90} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{144} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "5a",
-  "grp" => "0075",
+  "ele" => "90",
+  "grp" => "0117",
   "Name" => "CropSourceOrientation",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",91)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{91} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{145} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "5b",
-  "grp" => "0075",
+  "ele" => "91",
+  "grp" => "0117",
   "Name" => "CropTargetOrientation",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",92)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{92} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{146} = {
+  "VM" => "3",
   "VR" => "UL",
-  "ele" => "5c",
-  "grp" => "0075",
+  "ele" => "92",
+  "grp" => "0117",
   "Name" => "CropSourceNPixels",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",93)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{93} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{147} = {
+  "VM" => "3",
   "VR" => "UL",
-  "ele" => "5d",
-  "grp" => "0075",
+  "ele" => "93",
+  "grp" => "0117",
   "Name" => "CropTargetNPixels",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",94)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{94} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{148} = {
+  "VM" => "3",
   "VR" => "FD",
-  "ele" => "5e",
-  "grp" => "0075",
+  "ele" => "94",
+  "grp" => "0117",
   "Name" => "CropSourcePixelSize",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",95)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{95} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{149} = {
+  "VM" => "3",
   "VR" => "FD",
-  "ele" => "5f",
-  "grp" => "0075",
+  "ele" => "95",
+  "grp" => "0117",
   "Name" => "CropTargetPixelSize",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",96)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{96} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{150} = {
+  "VM" => "16",
   "VR" => "FD",
-  "ele" => "60",
-  "grp" => "0075",
+  "ele" => "96",
+  "grp" => "0117",
   "Name" => "CropSourcePixLPSMatrix",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",97)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{97} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{151} = {
+  "VM" => "16",
   "VR" => "FD",
-  "ele" => "61",
-  "grp" => "0075",
+  "ele" => "97",
+  "grp" => "0117",
   "Name" => "CropTargetPixLPSMatrix",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",98)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{98} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{152} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "62",
-  "grp" => "0075",
+  "ele" => "98",
+  "grp" => "0117",
   "Name" => "CropLaterality",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",99)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{99} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{153} = {
+  "VM" => "3",
   "VR" => "UL",
-  "ele" => "63",
-  "grp" => "0075",
+  "ele" => "99",
+  "grp" => "0117",
   "Name" => "CropPixelLimitsStart",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",9a)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{154} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{154} = {
+  "VM" => "3",
   "VR" => "UL",
   "ele" => "9a",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "CropPixelLimitsEnd",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",9b)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{155} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{155} = {
+  "VM" => "1",
   "VR" => "CS",
   "ele" => "9b",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "CropResamplingMethod",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",a1)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{161} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{161} = {
+  "VM" => "3",
   "VR" => "US ",
   "ele" => "a1",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "VOI_pixel_start *",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",a2)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{162} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{162} = {
+  "VM" => "3",
   "VR" => "US ",
   "ele" => "a2",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "VOI_pixel_end *",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b0)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{176} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{176} = {
+  "VM" => "1-n",
   "VR" => "SQ ",
   "ele" => "b0",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "FTV Sequence",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b1)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{177} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{177} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "b1",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "SER Minimum",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b2)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{178} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{178} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "b2",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "SER Maximum",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",B3)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{179} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{179} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "b3",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Voxel count",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b4)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{180} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{180} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "b4",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Volume",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b5)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{181} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{181} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "b5",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Label",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c0)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{192} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{192} = {
+  "VM" => "1",
   "VR" => "CS",
   "ele" => "c0",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "QC Type",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c1)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{193} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{193} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "c1",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "QC Factor",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c2)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{194} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{194} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "c2",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "QC value",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c3)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{195} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{195} = {
+  "VM" => "1",
   "VR" => "CS",
   "ele" => "c3",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "QC meaning",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c4)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{196} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{196} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "c4",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "QC comment",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c5)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{197} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{197} = {
+  "VM" => "1",
   "VR" => "CS",
   "ele" => "c5",
-  "grp" => "0075",
+  "grp" => "0117",
   "Name" => "Protocol compliance",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c6) ##
@@ -65431,291 +65447,291 @@ $Posda::DataDict::PvtDict->{"SIEMENS Ultrasound SC2000"}->{281}->{19} = {
   "Name" => "Volume Rate",
 };
 ##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",30)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{119}->{30} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{48} = {
+  "VM" => "9",
   "VR" => "DS",
-  "ele" => "1e",
-  "grp" => "0077",
+  "ele" => "30",
+  "grp" => "0119",
   "Name" => "DirectionCosines",
 };
 ##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",31)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{119}->{31} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{49} = {
+  "VM" => "3",
   "VR" => "CS",
-  "ele" => "1f",
-  "grp" => "0077",
+  "ele" => "31",
+  "grp" => "0119",
   "Name" => "PatientOrientation3",
 };
 ##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",50)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{119}->{50} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{80} = {
+  "VM" => "1-n",
   "VR" => "LO",
-  "ele" => "32",
-  "grp" => "0077",
+  "ele" => "50",
+  "grp" => "0119",
   "Name" => "VolumeLabels",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",00)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{0} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{0} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "00",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FitMapModuleVersion",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",01)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{1} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{1} = {
+  "VM" => "1-n",
   "VR" => "LO",
   "ele" => "01",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SourceFileNames",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",02)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{2} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{2} = {
+  "VM" => "1-n",
   "VR" => "IS",
   "ele" => "02",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SourceVolumeIndices",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",03)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{3} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{3} = {
+  "VM" => "1-n",
   "VR" => "DS",
   "ele" => "03",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "ParameterValues",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",04)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{4} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{4} = {
+  "VM" => "1",
   "VR" => "AT",
   "ele" => "04",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "ParameterTag",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",05)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{5} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{5} = {
+  "VM" => "1-n",
   "VR" => "UI",
   "ele" => "05",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SourceFileUIDs",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",06)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{6} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{6} = {
+  "VM" => "1-n",
   "VR" => "LO",
   "ele" => "06",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SourceFileDirectory",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",07)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{7} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{7} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "07",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SourceDataInPlaceFlag",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",08)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{8} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{8} = {
+  "VM" => "1-n",
   "VR" => "IS",
   "ele" => "08",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "ResultVolumeindices",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",09)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{9} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{9} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "09",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "SMOOTHBoxcarAverageKernel",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",0a)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{10} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{10} = {
+  "VM" => "1-n",
   "VR" => "LO",
   "ele" => "0a",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FitParameterName",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",0c)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{12} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{12} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "0c",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FitICFunction",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",0d)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{13} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{13} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "0d",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FitFormulaProcedure",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",0e)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{14} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{14} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "0e",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FittingProgram",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",0f)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{15} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{15} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "0f",
-  "grp" => "0077",
+  "grp" => "0119",
   "Name" => "FittingProgramVersion",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",10)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{10} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{16} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "0a",
-  "grp" => "0077",
+  "ele" => "10",
+  "grp" => "0119",
   "Name" => "FitType",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",11)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{11} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{17} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "0b",
-  "grp" => "0077",
+  "ele" => "11",
+  "grp" => "0119",
   "Name" => "SetICFlag",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",12)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{12} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{18} = {
+  "VM" => "1-n",
   "VR" => "DS",
-  "ele" => "0c",
-  "grp" => "0077",
+  "ele" => "12",
+  "grp" => "0119",
   "Name" => "InitialConditions",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",13)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{13} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{19} = {
+  "VM" => "1-n",
   "VR" => "DS",
-  "ele" => "0d",
-  "grp" => "0077",
+  "ele" => "13",
+  "grp" => "0119",
   "Name" => "FitMapScaleFactors",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",20)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{20} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{32} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "14",
-  "grp" => "0077",
+  "ele" => "20",
+  "grp" => "0119",
   "Name" => "ThresholdingFlag",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",21)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{21} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{33} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "15",
-  "grp" => "0077",
+  "ele" => "21",
+  "grp" => "0119",
   "Name" => "Threshold",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",22)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{22} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{34} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "16",
-  "grp" => "0077",
+  "ele" => "22",
+  "grp" => "0119",
   "Name" => "MaskCompression",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",23)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{23} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{35} = {
+  "VM" => "1-n",
   "VR" => "OB",
-  "ele" => "17",
-  "grp" => "0077",
+  "ele" => "23",
+  "grp" => "0119",
   "Name" => "FitMapMask",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",24)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{24} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{36} = {
+  "VM" => "1-n",
   "VR" => "OB",
-  "ele" => "18",
-  "grp" => "0077",
+  "ele" => "24",
+  "grp" => "0119",
   "Name" => "FitMapPntThreshMap",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",25)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{25} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{37} = {
+  "VM" => "1",
   "VR" => "ST",
-  "ele" => "19",
-  "grp" => "0077",
+  "ele" => "25",
+  "grp" => "0119",
   "Name" => "PixelMaskCheckString",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",26)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{26} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{38} = {
+  "VM" => "1-n",
   "VR" => "LO",
-  "ele" => "1a",
-  "grp" => "0077",
+  "ele" => "26",
+  "grp" => "0119",
   "Name" => "PixelMaskSource",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",30)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{30} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{48} = {
+  "VM" => "1-n",
   "VR" => "DS",
-  "ele" => "1e",
-  "grp" => "0077",
+  "ele" => "30",
+  "grp" => "0119",
   "Name" => "UpperFitLimit",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",31)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{31} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{49} = {
+  "VM" => "1-n",
   "VR" => "DS",
-  "ele" => "1f",
-  "grp" => "0077",
+  "ele" => "31",
+  "grp" => "0119",
   "Name" => "LowerFitLimit",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",40)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{40} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{64} = {
+  "VM" => "1",
   "VR" => "LO",
-  "ele" => "28",
-  "grp" => "0077",
+  "ele" => "40",
+  "grp" => "0119",
   "Name" => "GradientMatrixMethod",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",41)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{41} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{65} = {
+  "VM" => "1-n",
   "VR" => "DS",
-  "ele" => "29",
-  "grp" => "0077",
+  "ele" => "41",
+  "grp" => "0119",
   "Name" => "GradientMatrix",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",42)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{42} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{66} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "2a",
-  "grp" => "0077",
+  "ele" => "42",
+  "grp" => "0119",
   "Name" => "IVIMMinimumBSlow",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",80)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{80} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{128} = {
+  "VM" => "1",
   "VR" => "SQ",
-  "ele" => "50",
-  "grp" => "0077",
+  "ele" => "80",
+  "grp" => "0119",
   "Name" => "FitMapSQ",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",81)##
-$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{119}->{81} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{129} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "51",
-  "grp" => "0077",
+  "ele" => "81",
+  "grp" => "0119",
   "Name" => "fmSQFitNumber",
 };
 ##(0129,"SIEMENS Ultrasound SC2000",00)##
@@ -69343,435 +69359,435 @@ $Posda::DataDict::PvtDict->{"PRIVATE_CODE_STRING_1003"}->{4099}->{67} = {
   "Name" => "Focus",
 };
 ##(1129,"Eigen Artemis",01)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{1} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{1} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "01",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "PatientID",
 };
 ##(1129,"Eigen Artemis",02)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{2} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{2} = {
+  "VM" => "1",
   "VR" => "LO",
   "ele" => "02",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "ProcedureID",
 };
 ##(1129,"Eigen Artemis",03)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{3} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{3} = {
+  "VM" => "1",
   "VR" => "LT",
   "ele" => "03",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "3DPointFile",
 };
 ##(1129,"Eigen Artemis",04)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{4} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{4} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "04",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "EncoderHome",
 };
 ##(1129,"Eigen Artemis",05)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{5} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{5} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "05",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "EncoderCurrent",
 };
 ##(1129,"Eigen Artemis",06)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{6} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{6} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "06",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "NeedleGuidePoint",
 };
 ##(1129,"Eigen Artemis",07)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{7} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{7} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "07",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "TargetNeedlePoint",
 };
 ##(1129,"Eigen Artemis",08)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{8} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{8} = {
+  "VM" => "1",
   "VR" => "DS",
   "ele" => "08",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "ProstateSpecificAntigen",
 };
 ##(1129,"Eigen Artemis",09)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{9} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{9} = {
+  "VM" => "1",
   "VR" => "IS",
   "ele" => "09",
-  "grp" => "0469",
+  "grp" => "1129",
   "Name" => "NeedleGauge",
 };
 ##(1129,"Eigen Artemis",10)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{10} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{16} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "0a",
-  "grp" => "0469",
+  "ele" => "10",
+  "grp" => "1129",
   "Name" => "ThrowDistance",
 };
 ##(1129,"Eigen Artemis",11)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{11} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{17} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "0b",
-  "grp" => "0469",
+  "ele" => "11",
+  "grp" => "1129",
   "Name" => "NotchLength",
 };
 ##(1129,"Eigen Artemis",12)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{12} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{18} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "0c",
-  "grp" => "0469",
+  "ele" => "12",
+  "grp" => "1129",
   "Name" => "NeedleTipLength",
 };
 ##(1129,"Eigen Artemis",13)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{13} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{19} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "0d",
-  "grp" => "0469",
+  "ele" => "13",
+  "grp" => "1129",
   "Name" => "PivotDistance",
 };
 ##(1129,"Eigen Artemis",14)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{14} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{20} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "0e",
-  "grp" => "0469",
+  "ele" => "14",
+  "grp" => "1129",
   "Name" => "TrackerSerialPort",
 };
 ##(1129,"Eigen Artemis",15)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{15} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{21} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "0f",
-  "grp" => "0469",
+  "ele" => "15",
+  "grp" => "1129",
   "Name" => "EncoderCountsPerDegree",
 };
 ##(1129,"Eigen Artemis",16)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{16} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{22} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "10",
-  "grp" => "0469",
+  "ele" => "16",
+  "grp" => "1129",
   "Name" => "VoxelSize",
 };
 ##(1129,"Eigen Artemis",17)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{17} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{23} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "11",
-  "grp" => "0469",
+  "ele" => "17",
+  "grp" => "1129",
   "Name" => "ImageLag",
 };
 ##(1129,"Eigen Artemis",18)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{18} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{24} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "12",
-  "grp" => "0469",
+  "ele" => "18",
+  "grp" => "1129",
   "Name" => "RoomHandedness",
 };
 ##(1129,"Eigen Artemis",19)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{19} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{25} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "13",
-  "grp" => "0469",
+  "ele" => "19",
+  "grp" => "1129",
   "Name" => "ProstateVolume",
 };
 ##(1129,"Eigen Artemis",20)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{20} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{32} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "14",
-  "grp" => "0469",
+  "ele" => "20",
+  "grp" => "1129",
   "Name" => "VolumeMeasureMethod",
 };
 ##(1129,"Eigen Artemis",21)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{21} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{33} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "15",
-  "grp" => "0469",
+  "ele" => "21",
+  "grp" => "1129",
   "Name" => "BiopsyPlan",
 };
 ##(1129,"Eigen Artemis",22)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{22} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{34} = {
+  "VM" => "1",
   "VR" => "LT",
-  "ele" => "16",
-  "grp" => "0469",
+  "ele" => "22",
+  "grp" => "1129",
   "Name" => "PathologyReport",
 };
 ##(1129,"Eigen Artemis",23)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{23} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{35} = {
+  "VM" => "1",
   "VR" => "IS",
-  "ele" => "17",
-  "grp" => "0469",
+  "ele" => "23",
+  "grp" => "1129",
   "Name" => "NumberEncoders",
 };
 ##(1129,"Eigen Artemis",24)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{24} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{36} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "18",
-  "grp" => "0469",
+  "ele" => "24",
+  "grp" => "1129",
   "Name" => "EncoderTransformMatrix",
 };
 ##(1129,"Eigen Artemis",25)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{25} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{37} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "19",
-  "grp" => "0469",
+  "ele" => "25",
+  "grp" => "1129",
   "Name" => "AxisOfRotation",
 };
 ##(1129,"Eigen Artemis",26)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{26} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{38} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1a",
-  "grp" => "0469",
+  "ele" => "26",
+  "grp" => "1129",
   "Name" => "SweepAngle",
 };
 ##(1129,"Eigen Artemis",27)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{27} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{39} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1b",
-  "grp" => "0469",
+  "ele" => "27",
+  "grp" => "1129",
   "Name" => "HomeAngle",
 };
 ##(1129,"Eigen Artemis",28)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{28} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{40} = {
+  "VM" => "1",
   "VR" => "LT",
-  "ele" => "1c",
-  "grp" => "0469",
+  "ele" => "28",
+  "grp" => "1129",
   "Name" => "BoundaryPointFile",
 };
 ##(1129,"Eigen Artemis",29)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{29} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{41} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1d",
-  "grp" => "0469",
+  "ele" => "29",
+  "grp" => "1129",
   "Name" => "ProstateSemiAutoVolume",
 };
 ##(1129,"Eigen Artemis",30)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{30} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{48} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1e",
-  "grp" => "0469",
+  "ele" => "30",
+  "grp" => "1129",
   "Name" => "ProstateMaualVolume",
 };
 ##(1129,"Eigen Artemis",31)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{31} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{49} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "1f",
-  "grp" => "0469",
+  "ele" => "31",
+  "grp" => "1129",
   "Name" => "MeasuredLengthPoints",
 };
 ##(1129,"Eigen Artemis",32)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{32} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{50} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "20",
-  "grp" => "0469",
+  "ele" => "32",
+  "grp" => "1129",
   "Name" => "MeasuredWidthPoints",
 };
 ##(1129,"Eigen Artemis",33)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{33} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{51} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "21",
-  "grp" => "0469",
+  "ele" => "33",
+  "grp" => "1129",
   "Name" => "MeasuredHeightPoints",
 };
 ##(1129,"Eigen Artemis",34)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{34} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{52} = {
+  "VM" => "1",
   "VR" => "LT",
-  "ele" => "22",
-  "grp" => "0469",
+  "ele" => "34",
+  "grp" => "1129",
   "Name" => "RawVolumeFile",
 };
 ##(1129,"Eigen Artemis",35)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{35} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{53} = {
+  "VM" => "1",
   "VR" => "LT",
-  "ele" => "23",
-  "grp" => "0469",
+  "ele" => "35",
+  "grp" => "1129",
   "Name" => "CalibrationFile",
 };
 ##(1129,"Eigen Artemis",36)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{36} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{54} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "24",
-  "grp" => "0469",
+  "ele" => "36",
+  "grp" => "1129",
   "Name" => "PlannedLocationPoint",
 };
 ##(1129,"Eigen Artemis",37)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{37} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{55} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "25",
-  "grp" => "0469",
+  "ele" => "37",
+  "grp" => "1129",
   "Name" => "RecordedLocationPoint",
 };
 ##(1129,"Eigen Artemis",38)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{38} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{56} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "26",
-  "grp" => "0469",
+  "ele" => "38",
+  "grp" => "1129",
   "Name" => "EntryLocationPoint",
 };
 ##(1129,"Eigen Artemis",39)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{39} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{57} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "27",
-  "grp" => "0469",
+  "ele" => "39",
+  "grp" => "1129",
   "Name" => "TipLocationPoint",
 };
 ##(1129,"Eigen Artemis",40)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{40} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{64} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "28",
-  "grp" => "0469",
+  "ele" => "40",
+  "grp" => "1129",
   "Name" => "CorBotLocationPoint",
 };
 ##(1129,"Eigen Artemis",41)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{41} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{65} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "29",
-  "grp" => "0469",
+  "ele" => "41",
+  "grp" => "1129",
   "Name" => "CorTipLocationPoint",
 };
 ##(1129,"Eigen Artemis",70)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{70} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{112} = {
+  "VM" => "1",
   "VR" => "CS",
-  "ele" => "46",
-  "grp" => "0469",
+  "ele" => "70",
+  "grp" => "1129",
   "Name" => "MarkerSide",
 };
 ##(1129,"Eigen Artemis",71)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{71} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{113} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "47",
-  "grp" => "0469",
+  "ele" => "71",
+  "grp" => "1129",
   "Name" => "GrabSize",
 };
 ##(1129,"Eigen Artemis",72)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{72} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{114} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "48",
-  "grp" => "0469",
+  "ele" => "72",
+  "grp" => "1129",
   "Name" => "GrabROI",
 };
 ##(1129,"Eigen Artemis",73)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{73} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{115} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "49",
-  "grp" => "0469",
+  "ele" => "73",
+  "grp" => "1129",
   "Name" => "Depth",
 };
 ##(1129,"Eigen Artemis",74)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{74} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{116} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "4a",
-  "grp" => "0469",
+  "ele" => "74",
+  "grp" => "1129",
   "Name" => "CORO",
 };
 ##(1129,"Eigen Artemis",75)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{75} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{117} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "4b",
-  "grp" => "0469",
+  "ele" => "75",
+  "grp" => "1129",
   "Name" => "MisAng",
 };
 ##(1129,"Eigen Artemis",76)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{76} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{118} = {
+  "VM" => "1",
   "VR" => "LO",
-  "ele" => "4c",
-  "grp" => "0469",
+  "ele" => "76",
+  "grp" => "1129",
   "Name" => "ProbeOrientation",
 };
 ##(1129,"Eigen Artemis",77)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{77} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{119} = {
+  "VM" => "1",
   "VR" => "LT",
-  "ele" => "4d",
-  "grp" => "0469",
+  "ele" => "77",
+  "grp" => "1129",
   "Name" => "UltrasoundState",
 };
 ##(1129,"Eigen Artemis",78)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{78} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{120} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "4e",
-  "grp" => "0469",
+  "ele" => "78",
+  "grp" => "1129",
   "Name" => "VideoClipROI",
 };
 ##(1129,"Eigen Artemis",79)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{79} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{121} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "4f",
-  "grp" => "0469",
+  "ele" => "79",
+  "grp" => "1129",
   "Name" => "ROIGroupSizes",
 };
 ##(1129,"Eigen Artemis",80)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{80} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{128} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "50",
-  "grp" => "0469",
+  "ele" => "80",
+  "grp" => "1129",
   "Name" => "ROIGroupsLocations",
 };
 ##(1129,"Eigen Artemis",81)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{81} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{129} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "51",
-  "grp" => "0469",
+  "ele" => "81",
+  "grp" => "1129",
   "Name" => "ROIsliceThickness",
 };
 ##(1129,"Eigen Artemis",82)##
-$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{1129}->{82} = {
-  "VM" => "2",
+$Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{130} = {
+  "VM" => "1",
   "VR" => "DS",
-  "ele" => "52",
-  "grp" => "0469",
+  "ele" => "82",
+  "grp" => "1129",
   "Name" => "VideoToVolumeMatrix",
 };
 ##(1129,"Eigen, Inc",01)##
@@ -91301,5 +91317,29 @@ $Posda::DataDict::PvtDict->{"Carestream Health TIFF"}->{65535}->{255} = {
   "ele" => "ff",
   "grp" => "ffff",
   "Name" => "Unknown",
+};
+####
+$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
+  "VM" => "",
+  "VR" => "",
+  "ele" => "00",
+  "grp" => "0000",
+  "Name" => "",
+};
+####
+$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
+  "VM" => "",
+  "VR" => "",
+  "ele" => "00",
+  "grp" => "0000",
+  "Name" => "",
+};
+####
+$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
+  "VM" => "",
+  "VR" => "",
+  "ele" => "00",
+  "grp" => "0000",
+  "Name" => "",
 };
 1;
