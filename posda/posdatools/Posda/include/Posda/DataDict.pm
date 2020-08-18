@@ -10633,6 +10633,22 @@ $Dict = {
       "ele" => "0051",
       "group" => "0012"
     },
+    "82" => {
+      "KeyWord" => "LongitudinalTemporalOffsetFromEvent",
+      "Name" => "Longitudinal Temporal Offset From Event",
+      "VM" => "1",
+      "VR" => "FD",
+      "ele" => "0052",
+      "group" => "0012"
+    },
+    "83" => {
+      "KeyWord" => "LongitudinalTemporalEventType",
+      "Name" => "Longitudinal Temporal Event Type",
+      "VM" => "1",
+      "VR" => "CS",
+      "ele" => "0053",
+      "group" => "0012"
+    },
     "96" => {
       "KeyWord" => "ClinicalTrialCoordinatingCenterName",
       "Name" => "Clinical Trial Coordinating Center Name",
