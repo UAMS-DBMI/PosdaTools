@@ -136,6 +136,9 @@ COPY --from=gdcmbuild /usr/local/lib/_gdcmswig.so /usr/lib/python3.8/site-packag
 COPY --from=gdcmbuild /usr/local/bin/* /usr/local/bin/
 COPY --from=gdcmbuild /usr/local/lib/* /usr/local/lib/
 
+# Add Imagemagick
+RUN apk --update --no-cache add imagemagick
+
 # Copy actual posdatools last, to speed up rebuilds
 COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
 
