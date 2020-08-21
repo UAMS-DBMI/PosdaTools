@@ -108,7 +108,7 @@ RUN cpanm --notest REST::Client \
 
 
 # Install needed python utils
-RUN pip3 install xlsx2csv mysql-connector python-box pydicom
+RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis
 
 RUN addgroup -g 2123 fakeposda
 RUN adduser -D -G fakeposda posda
