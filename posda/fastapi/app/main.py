@@ -18,11 +18,12 @@ from papi.routes import rois
 from papi.routes import importer
 from papi.routes import send_to_public_status
 from papi.routes import dicom_roots
+from papi.routes import worker
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
     'FILE_STORAGE_PATH',
-    "/home/posda/cache/created" 
+    "/home/posda/cache/created"
 )
 importer.TEMP_STORAGE_PATH = os.environ.get(
     'TEMP_STORAGE_PATH',
@@ -60,12 +61,9 @@ router_v1.include_router(rois.router, prefix="/rois")
 router_v1.include_router(importer.router, prefix="/import")
 router_v1.include_router(send_to_public_status.router, prefix="/send_to_public_status")
 router_v1.include_router(dicom_roots.router, prefix="/dicom_roots")
+router_v1.include_router(worker.router, prefix="/dicom_roots")
 
 app.include_router(auth.router)
 app.include_router(router_v1, prefix="/v1")
 # For backward compatiblity, also include the download router at the root
 app.include_router(download.router)
-
-
-
-
