@@ -61,7 +61,7 @@ router_v1.include_router(rois.router, prefix="/rois")
 router_v1.include_router(importer.router, prefix="/import")
 router_v1.include_router(send_to_public_status.router, prefix="/send_to_public_status")
 router_v1.include_router(dicom_roots.router, prefix="/dicom_roots")
-router_v1.include_router(worker.router, prefix="/dicom_roots")
+router_v1.include_router(worker.router, prefix="/worker")
 
 app.include_router(auth.router)
 app.include_router(router_v1, prefix="/v1")
