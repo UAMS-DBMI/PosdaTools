@@ -252,22 +252,10 @@ Query("GetVisualReviewByActivityIdLatest")->RunQuery(sub{
   $num_visual_reviews += 1;
 }, sub{}, $act_id);
 
-if ($num_visual_reviews == 1){
-  unless (defined $visual_review_id){
-    $background->WriteToEmail("Internal Error: visual review id undefined\n");
-    $background->Finish;
-    exit;
-  }
-  $background->WriteToEmail("WARNING: There were $num_visual_reviews " .
-    "visual reviews for this activity\n" .
-    "visual review verification may be inaccurate.\n"
-  );
-} else {
-  unless(defined $visual_review_id){
-    $background->WriteToEmail("Internal Error: visual review id undefined\n");
-    $background->Finish;
-    exit;
-  }
+unless(defined $visual_review_id){
+  $background->WriteToEmail("Internal Error: visual review id undefined\n");
+  $background->Finish;
+  exit;
 }
 my $num_sops_not_reviewed;
 Query("VerifyAllSopsInTpAreInVR")->RunQuery(sub {

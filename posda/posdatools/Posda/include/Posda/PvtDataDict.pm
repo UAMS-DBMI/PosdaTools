@@ -1,19 +1,3 @@
-####
-$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
-  "VM" => "",
-  "VR" => "",
-  "ele" => "00",
-  "grp" => "0000",
-  "Name" => "",
-};
-####
-$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
-  "VM" => "",
-  "VR" => "",
-  "ele" => "00",
-  "grp" => "0000",
-  "Name" => "",
-};
 ##(0003,"AEGIS_DICOM_2.00",00)##
 $Posda::DataDict::PvtDict->{"AEGIS_DICOM_2.00"}->{3}->{0} = {
   "VM" => "1-n",
@@ -64470,6 +64454,14 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{53} =
   "grp" => "0117",
   "Name" => "SER timing indices",
 };
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",36)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{54} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "36",
+  "grp" => "0117",
+  "Name" => "FirstPostIndex",
+};
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",3a)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{58} = {
   "VM" => "1",
@@ -64734,6 +64726,14 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{178} 
   "grp" => "0117",
   "Name" => "SER Maximum",
 };
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b3)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{179} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "b3",
+  "grp" => "0117",
+  "Name" => "Voxel count",
+};
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",B3)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{179} = {
   "VM" => "1",
@@ -64806,6 +64806,14 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{197} 
   "grp" => "0117",
   "Name" => "Protocol compliance",
 };
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c6)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{198} = {
+  "VM" => "1-n",
+  "VR" => "LO ",
+  "ele" => "c6",
+  "grp" => "0117",
+  "Name" => "Protocol non-compliance reasons",
+};
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c6) ##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{198} = {
   "VM" => "2",
@@ -64813,6 +64821,70 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{198} 
   "ele" => "c6",
   "grp" => "0075",
   "Name" => "Protocol non-compliance reasons",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",d1)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{209} = {
+  "VM" => "1",
+  "VR" => "DT",
+  "ele" => "d1",
+  "grp" => "0117",
+  "Name" => "MaskSourceSaveDate",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",D1)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{209} = {
+  "VM" => "1",
+  "VR" => "DT",
+  "ele" => "d1",
+  "grp" => "0117",
+  "Name" => "MaskSourceSaveDate",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",d2)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{210} = {
+  "VM" => "1-n",
+  "VR" => "CS",
+  "ele" => "d2",
+  "grp" => "0117",
+  "Name" => "MaskOperations",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",D2)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{210} = {
+  "VM" => "1-n",
+  "VR" => "CS",
+  "ele" => "d2",
+  "grp" => "0117",
+  "Name" => "MaskOperations",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",d3)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{211} = {
+  "VM" => "1-n",
+  "VR" => "LO",
+  "ele" => "d3",
+  "grp" => "0117",
+  "Name" => "MaskLegend",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",D3)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{211} = {
+  "VM" => "1-n",
+  "VR" => "LO",
+  "ele" => "d3",
+  "grp" => "0117",
+  "Name" => "MaskLegend",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",d4)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{212} = {
+  "VM" => "1-n",
+  "VR" => "LO",
+  "ele" => "d4",
+  "grp" => "0117",
+  "Name" => "MaskProcessDescriptions",
+};
+##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",D4)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{212} = {
+  "VM" => "1-n",
+  "VR" => "LO",
+  "ele" => "d4",
+  "grp" => "0117",
+  "Name" => "MaskProcessDescriptions",
 };
 ##(0119,"MRSC",14)##
 $Posda::DataDict::PvtDict->{"MRSC"}->{281}->{20} = {
@@ -65334,6 +65406,206 @@ $Posda::DataDict::PvtDict->{"MRSC"}->{281}->{255} = {
   "grp" => "0119",
   "Name" => "UserInfo",
 };
+##(0119,"MRSC_IMAGE ACQ",11)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{17} = {
+  "VM" => "7",
+  "VR" => "IS",
+  "ele" => "11",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",12)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{18} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "12",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",13)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{19} = {
+  "VM" => "1",
+  "VR" => "CS",
+  "ele" => "13",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",18)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{24} = {
+  "VM" => "3",
+  "VR" => "IS",
+  "ele" => "18",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",20)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{32} = {
+  "VM" => "3",
+  "VR" => "LO",
+  "ele" => "20",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",25)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{37} = {
+  "VM" => "7",
+  "VR" => "LO",
+  "ele" => "25",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",38)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{56} = {
+  "VM" => "3",
+  "VR" => "DS",
+  "ele" => "38",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",41)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{65} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "41",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",50)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{80} = {
+  "VM" => "7",
+  "VR" => "LO",
+  "ele" => "50",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",80)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{128} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "80",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",81)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{129} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "81",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",82)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{130} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "82",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",88)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{136} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "88",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",90)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{144} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "90",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",91)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{145} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "91",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a0)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{160} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a0",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a1)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{161} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a1",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a2)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{162} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a2",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a3)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{163} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a3",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a4)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{164} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a4",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a5)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{165} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a5",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a6)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{166} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a6",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a7)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{167} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a7",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",a8)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{168} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "a8",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
+##(0119,"MRSC_IMAGE ACQ",ff)##
+$Posda::DataDict::PvtDict->{"MRSC_IMAGE ACQ"}->{281}->{255} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "ff",
+  "grp" => "0119",
+  "Name" => "Unknown",
+};
 ##(0119,"SIEMENS Ultrasound SC2000",00)##
 $Posda::DataDict::PvtDict->{"SIEMENS Ultrasound SC2000"}->{281}->{0} = {
   "VM" => "1",
@@ -65446,6 +65718,62 @@ $Posda::DataDict::PvtDict->{"SIEMENS Ultrasound SC2000"}->{281}->{19} = {
   "grp" => "0119",
   "Name" => "Volume Rate",
 };
+##(0119,"UCSF BIRP PRIVATE CREATOR 011910xx",00)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011910xx"}->{281}->{0} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "00",
+  "grp" => "0119",
+  "Name" => "Version",
+};
+##(0119,"UCSF BIRP PRIVATE CREATOR 011910xx",10)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011910xx"}->{281}->{16} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "10",
+  "grp" => "0119",
+  "Name" => "PixelDataType",
+};
+##(0119,"UCSF BIRP PRIVATE CREATOR 011910xx",30)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011910xx"}->{281}->{48} = {
+  "VM" => "9",
+  "VR" => "DS",
+  "ele" => "30",
+  "grp" => "0119",
+  "Name" => "DirectionCosines",
+};
+##(0119,"UCSF BIRP PRIVATE CREATOR 011910xx",31)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011910xx"}->{281}->{49} = {
+  "VM" => "3",
+  "VR" => "CS",
+  "ele" => "31",
+  "grp" => "0119",
+  "Name" => "PatientOrientation3",
+};
+##(0119,"UCSF BIRP PRIVATE CREATOR 011910xx",50)##
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011910xx"}->{281}->{80} = {
+  "VM" => "1-n",
+  "VR" => "LO",
+  "ele" => "50",
+  "grp" => "0119",
+  "Name" => "VolumeLabels",
+};
+##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",00)##
+$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{0} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "00",
+  "grp" => "0119",
+  "Name" => "Version",
+};
+##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",10)##
+$Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{16} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "10",
+  "grp" => "0119",
+  "Name" => "PixelDataType",
+};
 ##(0119,"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx",30)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Acquisition PRIVATE CREATOR 011910xx"}->{281}->{48} = {
   "VM" => "9",
@@ -65524,7 +65852,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "LO",
   "ele" => "06",
   "grp" => "0119",
-  "Name" => "SourceFileDirectory",
+  "Name" => "Source File Directory",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",07)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{7} = {
@@ -65532,7 +65860,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "IS",
   "ele" => "07",
   "grp" => "0119",
-  "Name" => "SourceDataInPlaceFlag",
+  "Name" => "Source Data In Place Flag",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",08)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{8} = {
@@ -65636,7 +65964,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "DS",
   "ele" => "21",
   "grp" => "0119",
-  "Name" => "Threshold",
+  "Name" => "Threshold value",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",22)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{34} = {
@@ -65644,7 +65972,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "IS",
   "ele" => "22",
   "grp" => "0119",
-  "Name" => "MaskCompression",
+  "Name" => "Mask Compression",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",23)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{35} = {
@@ -65652,7 +65980,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "OB",
   "ele" => "23",
   "grp" => "0119",
-  "Name" => "FitMapMask",
+  "Name" => "Compressed fit map binary mask ",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",24)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{36} = {
@@ -65660,7 +65988,7 @@ $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}
   "VR" => "OB",
   "ele" => "24",
   "grp" => "0119",
-  "Name" => "FitMapPntThreshMap",
+  "Name" => "Fit map Point Threshold map",
 };
 ##(0119,"UCSF MRSC Fitting PRIVATE CREATOR 011911xx",25)##
 $Posda::DataDict::PvtDict->{"UCSF MRSC Fitting PRIVATE CREATOR 011911xx"}->{281}->{37} = {
@@ -69790,6 +70118,14 @@ $Posda::DataDict::PvtDict->{"Eigen Artemis"}->{4393}->{130} = {
   "grp" => "1129",
   "Name" => "VideoToVolumeMatrix",
 };
+##(1129,"Eigen Inc",01)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{1} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "01",
+  "grp" => "1129",
+  "Name" => "PatientID",
+};
 ##(1129,"Eigen, Inc",01)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{1} = {
   "VM" => "2",
@@ -69797,6 +70133,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{1} = {
   "ele" => "01",
   "grp" => "0469",
   "Name" => "PatientID",
+};
+##(1129,"Eigen Inc",02)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{2} = {
+  "VM" => "1",
+  "VR" => "LO",
+  "ele" => "02",
+  "grp" => "1129",
+  "Name" => "ProcedureID",
 };
 ##(1129,"Eigen, Inc",02)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{2} = {
@@ -69806,6 +70150,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{2} = {
   "grp" => "0469",
   "Name" => "ProcedureID",
 };
+##(1129,"Eigen Inc",03)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{3} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "03",
+  "grp" => "1129",
+  "Name" => "3DPointFile",
+};
 ##(1129,"Eigen, Inc",03)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{3} = {
   "VM" => "2",
@@ -69813,6 +70165,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{3} = {
   "ele" => "03",
   "grp" => "0469",
   "Name" => "3DPointFile",
+};
+##(1129,"Eigen Inc",04)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{4} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "04",
+  "grp" => "1129",
+  "Name" => "EncoderHome",
 };
 ##(1129,"Eigen, Inc",04)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{4} = {
@@ -69822,6 +70182,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{4} = {
   "grp" => "0469",
   "Name" => "EncoderHome",
 };
+##(1129,"Eigen Inc",05)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{5} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "05",
+  "grp" => "1129",
+  "Name" => "EncoderCurrent",
+};
 ##(1129,"Eigen, Inc",05)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{5} = {
   "VM" => "2",
@@ -69829,6 +70197,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{5} = {
   "ele" => "05",
   "grp" => "0469",
   "Name" => "EncoderCurrent",
+};
+##(1129,"Eigen Inc",06)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{6} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "06",
+  "grp" => "1129",
+  "Name" => "NeedleGuidePoint",
 };
 ##(1129,"Eigen, Inc",06)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{6} = {
@@ -69838,6 +70214,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{6} = {
   "grp" => "0469",
   "Name" => "NeedleGuidePoint",
 };
+##(1129,"Eigen Inc",07)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{7} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "07",
+  "grp" => "1129",
+  "Name" => "TargetNeedlePoint",
+};
 ##(1129,"Eigen, Inc",07)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{7} = {
   "VM" => "2",
@@ -69845,6 +70229,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{7} = {
   "ele" => "07",
   "grp" => "0469",
   "Name" => "TargetNeedlePoint",
+};
+##(1129,"Eigen Inc",08)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{8} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "08",
+  "grp" => "1129",
+  "Name" => "ProstateSpecificAntigen",
 };
 ##(1129,"Eigen, Inc",08)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{8} = {
@@ -69854,6 +70246,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{8} = {
   "grp" => "0469",
   "Name" => "ProstateSpecificAntigen",
 };
+##(1129,"Eigen Inc",09)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{9} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "09",
+  "grp" => "1129",
+  "Name" => "NeedleGauge",
+};
 ##(1129,"Eigen, Inc",09)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{9} = {
   "VM" => "2",
@@ -69861,6 +70261,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{9} = {
   "ele" => "09",
   "grp" => "0469",
   "Name" => "NeedleGauge",
+};
+##(1129,"Eigen Inc",10)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{16} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "10",
+  "grp" => "1129",
+  "Name" => "ThrowDistance",
 };
 ##(1129,"Eigen, Inc",10)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{10} = {
@@ -69870,6 +70278,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{10} = {
   "grp" => "0469",
   "Name" => "ThrowDistance",
 };
+##(1129,"Eigen Inc",11)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{17} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "11",
+  "grp" => "1129",
+  "Name" => "NotchLength",
+};
 ##(1129,"Eigen, Inc",11)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{11} = {
   "VM" => "2",
@@ -69877,6 +70293,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{11} = {
   "ele" => "0b",
   "grp" => "0469",
   "Name" => "NotchLength",
+};
+##(1129,"Eigen Inc",12)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{18} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "12",
+  "grp" => "1129",
+  "Name" => "NeedleTipLength",
 };
 ##(1129,"Eigen, Inc",12)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{12} = {
@@ -69886,6 +70310,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{12} = {
   "grp" => "0469",
   "Name" => "NeedleTipLength",
 };
+##(1129,"Eigen Inc",13)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{19} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "13",
+  "grp" => "1129",
+  "Name" => "PivotDistance",
+};
 ##(1129,"Eigen, Inc",13)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{13} = {
   "VM" => "2",
@@ -69893,6 +70325,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{13} = {
   "ele" => "0d",
   "grp" => "0469",
   "Name" => "PivotDistance",
+};
+##(1129,"Eigen Inc",14)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{20} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "14",
+  "grp" => "1129",
+  "Name" => "TrackerSerialPort",
 };
 ##(1129,"Eigen, Inc",14)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{14} = {
@@ -69902,6 +70342,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{14} = {
   "grp" => "0469",
   "Name" => "TrackerSerialPort",
 };
+##(1129,"Eigen Inc",15)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{21} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "15",
+  "grp" => "1129",
+  "Name" => "EncoderCountsPerDegree",
+};
 ##(1129,"Eigen, Inc",15)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{15} = {
   "VM" => "2",
@@ -69909,6 +70357,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{15} = {
   "ele" => "0f",
   "grp" => "0469",
   "Name" => "EncoderCountsPerDegree",
+};
+##(1129,"Eigen Inc",16)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{22} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "16",
+  "grp" => "1129",
+  "Name" => "VoxelSize",
 };
 ##(1129,"Eigen, Inc",16)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{16} = {
@@ -69918,6 +70374,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{16} = {
   "grp" => "0469",
   "Name" => "VoxelSize",
 };
+##(1129,"Eigen Inc",17)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{23} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "17",
+  "grp" => "1129",
+  "Name" => "ImageLag",
+};
 ##(1129,"Eigen, Inc",17)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{17} = {
   "VM" => "2",
@@ -69925,6 +70389,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{17} = {
   "ele" => "11",
   "grp" => "0469",
   "Name" => "ImageLag",
+};
+##(1129,"Eigen Inc",18)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{24} = {
+  "VM" => "1",
+  "VR" => "CS",
+  "ele" => "18",
+  "grp" => "1129",
+  "Name" => "RoomHandedness",
 };
 ##(1129,"Eigen, Inc",18)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{18} = {
@@ -69934,6 +70406,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{18} = {
   "grp" => "0469",
   "Name" => "RoomHandedness",
 };
+##(1129,"Eigen Inc",19)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{25} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "19",
+  "grp" => "1129",
+  "Name" => "ProstateVolume",
+};
 ##(1129,"Eigen, Inc",19)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{19} = {
   "VM" => "2",
@@ -69941,6 +70421,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{19} = {
   "ele" => "13",
   "grp" => "0469",
   "Name" => "ProstateVolume",
+};
+##(1129,"Eigen Inc",20)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{32} = {
+  "VM" => "1",
+  "VR" => "CS",
+  "ele" => "20",
+  "grp" => "1129",
+  "Name" => "VolumeMeasureMethod",
 };
 ##(1129,"Eigen, Inc",20)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{20} = {
@@ -69950,6 +70438,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{20} = {
   "grp" => "0469",
   "Name" => "VolumeMeasureMethod",
 };
+##(1129,"Eigen Inc",21)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{33} = {
+  "VM" => "1",
+  "VR" => "CS",
+  "ele" => "21",
+  "grp" => "1129",
+  "Name" => "BiopsyPlan",
+};
 ##(1129,"Eigen, Inc",21)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{21} = {
   "VM" => "2",
@@ -69957,6 +70453,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{21} = {
   "ele" => "15",
   "grp" => "0469",
   "Name" => "BiopsyPlan",
+};
+##(1129,"Eigen Inc",22)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{34} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "22",
+  "grp" => "1129",
+  "Name" => "PathologyReport",
 };
 ##(1129,"Eigen, Inc",22)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{22} = {
@@ -69966,6 +70470,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{22} = {
   "grp" => "0469",
   "Name" => "PathologyReport",
 };
+##(1129,"Eigen Inc",23)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{35} = {
+  "VM" => "1",
+  "VR" => "IS",
+  "ele" => "23",
+  "grp" => "1129",
+  "Name" => "NumberEncoders",
+};
 ##(1129,"Eigen, Inc",23)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{23} = {
   "VM" => "2",
@@ -69973,6 +70485,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{23} = {
   "ele" => "17",
   "grp" => "0469",
   "Name" => "NumberEncoders",
+};
+##(1129,"Eigen Inc",24)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{36} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "24",
+  "grp" => "1129",
+  "Name" => "EncoderTransformMatrix",
 };
 ##(1129,"Eigen, Inc",24)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{24} = {
@@ -69982,6 +70502,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{24} = {
   "grp" => "0469",
   "Name" => "EncoderTransformMatrix",
 };
+##(1129,"Eigen Inc",25)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{37} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "25",
+  "grp" => "1129",
+  "Name" => "AxisOfRotation",
+};
 ##(1129,"Eigen, Inc",25)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{25} = {
   "VM" => "2",
@@ -69989,6 +70517,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{25} = {
   "ele" => "19",
   "grp" => "0469",
   "Name" => "AxisOfRotation",
+};
+##(1129,"Eigen Inc",26)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{38} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "26",
+  "grp" => "1129",
+  "Name" => "SweepAngle",
 };
 ##(1129,"Eigen, Inc",26)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{26} = {
@@ -69998,6 +70534,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{26} = {
   "grp" => "0469",
   "Name" => "SweepAngle",
 };
+##(1129,"Eigen Inc",27)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{39} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "27",
+  "grp" => "1129",
+  "Name" => "HomeAngle",
+};
 ##(1129,"Eigen, Inc",27)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{27} = {
   "VM" => "2",
@@ -70005,6 +70549,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{27} = {
   "ele" => "1b",
   "grp" => "0469",
   "Name" => "HomeAngle",
+};
+##(1129,"Eigen Inc",28)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{40} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "28",
+  "grp" => "1129",
+  "Name" => "BoundaryPointFile",
 };
 ##(1129,"Eigen, Inc",28)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{28} = {
@@ -70014,6 +70566,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{28} = {
   "grp" => "0469",
   "Name" => "BoundaryPointFile",
 };
+##(1129,"Eigen Inc",29)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{41} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "29",
+  "grp" => "1129",
+  "Name" => "ProstateSemiAutoVolume",
+};
 ##(1129,"Eigen, Inc",29)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{29} = {
   "VM" => "2",
@@ -70021,6 +70581,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{29} = {
   "ele" => "1d",
   "grp" => "0469",
   "Name" => "ProstateSemiAutoVolume",
+};
+##(1129,"Eigen Inc",30)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{48} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "30",
+  "grp" => "1129",
+  "Name" => "ProstateMaualVolume",
 };
 ##(1129,"Eigen, Inc",30)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{30} = {
@@ -70030,6 +70598,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{30} = {
   "grp" => "0469",
   "Name" => "ProstateMaualVolume",
 };
+##(1129,"Eigen Inc",31)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{49} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "31",
+  "grp" => "1129",
+  "Name" => "MeasuredLengthPoints",
+};
 ##(1129,"Eigen, Inc",31)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{31} = {
   "VM" => "2",
@@ -70037,6 +70613,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{31} = {
   "ele" => "1f",
   "grp" => "0469",
   "Name" => "MeasuredLengthPoints",
+};
+##(1129,"Eigen Inc",32)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{50} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "32",
+  "grp" => "1129",
+  "Name" => "MeasuredWidthPoints",
 };
 ##(1129,"Eigen, Inc",32)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{32} = {
@@ -70046,6 +70630,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{32} = {
   "grp" => "0469",
   "Name" => "MeasuredWidthPoints",
 };
+##(1129,"Eigen Inc",33)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{51} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "33",
+  "grp" => "1129",
+  "Name" => "MeasuredHeightPoints",
+};
 ##(1129,"Eigen, Inc",33)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{33} = {
   "VM" => "2",
@@ -70053,6 +70645,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{33} = {
   "ele" => "21",
   "grp" => "0469",
   "Name" => "MeasuredHeightPoints",
+};
+##(1129,"Eigen Inc",34)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{52} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "34",
+  "grp" => "1129",
+  "Name" => "RawVolumeFile",
 };
 ##(1129,"Eigen, Inc",34)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{34} = {
@@ -70062,6 +70662,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{34} = {
   "grp" => "0469",
   "Name" => "RawVolumeFile",
 };
+##(1129,"Eigen Inc",35)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{53} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "35",
+  "grp" => "1129",
+  "Name" => "CalibrationFile",
+};
 ##(1129,"Eigen, Inc",35)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{35} = {
   "VM" => "2",
@@ -70069,6 +70677,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{35} = {
   "ele" => "23",
   "grp" => "0469",
   "Name" => "CalibrationFile",
+};
+##(1129,"Eigen Inc",36)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{54} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "36",
+  "grp" => "1129",
+  "Name" => "PlannedLocationPoint",
 };
 ##(1129,"Eigen, Inc",36)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{36} = {
@@ -70078,6 +70694,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{36} = {
   "grp" => "0469",
   "Name" => "PlannedLocationPoint",
 };
+##(1129,"Eigen Inc",37)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{55} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "37",
+  "grp" => "1129",
+  "Name" => "RecordedLocationPoint",
+};
 ##(1129,"Eigen, Inc",37)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{37} = {
   "VM" => "2",
@@ -70085,6 +70709,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{37} = {
   "ele" => "25",
   "grp" => "0469",
   "Name" => "RecordedLocationPoint",
+};
+##(1129,"Eigen Inc",38)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{56} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "38",
+  "grp" => "1129",
+  "Name" => "EntryLocationPoint",
 };
 ##(1129,"Eigen, Inc",38)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{38} = {
@@ -70094,6 +70726,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{38} = {
   "grp" => "0469",
   "Name" => "EntryLocationPoint",
 };
+##(1129,"Eigen Inc",39)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{57} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "39",
+  "grp" => "1129",
+  "Name" => "TipLocationPoint",
+};
 ##(1129,"Eigen, Inc",39)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{39} = {
   "VM" => "2",
@@ -70101,6 +70741,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{39} = {
   "ele" => "27",
   "grp" => "0469",
   "Name" => "TipLocationPoint",
+};
+##(1129,"Eigen Inc",40)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{64} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "40",
+  "grp" => "1129",
+  "Name" => "CorBotLocationPoint",
 };
 ##(1129,"Eigen, Inc",40)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{40} = {
@@ -70110,6 +70758,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{40} = {
   "grp" => "0469",
   "Name" => "CorBotLocationPoint",
 };
+##(1129,"Eigen Inc",41)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{65} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "41",
+  "grp" => "1129",
+  "Name" => "CorTipLocationPoint",
+};
 ##(1129,"Eigen, Inc",41)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{41} = {
   "VM" => "2",
@@ -70117,6 +70773,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{41} = {
   "ele" => "29",
   "grp" => "0469",
   "Name" => "CorTipLocationPoint",
+};
+##(1129,"Eigen Inc",70)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{112} = {
+  "VM" => "1",
+  "VR" => "CS",
+  "ele" => "70",
+  "grp" => "1129",
+  "Name" => "MarkerSide",
 };
 ##(1129,"Eigen, Inc",70)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{70} = {
@@ -70126,6 +70790,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{70} = {
   "grp" => "0469",
   "Name" => "MarkerSide",
 };
+##(1129,"Eigen Inc",71)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{113} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "71",
+  "grp" => "1129",
+  "Name" => "GrabSize",
+};
 ##(1129,"Eigen, Inc",71)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{71} = {
   "VM" => "2",
@@ -70133,6 +70805,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{71} = {
   "ele" => "47",
   "grp" => "0469",
   "Name" => "GrabSize",
+};
+##(1129,"Eigen Inc",72)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{114} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "72",
+  "grp" => "1129",
+  "Name" => "GrabROI",
 };
 ##(1129,"Eigen, Inc",72)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{72} = {
@@ -70142,6 +70822,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{72} = {
   "grp" => "0469",
   "Name" => "GrabROI",
 };
+##(1129,"Eigen Inc",73)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{115} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "73",
+  "grp" => "1129",
+  "Name" => "Depth",
+};
 ##(1129,"Eigen, Inc",73)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{73} = {
   "VM" => "2",
@@ -70149,6 +70837,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{73} = {
   "ele" => "49",
   "grp" => "0469",
   "Name" => "Depth",
+};
+##(1129,"Eigen Inc",74)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{116} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "74",
+  "grp" => "1129",
+  "Name" => "CORO",
 };
 ##(1129,"Eigen, Inc",74)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{74} = {
@@ -70158,6 +70854,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{74} = {
   "grp" => "0469",
   "Name" => "CORO",
 };
+##(1129,"Eigen Inc",75)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{117} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "75",
+  "grp" => "1129",
+  "Name" => "MisAng",
+};
 ##(1129,"Eigen, Inc",75)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{75} = {
   "VM" => "2",
@@ -70165,6 +70869,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{75} = {
   "ele" => "4b",
   "grp" => "0469",
   "Name" => "MisAng",
+};
+##(1129,"Eigen Inc",76)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{118} = {
+  "VM" => "1",
+  "VR" => "LO",
+  "ele" => "76",
+  "grp" => "1129",
+  "Name" => "ProbeOrientation",
 };
 ##(1129,"Eigen, Inc",76)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{76} = {
@@ -70174,6 +70886,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{76} = {
   "grp" => "0469",
   "Name" => "ProbeOrientation",
 };
+##(1129,"Eigen Inc",77)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{119} = {
+  "VM" => "1",
+  "VR" => "LT",
+  "ele" => "77",
+  "grp" => "1129",
+  "Name" => "UltrasoundState",
+};
 ##(1129,"Eigen, Inc",77)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{77} = {
   "VM" => "2",
@@ -70181,6 +70901,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{77} = {
   "ele" => "4d",
   "grp" => "0469",
   "Name" => "UltrasoundState",
+};
+##(1129,"Eigen Inc",78)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{120} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "78",
+  "grp" => "1129",
+  "Name" => "VideoClipROI",
 };
 ##(1129,"Eigen, Inc",78)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{78} = {
@@ -70190,6 +70918,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{78} = {
   "grp" => "0469",
   "Name" => "VideoClipROI",
 };
+##(1129,"Eigen Inc",79)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{121} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "79",
+  "grp" => "1129",
+  "Name" => "ROIGroupSizes",
+};
 ##(1129,"Eigen, Inc",79)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{79} = {
   "VM" => "2",
@@ -70197,6 +70933,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{79} = {
   "ele" => "4f",
   "grp" => "0469",
   "Name" => "ROIGroupSizes",
+};
+##(1129,"Eigen Inc",80)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{128} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "80",
+  "grp" => "1129",
+  "Name" => "ROIGroupsLocations",
 };
 ##(1129,"Eigen, Inc",80)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{80} = {
@@ -70206,6 +70950,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{80} = {
   "grp" => "0469",
   "Name" => "ROIGroupsLocations",
 };
+##(1129,"Eigen Inc",81)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{129} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "81",
+  "grp" => "1129",
+  "Name" => "ROIsliceThickness",
+};
 ##(1129,"Eigen, Inc",81)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{81} = {
   "VM" => "2",
@@ -70213,6 +70965,14 @@ $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{81} = {
   "ele" => "51",
   "grp" => "0469",
   "Name" => "ROIsliceThickness",
+};
+##(1129,"Eigen Inc",82)##
+$Posda::DataDict::PvtDict->{"Eigen Inc"}->{4393}->{130} = {
+  "VM" => "1",
+  "VR" => "DS",
+  "ele" => "82",
+  "grp" => "1129",
+  "Name" => "VideoToVolumeMatrix",
 };
 ##(1129,"Eigen, Inc",82)##
 $Posda::DataDict::PvtDict->{"Eigen, Inc"}->{1129}->{82} = {
@@ -91317,29 +92077,5 @@ $Posda::DataDict::PvtDict->{"Carestream Health TIFF"}->{65535}->{255} = {
   "ele" => "ff",
   "grp" => "ffff",
   "Name" => "Unknown",
-};
-####
-$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
-  "VM" => "",
-  "VR" => "",
-  "ele" => "00",
-  "grp" => "0000",
-  "Name" => "",
-};
-####
-$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
-  "VM" => "",
-  "VR" => "",
-  "ele" => "00",
-  "grp" => "0000",
-  "Name" => "",
-};
-####
-$Posda::DataDict::PvtDict->{""}->{0}->{0} = {
-  "VM" => "",
-  "VR" => "",
-  "ele" => "00",
-  "grp" => "0000",
-  "Name" => "",
 };
 1;
