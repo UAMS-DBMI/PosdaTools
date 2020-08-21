@@ -60,4 +60,7 @@
       <mat-checkbox [style.color]="contour.color" [(ngModel)]="contour.enabled" (click)="draw()">{{contour.name}}</mat-checkbox>
       <button mat-icon-button (click)="commute(contour)"><mat-icon>commute</mat-icon></button>
   </div>
+  <div *ngFor="let struct_file of total_struct_files" class="roi_box">
+      <mat-checkbox   (click)="uncheckMyRois()" >Show/Hide all Rois in File {{contour.name}}</mat-checkbox>
+  </div>
 </div>

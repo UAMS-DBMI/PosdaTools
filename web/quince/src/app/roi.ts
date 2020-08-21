@@ -14,3 +14,7 @@ export interface ContourSet {
   color: number[];
   file_ids: number[];
 }
+
+export interface StructFile {
+  rois_set: Roi[];
+}

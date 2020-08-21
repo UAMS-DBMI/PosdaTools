@@ -5,7 +5,7 @@ import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
 import { MatDialog } from '@angular/material';
 import { DumpComponent } from '../dump/dump.component';
-import { Roi , Contour, ContourSet} from '../roi';
+import { Roi , Contour, ContourSet, StructFile} from '../roi';
 
 // extern def of this built-in js func
 declare function createImageBitmap(file: any): Promise<any>;
@@ -59,6 +59,7 @@ export class ImageComponent implements OnInit {
   private roi_array: Roi[];
   public rois_seen: Contour[]= [];
   public rois_set: ContourSet[];
+
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
   @Output() commuter = new EventEmitter<number>();
@@ -541,6 +542,7 @@ export class ImageComponent implements OnInit {
       data: this.file_id
     });
   }
+
   public toggleROI(): void{
     this.roi_display = !this.roi_display;
     if (this.rois_set == undefined){
@@ -552,6 +554,15 @@ export class ImageComponent implements OnInit {
           this.draw();
         }
       }
+  }
+
+  public uncheckMyROIs(): void{
+    for(let c of this.rois_set){
+      if (c in struct_file.my_countours){
+          c.enabled = !(c.enabled);
+      }
+    }
+    this.draw();
   }
 
   public commute(contour: Contour){
