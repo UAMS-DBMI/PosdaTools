@@ -18,6 +18,22 @@ my $dbg = sub {print STDERR @_};
 
 use MIME::Base64;
 
+use Redis;
+use constant REDIS_HOST => 'redis:6379';
+
+my $redis = undef;
+
+sub ConnectToRedis {
+  if (not defined $redis) {
+    $redis = Redis->new(server => REDIS_HOST);
+  }
+}
+
+sub QuitRedis {
+  if ($redis != undef) {
+    $redis->quit;
+  }
+}
 
 use vars qw( @ISA );
 @ISA = ("Posda::PopupWindow");
@@ -271,6 +287,7 @@ sub StartSubprocess{
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
   my $spreadsheet_f_id;
+  print "$id\n--------\n $command_line\nStarting Subprocess.\n";
 
   #Did this operation come from a spreasheet?
   if ($self->{params}->{invocation}->{type} eq "UploadedUnnamedSpreadsheet" || $self->{params}->{invocation}->{type} eq "UploadedNamedSpreadsheet"){
@@ -340,17 +357,25 @@ sub StartSubprocess{
     die "Couldn't create row in subprocess_invocation";
   }
 
+  my $work_id = Query("CreateNewWork")
+                ->FetchOneHash($new_id)
+                ->{work_id};
+
+  ConnectToRedis();
+  $redis->lpush('normal_work', $work_id);
+  QuitRedis();
+
 
   my $cmd_to_invoke = $self->{ExpandedCommand};
   $cmd_to_invoke =~ s/<\?bkgrnd_id\?>/$new_id/eg;
 #  print STDERR "###########################\n";
 #  print STDERR "NewCommandToInvoke: $cmd_to_invoke\n";
 #  print STDERR "###########################\n";
-  Dispatch::LineReaderWriter->write_and_read_all(
-    $cmd_to_invoke,
-    $self->{InputLines},
-    $self->WhenCommandFinishes($new_id)
-  );
+# Dispatch::LineReaderWriter->write_and_read_all(
+#   $cmd_to_invoke,
+#   $self->{InputLines},
+#   $self->WhenCommandFinishes($new_id)
+# );
 #  print STDERR "Started Line reader\n";
   $self->{mode} = "waiting";
 }
