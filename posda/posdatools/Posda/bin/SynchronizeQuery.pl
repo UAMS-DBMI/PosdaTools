@@ -32,7 +32,7 @@ sub PrintQueryFile{
   for my $i (1 .. $#lines){
     print $fh "-- $lines[$i]\n";
   }
-  print $fh "--\n\n";
+  print $fh "-- \n\n";
   print $fh $query->{query};
 }
 
@@ -117,7 +117,7 @@ sub ParseQueryFile{
       }
     } elsif ($mode eq "Description"){
       chomp $line;
-      unless($line =~ /^-- Description:(.*)$/){
+      unless($line =~ /^-- Description: (.*)$/){
         print "Unable to parse $file_name - bad description format:\n\"$line\"\n";
         exit;
       }
