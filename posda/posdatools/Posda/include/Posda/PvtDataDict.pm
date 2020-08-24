@@ -61969,7 +61969,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{0} = 
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",01)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{1} = {
   "VM" => "1-n",
-  "VR" => "LO ",
+  "VR" => "LO",
   "ele" => "01",
   "grp" => "0075",
   "Name" => "String parameter value",
@@ -62025,7 +62025,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{16} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",12)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{18} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "12",
   "grp" => "0075",
   "Name" => "Floating parameter value",
@@ -62033,7 +62033,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{18} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",13)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{19} = {
   "VM" => "1-n",
-  "VR" => "IS ",
+  "VR" => "IS",
   "ele" => "13",
   "grp" => "0075",
   "Name" => "Integer parameter value",
@@ -62081,7 +62081,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{31} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",20)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{32} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "20",
   "grp" => "0075",
   "Name" => "Acquisition start times",
@@ -62097,7 +62097,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{33} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",22)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{34} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "22",
   "grp" => "0075",
   "Name" => "Effective acquisition delay",
@@ -62105,7 +62105,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{34} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",23)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{35} = {
   "VM" => "3",
-  "VR" => "IS ",
+  "VR" => "IS",
   "ele" => "23",
   "grp" => "0075",
   "Name" => "SER timing indices",
@@ -62121,7 +62121,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{41} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",2a)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{42} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "2a",
   "grp" => "0075",
   "Name" => "VOILPS Center",
@@ -62129,7 +62129,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{42} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",2b)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{43} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "2b",
   "grp" => "0075",
   "Name" => "VOILPS HalfWidth",
@@ -62137,7 +62137,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{43} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",2c)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{44} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "2c",
   "grp" => "0075",
   "Name" => "VOILPS HalfHeight",
@@ -62145,7 +62145,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{44} =
 ##(0075,"UCSF BIRP PRIVATE CREATOR 011710xx",2d)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{45} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "2d",
   "grp" => "0075",
   "Name" => "VOILPS HalfDepth",
@@ -64361,7 +64361,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{22} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",18)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{24} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "18",
   "grp" => "0117",
   "Name" => "Floating parameter value",
@@ -64369,7 +64369,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{24} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",19)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{25} = {
   "VM" => "1-n",
-  "VR" => "IS ",
+  "VR" => "IS",
   "ele" => "19",
   "grp" => "0117",
   "Name" => "Integer parameter value",
@@ -64377,7 +64377,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{25} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",1a)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{26} = {
   "VM" => "1-n",
-  "VR" => "LO ",
+  "VR" => "LO",
   "ele" => "1a",
   "grp" => "0117",
   "Name" => "String parameter value",
@@ -64425,7 +64425,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{49} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",32)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{50} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "32",
   "grp" => "0117",
   "Name" => "Acquisition start times",
@@ -64441,7 +64441,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{51} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",34)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{52} = {
   "VM" => "1-n",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "34",
   "grp" => "0117",
   "Name" => "Effective acquisition delay",
@@ -64449,7 +64449,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{52} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",35)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{53} = {
   "VM" => "3",
-  "VR" => "IS ",
+  "VR" => "IS",
   "ele" => "35",
   "grp" => "0117",
   "Name" => "SER timing indices",
@@ -64489,7 +64489,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{65} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",42)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{66} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "42",
   "grp" => "0117",
   "Name" => "VOILPS Center",
@@ -64497,7 +64497,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{66} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",43)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{67} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "43",
   "grp" => "0117",
   "Name" => "VOILPS HalfWidth",
@@ -64505,7 +64505,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{67} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",44)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{68} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "44",
   "grp" => "0117",
   "Name" => "VOILPS HalfHeight",
@@ -64513,7 +64513,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{68} =
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",45)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{69} = {
   "VM" => "3",
-  "VR" => "DS ",
+  "VR" => "DS",
   "ele" => "45",
   "grp" => "0117",
   "Name" => "VOILPS HalfDepth",
@@ -64689,7 +64689,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{155} 
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",a1)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{161} = {
   "VM" => "3",
-  "VR" => "US ",
+  "VR" => "US",
   "ele" => "a1",
   "grp" => "0117",
   "Name" => "VOI_pixel_start *",
@@ -64697,7 +64697,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{161} 
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",a2)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{162} = {
   "VM" => "3",
-  "VR" => "US ",
+  "VR" => "US",
   "ele" => "a2",
   "grp" => "0117",
   "Name" => "VOI_pixel_end *",
@@ -64705,7 +64705,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{162} 
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",b0)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{176} = {
   "VM" => "1-n",
-  "VR" => "SQ ",
+  "VR" => "SQ",
   "ele" => "b0",
   "grp" => "0117",
   "Name" => "FTV Sequence",
@@ -64809,7 +64809,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{197} 
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c6)##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{198} = {
   "VM" => "1-n",
-  "VR" => "LO ",
+  "VR" => "LO",
   "ele" => "c6",
   "grp" => "0117",
   "Name" => "Protocol non-compliance reasons",
@@ -64817,7 +64817,7 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{198} 
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",c6) ##
 $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{198} = {
   "VM" => "2",
-  "VR" => "LO ",
+  "VR" => "LO",
   "ele" => "c6",
   "grp" => "0075",
   "Name" => "Protocol non-compliance reasons",
