@@ -287,7 +287,6 @@ sub StartSubprocess{
   my $command_line = $self->{ExpandedCommand};
   my $invoking_user = $self->get_user;
   my $spreadsheet_f_id;
-  print "$id\n--------\n $command_line\nStarting Subprocess.\n";
 
   #Did this operation come from a spreasheet?
   if ($self->{params}->{invocation}->{type} eq "UploadedUnnamedSpreadsheet" || $self->{params}->{invocation}->{type} eq "UploadedNamedSpreadsheet"){
