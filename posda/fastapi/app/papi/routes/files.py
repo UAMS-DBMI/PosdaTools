@@ -120,7 +120,7 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
     filename = record['file']
     # TODO: This reads the entire pixel data into memory. We should
     # be doing a chunked read, but it wasn't working with starlette's
-    # StreamingResponse for some reason. 
+    # StreamingResponse for some reason.
     async with aiofiles.open(filename, 'rb') as f:
         await f.seek(record['file_offset'])
         data = await f.read()
@@ -163,6 +163,18 @@ async def get_data(file_id: int, db: Database = Depends()):
 
     return FileResponse(file_rec['file'])
 
+@router.get("/{file_id}/path")
+async def get_path(file_id: int, db: Database = Depends()):
+    query = """
+        select
+            root_path || '/' || rel_path as file_path
+        from file
+        natural join file_location
+        natural join file_storage_root
+        where file_id = $1
+    """
+
+    return await db.fetch_one(query, [file_id])
 
 
 @router.get("/{file_id}/details")
