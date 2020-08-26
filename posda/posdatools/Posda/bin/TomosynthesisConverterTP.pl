@@ -114,7 +114,7 @@ for my $file (keys %Files){
   #Top level attributes
   $ds->Insert("(0008,0008)[2]", "TOMOSYNTHESIS");        #Image Type 3
   $ds->Insert("(0008,0008)[3]", "NONE");                 #Image Type 4
-  $ds->Insert("(0008,0008)[4]", "SYNTHETIC");            #Image Type 5
+  #$ds->Insert("(0008,0008)[4]", "SYNTHETIC");            #Image Type 5
   $ds->Insert("(0018,1000)", "12345");                   #Device Serial Number
   $ds->Insert("(0018,1020)", "12345");                   #Software Version(s)
   $ds->Insert("(0020,0013)", "1");                       #Instance Number
