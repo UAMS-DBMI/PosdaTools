@@ -44,6 +44,8 @@ unless($#ARGV == 3){
 my($invoc_id, $activity_id, $activity_timepoint_id, $notify) = @ARGV;
 
 print "Going to background\n";
+my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
+$back->Daemonize;
 
 my $oq = Query("GetPathsForActivityTP");
 my $i = 0;
@@ -251,7 +253,9 @@ for my $file (keys %Files){
 
   $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl $dest_file \"Changing tags to make valid Tomosynthesis\"";
   my $result = `$cmd`;
-  print STDERR "\n Result STUFF  $result ";  my $new_file_id;
+  print STDERR "\n Result: $result ";
+  my $new_file_id;
+  $back->WriteToEmail("\n$result");
   if($result =~ /File id: (.*)/){
     $new_file_id = $1;
   }
@@ -267,6 +271,7 @@ for my $file (keys %Files){
   }
 }
 print STDERR "Processed $num_done files\n Failed to get meta for $num_failed\n Converted $num_converted\n";
+$back->WriteToEmail("\nProcessed $num_done files\nFailed to get meta for $num_failed\nConverted $num_converted\n");
 if($num_converted > 0){
   my %FilesInNewTp;
   my $comment = "New Timepoint for ImportedEdits $invoc_id";
@@ -280,6 +285,7 @@ if($num_converted > 0){
   unless(defined $new_tp){
     exit;
   }
+  $back->WriteToEmail("\nNew Timepoint created: $new_tp");
 
   my $num_copied = 0;
   my $num_replaced = 0;
@@ -296,5 +302,9 @@ if($num_converted > 0){
     $ins->RunQuery(sub{}, sub{}, $new_tp, $new_file);
     $FilesInNewTp{$new_file} = 1;
   }
+} else {
+  $back->WriteToEmail("No conversions, so no new timepoint\n");
 }
 my $elapsed = time - $start;
+$back->WriteToEmail("\nProcessed $num_done files in $elapsed seconds\n");
+$back->Finish("\nProcessed $num_done files in $elapsed seconds\n");
