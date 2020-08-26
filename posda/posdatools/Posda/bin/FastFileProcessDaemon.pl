@@ -59,7 +59,7 @@ while (1) {
     shut_down();
   }
 
-  sleep 15;
+  sleep 30;
 
 }
 
