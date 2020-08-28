@@ -114,51 +114,72 @@ for my $file (keys %Files){
   my $dest_file = File::Temp::tempnam("/tmp", "New_$num_done");
 
   #Top level attributes
-  $ds->Insert("(0008,0008)[2]", "TOMOSYNTHESIS");        #Image Type 3
-  $ds->Insert("(0008,0008)[3]", "NONE");                 #Image Type 4
-  #$ds->Insert("(0008,0008)[4]", "SYNTHETIC");            #Image Type 5
-  $ds->Insert("(0018,1000)", "12345");                   #Device Serial Number
-  $ds->Insert("(0018,1020)", "12345");                   #Software Version(s)
-  $ds->Insert("(0020,0013)", "1");                       #Instance Number
-  $ds->Insert("(0020,0011)", $num_done);                 #Series Number
-  $ds->Insert("(0018,9004)", "RESEARCH");                #Content Qualification
-  $ds->Insert("(0008,9205)", "MONOCHROME");              #Pixel Presentation
-  $ds->Insert("(0008,9206)", "SAMPLED");                 #Volumetric Properties
-  $ds->Insert("(0008,9207)", "TOMOSYNTHESIS");           #Volume Based Calculation Technique
-  #$ds->Insert("(0054,0220)", "399368009");              #View Code Sequence
-  $ds->Insert("(0008,0016)", $sop_class);                #SOP Class
-  $ds->Insert("(0008,0018)", $sop_inst);                 #SOP Instance
-  $ds->Insert("(0008,0023)",  $study_date);              #ContentDate
-  $ds->Insert("(0008,0033)",  $study_time);              #ContentTime
+  $ds->Insert("(0008,0008)[2]", "TOMOSYNTHESIS");                                         #Image Type 3
+  $ds->Insert("(0008,0008)[3]", "NONE");                                                  #Image Type 4
+  $ds->Insert("(0018,1000)", "12345");                                                    #Device Serial Number
+  $ds->Insert("(0018,1020)", "12345");                                                    #Software Version(s)
+  $ds->Insert("(0020,0013)", "1");                                                        #Instance Number
+  $ds->Insert("(0020,0011)", $num_done);                                                  #Series Number
+  $ds->Insert("(0018,9004)", "RESEARCH");                                                 #Content Qualification
+  $ds->Insert("(0008,9205)", "MONOCHROME");                                               #Pixel Presentation
+  $ds->Insert("(0008,9206)", "SAMPLED");                                                  #Volumetric Properties
+  $ds->Insert("(0008,9207)", "TOMOSYNTHESIS");                                            #Volume Based Calculation Technique
+  $ds->Insert("(0008,0016)", $sop_class);                                                 #SOP Class
+  $ds->Insert("(0008,0018)", $sop_inst);                                                  #SOP Instance
+  $ds->Insert("(0008,0023)",  $study_date);                                               #ContentDate
+  $ds->Insert("(0008,0033)",  $study_time);                                               #ContentTime
 
-  $ds->Insert("(0018,1147)", "1");                       #FieldOfViewShape
-  $ds->Insert("(0008,0018)", "1");                       #XRayReceptorType
-
-  # Values based on Samples from Holologic
-  $ds->Insert("(0018,1190)", "0.3");                     #Focal Spot{s)
-  $ds->Insert("(0018,1160)", "STRIP");                   #Filter Type
-  $ds->Insert("(0018,11a4)",  "24X29");                  #PaddleDescription
-  $ds->Insert("(0054,0220)[0](0008,0100)",  "399368009");  #PerProjectionAcquisitionSequence ViewCodeSequence Code Value
-
-  #$ds->Insert("(0054,0220)[0](0008,0102)",  "SRT");  #PerProjectionAcquisitionSequence ViewCodeSequence Coding Scheme Designator
-  #$ds->Insert("(0054,0220)[0](0008,0104)",  "cranio-caudal");  #PerProjectionAcquisitionSequence ViewCodeSequence Code Meaning
 
   #X-Ray 3D Acquisition Sequence
-  $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);                                  #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
-  $ds->Insert("(0018,9507)[0](0018,1110)", $ds->GetEle("(0018,1110)")->{value});   #X-Ray 3D Acquisition Sequence -  Distance Source to Detector
-  $ds->Insert("(0018,9507)[0](0018,1111)", $ds->GetEle("(0018,1111)")->{value});   #X-Ray 3D Acquisition Sequence -  Distance Source to Patient
-  $ds->Insert("(0018,9507)[0](0018,1114)", $ds->GetEle("(0018,1114)")->{value});   #X-Ray 3D Acquisition Sequence -  Estimated Radiographic Magnification Factor
-  $ds->Insert("(0018,9507)[0](0018,1191)", $ds->GetEle("(0018,1191)")->{value});   #X-Ray 3D Acquisition Sequence -  AnodeTargetMaterial
-  # $ds->Insert("(0018,9507)[0](0018,11a0)", $bodypartthickness);                  #X-Ray 3D Acquisition Sequence -  BodyPartThickness
-  $ds->Insert("(0018,9507)[0](0018,11a2)", $ds->GetEle("(0018,11a2)")->{value});   #X-Ray 3D Acquisition Sequence -  CompressionForce
-  $ds->Insert("(0018,9507)[0](0018,7060)", $ds->GetEle("(0018,7060)")->{value});   #X-Ray 3D Acquisition Sequence -  ExposureControlMode
-  $ds->Insert("(0018,9507)[0](0018,7062)", $ds->GetEle("(0018,7062)")->{value});   #X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
-  $ds->Insert("(0018,9507)[0](0040,0314)", $ds->GetEle("(0040,0314)")->{value});   #X-Ray 3D Acquisition Sequence -  HalfValueLayer
-  $ds->Insert("(0018,9507)[0](0018,7001)", $ds->GetEle("(0018,7001)")->{value});   #X-Ray 3D Acquisition Sequence -  DetectorTemperature
-  $ds->Insert("(0018,9507)[0](0018,7050)", $ds->GetEle("(0018,7050)")->{value});   #X-Ray 3D Acquisition Sequence -  FilterMaterial
+  $ds->Insert("(0018,9507)[0](0018,1510)", $ppa);                                         #X-Ray 3D Acquisition Sequence -  Positioner Primary Angle
+  $ds->Insert("(0018,9507)[0](0018,1110)", $ds->GetEle("(0018,1110)")->{value});          #X-Ray 3D Acquisition Sequence -  Distance Source to Detector
+  $ds->Insert("(0018,9507)[0](0018,1111)", $ds->GetEle("(0018,1111)")->{value});          #X-Ray 3D Acquisition Sequence -  Distance Source to Patient
+  $ds->Insert("(0018,9507)[0](0018,1114)", $ds->GetEle("(0018,1114)")->{value});          #X-Ray 3D Acquisition Sequence -  Estimated Radiographic Magnification Factor
+  $ds->Insert("(0018,9507)[0](0018,1191)", $ds->GetEle("(0018,1191)")->{value});          #X-Ray 3D Acquisition Sequence -  AnodeTargetMaterial
+  $ds->Insert("(0018,9507)[0](0018,11a2)", $ds->GetEle("(0018,11a2)")->{value});          #X-Ray 3D Acquisition Sequence -  CompressionForce
+  $ds->Insert("(0018,9507)[0](0018,7060)", $ds->GetEle("(0018,7060)")->{value});          #X-Ray 3D Acquisition Sequence -  ExposureControlMode
+  $ds->Insert("(0018,9507)[0](0018,7062)", $ds->GetEle("(0018,7062)")->{value});          #X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
+  $ds->Insert("(0018,9507)[0](0040,0314)", $ds->GetEle("(0040,0314)")->{value});          #X-Ray 3D Acquisition Sequence -  HalfValueLayer
+  $ds->Insert("(0018,9507)[0](0018,7001)", $ds->GetEle("(0018,7001)")->{value});          #X-Ray 3D Acquisition Sequence -  DetectorTemperature
+  $ds->Insert("(0018,9507)[0](0018,7050)", $ds->GetEle("(0018,7050)")->{value});          #X-Ray 3D Acquisition Sequence -  FilterMaterial
 
 
-    #Shared functional groups
+
+  #X-Ray 3D Acquisition Sequence - Continued
+  $ds->Insert("(0018,9507)[0](0018,1147)", "RECTANGLE");                                   #X-Ray 3D Acquisition Sequence -  FieldOfViewShape
+  $ds->Insert("(0018,9507)[0](0018,9420)", "DIGITAL_DETECTOR");                            #X-Ray 3D Acquisition Sequence -  XRayReceptorType
+  $ds->Insert("(0018,9507)[0](0018,1190)", "0.3");                                         #X-Ray 3D Acquisition Sequence -  Focal Spot(s)
+  $ds->Insert("(0018,9507)[0](0018,1160)", "STRIP");                                       #X-Ray 3D Acquisition Sequence -  Filter Type
+  $ds->Insert("(0018,9507)[0](0018,11a4)", "24X29");                                       #X-Ray 3D Acquisition Sequence -  PaddleDescription
+  $ds->Insert("(0018,9507)[0](0018,11a0)", $ds->GetEle("(0018,11a0)")->{value});           #X-Ray 3D Acquisition Sequence -  BodyPartThickness
+  $ds->Insert("(0018,9507)[0](0018,9538)[0](0054,0220)[0](0008,0100)", "399368009");       #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence ViewCodeSequence Code Value
+  $ds->Insert("(0018,9507)[0](0018,1150)", $ds->GetEle("(0018,1150)")->{value});           #X-Ray 3D Acquisition Sequence -  Exposure Time
+  $ds->Insert("(0018,9507)[0](0018,1153)", $ds->GetEle("(0018,1153)")->{value});           #X-Ray 3D Acquisition Sequence -  Exposure in uAs
+  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});           #X-Ray 3D Acquisition Sequence -  Field of View Origin
+
+  $ds->Insert("(0018,9507)[0](0018,1151)", $ds->GetEle("(0018,1151)")->{value});           #X-Ray 3D Acquisition Sequence -  X-Ray Tube Current
+  $ds->Insert("(0018,9507)[0](0018,1405)", $ds->GetEle("(0018,1405)")->{value});           #X-Ray 3D Acquisition Sequence -  Relative X-Ray Exposure
+  $ds->Insert("(0018,9507)[0](0018,1508)", $ds->GetEle("(0018,1508)")->{value});           #X-Ray 3D Acquisition Sequence -  Positioner Type
+  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});           #X-Ray 3D Acquisition Sequence -  Field of View Origin
+
+  $ds->Insert("(0018,9507)[0](0018,5101)", $ds->GetEle("(0018,5101)")->{value});           #X-Ray 3D Acquisition Sequence -  View Position
+  $ds->Insert("(0018,9507)[0](0018,7000)", $ds->GetEle("(0018,7000)")->{value});           #X-Ray 3D Acquisition Sequence -  Detector Conditions Nominal Flag
+  $ds->Insert("(0018,9507)[0](0018,7004)", $ds->GetEle("(0018,7004)")->{value});           #X-Ray 3D Acquisition Sequence -  Detector Type
+  $ds->Insert("(0018,9507)[0](0018,701a)", $ds->GetEle("(0018,701a)")->{value});           #X-Ray 3D Acquisition Sequence -  Detector Binning
+  $ds->Insert("(0018,9507)[0](0018,7032)", $ds->GetEle("(0018,7032)")->{value});           #X-Ray 3D Acquisition Sequence -  Field of View Rotation
+
+  $ds->Insert("(0018,9507)[0](0018,7034)", $ds->GetEle("(0018,7034)")->{value});           #X-Ray 3D Acquisition Sequence -  Field of View Horizontal Flip
+  $ds->Insert("(0018,9507)[0](0018,7052)", $ds->GetEle("(0018,7052)")->{value});           #X-Ray 3D Acquisition Sequence -  Filter Thickness Minimum
+  $ds->Insert("(0018,9507)[0](0018,7054)", $ds->GetEle("(0018,7054)")->{value});           #X-Ray 3D Acquisition Sequence -  Filter Thickness Maximum
+  $ds->Insert("(0018,9507)[0](0020,0020)", $ds->GetEle("(0020,0020)")->{value});           #X-Ray 3D Acquisition Sequence -  Patient Orientation
+  $ds->Insert("(0018,9507)[0](0040,0302)", $ds->GetEle("(0040,0302)")->{value});           #X-Ray 3D Acquisition Sequence -  Entrance Dose
+
+  $ds->Insert("(0018,9507)[0](0040,0316)", $ds->GetEle("(0040,0316)")->{value});           #X-Ray 3D Acquisition Sequence -  Organ Dose
+  $ds->Insert("(0018,9507)[0](0040,0318)", $ds->GetEle("(0040,0318)")->{value});           #X-Ray 3D Acquisition Sequence -  Organ Exposed
+  $ds->Insert("(0018,9507)[0](0040,8302)", $ds->GetEle("(0040,8302)")->{value});           #X-Ray 3D Acquisition Sequence -  Entrance Dose in mGy
+
+
+  #Shared functional groups
   $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);              #Slice Thickness
   $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1053)", $rescale_slope);                  #Rescale Slope
   $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1054)", $rescale_type);                   #Rescale Type
@@ -193,10 +214,6 @@ for my $file (keys %Files){
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[4]", "0");                       #Plane Orientation Sequence - Image Orientation Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[5]", $negativeCosTheta);         #Plane Orientation Sequence - Image Orientation Patient
 
-
-    #$ds->Insert("(5200,9230)[$i](0008,0023)",  $study_date);                              #MultiFrameFunctionalGroupsCommon - ContentDate
-    #$ds->Insert("(5200,9230)[$i](0008,0033)",  $study_time);                              #MultiFrameFunctionalGroupsCommon - ContentTime
-
   }
 
   #Remove values from top level that have been moved
@@ -216,31 +233,34 @@ for my $file (keys %Files){
   $ds->DeleteElementBySig("(0018,7001)");
   $ds->DeleteElementBySig("(0018,7050)");
   $ds->DeleteElementBySig("(0040,0314)");
+  $ds->DeleteElementBySig("(0018,1150)"); # Exposure Time
+  $ds->DeleteElementBySig("(0018,1153)"); # Exposure in uAs
+  $ds->DeleteElementBySig("(0018,7030)"); # Field of View Origin
+  $ds->DeleteElementBySig("(0018,1151)"); # X-Ray Tube Current
+  $ds->DeleteElementBySig("(0018,1152)"); # Exposure
+  $ds->DeleteElementBySig("(0018,1405)"); # Relative X-Ray Exposure
+  $ds->DeleteElementBySig("(0018,1508)"); # Positioner Type
+  $ds->DeleteElementBySig("(0018,5101)"); # View Position
+  $ds->DeleteElementBySig("(0018,7000)"); # Detector Conditions Nominal Flag
+  $ds->DeleteElementBySig("(0018,7004)"); # Detector Type
+  $ds->DeleteElementBySig("(0018,701a)"); # Detector Binning
+  $ds->DeleteElementBySig("(0018,7032)"); # Field of View Rotation
+  $ds->DeleteElementBySig("(0018,7034)"); # Field of View Horizontal Flip
+  $ds->DeleteElementBySig("(0018,7052)"); # Filter Thickness Minimum
+  $ds->DeleteElementBySig("(0018,7054)"); # Filter Thickness Maximum
+  $ds->DeleteElementBySig("(0018,8150)"); # Exposure Time in uS
+  $ds->DeleteElementBySig("(0018,1510)"); # Positioner Primary Angle
+  $ds->DeleteElementBySig("(0020,0020)"); # Patient Orientation
+  $ds->DeleteElementBySig("(0040,0302)"); # Entrance Dose
+  $ds->DeleteElementBySig("(0040,0316)"); # Organ Dose
+  $ds->DeleteElementBySig("(0040,0318)"); # Organ Exposed
+  $ds->DeleteElementBySig("(0040,8302)"); # Entrance Dose in mGy
 
-  # Remove values from top level
-  # This will remove dciodvfy warnings, but data will be lost
-  # $ds->DeleteElementBySig("(0018,1150)"); # Exposure Time
-  # $ds->DeleteElementBySig("(0018,1151)"); # X-Ray Tube Current
-  # $ds->DeleteElementBySig("(0018,1152)"); # Exposure
-  # $ds->DeleteElementBySig("(0018,1153)"); # Exposure in uAs
-  # $ds->DeleteElementBySig("(0018,1405)"); # Relative X-Ray Exposure
-  # $ds->DeleteElementBySig("(0018,1508)"); # Positioner Type
-  # $ds->DeleteElementBySig("(0018,5101)"); # View Position
-  # $ds->DeleteElementBySig("(0018,7000)"); # Detector Conditions Nominal Flag
-  # $ds->DeleteElementBySig("(0018,7004)"); # Detector Type
-  # $ds->DeleteElementBySig("(0018,701a)"); # Detector Binning
-  # $ds->DeleteElementBySig("(0018,7030)"); # Field of View Origin
-  # $ds->DeleteElementBySig("(0018,7032)"); # Field of View Rotation
-  # $ds->DeleteElementBySig("(0018,7034)"); # Field of View Horizontal Flip
-  # $ds->DeleteElementBySig("(0018,7052)"); # Filter Thickness Minimum
-  # $ds->DeleteElementBySig("(0018,7054)"); # Filter Thickness Maximum
-  # $ds->DeleteElementBySig("(0018,8150)"); # Exposure Time in uS
-  # $ds->DeleteElementBySig("(0018,1510)"); # Positioner Primary Angle
-  # $ds->DeleteElementBySig("(0020,0020)"); # Patient Orientation
-  # $ds->DeleteElementBySig("(0040,0302)"); # Entrance Dose
-  # $ds->DeleteElementBySig("(0040,0316)"); # Organ Dose
-  # $ds->DeleteElementBySig("(0040,0318)"); # Organ Exposed
-  # $ds->DeleteElementBySig("(0040,8302)"); # Entrance Dose in mGy
+
+    #$ds->Insert("(5200,9230)[$i](0008,0023)",  $study_date);                              #MultiFrameFunctionalGroupsCommon - ContentDate
+    #$ds->Insert("(5200,9230)[$i](0008,0033)",  $study_time);                              #MultiFrameFunctionalGroupsCommon - ContentTime
+    #$ds->Insert("(0054,0220)[0](0008,0102)",  "SRT");  #PerProjectionAcquisitionSequence ViewCodeSequence Coding Scheme Designator
+    #$ds->Insert("(0054,0220)[0](0008,0104)",  "cranio-caudal");  #PerProjectionAcquisitionSequence ViewCodeSequence Code Meaning
 
 
 
