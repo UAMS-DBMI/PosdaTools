@@ -59,17 +59,19 @@ def update_success(psql_db, file_id, export_event_id):
 def insert_errors(psql_db, file_id, export_event_id, errors):
     transfer_status_id = None
     try:
-        (transfer_status_id) = psql_db.execute("""
+        psql_db.execute("""
             insert into transfer_status
             values (default, %s)
             returning transfer_status_id
         """, [str(errors)])
+        transfer_status_id, = psql_db.fetchone()
     except psycopg2.IntegrityError:
-        (transfer_status_id) = psql_db.execute("""
+        psql_db.execute("""
             select transfer_status_id
             from transfer_status
             where transfer_status_message = %s
         """, [str(errors)])
+        transfer_status_id, = psql_db.fetchone()
     if transfer_status_id is None:
         print("Unable to create or get transfer_status_id for following error")
         print(str(errors))
