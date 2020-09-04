@@ -1912,8 +1912,9 @@ sub ConvertToPrivate{
         };
       }
       my %new_hash;
-      ConvertElementValue($before, $ele_info, \%new_hash, 1);
-      $hash{$owners{$block}}->{$pvt_ele} = \%new_hash;
+#      ConvertElementValue($before, $ele_info, \%new_hash, 1);
+#      $hash{$owners{$block}}->{$pvt_ele} = \%new_hash;
+      $hash{$owners{$block}}->{$pvt_ele} = $before;
     }
   }
   for my $i (keys %{$ds->{$grp}}){

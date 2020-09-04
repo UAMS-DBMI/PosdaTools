@@ -63335,11 +63335,11 @@ $Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{20} =
   "Name" => "Parameter name",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",16)##
-$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{279}->{22} = {
+$Posda::DataDict::PvtDict->{"UCSF BIRP PRIVATE CREATOR 011710xx"}->{117}->{16} = {
   "VM" => "1",
-  "VR" => "LT",
-  "ele" => "16",
-  "grp" => "0117",
+  "VR" => "LO",
+  "ele" => "10",
+  "grp" => "0075",
   "Name" => "Parameter description",
 };
 ##(0117,"UCSF BIRP PRIVATE CREATOR 011710xx",18)##
