@@ -691,7 +691,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@long) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @long;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (long $this->{vm} vs $act_vm)");
         return \@long;
       }
       return($long[0]);
@@ -707,7 +708,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@short) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @short;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (ushort $this->{vm} vs $act_vm)");
         return \@short;
       }
       return($short[0]);
@@ -723,7 +725,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@long) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @long;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (tag $this->{vm} vs $act_vm)");
         return \@long;
       }
       return($long[0]);
@@ -739,7 +742,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@long) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @long;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (slong $this->{vm} vs $act_vm)");
         return \@long;
       }
       return($long[0]);
@@ -755,7 +759,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@float) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @float;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (float $this->{vm} vs $act_vm)");
         return \@float;
       }
       return($float[0]);
@@ -793,7 +798,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@float) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @float;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (float $this->{vm} vs $act_vm)");
         return \@float;
       }
       return($float[0]);
@@ -809,7 +815,8 @@ sub DecodeElementValue {
     }
     if($this->{vm} eq "1"){
       if(scalar(@short) != 1){
-        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag}");
+        my $act_vm = @short;
+        push(@{$this->{errors}}, "Warning apparent VM mismatch $this->{tag} (sshort $this->{vm} vs $act_vm)");
         return \@short;
       }
       return($short[0]);
@@ -1093,9 +1100,8 @@ sub EleHandler{
 sub CoerceBadVRs{
   my($this, $from_vr, $to_vr, $vm, $value_s) = @_;
   if($from_vr eq $to_vr) { return $value_s }
-if(exists $this->{pvt_index}){
-  print STDERR "###########\nCoercing Private tag ($this->{tag}, $from_vr => $to_vr, \"$value_s\")\n";
-}
+  push(@{$this->{errors}},
+    "Attempting to Coerce $this->{tag} ($from_vr => $to_vr, \"$value_s\")");
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
@@ -1111,11 +1117,26 @@ if(exists $this->{pvt_index}){
       push @{$this->{errors}}, "coercing $this->{tag}: $value_s DS => IS";
     }
     return("text", $value_s);
-  }elsif($from_vr eq "OB" && $to_vr eq "FD"){
-    return ("double", [unpack("d*", $value_s)]);
-  }elsif($from_vr eq "OB" && $to_vr eq "FL"){
-    return ("float", [unpack("f*", $value_s)]);
-  }elsif($from_vr eq "DS" && $to_vr eq "FD"){
+  } elsif($from_vr eq "OB"){
+    if($to_vr eq "FD"){
+      return ("double", [unpack("d*", $value_s)]);
+    }elsif($to_vr eq "FL"){
+      return ("float", [unpack("f*", $value_s)]);
+    } elsif($to_vr eq "CS"){
+      return("text", $value_s);
+    } elsif(
+      $to_vr eq 'LO' || $to_vr eq 'DS' || $to_vr eq 'SH' ||
+      $to_vr eq 'IS'
+    ){
+      return("text", $value_s);
+    } elsif ($to_vr eq 'SL'){
+      return ("long", $value_s);
+    }
+  } elsif($from_vr eq 'LO'){
+    if($to_vr eq 'IS' || $to_vr eq 'CS'){
+      return ("text", $value_s);
+    }
+  } elsif($from_vr eq "DS" && $to_vr eq "FD"){
     return ("double", $value_s);
   } elsif($from_vr eq "SH" && $to_vr eq "CS"){
     return("text", $value_s);
@@ -1124,8 +1145,6 @@ if(exists $this->{pvt_index}){
   } elsif($from_vr eq "ST" && $to_vr eq "LO"){
     return("text", $value_s);
   } elsif($from_vr eq "LT" && $to_vr eq "LO" && length($value_s) < 65){
-    return("text", $value_s);
-  } elsif($from_vr eq "OB" && $to_vr eq "CS"){
     return("text", $value_s);
   } elsif($from_vr eq "DS" && $to_vr eq "DA"){
     return("text", $value_s);
@@ -1151,14 +1170,19 @@ if(exists $this->{pvt_index}){
       $value_s .= "\0";
     }
     return("text", $value_s);
-  } elsif($from_vr eq "LO" && $to_vr eq "CS"){
-    return("text", $value_s);
+  } elsif($from_vr eq "SL" && $to_vr eq "UL"){
+    return("long", $value_s);
+  } elsif($from_vr eq "UL" && $to_vr eq "SL"){
+    return("long", $value_s);
+  } elsif($from_vr eq "SS" && $to_vr eq "US"){
+    return("short", $value_s);
+  } elsif($from_vr eq "US" && $to_vr eq "SS"){
+    return("short", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "LO"){
     return("text", $value_s);
   } else {
+#    push(@{$this->{errors}}, "Can't coerce a $from_vr to a $to_vr\n");
     return (undef, undef);
-    print STDERR "Can't coerce a $from_vr to a $to_vr\n";
-#    die "Can't coerce a $from_vr into a $to_vr";
   }
 }
 
