@@ -18,8 +18,8 @@ select distinct
     modality,
     dicom_file_type,
     root_path || '/' || file_location.rel_path as path,
-    date_trunc('day', min(file_import_time)) as earliest_import_day,
-    date_trunc('day', max(file_import_time)) as latest_import_day
+    date_trunc('day', min(coalesce(file_import_time, import_time))) as earliest_import_day,
+    date_trunc('day', max(coalesce(file_import_time, import_time))) as latest_import_day
 from
     dicom_file
     natural join file_patient
@@ -27,6 +27,7 @@ from
     natural join file_series
     natural join file_sop_common
     natural join file_import
+	natural join import_event
     natural left join ctp_file
     join file_location using (file_id)
     natural join file_storage_root
