@@ -286,17 +286,23 @@ sub PauseTransfer{
 
 sub UpdateFileTransferStatus{
   %WaitingFiles = ();
+
+  # these are all unused ########################
   %PendingFiles = ();
   %TransferredFiles = ();
   %FailedTemporaryFiles = ();
   %FailedPermanentFiles = ();
   %FilesInBadState = ();
-  Query("FileExportForEvent")->RunQuery(sub{
+  ###############################################
+  
+
+  # Get the details of only the next waiting file, and add to %WaitingFiles
+  Query("NextFileExportForEvent")->RunQuery(sub{
     my($row) = @_;
     my($file_id, $has_disp_parms, $when_queued, $when_transferred,
       $transfer_status, $transfer_status_message, $offset, $root, $batch, $only_13) =
       @{$row};
-    if(!defined $when_transferred){
+
       my $stat = {
         when_queued => $when_queued,
         transfer_status => $transfer_status,
@@ -309,43 +315,26 @@ sub UpdateFileTransferStatus{
         $stat->{batch} = $batch;
         $stat->{only_13} = $only_13;
       }
-      if(defined($transfer_status) && $transfer_status eq "pending"){
-        $PendingFiles{$file_id} = $stat;
-      } else {
-        $WaitingFiles{$file_id} = $stat;
-      }
-    } else {
-      my $stat = {
-        when_queued => $when_queued,
-        when_transfered => $when_transferred,
-        transfer_status => $transfer_status,
-        transfer_status_message => $transfer_status_message,
-      };
-      if($has_disp_parms){
-        $stat->{has_disp_parms} = 1;
-        $stat->{offset} = $offset;
-        $stat->{root} = $root;
-        $stat->{batch} = $batch;
-      }
-      if($transfer_status eq "pending"){
-        $PendingFiles{$file_id} = $stat;
-      } elsif ($transfer_status eq "success"){
-        $TransferredFiles{$file_id} = $stat;
-      } elsif ($transfer_status eq "failed temporary"){
-        $FailedTemporaryFiles{$file_id} = $stat;
-      } elsif ($transfer_status eq "failed permanent"){
-        $FailedPermanentFiles{$file_id} = $stat;
-      } else {
-        $FilesInBadState{$file_id} = $stat;
-      }
-    }
+      $WaitingFiles{$file_id} = $stat;
+
   },sub{}, $export_event_id);
-  $num_waiting = keys %WaitingFiles;
-  $num_pending = keys %PendingFiles;
-  $num_success = keys %TransferredFiles;
-  $num_failed_temp = keys %FailedTemporaryFiles;
-  $num_failed_perm = keys %FailedPermanentFiles;
-  $num_bad_state = keys %FilesInBadState;;
+
+  # Get and update counts
+  my $counts = {};
+
+  Query("GetExportEventCounts")->RunQuery(sub{
+    my($row) = @_;
+    my($transfer_status, $count) = @{$row};
+
+    $counts->{$transfer_status} = $count;
+  },sub{}, $export_event_id);
+  
+  $num_waiting = $counts->{waiting} || 0;
+  $num_pending = $counts->{pending} || 0;
+  $num_success = $counts->{success} || 0;
+  $num_failed_temp = $counts->{'failed temporary'} || 0;
+  $num_failed_perm = $counts->{'failed permanent'} || 0;
+  $num_bad_state = 0;
 }
 
 sub PauseRequested {
