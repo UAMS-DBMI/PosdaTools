@@ -15,7 +15,7 @@ BackgroundDciodvfyTp.pl <?bkgrnd_id?> <activity_id> <type>  <notify>
 Expects nothing on STDIN
 
 Uses the following script to do most of the work:
-  ProcessDciodvfyScan.pl <type> <uid> <scan_id>
+  ProcessDciodvfyScanTp.pl <activity_timpoint_id> <type> <uid> <scan_id>
 
 EOF
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
@@ -98,7 +98,7 @@ $get_scan_id->RunQuery(sub {
 }, sub {});
 my $num_scanned = 0;
 for my $uid (keys %SeriesInTp){
-  my $cmd = "ProcessDciodvfyScan.pl $type_of_unit $uid $scan_id";
+  my $cmd = "ProcessDciodvfyScanTp.pl $ActTpId $type_of_unit $uid $scan_id";
 #print EMAIL "command: $cmd\n";
   `$cmd`;
   $num_scanned += 1;
