@@ -130,7 +130,7 @@ for my $file (keys %Files){
   $ds->Insert("(0008,0033)", $study_time);                                                               #ContentTime
 
   $ds->Insert("(0054,0220)[0](0054,0222)",$empty);                                                       #ViewCodeSequence - View Modifier Code Sequence
-  $ds->Insert("(0054,0220)[0](0008,0100)","R-10226");                                                    #ViewCodeSequence - Code Value
+  $ds->Insert("(0054,0220)[0](0008,0100)","399368009");                                                  #ViewCodeSequence - Code Value
   $ds->Insert("(0054,0220)[0](0008,0102)","SCT");                                                        #ViewCodeSequence - Coding Scheme Designator
   $ds->Insert("(0054,0220)[0](0008,0104)","medio-lateral oblique");                                      #ViewCodeSequence - Code Meaning
 
