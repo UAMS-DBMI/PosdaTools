@@ -31268,12 +31268,12 @@ $SopCl = {
   },
   "1.2.840.10008.1.20.2" => {
     "retired" => "1",
-    "sopcl_desc" => "Storage Commitment Pull Model SOP Class ",
+    "sopcl_desc" => "Storage Commitment Pull Model SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.1.20.2.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Storage Commitment Pull Model SOP Instance ",
+    "sopcl_desc" => "Storage Commitment Pull Model SOP Instance - Retired",
     "type" => "Well-known SOP Instance"
   },
   "1.2.840.10008.1.3.10" => {
@@ -31398,7 +31398,7 @@ $SopCl = {
   },
   "1.2.840.10008.1.9" => {
     "retired" => "1",
-    "sopcl_desc" => "Basic Study Content Notification SOP Class ",
+    "sopcl_desc" => "Basic Study Content Notification SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.15.0.3.1" => {
@@ -31576,47 +31576,47 @@ $SopCl = {
   },
   "1.2.840.10008.3.1.2.1.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Patient Management SOP Class ",
+    "sopcl_desc" => "Detached Patient Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.3.1.2.1.4" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Patient Management Meta SOP Class ",
+    "sopcl_desc" => "Detached Patient Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.3.1.2.2.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Visit Management SOP Class ",
+    "sopcl_desc" => "Detached Visit Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.3.1.2.3.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Study Management SOP Class ",
+    "sopcl_desc" => "Detached Study Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.3.1.2.3.2" => {
     "retired" => "1",
-    "sopcl_desc" => "Study Component Management SOP Class ",
+    "sopcl_desc" => "Study Component Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.3.1.2.5.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Results Management SOP Class ",
+    "sopcl_desc" => "Detached Results Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.3.1.2.5.4" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Results Management Meta SOP Class ",
+    "sopcl_desc" => "Detached Results Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.3.1.2.5.5" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Study Management Meta SOP Class ",
+    "sopcl_desc" => "Detached Study Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.3.1.2.6.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Detached Interpretation Management SOP Class ",
+    "sopcl_desc" => "Detached Interpretation Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.4.2" => {
@@ -31657,7 +31657,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.1.18.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Referenced Color Print Management Meta SOP Class ",
+    "sopcl_desc" => "Referenced Color Print Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.5.1.1.2" => {
@@ -31674,47 +31674,47 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.1.24" => {
     "retired" => "1",
-    "sopcl_desc" => "Image Overlay Box SOP Class ",
+    "sopcl_desc" => "Image Overlay Box SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.24.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Basic Print Image Overlay Box SOP Class ",
+    "sopcl_desc" => "Basic Print Image Overlay Box SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.25" => {
     "retired" => "1",
-    "sopcl_desc" => "Print Queue SOP Instance ",
+    "sopcl_desc" => "Print Queue SOP Instance - Retired",
     "type" => "Well-known Print Queue SOP Instance"
   },
   "1.2.840.10008.5.1.1.26" => {
     "retired" => "1",
-    "sopcl_desc" => "Print Queue Management SOP Class ",
+    "sopcl_desc" => "Print Queue Management SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.27" => {
     "retired" => "1",
-    "sopcl_desc" => "Stored Print Storage SOP Class ",
+    "sopcl_desc" => "Stored Print Storage SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.29" => {
     "retired" => "1",
-    "sopcl_desc" => "Hardcopy Grayscale Image Storage SOP Class ",
+    "sopcl_desc" => "Hardcopy Grayscale Image Storage SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.30" => {
     "retired" => "1",
-    "sopcl_desc" => "Hardcopy Color Image Storage SOP Class ",
+    "sopcl_desc" => "Hardcopy Color Image Storage SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.31" => {
     "retired" => "1",
-    "sopcl_desc" => "Pull Print Request SOP Class ",
+    "sopcl_desc" => "Pull Print Request SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.32" => {
     "retired" => "1",
-    "sopcl_desc" => "Pull Stored Print Management Meta SOP Class ",
+    "sopcl_desc" => "Pull Stored Print Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.5.1.1.33" => {
@@ -31731,7 +31731,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.1.4.2" => {
     "retired" => "1",
-    "sopcl_desc" => "Referenced Image Box SOP Class ",
+    "sopcl_desc" => "Referenced Image Box SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.1.9" => {
@@ -31740,7 +31740,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.1.9.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Referenced Grayscale Print Management Meta SOP Class ",
+    "sopcl_desc" => "Referenced Grayscale Print Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.1" => {
@@ -31773,7 +31773,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.10" => {
     "retired" => "1",
-    "sopcl_desc" => "Standalone Modality LUT Storage ",
+    "sopcl_desc" => "Standalone Modality LUT Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.104.1" => {
@@ -31786,7 +31786,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.11" => {
     "retired" => "1",
-    "sopcl_desc" => "Standalone VOI LUT Storage ",
+    "sopcl_desc" => "Standalone VOI LUT Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.11.1" => {
@@ -31827,7 +31827,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.12.3" => {
     "retired" => "1",
-    "sopcl_desc" => "X-Ray Angiographic Bi-Plane Image Storage ",
+    "sopcl_desc" => "X-Ray Angiographic Bi-Plane Image Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.128" => {
@@ -31840,7 +31840,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.129" => {
     "retired" => "1",
-    "sopcl_desc" => "Standalone PET Curve Storage ",
+    "sopcl_desc" => "Standalone PET Curve Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.13.1.1" => {
@@ -31889,7 +31889,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.3" => {
     "retired" => "1",
-    "sopcl_desc" => "Ultrasound Multi-frame Image Storage ",
+    "sopcl_desc" => "Ultrasound Multi-frame Image Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.3.1" => {
@@ -31954,7 +31954,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.5" => {
     "retired" => "1",
-    "sopcl_desc" => "Nuclear Medicine Image Storage ",
+    "sopcl_desc" => "Nuclear Medicine Image Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.501.1" => {
@@ -31994,7 +31994,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.6" => {
     "retired" => "1",
-    "sopcl_desc" => "Ultrasound Image Storage ",
+    "sopcl_desc" => "Ultrasound Image Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.6.1" => {
@@ -32073,7 +32073,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.77.1" => {
     "retired" => "1",
-    "sopcl_desc" => "VL Image Storage - Trial ",
+    "sopcl_desc" => "VL Image Storage - Trial - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.77.1.1" => {
@@ -32167,7 +32167,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.8" => {
     "retired" => "1",
-    "sopcl_desc" => "Standalone Overlay Storage ",
+    "sopcl_desc" => "Standalone Overlay Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.80.1" => {
@@ -32248,7 +32248,7 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.1.9" => {
     "retired" => "1",
-    "sopcl_desc" => "Standalone Curve Storage ",
+    "sopcl_desc" => "Standalone Curve Storage - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.1.9.1" => {
@@ -32318,17 +32318,17 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.1.2.3.1" => {
     "retired" => "1",
-    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - FIND ",
+    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - FIND - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.2.3.2" => {
     "retired" => "1",
-    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - MOVE ",
+    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - MOVE - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.2.3.3" => {
     "retired" => "1",
-    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - GET ",
+    "sopcl_desc" => "Patient/Study Only Query/Retrieve Information Model - GET - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.1.2.4.2" => {
@@ -32349,22 +32349,22 @@ $SopCl = {
   },
   "1.2.840.10008.5.1.4.32" => {
     "retired" => "1",
-    "sopcl_desc" => "General Purpose Worklist Management Meta SOP Class ",
+    "sopcl_desc" => "General Purpose Worklist Management Meta SOP Class - Retired",
     "type" => "Meta SOP Class"
   },
   "1.2.840.10008.5.1.4.32.1" => {
     "retired" => "1",
-    "sopcl_desc" => "General Purpose Worklist Information Model - FIND ",
+    "sopcl_desc" => "General Purpose Worklist Information Model - FIND - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.32.2" => {
     "retired" => "1",
-    "sopcl_desc" => "General Purpose Scheduled Procedure Step SOP Class ",
+    "sopcl_desc" => "General Purpose Scheduled Procedure Step SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.32.3" => {
     "retired" => "1",
-    "sopcl_desc" => "General Purpose Performed Procedure Step SOP Class ",
+    "sopcl_desc" => "General Purpose Performed Procedure Step SOP Class - Retired",
     "type" => "SOP Class"
   },
   "1.2.840.10008.5.1.4.33" => {
