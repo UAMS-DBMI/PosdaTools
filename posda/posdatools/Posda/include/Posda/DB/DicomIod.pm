@@ -10,15 +10,23 @@ use Posda::DB::Modules;
 
 my $SopHandlers = {
   '1.2.840.10008.5.1.1.29' =>{
-    name => 'Hardcopy Grayscale Image Storage',
+    name => 'Hardcopy Grayscale Image Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.1.30' =>{
-    name => 'Hardcopy Color Image Storage',
+    name => 'Hardcopy Color Image Storage  - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.11.2' => {
@@ -179,7 +187,11 @@ my $SopHandlers = {
   '1.2.840.10008.5.1.4.1.1.3' =>{
     name => 'Ultrasound Multiframe Image Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.3.1' =>{
@@ -218,13 +230,21 @@ my $SopHandlers = {
   '1.2.840.10008.5.1.4.1.1.5' =>{
     name => 'Nuclear Medicine Image Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.6' =>{
     name => 'Ultrasound Image Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.6.1' =>{
@@ -286,15 +306,23 @@ my $SopHandlers = {
     ],
   },
   '1.2.840.10008.5.1.4.1.1.8' =>{
-    name => 'Standalone Overlay Storage',
+    name => 'Standalone Overlay Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.9' =>{
-    name => 'Standalone Curve Storage',
+    name => 'Standalone Curve Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.9.1.1' =>{
@@ -374,15 +402,23 @@ my $SopHandlers = {
     ],
   },
   '1.2.840.10008.5.1.4.1.1.10' =>{
-    name => 'Standalone Modality LUT Storage',
+    name => 'Standalone Modality LUT Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.11' =>{
-    name => 'Standalone VOI LUT Storage',
+    name => 'Standalone VOI LUT Storage - Retired',
     handlers => [
-      \&Posda::DB::Modules::Retired,
+      #\&Posda::DB::Modules::Retired,
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.11.1' =>{
