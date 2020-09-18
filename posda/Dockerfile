@@ -17,7 +17,7 @@ RUN wget -O /build/tools.tar.bz2 \
   https://posda.tools/downloads/dicom3tools_1.00.snapshot.20200806153050.tar.bz2
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \
-	cd dicom3tools_1.00.snapshot.20191225060430 && \
+	cd dicom3tools_1.00.snapshot.20200806153050 && \
 	./Configure && \
 	imake -I./config && \
 	make -j 16 World && \
