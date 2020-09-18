@@ -14,7 +14,7 @@ RUN apk add --update --no-cache \
 
 RUN mkdir /build
 RUN wget -O /build/tools.tar.bz2 \
-  http://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20191225060430.tar.bz2
+  https://posda.tools/downloads/dicom3tools_1.00.snapshot.20200806153050.tar.bz2
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \
 	cd dicom3tools_1.00.snapshot.20191225060430 && \
