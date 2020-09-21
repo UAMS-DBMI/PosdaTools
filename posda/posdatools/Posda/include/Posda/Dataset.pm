@@ -425,6 +425,22 @@ sub MakeExpLeElementWriter{
   my($stream) = @_;
   return sub {
     my($ele, $root, $sig, $keys, $depth) = @_;
+    if($sig eq "(7fe0,0010)" && ref($ele->{value}) eq "ARRAY"){
+      ## here we encode segmented pixel data like a sequence
+      my @vr = unpack("cc", $ele->{VR});
+      my $SqStart = pack("vvccvV", 0x7fe0, 0x0010,  @vr, 0, 0xffffffff);
+      print $stream $SqStart;
+      for my $i (0 .. $#{$ele->{value}}){
+        my $v = $ele->{value}->[$i];
+        my $len = length($v);
+        my $ItemStart = pack("vvV", 0xfffe, 0xe000, $len);
+        print $stream $ItemStart;
+        print $stream $v;
+      }
+      my $SqEnd = pack("vvV", 0xfffe, 0xe0dd, 0);
+      print $stream $SqEnd;
+      return;
+    }
     my($Value, $type, $vr) =
       EncodeElementValue($ele, $root, $sig, $keys, $depth, 1);
     my $group = $keys->[0];
@@ -817,6 +833,8 @@ sub WriteRawDicom{
     WriteExpBe($ds, \*FILE);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, \*FILE);
+  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    WriteExpLe($ds, \*FILE);
   } else {
     die "unsupported transfer syntax $xfr_stx";
   }
@@ -832,14 +850,19 @@ sub CanonicalFileName{
 }
 sub WritePart10Fh{
   my($ds, $fh, $xfr_stx, $ae_title) = @_;
-  unless(
-     $xfr_stx eq "1.2.840.10008.1.2" ||
-     $xfr_stx eq "1.3.6.1.4.1.22213.1.147" ||
-     $xfr_stx eq "1.2.840.10008.1.2.1" ||
-     $xfr_stx eq "1.2.840.10008.1.2.1" ||
-     $xfr_stx eq "1.2.840.10008.1.2.2"
+  my $pix_ref = $ds->Get("(7fe0,0010)");
+  if(ref($pix_ref) eq "ARRAY"){
+    unless($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+      die "Can't convert from compressed to non-compressed xfer_syntax";
+    }
+  } elsif (
+     $xfr_stx ne "1.2.840.10008.1.2" &&
+     $xfr_stx ne "1.3.6.1.4.1.22213.1.147" &&
+     $xfr_stx ne "1.2.840.10008.1.2.1" &&
+     $xfr_stx ne "1.2.840.10008.1.2.1" &&
+     $xfr_stx ne "1.2.840.10008.1.2.2"
   ){
-    die "Xfr_stx $xfr_stx not currently supported for part 10 writes";
+    die "Can't convert from compressed to non-compressed xfer_syntax";
   }
   # Preamble
   print $fh "\0" x 128;
@@ -925,6 +948,8 @@ sub WritePart10Fh{
     WriteExpBe($ds, *fh);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, *fh);
+  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    WriteExpLe($ds, $fh);
   } else {
     die "unsupported transfer syntax $xfr_stx";
   }
@@ -933,14 +958,19 @@ sub WritePart10Fh{
 }
 sub WritePart10{
   my($ds, $file_name, $xfr_stx, $ae_title, $private_uid, $private) = @_;
-  unless(
-     $xfr_stx eq "1.2.840.10008.1.2" ||
-     $xfr_stx eq "1.3.6.1.4.1.22213.1.147" ||
-     $xfr_stx eq "1.2.840.10008.1.2.1" ||
-     $xfr_stx eq "1.2.840.10008.1.2.1" ||
-     $xfr_stx eq "1.2.840.10008.1.2.2"
+  my $pix_ref = $ds->Get("(7fe0,0010)");
+  if(ref($pix_ref) eq "ARRAY"){
+    unless($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+      die "Can't convert from compressed to non-compressed xfer_syntax";
+    }
+  } elsif (
+     $xfr_stx ne "1.2.840.10008.1.2" &&
+     $xfr_stx ne "1.3.6.1.4.1.22213.1.147" &&
+     $xfr_stx ne "1.2.840.10008.1.2.1" &&
+     $xfr_stx ne "1.2.840.10008.1.2.1" &&
+     $xfr_stx ne "1.2.840.10008.1.2.2"
   ){
-    die "Xfr_stx $xfr_stx not currently supported for part 10 writes";
+    die "Can't convert from compressed to non-compressed xfer_syntax";
   }
   unless(defined $file_name){
     my $sop_inst_uid = $ds->Get("(0008,0018)");
@@ -1055,6 +1085,8 @@ sub WritePart10{
     WriteExpBe($ds, \*FILE);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, \*FILE);
+  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    WriteExpLe($ds, \*FILE);
   } else {
     die "unsupported transfer syntax $xfr_stx";
   }
@@ -1072,6 +1104,8 @@ sub WriteDataset{
     WriteExpBe($ds, $stream);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, $stream);
+  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    WriteExpLe($ds, $stream);
   } else {
     die "unsupported transfer syntax $xfr_stx";
   }
@@ -1123,6 +1157,30 @@ sub DumpAT{
     }
   }
 };
+
+sub DumpCompressedPixelData {
+  my($pr, $ele, $max_len1) = @_;
+  my $v = $ele->{value};
+  unless(ref($v) eq "ARRAY"){ die "Internal Error, ref of pixel data changed" }
+  my $name;
+  my $vr = $ele->{VR};
+  my $vm = @$v;
+  my $value_string;
+  my $tag;
+  for my $i (0 .. $#{$v}){
+    $tag = "(7fe0,0010)[$i]";
+    my $index = $i + 1;
+    $name = "Pixel Data Segment $index";
+    my $vi = $v->[$i];
+    my $ctx = Digest::MD5->new;
+    $ctx->add($vi);
+    my $dig = $ctx->hexdigest;
+    my $len = length($vi);
+    $value_string = "<raw data $len bytes $dig>";
+    $pr->print("$tag:($vr, $vm):$name:$value_string\n");
+  }
+}
+
 sub DumpEle{
   my($pr, $ele, $max_len) = @_;
   unless(ref($ele) eq "HASH"){
@@ -1359,51 +1417,55 @@ sub DumpStyle0{
   MapPvt($ds, sub {
     my($ele, $sig) = @_;
     my $ele_info = $DD->get_ele_by_sig($sig);
-    unless(defined($ele_info)){
-      $ele_info = {
-        Name => "<Unknown Priv Ele>",
-        VR => 'UN',
-        VM => 1,
-      };
-    }
-    unless(defined($ele_info->{Name})){
-       $ele_info->{Name} = "<Unknown (probably repeating) Ele>";
-    }
-    my $vr = $ele->{VR};
-    unless(defined $vr) {
+    if($sig eq "(7fe0,0010)" && ref($ele->{value}) eq "ARRAY"){
+      DumpCompressedPixelData($pr, $ele, $max_len1);
+    } else {
+      unless(defined($ele_info)){
+        $ele_info = {
+          Name => "<Unknown Priv Ele>",
+          VR => 'UN',
+          VM => 1,
+        };
+      }
+      unless(defined($ele_info->{Name})){
+         $ele_info->{Name} = "<Unknown (probably repeating) Ele>";
+      }
+      my $vr = $ele->{VR};
+      unless(defined $vr) {
 #Don't know why $vr would ever be undefined here
 # (but it seems to be so for empty SQ's in private tags)
 #Uncomment this print if you ever want to debug this...
 #print STDERR "Sig: $sig\n";
-      if(defined $ele_info->{VR}){
-        $vr = $ele_info->{VR};
-      } else {
-        $vr = 'UN';
-      }
-    }
-    my $vm = 1;
-    if(ref($ele->{value}) eq "ARRAY"){
-      $vm = @{$ele->{value}};
-    }
-    my $ele_name = defined($ele_info->{Name})? $ele_info->{Name} : "<undef>";
-#    print $pr "$sig:($vr, $vm):$ele_info->{Name}:";
-    $pr->print("$sig:($vr, $vm):$ele_name:");
-    #print $pr "$ele->{file_pos}:$sig:($vr, $vm):$ele_info->{Name}:";
-    DumpEle($pr, $ele, $max_len1);
-#    print $pr "\n";
-    $pr->print("\n");
-    if(
-      defined($ele->{type}) && 
-      $ele->{type} eq "raw" &&
-      defined $ele->{value} &&
-      $ele->{VR} ne "OF"
-    ){
-      my $len = length($ele->{value});
-      if($len < $max_len2){
-        if(exists $ele->{big_endian}){
-          HexDump::PrintBigEndian($pr, $ele->{value});
+        if(defined $ele_info->{VR}){
+          $vr = $ele_info->{VR};
         } else {
-          HexDump::PrintVax($pr, $ele->{value});
+          $vr = 'UN';
+        }
+      }
+      my $vm = 1;
+      if(ref($ele->{value}) eq "ARRAY"){
+        $vm = @{$ele->{value}};
+      }
+      my $ele_name = defined($ele_info->{Name})? $ele_info->{Name} : "<undef>";
+#      print $pr "$sig:($vr, $vm):$ele_info->{Name}:";
+      $pr->print("$sig:($vr, $vm):$ele_name:");
+      #print $pr "$ele->{file_pos}:$sig:($vr, $vm):$ele_info->{Name}:";
+      DumpEle($pr, $ele, $max_len1);
+#      print $pr "\n";
+      $pr->print("\n");
+      if(
+        defined($ele->{type}) && 
+        $ele->{type} eq "raw" &&
+        defined $ele->{value} &&
+        $ele->{VR} ne "OF"
+      ){
+        my $len = length($ele->{value});
+        if($len < $max_len2){
+          if(exists $ele->{big_endian}){
+            HexDump::PrintBigEndian($pr, $ele->{value});
+          } else {
+            HexDump::PrintVax($pr, $ele->{value});
+          }
         }
       }
     }
