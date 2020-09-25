@@ -59,6 +59,8 @@ export class ImageComponent implements OnInit {
   private roi_array: Roi[];
   public rois_seen: Contour[]= [];
   public rois_set: ContourSet[];
+  public rois_seen: Contour[]= [];
+  public total_struct_files: StructFile[];
 
   private roi_loaded: boolean = false;
   private image_loaded: boolean = false;
@@ -557,12 +559,12 @@ export class ImageComponent implements OnInit {
   }
 
   public uncheckMyROIs(): void{
-    for(let c of this.rois_set){
-      if (c in struct_file.my_countours){
-          c.enabled = !(c.enabled);
-      }
-    }
-    this.draw();
+    // for(let c of this.rois_set){
+    //   // if (c in struct_file.my_countours){
+    //   //     c.enabled = !(c.enabled);
+    //   // }
+    // }
+    // this.draw();
   }
 
   public commute(contour: Contour){
