@@ -105,7 +105,7 @@ $background->WriteToEmail("Found $num_tp_studiea studies, $num_tp_series series\
 # Analyze Series Consistency for Inconsistent Series
 my $start_analysis = time;
 my $ser_inc = Query('SeriesConsistency');
-Query("FindInconsistentSeriesIgnoringTimeAll")->RunQuery(sub{
+Query("FindInconsistentSeriesIgnoringTimeTp")->RunQuery(sub{
   my($row) = @_;
   my($series) = @$row;
   my %AttrValues;
