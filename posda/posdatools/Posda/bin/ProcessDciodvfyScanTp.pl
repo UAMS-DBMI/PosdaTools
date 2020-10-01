@@ -48,17 +48,25 @@ unless(
   die "$ARGV[1] is bad type\n";
 }
 my $q;
+my $q_name;
 if($ARGV[1] eq "one_per_series"){
+  $q_name = "OneFileInSeriesInTp";
   $q = PosdaDB::Queries->GetQueryInstance("OneFileInSeriesInTp");
 } elsif($ARGV[1] eq "all_per_series"){
+  $q_name = "FilesInSeriesInTp";
   $q = PosdaDB::Queries->GetQueryInstance("FilesInSeriesInTp");
 } elsif($ARGV[1] eq "per_sop"){
+  $q_name = "OOneFileFromSopInTp";
   $q = PosdaDB::Queries->GetQueryInstance("OneFileFromSopInTp");
 } else {
   die "Unknown type: $ARGV[1]";
 }
 my $scan_id = $ARGV[3];
 my @FileList;
+#print STDERR
+# "#################\n" . 
+# "Making Query: $q_name('$ARGV[2]', '$ARGV[0]')\n" .
+# "#################\n";
 $q->RunQuery(sub{
   my($row) = @_;
   push @FileList, $row->[0];
@@ -81,7 +89,7 @@ my $get_unit_scan_id = PosdaDB::Queries->GetQueryInstance(
 my $unit_scan_id;
 my $num_files = @FileList;
 $create_unit_scan->RunQuery(sub {}, sub {},
-  $ARGV[0], $ARGV[1], undef, $num_files);
+  $ARGV[1], $ARGV[2], undef, $num_files);
 $get_unit_scan_id->RunQuery(sub {
   my($row) = @_;
   $unit_scan_id = $row->[0];
@@ -340,16 +348,16 @@ for my $i (@Records){
       $error_value =~ s/\s*$//;
       $error_subtype =~ s/^\s*//;
       $error_subtype =~ s/\s*$//;
-print STDERR "Running GetErrorInvalidValueForVr($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
+#print STDERR "Running GetErrorInvalidValueForVr($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
       $get_e_invalid_value_for_vr->RunQuery(sub {
         my($row) = @_;
         $error_id = $row->[0];
-print STDERR "Created row $error_id\n";
+#print STDERR "Created row $error_id\n";
       }, sub {}, ConvertTag($error_tag), $error_index, $error_value, $error_reason, $error_subtype);
     }
     unless(defined $error_id){
-print STDERR "Creating a new Error row (no row found)\n";
-print STDERR "($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
+#print STDERR "Creating a new Error row (no row found)\n";
+#print STDERR "($error_tag, $error_index, $error_value, $error_reason, $error_subtype)\n";
       $create_error->RunQuery(sub {}, sub {},
         $error_type, ConvertTag($error_tag), $error_subtype, $error_module,
         $error_reason, $error_index, $error_value, $error_text);
