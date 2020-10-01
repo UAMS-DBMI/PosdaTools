@@ -18,11 +18,15 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 
-unless($#ARGV == 4){
+unless($#ARGV == 5){
+  my $n_args = @ARGV;
+  print "Error: wrong number args $n_args vs 6\n";
+  print "$usage\n";
   die "$usage\n";
 }
 
 my ($invoc_id, $act_id, $max_rows, $collection, $site, $notify) = @ARGV;
+print "invoc_id, $act_id, $max_rows, $collection, $site, $notify\n";
 my $q;
 my %Series;
 my $num_rows = 0;
