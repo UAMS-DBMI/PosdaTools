@@ -1,5 +1,5 @@
 :operation_name: PhiPublicScan
-:command_line: PhiPublicScan.pl <?bkgrnd_id?> <collection> <site> <notify>
+:command_line: PhiPublicScan.pl <?bkgrnd_id?> <activity_id> <max_rows> <collection> <site> <notify>
 :operation_type: background_process
 :input_line_format: 
 :tags: ['simple_phi']

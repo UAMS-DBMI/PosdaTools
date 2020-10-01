@@ -251,6 +251,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "PhiPublicScanTp",
       },
       {
+        caption => "Public Phi Scan Based on Collection, Site",
+        action =>  "PhiPublicScan",
+      },
+      {
         caption => "Find Files in Tp, not in Public",
         action =>  "FilesInTpNotInPublic",
       },
