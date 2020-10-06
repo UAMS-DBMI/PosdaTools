@@ -14,6 +14,30 @@ use JSON;
 $| = 1;
 
 use vars qw( $HTTP_APP_SINGLETON $HTTP_APP_CONFIG %HTTP_RUNNING_SUB_PROGRAMS %HTTP_STATIC_OBJS  *sym *sys *code );
+
+sub port_to_subdomain {
+  my ($host, $port) = @_;
+
+  my $map = {
+    "64615" => "one",
+    "64616" => "two",
+    "64617" => "three",
+    "64618" => "four",
+    "64619" => "five",
+    "64620" => "six",
+    "64621" => "seven",
+    "64622" => "eight",
+    "64623" => "nine",
+    "64624" => "ten",
+    "64625" => "eleven",
+  };
+
+  print STDERR ">>> host: $host port: $port\n";
+  return "$map->{$port}.$host";
+
+}
+
+
 ######### Don't modify
 $SIG{PIPE} = 'IGNORE';
 sub DumpSymName{
@@ -139,7 +163,11 @@ sub Init{
   if(defined $token) { $HTTP_APP_SINGLETON->{token} = $token }
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
   $HTTP_APP_SINGLETON->{base_url} = "http://$host:$port";
-  print "Redirect to http://$host:$port\n";
+  # print "Redirect to http://$host:$port\n";
+  my $redirect_host = port_to_subdomain($host, $port);
+  print "Redirect to http://$redirect_host\n";
+
+  # print "Redirect to http://blarg\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {
     my $old_handler = $SIG{$signal};
