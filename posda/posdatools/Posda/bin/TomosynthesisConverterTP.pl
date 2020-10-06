@@ -63,7 +63,7 @@ my $num_done = 0;
 my $num_failed = 0;
 my $num_converted = 0;
 
-#____________MAIN FILE LOGIC START_____________
+#_________________________________________________MAIN FILE LOGIC START__________________________________________________________________________
 
 print STDERR "\n Do I have any files? I see $num_files \n";
 print STDERR Dumper(\%Files);
@@ -159,51 +159,51 @@ for my $file (keys %Files){
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,9332)", $ds->GetEle("(0018,1153)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure in uAs
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,1405)", $ds->GetEle("(0018,1405)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Relative X-Ray Exposure
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,9330)", $ds->GetEle("(0018,1151)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  X ray tube current
-  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});                          #X-Ray 3D Acquisition Sequence -  Field of View Origin
-  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});                          #X-Ray 3D Acquisition Sequence -  Field of View Origin
-  $ds->Insert("(0018,9507)[0](0018,701a)", $ds->GetEle("(0018,701a)")->{value});                          #X-Ray 3D Acquisition Sequence -  Detector Binning
-  $ds->Insert("(0018,9507)[0](0018,7032)", $ds->GetEle("(0018,7032)")->{value});                          #X-Ray 3D Acquisition Sequence -  Field of View Rotation
-  $ds->Insert("(0018,9507)[0](0018,7034)", $ds->GetEle("(0018,7034)")->{value});                          #X-Ray 3D Acquisition Sequence -  Field of View Horizontal Flip
-  $ds->Insert("(0018,9507)[0](0018,7052)", $ds->GetEle("(0018,7052)")->{value});                          #X-Ray 3D Acquisition Sequence -  Filter Thickness Minimum
-  $ds->Insert("(0018,9507)[0](0018,7054)", $ds->GetEle("(0018,7054)")->{value});                          #X-Ray 3D Acquisition Sequence -  Filter Thickness Maximum
-  $ds->Insert("(0018,9507)[0](0040,0316)", $ds->GetEle("(0040,0316)")->{value});                          #X-Ray 3D Acquisition Sequence -  Organ Dose
-  $ds->Insert("(0018,9507)[0](0040,8302)", $ds->GetEle("(0040,8302)")->{value});                          #X-Ray 3D Acquisition Sequence -  Entrance Dose in mGy
+  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});                         #X-Ray 3D Acquisition Sequence -  Field of View Origin
+  $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});                         #X-Ray 3D Acquisition Sequence -  Field of View Origin
+  $ds->Insert("(0018,9507)[0](0018,701a)", $ds->GetEle("(0018,701a)")->{value});                         #X-Ray 3D Acquisition Sequence -  Detector Binning
+  $ds->Insert("(0018,9507)[0](0018,7032)", $ds->GetEle("(0018,7032)")->{value});                         #X-Ray 3D Acquisition Sequence -  Field of View Rotation
+  $ds->Insert("(0018,9507)[0](0018,7034)", $ds->GetEle("(0018,7034)")->{value});                         #X-Ray 3D Acquisition Sequence -  Field of View Horizontal Flip
+  $ds->Insert("(0018,9507)[0](0018,7052)", $ds->GetEle("(0018,7052)")->{value});                         #X-Ray 3D Acquisition Sequence -  Filter Thickness Minimum
+  $ds->Insert("(0018,9507)[0](0018,7054)", $ds->GetEle("(0018,7054)")->{value});                         #X-Ray 3D Acquisition Sequence -  Filter Thickness Maximum
+  $ds->Insert("(0018,9507)[0](0040,0316)", $ds->GetEle("(0040,0316)")->{value});                         #X-Ray 3D Acquisition Sequence -  Organ Dose
+  $ds->Insert("(0018,9507)[0](0040,8302)", $ds->GetEle("(0040,8302)")->{value});                         #X-Ray 3D Acquisition Sequence -  Entrance Dose in mGy
 
 
   #Shared functional groups
-  $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);                             #Slice Thickness
-  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1053)", $rescale_slope);                                 #Rescale Slope
-  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1054)", $rescale_type);                                  #Rescale Type
-  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1052)", $rescale_intercept);                             #Rescale Intercept
-  $ds->Insert("(5200,9229)[0](0020,9071)[0](0020,9072)", $laterality);                                    #Frame Laterality
-  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)", "76752008");                       #Frame Anatomy Sequence - Anatomic Region Sequence - Code Value
-  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)", "SCT");                            #Frame Anatomy Sequence - Anatomic Region Sequence - Coding Scheme Designator
-  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)", "Breast");                         #Frame Anatomy Sequence - Anatomic Region Sequence - Code Meaning
-  $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1050)", $window_center[0][0]);                           #Frame VOI LUT Sequence - Window Center
-  $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1051)",  $window_width[0][0]);                           #Frame VOI LUT Sequence - Window Width
+  $ds->Insert("(5200,9229)[0](0028,9110)[0](0018,0050)", $bodypartthickness);                            #Slice Thickness
+  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1053)", $rescale_slope);                                #Rescale Slope
+  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1054)", $rescale_type);                                 #Rescale Type
+  $ds->Insert("(5200,9229)[0](0028,9145)[0](0028,1052)", $rescale_intercept);                            #Rescale Intercept
+  $ds->Insert("(5200,9229)[0](0020,9071)[0](0020,9072)", $laterality);                                   #Frame Laterality
+  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0100)", "76752008");                      #Frame Anatomy Sequence - Anatomic Region Sequence - Code Value
+  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0102)", "SCT");                           #Frame Anatomy Sequence - Anatomic Region Sequence - Coding Scheme Designator
+  $ds->Insert("(5200,9229)[0](0020,9071)[0](0008,2218)[0](0008,0104)", "Breast");                        #Frame Anatomy Sequence - Anatomic Region Sequence - Code Meaning
+  $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1050)", $window_center[0][0]);                          #Frame VOI LUT Sequence - Window Center
+  $ds->Insert("(5200,9229)[0](0028,9132)[0](0028,1051)",  $window_width[0][0]);                          #Frame VOI LUT Sequence - Window Width
 
 
   #Per frame functional groups
   for my $i (0..($numframes-1)){
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[0]", $image_type[0][0]);                        #X-Ray 3D Frame Type Sequence - Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[1]",  $image_type[0][1]);                       #X-Ray 3D Frame Type Sequence - Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[2]", "TOMOSYNTHESIS");                          #X-Ray 3D Frame Type Sequence - Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[3]", "NONE");                                   #X-Ray 3D Frame Type Sequence - Frame Type
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9205)", "MONOCHROME");                                #X-Ray 3D Frame Type Sequence - Pixel Presentation
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", "VOLUME");                                    #X-Ray 3D Frame Type Sequence - Volumetric Properties
-    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", "TOMOSYNTHESIS");                             #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
-    $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", "1");                                         #Frame Content Sequence - Frame Acquisition Number
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[0]", $image_type[0][0]);                       #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[1]",  $image_type[0][1]);                      #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[2]", "TOMOSYNTHESIS");                         #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9007)[3]", "NONE");                                  #X-Ray 3D Frame Type Sequence - Frame Type
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9205)", "MONOCHROME");                               #X-Ray 3D Frame Type Sequence - Pixel Presentation
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", "VOLUME");                                   #X-Ray 3D Frame Type Sequence - Volumetric Properties
+    $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", "TOMOSYNTHESIS");                            #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
+    $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", "1");                                        #Frame Content Sequence - Frame Acquisition Number
     my $incrementedST = $sinTheta * $ippIncrement;
     my $incrementedNCT = $negativeCosTheta * $ippIncrement;
-    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[0]", $incrementedNCT);                          #Plane Position Sequence - Image Position Patient
-    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[1]", "0");                                      #Plane Position Sequence - Image Position Patient
-    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[2]", $incrementedST);                           #Plane Position Sequence - Image Position Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[0]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                      #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[2]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[3]", $sinTheta);                                #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[4]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[5]", $negativeCosTheta);                        #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[0]", $incrementedNCT);                         #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[1]", "0");                                     #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[2]", $incrementedST);                          #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[0]", "0");                                     #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                     #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[2]", "0");                                     #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[3]", $sinTheta);                               #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[4]", "0");                                     #Plane Orientation Sequence - Image Orientation Patient
+    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[5]", $negativeCosTheta);                       #Plane Orientation Sequence - Image Orientation Patient
 
   }
 
@@ -238,7 +238,7 @@ for my $file (keys %Files){
   $ds->DeleteElementBySig("(0028,1050)");    # moved on line 185  to Shared Functional Group - Frame VOI LUT Sequence - Window Center
   $ds->DeleteElementBySig("(0028,1051)");    # moved on line 186  to Shared Functional Group - Frame VOI LUT Sequence - Window Width
 
-  #____________MAIN FILE LOGIC END_____________
+  #_________________________________________________MAIN FILE LOGIC END____________________________________________________________________________
 
   if($df){
     $ds->WritePart10($dest_file, $xfr_stx, "POSDA", undef, undef);
