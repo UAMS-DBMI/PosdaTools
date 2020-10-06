@@ -100,7 +100,7 @@ for my $file (keys %Files){
   my $negativeCosTheta = cos($ppa) * -1;
   my $ippIncrement = ($bodypartthickness / 55.0);
   my $empty = [];
-
+  my $view_position  = $ds->GetEle("(0018,5101)")->{value};
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
@@ -130,10 +130,42 @@ for my $file (keys %Files){
   $ds->Insert("(0008,0033)", $study_time);                                                               #ContentTime
 
   $ds->Insert("(0054,0220)[0](0054,0222)",$empty);                                                       #ViewCodeSequence - View Modifier Code Sequence
-  $ds->Insert("(0054,0220)[0](0008,0100)","399368009");                                                  #ViewCodeSequence - Code Value
-  $ds->Insert("(0054,0220)[0](0008,0102)","SCT");                                                        #ViewCodeSequence - Coding Scheme Designator
-  $ds->Insert("(0054,0220)[0](0008,0104)","medio-lateral oblique");                                      #ViewCodeSequence - Code Meaning
 
+  $ds->Insert("(0054,0220)[0](0008,0102)","SCT");                                                        #ViewCodeSequence - Coding Scheme Designator
+  if ($view_position eq 'MLO'){
+    $ds->Insert("(0054,0220)[0](0008,0100)","399368009");                                                #ViewCodeSequence - Code Value
+    $ds->Insert("(0054,0220)[0](0008,0104)","medio-lateral oblique");                                    #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'ML'){
+      $ds->Insert("(0054,0220)[0](0008,0100)","399260004");                                              #ViewCodeSequence - Code Value
+      $ds->Insert("(0054,0220)[0](0008,0104)","medio-lateral");                                          #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'LM'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399352003");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","latero-medial");                                       #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'LMO'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399099002");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","latero-medial oblique");                                #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'CC'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399162004");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","cranio-caudal");                                       #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'FB'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399196006");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","caudo-cranial (from below)");                          #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'SIO'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399188001");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","superolateral to inferomedial oblique");               #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'ISO'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","441555000");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","inferomedial to superolateral oblique");               #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'XCCL'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399192008");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","cranio-caudal exaggerated laterally");                 #ViewCodeSequence - Code Meaning
+  }elsif($view_position eq 'XCCM'){
+        $ds->Insert("(0054,0220)[0](0008,0100)","399101009");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","cranio-caudal exaggerated medially");                  #ViewCodeSequence - Code Meaning
+  }else{
+        $ds->Insert("(0054,0220)[0](0008,0100)","127457009");                                           #ViewCodeSequence - Code Value
+        $ds->Insert("(0054,0220)[0](0008,0104)","tissue specimen from breast");                         #ViewCodeSequence - Code Meaning
+  }
 
   #X-Ray 3D Acquisition Sequence
   $ds->Insert("(0018,9507)[0](0018,1110)", $ds->GetEle("(0018,1110)")->{value});                         #X-Ray 3D Acquisition Sequence -  Distance Source to Detector
