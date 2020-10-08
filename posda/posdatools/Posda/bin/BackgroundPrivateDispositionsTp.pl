@@ -14,18 +14,20 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 my $usage = <<EOF;
-BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions>
+BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions> <upd_nbia> <dir>
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
   email sent to <notify>
   skip private dispositions if <skip_dispositions> is set to 1
+  if <upd_nbia> use nbia file conventions and nbia-api to update nbia
+  else <dir> contains name of download subdirectory (no spaces or special characters)
 
 Expects nothing on <STDIN>
 
 Constructs a destination file name as follows:
   <generated_unique_dir>/<patient_id>/<study_uid>/<series_uid>/<modality>_sop_inst_uid.dcm
 
-Actually invokes ApplyPrivateDispositionUnconditionalDate.pl to do the edits
+Actually invokes ApplyPrivateDispositionUnconditionalDate2.pl to do the edits
 EOF
 
 
@@ -37,16 +39,30 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $script_start_time = time;
-unless($#ARGV == 5){
+unless($#ARGV == 7){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions) = @ARGV;
+my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions, $upd_nbia, $rel_dir) = @ARGV;
 
 unless(defined $skip_dispositions) { $skip_dispositions = 0}
 if($skip_dispositions == "") { $skip_dispositions = 0}
+unless(defined $upd_nbia) { $upd_nbia = 0}
+if($upd_nbia == "") { $upd_nbia = 0}
+
+if($upd_nbia && $rel_dir){
+  print "If <upd_nbia> is not 0 or blank (and it is \"$upd_nbia\") then <dir> should not be supplied (it is \"$rel_dir\")\n";
+  exit;
+}
+
+if($rel_dir){
+  if($rel_dir =~ /[^A-Za-z0-9_]/){
+    print "Rel_dir is only allowed to have A-Z, a-z, 0-9, _ characters.  It is \"$rel_dir\".";
+    exit;
+  }
+}
 
 my %Patients;
 my %Studies;
@@ -60,7 +76,7 @@ Query("FilesForDispositionsByActivity")->RunQuery(sub{
   my($row) = @_;
   my($file_id, $collection, $site,
     $patient_id, $study_instance_uid, $series_instance_uid,
-    $modality, $sop_instance_uid, $path) = @$row;
+    $sop_instance_uid, $modality, $path) = @$row;
     $Files{$file_id} = {
       collection => $collection,
       site => $site,
@@ -87,6 +103,14 @@ Query("FilesForDispositionsByActivity")->RunQuery(sub{
       $Sops{$sop_instance_uid}->{$file_id} = 1;
     }
 }, sub{}, $act_id);
+
+my $tp_id;
+Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+  my($row) = @_;
+  $tp_id = $row->[0];
+}, sub{}, $act_id);
+print STDERR "Activity timepoint id: $tp_id\n";
+
 my $num_reports = 0;
 
 ## Basic sanity checks:
@@ -95,6 +119,12 @@ my $num_reports = 0;
   my $num_dups = keys %DupSops;
   if($num_dups > 0){
     print "$num_dups Duplicate Sops found in timepoint\n";
+    for my $sop(keys %DupSops){
+      print "$sop:\n";
+      for my $fid (keys %{$DupSops{$sop}}){
+        print "\t$fid\n";
+      }
+    }
     $num_reports += 1;
   }
 # Check Patient in no collection or multiple collections, report
@@ -220,6 +250,8 @@ unless(defined $visual_review_id){
   $background->Finish("Error: No visual review");
   exit;
 }
+
+$background->WriteToEmail("Checking visual_review_id: $visual_review_id\n");
 my $num_sops_not_reviewed;
 Query("VerifyAllSopsInTpAreInVR")->RunQuery(sub {
   $num_sops_not_reviewed += 1;
@@ -231,6 +263,7 @@ if($num_sops_not_reviewed > 0){
     "which were not reviewed");
   exit;
 }
+$background->WriteToEmail("All SOPs in current_timepoint are in visual review\n");
 my $unfinished_reviews = 0;
 Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
   $unfinished_reviews += 1;
@@ -273,22 +306,38 @@ my $date = `date`;
 chomp $date;
 
 #############################
-## Compute the Destination Dir
+## Compute the BaseDir
 #
-my $sub_dir = get_uuid();
-
-my $BaseDir = $ENV{NBIA_STORAGE_ROOT}
+my $BaseDir;
+if($upd_nbia){
+  $BaseDir = $ENV{NBIA_STORAGE_ROOT}
   or die "NBIA_STORAGE_ROOT env var is undefined! cannot continue";
-
-unless(-d $BaseDir){
-  print "Error: Base dir ($BaseDir) isn't a directory\n";
+} else {
+  my $cache_dir = $ENV{POSDA_CACHE_ROOT};
+  unless(-d $cache_dir){
+    print "Error: Cache dir ($cache_dir) isn't a directory\n";
+    exit;
+  }
+  $BaseDir = "$cache_dir/linked_for_download/$rel_dir";
+  make_path($BaseDir);
 }
+#
+## End Compute the BaseDir
+#############################
 
 $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
 
 if($skip_dispositions) {
-  $background->WriteToEmail("$date\nPrivate Dispositions will be skipped\n");
+  $background->WriteToEmail("Private Dispositions will be skipped\n");
 }
+
+if($upd_nbia){
+  $background->WriteToEmail("Files will be entered into nbia database\n");
+} else {
+  $background->WriteToEmail("Files will be written to downloadable " .
+    "directory \"$rel_dir\"\nReal directory: $BaseDir\n");
+}
+
 #######################################################################
 ### Body of script
 
@@ -309,13 +358,23 @@ my @cmds;
 for my $file_id (keys %Files){
   my $sop_instance_uid = $Files{$file_id}->{sop};
   my $path = $Files{$file_id}->{path};
-  my $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
+  my $f_filename;
+  if($upd_nbia){
+    $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
+  } else {
+    my $pat = $Files{$file_id}->{patient};
+    my $study = $Files{$file_id}->{study};
+    my $series = $Files{$file_id}->{series};
+    my $modality = $Files{$file_id}->{modality};
+    $f_filename = "$pat/$study/$series/$modality$sop_instance_uid.dcm";
+  }
   my $full_filename = "$BaseDir/$f_filename";
   my $dirname = dirname($full_filename);
   make_path($dirname);
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-            qq{$file_id $path "$full_filename" $uid_root "$offset" "$skip_dispositions"};
+            qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
+            qq{"$upd_nbia"};
 
   push @cmds, $cmd;
 }
@@ -397,5 +456,8 @@ $background->WriteToEmail("All subshells complete\n");
 my $end = time;
 my $duration = $end - $script_start_time;
 $background->WriteToEmail( "finished conversion in $duration seconds\n");
-$background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
+if($upd_nbia){
+  $background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" " .
+    "href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
+}
 $background->Finish("Done");
