@@ -12,8 +12,11 @@ ApplyPrivateDispositionUnconditionalDate.pl <from_file> <to_file> <uid_root> <of
   UID's not hashed if they begin with <uid_root>
   date's always offset
 EOF
+die "This script is obsolete, and should not be used!\n" .
+  "See: ApplyPrivateDispositionUnconditionalDate2.pl";
 unless($#ARGV == 3) { die $usage }
-my $uid_root = $ARGV[2];
+my($from_file, $to_file, $uid_root, $offset) = @_;
+
 sub HashUID{
   my($uid) = @_;
   if($uid =~ /^$uid_root/){
@@ -26,25 +29,6 @@ sub HashUID{
   $new_uid = substr($new_uid, 0, 64);
   return $new_uid;
 }
-my $offset = $ARGV[3];
-my $d = $ARGV[0];
-#my $frac = "";
-#if($d =~ /^([\+\-]*\d+)(\.\d+)$/){
-#  $d = $1;
-#  $frac = $2;
-#  if($d < 0){
-#    $d -=  1;
-#    $frac = 1 - $frac;
-#    if($frac =~ /(\.\d+)$/){
-#      $frac = $1;
-#    } else {
-#      $frac = "";
-#    }
-#  }
-#}
-#my $date = Time::Piece->new($d);
-#my $val = $date->strftime("%Y%m%d%H%M%S");
-#print "Date: $val$frac\n";
 
 sub ShiftIntegerDate{
   my($epoch) = @_;
@@ -89,6 +73,11 @@ my %OffsetDateByPattern;
 my %OffsetInteger;
 my %HashByElement;
 my %HashByPattern;
+
+# Delete Trial and Site name from Group 13
+$DeleteByElement{'(0013,"CTP",11)'} = 1;
+$DeleteByElement{'(0013,"CTP",12)'} = 1;
+
 $get_disp->RunQuery(sub {
   my($row) = @_;
   if($row->[0] =~ /\[/){
@@ -118,10 +107,10 @@ $get_disp->RunQuery(sub {
     $HashByElement{$row->[0]} = 1;
   }
 }, sub {}, 'h');
-my $try = Posda::Try->new($ARGV[0]);
-unless(exists $try->{dataset}){ die "$ARGV[0] is not a DICOM file" }
+my $try = Posda::Try->new($from_file);
+unless(exists $try->{dataset}){ die "$from_file is not a DICOM file" }
 my $ds = $try->{dataset};
-#print "Editing file $ARGV[0]\n";
+#print "Editing file $from_file\n";
 for my $e (keys %DeleteByElement){
   #print "\tDeleting: $e\n";
   $ds->Delete($e);
@@ -241,10 +230,9 @@ for my $e (keys %OffsetInteger){
   }
 }
 eval {
-  $ds->WritePart10($ARGV[1], $try->{xfr_stx}, "POSDA", undef, undef);
+  $ds->WritePart10($to_file, $try->{xfr_stx}, "POSDA", undef, undef);
 };
 if($@){
-  print STDERR "Can't write $ARGV[1] ($@)\n";
+  print STDERR "Can't write $to_file ($@)\n";
   exit;
 }
-#print "Wrote $ARGV[1]\n";

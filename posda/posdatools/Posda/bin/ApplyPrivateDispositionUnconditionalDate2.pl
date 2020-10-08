@@ -9,7 +9,7 @@ use Time::Piece;
 use Posda::NBIASubmit;
 
 my $usage = <<EOF;
-ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions>
+ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions> <upd_nbia>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
@@ -21,9 +21,13 @@ ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file>
   skip private dispositions if <skip_dispositions> is set to 1
 EOF
 
-unless($#ARGV == 7) { die $usage }
+unless($#ARGV == 8) {
+ my $num_parms = @ARGV;
+ print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 9\n";
+ die $usage;
+}
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
-    $offset, $batch, $skip_dispositions) = @ARGV;
+    $offset, $batch, $skip_dispositions, $upd_nbia) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -37,24 +41,6 @@ sub HashUID{
   $new_uid = substr($new_uid, 0, 64);
   return $new_uid;
 }
-# my $d = $from_file;
-#my $frac = "";
-#if($d =~ /^([\+\-]*\d+)(\.\d+)$/){
-#  $d = $1;
-#  $frac = $2;
-#  if($d < 0){
-#    $d -=  1;
-#    $frac = 1 - $frac;
-#    if($frac =~ /(\.\d+)$/){
-#      $frac = $1;
-#    } else {
-#      $frac = "";
-#    }
-#  }
-#}
-#my $date = Time::Piece->new($d);
-#my $val = $date->strftime("%Y%m%d%H%M%S");
-#print "Date: $val$frac\n";
 
 sub ShiftIntegerDate{
   my($epoch) = @_;
@@ -310,13 +296,15 @@ if($@){
   exit;
 }
 
-Posda::NBIASubmit::AddToSubmitAndThumbQs(
-  $subprocess_invocation_id,
-  $file_id,
-  $collection_name,
-  $site_name,
-  $site_id,
-  $batch,
-  $to_file,
-  $tpa_url
-);
+if($upd_nbia){
+  Posda::NBIASubmit::AddToSubmitAndThumbQs(
+    $subprocess_invocation_id,
+    $file_id,
+    $collection_name,
+    $site_name,
+    $site_id,
+    $batch,
+    $to_file,
+    $tpa_url
+  );
+}

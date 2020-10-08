@@ -1,5 +1,5 @@
 :operation_name: BackgroundPrivateDispositionsTpBaseline
-:command_line: BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id> <notify> "<skip_dispositions>"
+:command_line: BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id>  "<notify>" "<skip_dispositions>" "<upd_nbia>" "<dir>"
 :operation_type: background_process
 :input_line_format: 
 :tags: ['activity_timepoints']
