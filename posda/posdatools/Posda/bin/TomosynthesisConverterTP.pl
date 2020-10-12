@@ -96,6 +96,8 @@ for my $file (keys %Files){
   my $study_date = $ds->GetEle("(0008,0020)")->{value};
   my $study_time = $ds->GetEle("(0008,0030)")->{value};
   my $ppa  = $ds->GetEle("(0018,1510)")->{value};
+  my $tubecurrent =  $ds->GetEle("(0018,1151)")->{value};
+  my $exposuretime =  $ds->GetEle("(0018,1150)")->{value};
   my $sinTheta = sin($ppa);
   my $negativeCosTheta = cos($ppa) * -1;
   my $ippIncrement = ($bodypartthickness / 55.0);
@@ -182,7 +184,6 @@ for my $file (keys %Files){
   #X-Ray 3D Acquisition Sequence - Continued
   $ds->Insert("(0018,9507)[0](0018,1147)", "RECTANGLE");                                                 #X-Ray 3D Acquisition Sequence -  FieldOfViewShape
   $ds->Insert("(0018,9507)[0](0018,9420)", "DIGITAL_DETECTOR");                                          #X-Ray 3D Acquisition Sequence -  XRayReceptorType
-  $ds->Insert("(0018,9507)[0](0018,1190)", "0.3");                                                       #X-Ray 3D Acquisition Sequence -  Focal Spot(s)
   $ds->Insert("(0018,9507)[0](0018,1160)", "STRIP");                                                     #X-Ray 3D Acquisition Sequence -  Filter Type
   $ds->Insert("(0018,9507)[0](0018,11a4)", "UNKNOWN");                                                   #X-Ray 3D Acquisition Sequence -  PaddleDescription
   $ds->Insert("(0018,9507)[0](0018,11a0)", $ds->GetEle("(0018,11a0)")->{value});                         #X-Ray 3D Acquisition Sequence -  BodyPartThickness
@@ -190,9 +191,15 @@ for my $file (keys %Files){
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,9328)", $ds->GetEle("(0018,1150)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure Time
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,9332)", $ds->GetEle("(0018,1153)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure in uAs
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,1405)", $ds->GetEle("(0018,1405)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Relative X-Ray Exposure
-
   $ds->Insert("(0018,9507)[0](0018,9538)[0](0018,9330)", $ds->GetEle("(0018,1151)")->{value});           #X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  X ray tube current
 
+  if ($tubecurrent > 50){
+    $ds->Insert("(0018,9507)[0](0018,1190)", "0.3");                                                      #X-Ray 3D Acquisition Sequence -  Focal Spot(s)
+  }elsif ($exposuretime > 2500){
+      $ds->Insert("(0018,9507)[0](0018,1190)", "0.1");                                                    #X-Ray 3D Acquisition Sequence -  Focal Spot(s)
+  }else{
+      $ds->Insert("(0018,9507)[0](0018,1190)", "UNKNOWN");                                                #X-Ray 3D Acquisition Sequence -  Focal Spot(s)
+  }
 
   $ds->Insert("(0018,9507)[0](0018,7030)", $ds->GetEle("(0018,7030)")->{value});                          #X-Ray 3D Acquisition Sequence -  Field of View Origin
   $ds->Insert("(0018,9507)[0](0018,701a)", $ds->GetEle("(0018,701a)")->{value});                          #X-Ray 3D Acquisition Sequence -  Detector Binning
@@ -242,35 +249,35 @@ for my $file (keys %Files){
   }
 
   #Remove values from top level that have been moved
-  $ds->DeleteElementBySig("(0018,1110)");    # moved on line 171  to X-Ray 3D Acquisition Sequence -  Distance Source to Detector
-  $ds->DeleteElementBySig("(0018,1111)");    # moved on line 172  to X-Ray 3D Acquisition Sequence -  Distance Source to Patient
-  $ds->DeleteElementBySig("(0018,1114)");    # moved on line 173  to X-Ray 3D Acquisition Sequence -  Estimated Radiographic Magnification Factor
-  $ds->DeleteElementBySig("(0018,1191)");    # moved on line 174  to X-Ray 3D Acquisition Sequence -  AnodeTargetMaterial
-  $ds->DeleteElementBySig("(0018,11a2)");    # moved on line 175  to X-Ray 3D Acquisition Sequence -  CompressionForce
-  $ds->DeleteElementBySig("(0018,7060)");    # moved on line 176  to X-Ray 3D Acquisition Sequence -  ExposureControlMode
-  $ds->DeleteElementBySig("(0018,7062)");    # moved on line 177  to X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
-  $ds->DeleteElementBySig("(0040,0314)");    # moved on line 178  to X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
-  $ds->DeleteElementBySig("(0018,7001)");    # moved on line 179  to X-Ray 3D Acquisition Sequence -  DetectorTemperature
-  $ds->DeleteElementBySig("(0018,7050)");    # moved on line 180  to X-Ray 3D Acquisition Sequence -  FilterMaterial
-  $ds->DeleteElementBySig("(0018,1510)");    # moved on line 189  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Positioner Primary Angle
-  $ds->DeleteElementBySig("(0018,1150)");    # moved on line 190  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure Time
-  $ds->DeleteElementBySig("(0018,1153)");    # moved on line 191  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure in uAs
-  $ds->DeleteElementBySig("(0018,1405)");    # moved on line 192  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Relative X-Ray Exposure
+  $ds->DeleteElementBySig("(0018,1110)");    # moved on line 173  to X-Ray 3D Acquisition Sequence -  Distance Source to Detector
+  $ds->DeleteElementBySig("(0018,1111)");    # moved on line 174  to X-Ray 3D Acquisition Sequence -  Distance Source to Patient
+  $ds->DeleteElementBySig("(0018,1114)");    # moved on line 175  to X-Ray 3D Acquisition Sequence -  Estimated Radiographic Magnification Factor
+  $ds->DeleteElementBySig("(0018,1191)");    # moved on line 176  to X-Ray 3D Acquisition Sequence -  AnodeTargetMaterial
+  $ds->DeleteElementBySig("(0018,11a2)");    # moved on line 177  to X-Ray 3D Acquisition Sequence -  CompressionForce
+  $ds->DeleteElementBySig("(0018,7060)");    # moved on line 178  to X-Ray 3D Acquisition Sequence -  ExposureControlMode
+  $ds->DeleteElementBySig("(0018,7062)");    # moved on line 179  to X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
+  $ds->DeleteElementBySig("(0040,0314)");    # moved on line 180  to X-Ray 3D Acquisition Sequence -  ExposureControlModeDescription
+  $ds->DeleteElementBySig("(0018,7001)");    # moved on line 181  to X-Ray 3D Acquisition Sequence -  DetectorTemperature
+  $ds->DeleteElementBySig("(0018,7050)");    # moved on line 182  to X-Ray 3D Acquisition Sequence -  FilterMaterial
+  $ds->DeleteElementBySig("(0018,1510)");    # moved on line 190  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Positioner Primary Angle
+  $ds->DeleteElementBySig("(0018,1150)");    # moved on line 191  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure Time
+  $ds->DeleteElementBySig("(0018,1153)");    # moved on line 192  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Exposure in uAs
+  $ds->DeleteElementBySig("(0018,1405)");    # moved on line 193  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  Relative X-Ray Exposure
   $ds->DeleteElementBySig("(0018,1151)");    # moved on line 194  to X-Ray 3D Acquisition Sequence -  PerProjectionAcquisitionSequence -  X ray tube current
-  $ds->DeleteElementBySig("(0018,7030)");    # moved on line 197  to X-Ray 3D Acquisition Sequence -  Field of View Origin
-  $ds->DeleteElementBySig("(0018,701a)");    # moved on line 198  to X-Ray 3D Acquisition Sequence -  Detector Binning
-  $ds->DeleteElementBySig("(0018,7032)");    # moved on line 199  to X-Ray 3D Acquisition Sequence -  Field of View Rotation
-  $ds->DeleteElementBySig("(0018,7034)");    # moved on line 200  to X-Ray 3D Acquisition Sequence -  Field of View Horizontal Flip
-  $ds->DeleteElementBySig("(0018,7052)");    # moved on line 201  to X-Ray 3D Acquisition Sequence -  Filter Thickness Minimum
-  $ds->DeleteElementBySig("(0018,7054)");    # moved on line 202  to X-Ray 3D Acquisition Sequence -  Filter Thickness Maximum
-  $ds->DeleteElementBySig("(0040,0316)");    # moved on line 203  to X-Ray 3D Acquisition Sequence -  Organ Dose
-  $ds->DeleteElementBySig("(0040,8302)");    # moved on line 204  to X-Ray 3D Acquisition Sequence -  Entrance Dose in mGy
-  $ds->DeleteElementBySig("(0018,11a0)");    # moved on line 208  to Shared Functional Group - Slice Thickness
-  $ds->DeleteElementBySig("(0028,1053)");    # moved on like 209  to Shared Functional Group - Rescale Slope
-  $ds->DeleteElementBySig("(0028,1054)");    # moved on line 210  to Shared Functional Group - Rescale Type
-  $ds->DeleteElementBySig("(0028,1052)");    # moved on line 211  to Shared Functional Group - Rescale Intercept
-  $ds->DeleteElementBySig("(0028,1050)");    # moved on line 216  to Shared Functional Group - Frame VOI LUT Sequence - Window Center
-  $ds->DeleteElementBySig("(0028,1051)");    # moved on line 217  to Shared Functional Group - Frame VOI LUT Sequence - Window Width
+  $ds->DeleteElementBySig("(0018,7030)");    # moved on line 204  to X-Ray 3D Acquisition Sequence -  Field of View Origin
+  $ds->DeleteElementBySig("(0018,701a)");    # moved on line 205  to X-Ray 3D Acquisition Sequence -  Detector Binning
+  $ds->DeleteElementBySig("(0018,7032)");    # moved on line 206  to X-Ray 3D Acquisition Sequence -  Field of View Rotation
+  $ds->DeleteElementBySig("(0018,7034)");    # moved on line 207  to X-Ray 3D Acquisition Sequence -  Field of View Horizontal Flip
+  $ds->DeleteElementBySig("(0018,7052)");    # moved on line 208  to X-Ray 3D Acquisition Sequence -  Filter Thickness Minimum
+  $ds->DeleteElementBySig("(0018,7054)");    # moved on line 209  to X-Ray 3D Acquisition Sequence -  Filter Thickness Maximum
+  $ds->DeleteElementBySig("(0040,0316)");    # moved on line 210  to X-Ray 3D Acquisition Sequence -  Organ Dose
+  $ds->DeleteElementBySig("(0040,8302)");    # moved on line 211  to X-Ray 3D Acquisition Sequence -  Entrance Dose in mGy
+  $ds->DeleteElementBySig("(0018,11a0)");    # moved on line 215  to Shared Functional Group - Slice Thickness
+  $ds->DeleteElementBySig("(0028,1053)");    # moved on like 216  to Shared Functional Group - Rescale Slope
+  $ds->DeleteElementBySig("(0028,1054)");    # moved on line 217  to Shared Functional Group - Rescale Type
+  $ds->DeleteElementBySig("(0028,1052)");    # moved on line 218  to Shared Functional Group - Rescale Intercept
+  $ds->DeleteElementBySig("(0028,1050)");    # moved on line 223  to Shared Functional Group - Frame VOI LUT Sequence - Window Center
+  $ds->DeleteElementBySig("(0028,1051)");    # moved on line 224  to Shared Functional Group - Frame VOI LUT Sequence - Window Width
 
 
 
