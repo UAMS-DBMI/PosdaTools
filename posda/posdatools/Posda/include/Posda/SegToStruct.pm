@@ -46,15 +46,15 @@ Internal structure (after new)
   pixel_size => <num_bytes in pixel>,
   pixel_offset => <position of pixels in file>
   ref_series => {
-    series_instance_uid => <uid>,
-    sop_list => {
+    <series_instance_uid> => {
       <sop_inst> => {
         sop_class => <sop_class>,
         in_posda => "1" or "0",
         in_nbia => "1" or "0",
         posda_path => <path_to_file_in_posda>,
         nbia_path => <path_to_file_in_nbia>,
-      }
+      },
+      ...
     },
     ...
   },
@@ -166,17 +166,14 @@ sub new{
   ###############################################################
   #Referenced Series Sequence
   my $series_of_related_images = $ds->Get("(0008,1115)[0](0020,000e)");
-  $this->{ref_series} = {
-    series_instance_uid => $series_of_related_images
-  };
   my $list = $ds->Search("(0008,1115)[0](0008,114a)[<0>](0008,1155)");
   unless(ref($list) eq "ARRAY"){
     die "Didn't find any referenced sops";
   }
-  $this->{ref_series}->{sop_list} = {};
   for my $match (@$list){
     my $sop_instance = 
      $ds->Get("(0008,1115)[0](0008,114a)[$match->[0]](0008,1155)");
+    $this->{ref_series}->{$series_of_related_images}->{$sop_instance} = 1;
     my $sop_class = 
      $ds->Get("(0008,1115)[0](0008,114a)[$match->[0]](0008,1150)");
     ### to do
