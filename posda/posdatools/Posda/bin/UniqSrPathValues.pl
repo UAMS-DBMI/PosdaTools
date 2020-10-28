@@ -16,7 +16,7 @@ unless ($#ARGV >= 0) {die $usage;}
 my $dir = getcwd;
 my $infile = $ARGV[0];
 unless($infile =~ /^\//) {
-        $infile = "$dir/$infile";
+	$infile = "$dir/$infile";
 }
 my $max_len1 = $ARGV[1];
 my $max_len2 = $ARGV[2];
@@ -28,5 +28,27 @@ my $dd = $Posda::Dataset::DD;
 
 my $ParsedSR = Posda::SrSemanticParse->new($infile);
 
-my $dbg = sub {print @_};
-$ParsedSR->PrintContent($dbg);
+my %Paths;
+sub GetPaths{
+  my($content) = @_;
+  for my $i (@{$content}){
+    if(exists $i->{value}){
+    $Paths{$i->{semantic_path}}->{$i->{value}} = 1;
+    } elsif(exists $i->{image_ref}){
+      $Paths{$i->{semantic_path}}->{$i->{image_ref}} = 1;
+    } else {
+      $Paths{$i->{semantic_path}}->{"<none>"} = 1;
+    }
+    if(exists $i->{content}){
+      GetPaths($i->{content});
+    }
+  }
+}
+my $content = $ParsedSR->{content};
+GetPaths $content;
+for my $path(sort keys %Paths){
+  for my $v (sort keys %{$Paths{$path}}){
+    print "$path|$v\n";
+  }
+}
+
