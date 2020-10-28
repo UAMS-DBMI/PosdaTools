@@ -13,6 +13,7 @@ create table seg_bitmap_file(
 );
 create table seg_slice_bitmap_file (
   seg_slice_bitmap_file_id integer not null,
+  seg_bitmap_slice_no integer not null,
   seg_bitmap_file_id integer not null,
   segmentation_number integer not null,
   iop text not null,
@@ -21,13 +22,13 @@ create table seg_slice_bitmap_file (
   num_bare_points integer not null
 );
 create table seg_slice_bitmap_file_related_image(
-  seg_slice_bitmap_file_id integer not null,
   seg_bitmap_file_id integer not null,
+  seg_bitmap_slice_no integer not null,
   sop_instance_uid text not null
 );
 create table seg_slice_bitmap_bare_point(
-  seg_slice_bitmap_file_id integer not null,
   seg_bitmap_file_id integer not null,
+  seg_bitmap_slice_no integer not null,
   point text not null
 );
 create table seg_bitmap_related_sops(

@@ -64,6 +64,7 @@ Internal structure (after new)
       {
         dimension_sig => "(gggg,eeee)[<0>](gggg,eeee)",
         dimension_desc => <dimension_description>
+        index_range => { min => <min>, max => <max> },
       },
       ...
     ],
@@ -92,23 +93,23 @@ Internal structure (after new)
     },
     ...
   },
-  frame_descriptor => {
-    <index_0> => {
-      <index_1> => {
-        offset_within_pixels => <offset>,
-        plane_orientation => <iop>,
-        pixel_spacing => <pixel_spacing>,
-        slice_spacing => <slice_spacing>,
-        slice_thickness => <slice_thickness>,
-        plane_position => <ipp>,
-        referenced_segment_number => <segment_number>,
-        referenced_images => {
-          <sop_instance_uid> => 1,
-        },
+  frame_descriptor => [
+    {
+      indices => [ <1>, <2>, .... ],
+      offset_within_pixels => <offset>,
+      plane_orientation => <iop>,
+      pixel_spacing => <pixel_spacing>,
+      slice_spacing => <slice_spacing>,
+      slice_thickness => <slice_thickness>,
+      plane_position => <ipp>,
+      referenced_segment_number => <segment_number>,
+      referenced_images => {
+        <sop_instance_uid> => 1,
         ...
       },
     },
-  }
+    ...
+  ]
 };
 
 EOF
@@ -124,6 +125,7 @@ sub new{
   bless $this, $class;
   $this->{study_instance_uid} = $ds->Get("(0020,000d)");
   $this->{series_instance_uid} = $ds->Get("(0020,000e)");
+  $this->{sop_instance_uid} = $ds->Get("(0020,000e)");
   $this->{frame_of_reference_uid} = $ds->Get("(0008,0018)");
   $this->{patient_id} = $ds->Get("(0010,0020)");
   $this->{samples_per_pixel} = $ds->Get("(0028,0002)");
@@ -278,31 +280,41 @@ sub new{
   unless($n_f_found == $this->{number_of_frames}){
     die "$n_f_found descriptors found for $this->{number_of_frames} frames";
   }
+  $this->{frame_descriptor} = [];
+  my @min_max_indices;
   for my $m (@$ml){
     my $i = $m->[0];
     my $d_i_v = $ds->Get("(5200,9230)[$i](0020,9111)[0](0020,9157)");
-    my($index_0,$index_1) = @$d_i_v;
-    if(exists $this->{frame_descriptor}->{$index_0}->{$index_1}){
-      die "duplicate dimension indices \"$index_1\\$index_0\" at $i";
+    my @indices = @$d_i_v;
+    for my $i (0 .. $#indices){
+      unless(exists $min_max_indices[$i]){
+        $min_max_indices[$i] = { min => $indices[$i], max => $indices[$i] };
+      }
+      if($indices[$i] < $min_max_indices[$i]->{min}){
+        $min_max_indices[$i]->{min} = $indices[$i];
+      }
+      if($indices[$i] > $min_max_indices[$i]->{max}){
+        $min_max_indices[$i]->{max} = $indices[$i];
+      }
     }
-    $this->{frame_descriptor}->{$index_0}->{$index_1} = {
+    my $h = {
+      indices => \@indices,
       offset_within_pixels => $offset_within_pixels,
       plane_orientation => $iop,
       pixel_spacing => $pixel_spacing,
       slice_spacing => $slice_spacing,
     };
     $offset_within_pixels += $frame_size;
-    my $p = $this->{frame_descriptor}->{$index_0}->{$index_1};
-    $p->{plane_position} =
+    $h->{plane_position} =
       $ds->Get("(5200,9230)[$i](0020,9113)[0](0020,0032)");
-    $p->{referenced_segment_number} =
+    $h->{referenced_segment_number} =
       $ds->Get("(5200,9230)[$i](0062,000a)[0](0062,000b)");
     if(
-      ref($p->{referenced_segment_number}) eq "ARRAY" &&
-      $#{$p->{referenced_segment_number}} == 0
+      ref($h->{referenced_segment_number}) eq "ARRAY" &&
+      $#{$h->{referenced_segment_number}} == 0
     ){
-      $p->{referenced_segment_number} =
-        $p->{referenced_segment_number}->[0];
+      $h->{referenced_segment_number} =
+        $h->{referenced_segment_number}->[0];
     }
     my $ml_n =
       $ds->Search("(5200,9230)[$i](0008,9124)[0](0008,2112)[<0>](0008,1155)");
@@ -311,12 +323,15 @@ sub new{
         my $j = $m->[0];
         my $sop =
           $ds->Get("(5200,9230)[$i](0008,9124)[0](0008,2112)[$j](0008,1155)");
-        $p->{referenced_images}->{$sop} = 1;
+        $h->{referenced_images}->{$sop} = 1;
       }
     }
+    push @{$this->{frame_descriptor}}, $h;
   }
-
-
+  for my $i (0 .. $#min_max_indices){
+    $this->{dimension_organization}->{dimension_indices}->[$i]->{index_range} =
+      $min_max_indices[$i];
+  }
 
   return $this;
 }
