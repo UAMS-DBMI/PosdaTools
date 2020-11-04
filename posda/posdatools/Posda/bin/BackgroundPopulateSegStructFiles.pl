@@ -305,6 +305,7 @@ for my $f (keys %FileIds){
 
   ## Check/Populate seg_slice_bitmap_file
   my $slice_no = 0;
+  frame:
   for my $frame (@{$seg_obj->{frame_descriptor}}){
     ## Extract compressed bitmap for slice and add to db
     my $offset = $seg_obj->{pixel_offset} + $frame->{offset_within_pixels};
@@ -355,6 +356,14 @@ for my $f (keys %FileIds){
       }
     }
     close CMD;
+    if(defined $slice_file_error){
+      $back->WriteToEmail("slice file error on import to posda: $slice_file_error\n");
+    }
+    unless(defined($slice_file_id)){
+      $back->WriteToEmail("slice file didn't import to posda\n");
+      next frame;
+    }
+    unlink $tmp_file_path;
 
     ## Check/Populate seg_slice_bitmap_file
     my @cols = ( "seg_slice_bitmap_file_id", "seg_slice_bitmap_slice_no",
