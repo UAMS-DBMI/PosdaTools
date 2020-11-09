@@ -299,10 +299,17 @@ EOF
     col_name => "series_instance_uid",
     caption => "view",
   },
+  qc_cc_72_1 => {
+    query => "ListSrTimepoint",
+    type => "ChainColumnToPopup",
+    obj => "DbIf::ShowSr",
+    col_name => "file_path",
+    caption => "view",
+  },
   qc_cc_8 => {
     query_pat => "%",
     type => "ChainColumnToPopup",
-    obj => "choose_from_file_type",
+    obj => "Posda::FileVisualizer",
     col_name => "file_id",
     caption => "view",
   },
@@ -381,13 +388,6 @@ EOF
   },
   qc_cc_72 => {
     query => "ListSrPosdaHidden",
-    type => "ChainColumnToPopup",
-    obj => "DbIf::ShowSr",
-    col_name => "file_path",
-    caption => "view",
-  },
-  qc_cc_72_1 => {
-    query => "ListSrTimepoint",
     type => "ChainColumnToPopup",
     obj => "DbIf::ShowSr",
     col_name => "file_path",
