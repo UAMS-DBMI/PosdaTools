@@ -2624,6 +2624,7 @@ sub NewerProcessPopupFromRow{
 }
 sub InvokeOperationRow {
   my ($self, $http, $dyn) = @_;
+print STDERR "############In InvokeOperationRow\n";
 #  my $class = "Posda::NewerProcessPopup";
   my $class = $dyn->{class_};
   if($class eq "Posda::NewerProcessPopup"){
@@ -2632,6 +2633,7 @@ sub InvokeOperationRow {
   unless(defined $class){
     $class = "Posda::NewerProcessPopup";
   }
+print STDERR "###########class: $class\n";
   if($class eq "Quince") { $class = "ActivityBasedCuration::Quince" }
   eval "require $class";
   if($@){
