@@ -80,7 +80,7 @@ def render_projection(cursor, iec: int) -> None:
             outfile.write(path.encode())
             outfile.write(b'\n')
         outfile.close()
-        print(f"Found {i} images in this IEC.")
+        print(f"Found {i+1} images in this IEC.")
 
         # call IM to produce min, max, avg projections
         call_convert(outfile.name, "min.jpg", ProjectionType.MIN)
