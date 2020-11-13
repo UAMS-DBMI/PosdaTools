@@ -100,7 +100,7 @@ for my $file (keys %Files){
   my $exposuretime =  $ds->GetEle("(0018,1150)")->{value};
   my $sinTheta = sin($ppa);
   my $negativeCosTheta = cos($ppa) * -1;
-  my $ippIncrement = ($bodypartthickness / 55.0);
+  my $ippIncrement = ($bodypartthickness / $numframes);
   my $empty = [];
   my $view_position  = $ds->GetEle("(0018,5101)")->{value};
 
