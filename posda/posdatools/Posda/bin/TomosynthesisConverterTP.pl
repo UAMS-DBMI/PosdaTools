@@ -243,9 +243,9 @@ for my $file (keys %Files){
     $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[2]", $IPP3);                                    #Plane Position Sequence - Image Position Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[0]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
     if ($laterality eq 'L'){
-      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                      #Plane Orientation Sequence - Image Orientation Patient
+      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                    #Plane Orientation Sequence - Image Orientation Patient
     }else{
-      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "-1");                                      #Plane Orientation Sequence - Image Orientation Patient
+      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "-1");                                   #Plane Orientation Sequence - Image Orientation Patient
       }
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[2]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[3]", $sinTheta);                                #Plane Orientation Sequence - Image Orientation Patient
