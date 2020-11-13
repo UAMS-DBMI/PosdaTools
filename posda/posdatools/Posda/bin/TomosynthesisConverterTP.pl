@@ -101,8 +101,12 @@ for my $file (keys %Files){
   my $sinTheta = sin($ppa);
   my $negativeCosTheta = cos($ppa) * -1;
   my $ippIncrement = ($bodypartthickness / $numframes);
+  my $incrementedST = $sinTheta * $ippIncrement;
+  my $incrementedNCT = $negativeCosTheta * $ippIncrement;
   my $empty = [];
   my $view_position  = $ds->GetEle("(0018,5101)")->{value};
+  my $IPP1 = 0;
+  my $IPP3 = 0;
 
   my $laterality;
   if (index(substr($path, -15), 'r') != -1) {
@@ -234,17 +238,21 @@ for my $file (keys %Files){
     $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9206)", "VOLUME");                                    #X-Ray 3D Frame Type Sequence - Volumetric Properties
     $ds->Insert("(5200,9230)[$i](0018,9504)[0](0008,9207)", "TOMOSYNTHESIS");                             #X-Ray 3D Frame Type Sequence - Volume Based Calculation Technique
     $ds->Insert("(5200,9230)[$i](0020,9111)[0](0020,9156)", "1");                                         #Frame Content Sequence - Frame Acquisition Number
-    my $incrementedST = $sinTheta * $ippIncrement;
-    my $incrementedNCT = $negativeCosTheta * $ippIncrement;
-    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[0]", $incrementedNCT);                          #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[0]", $IPP1 );                                   #Plane Position Sequence - Image Position Patient
     $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[1]", "0");                                      #Plane Position Sequence - Image Position Patient
-    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[2]", $incrementedST);                           #Plane Position Sequence - Image Position Patient
+    $ds->Insert("(5200,9230)[$i](0020,9113)[0](0020,0032)[2]", $IPP3);                                    #Plane Position Sequence - Image Position Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[0]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
-    $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                      #Plane Orientation Sequence - Image Orientation Patient
+    if ($laterality eq 'L'){
+      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "1");                                      #Plane Orientation Sequence - Image Orientation Patient
+    }else{
+      $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[1]", "-1");                                      #Plane Orientation Sequence - Image Orientation Patient
+      }
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[2]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[3]", $sinTheta);                                #Plane Orientation Sequence - Image Orientation Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[4]", "0");                                      #Plane Orientation Sequence - Image Orientation Patient
     $ds->Insert("(5200,9230)[$i](0020,9116)[0](0020,0037)[5]", $negativeCosTheta);                        #Plane Orientation Sequence - Image Orientation Patient
+    $IPP1 += $incrementedNCT;
+    $IPP3 += $incrementedST;
 
   }
 
