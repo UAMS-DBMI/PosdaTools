@@ -852,7 +852,10 @@ sub WritePart10Fh{
   my($ds, $fh, $xfr_stx, $ae_title) = @_;
   my $pix_ref = $ds->Get("(7fe0,0010)");
   if(ref($pix_ref) eq "ARRAY"){
-    unless($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    unless(
+      $xfr_stx eq '1.2.840.10008.1.2.4.90' ||
+      $xfr_stx eq '1.2.840.10008.1.2.4.70'
+    ){
       die "Can't convert from compressed to non-compressed xfer_syntax";
     }
   } elsif (
@@ -960,7 +963,10 @@ sub WritePart10{
   my($ds, $file_name, $xfr_stx, $ae_title, $private_uid, $private) = @_;
   my $pix_ref = $ds->Get("(7fe0,0010)");
   if(ref($pix_ref) eq "ARRAY"){
-    unless($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    unless(
+      $xfr_stx eq '1.2.840.10008.1.2.4.90' ||
+      $xfr_stx eq '1.2.840.10008.1.2.4.70'
+    ){
       die "Can't convert from compressed to non-compressed xfer_syntax";
     }
   } elsif (
@@ -1086,6 +1092,8 @@ sub WritePart10{
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, \*FILE);
   } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
+    WriteExpLe($ds, \*FILE);
+  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.70'){
     WriteExpLe($ds, \*FILE);
   } else {
     die "unsupported transfer syntax $xfr_stx";
