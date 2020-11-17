@@ -9,16 +9,25 @@ my $usage = <<EOF;
 PhiSimpleSeriesScan.pl  <series_instance_uid> <activity_id> <database>
   series_instance_uid  - series_instance_uid
   activity_id          - activity ID
-  database             - Public or Posda
+  database             - Public or Posda or ImportEventId(<imp_event_id>)
 
 uses query  FilesInSeriesAndTP
 EOF
 unless($#ARGV == 2){ die $usage }
 my($series_inst, $act_id, $scandb) = @ARGV;
 
-my $query = "FilesInSeriesAndTP";
-if ($scandb eq "Public") {
+my $query;
+my $imp_event_id;
+if($scandb eq "Posda"){
+  $query = "FilesInSeriesAndTP";
+}elsif ($scandb eq "Public") {
   $query = "PublicFilesInSeries";
+} elsif($scandb =~ /^ImportEventId\((\d+)\)$/){
+  $imp_event_id = $1;
+  $query = "FilesInSeriesInImportEvent";
+} else {
+  print STDERR "Can't make sense of scan type $scandb\n";
+  exit;
 }
 my @FilesToScan;
 my $current_timepoint_id;
@@ -71,6 +80,13 @@ if ($scandb eq "Public") {
     my $path = &$trans($file);
     push @FilesToScan, $path;
   }, sub {}, $series_inst);
+} elsif($scandb =~ /^ImportEvent/) {
+  $get_files->RunQuery(sub {
+    my($row) = @_;
+    my $file = $row->[0];
+    my $path = &$trans($file);
+    push @FilesToScan, $path;
+  }, sub {}, $imp_event_id, $series_inst);
 } else {
   $get_files->RunQuery(sub {
     my($row) = @_;

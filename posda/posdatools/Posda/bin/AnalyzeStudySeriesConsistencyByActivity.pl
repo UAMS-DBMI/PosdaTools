@@ -146,7 +146,7 @@ Query("FindInconsistentSeriesIgnoringTimeTp")->RunQuery(sub{
       }
     }
   }
-}, sub {});
+}, sub {}, $OldActTpId);
 ##################
 # Analyze Study Consistency for Inconsistent Studies
 my $std_inc = Query('StudyConsistencyWithPatientId');

@@ -14,18 +14,20 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 my $usage = <<EOF;
-BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions>
+BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions> <upd_nbia> <dir>
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
   email sent to <notify>
   skip private dispositions if <skip_dispositions> is set to 1
+  if <upd_nbia> use nbia file conventions and nbia-api to update nbia
+  else <dir> contains name of download subdirectory (no spaces or special characters)
 
 Expects nothing on <STDIN>
 
 Constructs a destination file name as follows:
   <generated_unique_dir>/<patient_id>/<study_uid>/<series_uid>/<modality>_sop_inst_uid.dcm
 
-Actually invokes ApplyPrivateDispositionUnconditionalDate.pl to do the edits
+Actually invokes ApplyPrivateDispositionUnconditionalDate2.pl to do the edits
 EOF
 
 
@@ -37,156 +39,145 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $script_start_time = time;
-unless($#ARGV == 5){
+unless($#ARGV == 7){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions) = @ARGV;
+my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions, $upd_nbia, $rel_dir) = @ARGV;
 
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
+unless(defined $skip_dispositions) { $skip_dispositions = 0}
+if($skip_dispositions == "") { $skip_dispositions = 0}
+unless(defined $upd_nbia) { $upd_nbia = 0}
+if($upd_nbia == "") { $upd_nbia = 0}
 
-print "All processing in background\n";
-$background->Daemonize;
+if($upd_nbia && $rel_dir){
+  print "If <upd_nbia> is not 0 or blank (and it is \"$upd_nbia\") then <dir> should not be supplied (it is \"$rel_dir\")\n";
+  exit;
+}
+
+if($rel_dir){
+  if($rel_dir =~ /[^A-Za-z0-9_]/){
+    print "Rel_dir is only allowed to have A-Z, a-z, 0-9, _ characters.  It is \"$rel_dir\".";
+    exit;
+  }
+}
 
 my %Patients;
-my @Series;
-
-
-my $act_info = Posda::ActivityInfo->new($act_id);
-my $collection_name = $act_info->GetCollection;
-my $site_name = $act_info->GetSite;
-my $site_code = $act_info->GetSiteCode;
-my $collection_code = $act_info->GetCollectionCode;
-
-# Although site_code is not used in this script, this test is left here
-# because the sub cmd will fail silently if no site_code is defined!!
-if (not defined $site_code) {
-  $background->WriteToEmail("No entry for $site_name in site_codes table!\n");
-  $background->Finish;
-  exit;
-}
-
-if (not defined $collection_code) {
-  $background->WriteToEmail("No entry for $collection_name in collection_codes table!\n");
-  $background->Finish;
-  exit;
-}
-
-
-
-my $tp_id = $act_info->LatestTimepoint;
-my $FileInfo = $act_info->GetFileInfoForTp($tp_id);
-for my $f (keys %$FileInfo){
-  my $pat_id = $FileInfo->{$f}->{patient_id};
-  my $series_uid = $FileInfo->{$f}->{series_instance_uid};
-  my $study_uid = $FileInfo->{$f}->{study_instance_uid};
-  $Patients{$pat_id}->{$study_uid}->{$series_uid} = 1;
-}
-
-for my $p (keys %Patients){
-  for my $s (keys %{$Patients{$p}}){
-    for my $se (keys %{$Patients{$p}->{$s}}){
-      push @Series, $se;
+my %Studies;
+my %Series;
+my %Sops;
+my %Files;
+my %DupSops;
+my %Collections;
+my %Sites;
+Query("FilesForDispositionsByActivity")->RunQuery(sub{
+  my($row) = @_;
+  my($file_id, $collection, $site,
+    $patient_id, $study_instance_uid, $series_instance_uid,
+    $sop_instance_uid, $modality, $path) = @$row;
+    $Files{$file_id} = {
+      collection => $collection,
+      site => $site,
+      patient => $patient_id,
+      study => $study_instance_uid,
+      series => $series_instance_uid,
+      sop => $sop_instance_uid,
+      modality => $modality,
+      path => $path,
+    };
+    if(defined $collection){
+      $Patients{$patient_id}->{collection}->{$collection} = 1;
     }
-  }
-}
-
-my %SopsInTimepoint;
-Query("DistinctSopsInLatestTimepoint")->RunQuery(sub{
-  my($row) = @_;
-  $SopsInTimepoint{$row->[0]} = 1;
-}, sub {}, $act_id);
-
-
-#my $g_ser_file_ids = PosdaDB::Queries->GetQueryInstance("FilesIdsVisibleInSeries");
-#my @tp_errors;
-#for my $s (@Series){
-#  $g_ser_file_ids->RunQuery(sub{
-#    my($row) = @_;
-#    my $f = $row->[0];
-#    unless(exists $FileInfo->{$f}){
-#      push(@tp_errors, [$s, $f]);
-#    }
-#  }, sub {}, $s);
-#}
-
-my %tp_errors;
-Query("SeriesSopActivityForAllSopsInLatestAcivityTpOfActivity")->RunQuery(sub {
-  my($row) = @_;
-  my($series_instance_uid, $sop_instance_uid, $in_act_id) = @$row;
-  unless(exists $SopsInTimepoint{$sop_instance_uid}){
-    if(exists($tp_errors{$sop_instance_uid})){
-      $tp_errors{$series_instance_uid} += 1;
+    if(defined $site){
+      $Patients{$patient_id}->{sites}->{$site} = 1;
+    }
+    $Patients{$patient_id}->{studies}->{$study_instance_uid}->{$series_instance_uid}->{$modality}->{$sop_instance_uid} =  $file_id;
+    $Series{$series_instance_uid}->{$study_instance_uid} = 1;
+    $Studies{$study_instance_uid}->{$patient_id} = 1;
+    if(exists($Sops{$sop_instance_uid})){
+      $DupSops{$sop_instance_uid}->{$file_id} = 1;
+      $DupSops{$sop_instance_uid}->{$Sops{$sop_instance_uid}} = 1;
     } else {
-      $tp_errors{$series_instance_uid} = 1;
+      $Sops{$sop_instance_uid}->{$file_id} = 1;
+    }
+}, sub{}, $act_id);
+
+my $tp_id;
+Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+  my($row) = @_;
+  $tp_id = $row->[0];
+}, sub{}, $act_id);
+print STDERR "Activity timepoint id: $tp_id\n";
+
+my $num_reports = 0;
+
+## Basic sanity checks:
+
+# Check DupSops, report and exit
+  my $num_dups = keys %DupSops;
+  if($num_dups > 0){
+    print "$num_dups Duplicate Sops found in timepoint\n";
+    for my $sop(keys %DupSops){
+      print "$sop:\n";
+      for my $fid (keys %{$DupSops{$sop}}){
+        print "\t$fid\n";
+      }
+    }
+    $num_reports += 1;
+  }
+# Check Patient in no collection or multiple collections, report
+  for my $pat (keys %Patients){
+    if(
+      exists $Patients{$pat}->{collection} and 
+      ref($Patients{$pat}->{collection}) eq "HASH"
+    ){
+      my $num_col = keys %{$Patients{$pat}->{collection}};
+      unless($num_col == 1){
+        print "Patient $pat is in $num_col collections\n";
+      }
+    } else {
+      print "Patient $pat is in no collection\n";
+      $num_reports += 1;
     }
   }
-}, sub {}, $act_id);
-
-
-my $num_errors = keys %tp_errors;
-if($num_errors > 0){
-  $background->WriteToEmail("There were $num_errors in tp series\n");
-  my $rpt_w = $background->CreateReport("Series In Timepoint With Files Not In Timepoint");
-  $rpt_w->print("series_instance_uid,num_files\n");
-  for my $i (sort keys %tp_errors){
-    $rpt_w->print("$i, $tp_errors{$i}\n");
+# Check Patient in no site or multiple sites, report
+  for my $pat (keys %Patients){
+    if(
+      exists $Patients{$pat}->{sites} and 
+      ref($Patients{$pat}->{sites}) eq "HASH"
+    ){
+      my $num_sites = keys %{$Patients{$pat}->{sites}};
+      unless($num_sites == 1){
+        print "Patient $pat is in $num_sites sites\n";
+      }
+    } else {
+      print "Patient $pat is in no sites\n";
+      $num_reports += 1;
+    }
   }
-  $background->WriteToEmail("Warning: There are series in timepoint with SOPs not in timepoint\n");
-#  $background->Finish;
-#  exit;
+# Check Study in multiple patients, report
+# Check Series in multiple studies, report
+# Exit if any errors reported above
+if($num_reports > 0){
+  print "Exiting for $num_reports errors\n";
+  exit;
 }
 
+print "Passed basic checks\n";
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
+
+print "Going to background for further processing\n";
+$background->Daemonize;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$background->SetActivityStatus("Checking and Marking Tags");
 my $q1 = PosdaDB::Queries->GetQueryInstance(
   "PrivateTagsWhichArentMarked");
 my $q2 = PosdaDB::Queries->GetQueryInstance(
-  "DistinctDispositionsNeededSimple");
+  "DoAnyPrivateTagsNeedDispositions");
 my $error = 0;
 
 my @new_tags;
@@ -196,23 +187,19 @@ $q1->RunQuery(sub{
   push(@new_tags, [$id, $ele_sig, $vr, $name, $disp]);
 }, sub {});
 if(@new_tags > 0){
-  $background->WriteToEmail("Error: there are new private tags which have no disposition\n");
-  my $rpt = $background->CreateReport("Private Tags With No Disposition");
-  $rpt->print("id,tag,vr,name,disp\n");
-  for my $i (@new_tags){
-    for my $j (0 .. $#{$i}){
-      my $v = $i->[$j];
-      if(defined $v) { $rpt->print("$v") } else {$rpt->print("<undef>") }
-      if($j == $#{$i}){
-        $rpt->print("\n");
-      }
-    }
-    $rpt->print("\n");
+  my $num_new_tags = @new_tags;
+  $background->WriteToEmail("Error: there are $num_new_tags new private tags to be processed (for name)\n");
+  open PIPE, "UpdatePrivateElementNames.pl|";
+  $background->WriteToEmail("Running UpdatePrivateElementNames.pl:\n");
+  while(my $line = <PIPE>){
+    chomp $line;
+    $background->WriteToEmail(">>>>$line\n");
   }
-  $background->Finish;
-  exit;
+  my $now = `date`;
+  chomp $now;
+  $background->WriteToEmail("$now: finished UpdatePrivateElementNames.pl:\n");
 }
-
+$background->SetActivityStatus("Checking Missing Dispositions");
 
 my @dispositions_needed;
 $q2->RunQuery(sub {
@@ -220,28 +207,34 @@ $q2->RunQuery(sub {
   my($id, $ele_sig, $vr, $name) = @$row;
   push @dispositions_needed, [$id, $ele_sig, $vr, $name];
 }, sub {});
-if(@dispositions_needed > 0){
-  my $num_disp_n = @dispositions_needed;
-  $background->WriteToEmail("Error: $num_disp_n private tags have no disposition\n");
-  my $rpt = $background->CreateReport("Private Tags With No Disposition");
-  $rpt->print("id,tag,vr,name\n");
-  for my $i (@dispositions_needed){
-    for my $j ($#{$i}){
-      my $v = $i->[$j];
-      if(defined $v) { $rpt->print("$v") } else {$rpt->print("<undef>") }
-      unless($j == $#{$i}){
-        $rpt->print(",");
-      }
-    }
-    $rpt->print("\n");
+my $num_needing_disp = @dispositions_needed;
+
+if($num_needing_disp > 0){
+  $background->WriteToEmail("\n############\n" .
+    "$num_needing_disp private tags need dispositions\n");
+  my %SeriesNeedingDispositions;
+  my $c_series = Query('DoesSeriesHaveAnyTagsWithNoDispositions');
+  for my $series (keys %Series){
+    $c_series->RunQuery(sub{
+      my($row) = @_;
+      $SeriesNeedingDispositions{$row->[0]} = 1;
+    }, sub {}, $series);
   }
-  $background->Finish;
-  exit;
+  my $num_series_missing_dispositions = keys %SeriesNeedingDispositions;
+  if($num_series_missing_dispositions > 0){
+    $background->WriteToEmail("including $num_series_missing_dispositions" .
+      " series in this timepoint\n############\n");
+    $background->Finish("$num_series_missing_dispositions missing dispositions");
+    exit;
+  } else {
+    $background->WriteToEmail("$num_needing_disp private tags need dispositions\n");
+  }
 }
 
 ####
 #### Visual Review Checking
 ####
+$background->SetActivityStatus("Checking Visual Review");
 
 ### Get visual review for this activity
 my $visual_review_id;
@@ -254,9 +247,11 @@ Query("GetVisualReviewByActivityIdLatest")->RunQuery(sub{
 
 unless(defined $visual_review_id){
   $background->WriteToEmail("Internal Error: visual review id undefined\n");
-  $background->Finish;
+  $background->Finish("Error: No visual review");
   exit;
 }
+
+$background->WriteToEmail("Checking visual_review_id: $visual_review_id\n");
 my $num_sops_not_reviewed;
 Query("VerifyAllSopsInTpAreInVR")->RunQuery(sub {
   $num_sops_not_reviewed += 1;
@@ -264,9 +259,11 @@ Query("VerifyAllSopsInTpAreInVR")->RunQuery(sub {
 if($num_sops_not_reviewed > 0){
   $background->WriteToEmail("There are $num_sops_not_reviewed SOPs in the activity " .
     "which were not reviewed\n");
-  $background->Finish;
+  $background->Finish("There are $num_sops_not_reviewed SOPs in the activity " .
+    "which were not reviewed");
   exit;
 }
+$background->WriteToEmail("All SOPs in current_timepoint are in visual review\n");
 my $unfinished_reviews = 0;
 Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
   $unfinished_reviews += 1;
@@ -274,7 +271,8 @@ Query("SopsInTimepointWithUnfinishedVR")->RunQuery(sub {
 if ($unfinished_reviews > 0){
   $background->WriteToEmail("There are $unfinished_reviews SOPs in the activity " .
     "have review status other than Good or Bad\n");
-  $background->Finish;
+  $background->Finish("There are $unfinished_reviews SOPs in the activity " .
+    "have review status other than Good or Bad");
   exit;
 }
 my $bad_status = 0;
@@ -284,7 +282,8 @@ Query("SopsInTimepointWithBadVR")->RunQuery(sub {
 if ($bad_status > 0){
   $background->WriteToEmail("There are $bad_status SOPs in the activity " .
     "have review status of Bad\n");
-  $background->Finish;
+  $background->Finish("There are $bad_status SOPs in the activity " .
+    "have review status of Bad");
   exit;
 }
 ####
@@ -293,12 +292,13 @@ if ($bad_status > 0){
 
 
 
-my $num_series = @Series;
-$background->WriteToEmail("Found list of $num_series series to send\n");
+$background->SetActivityStatus("Building Commands");
+my $num_files = keys %Files;
+$background->WriteToEmail("Found list of $num_files files to send\n");
 
 # Abort if we found nothing to do
-if($num_series <= 0) {
-  $background->Finish;
+if($num_files <= 0) {
+  $background->Finish("No files found");
   exit;
 }
 
@@ -306,60 +306,82 @@ my $date = `date`;
 chomp $date;
 
 #############################
-## Compute the Destination Dir (and die if it already exists)
+## Compute the BaseDir
 #
-my $sub_dir = get_uuid();
-
-my $BaseDir = $ENV{NBIA_STORAGE_ROOT}
+my $BaseDir;
+if($upd_nbia){
+  $BaseDir = $ENV{NBIA_STORAGE_ROOT}
   or die "NBIA_STORAGE_ROOT env var is undefined! cannot continue";
-
-unless(-d $BaseDir){
-  print "Error: Base dir ($BaseDir) isn't a directory\n";
+} else {
+  my $cache_dir = $ENV{POSDA_CACHE_ROOT};
+  unless(-d $cache_dir){
+    print "Error: Cache dir ($cache_dir) isn't a directory\n";
+    exit;
+  }
+  $BaseDir = "$cache_dir/linked_for_download/$rel_dir";
+  make_path($BaseDir);
 }
+#
+## End Compute the BaseDir
+#############################
 
 $background->WriteToEmail("$date\nStarting ApplyPrivateDispositions\n");
 
 if($skip_dispositions) {
-  $background->WriteToEmail("$date\nPrivate Dispositions will be skipped\n");
+  $background->WriteToEmail("Private Dispositions will be skipped\n");
 }
+
+if($upd_nbia){
+  $background->WriteToEmail("Files will be entered into nbia database\n");
+} else {
+  $background->WriteToEmail("Files will be written to downloadable " .
+    "directory \"$rel_dir\"\nReal directory: $BaseDir\n");
+}
+
 #######################################################################
 ### Body of script
 
+#    $Files{$file_id} = {
+#      collection => $collection,
+#      site => $site,
+#      patient => $patient_id,
+#      study => $study_instance_uid,
+#      series => $series_instance_uid,
+#      sop => $sop_instance_uid,
+#      modality => $modality,
+#      path => $path,
+#    };
+#
+
+$background->SetActivityStatus("Building Commands");
 my @cmds;
-my $q_inst = PosdaDB::Queries->GetQueryInstance("FilesInSeriesForApplicationOfPrivateDisposition2");
-for my $patient_id (sort keys %Patients){
-
-
-  $background->WriteToEmail("Patient: $patient_id\n");
-  for my $study_uid (sort keys %{$Patients{$patient_id}}){
-    $background->WriteToEmail("Study $study_uid\n");
-    for my $series_uid (sort keys %{$Patients{$patient_id}->{$study_uid}}){
-      $background->WriteToEmail("Series \"$series_uid\"\n");
-      my $num_files = 0;
-      $q_inst->RunQuery(sub {
-        my ($row) = @_;
-        my ($path, $sop_instance_uid, $modality, $file_id) = @$row;
-
-        my $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
-
-				my $full_filename = "$BaseDir/$f_filename";
-				my $dirname = dirname($full_filename);
-				make_path($dirname);
-
-        my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-                  qq{$file_id $path "$full_filename" $uid_root "$offset" "$skip_dispositions" } .
-                  qq{$tp_id};
-
-        push @cmds, $cmd;
-        $num_files += 1;
-      }, sub{}, $series_uid);
-      $background->WriteToEmail("Num_files $num_files\n");
-    }
+for my $file_id (keys %Files){
+  my $sop_instance_uid = $Files{$file_id}->{sop};
+  my $path = $Files{$file_id}->{path};
+  my $f_filename;
+  if($upd_nbia){
+    $f_filename = Posda::NBIASubmit::GenerateFilename($sop_instance_uid);
+  } else {
+    my $pat = $Files{$file_id}->{patient};
+    my $study = $Files{$file_id}->{study};
+    my $series = $Files{$file_id}->{series};
+    my $modality = $Files{$file_id}->{modality};
+    $f_filename = "$pat/$study/$series/$modality$sop_instance_uid.dcm";
   }
+  my $full_filename = "$BaseDir/$f_filename";
+  my $dirname = dirname($full_filename);
+  make_path($dirname);
+
+  my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
+            qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
+            qq{"$upd_nbia"};
+
+  push @cmds, $cmd;
 }
 my $num_commands = @cmds;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
+$background->SetActivityStatus("Queueing Commands (in parallel)");
 open SCRIPT1, "|/bin/sh";
 open SCRIPT2, "|/bin/sh";
 open SCRIPT3, "|/bin/sh";
@@ -413,6 +435,7 @@ while(1){
   print SCRIPT0 "$cmd\n";
 
 }
+$background->SetActivityStatus("Waiting For commands to clear");
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("All commands queued\n");
 close SCRIPT1;
@@ -433,5 +456,8 @@ $background->WriteToEmail("All subshells complete\n");
 my $end = time;
 my $duration = $end - $script_start_time;
 $background->WriteToEmail( "finished conversion in $duration seconds\n");
-$background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
-$background->Finish;
+if($upd_nbia){
+  $background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" " .
+    "href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
+}
+$background->Finish("Done");

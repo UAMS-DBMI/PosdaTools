@@ -251,6 +251,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "PhiPublicScanTp",
       },
       {
+        caption => "VA Phi 'Public' Scan Based on ImportEventId",
+        action =>  "PhiVaPublicScanTp",
+      },
+      {
         caption => "Public Phi Scan Based on Collection, Site",
         action =>  "PhiPublicScan",
       },
@@ -286,6 +290,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Make a Downloadable Directory",
         action =>  "MakeDownloadableDirectoryTp",
+      },
+      {
+        caption => "Import Downloadable Directory",
+        action =>  "ImportDownloadableDirectory",
       },
       {
         caption => "Copy SOP Class and SOP instance from Meta-header",
