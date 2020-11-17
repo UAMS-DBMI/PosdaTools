@@ -50,9 +50,9 @@ for my $line (@lines){
   if($date_shift eq "<undef>"){ $date_shift = undef }
   if($batch eq "<undef>"){ $batch = undef }
   if($diagnosis_date eq "<undef>"){ $diagnosis_date = undef }
-  if($diagnosis_date =~ /^<(.*)>$/) { $diagnosis_date = $1 }
+    elsif($diagnosis_date =~ /^<(.*)>$/) { $diagnosis_date = $1 }
   if($baseline_date eq "<undef>"){ $baseline_date = undef }
-  if($baseline_date =~ /^<(.*)>$/) { $baseline_date = $1 }
+    elsif($baseline_date =~ /^<(.*)>$/) { $baseline_date = $1 }
   if($date_shift =~ /^<(.*)>$/) { $date_shift = $1 }
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;

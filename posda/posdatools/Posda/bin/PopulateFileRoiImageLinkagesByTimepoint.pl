@@ -7,11 +7,11 @@ use Digest::MD5 qw( md5_hex );
 use Debug;
 my $dbg = sub {print @_};
 my $usage = <<EOF;
-  PopulateFileRoiImageLinkagesByTimepoint.pl <activity_timepoint_id>
+  PopulateFileRoiImageLinkagesByTimepoint.pl <activity_id>
 or
   PopulateFileRoiImageLinkagesByTimepoint.pl -h
 
-Uses query "GetListOfUnprocessedStructureSetsInTimepoint" to
+Uses query "GetListOfUnprocessedStructureSetsInActivity" to
 get a list of structure sets which do not have entries in
 the file_roi_image_linkages table, and processes them,
 using queries "GetRoiIdFromFileIdRoiNum",
@@ -36,7 +36,7 @@ unless($#ARGV ==  0) { die $usage }
 my $activity_timepoint_id = $ARGV[0];
 my %StructureSetList;
 my $get_list = PosdaDB::Queries->GetQueryInstance(
-  "GetListOfUnprocessedStructureSetsInTimepoint"
+  "GetListOfUnprocessedStructureSetsInActivity"
 );
 my $get_roi_id = PosdaDB::Queries->GetQueryInstance(
   "GetRoiIdFromFileIdRoiNum"
