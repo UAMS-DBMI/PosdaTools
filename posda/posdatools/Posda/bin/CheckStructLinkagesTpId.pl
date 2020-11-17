@@ -485,7 +485,8 @@ sub VolumeFilesInPosda{
       $num_rows += 1;
     }, sub {}, $sop);
     if($num_rows < 1) {$sops_not_found += 1}
-    if($num_rows == 1) {$sops_found += 1}
+    elsif($num_rows == 1) {$sops_found += 1}
+    elsif($num_rows > 1) {$sops_found += 1}
   }
   $RowInfo->{SopInfoFoundInVolPosda} = \%SopsFoundInVol;
   $RowInfo->{VolumeFilesInPosda} =

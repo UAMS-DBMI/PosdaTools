@@ -47,7 +47,7 @@ unless($#ARGV == 5){
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions, $upd_nbia, $rel_dir) = @ARGV;
+my($invoc_id, $act_id, $notify, $skip_dispositions, $upd_nbia, $rel_dir) = @ARGV;
 
 unless(defined $skip_dispositions) { $skip_dispositions = 0}
 if($skip_dispositions == "") { $skip_dispositions = 0}

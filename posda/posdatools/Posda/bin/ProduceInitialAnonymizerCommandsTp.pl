@@ -50,6 +50,8 @@ my $activity_timepoint_id = $res->{activity_timepoint_id};
 my $patients = Query('PatientsByTp')->FetchResults(
   $activity_timepoint_id
 );
+my $num_initial_patients = @$patients;
+print "$num_initial_patients patients\n";
 
 my %patients; 
 # $patients{<from_patient_id>} = {
@@ -98,6 +100,7 @@ $get_collection_codes->RunQuery(sub {
   my($collection_name, $collection_code) = @$row;
   $CollectionNameToCode{$collection_name} = $collection_code;
 }, sub {});
+print "GetPatientMappingByCollectionSite(\"$collection\", \"$site\");\n";
 $get_patient_mapping->RunQuery(sub{
   my($row) = @_;
   my($from_patient_id, $to_patient_id, $to_patient_name,
@@ -153,7 +156,8 @@ $get_patient_mapping->RunQuery(sub{
       "\"$hash->{date_shift}\"\n";
     }
   }
-  if(exists $PatientMapping{$hash}){
+  print "Found patient_mapping $from_patient_id\n";
+  if(exists $PatientMapping{$from_patient_id}){
     $PatientMapping{$from_patient_id} = [ $PatientMapping{$from_patient_id} ];
     push @{$PatientMapping{$from_patient_id}}, $hash;
   } else {
@@ -163,10 +167,13 @@ $get_patient_mapping->RunQuery(sub{
 
 
 my $num_patients = keys %patients;
+print "Num patients = $num_patients\n";
 my @mapped_patients;
 for my $i (keys %patients){
   if(exists $PatientMapping{$i}){
     push @mapped_patients, $i;
+  } else {
+    print "Error: $i has no patient_mapping\n";
   }
 }
 my $num_mapped_patients = @mapped_patients;
