@@ -8,9 +8,11 @@ represent PHI scans of DICOM files.
 
 Such an instance of this class can be created in one of two different ways:
  - initiate a scan.  This creates a row in phi_scan_instance, and populates
-   all of the associated rows.   to do this you need to supply three things
+   all of the associated rows.   To do this you need to supply three or four
+   things:
      1) A list of series to scan,
-     2) The database against which you wish to scan: "Posda" or "Public"
+     2) The database against which you wish to scan: "Posda" or "Public" or
+        "ImportEvent(<imp_event_id>)"
      3) A description of the Scan to be performed
    Creating an object this way will take a long time. During which the
    script creating the object will be waiting for the scan to complete.
@@ -55,18 +57,24 @@ my $finalize_scan = Query("FinalizeSimpleScanInstance");
 my $get_scan_by_id = Query("GetScanInstanceById");
 my $update_act = Query('UpdateActivityTaskStatus');
 sub NewFromScan{
-  my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back) = @_;
+  my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back, $imp_event) = @_;
   my $current_timepoint_id;
   Query("LatestActivityTimepointForActivity")->RunQuery(sub{
     my($row) = @_;
     $current_timepoint_id = $row->[0];
   }, sub {}, $act_id);
   my $num_series = @$SeriesList;
-  my $q_name = "FilesInSeriesAndTP";
+  my $q_name;
+  my $imp_event_id;
   if($database eq "Public") {
     $q_name = "PublicFilesInSeries";
-  } elsif($database ne "Posda"){
-    die "Database must be either Posda or Public";
+  } elsif($database =~ /^ImportEventId\((\d+)\)$/){
+    $imp_event_id = $1;
+    $q_name = "FilesInSeriesInImportEvent";
+  } elsif($database eq "Posda"){
+    $q_name = "FilesInSeriesAndTP";
+  } else {
+    die "Database ($database) must be either Posda or Public or ImportEventId(<id>)";
   }
   my $get_series_count = Query($q_name);
   $create_scan->RunQuery(sub {}, sub{}, $description, $num_series, $q_name);
@@ -88,16 +96,24 @@ sub NewFromScan{
     my $series_start_time = time;
     my $num_files_in_series = 0;
 
-    if ($database ne 'Public') {
+    if ($database eq 'Posda') {
       $get_series_count->RunQuery(sub {
         my($row) = @_;
         $num_files_in_series += 1;
       }, sub {}, $series, $current_timepoint_id);
-    } else {
+    } elsif ($database eq 'Public') {
       $get_series_count->RunQuery(sub {
         my($row) = @_;
         $num_files_in_series += 1;
       }, sub {}, $series);
+    } elsif($database =~ /^ImportEvent/){
+      unless(defined $imp_event_id){
+        die "no import event found in $database";
+      }
+      $get_series_count->RunQuery(sub {
+        my($row) = @_;
+        $num_files_in_series += 1;
+      }, sub {}, $imp_event_id, $series);
     }
 
     $create_series_scan->RunQuery(sub {}, sub {}, $scan_id,
@@ -107,7 +123,7 @@ sub NewFromScan{
       my($row) = @_;
       $series_scan_id = $row->[0];
     }, sub {});
-    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id $database |";
+    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id \"$database\" |";
     while(my $line = <SUBP>){
       chomp $line;
       my($tagp, $vr, $value) = split(/\|/, $line);
