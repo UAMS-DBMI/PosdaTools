@@ -9,3 +9,4 @@ add_expected_count_to_import_event.sql
 create_export_event_related_tables.sql
 add_outdated_to_spreadsheet_operation.sql
 set_oudated_operations.sql
+create_work_table.sql
