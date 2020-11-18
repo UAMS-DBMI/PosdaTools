@@ -35,7 +35,7 @@ def main_loop(redis_db):
         print(command_line)
         stdout_fp = tempfile.TemporaryFile()
         stderr_fp = tempfile.TemporaryFile()
-        req = requests.get(f'{BASE_URL}/files/{subp["spreadsheet_uploaded_id"]}/path')
+        req = requests.get(f'{BASE_URL}/files/{work_item["input_file_id"]}/path')
         if req.status_code != 200:
             print(f'Filepath returned: {req.status_code}')
             continue

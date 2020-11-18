@@ -116,7 +116,7 @@ services:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
-            - /Users/joseph/work/oneposda/nas:/nas
+            - /nas:/nas
         env_file:
             - database.env
             - common.env

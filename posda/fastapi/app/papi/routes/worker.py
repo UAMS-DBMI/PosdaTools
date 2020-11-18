@@ -1,4 +1,5 @@
 from fastapi import Depends, APIRouter, HTTPException
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -14,6 +15,7 @@ async def get_work_status(work_id: int, db: Database = Depends()):
             work_id,
             node_hostname,
             subprocess_invocation_id,
+            input_file_id,
             status,
             running,
             finished,
@@ -76,7 +78,8 @@ async def set_work_status_errored(error_file: ErrorFile, work_id: int, db: Datab
 async def get_subprocess_info(subprocess_invocation_id: int, db: Database = Depends()):
     query = """
         select
-            *
+            subprocess_invocation_id,
+            command_line
         from
             subprocess_invocation
         where
