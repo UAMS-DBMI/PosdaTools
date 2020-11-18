@@ -14,10 +14,10 @@ RUN apk add --update --no-cache \
 
 RUN mkdir /build
 RUN wget -O /build/tools.tar.bz2 \
-	http://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20200727055401.tar.bz2
+	http://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20200806153050.tar.bz2
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \
-	cd dicom3tools_1.00.snapshot.20200727055401 && \
+	cd dicom3tools_1.00.snapshot.20200806153050 && \
 	./Configure && \
 	imake -I./config && \
 	make -j 16 World && \
