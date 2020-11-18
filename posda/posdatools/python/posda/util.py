@@ -1,5 +1,6 @@
 import hashlib
 import sys
+import os
 
 def printe(*args, **kwargs):
     """Print to standard error"""
@@ -25,3 +26,23 @@ def unpack_n(iterable, n):
             ret.append(iterable[n])
 
     return ret
+
+
+def make_filename_from_sop(sop):
+    """Turn a SOPInstanceUID into a filename
+
+    Expects sop to be a Unicode string
+    """
+    md5 = hashlib.md5()
+    md5.update(sop.encode())
+    digest = md5.hexdigest()
+
+    # path = "{}/{}/{}/{}.dcm".format(
+    path = os.path.join(
+        digest[:2],
+        digest[2:4],
+        digest[4:6],
+        digest
+    )
+
+    return path + ".dcm"
