@@ -24,15 +24,16 @@ use constant REDIS_HOST => 'redis:6379';
 my $redis = undef;
 
 sub ConnectToRedis {
-  if (not defined $redis) {
+  unless($redis) {
     $redis = Redis->new(server => REDIS_HOST);
   }
 }
 
 sub QuitRedis {
-  if ($redis != undef) {
+  if ($redis) {
     $redis->quit;
   }
+  $redis = undef;
 }
 
 use vars qw( @ISA );
@@ -356,13 +357,35 @@ sub StartSubprocess{
     die "Couldn't create row in subprocess_invocation";
   }
 
+  # save input file for worker nodes
+  my ($fht,$tempinputdata) = tempfile();
+  for $datalines (@{$self->{InputLines}}) {
+    print $fht "$datalines\n";
+  }
+  close $fht;
+
+  #call API to import
+  my $resp = Posda::File::Import::insert_file($tempinputdata);
+  if ($resp->is_error){
+      die $resp->error;
+  }else{
+    $worker_input_file_id =  $resp->file_id;
+  }
+  unlink $tempinputdata;
+
+  # add to the work table for worker nodes
   my $work_id = Query("CreateNewWork")
-                ->FetchOneHash($new_id)
+                ->FetchOneHash($new_id,$worker_input_file_id)
                 ->{work_id};
 
+
   ConnectToRedis();
+  unless($redis){
+    die "Couldn't connect to redis";
+  }
   $redis->lpush('normal_work', $work_id);
   QuitRedis();
+
 
 
   my $cmd_to_invoke = $self->{ExpandedCommand};
