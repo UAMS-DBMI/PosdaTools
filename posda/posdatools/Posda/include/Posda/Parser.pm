@@ -871,17 +871,14 @@ sub ReadElementValue{
     }
   } elsif($this->{ele_len} == 0) {
     if(exists($this->{vr_to_convert_to})){
-      print STDERR "$this->{tag} converts to $this->{vr_to_convert_to}\n";
       my $VRDesc = $Posda::Dataset::DD->{VRDesc}->{$this->{vr}};
       unless(defined $VRDesc) { die "unknown VR: $this->{vr} ($this->{tag})" }
-      if($this->{vr} eq "UN" && exists $this->{vr_to_convert_to}){
-        push(@{$this->{errors}},
-          "Recasting $this->{tag} (with null value) from $this->{vr} to " .
-          "$this->{vr_to_convert_to}");
-        $this->{vr} = $this->{vr_to_convert_to};
-        if($this->{vr} eq "SQ"){
-          $this->{type} = "seq";
-        }
+      push(@{$this->{errors}},
+        "Recasting $this->{tag} (with null value) from $this->{vr} to " .
+        "$this->{vr_to_convert_to}");
+      $this->{vr} = $this->{vr_to_convert_to};
+      if($this->{vr} eq "SQ"){
+        $this->{type} = "seq";
         delete $this->{vr_to_convert_to};
       }
     }
