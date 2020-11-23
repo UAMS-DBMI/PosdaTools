@@ -54,11 +54,11 @@ def main_loop(redis_db):
         print(f'stdout:{stdout_file_id}\nstderr:{stderr_file_id}')
         stdout_fp.close()
         stderr_fp.close()
+        payload = {'stderr_file_id':stderr_file_id, 'stdout_file_id':stdout_file_id}
         if return_code != 0:
-            payload = {'stderr_file_id':stderr_file_id}
             requests.post(f'{BASE_URL}/worker/status/{work_id}/errored', data=payload)
         else:
-            requests.post(f'{BASE_URL}/worker/status/{work_id}/finished')
+            requests.post(f'{BASE_URL}/worker/status/{work_id}/finished', data=payload)
 
 def md5sum(fp):
     fp.seek(0)
