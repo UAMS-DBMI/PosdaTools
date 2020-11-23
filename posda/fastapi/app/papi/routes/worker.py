@@ -41,8 +41,12 @@ async def set_work_status_running(work_id: int, db: Database = Depends()):
     """
     return await db.fetch_one(query, [work_id])
 
+class ErrorFiles(BaseModel):
+    stderr_file_id: int
+    stdout_file_id: int
+
 @router.post("/status/{work_id}/finished")
-async def set_work_status_finished(work_id: int, db: Database = Depends()):
+async def set_work_status_finished(error_files: ErrorFiles, work_id: int, db: Database = Depends()):
     query = """
         update
             work
@@ -50,17 +54,15 @@ async def set_work_status_finished(work_id: int, db: Database = Depends()):
             running = false,
             finished = true,
             status = 'finished'
+            stderr_file_id = $2
+            stdout_file_id = $3
         where
             work_id = $1
     """
-    return await db.fetch_one(query, [work_id])
-
-
-class ErrorFile(BaseModel):
-    stderr_file_id: int
+    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id])
 
 @router.post("/status/{work_id}/errored")
-async def set_work_status_errored(error_file: ErrorFile, work_id: int, db: Database = Depends()):
+async def set_work_status_errored(error_files: ErrorFiles, work_id: int, db: Database = Depends()):
     query = """
         update
             work
@@ -69,10 +71,11 @@ async def set_work_status_errored(error_file: ErrorFile, work_id: int, db: Datab
             errored = true,
             status = 'errored'
             stderr_file_id = $2
+            stdout_file_id = $3
         where
             work_id = $1
     """
-    return await db.fetch_one(query, [work_id, error_file.stderr_file_id])
+    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id])
 
 @router.get("/subprocess/{subprocess_invocation_id}")
 async def get_subprocess_info(subprocess_invocation_id: int, db: Database = Depends()):
