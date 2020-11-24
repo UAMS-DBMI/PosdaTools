@@ -2,14 +2,32 @@ package Posda::BackgroundQuery;
 # 
 #
 
-use Modern::Perl;
-
 use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
+use File::Temp 'tempfile';
+use Posda::File::Import 'insert_file';
 
 use File::Slurp;
 use Text::Markdown 'markdown';
 use Regexp::Common "URI";
+use Redis;
+use constant REDIS_HOST => 'redis:6379';
+
+my $redis = undef;
+sub ConnectToRedis {
+  unless($redis) {
+    $redis = Redis->new(server => REDIS_HOST);
+  }
+}
+sub QuitRedis {
+  if ($redis) {
+    $redis->quit;
+  }
+  $redis = undef;
+}
+
+
+
 
 use parent 'Posda::PopupWindow';
 
@@ -193,13 +211,8 @@ sub UpdateBindingValueInDb {
   Query("UpdateUserBoundVariable")->RunQuery(sub{
   },sub{}, $value, $user, $key);
 }
-sub RunQueryInBackground {
+sub RunQueryInBackground{
   my ($self, $http, $dyn) = @_;
-  my $cmd = "RunQueryInBackground.pl <?invoc_id>? \"$self->{query}->{name}\" $self->{Param}->{notify}";
-  my $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
-    1, 0, undef, undef, "RunQueryInBackground",
-    $cmd, $self->get_user, "RunQueryInBackground");
-  my $real_cmd = "RunQueryInBackground.pl $subprocess_invocation_id \"$self->{query}->{name}\" $self->{Param}->{notify}";
   my @args;
   for my $name (@{$self->{query}->{args}}){
     if(exists $self->{BindingCache}->{$name}){
@@ -207,38 +220,119 @@ sub RunQueryInBackground {
         $self->{BindingCache}->{$name} = $self->{Input}->{$name};
         $self->UpdateBindingValueInDb($name);
       }
-    } else {
+   } else {
       $self->{BindingCache}->{$name} = $self->{Input}->{$name};
       $self->CreateBindingCacheInfoForKeyInDb($name);
     }
     push @args, $self->{Input}->{$name};
   }
-  $self->{ForRunning} = [$cmd, $real_cmd, \@args];
-  Dispatch::LineReaderWriter->write_and_read_all(
-    $self->{ForRunning}->[1],
-    $self->{ForRunning}->[2],
-    sub {
-  my ($return, $pid) = @_;
-      $self->{Results} = $return;
-      $self->{Mode} = 'ResultsAreIn';
-      $self->AutoRefresh;
-      say "ResultsAreIn!";
+  #create spreadsheet
+  my ($fh,$tempfilename) = tempfile();
+  print $fh "arg,Operation,$self->{query}->{name},$self->{Param}->{notify}\n";
+  print $fh "$args[0],RunQueryInBackground,$self->{query}->{name},$self->{Param}->{notify}\n";
+  for my $i (1 .. $#args){
+    print $fh "$args[$i]\n";
+  }
+  close $fh;
 
-      if (defined $subprocess_invocation_id) {
-        # TODO: Is this really useful? the way write_and_read_all()
-        # works, the subprocess should always be dead by the time
-        # we get here. This is in the spec, but maybe it should be
-        # modified?
-        PosdaDB::Queries::set_subprocess_pid(
-          $subprocess_invocation_id, $pid);
-        PosdaDB::Queries::record_subprocess_lines(
-          $subprocess_invocation_id, $return);
-      }
-    }
-  );
+  #call API to import
+  my $input_spreadsheet_file_id;
+  my $resp = Posda::File::Import::insert_file($tempfilename);
+  if ($resp->is_error){
+      die $resp->error;
+  }else{
+    $input_spreadsheet_file_id =  $resp->file_id;
+  }
+  unlink $tempfilename;
+  #create subprocess_invocation row
+  my $new_id = Query("CreateSubprocessInvocationButton")
+               ->FetchOneHash($input_spreadsheet_file_id, 'background',
+                              "RunQueryInBackground.pl <?bkgrnd_id?> $self->{query}->{name} $self->{Param}->{notify}", undef,
+                              $self->{params}->{user}, 'RunQueryInBackground')
+               ->{subprocess_invocation_id};
+  unless($new_id) {
+    die "Couldn't create row in subprocess_invocation";
+  }
 
-  $self->{mode} = "waiting";
+  #create input_file
+  ($fh,$tempfilename) = tempfile();
+  for my $i (0 .. $#args){
+    print $fh "$args[$i]\n";
+  }
+  close $fh;
+
+  #call API to import
+  my $worker_input_file_id;
+  $resp = Posda::File::Import::insert_file($tempfilename);
+  if ($resp->is_error){
+      die $resp->error;
+  }else{
+    $worker_input_file_id =  $resp->file_id;
+  }
+  unlink $tempfilename;
+
+  # add to the work table for worker nodes
+  my $work_id = Query("CreateNewWork")
+                ->FetchOneHash($new_id,$worker_input_file_id)
+                ->{work_id};
+
+
+  ConnectToRedis();
+  unless($redis){
+    die "Couldn't connect to redis";
+  }
+  $redis->lpush('normal_work', $work_id);
+  QuitRedis();
+  
+  $self->{mode} = "queued";
+  $self->{work_id} = $work_id;
 }
+#sub RunQueryInBackground {
+#  my ($self, $http, $dyn) = @_;
+#  my $cmd = "RunQueryInBackground.pl <?invoc_id>? \"$self->{query}->{name}\" $self->{Param}->{notify}";
+#  my $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
+#    1, 0, undef, undef, "RunQueryInBackground",
+#    $cmd, $self->get_user, "RunQueryInBackground");
+#  my $real_cmd = "RunQueryInBackground.pl $subprocess_invocation_id \"$self->{query}->{name}\" $self->{Param}->{notify}";
+#  my @args;
+#  for my $name (@{$self->{query}->{args}}){
+#    if(exists $self->{BindingCache}->{$name}){
+#      if($self->{BindingCache}->{$name} ne $self->{Input}->{$name}){
+#        $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+#        $self->UpdateBindingValueInDb($name);
+#      }
+#    } else {
+#      $self->{BindingCache}->{$name} = $self->{Input}->{$name};
+#      $self->CreateBindingCacheInfoForKeyInDb($name);
+#    }
+#    push @args, $self->{Input}->{$name};
+#  }
+#  $self->{ForRunning} = [$cmd, $real_cmd, \@args];
+#  Dispatch::LineReaderWriter->write_and_read_all(
+#    $self->{ForRunning}->[1],
+#    $self->{ForRunning}->[2],
+#    sub {
+#  my ($return, $pid) = @_;
+#      $self->{Results} = $return;
+#      $self->{Mode} = 'ResultsAreIn';
+#      $self->AutoRefresh;
+#      say "ResultsAreIn!";
+#
+#      if (defined $subprocess_invocation_id) {
+#        # TODO: Is this really useful? the way write_and_read_all()
+#        # works, the subprocess should always be dead by the time
+#        # we get here. This is in the spec, but maybe it should be
+#        # modified?
+#        PosdaDB::Queries::set_subprocess_pid(
+#          $subprocess_invocation_id, $pid);
+#        PosdaDB::Queries::record_subprocess_lines(
+#          $subprocess_invocation_id, $return);
+#      }
+#    }
+#  );
+#
+#  $self->{mode} = "waiting";
+#}
 sub WaitingContentResponse {
   my ($self, $http, $dyn) = @_;
   $http->queue("Waiting");
