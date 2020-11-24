@@ -20,7 +20,8 @@ async def get_work_status(work_id: int, db: Database = Depends()):
             running,
             finished,
             failed,
-            stderr_file_id
+            stderr_file_id,
+            stdout_file_id
         from
             work
         where
@@ -53,8 +54,8 @@ async def set_work_status_finished(error_files: ErrorFiles, work_id: int, db: Da
         set
             running = false,
             finished = true,
-            status = 'finished'
-            stderr_file_id = $2
+            status = 'finished',
+            stderr_file_id = $2,
             stdout_file_id = $3
         where
             work_id = $1
@@ -68,9 +69,9 @@ async def set_work_status_errored(error_files: ErrorFiles, work_id: int, db: Dat
             work
         set
             running = false,
-            errored = true,
-            status = 'errored'
-            stderr_file_id = $2
+            failed = true,
+            status = 'errored',
+            stderr_file_id = $2,
             stdout_file_id = $3
         where
             work_id = $1
