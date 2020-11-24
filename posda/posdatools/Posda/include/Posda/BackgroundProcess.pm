@@ -153,17 +153,17 @@ sub Daemonize {
 
 sub ForkAndExit {
   my ($self) = @_;
-  ResetDBHandles();
+  # ResetDBHandles();
   $self->{input_line_query} = undef;
 
   # This appears to be the proper way to fork, and release discriptors
   # so the parent is released but the child still functions
-  shutdown STDOUT, 1;
-  if(fork){
-    close STDIN;
-    close STDOUT;
-    exit;
-  }
+  # shutdown STDOUT, 1;
+  # if(fork){
+  #   close STDIN;
+  #   close STDOUT;
+  #   exit;
+  # }
 
   $self->{grandchild_pid} = $$;
 
