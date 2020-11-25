@@ -71,12 +71,12 @@ my $finalize = Query("FinalizeVisualReviewScheduling");
 my $tot_series = 0;
 for my $i (0 .. $#series){
   my $ith = $i +1;
-  
+
   $background->SetActivityStatus(
     "process $ith of $num_series in timepoint $OldActTpId");
   my $s = $series[$i];
   my $tot_equiv = 0;
-  my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $visual_review_instance_id";
+  my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $OldActTpId $visual_review_instance_id";
   open CMD, "$cmd|";
   while(my $line = <CMD>){
     if($line =~ /\s*(\d+)\s*classes for series\s*(.*)\s*$/){

@@ -6,7 +6,7 @@ use Data::Dumper;
 use VectorMath;
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
-NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <visual_review_inst_id>
+NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_id> <visual_review_inst_id>
 EOF
 unless($#ARGV == 1){ die $usage }
 if($ARGV[0] eq "-h"){ print STDERR "$usage\n"; exit }
@@ -43,6 +43,14 @@ my @col_headers = (
 #After Runquery this will be a collection of all the "files" in the series
 my $Separator= {};
 
+my $current_timepoint_id;
+Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+  my($row) = @_;
+  $current_timepoint_id = $row->[0];
+}, sub {}, $ARGV[1]);
+
+my $myArgs = [$ARGV[0], $current_timepoint_id];
+
 $q_inst->RunQuery(
   # Do this sub for every row returned by q_inst(ForConstructingSeriesEquivalenceClasses)
   sub {
@@ -59,9 +67,9 @@ $q_inst->RunQuery(
         };
         #Add this file to the file collection
         $Separator->{$file->{file_id}}=$file;
-      }, 
-  sub {}, 
-  $ARGV[0]
+      },
+  sub {},
+$myArgs
 );
 
 #check that the non-geometric fields match the template
@@ -75,10 +83,10 @@ foreach my $file_id (keys %$Separator){
   foreach my $tmpl_id (keys %$templates){
      if(HashCompare($Separator->{$tmpl_id},$Separator->{$file_id})){
         #add this file to this templates members
-        push @{$templates->{$tmpl_id}}, $file_id; 
-	$match = 1; 
+        push @{$templates->{$tmpl_id}}, $file_id;
+	$match = 1;
         last;
-      }  
+      }
   }
   unless($match){
     #since no templates matched, create  a new one and add this as its first member
@@ -102,17 +110,17 @@ foreach my $tmpl_id (keys %$templates){
       unless($image_position_patient eq "<undef>"){
 	      my $point;
 	      @$point = split /\\/, $image_position_patient;
-	      
+
 	      if(!defined($prev_2)){
 		   #if this is the first file, compare it to the last one
 		   unless($#templ < 2){@$prev_1 = split /\\/,$Separator->{$templ[$#templ-2]}->{"ipp"}}else{$prev_2 =$point};
 		   @$prev_2 = split /\\/,$Separator->{$templ[$#templ-1]}->{"ipp"};
 	      }
-         
+
 	      if (@$point[2] == @$prev_2[2]){
 		 push @{$radials->{0}},$file_id;
 		 $prev_1 = $prev_2;
-		 $prev_2 = $point; 
+		 $prev_2 = $point;
 	       }else{
 		 if ($prev_1 ~~ $prev_2){
 		 	eval{$dist = VectorMath::Dist($point,$prev_2);};
@@ -120,24 +128,24 @@ foreach my $tmpl_id (keys %$templates){
 		 	eval{$dist = VectorMath::DistPointToLine($point,$prev_1,$prev_2);};
 	         }
 		 if ($@){
-			$dist = 5; 
+			$dist = 5;
 		 }
 		 if  ($dist > -0.9 and $dist < 0.9){ # distance = 0 or very close
 		   push @{$lines->{0}},$file_id;
 		   $prev_1 = $prev_2;
-		   $prev_2 = $point; 
+		   $prev_2 = $point;
 		 }else{
-		   push @{$extras->{0}},$file_id; 
+		   push @{$extras->{0}},$file_id;
 		 }
 	       }
              }else{
-		   push @{$extras->{1}},$file_id; 
+		   push @{$extras->{1}},$file_id;
              }
     }
 }
 
 # equiv_classes = radials + lines + extras;
-my @equiv_classes; 
+my @equiv_classes;
 foreach my $rad_id (keys %$radials){
  push @equiv_classes, $radials->{$rad_id};
 }
@@ -157,7 +165,7 @@ my $ins_equiv_file = PosdaDB::Queries->GetQueryInstance(
 my $upd_proc_stat = PosdaDB::Queries->GetQueryInstance(
   "UpdateEquivalenceClassProcessingStatus");
 for my $i (0 .. $#equiv_classes){
-  #inserts 'series_instance_uid' and 'equivalence_class_number' into Image_Equivalence_Class table with 'Preparing' status  
+  #inserts 'series_instance_uid' and 'equivalence_class_number' into Image_Equivalence_Class table with 'Preparing' status
   $ins_equiv->RunQuery(sub{}, sub{}, $ARGV[0], $i,$ARGV[1]);
   my $id = $i;
   #gets the newly generated Sequence Id from that table
@@ -168,7 +176,7 @@ for my $i (0 .. $#equiv_classes){
     },
     sub {}
   );
-  print "[$id]-[$i]$ARGV[0]:\n"; 
+  print "[$id]-[$i]$ARGV[0]:\n";
   #loop through each equivalnce class array
   for my $file_id (@{$equiv_classes[$i]}){
     #print the array id and the file id
@@ -184,10 +192,10 @@ for my $i (0 .. $#equiv_classes){
 sub HashCompare{
   my ($hash1,$hash2) = @_;
       foreach my $key (keys(%$hash1)){
-          if ($key ne "iop" and $key ne "ipp" and $key ne "file_id"){ 
+          if ($key ne "iop" and $key ne "ipp" and $key ne "file_id"){
              if($hash1->{$key} eq $hash2->{$key}){
                #matches, continue the check
-             }else{ 
+             }else{
                 #not a match to this template, end the check
                 return 0;
              }
@@ -195,4 +203,3 @@ sub HashCompare{
         }
   return 1;
 }
-      
