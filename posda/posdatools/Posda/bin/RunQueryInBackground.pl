@@ -4,7 +4,7 @@ use Posda::BackgroundProcess;
 use Posda::DB 'Query';
 use Posda::QueryLog;
 my $usage = <<EOF;
-RunQueryInBackground.pl <?invoc_id?> <query_name> <notify>
+RunQueryInBackground.pl <?invoc_id?> <activity_id> <query_name> <notify>
 or
 RunQueryInBackground.pl -h
 
@@ -17,11 +17,11 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
   exit;
 }
-unless($#ARGV == 2) {
+unless($#ARGV == 3) {
   print "Wrong number of args: $#ARGV vs 2\n";
   exit;
 }
-my($invoc_id, $query_name, $notify) = @ARGV;
+my($invoc_id, $activity_id, $query_name, $notify) = @ARGV;
 my @Args;
 while(my $line = <STDIN>){
   chomp $line;
@@ -29,7 +29,7 @@ while(my $line = <STDIN>){
 }
 my $num_args = @Args;
 print "Going to background after reading $num_args args\n";
-my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
+my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 $back->Daemonize;
 #print STDERR "***************\nQuery_name: $query_name\n";
 my $Query = PosdaDB::Queries->GetQueryInstance($query_name);

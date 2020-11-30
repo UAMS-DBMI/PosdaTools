@@ -19,11 +19,20 @@ sub new {
   print STDERR "param = ";
   Debug::GenPrint($dbg, $parameters, 1);
   print STDERR "\n";
+  return $self->Initialize($parameters);
+}
 
-
+sub Initialize{
+  my($self, $parameters) = @_;
   my $host_url = $ENV{POSDA_EXTERNAL_HOSTNAME};
-  my $base_url = "http://$host_url/viewer/series/$parameters->{series_instance_uid}";
-
+  my $base_url;
+  if($parameters->{type} eq "file"){
+    $base_url = 
+      "http://$host_url/viewer/file/$parameters->{file_id}";
+  } elsif ($parameters->{type} eq "series"){
+    $base_url = 
+      "http://$host_url/viewer/series/$parameters->{series_instance_uid}";
+  }
   my $url = $base_url;
   my $expander = "HTTP/1.0 201 Created\n" .
     "Location: $url\n" .
