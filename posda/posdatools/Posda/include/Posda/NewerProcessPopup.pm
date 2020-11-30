@@ -22,6 +22,7 @@ use Redis;
 use constant REDIS_HOST => 'redis:6379';
 
 my $redis = undef;
+my $work_id;
 
 sub ConnectToRedis {
   unless($redis) {
@@ -374,7 +375,7 @@ sub StartSubprocess{
   unlink $tempinputdata;
 
   # add to the work table for worker nodes
-  my $work_id = Query("CreateNewWork")
+  $work_id = Query("CreateNewWork")
                 ->FetchOneHash($new_id,$worker_input_file_id)
                 ->{work_id};
 
@@ -429,7 +430,18 @@ sub WhenCommandFinishes{
 
 sub WaitingForResponse{
   my($self,$http, $dyn) = @_;
-  $http->queue("<p>Waiting on sub_process</p>");
+  $http->queue("<p>Successfully queued background process with worker $work_id.</p>");
+  my $q = Query("GetWorkerQueueLength");
+  my $qlen = $q->FetchOneHash();
+  $http->queue("<p>There are $qlen->{qlength} items ahead in the worker queue.</p>");
+  # my $q = Query("GetWorkerCompleteStatus");
+  # my $w_info = $q->FetchOneHash($work_id);
+  # $http->queue("<p>Worker $work_id's log information can be found in files: $w_info->{stdout_file_id} , $w_info->{stderr_file_id}./p>");
+  $self->DelegateButton($http, {
+    op => "Close",
+    caption => "Close",
+    sync => "CloseThisWindow();",
+  });
 }
 
 sub SubProcessResponded{
@@ -438,7 +450,6 @@ sub SubProcessResponded{
   for my $i (@{$self->{Results}}){
     $http->queue("$i\n");
   }
-  $http->queue("</pre>");
 }
 sub OpHelp {
   my ($self, $http, $dyn) = @_;
