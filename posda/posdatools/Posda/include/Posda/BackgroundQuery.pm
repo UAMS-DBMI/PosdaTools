@@ -53,10 +53,10 @@ sub ContentResponse {
   my ($self, $http, $dyn) = @_;
   if($self->{mode} eq "Initial"){
     return $self->InitialContentResponse($http, $dyn);
-  } elsif($self->{mode} eq "waiting"){
-    return $self->ResultsAreIn($http, $dyn);
+  } elsif($self->{mode} eq "queued"){
+    return $self->Queued($http, $dyn);
   }
-  $self->ResultsAreIn($http, $dyn);
+  $self->UnknownMode($http, $dyn);
 }
 sub InitialContentResponse {
   my ($self, $http, $dyn) = @_;
@@ -141,8 +141,9 @@ sub InitialContentResponse {
         $self->RefreshEngine($http, $dyn, "<table class=\"table\">");
 	$http->queue("<tr><td>Script args:</td></tr>");
 	$self->{Param}->{query_name} = $self->{query}->{name};
+	$self->{Param}->{activity_id} = $self->{params}->{current_settings}->{activity_id};
 	$self->{Param}->{notify} = $self->{user};
-	for my $arg ("query_name", "notify"){
+	for my $arg ("query_name", "activity_id", "notify"){
           $self->RefreshEngine($http, $dyn, qq{
             <tr>
               <th style="width:5%">$arg</th>
@@ -246,10 +247,12 @@ sub RunQueryInBackground{
   unlink $tempfilename;
   #create subprocess_invocation row
   my $new_id = Query("CreateSubprocessInvocationButton")
-               ->FetchOneHash($input_spreadsheet_file_id, 'background',
-                              "RunQueryInBackground.pl <?bkgrnd_id?> $self->{query}->{name} $self->{Param}->{notify}", undef,
-                              $self->{params}->{user}, 'RunQueryInBackground')
-               ->{subprocess_invocation_id};
+    ->FetchOneHash($input_spreadsheet_file_id, 'background',
+      "RunQueryInBackground.pl <?bkgrnd_id?> \"$self->{Param}->{activity_id}\" " .
+      "$self->{query}->{name} $self->{Param}->{notify}",
+      undef,
+      $self->{params}->{user}, 'RunQueryInBackground'
+    )->{subprocess_invocation_id};
   unless($new_id) {
     die "Couldn't create row in subprocess_invocation";
   }
@@ -287,65 +290,17 @@ sub RunQueryInBackground{
   $self->{mode} = "queued";
   $self->{work_id} = $work_id;
 }
-#sub RunQueryInBackground {
-#  my ($self, $http, $dyn) = @_;
-#  my $cmd = "RunQueryInBackground.pl <?invoc_id>? \"$self->{query}->{name}\" $self->{Param}->{notify}";
-#  my $subprocess_invocation_id = PosdaDB::Queries::invoke_subprocess(
-#    1, 0, undef, undef, "RunQueryInBackground",
-#    $cmd, $self->get_user, "RunQueryInBackground");
-#  my $real_cmd = "RunQueryInBackground.pl $subprocess_invocation_id \"$self->{query}->{name}\" $self->{Param}->{notify}";
-#  my @args;
-#  for my $name (@{$self->{query}->{args}}){
-#    if(exists $self->{BindingCache}->{$name}){
-#      if($self->{BindingCache}->{$name} ne $self->{Input}->{$name}){
-#        $self->{BindingCache}->{$name} = $self->{Input}->{$name};
-#        $self->UpdateBindingValueInDb($name);
-#      }
-#    } else {
-#      $self->{BindingCache}->{$name} = $self->{Input}->{$name};
-#      $self->CreateBindingCacheInfoForKeyInDb($name);
-#    }
-#    push @args, $self->{Input}->{$name};
-#  }
-#  $self->{ForRunning} = [$cmd, $real_cmd, \@args];
-#  Dispatch::LineReaderWriter->write_and_read_all(
-#    $self->{ForRunning}->[1],
-#    $self->{ForRunning}->[2],
-#    sub {
-#  my ($return, $pid) = @_;
-#      $self->{Results} = $return;
-#      $self->{Mode} = 'ResultsAreIn';
-#      $self->AutoRefresh;
-#      say "ResultsAreIn!";
-#
-#      if (defined $subprocess_invocation_id) {
-#        # TODO: Is this really useful? the way write_and_read_all()
-#        # works, the subprocess should always be dead by the time
-#        # we get here. This is in the spec, but maybe it should be
-#        # modified?
-#        PosdaDB::Queries::set_subprocess_pid(
-#          $subprocess_invocation_id, $pid);
-#        PosdaDB::Queries::record_subprocess_lines(
-#          $subprocess_invocation_id, $return);
-#      }
-#    }
-#  );
-#
-#  $self->{mode} = "waiting";
-#}
 sub WaitingContentResponse {
   my ($self, $http, $dyn) = @_;
   $http->queue("Waiting");
 }
+sub Queued {
+  my ($self, $http, $dyn) = @_;
+  $http->queue("Queued: $self->{work_id}");
+}
 sub ResultsAreIn {
   my ($self, $http, $dyn) = @_;
-  $http->queue("results:<pre>");
-  if(exists $self->{Results} && ref($self->{Results}) eq "ARRAY"){
-    for my $line (@{$self->{Results}}){
-      $http->queue("$line\n");
-    }
-  }
-  $http->queue("</pre>");
+  $http->queue("Unknown mode: $self->{mode}");
 }
 
 sub MenuResponse {

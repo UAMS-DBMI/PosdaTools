@@ -295,7 +295,7 @@ EOF
   qc_cc_22 => {
     query_pat => "%",
     type => "ChainColumnToPopup",
-    obj => "Quince",
+    obj => "Posda::SeriesVisualizer",
     col_name => "series_instance_uid",
     caption => "view",
   },

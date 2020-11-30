@@ -3,6 +3,7 @@ package Posda::FileVisualizer;
 use Posda::PopupWindow;
 use Posda::DB qw( Query );
 use Digest::MD5;
+use ActivityBasedCuration::Quince;
 
 
 use vars qw( @ISA );
@@ -238,6 +239,15 @@ sub ListZipExpansion{
   $self->{mode} = "list_zip_expansion";
 }
 
+sub OpenInQuince{
+  my ($self, $http, $dyn) = @_;
+  bless $self, "ActivityBasedCuration::Quince";
+  $self->Initialize({
+    type => "file",
+    file_id => $self->{params}->{file_id}
+  });
+}
+
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;
   if($self->{is_dicom_file}){
@@ -245,6 +255,11 @@ sub MenuResponse {
        op => "ShowDicomDump",
        caption => "ShowDicomDump",
        sync => "Update();"
+    });
+    $self->NotSoSimpleButton($http, {
+       op => "OpenInQuince",
+       caption => "Open in Quince",
+       sync => "Reload();"
     });
   } elsif($self->{params}->{file_type} eq "ASCII text"){
     $self->NotSoSimpleButton($http, {
@@ -329,16 +344,20 @@ sub MenuResponse {
          caption => "List files in ZIP File",
          sync => "Update();"
       });
-      $self->NotSoSimpleButton($http, {
-         op => "ListZipExpansion",
-         caption => "Show Expanded ZIP",
-         sync => "Update();"
-      });
-      $self->NotSoSimpleButton($http, {
-         op => "ExpandZip",
-         caption => "Extract and Import ZIP contents",
-         sync => "Update();"
-      });
+      if(exists $self->{expanded_zips}){
+        $self->NotSoSimpleButton($http, {
+           op => "ListZipExpansion",
+           caption => "Show Expanded ZIP",
+           sync => "Update();"
+        });
+      }
+      unless(exists $self->{expanded_zips}){
+        $self->NotSoSimpleButton($http, {
+           op => "ExpandZip",
+           caption => "Extract and Import ZIP contents",
+           sync => "Update();"
+        });
+      }
     } else {
       $http->queue("Error: couldn't find file\n");
     }

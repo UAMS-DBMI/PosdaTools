@@ -91,6 +91,9 @@ function UpdateOne(){
 function UpdateAct(){ 
   UpdateActivityTaskStatus();
 }
+function Reload(){
+  window.location.reload();
+}
 
 var spinner_opts = {
   lines: 13 // The number of lines to draw
