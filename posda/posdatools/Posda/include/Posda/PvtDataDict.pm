@@ -74921,10 +74921,10 @@ $Posda::DataDict::PvtDict->{"PHILIPS MR IMAGING DD 001"}->{8197}->{52} = {
 ##(2005,"Philips MR Imaging DD 001",35)##
 $Posda::DataDict::PvtDict->{"Philips MR Imaging DD 001"}->{8197}->{53} = {
   "VM" => "1",
-  "VR" => "SS",
+  "VR" => "CS",
   "ele" => "35",
   "grp" => "2005",
-  "Name" => "Stack Slice Number",
+  "Name" => "Unknown",
 };
 ##(2005,"PHILIPS MR IMAGING DD 001",35)##
 $Posda::DataDict::PvtDict->{"PHILIPS MR IMAGING DD 001"}->{8197}->{53} = {
@@ -75529,10 +75529,10 @@ $Posda::DataDict::PvtDict->{"PHILIPS MR IMAGING DD 001"}->{8197}->{94} = {
 ##(2005,"Philips MR Imaging DD 001",5f)##
 $Posda::DataDict::PvtDict->{"Philips MR Imaging DD 001"}->{8197}->{95} = {
   "VM" => "1",
-  "VR" => "SQ",
+  "VR" => "CS",
   "ele" => "5f",
   "grp" => "2005",
-  "Name" => "Stack Sequence",
+  "Name" => "Unknown",
 };
 ##(2005,"PHILIPS MR IMAGING DD 001",5f)##
 $Posda::DataDict::PvtDict->{"PHILIPS MR IMAGING DD 001"}->{8197}->{95} = {
