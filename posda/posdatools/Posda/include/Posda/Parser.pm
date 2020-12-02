@@ -1150,7 +1150,7 @@ sub CoerceBadVRs{
   } elsif($from_vr eq "PN" && $to_vr eq "LO"){
     return("text", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "US"){
-    return("short", $value_s);
+    return("ushort", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "SH"){
     my $ref = ref($value_s);
     if($ref eq "ARRAY"){
@@ -1168,17 +1168,17 @@ sub CoerceBadVRs{
     }
     return("text", $value_s);
   } elsif($from_vr eq "SL" && $to_vr eq "UL"){
-    return("long", $value_s);
+    return("ulong", $value_s);
   } elsif($from_vr eq "UL" && $to_vr eq "SL"){
     return("long", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "US"){
-    return("short", $value_s);
+    return("ushort", $value_s);
   } elsif($from_vr eq "US" && $to_vr eq "SS"){
     return("short", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "LO"){
     return("text", $value_s);
   } else {
-#    push(@{$this->{errors}}, "Can't coerce a $from_vr to a $to_vr\n");
+    push(@{$this->{errors}}, "Can't coerce a $from_vr to a $to_vr\n");
     return (undef, undef);
   }
 }
