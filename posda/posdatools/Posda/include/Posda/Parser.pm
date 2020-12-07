@@ -1053,7 +1053,7 @@ sub EleHandler{
     #  Because of screwy sequencing, the following code unpads text
     #  (unpad has already not been called)
     if(
-      $element->{type} eq "text" && exists($element->{value}) &&
+      $element->{type_in_file} eq "text" && exists($element->{value}) &&
       defined($element->{value})
     ){
       if(exists($Posda::Dataset::DD->{VRDesc}->{$this->{vr}}->{padnull})){
@@ -1127,7 +1127,7 @@ sub CoerceBadVRs{
     ){
       return("text", $value_s);
     } elsif ($to_vr eq 'SL'){
-      return ("long", $value_s);
+      return ("slong", $value_s);
     }
   } elsif($from_vr eq 'LO'){
     if($to_vr eq 'IS' || $to_vr eq 'CS'){
@@ -1146,7 +1146,7 @@ sub CoerceBadVRs{
   } elsif($from_vr eq "DS" && $to_vr eq "DA"){
     return("text", $value_s);
   } elsif($from_vr eq "IS" && $to_vr eq "SS"){
-    return("short", $value_s);
+    return("sshort", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "SH"){
     return("text", $value_s);
   } elsif($from_vr eq "PN" && $to_vr eq "LO"){
@@ -1172,11 +1172,11 @@ sub CoerceBadVRs{
   } elsif($from_vr eq "SL" && $to_vr eq "UL"){
     return("ulong", $value_s);
   } elsif($from_vr eq "UL" && $to_vr eq "SL"){
-    return("long", $value_s);
+    return("slong", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "US"){
     return("ushort", $value_s);
   } elsif($from_vr eq "US" && $to_vr eq "SS"){
-    return("short", $value_s);
+    return("sshort", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "LO"){
     return("text", $value_s);
   } else {
