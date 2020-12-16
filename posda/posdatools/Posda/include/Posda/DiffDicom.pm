@@ -177,6 +177,49 @@ sub ReportFromSemi{
   }
   return($short_rpt, $long_rpt);
 }
+sub LongReportFromSemiWithDates{
+  my($this, $OnlyInFrom, $OnlyInTo, $DifferentValues) = @_;
+  my $long_rpt = "";
+  my $num_only_in_from = keys %$OnlyInFrom;
+  if($num_only_in_from > 0){
+    $long_rpt .= "Only in from file:\r\n";
+    my %SeenPatterns;
+    for my $el (sort keys %$OnlyInFrom){
+      my $tag_pat = $this->MakePattern($el);
+      unless(exists $SeenPatterns{$tag_pat}){
+        my $v = $this->RenderValue($OnlyInFrom->{$el});
+        $long_rpt .= "\t$tag_pat : $v\r\n";
+      }
+    }
+  }
+  my $num_only_in_to = keys %$OnlyInTo;
+  if($num_only_in_to > 0){
+    $long_rpt .= "Only in to file:\r\n";
+    my %SeenPatterns;
+    for my $el (sort keys %$OnlyInTo){
+      my $tag_pat = $this->MakePattern($el);
+      unless(exists $SeenPatterns{$tag_pat}){
+        $SeenPatterns{$tag_pat} = 1;
+        my $v = $this->RenderValue($OnlyInTo->{$el});
+        $long_rpt .= "\t$tag_pat: $v\r\n";
+      }
+    }
+  }
+  my $num_diffs = keys %$DifferentValues;
+  if($num_diffs > 0){
+    $long_rpt .= "Elements changed:\r\n";
+    my %SeenPatterns;
+    for my $el (sort keys %$DifferentValues){
+      my $tag_pat = $this->MakePattern($el);
+      unless(exists $SeenPatterns{$tag_pat}){
+        $SeenPatterns{$tag_pat} = 1;
+        $long_rpt .= "\t$tag_pat: $DifferentValues->{$el}->{from} " .
+          "=> $DifferentValues->{$el}->{to}\r\n";
+      }
+    }
+  }
+  return $long_rpt;
+}
 sub IsUid{
   my($this, $el) = @_;
   my $ele_desc = Posda::DataDict::get_ele_by_sig($Posda::Dataset::DD, $el);

@@ -10,3 +10,5 @@ create_export_event_related_tables.sql
 add_outdated_to_spreadsheet_operation.sql
 set_oudated_operations.sql
 create_work_table.sql
+seg_bitmap_file.sql
+dup_sops_comparison.sql
