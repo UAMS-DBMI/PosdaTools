@@ -6,4 +6,4 @@
 -- Description: check length of work queue
 --
 
-select count(*) as qlength from work where status != ''finished'' and failed = false
+select count(*) as qlength from work where status != 'finished' and failed = false
