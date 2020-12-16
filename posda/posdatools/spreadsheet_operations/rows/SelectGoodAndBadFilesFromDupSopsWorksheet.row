@@ -1,0 +1,6 @@
+:operation_name: SelectGoodAndBadFilesFromDupSopsWorksheet
+:command_line: SelectGoodAndBadFilesFromDupSopsWorksheet.pl <?bkgrnd_id?> <activity_id> <comparison_id> <notify>
+:operation_type: background_process
+:input_line_format: <equiv_class>&<select>
+:tags: ['dup_sops']
+:can_chain: 

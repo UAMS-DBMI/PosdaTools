@@ -319,6 +319,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Correct Tomosynthesis Files",
         action =>  "TomosynthesisConverterTP",
       },
+      {
+        caption => "Compare Duplicate Sops in Timepoint",
+        action =>  "CompareDupSopsInTimepoint",
+      },
     ],
   },
 );

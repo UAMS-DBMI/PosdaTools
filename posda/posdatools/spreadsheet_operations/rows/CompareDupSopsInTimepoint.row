@@ -1,0 +1,6 @@
+:operation_name: CompareDupSopsInTimepoint
+:command_line: CompareDupSopsInTp.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <notify>
+:operation_type: background_subprocess
+:input_line_format: 
+:tags: ['dup_sops']
+:can_chain: 

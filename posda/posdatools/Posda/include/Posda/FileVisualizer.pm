@@ -1,6 +1,8 @@
 package Posda::FileVisualizer;
 
 use Posda::PopupWindow;
+use Posda::FileVisualizer::SR;
+use Posda::FileVisualizer::DicomImage;
 use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
@@ -24,24 +26,53 @@ sub SpecificInitialize {
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
   $self->{params} = $params;
   $self->{file_id} = $params->{file_id};
-  if($self->{params}->{file_type} eq "parsed dicom file"){
+  Query('GetBasicFileInfo')->RunQuery(sub{
+    my($row) = @_;
+    my($file_id_cp, $file_type, $dicom_file_type,
+      $patient_id, $non_dicom_file_type, $subject,
+      $non_dicom_file_subtype) = @$row;
+    $self->{file_desc} = {
+       file_id => $file_id_cp,
+       file_type => $file_type,
+       dicom_file_type => $dicom_file_type,
+       patient_id => $patient_id,
+       non_dicom_file_type  => $non_dicom_file_type,
+       subject => $subject,
+       non_dicm_file_subtype => $non_dicom_file_subtype
+    };
+  }, sub {}, $self->{file_id});
+  Query("GetFilePath")->RunQuery(sub{
+      my($row) = @_;
+      $self->{file_path} = $row->[0];
+  }, sub{}, $self->{file_id});
+  if($self->{file_desc}->{file_type} eq "parsed dicom file"){
     $self->{is_dicom_file} = 1;
-    $self->{sop_class_name} = $self->{params}->{dicom_file_type};
-    $self->{modality} = $self->{params}->{modality};
+    $self->{sop_class_name} = $self->{file_desc}->{dicom_file_type};
+    $self->{modality} = $self->{file_desc}->{modality};
+    $self->InitializeDicomDump;
+    if($self->{file_desc}->{dicom_file_type} =~ /SR/){
+      bless $self, "Posda::FileVisualizer::SR";
+      print STDERR "bless \$self, Posda::FileVisualizer::SR\n";
+      return $self->SpecificInitialize;
+    } elsif ($self->{file_desc}->{dicom_file_type} =~ /Image/){
+      print STDERR "bless \$self, Posda::FileVisualizer::DicomImage\n";
+      bless $self, "Posda::FileVisualizer::DicomImage";
+      return $self->SpecificInitialize;
+    }
   } else {
     $self->{is_dicom_file} = 0;
   }
-#  Query('GetBasicFileInfo')->RunQuery(sub{
-#  }, sub  {}, $self->{file_id};
 
 }
 
 sub ContentResponse {
   my ($self, $http, $dyn) = @_;
-  if(defined($self->{mode}) && $self->{mode} eq "show_dump"){
+  if(defined($self->{mode}) && $self->{mode} eq "show_dicom_dump"){
     $http->queue("<h3>Dump of DICOM file $self->{file_id}</h3><pre>");
-    open FILE, "<$self->{dump_file}";
+    open FILE, "<$self->{dicom_dump_file}";
     while(my $line = <FILE>){
+      $line =~ s/</&lt/g;
+      $line =~ s/>/&gt/g;
       $http->queue($line);
     }
     $http->queue("</pre>");
@@ -114,24 +145,23 @@ sub ContentResponse {
   $http->queue("</pre>");
 }
 
-sub ShowDicomDump{
-  my ($self, $http, $dyn) = @_;
+sub InitializeDicomDump{
+  my ($self) = @_;
   unless(exists $self->{dump_file}){
-    my $path;
-    Query("GetFilePath")->RunQuery(sub{
-      my($row) = @_;
-      $path = $row->[0];
-    }, sub{}, $self->{file_id});
-    if(defined $path){
+    if(defined $self->{file_path}){
       my $dump_name = "$self->{temp_path}/Dumpfile";
-      my $dump_cmd = "DumpDicom.pl \"$path\" >$dump_name";
+      my $dump_cmd = "DumpDicom.pl \"$self->{file_path}\" >$dump_name";
       open DUMP, "$dump_cmd|";
       while(my $line = <DUMP>){}
-      $self->{dump_file} = $dump_name;
+      close DUMP;
+      $self->{dicom_dump_file} = $dump_name;
     }
   }
-  if(defined($self->{dump_file}) && -e $self->{dump_file}){
-    $self->{mode} = "show_dump";
+}
+sub ShowDicomDump{
+  my ($self, $http, $dyn) = @_;
+  if(defined($self->{dicom_dump_file}) && -e $self->{dicom_dump_file}){
+    $self->{mode} = "show_dicom_dump";
   }
 }
 
@@ -223,8 +253,17 @@ sub ListZip{
 
 sub ExpandZip{
   my($self, $http, $dyn) = @_;
+  my $zip_dir = "$self->{temp_path}/zip_dir/$this->{file_id}";
+  if(-d $zip_dir || exists $this->{zip_expand}){
+    $self->{mode} = "show_zip_expand";
+    return;
+  }
+  unless(mkdir($zip_dir) == 1){
+    print STDERR "unable to mkdir $zip_dir\n";
+    return;
+  }
   $self->{zip_expand} = [];
-  my $cmd = "cd $self->{temp_path};unzip $self->{zip_file}";
+  my $cmd = "cd $zip_dir;unzip $self->{zip_file}";
   open SUB, "$cmd |";
   while (my $line = <SUB>){
     chomp $line;
@@ -290,13 +329,14 @@ sub MenuResponse {
     if(exists $self->{zip_expand}){
       unless(exists $self->{expanded_zips}){
         $self->{expanded_zips} = [];
-        my $dir = $self->{temp_path};
+        #my $dir = $self->{temp_path};
+        my $zip_dir = "$self->{temp_path}/zip_dir/$this->{file_id}";
         line:
         for my $line (@{$self->{zip_expand}}){
           if($line =~ /^Archive:\s*(.*)$/) { next line }
           if($line =~ /^\s*inflating:\s*([^\s]+)\s*$/){
             my $file = $1;
-            my $path = "$dir/$1";
+            my $path = "$zip_dir/$1";
             unless(-e $path) {
               print STDERR "Error: file $path not found\n";
               next line;
