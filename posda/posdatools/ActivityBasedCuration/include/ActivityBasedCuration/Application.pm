@@ -120,9 +120,15 @@ sub SpecificInitialize {
         mode => 'DownloadTar',
         sync => 'Update();'
       },
+#      {
+#        caption => "ShowBackground",
+#        op => 'SetMode',
+#        mode => 'ShowBackground',
+#        sync => 'Update();'
+#      },
       {
         caption => "ShowBackground",
-        op => 'SetMode',
+        op => 'LaunchBackground',
         mode => 'ShowBackground',
         sync => 'Update();'
       },
@@ -2445,6 +2451,27 @@ sub ActivityOperations{
     }
     $http->queue('</blockquote></div>');
   }
+}
+
+sub LaunchBackground{
+  my($self, $http, $dyn) = @_;
+  my $params = {};
+  $params->{user} = $self->get_user;
+  my $class = "Posda::BackgroundList";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Background_list_$self->{sequence_no}";
+  $self->{sequence_no}++;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                            $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+  return;
 }
 
 sub InvokeNewOperation{
