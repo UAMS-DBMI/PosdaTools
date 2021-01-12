@@ -1,4 +1,5 @@
 package Posda::FileVisualizer::DicomImage;
+use strict;
 
 use Posda::PopupWindow;
 use Posda::DB qw( Query );
@@ -8,33 +9,24 @@ use ActivityBasedCuration::Quince;
 
 use vars qw( @ISA );
 @ISA = ("Posda::FileVisualizer");
+sub MakeQueuer{ 
+  my($http) = @_;
+  my $sub = sub {
+    my($txt) = @_;
+    $http->queue($txt);
+  };
+  return $sub;
+}
 
 sub SpecificInitialize {
-  my ($self) = @_;
-  $self->{mode} = "show_dicom_dump";
+  my ($self, $params) = @_;
+  $self->{title} = "Dicom Image File Visualizer";
 }
 
 sub ContentResponse {
   my ($self, $http, $dyn) = @_;
-  if(defined($self->{mode}) && $self->{mode} eq "show_dicom_dump"){
-    $http->queue("<h3>Dump of DICOM file $self->{file_id}</h3><pre>");
-    open FILE, "<$self->{dicom_dump_file}";
-    while(my $line = <FILE>){
-      $line =~ s/</&lt/g;
-      $line =~ s/>/&gt/g;
-      $http->queue($line);
-    }
-    $http->queue("</pre>");
-    return;
-  }
-  my $queuer = MakeQueuer($http);
-  $http->queue("<pre>Params: ");
-  Debug::GenPrint($queuer, $self->{params}, 1);
-  $http->queue(";\n");
-  $http->queue("</pre>");
+    $self->DisplayDicomDump($http, $dyn);
 }
-
-
 sub OpenInQuince{
   my ($self, $http, $dyn) = @_;
   bless $self, "ActivityBasedCuration::Quince";
@@ -46,18 +38,16 @@ sub OpenInQuince{
 
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;
-  if($self->{is_dicom_file}){
-    $self->NotSoSimpleButton($http, {
-       op => "ShowDicomDump",
-       caption => "ShowDicomDump",
-       sync => "Update();"
-    });
-    $self->NotSoSimpleButton($http, {
-       op => "OpenInQuince",
-       caption => "Open in Quince",
-       sync => "Reload();"
-    });
-  }
+  $self->NotSoSimpleButton($http, {
+    op => "ShowDicomDump",
+    caption => "ShowDicomDump",
+    sync => "Update();"
+  });
+  $self->NotSoSimpleButton($http, {
+    op => "OpenInQuince",
+    caption => "Open in Quince",
+    sync => "Reload();"
+  });
 }
 
 1;

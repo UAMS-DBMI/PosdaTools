@@ -1,8 +1,12 @@
 package Posda::FileVisualizer;
+use strict;
 
+use Dispatch::LineReader;
 use Posda::PopupWindow;
 use Posda::FileVisualizer::SR;
 use Posda::FileVisualizer::DicomImage;
+use Posda::FileVisualizer::Segmentation;
+use Posda::FileVisualizer::StructureSet;
 use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
@@ -38,7 +42,7 @@ sub SpecificInitialize {
        patient_id => $patient_id,
        non_dicom_file_type  => $non_dicom_file_type,
        subject => $subject,
-       non_dicm_file_subtype => $non_dicom_file_subtype
+       non_dicom_file_subtype => $non_dicom_file_subtype
     };
   }, sub {}, $self->{file_id});
   Query("GetFilePath")->RunQuery(sub{
@@ -48,8 +52,7 @@ sub SpecificInitialize {
   if($self->{file_desc}->{file_type} eq "parsed dicom file"){
     $self->{is_dicom_file} = 1;
     $self->{sop_class_name} = $self->{file_desc}->{dicom_file_type};
-    $self->{modality} = $self->{file_desc}->{modality};
-    $self->InitializeDicomDump;
+#    $self->InitializeDicomDump();
     if($self->{file_desc}->{dicom_file_type} =~ /SR/){
       bless $self, "Posda::FileVisualizer::SR";
       print STDERR "bless \$self, Posda::FileVisualizer::SR\n";
@@ -57,6 +60,13 @@ sub SpecificInitialize {
     } elsif ($self->{file_desc}->{dicom_file_type} =~ /Image/){
       print STDERR "bless \$self, Posda::FileVisualizer::DicomImage\n";
       bless $self, "Posda::FileVisualizer::DicomImage";
+      return $self->SpecificInitialize;
+    } elsif ($self->{file_desc}->{dicom_file_type} =~ /Segmentation/){
+      print STDERR "bless \$self, Posda::FileVisualizer::Segmentation\n";
+      bless $self, "Posda::FileVisualizer::Segmentation";
+      return $self->SpecificInitialize;
+    } elsif ($self->{file_desc}->{dicom_file_type} =~ /Structure/){
+      bless $self, "Posda::FileVisualizer::StructureSet";
       return $self->SpecificInitialize;
     }
   } else {
@@ -68,14 +78,7 @@ sub SpecificInitialize {
 sub ContentResponse {
   my ($self, $http, $dyn) = @_;
   if(defined($self->{mode}) && $self->{mode} eq "show_dicom_dump"){
-    $http->queue("<h3>Dump of DICOM file $self->{file_id}</h3><pre>");
-    open FILE, "<$self->{dicom_dump_file}";
-    while(my $line = <FILE>){
-      $line =~ s/</&lt/g;
-      $line =~ s/>/&gt/g;
-      $http->queue($line);
-    }
-    $http->queue("</pre>");
+    $self->DisplayDicomDump($http, $dyn);
     return;
   } elsif($self->{mode} eq "show_text"){
     $http->queue("<h3>ASCII file: $self->{file_id}</h3><pre>");
@@ -131,7 +134,8 @@ sub ContentResponse {
     $http->queue("</table>");
     return;
   } elsif($self->{mode} eq "non_dicom_file processing complete"){
-    $http->queue("<h3>Processed ASCII file: $self->{file_id} as non-dicom manifest</h3><pre>");
+    $http->queue("<h3>Processed ASCII file: " .
+      "$self->{file_id} as non-dicom manifest</h3><pre>");
     for my $mess (@{$self->{non_dicom_processing_results}}){
       $http->queue("$mess\n");
     }
@@ -145,24 +149,51 @@ sub ContentResponse {
   $http->queue("</pre>");
 }
 
+sub DisplayDicomDump{
+  my ($self, $http, $dyn) = @_;
+  
+  $http->queue("<h3>Dump of DICOM file $self->{file_id}</h3><pre>");
+  open DUMP, "DumpDicom.pl \"$self->{file_path}\"|";
+  while(my $line = <DUMP>){
+    $line =~ s/</&lt/g;
+    $line =~ s/>/&gt/g;
+    $http->queue($line);
+  }
+  return;
+  unless(defined($self->{dicom_dump_file})){
+    $http->queue("&lt;preparing&gt;");
+    return;
+  }
+  open FILE, "<$self->{dicom_dump_file}";
+  while(my $line = <FILE>){
+    $line =~ s/</&lt/g;
+    $line =~ s/>/&gt/g;
+    $http->queue($line);
+  }
+  $http->queue("</pre>");
+}
+
 sub InitializeDicomDump{
   my ($self) = @_;
-  unless(exists $self->{dump_file}){
-    if(defined $self->{file_path}){
-      my $dump_name = "$self->{temp_path}/Dumpfile";
-      my $dump_cmd = "DumpDicom.pl \"$self->{file_path}\" >$dump_name";
-      open DUMP, "$dump_cmd|";
-      while(my $line = <DUMP>){}
-      close DUMP;
+  my $dump_name = "$self->{temp_path}/" . rand(1000);
+  my $dump_cmd = "DumpDicom.pl \"$self->{file_path}\" >\"$dump_name\"";
+  print STDERR "####################\n" .
+    "Invoking cmd '$dump_cmd'\n" .
+    "####################\n";
+  Dispatch::LineReader->new_cmd($dump_cmd, sub {},
+    sub {
       $self->{dicom_dump_file} = $dump_name;
+      $self->AutoRefresh();
+      print STDERR "####################\n" .
+        "Finished cmd '$dump_cmd'\n" .
+        "####################\n";
     }
-  }
+  );
 }
+
 sub ShowDicomDump{
   my ($self, $http, $dyn) = @_;
-  if(defined($self->{dicom_dump_file}) && -e $self->{dicom_dump_file}){
-    $self->{mode} = "show_dicom_dump";
-  }
+  $self->{mode} = "show_dicom_dump";
 }
 
 sub ShowAsciiText{
@@ -253,8 +284,8 @@ sub ListZip{
 
 sub ExpandZip{
   my($self, $http, $dyn) = @_;
-  my $zip_dir = "$self->{temp_path}/zip_dir/$this->{file_id}";
-  if(-d $zip_dir || exists $this->{zip_expand}){
+  my $zip_dir = "$self->{temp_path}/zip_dir/$self->{file_id}";
+  if(-d $zip_dir || exists $self->{zip_expand}){
     $self->{mode} = "show_zip_expand";
     return;
   }
@@ -330,7 +361,7 @@ sub MenuResponse {
       unless(exists $self->{expanded_zips}){
         $self->{expanded_zips} = [];
         #my $dir = $self->{temp_path};
-        my $zip_dir = "$self->{temp_path}/zip_dir/$this->{file_id}";
+        my $zip_dir = "$self->{temp_path}/zip_dir/$self->{file_id}";
         line:
         for my $line (@{$self->{zip_expand}}){
           if($line =~ /^Archive:\s*(.*)$/) { next line }
@@ -344,7 +375,7 @@ sub MenuResponse {
             my $q = { path => $path };
             my $ctx = Digest::MD5->new;
             open PATH, "<$path";
-            $ctx->addfile(PATH);
+            $ctx->addfile(*PATH);
             my $digest = $ctx->hexdigest;
             $q->{digest} = $digest;
             close PATH;

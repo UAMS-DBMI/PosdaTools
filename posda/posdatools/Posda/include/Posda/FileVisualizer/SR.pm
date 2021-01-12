@@ -22,13 +22,7 @@ sub ContentResponse {
   my ($self, $http, $dyn) = @_;
   if(defined($self->{mode}) && $self->{mode} eq "show_dicom_dump"){
     $http->queue("<h3>Dump of DICOM file $self->{file_id}</h3><pre>");
-    open FILE, "<$self->{dicom_dump_file}";
-    while(my $line = <FILE>){
-      $line =~ s/</&lt/g;
-      $line =~ s/>/&gt/g;
-      $http->queue($line);
-    }
-    $http->queue("</pre>");
+    $self->DisplayDicomDump($http, $dyn);
     return;
   } elsif(defined($self->{mode}) && $self->{mode} eq "show_sr_text"){
     $http->queue("<h3>SR Text representation of DICOM file $self->{file_id}</h3><pre>");

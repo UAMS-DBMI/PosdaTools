@@ -3901,8 +3901,19 @@ $self->{chained_queries} = \@chained_queries;
           $t =~ s/</&lt;/g;
           $t =~ s/>/&gt;/g;
 	  $http->queue($t);
-	  if (defined $popup_hash->{$cn}) {
+	  if (defined $popup_hash->{$cn} && ref($popup_hash->{$cn}) eq "HASH") {
 	    my $popup_details = $popup_hash->{$cn};
+            #### surpress warnings ---
+            unless(defined $popup_details->{caption}){
+              $popup_details->{caption} = "";
+            }
+            unless(defined $popup_details->{obj}){
+              $popup_details->{obj} = "";
+            }
+            unless(defined $popup_details->{operation}){
+              $popup_details->{operation} = "";
+            }
+            #### end surpress warnings ---
 #xyzzy --- Here to work on column buttons
 	    $self->NotSoSimpleButton($http, {
 		caption => "$popup_details->{caption}",

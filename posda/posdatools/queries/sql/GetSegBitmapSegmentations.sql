@@ -20,3 +20,4 @@ from
   seg_bitmap_segmentation
 where
   seg_bitmap_file_id = ?
+order by segmentation_num
