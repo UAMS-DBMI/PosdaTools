@@ -71,7 +71,7 @@ my $finalize = Query("FinalizeVisualReviewScheduling");
 my $tot_series = 0;
 for my $i (0 .. $#series){
   my $ith = $i +1;
-
+  print STDERR "process $ith of $num_series in timepoint $OldActTpId";
   $background->SetActivityStatus(
     "process $ith of $num_series in timepoint $OldActTpId");
   my $s = $series[$i];
