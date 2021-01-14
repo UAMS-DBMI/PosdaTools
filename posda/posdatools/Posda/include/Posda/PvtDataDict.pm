@@ -21937,7 +21937,7 @@ $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{25}->{14} = {
 ##(0019,"SIEMENS MR HEADER",0f)##
 $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{25}->{15} = {
   "VM" => "1",
-  "VR" => "SH",
+  "VR" => "LO",
   "ele" => "0f",
   "grp" => "0019",
   "Name" => "Gradient Mode",
