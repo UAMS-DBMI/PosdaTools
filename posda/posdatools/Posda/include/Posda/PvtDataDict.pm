@@ -21937,7 +21937,7 @@ $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{25}->{14} = {
 ##(0019,"SIEMENS MR HEADER",0f)##
 $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{25}->{15} = {
   "VM" => "1",
-  "VR" => "SH",
+  "VR" => "LO",
   "ele" => "0f",
   "grp" => "0019",
   "Name" => "Gradient Mode",
@@ -56617,7 +56617,7 @@ $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{81}->{10} = {
 ##(0051,"SIEMENS MR HEADER",0b)##
 $Posda::DataDict::PvtDict->{"SIEMENS MR HEADER"}->{81}->{11} = {
   "VM" => "1",
-  "VR" => "SH",
+  "VR" => "LO",
   "ele" => "0b",
   "grp" => "0051",
   "Name" => "Acquisition Matrix Text",
@@ -74887,7 +74887,7 @@ $Posda::DataDict::PvtDict->{"PHILIPS MR IMAGING DD 001"}->{8197}->{50} = {
   "Name" => "StackRadialAngle",
 };
 ##(2005,"Philips MR Imaging DD 001",33)##
-$Posda::DataDict::PvtDict->{"2005 Philips MR Imaging DD 001"}->{8197}->{51} = {
+$Posda::DataDict::PvtDict->{"Philips MR Imaging DD 001"}->{8197}->{51} = {
   "VM" => "1",
   "VR" => "FL",
   "ele" => "33",
