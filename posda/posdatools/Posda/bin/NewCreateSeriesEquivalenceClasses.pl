@@ -2,14 +2,15 @@
 use strict;
 use Posda::DB::PosdaFilesQueries;
 use Debug;
-use Data::Dumper;
 use VectorMath;
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
-NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_id> <visual_review_inst_id>
+NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_timepoint_id> <visual_review_inst_id>
 EOF
-unless($#ARGV == 1){ die $usage }
+
 if($ARGV[0] eq "-h"){ print STDERR "$usage\n"; exit }
+unless($#ARGV == 2){ die $usage }
+
 my $q_inst = PosdaDB::Queries->GetQueryInstance(
   "ForConstructingSeriesEquivalenceClasses");
 my @col_headers = (
@@ -43,13 +44,7 @@ my @col_headers = (
 #After Runquery this will be a collection of all the "files" in the series
 my $Separator= {};
 
-my $current_timepoint_id;
-Query("LatestActivityTimepointForActivity")->RunQuery(sub{
-  my($row) = @_;
-  $current_timepoint_id = $row->[0];
-}, sub {}, $ARGV[1]);
-
-my $myArgs = [$ARGV[0], $current_timepoint_id];
+my $myArgs = [$ARGV[0], $ARGV[1]];
 
 $q_inst->RunQuery(
   # Do this sub for every row returned by q_inst(ForConstructingSeriesEquivalenceClasses)
@@ -69,7 +64,7 @@ $q_inst->RunQuery(
         $Separator->{$file->{file_id}}=$file;
       },
   sub {},
-  $myArgs
+  $ARGV[0], $ARGV[1]
 );
 
 #check that the non-geometric fields match the template
