@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
+-- Dumped from database version 13.0
+-- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,27 @@ SET row_security = off;
 -- Name: posda_files; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+CREATE DATABASE posda_files WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.UTF-8';
+
+
+\connect posda_files
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: posda_files; Type: DATABASE PROPERTIES; Schema: -; Owner: -
+--
+
+ALTER DATABASE posda_files SET search_path TO 'public', 'dbif_config', 'dicom_conv';
 
 
 \connect posda_files
@@ -65,20 +85,6 @@ CREATE SCHEMA quasar;
 
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
 -- Name: access_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -86,6 +92,80 @@ CREATE TYPE public.access_type AS ENUM (
     'public',
     'limited'
 );
+
+
+--
+-- Name: export_status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.export_status_type AS ENUM (
+    'paused',
+    'transfering',
+    'finished success',
+    'finished failure'
+);
+
+
+--
+-- Name: TYPE export_status_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.export_status_type IS 'The status of an export_event';
+
+
+--
+-- Name: request_status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.request_status_type AS ENUM (
+    'start',
+    'pause',
+    'abort',
+    'retry failures'
+);
+
+
+--
+-- Name: TYPE request_status_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.request_status_type IS 'Options for user-originated requests for status change';
+
+
+--
+-- Name: submitter_type_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.submitter_type_type AS ENUM (
+    'unrecorded',
+    'subprocess_invocation'
+);
+
+
+--
+-- Name: TYPE submitter_type_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.submitter_type_type IS 'What application type made this request';
+
+
+--
+-- Name: transfer_status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.transfer_status_type AS ENUM (
+    'pending',
+    'success',
+    'failed temporary',
+    'failed permanent'
+);
+
+
+--
+-- Name: TYPE transfer_status_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.transfer_status_type IS 'The status of an export_event transfer of a file';
 
 
 --
@@ -108,7 +188,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: version; Type: TABLE; Schema: db_version; Owner: -
@@ -305,7 +385,8 @@ CREATE TABLE dbif_config.spreadsheet_operation (
     operation_type text,
     input_line_format text,
     tags text[],
-    can_chain boolean
+    can_chain boolean,
+    outdated boolean DEFAULT false
 );
 
 
@@ -1634,6 +1715,148 @@ ALTER SEQUENCE public.downloadable_file_downloadable_file_id_seq OWNED BY public
 
 
 --
+-- Name: export_destination; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.export_destination (
+    export_destination_name text NOT NULL,
+    protocol text NOT NULL,
+    base_url text NOT NULL,
+    configuration json
+);
+
+
+--
+-- Name: TABLE export_destination; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.export_destination IS 'A list of destinations to export to';
+
+
+--
+-- Name: COLUMN export_destination.export_destination_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_destination.export_destination_name IS 'A human-readable name for this configured destination';
+
+
+--
+-- Name: COLUMN export_destination.protocol; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_destination.protocol IS 'System type: nbia, posda';
+
+
+--
+-- Name: COLUMN export_destination.configuration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_destination.configuration IS 'Full configuration settings for the destination, stored as json';
+
+
+--
+-- Name: export_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.export_event (
+    export_event_id integer NOT NULL,
+    submitter_type public.submitter_type_type DEFAULT 'unrecorded'::public.submitter_type_type NOT NULL,
+    subprocess_invocation_id integer,
+    export_destination_name text NOT NULL,
+    creation_time timestamp without time zone NOT NULL,
+    start_time timestamp without time zone,
+    end_time timestamp without time zone,
+    dismissed_time timestamp without time zone,
+    request_pending boolean DEFAULT false NOT NULL,
+    request_status public.request_status_type,
+    export_status public.export_status_type,
+    destination_import_event_id integer,
+    destination_import_event_closed boolean,
+    transfer_status_id integer
+);
+
+
+--
+-- Name: TABLE export_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.export_event IS 'Track exports from Posda to other systems';
+
+
+--
+-- Name: COLUMN export_event.request_pending; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_event.request_pending IS 'If true, a user-originated request is waiting to be processed';
+
+
+--
+-- Name: COLUMN export_event.request_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_event.request_status IS 'A user-originated request for action on this request';
+
+
+--
+-- Name: COLUMN export_event.export_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.export_event.export_status IS 'The current status of this export, as set by the export daemon';
+
+
+--
+-- Name: export_event_export_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.export_event_export_event_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: export_event_export_event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.export_event_export_event_id_seq OWNED BY public.export_event.export_event_id;
+
+
+--
+-- Name: export_file_dispositions_params; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.export_file_dispositions_params (
+    export_file_dispositions_params_id integer NOT NULL,
+    offset_days integer,
+    uid_root text,
+    only_modify_group_13 boolean
+);
+
+
+--
+-- Name: export_file_dispositions_para_export_file_dispositions_para_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.export_file_dispositions_para_export_file_dispositions_para_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: export_file_dispositions_para_export_file_dispositions_para_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.export_file_dispositions_para_export_file_dispositions_para_seq OWNED BY public.export_file_dispositions_params.export_file_dispositions_params_id;
+
+
+--
 -- Name: file; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1782,6 +2005,28 @@ CREATE TABLE public.file_equipment (
     last_calib_time text,
     pixel_pad integer
 );
+
+
+--
+-- Name: file_export; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file_export (
+    export_event_id integer NOT NULL,
+    file_id integer NOT NULL,
+    export_file_dispositions_params_id integer,
+    when_queued timestamp without time zone NOT NULL,
+    when_transferred timestamp without time zone,
+    transfer_status public.transfer_status_type,
+    transfer_status_id integer
+);
+
+
+--
+-- Name: TABLE file_export; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.file_export IS 'Files to export';
 
 
 --
@@ -3998,6 +4243,43 @@ CREATE TABLE public.subprocess_lines (
 
 
 --
+-- Name: transfer_status; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transfer_status (
+    transfer_status_id integer NOT NULL,
+    transfer_status_message text NOT NULL
+);
+
+
+--
+-- Name: TABLE transfer_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transfer_status IS 'Detailed error messages for export_event status';
+
+
+--
+-- Name: transfer_status_transfer_status_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.transfer_status_transfer_status_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: transfer_status_transfer_status_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.transfer_status_transfer_status_id_seq OWNED BY public.transfer_status.transfer_status_id;
+
+
+--
 -- Name: unique_pixel_data; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4441,6 +4723,20 @@ ALTER TABLE ONLY public.downloadable_file ALTER COLUMN downloadable_file_id SET 
 
 
 --
+-- Name: export_event export_event_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_event ALTER COLUMN export_event_id SET DEFAULT nextval('public.export_event_export_event_id_seq'::regclass);
+
+
+--
+-- Name: export_file_dispositions_params export_file_dispositions_params_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_file_dispositions_params ALTER COLUMN export_file_dispositions_params_id SET DEFAULT nextval('public.export_file_dispositions_para_export_file_dispositions_para_seq'::regclass);
+
+
+--
 -- Name: file file_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4630,6 +4926,13 @@ ALTER TABLE ONLY public.subprocess_invocation ALTER COLUMN subprocess_invocation
 
 
 --
+-- Name: transfer_status transfer_status_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transfer_status ALTER COLUMN transfer_status_id SET DEFAULT nextval('public.transfer_status_transfer_status_id_seq'::regclass);
+
+
+--
 -- Name: unique_pixel_data unique_pixel_data_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4792,6 +5095,30 @@ ALTER TABLE ONLY public.downloadable_file
 
 
 --
+-- Name: export_destination export_destination_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_destination
+    ADD CONSTRAINT export_destination_pkey PRIMARY KEY (export_destination_name);
+
+
+--
+-- Name: export_event export_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_event
+    ADD CONSTRAINT export_event_pkey PRIMARY KEY (export_event_id);
+
+
+--
+-- Name: export_file_dispositions_params export_file_dispositions_params_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_file_dispositions_params
+    ADD CONSTRAINT export_file_dispositions_params_pkey PRIMARY KEY (export_file_dispositions_params_id);
+
+
+--
 -- Name: file_ct_image file_ct_image__new_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4941,6 +5268,22 @@ ALTER TABLE ONLY public.submissions
 
 ALTER TABLE ONLY public.subprocess_invocation
     ADD CONSTRAINT subprocess_invocation_pkey PRIMARY KEY (subprocess_invocation_id);
+
+
+--
+-- Name: transfer_status transfer_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transfer_status
+    ADD CONSTRAINT transfer_status_pkey PRIMARY KEY (transfer_status_id);
+
+
+--
+-- Name: transfer_status transfer_status_transfer_status_message_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transfer_status
+    ADD CONSTRAINT transfer_status_transfer_status_message_key UNIQUE (transfer_status_message);
 
 
 --
@@ -5823,6 +6166,54 @@ ALTER TABLE ONLY public.background_subprocess_report
 
 ALTER TABLE ONLY public.downloadable_file
     ADD CONSTRAINT downloadable_file_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: export_event export_event_export_destination_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_event
+    ADD CONSTRAINT export_event_export_destination_name_fkey FOREIGN KEY (export_destination_name) REFERENCES public.export_destination(export_destination_name);
+
+
+--
+-- Name: export_event export_event_subprocess_invocation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_event
+    ADD CONSTRAINT export_event_subprocess_invocation_id_fkey FOREIGN KEY (subprocess_invocation_id) REFERENCES public.subprocess_invocation(subprocess_invocation_id);
+
+
+--
+-- Name: export_event export_event_transfer_status_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.export_event
+    ADD CONSTRAINT export_event_transfer_status_id_fkey FOREIGN KEY (transfer_status_id) REFERENCES public.transfer_status(transfer_status_id);
+
+
+--
+-- Name: file_export file_export_export_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_export
+    ADD CONSTRAINT file_export_export_event_id_fkey FOREIGN KEY (export_event_id) REFERENCES public.export_event(export_event_id);
+
+
+--
+-- Name: file_export file_export_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_export
+    ADD CONSTRAINT file_export_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_export file_export_transfer_status_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_export
+    ADD CONSTRAINT file_export_transfer_status_id_fkey FOREIGN KEY (transfer_status_id) REFERENCES public.transfer_status(transfer_status_id);
 
 
 --

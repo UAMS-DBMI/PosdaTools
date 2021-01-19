@@ -3,8 +3,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 10.7 (Ubuntu 10.7-0ubuntu0.18.04.1)
+-- Dumped from database version 13.0
+-- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -13,6 +13,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -112,6 +113,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5953	(0057,"GEMS_VXTLSTATE_001",26)	SQ	t	Unknown	d
 3251	(300a,0070)[<0>](300a,007b)	LT	f	Fraction Group Sequence:Fraction Pattern	\N
 3262	(3006,0039)[<0>](3006,0040)[<1>](3006,0045)	DS	f	ROI Contour Sequence:Contour Sequence:Contour Offset Vector	\N
+6124	(0055,"SIEMENS MED NM",7e)	FL	t	Collimator Thickness mm	k
 5705	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",44)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Near Clip Plane	k
 87	(0012,0062)	CS	f	Patient Identity Removed	\N
 5914	(7029,"CtProjectionData-MayoClinc-v1",11)	UN	t	Unknown	d
@@ -272,6 +274,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6050	(7005,"TOSHIBA_MEC_CT3",0b)	OB	t	Filter	k
 5766	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",37)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Measurement Graphic Is Visible Flag	k
 5706	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",48)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence:Camera Projection Type	k
+2592	(0018,1600)	CS	f	Shutter Shape	\N
 5824	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",61)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",63)[<3>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",56)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Segmentation Display Data Sequence:Segmentation Display Parameter Sequence:Renderer DirectionalLight TwoSide Usage Flag	k
 6061	(7005,"TOSHIBA_MEC_CT3",1d)	OB	t	Reconstruction Number	k
 5600	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)	SQ	t	Advanced Presentation Sequence:Presentation Module Sequence	k
@@ -357,7 +360,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2352	(0008,0102)	SH	f	Coding Scheme Designator	\N
 6389	(0021,"SIEMENS CT VA0  RAW",10)	UL	t	CreationMask	k
 4817	(0019,"GEMS_ACQU_01",43)	OB	t	TotalSegmentsRequested	k
-6124	(0055,"SIEMENS MED NM",7e)	FL	t	Collimator Thickness mm	k
 6207	(0041,"SIEMENS MED NM",02)	SL	t	Whole Body Tomo Number of Positions	k
 6292	(0011,"GEMS_GENIE_1",1f)	SL	t	ImageOrientation	k
 4797	(0045,"GEMS_HELIOS_01",3b)	OB	t	NoiseReductionImageFilterDesc	k
@@ -512,7 +514,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1009	(300a,0006)	DA	f	RT Plan Date	\N
 991	(300a,00b0)[<0>](300a,0111)[<1>](300a,012a)	DS	f	Beam Sequence:Control Point Sequence:Table Top Lateral Position	\N
 1061	(300a,00b0)[<0>](300a,00f4)[<1>](300a,00fc)	IS	f	Beam Sequence:Block Sequence:Block Number	\N
-2592	(0018,1600)	CS	f	Shutter Shape	\N
 5899	(7033,"CtProjectionData-MayoClinc-v1",0e)	UN	t	Unknown	d
 3212	(2010,0040)	CS	f	Film Orientation	\N
 1464	(3006,0024)	UI	f	Referenced Frame of Reference UID	\N
@@ -586,6 +587,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1111	(0040,0260)	SQ	f	Performed Protocol Code Sequence	\N
 1898	(0040,9096)[<0>](0040,9210)	SH	f	Real World Value Mapping Sequence:LUT Label	\N
 1900	(0040,9096)[<0>](0040,08ea)[<1>](0008,0104)	LO	f	Real World Value Mapping Sequence:Measurement Units Code Sequence:Code Meaning	\N
+1444	(0028,0301)	CS	f	Burned In Annotation	\N
 1068	(300a,00b0)[<0>](300a,00f4)[<1>](300a,00fa)	CS	f	Beam Sequence:Block Sequence:Block Divergence	\N
 4781	(0019,"GEMS_ACQU_01",18)	OB	t	FirstScanRAS	k
 1241	(0040,0555)[<0>](0040,a168)[<1>](0008,0100)	SH	f	Acquisition Context Sequence:Concept Code Sequence:Code Value	\N
@@ -663,7 +665,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1343	(0054,0410)[<0>](0008,010f)	CS	f	Patient Orientation Code Sequence:Context Identifier	\N
 1334	(0054,0016)[<0>](0054,0300)[<1>](0008,0106)	DT	f	Radiopharmaceutical Information Sequence:Radionuclide Code Sequence:Context Group Version	\N
 1336	(0054,0414)[<0>](0008,010f)	CS	f	Patient Gantry Relationship Code Sequence:Context Identifier	\N
-1444	(0028,0301)	CS	f	Burned In Annotation	\N
 1967	(5000,0103)	US	f	Data Value Representation	\N
 1974	(0018,6011)[<0>](0018,601a)	UL	f	Sequence of Ultrasound Regions:Region Location Min Y0	\N
 1972	(0018,6011)[<0>](0018,601c)	UL	f	Sequence of Ultrasound Regions:Region Location Max X1	\N
@@ -919,6 +920,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 24	(0032,1060)	LO	f	Requested Procedure Description	\N
 894	(0032,1064)	SQ	f	Requested Procedure Code Sequence	\N
 1188	(5004,3000)	UN	f	Curve Data	\N
+1406	(0088,0200)[<0>](0028,1101)	SS	f	Icon Image Sequence:Red Palette Color Lookup Table Descriptor	\N
 1119	(0054,0410)[<0>](0054,0412)[<1>](0008,0100)	SH	f	Patient Orientation Code Sequence:Patient Orientation Modifier Code Sequence:Code Value	\N
 732	(0054,0016)[<0>](0018,1073)	TM	f	Radiopharmaceutical Information Sequence:Radiopharmaceutical Stop Time	\N
 14	(0018,1030)	LO	f	Protocol Name	\N
@@ -1007,7 +1009,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2754	(0008,2112)[<0>](0040,a170)[<1>](0008,0105)	CS	f	Source Image Sequence:Purpose of Reference Code Sequence:Mapping Resource	\N
 1418	(0088,0200)[<0>](0028,0011)	US	f	Icon Image Sequence:Columns	\N
 1425	(0088,0200)[<0>](0028,1101)	US	f	Icon Image Sequence:Red Palette Color Lookup Table Descriptor	\N
-1406	(0088,0200)[<0>](0028,1101)	SS	f	Icon Image Sequence:Red Palette Color Lookup Table Descriptor	\N
 897	(0018,1047)	DS	f	Contrast Flow Duration	\N
 1165	(5000,0103)	UN	f	Data Value Representation	\N
 2751	(0008,2112)[<0>](0040,a170)[<1>](0008,010f)	CS	f	Source Image Sequence:Purpose of Reference Code Sequence:Context Identifier	\N
@@ -1169,6 +1170,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2057	(0064,0002)[<0>](0064,0005)[<1>](0064,0009)	OF	f	Deformable Registration Sequence:Deformable Registration Grid Sequence:Vector Grid Data	\N
 2036	(0064,0002)[<0>](0070,0309)[<1>](0070,030d)[<2>](0008,0100)	SH	f	Deformable Registration Sequence:Matrix Registration Sequence:Registration Type Code Sequence:Code Value	\N
 2025	(3006,0020)[<0>](0008,0005)	CS	f	Structure Set ROI Sequence:Specific Character Set	\N
+4331	(0018,5020)	LO	f	Processing Function	\N
 2055	(0064,0002)[<0>](0064,000f)[<1>](3006,00c6)	DS	f	Deformable Registration Sequence:Pre Deformation Matrix Registration Sequence:Frame of Reference Transformation Matrix	\N
 2041	(0064,0002)[<0>](0070,0309)[<1>](0070,030a)	SQ	f	Deformable Registration Sequence:Matrix Registration Sequence:Matrix Sequence	\N
 2040	(0064,0002)	SQ	f	Deformable Registration Sequence	\N
@@ -1243,6 +1245,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 7031	(0009,"GEMS_PETD_01",fa)	UN	t	Unknown	d
 7001	(0009,"GEMS_PETD_01",f6)	SL	t	Unknown	d
 7036	(0009,"GEMS_PETD_01",fa)	SL	t	Unknown	d
+1880	(0099,"SIENET",05)	SL	t	Unknown	d
 2948	(0018,1400)	LO	f	Acquisition Device Processing Description	\N
 2056	(0064,0002)[<0>](0064,0010)[<1>](3006,00c6)	DS	f	Deformable Registration Sequence:Post Deformation Matrix Registration Sequence:Frame of Reference Transformation Matrix	\N
 2001	(300e,0004)	DA	f	Review Date	\N
@@ -1392,6 +1395,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4325	(0008,9206)	CS	f	Volumetric Properties	\N
 4993	(0028,3003)	LO	f	LUT Explanation	\N
 4996	(0018,9036)	CS	f	Partial Fourier Direction	\N
+4333	(0018,8150)	DS	f	Exposure Time in ÂµS	\N
 7028	(0043,"GEMS_PARM_01",a8)	UN	t	Dual Drive Mode, Amplitude Attentuation and Phase Offset	k
 3601	(0019,"SIEMENS MR HEADER",17)	UN	t	Slice Resolution	k
 4317	(0032,1064)[<0>](0008,0103)	SH	f	Requested Procedure Code Sequence:Coding Scheme Version	\N
@@ -1456,8 +1460,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5001	(0018,9014)	CS	f	Phase Contrast	\N
 4332	(0018,5021)	LO	f	Postprocessing Function	\N
 5005	(0018,9024)	CS	f	Saturation Recovery	\N
-4333	(0018,8150)	DS	f	Exposure Time in ÂµS	\N
-4331	(0018,5020)	LO	f	Processing Function	\N
 3303	(0019,"SIEMENS CT VA0  COAD",b0)	OB	t	Feed per Rotation	k
 3304	(0019,"SIEMENS CT VA0  COAD",92)	OB	t	OsteoRegressionLineSlope	k
 5589	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)	SQ	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence	k
@@ -1532,6 +1534,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3444	(0018,113a)	CS	f	Table Type	\N
 3414	(0018,1405)	IS	f	Relative X-Ray Exposure	\N
 3326	(0040,a730)[<0>](0040,a168)	SQ	f	Content Sequence:Concept Code Sequence	\N
+6728	(0011,"PICKER PQ2000+ CT IMAGE PRIVATE DATA",5b)	UN	t	Unknown	d
 3324	(0040,a375)[<0>](0008,1115)[<1>](0008,1199)	SQ	f	Current Requested Procedure Evidence Sequence:Referenced Series Sequence:Referenced SOP Sequence	\N
 3460	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)	SQ	f	Content Sequence:Content Sequence:Content Sequence	\N
 3454	(0040,a730)[<0>](0040,a730)[<1>](0040,a043)[<2>](0008,0100)	SH	f	Content Sequence:Content Sequence:Concept Name Code Sequence:Code Value	\N
@@ -1608,6 +1611,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3450	(0018,700e)	TM	f	Time of Last Detector Calibration	\N
 3465	(0040,a730)[<0>](0040,a730)[<1>](0040,a160)	UT	f	Content Sequence:Content Sequence:Text Value	\N
 3349	(0018,9334)	CS	f	Fluoroscopy Flag	\N
+4402	(0020,9222)[<0>](0020,9421)	LO	f	Dimension Index Sequence:Dimension Description Label	\N
 3464	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a043)[<3>](0008,0104)	LO	f	Content Sequence:Content Sequence:Content Sequence:Concept Name Code Sequence:Code Meaning	\N
 3412	(0018,1708)	IS	f	Collimator Lower Horizontal Edge	\N
 3471	(0040,a491)	CS	f	Completion Flag	\N
@@ -1671,7 +1675,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4398	(5200,9230)[<0>](0008,9124)[<1>](0008,2112)[<2>](0040,a170)[<3>](0008,0100)	SH	f	Per-frame Functional Groups Sequence:Derivation Image Sequence:Source Image Sequence:Purpose of Reference Code Sequence:Code Value	\N
 4401	(5200,9230)[<0>](0008,9124)[<1>](0008,2112)[<2>](0040,a170)[<3>](0008,0102)	SH	f	Per-frame Functional Groups Sequence:Derivation Image Sequence:Source Image Sequence:Purpose of Reference Code Sequence:Coding Scheme Designator	\N
 4403	(5200,9230)[<0>](0008,9124)[<1>](0008,9215)[<2>](0008,0104)	LO	f	Per-frame Functional Groups Sequence:Derivation Image Sequence:Derivation Code Sequence:Code Meaning	\N
-4402	(0020,9222)[<0>](0020,9421)	LO	f	Dimension Index Sequence:Dimension Description Label	\N
+5012	(0018,9018)	CS	f	Echo Planar Pulse Sequence	\N
 4397	(5200,9230)[<0>](0008,9124)[<1>](0008,2112)[<2>](0008,1150)	UI	f	Per-frame Functional Groups Sequence:Derivation Image Sequence:Source Image Sequence:Referenced SOP Class UID	\N
 4351	(0040,1008)	LO	f	Confidentiality Code	\N
 4413	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a730)[<3>](0040,a043)[<4>](0008,0100)	SH	f	Content Sequence:Content Sequence:Content Sequence:Content Sequence:Concept Name Code Sequence:Code Value	\N
@@ -1724,6 +1728,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4418	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a168)	SQ	f	Content Sequence:Content Sequence:Content Sequence:Concept Code Sequence	\N
 4424	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a730)[<3>](0040,a300)	SQ	f	Content Sequence:Content Sequence:Content Sequence:Content Sequence:Measured Value Sequence	\N
 5606	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0008,1115)[<2>](0008,1140)	SQ	t	Advanced Presentation Sequence:Presentation State Sequence:Referenced Series Sequence:Referenced Image Sequence	k
+5628	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0008,0016)	UI	t	Advanced Presentation Sequence:Presentation State Sequence:SOP Class UID	k
+5637	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0028,1054)	LO	t	Advanced Presentation Sequence:Presentation State Sequence:Rescale Type	k
 5616	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",91)[<3>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",9a)[<4>](0028,0008)	IS	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Measurement Evaluation DataRole Sequence:Measurement Referenced Frames Sequence:Number of Frames	k
 5609	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,005a)[<2>](0008,1140)[<3>](0008,1160)	IS	t	Advanced Presentation Sequence:Presentation State Sequence:Displayed Area Selection Sequence:Referenced Image Sequence:Referenced Frame Number	k
 5617	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,005a)[<2>](0070,0103)	FL	t	Advanced Presentation Sequence:Presentation State Sequence:Displayed Area Selection Sequence:Presentation Pixel Magnification Ratio	k
@@ -1757,8 +1763,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5635	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0018,9525)	LO	t	Advanced Presentation Sequence:Application Version	k
 5641	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0028,1053)	DS	t	Advanced Presentation Sequence:Presentation State Sequence:Rescale Slope	k
 5626	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0020,000d)	UI	t	Advanced Presentation Sequence:Presentation State Sequence:Study Instance UID	h
-5628	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0008,0016)	UI	t	Advanced Presentation Sequence:Presentation State Sequence:SOP Class UID	k
-5637	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0028,1054)	LO	t	Advanced Presentation Sequence:Presentation State Sequence:Rescale Type	k
 5639	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,0084)	PN	t	Advanced Presentation Sequence:Presentation State Sequence:Content Creator's Name	d
 5640	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0028,3110)[<2>](0028,1050)	DS	t	Advanced Presentation Sequence:Presentation State Sequence:Softcopy VOI LUT Sequence:Window Center	k
 5629	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0008,1115)[<2>](0020,000e)	UI	t	Advanced Presentation Sequence:Presentation State Sequence:Referenced Series Sequence:Series Instance UID	h
@@ -1866,6 +1870,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5053	(2005,"Philips MR Imaging DD 001",0f)	OB	t	Window Center	k
 617	(0009,"GEMS_PETD_01",bf)	FL	t	AC BP Filt Cutoff	k
 3240	(300a,00b0)[<0>](300d,"TOMO_HA_01",80)	UN	t	Beam Sequence:Unknown	d
+250	(0025,"GEMS_SERS_01",07)	SL	t	ImagesInSeries	k
+5925	(0010,0024)	SQ	f	Issuer of Patient ID Qualifiers Sequence	\N
 5673	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0071,"SIEMENS SYNGO OBJECT GRAPHICS",1a)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Unknown	d
 303	(0019,"GEMS_ACQU_01",58)	SS	t	CTBoneNumber	k
 520	(0021,"GEMS_RELA_01",58)	SL	t	IntegerSlop	k
@@ -1934,7 +1940,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1375	(01f7,"ELSCINT1",11)	OW	t	Unknown	d
 3192	(0023,"FDMS 1.0",10)[<0>](0027,"FDMS 1.0",30)[<1>](0027,"FDMS 1.0",a2)	OB	t	Unknown:Unknown:Unknown	d
 599	(0009,"GEMS_PETD_01",cc)	FL	t	vqc_x_axis_tilt	k
-250	(0025,"GEMS_SERS_01",07)	SL	t	ImagesInSeries	k
 5228	(2005,"Philips MR Imaging DD 005",3f)	OB	t	Active Implantable Medical Device Limits Applied	k
 5331	(0015,"GEMS_PETD_01",29)	UN	t	Decay Flag	k
 348	(0045,"GEMS_HELIOS_01",03)	SS	t	DAS type	k
@@ -2069,9 +2074,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5025	(0018,9025)	CS	f	Spectrally Selected Suppression	\N
 3681	(0040,030e)[<0>](0018,0010)	LO	f	Exposure Dose Sequence:Contrast/Bolus Agent	\N
 6714	(7001,"GEMS_MR_RAW_01",08)	UN	t	rdb_raw_data	d
-6728	(0011,"PICKER PQ2000+ CT IMAGE PRIVATE DATA",5b)	UN	t	Unknown	d
-5012	(0018,9018)	CS	f	Echo Planar Pulse Sequence	\N
-5925	(0010,0024)	SQ	f	Issuer of Patient ID Qualifiers Sequence	\N
 5928	(0008,0051)	SQ	f	Issuer of Accession Number Sequence	\N
 5930	(0008,0051)[<0>](0040,0031)	UT	f	Issuer of Accession Number Sequence:Local Namespace Entity ID	\N
 5926	(0010,0024)[<0>](0040,0032)	UT	f	Issuer of Patient ID Qualifiers Sequence:Universal Entity ID	\N
@@ -2225,7 +2227,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5204	(2001,"Philips Imaging DD 001",18)	OB	t	NumberOfSlicesMR	k
 6823	(5200,9229)[<0>](0008,1140)[<1>](2005,"Philips MR Imaging DD 005",11)	UI	t	Shared Functional Groups Sequence:Referenced Image Sequence:MF Private Referenced SOP Instance UID	d
 5133	(2005,"Philips MR Imaging DD 003",53)	OB	t	Number of Study Patient Medical Alerts	k
-1880	(0099,"SIENET",05)	SL	t	Unknown	d
 5010	(0018,9015)	CS	f	Time of Flight Contrast	\N
 5022	(0018,9077)	CS	f	Parallel Acquisition	\N
 2455	(2001,"Philips Imaging DD 001",19)	CS	t	PartialMatrixScanned	k
@@ -2381,6 +2382,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1029	(7005,"TOSHIBA_MEC_CT3",13)	US	t	Expert Plan Number	k
 1579	(0025,"GEMS_SERS_01",19)	SL	t	LastImageNumberUsed	k
 810	(01f1,"ELSCINT1",0c)	DS	t	Scanner Relative Center	k
+2859	(01f3,"ELSCINT1",23)	OB	t	Unknown	d
+3841	(0043,"",1c)	UN	t	Unknown	d
 6805	(5200,9229)[<0>](0008,1140)[<1>](0040,a170)	SQ	f	Shared Functional Groups Sequence:Referenced Image Sequence:Purpose of Reference Code Sequence	\N
 6964	(0018,9239)[<0>](0018,9179)	CS	f	Specific Absorption Rate Sequence:Specific Absorption Rate Definition	\N
 6856	(5200,9229)[<0>](0018,9112)[<1>](0018,9180)	CS	f	Shared Functional Groups Sequence:MR Timing and Related Parameters Sequence:Gradient Output Type	\N
@@ -2455,8 +2458,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5712	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a6)	UN	t	Advanced Presentation Sequence:Presentation Version Identifier	k
 3181	(0009,"FDMS 1.0",90)	OB	t	DistributionCode	d
 4011	(0019,"",a1)	UN	t	Unknown	d
-2859	(01f3,"ELSCINT1",23)	OB	t	Unknown	d
-3841	(0043,"",1c)	UN	t	Unknown	d
 2778	(0029,"MITRA PRESENTATION 1.0",01)	UN	t	Window Width	k
 2594	(0029,"SIEMENS MED DISPLAY",10)	US	t	RowsOfSubmatrix	k
 2593	(0029,"SIEMENS MED DISPLAY",11)	US	t	ColumnsOfSubmatrix	k
@@ -2530,6 +2531,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6130	(0018,0026)[<0>](0018,0034)	LO	f	Intervention Drug Information Sequence:Intervention Drug Name	\N
 6136	(0054,0052)[<0>](0018,1143)	DS	f	Rotation Information Sequence:Scan Arc	\N
 6141	(0054,0052)[<0>](0018,1144)	DS	f	Rotation Information Sequence:Angular Step	\N
+6827	(5200,9230)[<0>](0020,9111)[<1>](0018,9151)	DT	f	Per-frame Functional Groups Sequence:Frame Content Sequence:Frame Reference DateTime	\N
+4120	(0008,9007)	CS	f	Frame Type	\N
 4417	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a300)[<3>](0040,08ea)[<4>](0008,0102)	SH	f	Content Sequence:Content Sequence:Content Sequence:Measured Value Sequence:Measurement Units Code Sequence:Coding Scheme Designator	\N
 6145	(0018,0026)[<0>](0018,0028)	DS	f	Intervention Drug Information Sequence:Intervention Drug Dose	\N
 6122	(0054,0052)[<0>](0018,1242)	IS	f	Rotation Information Sequence:Actual Frame Duration	\N
@@ -2598,8 +2601,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6884	(5200,9229)[<0>](0018,9115)[<1>](0018,9026)	CS	f	Shared Functional Groups Sequence:MR Modifier Sequence:Spectrally Selected Excitation	\N
 5336	(0015,"GEMS_PETD_01",25)	UN	t	BP3d Filter OrderU	k
 322	(0043,"GEMS_PARM_01",15)	SS	t	TotalOutputViews	k
-6827	(5200,9230)[<0>](0020,9111)[<1>](0018,9151)	DT	f	Per-frame Functional Groups Sequence:Frame Content Sequence:Frame Reference DateTime	\N
 195	(0019,"GEMS_ACQU_01",1b)	DS	t	LastScanLocation	k
+3831	(0027,"",62)	UN	t	Unknown	d
 6855	(5200,9229)[<0>](0018,9125)[<1>](0018,1312)	CS	f	Shared Functional Groups Sequence:MR FOV/Geometry Sequence:In-plane Phase Encoding Direction	\N
 6953	(0040,a170)[<0>](0008,0104)	LO	f	Purpose of Reference Code Sequence:Code Meaning	\N
 6796	(5200,9230)[<0>](0018,9226)	SQ	f	Per-frame Functional Groups Sequence:MR Image Frame Type Sequence	\N
@@ -2670,7 +2673,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4086	(0028,0108)	SS	f	Smallest Pixel Value in Series	\N
 4419	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a300)[<3>](0040,08ea)	SQ	f	Content Sequence:Content Sequence:Content Sequence:Measured Value Sequence:Measurement Units Code Sequence	\N
 4533	(0040,0275)[<0>](0040,0007)	LO	f	Request Attributes Sequence:Scheduled Procedure Step Description	\N
-4120	(0008,9007)	CS	f	Frame Type	\N
 4475	(1111,"2.16.840.1.114330.1.1.1.1",24)	FD	t	Unknown	d
 4534	(0040,0275)[<0>](0032,1064)[<1>](0008,0104)	LO	f	Request Attributes Sequence:Requested Procedure Code Sequence:Code Meaning	\N
 1716	(07a1,"ELSCINT1",02)	UL	t	Unknown	d
@@ -2803,6 +2805,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2540	(2005,"Philips MR Imaging DD 005",0f)[<0>](0018,9032)	CS	t	Private Per-Frame Sequence:Geometry of k-Space Traversal	na
 2490	(2005,"Philips MR Imaging DD 005",0f)[<0>](0018,9033)	CS	t	Private Per-Frame Sequence:Segmented k-Space Traversal	na
 2687	(2005,"Philips MR Imaging DD 005",0f)[<0>](0018,9062)	CS	t	Private Per-Frame Sequence:De-coupling Method	na
+2177	(2001,"Philips Imaging DD 001",5f)	SQ	t	StackSequence	k
 4552	(0054,0016)[<0>](0054,0304)[<1>](0008,010f)	CS	f	Radiopharmaceutical Information Sequence:Radiopharmaceutical Code Sequence:Context Identifier	\N
 4434	(0040,a730)[<0>](0040,a730)[<1>](0040,a730)[<2>](0040,a730)[<3>](0040,a300)[<4>](0040,08ea)[<5>](0008,0104)	LO	f	Content Sequence:Content Sequence:Content Sequence:Content Sequence:Measured Value Sequence:Measurement Units Code Sequence:Code Meaning	\N
 3697	(0025,"Siemens: Thorax/Multix FD Raw Image Settings",06)	FL	t	Unknown	d
@@ -2872,7 +2875,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2459	(2001,"Philips Imaging DD 001",24)	CS	t	Series is Interactive	k
 2345	(2001,"Philips Imaging DD 001",25)	SH	t	EchoTimeDisplayMR	k
 2671	(2001,"Philips Imaging DD 001",4e)	CS	t	Window Smoothing Taste	k
-2177	(2001,"Philips Imaging DD 001",5f)	SQ	t	StackSequence	k
+3921	(0043,"",1d)	UN	t	Unknown	d
 2281	(2001,"Philips Imaging DD 001",5f)[<0>](2001,"Philips Imaging DD 001",32)	FL	t	StackSequence:StackRadialAngle	k
 2429	(2001,"Philips Imaging DD 001",5f)[<0>](2001,"Philips Imaging DD 001",33)	CS	t	StackSequence:StackRadialAxis	k
 2314	(2001,"Philips Imaging DD 001",5f)[<0>](2001,"Philips Imaging DD 001",35)	SS	t	StackSequence:StackSliceNumber	k
@@ -3062,6 +3065,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2175	(2001,"Philips Imaging DD 129",00)[<0>](0008,1115)[<1>](0008,1140)	SQ	t	Presentation State Sequence:Referenced Series Sequence:Referenced Image Sequence	na
 2303	(2001,"Philips Imaging DD 129",00)[<0>](0008,1115)[<1>](0008,1140)[<2>](0008,1155)	UI	t	Presentation State Sequence:Referenced Series Sequence:Referenced Image Sequence:Referenced SOP Instance UID	na
 2306	(2001,"Philips Imaging DD 129",00)[<0>](0008,1115)[<1>](0020,000e)	UI	t	Presentation State Sequence:Referenced Series Sequence:Series Instance UID	na
+2247	(2005,"Philips MR Imaging DD 001",0e)	FL	t	Scale Slope	k
 2564	(2001,"Philips Imaging DD 129",00)[<0>](0018,1622)	US	t	Presentation State Sequence:Shutter Presentation Value	na
 2209	(2001,"Philips Imaging DD 129",00)[<0>](0020,0013)	IS	t	Presentation State Sequence:Instance Number	na
 2173	(2001,"Philips Imaging DD 129",00)[<0>](0028,3110)	SQ	t	Presentation State Sequence:Softcopy VOI LUT Sequence	na
@@ -3116,7 +3120,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2235	(2005,"Philips MR Imaging DD 001",0b)	FL	t	Max FP	k
 2290	(2005,"Philips MR Imaging DD 001",0c)	FL	t	Min FP	k
 2292	(2005,"Philips MR Imaging DD 001",0d)	FL	t	Scale Intercept	k
-2247	(2005,"Philips MR Imaging DD 001",0e)	FL	t	Scale Slope	k
+4022	(0019,"",88)	UN	t	Unknown	d
 2370	(2005,"Philips MR Imaging DD 001",0f)	DS	t	Window Center	k
 2368	(2005,"Philips MR Imaging DD 001",10)	DS	t	Window Width	k
 2423	(2005,"Philips MR Imaging DD 001",11)	CS	t	Image Type	k
@@ -3326,6 +3330,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3931	(0021,"",5b)	UN	t	Unknown	d
 6229	(0054,0022)[<0>](0054,0220)[<1>](0008,0102)	SH	f	Detector Information Sequence:View Code Sequence:Coding Scheme Designator	\N
 6227	(0054,0022)[<0>](0054,0220)	SQ	f	Detector Information Sequence:View Code Sequence	\N
+2856	(01f3,"ELSCINT1",13)	OB	t	Unknown	d
 6230	(0054,0022)[<0>](0054,0220)[<1>](0008,0104)	LO	f	Detector Information Sequence:View Code Sequence:Code Meaning	\N
 6228	(0054,0022)[<0>](0054,0220)[<1>](0008,0100)	SH	f	Detector Information Sequence:View Code Sequence:Code Value	\N
 5284	(2001,"Philips Imaging DD 001",85)	OB	t	Magnetic Field Strength	k
@@ -3389,9 +3394,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4008	(0025,"",18)	UN	t	Unknown	d
 2972	(0023,"FDMS 1.0",10)[<0>](0025,"FDMS 1.0",94)	OB	t	Unknown:Unknown	d
 3158	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",42)	OB	t	Unknown:Unknown	d
-4022	(0019,"",88)	UN	t	Unknown	d
-2856	(01f3,"ELSCINT1",13)	OB	t	Unknown	d
-3831	(0027,"",62)	UN	t	Unknown	d
 2923	(0023,"FDMS 1.0",10)[<0>](0027,"FDMS 1.0",40)	SQ	t	Unknown:Unknown	d
 4282	(5200,9229)[<0>](0008,9124)[<1>](0008,9215)[<2>](0008,0104)	LO	f	Shared Functional Groups Sequence:Derivation Image Sequence:Derivation Code Sequence:Code Meaning	\N
 4254	(5200,9229)[<0>](0062,000a)	SQ	f	Shared Functional Groups Sequence:Segment Identification Sequence	\N
@@ -3456,6 +3458,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1353	(01f1,"ELSCINT1",4c)	SH	t	Unknown	d
 3798	(0019,"",15)	UN	t	Unknown	d
 623	(0009,"GEMS_PETD_01",eb)	FL	t	Unknown	d
+6654	(0019,"SIEMENS MR VA0  GEN",98)	DS	t	CoilPosition	k
 5749	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",b5)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",ff)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Evaluation Text Position Sequence:Unknown	d
 3034	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",52)	OB	t	Unknown:Unknown	d
 5752	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",88)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence:Camera Min Zoom In Factor	k
@@ -3532,8 +3535,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1267	(0009,"GEIIS",10)[<0>](0028,1050)	DS	t	GE Private Image Thumbnail Sequence:Window Center	na
 3174	(0023,"FDMS 1.0",30)[<0>](0027,"FDMS 1.0",60)[<1>](0027,"FDMS 1.0",a2)	OB	t	Unknown:Unknown:Unknown	d
 3736	(0021,"Siemens: Thorax/Multix FD Post Processing",08)	US	t	Auto Window Flag	d
-3921	(0043,"",1d)	UN	t	Unknown	d
-6654	(0019,"SIEMENS MR VA0  GEN",98)	DS	t	CoilPosition	k
 5756	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",00)	UN	t	Advanced Presentation Sequence:Presentation Name	k
 4098	(0019,"SIEMENS MR HEADER",0e)	FD	t	Diffusion Gradient Direction	k
 5754	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",80)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Rotation Axis	k
@@ -3685,6 +3686,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4489	(0043,"GEMS_PARM_01",6d)	US	t	Area Size	k
 4375	(0015,"GEMS_PETD_01",23)	UL	t	BP3d Filter FlagU	k
 6645	(0019,"SIEMENS MR VA0  COAD",80)	DS	t	GradientDelayTime	k
+6419	(0028,0005)	SS	f	Image Dimensions	\N
 6789	(0019,"SIEMENS MR VA0  GEN",82)	DS	t	FilterParameterForRawData	k
 6767	(2001,"Philips Imaging DD 129",00)[<0>](2005,"Philips MR Imaging DD 002",99)	UL	t	Presentation State Sequence:Number of Request Excerpts	d
 6675	(0019,"SIEMENS MR VA0  COAD",da)	CS	t	PhaseCodingDirection	k
@@ -3754,7 +3756,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6667	(0019,"SIEMENS MR VA0  COAD",52)	DS	t	ReceiverPreamplifierGain	k
 6681	(0029,"SIEMENS CM VA0  CMS",20)	CS	t	PixelQualityCode	K
 6418	(0028,0200)	SS	f	Image Location	\N
-6419	(0028,0005)	SS	f	Image Dimensions	\N
 412	(0019,"GEMS_ACQU_01",c3)	SS	t	SATLocationL	k
 351	(0045,"GEMS_HELIOS_01",11)	SS	t	Number of Views 2A	k
 1628	(0023,"GEMS_STDY_01",74)	SL	t	NumberOfUpdatesToHeader	k
@@ -3870,6 +3871,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4688	(300a,03a2)[<0>](300a,03a8)[<1>](300a,0144)	FL	f	Ion Beam Sequence:Ion Control Point Sequence:Table Top Roll Angle	\N
 4771	(300a,00b0)[<0>](300a,00e3)[<1>](300a,00e4)	IS	f	Beam Sequence:Compensator Sequence:Compensator Number	\N
 4733	(300a,0180)[<0>](300a,0410)[<1>](0018,9171)	CS	f	Patient Setup Sequence:Motion Synchronization Sequence:Respiratory Signal Source	\N
+4779	(300a,00b0)[<0>](3283,"Varian Medical Systems VISION 3283",60)	UN	t	Beam Sequence:Unknown	d
 4727	(300a,00b0)[<0>](300a,00ca)[<1>](3002,0012)	DS	f	Beam Sequence:Planned Verification Image Sequence:RT Image Position	\N
 4730	(300a,00b0)[<0>](300a,00ca)[<1>](3002,000c)	CS	f	Beam Sequence:Planned Verification Image Sequence:RT Image Plane	\N
 4716	(300a,0180)[<0>](300a,01d6)	DS	f	Patient Setup Sequence:Table Top Lateral Setup Displacement	\N
@@ -3950,7 +3952,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5944	(7005,"TOSHIBA_MEC_CT3",1a)	OB	t	Frame Sort Order	k
 1102	(0043,"GEMS_PARM_01",9a)	IS	t	Rx Stack Identification	k
 598	(0009,"GEMS_PETD_01",3c)	FL	t	Post Injected Activity	k
-4779	(300a,00b0)[<0>](3283,"Varian Medical Systems VISION 3283",60)	UN	t	Beam Sequence:Unknown	d
 5932	(3f01,"INTELERAD MEDICAL SYSTEMS",13)	LO	t	Unknown	d
 5896	(7031,"CtProjectionData-MayoClinc-v1",01)	UN	t	Unknown	d
 5910	(7033,"CtProjectionData-MayoClinc-v1",0c)	UN	t	Unknown	d
@@ -4038,6 +4039,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3972	(0043,"",9a)	UN	t	Unknown	d
 4854	(0019,"GEMS_ACQU_01",6a)	OB	t	DependantOnNumberOfViewsProcessed	d
 1358	(01f1,"ELSCINT1",4b)	SH	t	Unknown	d
+1941	(01f1,"ELSCINT1",36)	CS	t	Unknown	d
 4889	(0019,"SIEMENS CT VA0  COAD",b1)	SH	t	Unknown	d
 499	(0019,"GEMS_ACQU_01",b7)	DS	t	UserData	d
 3179	(0023,"FDMS 1.0",20)[<0>](0027,"FDMS 1.0",70)[<1>](0027,"FDMS 1.0",a2)	OB	t	Unknown:Unknown:Unknown	d
@@ -4572,6 +4574,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6430	(0009,"SIEMENS CM VA0  LAB",16)	LO	t	CPUIdentificationLabel	d
 6459	(0029,"SIEMENS CM VA0  CMS",51)	CS	t	ExposureCode	k
 6421	(0009,"SIEMENS CM VA0  LAB",20)	SH	t	HeaderVersion	k
+1940	(01f1,"ELSCINT1",37)	DS	t	Unknown	d
 6427	(0029,"SIEMENS MED MG",50)	LO	t	ListOfDisplayPostfix	k
 6436	(0009,"SIEMENS CM VA0  LAB",15)	LO	t	SMIIdentificationLabel	k
 6437	(0021,"SIEMENS CM VA0  CMS",60)	DS	t	ImagePosition	k
@@ -4653,6 +4656,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6051	(7005,"TOSHIBA_MEC_CT3",0f)	OB	t	Direction (head or feet first)	k
 2781	(0053,"GEHC_CT_ADVAPP_001",63)	UN	t	Image Position Patient Setting	k
 5713	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",8b)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Measurement Surface Normal	k
+5682	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",55)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Renderer DirectionalLight Direction	k
 5670	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",4c)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence:Camera Image Minimum Height	k
 5874	(0025,"Siemens: Thorax/Multix FD Raw Image Settings",1a)	US	t	Image Crop Upper Left	k
 5604	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,005a)	SQ	t	Advanced Presentation Sequence:Presentation State Sequence:Displayed Area Selection Sequence	k
@@ -4689,7 +4693,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5643	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,005a)[<2>](0070,0101)	DS	t	Advanced Presentation Sequence:Presentation State Sequence:Displayed Area Selection Sequence:Presentation Pixel Spacing	k
 5755	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",80)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence:Camera Rotation Axis	k
 5740	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",54)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Renderer DirectionalLight Color	k
-5682	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",55)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Renderer DirectionalLight Direction	k
+1485	(0051,"SIEMENS MR HEADER",08)	CS	t	CSA Image Header Type	k
 5746	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",96)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Measurement Data Points	k
 5663	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",31)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",91)[<3>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",8d)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Measurement Data Sequence:Measurement Evaluation DataRole Sequence:Measurement Evaluation DataRole ID	h
 5816	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",61)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",63)[<3>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",64)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Segmentation Display Data Sequence:Segmentation Display Parameter Sequence:Segmentation Display Parameter Type	k
@@ -4759,6 +4763,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 6514	(0009,"GEMS_PETD_01",42)	FL	t	Source 1 Activity	k
 6311	(0055,"GEMS_GENIE_1",22)[<0>](0011,"GEMS_GENIE_1",25)	SL	t	eNTEGRA Detector Information Sequence:FOVMaskCutoffAngle	k
 6097	(0045,"GEMS_SENO_02",50)	UI	t	Fallback Instance UID (CR or SC)	h
+154	(0009,"GEMS_IDEN_01",04)	SH	t	ProductId	k
+485	(0043,"GEMS_PARM_01",0e)	DS	t	PSDEstimatedLimitInTeslaPerSecond	k
 5810	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",03)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",04)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",10)[<3>](0008,0018)	UI	t	Advanced Presentation Sequence:Time Point Sequence:Base Image Sequence:Segmentation Sequence:SOP Instance UID	h
 5584	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",12)	SQ	t	Advanced Presentation Sequence:Navigation Sequence	k
 5607	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a9)[<1>](0070,005a)[<2>](0008,1140)	SQ	t	Advanced Presentation Sequence:Presentation State Sequence:Displayed Area Selection Sequence:Referenced Image Sequence	k
@@ -4792,6 +4798,10 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 5830	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",61)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",63)[<3>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",53)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Segmentation Display Data Sequence:Segmentation Display Parameter Sequence:Renderer Material	k
 5694	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",3f)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",4b)	UN	t	Advanced Presentation Sequence:Presentation Module Sequence:Camera Home Settings Sequence:Camera Image Maximum Height	k
 5804	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",a7)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",61)	SQ	t	Advanced Presentation Sequence:Presentation Module Sequence:Segmentation Display Data Sequence	k
+367	(0043,"GEMS_PARM_01",67)	US	t	IBO Correction Indicator	k
+861	(0009,"GEMS_PETD_01",0d)	DT	t	Scan Date Time	o
+5320	(0015,"GEMS_PETD_01",28)	UN	t	BP3d Filter CutoffV	k
+300	(0019,"GEMS_ACQU_01",14)	SS	t	End NumberForBaseline	k
 5614	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",03)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",04)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",cf)[<3>](0008,1115)[<4>](0008,1140)[<5>](0008,1160)	IS	t	Advanced Presentation Sequence:Time Point Sequence:Base Image Sequence:Image Sequence:Referenced Series Sequence:Referenced Image Sequence:Referenced Frame Number	k
 887	(0043,"GEMS_PARM_01",83)	DS	t	Asset R Factors	k
 216	(0043,"GEMS_PARM_01",20)	DS	t	AvgOverrangesAllViews	k
@@ -4879,13 +4889,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 59	(0051,"SIEMENS MR HEADER",08)	OB	t	CSA Image Header Type	d
 1639	(0019,"SIEMENS MR HEADER",16)	DS	t	Time After Start	k
 57	(0019,"SIEMENS MR HEADER",16)	OB	t	Time After Start	k
-1485	(0051,"SIEMENS MR HEADER",08)	CS	t	CSA Image Header Type	k
-154	(0009,"GEMS_IDEN_01",04)	SH	t	ProductId	k
-485	(0043,"GEMS_PARM_01",0e)	DS	t	PSDEstimatedLimitInTeslaPerSecond	k
-367	(0043,"GEMS_PARM_01",67)	US	t	IBO Correction Indicator	k
-861	(0009,"GEMS_PETD_01",0d)	DT	t	Scan Date Time	o
-5320	(0015,"GEMS_PETD_01",28)	UN	t	BP3d Filter CutoffV	k
-300	(0019,"GEMS_ACQU_01",14)	SS	t	End NumberForBaseline	k
 5121	(2005,"Philips MR Imaging DD 004",33)	OB	t	Phase Encoding Echo Top Positions	k
 5126	(2005,"Philips MR Imaging DD 001",30)	OB	t	Repetition Time	k
 5127	(2005,"Philips MR Imaging DD 005",01)	OB	t	Number of Study Reference	k
@@ -5685,6 +5688,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3534	(200b,"Philips RAD Imaging DD 097",79)	IS	t	Unknown	d
 4518	(5001,"vRad PACS",54)	UN	t	Unknown	d
 4477	(1111,"2.16.840.1.114330.1.1.1.1",11)	SL	t	Unknown	d
+3061	(0023,"FDMS 1.0",10)[<0>](0025,"FDMS 1.0",90)	OB	t	Unknown:Unknown	d
 5370	(0071,"BLACKFORD",04)[<0>](0070,0308)[<1>](0070,0309)[<2>](0070,030a)	SQ	t	Unknown:Registration Sequence:Matrix Registration Sequence:Matrix Sequence	d
 5518	(2005,"Philips MR Imaging DD 002",32)[<0>](2005,"Philips MR Imaging DD 002",44)	OW	t	Blob Data Object Array:Blob Data	d
 3597	(0051,"SIEMENS MR HEADER",0f)	UN	t	Coil String	k
@@ -5839,7 +5843,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1524	(0011,"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT",5c)	UN	t	Unknown	d
 3881	(0019,"",c8)	UN	t	Unknown	d
 3025	(0023,"FDMS 1.0",30)[<0>](0027,"FDMS 1.0",60)[<1>](0027,"FDMS 1.0",a1)	OB	t	Unknown:Unknown:Unknown	d
-3061	(0023,"FDMS 1.0",10)[<0>](0025,"FDMS 1.0",90)	OB	t	Unknown:Unknown	d
 3636	(0011,"GEMS_GDXE_FALCON_04",76)	UN	t	Unknown	d
 3645	(0011,"GEMS_GDXE_FALCON_04",65)	UN	t	Unknown	d
 3008	(0023,"FDMS 1.0",10)[<0>](0027,"FDMS 1.0",50)[<1>](0027,"FDMS 1.0",a1)	OB	t	Unknown:Unknown:Unknown	d
@@ -5924,8 +5927,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4513	(5001,"vRad PACS",77)	UN	t	Unknown	d
 5294	(2001,"Philips Imaging DD 001",52)	UI	t	Image Presentation State UID	d
 1942	(01f1,"ELSCINT1",31)	UN	t	Unknown	d
-1941	(01f1,"ELSCINT1",36)	CS	t	Unknown	d
-1940	(01f1,"ELSCINT1",37)	DS	t	Unknown	d
 4988	(2005,"Philips MR Imaging DD 002",32)		t	Blob Data Object Array	d
 3734	(0019,"Siemens: Thorax/Multix FD Lab Settings",06)	FD	t	Table Object Distance	d
 2118	(0053,"GEHC_CT_ADVAPP_001",6b)	IS	t	Unknown	d
@@ -6192,6 +6193,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2621	(4453,"DR Systems, Inc.",04)	LO	t	File Type	k
 2614	(4453,"DR Systems, Inc.",05)	LO	t	File Suffix	k
 2618	(4453,"DR Systems, Inc.",02)	LO	t	Image Type	k
+1318	(7053,"Philips PET Private Group",16)	SS	t	Unknown	d
 5424	(0071,"BLACKFORD",04)[<0>](0064,0002)[<1>](0064,0003)	UI	t	Unknown:Deformable Registration Sequence:Source Frame of Reference UID	d
 5425	(0071,"BLACKFORD",04)[<0>](0064,0002)[<1>](0070,030d)[<2>](0008,0102)	SH	t	Unknown:Deformable Registration Sequence:Registration Type Code Sequence:Coding Scheme Designator	d
 2918	(00e1,"ELSCINT1",39)[<0>](0008,1140)[<1>](0008,1150)	UI	t	Unknown:Referenced Image Sequence:Referenced SOP Class UID	d
@@ -6264,7 +6266,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2127	(0011,"GEMS_GENIE_1",10)	LO	t	Unknown	d
 3876	(0021,"",50)	UN	t	Unknown	d
 3765	(0079,"Unnamed Private Block - 10",15)	DS	t	Unknown	d
-1318	(7053,"Philips PET Private Group",16)	SS	t	Unknown	d
 1544	(0033,"MITRA OBJECT UTF8 ATTRIBUTES 1.0",04)	CS	t	Unknown	d
 5394	(0071,"BLACKFORD",04)[<0>](0071,"BLACKFORD",01)[<1>](0071,"BLACKFORD",02)[<2>](0020,0037)	DS	t	Unknown:Unknown:Unknown:Image Orientation (Patient)	d
 5355	(0077,"TERARECON AQUARIUS",20)	UN	t	Binary Data Name	d
@@ -6607,6 +6608,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3932	(0019,"",ab)	UN	t	Unknown	d
 3194	(0023,"FDMS 1.0",30)[<0>](0027,"FDMS 1.0",60)[<1>](0027,"FDMS 1.0",a0)	OB	t	Unknown:Unknown:Unknown	d
 3638	(0011,"GEMS_GDXE_FALCON_04",6d)	UN	t	Unknown	d
+4186	(0043,"dcm4che/archive",27)	SH	t	Unknown	d
 3012	(0023,"FDMS 1.0",20)[<0>](0027,"FDMS 1.0",50)[<1>](0027,"FDMS 1.0",a1)	OB	t	Unknown:Unknown:Unknown	d
 4200	(5653,"",14)	SQ	t	Unknown	d
 4135	(5653,"",14)	UN	t	Unknown	d
@@ -6698,6 +6700,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4337	(00e1,"ELSCINT1",46)	OB	t	Unknown	d
 3647	(0011,"GEMS_GDXE_FALCON_04",67)	UN	t	Unknown	d
 5489	(07a1,"ELSCINT1",8d)	ST	t	Unknown	d
+3060	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",71)	OB	t	Unknown:Unknown	d
 5290	(2001,"Philips Imaging DD 129",00)[<0>](0070,0060)	SQ	t	Presentation State Sequence:Graphic Layer Sequence	d
 3751	(0031,"AGFA PACS Archive Mirroring 1.0",01)	SH	t	Unknown	d
 1400	(0031,"AGFA PACS Archive Mirroring 1.0",01)	UL	t	Unknown	d
@@ -6794,6 +6797,8 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 4014	(0019,"",a9)	UN	t	Unknown	d
 3182	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",96)	OB	t	Unknown:Unknown	d
 3029	(50f1,"FDMS 1.0",10)	OB	t	Film Output Format	d
+3888	(0019,"",91)	UN	t	Unknown	d
+4196	(0043,"dcm4che/archive",1f)	SL	t	Unknown	d
 2878	(00e1,"ELSCINT1",39)[<0>](0040,0275)[<1>](0040,0008)	SQ	t	Unknown:Request Attributes Sequence:Scheduled Protocol Code Sequence	d
 3732	(0025,"Siemens: Thorax/Multix FD Raw Image Settings",10)	LT	t	Internal Value	d
 4313	(0137,"NetRAAD",0d)	UI	t	Unknown	d
@@ -6886,10 +6891,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1514	(0011,"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT",13)	UN	t	Unknown	d
 1347	(01f7,"ELSCINT1",10)	OB	t	Unknown	d
 1532	(0011,"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT",56)	UN	t	Unknown	d
-4186	(0043,"dcm4che/archive",27)	SH	t	Unknown	d
-3060	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",71)	OB	t	Unknown:Unknown	d
-3888	(0019,"",91)	UN	t	Unknown	d
-4196	(0043,"dcm4che/archive",1f)	SL	t	Unknown	d
+1455	(0009,"GEIIS",3b)	UN	t	Unknown	d
 2956	(0019,"FDMS 1.0",60)	OB	t	RadiographersCode	d
 482	(0019,"GEMS_ACQU_01",b1)	DS	t	UserData	d
 3665	(2001,"Philips Imaging DD 002",6c)	UN	t	Unknown	d
@@ -7072,7 +7074,6 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2959	(0029,"FDMS 1.0",34)	OB	t	MagnificationReductionRatio	d
 1621	(0021,"GEMS_RELA_01",07)	UL	t	SeriesRecordChecksum	d
 4190	(0043,"dcm4che/archive",26)	US	t	Unknown	d
-1455	(0009,"GEIIS",3b)	UN	t	Unknown	d
 3119	(0023,"FDMS 1.0",30)[<0>](0025,"FDMS 1.0",53)	OB	t	Unknown:Unknown	d
 1348	(01f1,"ELSCINT1",46)	FL	t	Unknown	d
 2832	(01f1,"ELSCINT1",46)	OB	t	Unknown	d
