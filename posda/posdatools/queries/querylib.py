@@ -111,6 +111,7 @@ def parse_query_string(query_string):
                 if query_lines != 1: # skip the first line, it's padding
                     query["query"].append(line)
     except:
+        print(query_string)
         raise RuntimeError("Failed to parse as a Query")
 
     # magicify it
@@ -121,6 +122,7 @@ def parse_query_string(query_string):
         query["description"] = '\n'.join(query["description"])
         query["query"] = '\n'.join(query["query"])
     except:
+        print(query_string)
         raise RuntimeError("Failed to convert to Query object")
 
     return query
