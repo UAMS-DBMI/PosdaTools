@@ -105,7 +105,7 @@ services:
             - common.env
             - nbia.env
 
-    posda-worker:
+    posda-worker-low:
         image: tcia/posda:latest
         command: worker
         restart: always
@@ -121,6 +121,27 @@ services:
             - database.env
             - common.env
             - nbia.env
+        environment:
+          WORKER_PRIORITY: 0
+
+    posda-worker-high:
+        image: tcia/posda:latest
+        command: worker
+        restart: always
+        depends_on:
+            - db
+            - redis
+        volumes:
+            - posda_cache_alpine:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - /mnt:/mnt
+            - /nas:/nas
+        env_file:
+            - database.env
+            - common.env
+            - nbia.env
+        environment:
+          WORKER_PRIORITY: 1
 
     posda-fast-file-process:
         image: tcia/posda:latest

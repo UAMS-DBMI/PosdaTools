@@ -384,7 +384,10 @@ sub StartSubprocess{
   unless($redis){
     die "Couldn't connect to redis";
   }
-  $redis->lpush('normal_work', $work_id);
+  my $priority = Query("OperationPriority")
+               ->FetchOneHash($self->{params}->{command}->{operation_name})
+               ->{worker_priority};
+  $redis->lpush('work_queue_$priority', $work_id);
   QuitRedis();
 
 

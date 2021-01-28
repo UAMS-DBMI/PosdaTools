@@ -9,12 +9,10 @@ import hashlib
 
 BASE_URL = 'http://web/papi/v1'
 
-def main_loop(redis_db):
+def main_loop(redis_db, priority):
 
     while True:
-        sr = redis_db.brpop("hp_work", 1)
-        if sr is None:
-            sr = redis_db.brpop("normal_work", 5)
+        sr = redis_db.brpop("work_queue_{}".format(priority), 5)
         if sr is None:
             continue
 
@@ -84,7 +82,8 @@ def main():
     redis_db = redis.StrictRedis(host="redis", db=0, decode_responses=True)
     print("connected to redis")
 
-    main_loop(redis_db)
+    priority = os.environ.get('WORKER_PRIORITY', '0')
+    main_loop(redis_db, priority)
 
 
 if __name__ == "__main__":
