@@ -163,12 +163,12 @@ sub DrawProcessSummary{
   if ($encoded_inp){
     $http->queue("Input line format: $encoded_inp");
   }
-#  my $warn = Query("IsThisOperationOutdated")
-#               ->FetchOneHash($self->{params}->{command}->{operation_name})
-#               ->{outdated};
-#  if ($warn){
-#    $http->queue("<br><strong>**This operation is outdated. Speak to an administrator.**</strong><br>");
-#  }
+  my $warn = Query("IsThisOperationOutdated")
+               ->FetchOneHash($self->{params}->{command}->{operation_name})
+               ->{outdated};
+  if ($warn){
+    $http->queue("<br><strong>**This operation is outdated. Speak to an administrator.**</strong><br>");
+  }
 }
 
 sub DrawParameterForm{

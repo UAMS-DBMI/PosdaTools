@@ -7,7 +7,6 @@
 -- 
 
 select * from (
--- this is wrapped in a select to fix a bug in Posda
 with tp_id as (
 	select max(activity_timepoint_id)
 	from activity_timepoint

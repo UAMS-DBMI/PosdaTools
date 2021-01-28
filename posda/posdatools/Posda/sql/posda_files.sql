@@ -386,7 +386,8 @@ CREATE TABLE dbif_config.spreadsheet_operation (
     input_line_format text,
     tags text[],
     can_chain boolean,
-    outdated boolean DEFAULT false
+    outdated boolean DEFAULT false,
+    worker_priority integer DEFAULT 0
 );
 
 
@@ -1712,6 +1713,21 @@ CREATE SEQUENCE public.downloadable_file_downloadable_file_id_seq
 --
 
 ALTER SEQUENCE public.downloadable_file_downloadable_file_id_seq OWNED BY public.downloadable_file.downloadable_file_id;
+
+
+--
+-- Name: dup_sops_comparison; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dup_sops_comparison (
+    subprocess_invocation_id integer NOT NULL,
+    sop_index integer NOT NULL,
+    cmp_index integer NOT NULL,
+    from_file_id integer NOT NULL,
+    to_file_id integer NOT NULL,
+    long_report_file_id integer,
+    equiv_class text
+);
 
 
 --
@@ -3992,6 +4008,105 @@ ALTER SEQUENCE public.rt_prescription_rt_prescription_id_seq OWNED BY public.rt_
 
 
 --
+-- Name: seg_bitmap_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_bitmap_file (
+    seg_bitmap_file_id integer NOT NULL,
+    number_segmentations integer NOT NULL,
+    num_slices integer NOT NULL,
+    rows integer NOT NULL,
+    cols integer NOT NULL,
+    frame_of_reference_uid text NOT NULL,
+    patient_id text NOT NULL,
+    study_instance_uid text NOT NULL,
+    series_instance_uid text NOT NULL,
+    sop_instance_uid text NOT NULL,
+    pixel_offset integer NOT NULL
+);
+
+
+--
+-- Name: seg_bitmap_related_sops; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_bitmap_related_sops (
+    seg_bitmap_file_id integer NOT NULL,
+    series_instance_uid text,
+    sop_instance_uid text
+);
+
+
+--
+-- Name: seg_bitmap_segmentation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_bitmap_segmentation (
+    seg_bitmap_file_id integer NOT NULL,
+    segmentation_num integer,
+    label text,
+    description text,
+    color text,
+    algorithm_type text,
+    algorithm_name text,
+    segmented_category text,
+    segmented_type text
+);
+
+
+--
+-- Name: seg_slice_bitmap_bare_point; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_slice_bitmap_bare_point (
+    seg_bitmap_file_id integer NOT NULL,
+    seg_bitmap_slice_no integer NOT NULL,
+    point text NOT NULL
+);
+
+
+--
+-- Name: seg_slice_bitmap_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_slice_bitmap_file (
+    seg_slice_bitmap_file_id integer NOT NULL,
+    seg_bitmap_slice_no integer NOT NULL,
+    seg_bitmap_file_id integer NOT NULL,
+    segmentation_number integer NOT NULL,
+    iop text NOT NULL,
+    ipp text NOT NULL,
+    total_one_bits integer NOT NULL,
+    num_bare_points integer NOT NULL
+);
+
+
+--
+-- Name: seg_slice_bitmap_file_related_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_slice_bitmap_file_related_image (
+    seg_bitmap_file_id integer NOT NULL,
+    seg_bitmap_slice_no integer NOT NULL,
+    sop_instance_uid text NOT NULL
+);
+
+
+--
+-- Name: seg_slice_to_contour; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.seg_slice_to_contour (
+    seg_slice_bitmap_file_id integer NOT NULL,
+    rows integer NOT NULL,
+    cols integer NOT NULL,
+    num_contours integer NOT NULL,
+    num_points integer NOT NULL,
+    contour_slice_file_id integer NOT NULL
+);
+
+
+--
 -- Name: site_codes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4518,6 +4633,44 @@ ALTER SEQUENCE public.window_level_window_level_id_seq OWNED BY public.window_le
 
 
 --
+-- Name: work; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.work (
+    work_id integer NOT NULL,
+    node_hostname text,
+    subprocess_invocation_id integer,
+    input_file_id integer,
+    status text,
+    running boolean DEFAULT false NOT NULL,
+    finished boolean DEFAULT false NOT NULL,
+    failed boolean DEFAULT false NOT NULL,
+    stdout_file_id integer,
+    stderr_file_id integer
+);
+
+
+--
+-- Name: work_work_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.work_work_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: work_work_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.work_work_id_seq OWNED BY public.work.work_id;
+
+
+--
 -- Name: files_to_archive; Type: TABLE; Schema: quasar; Owner: -
 --
 
@@ -4975,6 +5128,13 @@ ALTER TABLE ONLY public.window_level ALTER COLUMN window_level_id SET DEFAULT ne
 
 
 --
+-- Name: work work_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work ALTER COLUMN work_id SET DEFAULT nextval('public.work_work_id_seq'::regclass);
+
+
+--
 -- Name: background_buttons background_buttons_pkey; Type: CONSTRAINT; Schema: dbif_config; Owner: -
 --
 
@@ -5231,6 +5391,14 @@ ALTER TABLE ONLY public.public_copy_status
 
 
 --
+-- Name: seg_bitmap_file seg_bitmap_file_seg_bitmap_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.seg_bitmap_file
+    ADD CONSTRAINT seg_bitmap_file_seg_bitmap_file_id_key UNIQUE (seg_bitmap_file_id);
+
+
+--
 -- Name: site_codes site_codes_site_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5308,6 +5476,14 @@ ALTER TABLE ONLY public.user_inbox
 
 ALTER TABLE ONLY public.user_inbox
     ADD CONSTRAINT user_inbox_user_name_key UNIQUE (user_name);
+
+
+--
+-- Name: work work_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work
+    ADD CONSTRAINT work_pkey PRIMARY KEY (work_id);
 
 
 --
@@ -6270,6 +6446,38 @@ ALTER TABLE ONLY public.user_inbox_content_operation
 
 ALTER TABLE ONLY public.user_inbox_content
     ADD CONSTRAINT user_inbox_content_user_inbox_id_fkey FOREIGN KEY (user_inbox_id) REFERENCES public.user_inbox(user_inbox_id);
+
+
+--
+-- Name: work work_input_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work
+    ADD CONSTRAINT work_input_file_id_fkey FOREIGN KEY (input_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: work work_stderr_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work
+    ADD CONSTRAINT work_stderr_file_id_fkey FOREIGN KEY (stderr_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: work work_stdout_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work
+    ADD CONSTRAINT work_stdout_file_id_fkey FOREIGN KEY (stdout_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: work work_subprocess_invocation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work
+    ADD CONSTRAINT work_subprocess_invocation_id_fkey FOREIGN KEY (subprocess_invocation_id) REFERENCES public.subprocess_invocation(subprocess_invocation_id);
 
 
 --
