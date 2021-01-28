@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
     db:
-        image: postgres:10.1-alpine
+        image: postgres:13-alpine
         restart: always
         environment:
             POSTGRES_PASSWORD: example
