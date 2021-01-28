@@ -327,7 +327,7 @@ for my $f (keys %FileIds){
       chomp $line;
       if($line =~ /^total ones: (.*)$/){
         $total_ones = $1;
-    }elsif($line =~ /^total zeros: (.*)$/){
+      }elsif($line =~ /^total zeros: (.*)$/){
         $total_zeros = $1;
       }elsif($line =~ /^bytes written: (.*)$/){
         $c_bytes = $1;

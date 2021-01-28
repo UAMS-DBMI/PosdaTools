@@ -30,6 +30,10 @@ sub SpecificInitialize {
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
   $self->{params} = $params;
   $self->{file_id} = $params->{file_id};
+  Query('GetDatasetStart')->RunQuery(sub{
+    my($row) = @_;
+    $self->{data_set_start} = $row->[0];
+  }, sub {}, $self->{file_id});
   Query('GetBasicFileInfo')->RunQuery(sub{
     my($row) = @_;
     my($file_id_cp, $file_type, $dicom_file_type,

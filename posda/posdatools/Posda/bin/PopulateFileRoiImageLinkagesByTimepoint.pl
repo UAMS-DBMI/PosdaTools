@@ -35,18 +35,22 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
 unless($#ARGV ==  0) { die $usage }
 my $activity_timepoint_id = $ARGV[0];
 my %StructureSetList;
+print STDERR "Getting query: GetListOfUnprocessedStructureSetsInActivity\n";
 my $get_list = PosdaDB::Queries->GetQueryInstance(
   "GetListOfUnprocessedStructureSetsInActivity"
 );
+print STDERR "Getting query: GetRoiIdFromFileIdRoiNum\n";
 my $get_roi_id = PosdaDB::Queries->GetQueryInstance(
   "GetRoiIdFromFileIdRoiNum"
 );
 my $add_roi_data = PosdaDB::Queries->GetQueryInstance(
   "AddNewDataToRoiTable"
 );
+print STDERR "Getting query: InsertIntoFileRoiImageLinkage\n";
 my $insert_linkage = PosdaDB::Queries->GetQueryInstance(
   "InsertIntoFileRoiImageLinkage"
 );
+print STDERR "Running query: GetListOfUnprocessedStructureSetsInActivity\n";
 $get_list->RunQuery(
   sub {
     my($row) = @_;
@@ -68,9 +72,9 @@ for my $file_id (sort {$a <=> $b} keys %StructureSetList){
   my %roi_updated;
   $num_processed += 1;
   my $file = $StructureSetList{$file_id};
-print STDERR $file, "\n";
+print STDERR "Reading file: $file\n";
   my $try = Posda::Try->new($file);
-print STDERR "beginning analysis\n";
+print STDERR "beginning analysis of file\n";
   my $analysis = Posda::SimplerDicomAnalysis::Analyze($try, $file);
   print "file: $file_id\n";
   my $ds_start = 0;
