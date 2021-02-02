@@ -1,0 +1,6 @@
+:operation_name: ImportDownloadableDirectory
+:command_line: ImportDownloadableDirectory.pl <?bkgrnd_id?> <activity_id> "<comment>" "<sub_dir>" <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['VA', 'dispositions']
+:can_chain: 

@@ -1,6 +1,7 @@
 use strict;
 package Posda::Background::PhiScan;
 use Posda::DB 'Query';
+use File::Temp qw/ tempfile /;
 my $doc = <<EOF;
 Instances of Posda::Background::PhiScan  essentially represent rows in the
 phi_scan_instance table in the posda_phi_simple database, which in turn
@@ -57,13 +58,19 @@ my $finalize_scan = Query("FinalizeSimpleScanInstance");
 my $get_scan_by_id = Query("GetScanInstanceById");
 my $update_act = Query('UpdateActivityTaskStatus');
 sub NewFromScan{
-  my($class, $SeriesList, $description, $database, $invoc_id, $act_id, $back, $imp_event) = @_;
+  my($class, $SeriesList, $description, 
+    $database, $invoc_id, $act_id, $back, $imp_event) = @_;
   my $current_timepoint_id;
   Query("LatestActivityTimepointForActivity")->RunQuery(sub{
     my($row) = @_;
     $current_timepoint_id = $row->[0];
   }, sub {}, $act_id);
-  my $num_series = @$SeriesList;
+  my $num_series;
+  if($database =~/^DownloadDirectory/){
+    $num_series = keys %$SeriesList;
+  } else {
+    $num_series = @$SeriesList;
+  }
   my $q_name;
   my $imp_event_id;
   if($database eq "Public") {
@@ -73,10 +80,13 @@ sub NewFromScan{
     $q_name = "FilesInSeriesInImportEvent";
   } elsif($database eq "Posda"){
     $q_name = "FilesInSeriesAndTP";
+  } elsif($database =~ /^DownloadDirectory/){
   } else {
-    die "Database ($database) must be either Posda or Public or ImportEventId(<id>)";
+    die "Database ($database) must be either Posda " .
+      "or Public or ImportEventId(<id>) or DownloadDirectory(<dir>)";
   }
-  my $get_series_count = Query($q_name);
+  my $get_series_count;
+  if (defined ($q_name)) { $get_series_count = Query($q_name) }
   $create_scan->RunQuery(sub {}, sub{}, $description, $num_series, $q_name);
   my $scan_id;
   $get_scan_id->RunQuery(sub {
@@ -84,18 +94,25 @@ sub NewFromScan{
     $scan_id = $row->[0];
   }, sub {});
   my $num_series_being_scanned = 0;
-  for my $series (@$SeriesList){
+  my @series_to_scan;
+  if($database =~/^DownloadDirectory/){
+    @series_to_scan = keys %$SeriesList;
+  } else {
+    @series_to_scan = @$SeriesList;
+  }
+  for my $series (@series_to_scan){
     $num_series_being_scanned += 1;
     if(
       defined($act_id) && defined($invoc_id) &&
       defined $back && $back->can("SetActivityStatus")
     ){
       $back->SetActivityStatus(
-        "Scanning ($q_name) $num_series_being_scanned series of $num_series");
+        "Scanning ($database) $num_series_being_scanned series of $num_series");
     }
     my $series_start_time = time;
     my $num_files_in_series = 0;
 
+    my $file_list_of_files;
     if ($database eq 'Posda') {
       $get_series_count->RunQuery(sub {
         my($row) = @_;
@@ -114,6 +131,18 @@ sub NewFromScan{
         my($row) = @_;
         $num_files_in_series += 1;
       }, sub {}, $imp_event_id, $series);
+    } elsif(
+      ($database =~ /^DownloadDirectory/) ||
+      ($database =~ /^File/)
+    ){
+      my $fhs;
+      ($fhs, $file_list_of_files) = tempfile();
+      for my $f (keys %{$SeriesList->{$series}}){
+        $num_files_in_series += 1;
+        print $fhs "$f\n";
+      }
+      close $fhs;
+      $database = "File($file_list_of_files)";
     }
 
     $create_series_scan->RunQuery(sub {}, sub {}, $scan_id,
@@ -123,7 +152,8 @@ sub NewFromScan{
       my($row) = @_;
       $series_scan_id = $row->[0];
     }, sub {});
-    open SUBP, "PhiSimpleSeriesScanTp.pl $series $act_id \"$database\" |";
+    my $cmd = "PhiSimpleSeriesScanTp.pl $series $act_id \"$database\"";
+    open SUBP, "$cmd |";
     while(my $line = <SUBP>){
       chomp $line;
       my($tagp, $vr, $value) = split(/\|/, $line);
@@ -157,6 +187,10 @@ sub NewFromScan{
         $tag_id, $value_id, $series_scan_id, $scan_id)
     }
     close SUBP;
+    if($database =~ /^File\((.*)\)$/){
+    my $tf = $1;
+      unlink($tf);
+    }
     if(
       defined($act_id) && defined($invoc_id) &&
       defined $back && $back->can("SetActivityStatus")
