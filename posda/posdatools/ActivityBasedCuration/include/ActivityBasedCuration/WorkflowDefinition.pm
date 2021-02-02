@@ -248,6 +248,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "PhiVaPublicScanTp",
       },
       {
+        caption => "VA Phi 'Public' Scan Based on Download Dir",
+        action =>  "PhiVaPublicScanDD",
+      },
+      {
+        caption => "VA Import Download Dir",
+        action =>  "ImportDownloadableDirectory",
+      },
+      {
         caption => "Public Phi Scan Based on Collection, Site",
         action =>  "PhiPublicScan",
       },

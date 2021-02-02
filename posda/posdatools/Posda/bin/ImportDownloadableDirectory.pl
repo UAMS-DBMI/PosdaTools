@@ -25,7 +25,7 @@ my $import_description =
 my $cache_dir = $ENV{POSDA_CACHE_ROOT};
 my $dir = "$cache_dir/linked_for_download/$sub_dir";
 unless(-d $dir) {
-  print "Error: $dir already exists\n";
+  print "Error: $dir doesn't exist\n";
   exit;
 }
 open FIND, "find $dir -type f |";

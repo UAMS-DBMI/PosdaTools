@@ -1,0 +1,6 @@
+:operation_name: PhiVaPublicScanDD
+:command_line: PhiVaPublicScanDD.pl <?bkgrnd_id?> <activity_id> <rel_dir> <max_rows> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['simple_phi', 'va']
+:can_chain: 

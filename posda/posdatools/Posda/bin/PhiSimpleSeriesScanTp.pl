@@ -25,6 +25,7 @@ if($scandb eq "Posda"){
 } elsif($scandb =~ /^ImportEventId\((\d+)\)$/){
   $imp_event_id = $1;
   $query = "FilesInSeriesInImportEvent";
+} elsif($scandb =~ /^File\((.*)\)$/){
 } else {
   print STDERR "Can't make sense of scan type $scandb\n";
   exit;
@@ -35,7 +36,8 @@ Query("LatestActivityTimepointForActivity")->RunQuery(sub{
   my($row) = @_;
   $current_timepoint_id = $row->[0];
 }, sub {}, $act_id);
-my $get_files = PosdaDB::Queries->GetQueryInstance($query);
+my $get_files;
+if(defined($query)){ $get_files = PosdaDB::Queries->GetQueryInstance($query) }
 my $trans = sub { return $_[0] };
 # if($search_files =~ /Intake/){
 #   $trans = sub {
@@ -87,13 +89,23 @@ if ($scandb eq "Public") {
     my $path = &$trans($file);
     push @FilesToScan, $path;
   }, sub {}, $imp_event_id, $series_inst);
-} else {
+} elsif($scandb =~ /Posda/){
   $get_files->RunQuery(sub {
     my($row) = @_;
     my $file = $row->[0];
     my $path = &$trans($file);
     push @FilesToScan, $path;
   }, sub {}, $series_inst, $current_timepoint_id);
+} elsif($scandb =~ /^File\((.*)\)$/){
+  my $fname = $1;
+  open FILE, "<$fname" or die "Can't open $fname ($!)";
+  while(my $line = <FILE>){
+    chomp $line;
+    push @FilesToScan, $line;
+  }
+  close FILE;
+} else {
+  die "Can't make sense of $scandb";
 }
 
 #######################################
