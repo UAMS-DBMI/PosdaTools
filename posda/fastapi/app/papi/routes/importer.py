@@ -56,6 +56,7 @@ async def close_import_event(import_event_id: int, db: Database = Depends()):
 
 
 @router.put("/file")
+@router.post("/file")
 async def import_file(request: Request, digest: str, import_event_id: int = None, localpath: str = None, db: Database = Depends()):
     fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
     m = hashlib.md5()
