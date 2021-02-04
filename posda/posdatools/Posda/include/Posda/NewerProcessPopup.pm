@@ -387,7 +387,7 @@ sub StartSubprocess{
   my $priority = Query("OperationPriority")
                ->FetchOneHash($self->{params}->{command}->{operation_name})
                ->{worker_priority};
-  $redis->lpush('work_queue_$priority', $work_id);
+  $redis->lpush("work_queue_$priority", $work_id);
   QuitRedis();
 
 
