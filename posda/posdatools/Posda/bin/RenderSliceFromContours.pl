@@ -2,6 +2,8 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+use Posda::FlipRotate;
+use File::Temp qw/ tempfile /;
 use Debug;
 my $dbg = sub { print @_ };
 
@@ -42,6 +44,8 @@ my ($invoc_id, $activity_id, $notify) = @ARGV;
 my $back = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 $back->Daemonize;
 
+$back->WriteToEmail(
+  "RenderRoiSlicesFromContours.pl $invoc_id $notify $activity_id\n");
 my $ss_file_id;
 my $ss_file_path;
 my %Rois;
@@ -58,7 +62,7 @@ while(my $line = <STDIN>){
       next;
     }
     if($line =~ /^Structure Set File Path:\s*(.+)\s*$/){
-      $ss_file_id = $1;
+      $ss_file_path = $1;
       next;
     }
     if($line =~/^BEGIN ROI:\s*(.*)\s*$/){
@@ -116,9 +120,178 @@ while(my $line = <STDIN>){
     die "unknown mode \"$mode\"";
   }
 }
+my $data_set_start;
+Query('GetDatasetStart')->RunQuery(sub{
+  my($row) = @_;
+  $data_set_start = $row->[0];
+}, sub {}, $ss_file_id);
 
-print "Parsed struct: ";
-Debug::GenPrint($dbg, \%Rois, 1);
-print "\n";
 
-$back->Finish("Done");
+open STRUCT, "<$ss_file_path" or die "Can't open structure set file";
+my $num_rois = keys %Rois;
+my $num_tot_slice = 0;
+for my $roi(keys %Rois){
+  my $ns = keys %{$Rois{$roi}};
+  $num_tot_slice += $ns;
+}
+my $roi_count = 0;
+my $total_slices = 0;
+for my $i (keys %Rois){
+  $roi_count += 1;
+  my $num_slices = keys %{$Rois{$i}};
+  my $slice_count = 0;
+  for my $j (keys %{$Rois{$i}}){
+    my $cont_file_path;
+    my $slice_file_path;
+    my $c_fhs;
+    {
+      my $t_fhs;
+      ($c_fhs, $cont_file_path) = tempfile();
+      ($t_fhs, $slice_file_path) = tempfile();
+    }
+    $slice_count += 1;
+    $total_slices += 1;
+    $back->SetActivityStatus("Roi $i ($roi_count of $num_rois), ".
+      "slice $j ($slice_count of $num_slices) " .
+      "tot: $total_slices of $num_tot_slice");
+    my $info = $Rois{$i}->{$j};
+    my @iop_6;
+    $iop_6[0] = $info->{iop}->[0]->[0];
+    $iop_6[1] = $info->{iop}->[0]->[1];
+    $iop_6[2] = $info->{iop}->[0]->[2];
+    $iop_6[3] = $info->{iop}->[1]->[0];
+    $iop_6[4] = $info->{iop}->[1]->[1];
+    $iop_6[5] = $info->{iop}->[1]->[2];
+    my $rows = $info->{rows};
+    my $cols = $info->{cols};
+    my $ipp = $info->{ipp};
+    my $iop = \@iop_6;
+    my $pix_sp = $info->{pix_sp};
+    my $contours = $info->{contours};
+    # Extract 3D contours and convert
+    my $num_points = 0;
+    my $num_contours = @$contours;
+    for my $c (@$contours){
+      my $offset = $c->{offset} + $data_set_start;
+      my $length = $c->{length};
+      my $num_pts = $c->{num_pts};
+      $num_points += $num_pts;
+      unless(seek STRUCT, $offset, 0){
+        die "Can't seek structure to $offset";
+      }
+      my $text;
+      my $len = read STRUCT, $text, $length;
+      unless($len == $length){
+        die "Read wrong length ($len vs $length)";
+      }
+      my @nums = split(/\\/, $text);
+      my $num_n = @nums;
+      unless(($num_n % 3) == 0){
+        die "Not an integral number of points ($num_n):\n$text\n";
+      }
+      my @pts;
+      for my $j (0 .. $num_pts - 1){
+        $pts[$j] = [$nums[$j * 3], $nums[($j * 3) + 1], $nums[($j * 3)+ 2]];
+      }
+      my $first = $pts[0];
+      my $last = $pts[$#pts];
+      unless(
+        $first->[0] == $last->[0] &&
+        $first->[1] == $last->[1] &&
+        $first->[2] == $last->[2]
+      ){
+        push @pts, $pts[0];
+      }
+      # Now convert to pixel space and write to cont_file
+      print $c_fhs "BEGIN\n";
+      my $z_dist = 0;
+      for my $pt (@pts){
+        my $pix_pt = Posda::FlipRotate::ToPixCoords(
+          $iop, $ipp, $rows, $cols, $pix_sp, $pt);
+        if($pix_pt->[2] > $z_dist){
+          $z_dist = $pix_pt->[2];
+        }
+        print $c_fhs "$pix_pt->[0],$pix_pt->[1]\n";
+      }
+      print $c_fhs "END\n";
+    }
+    close $c_fhs;
+    # Create compressed bitmap file
+    my $cmd = "cat $cont_file_path | ContourToBitmapPixCoordsOnly.pl " .
+     "$rows $cols $slice_file_path";
+    open CMD, "$cmd|";
+    my($total_ones, $total_zeros, $c_bytes, $c_ratio);
+    while(my $line = <CMD>){
+      chomp $line;
+      if($line =~ /^total ones: (.*)$/){
+        $total_ones = $1;
+      }elsif($line =~ /^total zeros: (.*)$/){
+        $total_zeros = $1;
+      }elsif($line =~ /^bytes written: (.*)$/){
+        $c_bytes = $1;
+      }elsif($line =~ /^compression: (.*)$/){
+        $c_ratio = $1;
+      }
+    }
+    my $pbm_path = "$slice_file_path.pbm";
+    $cmd = "cat $slice_file_path|CmdCtoPbm.pl rows=$rows cols=$cols >$pbm_path";
+    `$cmd`;
+    my $png_path = "$slice_file_path.png";
+    $cmd = "convert $pbm_path $png_path";
+    `$cmd`;
+    my $contour_slice_file_id;
+    $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$cont_file_path\" " .
+      "\"2D contours from SS ROI\"";
+    my $res = `$cmd`;
+    if($res =~ /File id: (.*)/){
+      $contour_slice_file_id = $1;
+    };
+    my $segmentation_slice_file_id;
+    $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$slice_file_path\" " .
+      "\"Compressed Bitmap from 2D Contours\"";
+    $res = `$cmd`;
+    if($res =~ /File id: (.*)/){
+      $segmentation_slice_file_id = $1;
+    };
+    my $png_slice_file_id;
+    $cmd = "ImportSingleFileIntoPosdaAndReturnId.pl \"$png_path\" " .
+      "\"Png from Compressed Bitmap\"";
+    $res = `$cmd`;
+    if($res =~ /File id: (.*)/){
+      $png_slice_file_id = $1;
+    };
+    unlink($cont_file_path);
+    unlink($slice_file_path);
+    unlink($pbm_path);
+    unlink($png_path);
+    my $existing_row;
+    Query('GetStructContoursToSegByRoiAndImageIdAndStructFileId')->RunQuery(sub{
+      my($row) = @_;
+      $existing_row = $row;
+    }, sub {},
+      $i,
+      $j,
+      $ss_file_id
+    );
+    unless(defined $existing_row){
+      Query('InsertStructContoursToSeg')->RunQuery(sub{
+      }, sub{},
+        $ss_file_id,
+        $j,
+        $i,
+        $rows,
+        $cols,
+        $num_contours,
+        $num_points,
+        $total_ones,
+        $contour_slice_file_id,
+        $segmentation_slice_file_id,
+        $png_slice_file_id
+      );
+    }
+  }
+}
+close STRUCT;
+
+$back->WriteToEmail("Rendered $total_slices in $roi_count rois\n");
+$back->Finish("Done: rendered $total_slices in $roi_count rois");

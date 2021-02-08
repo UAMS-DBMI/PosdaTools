@@ -284,7 +284,7 @@ sub RunQueryInBackground{
   unless($redis){
     die "Couldn't connect to redis";
   }
-  $redis->lpush('normal_work', $work_id);
+  $redis->lpush('work_queue_0', $work_id);
   QuitRedis();
   
   $self->{mode} = "queued";
