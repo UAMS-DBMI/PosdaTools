@@ -138,6 +138,42 @@ sub DvhReport{
   $http->queue("&nbsp;show");
   $http->queue("</h4>");
   unless($self->{show_dvh_report}){ return }
+  my @tab_cols = ("Inc Rois", "Excluded Rois", "DVH type",
+    "DoseType", "Dose Units", "Max Dose", "Min Dose",
+    "Vol Units", "Dose Scaling", "Num Bins");
+  $http->queue("<table class=\"table table-striped\"><tr>");
+  for my $h (@tab_cols){
+    $http->queue("<th>$h</th>");
+  }
+  $http->queue("</tr>");
+  for my $dvh (@{$self->{RtDoseAnalysis}->{dvhs}}){
+    $http->queue("<tr>");
+    for my $c (@tab_cols){
+      $http->queue("<td>");
+      if($c eq "Inc Rois"){
+      } elsif($c eq "Excluded Rois"){
+      } elsif($c eq "DVH type"){
+        $http->queue($dvh->{type})
+      } elsif($c eq "DoseType"){
+        $http->queue($dvh->{dose_type})
+      } elsif($c eq "Dose Units"){
+        $http->queue($dvh->{dose_units})
+      } elsif($c eq "Max Dose"){
+        $http->queue($dvh->{max_dose})
+      } elsif($c eq "Min Dose"){
+        $http->queue($dvh->{min_dose})
+      } elsif($c eq "Vol Units"){
+        $http->queue($dvh->{vol_units})
+      } elsif($c eq "Dose Scaling"){
+        $http->queue($dvh->{dose_scaling})
+      } elsif($c eq  "Num Bins"){
+        $http->queue($dvh->{num_bins})
+      }
+      $http->queue("</td>");
+    }
+    $http->queue("</tr>");
+  }
+  $http->queue("</table>");
   $http->queue("Coming soon");
 }
 
