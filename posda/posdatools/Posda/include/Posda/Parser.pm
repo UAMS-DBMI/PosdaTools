@@ -1179,6 +1179,8 @@ sub CoerceBadVRs{
     return("sshort", $value_s);
   } elsif($from_vr eq "CS" && $to_vr eq "LO"){
     return("text", $value_s);
+  } elsif($from_vr eq "SH" && $to_vr eq "LO"){
+    return("text", $value_s);
   } else {
     push(@{$this->{errors}}, "Can't coerce a $from_vr to a $to_vr\n");
     return (undef, undef);
