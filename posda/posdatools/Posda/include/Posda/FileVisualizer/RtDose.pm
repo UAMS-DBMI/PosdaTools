@@ -56,6 +56,11 @@ sub CrunchAnalysis{
   my($self, $analysis) = @_;
   $self->{RtDoseAnalysis}->{dvhs} = $analysis->{dvhs};
   $self->{RtDoseAnalysis}->{ref_ss} = $analysis->{ref_ss};
+  Query('GetFromToFileForSopActivity')->RunQuery(sub {
+    my($row) = @_;
+    $self->{RtDoseAnalysis}->{ref_ss_file_id} = $row->[0];
+    $self->{RtDoseAnalysis}->{ref_ss_file_path} = $row->[1];
+  }, sub {}, $analysis->{ref_ss}, $self->{params}->{activity_id});
   $self->{RtDoseAnalysis}->{ds_offset} = $analysis->{dataset_start_offset};
   $self->{RtDoseAnalysis}->{dose_grid_analysis} = {};
   my $dga = $self->{RtDoseAnalysis}->{dose_grid_analysis};
@@ -118,6 +123,24 @@ sub ShowDoseGridReport{
   }
 }
 
+sub ShowRelatedStruct{
+  my($self, $http, $dyn) = @_;
+  my $params = {
+    file_id => $self->{RtDoseAnalysis}->{ref_ss_file_id},
+    activity_id => $self->{params}->{activity_id}
+  };
+  my $class = "Posda::FileVisualizer";
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "$self->{name}" . "RelStruct_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+
+}
+
 sub DvhReport{
   my($self, $http, $dyn) = @_;
   unless(exists $self->{RtDoseAnalysis}->{dvhs}){
@@ -138,7 +161,19 @@ sub DvhReport{
   $http->queue("&nbsp;show");
   $http->queue("</h4>");
   unless($self->{show_dvh_report}){ return }
-  my @tab_cols = ("Inc Rois", "Excluded Rois", "DVH type",
+  $http->queue("<p>Referenced SS: $self->{RtDoseAnalysis}->{ref_ss}" .
+    "&nbsp;");
+  if(exists $self->{RtDoseAnalysis}->{ref_ss_file_id}){
+    $self->NotSoSimpleButton($http, {
+       op => "ShowRelatedStruct",
+       caption => "view",
+       sync => "Update();"
+    });
+  } else {
+    $http->queue("(not in activity)");
+  }
+  $http->queue("</p>");
+  my @tab_cols = ("Sel", "Inc Rois", "Excluded Rois", "DVH type",
     "DoseType", "Dose Units", "Max Dose", "Min Dose",
     "Vol Units", "Dose Scaling", "Num Bins");
   $http->queue("<table class=\"table table-striped\"><tr>");
@@ -146,12 +181,33 @@ sub DvhReport{
     $http->queue("<th>$h</th>");
   }
   $http->queue("</tr>");
-  for my $dvh (@{$self->{RtDoseAnalysis}->{dvhs}}){
+  for my $i (0 .. $#{$self->{RtDoseAnalysis}->{dvhs}}){
+    my $dvh = $self->{RtDoseAnalysis}->{dvhs}->[$i];
+    my @included;
+    my @excluded;
+    for my $d (@{$dvh->{rois}}){
+      if($d->{type} eq "INCLUDED"){
+        push(@included, $d->{num});
+      } elsif ($d->{type} eq "EXCLUDED"){
+        push(@excluded, $d->{num});
+      }
+    }
     $http->queue("<tr>");
+    unless(exists $self->{SelectedDvh}){
+      $self->SelectDvh($http, { value => 0 });
+    }
     for my $c (@tab_cols){
       $http->queue("<td>");
       if($c eq "Inc Rois"){
+        for my $j (0 .. $#included){
+          unless($j == 0){ $http->queue(", ") }
+          $http->queue("$included[$j]");
+        }
       } elsif($c eq "Excluded Rois"){
+        for my $j (0 .. $#excluded){
+          unless($j == 0){ $http->queue(", ") }
+          $http->queue("$excluded[$j]");
+        }
       } elsif($c eq "DVH type"){
         $http->queue($dvh->{type})
       } elsif($c eq "DoseType"){
@@ -168,13 +224,56 @@ sub DvhReport{
         $http->queue($dvh->{dose_scaling})
       } elsif($c eq  "Num Bins"){
         $http->queue($dvh->{num_bins})
+      } elsif($c eq  "Sel"){
+        $http->queue($self->CheckBoxDelegate("Dvh", "$i",
+        $self->{SelectedDvh} == $i ? 1: 0,
+        { op => "SelectDvh",
+          sync => "Update();" }));
+        $http->queue("</td>");
       }
       $http->queue("</td>");
     }
     $http->queue("</tr>");
   }
-  $http->queue("</table>");
-  $http->queue("Coming soon");
+  if(exists $self->{SelectedDvhData}){
+    $http->queue("</table>");
+    $http->queue("<table class=\"table\"><tr>");
+    $http->queue("<th>bin width</th><th>value</th>" .
+      "<th>percent area</th><th>has dose greater than or equal</th>" .
+      "</tr>");
+    my $tot_area = $self->{SelectedDvhData}->[1];
+    my $cum_dose = 0;
+    for my $i (0 .. $#{$self->{SelectedDvhData}}/2){
+      my $bw = $self->{SelectedDvhData}->[$i * 2];
+      my $area = $self->{SelectedDvhData}->[($i * 2) + 1];
+      $http->queue("<tr><td>$bw</td>");
+      $http->queue("<td>$area</td>");
+      my $low = sprintf("%3.2f", $cum_dose);
+      my $high = $cum_dose + $bw;
+      $cum_dose = $high;
+      my $percent = ($area / $tot_area) * 100;
+      $http->queue("<td>$percent</td><td>$low</td></tr>");
+    }
+    $http->queue("</table>");
+  }
+}
+
+sub SelectDvh{
+  my($self, $http, $dyn) = @_;
+  $self->{SelectedDvh} = $dyn->{value};
+  $self->{SelectedDvhStruct} = $self->{RtDoseAnalysis}->{dvhs}->[$dyn->{value}];
+  $self->LoadSelectedDvh($http, $dyn);
+}
+
+sub LoadSelectedDvh{
+  my($self, $http, $dyn) = @_;
+#  my $file_offset = $self->{RtDoseAnalysis}->{ds_offset} +
+#    $self->{SelectedDvhStruct}->{file_pos};
+  my $file_offset = $self->{SelectedDvhStruct}->{file_pos};
+  my $length = $self->{SelectedDvhStruct}->{file_len};
+  my $cmd = "GetFilePart.pl \"$self->{file_path}\" $file_offset $length";
+  my $dvh_txt = `$cmd`;
+  $self->{SelectedDvhData} = [ split(/\\/, $dvh_txt) ];
 }
 
 sub ShowDvhReport{

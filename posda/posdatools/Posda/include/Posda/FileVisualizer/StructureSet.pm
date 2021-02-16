@@ -573,7 +573,6 @@ sub MakeThisOneBad{
 
 sub DisplaySelectedRoiAndSop{
   my ($self, $http, $dyn) = @_;
-  "In DisplaySelectedRoiAndSop\n";
   $self->{StructureSetAnalysis}->{extracted_slice_images} = 
     $self->InitializeExtractedSlices();
   {
@@ -1315,6 +1314,58 @@ sub RenderSelectedRoiContours{
                               $child_path, $params);
     $self->StartJsChildWindow($child_obj);
     return;
+}
+
+sub MakeSegmentationFile{
+  my($self, $http, $dyn) = @_;
+  my $params = {
+    ss_file_id => $self->{file_id},
+    rois => {},
+    image_files => {},
+    sops => {},
+  };
+  my %ref_img;
+  my $f_rois = $self->{StructureSetAnalysis}->{rois};
+  my $t_rois = $params->{rois};
+  roi:
+  for my $i (keys %$f_rois){
+    unless(exists $self->{SelectedRoiForSeg}->{$i}){ next roi }
+    $t_rois->{$i} = {
+      color => $f_rois->{$i}->{color},
+      ref_for => $f_rois->{$i}->{ref_for},
+      roi_interpreted_type => $f_rois->{$i}->{roi_interpreted_type},
+      roi_name => $f_rois->{$i}->{roi_name},
+      roi_obser_desc => $f_rois->{$i}->{roi_obser_desc},
+      roi_label => $f_rois->{$i}->{roi_obser_label},
+    };
+    for my $sop (keys %{$f_rois->{$i}->{referencing_contours_by_reference}}){
+      my $ser_p = $self->{StructureSetAnalysis}->{series_ref};
+      for my $series (keys %$ser_p){
+        if(exists $ser_p->{$series}->{img_list}->{$sop}){
+          my $file_id = $ser_p->{$series}->{img_list}->{$sop}->{file_id};
+          $params->{image_files}->{$file_id} =
+            $ser_p->{$series}->{img_list}->{$sop};
+          $params->{sops}->{$sop} = $file_id;
+        }
+      }
+    }
+  }
+  my $class = "Posda::FileVisualizer::StructureSet::MakeSegmentation";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "$self->{name}" . "MakeSeg_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+
 }
 
 sub FileIdToSop{
