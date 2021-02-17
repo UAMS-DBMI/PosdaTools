@@ -80,7 +80,14 @@ sub SpecificInitialize {
   $self->{MenuByMode} = {
     Default => [
       {
-        caption => "Activity",
+        op => "ClearActivity",
+        id => "ClearCurrentActivity",
+        caption => "Choose An Activity",
+        mode => 'Activities',
+        sync => "UpdateDiv('header', 'BigTitle');Update();",
+      },
+      {
+        caption => "Activity Timeline",
         op => 'SetMode',
         mode => 'Activities',
         sync => 'Update();'
@@ -115,7 +122,7 @@ sub SpecificInitialize {
         type => "hr"
       },
       {
-        caption => "Download",
+        caption => "Downloads",
         op => 'SetMode',
         mode => 'DownloadTar',
         sync => 'Update();'
@@ -132,6 +139,7 @@ sub SpecificInitialize {
         mode => 'ShowBackground',
         sync => 'Update();'
       },
+
     ],
 
     NewQuery => [
@@ -253,16 +261,16 @@ sub BackgroundMonitorForEmail {
     }
 
     if ($count > 0 && $count != $last_count) {
-      $self->{MenuByMode}->{Default}->[3]->{class} = 'btn btn-danger';
-      $self->{MenuByMode}->{Default}->[3]->{caption} = "Inbox ($count)";
-      $self->{MenuByMode}->{Default}->[3]->{count} = $count;
+      $self->{MenuByMode}->{Default}->[4]->{class} = 'btn btn-danger';
+      $self->{MenuByMode}->{Default}->[4]->{caption} = "Inbox ($count)";
+      $self->{MenuByMode}->{Default}->[4]->{count} = $count;
       $self->AutoRefresh;
     }
 
     if ($count == 0 && $count != $last_count) {
-      $self->{MenuByMode}->{Default}->[3]->{class} = 'btn btn-default';
-      $self->{MenuByMode}->{Default}->[3]->{caption} = "Inbox";
-      $self->{MenuByMode}->{Default}->[3]->{count} = $count;
+      $self->{MenuByMode}->{Default}->[4]->{class} = 'btn btn-default';
+      $self->{MenuByMode}->{Default}->[4]->{caption} = "Inbox";
+      $self->{MenuByMode}->{Default}->[4]->{count} = $count;
       $self->AutoRefresh;
     }
 
@@ -532,22 +540,23 @@ sub MakeMenuByMode{
   } else {
     @final_menu = (@$default_menu, { type => 'hr' }, @$mode_menu);
   }
-  if(
-    (defined($self->{ActivityModeSelected}) &&
-      ($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries"
-    ) || $self->{Mode} eq "Queries")  &&
-    exists $self->{NewQueryToDisplay}
-  ){
-    my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
-    my $query_menu;
-    if(
-      $q_info->{status} eq "done" || $q_info->{status} eq "ended" ||
-      $q_info->{status} eq "paused"
-    ){
-      $query_menu = $self->QueryDisplayMenu;
-    } else {
-      $query_menu = $self->QueryDisplayMenuRunning;
-    }
+  if((defined($self->{ActivityModeSelected}) && ($self->{ActivityModes}->{$self->{ActivityModeSelected}} eq "Queries") || $self->{Mode} eq "Queries")  )
+    {
+      my $query_menu;
+      if (exists $self->{NewQueryToDisplay})
+        {
+            my $q_info = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+            if($q_info->{status} eq "done" || $q_info->{status} eq "ended" || $q_info->{status} eq "paused")
+              {
+                $query_menu = $self->QueryDisplayMenu;
+              } else {
+                $query_menu = $self->QueryDisplayMenuRunning;
+              }
+        }
+        else
+          {
+            $query_menu = $self->DisplayFrequents;
+          }
     push @final_menu, {type => 'hr'}, @$query_menu;
     my $SFQ = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
     my $q_name = $SFQ->{query}->{name};
@@ -568,6 +577,38 @@ sub MakeMenuByMode{
   @final_menu = (@final_menu, @$default_men_tail);
   return \@final_menu;
 }
+
+sub DisplayFrequents{
+  my($this) = @_;
+  my $ret = [
+  {
+    caption => "Verbose Activity Report",
+    op => 'setForegroundQuery',
+    id => 'query_menu_setForegroundQuery1',
+    #mode => 'SaveQuery',
+    sync => 'Update();',
+    query_name => 'VerboseActivityReport'
+  },
+  {
+    caption => "GetVisualReviewByActivityId",
+    op => 'setForegroundQuery',
+    id => 'query_menu_setForegroundQuery2',
+    #mode => 'SaveQuery',
+    sync => 'Update();',
+    query_name => 'GetVisualReviewByActivityId'
+  },
+  {
+    caption => "PublicCollectionCounts",
+    op => 'setForegroundQuery',
+    id => 'query_menu_setForegroundQuery3',
+    #mode => 'SaveQuery',
+    sync => 'Update();',
+    query_name => 'PublicCollectionCounts'
+  }
+  ];
+  return $ret;
+}
+
 sub QueryDisplayMenuRunning{
   my($this) = @_;
   my $ret = [
@@ -584,7 +625,7 @@ sub QueryDisplayMenuRunning{
       id => 'query_menu_CancelCurrentForegroundQuery',
       #mode => 'SaveQuery',
       sync => 'Update();'
-    },
+    }
   ];
   return $ret;
 }
@@ -659,7 +700,8 @@ sub QueryDisplayMenu{
       id => 'query_menu_ChainToSpreadsheet',
       #mode => 'SaveQuery',
       sync => 'Update();'
-    },
+    }
+
   ];
   return $ret;
 }
@@ -671,9 +713,30 @@ sub MenuResponse {
   # $self->DrawRoles($http, $dyn);
 }
 
+#ButtonHighlightHere
 sub SetMode{
   my($self, $http, $dyn) = @_;
+  my $oldB = FindButtonForMode();
+  $self->{MenuByMode}->{Default}->[$oldB]->{class} = 'btn btn-default';
   $self->{Mode} = $dyn->{mode};
+  my $newB = FindButtonForMode();
+  $self->{MenuByMode}->{Default}->[$newB]->{class} = 'btn btn-info';
+  print "my old = $oldB and my new = $newB";
+
+
+}
+
+sub FindButtonForMode{
+  my($self, $http, $dyn) = @_;
+  my @a = $self->{MenuByMode}->{Default};
+  my $i = 0;
+  foreach(@a){
+    if( $a->{mode} = $self->{Mode}){
+      return $i;
+    }else{
+       $i++;
+    }
+  }
 }
 
 sub ScriptButton {
@@ -2398,7 +2461,7 @@ sub CompareTimepoints{
 }
 
 
-#ACTIVITY OPERATION WOOO
+#ACTIVITY OPERATION
 sub ActivityOperations{
   my($self, $http, $dyn) = @_;
   my @buttons;
@@ -2947,7 +3010,7 @@ sub DrawQueryListTypeSelector{
   if($q_count > 0){
     $http->queue("$url - active&nbsp;&nbsp;");
   }
-  my $url = $self->RadioButtonSync("query_type","recent",
+  $url = $self->RadioButtonSync("query_type","recent",
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");
@@ -3333,7 +3396,7 @@ $self->{querychaindetails} = $details;
 sub RerunQuery{
   my($self, $http, $dyn) = @_;
   $self->{NewQueryToDisplay} = $dyn->{index};
-  $self->RerunCurrentForegroundQuery($http, $dyn);;
+  $self->RerunCurrentForegroundQuery($http, $dyn);
 }
 
 sub RerunCurrentForegroundQuery{
@@ -3341,6 +3404,14 @@ sub RerunCurrentForegroundQuery{
   my $q_pack = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   delete $self->{NewQueryToDisplay};
   $self->{SelectedNewQuery} = $q_pack->{query}->{name};
+}
+
+sub setForegroundQuery(){
+  my($self, $http, $dyn) = @_;
+  $self->{NewQueryToDisplay} = $dyn->{index};
+  my $q_pack = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  delete $self->{NewQueryToDisplay};
+  $self->{SelectedNewQuery} = $dyn->{query_name};
 }
 
 sub DrawNewQuery{
