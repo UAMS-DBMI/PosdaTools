@@ -1132,6 +1132,8 @@ sub CoerceBadVRs{
       return ("float", [unpack("f*", $value_s)]);
     } elsif($to_vr eq "SL"){
       return("slong", [unpack("l*", $value_s)]);
+    } elsif($to_vr eq "UL"){
+      return("ulong", [unpack("l*", $value_s)]);
     } elsif($to_vr eq "SS"){
       return ("sshort", [unpack("s*", $value_s)]);
     } elsif($to_vr eq "CS"){
