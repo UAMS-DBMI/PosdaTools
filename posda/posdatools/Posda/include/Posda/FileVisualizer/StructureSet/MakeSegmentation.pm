@@ -37,6 +37,7 @@ sub SpecificInitialize {
   $self->{errors} = [];
   $self->SortFilesByOffset;
   $self->{mode} = "show_file_sorting";
+  $self->MakeRefSeriesSeq();
 }
 
 sub SortFilesByOffset{
@@ -169,10 +170,29 @@ sub DisplayFileSorting{
   $http->queue("</table>");
 };
 
+sub DisplayRefSeriesSeq{
+  my ($self, $http, $dyn) = @_;
+  $http->queue("<pre>");
+  for my $i (0 .. $#{$self->{RefSeriesSeq}}){
+    $http->queue("(0008,1115)[$i](0020,000e):" .
+      "$self->{RefSeriesSeq}->[$i]->{series}\n");
+    for my $j (0 .. $#{$self->{RefSeriesSeq}->[$i]->{ref_sop_seq}}){
+      my $sop_cl = Posda::DataDict->GetSopClassFromName(
+        $self->{RefSeriesSeq}->[$i]->{ref_sop_seq}->[$j]->{dicom_file_type});
+      $http->queue("(0008,1115)[$i](0008,114a)[$j](0008,1150): $sop_cl\n");
+      $http->queue("(0008,1115)[$i](0008,114a)[$j](0008,1155): " .
+        "$self->{RefSeriesSeq}->[$i]->{ref_sop_seq}->[$j]->{sop}\n");
+    }
+  }
+  $http->queue("</pre>");
+};
+
 sub ContentResponse {
   my ($self, $http, $dyn) = @_;
   if($self->{mode} eq "show_file_sorting"){
     return $self->DisplayFileSorting($http, $dyn);
+  } elsif ($self->{mode} eq "show_ref_series_seq"){
+    return $self->DisplayRefSeriesSeq($http, $dyn);
   }
   $http->queue("unknown mode $self->{mode}");
 }
@@ -184,11 +204,46 @@ sub MenuResponse{
     caption => "ShowFileSortingReport",
     sync => "Reload();"
   });
+  $self->NotSoSimpleButton($http, {
+    op => "ShowRefSeriesSeq",
+    caption => "ShowRefSeriesSequence",
+    sync => "Reload();"
+  });
 }
 
 sub ShowFileSorting{
   my ($self, $http, $dyn) = @_;
   $self->{mode} = "show_file_sorting";
+}
+sub ShowRefSeriesSeq{
+  my ($self, $http, $dyn) = @_;
+  $self->{mode} = "show_ref_series_seq";
+}
+
+sub MakeRefSeriesSeq{
+  my ($self, $http, $dyn) = @_;
+  my %Series;
+  for my $i (keys %{$self->{params}->{image_files}}){
+    my $f_info = $self->{params}->{image_files}->{$i};
+    $Series{$f_info->{series_instance_uid}}->{$f_info->{sop_instance_uid}}
+      = $f_info->{dicom_file_type};
+  }
+  my @RefSeriesSeq;
+  for my $series (keys %Series){
+    my $h = {
+      series => $series,
+      ref_sop_seq => []
+    };
+    my $list = $h->{ref_sop_seq};
+    for my $sop (keys %{$Series{$series}}){
+      push @$list, {
+        sop => $sop,
+        dicom_file_type => $Series{$series}->{$sop}
+      };
+    }
+    push @RefSeriesSeq, $h;
+  }
+  $self->{RefSeriesSeq} = \@RefSeriesSeq;
 }
 
 

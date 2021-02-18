@@ -347,6 +347,121 @@ sub Squash3DPointList{
   }
   return @$list;
 }
+##########################
+# RGB => CIELab conversion
+####
+# python (from interwebs :-)
+#import numpy as np
+#
+#def func(t):
+#    if (t > 0.008856):
+#        return np.power(t, 1/3.0);
+#    else:
+#        return 7.787 * t + 16 / 116.0;
+#
+##Conversion Matrix
+#matrix = [[0.412453, 0.357580, 0.180423],
+#          [0.212671, 0.715160, 0.072169],
+#          [0.019334, 0.119193, 0.950227]]
+#
+## RGB values lie between 0 to 1.0
+#rgb = [1.0, 0, 0] # RGB
+#
+#cie = np.dot(matrix, rgb);
+#
+#cie[0] = cie[0] /0.950456;
+#cie[2] = cie[2] /1.088754; 
+#
+## Calculate the L
+#L = 116 * np.power(cie[1], 1/3.0) - 16.0 if cie[1] > 0.008856 else 903.3 * cie[1];
+#
+## Calculate the a 
+#a = 500*(func(cie[0]) - func(cie[1]));
+#
+## Calculate the b
+#b = 200*(func(cie[1]) - func(cie[2]));
+#
+##  Values lie between -128 < b <= 127, -128 < a <= 127, 0 <= L <= 100 
+#Lab = [b , a, L]; 
+#
+# OpenCV Format
+#L = L * 255 / 100;
+#a = a + 128;
+#b = b + 128;
+#Lab_OpenCV = [b , a, L]; 
+####
+#DICOM INFO:
+#Attributes such as Graphic Layer Recommended Display CIELab Value
+#(0070,0401) consist of three unsigned short values:
+#
+#An L value linearly scaled to 16 bits, such that 0x0000 corresponds 
+#to an L of 0.0, and 0xFFFF corresponds to an L of 100.0.
+#
+#An a* then a b* value, each linearly scaled to 16 bits and offset 
+#to an unsigned range, such that 0x0000 corresponds to an a* or b* 
+#of -128.0, 0x8080 corresponds to an a* or b* of 0.0 and 
+#0xFFFF corresponds to an a* or b* of 127.0
+#
+######## Perl code starts here
+# RgbToCie([$r, $g, $b])
+sub RgbToCie{
+  my($in_rgb) = @_;
+  # First convert RGB to fractions from bytes;
+  my $rgb = [$in_rgb->[0]/255, $in_rgb->[1]/255, $in_rgb->[2]/255];
+  my $f = sub{
+    my($t) = @_;
+    if ($t > 0.008856){
+      return ($t ** (1/3.0));
+    }else{
+      return (7.787 * $t) + (16 / 116.0);
+    }
+  };
+  my $matrix = [
+   [0.412453, 0.357580, 0.180423],
+   [0.212671, 0.715160, 0.072169],
+   [0.019334, 0.119193, 0.950227]
+  ];
+  my $cie = ApplyRot($matrix, $rgb);
+  $cie->[0] = $cie->[0] /0.950456;
+  $cie->[2] = $cie->[2] /1.088754;
+  my $L;
+  if($cie->[1] > 0.008856){
+    $L = 116 * ($cie->[1]** (1/3.0)) - 16.0 
+  }else{
+    $L =  903.3 * $cie->[1];
+  }
+  $a = 500*(&$f($cie->[0]) - &$f($cie->[1]));
+  $b = 200*(&$f($cie->[1]) - &$f($cie->[2]));
+  #Values lie between -128 < b <= 127,
+  #                   -128 < a <= 127,
+  #                     0 <= L <= 100 
+  if($a <= -128){
+    print STDERR "RgbToCie: a < -128 ($a) set to -128\n";
+    $a = -127;
+  } elsif ($a > 127){
+    print STDERR "RgbToCie: a > 127 ($a) set to 127\n";
+    $a = 127;
+  }
+  if($b <= -128){
+    print STDERR "RgbToCie: b < -128 ($b) set to -127\n";
+    $b = -127;
+  } elsif ($a > 127){
+    print STDERR "RgbToCie: b > 127 ($b) set to 127\n";
+    $b = 127;
+  }
+  if($L <= 0){
+    print STDERR "RgbToCie: L < 0 ($L) set to 0\n";
+    $L = 0;
+  } elsif ($L > 100){
+    print STDERR "RgbToCie: L > 100 ($L) set to 100\n";
+    $L = 100;
+  }
+  my $DL = $L * (65535/100);
+  my $Da = ($a + 127) * 255;
+  my $Db = ($a + 127) * 255;
+  return [$DL, $Da, $Db];
+}
+##########################
 #####
 # C-code generation macros
 #####
