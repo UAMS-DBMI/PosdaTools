@@ -205,14 +205,14 @@ sub SsRoiReport{
     return;
   }
   $http->queue("<h4>$num_rois rois found&nbsp;");
-    $http->queue("</tr>");
   $http->queue($self->CheckBoxDelegate("ShowRoiReport", 0,
       $self->{show_roi_report},
       { op => "ShowRoiReport", sync => "Update();" }));
    
   $http->queue("&nbsp;show");
   $http->queue("</h4>");
-  unless($self->{show_roi_report}){ return } my @rois = sort {$a <=> $b} keys %{$self->{StructureSetAnalysis}->{rois}};
+  unless($self->{show_roi_report}){ return }
+   my @rois = sort {$a <=> $b} keys %{$self->{StructureSetAnalysis}->{rois}};
   my $keys = {
      gen_alg => 1,
      roi_interpreted_type => 1,
@@ -514,14 +514,12 @@ sub GetSelectedSopData{
 sub InitSelectedRoiAndSop{
   my ($self) = @_;
   $self->{mode} = "show_selected_roi_and_sop";
-print STDERR "Calling GetSelectedSopData($self->{SelectedSop})\n";
   $self->{SelectedSopData} = $self->GetSelectedSopData($self->{SelectedSop});
   delete $self->{SelectedSegmentationSliceFileId};
   Query('GetStructContoursToSegByRoiAndImageId')->RunQuery(sub{
     my($row) = @_;
     $self->{SelectedSegmentationSliceFileId} = $row->[8];
   }, sub {}, $self->{SelectedRoi}, $self->{SelectedSopData}->{file_id});
-print STDERR "Setting SelectedContours\n";
   $self->{SelectedContours} = [];
   my $rp = $self->{StructureSetAnalysis}->{rois}->{$self->{SelectedRoi}};
   my $clp = $rp->{referencing_contours_by_reference}->{$self->{SelectedSop}};
@@ -542,7 +540,6 @@ sub GetPngImage{
     my($row) = @_;
     $file = $row->[0];
   }, sub {}, $dyn->{file_id});
-print STDERR "\n\n############################\nfile_id: $dyn->{file_id}, path: $file\n";
   my $content_type = "image/png";
   $http->HeaderSent;
   $http->queue("HTTP/1.0 200 OK\n");
@@ -553,65 +550,43 @@ print STDERR "\n\n############################\nfile_id: $dyn->{file_id}, path: 
     my $buff;
     my $count = read(FILE, $buff, 1024);
     if($count <= 0) { last }
-$bytes_sent += $count;
     $http->queue($buff);
   }
   close FILE;
   $http->finish();
-print STDERR "$bytes_sent bytes sent\n############################\n\n";
 }
 
 sub MakeThisOneBad{
   my ($self, $http, $dyn) = @_;
   my $img_file_id = $self->{SelectedSopData}->{file_id};
   my $roi_num = $self->{SelectedRoi};
-#print STDERR "#######################################\n" .
-# "#######################################\n" .
-# "marking ($roi_num, $img_file_id, $self->{file_id}) bad\n";
   Query('GetStructContoursToSegByRoiAndImageIdAndStructFileId')->RunQuery(sub{
     my($row) = @_;
-#my $num_args = @$row;
-#print STDERR "Inserting bad row, $num_args args\n";
     Query('InsertBadStructContoursToSeg')->RunQuery(sub{}, sub{}, @$row);
-#      $row->[0],
-##      $row->[1],
-##      $row->[2],
-#      $row->[3],
-#      $row->[4],
-#      $row->[5],
-#      $row->[6],
-#      $row->[7],
-#      $row->[8],
-#      $row->[9],
-#      $row->[10]
-# );
-#print STDERR "Deleting good row\n" .
-# "#######################################\n" .
-# "#######################################\n" .
-
-    Query('DeleteStructContoursToSegByRoiAndImageIdAndStructFileId')->RunQuery(sub{}, sub{}, $roi_num,
+    Query('DeleteStructContoursToSegByRoiAndImageIdAndStructFileId')->RunQuery(
+      sub{}, sub{}, $roi_num,
       $img_file_id, $self->{file_id});
   }, sub {}, $roi_num, $img_file_id, $self->{file_id});
   $self->{StructureSetAnalysis}->{extracted_slice_images} = 
     $self->InitializeExtractedSlices();
-#xyzzy
 }
 
 sub DisplaySelectedRoiAndSop{
   my ($self, $http, $dyn) = @_;
+  $self->{StructureSetAnalysis}->{extracted_slice_images} = 
+    $self->InitializeExtractedSlices();
   {
     my $img_file_id = $self->{SelectedSopData}->{file_id};
     my $roi_num = $self->{SelectedRoi};
-    if(exists $self->{StructureSetAnalysis}->{extracted_slice_images}->{$roi_num}->{$img_file_id}){
+    if(
+      exists $self->{StructureSetAnalysis}->
+        {extracted_slice_images}->{$roi_num}->{$img_file_id}
+    ){
       my $png_file_id = $self->{StructureSetAnalysis}->{extracted_slice_images}
         ->{$roi_num}->{$img_file_id}->{png_slice_file_id};
       $http->queue("<pre>Display PNG file $png_file_id here</pre>");
-      $http->queue("<img src=\"GetPngImage?obj_path=$self->{path}&file_id=$png_file_id\">");
-#      $self->NotSoSimpleButton($http, {
-#         op => "MakeThisOneBad",
-#         caption => "Mark Bad",
-#         sync => "Reload()o"
-#      });
+      $http->queue("<img src=\"GetPngImage?obj_path=$self->{path}" .
+        "&file_id=$png_file_id\">");
    }
   }
   $http->queue("<h4>Selected roi: $self->{SelectedRoi}; " .
@@ -635,7 +610,6 @@ sub DisplaySelectedRoiAndSop{
     push @pts, $pts[0]; # close contour
     $self->{ExtractedContours}->[$i] = \@pts;
   }
-#  my($iop, $ipp, $rows, $cols, $pix_sp, $point) = @_;
   my $iop = [split /\\/, $self->{SelectedSopData}->{iop}];
   my $ipp = [split /\\/, $self->{SelectedSopData}->{ipp}];
   my $rows = $self->{SelectedSopData}->{pixel_rows};
@@ -741,10 +715,6 @@ sub CreateBitmap{
       $c_ratio = $1;
     }
   }
-  print STDERR 
-    "############################################\n" .
-    "TMP PATH: $self->{temp_path}" .
-    "############################################\n";
   close CMD;
   $cmd = "cp $slice_file_path $self->{temp_path}/slice.cbmp";
   `$cmd`;
@@ -1263,6 +1233,7 @@ sub CrunchAnalysis{
 }
 sub InitializeExtractedSlices{
   my($self) = @_;
+print STDERR "In InitializeExtractedSlices\n";
 #    },
 #    extracted_slice_images => {
 #      <roi_num> => {
@@ -1343,6 +1314,58 @@ sub RenderSelectedRoiContours{
                               $child_path, $params);
     $self->StartJsChildWindow($child_obj);
     return;
+}
+
+sub MakeSegmentationFile{
+  my($self, $http, $dyn) = @_;
+  my $params = {
+    ss_file_id => $self->{file_id},
+    rois => {},
+    image_files => {},
+    sops => {},
+  };
+  my %ref_img;
+  my $f_rois = $self->{StructureSetAnalysis}->{rois};
+  my $t_rois = $params->{rois};
+  roi:
+  for my $i (keys %$f_rois){
+    unless(exists $self->{SelectedRoiForSeg}->{$i}){ next roi }
+    $t_rois->{$i} = {
+      color => $f_rois->{$i}->{color},
+      ref_for => $f_rois->{$i}->{ref_for},
+      roi_interpreted_type => $f_rois->{$i}->{roi_interpreted_type},
+      roi_name => $f_rois->{$i}->{roi_name},
+      roi_obser_desc => $f_rois->{$i}->{roi_obser_desc},
+      roi_label => $f_rois->{$i}->{roi_obser_label},
+    };
+    for my $sop (keys %{$f_rois->{$i}->{referencing_contours_by_reference}}){
+      my $ser_p = $self->{StructureSetAnalysis}->{series_ref};
+      for my $series (keys %$ser_p){
+        if(exists $ser_p->{$series}->{img_list}->{$sop}){
+          my $file_id = $ser_p->{$series}->{img_list}->{$sop}->{file_id};
+          $params->{image_files}->{$file_id} =
+            $ser_p->{$series}->{img_list}->{$sop};
+          $params->{sops}->{$sop} = $file_id;
+        }
+      }
+    }
+  }
+  my $class = "Posda::FileVisualizer::StructureSet::MakeSegmentation";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "$self->{name}" . "MakeSeg_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+
 }
 
 sub FileIdToSop{

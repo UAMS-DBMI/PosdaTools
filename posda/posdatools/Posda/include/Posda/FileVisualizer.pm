@@ -7,6 +7,7 @@ use Posda::FileVisualizer::SR;
 use Posda::FileVisualizer::DicomImage;
 use Posda::FileVisualizer::Segmentation;
 use Posda::FileVisualizer::StructureSet;
+use Posda::FileVisualizer::RtDose;
 use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
@@ -68,6 +69,9 @@ sub SpecificInitialize {
     } elsif ($self->{file_desc}->{dicom_file_type} =~ /Segmentation/){
       print STDERR "bless \$self, Posda::FileVisualizer::Segmentation\n";
       bless $self, "Posda::FileVisualizer::Segmentation";
+      return $self->SpecificInitialize;
+    } elsif ($self->{file_desc}->{dicom_file_type} =~ /RT Dose/){
+      bless $self, "Posda::FileVisualizer::RtDose";
       return $self->SpecificInitialize;
     } elsif ($self->{file_desc}->{dicom_file_type} =~ /Structure/){
       bless $self, "Posda::FileVisualizer::StructureSet";

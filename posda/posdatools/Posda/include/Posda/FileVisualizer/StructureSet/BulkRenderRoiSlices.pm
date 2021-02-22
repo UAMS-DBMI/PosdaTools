@@ -140,7 +140,7 @@ sub StartBackgroundProcess{
       "$self->{params}->{activity_id} " .
       "$self->{params}->{notify}",
       undef,
-      $self->{params}->{user}, 'RenderSliceFromContours'
+      $self->get_user, 'RenderSliceFromContours'
     )->{subprocess_invocation_id};
   unless($new_id) {
     die "Couldn't create row in subprocess_invocation";
@@ -173,7 +173,8 @@ sub StartBackgroundProcess{
   unless($redis){
     die "Couldn't connect to redis";
   }
-  $redis->lpush('normal_work', $work_id);
+  my $priority = 0;
+  $redis->lpush("work_queue_$priority", $work_id);
   QuitRedis();
 
   $self->{mode} = "queued";
