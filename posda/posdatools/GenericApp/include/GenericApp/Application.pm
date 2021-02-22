@@ -135,10 +135,10 @@ my $content = qq{
       <?dyn="BigTitle"?>
     </div>
     <div class="row" id="div-menu-content">
-      <div id="menu" class="col-md-2">
+      <div id="menu" class="col-md-3">
       Menu
       </div>
-      <div id="content" class="col-md-10">
+      <div id="content" class="col-md-9">
       </div>
     </div>
   </div>
@@ -214,7 +214,7 @@ sub DebugButton{
   my($this, $http, $dyn) = @_;
   if($this->CanDebug){
     $this->RefreshEngine($http, $dyn, qq{
-      <span class="btn btn-sm btn-info" 
+      <span class="btn btn-sm btn-info"
        onClick="javascript:rt('DebugWindow',
        'Refresh?obj_path=Debug',1600,1200,0);">Debug</span>
     });
@@ -240,11 +240,11 @@ sub MenuResponse{
   });
 
   $http->queue(
-    $this->MakeHostLinkSync("New Scan", "NewScan", 
+    $this->MakeHostLinkSync("New Scan", "NewScan",
       "", "", "Update();", "btn btn-default")
   );
   $http->queue(
-    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan", 
+    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan",
       "", "", "Update();", "btn btn-default")
   );
 

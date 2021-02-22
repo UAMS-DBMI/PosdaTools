@@ -132,6 +132,30 @@ sub SpecificInitialize {
         mode => 'ShowBackground',
         sync => 'Update();'
       },
+      {
+        caption => "Verbose Activity Report",
+        op => 'setForegroundQuery',
+        id => 'query_menu_setForegroundQuery1',
+        mode => 'Queries',
+        sync => 'Update();',
+        query_name => 'VerboseActivityReport'
+      },
+      {
+        caption => "GetVisualReviewByActivityId",
+        op => 'setForegroundQuery',
+        id => 'query_menu_setForegroundQuery2',
+        mode => 'Queries',
+        sync => 'Update();',
+        query_name => 'GetVisualReviewByActivityId'
+      },
+      {
+        caption => "PublicCollectionCounts",
+        op => 'setForegroundQuery',
+        id => 'query_menu_setForegroundQuery3',
+        mode => 'Queries',
+        sync => 'Update();',
+        query_name => 'PublicCollectionCounts'
+      },
     ],
 
     NewQuery => [
@@ -3341,6 +3365,15 @@ sub RerunCurrentForegroundQuery{
   my $q_pack = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   delete $self->{NewQueryToDisplay};
   $self->{SelectedNewQuery} = $q_pack->{query}->{name};
+}
+
+sub setForegroundQuery(){
+  my($self, $http, $dyn) = @_;
+  $self->{Mode} = $dyn->{mode};
+  $self->{NewQueryToDisplay} = $dyn->{index};
+  my $q_pack = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
+  delete $self->{NewQueryToDisplay};
+  $self->{SelectedNewQuery} = $dyn->{query_name};
 }
 
 sub DrawNewQuery{
