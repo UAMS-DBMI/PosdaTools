@@ -421,7 +421,7 @@ sub RgbToCie{
    [0.212671, 0.715160, 0.072169],
    [0.019334, 0.119193, 0.950227]
   ];
-  my $cie = ApplyRot($matrix, $rgb);
+  my $cie = Rot3D($matrix, $rgb);
   $cie->[0] = $cie->[0] /0.950456;
   $cie->[2] = $cie->[2] /1.088754;
   my $L;
@@ -456,9 +456,9 @@ sub RgbToCie{
     print STDERR "RgbToCie: L > 100 ($L) set to 100\n";
     $L = 100;
   }
-  my $DL = $L * (65535/100);
-  my $Da = ($a + 127) * 255;
-  my $Db = ($a + 127) * 255;
+  my $DL = int($L * (65535/100)+0.5);
+  my $Da = int((($a + 127) * 255)+0.5);
+  my $Db = int((($b + 127) * 255)+0.5);
   return [$DL, $Da, $Db];
 }
 ##########################
