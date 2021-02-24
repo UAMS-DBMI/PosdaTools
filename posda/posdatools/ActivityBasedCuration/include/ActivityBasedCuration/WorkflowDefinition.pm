@@ -62,6 +62,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query_list_name => "FindSeries",
       },
       {
+        caption => "Suggested Queries for Creating a Timepoint from Date Range for CTP data",
+        operation => "SelectQueryGroup",
+        query_list_name => "CTPImports",
+      },
+      {
         caption => "Copy Files",
         operation => "SelectQueryGroup",
         query_list_name => "CopyFiles",
@@ -86,12 +91,12 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     name => "Check for Duplicate SOPs",
     description => "This process builds a report to alert you to " .
       "duplicated data or data where multiple entities are using the same identifiers.",
-    operations => [
-      {
-        operation => "InvokeNewOperation",
-        caption => "Analyze Series in Time Point with Duplicates",
-        action =>  "AnalyzeSeriesDuplicatesForTimepoint",
-      },
+      queries => [
+        {
+          caption => "Suggested Queries for Duplicate SOPs",
+          operation => "SelectQueryGroup",
+          query_list_name => "DupeSops",
+        },
     ],
   },
   {
@@ -100,9 +105,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     note => " This step should not be needed if your data was imported through CTP",
     description => "Maps each patient to a new identifier that does not contain PHI. (e.g. Pat_030)",
     operations => [
+      {
+       operation => "InvokeNewOperation",
+       caption => "Import Patient Mappings For Timepoint",
+       action =>  "ImportPatientMappings",
+     },
      {
         operation => "InvokeNewOperation",
-        caption => "Suggest Patient Mappings For Timepoint",
+        caption => "Suggest Patient Mappings [LEGACY]",
         action =>  "SuggestPatientMappings",
       },
     ],
@@ -383,6 +393,32 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
+    ],
+  ],
+  CTPImports => [
+    "Suggested Queries for Importing CTP data by Date Range",
+    [
+      {
+        caption => "CTP Brief Import Summary By Date Range",
+        query => "CtpImportBriefSummaryByDateRange",
+      },
+      {
+        caption => "CTP Import Summary By Date Range",
+        query => "CtpImportSummaryByDateRange",
+      },
+      {
+        caption => "CTP Imports By Date Range",
+        query => "CtpImportsByDateRange",
+      },
+    ],
+  ],
+  DupeSops => [
+    "Suggested Queries for Duplicate SOPs",
+    [
+      {
+        caption => "Dup SOPs In Timepoint With Series, File Id, And Load Times",
+        query => "DupSopsInTimepointWithSeriesFileIdAndLoadTimes",
       },
     ],
   ],

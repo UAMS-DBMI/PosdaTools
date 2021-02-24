@@ -89,6 +89,9 @@ sub SpecificInitialize{
   $self->{args} = {};
   $self->{meta_args} = {};
   $self->{params} = $params;
+
+
+
   for my $arg (@{$self->{params}->{command}->{args}}){
     if(exists $self->{params}->{prior_ss_args}->{$arg}){ #if prior_ss_arg, use it
       $self->{args}->{$arg}  = ["from spreadsheet", $self->{params}->{prior_ss_args}->{$arg}];
@@ -110,7 +113,9 @@ sub SpecificInitialize{
     $self->{EffectiveProg} = $effective_prog;
   }
   $self->SetDefaultInput;
-  $self->{mode} = "initial";
+  # $self->{mode} = "initial";
+
+  $self->{mode} = 'needs_spreadsheet';
 }
 
 sub SetDefaultInput{
@@ -147,7 +152,35 @@ sub ContentResponse {
     $self->WaitingForResponse($http, $dyn);
   } elsif($self->{mode} eq "response_available"){
     $self->SubProcessResponded($http, $dyn);
-  } else {
+  } elsif($self->{mode} eq "needs_spreadsheet"){
+    $self->RefreshEngine($http, $dyn,
+      '<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">' .
+      '<div id="div_ProcessSummary">' .
+      '<?dyn="DrawProcessSummary"?>' .
+      '</div>' .
+      '<div>' .
+      '<h3>This operation requires a spreadsheet as input</h3>' .
+      '<div style="display: flex; flex-direction: column; align-items: flex-beginning;' .
+      '  margin-left: 10px; margin-bottom: 5px"> ' .
+      '<div id="load_form"> ' .
+      ' <form action="<?dyn="StoreFileUri"?>" ' .
+      ' enctype="multipart/form-data" method="POST" class="dropzone"> ' .
+      ' </form> ' .
+      ' </div> ' .
+      '<div id="file_report"> ' .
+      '<?dyn="Files"?> ' .
+      '</div>' .
+      '</div>' .
+      '</div>' .
+      '<div id="div_RenderedCommandLine">' .
+      '<?dyn="DrawRenderedCommandLine"?>' .
+      '</div>' .
+      '<div id="div_RenderedInputData">' .
+      '<?dyn="DrawRenderedInputData"?>' .
+      '</div>' .
+      '</div>');
+  }
+   else {
     $http->queue("Unknown mode: $self->{mode}");
   }
 }
