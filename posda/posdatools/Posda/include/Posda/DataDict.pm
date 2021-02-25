@@ -32596,6 +32596,15 @@ sub new {
   $this->{ReverseDefaultPrivateGroupTags} = $ReverseDefaultPrivateGroupTags;
   return bless $this, $class;
 }
+sub GetSopClassFromName{
+  my($dd, $sopcl_desc) = @_;
+  for my $i (keys %$SopCl){
+    if($SopCl->{$i}->{sopcl_desc} eq $sopcl_desc){
+      return $i;
+    }
+  }
+  return undef;
+}
 sub GetSopClName{
   my($dd, $sop_cl) = @_;
   if(exists $dd->{SopCl}->{$sop_cl}){
