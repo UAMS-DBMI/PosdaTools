@@ -40,12 +40,11 @@ for my $c (@Conversions){
     ($t_fhs, $tmp_file_path) = tempfile();
   }
   unless(defined $path) {
-    print "File $c->{seg_slice_bitmap_file_id}: path not found in db\n";
+    print STDERR "File $c->{seg_slice_bitmap_file_id}: path not found in db\n";
     next conversion;
   }
   my $cmd = "cat \"$path\"|CmdCompressedPixBitMapToContour.pl " .
     "$c->{rows} $c->{cols} >$tmp_file_path";
-  print STDERR "Command: $cmd\n";
   `$cmd`;
   unless(open FILE, "<$tmp_file_path"){
     print "File $c->{seg_slice_bitmap_file_id} produced no contour file\n";
@@ -74,6 +73,7 @@ for my $c (@Conversions){
     }
   }
   close CMD;
+  unlink $tmp_file_path;
   if(defined $contour_file_error){
     print STDERR "Error on import of contour file into posda: $contour_file_error\n";
   }

@@ -39,68 +39,74 @@ sub SpecificInitialize {
   my %iops;
   my %ipps;
   my %pix_digs;
-  Query('GetBasicSeriesInfo')->RunQuery(sub{
+  
+  my $get_f_info = Query('GetFileInfoForSeriesReport');
+  Query('GetFilesInSeriesAndActivity')->RunQuery(sub{
     my($row) = @_;
-    my($file_id,
-      $sop_instance_uid,
-      $series_instance_uid,
-      $series_date,
-      $study_instance_uid,
-      $study_date,
-      $instance_number,
-      $patient_id,
-      $modality,
-      $dicom_file_type,
-      $for_uid,
-      $iop,
-      $ipp,
-      $pixel_data_digest) = @$row;
-    $sop_instances{$sop_instance_uid} = 1;
-    $instance_numbers{$instance_number} = 1;
-    $series_instances{$series_instance_uid} = 1;
-    $series_dates{$series_date} = 1;
-    $study_instances{$study_instance_uid} = 1;
-    $study_dates{$study_date} = 1;
-    $patient_ids{$patient_id} = 1;
-    $modalities{$modality} = 1;
-    $dicom_file_types{$dicom_file_type} = 1;
-    $for_uids{$for_uid} = 1;
-    $iops{$iop} = 1;
-    $ipps{$ipp} = 1;
-    $pix_digs{$pixel_data_digest} = 1;
-    $self->{FilesInSeries}->{$file_id} = {
-      sop_instance_uid => $sop_instance_uid,
-      instance_number => $instance_number,
-      series_instance_uid => $series_instance_uid,
-      series_date => $series_date,
-      study_instance_uid => $study_instance_uid,
-      study_date => $study_date,
-      patient_id => $patient_id,
-      modality => $modality,
-      dicom_file_type => $dicom_file_type,
-      for_uid => $for_uid,
-      iop => $iop,
-      ipp => $ipp,
-      pixel_data_digest => $pixel_data_digest
-    };
-    $self->{SeriesCounts} = {
-      sops => \%sop_instances,
-      inst_nums  => \%instance_numbers,
-      series_inst  => \%series_instances,
-      series_dates  => \%series_dates,
-      study_instances  => \%study_instances,
-      study_dates  => \%study_dates,
-      patient_ids  => \%patient_ids,
-      modalities  => \%modalities,
-      dicom_file_types  => \%dicom_file_types,
-      frame_of_ref  => \%for_uids,
-      iops  => \%iops,
-      ipps  => \%ipps,
-      pixels  => \%pix_digs 
-    };
-  }, sub  {}, $self->{series_instance_uid}, $self->{activity_id});
-  $self->{mode} = "series_report";
-  $self->{sort_field} = "instance_number";
+    my $file_id = $row->[0];
+    Query('GetFileInfoForSeriesReport')->RunQuery(sub{
+      my($row) = @_;
+      my($file_id,
+        $sop_instance_uid,
+        $series_instance_uid,
+        $series_date,
+        $study_instance_uid,
+        $study_date,
+        $instance_number,
+        $patient_id,
+        $modality,
+        $dicom_file_type,
+        $for_uid,
+        $iop,
+        $ipp,
+        $pixel_data_digest) = @$row;
+      $sop_instances{$sop_instance_uid} = 1;
+      $instance_numbers{$instance_number} = 1;
+      $series_instances{$series_instance_uid} = 1;
+      $series_dates{$series_date} = 1;
+      $study_instances{$study_instance_uid} = 1;
+      $study_dates{$study_date} = 1;
+      $patient_ids{$patient_id} = 1;
+      $modalities{$modality} = 1;
+      $dicom_file_types{$dicom_file_type} = 1;
+      $for_uids{$for_uid} = 1;
+      $iops{$iop} = 1;
+      $ipps{$ipp} = 1;
+      $pix_digs{$pixel_data_digest} = 1;
+      $self->{FilesInSeries}->{$file_id} = {
+        sop_instance_uid => $sop_instance_uid,
+        instance_number => $instance_number,
+        series_instance_uid => $series_instance_uid,
+        series_date => $series_date,
+        study_instance_uid => $study_instance_uid,
+        study_date => $study_date,
+        patient_id => $patient_id,
+        modality => $modality,
+        dicom_file_type => $dicom_file_type,
+        for_uid => $for_uid,
+        iop => $iop,
+        ipp => $ipp,
+        pixel_data_digest => $pixel_data_digest
+      };
+      $self->{SeriesCounts} = {
+        sops => \%sop_instances,
+        inst_nums  => \%instance_numbers,
+        series_inst  => \%series_instances,
+        series_dates  => \%series_dates,
+        study_instances  => \%study_instances,
+        study_dates  => \%study_dates,
+        patient_ids  => \%patient_ids,
+        modalities  => \%modalities,
+        dicom_file_types  => \%dicom_file_types,
+        frame_of_ref  => \%for_uids,
+        iops  => \%iops,
+        ipps  => \%ipps,
+        pixels  => \%pix_digs 
+      };
+    }, sub  {}, $file_id);
+    $self->{mode} = "series_report";
+    $self->{sort_field} = "instance_number";
+  }, sub {}, $self->{series_instance_uid}, $self->{activity_id});
 }
 
 sub ContentResponse {

@@ -269,7 +269,7 @@ sub DisplayPerFrameFunc{
     $http->queue("(5200,9230)[$fi](0008,9124)[0](0008,9215)[0](0008,0102): DCM\n");
     $http->queue("(5200,9230)[$fi](0008,9124)[0](0008,9215)[0](0008,0104): Segmentation\n");
     $http->queue("(5200,9230)[$fi](0020,9111)[0](0020,9157): $item->{index}\n");
-    $http->queue("(5200,9230)[$fi](0020,9113)[0](0020,0032): $item->{image_info}->{iop}\n");
+    $http->queue("(5200,9230)[$fi](0020,9113)[0](0020,0032): $item->{image_info}->{ipp}\n");
     $http->queue("(5200,9230)[$fi](0062,000a)[0](0062,000b): $item->{roi_num}\n");
   }
 }
