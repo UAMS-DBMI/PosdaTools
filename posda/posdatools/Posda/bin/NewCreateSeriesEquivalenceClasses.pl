@@ -161,7 +161,7 @@ my $upd_proc_stat = PosdaDB::Queries->GetQueryInstance(
   "UpdateEquivalenceClassProcessingStatus");
 for my $i (0 .. $#equiv_classes){
   #inserts 'series_instance_uid' and 'equivalence_class_number' into Image_Equivalence_Class table with 'Preparing' status
-  $ins_equiv->RunQuery(sub{}, sub{}, $ARGV[0], $i,$ARGV[1]);
+  $ins_equiv->RunQuery(sub{}, sub{}, $ARGV[0], $i,$ARGV[2]);
   my $id = $i;
   #gets the newly generated Sequence Id from that table
   $get_id->RunQuery(
