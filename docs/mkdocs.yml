@@ -1,4 +1,7 @@
 site_name: Posda
-theme: readthedocs
+theme: 
+    # name: material
+    name: readthedocs
 docs_dir: src
-site_dir: ../web/www/docs
+# site_dir: ../web/www/docs
+site_dir: build
