@@ -109,6 +109,8 @@ services:
         image: tcia/posda:latest
         command: worker
         restart: always
+        deploy:
+            replicas: 3
         depends_on:
             - db
             - redis
@@ -128,6 +130,8 @@ services:
         image: tcia/posda:latest
         command: worker
         restart: always
+        deploy:
+            replicas: 1
         depends_on:
             - db
             - redis

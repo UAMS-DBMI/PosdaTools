@@ -24,33 +24,33 @@ case "$1" in
   restart)
     shift
     git describe --tags > posda/posdatools/versionInfo.txt
-    exec docker-compose restart $*
+    exec docker-compose --compatibility restart $*
     ;;
   up)
     shift
     make -C posda posdatools/posda.env
     git describe --tags > posda/posdatools/versionInfo.txt
-    exec docker-compose up $*
+    exec docker-compose --compatibility up $*
     ;;
 
   down)
     shift
-    exec docker-compose down $*
+    exec docker-compose --compatibility down $*
     ;;
 
   psql)
     shift
-    exec docker-compose exec db psql -U postgres $*
+    exec docker-compose --compatibility exec db psql -U postgres $*
     ;;
 
   shell)
     shift
-    exec docker-compose exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
+    exec docker-compose --compatibility exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
     ;;
 
   logs)
     shift
-    exec docker-compose logs -f --tail=10
+    exec docker-compose --compatibility logs -f --tail=10
     ;;
 
   help)
