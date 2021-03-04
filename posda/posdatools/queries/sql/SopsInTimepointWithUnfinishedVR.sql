@@ -22,7 +22,7 @@ with tp_id as (
 	natural join image_equivalence_class_input_image
 	natural join file_sop_common
 	where visual_review_instance_id = ?
-	  and (review_status not in ('Bad', 'Good')) or review_status is null
+	  and (review_status not in ('Bad', 'Good') or review_status is null)
 )
 select *
 from sops_in_timepoint
