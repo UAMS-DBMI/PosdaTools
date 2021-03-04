@@ -19,14 +19,15 @@ the use of Windows.
 Any Linux distribution should work, as long as you can install Docker, though
 we have tested Posda on the following:
 
-* Ubuntu 16.04, 18.04
+* Ubuntu 16.04, 18.04, 20.04
 * RHEL 7
 * Alpine
 
 
 ### Type of Installation
 Posda supports a number of different types of installation. The main options
-are if separate storage will be used, and/or a separate database server. The
+are if separate storage will be used, and/or a separate database server, and/or
+separate compute nodes (worker nodes).  The
 reasons why you would make these choices are beyond the scope of this
 documentation, but you should make those choices before beginning installation.
 
@@ -34,7 +35,7 @@ We have included three example configurations in this guide:
 
 * Small - Single machine, for a small site, or development, or demonstration
 * Medium - When separate storage is needed
-* Large - When separate storage and database servers are needed
+* Large - When separate storage, database, and worker node servers are needed
 
 
 ## Install Sizes / Types
@@ -61,7 +62,7 @@ or just an environment where this is all that is required.
 * [Configure Common Settings](#configure-common-settings)
 * [Start Posda](#start-posda)
 
-### Large / Separate Storage and Separate Database
+### Large / Separate Storage, Separate Database, Separate Compute
 * Provision database server, install PostgreSQL
 * [Install Docker](#install-docker)
 * [Clone the Repo](#clone-oneposda)
@@ -69,6 +70,7 @@ or just an environment where this is all that is required.
 * [Configure storage](#configure-storage) in docker-compose.yaml
 * [Configure database](#configure-database)
 * [Configure Common Settings](#configure-common-settings)
+* [Configure Worker Nodes](#configure-worker-nodes)
 * [Start Posda](#start-posda)
 
 
@@ -88,9 +90,13 @@ simply clone Posda by typing:
 git clone https://code.imphub.org/scm/pt/oneposda.git
 ```
 
-You can place this directory anywhere you like.
+You can place this directory anywhere you like, however we recommend placing it
+in a location owned by a dedicated user (or root). Any admin working on
+this installation will need access to this directory, so it may not make sense
+for it to be owned by a normal user.
 
-After it has finished downloading move into the directory and initialize your configuration, this will also download the docker containers.
+After it has finished downloading move into the directory and initialize your 
+configuration (this will also download the docker containers).
 
 ```bash
 cd oneposda
@@ -125,7 +131,10 @@ and change them to:
 Make sure you change all occurrences!
 
 NOTE: You should ensure that the owner:group ID of the chosen location
-is `2123:2123`. 
+is `1000:2123`. This is the UID and GID which Posda runs as inside the
+containers, and setting it this way will guarantee Posda can write to
+its storage directory. This is not a hard requirement, so long as the 
+location is __writable__ by UID 1000.
 
 If you additionally wanted to change where the built-in Postgres database
 stores its data, first choose a location (such as `/mnt/storage/database`),
@@ -188,7 +197,36 @@ PGPASSWORD=s3cret!
 
 ## Configure Common Settings
 Edit the file `common.env` and set the values. In particular, you should
-carefully choose `POSDA_EXTERNAL_HOSTNAME`. 
+carefully choose `POSDA_EXTERNAL_HOSTNAME`; it should be the hostname
+where users will expect to find the Posda server.
+
+## Configure Worker Nodes
+By default, the docker-compose.yaml defines two Worker Nodes:
+
+* High (priority 1)
+* Low (priority 0)
+
+By default, these will run on the same server as the rest of Posda.
+You have a number of options for customizing this setup. You can define
+additional priority levels (numeric), which you can use for more fine-grained
+association of tasks with nodes (via further configuration that is beyond
+the scope of this document). You can also choose to run additional nodes,
+so that additional tasks can execute simultaneously. You can also choose
+to run these nodes on dedicated systems to greatly expand the available
+computing resources the Posda system has access to.
+
+You can increase (or decrease) the number of running nodes of each type
+by adjusting the `replicas` entry in the docker-compose.yaml file for each
+type of worker node. By default the low (default) priority has 3 replicas,
+and the high priority has 1. 
+
+If you wish to run worker nodes on dedicated servers, you will need to be
+running separate storage and database servers as well. You will need to
+copy the `oneposda` repository (including the configuration files) to each
+host that will run a worker node instance, then modify the docker-compose.yaml
+(on those hosts only!) to remove all `service`s other than the desired
+worker node entry. You should then be able to start it using `./manange up -d`
+just like normal.
 
 
 ## Start Posda
@@ -201,7 +239,7 @@ configures some things before each run, so it is recommend you use it
 rather than using `docker-compose` directly.
 
 WARNING: If you have chosen to have a separate database host, you must skip
-the first command.
+the first command (because there will be no `db` container).
 
 From the `oneposda` directory, execute:
 

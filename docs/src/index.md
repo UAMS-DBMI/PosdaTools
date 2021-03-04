@@ -1,17 +1,9 @@
 # Posda Documentation
 
-Words words words...
+Welcome to the official online Posda Documentation!
+
+This document is a work in progress, but may be expanded in the future.
 
 ## Sections
 
 * [Installation](installation.md)
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
