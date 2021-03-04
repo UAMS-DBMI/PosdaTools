@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, Form
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -30,17 +30,18 @@ async def get_work_status(work_id: int, db: Database = Depends()):
     return await db.fetch_one(query, [work_id])
 
 @router.post("/status/{work_id}/running")
-async def set_work_status_running(work_id: int, db: Database = Depends()):
+async def set_work_status_running(work_id: int, node_hostname: str = Form(...), db: Database = Depends()):
     query = """
         update
             work
         set
             running = true,
-            status = 'running'
+            status = 'running',
+            node_hostname = $1
         where
-            work_id = $1
+            work_id = $2
     """
-    return await db.fetch_one(query, [work_id])
+    return await db.fetch_one(query, [node_hostname, work_id])
 
 class ErrorFiles(BaseModel):
     stderr_file_id: int

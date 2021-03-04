@@ -6,6 +6,7 @@ import subprocess
 import os
 import tempfile
 import hashlib
+import platform
 
 BASE_URL = 'http://web/papi/v1'
 
@@ -39,7 +40,10 @@ def main_loop(redis_db, priority):
             continue
         stdin_path = req.json()['file_path']
         stdin_fp = open(stdin_path)
-        requests.post(f'{BASE_URL}/worker/status/{work_id}/running')
+        # TODO: this needs to be expanded to post some data - mostly the hostname
+        # of the worker, but possibly other status info!!
+        requests.post(f'{BASE_URL}/worker/status/{work_id}/running', 
+                      data={"node_hostname": platform.node()})
         return_code = subprocess.Popen(command_line,
                                        shell=True,
                                        stdin=stdin_fp,
