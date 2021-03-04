@@ -2427,6 +2427,7 @@ sub ActivityOperations{
           id => "btn_activity_op_$j->{action}",
           caption => $j->{caption},
           operation => $j->{action},
+          special => $j->{special},
           sync => "Update();",
         });
         $http->queue("</li>");
@@ -2478,13 +2479,14 @@ sub InvokeNewOperation{
   my($self, $http, $dyn) = @_;
   my $params;
   my $operation = $dyn->{operation};
+  my $special = $dyn->{special};
   $params = {
      bindings => $self->{BindingCache},
   };
   my $invocation = {
     type => "WorkflowButton",
     Operation => $dyn->{operation},
-    caption => $dyn->{caption},
+    caption => $dyn->{caption}
   };
   $params->{invocation} = $invocation;
   $params->{current_settings}->{notify} = $self->get_user;
@@ -2529,6 +2531,10 @@ sub InvokeNewOperation{
                               $child_path, $params);
     $self->StartJsChildWindow($child_obj);
     return;
+  }
+  if ($special eq "spreadsheetRequest"){
+      $params->{special} =  $special;
+      $params->{Temp_dir} =  "$self->{Environment}->{LoginTemp}/$self->{session}";
   }
 
   my $class = "Posda::NewerProcessPopup";
