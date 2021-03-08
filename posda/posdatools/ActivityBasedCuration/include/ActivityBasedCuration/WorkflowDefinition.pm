@@ -53,8 +53,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
        operation => "InvokeNewOperation",
        caption => "Import Patient Mappings For Timepoint",
        action =>  "ImportPatientMapping",
-       special => "spreadsheetRequest",
-       directions => "The operation ImportPatientMapping requires a spreadsheet with the following columns. Columns: from_patient_id, to_patient_name, to_patient_id, collection_name, site_name, diagnosis_date, baseline_date, uid_root, batch_number, date_shift, Operation, notify, description.",
+       special => "spreadsheetRequest"
      },
      {
         operation => "InvokeNewOperation",
@@ -281,21 +280,25 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       operation => "Copy Prior Timepoint Excluding Files",
       caption => "CopyPriorTimepointExcludingFiles",
       action => "CopyPriorTimepointExcludingFiles",
+      special => "spreadsheetRequest"
     },
     {
       operation => "CopyPriorTimepointInSeriesOnly",
       caption =>"Copy Prior Timepoint In Series Only",
       action =>"CopyPriorTimepointInSeriesOnly",
+      special => "spreadsheetRequest"
     },
     {
       operation => "ConsolidateTimepoints",
       caption =>"Consolidate Timepoints",
       action =>"ConsolidateTimepoints",
+      special => "spreadsheetRequest"
     },
     {
       operation => "ConsolidateActivities",
       caption =>"Consolidate Activities",
       action =>"ConsolidateActivities",
+      special => "spreadsheetRequest"
     },
     ],
     queries => [

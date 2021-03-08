@@ -1025,75 +1025,8 @@ sub Files{
     $http->queue($self->{UploadedFiles}->[$in]->{file_id});
     $self->RefreshEngine($http, $dyn, '</p></td></tr>');
   }
-  $self->RefreshEngine($http, $dyn,
-    '<tr><td colspan="4"></td><td><p>' .
-    '<?dyn="NotSoSimpleButton" ' .
-    'caption="Annotation" ' .
-    'op="AnnotateSelectedUploads" ' .
-    "sync=\"UpdateDiv('file_report','Files');\" " .
-    'class="btn btn-primary"?></p>' .
-    '</td></tr>');
   $self->RefreshEngine($http, $dyn, '</table>');
 }
 
-sub AnnotateSelectedUploads{
-  my($self, $http, $dyn) = @_;
-#  my $class = "Posda::NewProcessPopup";
-  my $class = "Posda::NewerProcessPopup";
-  eval "require $class";
-  if($@){
-    print STDERR "$class failed to compile\n\t$@\n";
-    return;
-  }
-  my @selected_files;
-  for my $f (@{$self->{UploadedFiles}}){
-    if($f->{check_box} eq "true"){
-      my $name = $f->{"Output file"};
-      if($name =~ /\/([^\/]+)$/){
-        $name = $1;
-      }
-      my $nf = {
-        file_id => $f->{file_id},
-        mime_type => $f->{"mime-type"},
-        description => $f->{description},
-        file_name => $name,
-      };
-      push @selected_files, $nf;
-    }
-  }
-  my $params = {
-    bindings => $self->{BindingCache},
-    current_settings => { notify => $self->get_user },
-    rows => \@selected_files,
-  };
-  if(defined($self->{ActivitySelected}) && $self->{ActivitySelected}){
-    $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
-    Query("LatestActivityTimepointForActivity")->RunQuery(sub{
-      my($row) = @_;
-      $params->{current_settings}->{activity_timepoint_id} = $row->[0];
-    }, sub {}, $self->{ActivitySelected});
-  }
-  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  my $name = "Annotate_$self->{sequence_no}";
-  $self->{sequence_no}++;
 
-  my $child_path = $self->child_path($name);
-
-  my $operation = {
-    operation_name => "AnnotateTimeline",
-    command_line => "InsertListOfAnnotatedFiles.pl <?bkgrnd_id?> \"<comment>\" <notify>",
-    operation_type => "background_subprocess",
-    input_line_format => "<file_id>&<file_name>&<mime_type>&<description>",
-    create_file_from_rows => 1,
-  };
-  my($fields, $args, $meta_args) = $self->BuildFieldsAndArgs($operation);
-  $operation->{fields} = $fields;
-  $operation->{args} = $args;
-  $operation->{meta_args} = $meta_args;
-  $params->{command} = $operation;
-  $params->{cols} = $params->{command}->{fields};
-  my $child_obj = $class->new($self->{session},
-                              $child_path, $params);
-  $self->StartJsChildWindow($child_obj);
-}
 1;
