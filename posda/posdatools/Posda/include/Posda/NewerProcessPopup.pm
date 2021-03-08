@@ -838,10 +838,13 @@ sub ProcessConvertedUploadedSpreadsheet{
   $params->{Operations} = $self->{Commands};
   $self->{sequence_no}++;
 
-  my $child_path = $self->child_path($name);
-  my $child_obj = $class->new($self->{session},
-                              $child_path, $params);
-  $self->StartJsChildWindow($child_obj);
+
+   #they uploaded the wrong spreadsheet
+   my $child_path = $self->child_path($name);
+   my $child_obj = $class->new($self->{session},
+                               $child_path, $params);
+   $self->StartJsChildWindow($child_obj);
+
 }
 
 sub ProcessConvertedUploadedNamedSpreadsheet{
@@ -858,20 +861,28 @@ sub ProcessConvertedUploadedNamedSpreadsheet{
     }
   }
   $params->{prior_ss_args} = \%arg_map;
-  my $class = 'Posda::NewerProcessPopup';
-  eval "require $class";
-  if($@){
-    print STDERR "$class failed to compile\n\t$@\n";
-    return;
-  }
-  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  my $name = "Loaded_Spreadsheet_$self->{sequence_no}";
-  $self->{sequence_no}++;
+  $self->{args} = {};
+  $self->{meta_args} = {};
+  $self->{params} = $params;
 
-  my $child_path = $self->child_path($name);
-  my $child_obj = $class->new($self->{session},
-                              $child_path, $params);
-  $self->StartJsChildWindow($child_obj);
+  for my $arg (@{$self->{params}->{command}->{args}}){
+      $self->{args}->{$arg}  = ["from spreadsheet", $self->{params}->{prior_ss_args}->{$arg}];
+  }
+  my $cmd = $self->{params}->{command}->{command_line};
+  if($cmd =~ /^([^\s]*)\s/){
+    $prog = $1;
+    my $effective_prog;
+    open FOO, "which $prog|";
+    while(my $line = <FOO>){ $effective_prog .= $line };
+    chomp $effective_prog;
+    $self->{EffectiveProg} = $effective_prog;
+  }
+  $self->SetDefaultInput;
+  $self->{mode} = "initial";
+
+  if($self->can("AutoRefresh")){
+    $self->AutoRefresh;
+  }
 }
 
 sub GetOperationDescription{
