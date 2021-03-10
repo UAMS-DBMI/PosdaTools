@@ -96,6 +96,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       name => "Check for Duplicate SOPs",
       description => "This process builds a report to alert you to " .
         "duplicated data or data where multiple entities are using the same identifiers.",
+        operations => [
+          {
+            operation => "InvokeNewOperation",
+            caption => "Analyze Series Duplicates for Timepoint",
+            action =>  "AnalyzeSeriesDuplicatesForTimepoint",
+          },
+        ],
         queries => [
           {
             caption => "Suggested Queries for Duplicate SOPs",
@@ -274,7 +281,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     {
       operation => "CopyPriorTimepoint",
       caption => "Copy Prior Timepoint",
-      action => "CopyPriorTimepoint",
+      action => "CopyPriorTimepoint"
     },
     {
       operation => "Copy Prior Timepoint Excluding Files",
@@ -434,8 +441,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     "Suggested Queries for Duplicate SOPs",
     [
       {
-        caption => "Dup SOPs In Timepoint With Series, File Id, And Load Times",
-        query => "DupSopsInTimepointWithSeriesFileIdAndLoadTimes",
+        caption => "Dup SOPs In Timepoint With Series, File Ids, And Load Times",
+        query => "DupSopsInTimepointWithSeriesFileIdsAndLoadTimes",
       },
     ],
   ],
