@@ -210,19 +210,23 @@ sub DrawProcessSummary{
 
 sub DrawParameterForm{
   my($self, $http, $dyn) = @_;
-  $http->queue("<hr>Parameters:<ul>");
-  for my $p (sort keys %{$self->{args}}){
-    $http->queue("<li>$p : ");
-    $self->NewEntryBox($http, {
-      name => "Arg_$p",
-      op => "SetArg",
-      index => $p,
-      value => $self->{args}->{$p}->[1],
-      id => "ent_arg_$p",
-    }, "UpdateDiv('div_RenderedCommandLine', 'DrawRenderedCommandLine')");
-    $http->queue("</li>");
+  if (defined $self->{params}->{special}){
+      $http->queue("<hr>Parameters can only be supplied after spreadsheet upload.<ul>");
+  }else{
+    $http->queue("<hr>Parameters:<ul>");
+    for my $p (sort keys %{$self->{args}}){
+      $http->queue("<li>$p : ");
+      $self->NewEntryBox($http, {
+        name => "Arg_$p",
+        op => "SetArg",
+        index => $p,
+        value => $self->{args}->{$p}->[1],
+        id => "ent_arg_$p",
+      }, "UpdateDiv('div_RenderedCommandLine', 'DrawRenderedCommandLine')");
+      $http->queue("</li>");
+    }
+    $http->queue("</ul>");
   }
-  $http->queue("</ul>");
 }
 
 sub SetArg{
@@ -358,12 +362,21 @@ sub MenuResponse{
     '<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px">');
   if($self->{mode} eq "initial"){
     if($self->{EffectiveProg} ne ""){
-      $self->DelegateButton($http, {
-        op => "StartSubprocess",
-        caption => "Start",
-        sync => "Update();",
-        css_class => "btn btn-success",
-      });
+      if (defined $self->{params}->{special}){
+        $self->DelegateButton($http, {
+          op => "",
+          caption => "Start button will become available after a spreadsheet is processed",
+          sync => "",
+          css_class => "btn btn-secondary",
+        });
+      }else{
+        $self->DelegateButton($http, {
+          op => "StartSubprocess",
+          caption => "Start",
+          sync => "Update();",
+          css_class => "btn btn-success",
+        });
+      }
     } else {
       $http->queue("Program not found");
     }
@@ -820,30 +833,13 @@ sub ProcessConvertedUploadedSpreadsheet{
       $self->GetOperationDescription($params->{rows}->[0]->{Operation});
     if(defined $operation){
       $params->{command} = $operation;
+      $self->{params}->{special} = undef;
       return $self->ProcessConvertedUploadedNamedSpreadsheet($http, $dyn, $params);
     }
   }
-  $params->{invocation} = {
-    type => "UploadedUnnamedSpreadsheet",
-    file_id => $dyn->{file_id},
-  };
-  my $class = "Posda::ProcessUploadedSpreadsheetWithNoOperation";
-  eval "require $class";
-  if($@){
-    print STDERR "$class failed to compile\n\t$@\n";
-    return;
-  }
-  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  my $name = "UploadedUnnamedSpreadsheet_$self->{sequence_no}";
-  $params->{Operations} = $self->{Commands};
-  $self->{sequence_no}++;
 
-
-   #they uploaded the wrong spreadsheet
-   my $child_path = $self->child_path($name);
-   my $child_obj = $class->new($self->{session},
-                               $child_path, $params);
-   $self->StartJsChildWindow($child_obj);
+  #should only get here if the spreadsheet did not have an operation
+  $self->RefreshEngine($http, $dyn,'<warn>ERROR: Improperly formatted spreadsheet. Please ensure the spreasheet includes the columsn specified in the Input Lines description AND the columns Operation, Notify, and Description.</warn>');
 
 }
 
@@ -879,6 +875,7 @@ sub ProcessConvertedUploadedNamedSpreadsheet{
   }
   $self->SetDefaultInput;
   $self->{mode} = "initial";
+
 
   if($self->can("AutoRefresh")){
     $self->AutoRefresh;
@@ -993,7 +990,7 @@ sub Files{
       (
         ($type eq "text/csv" || $type eq "application/vnd.ms-excel") ?
           '<?dyn="NotSoSimpleButton" ' .
-          'caption="chain" ' .
+          'caption="Process spreadsheet" ' .
           'op="ChainUploadedSpreadsheet" ' .
           "index=\"$in\" " .
           "sync=\"UpdateDiv('file_report','Files');\" " .
