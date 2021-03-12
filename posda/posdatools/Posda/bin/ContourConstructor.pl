@@ -317,7 +317,7 @@ sub Process2dContourBatch{
         push(@contours, $contour);
         $contour = [];
         $state = "BEGIN_Search";
-      } elsif ($line =~ /^(.*), (.*)$/){
+      } elsif ($line =~ /^(.*),\s*(.*)$/){
         my $x = $1;
         my $y = $2;
         push @{$contour}, [($x + $x_shift)/$pix_sp_x,
