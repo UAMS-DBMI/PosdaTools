@@ -275,8 +275,9 @@ sub RunQueryInBackground{
   unlink $tempfilename;
 
   # add to the work table for worker nodes
-  my $work_id = Query("CreateNewWork")
-                ->FetchOneHash($new_id,$worker_input_file_id)
+  my $work_id = Query("CreateNewWorkWithPriority")
+                ->FetchOneHash($new_id,
+                  $worker_input_file_id, "work_queue_0")
                 ->{work_id};
 
 

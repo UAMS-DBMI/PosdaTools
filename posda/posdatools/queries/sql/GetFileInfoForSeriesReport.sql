@@ -1,6 +1,6 @@
 -- Name: GetFileInfoForSeriesReport
 -- Schema: posda_files
--- Columns: ['file_id', 'sop_instance_uid', 'series_instance_uid', 'series_date', 'study_instance_uid', 'study_date', 'instance_number', 'patient_id', 'modality', 'dicom_file_type', 'for_uid', 'iop', 'ipp', 'pixel_data_digest']
+-- Columns: ['file_id', 'sop_instance_uid', 'series_instance_uid', 'series_date', 'study_instance_uid', 'study_date', 'instance_number', 'patient_id', 'modality', 'dicom_file_type', 'for_uid', 'iop', 'ipp', 'pixel_data_digest', 'pixel_rows', 'pixel_columns', 'pixel_spacing']
 -- Args: ['file_id']
 -- Tags: ['activity_timepoint', 'series_report']
 -- Description: Get Distinct SOPs in Series with number files
@@ -19,7 +19,10 @@ select
   modality,
   dicom_file_type,
   for_uid, iop, ipp, 
-  pixel_data_digest
+  pixel_data_digest,
+  pixel_rows,
+  pixel_columns,
+  pixel_spacing
 from
   file_location
   natural join dicom_file
@@ -29,5 +32,6 @@ from
   natural join file_sop_common
   left join file_image_geometry using(file_id) 
   left join image_geometry using(image_geometry_id)
+  left join image using(image_id)
 where file_id  = ?
 order by instance_number
