@@ -19,31 +19,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Find files In Timepoint Not In Public",
         action =>  "FilesInTpNotInPublic",
       },
-      {
-        operation => "CopyPriorTimepoint",
-        caption => "Copy Prior Timepoint",
-        action => "CopyPriorTimepoint",
-      },
-      {
-        operation => "Copy Prior Timepoint Excluding Files",
-        caption => "CopyPriorTimepointExcludingFiles",
-        action => "CopyPriorTimepointExcludingFiles",
-      },
-      {
-        operation => "CopyPriorTimepointInSeriesOnly",
-        caption =>"Copy Prior Timepoint In Series Only",
-        action =>"CopyPriorTimepointInSeriesOnly",
-      },
-      {
-        operation => "ConsolidateTimepoints",
-        caption =>"Consolidate Timepoints",
-        action =>"ConsolidateTimepoints",
-      },
-      {
-        operation => "ConsolidateActivities",
-        caption =>"Consolidate Activities",
-        action =>"ConsolidateActivities",
-      },
     #  {
     #    operation => "ConsolidateVisualReview",
     #    caption =>"ConsolidateVisualReview",
@@ -62,53 +37,33 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query_list_name => "FindSeries",
       },
       {
-        caption => "Copy Files",
+        caption => "Suggested Queries for Creating a Timepoint from Date Range for CTP data",
         operation => "SelectQueryGroup",
-        query_list_name => "CopyFiles",
+        query_list_name => "CTPImports",
       },
     ],
   },
   {
-    id => "2_count",
-    name => "Run Count Checks",
-    description => "Verification of the number of files sent to confirm " .
-      "with the sending site that everything arrived as expected.",
-    queries => [
-      {
-        caption => "Suggested Queries for Count Checks",
-        operation => "SelectQueryGroup",
-        query_list_name => "RunCountChecks",
-      },
-    ],
-  },
-  {
-    id => "3_dupes",
-    name => "Check for Duplicate SOPs",
-    description => "This process builds a report to alert you to " .
-      "duplicated data or data where multiple entities are using the same identifiers.",
-    operations => [
-      {
-        operation => "InvokeNewOperation",
-        caption => "Analyze Series in Time Point with Duplicates",
-        action =>  "AnalyzeSeriesDuplicatesForTimepoint",
-      },
-    ],
-  },
-  {
-    id => "4_pmap",
-    name => "Create Patient Mapping",
+    id => "2_pmap",
+    name => "Patient Mapping",
     note => " This step should not be needed if your data was imported through CTP",
     description => "Maps each patient to a new identifier that does not contain PHI. (e.g. Pat_030)",
     operations => [
+      {
+       operation => "InvokeNewOperation",
+       caption => "Import Patient Mappings For Timepoint",
+       action =>  "ImportPatientMapping",
+       special => "spreadsheetRequest"
+     },
      {
         operation => "InvokeNewOperation",
-        caption => "Suggest Patient Mappings For Timepoint",
+        caption => "Suggest Patient Mappings [LEGACY]",
         action =>  "SuggestPatientMappings",
       },
     ],
   },
   {
-    id => "5_ianon",
+    id => "3_ianon",
     name => "Initial Anonymization",
     note => " This step should not be needed if your data was imported through CTP",
     description => "Once the mapping is in place, we can run the initial " .
@@ -123,6 +78,39 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   },
+  {
+    id => "4_count",
+    name => "Run Count Checks",
+    description => "Verification of the number of files sent to confirm " .
+      "with the sending site that everything arrived as expected.",
+    queries => [
+      {
+        caption => "Suggested Queries for Count Checks",
+        operation => "SelectQueryGroup",
+        query_list_name => "RunCountChecks",
+      },
+    ],
+  },
+    {
+      id => "5_dupes",
+      name => "Check for Duplicate SOPs",
+      description => "This process builds a report to alert you to " .
+        "duplicated data or data where multiple entities are using the same identifiers.",
+        operations => [
+          {
+            operation => "InvokeNewOperation",
+            caption => "Analyze Series Duplicates for Timepoint",
+            action =>  "AnalyzeSeriesDuplicatesForTimepoint",
+          },
+        ],
+        queries => [
+          {
+            caption => "Suggested Queries for Duplicate SOPs",
+            operation => "SelectQueryGroup",
+            query_list_name => "DupeSops",
+          },
+      ],
+    },
   {
     id => "6_concheck",
     name => "Run Consistency Check",
@@ -283,7 +271,53 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "14_other",
+    id => "15_copyTP",
+    name => "Copy or Consolidate Timepoints",
+    note => "These operations require uploading a Spreadsheet",
+    description => "Sometimes in order to solve an unusual issue " .
+      "you will want to make a second copy of the Timepoint " .
+      "You may also want to merge Timepoints together.",
+    operations => [
+    {
+      operation => "CopyPriorTimepoint",
+      caption => "Copy Prior Timepoint",
+      action => "CopyPriorTimepoint"
+    },
+    {
+      operation => "Copy Prior Timepoint Excluding Files",
+      caption => "CopyPriorTimepointExcludingFiles",
+      action => "CopyPriorTimepointExcludingFiles",
+      special => "spreadsheetRequest"
+    },
+    {
+      operation => "CopyPriorTimepointInSeriesOnly",
+      caption =>"Copy Prior Timepoint In Series Only",
+      action =>"CopyPriorTimepointInSeriesOnly",
+      special => "spreadsheetRequest"
+    },
+    {
+      operation => "ConsolidateTimepoints",
+      caption =>"Consolidate Timepoints",
+      action =>"ConsolidateTimepoints",
+      special => "spreadsheetRequest"
+    },
+    {
+      operation => "ConsolidateActivities",
+      caption =>"Consolidate Activities",
+      action =>"ConsolidateActivities",
+      special => "spreadsheetRequest"
+    },
+    ],
+    queries => [
+      {
+        caption => "Copy Files",
+        operation => "SelectQueryGroup",
+        query_list_name => "CopyFiles",
+      },
+    ],
+  },
+  {
+    id => "16_other",
     name => "Other",
     description => "Miscellaneous operations",
     operations => [
@@ -383,6 +417,32 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
         query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
+      },
+    ],
+  ],
+  CTPImports => [
+    "Suggested Queries for Importing CTP data by Date Range",
+    [
+      {
+        caption => "CTP Brief Import Summary By Date Range",
+        query => "CtpImportBriefSummaryByDateRange",
+      },
+      {
+        caption => "CTP Import Summary By Date Range",
+        query => "CtpImportSummaryByDateRange",
+      },
+      {
+        caption => "CTP Imports By Date Range",
+        query => "CtpImportsByDateRange",
+      },
+    ],
+  ],
+  DupeSops => [
+    "Suggested Queries for Duplicate SOPs",
+    [
+      {
+        caption => "Dup SOPs In Timepoint With Series, File Ids, And Load Times",
+        query => "DupSopsInTimepointWithSeriesFileIdsAndLoadTimes",
       },
     ],
   ],
