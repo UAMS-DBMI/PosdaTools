@@ -499,8 +499,12 @@ sub StartSubprocess{
   unlink $tempinputdata;
 
   # add to the work table for worker nodes
-  $work_id = Query("CreateNewWork")
-                ->FetchOneHash($new_id,$worker_input_file_id)
+  my $priority = Query("OperationPriority")
+               ->FetchOneHash($self->{params}->{command}->{operation_name})
+               ->{worker_priority};
+  $work_id = Query("CreateNewWorkWithPriority")
+                ->FetchOneHash($new_id,$worker_input_file_id, 
+                    "work_queue_$priority")
                 ->{work_id};
 
 
@@ -508,9 +512,6 @@ sub StartSubprocess{
   unless($redis){
     die "Couldn't connect to redis";
   }
-  my $priority = Query("OperationPriority")
-               ->FetchOneHash($self->{params}->{command}->{operation_name})
-               ->{worker_priority};
   $redis->lpush("work_queue_$priority", $work_id);
   QuitRedis();
 
@@ -530,30 +531,30 @@ sub StartSubprocess{
   $self->{mode} = "waiting";
 }
 
-sub WhenCommandFinishes{
-  my($self,$subprocess_invocation_id) = @_;
-  my $sub = sub {
-    my($results, $pid) = @_;
-    $self->{Results} = $results;
-    my $q = Query("AddPidToSubprocessInvocation");
-    $q->RunQuery(sub{}, sub{}, $pid, $subprocess_invocation_id);
-    my $q1 = Query("CreateSubprocessLine");
-    my $line_no = 0;
-    for my $line (@$results){
-      $line_no += 1;
-      $q1->RunQuery(sub {}, sub {},
-        $subprocess_invocation_id,
-        $line_no,
-        $line
-      );
-    }
-    $self->{mode} = "response_available";
-    if($self->can("AutoRefresh")){
-      $self->AutoRefresh;
-    }
-  };
-  return $sub;
-}
+#sub WhenCommandFinishes{
+#  my($self,$subprocess_invocation_id) = @_;
+#  my $sub = sub {
+#    my($results, $pid) = @_;
+#    $self->{Results} = $results;
+#    my $q = Query("AddPidToSubprocessInvocation");
+#    $q->RunQuery(sub{}, sub{}, $pid, $subprocess_invocation_id);
+#    my $q1 = Query("CreateSubprocessLine");
+#    my $line_no = 0;
+#    for my $line (@$results){
+#      $line_no += 1;
+#      $q1->RunQuery(sub {}, sub {},
+#        $subprocess_invocation_id,
+#        $line_no,
+#        $line
+#      );
+#    }
+#    $self->{mode} = "response_available";
+#    if($self->can("AutoRefresh")){
+#      $self->AutoRefresh;
+#    }
+#  };
+#  return $sub;
+#}
 
 sub WaitingForResponse{
   my($self,$http, $dyn) = @_;

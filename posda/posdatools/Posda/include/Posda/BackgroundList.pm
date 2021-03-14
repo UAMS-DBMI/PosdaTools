@@ -13,7 +13,8 @@ sub SpecificInitialize {
   $self->{title} = 'Background Process Lister';
   $self->{params} = $params;
   $self->{ListMode} = "All";
-  $self->{checkboxes}->{InLast} = 0;
+  $self->{checkboxes}->{InLast} = 1;
+  $self->{InLastInterval} = "12 hours";
   Dispatch::Select::Background->new(sub {
     my($disp) = @_;
     if($self->{checkboxes}->{Refresh}){
@@ -54,6 +55,14 @@ sub WorklistContentResponse {
     push(@args, $self->{InLastInterval});
   }
   $self->{List} = [];
+#  print STDERR "##########################\n" .
+#  "Query: $q_name(";
+#  for my $i (0 .. $#args){
+#    print STDERR "$args[$i]";
+#    unless($i == $#args){ print STDERR ", " }
+#  }
+#  print STDERR ")\n" .
+#  "##########################\n";
   Query($q_name)->RunQuery(sub{
     push(@{$self->{List}}, $_[0]);
   }, sub {}, @args);
@@ -62,7 +71,10 @@ sub WorklistContentResponse {
     "<th>bid</th><th>aid</th><th>status</th><th>input</th>" .
     "<th>stdout</th><th>stderr</th>" .
     "<th>invoker</th><th>since</th><th>command_line</th>" .
-    "<th>invoked</th><th>notify</th></tr>");
+    "<th>invoked</th><th>notify</th><th>node_hostname</th>" .
+    "<th>background_queue_name</th></tr>");
+  my $rows_printed = 0;
+  my $num_rows = @{$self->{List}};
   for my $i (@{$self->{List}}){
     $http->queue("<tr>");
     for my $j (0 .. 4){
@@ -94,8 +106,13 @@ sub WorklistContentResponse {
       $http->queue("<td>$i->[$j]</td>");
     }
     $http->queue("</tr>");
+    $rows_printed += 1;
+    if($rows_printed >= 100){ last }
   }
   $http->queue("</table>");
+  if($rows_printed != $num_rows){
+    $http->queue("<p>Only $rows_printed of $num_rows printed</p>");
+  }
 }
 sub DownloadTextAttachment{
   my ($self, $http, $dyn) = @_;
@@ -148,25 +165,33 @@ sub MenuResponse {
   $self->NotSoSimpleButton($http, {
      op => "ListAll",
      caption => "All",
-     sync => "Update();"
+     sync => "Update();",
+     class => ($self->{ListMode} eq "all") ?
+      'btn btn_primary' : 'btn btn-default'
   });
   $http->queue("<br>");
   $self->NotSoSimpleButton($http, {
      op => "ListRunning",
      caption => "Running",
-     sync => "Update();"
+     sync => "Update();",
+     class => ($self->{ListMode} eq "running") ?
+      'btn btn_primary' : 'btn btn-default'
   });
   $http->queue("<br>");
   $self->NotSoSimpleButton($http, {
      op => "ListErrored",
      caption => "Errored",
-     sync => "Update();"
+     sync => "Update();",
+     class => ($self->{ListMode} eq "errored") ?
+      'btn btn_primary' : 'btn btn-default'
   });
   $http->queue("<br>");
   $self->NotSoSimpleButton($http, {
      op => "ListFinished",
      caption => "Finished",
-     sync => "Update();"
+     sync => "Update();",
+     class => ($self->{ListMode} eq "finished") ?
+      'btn btn_primary' : 'btn btn-default'
   });
   $http->queue("<br>");
   $http->queue("<hr>");
@@ -190,11 +215,11 @@ sub SetInLastInterval{
 }
 sub SetCheckbox{
   my ($self, $http, $dyn) = @_;
-  print STDERR "##################\n";
-  for my $i (keys %{$dyn}){
-    print STDERR "dyn{$i} =  $dyn->{$i}\n";
-  }
-  print STDERR "##################\n";
+#  print STDERR "##################\n";
+#  for my $i (keys %{$dyn}){
+#    print STDERR "dyn{$i} =  $dyn->{$i}\n";
+#  }
+#  print STDERR "##################\n";
   my $checked = 0;
   if($dyn->{checked} eq "true"){
     $checked = 1;

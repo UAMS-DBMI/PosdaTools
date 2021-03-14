@@ -39,6 +39,9 @@ sub SpecificInitialize {
   my %iops;
   my %ipps;
   my %pix_digs;
+  my %pix_rows;
+  my %pix_cols;
+  my %pix_spacing;
   
   my $get_f_info = Query('GetFileInfoForSeriesReport');
   Query('GetFilesInSeriesAndActivity')->RunQuery(sub{
@@ -59,7 +62,10 @@ sub SpecificInitialize {
         $for_uid,
         $iop,
         $ipp,
-        $pixel_data_digest) = @$row;
+        $pixel_data_digest, 
+        $pixel_rows,
+        $pixel_cols,
+        $pixel_spacing) = @$row;
       $sop_instances{$sop_instance_uid} = 1;
       $instance_numbers{$instance_number} = 1;
       $series_instances{$series_instance_uid} = 1;
@@ -73,6 +79,10 @@ sub SpecificInitialize {
       $iops{$iop} = 1;
       $ipps{$ipp} = 1;
       $pix_digs{$pixel_data_digest} = 1;
+      $pix_rows{$pixel_rows} = 1;
+      $pix_cols{$pixel_cols} = 1;
+      $pix_spacing{$pixel_spacing} = 1;
+     
       $self->{FilesInSeries}->{$file_id} = {
         sop_instance_uid => $sop_instance_uid,
         instance_number => $instance_number,
@@ -86,7 +96,10 @@ sub SpecificInitialize {
         for_uid => $for_uid,
         iop => $iop,
         ipp => $ipp,
-        pixel_data_digest => $pixel_data_digest
+        pixel_data_digest => $pixel_data_digest,
+        pix_rows => $pixel_rows,
+        pix_cols => $pixel_cols,
+        pix_spacing => $pixel_spacing,
       };
       $self->{SeriesCounts} = {
         sops => \%sop_instances,
@@ -101,7 +114,10 @@ sub SpecificInitialize {
         frame_of_ref  => \%for_uids,
         iops  => \%iops,
         ipps  => \%ipps,
-        pixels  => \%pix_digs 
+        pixels  => \%pix_digs,
+        pix_rows => \%pix_rows,
+        pix_cols => \%pix_cols,
+        pix_spacing => \%pix_spacing,
       };
     }, sub  {}, $file_id);
     $self->{mode} = "series_report";
@@ -131,11 +147,12 @@ sub SeriesReport{
   $http->queue("<pre>Contains $num_files files\n");
   for my $i ("dicom_file_types", "modalities", "patient_ids", 
     "frame_of_ref", "iops", "series_dates", "study_instances",
-    "study_dates"
+    "study_dates", "pix_spacing",
+    "pix_rows", "pix_cols"
   ){
     my $num = keys %{$self->{SeriesCounts}->{$i}};
     if($num > 1){
-      $http->queue("Has $num $i\n");
+      $http->queue("Has $num $i (NOT one)\n");
     } else {
       my $v = [keys %{$self->{SeriesCounts}->{$i}}]->[0];
       $http->queue("Has one $i ($v)\n");
@@ -177,7 +194,11 @@ sub SeriesReport{
 sub SeriesSummary{
   my ($self, $http, $dyn) = @_;
   $http->queue(
-    "<h4>Series summary for series $self->{series_instance_uid}:</h4>");
+    "<h4>Series summary for series $self->{series_instance_uid}:");
+  $http->queue("<a class=\"btn btn_primary\" " .
+    "href=\"DownloadSeriesReport?obj_path=$self->{path}\">" .
+    "Download");
+  $http->queue("</h4>");
   my @files = sort
     {
        $self->{FilesInSeries}->{$a}->{$self->{sort_field}} <=>
@@ -202,7 +223,67 @@ sub SeriesSummary{
   $http->queue("</table>");
 }
 
+sub DownloadSeriesReport{
+  my ($self, $http, $dyn) = @_;
+  $http->DownloadHeader("text/csv", "Series_$self->{series_instance_uid}.csv");
+
+  my @files = sort
+    {
+       $self->{FilesInSeries}->{$a}->{$self->{sort_field}} <=>
+       $self->{FilesInSeries}->{$b}->{$self->{sort_field}}
+    }
+    keys %{$self->{FilesInSeries}};
+  my @keys = ("instance_number", "sop_instance_uid", "dicom_file_type",
+    "modality", "pix_rows", "pix_cols", "dr/dx", "dr/dy", "dr/dz", 
+    "dc/dx", "dc/dy", "dc/dz", "ipp_x", "ipp_y", "ipp_z",
+    "row_spc", "col_spc", "pix_dig");
+  $http->queue("file_id,");
+  for my $i (0 .. $#keys){
+    my $k = $keys[$i];
+    $http->queue("$k");
+    unless($i == $#keys){ $http->queue(",") }
+  }
   
+  for my $i (@files){
+    $http->queue("\r\n");
+    $http->queue("$i,");
+    my @drc = split(/\\/, $self->{FilesInSeries}->{$i}->{iop});
+    my @ipp = split(/\\/, $self->{FilesInSeries}->{$i}->{ipp});
+    my @pix_spc = split(/\\/, $self->{FilesInSeries}->{$i}->{pix_spacing});
+    my $pix_dig = $self->{FilesInSeries}->{$i}->{pixel_data_digest};
+    for my $ki (0 .. $#keys){
+      my $k = $keys[$ki];
+      if($k eq "dr/dx"){
+        $http->queue("$drc[0]");
+      }elsif($k eq "dr/dy"){
+        $http->queue("$drc[1]");
+      }elsif($k eq "dr/dz"){
+        $http->queue("$drc[2]");
+      }elsif($k eq "dc/dx"){
+        $http->queue("$drc[3]");
+      }elsif($k eq "dc/dy"){
+        $http->queue("$drc[4]");
+      }elsif($k eq "dc/dz"){
+        $http->queue("$drc[5]");
+      }elsif($k eq "ipp_x"){
+        $http->queue("$ipp[0]");
+      }elsif($k eq "ipp_y"){
+        $http->queue("$ipp[1]");
+      }elsif($k eq "ipp_z"){
+        $http->queue("$ipp[2]");
+      }elsif($k eq "row_spc"){
+        $http->queue("$pix_spc[0]");
+      }elsif($k eq "col_spc"){
+        $http->queue("$pix_spc[1]");
+      }elsif($k eq "pix_dig"){
+        $http->queue("$pix_dig");
+      } else {
+        $http->queue("$self->{FilesInSeries}->{$i}->{$k}");
+      }
+      unless($ki == $#keys){  $http->queue(",") }
+    }
+  }
+}
 
 sub SetSeriesReport{
   my ($self, $http, $dyn) = @_;

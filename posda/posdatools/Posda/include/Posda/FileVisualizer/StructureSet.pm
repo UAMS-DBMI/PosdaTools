@@ -59,6 +59,7 @@ sub HandleStructureInfo{
     }
     $self->{struct_analysis_result} = $result;
     $self->{struct_analysis_status} = $status;
+    $self->SortFilesByOffset;
     $self->AutoRefresh();
   };
   return $sub;
@@ -288,6 +289,13 @@ sub SsRoiReport{
       }));
     } elsif (exists($self->{SelectedRoiForRendering}->{$roi})) {
         delete $self->{SelectedRoiForRendering}->{$roi};
+    } else {
+      $self->NotSoSimpleButton($http, {
+        op => "DisplayRoi",
+        caption => "disp",
+        roi_num => $roi,
+        sync => "Reload();"
+      });
     }
     $http->queue("</td>");
     $http->queue("<td>");
@@ -1316,6 +1324,32 @@ sub RenderSelectedRoiContours{
     return;
 }
 
+sub DisplayRoi{
+  my($self, $http, $dyn) = @_;
+  my $params = {
+    roi_num => $dyn->{roi_num},
+    ss_file_id => $self->{file_id},
+    file_sort => $self->{StructureSetAnalysis}->{file_sort},
+    tmp_dir => $self->{temp_path},
+    file_to_instance => $self->{FileToInstance}
+  };
+  my $class = "Posda::FileVisualizer::ImageDisplayer";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "$self->{name}" . "_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
 sub MakeSegmentationFile{
   my($self, $http, $dyn) = @_;
   my $params = {
@@ -1323,6 +1357,7 @@ sub MakeSegmentationFile{
     rois => {},
     image_files => {},
     sops => {},
+    all_file_sort => $self->{StructureSetAnalysis}->{file_sort}
   };
   my %ref_img;
   my $f_rois = $self->{StructureSetAnalysis}->{rois};
@@ -1379,4 +1414,102 @@ sub FileIdToSop{
   }
   return undef;
 }
+
+sub SortFilesByOffset{
+  my ($self) = @_;
+  my %file_offset_info;
+  my $iop;
+  my $file_list;
+  # also - construct file_to_instance
+  $self->{FileToInstance} = {};
+  for my $ser (keys %{$self->{StructureSetAnalysis}->{series_ref}}){
+    my $img_list = 
+      $self->{StructureSetAnalysis}->{series_ref}->{$ser}->{img_list};
+    for my $sop (keys %{$img_list}){
+      my $f_info = $img_list->{$sop};
+      my $file_id = $f_info->{file_id};
+      $file_list->{$file_id} = $f_info;
+      $self->{FileToInstance}->{$file_id} = $f_info->{instance_number};
+    }
+  }
+  file:
+  for my $f_id (keys %{$file_list}){
+    my $f_info = $file_list->{$f_id};
+    unless(defined $f_info->{iop}) {
+      my $msg = "Error: file $f_id has no iop";
+      print STDERR "####################\n$msg\n####################\n";
+      push(@{$self->{errors}}, $msg);
+      next file;
+    }
+    unless(defined $iop) {$iop = $f_info->{iop}};
+    unless($iop eq $f_info->{iop}){
+      my $msg = "Error: file $f_id non matching iop " .
+        "($iop vs $f_info->{iop})";
+      print STDERR "####################\n$msg\n####################\n";
+      push(@{$self->{errors}}, $msg);
+      next file;
+    }
+    my @iop = split(/\\/, $iop);
+    my $dx = [$iop[0], $iop[1], $iop[2]];
+    my $dy = [$iop[3], $iop[4], $iop[5]];
+    my $dz = VectorMath::cross($dx, $dy);
+    my $rot = [$dx, $dy, $dz];
+    my @ipp = split(/\\/, $f_info->{ipp});
+    my $rot_dx = VectorMath::Rot3D($rot, $dx);
+    my $rot_dy = VectorMath::Rot3D($rot, $dy);
+    my $rot_iop = [$rot_dx, $rot_dy];
+    my $rot_ipp = VectorMath::Rot3D($rot, \@ipp);
+    my $h = { rot_iop => $rot_iop, rot_ipp => $rot_ipp };
+    $file_offset_info{$f_id} = $h;
+  }
+  my $min_z; my $fid_min; my $max_z; my $fid_max;
+  my $tot_x = 0;  my $tot_y = 0; my $num_slice = 0;
+  for my $i (keys %file_offset_info){
+    my $offset_info = $file_offset_info{$i};
+    $num_slice += 1;
+    $tot_x += $offset_info->{rot_ipp}->[0];
+    $tot_y += $offset_info->{rot_ipp}->[1];
+    my $z = $offset_info->{rot_ipp}->[2];
+    unless(defined $min_z) {
+      $min_z = $z;
+      $fid_min = $i;
+    }
+    unless(defined $max_z) {
+      $max_z = $z;
+      $fid_max = $i;
+    }
+    if($z < $min_z){
+      $min_z = $z;
+      $fid_min = $i;
+    }
+    if($z > $max_z){
+      $max_z = $z;
+      $fid_max = $i;
+    }
+  }
+  my $avg_x = $tot_x / $num_slice;
+  my $avg_y = $tot_y / $num_slice;
+
+  for my $i (keys %file_offset_info){
+    my $off_info = $file_offset_info{$i};
+    $off_info->{z_diff} = $off_info->{rot_ipp}->[2] - $min_z;
+    $off_info->{x_diff} = $off_info->{rot_ipp}->[0] - $avg_x;
+    $off_info->{y_diff} = $off_info->{rot_ipp}->[1] - $avg_y;
+  }
+  $self->{StructureSetAnalysis}->{file_sort} = [];
+  for my $f (
+    sort {
+      $file_offset_info{$a}->{z_diff} <=> $file_offset_info{$b}->{z_diff}
+    }
+    keys %file_offset_info
+  ){
+    push @{$self->{StructureSetAnalysis}->{file_sort}}, {
+      file_id => $f,
+      offset => $file_offset_info{$f}->{z_diff},
+      x_diff => $file_offset_info{$f}->{x_diff},
+      y_diff => $file_offset_info{$f}->{y_diff},
+    };
+  }
+}
+
 1;
