@@ -1048,18 +1048,22 @@ sub CrunchAnalysis{
       "planar_configuration",
       "number_of_frames",
     );
-    Query('ReportForImageLinkageTestTpForSeries')->RunQuery(sub{
+    Query('GetFilesInSeriesAndActivity')->RunQuery(sub{
       my($row) = @_;
-      my %q;
-      for my $i (0 ..  $#q_cols){
-        $q{$q_cols[$i]} = $row->[$i];
-      }
-      my $sop = $q{sop_instance_uid};
-      if(exists $img_list{$sop}){
-        $errors{"sop ($sop) apparently duplicated in series ($series)"} = 1;
-      }
-      $img_list{$sop} = \%q;
-    }, sub{}, $self->{params}->{activity_id}, $series);
+      my $file_id = $row->[0];
+      Query('ReportForImageLinkageTestTpForFile')->RunQuery(sub{
+        my($row) = @_;
+        my %q;
+        for my $i (0 ..  $#q_cols){
+          $q{$q_cols[$i]} = $row->[$i];
+        }
+        my $sop = $q{sop_instance_uid};
+        if(exists $img_list{$sop}){
+          $errors{"sop ($sop) apparently duplicated in series ($series)"} = 1;
+          }
+        $img_list{$sop} = \%q;
+      }, sub {}, $file_id);
+    }, sub{}, $series, $self->{params}->{activity_id});
     $expected_study = $h->{ref_study};
     $expected_for = $h->{ref_for};
     $self->{StructureSetAnalysis} = {
