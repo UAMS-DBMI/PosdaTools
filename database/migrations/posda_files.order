@@ -14,3 +14,4 @@ seg_bitmap_file.sql
 dup_sops_comparison.sql
 add_priority_to_spreadsheet_operation.sql
 add_queue_name_to_work.sql
+struct_contours_to_slice.sql
