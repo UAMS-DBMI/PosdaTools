@@ -3377,6 +3377,7 @@ sub setForegroundQuery(){
   my($self, $http, $dyn) = @_;
   $self->{Mode} = $dyn->{mode};
   $self->{NewQueryToDisplay} = $dyn->{index};
+  $self->{Input} = {};  # clear previous input values
   my $q_pack = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   delete $self->{NewQueryToDisplay};
   $self->{SelectedNewQuery} = $dyn->{query_name};
