@@ -1333,7 +1333,8 @@ sub DisplayRoi{
     tmp_dir => $self->{temp_path},
     file_to_instance => $self->{FileToInstance}
   };
-  my $class = "Posda::FileVisualizer::ImageDisplayer";
+#  my $class = "Posda::FileVisualizer::ImageDisplayer";
+  my $class = "Posda::HttpApp::SimplifiedImageDisp";
   eval "require $class";
   if($@){
     print STDERR "Class failed to compile\n\t$@\n";
