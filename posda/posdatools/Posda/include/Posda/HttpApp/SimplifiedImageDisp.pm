@@ -51,6 +51,13 @@ sub new {
 }
 sub Init{
   my($self) = @_;
+  $self->{x_shift} = "0.5";
+  $self->{y_shift} = "0.5";
+  $self->{title} = "ss_file_id: $self->{params}->{ss_file_id}" .
+    "; roi_num: $self->{params}->{roi_num}, " .
+    "($self->{x_shift}, $self->{y_shift})";
+  $self->{height} = 600;
+  $self->{width} = 600;
   $self->{ImageList} = {};
   Query('GetStructContoursToSegByStructIdAndRoi')->RunQuery(sub{
     my($row) = @_;
@@ -97,7 +104,8 @@ sub InitializeUrls{
     ){
       $self->{CurrentUrlIndex} = 0;
     }
-    $self->{ImageUrls} = [];
+    $self->{BitmapImageUrls} = [];
+    $self->{JpegImageUrls} = [];
     $self->{ContourFileIds} = [];
     for my $index (0 .. $num_slices - 1){
       my $i_fid = $self->{SortedFileInfo}->[$index]->{file_id};
@@ -105,9 +113,13 @@ sub InitializeUrls{
       my $contour_file_id =
         $self->{ImageList}->{$i_fid}->{contour_slice_file_id};
       $self->{ContourFileIds}->[$index] = $contour_file_id;
-      $self->{ImageUrls}->[$index] = {
+      $self->{BitmapImageUrls}->[$index] = {
         url_type => "relative",
-        image => "FetchPng?obj_path=$self->{path}&file_id=$png_file_id"
+        image => "FetchBitmapPng?obj_path=$self->{path}&file_id=$png_file_id"
+      };
+      $self->{JpegImageUrls}->[$index] = {
+        url_type => "relative",
+        image => "FetchDicomJpeg?obj_path=$self->{path}&file_id=$i_fid"
       };
     }
     $self->SetImageUrlAndContour;
@@ -115,8 +127,24 @@ sub InitializeUrls{
 };
 sub SetImageUrlAndContour{
   my($self)= @_;
+  unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
+  unless(defined $self->{ImageType}){
+    $self->{ImageType} = "Rendered Bitmap";
+  }
   my $current_index = $self->{CurrentUrlIndex};
-  $self->{ImageUrl} = $self->{ImageUrls}->[$current_index];
+  if($self->{ImageType} eq "Rendered Bitmap"){
+    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
+  }elsif($self->{ImageType} eq "Dicom Image"){
+#    $self->{DicomImageJpegId} = $self->{DicomImageUrls}->[$current_index];
+    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
+  } elsif($self->{ImageType} eq "TestPattern"){
+    $self->{ImageUrl} = {
+        url_type => "relative",
+        image => "FetchTestPattern?obj_path=$self->{path}"
+    };
+  }else{
+    die "WTF?  Image Type = $self->{ImageType} !!!";
+  }
   $self->{ContourFileId} = $self->{ContourFileIds}->[$current_index];
   my $contour_file_path;
   Query('GetFilePath')->RunQuery(sub {
@@ -133,7 +161,7 @@ sub SetImageUrlAndContour{
   $self->{ImageLabels}->{current_instance} = 
     $self->{params}->{file_to_instance}->{$current_file_id};
 }
-sub FetchPng{
+sub FetchBitmapPng{
   my ($self, $http, $dyn) = @_;
   my $file;
   unless(defined($dyn->{file_id}) && $dyn->{file_id} ne ""){
@@ -143,7 +171,7 @@ sub FetchPng{
     }
     return;
   }
-print STDERR "Executing Query: GetFilePath($dyn->{file_id})\n";
+#print STDERR "Executing Query: GetFilePath($dyn->{file_id})\n";
   Query('GetFilePath')->RunQuery(sub{
     my($row) = @_;
     $file = $row->[0];
@@ -151,24 +179,103 @@ print STDERR "Executing Query: GetFilePath($dyn->{file_id})\n";
   open my $fh, "cat $file|" or die "Can't open $file for reading ($!)";
   $self->SendContentFromFh($http, $fh, "image/png",
   $self->CreateNotifierClosure("NullNotifier", $dyn));
+} 
+sub FetchTestPattern{
+  my($self, $http, $dyn) = @_;
+  my $tp_path = "$self->{params}->{tmp_dir}/TestPattern.png";
+  my $tmp_path = "$self->{params}->{tmp_dir}/TestPattern.pbm";
+  unless(-f $tp_path){
+    my $cmd = "MakeTestPbm.pl 512 512  >$tmp_path; ". 
+    "convert $tmp_path $tp_path; rm $tmp_path; echo done";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $tp_path,
+        \@render_list)
+    );
+    return;
+  }
+  $self->SendCachedPng($http, $dyn, $tp_path);
+} 
+sub ContinueRenderingTp{
+  my($self, $http, $dyn, $rendered_test_pat, $render_list) = @_;
+  my $sub = sub {
+    $self->SendCachedPng($http, $dyn, $rendered_test_pat);
+  };
+  return $sub;
+}
+sub SendCachedPng{
+  my($self, $http, $dyn, $png_path) = @_;
+  my $content_type = "image/jpeg";
+  open my $sock, "cat $png_path|" or die "Can't open " .
+    "$png_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+sub FetchDicomJpeg{
+  my($self, $http, $dyn) = @_;
+  my $dicom_file_id = $dyn->{file_id};
+  $self->{CurrentDicomFile} = $dicom_file_id;
+  $self->{WindowWidth} = -600;
+  $self->{WindowCenter} = 1600;
+  my $window_width = $self->{WindowWidth};
+  my $window_ctr = $self->{WindowCenter};
+  my $jpeg_file = "$self->{params}->{tmp_dir}/" .
+    "$dicom_file_id" ."_$window_ctr" . "_$window_width.jpeg";
+  unless(-f $jpeg_file){
+    #todo make cmd to Render Dicom to $rendered_dicom_jpeg
+    my $rendered_dicom_gray = "$self->{params}->{tmp_dir}/$dicom_file_id.gray";
+    my $cmd = "CacheDicomAsJpeg.pl $dicom_file_id \"$window_width\" " .
+     "\"$window_ctr\" " .
+     "$rendered_dicom_gray $jpeg_file;echo 'done'";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $jpeg_file,
+        $rendered_dicom_gray, $dicom_file_id, \@render_list)
+    );
+    return;
+  }
+  unless($self->{CachedJpegs}->{$dicom_file_id} eq $jpeg_file){
+    $self->{CachedJpegs}->{$dicom_file_id} = $jpeg_file;
+  }
+  $self->SendCachedJpeg($http, $dyn, $self->{CachedJpegs}->{$dicom_file_id})
+} 
+sub HandleRenderersLines{
+  my($self, $render_list) = @_;
+  my $sub = sub {
+    my($line) = @_;
+print STDERR "Line from renderer: $line\n";
+    push @$render_list, $line;
+  };
+  return $sub;
+}
+sub ContinueRenderingImage{
+  my($self, $http, $dyn, $rendered_dicom_jpeg, $rendered_dicom_gray, 
+    $dicom_file_id, $render_list) = @_;
+  my $sub = sub {
+    $self->{CachedJpegs}->{$dicom_file_id} = $rendered_dicom_jpeg;
+    $self->SendCachedJpeg($http, $dyn, $rendered_dicom_jpeg);
+    unlink $rendered_dicom_gray;
+  };
+  return $sub;
+}
+sub SendCachedJpeg{
+  my($self, $http, $dyn, $jpeg_path) = @_;
+  my $contour_file_id = $self->{ContourFileId};
+  my $content_type = "image/jpeg";
+  open my $sock, "cat $jpeg_path|" or die "Can't open " .
+    "$jpeg_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
 
-#  my $content_type = "image/png";
-#  $http->HeaderSent;
-#  $http->queue("HTTP/1.0 200 OK\n");
-#  $http->queue("Content-type: $content_type\n\n");
-#  open FILE, "<$file" or die "Can't open $file for reading ($!)";
-#  my $bytes_sent = 0;
-#  while(1){
-#    my $buff;
-#    my $count = read(FILE, $buff, 1024);
-#    if($count <= 0) { last }
-#    $http->queue($buff);
-#  }
-#  close FILE;
-#  $http->finish();
-#}
+
 my $content = <<EOF;
+<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px" id="div_content">
+<div id="div_canvas">
 <table border="1" width="100%">
 <tr>
 <td align="center" colspan="3" id="TopPositionText"`>
@@ -188,27 +295,74 @@ my $content = <<EOF;
 </td>
 </tr>
 </table>
-<table border="1" width="100%">
-<tr>
-<td id="ControlButton1" width="10%">
-<input type="Button" class="btn btn-default"  onclick="javascript:Reload();" value="reset">
-</td>
-<td id="ControlButton2" width="10%">&nbsp;</td>
-<td id="ControlButton3" width="10%">&nbsp;</td>
-<td id="ControlButton4" width="10%">&nbsp;</td>
-<td id="ControlButton5" width="10%">&nbsp;</td>
-<td id="ControlButton6" width="10%">&nbsp;</td>
-<td id="ControlButton7" width="10%">&nbsp;<?dyn="PrevButton"?></td>
-<td id="ControlButton8" width="10%">&nbsp;<?dyn="NextButton"?></td>
-<td id="ControlButton9" width="10%">&nbsp;</td>
-<td id="ControlButton10" width="10%">&nbsp;</td>
-</tr>
-</table>
+</div>
+<div id="div_control_buttons" style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+<div id="ControlButton1" width="10%">
+<input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
+</div>
+<div id="PanZoomButton">
+<input type="Button" class="btn btn-default"  onclick="javascript:TogglePz();" value="P/Z">
+</div>
+<div id="ControlButton2" width="10%">Off</div>
+<div id="CineToggle" width="10%">
+<input type="Button" class="btn btn-default"  onclick="javascript:ToggleCine();" value="Cine">
+</div>
+<div id="CineStatus" width="10%">&nbsp;</div>
+<div id="CineDirDiv" width="10%">+</div>
+<div>
+<div id="ControlButton4" width="10%">
+<div id="CineToggleDir" width="10%">
+<input type="Button" class="btn btn-default"  onclick="javascript:ToggleCineDir();" value="+/-">&nbsp;
+</div>
+</div>
+</div>
+<div id="ControlButton5" width="10%">&nbsp;</div>
+<div id="ControlButton6" width="10%">&nbsp;</div>
+<div id="ControlButton7" width="10%">&nbsp;<?dyn="PrevButton"?></div>
+<div id="ControlButton8" width="10%">&nbsp;<?dyn="NextButton"?></div>
+<div id="ControlButton9" width="10%">&nbsp;</div>
+<div id="ControlButton10" width="10%">&nbsp;</div>
+</div>
+<div id="div_Selectors" style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+<div width="30%" id="ImageTypeSelector">
+<?dyn="ImageTypeSelector"?>
+</div>
+<div width=30% id="ToolTypeSelector">
+<?dyn="ToolTypeSelector"?>
+</div>
+</div>
+</div>
+<div>
+<p>
+<pre>
+<div id="DebugInfo">
+Debug Info goes here
+</div>
+</pre>
+</p>
+</div>
+<div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+<p>
+Tool Type:
+<div id="ToolType">
+ Info goes here
+</div>
+</p>
+</div>
+<div>
+<p>
+<pre>
+Mouse Position:
+<div id="MousePosition">
+</div>
+</pre>
+</p>
+</div>
 EOF
 
 sub NextButton{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
+my($self, $http, $dyn) = @_;
+$self->NotSoSimpleButton($http, {
     op => "NextSlice",
     caption => "nxt",
     id => "NextButton",
@@ -229,7 +383,7 @@ sub PrevButton{
 sub NextSlice{
   my($self, $http, $dyn) = @_;
   $self->{CurrentUrlIndex} += 1;
-  if($self->{CurrentUrlIndex} > $#{$self->{ImageUrls}}){
+  if($self->{CurrentUrlIndex} > $#{$self->{BitmapImageUrls}}){
     $self->{CurrentUrlIndex} = 0;
   }
   $self->SetImageUrlAndContour;
@@ -239,7 +393,7 @@ sub PrevSlice{
   my($self, $http, $dyn) = @_;
   $self->{CurrentUrlIndex} -= 1;
   if($self->{CurrentUrlIndex} < 0){
-    $self->{CurrentUrlIndex} = $#{$self->{ImageUrls}};
+    $self->{CurrentUrlIndex} = $#{$self->{BitmapImageUrls}};
   }
   $self->SetImageUrlAndContour;
 }
@@ -255,6 +409,48 @@ sub GetContoursToRender{
   my($self, $http, $dyn) = @_;
   my $contour_file_id = $self->{ContourFileId};
   my $json_contours_path;
+  my $border_contour_file = 
+    "$self->{params}->{tmp_dir}/border_contours.contours";
+  unless(-f $border_contour_file){
+    open FILE, ">$border_contour_file" or
+      die "can't open $border_contour_file";
+    print FILE "BEGIN\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "-0.5,512.5\n";
+    print FILE "512.5,512.5\n";
+    print FILE "512.5,-0.5\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
+  my $border_contour_file1 = 
+    "$self->{params}->{tmp_dir}/border_contours1.contours";
+  unless(-f $border_contour_file1){
+    open FILE, ">$border_contour_file1" or 
+      die "can't open $border_contour_file1";
+    print FILE "BEGIN\n";
+    print FILE "0.5,0.5\n";
+    print FILE "0.5,511.5\n";
+    print FILE "511.5,511.5\n";
+    print FILE "511.5,0.5\n";
+    print FILE "0.5,0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
+  my $border_contour_file2 = 
+    "$self->{params}->{tmp_dir}/border_contours2.contours";
+  unless(-f $border_contour_file2){
+    open FILE, ">$border_contour_file2" or 
+      die "can't open $border_contour_file2";
+    print FILE "BEGIN\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "0,511.5\n";
+    print FILE "511.5,511.5\n";
+    print FILE "511.5,-0.5\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
   if(exists $self->{CachedContours}->{$contour_file_id}){
     $json_contours_path = $self->{CachedContours}->{$contour_file_id};
   } else {
@@ -265,9 +461,36 @@ sub GetContoursToRender{
         file => $self->{ContourFilePath},
         pix_sp_x => 1,
         pix_sp_y => 1,
-        x_shift => .5,
-        y_shift => .5,
-      }
+        x_shift => $self->{x_shift},
+        y_shift => $self->{y_shift},
+      },
+      {
+        color => "00ff00",
+        type => "2dContourBatch",
+        file => $border_contour_file,
+        pix_sp_x => 1,
+        pix_sp_y => 1,
+        x_shift => 0,
+        y_shift => 0,
+      },
+      {
+        color => "0000ff",
+        type => "2dContourBatch",
+        file => $border_contour_file1,
+        pix_sp_x => 1,
+        pix_sp_y => 1,
+        x_shift => 0,
+        y_shift => 0,
+      },
+      {
+        color => "ff0000",
+        type => "2dContourBatch",
+        file => $border_contour_file2,
+        pix_sp_x => 1,
+        pix_sp_y => 1,
+        x_shift => 0.5,
+        y_shift => 0.5,
+      },
     ];
     my $tmp1 = "$self->{params}->{tmp_dir}/$contour_file_id.contours";
     my $tmp2 = "$self->{params}->{tmp_dir}/$contour_file_id.json";
@@ -413,6 +636,12 @@ function UpdateOne(){
 function UpdateAct(){ 
   // UpdateActivityTaskStatus();
 }
+function ResetZoom(){
+  var xform = ctx.setTransform(1,0,0,1,0,0);
+  LineWidth = 1;
+  RenderImage(canvas,ctx);
+  DisableCine();
+}
 function Reload(){
   window.location.reload();
 }
@@ -463,6 +692,7 @@ my $dicom_image_disp_js = <<EOF;
   var BaseSessionUrl;
   var LineWidth = 1;
   var ToolType = "None";
+  var TrackingEnabled = "Off";
   var CineEnabled = "No";
   var CineDir = "+";
 //  var ContoursToDraw = [];
@@ -474,6 +704,10 @@ my $dicom_image_disp_js = <<EOF;
       // Clear the entire canvas
       var p1 = ctx.transformedPoint(0,0);
       var p2 = ctx.transformedPoint(canvas.width,canvas.height);
+      var td = document.getElementById('DebugInfo');
+      var tf = ctx.getTransform();
+      td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' c:' 
+        + tf.c + ' d: ' + tf.d + ' e: ' + tf.e + ' f: ' + tf.f;
       ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
       // Alternatively:
@@ -512,6 +746,9 @@ my $dicom_image_disp_js = <<EOF;
       lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
       lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
       dragStart = ctx.transformedPoint(lastX,lastY);
+      var td = document.getElementById('MousePosition');
+      td.innerHTML = 'Last mouse click: (' + dragStart.x +
+        ', ' + dragStart.y + ')';
       dragged = false;
     };
     canvas.addEventListener('mousedown',PanZoomMouseDown, false);
@@ -533,11 +770,13 @@ my $dicom_image_disp_js = <<EOF;
     canvas.addEventListener('mouseup',PanZoomMouseUp, false);
 
     var scaleFactor = 1.025;
+    var currentScaleFactor = 1.0;
     var zoom = function(clicks){
       var pt = ctx.transformedPoint(lastX,lastY);
       ctx.translate(pt.x,pt.y);
       var factor = Math.pow(scaleFactor,clicks);
       LineWidth /= factor;
+      currentScaleFactor  = factor;
       ctx.scale(factor,factor);
       ctx.translate(-pt.x,-pt.y);
       RenderImage(canvas, ctx);
@@ -552,8 +791,7 @@ my $dicom_image_disp_js = <<EOF;
     canvas.addEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.addEventListener('mousewheel',PanZoomScroll,false);
     var td = document.getElementById('ControlButton2');
-    td.innerHTML = 
-      '<input type="button" onClick="DisableTracking();" value="p/z off"/>';
+    td.innerHTML = TrackingEnabled;
   };
   function RemovePanZoomTrackers(canvas, ctx){
     canvas.removeEventListener('mousedown',PanZoomMouseDown, false);
@@ -562,8 +800,7 @@ my $dicom_image_disp_js = <<EOF;
     canvas.removeEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.removeEventListener('mousewheel',PanZoomScroll,false);
     var td = document.getElementById('ControlButton2');
-    td.innerHTML = 
-      '<input type="button" onClick="EnableTracking();" value="p/z on"/>';
+    td.innerHTML = TrackingEnabled;
   }
   
   // Adds ctx.getTransform() - returns an SVGMatrix
@@ -571,6 +808,8 @@ my $dicom_image_disp_js = <<EOF;
   function trackTransforms(ctx){
     var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
     var xform = svg.createSVGMatrix();
+    xform.a = 1; xform.b = 0; xform.c = 0, xform.d = 1;
+    xform.e = 0; xform.f = 0;
     ctx.getTransform = function(){ return xform; };
     
     var savedTransforms = [];
@@ -642,7 +881,10 @@ my $dicom_image_disp_js = <<EOF;
   var canvas;
   var ctx;
   WaitingForUpdates = function(){
-    return (ContoursPending || ImageUrlPending || ImageLabelsPending);
+    if(ContoursPending) { return true };
+    if(ImageUrlPending) { return true };
+    if(ImageLabelsPending) { return true };
+    return false;
   }
   EnableImageControlButtons = function(){
     document.getElementById('NextButton').disabled = false;
@@ -661,7 +903,7 @@ my $dicom_image_disp_js = <<EOF;
       console.log("Waiting for updates right after RenderCanvas");
     }
     EnableImageControlButtons();
-    if(CineEnabled == "Yes"){
+    if(CineEnabled == "On"){
       if(CineDir == "+"){
         document.getElementById('NextButton').click();
       } else {
@@ -670,10 +912,10 @@ my $dicom_image_disp_js = <<EOF;
     }
   }
   ImageToDraw.onload = function(){
+    ImageUrlPending = false;
     RenderImageIfReady();
   };
   function ImageUrlReturned(obj) {
-    ImageUrlPending = false;
     var td = document.getElementById('ControlButton10');
     td.innerHTML="&nbsp;";
     if(ImageUrl == null){
@@ -735,72 +977,69 @@ my $dicom_image_disp_js = <<EOF;
       ContourResp = 
         new PosdaAjaxMethod("GetContoursToRender", ObjPath, ContoursReturned);
     }
-    if(ToolType == "None"){
-      var td = document.getElementById('ControlButton2');
-      td.innerHTML = 
-        '<input type="button" onClick="EnableTracking();" value="p/z on"/>';
+    var td = document.getElementById('ToolType');
+    td.innerHTML = ToolType;
+    if(CineEnabled == "On"){
+      var td = document.getElementById('CineStatus');
+      td.innerHTML = 'On';
     } else {
-      var td = document.getElementById('ControlButton2');
-      td.innerHTML = 
-        '<input type="button" onClick="DisableTracking();" value="p/z off"/>';
+      var td = document.getElementById('CineStatus');
+      td.innerHTML = 'Off';
     }
-    if(CineEnabled == "Yes"){
-      var td = document.getElementById('ControlButton3');
-      td.innerHTML = 
-        '<input type="button" onClick="DisableCine();" value="cine off"/>';
-    } else {
-      var td = document.getElementById('ControlButton3');
-      td.innerHTML = 
-        '<input type="button" onClick="EnableCine();" value="cine on"/>';
-    }
-    if(CineDir == "+"){
-      var td = document.getElementById('ControlButton4');
-      td.innerHTML = 
-        '<input type="button" onClick="CineMinus();" value="C-"/>';
-    } else {
-      var td = document.getElementById('ControlButton4');
-      td.innerHTML = 
-        '<input type="button" onClick="CinePlus();" value="C+"/>';
-    }
+    var td = document.getElementById('CineDirDiv');
+    td.innerHTML = CineDir;
     if(WaitingForUpdates()){
       DisableImageControlButtons();
     }
   }
-  function CinePlus(){
-    var td = document.getElementById('ControlButton4');
-    td.innerHTML = 
-      '<input type="button" onClick="CineMinus();" value="C-"/>';
-    CineDir = "+";
-  }
-  function CineMinus(){
-    var td = document.getElementById('ControlButton4');
-    td.innerHTML = 
-      '<input type="button" onClick="CinePlus();" value="C+"/>';
-    CineDir = "-";
-  }
   function EnableCine(){
-    console.log('Cine Enabled');
-    var td = document.getElementById('ControlButton3');
-    td.innerHTML = 
-      '<input type="button" onClick="DisableCine();" value="cine off"/>';
-    CineEnabled = "Yes";
-    document.getElementById('NextButton').click();
+    CineEnabled = "On";
   }
   function DisableCine(){
-    console.log('Cine Disabled');
-    var td = document.getElementById('ControlButton3');
-    td.innerHTML = 
-      '<input type="button" onClick="EnableCine();" value="cine on"/>';
-    CineEnabled = "No";
+    CineEnabled = "Off";
+  }
+  function ToggleCine(){
+    if(CineEnabled == "On"){
+      CineEnabled = "Off";
+    } else {
+      CineEnabled = "On";
+    }
+    UpdateImage();
+  }
+  function ToggleCineDir(){
+    if(CineDir == "+"){
+      CineDir = "-";
+    } else {
+      CineDir = "+";
+    }
+    UpdateImage();
   }
   function EnableTracking(){
-    InstallPanZoomTrackers(canvas, ctx);
-    ToolType = "PanZoom";
+    if(TrackingEnabled == "Off"){
+      TrackingEnabled = "On";
+      InstallPanZoomTrackers(canvas, ctx);
+    } else {
+      console.log('EnableTracking called when Tracking Enabled = ' +
+        TrackingEnabled);
+    }
   }
   function DisableTracking(){
-    RemovePanZoomTrackers(canvas, ctx);
-    ToolType = "None";
-    RenderImage(canvas, ctx);
+    if(TrackingEnabled == "On"){
+      TrackingEnabled = "Off";
+      RemovePanZoomTrackers(canvas, ctx);
+    } else {
+      console.log('DisableTracking called when Tracking Enabled = ' +
+        TrackingEnabled);
+    }
+  }
+  function TogglePz(){
+    console.log('TogglePz called');
+    if(TrackingEnabled == "On"){
+      DisableTracking();
+    } else {
+      EnableTracking();
+    }
+    UpdateImage();
   }
   function Init() {
     canvas = document.getElementById('MyCanvas');
@@ -1124,5 +1363,58 @@ sub JsControllerLocal{
   my($self, $http, $dyn) = @_;
   $dyn->{path} = $self->{path};
   $self->RefreshEngine($http, $dyn, $js_controller_local);
+}
+sub ImageTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(defined $self->{ImageType}){
+    $self->{ImageType} = "Rendered Bitmap";
+  }
+  $http->queue("Image type: ");
+  $self->SelectDelegateByValue($http, {
+    op => "SelectImageType",
+    id => "SelectImageTypeDropdown",
+    class => "form-control",
+    style => "",
+    sync => "UpdateImage();"
+  });
+  for my $i ("Rendered Bitmap", "Dicom Image", "TestPattern"){
+   $http->queue("<option value=\"$i\"");
+   if($i eq $self->{ImageType}){
+     $http->queue(" selected");
+   }
+   $http->queue(">$i</option>");
+  }
+  $http->queue("</select>");
+}
+sub SelectImageType{
+  my($self, $http, $dyn) = @_;
+  $self->{ImageType} = $dyn->{value};
+  $self->SetImageUrlAndContour;
+}
+sub ToolTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(defined $self->{ToolType}){
+    $self->{ToolType} = "None";
+  }
+  $http->queue("Tool type: ");
+  $self->SelectDelegateByValue($http, {
+    op => "SelectToolType",
+    id => "SelectToolTypeDropdown",
+    class => "form-control",
+    style => "",
+    sync => "InitToolType();"
+  });
+  for my $i ("None", "Pan/Zoom", "Select"){
+   $http->queue("<option value=\"$i\"");
+   if($i eq $self->{ToolType}){
+     $http->queue(" selected");
+   }
+   $http->queue(">$i</option>");
+  }
+  $http->queue("</select>");
+}
+sub SelectToolType{
+  my($self, $http, $dyn) = @_;
+  $self->{ToolType} = $dyn->{value};
 }
 1;
