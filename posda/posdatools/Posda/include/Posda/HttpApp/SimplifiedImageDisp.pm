@@ -300,36 +300,26 @@ my $content = <<EOF;
 <div id="ControlButton1" width="10%">
 <input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
 </div>
-<div id="PanZoomButton">
-<input type="Button" class="btn btn-default"  onclick="javascript:TogglePz();" value="P/Z">
+<div width=10% id="ToolTypeSelector">
+  <select class="form-control"
+    onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
+    <option value="None" selected="">No tool</option>
+    <option value="Pan/Zoom">P/Z tool</option>
+    <option value="Select">Sel tool</option>
+  </select>
 </div>
-<div id="ControlButton2" width="10%">Off</div>
-<div id="CineToggle" width="10%">
-<input type="Button" class="btn btn-default"  onclick="javascript:ToggleCine();" value="Cine">
+<div width=10% id="CineSelector">
+  <select class="form-control"
+    onchange="javascript:SetCineMode(this.options[this.selectedIndex].value);">
+    <option value="Cine off" selected="">Cine off</option>
+    <option value="Cine +">Cine +</option>
+    <option value="Cine -">Cine -</option>
+  </select>
 </div>
-<div id="CineStatus" width="10%">&nbsp;</div>
-<div id="CineDirDiv" width="10%">+</div>
-<div>
-<div id="ControlButton4" width="10%">
-<div id="CineToggleDir" width="10%">
-<input type="Button" class="btn btn-default"  onclick="javascript:ToggleCineDir();" value="+/-">&nbsp;
-</div>
-</div>
-</div>
-<div id="ControlButton5" width="10%">&nbsp;</div>
-<div id="ControlButton6" width="10%">&nbsp;</div>
 <div id="ControlButton7" width="10%">&nbsp;<?dyn="PrevButton"?></div>
 <div id="ControlButton8" width="10%">&nbsp;<?dyn="NextButton"?></div>
-<div id="ControlButton9" width="10%">&nbsp;</div>
-<div id="ControlButton10" width="10%">&nbsp;</div>
-</div>
-<div id="div_Selectors" style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
-<div width="30%" id="ImageTypeSelector">
+<div>
 <?dyn="ImageTypeSelector"?>
-</div>
-<div width=30% id="ToolTypeSelector">
-<?dyn="ToolTypeSelector"?>
-</div>
 </div>
 </div>
 <div>
@@ -337,6 +327,17 @@ my $content = <<EOF;
 <pre>
 <div id="DebugInfo">
 Debug Info goes here
+</div>
+<div id="div_contours_pending">&nbsp;</div>
+<div id="div_image_pending"">&nbsp;</div>
+</pre>
+</p>
+</div>
+<div>
+<p>
+<pre>
+<div id="CurrentInstance">
+Current Instance Goes here
 </div>
 </pre>
 </p>
@@ -640,7 +641,6 @@ function ResetZoom(){
   var xform = ctx.setTransform(1,0,0,1,0,0);
   LineWidth = 1;
   RenderImage(canvas,ctx);
-  DisableCine();
 }
 function Reload(){
   window.location.reload();
@@ -693,6 +693,7 @@ my $dicom_image_disp_js = <<EOF;
   var LineWidth = 1;
   var ToolType = "None";
   var TrackingEnabled = "Off";
+  var SelectionEnabled = "Off";
   var CineEnabled = "No";
   var CineDir = "+";
 //  var ContoursToDraw = [];
@@ -735,6 +736,156 @@ my $dicom_image_disp_js = <<EOF;
  //     }
       ctx.save();
   };
+  function SetCineMode(cine_mode){
+    var oldCine = CineEnabled;
+    if(cine_mode == "Cine -"){
+      CineEnabled = "On";
+      CineDir = "-";
+    } else if (cine_mode == "Cine +"){
+      CineEnabled = "On";
+      CineDir = "+";
+    } else {
+      CineEnabled = "Off";
+    }
+    if(oldCine = 'Off'){
+      UpdateImage();
+    }
+  }
+  function SetToolType(sel_type){
+    if(ToolType == sel_type) { return; }
+    if(ToolType == "Pan/Zoom"){
+      DisableTracking();
+    } else if (ToolType == "Select"){
+      DisableSelection();
+    }
+    ToolType = sel_type;
+    if(ToolType == "Pan/Zoom"){
+      EnableTracking();
+    } else if (ToolType == "Select"){
+      EnableSelection();
+    }
+  }
+  function InstallSelectionTrackers(canvas, ctx){
+    var lastX=canvas.width/2, lastY=canvas.height/2;
+    var dragStart,dragged;
+    PanZoomMouseDown = function(evt){
+    document.body.style.mozUserSelect = 
+        document.body.style.webkitUserSelect = 
+          document.body.style.userSelect = 'none';
+      lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+      lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+      dragStart = ctx.transformedPoint(lastX,lastY);
+      var td = document.getElementById('MousePosition');
+      td.innerHTML = 'Last mouse click: (' + dragStart.x +
+        ', ' + dragStart.y + ')';
+      dragged = false;
+    };
+    canvas.addEventListener('mousedown',PanZoomMouseDown, false);
+    PanZoomMouseMove = function(evt){
+      lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+      lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+      dragged = true;
+      if (dragStart){
+        var pt = ctx.transformedPoint(lastX,lastY);
+        ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
+        RenderImage(canvas, ctx);
+      }
+    };
+    canvas.addEventListener('mousemove',PanZoomMouseMove, false);
+    PanZoomMouseUp = function(evt){
+      dragStart = null;
+      if (!dragged) zoom(evt.shiftKey ? -1 : 1 );
+    };
+    canvas.addEventListener('mouseup',PanZoomMouseUp, false);
+
+    var scaleFactor = 1.025;
+    var currentScaleFactor = 1.0;
+    var zoom = function(clicks){
+      var pt = ctx.transformedPoint(lastX,lastY);
+      ctx.translate(pt.x,pt.y);
+      var factor = Math.pow(scaleFactor,clicks);
+      LineWidth /= factor;
+      currentScaleFactor  = factor;
+      ctx.scale(factor,factor);
+      ctx.translate(-pt.x,-pt.y);
+      RenderImage(canvas, ctx);
+    }
+
+    PanZoomScroll = function(evt){
+      var delta = evt.wheelDelta ? 
+        evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
+      if (delta) zoom(delta);
+      return evt.preventDefault() && false;
+    };
+    canvas.addEventListener('DOMMouseScroll',PanZoomScroll,false);
+    canvas.addEventListener('mousewheel',PanZoomScroll,false);
+  };
+  function RemoveSelectionTrackers(canvas, ctx){
+    canvas.removeEventListener('mousedown',PanZoomMouseDown, false);
+    canvas.removeEventListener('mousemove',PanZoomMouseMove, false);
+    canvas.removeEventListener('mousemove',PanZoomMouseMove, false);
+    canvas.removeEventListener('DOMMouseScroll',PanZoomScroll,false);
+    canvas.removeEventListener('mousewheel',PanZoomScroll,false);
+  }
+  
+  // Adds ctx.getTransform() - returns an SVGMatrix
+  // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
+  function trackTransforms(ctx){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+    var xform = svg.createSVGMatrix();
+    xform.a = 1; xform.b = 0; xform.c = 0, xform.d = 1;
+    xform.e = 0; xform.f = 0;
+    ctx.getTransform = function(){ return xform; };
+    
+    var savedTransforms = [];
+    var save = ctx.save;
+    ctx.save = function(){
+      savedTransforms.push(xform.translate(0,0));
+      return save.call(ctx);
+    };
+    var restore = ctx.restore;
+    ctx.restore = function(){
+      xform = savedTransforms.pop();
+      return restore.call(ctx); };
+
+    var scale = ctx.scale;
+    ctx.scale = function(sx,sy){
+      xform = xform.scaleNonUniform(sx,sy);
+      return scale.call(ctx,sx,sy);
+    };
+    var rotate = ctx.rotate;
+    ctx.rotate = function(radians){
+      xform = xform.rotate(radians*180/Math.PI);
+      return rotate.call(ctx,radians);
+    };
+     var translate = ctx.translate;
+     ctx.translate = function(dx,dy){
+      xform = xform.translate(dx,dy);
+      return translate.call(ctx,dx,dy);
+    };
+    var transform = ctx.transform;
+    ctx.transform = function(a,b,c,d,e,f){
+      var m2 = svg.createSVGMatrix();
+      m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
+      xform = xform.multiply(m2);
+      return transform.call(ctx,a,b,c,d,e,f);
+    };
+    var setTransform = ctx.setTransform;
+    ctx.setTransform = function(a,b,c,d,e,f){
+      xform.a = a;
+      xform.b = b;
+      xform.c = c;
+      xform.d = d;
+      xform.e = e;
+      xform.f = f;
+      return setTransform.call(ctx,a,b,c,d,e,f);
+    };
+    var pt  = svg.createSVGPoint();
+    ctx.transformedPoint = function(x,y){
+      pt.x=x; pt.y=y;
+      return pt.matrixTransform(xform.inverse());
+    }
+  }
   var PanZoomMouseDown, PanZoomMouseMove, PanZoomMouseUp, PanZoomScroll;
   function InstallPanZoomTrackers(canvas, ctx){
     var lastX=canvas.width/2, lastY=canvas.height/2;
@@ -790,8 +941,6 @@ my $dicom_image_disp_js = <<EOF;
     };
     canvas.addEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.addEventListener('mousewheel',PanZoomScroll,false);
-    var td = document.getElementById('ControlButton2');
-    td.innerHTML = TrackingEnabled;
   };
   function RemovePanZoomTrackers(canvas, ctx){
     canvas.removeEventListener('mousedown',PanZoomMouseDown, false);
@@ -799,8 +948,6 @@ my $dicom_image_disp_js = <<EOF;
     canvas.removeEventListener('mousemove',PanZoomMouseMove, false);
     canvas.removeEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.removeEventListener('mousewheel',PanZoomScroll,false);
-    var td = document.getElementById('ControlButton2');
-    td.innerHTML = TrackingEnabled;
   }
   
   // Adds ctx.getTransform() - returns an SVGMatrix
@@ -874,7 +1021,7 @@ my $dicom_image_disp_js = <<EOF;
     \$('#RightPositionText').html(ImageLabels.d.right_text);
     \$('#TopPositionText').html(ImageLabels.d.top_text);
     \$('#BottomPositionText').html(ImageLabels.d.bottom_text);
-    \$('#ControlButton5').html(ImageLabels.d.current_instance);
+    \$('#CurrentInstance').html(ImageLabels.d.current_instance);
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
@@ -916,7 +1063,7 @@ my $dicom_image_disp_js = <<EOF;
     RenderImageIfReady();
   };
   function ImageUrlReturned(obj) {
-    var td = document.getElementById('ControlButton10');
+    var td = document.getElementById('div_image_pending');
     td.innerHTML="&nbsp;";
     if(ImageUrl == null){
       //console.error("ImageUrl is null");
@@ -934,7 +1081,7 @@ my $dicom_image_disp_js = <<EOF;
   }
   function ContoursReturned(obj) {
     ContoursPending = false;
-    var td = document.getElementById('ControlButton9');
+    var td = document.getElementById('div_contours_pending');
     td.innerHTML="&nbsp;";
     if(ContourResp == null){
       console.error("ContourResp is null");
@@ -961,7 +1108,7 @@ my $dicom_image_disp_js = <<EOF;
       //console.error("Update when ImageUrl Pending");
     } else {
       ImageUrlPending = true;
-      var td = document.getElementById('ControlButton10');
+      var td = document.getElementById('div_image_pending');
       td.innerHTML="<small>pending</small>";
       ImageUrl =
         new PosdaAjaxObj("ImageUrl", ObjPath, ImageUrlReturned);
@@ -972,22 +1119,11 @@ my $dicom_image_disp_js = <<EOF;
       ContoursPending = true;
       //ContoursToDraw = [];
       //RenderImage(canvas, ctx);
-      var td = document.getElementById('ControlButton9');
+      var td = document.getElementById('div_contours_pending');
       td.innerHTML="<small>pending</small>";
       ContourResp = 
         new PosdaAjaxMethod("GetContoursToRender", ObjPath, ContoursReturned);
     }
-    var td = document.getElementById('ToolType');
-    td.innerHTML = ToolType;
-    if(CineEnabled == "On"){
-      var td = document.getElementById('CineStatus');
-      td.innerHTML = 'On';
-    } else {
-      var td = document.getElementById('CineStatus');
-      td.innerHTML = 'Off';
-    }
-    var td = document.getElementById('CineDirDiv');
-    td.innerHTML = CineDir;
     if(WaitingForUpdates()){
       DisableImageControlButtons();
     }
@@ -1030,6 +1166,24 @@ my $dicom_image_disp_js = <<EOF;
     } else {
       console.log('DisableTracking called when Tracking Enabled = ' +
         TrackingEnabled);
+    }
+  }
+  function EnableSelection(){
+    if(SelectionEnabled == "Off"){
+      SelectionEnabled = "On";
+      InstallSelectionTrackers(canvas, ctx);
+    } else {
+      console.log('SelectionTracking called when Selection Enabled = ' +
+        SelectionEnabled);
+    }
+  }
+  function DisableSelection(){
+    if(SelectionEnabled == "On"){
+      SelectionEnabled = "Off";
+      RemoveSelectionTrackers(canvas, ctx);
+    } else {
+      console.log('DisableSelection called when Selection Enabled = ' +
+        SelectionEnabled);
     }
   }
   function TogglePz(){
@@ -1369,7 +1523,6 @@ sub ImageTypeSelector{
   unless(defined $self->{ImageType}){
     $self->{ImageType} = "Rendered Bitmap";
   }
-  $http->queue("Image type: ");
   $self->SelectDelegateByValue($http, {
     op => "SelectImageType",
     id => "SelectImageTypeDropdown",
