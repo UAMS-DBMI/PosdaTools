@@ -51,6 +51,13 @@ sub new {
 }
 sub Init{
   my($self) = @_;
+  $self->{x_shift} = "0.5";
+  $self->{y_shift} = "0.5";
+  $self->{title} = "ss_file_id: $self->{params}->{ss_file_id}" .
+    "; roi_num: $self->{params}->{roi_num}, " .
+    "($self->{x_shift}, $self->{y_shift})";
+  $self->{height} = 600;
+  $self->{width} = 600;
   $self->{ImageList} = {};
   Query('GetStructContoursToSegByStructIdAndRoi')->RunQuery(sub{
     my($row) = @_;
@@ -97,7 +104,8 @@ sub InitializeUrls{
     ){
       $self->{CurrentUrlIndex} = 0;
     }
-    $self->{ImageUrls} = [];
+    $self->{BitmapImageUrls} = [];
+    $self->{JpegImageUrls} = [];
     $self->{ContourFileIds} = [];
     for my $index (0 .. $num_slices - 1){
       my $i_fid = $self->{SortedFileInfo}->[$index]->{file_id};
@@ -105,9 +113,14 @@ sub InitializeUrls{
       my $contour_file_id =
         $self->{ImageList}->{$i_fid}->{contour_slice_file_id};
       $self->{ContourFileIds}->[$index] = $contour_file_id;
-      $self->{ImageUrls}->[$index] = {
+      $self->{BitmapImageUrls}->[$index] = {
         url_type => "relative",
-        image => "FetchPng?obj_path=$self->{path}&file_id=$png_file_id"
+        image => "FetchBitmapPng?obj_path=$self->{path}&file_id=$png_file_id"
+      };
+      $self->{JpegImageUrls}->[$index] = {
+        url_type => "relative",
+        image => "FetchDicomJpeg?obj_path=$self->{path}&file_id=$i_fid" .
+          "&win=$self->{WindowCenter}&lev=$self->{WindowWidth}"
       };
     }
     $self->SetImageUrlAndContour;
@@ -115,25 +128,38 @@ sub InitializeUrls{
 };
 sub SetImageUrlAndContour{
   my($self)= @_;
+  unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
+  unless(defined $self->{ImageType}){
+    $self->{ImageType} = "Rendered Bitmap";
+  }
   my $current_index = $self->{CurrentUrlIndex};
-  $self->{ImageUrl} = $self->{ImageUrls}->[$current_index];
+  if($self->{ImageType} eq "Rendered Bitmap"){
+    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
+  }elsif($self->{ImageType} eq "Dicom Image"){
+    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
+  } elsif($self->{ImageType} eq "TestPattern"){
+    $self->{ImageUrl} = {
+        url_type => "relative",
+        image => "FetchTestPattern?obj_path=$self->{path}"
+    };
+  }else{
+    die "WTF?  Image Type = $self->{ImageType} !!!";
+  }
   $self->{ContourFileId} = $self->{ContourFileIds}->[$current_index];
   my $contour_file_path;
   Query('GetFilePath')->RunQuery(sub {
     my($row) = @_;
     $contour_file_path = $row->[0];
   }, sub {}, $self->{ContourFileIds}->[$self->{CurrentUrlIndex}]);
-#print STDERR "#------------------- $self->{CurrentUrlIndex}\n" .
-#  "Old contour path: $self->{ContourFilePath}\n" .
-#  "New contour path: $contour_file_path\n" .
-#  "#-------------------\n";
-
   $self->{ContourFilePath} = $contour_file_path;
   my $current_file_id = $self->{SortedFileInfo}->[$current_index]->{file_id};
   $self->{ImageLabels}->{current_instance} = 
     $self->{params}->{file_to_instance}->{$current_file_id};
+  $self->{ImageLabels}->{current_offset} = 
+    $self->{SortedFileInfo}->[$current_index]->{offset};
+  $self->{ImageLabels}->{current_index} = $current_index;
 }
-sub FetchPng{
+sub FetchBitmapPng{
   my ($self, $http, $dyn) = @_;
   my $file;
   unless(defined($dyn->{file_id}) && $dyn->{file_id} ne ""){
@@ -143,7 +169,6 @@ sub FetchPng{
     }
     return;
   }
-print STDERR "Executing Query: GetFilePath($dyn->{file_id})\n";
   Query('GetFilePath')->RunQuery(sub{
     my($row) = @_;
     $file = $row->[0];
@@ -151,24 +176,104 @@ print STDERR "Executing Query: GetFilePath($dyn->{file_id})\n";
   open my $fh, "cat $file|" or die "Can't open $file for reading ($!)";
   $self->SendContentFromFh($http, $fh, "image/png",
   $self->CreateNotifierClosure("NullNotifier", $dyn));
+} 
+sub FetchTestPattern{
+  my($self, $http, $dyn) = @_;
+  my $tp_path = "$self->{params}->{tmp_dir}/TestPattern.png";
+  my $tmp_path = "$self->{params}->{tmp_dir}/TestPattern.pbm";
+  unless(-f $tp_path){
+    my $cmd = "MakeTestPbm.pl 512 512  >$tmp_path; ". 
+    "convert $tmp_path $tp_path; rm $tmp_path; echo done";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $tp_path,
+        \@render_list)
+    );
+    return;
+  }
+  $self->SendCachedPng($http, $dyn, $tp_path);
+} 
+sub ContinueRenderingTp{
+  my($self, $http, $dyn, $rendered_test_pat, $render_list) = @_;
+  my $sub = sub {
+    $self->SendCachedPng($http, $dyn, $rendered_test_pat);
+  };
+  return $sub;
+}
+sub SendCachedPng{
+  my($self, $http, $dyn, $png_path) = @_;
+  my $content_type = "image/jpeg";
+  open my $sock, "cat $png_path|" or die "Can't open " .
+    "$png_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+sub FetchDicomJpeg{
+  my($self, $http, $dyn) = @_;
+  my $dicom_file_id = $dyn->{file_id};
+  $self->{CurrentDicomFile} = $dicom_file_id;
+  unless(defined $self->{WindowWidth}){
+    $self->{WindowWidth} = "";
+    $self->{WindowCenter} = ""; 
+  }
+  my $window_width = $self->{WindowWidth};
+  my $window_ctr = $self->{WindowCenter};
+  my $jpeg_file = "$self->{params}->{tmp_dir}/" .
+    "$dicom_file_id" ."_$window_ctr" . "_$window_width.jpeg";
+  unless(-f $jpeg_file){
+    #todo make cmd to Render Dicom to $rendered_dicom_jpeg
+    my $rendered_dicom_gray = "$self->{params}->{tmp_dir}/$dicom_file_id.gray";
+    my $cmd = "CacheDicomAsJpeg.pl $dicom_file_id \"$window_width\" " .
+     "\"$window_ctr\" " .
+     "$rendered_dicom_gray $jpeg_file;echo 'done'";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $jpeg_file,
+        $rendered_dicom_gray, $dicom_file_id, \@render_list)
+    );
+    return;
+  }
+  unless($self->{CachedJpegs}->{$dicom_file_id} eq $jpeg_file){
+    $self->{CachedJpegs}->{$dicom_file_id} = $jpeg_file;
+  }
+  $self->SendCachedJpeg($http, $dyn, $self->{CachedJpegs}->{$dicom_file_id})
+} 
+sub HandleRenderersLines{
+  my($self, $render_list) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    push @$render_list, $line;
+  };
+  return $sub;
+}
+sub ContinueRenderingImage{
+  my($self, $http, $dyn, $rendered_dicom_jpeg, $rendered_dicom_gray, 
+    $dicom_file_id, $render_list) = @_;
+  my $sub = sub {
+    $self->{CachedJpegs}->{$dicom_file_id} = $rendered_dicom_jpeg;
+    $self->SendCachedJpeg($http, $dyn, $rendered_dicom_jpeg);
+    unlink $rendered_dicom_gray;
+  };
+  return $sub;
+}
+sub SendCachedJpeg{
+  my($self, $http, $dyn, $jpeg_path) = @_;
+  my $contour_file_id = $self->{ContourFileId};
+  my $content_type = "image/jpeg";
+  open my $sock, "cat $jpeg_path|" or die "Can't open " .
+    "$jpeg_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
 
-#  my $content_type = "image/png";
-#  $http->HeaderSent;
-#  $http->queue("HTTP/1.0 200 OK\n");
-#  $http->queue("Content-type: $content_type\n\n");
-#  open FILE, "<$file" or die "Can't open $file for reading ($!)";
-#  my $bytes_sent = 0;
-#  while(1){
-#    my $buff;
-#    my $count = read(FILE, $buff, 1024);
-#    if($count <= 0) { last }
-#    $http->queue($buff);
-#  }
-#  close FILE;
-#  $http->finish();
-#}
+
 my $content = <<EOF;
+<div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px" id="div_content">
+<div id="div_canvas">
 <table border="1" width="100%">
 <tr>
 <td align="center" colspan="3" id="TopPositionText"`>
@@ -188,23 +293,72 @@ my $content = <<EOF;
 </td>
 </tr>
 </table>
-<table border="1" width="100%">
-<tr>
-<td id="ControlButton1" width="10%">
-<input type="Button" class="btn btn-default"  onclick="javascript:Reload();" value="reset">
-</td>
-<td id="ControlButton2" width="10%">&nbsp;</td>
-<td id="ControlButton3" width="10%">&nbsp;</td>
-<td id="ControlButton4" width="10%">&nbsp;</td>
-<td id="ControlButton5" width="10%">&nbsp;</td>
-<td id="ControlButton6" width="10%">&nbsp;</td>
-<td id="ControlButton7" width="10%">&nbsp;<?dyn="PrevButton"?></td>
-<td id="ControlButton8" width="10%">&nbsp;<?dyn="NextButton"?></td>
-<td id="ControlButton9" width="10%">&nbsp;</td>
-<td id="ControlButton10" width="10%">&nbsp;</td>
-</tr>
-</table>
+</div>
+<div id="div_control_buttons_1" style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+<div id="ControlButton1" width="10%">
+<input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
+</div>
+<div width=10% id="ToolTypeSelector">
+  <select class="form-control"
+    onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
+    <option value="None" selected="">No tool</option>
+    <option value="Pan/Zoom">P/Z tool</option>
+    <option value="Select">Sel tool</option>
+  </select>
+</div>
+<div width=10% id="CineSelector">
+  <select class="form-control"
+    onchange="javascript:SetCineMode(this.options[this.selectedIndex].value);">
+    <option value="Cine off" selected="">Cine off</option>
+    <option value="Cine +">Cine +</option>
+    <option value="Cine -">Cine -</option>
+  </select>
+</div>
+<div id="divPrev" width="10%">&nbsp;<?dyn="PrevButton"?></div>
+<div id="divNext" width="10%">&nbsp;<?dyn="NextButton"?></div>
+<div id="divOffsetSelector" width="10%">
+  <select id="OffsetSelector" class="form-control"
+    onchange="javascript:PosdaGetRemoteMethod('SetImageIndex', 'value=' +
+      this.options[this.selectedIndex].value, 
+      function () { UpdateImage(); });">
+   <?dyn="OffsetOptions"?>
+   </select>
+</div>
+</div>
+<div id="div_control_buttons_1" style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+<div id="CtPresets">
+<?dyn="PresetWidgetCt"?>
+</div>
+<div>
+<?dyn="ImageTypeSelector"?>
+</div>
+<div id="div_annotation_ctrl">
+</div>
+</div>
+</div>
+<div>
+<p>
+<pre>
+<div id="CurrentOffset"></div>
+<div id="CurrentInstance"></div>
+Transform: <div id="divTransform"></div>
+<div id="MousePosition"></div>
+<div id="div_contours_pending">&nbsp;</div>
+<div id="div_image_pending">&nbsp;</div>
+</pre>
+</p>
+</div>
+<div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
+</div>
 EOF
+
+sub OffsetOptions{
+my($self, $http, $dyn) = @_;
+  for my $i (0 .. $#{$self->{SortedFileInfo}}){
+    $http->queue("<option value=\"$i\">" .
+      "$self->{SortedFileInfo}->[$i]->{offset}</option>");
+  }
+}
 
 sub NextButton{
   my($self, $http, $dyn) = @_;
@@ -229,17 +383,32 @@ sub PrevButton{
 sub NextSlice{
   my($self, $http, $dyn) = @_;
   $self->{CurrentUrlIndex} += 1;
-  if($self->{CurrentUrlIndex} > $#{$self->{ImageUrls}}){
+  if($self->{CurrentUrlIndex} > $#{$self->{BitmapImageUrls}}){
     $self->{CurrentUrlIndex} = 0;
   }
   $self->SetImageUrlAndContour;
+}
+
+sub SetImageIndex{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{value};
+  if($index >= 0 && $index <= $#{$self->{BitmapImageUrls}}){
+    $self->{CurrentUrlIndex} = $index;
+    $self->SetImageUrlAndContour;
+  } else {
+    my $max = $#{$self->{BitmapImageUrls}};
+    print STDERR "#############\n" .
+      "Bad value ($index) in SetImageIndex\n" .
+      "Should be in range 0 }\n" .
+      "#############\n";
+  }
 }
 
 sub PrevSlice{
   my($self, $http, $dyn) = @_;
   $self->{CurrentUrlIndex} -= 1;
   if($self->{CurrentUrlIndex} < 0){
-    $self->{CurrentUrlIndex} = $#{$self->{ImageUrls}};
+    $self->{CurrentUrlIndex} = $#{$self->{BitmapImageUrls}};
   }
   $self->SetImageUrlAndContour;
 }
@@ -255,6 +424,48 @@ sub GetContoursToRender{
   my($self, $http, $dyn) = @_;
   my $contour_file_id = $self->{ContourFileId};
   my $json_contours_path;
+  my $border_contour_file = 
+    "$self->{params}->{tmp_dir}/border_contours.contours";
+  unless(-f $border_contour_file){
+    open FILE, ">$border_contour_file" or
+      die "can't open $border_contour_file";
+    print FILE "BEGIN\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "-0.5,512.5\n";
+    print FILE "512.5,512.5\n";
+    print FILE "512.5,-0.5\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
+  my $border_contour_file1 = 
+    "$self->{params}->{tmp_dir}/border_contours1.contours";
+  unless(-f $border_contour_file1){
+    open FILE, ">$border_contour_file1" or 
+      die "can't open $border_contour_file1";
+    print FILE "BEGIN\n";
+    print FILE "0.5,0.5\n";
+    print FILE "0.5,511.5\n";
+    print FILE "511.5,511.5\n";
+    print FILE "511.5,0.5\n";
+    print FILE "0.5,0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
+  my $border_contour_file2 = 
+    "$self->{params}->{tmp_dir}/border_contours2.contours";
+  unless(-f $border_contour_file2){
+    open FILE, ">$border_contour_file2" or 
+      die "can't open $border_contour_file2";
+    print FILE "BEGIN\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "0,511.5\n";
+    print FILE "511.5,511.5\n";
+    print FILE "511.5,-0.5\n";
+    print FILE "-0.5,-0.5\n";
+    print FILE "END\n";
+    close FILE;
+  }
   if(exists $self->{CachedContours}->{$contour_file_id}){
     $json_contours_path = $self->{CachedContours}->{$contour_file_id};
   } else {
@@ -265,9 +476,36 @@ sub GetContoursToRender{
         file => $self->{ContourFilePath},
         pix_sp_x => 1,
         pix_sp_y => 1,
-        x_shift => .5,
-        y_shift => .5,
-      }
+        x_shift => $self->{x_shift},
+        y_shift => $self->{y_shift},
+      },
+#      {
+#        color => "00ff00",
+#        type => "2dContourBatch",
+#        file => $border_contour_file,
+#        pix_sp_x => 1,
+#        pix_sp_y => 1,
+#        x_shift => 0,
+#        y_shift => 0,
+#      },
+#      {
+#        color => "0000ff",
+#        type => "2dContourBatch",
+#        file => $border_contour_file1,
+#        pix_sp_x => 1,
+#        pix_sp_y => 1,
+#        x_shift => 0,
+#        y_shift => 0,
+#      },
+#      {
+#        color => "ff0000",
+#        type => "2dContourBatch",
+#        file => $border_contour_file2,
+#        pix_sp_x => 1,
+#        pix_sp_y => 1,
+#        x_shift => 0.5,
+#        y_shift => 0.5,
+#      },
     ];
     my $tmp1 = "$self->{params}->{tmp_dir}/$contour_file_id.contours";
     my $tmp2 = "$self->{params}->{tmp_dir}/$contour_file_id.json";
@@ -413,6 +651,11 @@ function UpdateOne(){
 function UpdateAct(){ 
   // UpdateActivityTaskStatus();
 }
+function ResetZoom(){
+  var xform = ctx.setTransform(1,0,0,1,0,0);
+  LineWidth = 1;
+  RenderImage(canvas,ctx);
+}
 function Reload(){
   window.location.reload();
 }
@@ -463,17 +706,37 @@ my $dicom_image_disp_js = <<EOF;
   var BaseSessionUrl;
   var LineWidth = 1;
   var ToolType = "None";
+  var TrackingEnabled = "Off";
+  var SelectionEnabled = "Off";
   var CineEnabled = "No";
   var CineDir = "+";
 //  var ContoursToDraw = [];
   var ContourResp;
   var ContoursToDraw = [
   ];
-
+  var AnnotationsToDraw = [
+  ];
+  var RectBeingConstructed = null;
+  var theSvg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+  function SendAnnotations(){
+    var data = JSON.stringify(AnnotationsToDraw)
+    var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
+      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });;
+    ajax.post(data);
+  }
+  function PopAnnotations(){
+    var anot = AnnotationsToDraw.pop();
+    SendAnnotations();
+//    RenderImage(canvas,ctx);
+  }
   function RenderImage (canvas, ctx) {
       // Clear the entire canvas
       var p1 = ctx.transformedPoint(0,0);
       var p2 = ctx.transformedPoint(canvas.width,canvas.height);
+      var td = document.getElementById('divTransform');
+      var tf = ctx.getTransform();
+      td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' c: ' 
+        + tf.c + '<br>d: ' + tf.d + ' e: ' + tf.e + ' f: ' + tf.f;
       ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
       // Alternatively:
@@ -483,24 +746,221 @@ my $dicom_image_disp_js = <<EOF;
       // ctx.restore();
 
       ctx.drawImage(ImageToDraw,0,0);
-//      if(ToolType == "PanZoom"){
-//      } else {
-        var i;
-        for(i = 0; i < ContoursToDraw.length; i++){
-           var contour = ContoursToDraw[i];
-           ctx.beginPath();
-           ctx.moveTo(contour.points[0][0], contour.points[0][1]);
-           for(j = 0; j < contour.points.length - 1; j++){
-             ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
-           }
-           ctx.closePath();
-           ctx.lineWidth = LineWidth;
-           ctx.strokeStyle = contour.color;
-           ctx.stroke();
-        }
- //     }
+      var i;
+      for(i = 0; i < ContoursToDraw.length; i++){
+         var contour = ContoursToDraw[i];
+         ctx.beginPath();
+         ctx.moveTo(contour.points[0][0], contour.points[0][1]);
+         for(j = 0; j < contour.points.length - 1; j++){
+           ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
+         }
+         ctx.closePath();
+         ctx.lineWidth = LineWidth;
+         ctx.strokeStyle = contour.color;
+         ctx.stroke();
+      }
+      if(RectBeingConstructed != null){
+         //console.log('Drawing rect under construction');
+         var ul_x = RectBeingConstructed.x;
+         var ul_y = RectBeingConstructed.y;
+
+         var ur_x = RectBeingConstructed.x + RectBeingConstructed.width;
+         var ur_y = RectBeingConstructed.y;
+
+         var ll_x = RectBeingConstructed.x;
+         var ll_y = RectBeingConstructed.y + RectBeingConstructed.height;
+
+         var lr_x = RectBeingConstructed.x + RectBeingConstructed.width;
+         var lr_y = RectBeingConstructed.y + RectBeingConstructed.height;
+         ctx.beginPath();
+         ctx.moveTo(ul_x, ul_y);
+         ctx.lineTo(ur_x, ur_y);
+         ctx.lineTo(lr_x, lr_y);
+         ctx.lineTo(ll_x, lr_y);
+         ctx.lineTo(ul_x, ur_y);
+         ctx.closePath();
+         ctx.lineWidth = LineWidth;
+         ctx.strokeStyle = '#20ff20';;
+         ctx.stroke();
+      }
+      for(i = 0; i < AnnotationsToDraw.length; i++){
+         var contour = AnnotationsToDraw[i];
+         ctx.beginPath();
+         ctx.moveTo(contour.points[0][0], contour.points[0][1]);
+         for(j = 0; j < contour.points.length - 1; j++){
+           ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
+         }
+         ctx.closePath();
+         ctx.lineWidth = LineWidth;
+         ctx.strokeStyle = contour.color;
+         ctx.stroke();
+      }
+      var td = document.getElementById('div_annotation_ctrl');
+      if(AnnotationsToDraw.length > 0){
+        // Create a count and delete button in div_annotation_ctrl
+        td.innerHTML = '<input type="Button" class="btn btn-default" ' +
+          'onclick="javascript:PopAnnotations();" value="pop annotation">';
+      } else {
+        td.innerHTML = '';
+      }
       ctx.save();
   };
+  function SetCineMode(cine_mode){
+    var oldCine = CineEnabled;
+    if(cine_mode == "Cine -"){
+      CineEnabled = "On";
+      CineDir = "-";
+    } else if (cine_mode == "Cine +"){
+      CineEnabled = "On";
+      CineDir = "+";
+    } else {
+      CineEnabled = "Off";
+    }
+    if(oldCine = 'Off'){
+      UpdateImage();
+    }
+  }
+  function SetToolType(sel_type){
+    if(ToolType == sel_type) { return; }
+    if(ToolType == "Pan/Zoom"){
+      DisableTracking();
+    } else if (ToolType == "Select"){
+      DisableSelection();
+    }
+    ToolType = sel_type;
+    if(ToolType == "Pan/Zoom"){
+      EnableTracking();
+    } else if (ToolType == "Select"){
+      EnableSelection();
+    }
+  }
+  function InstallSelectionTrackers(canvas, ctx){
+    var lastX=canvas.width/2, lastY=canvas.height/2;
+    var dragStart,dragged;
+    var theRect = document.createElementNS(theSvg, 'rect');
+    SelectionMouseDown = function(evt){
+    document.body.style.mozUserSelect = 
+        document.body.style.webkitUserSelect = 
+          document.body.style.userSelect = 'none';
+      lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+      lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+      dragStart = ctx.transformedPoint(lastX,lastY);
+      theRect.x = dragStart.x;
+      theRect.y = dragStart.y;
+      var td = document.getElementById('MousePosition');
+      td.innerHTML = 'Rect(x,y): (' + dragStart.x +
+        ', ' + dragStart.y + ')';
+      dragged = false;
+    };
+    canvas.addEventListener('mousedown',SelectionMouseDown, false);
+    SelectionMouseMove = function(evt){
+      lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+      lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+      dragged = true;
+      if (dragStart){
+        var pt = ctx.transformedPoint(lastX,lastY);
+        var width = pt.x - theRect.x;
+        var height = pt.y - theRect.y;
+        theRect.width = width;
+        theRect.height = height;
+        RectBeingConstructed = theRect;
+        var td = document.getElementById('MousePosition');
+        td.innerHTML = 'Rect(x,y): (' + theRect.x +
+          ', ' + theRect.y + ')<br>' +
+          'Rect(w,h): (' + theRect.width + ', ' + theRect.height + ')';
+        RenderImage(canvas, ctx);
+      }
+    };
+    canvas.addEventListener('mousemove',SelectionMouseMove, false);
+    SelectionMouseUp = function(evt){
+      dragStart = null;
+      var cont = {};
+      cont.color = '#2020ff';
+      cont.points = [];
+      var ul = []; var ur = []; var lr = []; var ll = [];
+      ul[0] = theRect.x;
+      ul[1] = theRect.y;
+      ur[0] = theRect.x + theRect.width;
+      ur[1] = theRect.y;
+      lr[0] = theRect.x + theRect.width;
+      lr[1] = theRect.y + theRect.height;
+      ll[0] = theRect.x;
+      ll[1] = theRect.y + theRect.height;
+      cont.points[0] = ul;
+      cont.points[1] = ur;
+      cont.points[2] = lr;
+      cont.points[3] = ll;
+      AnnotationsToDraw.push(cont);
+      RectBeingConstructed = null;
+      SendAnnotations();
+//      RenderImage(canvas, ctx);
+    };
+    canvas.addEventListener('mouseup',SelectionMouseUp, false);
+
+  };
+  function RemoveSelectionTrackers(canvas, ctx){
+    canvas.removeEventListener('mousedown',SelectionMouseDown, false);
+    canvas.removeEventListener('mousemove',SelectionMouseMove, false);
+    canvas.removeEventListener('mouseup',SelectionMouseUp, false);
+  }
+  
+  // Adds ctx.getTransform() - returns an SVGMatrix
+  // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
+  function trackTransforms(ctx){
+    var xform = theSvg.createSVGMatrix();
+    xform.a = 1; xform.b = 0; xform.c = 0, xform.d = 1;
+    xform.e = 0; xform.f = 0;
+    ctx.getTransform = function(){ return xform; };
+    
+    var savedTransforms = [];
+    var save = ctx.save;
+    ctx.save = function(){
+      savedTransforms.push(xform.translate(0,0));
+      return save.call(ctx);
+    };
+    var restore = ctx.restore;
+    ctx.restore = function(){
+      xform = savedTransforms.pop();
+      return restore.call(ctx); };
+
+    var scale = ctx.scale;
+    ctx.scale = function(sx,sy){
+      xform = xform.scaleNonUniform(sx,sy);
+      return scale.call(ctx,sx,sy);
+    };
+    var rotate = ctx.rotate;
+    ctx.rotate = function(radians){
+      xform = xform.rotate(radians*180/Math.PI);
+      return rotate.call(ctx,radians);
+    };
+     var translate = ctx.translate;
+     ctx.translate = function(dx,dy){
+      xform = xform.translate(dx,dy);
+      return translate.call(ctx,dx,dy);
+    };
+    var transform = ctx.transform;
+    ctx.transform = function(a,b,c,d,e,f){
+      var m2 = theSvg.createSVGMatrix();
+      m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
+      xform = xform.multiply(m2);
+      return transform.call(ctx,a,b,c,d,e,f);
+    };
+    var setTransform = ctx.setTransform;
+    ctx.setTransform = function(a,b,c,d,e,f){
+      xform.a = a;
+      xform.b = b;
+      xform.c = c;
+      xform.d = d;
+      xform.e = e;
+      xform.f = f;
+      return setTransform.call(ctx,a,b,c,d,e,f);
+    };
+    var pt  = theSvg.createSVGPoint();
+    ctx.transformedPoint = function(x,y){
+      pt.x=x; pt.y=y;
+      return pt.matrixTransform(xform.inverse());
+    }
+  }
   var PanZoomMouseDown, PanZoomMouseMove, PanZoomMouseUp, PanZoomScroll;
   function InstallPanZoomTrackers(canvas, ctx){
     var lastX=canvas.width/2, lastY=canvas.height/2;
@@ -533,11 +993,13 @@ my $dicom_image_disp_js = <<EOF;
     canvas.addEventListener('mouseup',PanZoomMouseUp, false);
 
     var scaleFactor = 1.025;
+    var currentScaleFactor = 1.0;
     var zoom = function(clicks){
       var pt = ctx.transformedPoint(lastX,lastY);
       ctx.translate(pt.x,pt.y);
       var factor = Math.pow(scaleFactor,clicks);
       LineWidth /= factor;
+      currentScaleFactor  = factor;
       ctx.scale(factor,factor);
       ctx.translate(-pt.x,-pt.y);
       RenderImage(canvas, ctx);
@@ -551,9 +1013,6 @@ my $dicom_image_disp_js = <<EOF;
     };
     canvas.addEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.addEventListener('mousewheel',PanZoomScroll,false);
-    var td = document.getElementById('ControlButton2');
-    td.innerHTML = 
-      '<input type="button" onClick="DisableTracking();" value="p/z off"/>';
   };
   function RemovePanZoomTrackers(canvas, ctx){
     canvas.removeEventListener('mousedown',PanZoomMouseDown, false);
@@ -561,16 +1020,15 @@ my $dicom_image_disp_js = <<EOF;
     canvas.removeEventListener('mousemove',PanZoomMouseMove, false);
     canvas.removeEventListener('DOMMouseScroll',PanZoomScroll,false);
     canvas.removeEventListener('mousewheel',PanZoomScroll,false);
-    var td = document.getElementById('ControlButton2');
-    td.innerHTML = 
-      '<input type="button" onClick="EnableTracking();" value="p/z on"/>';
   }
   
   // Adds ctx.getTransform() - returns an SVGMatrix
   // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
   function trackTransforms(ctx){
-    var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
-    var xform = svg.createSVGMatrix();
+    var theSvg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+    var xform = theSvg.createSVGMatrix();
+    xform.a = 1; xform.b = 0; xform.c = 0, xform.d = 1;
+    xform.e = 0; xform.f = 0;
     ctx.getTransform = function(){ return xform; };
     
     var savedTransforms = [];
@@ -601,7 +1059,7 @@ my $dicom_image_disp_js = <<EOF;
     };
     var transform = ctx.transform;
     ctx.transform = function(a,b,c,d,e,f){
-      var m2 = svg.createSVGMatrix();
+      var m2 = theSvg.createSVGMatrix();
       m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
       xform = xform.multiply(m2);
       return transform.call(ctx,a,b,c,d,e,f);
@@ -616,7 +1074,7 @@ my $dicom_image_disp_js = <<EOF;
       xform.f = f;
       return setTransform.call(ctx,a,b,c,d,e,f);
     };
-    var pt  = svg.createSVGPoint();
+    var pt  = theSvg.createSVGPoint();
     ctx.transformedPoint = function(x,y){
       pt.x=x; pt.y=y;
       return pt.matrixTransform(xform.inverse());
@@ -635,22 +1093,32 @@ my $dicom_image_disp_js = <<EOF;
     \$('#RightPositionText').html(ImageLabels.d.right_text);
     \$('#TopPositionText').html(ImageLabels.d.top_text);
     \$('#BottomPositionText').html(ImageLabels.d.bottom_text);
-    \$('#ControlButton5').html(ImageLabels.d.current_instance);
+    \$('#CurrentInstance').html("Current Instance: " +
+       ImageLabels.d.current_instance);
+    \$('#CurrentOffset').html("Current Offset: " +
+       ImageLabels.d.current_offset);
+    var td = document.getElementById('OffsetSelector');
+    td.selectedIndex = ImageLabels.d.current_index;
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
   var canvas;
   var ctx;
   WaitingForUpdates = function(){
-    return (ContoursPending || ImageUrlPending || ImageLabelsPending);
+    if(ContoursPending) { return true };
+    if(ImageUrlPending) { return true };
+    if(ImageLabelsPending) { return true };
+    return false;
   }
   EnableImageControlButtons = function(){
     document.getElementById('NextButton').disabled = false;
     document.getElementById('PrevButton').disabled = false;
+    document.getElementById('OffsetSelector').disabled = false;
   }
   DisableImageControlButtons = function(){
     document.getElementById('NextButton').disabled = true;
     document.getElementById('PrevButton').disabled = true;
+    document.getElementById('OffsetSelector').disabled = true;
   }
   RenderImageIfReady = function(){
     if(WaitingForUpdates()){
@@ -661,7 +1129,7 @@ my $dicom_image_disp_js = <<EOF;
       console.log("Waiting for updates right after RenderCanvas");
     }
     EnableImageControlButtons();
-    if(CineEnabled == "Yes"){
+    if(CineEnabled == "On"){
       if(CineDir == "+"){
         document.getElementById('NextButton').click();
       } else {
@@ -670,12 +1138,12 @@ my $dicom_image_disp_js = <<EOF;
     }
   }
   ImageToDraw.onload = function(){
+    ImageUrlPending = false;
+    var td = document.getElementById('div_image_pending');
+    td.innerHTML="&nbsp;";
     RenderImageIfReady();
   };
   function ImageUrlReturned(obj) {
-    ImageUrlPending = false;
-    var td = document.getElementById('ControlButton10');
-    td.innerHTML="&nbsp;";
     if(ImageUrl == null){
       //console.error("ImageUrl is null");
       return;
@@ -692,7 +1160,7 @@ my $dicom_image_disp_js = <<EOF;
   }
   function ContoursReturned(obj) {
     ContoursPending = false;
-    var td = document.getElementById('ControlButton9');
+    var td = document.getElementById('div_contours_pending');
     td.innerHTML="&nbsp;";
     if(ContourResp == null){
       console.error("ContourResp is null");
@@ -719,8 +1187,8 @@ my $dicom_image_disp_js = <<EOF;
       //console.error("Update when ImageUrl Pending");
     } else {
       ImageUrlPending = true;
-      var td = document.getElementById('ControlButton10');
-      td.innerHTML="<small>pending</small>";
+      var td = document.getElementById('div_image_pending');
+      td.innerHTML="<small>image pending</small>";
       ImageUrl =
         new PosdaAjaxObj("ImageUrl", ObjPath, ImageUrlReturned);
     }
@@ -730,77 +1198,81 @@ my $dicom_image_disp_js = <<EOF;
       ContoursPending = true;
       //ContoursToDraw = [];
       //RenderImage(canvas, ctx);
-      var td = document.getElementById('ControlButton9');
-      td.innerHTML="<small>pending</small>";
+      var td = document.getElementById('div_contours_pending');
+      td.innerHTML="<small>contours pending</small>";
       ContourResp = 
         new PosdaAjaxMethod("GetContoursToRender", ObjPath, ContoursReturned);
-    }
-    if(ToolType == "None"){
-      var td = document.getElementById('ControlButton2');
-      td.innerHTML = 
-        '<input type="button" onClick="EnableTracking();" value="p/z on"/>';
-    } else {
-      var td = document.getElementById('ControlButton2');
-      td.innerHTML = 
-        '<input type="button" onClick="DisableTracking();" value="p/z off"/>';
-    }
-    if(CineEnabled == "Yes"){
-      var td = document.getElementById('ControlButton3');
-      td.innerHTML = 
-        '<input type="button" onClick="DisableCine();" value="cine off"/>';
-    } else {
-      var td = document.getElementById('ControlButton3');
-      td.innerHTML = 
-        '<input type="button" onClick="EnableCine();" value="cine on"/>';
-    }
-    if(CineDir == "+"){
-      var td = document.getElementById('ControlButton4');
-      td.innerHTML = 
-        '<input type="button" onClick="CineMinus();" value="C-"/>';
-    } else {
-      var td = document.getElementById('ControlButton4');
-      td.innerHTML = 
-        '<input type="button" onClick="CinePlus();" value="C+"/>';
     }
     if(WaitingForUpdates()){
       DisableImageControlButtons();
     }
   }
-  function CinePlus(){
-    var td = document.getElementById('ControlButton4');
-    td.innerHTML = 
-      '<input type="button" onClick="CineMinus();" value="C-"/>';
-    CineDir = "+";
-  }
-  function CineMinus(){
-    var td = document.getElementById('ControlButton4');
-    td.innerHTML = 
-      '<input type="button" onClick="CinePlus();" value="C+"/>';
-    CineDir = "-";
-  }
   function EnableCine(){
-    console.log('Cine Enabled');
-    var td = document.getElementById('ControlButton3');
-    td.innerHTML = 
-      '<input type="button" onClick="DisableCine();" value="cine off"/>';
-    CineEnabled = "Yes";
-    document.getElementById('NextButton').click();
+    CineEnabled = "On";
   }
   function DisableCine(){
-    console.log('Cine Disabled');
-    var td = document.getElementById('ControlButton3');
-    td.innerHTML = 
-      '<input type="button" onClick="EnableCine();" value="cine on"/>';
-    CineEnabled = "No";
+    CineEnabled = "Off";
+  }
+  function ToggleCine(){
+    if(CineEnabled == "On"){
+      CineEnabled = "Off";
+    } else {
+      CineEnabled = "On";
+    }
+    UpdateImage();
+  }
+  function ToggleCineDir(){
+    if(CineDir == "+"){
+      CineDir = "-";
+    } else {
+      CineDir = "+";
+    }
+    UpdateImage();
   }
   function EnableTracking(){
-    InstallPanZoomTrackers(canvas, ctx);
-    ToolType = "PanZoom";
+    if(TrackingEnabled == "Off"){
+      TrackingEnabled = "On";
+      InstallPanZoomTrackers(canvas, ctx);
+    } else {
+      console.log('EnableTracking called when Tracking Enabled = ' +
+        TrackingEnabled);
+    }
   }
   function DisableTracking(){
-    RemovePanZoomTrackers(canvas, ctx);
-    ToolType = "None";
-    RenderImage(canvas, ctx);
+    if(TrackingEnabled == "On"){
+      TrackingEnabled = "Off";
+      RemovePanZoomTrackers(canvas, ctx);
+    } else {
+      console.log('DisableTracking called when Tracking Enabled = ' +
+        TrackingEnabled);
+    }
+  }
+  function EnableSelection(){
+    if(SelectionEnabled == "Off"){
+      SelectionEnabled = "On";
+      InstallSelectionTrackers(canvas, ctx);
+    } else {
+      console.log('SelectionTracking called when Selection Enabled = ' +
+        SelectionEnabled);
+    }
+  }
+  function DisableSelection(){
+    if(SelectionEnabled == "On"){
+      SelectionEnabled = "Off";
+      RemoveSelectionTrackers(canvas, ctx);
+    } else {
+      console.log('DisableSelection called when Selection Enabled = ' +
+        SelectionEnabled);
+    }
+  }
+  function TogglePz(){
+    console.log('TogglePz called');
+    if(TrackingEnabled == "On"){
+      DisableTracking();
+    } else {
+      EnableTracking();
+    }
+    UpdateImage();
   }
   function Init() {
     canvas = document.getElementById('MyCanvas');
@@ -1124,5 +1596,109 @@ sub JsControllerLocal{
   my($self, $http, $dyn) = @_;
   $dyn->{path} = $self->{path};
   $self->RefreshEngine($http, $dyn, $js_controller_local);
+}
+
+sub SetWinLev{
+  my($self, $http, $dyn) = @_;
+  my $v = $dyn->{value};
+  if($v eq "No preset"){
+    delete $self->{WindowWidth};
+    delete $self->{WindowCenter}
+  } else {
+    my ($wc, $ww) = split(/:/, $dyn->{value});
+    $self->{WindowCenter} = $wc;
+    $self->{WindowWidth} = $ww;
+  }
+  $self->InitializeUrls;
+}
+my $preset_widget_ct = <<EOF;
+  <select class="form-control"
+    onchange="javascript:PosdaGetRemoteMethod('SetWinLev', 'value=' +
+      this.options[this.selectedIndex].value, 
+      function () { UpdateImage(); });">;
+    <option value="None" selected="">No preset</option>
+    <option value="470:20">Soft Tissue</option>
+    <option value="450:50">Abdomen</option>
+    <option value="350:50">Mediastinum</option>
+    <option value="1600:-600">Lung</option>
+    <option value="2000:300">Bone</option>
+    <option value="4000:400">Sinus</option>
+    <option value="180:80">Larynx</option>
+    <option value="120:40">Brain Posterior</option>
+    <option value="80:40">Brain</option>
+  </select>
+EOF
+sub PresetWidgetCt{
+  my($self, $http, $dyn) = @_;
+  $self->RefreshEngine($http, $dyn, $preset_widget_ct);
+}
+
+sub ImageTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(defined $self->{ImageType}){
+    $self->{ImageType} = "Rendered Bitmap";
+  }
+  $self->SelectDelegateByValue($http, {
+    op => "SelectImageType",
+    id => "SelectImageTypeDropdown",
+    class => "form-control",
+    style => "",
+    sync => "UpdateImage();"
+  });
+  for my $i ("Rendered Bitmap", "Dicom Image", "TestPattern"){
+   $http->queue("<option value=\"$i\"");
+   if($i eq $self->{ImageType}){
+     $http->queue(" selected");
+   }
+   $http->queue(">$i</option>");
+  }
+  $http->queue("</select>");
+}
+sub SelectImageType{
+  my($self, $http, $dyn) = @_;
+  $self->{ImageType} = $dyn->{value};
+  $self->SetImageUrlAndContour;
+}
+sub ToolTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(defined $self->{ToolType}){
+    $self->{ToolType} = "None";
+  }
+  $http->queue("Tool type: ");
+  $self->SelectDelegateByValue($http, {
+    op => "SelectToolType",
+    id => "SelectToolTypeDropdown",
+    class => "form-control",
+    style => "",
+    sync => "InitToolType();"
+  });
+  for my $i ("None", "Pan/Zoom", "Select"){
+   $http->queue("<option value=\"$i\"");
+   if($i eq $self->{ToolType}){
+     $http->queue(" selected");
+   }
+   $http->queue(">$i</option>");
+  }
+  $http->queue("</select>");
+}
+sub SelectToolType{
+  my($self, $http, $dyn) = @_;
+  $self->{ToolType} = $dyn->{value};
+}
+sub UploadJsonObject{
+  my($self, $http, $dyn) = @_;
+  my $text = $http->ParseTextPlain;
+  my $data_name = $dyn->{DataName};
+  my $json = JSON->new->allow_nonref;
+  $self->{$data_name} = $json->decode($text);
+#  print STDERR
+#    "++++++++++++++++++++++++++++++++++++++++\n" .
+#    "In UploadJsonObject\n";
+#  for my $i (keys %{$dyn}){
+#    print STDERR "dyn{$i} = $dyn->{$i}\n";
+#  }
+#  print STDERR "text: \"$text\"\n";
+#  print STDERR
+#    "++++++++++++++++++++++++++++++++++++++++\n";
 }
 1;

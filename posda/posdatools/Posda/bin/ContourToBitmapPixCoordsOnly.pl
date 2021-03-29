@@ -117,7 +117,7 @@ for my $i (0 .. $rows - 1){
   }
   my $crossing_polarity = 0;
   for my $j (0 .. $cols - 1){
-    if(defined($next_crossing) && $j > $next_crossing) {
+    while(defined($next_crossing) && $j > $next_crossing) {
       $crossing_polarity ^= 1;
       if($#cross_segs >= 0){
         $next_crossing = shift @cross_segs;
