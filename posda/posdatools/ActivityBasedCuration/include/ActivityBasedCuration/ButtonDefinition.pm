@@ -335,6 +335,15 @@ EOF
     spreadsheet_operation => "CreateActivityTimepoint",
     caption => "Create Activity Timepoint",
   },
+  DupSopsInSeries => {
+    query => "SeriesWithDupSopsInTimepoint",
+    type => "ChainColumnToPopup",
+    obj => "Posda::NewerProcessPopup",
+    col_name => "series_instance_uid",
+    spreadsheet_operation => "CompareDupSopsInTimepointSeries",
+    operation => "CompareDupSopsInTimepointSeries",
+    caption => "Duplicate Sops Analysis",
+  },
   qc_cc_63 => {
     query => "InboxContentByActivityId",
     type => "ChainColumnToPopup",
@@ -589,9 +598,13 @@ for my $i (keys %QueryProcessingButtons){
   #%QueryButtonsByQueryColumn %QueryButtonsByQueryPatColumn);
 for my $i (keys %QueryChainColumnButtons){
   my $r = $QueryChainColumnButtons{$i};
-  if(exists $r->{query_pat}){
+  if (exists $r->{query_pat}){
     $QueryButtonsByQueryPatColumn{$r->{query_pat}}->{$r->{col_name}} = $i;
-  } elsif (exists $r->{query}){
+  }
+}
+for my $i (keys %QueryChainColumnButtons){
+  my $r = $QueryChainColumnButtons{$i};
+  if(exists $r->{query}){
     $QueryButtonsByQueryColumn{$r->{query}}->{$r->{col_name}} = $i;
   }
 }
