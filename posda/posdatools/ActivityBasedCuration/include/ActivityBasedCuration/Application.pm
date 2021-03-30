@@ -1443,15 +1443,15 @@ sub get_popup_hash_new{
   my($self, $query_name) = @_;
   my %popup_hash;
   my %grps;
-  for my $i (keys %{$self->{QueryButtonsByQueryColumn}->{$query_name}}){
-    $grps{$i} = $self->{QueryButtonsByQueryColumn}->{$query_name}->{$i};
-  }
   for my $k (keys %{$self->{QueryButtonsByQueryPatColumn}}){
     if(sql_match($k, $query_name)){
       for my $i (keys %{$self->{QueryButtonsByQueryPatColumn}->{$k}}){
         $grps{$i} = $self->{QueryButtonsByQueryPatColumn}->{$k}->{$i};
       }
     }
+  }
+  for my $i (keys %{$self->{QueryButtonsByQueryColumn}->{$query_name}}){
+    $grps{$i} = $self->{QueryButtonsByQueryColumn}->{$query_name}->{$i};
   }
   for my $i (keys %grps){
     $popup_hash{$i} = $self->{QueryChainColumnButtons}->{$grps{$i}};

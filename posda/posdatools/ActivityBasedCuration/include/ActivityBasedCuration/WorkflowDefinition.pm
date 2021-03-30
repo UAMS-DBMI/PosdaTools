@@ -99,6 +99,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         operations => [
           {
             operation => "InvokeNewOperation",
+            caption => "Compare Duplicate Sops in Timepoint",
+            action =>  "CompareDupSopsInTimepoint",
+          },
+          {
+            operation => "InvokeNewOperation",
             caption => "Analyze Series Duplicates for Timepoint",
             action =>  "AnalyzeSeriesDuplicatesForTimepoint",
           },
@@ -353,10 +358,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Correct Tomosynthesis Files",
         action =>  "TomosynthesisConverterTP",
       },
-      {
-        caption => "Compare Duplicate Sops in Timepoint",
-        action =>  "CompareDupSopsInTimepoint",
-      },
     ],
   },
 );
@@ -441,8 +442,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     "Suggested Queries for Duplicate SOPs",
     [
       {
-        caption => "Dup SOPs In Timepoint With Series, File Ids, And Load Times",
-        query => "DupSopsInTimepointWithSeriesFileIdsAndLoadTimes",
+        caption => "Series with Dup Sops in Tp with SOP and file counts",
+        query => "SeriesWithDupSopsInTimepoint",
       },
     ],
   ],
