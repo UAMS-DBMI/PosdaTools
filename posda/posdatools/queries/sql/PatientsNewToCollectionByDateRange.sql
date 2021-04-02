@@ -2,7 +2,7 @@
 -- Schema: posda_files
 -- Columns: [collection,site,patient_id,qualified,study_date,num_files,num_sops,earliest_day,latest_day]
 -- Args: ['collection_like, 'date_range_start', 'date_range_end', 'earliest_day']
--- Tags: ['NotInteractive']
+-- Tags: []
 -- Description: Find the number of new patients that have come into a collection or set of collections within a date range. Ex: Answer how much new data came in to CPTAC this month
 
 select * from (select
