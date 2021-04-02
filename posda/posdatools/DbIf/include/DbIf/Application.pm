@@ -1251,6 +1251,12 @@ sub OpenPopup {
     $self->OpenQuince($name, $params);
     return;
   }
+  # if PathologyViewer, do it differently:
+  if ($class eq 'PathViewer') {
+    $self->openPathologyViewer($name, $params);
+    return;
+  }
+
 
   eval "require $class";
   if($@){
@@ -3517,6 +3523,26 @@ sub InvokeOperationRow {
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
+
+sub openPathologyViewer{
+  my ($self, $http, $dyn) = @_;
+  bless $self, "ActivityBasedCuration::PathologyViewerLauncher";
+
+    if(defined $self->{ActivitySelected}){
+      $params->{current_settings}->{activity_id} = $self->{ActivitySelected};
+      Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+        my($row) = @_;
+        $params->{current_settings}->{activity_timepoint_id} = $row->[0];
+      }, sub {}, $self->{ActivitySelected});
+    }
+
+  $self->Initialize({
+    type => "activity_timepoint_id",
+    activity_timepoint_id => $params->{current_settings}->{activity_timepoint_id}
+  });
+}
+}
+
 sub NewQueryWait {
   my ($self, $http, $dyn) = @_;
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
