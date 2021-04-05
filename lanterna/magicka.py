@@ -152,7 +152,7 @@ def render_projection(cursor, iec: int) -> None:
         """, [iec])
 
         # clean up temp files
-        outfile.cleanup()
+        os.unlink(outfile.name)
         os.unlink(projection_filename)
 
 def get_iecs_in_visual_review(cursor, visual_review_id: int) -> List[int]:
