@@ -5,9 +5,10 @@ use ActivityBasedCuration::ElementDescriptions;
 use Redis;
 use JSON;
 use Debug;
+use Posda::Config 'Config';
 my $dbg = sub {print STDERR @_};
 
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 sub new {
   my($class, $export_event_id, $waiting_files,

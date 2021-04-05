@@ -124,7 +124,7 @@ services:
             - common.env
             - nbia.env
         environment:
-          WORKER_PRIORITY: 0
+          POSDA_WORKER_PRIORITY: 0
 
     posda-worker-high:
         image: tcia/posda:latest
@@ -145,7 +145,7 @@ services:
             - common.env
             - nbia.env
         environment:
-          WORKER_PRIORITY: 1
+          POSDA_WORKER_PRIORITY: 1
 
     posda-fast-file-process:
         image: tcia/posda:latest

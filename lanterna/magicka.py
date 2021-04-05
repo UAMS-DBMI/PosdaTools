@@ -12,8 +12,7 @@ import time
 import requests
 import fire
 
-URL = 'http://web/papi/v1/import/'
-# URL = 'http://tcia-posda-rh-1.ad.uams.edu/papi/v1/import/'
+URL = os.environ.get("POSDA_INTERNAL_API_URL") + '/v1/import/'
 DEBUG = True
 
 class ProjectionType(Enum):

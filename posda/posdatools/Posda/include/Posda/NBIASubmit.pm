@@ -5,8 +5,9 @@ use JSON;
 use Data::Dumper;
 use Redis;
 use Digest::MD5;
+use Posda::Config 'Config';
 
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 my $redis = undef;
 

@@ -11,7 +11,7 @@ use File::Slurp;
 use Text::Markdown 'markdown';
 use Regexp::Common "URI";
 use Redis;
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 my $redis = undef;
 sub ConnectToRedis {

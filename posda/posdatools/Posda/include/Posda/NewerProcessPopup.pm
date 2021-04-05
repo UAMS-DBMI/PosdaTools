@@ -19,7 +19,7 @@ my $dbg = sub {print STDERR @_};
 use MIME::Base64;
 
 use Redis;
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 my $redis = undef;
 my $work_id;

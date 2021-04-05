@@ -12,7 +12,6 @@
 
 # These settings may need to be adjusted
 use constant DBNAME => 'posda_files';
-use constant REDIS_HOST => 'redis:6379';
 
 ###############################################################################
 
@@ -20,7 +19,7 @@ use Modern::Perl;
 
 use DBD::Pg;
 
-use Posda::Config 'Database';
+use Posda::Config ('Database', 'Config');
 use Posda::DB 'Query';
 
 use Posda::Try;
@@ -30,6 +29,7 @@ use Posda::DB::DicomIod;
 use JSON;
 use Redis;
 
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 $| = 1; # Set non-buffered output mode
 

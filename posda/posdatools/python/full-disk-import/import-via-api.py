@@ -100,7 +100,8 @@ def fix_xfer_syntax(filename):
 
 def import_one_file(import_event_id, line_obj):
 
-    file, original_file = fix_xfer_syntax(line_obj['filename'])
+    # file, original_file = fix_xfer_syntax(line_obj['filename'])
+    file = original_file = line_obj['filename']
     if file is None:
         print("Skipping due to previous errors. If this is happening a lot you might want to abort")
         return
