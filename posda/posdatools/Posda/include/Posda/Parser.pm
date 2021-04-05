@@ -10,6 +10,7 @@ use strict;
 package Posda::Parser;
 use Debug;
 my $dbg = sub {print STDERR @_};
+use HexDump;
 use FileHandle;
 my $native_moto = 
   (unpack("S", pack("C2", 1, 2)) == 0x0102) ? 1 : 0;
@@ -1097,8 +1098,18 @@ sub EleHandler{
 sub CoerceBadVRs{
   my($this, $from_vr, $to_vr, $vm, $value_s) = @_;
   if($from_vr eq $to_vr) { return $value_s }
+############################################################
+## Uncomment following for very slow, informative dump
+#  my $cmd = "GetFilePart.pl \"$this->{filename}\" $this->{ele_offset} " .
+#    "$this->{ele_len}|VaxDumper.pl";
+#  my $dump = `$cmd`;
+#  chomp $dump;
+#  $dump = "\n" . $dump;
+#####################
+  my $dump = "value ($value_s)";
+#####################
   push(@{$this->{errors}},
-    "Attempting to Coerce $this->{tag} ($from_vr => $to_vr, \"$value_s\")");
+    "Coerce $this->{tag} ($from_vr => $to_vr) $dump");
   if($from_vr eq "DS" && $to_vr eq "FL"){
     # nothing to do here - perl does the coersion just fine all by itself
     return ("float", $value_s);
@@ -1119,6 +1130,12 @@ sub CoerceBadVRs{
       return ("double", [unpack("d*", $value_s)]);
     }elsif($to_vr eq "FL"){
       return ("float", [unpack("f*", $value_s)]);
+    } elsif($to_vr eq "SL"){
+      return("slong", [unpack("l*", $value_s)]);
+    } elsif($to_vr eq "UL"){
+      return("ulong", [unpack("l*", $value_s)]);
+    } elsif($to_vr eq "SS"){
+      return ("sshort", [unpack("s*", $value_s)]);
     } elsif($to_vr eq "CS"){
       return("text", $value_s);
     } elsif(
@@ -1126,8 +1143,6 @@ sub CoerceBadVRs{
       $to_vr eq 'IS'
     ){
       return("text", $value_s);
-    } elsif ($to_vr eq 'SL'){
-      return ("slong", $value_s);
     }
   } elsif($from_vr eq 'LO'){
     if($to_vr eq 'IS' || $to_vr eq 'CS'){
@@ -1141,8 +1156,7 @@ sub CoerceBadVRs{
     return("text", $value_s);
   } elsif($from_vr eq "ST" && $to_vr eq "LO"){
     return("text", $value_s);
-  } elsif($from_vr eq "LT" && $to_vr eq "LO" && length($value_s) < 65){
-    return("text", $value_s);
+  } elsif($from_vr eq "LT" && $to_vr eq "LO" && length($value_s) < 65){ return("text", $value_s);
   } elsif($from_vr eq "DS" && $to_vr eq "DA"){
     return("text", $value_s);
   } elsif($from_vr eq "IS" && $to_vr eq "SS"){
@@ -1155,12 +1169,11 @@ sub CoerceBadVRs{
     return("ushort", $value_s);
   } elsif($from_vr eq "SS" && $to_vr eq "SH"){
     my $ref = ref($value_s);
-    if($ref eq "ARRAY"){
-      my $new_v = unpack("a*", pack("s*", @$value_s));
-      push(@{$this->{errors}}, "Coerced $this->{tag} from " .
-        "$from_vr to $to_vr, value = \"$new_v\"");
-      return("text", $new_v);
+    unless($ref eq "ARRAY"){
+      $value_s = [$value_s];
     }
+    my $new_v = pack("s*", @$value_s);
+    return("text", $new_v);
   } elsif($from_vr eq "CS" && $to_vr eq "UI"){
     $value_s =~ s/^\s*//;
     $value_s =~ s/\s*$//;
@@ -1173,6 +1186,31 @@ sub CoerceBadVRs{
     return("ulong", $value_s);
   } elsif($from_vr eq "UL" && $to_vr eq "SL"){
     return("slong", $value_s);
+  } elsif($from_vr eq "SS" && $to_vr eq "SL"){
+    if(ref($value_s) eq "ARRAY"){
+      my $raw;
+      my $packer;
+      my $unpacker;
+      if($this->{vax}) { $packer = "v*" } else { $packer = "n*" }
+      $unpacker = "l*";
+      $raw = pack($packer, @$value_s);
+      #print "Packed Array:\n";
+      #HexDump::PrintVax(*STDOUT, $raw, 0);
+      my $new_v = [ unpack($unpacker, $raw) ];
+      return ("slong", $new_v );
+    } else {
+      push @{$this->{errors}}, "Here we are converting from SS to SL\n";
+      push @{$this->{errors}},
+        "This is not an array ($value_s). Should we coerce????";
+      push @{$this->{errors}}, " (No)\n";
+    }
+  } elsif($from_vr eq "SS" && $to_vr eq "DS"){
+    my $ref = ref($value_s);
+    unless($ref eq "ARRAY"){
+      $value_s = [$value_s];
+    }
+    my $new_v = pack("s*", @$value_s);
+    return("text", $new_v);
   } elsif($from_vr eq "SS" && $to_vr eq "US"){
     return("ushort", $value_s);
   } elsif($from_vr eq "US" && $to_vr eq "SS"){
