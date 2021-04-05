@@ -1752,6 +1752,41 @@ sub TableSelected {
   }
 }
 
+sub LaunchKaleidoscope{
+  my($self, $http, $dyn) = @_;
+  my $hash = $self->{NewQueryToDisplay};
+  my $cur_query = $self->{ForegroundQueries}->{$hash};
+  my $scan_id = $cur_query->{args}->[0];
+print STDERR
+"###########################\n".
+"In Launch Kaleidoscope\n";
+for my $i (keys %$dyn){
+print STDERR "dyn{$i} = $dyn->{$i}\n";
+}
+print STDERR
+"###########################\n";
+  my $params = {
+    vis_review_id => $scan_id,
+    user => $self->get_user,
+    tmp_dir => $self->{TempDir},
+  };
+  my $class = "Posda::ImageDisplayer::Kaleidoscope";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "$self->{name}" . "_k_scope_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+
 sub OpenChainedQuery {
   my ($self, $http, $dyn) = @_;
   my $id = $dyn->{chained_query_id};
@@ -2999,7 +3034,7 @@ sub DrawQueryListTypeSelector{
   if($q_count > 0){
     $http->queue("$url - active&nbsp;&nbsp;");
   }
-  my $url = $self->RadioButtonSync("query_type","recent",
+  $url = $self->RadioButtonSync("query_type","recent",
     "ProcessRadioButton",
     (defined($self->{NewActivityQueriesType}) && $self->{NewActivityQueriesType}->{query_type} eq "recent") ? 1 : 0,
     "&control=NewActivityQueriesType","Update();");

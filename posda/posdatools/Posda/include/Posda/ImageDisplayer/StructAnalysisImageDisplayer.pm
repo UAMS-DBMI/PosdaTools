@@ -52,6 +52,8 @@ sub Init{
     "($self->{x_shift}, $self->{y_shift})";
   $self->{height} = 600;
   $self->{width} = 600;
+  $self->{canvas_height} = 512;
+  $self->{canvas_width} = 512;
   $self->{ImageList} = {};
   Query('GetStructContoursToSegByStructIdAndRoi')->RunQuery(sub{
     my($row) = @_;
@@ -117,10 +119,10 @@ sub InitializeUrls{
           "&win=$self->{WindowCenter}&lev=$self->{WindowWidth}"
       };
     }
-    $self->SetImageUrlAndContour;
+    $self->SetImageUrl;
   }
 };
-sub SetImageUrlAndContour{
+sub SetImageUrl{
   my($self)= @_;
   unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
   unless(defined $self->{ImageType}){
@@ -264,6 +266,15 @@ sub SendCachedJpeg{
   $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
 
+sub CanvasHeight{
+  my($self, $http, $dyn) = @_;
+  $http->queue($self->{canvas_height});
+}
+sub CanvasWidth{
+  my($self, $http, $dyn) = @_;
+  $http->queue($self->{canvas_width});
+}
+
 
 my $content = <<EOF;
 <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px" id="div_content">
@@ -277,7 +288,7 @@ my $content = <<EOF;
 <td id="LeftPositionText">
 </td>
 <td align="center" valign="center">
-<canvas id="MyCanvas" width="512" height="512"></canvas>
+<canvas id="MyCanvas" width="<?dyn="CanvasWidth"?>" height="<?dyn="CanvasWidth"?>"></canvas>
 </td>
 <td id="RightPositionText">
 </td>
@@ -352,59 +363,6 @@ my($self, $http, $dyn) = @_;
     $http->queue("<option value=\"$i\">" .
       "$self->{SortedFileInfo}->[$i]->{offset}</option>");
   }
-}
-
-sub NextButton{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
-    op => "NextSlice",
-    caption => "nxt",
-    id => "NextButton",
-    sync => "UpdateImage();"
-  });
-}
-
-sub PrevButton{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
-    op => "PrevSlice",
-    caption => "prv",
-    id => "PrevButton",
-    sync => "UpdateImage();"
-  });
-}
-
-sub NextSlice{
-  my($self, $http, $dyn) = @_;
-  $self->{CurrentUrlIndex} += 1;
-  if($self->{CurrentUrlIndex} > $#{$self->{BitmapImageUrls}}){
-    $self->{CurrentUrlIndex} = 0;
-  }
-  $self->SetImageUrlAndContour;
-}
-
-sub SetImageIndex{
-  my($self, $http, $dyn) = @_;
-  my $index = $dyn->{value};
-  if($index >= 0 && $index <= $#{$self->{BitmapImageUrls}}){
-    $self->{CurrentUrlIndex} = $index;
-    $self->SetImageUrlAndContour;
-  } else {
-    my $max = $#{$self->{BitmapImageUrls}};
-    print STDERR "#############\n" .
-      "Bad value ($index) in SetImageIndex\n" .
-      "Should be in range 0 }\n" .
-      "#############\n";
-  }
-}
-
-sub PrevSlice{
-  my($self, $http, $dyn) = @_;
-  $self->{CurrentUrlIndex} -= 1;
-  if($self->{CurrentUrlIndex} < 0){
-    $self->{CurrentUrlIndex} = $#{$self->{BitmapImageUrls}};
-  }
-  $self->SetImageUrlAndContour;
 }
 
 sub Content{
@@ -535,49 +493,6 @@ sub SendCachedContours{
   $self->SendContentFromFh($http, $sock, "application/json",
   $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
-sub NullLineHandler{
-  my($self) = @_;
-  my $sub = sub{};
-  return $sub;
-}
-sub NullNotifier{
-  my($self, $dyn) = @_;
-}
-
-sub SetWinLev{
-  my($self, $http, $dyn) = @_;
-  my $v = $dyn->{value};
-  if($v eq "No preset"){
-    delete $self->{WindowWidth};
-    delete $self->{WindowCenter}
-  } else {
-    my ($wc, $ww) = split(/:/, $dyn->{value});
-    $self->{WindowCenter} = $wc;
-    $self->{WindowWidth} = $ww;
-  }
-  $self->InitializeUrls;
-}
-my $preset_widget_ct = <<EOF;
-  <select class="form-control"
-    onchange="javascript:PosdaGetRemoteMethod('SetWinLev', 'value=' +
-      this.options[this.selectedIndex].value, 
-      function () { UpdateImage(); });">;
-    <option value="None" selected="">No preset</option>
-    <option value="470:20">Soft Tissue</option>
-    <option value="450:50">Abdomen</option>
-    <option value="350:50">Mediastinum</option>
-    <option value="1600:-600">Lung</option>
-    <option value="2000:300">Bone</option>
-    <option value="4000:400">Sinus</option>
-    <option value="180:80">Larynx</option>
-    <option value="120:40">Brain Posterior</option>
-    <option value="80:40">Brain</option>
-  </select>
-EOF
-sub PresetWidgetCt{
-  my($self, $http, $dyn) = @_;
-  $self->RefreshEngine($http, $dyn, $preset_widget_ct);
-}
 
 sub ImageTypeSelector{
   my($self, $http, $dyn) = @_;
@@ -603,48 +518,6 @@ sub ImageTypeSelector{
 sub SelectImageType{
   my($self, $http, $dyn) = @_;
   $self->{ImageType} = $dyn->{value};
-  $self->SetImageUrlAndContour;
-}
-sub ToolTypeSelector{
-  my($self, $http, $dyn) = @_;
-  unless(defined $self->{ToolType}){
-    $self->{ToolType} = "None";
-  }
-  $http->queue("Tool type: ");
-  $self->SelectDelegateByValue($http, {
-    op => "SelectToolType",
-    id => "SelectToolTypeDropdown",
-    class => "form-control",
-    style => "",
-    sync => "InitToolType();"
-  });
-  for my $i ("None", "Pan/Zoom", "Select"){
-   $http->queue("<option value=\"$i\"");
-   if($i eq $self->{ToolType}){
-     $http->queue(" selected");
-   }
-   $http->queue(">$i</option>");
-  }
-  $http->queue("</select>");
-}
-sub SelectToolType{
-  my($self, $http, $dyn) = @_;
-  $self->{ToolType} = $dyn->{value};
-}
-sub UploadJsonObject{
-  my($self, $http, $dyn) = @_;
-  my $text = $http->ParseTextPlain;
-  my $data_name = $dyn->{DataName};
-  my $json = JSON->new->allow_nonref;
-  $self->{$data_name} = $json->decode($text);
-#  print STDERR
-#    "++++++++++++++++++++++++++++++++++++++++\n" .
-#    "In UploadJsonObject\n";
-#  for my $i (keys %{$dyn}){
-#    print STDERR "dyn{$i} = $dyn->{$i}\n";
-#  }
-#  print STDERR "text: \"$text\"\n";
-#  print STDERR
-#    "++++++++++++++++++++++++++++++++++++++++\n";
+  $self->SetImageUrl;
 }
 1;

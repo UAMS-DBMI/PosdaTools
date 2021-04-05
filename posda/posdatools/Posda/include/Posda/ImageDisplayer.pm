@@ -86,7 +86,7 @@ function makeDivUpdater(div_text){
   return function(text, status, xml){
     var foo = document.getElementById(that.div_text);
     if(foo != null) {
-      document.getElementById(that.div_text).innerHTML = text;
+      foo.innerHTML = text;
     } else {
       // console.log("Attempt to update unknown div: " + div_text);
     }
@@ -185,16 +185,22 @@ my $dicom_image_disp_js = <<EOF;
   ];
   var AnnotationsToDraw = [
   ];
+  var RectsToDraw = [
+  ];
   var RectBeingConstructed = null;
   var theSvg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
   function SendAnnotations(){
-    var data = JSON.stringify(AnnotationsToDraw)
+//    var data = JSON.stringify(AnnotationsToDraw)
+//    var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
+//      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });;
+//    ajax.post(data);
+    var data = JSON.stringify(RectsToDraw)
     var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
       '&DataName=Annotations', function () { RenderImage(canvas,ctx); });;
     ajax.post(data);
   }
   function PopAnnotations(){
-    var anot = AnnotationsToDraw.pop();
+    var anot = RectsToDraw.pop();
     SendAnnotations();
 //    RenderImage(canvas,ctx);
   }
@@ -204,8 +210,10 @@ my $dicom_image_disp_js = <<EOF;
       var p2 = ctx.transformedPoint(canvas.width,canvas.height);
       var td = document.getElementById('divTransform');
       var tf = ctx.getTransform();
-      td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' c: ' 
-        + tf.c + '<br>d: ' + tf.d + ' e: ' + tf.e + ' f: ' + tf.f;
+      if(td != null){
+        td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' c: ' 
+          + tf.c + '<br>d: ' + tf.d + ' e: ' + tf.e + ' f: ' + tf.f;
+      }
       ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
       // Alternatively:
@@ -229,48 +237,32 @@ my $dicom_image_disp_js = <<EOF;
          ctx.stroke();
       }
       if(RectBeingConstructed != null){
-         //console.log('Drawing rect under construction');
-         var ul_x = RectBeingConstructed.x;
-         var ul_y = RectBeingConstructed.y;
-
-         var ur_x = RectBeingConstructed.x + RectBeingConstructed.width;
-         var ur_y = RectBeingConstructed.y;
-
-         var ll_x = RectBeingConstructed.x;
-         var ll_y = RectBeingConstructed.y + RectBeingConstructed.height;
-
-         var lr_x = RectBeingConstructed.x + RectBeingConstructed.width;
-         var lr_y = RectBeingConstructed.y + RectBeingConstructed.height;
          ctx.beginPath();
-         ctx.moveTo(ul_x, ul_y);
-         ctx.lineTo(ur_x, ur_y);
-         ctx.lineTo(lr_x, lr_y);
-         ctx.lineTo(ll_x, lr_y);
-         ctx.lineTo(ul_x, ur_y);
-         ctx.closePath();
+         ctx.rect(RectBeingConstructed.x, RectBeingConstructed.y,
+           RectBeingConstructed.width, RectBeingConstructed.height);
+         ctx.setLineDash([5,15]);
          ctx.lineWidth = LineWidth;
-         ctx.strokeStyle = '#20ff20';;
+         ctx.strokeStyle = '#20ff20';
          ctx.stroke();
+         ctx.setLineDash([]);
       }
-      for(i = 0; i < AnnotationsToDraw.length; i++){
-         var contour = AnnotationsToDraw[i];
+      for(i = 0; i < RectsToDraw.length; i++){
+         var rect = RectsToDraw[i];
          ctx.beginPath();
-         ctx.moveTo(contour.points[0][0], contour.points[0][1]);
-         for(j = 0; j < contour.points.length - 1; j++){
-           ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
-         }
-         ctx.closePath();
+         ctx.rect(rect.x, rect.y, rect.width, rect.height);
+         ctx.strokeStyle = "blue";
          ctx.lineWidth = LineWidth;
-         ctx.strokeStyle = contour.color;
          ctx.stroke();
       }
       var td = document.getElementById('div_annotation_ctrl');
-      if(AnnotationsToDraw.length > 0){
-        // Create a count and delete button in div_annotation_ctrl
-        td.innerHTML = '<input type="Button" class="btn btn-default" ' +
-          'onclick="javascript:PopAnnotations();" value="pop annotation">';
-      } else {
-        td.innerHTML = '';
+      if(td != null){
+        if(RectsToDraw.length > 0){
+          // Create a count and delete button in div_annotation_ctrl
+          td.innerHTML = '<input type="Button" class="btn btn-default" ' +
+            'onclick="javascript:PopAnnotations();" value="pop annotation">';
+        } else {
+          td.innerHTML = '';
+        }
       }
       ctx.save();
   };
@@ -317,8 +309,10 @@ my $dicom_image_disp_js = <<EOF;
       theRect.x = dragStart.x;
       theRect.y = dragStart.y;
       var td = document.getElementById('MousePosition');
-      td.innerHTML = 'Rect(x,y): (' + dragStart.x +
-        ', ' + dragStart.y + ')';
+      if(td != null){
+        td.innerHTML = 'Rect(x,y): (' + dragStart.x +
+          ', ' + dragStart.y + ')';
+      }
       dragged = false;
     };
     canvas.addEventListener('mousedown',SelectionMouseDown, false);
@@ -334,9 +328,11 @@ my $dicom_image_disp_js = <<EOF;
         theRect.height = height;
         RectBeingConstructed = theRect;
         var td = document.getElementById('MousePosition');
-        td.innerHTML = 'Rect(x,y): (' + theRect.x +
-          ', ' + theRect.y + ')<br>' +
-          'Rect(w,h): (' + theRect.width + ', ' + theRect.height + ')';
+        if(td != null){
+          td.innerHTML = 'Rect(x,y): (' + theRect.x +
+            ', ' + theRect.y + ')<br>' +
+            'Rect(w,h): (' + theRect.width + ', ' + theRect.height + ')';
+        }
         RenderImage(canvas, ctx);
       }
     };
@@ -360,6 +356,8 @@ my $dicom_image_disp_js = <<EOF;
       cont.points[2] = lr;
       cont.points[3] = ll;
       AnnotationsToDraw.push(cont);
+      theRect = document.createElementNS(theSvg, 'rect');
+      RectsToDraw.push(RectBeingConstructed);
       RectBeingConstructed = null;
       SendAnnotations();
 //      RenderImage(canvas, ctx);
@@ -558,16 +556,36 @@ my $dicom_image_disp_js = <<EOF;
       //console.error("ImageLabels.d is null");
       return;
     }
-    \$('#LeftPositionText').html(ImageLabels.d.left_text);
-    \$('#RightPositionText').html(ImageLabels.d.right_text);
-    \$('#TopPositionText').html(ImageLabels.d.top_text);
-    \$('#BottomPositionText').html(ImageLabels.d.bottom_text);
-    \$('#CurrentInstance').html("Current Instance: " +
-       ImageLabels.d.current_instance);
-    \$('#CurrentOffset').html("Current Offset: " +
-       ImageLabels.d.current_offset);
-    var td = document.getElementById('OffsetSelector');
-    td.selectedIndex = ImageLabels.d.current_index;
+    var td = document.getElementById('LeftPositionText');
+    if(td != null){
+      td.innerHTML = ImageLabels.d.left_text;
+    }
+    td = document.getElementById('RightPositionText');
+    if(td != null){
+      td.innerHTML = ImageLabels.d.right_text;
+    }
+    td = document.getElementById('TopPositionText');
+    if(td != null){
+      td.innerHTML = ImageLabels.d.top_text;
+    }
+    td = document.getElementById('BottomPositionText');
+    if(td != null){
+      td.innerHTML = ImageLabels.d.bottom_text;
+    }
+    td = document.getElementById('CurrentInstance');
+    if(td != null){
+      td.innerHTML = "Current Instance: " +
+       ImageLabels.d.current_instance;
+    }
+    td = document.getElementById('CurrentOffset');
+    if(td != null){
+      td.innerHTML = "Current Offset: " +
+       ImageLabels.d.current_offset;
+    }
+    td = document.getElementById('OffsetSelector');
+    if(td != null){
+      td.selectedIndex = ImageLabels.d.current_index;
+    }
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
@@ -580,14 +598,32 @@ my $dicom_image_disp_js = <<EOF;
     return false;
   }
   EnableImageControlButtons = function(){
-    document.getElementById('NextButton').disabled = false;
-    document.getElementById('PrevButton').disabled = false;
-    document.getElementById('OffsetSelector').disabled = false;
+    var td = document.getElementById('NextButton'); 
+    if(td != null){
+      td.disabled = false;
+    }
+    var td = document.getElementById('PrevButton'); 
+    if(td != null){
+      td.disabled = false;
+    }
+    var td = document.getElementById('OffsetSelector'); 
+    if(td != null){
+      td.disabled = false;
+    }
   }
   DisableImageControlButtons = function(){
-    document.getElementById('NextButton').disabled = true;
-    document.getElementById('PrevButton').disabled = true;
-    document.getElementById('OffsetSelector').disabled = true;
+    var td = document.getElementById('NextButton'); 
+    if(td != null){
+      td.disabled = true;
+    }
+    var td = document.getElementById('PrevButton'); 
+    if(td != null){
+      td.disabled = true;
+    }
+    var td = document.getElementById('OffsetSelector'); 
+    if(td != null){
+      td.disabled = true;
+    }
   }
   RenderImageIfReady = function(){
     if(WaitingForUpdates()){
@@ -609,7 +645,9 @@ my $dicom_image_disp_js = <<EOF;
   ImageToDraw.onload = function(){
     ImageUrlPending = false;
     var td = document.getElementById('div_image_pending');
-    td.innerHTML="&nbsp;";
+    if(td != null){
+      td.innerHTML="&nbsp;";
+    }
     RenderImageIfReady();
   };
   function ImageUrlReturned(obj) {
@@ -630,7 +668,9 @@ my $dicom_image_disp_js = <<EOF;
   function ContoursReturned(obj) {
     ContoursPending = false;
     var td = document.getElementById('div_contours_pending');
-    td.innerHTML="&nbsp;";
+    if(td != null){
+      td.innerHTML="&nbsp;";
+    }
     if(ContourResp == null){
       console.error("ContourResp is null");
       return;
@@ -657,7 +697,9 @@ my $dicom_image_disp_js = <<EOF;
     } else {
       ImageUrlPending = true;
       var td = document.getElementById('div_image_pending');
-      td.innerHTML="<small>image pending</small>";
+      if(td != null){
+        td.innerHTML="<small>image pending</small>";
+      }
       ImageUrl =
         new PosdaAjaxObj("ImageUrl", ObjPath, ImageUrlReturned);
     }
@@ -668,7 +710,9 @@ my $dicom_image_disp_js = <<EOF;
       //ContoursToDraw = [];
       //RenderImage(canvas, ctx);
       var td = document.getElementById('div_contours_pending');
-      td.innerHTML="<small>contours pending</small>";
+      if(td != null){
+        td.innerHTML="<small>contours pending</small>";
+      }
       ContourResp = 
         new PosdaAjaxMethod("GetContoursToRender", ObjPath, ContoursReturned);
     }
@@ -1067,6 +1111,149 @@ sub JsControllerLocal{
   my($self, $http, $dyn) = @_;
   $dyn->{path} = $self->{path};
   $self->RefreshEngine($http, $dyn, $js_controller_local);
+}
+
+############################# Widgets
+
+
+sub NextButton{
+  my($self, $http, $dyn) = @_;
+  $self->NotSoSimpleButton($http, {
+    op => "NextSlice",
+    caption => "nxt",
+    id => "NextButton",
+    sync => "UpdateImage();"
+  });
+}
+
+sub PrevButton{
+  my($self, $http, $dyn) = @_;
+  $self->NotSoSimpleButton($http, {
+    op => "PrevSlice",
+    caption => "prv",
+    id => "PrevButton",
+    sync => "UpdateImage();"
+  });
+}
+
+sub NextSlice{
+  my($self, $http, $dyn) = @_;
+  $self->{CurrentUrlIndex} += 1;
+  if($self->{CurrentUrlIndex} > $#{$self->{JpegImageUrls}}){
+    $self->{CurrentUrlIndex} = 0;
+  }
+  $self->SetImageUrl;
+}
+
+sub SetImageIndex{
+  my($self, $http, $dyn) = @_;
+  my $index = $dyn->{value};
+  if($index >= 0 && $index <= $#{$self->{JpegImageUrls}}){
+    $self->{CurrentUrlIndex} = $index;
+    $self->SetImageUrl;
+  } else {
+    my $max = $#{$self->{JpegImageUrls}};
+    print STDERR "#############\n" .
+      "Bad value ($index) in SetImageIndex\n" .
+      "Should be in range 0 }\n" .
+      "#############\n";
+  }
+}
+
+sub PrevSlice{
+  my($self, $http, $dyn) = @_;
+  $self->{CurrentUrlIndex} -= 1;
+  if($self->{CurrentUrlIndex} < 0){
+    $self->{CurrentUrlIndex} = $#{$self->{JpegImageUrls}};
+  }
+  $self->SetImageUrl;
+}
+
+sub NullLineHandler{
+  my($self) = @_;
+  my $sub = sub{};
+  return $sub;
+}
+sub NullNotifier{
+  my($self, $dyn) = @_;
+}
+
+sub SetWinLev{
+  my($self, $http, $dyn) = @_;
+  my $v = $dyn->{value};
+  if($v eq "No preset"){
+    delete $self->{WindowWidth};
+    delete $self->{WindowCenter}
+  } else {
+    my ($wc, $ww) = split(/:/, $dyn->{value});
+    $self->{WindowCenter} = $wc;
+    $self->{WindowWidth} = $ww;
+  }
+  $self->InitializeUrls;
+}
+my $preset_widget_ct = <<EOF;
+  <select class="form-control"
+    onchange="javascript:PosdaGetRemoteMethod('SetWinLev', 'value=' +
+      this.options[this.selectedIndex].value,
+      function () { UpdateImage(); });">;
+    <option value="None" selected="">No preset</option>
+    <option value="470:20">Soft Tissue</option>
+    <option value="450:50">Abdomen</option>
+    <option value="350:50">Mediastinum</option>
+    <option value="1600:-600">Lung</option>
+    <option value="2000:300">Bone</option>
+    <option value="4000:400">Sinus</option>
+    <option value="180:80">Larynx</option>
+    <option value="120:40">Brain Posterior</option>
+    <option value="80:40">Brain</option>
+  </select>
+EOF
+sub PresetWidgetCt{
+  my($self, $http, $dyn) = @_;
+  $self->RefreshEngine($http, $dyn, $preset_widget_ct);
+}
+
+sub ToolTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(defined $self->{ToolType}){
+    $self->{ToolType} = "None";
+  }
+  $http->queue("Tool type: ");
+  $self->SelectDelegateByValue($http, {
+    op => "SelectToolType",
+    id => "SelectToolTypeDropdown",
+    class => "form-control",
+    style => "",
+    sync => "InitToolType();"
+  });
+  for my $i ("None", "Pan/Zoom", "Select"){
+   $http->queue("<option value=\"$i\"");
+   if($i eq $self->{ToolType}){
+     $http->queue(" selected");
+   }
+   $http->queue(">$i</option>");
+  }
+  $http->queue("</select>");
+}
+sub SelectToolType{
+  my($self, $http, $dyn) = @_;
+  $self->{ToolType} = $dyn->{value};
+}
+sub UploadJsonObject{
+  my($self, $http, $dyn) = @_;
+  my $text = $http->ParseTextPlain;
+  my $data_name = $dyn->{DataName};
+  my $json = JSON->new->allow_nonref;
+  $self->{$data_name} = $json->decode($text);
+#  print STDERR
+#    "++++++++++++++++++++++++++++++++++++++++\n" .
+#    "In UploadJsonObject\n";
+#  for my $i (keys %{$dyn}){
+#    print STDERR "dyn{$i} = $dyn->{$i}\n";
+#  }
+#  print STDERR "text: \"$text\"\n";
+#  print STDERR
+#    "++++++++++++++++++++++++++++++++++++++++\n";
 }
 
 1;

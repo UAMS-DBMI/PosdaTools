@@ -558,6 +558,17 @@ EOF
       visual_review_id => 0,
     }
   },
+  qbp_PrototypeKaleidoscope => {
+    caption => "Launch Prototype Kaleidoscope",
+    operation => "LaunchKaleidoscope",
+    obj_class => "Posda::ImageDisplayer::Kaleidoscope",
+    queries => {
+      VisualReviewStatusById => 1,
+    },
+    params => {
+      visual_review_id => 0,
+    }
+  },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
 # BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup
