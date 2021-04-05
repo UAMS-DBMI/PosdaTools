@@ -1,6 +1,6 @@
 -- Name: PatientsNewToCollectionByDateRange
 -- Schema: posda_files
--- Columns: [collection,site,patient_id,qualified,study_date,num_files,num_sops,earliest_day,latest_day]
+-- Columns: ['collection','site','patient_id','qualified','study_date','num_files','num_sops','earliest_day','latest_day']
 -- Args: ['collection_like, 'date_range_start', 'date_range_end', 'earliest_day']
 -- Tags: []
 -- Description: Find the number of new patients that have come into a collection or set of collections within a date range. Ex: Answer how much new data came in to CPTAC this month
@@ -25,4 +25,4 @@ where patient_id in (
     project_name like ? and file_import_time > ? and file_import_time < ? and import_event_id = 0
 )
 group by project_name, site_name, patient_id,  study_date) as foo
-where earliest_day < ?;
+where earliest_day < ?
