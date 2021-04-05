@@ -13,6 +13,7 @@ import requests
 import fire
 
 URL = 'http://web/papi/v1/import/'
+# URL = 'http://tcia-posda-rh-1.ad.uams.edu/papi/v1/import/'
 DEBUG = True
 
 class ProjectionType(Enum):
@@ -41,14 +42,25 @@ def add_file(filename: str) -> int:
             print(r.content)
             raise
 
-def call_convert(filelist: str, output_filename: str, projection_type: ProjectionType) -> None:
+def convert_tempfiles_to_projection(directory: str, 
+                                    output_filename: str, 
+                                    projection_type: ProjectionType) -> None:
+    subprocess.call([
+        'convert',
+        "-define", "dcm:rescale=true",
+        "-define", "dcm:unsigned=true",
+        f'{directory}/*.png',
+        projection_type.value,
+        output_filename
+    ])
+
+def convert_filelist_to_tempfiles(filelist: str, output_directory: str) -> None:
     subprocess.call([
         'convert',
         "-define", "dcm:rescale=true",
         "-define", "dcm:unsigned=true",
         f'@{filelist}',
-        projection_type.value,
-        output_filename
+        output_directory + "/temp.png"
     ])
 
 def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: str) -> None:
@@ -62,7 +74,44 @@ def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: s
         output_filename
     ])
 
+def render_projection_from_filelist(filelist: str) -> str:
+    """Render a full projection montage from the given filelist
+
+    Returns the filename to the output image, which must be manually
+    deleted after use.
+    """
+
+    temp_dir = tempfile.TemporaryDirectory()
+    convert_filelist_to_tempfiles(filelist, temp_dir.name)
+
+    # by using jpeg for the output format, we avoid including the
+    # rendered projections in the subsequent renders
+    max_file = os.path.join(temp_dir.name, "max.jpg")
+    min_file = os.path.join(temp_dir.name, "min.jpg")
+    avg_file = os.path.join(temp_dir.name, "avg.jpg")
+
+    convert_tempfiles_to_projection(temp_dir.name, max_file, ProjectionType.MAX)
+    convert_tempfiles_to_projection(temp_dir.name, min_file, ProjectionType.MIN)
+    convert_tempfiles_to_projection(temp_dir.name, avg_file, ProjectionType.AVG)
+
+    output_filename = tempfile.mktemp(suffix='.jpg')
+    make_montage(min_file, max_file, avg_file, output_filename)
+
+    temp_dir.cleanup()
+
+    return output_filename
+
+
 def render_projection(cursor, iec: int) -> None:
+    """Render a projection of the given IEC
+
+    This method follows these steps:
+    * build a filelist of all input files for the IEC
+    * use convert to generate png files for each input image in the filelist
+    * create min, max, and avg projections from those files
+    * generate a final montage
+    """
+
     print(f"Rendering projection for IEC: {iec}.")
     # look up the input files
     cursor.execute("""
@@ -82,16 +131,10 @@ def render_projection(cursor, iec: int) -> None:
         outfile.close()
         print(f"Found {i+1} images in this IEC.")
 
-        # call IM to produce min, max, avg projections
-        call_convert(outfile.name, "min.jpg", ProjectionType.MIN)
-        call_convert(outfile.name, "max.jpg", ProjectionType.MAX)
-        call_convert(outfile.name, "avg.jpg", ProjectionType.AVG)
-
-        # call IM to produce montage
-        make_montage("min.jpg", "max.jpg", "avg.jpg", "full.jpg")
+        projection_filename = render_projection_from_filelist(outfile.name)
 
         # import final file into posda and get file_id
-        file_id = add_file("full.jpg")
+        file_id = add_file(projection_filename)
         if DEBUG:
             print(f"file_id: {file_id}")
 
@@ -109,11 +152,8 @@ def render_projection(cursor, iec: int) -> None:
         """, [iec])
 
         # clean up temp files
-        os.unlink(outfile.name)
-        os.unlink("min.jpg")
-        os.unlink("max.jpg")
-        os.unlink("avg.jpg")
-        os.unlink("full.jpg")
+        outfile.cleanup()
+        os.unlink(projection_filename)
 
 def get_iecs_in_visual_review(cursor, visual_review_id: int) -> List[int]:
     cursor.execute("""
@@ -203,7 +243,18 @@ def main(visual_review_instance_id: int = None) -> None:
         print("Processing all unprocessed IECs...")
         process_all_unprocessed()
 
+def test():
+    # f = render_projection_from_filelist("test-filelist")
+    # print(f)
+    conn = connect()
+    cur = conn.cursor()
+
+    render_projection(cur, 404860)
+
+    conn.close()
+
 
 if __name__ == '__main__':
     # main(2)
     fire.Fire(main)
+    # test()
