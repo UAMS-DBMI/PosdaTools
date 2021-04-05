@@ -28,7 +28,6 @@ case "$1" in
     ;;
   up)
     shift
-    make -C posda posdatools/posda.env
     git describe --tags > posda/posdatools/versionInfo.txt
     exec docker-compose --compatibility up $*
     ;;
@@ -59,6 +58,6 @@ case "$1" in
     ;;
 
   *)
-    help
+    exec docker-compose --compatibility $@
     ;;
 esac
