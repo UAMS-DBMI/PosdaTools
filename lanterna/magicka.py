@@ -54,14 +54,16 @@ def convert_tempfiles_to_projection(directory: str,
         output_filename
     ])
 
-def convert_filelist_to_tempfiles(filelist: str, output_directory: str) -> None:
-    subprocess.call([
-        'convert',
-        "-define", "dcm:rescale=true",
-        "-define", "dcm:unsigned=true",
-        f'@{filelist}',
-        output_directory + "/temp.png"
-    ])
+def convert_filelist_to_tempfiles(files: list, output_directory: str) -> None:
+    for i, filename in enumerate(files):
+        print(i)
+        subprocess.call([
+            'convert',
+            "-define", "dcm:rescale=true",
+            "-define", "dcm:unsigned=true",
+            filename,
+            f"{output_directory}/{i}.png"
+        ])
 
 def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: str) -> None:
     subprocess.call([
@@ -74,15 +76,15 @@ def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: s
         output_filename
     ])
 
-def render_projection_from_filelist(filelist: str) -> str:
-    """Render a full projection montage from the given filelist
+def render_projection_from_filelist(files: list) -> str:
+    """Render a full projection montage from the given list of files
 
     Returns the filename to the output image, which must be manually
     deleted after use.
     """
 
     temp_dir = tempfile.TemporaryDirectory()
-    convert_filelist_to_tempfiles(filelist, temp_dir.name)
+    convert_filelist_to_tempfiles(files, temp_dir.name)
 
     # by using jpeg for the output format, we avoid including the
     # rendered projections in the subsequent renders
@@ -125,13 +127,16 @@ def render_projection(cursor, iec: int) -> None:
     # get their paths
     # assemble into a filelist
     with tempfile.NamedTemporaryFile(delete=False) as outfile:
-        for i, (path,) in enumerate(cursor):
-            outfile.write(path.encode())
-            outfile.write(b'\n')
-        outfile.close()
-        print(f"Found {i+1} images in this IEC.")
+        # for i, (path,) in enumerate(cursor):
+        #     outfile.write(path.encode())
+        #     outfile.write(b'\n')
+        # outfile.close()
 
-        projection_filename = render_projection_from_filelist(outfile.name)
+        files = [path.encode() for path, in cursor]
+
+        print(f"Found {len(files)} images in this IEC.")
+
+        projection_filename = render_projection_from_filelist(files)
 
         # import final file into posda and get file_id
         file_id = add_file(projection_filename)
@@ -249,7 +254,7 @@ def test():
     conn = connect()
     cur = conn.cursor()
 
-    render_projection(cur, 404860)
+    render_projection(cur, 399696)
 
     conn.close()
 
