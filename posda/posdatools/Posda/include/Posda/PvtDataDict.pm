@@ -4793,7 +4793,7 @@ $Posda::DataDict::PvtDict->{"SECTRA_Ident_01"}->{9}->{1} = {
 ##(0009,"SECTRA_Ident_01",02)##
 $Posda::DataDict::PvtDict->{"SECTRA_Ident_01"}->{9}->{2} = {
   "VM" => "1",
-  "VR" => "SH",
+  "VR" => "LO",
   "ele" => "02",
   "grp" => "0009",
   "Name" => "Examination number",
