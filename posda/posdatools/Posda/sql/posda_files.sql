@@ -4226,6 +4226,25 @@ CREATE TABLE public.ss_volume (
 
 
 --
+-- Name: struct_contours_to_slice; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.struct_contours_to_slice (
+    structure_set_file_id integer NOT NULL,
+    image_file_id integer NOT NULL,
+    roi_num integer NOT NULL,
+    rows integer NOT NULL,
+    cols integer NOT NULL,
+    num_contours integer NOT NULL,
+    num_points integer NOT NULL,
+    total_one_bits integer NOT NULL,
+    contour_slice_file_id integer NOT NULL,
+    segmentation_slice_file_id integer NOT NULL,
+    png_slice_file_id integer NOT NULL
+);
+
+
+--
 -- Name: structure_set; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4646,7 +4665,8 @@ CREATE TABLE public.work (
     finished boolean DEFAULT false NOT NULL,
     failed boolean DEFAULT false NOT NULL,
     stdout_file_id integer,
-    stderr_file_id integer
+    stderr_file_id integer,
+    background_queue_name text
 );
 
 
