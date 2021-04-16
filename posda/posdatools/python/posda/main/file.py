@@ -4,9 +4,7 @@ from ..util import printe
 from ..config import Config
 import requests
 
-# this should currently be the docker address: web
-# API_URL = Config.get("api_url")
-API_URL = "http://web/papi"
+API_URL = Config.get("internal-api-url")
 
 def insert_file(filename, comment="Added by Python Job"):
     return insert_file_via_api(filename, comment)

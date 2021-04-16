@@ -1,11 +1,14 @@
 #!/usr/bin/python3 -u
 import redis
 import subprocess
+import os
+
+REDIS_HOST=os.environ['POSDA_REDIS_HOST']
 
 
 def main():
 
-    redis_db = redis.StrictRedis(host="redis", db=0)
+    redis_db = redis.StrictRedis(host=REDIS_HOST, db=0)
 
 
     while True:

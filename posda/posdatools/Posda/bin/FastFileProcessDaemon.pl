@@ -11,19 +11,20 @@
 
 # These settings may need to be adjusted
 use constant DBNAME => 'posda_files';
-use constant REDIS_HOST => 'redis:6379';
 use constant WORKER_COUNT => 5;
 
 ###############################################################################
 
 use Modern::Perl;
 
-use Posda::Config 'Database';
+use Posda::Config ('Database', 'Config');
 use DBD::Pg;
 
 use JSON;
 use Redis;
 
+
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 $| = 1;
 
 $SIG{INT}  = \&shut_down; # catch SIGINT

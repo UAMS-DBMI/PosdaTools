@@ -3,12 +3,14 @@ use Modern::Perl;
 use Redis;
 use JSON;
 
-use Posda::Config 'Database';
+use Posda::Config ('Config', 'Database');
 use DBD::Pg;
 
 use Data::Dumper;
 
-my $redis = Redis->new(server => 'redis:6379');
+use constant REDIS_HOST => Config('redis_host') . ':6379';
+
+my $redis = Redis->new(server => REDIS_HOST);
 my $db = DBI->connect(Database('posda_files'));
 
 my $q = $db->prepare(qq{

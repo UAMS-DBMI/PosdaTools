@@ -29,8 +29,11 @@ async def get_work_status(work_id: int, db: Database = Depends()):
     """
     return await db.fetch_one(query, [work_id])
 
+class RunningDetails(BaseModel):
+    node_hostname: str = None
+
 @router.post("/status/{work_id}/running")
-async def set_work_status_running(work_id: int, node_hostname: str = Form(...), db: Database = Depends()):
+async def set_work_status_running(details: RunningDetails, work_id: int, db: Database = Depends()):
     query = """
         update
             work
@@ -41,11 +44,11 @@ async def set_work_status_running(work_id: int, node_hostname: str = Form(...), 
         where
             work_id = $2
     """
-    return await db.fetch_one(query, [node_hostname, work_id])
+    return await db.fetch_one(query, [details.node_hostname, work_id])
 
 class ErrorFiles(BaseModel):
-    stderr_file_id: int
-    stdout_file_id: int
+    stderr_file_id: int = None
+    stdout_file_id: int = None
 
 @router.post("/status/{work_id}/finished")
 async def set_work_status_finished(error_files: ErrorFiles, work_id: int, db: Database = Depends()):

@@ -6,11 +6,12 @@ use Posda::DB qw( Query );
 use Posda::Try;
 use Posda::FlipRotate;
 use Posda::File::Import 'insert_file';
+use Posda::Config 'Config';
 use Digest::MD5;
 use File::Temp qw/ tempfile /;
 
 use Redis;
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 my $redis = undef;
 sub ConnectToRedis {

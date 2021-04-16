@@ -5,11 +5,12 @@ use ActivityBasedCuration::TransferAgent;
 use REST::Client;
 use Redis;
 use JSON;
+use Posda::Config 'Config';
 use vars qw( @ISA );
 @ISA = ("ActivityBasedCuration::TransferAgent");
 use Posda::DB qw(Query);
 
-use constant REDIS_HOST => 'redis:6379';
+use constant REDIS_HOST => Config('redis_host') . ':6379';
 
 sub new {
   my($class, $export_event_id, $base_url, $num_files, $configuration, $protocol_specific_params) = @_;

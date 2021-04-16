@@ -110,7 +110,7 @@ services:
         command: worker
         restart: always
         deploy:
-            replicas: 3
+            replicas: 1
         depends_on:
             - db
             - redis
@@ -124,7 +124,10 @@ services:
             - common.env
             - nbia.env
         environment:
-          WORKER_PRIORITY: 0
+          POSDA_WORKER_PRIORITY: 0
+          # this is optional, if omitted worker name will default to 
+          # the hostname of the container
+          POSDA_WORKER_NAME: "low-worker"
 
     posda-worker-high:
         image: tcia/posda:latest
@@ -145,7 +148,8 @@ services:
             - common.env
             - nbia.env
         environment:
-          WORKER_PRIORITY: 1
+          POSDA_WORKER_PRIORITY: 1
+          POSDA_WORKER_NAME: "high-worker"
 
     posda-fast-file-process:
         image: tcia/posda:latest

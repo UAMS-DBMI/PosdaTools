@@ -6,4 +6,9 @@ if [ ! -e posda.env ]; then
 fi
 
 . posda.env
+# TODO: these are for debugging only!
+
+env
+
+
 perl bin/setup.pl

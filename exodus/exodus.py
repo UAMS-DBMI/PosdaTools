@@ -14,6 +14,7 @@ USER=os.environ['EXODUS_USER']
 PASS=os.environ['EXODUS_PASS']
 RETRY_COUNT=int(os.environ['EXODUS_RETRY_COUNT'])
 PSQL_DB_NAME=os.environ['EXODUS_PSQL_DB_NAME']
+REDIS_HOST=os.environ['POSDA_REDIS_HOST']
 
 class SubmitFailedError(RuntimeError): pass
 
@@ -122,7 +123,7 @@ def submit_file(file):
 def main():
     print("exodus, starting up...")
 
-    redis_db = redis.StrictRedis(host="redis", db=0)
+    redis_db = redis.StrictRedis(host=REDIS_HOST, db=0)
     print("connected to redis")
 
     psql_db_conn = psycopg2.connect(dbname=PSQL_DB_NAME)
