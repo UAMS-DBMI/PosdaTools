@@ -30,6 +30,7 @@ services:
         env_file:
             - database.env
             - common.env
+            - posda.env
 
     ream:
         image: tcia/ream:latest
@@ -44,6 +45,7 @@ services:
             - database.env
             - common.env
             - ream.env
+            - posda.env
 
     exodus:
         image: tcia/exodus:latest
@@ -58,6 +60,7 @@ services:
             - database.env
             - common.env
             - exodus.env
+            - posda.env
 
     thumbs:
         image: tcia/lanterna:latest
@@ -72,6 +75,7 @@ services:
         env_file:
             - database.env
             - common.env
+            - posda.env
 
     magicka:
         image: tcia/lanterna:latest
@@ -86,6 +90,7 @@ services:
         env_file:
             - database.env
             - common.env
+            - posda.env
 
     posda:
         image: tcia/posda:latest
@@ -104,6 +109,7 @@ services:
             - database.env
             - common.env
             - nbia.env
+            - posda.env
 
     posda-worker-low:
         image: tcia/posda:latest
@@ -123,6 +129,7 @@ services:
             - database.env
             - common.env
             - nbia.env
+            - posda.env
         environment:
           POSDA_WORKER_PRIORITY: 0
           # this is optional, if omitted worker name will default to 
@@ -147,6 +154,7 @@ services:
             - database.env
             - common.env
             - nbia.env
+            - posda.env
         environment:
           POSDA_WORKER_PRIORITY: 1
           POSDA_WORKER_NAME: "high-worker"
@@ -166,6 +174,7 @@ services:
         env_file:
             - database.env
             - common.env
+            - posda.env
 
     posda-api:
         image: tcia/posda:latest
@@ -178,6 +187,7 @@ services:
             - database.env
             - common.env
             - api.env
+            - posda.env
 
         volumes:
             - posda_cache_alpine:/home/posda/cache
@@ -198,6 +208,7 @@ services:
         env_file:
             - database.env
             - common.env
+            - posda.env
         # environment:
         #     DEBUG: 1
 
