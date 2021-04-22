@@ -30,6 +30,10 @@ if [ ! -f exodus.env ]; then
   cp config/exodus.env .
 fi
 
+if [ ! -f posda.env ]; then
+  cp config/posda.env .
+fi
+
 docker pull tcia/posda:latest
 docker pull tcia/kaleidoscope:latest
 docker pull tcia/k-base:latest
