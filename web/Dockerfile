@@ -22,7 +22,7 @@ RUN cd /roots && \
 
 FROM node:current-alpine as kohlrabi-builder
 RUN apk --update add make
-COPY kohlrabi /kohlrabi
+COPY Kohlrabi /kohlrabi
 RUN cd /kohlrabi && \
   make
 
