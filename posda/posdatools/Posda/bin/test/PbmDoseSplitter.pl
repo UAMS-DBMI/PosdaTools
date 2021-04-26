@@ -42,18 +42,18 @@ for my $i (0 .. $slices - 1){
   my $stat = $stat_pbm->{from};
   my @pixels = ($bytes == 2) ? unpack("v*", $buff) : unpack("V*", $buff);
   my $byte = 0;
-  my $mask = 0x80;
+  my $mask = 1;
   my @bytes;
   for my $i (@pixels){
 print "$i: $level\n";
     if($i > $level){
       $byte |= $mask;
     }
-    $mask >>= 1;
-    if($mask == 0){
+    $mask <<= 1;
+    if($mask == 0x100){
       push(@bytes, $byte);
       $byte = 0;
-      $mask = 0x80;
+      $mask = 1;
     }
   }
   my $bitmap;

@@ -374,7 +374,7 @@ sub MakeExpBeElementWriter{
   my($stream) = @_;
   return sub {
     my($ele, $root, $sig, $keys, $depth) = @_;
-    my($Value, $type, $vr) =
+    my($Value, $type, $vr, $file_name, $offset, $length) =
       EncodeElementValue($ele, $root, $sig, $keys, $depth, 0);
     my $group = $keys->[0];
     my $element = $keys->[1];
@@ -441,7 +441,7 @@ sub MakeExpLeElementWriter{
       print $stream $SqEnd;
       return;
     }
-    my($Value, $type, $vr) =
+    my($Value, $type, $vr, $file_name, $offset, $length) =
       EncodeElementValue($ele, $root, $sig, $keys, $depth, 1);
     my $group = $keys->[0];
     my $element = $keys->[1];
@@ -458,21 +458,26 @@ sub MakeExpLeElementWriter{
       print $stream $SqStart;
       return;
     }
-    if($vr eq "OT") { 
-      $vr = MapOtVR($root, $sig);
-      #die "Need to handle this for $sig";
-      @vr = unpack("cc", $vr);
-      if($vr eq "SS"){
-        $Value = pack("s", $Value);
-      } elsif($vr eq "US"){
-        $Value = pack("S", $Value);
-      } elsif($vr eq "UL"){
-        die "Need to handle this for $sig";
-      } elsif($vr eq "SL"){
-        die "Need to handle this for $sig";
-      } 
-    };
-    my $len = length($Value);
+    my $len;
+    if($file_name){
+      $len = $length;
+    } else {
+      if($vr eq "OT") { 
+        $vr = MapOtVR($root, $sig);
+        #die "Need to handle this for $sig";
+        @vr = unpack("cc", $vr);
+        if($vr eq "SS"){
+          $Value = pack("s", $Value);
+        } elsif($vr eq "US"){
+          $Value = pack("S", $Value);
+        } elsif($vr eq "UL"){
+          die "Need to handle this for $sig";
+        } elsif($vr eq "SL"){
+          die "Need to handle this for $sig";
+        } 
+      };
+      $len = length($Value);
+    }
     my $Header;
     if(
       $vr eq "OB" ||
@@ -494,7 +499,27 @@ sub MakeExpLeElementWriter{
       $Header = pack("vvccv", $group, $element, @vr, $len);
     }
     print $stream $Header;
-    print $stream $Value;
+    if($file_name){
+      my $fh;
+      open $fh, "<$file_name" or die "can't open $file_name ($!)";
+      seek($fh, $offset, 0);
+      my $buff;
+      my $remaining = $length;
+      while($remaining > 0){
+        my $read = read($fh, $buff, 1024);
+        if($read > 0){
+          print $stream $buff;
+          $remaining -= $read;
+        } elsif($read == 0 && $remaining != 0){
+          die "read 0 with remaining = $remaining";
+        } else {
+          die "read failed ($read) with remaining = $remaining";
+        }
+      }
+      close $fh;
+    } else {
+      print $stream $Value;
+    }
   };
 }
 
@@ -502,7 +527,7 @@ sub MakeExpLeLongElementWriter{
   my($stream) = @_;
   return sub {
     my($ele, $root, $sig, $keys, $depth) = @_;
-    my($Value, $type, $vr) =
+    my($Value, $type, $vr, $file_name, $offset, $length) =
       EncodeElementValue($ele, $root, $sig, $keys, $depth, 1);
     my $group = $keys->[0];
     my $element = $keys->[1];
@@ -527,7 +552,7 @@ sub MakeExpLeLengthSeqElWriter{
   my($stream) = @_;
   return sub {
     my($ds, $ele, $sig, $group, $element) = @_;
-    my($Value, $type, $vr) =
+    my($Value, $type, $vr, $file_name, $offset, $length) =
       EncodeElementValue($ele, $ds, $sig, "", "", 1);
     my @vr = unpack("cc", $vr);
     if($type eq 'seq'){
@@ -704,6 +729,11 @@ sub EncodeDoubleEle{
 
 sub EncodeElementValue{
     my($ele, $root, $sig, $keys, $depth, $vax) = @_;
+    if(exists $ele->{left_in_file}){
+#print STDERR "Encoding data left in file\n";
+      return(undef, "raw", $ele->{VR}, $ele->{left_in_file},
+        $ele->{file_pos}, $ele->{ele_len_in_file});
+    }
     my $vr = 'UN';
 #print "Encoding Element Value\n";
     if(defined $ele->{VR}){ $vr = $ele->{VR}; }
@@ -774,7 +804,7 @@ sub MakeImpLeElementWriter{
   my($stream) = @_;
   return sub {
     my($ele, $root, $sig, $keys, $depth) = @_;
-    my($Value, $type, $vr) = 
+    my($Value, $type, $vr, $file_name, $offset, $length) =
       EncodeElementValue($ele, $root, $sig, $keys, $depth, 1);
     my $group = $keys->[0];
     my $element = $keys->[1];
@@ -784,11 +814,36 @@ sub MakeImpLeElementWriter{
       print $stream $SqStart;
       return;
     }
-    my $len = length($Value);
+    my $len;
+    if($file_name){
+      $len = $length;
+    } else {
+      $len = length($Value);
+    }
     my $Header;
     $Header = pack("vvV", $group, $element, $len);
     print $stream $Header;
-    print $stream $Value;
+    if($file_name){
+      my $fh;
+      open $fh, "<$file_name" or die "can't open $file_name ($!)";
+      seek($fh, $offset, 0);
+      my $buff;
+      my $remaining = $length;
+      while($remaining > 0){
+        my $read = read($fh, $buff, 1024);
+        if($read > 0){
+          print $stream $buff;
+          $remaining -= $read;
+        } elsif($read == 0 && $remaining != 0){
+          die "read 0 with remaining = $remaining";
+        } else {
+          die "read failed ($read) with remaining = $remaining";
+        }
+      }
+      close $fh;
+    } else {
+      print $stream $Value;
+    }
   };
 }
 

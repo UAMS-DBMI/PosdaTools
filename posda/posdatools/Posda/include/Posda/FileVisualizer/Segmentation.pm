@@ -121,7 +121,8 @@ sub GatherSegmentationSliceInfo{
     my($row) = @_;
     my($sn, $iop, $ipp, $total_one_bits,
       $num_bare_points, $sop_instance_uid, 
-      $num_contours, $num_points, $bm_slice_file_id, $c_file_id) = @$row;
+      $num_contours, $num_points, $bm_slice_file_id,
+      $c_file_id, $png_file_id) = @$row;
     $self->{SegmentationSliceInfo}->{$sn}->{iop} = $iop;
     $self->{SegmentationSliceInfo}->{$sn}->{ipp} = $ipp;
     $self->{SegmentationSliceInfo}->{$sn}->{total_one_bits} = $total_one_bits;
@@ -139,6 +140,10 @@ sub GatherSegmentationSliceInfo{
       $self->{SegmentationSliceInfo}->{$sn}->{seg_slice_bitmap_file_id} = 
         $bm_slice_file_id;
     }
+    if(defined $png_file_id){
+      $self->{SegmentationSliceInfo}->{$sn}->{png_file_id} = 
+        $png_file_id;
+    }
     if(defined $c_file_id){
       $self->{SegmentationSliceInfo}->{$sn}->{contour_file_id} = 
         $c_file_id;
@@ -149,6 +154,11 @@ sub GatherSegmentationSliceInfo{
 sub DisplaySegmentationSliceInfo{
   my($self, $http, $dyn) = @_;
   $http->queue("Segmentations:");
+  $self->NotSoSimpleButton($http, {
+     op => "LaunchSegmentationViewer",
+     caption => "view",
+     sync => "Update();"
+  });
   $http->queue("<table class=\"table table-striped\">");
   $http->queue("<tr><th>slice_no</th><th>iop</th><th>ipp</th>" .
     "<th>one_bits</th><th>bare_points</th><th>num_ref_sops</th>" .
@@ -204,6 +214,34 @@ sub MenuResponse {
        sync => "Update();"
     });
   };
+}
+
+sub LaunchSegmentationViewer{
+  my($self, $http, $dyn) = @_;
+  my $params = {
+    activity_id => $self->{params}->{activity_id},
+    segmentation_slice_info => $self->{SegmentationSliceInfo},
+    selected_segmenation => $self->{SegmentationInfo}
+      ->{$self->{SelectedSegmentation}}
+      ->{description},
+    seg_file_id => $self->{file_id},
+    tmp_dir => $self->{temp_path},
+  };
+  my $class = "Posda::ImageDisplayer::Segmentation";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Displayer_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
 }
 
 1;

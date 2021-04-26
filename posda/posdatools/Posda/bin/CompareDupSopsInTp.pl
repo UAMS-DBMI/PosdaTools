@@ -218,7 +218,8 @@ for my $i (0 .. $longest_equiv){
   if($i < $longest_equiv){
     $rpt_diffs->print(",$left,diffs");
   } else {
-    $rpt_diffs->print(",$left\r\n");
+    $rpt_diffs->print(",$left,");
+    $rpt_diffs->print(",select\r\n");
   }
 }
 for my $eq (@EquivClasses){

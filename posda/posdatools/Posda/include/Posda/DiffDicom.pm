@@ -178,7 +178,7 @@ sub ReportFromSemi{
   return($short_rpt, $long_rpt);
 }
 sub LongReportFromSemiWithDates{
-  my($this, $OnlyInFrom, $OnlyInTo, $DifferentValues) = @_;
+  my($this, $OnlyInFrom, $OnlyInTo, $DifferentValues, $show_uid_diffs) = @_;
   my $long_rpt = "";
   my $num_only_in_from = keys %$OnlyInFrom;
   if($num_only_in_from > 0){
@@ -213,8 +213,17 @@ sub LongReportFromSemiWithDates{
       my $tag_pat = $this->MakePattern($el);
       unless(exists $SeenPatterns{$tag_pat}){
         $SeenPatterns{$tag_pat} = 1;
-        $long_rpt .= "\t$tag_pat: $DifferentValues->{$el}->{from} " .
-          "=> $DifferentValues->{$el}->{to}\r\n";
+        if($show_uid_diffs){
+          $long_rpt .= "\t$tag_pat: $DifferentValues->{$el}->{from} " .
+            "=> $DifferentValues->{$el}->{to}\r\n";
+        } else {
+          if($this->IsUid($el)){
+            $long_rpt .= "\t$tag_pat: <uid>\r\n";
+          } else {
+            $long_rpt .= "\t$tag_pat: $DifferentValues->{$el}->{from} " .
+              "=> $DifferentValues->{$el}->{to}\r\n";
+          }
+        }
       }
     }
   }

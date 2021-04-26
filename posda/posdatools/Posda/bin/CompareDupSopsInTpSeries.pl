@@ -16,7 +16,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );
 
 my $usage = <<EOF;
 Usage:
-CompareDupSopsInTpSeries.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <series_instance_uid> <notify>
+CompareDupSopsInTpSeries.pl <?bkgrnd_id?> <activity_id> <activity_timepoint_id> <series_instance_uid> <show_uid_diffs> <notify>
 or
 CompareDupSopsInTp.pl -h
 
@@ -40,8 +40,8 @@ of differences.
 EOF
 
 if($#ARGV == 0 && $ARGV[0] eq "-h") { print "$usage\n\n"; exit }
-if($#ARGV != 4){ print "Wrong args: $usage\n"; die "$usage\n\n" }
-my($invoc_id, $act_id, $act_tp_id, $series, $notify) = @ARGV;
+if($#ARGV != 5){ print "Wrong args: $usage\n"; die "$usage\n\n" }
+my($invoc_id, $act_id, $act_tp_id, $series, $show_uid_diffs, $notify) = @ARGV;
 
 print "All processing in background\n";
 my $back = 
@@ -112,7 +112,8 @@ for my $sop (keys %Sops){
     my($only_in_from, $only_in_to, $different) =
       $diff->SemiDiffReport;
     my $l_rept =
-      $diff->LongReportFromSemiWithDates($only_in_from, $only_in_to, $different);
+      $diff->LongReportFromSemiWithDates(
+        $only_in_from, $only_in_to, $different, $show_uid_diffs);
     unless(length($l_rept) <= 0){
       my $ctx1 = Digest::MD5->new;
       $ctx1->add($l_rept);
@@ -206,7 +207,8 @@ for my $i (0 .. $longest_equiv){
   if($i < $longest_equiv){
     $rpt_diffs->print(",$left,diffs");
   } else {
-    $rpt_diffs->print(",$left\r\n");
+    $rpt_diffs->print(",$left,");
+    $rpt_diffs->print(",select\r\n");
   }
 }
 for my $eq (@EquivClasses){

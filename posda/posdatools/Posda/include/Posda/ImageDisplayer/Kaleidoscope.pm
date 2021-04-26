@@ -99,6 +99,8 @@ sub InitializeImageList{
         image => "FetchJpeg?obj_path=$self->{path}&file_id=$file_id",
       };
       push(@{$self->{JpegImageUrls}}, $jpeg_url);
+      $self->{IndexToEquiv}->{$#{$self->{JpegImageUrls}}} =
+        $image_equivalence_class_id;
     } else {
       $WithoutFile{$processing_status}->{$image_equivalence_class_id} = {
         id => $image_equivalence_class_id,
@@ -121,7 +123,6 @@ sub FetchJpeg{
   my($self, $http, $dyn) = @_;
   my $jpeg_file_id = $dyn->{file_id};
   my $path = $self->{JpegFiles}->{$jpeg_file_id};
-  ##  get path
   $self->SendCachedJpeg($http, $dyn, $path)
 } 
 sub SendCachedJpeg{
@@ -166,7 +167,6 @@ my $content = <<EOF;
     onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
     <option value="None" selected="">No tool</option>
     <option value="Pan/Zoom">P/Z tool</option>
-    <option value="Select">Sel tool</option>
   </select>
 </div>
 <div id="divPrev" width="10%">&nbsp;<?dyn="PrevButton"?></div>
@@ -181,16 +181,6 @@ my $content = <<EOF;
 </div>
 EOF
 
-sub CanvasWidth{
-  my($self, $http, $dyn) = @_;
-  $http->queue("$self->{canvas_width}");
-}
-
-sub CanvasHeight{
-  my($self, $http, $dyn) = @_;
-  $http->queue("$self->{canvas_height}");
-}
-
 sub ImageDisplayPopupButton{
   my($self, $http, $dyn) = @_;
   $self->NotSoSimpleButton($http, {
@@ -203,14 +193,22 @@ sub ImageDisplayPopupButton{
 sub ImageDisplayPopup{
   my($self, $http, $dyn) = @_;
   my %Files;
+  my $equiv_class = 
+    $self->{IndexToEquiv}->{$self->{CurrentUrlIndex}};
   Query('InputImagesByImageEquivalenceClass')->RunQuery(sub {
     my($row) = @_;
-  }, sub {}, $self->{params}->{vis_review_instance});
+    my($file_id, $rows, $cols) = @$row;
+    $Files{$file_id} = {
+      rows => $rows,
+      cols => $cols,
+    };
+  }, sub {}, $equiv_class);
   my $params = {
     vis_review_id => $self->{params}->{vis_review_instance},
     user => $self->get_user,
     files => \%Files,
     tmp_dir => $self->{params}->{tmp_dir},
+    equiv_class => $equiv_class
   };
   my $class = "Posda::ImageDisplayer::KaleidoscopeSub";
   eval "require $class";
@@ -220,7 +218,7 @@ sub ImageDisplayPopup{
   }
 
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
-  my $name = "$self->{name}" . "_k_scope_$self->{sequence_no}";
+  my $name = "$self->{name}" . "_sub_$self->{sequence_no}";
   $self->{sequence_no} += 1;
   my $child_path = $self->child_path($name);
   my $child_obj = $class->new($self->{session},
@@ -234,13 +232,4 @@ sub Content{
   my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, $content);
 }
-sub GetContoursToRender{
-  my($self, $http, $dyn) = @_;
-  my $content_type = "application/json";
-  $http->HeaderSent;
-  $http->queue("HTTP/1.0 200 OK\n");
-  $http->queue("Content-type: $content_type\n\n");
-  $http->queue("[]");
-}
-
 1;

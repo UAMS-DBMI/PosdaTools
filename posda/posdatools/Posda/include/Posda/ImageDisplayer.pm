@@ -3,6 +3,7 @@
 use strict;
 package Posda::ImageDisplayer;
 use Posda::HttpApp::JsController;
+use Posda::DB qw(Query);
 ##################################################
 #Data Fetched via Ajax (AjaxPosdaGet):
 #  ImageLabels
@@ -179,7 +180,6 @@ my $dicom_image_disp_js = <<EOF;
   var SelectionEnabled = "Off";
   var CineEnabled = "No";
   var CineDir = "+";
-//  var ContoursToDraw = [];
   var ContourResp;
   var ContoursToDraw = [
   ];
@@ -188,15 +188,16 @@ my $dicom_image_disp_js = <<EOF;
   var RectsToDraw = [
   ];
   var RectBeingConstructed = null;
+  var VisibleContours = {};
   var theSvg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
   function SendAnnotations(){
 //    var data = JSON.stringify(AnnotationsToDraw)
 //    var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
-//      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });;
+//      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });
 //    ajax.post(data);
     var data = JSON.stringify(RectsToDraw)
     var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
-      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });;
+      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });
     ajax.post(data);
   }
   function PopAnnotations(){
@@ -225,16 +226,20 @@ my $dicom_image_disp_js = <<EOF;
       ctx.drawImage(ImageToDraw,0,0);
       var i;
       for(i = 0; i < ContoursToDraw.length; i++){
-         var contour = ContoursToDraw[i];
-         ctx.beginPath();
-         ctx.moveTo(contour.points[0][0], contour.points[0][1]);
-         for(j = 0; j < contour.points.length - 1; j++){
-           ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
+         var cont_name = ContoursToDraw[i].id;
+         var is_visible = VisibleContours[cont_name];
+         if(is_visible){
+           var contour = ContoursToDraw[i];
+           ctx.beginPath();
+           ctx.moveTo(contour.points[0][0], contour.points[0][1]);
+           for(j = 0; j < contour.points.length - 1; j++){
+             ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
+           }
+           ctx.closePath();
+           ctx.lineWidth = LineWidth;
+           ctx.strokeStyle = contour.color;
+           ctx.stroke();
          }
-         ctx.closePath();
-         ctx.lineWidth = LineWidth;
-         ctx.strokeStyle = contour.color;
-         ctx.stroke();
       }
       if(RectBeingConstructed != null){
          ctx.beginPath();
@@ -586,6 +591,7 @@ my $dicom_image_disp_js = <<EOF;
     if(td != null){
       td.selectedIndex = ImageLabels.d.current_index;
     }
+    VisibleContours = ImageLabels.d.VisibleContours;
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
@@ -1113,6 +1119,17 @@ sub JsControllerLocal{
   $self->RefreshEngine($http, $dyn, $js_controller_local);
 }
 
+############################# GetContoursToRender (override)
+
+sub GetContoursToRender{
+  my($self, $http, $dyn) = @_;
+  my $content_type = "application/json";
+  $http->HeaderSent;
+  $http->queue("HTTP/1.0 200 OK\n");
+  $http->queue("Content-type: $content_type\n\n");
+  $http->queue("[]");
+}
+
 ############################# Widgets
 
 
@@ -1190,6 +1207,7 @@ sub SetWinLev{
     $self->{WindowWidth} = $ww;
   }
   $self->InitializeUrls;
+  $self->SetImageUrl;
 }
 my $preset_widget_ct = <<EOF;
   <select class="form-control"
@@ -1255,5 +1273,129 @@ sub UploadJsonObject{
 #  print STDERR
 #    "++++++++++++++++++++++++++++++++++++++++\n";
 }
+
+sub CanvasHeight{
+  my($self, $http, $dyn) = @_;
+  $http->queue($self->{canvas_height});
+}
+sub CanvasWidth{
+  my($self, $http, $dyn) = @_;
+  $http->queue($self->{canvas_width});
+}
+
+############################# Fetch Dicom / Send Jpeg
+
+sub FetchDicomJpeg{
+  my($self, $http, $dyn) = @_;
+  my $dicom_file_id = $dyn->{file_id};
+  $self->{CurrentDicomFile} = $dicom_file_id;
+  unless(defined $self->{WindowWidth}){
+    $self->{WindowWidth} = "";
+    $self->{WindowCenter} = "";
+  }
+  my $window_width = $self->{WindowWidth};
+  my $window_ctr = $self->{WindowCenter};
+  my $jpeg_file = "$self->{params}->{tmp_dir}/" .
+    "$dicom_file_id" ."_$window_ctr" . "_$window_width.jpeg";
+  unless(-f $jpeg_file){
+    my $rendered_dicom_gray = "$self->{params}->{tmp_dir}/$dicom_file_id.gray";
+    my $cmd = "CacheDicomAsJpeg.pl $dicom_file_id \"$window_width\" " .
+     "\"$window_ctr\" " .
+     "$rendered_dicom_gray $jpeg_file;echo 'done'";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $jpeg_file,
+        $rendered_dicom_gray, $dicom_file_id, \@render_list)
+    );
+    return;
+  }
+  $self->SendCachedJpeg($http, $dyn, $jpeg_file)
+}
+
+sub HandleRenderersLines{
+  my($self, $render_list) = @_;
+  my $sub = sub {
+    my($line) = @_;
+    push @$render_list, $line;
+  };
+  return $sub;
+}
+
+sub ContinueRenderingImage{
+  my($self, $http, $dyn, $rendered_dicom_jpeg, $rendered_dicom_gray,
+    $dicom_file_id, $render_list) = @_;
+  my $sub = sub {
+    $self->SendCachedJpeg($http, $dyn, $rendered_dicom_jpeg);
+    unlink $rendered_dicom_gray;
+  };
+  return $sub;
+}
+
+sub SendCachedJpeg{
+  my($self, $http, $dyn, $jpeg_path) = @_;
+  my $contour_file_id = $self->{ContourFileId};
+  my $content_type = "image/jpeg";
+  open my $sock, "cat $jpeg_path|" or die "Can't open " .
+    "$jpeg_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+
+############################# Fetch Png / Test Pattern
+sub FetchPng{ 
+  my ($self, $http, $dyn) = @_;
+  my $file;
+  unless(defined($dyn->{file_id}) && $dyn->{file_id} ne ""){
+    print STDERR "file_id not defined:\n";
+    for my $i (keys %$dyn){ 
+      print STDERR "dyn{$i} = $dyn->{$i}\n";
+    }
+    return;
+  }
+
+  Query('GetFilePath')->RunQuery(sub{
+    my($row) = @_;
+    $file = $row->[0];
+  }, sub {}, $dyn->{file_id}); 
+  open my $fh, "cat $file|" or die "Can't open $file for reading ($!)";
+  $self->SendContentFromFh($http, $fh, "image/png",
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+sub FetchTestPattern{
+  my($self, $http, $dyn) = @_;
+  my $tp_path = "$self->{params}->{tmp_dir}/TestPattern.png";
+  my $tmp_path = "$self->{params}->{tmp_dir}/TestPattern.pbm";
+  unless(-f $tp_path){
+    my $cmd = "MakeTestPbm.pl 512 512  >$tmp_path; ".
+    "convert $tmp_path $tp_path; rm $tmp_path; echo done";
+    my @render_list;
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->HandleRenderersLines(\@render_list),
+      $self->ContinueRenderingImage($http, $dyn, $tp_path,
+        \@render_list)
+    );
+    return;
+  }
+  $self->SendCachedPng($http, $dyn, $tp_path);
+}
+sub ContinueRenderingTp{
+  my($self, $http, $dyn, $rendered_test_pat, $render_list) = @_;
+  my $sub = sub {
+    $self->SendCachedPng($http, $dyn, $rendered_test_pat);
+  };
+  return $sub;
+}
+sub SendCachedPng{
+  my($self, $http, $dyn, $png_path) = @_;
+  my $content_type = "image/png";
+  open my $sock, "cat $png_path|" or die "Can't open " .
+    "$png_path for reading ($!)";
+
+  $self->SendContentFromFh($http, $sock, $content_type,
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+
 
 1;

@@ -165,7 +165,7 @@ sub StartBackgroundProcess{
   unlink $tempfilename;
 
   # add to the work table for worker nodes
-  my $priority = 1;
+  my $priority = 0;
   my $work_id = Query("CreateNewWorkWithPriority")
                 ->FetchOneHash($new_id,
                   $worker_input_file_id, "work_queue_$priority")

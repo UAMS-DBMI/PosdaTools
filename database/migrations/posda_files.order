@@ -18,3 +18,4 @@ struct_contours_to_slice.sql
 pathology_visual_review_instance.sql
 pathology_visual_review_files.sql
 add_metrics_to_work.sql
+add_png_to_seg_slice_bitmap_file.sql

@@ -901,12 +901,13 @@ sub ReadElementValue{
     ){
       seek($this->{stream}, $this->{ele_len}, 1);
       upd_len($this, $this->{ele_len});
+      $this->{element_is_skipped} = 1;
       if(defined($this->{length}) && $this->{length} < 0){
         my $overage = - $this->{length};
         die "not enough bytes (lacking $overage) " .
           "for ele $this->{parent_tag}$this->{tag}";
       }
-      return undef;
+      delete $this->{ele_value};
     } else {
       my $buff;
       my $len_read = read($this->{stream}, $buff, $this->{ele_len});
@@ -973,6 +974,7 @@ sub ReadFixedLengthDataset{
       $this->{ele_offset} = $file_pos;
       seek($this->{stream}, $this->{ele_len}, 1);
       upd_len($this, $this->{ele_len});
+      $this->{element_is_skipped} = 1;
       if(defined($this->{length}) && $this->{length} < 0){
         my $overage = - $this->{length};
         die "not enough bytes (lacking $overage) " .
@@ -1006,6 +1008,19 @@ sub ReadFixedLengthDataset{
 }
 sub EleHandler{
   my($this) = @_;
+  if($this->{element_is_skipped}){
+    my $element = {
+      VR => $this->{vr},
+      VM => $this->{vm},
+      type => $this->{type},
+      file_pos => $this->{file_pos},
+      ele_len_in_file => $this->{ele_len},
+      left_in_file => $this->{filename},
+    };
+    delete $this->{element_is_skipped};
+    $this->{dataset}->{$this->{grp}}->{$this->{ele}} = $element;
+    return;
+  }
   my $element = {
     value => $this->{ele_value},
     VR => $this->{vr},

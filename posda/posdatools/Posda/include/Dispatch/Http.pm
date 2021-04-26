@@ -858,7 +858,7 @@ print STDERR "##################################\n";
 # The following print statement will let you know if you are
 # dispatching objects at all (but will generate lots of output)
 #
-#  print "DispatchObj: method: $method q_string: $http->{q_string}\n";
+#  print STDERR "DispatchObj: method: $method q_string: $http->{q_string}\n";
 #
     my @pairs = split(/&/, $http->{q_string});
     my %env;
@@ -872,9 +872,13 @@ print STDERR "##################################\n";
     my $obj_path = $env{obj_path};
     my $obj = $sess->{root}->{$obj_path};
     unless($obj){
+      print STDERR "###################################\n";
+      print STDERR "###################################\n";
       print STDERR "Couldn't find object $obj_path\n";
       print STDERR "DispatchObj: method: $method q_string: $http->{q_string}\n";
       $http->NotFound("No obj: ", "$env{obj_path}");
+      print STDERR "###################################\n";
+      print STDERR "###################################\n";
       return;
     }
     if($obj->can($method)){

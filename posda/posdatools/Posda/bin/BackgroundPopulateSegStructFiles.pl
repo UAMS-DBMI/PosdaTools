@@ -72,7 +72,7 @@ for my $f (keys %FileIds){
   my $seg_obj;
   eval { $seg_obj = Posda::SegToStruct->new($path) };
   if($@){
-    $back->WriteToEmail("file_id ($f) isn't a seg_bitmap:\$@\n");
+    $back->WriteToEmail("file_id ($f) isn't a seg_bitmap: $@\n");
     $f_failed += 1;
     $f_remaining -= 1;
     next file;

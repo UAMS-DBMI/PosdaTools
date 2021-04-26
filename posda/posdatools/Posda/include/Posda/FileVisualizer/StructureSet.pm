@@ -1362,7 +1362,9 @@ sub MakeSegmentationFile{
     rois => {},
     image_files => {},
     sops => {},
-    all_file_sort => $self->{StructureSetAnalysis}->{file_sort}
+    all_file_sort => $self->{StructureSetAnalysis}->{file_sort},
+    temp_path => $self->{temp_path},
+    user => $self->get_user,
   };
   my %ref_img;
   my $f_rois = $self->{StructureSetAnalysis}->{rois};
@@ -1497,7 +1499,7 @@ sub SortFilesByOffset{
 
   for my $i (keys %file_offset_info){
     my $off_info = $file_offset_info{$i};
-    $off_info->{z_diff} = $off_info->{rot_ipp}->[2] - $min_z;
+    $off_info->{z_diff} = $off_info->{rot_ipp}->[2];
     $off_info->{x_diff} = $off_info->{rot_ipp}->[0] - $avg_x;
     $off_info->{y_diff} = $off_info->{rot_ipp}->[1] - $avg_y;
   }

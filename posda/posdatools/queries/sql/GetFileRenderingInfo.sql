@@ -24,8 +24,6 @@ from
   join file_storage_root fsr using (file_storage_root_id)
   join file_image fi using (file_id)
   join image i using (image_id)
-  join file_image_geometry fig using (file_id)
-  join image_geometry ig using (image_geometry_id)
   join file_win_lev fwl using (file_id)
   join window_level wl using (window_level_id)
   join file_slope_intercept using(file_id)
