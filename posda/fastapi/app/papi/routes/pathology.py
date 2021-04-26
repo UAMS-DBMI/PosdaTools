@@ -3,55 +3,56 @@ from pydantic import BaseModel
 from typing import List
 
 router = APIRouter()
+images = {}
 
 from .auth import logged_in_user, User
 
 from ..util import Database
 
 
-class CollectionInfo(BaseModel):
-    collection: str
-    site: str
-    file_count: int
-
-@router.get("/start/{activity_timepoint_id}")
-async def get_files_from_activity(activity_timepoint_id: int, db: Database = Depends()):
+@router.get("/start/{vr_id}")
+async def get_files_for_review(vr_id: int, db: Database = Depends()):
     query = """\
-        select
-          root_path + rel_path as filepath
+        select distinct
+          svsfile_id
         from
-          activity_timepoint_file
-          natural join from file
-          natural join file_location
-          natural join file_storage_root
+          pathology_visual_review_files
         where
-          activity_timepoint_id = $1
+          pathology_visual_review_instance_id = $1
     """
-    results = await db.fetch(query, [activity_id])
-    IMAGES = []
-    PREFIX = result['root_path'] + '/'
-    for result in results:
-        IMAGES.append(result['rel_path'])
-    return IMAGES
+    return await db.fetch(query, [vr_id])
+
 
 
 @router.get("/{svsid}")
-async def create_preview_from_SVS(svsid: int):
-    ret = []
-    mytif = get_SVS(svsid)
-    for i, page in enumerate(mytif.pages):
-        if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000):
-            data = page.asarray()
-            str = "{}_page{}.jpg".format(svsid,i)
-            im = Image.fromarray(data)
-            im.save(str)
-            ret.append(str)
-    return ret
+async def get_preview_filepaths(svsid: int, db: Database = Depends()):
+    query = """\
+        select
+         root_path || '/' || rel_path as filepath
+        from
+        	pathology_visual_review_files
+        	join file
+        		on pathology_visual_review_files.preview_file_id = file.file_id
+        	natural join file_location
+        	natural join file_storage_root
+        where
+        	svsfile_id = $1
+        """
+    return await db.fetch(query, [svsid])
 
-def get_SVS(svsid: int):
-    mypath = PREFIX + IMAGES[svsid]
-    return TiffFile(mypath)
+@router.get("/preview/{svsid}")
+async def get_previews(svsid: int, db: Database = Depends()):
+    query = """\
+        select
+         preview_file_id
+        from
+        	pathology_visual_review_files
+        where
+        	svsfile_id = $1
+        """
+    return await db.fetch(query, [svsid])
+
 
 @router.get("/getcount")
 def get_current_count():
-    return len(IMAGES)
+    return len(images)

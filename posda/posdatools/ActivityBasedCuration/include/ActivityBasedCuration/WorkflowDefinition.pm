@@ -144,12 +144,22 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule Visual Review",
         action =>  "VisualReviewFromTimepoint",
       },
+      {
+        operation => "InvokeNewOperation",
+        caption => "Pathology Schedule SVS VisualReview",
+        action =>  "Path_SVS_VisualReview",
+      },
     ],
     queries => [
       {
         caption => "Suggested Queries for Visual Review Status",
         operation => "SelectQueryGroup",
         query_list_name => "VisualReviewStatus",
+      },
+      {
+        caption => "Pathology Queries for Visual Review Status",
+        operation => "SelectQueryGroup",
+        query_list_name => "PathVisualReviewStatus",
       }
     ],
   },
@@ -494,6 +504,15 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "VisualReviewForActivity",
         query => "GetVisualReviewByActivityId",
+      },
+    ],
+  ],
+  PathVisualReviewStatus => [
+    "Pathology Suggested Queries for Visual Review Status",
+    [
+      {
+        caption => "View Pathology Visual Review Instances",
+        query => "ViewPathologyVisualReviewInstances",
       },
     ],
   ],
