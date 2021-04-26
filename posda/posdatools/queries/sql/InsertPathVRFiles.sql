@@ -1,4 +1,4 @@
--- Name: InsertActivityTimepointFile
+-- Name: InsertPathVRFiles
 -- Schema: posda_queries
 -- Columns: []
 -- Args: ['pathology_visual_review_instance_id', 'svsfile_id', 'preview_file_id']

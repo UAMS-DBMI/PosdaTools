@@ -24,6 +24,42 @@ RUN cd /build && \
 	make -j 16 && \
 	make install
 
+	###############################################################################
+	# Build imagecodecs
+	###############################################################################
+	FROM alpine:3.11.3 as icbuild
+	RUN apk add --update --no-cache \
+	        imake \
+	        makedepend \
+	        alpine-sdk \
+	        coreutils \
+	        tar \
+	        gzip \
+	        bzip2 \
+	        python3 \
+	        python3-dev \
+	        bzip2-dev \
+	        giflib-dev \
+	        openjpeg-dev \
+	        lcms2-dev \
+	        lz4-dev \
+	        xz-dev \
+	        libpng-dev \
+	        snappy-dev \
+	        libwebp-dev \
+	        zstd-dev
+
+	RUN pip3 install wheel
+	RUN pip3 install numpy
+	RUN pip3 wheel imagecodecs \
+	                                   --global-option="build_ext" \
+	                                   --global-option="--skip-bitshuffle" \
+	                                   --global-option="--skip-zopfli" \
+	                                   --global-option="--skip-jpegxr" \
+	                                   --global-option="--skip-deflate" \
+	                                   --global-option="--skip-brotli" \
+	                                   --global-option="--skip-aec" \
+	                                   --global-option="--skip-blosc"
 ###############################################################################
 # Build GDCM (Grassroots DICOM)
 ###############################################################################
@@ -108,7 +144,8 @@ RUN cpanm --notest REST::Client \
 
 
 # Install needed python utils
-RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis
+RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis tifffile
+
 
 RUN addgroup -g 2123 fakeposda
 RUN adduser -D -G fakeposda posda
@@ -136,8 +173,20 @@ COPY --from=gdcmbuild /usr/local/lib/_gdcmswig.so /usr/lib/python3.8/site-packag
 COPY --from=gdcmbuild /usr/local/bin/* /usr/local/bin/
 COPY --from=gdcmbuild /usr/local/lib/* /usr/local/lib/
 
+
+
+
+# copy the built wheels from the icbuild container into the real one
+copy --from=icbuild /imagecodecs*.whl /
+copy --from=icbuild /numpy*.whl /
+RUN pip3 install /numpy*.whl \
+	&&  pip3 install /imagecodecs*.whl \
+	&&  rm -f /*.whl
+
+
 # Add Imagemagick
-RUN apk --update --no-cache add imagemagick
+RUN apk --update --no-cache add imagemagick jpeg-dev
+RUN pip3 install Pillow
 
 # Copy actual posdatools last, to speed up rebuilds
 COPY --chown=posda:fakeposda posdatools /home/posda/posdatools
