@@ -2687,16 +2687,12 @@ print STDERR "############In InvokeOperationRow\n";
   if($class eq "Posda::NewerProcessPopup"){
     return $self->NewerProcessPopupFromRow($http, $dyn);
   }
+
   unless(defined $class){
     $class = "Posda::NewerProcessPopup";
   }
 print STDERR "###########class: $class\n";
   if($class eq "Quince") { $class = "ActivityBasedCuration::Quince" }
-  eval "require $class";
-  if($@){
-    print STDERR "$class failed to compile\n\t$@\n";
-    return;
-  }
   my $table = $self->{ForegroundQueries}->{$self->{NewQueryToDisplay}};
   my $params = {
 #    button => $dyn->{operation},
@@ -2717,6 +2713,17 @@ print STDERR "###########class: $class\n";
   for my $i (0 .. $#{$row}) {
     $params->{$cols->[$i]} = $row->[$i];
   }
+  # if PathologyViewer, do it differently:
+  if ($class eq 'PathologyViewerLauncher') {
+    my $name = 'Kohlrabi';
+    $self->openKohlrabi($name, $params);
+    return;
+  }
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
 
   unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
   my $name = "StartBackground_$self->{sequence_no}";
@@ -2731,6 +2738,21 @@ sub NewQueryWait {
   my ($self, $http, $dyn) = @_;
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");
 }
+
+sub openKohlrabi{
+    my ($self, $name, $params) = @_;
+    my $external_hostname = Config('external_hostname');
+    my $kohlrabi_url = "http://$external_hostname/kohlrabi";
+    my $val;
+
+    if (defined $params->{pathology_visual_review_instance_id}) {
+      $val = $params->{pathology_visual_review_instance_id};
+
+    my $cmd = "rt('$name', '$kohlrabi_url/$val', 700, 1000, 0);";
+    $self->QueueJsCmd($cmd);
+  }
+}
+
 sub Queries{
   my($self, $http, $dyn) = @_;
   unless(exists $self->{ForegroundQueries}){ $self->{ForegroundQueries} = {} }

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 -u
+#!/usr/bin/env python3
 
 import argparse
 import csv
@@ -29,8 +29,8 @@ def main(args):
     #background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
 
     vr_id = Query("CreatePathologyVisualReviewInstance").get_single_value(
-            activity_creation_id = activity_id,
-            scheduler = notify);
+            activity_creation_id = args.activity_id,
+            scheduler = args.notify);
 
 
     results = []
