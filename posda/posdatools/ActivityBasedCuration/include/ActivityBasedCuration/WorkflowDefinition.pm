@@ -366,6 +366,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Correct Tomosynthesis Files",
         action =>  "TomosynthesisConverterTP",
       },
+      {
+        caption => "Make a hashed UID mapping spreadsheet",
+        action =>  "MakeUIDMap",
+      },
     ],
   },
 );

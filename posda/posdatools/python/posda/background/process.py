@@ -58,8 +58,11 @@ class BackgroundProcess:
             q.execute(self.background_id, i, arg)
 
     def daemonize(self):
-        """For when good things just need to turn bad"""
-        (self.parent_pid, self.child_pid) = real_daemonize()
+        # background scripts should no longer deamonize, so this is removed
+        # the method itself is kept for backwards compatability, and because
+        # it performs some other actions.
+        # (self.parent_pid, self.child_pid) = real_daemonize()
+        self.parent_pid = self.child_pid = 0
 
 
         # turn email into a real report
