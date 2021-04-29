@@ -1,0 +1,6 @@
+:operation_name: MakeUIDMap
+:command_line: create-hashed-uid-mapping.py <?bkgrnd_id?> <notify> <timepoint_id>
+:operation_type: background_process
+:input_line_format: 
+:tags: []
+:can_chain: 
