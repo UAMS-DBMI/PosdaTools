@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException, Form
+from fastapi import Depends, APIRouter, HTTPException, Form, Request
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -6,6 +6,8 @@ router = APIRouter()
 from .auth import logged_in_user, User
 
 from ..util import Database
+
+import json
 
 
 @router.get("/status/{work_id}")
@@ -51,7 +53,14 @@ class ErrorFiles(BaseModel):
     stdout_file_id: int = None
 
 @router.post("/status/{work_id}/finished")
-async def set_work_status_finished(error_files: ErrorFiles, work_id: int, db: Database = Depends()):
+async def set_work_status_finished(request: Request, error_files: ErrorFiles, work_id: int, db: Database = Depends()):
+    json_body = await request.json()
+    # these two items are tracked directly, no need
+    # for them to also be in the metrics field
+    del json_body['stderr_file_id']
+    del json_body['stdout_file_id']
+    json_body_str = json.dumps(json_body)
+
     query = """
         update
             work
@@ -60,14 +69,23 @@ async def set_work_status_finished(error_files: ErrorFiles, work_id: int, db: Da
             finished = true,
             status = 'finished',
             stderr_file_id = $2,
-            stdout_file_id = $3
+            stdout_file_id = $3,
+            metrics = $4
         where
             work_id = $1
     """
-    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id])
+    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id, json_body_str])
 
 @router.post("/status/{work_id}/errored")
 async def set_work_status_errored(error_files: ErrorFiles, work_id: int, db: Database = Depends()):
+
+    json_body = await request.json()
+    # these two items are tracked directly, no need
+    # for them to also be in the metrics field
+    del json_body['stderr_file_id']
+    del json_body['stdout_file_id']
+    json_body_str = json.dumps(json_body)
+
     query = """
         update
             work
@@ -76,11 +94,12 @@ async def set_work_status_errored(error_files: ErrorFiles, work_id: int, db: Dat
             failed = true,
             status = 'errored',
             stderr_file_id = $2,
-            stdout_file_id = $3
+            stdout_file_id = $3,
+            metrics = $4
         where
             work_id = $1
     """
-    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id])
+    return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id, json_body_str])
 
 @router.get("/subprocess/{subprocess_invocation_id}")
 async def get_subprocess_info(subprocess_invocation_id: int, db: Database = Depends()):

@@ -96,6 +96,7 @@ def process_work_item(work_id: int):
 
     command_line = subp['command_line'].replace(
         "<?bkgrnd_id?>", str(subp['subprocess_invocation_id']))
+    command_line = f"/usr/bin/time -v -o /tmp/{work_id}.time {command_line}"
     logging.debug(command_line)
 
     stdout_fp = tempfile.TemporaryFile()
@@ -122,42 +123,49 @@ def process_work_item(work_id: int):
     stdout_fp.close()
     stderr_fp.close()
 
+    metrics = parse_timefile(f"/tmp/{work_id}.time")
+
     if return_code != 0:
-        set_status_errored(work_id, stderr_file_id, stdout_file_id)
+        set_status_errored(work_id, stderr_file_id, stdout_file_id, metrics)
     else:
-        set_status_finished(work_id, stderr_file_id, stdout_file_id)
+        set_status_finished(work_id, stderr_file_id, stdout_file_id, metrics)
 
 
 def set_status_finished(work_id: int,
                         stderr_file_id: int,
-                        stdout_file_id: int) -> None:
+                        stdout_file_id: int,
+                        metrics) -> None:
     """Set the status of the work item to finished
 
     If provided, set the stderr and stdout files as well
     """
-    set_status_x("finished", work_id, stderr_file_id, stdout_file_id)
+    set_status_x("finished", work_id, stderr_file_id, stdout_file_id, metrics)
 
 
 def set_status_errored(work_id: int,
                        stderr_file_id: int,
-                       stdout_file_id: int) -> None:
+                       stdout_file_id: int,
+                       metrics) -> None:
     """Set the status of the work item to errored
 
     If provided, set the stderr and stdout files as well
     """
-    set_status_x("errored", work_id, stderr_file_id, stdout_file_id)
+    set_status_x("errored", work_id, stderr_file_id, stdout_file_id, metrics)
 
 
 def set_status_x(status: str,
                  work_id: int,
                  stderr_file_id: int,
-                 stdout_file_id: int) -> None:
+                 stdout_file_id: int,
+                 metrics) -> None:
+
+    metrics.update({
+        'stderr_file_id': stderr_file_id,
+        'stdout_file_id': stdout_file_id,
+    })
     req = requests.post(
         f'{BASE_URL}/worker/status/{work_id}/{status}',
-        json={
-            'stderr_file_id': stderr_file_id,
-            'stdout_file_id': stdout_file_id
-        }
+        json=metrics
     )
 
     if req.status_code != 200:
@@ -245,6 +253,16 @@ def upload_file(fp):
         raise Exception("File upload failed")
     return resp.json()['file_id']
 
+def parse_timefile(filename):
+    with open(filename) as f:
+        rows = [row.strip() for row in f]
+
+    out_dict = {}
+    for row in rows:
+        key, value = row.split(': ')
+        out_dict[key] = value
+
+    return out_dict
 
 def test():
     """Some tests of this module, you should probably ignore this"""
@@ -276,7 +294,10 @@ def test():
         logging.error(e)
         set_status_errored(2, None, None)
 
+def test1():
+    pass
 
 if __name__ == "__main__":
     main()
     # test()
+    # test1()
