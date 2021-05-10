@@ -4,20 +4,27 @@ use strict;
 package Posda::ImageDisplayer;
 use Posda::HttpApp::JsController;
 use Posda::DB qw(Query);
-##################################################
-#Data Fetched via Ajax (AjaxPosdaGet):
-#  ImageLabels
-#  ImageUrl
-##################################################
-#Methods Invoked via Ajax:
-#  GetContoursToRender
-##################################################
+
 use vars qw( @ISA );
 @ISA = ( "Posda::HttpApp::JsController" );
+my $expander = <<EOF;
+<?dyn="BaseHeader"?>
+<script type="text/javascript">
+<?dyn="AjaxObj"?>
+<?dyn="DicomImageDispJs"?>
+<?dyn="JsContent"?>
+<?dyn="JsControllerLocal"?>
+</script>
+</head>
+<body>
+<?dyn="Content"?>
+<?dyn="Footer"?>
+EOF
 sub new {
   my($class, $sess, $path, $parms) = @_;
   my $self = Posda::HttpApp::JsController->new($sess, $path);
   bless $self, $class;
+  $self->{expander} = $expander;
   $self->Init($parms);
   return $self;
 }
@@ -175,7 +182,7 @@ my $dicom_image_disp_js = <<EOF;
   var ContoursPending = false;
   var BaseSessionUrl;
   var LineWidth = 1;
-  var ToolType = "None";
+  var ToolType = "No tool";
   var TrackingEnabled = "Off";
   var SelectionEnabled = "Off";
   var CineEnabled = "No";
@@ -212,8 +219,8 @@ my $dicom_image_disp_js = <<EOF;
       var td = document.getElementById('divTransform');
       var tf = ctx.getTransform();
       if(td != null){
-        td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' c: ' 
-          + tf.c + '<br>d: ' + tf.d + ' e: ' + tf.e + ' f: ' + tf.f;
+        td.innerHTML = 'a: ' + tf.a + ' b: ' + tf.b + ' <br>c: ' 
+          + tf.c + 'd: ' + tf.d + ' <br>e: ' + tf.e + ' f: ' + tf.f;
       }
       ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
@@ -290,13 +297,13 @@ my $dicom_image_disp_js = <<EOF;
     if(ToolType == sel_type) { return; }
     if(ToolType == "Pan/Zoom"){
       DisableTracking();
-    } else if (ToolType == "Select"){
+    } else if (ToolType == "Rect"){
       DisableSelection();
     }
     ToolType = sel_type;
     if(ToolType == "Pan/Zoom"){
       EnableTracking();
-    } else if (ToolType == "Select"){
+    } else if (ToolType == "Rect"){
       EnableSelection();
     }
   }
@@ -587,11 +594,22 @@ my $dicom_image_disp_js = <<EOF;
       td.innerHTML = "Current Offset: " +
        ImageLabels.d.current_offset;
     }
+    td = document.getElementById('CurrentIndex');
+    if(td != null){
+      td.innerHTML = "Current Index: " +
+       ImageLabels.d.current_index;
+    }
     td = document.getElementById('OffsetSelector');
     if(td != null){
       td.selectedIndex = ImageLabels.d.current_index;
     }
-    VisibleContours = ImageLabels.d.VisibleContours;
+    td = document.getElementById('IndexSelector');
+    if(td != null){
+      td.selectedIndex = ImageLabels.d.current_index;
+    }
+    if(ImageLabels.d.VisibleContours != null){
+      VisibleContours = ImageLabels.d.VisibleContours;
+    }
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
@@ -616,6 +634,10 @@ my $dicom_image_disp_js = <<EOF;
     if(td != null){
       td.disabled = false;
     }
+    var td = document.getElementById('IndexSelector'); 
+    if(td != null){
+      td.disabled = false;
+    }
   }
   DisableImageControlButtons = function(){
     var td = document.getElementById('NextButton'); 
@@ -627,6 +649,10 @@ my $dicom_image_disp_js = <<EOF;
       td.disabled = true;
     }
     var td = document.getElementById('OffsetSelector'); 
+    if(td != null){
+      td.disabled = true;
+    }
+    var td = document.getElementById('IndexSelector'); 
     if(td != null){
       td.disabled = true;
     }
@@ -1119,19 +1145,97 @@ sub JsControllerLocal{
   $self->RefreshEngine($http, $dyn, $js_controller_local);
 }
 
-############################# GetContoursToRender (override)
-
-sub GetContoursToRender{
-  my($self, $http, $dyn) = @_;
-  my $content_type = "application/json";
-  $http->HeaderSent;
-  $http->queue("HTTP/1.0 200 OK\n");
-  $http->queue("Content-type: $content_type\n\n");
-  $http->queue("[]");
-}
-
 ############################# Widgets
 
+sub RoiSelector{
+  my($self, $http, $dyn) = @_;
+  for my $ri (
+    sort { $a <=> $b }
+    keys %{$self->{params}->{rois}}
+  ){
+    my $roi = $self->{params}->{rois}->{$ri};
+    my $color = sprintf("%02x%02x%02x", $roi->{color}->[0],
+      $roi->{color}->[1], $roi->{color}->[2]);
+    $http->queue("<div style=\"display: flex; flex-direction: row;" .
+      " align-items: flex-beginning; margin-right: 5px\" id=\"div_roi_$ri\">");
+    $http->queue($self->CheckBoxDelegate("SelectRoiForDisplay", 0,
+        $self->{ImageLabels}->{VisibleContours}->{"roi_num_$ri"},
+        { op => "SelectRoiForDisplay",
+          sync => "UpdateImage();",
+          roi =>$ri
+        }
+      )
+    );
+    $http->queue("<font style=\"color: #$color\">$roi->{name}</font>");
+    $http->queue("</div>");
+  }
+}
+
+sub SelectRoiForDisplay{
+  my($self, $http, $dyn) = @_;
+  my $roi_id = "roi_num_$dyn->{roi}";
+  if($dyn->{checked} eq "true"){
+    $self->{ImageLabels}->{VisibleContours}->{$roi_id} = 1;
+  } elsif ($dyn->{checked} eq "false"){
+    $self->{ImageLabels}->{VisibleContours}->{$roi_id} = 0;
+  }
+}
+
+sub ToggleRoiVisible{
+  my($self, $http, $dyn) = @_;
+  if($self->{RoiVisible}){
+    $self->{RoiVisible} = 0;
+  } else {
+    $self->{RoiVisible} = 1;
+  }
+  $self->SetImageUrl;
+}
+
+sub ToggleRoiVisibilty{
+  my($self, $http, $dyn) = @_;
+  $self->NotSoSimpleButton($http, {
+     op => "ToggleRoiVisible",
+     caption => "Toggle Roi",
+     sync => "UpdateImage();"
+  });
+}
+
+sub IndexSelector{
+  my($self, $http, $dyn) = @_;
+  $self->RefreshEngine($http, $dyn,
+    "<select id=\"IndexSelector\" class=\"form-control\"\n" .
+    "onchange=\"javascript:PosdaGetRemoteMethod('SetImageIndex', 'value=' +\n" .
+    "  this.options[this.selectedIndex].value,\n".
+    "  function () { UpdateImage(); });\">" .
+    "<?dyn=\"IndexOptions\"?>" .
+    "</select>");
+}
+
+sub IndexOptions{
+  my($self, $http, $dyn) = @_;
+  for my $i (0 .. $#{$self->{FileList}}){
+    $http->queue("<option value=\"$i\">$i</option>");
+  }
+}
+
+sub OffsetSelector{
+  my($self, $http, $dyn) = @_;
+  $self->RefreshEngine($http, $dyn,
+    "<select id=\"OffsetSelector\" class=\"form-control\"\n" .
+    "onchange=\"javascript:PosdaGetRemoteMethod('SetImageIndex', 'value=' +\n" .
+    "  this.options[this.selectedIndex].value,\n".
+    "  function () { UpdateImage(); });\">" .
+    "<?dyn=\"OffsetOptions\"?>" .
+    "</select>");
+}
+
+sub OffsetOptions{
+  my($self, $http, $dyn) = @_;
+  for my $i (0 .. $#{$self->{FileList}}){
+    $http->queue("<option value=\"$i\">" .
+      "$self->{FileList}->[$i]->{offset}</option>");
+  }
+}
 
 sub NextButton{
   my($self, $http, $dyn) = @_;
@@ -1199,8 +1303,8 @@ sub SetWinLev{
   my($self, $http, $dyn) = @_;
   my $v = $dyn->{value};
   if($v eq "No preset"){
-    delete $self->{WindowWidth};
-    delete $self->{WindowCenter}
+    $self->{WindowWidth} = "";
+    $self->{WindowCenter} = "";
   } else {
     my ($wc, $ww) = split(/:/, $dyn->{value});
     $self->{WindowCenter} = $wc;
@@ -1233,30 +1337,60 @@ sub PresetWidgetCt{
 
 sub ToolTypeSelector{
   my($self, $http, $dyn) = @_;
-  unless(defined $self->{ToolType}){
-    $self->{ToolType} = "None";
+  $self->RefreshEngine($http, $dyn,
+    "<select class=\"form-control\" ".
+    "onchange=\"javascript:SetToolType" .
+    "(this.options[this.selectedIndex].value);\">" .
+    "<option value=\"None\" selected=\"\">No tool</option>" .
+    "<?dyn=\"ToolTypeOptions\"?>" .
+    "</select>");
+}
+sub ToolTypeOptions{
+  my($self, $http, $dyn) = @_;
+  my @ToolTypes;
+  if(defined $self->{ToolTypes}){
+    @ToolTypes = @{$self->{ToolTypes}};
+  } else {
+    @ToolTypes = (["Pan/Zoom", "P/Z tool"], ["Rect", "Rect Tool"]);
   }
-  $http->queue("Tool type: ");
+  for my $i (@ToolTypes){
+   $http->queue("<option value=\"$i->[0]\"");
+   $http->queue(">$i->[1]</option>");
+  }
+}
+
+sub ImageTypeSelector{
+  my($self, $http, $dyn) = @_;
+  unless(
+    defined $self->{ImageTypes} &&
+    ref($self->{ImageTypes}) eq "ARRAY" &&
+    ref($self->{ImageTypes}->[0]) eq "ARRAY"
+  ){ return };
+  unless(defined $self->{ImageType}){
+    $self->{ImageType} = $self->{ImageTypes}->[0]->[0];
+  }
   $self->SelectDelegateByValue($http, {
-    op => "SelectToolType",
-    id => "SelectToolTypeDropdown",
+    op => "SelectImageType",
+    id => "SelectImageTypeDropdown",
     class => "form-control",
     style => "",
-    sync => "InitToolType();"
+    sync => "UpdateImage();"
   });
-  for my $i ("None", "Pan/Zoom", "Select"){
-   $http->queue("<option value=\"$i\"");
-   if($i eq $self->{ToolType}){
+  for my $i (@{$self->{ImageTypes}}){
+   $http->queue("<option value=\"$i->[0]\"");
+   if($i->[0] eq $self->{ImageType}){
      $http->queue(" selected");
    }
-   $http->queue(">$i</option>");
+   $http->queue(">$i->[1]</option>");
   }
   $http->queue("</select>");
 }
-sub SelectToolType{
+sub SelectImageType{
   my($self, $http, $dyn) = @_;
-  $self->{ToolType} = $dyn->{value};
+  $self->{ImageType} = $dyn->{value};
+  $self->SetImageUrl;
 }
+
 sub UploadJsonObject{
   my($self, $http, $dyn) = @_;
   my $text = $http->ParseTextPlain;
@@ -1295,6 +1429,8 @@ sub FetchDicomJpeg{
   }
   my $window_width = $self->{WindowWidth};
   my $window_ctr = $self->{WindowCenter};
+  unless(defined $window_width) { $window_width = "" }
+  unless(defined $window_ctr) { $window_ctr = "" }
   my $jpeg_file = "$self->{params}->{tmp_dir}/" .
     "$dicom_file_id" ."_$window_ctr" . "_$window_width.jpeg";
   unless(-f $jpeg_file){
@@ -1343,9 +1479,20 @@ sub SendCachedJpeg{
   $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
 
-############################# Fetch Png / Test Pattern
+############################# Fetch Jpeg / Png / Test Pattern
+
+sub FetchJpeg{
+  my ($self, $http, $dyn) = @_;
+  $self->FetchImgFile($http, $dyn, "image/jpeg");
+}
+
 sub FetchPng{ 
   my ($self, $http, $dyn) = @_;
+  $self->FetchImgFile($http, $dyn, "image/png");
+}
+
+sub FetchImgFile{
+  my ($self, $http, $dyn, $mime_type) = @_;
   my $file;
   unless(defined($dyn->{file_id}) && $dyn->{file_id} ne ""){
     print STDERR "file_id not defined:\n";
@@ -1360,7 +1507,7 @@ sub FetchPng{
     $file = $row->[0];
   }, sub {}, $dyn->{file_id}); 
   open my $fh, "cat $file|" or die "Can't open $file for reading ($!)";
-  $self->SendContentFromFh($http, $fh, "image/png",
+  $self->SendContentFromFh($http, $fh, $mime_type,
   $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
 sub FetchTestPattern{
@@ -1396,6 +1543,253 @@ sub SendCachedPng{
   $self->SendContentFromFh($http, $sock, $content_type,
   $self->CreateNotifierClosure("NullNotifier", $dyn));
 }
+
+############################# InitializeUrls
+
+sub InitializeUrls{
+  my($self)= @_;
+    ######  Here is the "definition" of FileList #########
+#    push @{$self->{FileList}}, {
+#      dicom_file_id => $dicom_file_id, # if dicom file
+#      jpeg_file_id => $dicom_file_id,  # if jpeg file only
+#      contour_files => [
+#        {
+#          file_id => $contour_file_id,
+#          num_contours => $num_contours,
+#          contour_points => $contour_points,
+#          color => $color,
+#          roi_id => $roi_id,
+#          roi_name => $roi_name,
+#        },
+#        ...
+#      ],
+#      seg_bitmaps => [
+#        {
+#          seg_slice_bitmap_file_id => $seg_slice_bitmap_file_id,
+#          png_file_id => $png_file_id,
+#          frame_no => $frame_no,
+#          total_one_bits => $total_one_bits,
+#          num_bare_points => $num_bare_points,
+#        },
+#        ...
+#      ],
+#      offset => $offset,            #only if dicom and/or seg_bitmaps
+#      off_normal => $off_normal,    #
+#      iop => $iop,                  #
+#      ipp => $ipp,                  #
+#      instance_num => $instance_num #only if dicom
+#    };
+    #^^^^^  Here is the "definition" of FileList ^^^^^^^^^
+  delete $self->{BitmapImageUrls};
+  $self->{ContourFiles} = [];
+  $self->{JpegImageUrls} = [];
+  for my $i (0 .. $#{$self->{FileList}}){
+    my $ent = $self->{FileList}->[$i];
+    if(exists $ent->{jpeg_file_id}){
+      my $jpeg_url = "FetchJpeg?obj_path=$self->{path}&file_id=" .
+        "$ent->{dicom_file_id}";
+      push(@{$self->{JpegImageUrls}}, {
+        image => $jpeg_url,
+        url_type => "relative",
+      });
+    } else {
+      unless(defined $self->{WindowWidth}){ $self->{WindowWidth} = "" }
+      unless(defined $self->{WindowCenter}){ $self->{WindowCenter} = "" }
+      my $jpeg_url = "FetchDicomJpeg?obj_path=$self->{path}&file_id=" .
+        $ent->{dicom_file_id} . "&width=$self->{WindowWidth}" .
+        "&ctr=$self->{WindowCenter}";
+      push(@{$self->{JpegImageUrls}}, {
+        image => $jpeg_url,
+        url_type => "relative",
+      });
+    }
+    if(exists $ent->{contour_files} && ref($ent->{contour_files}) eq "ARRAY"){
+      push(@{$self->{ContourFiles}}, $ent->{contour_files});
+    } else {
+      push @{$self->{ContourFiles}}, [];
+    }
+   $self->InitializeSegs($ent);
+  }
+};
+
+sub InitializeSegs{
+  my($self, $ent) = @_;
+  ## default does nothing  -- override if you want to display segmentations
+}
+
+#sub SetImageUrl{
+sub SetImageUrl{
+  my($self)= @_;
+  unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
+  unless(defined $self->{ImageType}){
+    if(
+      defined $self->{ImageTypes} &&
+      ref($self->{ImageTypes}) eq "ARRAY" &&
+      ref($self->{ImageTypes}->[0]) eq "ARRAY"
+    ){
+      $self->{ImageType} = $self->{ImageTypes}->[0]->[0];
+    } else {
+      $self->{ImageType} = "Dicom Image";
+    }
+  }
+  my $current_index = $self->{CurrentUrlIndex};
+  if($self->{ImageType} eq "Rendered Bitmap"){
+    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
+  }elsif($self->{ImageType} eq "Dicom Image"){
+    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
+  } elsif($self->{ImageType} eq "Test Pattern"){
+    $self->{ImageUrl} = {
+        url_type => "relative",
+        image => "FetchTestPattern?obj_path=$self->{path}"
+    };
+  }else{
+    die "WTF?  Image Type = $self->{ImageType} !!!";
+  }
+  $self->SetContourRendering;
+  $self->{ImageLabels}->{current_instance} =
+    $self->{FileList}->[$current_index]->{instance};
+  $self->{ImageLabels}->{current_offset} =
+    $self->{FileList}->[$current_index]->{offset};
+  $self->{ImageLabels}->{current_index} = $current_index;
+  $self->SetTextLabels;
+  if(exists $self->{RoiVisible}){
+    $self->{ImageLabels}->{VisibleContours} = {
+       "this_roi" => $self->{RoiVisible}
+    };
+  }
+}
+sub SetContourRendering{
+  my($self)= @_;
+  my $current_index = $self->{CurrentUrlIndex};
+  $self->{CurrentContourRendering} =
+    $self->{ContourFiles}->[$current_index];
+}
+sub SetTextLabels{
+  my($self)= @_;
+  my $current_index = $self->{CurrentUrlIndex};
+  my @iop = split(/\\/, $self->{FileList}->[$current_index]->{iop});
+  my $top_text = "";
+  my $bottom_text = "";
+  my $right_text = "";
+  my $left_text = "";
+  if($iop[0] > 0){
+    $left_text .= "R"; $right_text .= "L";
+  } elsif($iop[0] < 0){
+    $left_text .= "L"; $right_text .= "R";
+  }
+  if($iop[1] > 0){
+    $left_text .= "A"; $right_text .= "P";
+  } elsif($iop[1] < 0){
+    $left_text .= "P"; $right_text .= "A";
+  }
+  if($iop[2] > 0){
+    $left_text .= "H"; $right_text .= "F";
+  } elsif($iop[2] < 0){
+    $left_text .= "F"; $right_text .= "H";
+  }
+  if($iop[3] > 0){
+    $top_text .= "R"; $bottom_text .= "L";
+  } elsif($iop[3] < 0){
+    $top_text .= "L"; $bottom_text .= "R";
+  }
+  if($iop[4] > 0){
+    $top_text .= "A"; $bottom_text .= "P";
+  } elsif($iop[4] < 0){
+    $top_text .= "P"; $bottom_text .= "A";
+  }
+  if($iop[5] > 0){
+    $top_text .= "H"; $bottom_text .= "F";
+  } elsif($iop[5] < 0){
+    $top_text .= "F"; $bottom_text .= "H";
+  }
+  $self->{ImageLabels}->{top_text} = "<small>$top_text</small>";
+  $self->{ImageLabels}->{bottom_text} = "<small>$bottom_text</small>";
+  $self->{ImageLabels}->{right_text} = "<small>$right_text</small>";
+  $self->{ImageLabels}->{left_text} = "<small>$left_text</small>";
+}
+
+
+############################# Fetch Contours
+
+sub GetContoursToRender{
+  my($self, $http, $dyn) = @_;
+  my $get_file = Query('GetFilePath');
+  unless(
+    exists($self->{CurrentContourRendering}) &&
+    ref($self->{CurrentContourRendering}) eq "ARRAY" &&
+    $#{$self->{CurrentContourRendering}} >= 0
+  ){
+    my $content_type = "application/json";
+    $http->HeaderSent;
+    $http->queue("HTTP/1.0 200 OK\n");
+    $http->queue("Content-type: $content_type\n\n");
+    $http->queue("[]");
+    return;
+  }
+  my $json_contours_path =
+    "$self->{params}->{tmp_dir}/contours_$self->{contour_root_file_id}";
+  my @contour_render_struct;
+  for my $cn (0 .. $#{$self->{CurrentContourRendering}}){
+    my $c = $self->{CurrentContourRendering}->[$cn];
+    $json_contours_path .= "_$c->{file_id}";
+    my $file_path;
+    $get_file->RunQuery(sub{
+      my($row) = @_;
+      $file_path = $row->[0];
+    }, sub {}, $c->{file_id});
+    my $roi_id;
+    if(exists $c->{id}){ $roi_id = $c->{id} }
+    else {$roi_id = "roi_num_" . $c->{roi_id} }
+    my $contour_render_hash = {
+      id => $roi_id,
+      color => $c->{color},
+      type => "2dContourBatch",
+      file => $file_path,
+      pix_sp_x => 1,
+      pix_sp_y => 1,
+      x_shift => $self->{x_shift},
+      y_shift => $self->{y_shift},
+    };
+    push @contour_render_struct, $contour_render_hash;
+  }
+  my $tmp1 = "$json_contours_path.contours";
+  $json_contours_path .= ".json";
+  unless(-f $json_contours_path){
+    Storable::store \@contour_render_struct, $tmp1;
+    my $cmd = "cat $tmp1|Construct2DContoursFromExtractedFile.pl > " .
+      "$json_contours_path;" .
+      "echo 'done'";
+    Dispatch::LineReader->new_cmd($cmd,
+      $self->NullLineHandler(),
+      $self->ContinueProcessingContours($http, $dyn, $tmp1,
+        $json_contours_path)
+    );
+    return;
+  }
+  $self->SendCachedContours($http, $dyn, $json_contours_path);
+}
+
+sub ContinueProcessingContours{
+  my($self, $http, $dyn, $tmp1, $json_contours_path) = @_;
+  my $sub = sub {
+    unlink $tmp1;
+    $self->SendCachedContours($http, $dyn, $json_contours_path);
+  };
+  return $sub;
+}
+sub SendCachedContours{
+  my($self, $http, $dyn, $json_contours_path) = @_;
+  my $contour_file_id = $self->{ContourFileId};
+  my $content_type = "text/json";
+  open my $sock, "cat $json_contours_path|" or die "Can't open " .
+    "$json_contours_path for reading ($!)";
+
+#  open FILE, "<$json_contours_path" or die "Can't open $json_contours_path" .
+#    " for reading ($!)";
+  $self->SendContentFromFh($http, $sock, "application/json",
+  $self->CreateNotifierClosure("NullNotifier", $dyn));
+}
+
 
 
 1;

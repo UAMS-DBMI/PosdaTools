@@ -20,22 +20,10 @@ my $dbg = sub {print STDERR @_ };
 ##################################################
 use vars qw( @ISA );
 @ISA = ( "Posda::ImageDisplayer" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="AjaxObj"?>
-<?dyn="DicomImageDispJs"?>
-<?dyn="JsContent"?>
-<?dyn="JsControllerLocal"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
 sub Init{
   my($self, $parms) = @_;
-  $self->{expander} = $expander;
+  $self->{ImageTypes} = [["Rendered Bitmap", "Rendered Bitmap"],
+    ["Dicom Image", "Dicom Image"], ["Test Pattern", "Test Pattern"]];
   $self->{ImageUrl} = { url_type => "absolute", image => "/LoadingScreen.png" };
   $self->{ImageLabels} = {
     top_text => "<small>U</small>",
@@ -140,7 +128,7 @@ sub SetImageUrl{
     $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
   }elsif($self->{ImageType} eq "Dicom Image"){
     $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
-  } elsif($self->{ImageType} eq "TestPattern"){
+  } elsif($self->{ImageType} eq "Test Pattern"){
     $self->{ImageUrl} = {
         url_type => "relative",
         image => "FetchTestPattern?obj_path=$self->{path}"
@@ -191,12 +179,7 @@ my $content = <<EOF;
 <input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
 </div>
 <div width=10% id="ToolTypeSelector">
-  <select class="form-control"
-    onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
-    <option value="None" selected="">No tool</option>
-    <option value="Pan/Zoom">P/Z tool</option>
-    <option value="Select">Sel tool</option>
-  </select>
+<?dyn="ToolTypeSelector"?>
 </div>
 <div width=10% id="CineSelector">
   <select class="form-control"
@@ -255,77 +238,14 @@ my($self, $http, $dyn) = @_;
   }
 }
 
-sub ToggleRoiVisible{
-  my($self, $http, $dyn) = @_;
-  if($self->{RoiVisible}){
-    $self->{RoiVisible} = 0;
-  } else {
-    $self->{RoiVisible} = 1;
-  }
-  $self->SetImageUrl;
-}
-
-sub ToggleRoiVisibilty{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
-     op => "ToggleRoiVisible",
-     caption => "Toggle Roi",
-     sync => "UpdateImage();"
-  });
-}
-
 sub Content{
   my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, $content);
 }
-##### Pixel Rendering Stuff
-#######  End of Image Stuff
-#######  Begin Contour Stuff
+
 sub GetContoursToRender{
   my($self, $http, $dyn) = @_;
   my $contour_file_id = $self->{ContourFileId};
-#  my $border_contour_file = 
-#    "$self->{params}->{tmp_dir}/border_contours.contours";
-#  unless(-f $border_contour_file){
-#    open FILE, ">$border_contour_file" or
-#      die "can't open $border_contour_file";
-#    print FILE "BEGIN\n";
-#    print FILE "-0.5,-0.5\n";
-#    print FILE "-0.5,512.5\n";
-#    print FILE "512.5,512.5\n";
-#    print FILE "512.5,-0.5\n";
-#    print FILE "-0.5,-0.5\n";
-#    print FILE "END\n";
-#    close FILE;
-#  }
-#  my $border_contour_file1 = 
-#    "$self->{params}->{tmp_dir}/border_contours1.contours";
-#  unless(-f $border_contour_file1){
-#    open FILE, ">$border_contour_file1" or 
-#      die "can't open $border_contour_file1";
-#    print FILE "BEGIN\n";
-#    print FILE "0.5,0.5\n";
-#    print FILE "0.5,511.5\n";
-#    print FILE "511.5,511.5\n";
-#    print FILE "511.5,0.5\n";
-#    print FILE "0.5,0.5\n";
-#    print FILE "END\n";
-#    close FILE;
-#  }
-##  my $border_contour_file2 = 
-#    "$self->{params}->{tmp_dir}/border_contours2.contours";
-#  unless(-f $border_contour_file2){
-#    open FILE, ">$border_contour_file2" or 
-#      die "can't open $border_contour_file2";
-#    print FILE "BEGIN\n";
-#    print FILE "-0.5,-0.5\n";
-#    print FILE "0,511.5\n";
-#    print FILE "511.5,511.5\n";
-#    print FILE "511.5,-0.5\n";
-#    print FILE "-0.5,-0.5\n";
-#    print FILE "END\n";
-#    close FILE;
-#  }
   my $json_contours_path = "$self->{params}->{tmp_dir}/$contour_file_id.json";
   unless(-f $json_contours_path){
     my $contour_render_struct = [
@@ -339,33 +259,6 @@ sub GetContoursToRender{
         x_shift => $self->{x_shift},
         y_shift => $self->{y_shift},
       },
-#      {
-#        color => "00ff00",
-#        type => "2dContourBatch",
-#        file => $border_contour_file,
-#        pix_sp_x => 1,
-#        pix_sp_y => 1,
-#        x_shift => 0,
-#        y_shift => 0,
-#      },
-#      {
-#        color => "0000ff",
-#        type => "2dContourBatch",
-#        file => $border_contour_file1,
-#        pix_sp_x => 1,
-#        pix_sp_y => 1,
-#        x_shift => 0,
-#        y_shift => 0,
-#      },
-#      {
-#        color => "ff0000",
-#        type => "2dContourBatch",
-#        file => $border_contour_file2,
-#        pix_sp_x => 1,
-#        pix_sp_y => 1,
-#        x_shift => 0.5,
-#        y_shift => 0.5,
-#      },
     ];
     my $tmp1 = "$self->{params}->{tmp_dir}/$contour_file_id.contours";
     Storable::store $contour_render_struct, $tmp1;
@@ -381,51 +274,5 @@ sub GetContoursToRender{
   }
   $self->SendCachedContours($http, $dyn, $json_contours_path);
 }
-sub ContinueProcessingContours{
-  my($self, $http, $dyn, $tmp1, $json_contours_path, $contour_file_id) = @_;
-  my $sub = sub {
-    unlink $tmp1;
-    $self->SendCachedContours($http, $dyn, $json_contours_path);
-  };
-  return $sub;
-}
-sub SendCachedContours{
-  my($self, $http, $dyn, $json_contours_path) = @_;
-  my $contour_file_id = $self->{ContourFileId};
-  my $content_type = "text/json";
-  open my $sock, "cat $json_contours_path|" or die "Can't open " .
-    "$json_contours_path for reading ($!)";
 
-#  open FILE, "<$json_contours_path" or die "Can't open $json_contours_path" .
-#    " for reading ($!)";
-  $self->SendContentFromFh($http, $sock, "application/json",
-  $self->CreateNotifierClosure("NullNotifier", $dyn));
-}
-
-sub ImageTypeSelector{
-  my($self, $http, $dyn) = @_;
-  unless(defined $self->{ImageType}){
-    $self->{ImageType} = "Rendered Bitmap";
-  }
-  $self->SelectDelegateByValue($http, {
-    op => "SelectImageType",
-    id => "SelectImageTypeDropdown",
-    class => "form-control",
-    style => "",
-    sync => "UpdateImage();"
-  });
-  for my $i ("Rendered Bitmap", "Dicom Image", "TestPattern"){
-   $http->queue("<option value=\"$i\"");
-   if($i eq $self->{ImageType}){
-     $http->queue(" selected");
-   }
-   $http->queue(">$i</option>");
-  }
-  $http->queue("</select>");
-}
-sub SelectImageType{
-  my($self, $http, $dyn) = @_;
-  $self->{ImageType} = $dyn->{value};
-  $self->SetImageUrl;
-}
 1;

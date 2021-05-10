@@ -5,6 +5,7 @@ package Posda::ImageDisplayer::Kaleidoscope;
 use Posda::ImageDisplayer;
 use Posda::DB qw( Query );
 use Dispatch::LineReader;
+use VectorMath;
 use Storable qw ( store_fd fd_retrieve );
 use JSON;
 use Debug;
@@ -20,23 +21,8 @@ my $dbg = sub {print STDERR @_ };
 ##################################################
 use vars qw( @ISA );
 @ISA = ( "Posda::ImageDisplayer" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="AjaxObj"?>
-<?dyn="DicomImageDispJs"?>
-<?dyn="JsContent"?>
-<?dyn="JsControllerLocal"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
-my $expander_test;
 sub Init{
   my($self, $parms) = @_;
-  $self->{expander} = $expander;
   $self->{params} = $parms;
   $self->{ImageLabels} = {
     top_text => "",
@@ -47,6 +33,7 @@ sub Init{
   $self->{title} =
     "Kaleidoscope: Visual Review id: $self->{params}->{vis_review_id}";
   $self->InitializeImageList;
+  $self->{ToolTypes} = [["Pan/Zoom", "P/Z tool"]];
   $self->{CurrentUrlIndex} = 0;
   $self->SetImageUrl;
 }
@@ -163,11 +150,7 @@ my $content = <<EOF;
 <input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
 </div>
 <div width=10% id="ToolTypeSelector">
-  <select class="form-control"
-    onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
-    <option value="None" selected="">No tool</option>
-    <option value="Pan/Zoom">P/Z tool</option>
-  </select>
+<?dyn="ToolTypeSelector"?>
 </div>
 <div id="divPrev" width="10%">&nbsp;<?dyn="PrevButton"?></div>
 <div id="divNext" width="10%">&nbsp;<?dyn="NextButton"?></div>
@@ -192,23 +175,78 @@ sub ImageDisplayPopupButton{
 
 sub ImageDisplayPopup{
   my($self, $http, $dyn) = @_;
-  my %Files;
+  my @FileList;
+  my %SopToFile;
   my $equiv_class = 
     $self->{IndexToEquiv}->{$self->{CurrentUrlIndex}};
-  Query('InputImagesByImageEquivalenceClass')->RunQuery(sub {
+  my($rows, $cols);
+  Query('FileInfoForFilesInImageEquivalenceClass')->RunQuery(sub {
     my($row) = @_;
-    my($file_id, $rows, $cols) = @$row;
-    $Files{$file_id} = {
-      rows => $rows,
-      cols => $cols,
+    my(
+      $file_id, 
+      $series_instance_uid, 
+      $study_instance_uid, 
+      $sop_instance_uid, 
+      $instance_number, 
+      $modality, 
+      $dicom_file_type, 
+      $for_uid, 
+      $iop, 
+      $ipp, 
+      $pixel_data_digest, 
+      $samples_per_pixel, 
+      $pixel_spacing, 
+      $photometric_interpretation, 
+      $pixel_rows, 
+      $pixel_columns, 
+      $bits_allocated, 
+      $bits_stored, 
+      $high_bit, 
+      $pixel_representation, 
+      $planar_configuration, 
+      $number_of_frames
+    ) = @$row;
+    my $offset;
+    if(defined($ipp) && defined($iop)){
+      my @iop = split(/\\/, $iop);
+      my $dx = [$iop[0], $iop[1], $iop[2]];
+      my $dy = [$iop[3], $iop[4], $iop[5]];
+      my $dz = VectorMath::cross($dx, $dy);
+      my $rot = [$dx, $dy, $dz];
+      my @ipp = split(/\\/, $ipp);
+      my $rot_dx = VectorMath::Rot3D($rot, $dx);
+      my $rot_dy = VectorMath::Rot3D($rot, $dy);
+      my $rot_iop = [$rot_dx, $rot_dy];
+      my $rot_ipp = VectorMath::Rot3D($rot, \@ipp);
+      $offset = $rot_ipp->[2];
+    }
+    my $h = {
+      dicom_file_id => $file_id,
+      iop => $iop,
+      instance_number => $instance_number,
+      ipp => $ipp,
+      offset => $offset
     };
+    unless(defined $rows) { $rows = $pixel_rows }
+    if($pixel_rows > $rows) { $rows = $pixel_rows }
+    unless(defined $cols) { $cols = $pixel_columns }
+    if($pixel_columns > $cols) { $cols = $pixel_columns }
+    push @FileList, $h;
   }, sub {}, $equiv_class);
+  @FileList = sort {
+    $a->{instance_number} <=> $b->{instance_number} ||
+    $a->{offset} <=> $b->{offset}
+  } @FileList;
   my $params = {
-    vis_review_id => $self->{params}->{vis_review_instance},
+    vis_review_id => $self->{params}->{vis_review_id},
     user => $self->get_user,
-    files => \%Files,
+    FileList => \@FileList,
+    SopToFile => \%SopToFile,
     tmp_dir => $self->{params}->{tmp_dir},
-    equiv_class => $equiv_class
+    equiv_class => $equiv_class,
+    rows => $rows,
+    cols => $cols,
+    rois => {},
   };
   my $class = "Posda::ImageDisplayer::KaleidoscopeSub";
   eval "require $class";

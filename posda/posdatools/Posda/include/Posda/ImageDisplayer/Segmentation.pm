@@ -21,22 +21,10 @@ my $dbg = sub {print STDERR @_ };
 ##################################################
 use vars qw( @ISA );
 @ISA = ( "Posda::ImageDisplayer" );
-my $expander = <<EOF;
-<?dyn="BaseHeader"?>
-<script type="text/javascript">
-<?dyn="AjaxObj"?>
-<?dyn="DicomImageDispJs"?>
-<?dyn="JsContent"?>
-<?dyn="JsControllerLocal"?>
-</script>
-</head>
-<body>
-<?dyn="Content"?>
-<?dyn="Footer"?>
-EOF
 sub Init{
   my($self, $parms) = @_;
-  $self->{expander} = $expander;
+  $self->{ImageTypes} = [["Rendered Bitmap", "Rendered Bitmap"],
+    ["Dicom Image", "Dicom Image"], ["Test Pattern", "Test Pattern"]];
   $self->{ImageUrl} = { url_type => "absolute", image => "/LoadingScreen.png" };
   $self->{ImageLabels} = {
     top_text => "<small>U</small>",
@@ -45,6 +33,7 @@ sub Init{
     left_text => "<small>U</small>",
   };
   $self->{params} = $parms;
+  $self->{contour_root_file_id} = $self->{params}->{seg_file_id};
   $self->{x_shift} = "0.5";
   $self->{y_shift} = "0.5";
 
@@ -59,100 +48,10 @@ sub Init{
   $self->{CurrentUrlIndex} = 0;
   $self->{RoiVisible} = 1;
   $self->{WindowWidth} = "";
-  $self->{WindowCtr} = "";
+  $self->{WindowCenter} = "";
+  $self->SortSliceInfo;
   $self->InitializeUrls;
   $self->SetImageUrl;
-}
-sub InitializeUrls{
-  my($self)= @_;
-  $self->SortSliceInfo;
-    ######  Here is the "definition" of FileList #########
-#    push @{$self->{FileList}}, {
-#      dicom_file_id => $dicom_file_id,
-#      contour_files => [
-#        {
-#          file_id => $contour_file_id,
-#          num_contours => $num_contours,
-#          contour_points => $contour_points,
-#          color => $color,
-#          roi_id => $roi_id,
-#        },
-#        ...
-#      ],
-#      seg_bitmaps => [
-#        {
-#          seg_slice_bitmap_file_id => $seg_slice_bitmap_file_id,
-#          png_file_id => $png_file_id,
-#          frame_no => $frame_no,
-#          total_one_bits => $total_one_bits,
-#          num_bare_points => $num_bare_points,
-#        },
-#        ...
-#      ],
-#      offset => $offset,
-#      off_normal => $off_normal,
-#      iop => $iop,
-#      ipp => $ipp,
-#    };
-    #^^^^^  Here is the "definition" of FileList ^^^^^^^^^
-  $self->{BitmapImageUrls} = [];
-  $self->{ContourFileIds} = [];
-  $self->{JpegImageUrls} = [];
-  for my $i (0 .. $#{$self->{FileList}}){
-    my $ent = $self->{FileList}->[$i];
-    my $jpeg_url = "FetchDicomJpeg?obj_path=$self->{path}&file_id=" .
-      $ent->{dicom_file_id} . "&width=$self->{WindowWidth}" .
-      "&ctr=$self->{WindowCtr}";
-    push(@{$self->{JpegImageUrls}}, {
-      image => $jpeg_url,
-      url_type => "relative",
-    });
-    push(@{$self->{ContourFiles}}, $ent->{contour_files});
-    my $png_file_id = $ent->{seg_bitmaps}->[0]->{png_file_id};
-    my $bitmap_url = "FetchPng?obj_path=$self->{path}&file_id=" .
-      $png_file_id;
-    push(@{$self->{BitmapImageUrls}}, {
-      image => $bitmap_url,
-      url_type => "relative",
-    });
-  }
-};
-sub SetImageUrl{
-  my($self)= @_;
-  unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
-  unless(defined $self->{ImageType}){
-    $self->{ImageType} = "Rendered Bitmap";
-  }
-  my $current_index = $self->{CurrentUrlIndex};
-  if($self->{ImageType} eq "Rendered Bitmap"){
-    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
-  }elsif($self->{ImageType} eq "Dicom Image"){
-    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
-  } elsif($self->{ImageType} eq "TestPattern"){
-    $self->{ImageUrl} = {
-        url_type => "relative",
-        image => "FetchTestPattern?obj_path=$self->{path}"
-    };
-  }else{
-    die "WTF?  Image Type = $self->{ImageType} !!!";
-  }
-  my $contour_file_path;
-  my $cfi = $self->{ContourFiles}->[$self->{CurrentUrlIndex}];
-  my $contour_file_id = $cfi->[0]->{file_id};
-  $self->{ContourFileId} = $contour_file_id;
-  Query('GetFilePath')->RunQuery(sub {
-    my($row) = @_;
-    $contour_file_path = $row->[0];
-  }, sub {}, $contour_file_id);
-  $self->{ContourFilePath} = $contour_file_path;
-  $self->{ImageLabels}->{current_instance} = 
-    $self->{FileList}->[$current_index]->{instance_number};
-  $self->{ImageLabels}->{current_offset} = 
-    $self->{FileList}->[$current_index]->{offset};
-  $self->{ImageLabels}->{current_index} = $current_index;
-  $self->{ImageLabels}->{VisibleContours} = {
-     "this_roi" => $self->{RoiVisible}
-  };
 }
 sub SortSliceInfo{
   my($self) = @_;
@@ -296,6 +195,20 @@ sub SortSliceInfo{
 #print STDERR "-------------------------------\n";
 }
 
+sub InitializeSegs{
+  my($self, $ent) = @_;
+    unless(exists $self->{BitmapImageUrls}){
+      $self->{BitmapImageUrls} = [];
+    }
+    my $png_file_id = $ent->{seg_bitmaps}->[0]->{png_file_id};
+    my $bitmap_url = "FetchPng?obj_path=$self->{path}&file_id=" .
+      $png_file_id;
+    push(@{$self->{BitmapImageUrls}}, {
+      image => $bitmap_url,
+      url_type => "relative",
+    });
+}
+
 my $content = <<EOF;
 <div style="display: flex; flex-direction: column; align-items: flex-beginning; margin-bottom: 5px" id="div_content">
 <div id="div_canvas">
@@ -324,12 +237,7 @@ my $content = <<EOF;
 <input type="Button" class="btn btn-default"  onclick="javascript:ResetZoom();" value="reset">
 </div>
 <div width=10% id="ToolTypeSelector">
-  <select class="form-control"
-    onchange="javascript:SetToolType(this.options[this.selectedIndex].value);">
-    <option value="None" selected="">No tool</option>
-    <option value="Pan/Zoom">P/Z tool</option>
-    <option value="Select">Sel tool</option>
-  </select>
+<?dyn="ToolTypeSelector"?>
 </div>
 <div width=10% id="CineSelector">
   <select class="form-control"
@@ -369,7 +277,7 @@ my $content = <<EOF;
 <pre>
 <div id="CurrentOffset"></div>
 <div id="CurrentInstance"></div>
-Transform: <div id="divTransform"></div>
+#Transform: <div id="divTransform"></div>
 <div id="MousePosition"></div>
 <div id="div_contours_pending">&nbsp;</div>
 <div id="div_image_pending">&nbsp;</div>
@@ -380,116 +288,50 @@ Transform: <div id="divTransform"></div>
 </div>
 EOF
 
-sub OffsetOptions{
-my($self, $http, $dyn) = @_;
-  for my $i (0 .. $#{$self->{FileList}}){
-    $http->queue("<option value=\"$i\">" .
-      "$self->{FileList}->[$i]->{offset}</option>");
-  }
-}
-
-sub ToggleRoiVisible{
-  my($self, $http, $dyn) = @_;
-  if($self->{RoiVisible}){
-    $self->{RoiVisible} = 0;
-  } else {
-    $self->{RoiVisible} = 1;
-  }
-  $self->SetImageUrl;
-}
-
-sub ToggleRoiVisibilty{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
-     op => "ToggleRoiVisible",
-     caption => "Toggle Roi",
-     sync => "UpdateImage();"
-  });
-}
-
 sub Content{
   my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, $content);
 }
-##### Pixel Rendering Stuff
-#######  End of Image Stuff
-#######  Begin Contour Stuff
-sub GetContoursToRender{
-  my($self, $http, $dyn) = @_;
-  my $contour_file_id = $self->{ContourFileId};
-  my $json_contours_path = "$self->{params}->{tmp_dir}/$contour_file_id.json";
-  unless(-f $json_contours_path){
-    my $contour_render_struct = [
-      {
-        id => "this_roi",
-        color => "ff0000",
-        type => "2dContourBatch",
-        file => $self->{ContourFilePath},
-        pix_sp_x => 1,
-        pix_sp_y => 1,
-        x_shift => $self->{x_shift},
-        y_shift => $self->{y_shift},
-      },
-    ];
-    my $tmp1 = "$self->{params}->{tmp_dir}/$contour_file_id.contours";
-    Storable::store $contour_render_struct, $tmp1;
-    my $cmd = "cat $tmp1|Construct2DContoursFromExtractedFile.pl > " .
-      "$json_contours_path;" .
-      "echo 'done'";
-    Dispatch::LineReader->new_cmd($cmd,
-      $self->NullLineHandler(),
-      $self->ContinueProcessingContours($http, $dyn, $tmp1, 
-        $json_contours_path, $contour_file_id)
-    );
-    return;
-  }
-  $self->SendCachedContours($http, $dyn, $json_contours_path);
-}
-sub ContinueProcessingContours{
-  my($self, $http, $dyn, $tmp1, $json_contours_path, $contour_file_id) = @_;
-  my $sub = sub {
-    unlink $tmp1;
-    $self->SendCachedContours($http, $dyn, $json_contours_path);
-  };
-  return $sub;
-}
-sub SendCachedContours{
-  my($self, $http, $dyn, $json_contours_path) = @_;
-  my $contour_file_id = $self->{ContourFileId};
-  my $content_type = "text/json";
-  open my $sock, "cat $json_contours_path|" or die "Can't open " .
-    "$json_contours_path for reading ($!)";
 
-#  open FILE, "<$json_contours_path" or die "Can't open $json_contours_path" .
-#    " for reading ($!)";
-  $self->SendContentFromFh($http, $sock, "application/json",
-  $self->CreateNotifierClosure("NullNotifier", $dyn));
+sub SetContourRendering{
+  my($self)= @_; 
+  my $cfi = $self->{ContourFiles}->[$self->{CurrentUrlIndex}];
+  $cfi->[0]->{id} = "this_roi";
+  $self->{CurrentContourRendering} = $cfi;
 }
 
-sub ImageTypeSelector{
-  my($self, $http, $dyn) = @_;
+sub SetImageUrlBeGone{ 
+  my($self)= @_; 
+  unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
   unless(defined $self->{ImageType}){
     $self->{ImageType} = "Rendered Bitmap";
   }
-  $self->SelectDelegateByValue($http, {
-    op => "SelectImageType",
-    id => "SelectImageTypeDropdown",
-    class => "form-control",
-    style => "",
-    sync => "UpdateImage();"
-  });
-  for my $i ("Rendered Bitmap", "Dicom Image", "TestPattern"){
-   $http->queue("<option value=\"$i\"");
-   if($i eq $self->{ImageType}){
-     $http->queue(" selected");
-   }
-   $http->queue(">$i</option>");
+  my $current_index = $self->{CurrentUrlIndex};
+  if($self->{ImageType} eq "Rendered Bitmap"){
+    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
+  }elsif($self->{ImageType} eq "Dicom Image"){
+    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
+  } elsif($self->{ImageType} eq "Test Pattern"){
+    $self->{ImageUrl} = {
+        url_type => "relative",
+        image => "FetchTestPattern?obj_path=$self->{path}"
+    };
+  }else{
+    die "WTF?  Image Type = $self->{ImageType} !!!";
   }
-  $http->queue("</select>");
+  my $cfi = $self->{ContourFiles}->[$self->{CurrentUrlIndex}];
+  $cfi->[0]->{id} = "this_roi";
+  $self->{CurrentContourRendering} = $cfi;
+  $self->{ImageLabels}->{current_instance} =
+    $self->{FileList}->[$current_index]->{instance_number};
+  $self->{ImageLabels}->{current_offset} =
+    $self->{FileList}->[$current_index]->{offset};
+  $self->{ImageLabels}->{current_index} = $current_index;
+  if(exists $self->{RoiVisible}){
+    $self->{ImageLabels}->{VisibleContours} = {
+       "this_roi" => $self->{RoiVisible}
+    };
+  }
 }
-sub SelectImageType{
-  my($self, $http, $dyn) = @_;
-  $self->{ImageType} = $dyn->{value};
-  $self->SetImageUrl;
-}
+
 1;

@@ -68,6 +68,7 @@ Query('GetFileRenderingInfo')->RunQuery(sub{
   $pixel_lengths{$pixel_data_length} = 1;
   $slopes{$slope} = 1;
   $intercepts{$intercept} = 1;
+  unless(defined $win_lev_desc) { $win_lev_desc = "" }
   my $win_desc = "$row_num:$window_center:$window_width:$win_lev_desc";
   $row_num += 1;
   $windows{$win_desc} = 1;
@@ -79,8 +80,12 @@ Query('GetFileRenderingInfo')->RunQuery(sub{
   $pixel_representations{$pixel_representation} = 1;
   $photometric_interpretations{$photometric_interpretation} = 1;
   $samples_per_pixels{$samples_per_pixel} = 1;
-  $number_of_framess{$number_of_frames} = 1;
-  $planar_configurations{$planar_configuration} = 1;
+  if(defined $number_of_frames){
+    $number_of_framess{$number_of_frames} = 1;
+  }
+  if(defined $planar_configuration){
+    $planar_configurations{$planar_configuration} = 1;
+  }
 }, sub{}, $file_id);
 my $num_file_paths = keys %file_paths;
 unless($num_file_paths == 1){

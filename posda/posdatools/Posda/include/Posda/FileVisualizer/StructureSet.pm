@@ -200,6 +200,7 @@ sub UnselectRoi{
 
 sub SsRoiReport{
   my($self, $http, $dyn) = @_;
+  $self->{FullyRenderedRois} = {};
   my $num_rois = keys %{$self->{StructureSetAnalysis}->{rois}};
   if($num_rois == 0){
     $http->queue("<h4>No rois Analysis (yet)</h4>");
@@ -290,6 +291,7 @@ sub SsRoiReport{
     } elsif (exists($self->{SelectedRoiForRendering}->{$roi})) {
         delete $self->{SelectedRoiForRendering}->{$roi};
     } else {
+      $self->{FullyRenderedRois}->{$roi} = 1;
       $self->NotSoSimpleButton($http, {
         op => "DisplayRoi",
         caption => "disp",
@@ -904,6 +906,14 @@ sub MenuResponse {
        caption => "Show Structure Info",
        sync => "Update();"
     });
+    my $num_rois = keys %{$self->{StructureSetAnalysis}->{rois}};
+    if($num_rois != 0){
+      $self->NotSoSimpleButton($http, {
+         op => "ShowAllRenderedContours",
+         caption => "Show All Rendered Contours",
+         sync => "Update();"
+      });
+    }
   }
 }
 
@@ -1337,7 +1347,6 @@ sub DisplayRoi{
     tmp_dir => $self->{temp_path},
     file_to_instance => $self->{FileToInstance}
   };
-#  my $class = "Posda::FileVisualizer::ImageDisplayer";
   my $class = "Posda::ImageDisplayer::StructAnalysisImageDisplayer";
   eval "require $class";
   if($@){
@@ -1428,6 +1437,8 @@ sub SortFilesByOffset{
   my $iop;
   my $file_list;
   # also - construct file_to_instance
+  # also - construct file_to_sop
+  # also - file_info by file_id
   $self->{FileToInstance} = {};
   for my $ser (keys %{$self->{StructureSetAnalysis}->{series_ref}}){
     my $img_list = 
@@ -1437,6 +1448,8 @@ sub SortFilesByOffset{
       my $file_id = $f_info->{file_id};
       $file_list->{$file_id} = $f_info;
       $self->{FileToInstance}->{$file_id} = $f_info->{instance_number};
+      $self->{FileToSop}->{$file_id} = $f_info->{sop_instance_uid};
+      $self->{FileInfoByFileId}->{$file_id} = $f_info;
     }
   }
   file:
@@ -1518,5 +1531,147 @@ sub SortFilesByOffset{
     };
   }
 }
+
+sub ShowAllRenderedContours{
+  my($self, $http, $dyn) = @_;
+  $self->GetFilePaths;
+  my %DispFiles;
+  for my $i (@{$self->{StructureSetAnalysis}->{file_sort}}){
+    $DispFiles{$i->{file_id}} = {
+      dicom_file_id => $i->{file_id},
+      offset => $i->{offset},
+      off_normal => sqrt(($i->{x_diff}**2)+($i->{y_diff}**2)),
+      bitmap_files => [
+      ],
+    };
+    my $f_info = $self->{FileInfoByFileId}->{$i->{file_id}};
+    $DispFiles{$i->{file_id}}->{iop} = $f_info->{iop};
+    $DispFiles{$i->{file_id}}->{ipp} = $f_info->{ipp};
+    $DispFiles{$i->{file_id}}->{file} = $f_info->{file_path};
+    $DispFiles{$i->{file_id}}->{instance} =
+      $self->{FileToInstance}->{$i->{file_id}};
+# $self->{StructureSetAnalysis}->{extracted_slice_images}->{<roi_id>}
+#    ->{<dicom_file_id>} = {
+#       rows => <rows>,
+#       cols => <cols>,
+#       contour_slice_file_id => <contour_slice_file_id>,
+#       segmentation_slice_file_id => <segmentation_slice_file_id>,
+#       png_slice_file_id => <png_slice_file_id>,
+#       num_contours => <num_contours>,
+#       num_points => <num_points>,
+#       total_one_bits => <total_one_bits>,
+# };
+# $self->{StructureSetAnalysis}->{rois}->{<roi_id>} = {
+#   color => [$r, $g, $b],
+#   roi_name => <roi_name>,
+#   ...  <lots of other stuff>
+#};
+    my @contour_list;
+    my $ext_slice = $self->{StructureSetAnalysis}->{extracted_slice_images};
+    my $rois = $self->{StructureSetAnalysis}->{rois};
+    for my $r (sort { $a <=> $b } keys %$rois){
+      if(exists $ext_slice->{$r}->{$i->{file_id}}){
+        my $h = $ext_slice->{$r}->{$i->{file_id}};
+        my $c = $rois->{$r}->{color};
+        my ($red, $green, $blue) = @$c;
+        my $color = sprintf("%02x%02x%02x", $red, $green, $blue);
+        push @contour_list, {
+          roi_id => $r,
+          roi_name => $rois->{$r}->{roi_name},
+          file_id => $h->{contour_slice_file_id},
+          color => $color,
+          num_contours => $h->{num_contours},
+          num_contour_points => $h->{num_points},
+        };
+      }
+    }
+    $DispFiles{$i->{file_id}}->{contour_files} = \@contour_list;
+  };
+  $self->{FileListForDisplay} = [];
+  for my $i (
+    sort { $DispFiles{$a}->{offset} <=> $DispFiles{$b}->{offset} }
+    keys %DispFiles
+  ){
+    push @{$self->{FileListForDisplay}}, $DispFiles{$i};
+  }
+  my %rois;
+  for my $ri (keys %{$self->{FullyRenderedRois}}){
+    my $rinfo = $self->{StructureSetAnalysis}->{rois}->{$ri};
+    $rois{$ri} = {
+      color => $rinfo->{color},
+      name => $rinfo->{roi_name},
+      label => $rinfo->{roi_obser_label},
+    };
+  }
+  my $params = {
+     FileListForDisplay => $self->{FileListForDisplay},
+     ss_file_id => $self->{file_id},
+     tmp_dir => $self->{temp_path},
+     rois => \%rois,
+  };
+  my $class = "Posda::ImageDisplayer::RenderedStructureSet";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Displayer_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+sub GetFilePaths{
+  my($self) = @_;
+  my $q = Query('GetFilePath');
+  for my $file_id (keys %{$self->{FileInfoByFileId}}){
+    my $info = $self->{FileInfoByFileId}->{$file_id};
+    unless(exists $info->{file_path}){
+      my $file_path;
+      $q->RunQuery(sub{
+        my($row) = @_;
+        $file_path = $row->[0];
+      }, sub {}, $file_id);
+      if(defined $file_path) {
+        $info->{file_path} = $file_path;
+      }
+    }
+  }
+}
+    ######  Here is the "definition" of FileList #########
+#    push @{$self->{FileList}}, {
+#      dicom_file_id => $dicom_file_id,
+#      contour_files => [
+#        {
+#          file_id => $contour_file_id,
+#          num_contours => $num_contours,
+#          contour_points => $contour_points,
+#          color => $color,
+#          roi_id => $roi_id,
+#          roi_name => $roi_name,
+#        },
+#        ...
+#      ],
+#      seg_bitmaps => [
+#        {
+#          seg_slice_bitmap_file_id => $seg_slice_bitmap_file_id,
+#          png_file_id => $png_file_id,
+#          frame_no => $frame_no,
+#          total_one_bits => $total_one_bits,
+#          num_bare_points => $num_bare_points,
+#        },
+#        ...
+#      ],
+#      offset => $offset,
+#      off_normal => $off_normal,
+#      iop => $iop,
+#      ipp => $ipp,
+#      instance => $instance,
+#    };
+    #^^^^^  Here is the "definition" of FileList ^^^^^^^^^
 
 1;
