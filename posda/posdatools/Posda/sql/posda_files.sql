@@ -4120,7 +4120,8 @@ CREATE TABLE public.seg_slice_bitmap_file (
     iop text NOT NULL,
     ipp text NOT NULL,
     total_one_bits integer NOT NULL,
-    num_bare_points integer NOT NULL
+    num_bare_points integer NOT NULL,
+    seg_slice_png_file_id integer
 );
 
 
