@@ -3052,6 +3052,49 @@ CREATE TABLE public.non_dicom_file_change (
 
 
 --
+-- Name: pathology_visual_review_files; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_visual_review_files (
+    pathology_visual_review_instance_id integer,
+    svsfile_id integer,
+    preview_file_id integer
+);
+
+
+--
+-- Name: pathology_visual_review_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_visual_review_instance (
+    pathology_visual_review_instance_id integer NOT NULL,
+    activity_creation_id integer,
+    scheduler text,
+    scheduled timestamp without time zone
+);
+
+
+--
+-- Name: pathology_visual_review_insta_pathology_visual_review_insta_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pathology_visual_review_insta_pathology_visual_review_insta_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pathology_visual_review_insta_pathology_visual_review_insta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pathology_visual_review_insta_pathology_visual_review_insta_seq OWNED BY public.pathology_visual_review_instance.pathology_visual_review_instance_id;
+
+
+--
 -- Name: patient_import_status; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4666,7 +4709,8 @@ CREATE TABLE public.work (
     failed boolean DEFAULT false NOT NULL,
     stdout_file_id integer,
     stderr_file_id integer,
-    background_queue_name text
+    background_queue_name text,
+    metrics jsonb
 );
 
 
@@ -4970,6 +5014,13 @@ ALTER TABLE ONLY public.image_geometry ALTER COLUMN image_geometry_id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.import_event ALTER COLUMN import_event_id SET DEFAULT nextval('public.import_event_import_event_id_seq'::regclass);
+
+
+--
+-- Name: pathology_visual_review_instance pathology_visual_review_instance_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pathology_visual_review_instance ALTER COLUMN pathology_visual_review_instance_id SET DEFAULT nextval('public.pathology_visual_review_insta_pathology_visual_review_insta_seq'::regclass);
 
 
 --

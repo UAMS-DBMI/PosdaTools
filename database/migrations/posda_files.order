@@ -15,4 +15,6 @@ dup_sops_comparison.sql
 add_priority_to_spreadsheet_operation.sql
 add_queue_name_to_work.sql
 struct_contours_to_slice.sql
+pathology_visual_review_instance.sql
+pathology_visual_review_files.sql
 add_metrics_to_work.sql

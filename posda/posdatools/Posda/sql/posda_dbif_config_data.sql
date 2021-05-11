@@ -698,6 +698,12 @@ CompareDupSopsInTimepoint	CompareDupSopsInTp.pl <?bkgrnd_id?> <activity_id> <act
 AddFilesToTimepoint	AddFilesToTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<file_id>	{activity}	\N	f	0
 CompareFileList	CompareFileList.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<from_file_id>&<to_file_path>	{file_compare}	\N	f	0
 SelectGoodAndBadFilesFromDupSopsWorksheet	SelectGoodAndBadFilesFromDupSopsWorksheet.pl <?bkgrnd_id?> <activity_id> <comparison_id> <notify>	background_process	<equiv_class>&<select>	{dup_sops}	\N	f	0
+Path_SVS_VisualReview	Path_SVS_VisualReview.py <?bkgrnd_id?> <activity_id> <notify>	background_process		{visual_review}	\N	f	0
+ImportDownloadableDirectory	ImportDownloadableDirectory.pl <?bkgrnd_id?> <activity_id> "<comment>" "<sub_dir>" <notify>	background_process		{VA,dispositions}	\N	f	0
+PhiVaPublicScanDD	PhiVaPublicScanDD.pl <?bkgrnd_id?> <activity_id> <rel_dir> <max_rows> <notify>	background_process		{simple_phi,va}	\N	f	0
+MakeUIDMap	create-hashed-uid-mapping.py <?bkgrnd_id?> <notify> <timepoint_id>	background_process		{}	\N	f	0
+SlowRoll0	SlowRoll.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{demo_background}	\N	f	0
+SlowRoll1	SlowRoll.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{demo_background}	\N	f	0
 \.
 
 
