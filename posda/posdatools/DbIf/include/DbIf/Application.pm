@@ -1252,6 +1252,8 @@ sub OpenPopup {
     return;
   }
 
+
+
   eval "require $class";
   if($@){
     print STDERR "Class failed to compile\n\t$@\n";
@@ -3517,6 +3519,9 @@ sub InvokeOperationRow {
                               $child_path, $params);
   $self->StartJsChildWindow($child_obj);
 }
+
+
+
 sub NewQueryWait {
   my ($self, $http, $dyn) = @_;
   $http->queue("Waiting for query: $self->{WaitingForQueryCompletion}");

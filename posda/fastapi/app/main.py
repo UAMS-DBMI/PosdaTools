@@ -19,6 +19,7 @@ from papi.routes import importer
 from papi.routes import send_to_public_status
 from papi.routes import dicom_roots
 from papi.routes import worker
+from papi.routes import pathology
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -62,6 +63,7 @@ router_v1.include_router(importer.router, prefix="/import")
 router_v1.include_router(send_to_public_status.router, prefix="/send_to_public_status")
 router_v1.include_router(dicom_roots.router, prefix="/dicom_roots")
 router_v1.include_router(worker.router, prefix="/worker")
+router_v1.include_router(pathology.router, prefix="/pathology")
 
 app.include_router(auth.router)
 app.include_router(router_v1, prefix="/v1")
