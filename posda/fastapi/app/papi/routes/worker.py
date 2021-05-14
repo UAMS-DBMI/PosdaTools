@@ -77,7 +77,7 @@ async def set_work_status_finished(request: Request, error_files: ErrorFiles, wo
     return await db.fetch_one(query, [work_id, error_files.stderr_file_id, error_files.stdout_file_id, json_body_str])
 
 @router.post("/status/{work_id}/errored")
-async def set_work_status_errored(error_files: ErrorFiles, work_id: int, db: Database = Depends()):
+async def set_work_status_errored(request: Request, error_files: ErrorFiles, work_id: int, db: Database = Depends()):
 
     json_body = await request.json()
     # these two items are tracked directly, no need

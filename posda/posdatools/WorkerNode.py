@@ -75,7 +75,7 @@ def work_loop(redis_db, priority):
             process_work_item(work_id)
         except Exception as e:
             logging.error(e)
-            set_status_errored(work_id, None, None)
+            set_status_errored(work_id, None, None, None)
 
 
 def process_work_item(work_id: int):
@@ -158,6 +158,9 @@ def set_status_x(status: str,
                  stderr_file_id: int,
                  stdout_file_id: int,
                  metrics) -> None:
+
+    if metrics is None:
+        metrics = {}
 
     metrics.update({
         'stderr_file_id': stderr_file_id,
@@ -254,13 +257,18 @@ def upload_file(fp):
     return resp.json()['file_id']
 
 def parse_timefile(filename):
-    with open(filename) as f:
-        rows = [row.strip() for row in f]
+    try:
+        with open(filename) as f:
+            rows = [row.strip() for row in f]
 
-    out_dict = {}
-    for row in rows:
-        key, value = row.split(': ')
-        out_dict[key] = value
+        out_dict = {}
+        for row in rows:
+            try:
+                key, value = row.split(': ')
+                out_dict[key] = value
+            except: pass
+    except:
+        return None
 
     return out_dict
 
@@ -292,7 +300,7 @@ def test():
         process_work_item(2)
     except Exception as e:
         logging.error(e)
-        set_status_errored(2, None, None)
+        set_status_errored(2, None, None, None)
 
 def test1():
     pass
