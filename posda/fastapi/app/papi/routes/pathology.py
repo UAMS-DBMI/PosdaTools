@@ -10,7 +10,7 @@ from .auth import logged_in_user, User
 from ..util import Database
 
 
-@router.get("/start/kohlrabi/{vr_id}")
+@router.get("/start/{vr_id}")
 async def get_files_for_review(vr_id: int, db: Database = Depends()):
     query = """\
         select distinct
@@ -51,6 +51,67 @@ async def get_previews(svsid: int, db: Database = Depends()):
         	svsfile_id = $1
         """
     return await db.fetch(query, [svsid])
+
+@router.put("/set_edit/{svsid}/good")
+async def set_editG(svsid: int,  db: Database = Depends()):
+    record = await db.fetch("""\
+        update
+            pathology_visual_review_files
+        set
+            needs_edit = false
+        where
+            svsfile_id = $1
+        returning 1
+        """, [svsid])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+@router.put("/set_edit/{svsid}/bad")
+async def set_editB(svsid: int, db: Database = Depends()):
+    record = await db.fetch("""\
+        update
+            pathology_visual_review_files
+        set
+            needs_edit = true
+        where
+            svsfile_id = $1
+        returning 1
+        """, [svsid])
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+@router.get("/review/{vr_id}/{status}")
+async def review(vr_id: int, status: str, db: Database = Depends()):
+    query = """\
+        select
+            file_name
+        from
+            pathology_visual_review_instance
+            natural join pathology_visual_review_files
+            join file_import on svsfile_id = file_id
+        where
+            pathology_visual_review_instance_id = $1
+            and needs_edit"""
+
+    if status == "good":
+        query = query + " = false"
+    elif status == "bad":
+        query = query + " = true"
+    else:
+        query = query + " is null"
+
+    return await db.fetch(query, [vr_id])
 
 
 @router.get("/getcount")
