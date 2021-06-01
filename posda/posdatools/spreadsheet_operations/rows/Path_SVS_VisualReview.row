@@ -1,5 +1,5 @@
 :operation_name: Path_SVS_VisualReview
-:command_line: Path_SVS_VisualReview.py <?bkgrnd_id?> <activity_id> <notify>
+:command_line: PathologyScheduleSVSReview.py <?bkgrnd_id?> <activity_id> <notify>
 :operation_type: background_process
 :input_line_format:
 :tags: ['visual_review']
