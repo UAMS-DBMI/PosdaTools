@@ -223,9 +223,10 @@ sub ReadElementHeader {
       exists($Posda::Dataset::DD->{Dict}->{$group}->{$ele}->{VR}) &&
       $Posda::Dataset::DD->{Dict}->{$group}->{$ele}->{VR} ne $vr
     ){
+      my $to_vr = $Posda::Dataset::DD->{Dict}->{$group}->{$ele}->{VR};
       unless(
-#        $vr =~ /^O/ && 
-        $Posda::Dataset::DD->{Dict}->{$group}->{$ele}->{VR} eq "OT"
+        ($to_vr =~ /or/) &&
+        ($to_vr =~/$vr/)
       ){
         my $dd_vr = $Posda::Dataset::DD->{Dict}->{$group}->{$ele}->{VR};
         unless(defined $dd_vr) { $dd_vr = "<undefined>" }
@@ -250,9 +251,20 @@ sub ReadElementHeader {
     } else {
       $vr = "UN";
     }
+#  } else {
+#    print STDERR "Is this the place???????\n";
+#    for my $k ("vm", "vr", "grp", "ele", "vax", "tag", "explicit"){
+#      print STDERR "this{$k} = $this->{$k}\n";
+#    }
+#    print "STDERR ################\n";
   }
   $this->{vr} = $vr;
   if($group != 0xfffe){
+    if($vr =~ /or/){
+      my @vrs = split(/\s*or\s*/, $vr);
+      $vr = $vrs[0];
+      $this->{vr} = $vr;
+    }
     if($vr && exists($Posda::Dataset::DD->{VRDesc}->{$vr}->{type})){
       $this->{type} = $Posda::Dataset::DD->{VRDesc}->{$vr}->{type};
     } else {
@@ -272,12 +284,15 @@ sub ReadElementHeader {
         $vr eq "OD" ||
         $vr eq "OF" ||
         $vr eq "OL" ||
+        $vr eq "OV" ||
         $vr eq "OW" ||
         $vr eq "SQ" ||
-        $vr eq "UT" ||
-        $vr eq "UR" ||
+        $vr eq "SV" ||
         $vr eq "UC" ||
-        $vr eq "UN" 
+        $vr eq "UN" ||
+        $vr eq "UR" ||
+        $vr eq "UT" ||
+        $vr eq "UV" 
       ) ||
       !$this->{short_len}
     )
@@ -658,9 +673,17 @@ sub DecodeElementValue {
       }
     }
   }
-  my $VRDesc = $Posda::Dataset::DD->{VRDesc}->{$this->{vr}};
-  unless(defined $VRDesc) { die "unknown VR: $this->{vr} ($this->{tag})" }
-  if($this->{vr} eq "UN" && exists $this->{vr_to_convert_to}){
+  my $VRDesc;
+  if(defined $this->{vr}) {
+    $VRDesc = $Posda::Dataset::DD->{VRDesc}->{$this->{vr}};
+  } else {
+    $VRDesc = { vr => 'UN', type => 'raw' };
+  }
+  if(
+    defined($this->{vr}) &&
+    $this->{vr} eq "UN" &&
+    exists $this->{vr_to_convert_to}
+  ){
     push(@{$this->{errors}},
       "Recasting $this->{tag} from $this->{vr} to $this->{vr_to_convert_to}");
     $this->{vr} = $this->{vr_to_convert_to};
@@ -856,6 +879,9 @@ sub ReadElementValue{
       my $value = ReadEncapsulatedPixelData($this);
       $this->{vr} = $save_vr;
       return $value;
+    } elsif(0 #condition for new encapsulated tags
+    ){
+      # Handle new encapsulated tags, (except UN, which we take for SQ)
     } else {
       unless(defined($this->{vr})){ $this->{vr} = 'UN' }
       unless($this->{vr} eq "SQ"){
@@ -886,7 +912,7 @@ sub ReadElementValue{
     ### to distinguish if present but empty
     return "";
     return undef;
-  } elsif($this->{vr} eq "SQ") {
+  } elsif(defined($this->{vr}) && $this->{vr} eq "SQ") {
     $this->{type} = "seq";
     return ReadFixedLengthItemList($this);
   } else {
@@ -939,7 +965,10 @@ sub ReadFixedLengthDataset{
       return $this->{dataset};
     }
     ReadElementHeader($this);
-    if($this->{grp} == 0xfffe){
+    if(
+      $this->{grp} == 0xfffe &&
+      ($this->{ele} == 0xe000 || $this->{ele} == 0xe0dd)
+    ){
       my $group = sprintf("%04x", $this->{grp});
       my $element = sprintf("%04x", $this->{ele});
       die "Encountered an unexpected item tag ($group,$element) \n" .
@@ -959,7 +988,7 @@ sub ReadFixedLengthDataset{
     $last_tag = $this->{tag};
     unless(defined $this->{vr}){ 
       push(@{$this->{errors}}, 
-        "undefined VR for $this->{parent_tag}$this->{tag}\n")
+        "undefined VR for $this->{parent_tag}$this->{tag}")
     }
     if(
       $this->{seekable} &&
@@ -1034,10 +1063,9 @@ sub EleHandler{
     exists($this->{dataset}->{0x28}->{0x100}->{value}) &&
     $this->{dataset}->{0x28}->{0x100}->{value} > 16
   ){
-    if($element->{VR} eq "OT") { $element->{VR} = "OB" }
     $element->{vax} = $this->{vax};
     $element->{bits_alloc} = $this->{dataset}->{0x28}->{0x100}->{value};
-    print STDERR "Wide dose ($element->{bits_alloc}) found in" .
+    print STDERR "Wide dose ($element->{bits_alloc}) found in " .
       ($element->{vax} ? "intel" : "motorola") .
       " format.  VR = $element->{VR}\n";
   }
