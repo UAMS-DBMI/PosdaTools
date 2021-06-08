@@ -13,3 +13,4 @@ select
   scheduler
 from
   pathology_visual_review_instance
+  order by pathology_visual_review_instance desc
