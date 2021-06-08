@@ -65,7 +65,7 @@ function App(props) {
           <button className="btn btn-warning" onClick={() => nextButtonPress()}>Next</button>
         </div>
         <div>
-          <Images original_file={original_files[index].svsfile_id} />
+          <Images original_file={original_files[index].svsfile_id} VRindex={props.VRindex} />
         </div>
       </div>
   );}
