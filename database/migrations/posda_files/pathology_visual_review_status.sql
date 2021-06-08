@@ -4,6 +4,6 @@
 --
 
 create table pathology_visual_review_status(
-	svsfile_id int unique,
+	path_file_id int unique,
 	good bool
 );
