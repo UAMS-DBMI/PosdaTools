@@ -40,7 +40,7 @@ def main(args):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
     for (file_id, svsfilepath) in results:
         myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-        print("reviewing file " + svsfilepath + ", which is really " + myfilename +". A " + myfilename[-3:] + " file")
+        print("Creating previews for file " + svsfilepath + " : " + myfilename )
         if (myfilename[-3:].lower() == "svs"):
             mytif = TiffFile(svsfilepath)
             for i, page in enumerate(mytif.pages):
@@ -49,29 +49,29 @@ def main(args):
                     str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
                     im = Image.fromarray(data)
                     im.save(str) #create thumbnail
-                    print(f"Creating an svs preview")
+                    #print(f"Creating an svs preview")
                     process(str, file_id,vr_id) #import thumbnail
-        # elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
-        #     mytif = TiffFile(svsfilepath)
-        #     for i, page in enumerate(mytif.pages):
-        #         data = page.asarray()
-        #         str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
-        #         im = Image.fromarray(data)
-        #         im.save(str) #create copy
-        #         mytif2 = Image.open(str)
-        #         size = (700,700)
-        #         mytif2.thumbnail(size) #change copy into a thumbnail
-        #         mytif2.save(str)
-        #         print(f"Creating a tif preview")
-        #         process(str, file_id,vr_id) #import thumbnail
-        # elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp"):
-        #         myimg = Image.open(svsfilepath)
-        #         str = "/home/posda/cache/created/{}_thumb.jpg".format(file_id)
-        #         size = (700,700)
-        #         myimg.thumbnail(size) #change copy into a thumbnail
-        #         myimg.save(str) #save thumbnail
-        #         print(f"Creating a jpg/bmp preview")
-        #         process(str, file_id,vr_id) #import thumbnail
+        elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
+            mytif = TiffFile(svsfilepath)
+            for i, page in enumerate(mytif.pages):
+                data = page.asarray()
+                str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
+                im = Image.fromarray(data)
+                im.save(str) #create copy
+                mytif2 = Image.open(str)
+                size = (700,700)
+                mytif2.thumbnail(size) #change copy into a thumbnail
+                mytif2.save(str)
+                #print(f"Creating a tif preview")
+                process(str, file_id,vr_id) #import thumbnail
+        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp"):
+                myimg = Image.open(svsfilepath)
+                str = "/home/posda/cache/created/{}_thumb.jpg".format(file_id)
+                size = (700,700)
+                myimg.thumbnail(size) #change copy into a thumbnail
+                myimg.save(str) #save thumbnail
+                #print(f"Creating a jpg/bmp preview")
+                process(str, file_id,vr_id) #import thumbnail
 
     background.finish(f"Thumbnail files created and imported")
 

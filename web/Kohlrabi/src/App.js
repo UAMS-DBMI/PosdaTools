@@ -28,6 +28,8 @@ function App(props) {
       return(<span>No files for review in VR {props.VRindex} </span>);
   }
 
+
+
     return (
       <div>
           <h1>Now Viewing Image {index+1} out of {original_files.length}</h1>
@@ -42,7 +44,7 @@ function App(props) {
           <button className="btn btn-warning" onClick={() => nextButtonPress()}>Next</button>
         </div>
         <div>
-          <Images original_file={original_files[index].svsfile_id} />
+          <Images original_file={original_files[index].svsfile_id} VRindex={props.VRindex} />
         </div>
       </div>
     );
