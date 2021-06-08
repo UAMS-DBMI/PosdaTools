@@ -22,7 +22,7 @@ def process(filepath, original_file,vr_id):
         #update table that tracks the relationship between preview files and the original file
         Query("InsertPathVRFiles").execute(
                 pathology_visual_review_instance_id = vr_id,
-                svsfile_id = original_file,
+                path_file_id = original_file,
                 preview_file_id = file_id)
 
 def main(args):
@@ -40,7 +40,7 @@ def main(args):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
     for (file_id, svsfilepath) in results:
         myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-        print("Creating previews for file " + svsfilepath + " : " + myfilename )
+        #print("Creating previews for file " + svsfilepath + " : " + myfilename )
         if (myfilename[-3:].lower() == "svs"):
             mytif = TiffFile(svsfilepath)
             for i, page in enumerate(mytif.pages):
