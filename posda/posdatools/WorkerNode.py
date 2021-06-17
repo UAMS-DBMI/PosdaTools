@@ -16,6 +16,7 @@ Those settings are read from the environment variables:
     * POSDA_WORKER_NAME
 
 """
+import sys
 import redis
 import requests
 import subprocess
@@ -27,6 +28,7 @@ import logging
 from posda.config import Config
 import posda.logging.autoconfig
 
+VERSION = 1       # the version of this code, increment only
 BASE_URL = None   # the base of the Posda API, as accessible from this node
 NODE_NAME = None  # the name of this node reported in the work table
 
@@ -64,6 +66,7 @@ def work_loop(redis_db, priority):
     queue_name = f"work_queue_{priority}"
 
     while True:
+        restart_if_needed(redis_db)
         sr = redis_db.brpop(keys=queue_name, timeout=5)
         if sr is None:
             # if the timeout is reached, sr will be None
@@ -302,10 +305,37 @@ def test():
         logging.error(e)
         set_status_errored(2, None, None, None)
 
-def test1():
-    pass
+def restart_if_needed(redis_db):
+    """Check to see if we should exit for upgrade
+
+    This assumes we are being run by some monitor process
+    that will automatically restart us upon exit. So, 
+    all we need to do is exit if we need an upgrade.
+    """
+    global VERSION
+
+    version = redis_db.get("worker-node-version")
+    if version is None:
+        logging.debug("worker-node-version is not set in redis, "
+                      "can't know if we need to restart for update.")
+        return
+
+    int_version = 0
+    try:
+        int_version = int(version)
+    except:
+        logging.error("worker-node-version key is not an integer!")
+        return
+
+    if int_version > VERSION:
+        logging.info(
+            f"Exiting for automatic upgrade. We are version {VERSION} but "
+            f"the latest version is {int_version}."
+        )
+        sys.exit(1)
+
+
 
 if __name__ == "__main__":
     main()
     # test()
-    # test1()

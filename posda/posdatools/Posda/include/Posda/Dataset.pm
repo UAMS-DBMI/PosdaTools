@@ -336,9 +336,9 @@ sub FixUpOt{
     my($ds, $ele, $sig) = @_;
     unless(exists($ele->{VR}) && $ele->{VR}){
       push(@errors, "Ele $sig has no VR");
-      $ele->{VR} = 'OT';
+      $ele->{VR} = 'UN';
     }
-    if(exists($ele->{VR}) && $ele->{VR} eq "OT"){
+    if(exists($ele->{VR}) && $ele->{VR} =~ /^O/){
       $ele->{VR} = MapOtVR($ds, $sig);
       if(
         $ele->{VR} eq "US" && $ele->{type} eq "raw" &&
@@ -372,6 +372,7 @@ sub FixUpOt{
 }
 sub MakeExpBeElementWriter{
   my($stream) = @_;
+die "Explicit Big Endian is deprecated.....";
   return sub {
     my($ele, $root, $sig, $keys, $depth) = @_;
     my($Value, $type, $vr, $file_name, $offset, $length) =
@@ -484,8 +485,10 @@ sub MakeExpLeElementWriter{
       $vr eq "OD" ||
       $vr eq "OF" ||
       $vr eq "OL" ||
+      $vr eq "OV" ||
       $vr eq "OW" ||
       $vr eq "SQ" ||
+      $vr eq "SV" ||
       $vr eq "UC" ||
       $vr eq "UR" ||
       $vr eq "UT" ||
@@ -1221,17 +1224,17 @@ sub DumpAT{
   }
 };
 
-sub DumpCompressedPixelData {
-  my($pr, $ele, $max_len1) = @_;
+sub DumpEncapsulatedOther {
+  my($pr, $sig, $ele, $ele_info, $max_len1) = @_;
   my $v = $ele->{value};
   unless(ref($v) eq "ARRAY"){ die "Internal Error, ref of pixel data changed" }
-  my $name;
+  my $name = $ele_info->{Name};
   my $vr = $ele->{VR};
   my $vm = @$v;
   my $value_string;
   my $tag;
   for my $i (0 .. $#{$v}){
-    $tag = "(7fe0,0010)[$i]";
+    $tag = "$sig" . "[$i]";
     my $index = $i + 1;
     $name = "Pixel Data Segment $index";
     my $vi = $v->[$i];
@@ -1480,12 +1483,18 @@ sub DumpStyle0{
   MapPvt($ds, sub {
     my($ele, $sig) = @_;
     my $ele_info = $DD->get_ele_by_sig($sig);
-    if($sig eq "(7fe0,0010)" && ref($ele->{value}) eq "ARRAY"){
-      DumpCompressedPixelData($pr, $ele, $max_len1);
+    if(($ele->{VR} =~ /^O/) && ref($ele->{value}) eq "ARRAY"){
+      DumpEncapsulatedOther($pr, $sig, $ele, $ele_info, $max_len1);
     } else {
       unless(defined($ele_info)){
+        my $is_priv = 0;
+        if($sig =~ /^\((....),(....)\)$/){
+          my $grp = $1;
+          $grp = hex($grp);
+          $is_priv = $grp & 1;
+        }
         $ele_info = {
-          Name => "<Unknown Priv Ele>",
+          Name => $is_priv ? "<Unknown Priv Ele>" : "<Unknown Ele>",
           VR => 'UN',
           VM => 1,
         };

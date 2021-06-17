@@ -54,7 +54,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Takes an Activity and creates the thumbnails for review for the SVS files")
-    parser.add_argument("background_id")
+    #parser.add_argument("background_id")
     parser.add_argument("activity_id")
     parser.add_argument("notify")
     args = parser.parse_args()
