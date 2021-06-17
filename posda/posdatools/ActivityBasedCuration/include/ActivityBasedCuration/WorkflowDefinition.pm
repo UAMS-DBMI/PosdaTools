@@ -380,6 +380,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Make a hashed UID mapping spreadsheet",
         action =>  "MakeUIDMap",
       },
+      {
+        caption => "Process Nifti Files In Timepoint",
+        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+      },
     ],
   },
 );
