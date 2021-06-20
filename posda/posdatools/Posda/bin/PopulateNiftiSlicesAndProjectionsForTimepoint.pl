@@ -11,7 +11,7 @@ my $dbg = sub { print STDERR @_ };
 
 my $usage = <<EOF;
 Usage:
-PopulateNiftiSlicesAndProjectionsForTimepoint.pl <?bkgrnd_id?> <activity_id> <notify>
+PopulateNiftiSlicesAndProjectionsForTimepoint.pl <?bkgrnd_id?> <activity_id> <notify> <render_slices> <render_volumes> <render_projections> <verbose>
 or
 PopulateNiftiSlicesAndProjectionsForTimepoint.pl -h
 
@@ -33,8 +33,9 @@ if($#ARGV == 0  && $ARGV[0] eq -h ) {
   print STDOUT  "$usage\n";
   exit;
  }
-if($#ARGV != 2){ die "Wrong args: $usage\n" }
-my($invoc_id, $act_id, $notify) = @ARGV;
+if($#ARGV != 6){ die "Wrong args: $usage\n" }
+my($invoc_id, $act_id, $notify,
+   $render_slices, $render_volumes, $render_projections, $verbose) = @ARGV;
 
 print "Forking background process\n";
 #############################
@@ -42,37 +43,55 @@ print "Forking background process\n";
 my $b = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $b->Daemonize;
 # now in the background...
+my $tmp_dir = File::Temp->newdir;
+$b->WriteToEmail("temp dir: $tmp_dir\n");
 $b->SetActivityStatus("Finding Files in Timepoint");
 my %NiftiFilesInTp;
 my $files_found = 0;
 my $nifti_files_found = 0;
+my $find_start = time;
 Query("FileIdTypePathFromActivity")->RunQuery(sub{
   my($row) = @_;
   my($file_id, $file_type, $path) = @$row;
   $files_found += 1;
-  my $nifti = Nifti::Parser->new($path);
+  my $nifti;
+  if($file_type =~ /gzip/){
+    $nifti = Nifti::Parser->new_from_zip($path, $file_id, $tmp_dir);
+  } else {
+    $nifti = Nifti::Parser->new($path);
+  }
   if(defined $nifti){
     $nifti_files_found += 1;
     $NiftiFilesInTp{$file_id} = $nifti;
     $nifti->Close;
-    if($file_type ne "Nifti Image"){
-      Query("ChangeFileType")->RunQuery(sub{}, sub{}, "Nifti Image", $file_id);
+    unless($file_type =~ /Nifti Image/){
+      my $new_file_type = "Nifti Image";
+      if($file_type =~ /gzip/){
+        $new_file_type .= " (gzipped)";
+      }
+      Query("ChangeFileType")->RunQuery(sub{}, sub{}, $new_file_type, $file_id);
     }
   } else  {
 #    $b->WriteToEmail("failed to nifti parse: $path\n");
   }
   $b->SetActivityStatus("Found $nifti_files_found of $files_found examined");
 }, sub {}, $act_id);
+my $find_time = time - $find_start;
 $b->WriteToEmail("Found $nifti_files_found nifti files in " .
   "$files_found files in latest timepoint for activity $act_id\n");
-my $tmp_dir = File::Temp->newdir;
-$b->WriteToEmail("temp dir: $tmp_dir\n");
+$b->WriteToEmail("Find took $find_time seconds\n");
+my $num_niftis = keys %NiftiFilesInTp;
+my $current_file = 0;
 nifti_file:
 for my $nfid (keys %NiftiFilesInTp){
+  $current_file += 1;
   my $nifti = $NiftiFilesInTp{$nfid};
   my $nifti_file_path = $nifti->{file_name};
   my $start_file_processing = time;
-  $b->WriteToEmail("processing nifti_file $nifti_file_path\n");
+  my $FileMessage = "File $nfid ($current_file of $num_niftis) TempDir: $tmp_dir";
+  if($verbose > 0){
+    $b->WriteToEmail("Processing ($FileMessage) $nifti_file_path\n");
+  }
 
   my %NiftiSlicesInDb;
   my %NiftiVolProjectionsInDb;
@@ -109,12 +128,14 @@ for my $nfid (keys %NiftiFilesInTp){
     $NiftiFileProjectionsInDb{$proj_type} = $jpeg_file_id;
   }, sub{}, $nfid);
 
-  $b->WriteToEmail("Found $slice_renderings_found renderings of ".
-    "$expected_slice_renderings\n");
-  $b->WriteToEmail("Found $volume_projections_found volume projections of ".
-    "$expected_vol_projections\n");
-  $b->WriteToEmail("Found $file_projections_found file projections of ".
-    "$expected_file_projections\n");
+  if($verbose > 1){
+    $b->WriteToEmail("Found $slice_renderings_found slice renderings of ".
+      "$expected_slice_renderings\n");
+    $b->WriteToEmail("Found $volume_projections_found volume projections of ".
+      "$expected_vol_projections\n");
+    $b->WriteToEmail("Found $file_projections_found file projections of ".
+      "$expected_file_projections\n");
+  }
 
   my $ImportComment = "RenderingSlicesAndProjections for Nifti file $nfid";
   my $now = time;
@@ -136,63 +157,111 @@ for my $nfid (keys %NiftiFilesInTp){
   #  "vols to render: $vols_to_render\n" .
   #  "files to render: $files_to_render\n" .
   #  "total to render: $total_to_render\n";
-  if($total_to_render < 0){
+  if($total_to_render <= 0){
     my $elapsed = time - $start_file_processing;
-    $b->WriteToEmail("Nothing to render for nifti_file $nfid " .
-      "($elapsed seconds)\n");
+    if($verbose > 1){
+      $b->WriteToEmail("Nothing to render for nifti_file $nfid " .
+        "($elapsed seconds)\n");
+    }
     next nifti_file;
   }
-  open IMPORT, "|ImportMultipleFilesIntoPosda.pl \"$ImportComment\"" or 
-    die "Can't open importer";
   my @JpegsRendered;
   my $start_slice_rendering = time;
-  if($slices_to_render > 0){
-    slice_rendering:
-    for my $vol(0 .. $num_vols - 1){
-      for my $slice (0 .. $num_slices - 1){
-        for my $flip_stat ("f", "n"){
-          if(exists $NiftiSlicesInDb{$vol}->{$slice}->{$flip_stat}){
-            next slice_rendering;
-          }
-          if($slices_rendered == $slices_to_render){
-             print STDERR "Hmmm -this doesn't look right:\n";
-             print STDERR "$vol, $slice, $flip_stat\n";
-             print STDERR "NiftiSlicesInDb: ";
-             Debug::GenPrint($dbg, \%NiftiSlicesInDb, 1);
-             print STDERR "\n";
-             last slice_rendering;
-          }
-          $slices_rendered += 1;
-          my $cmd = "ExtractNiftiSlice.pl $nfid $nifti_file_path $vol $slice " .
-            " $flip_stat $tmp_dir";
-          open SUB, "$cmd|" or die "can't open cmd: $cmd\n";
-          my $jpeg_file_path;
-          while(my $line = <SUB>){
-            chomp $line;
-            if($line =~ /Jpeg: (.*)$/){
-              $jpeg_file_path = $1;
+  if($render_slices){
+    my $open_start = time;
+    $nifti->Open;
+    my $open_time = time - $open_start;
+    if($verbose > 1){
+      $b->WriteToEmail("$open_time seconds opening $FileMessage\n");
+    }
+    open IMPORT, "|ImportMultipleFilesIntoPosda.pl \"$ImportComment\"" or 
+      die "Can't open importer";
+    if($slices_to_render > 0){
+      slice_rendering:
+      for my $vol(0 .. $num_vols - 1){
+        for my $slice (0 .. $num_slices - 1){
+          for my $flip_stat ("f", "n"){
+            if(exists $NiftiSlicesInDb{$vol}->{$slice}->{$flip_stat}){
+              next slice_rendering;
             }
+            if($slices_rendered == $slices_to_render){
+               print STDERR "Hmmm -this doesn't look right:\n";
+               print STDERR "$vol, $slice, $flip_stat\n";
+               print STDERR "NiftiSlicesInDb: ";
+               Debug::GenPrint($dbg, \%NiftiSlicesInDb, 1);
+               print STDERR "\n";
+               last slice_rendering;
+            }
+            $slices_rendered += 1;
+  #          my $cmd = "ExtractNiftiSlice.pl $nfid $nifti_file_path $vol $slice " .
+  #            " $flip_stat $tmp_dir";
+  #          open SUB, "$cmd|" or die "can't open cmd: $cmd\n";
+  #          my $jpeg_file_path;
+  #          while(my $line = <SUB>){
+  #            chomp $line;
+  #            if($line =~ /Jpeg: (.*)$/){
+  #              $jpeg_file_path = $1;
+  #            }
+  #          }
+  #          if(defined $jpeg_file_path){
+  #            print IMPORT "$jpeg_file_path\n";
+  #            push @JpegsRendered, [$jpeg_file_path, "slice", $nfid, $vol,
+  #              $slice, $flip_stat];
+  #          } else {
+  #            $b->WriteToEmail("Couldn't find jpeg: $vol $slice $flip_stat\n");
+  #          }
+            my $to_root = "nifti_$nfid" . "_$vol" . "_$slice";
+            if($flip_stat eq "f"){
+              $to_root .= "_f";
+            } else {
+              $to_root .= "_n";
+            }
+            my $gray_file = "$tmp_dir/$to_root.gray";
+            my $jpeg_file = "$tmp_dir/$to_root.jpeg";
+            print "Gray: $gray_file\n";
+            print "Jpeg: $jpeg_file\n";
+            unless(open OUT, ">$gray_file"){
+              die "Can't open $gray_file for write ($!)";
+            }
+            if($flip_stat eq "f"){
+              $nifti->PrintSliceFlippedScaled($vol, $slice, *OUT);
+            } else {
+              print "Calling PrintSliceScaled\n";
+              $nifti->PrintSliceScaled($vol, $slice, *OUT);
+            }
+            close OUT;
+            my($rows,$cols,$bytes) = $nifti->RowsColsAndBytes;
+            my $cmd = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+              "-depth 8 gray:$gray_file $jpeg_file";
+            `$cmd`;
+            unlink $gray_file;
+            if(-r $jpeg_file){
+              print IMPORT "$jpeg_file\n";
+              push @JpegsRendered, [$jpeg_file, "slice", $nfid, $vol,
+                $slice, $flip_stat];
+            } else {
+              die "Jpeg: $jpeg_file didn't render";
+            }
+            $b->SetActivityStatus("Rendered $slices_rendered slices " .
+              "(of $slices_to_render) for $FileMessage");
+            if($slices_rendered == $slices_to_render){ last slice_rendering }
           }
-          if(defined $jpeg_file_path){
-            print IMPORT "$jpeg_file_path\n";
-            push @JpegsRendered, [$jpeg_file_path, "slice", $nfid, $vol,
-              $slice, $flip_stat];
-          } else {
-            $b->WriteToEmail("Couldn't find jpeg: $vol $slice $flip_stat\n");
-          }
-          $b->SetActivityStatus("Rendered $slices_rendered slices " .
-            "(of $slices_to_render) for file: $nfid");
-          if($slices_rendered == $slices_to_render){ last slice_rendering }
         }
       }
+    }
+  } else {
+    if($verbose > 1){
+      $b->WriteToEmail("Skipping slice rendering (by request) ");
     }
   }
   my $slice_rendering_time = time - $start_slice_rendering;
   my $vol_rendering_start = time;
-  if($vols_to_render > 0){
+  if($render_volumes && $vols_to_render > 0){
     #print STDERR "Rendering $vols_to_render volumes\n";
+    my %type_to_file;
     vol_rendering:
     for my $vol (0 .. $num_vols - 1){
+      $b->SetActivityStatus("Rendering vol $vol of $num_vols $FileMessage");
       my $vol_needed = 0;
       my @types_needed;
       if(exists $NiftiVolProjectionsInDb{$vol}){
@@ -209,20 +278,41 @@ for my $nfid (keys %NiftiFilesInTp){
         push @types_needed, "min";
       }
       if($vol_needed){
-        my $cmd = "ProjectNiftiVolume.pl $nfid $nifti_file_path $vol $tmp_dir";
-        $b->SetActivityStatus("Rendering volume projection $nfid $vol");
-        open REND, "$cmd|" or die "can't open $cmd\n";
-        my %type_to_file;
-        type:
-        while(my $line = <REND>){
-          chomp $line;
-          if($line =~ /Jpeg (.*): (.*)$/){
-            my $type = $1;
-            my $file = $2;
-            $type_to_file{$type} = $file;
-          }
+        my($rows, $cols, $depth) = $nifti->RowsColsAndBytes;
+        my $gray_avg = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_avg.gray";
+        my $gray_min = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_min.gray";
+        my $gray_max = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_max.gray";
+        my $jpeg_avg = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_avg.jpeg";
+        my $jpeg_min = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_min.jpeg";
+        my $jpeg_max = "$tmp_dir/nifti_$nfid" . "_$vol" . "_p_max.jpeg";
+        open FILE, ">$gray_avg" or die "Can't open $gray_avg ($!0)";
+        open FILE1, ">$gray_min" or die "Can't open $gray_min ($!0)";
+        open FILE2, ">$gray_max" or die "Can't open $gray_max($!0)";
+        $nifti->PrintNormalizedVolumeProjections($vol, \*FILE, \*FILE1, \*FILE2);
+        close FILE;
+        close FILE1;
+        close FILE2;
+        my $cmd1 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+          "-depth 8 $gray_avg $jpeg_avg";
+        my $cmd2 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+          "-depth 8 $gray_max $jpeg_max";
+        my $cmd3 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+          "-depth 8 $gray_min $jpeg_min";
+        `$cmd1`;
+        `$cmd2`;
+        `$cmd3`;
+        unlink $gray_avg;
+        unlink $gray_max;
+        unlink $gray_min;
+        if(-r $jpeg_avg){
+          $type_to_file{avg} = $jpeg_avg;
         }
-        close REND;
+        if(-r $jpeg_max){
+          $type_to_file{max} = $jpeg_max;
+        }
+        if(-r $jpeg_min){
+          $type_to_file{min} = $jpeg_min;
+        }
         type:
         for my $t (@types_needed){
           unless (exists $type_to_file{$t}){
@@ -239,28 +329,51 @@ for my $nfid (keys %NiftiFilesInTp){
   }
   my $vol_rendering_time = time -$vol_rendering_start;
   my $projection_rendering_start = time;
-  if($files_to_render > 0){
+  if($render_projections && $files_to_render > 0){
     my @types_needed;
+    $b->SetActivityStatus("Rendering full projection $FileMessage");
     for my $t ("avg", "min", "max"){
       unless(exists $NiftiFileProjectionsInDb{$t}){
         push @types_needed, $t;
       }
     }
     if($#types_needed >= 0){
-      my $cmd = "ProjectNiftiFile.pl $nfid $nifti_file_path $tmp_dir";
-      $b->SetActivityStatus("Rendering file projection $nfid");
-      open REND, "$cmd|" or die "can't open $cmd\n";
       my %type_to_file;
-      type:
-      while(my $line = <REND>){
-        chomp $line;
-        if($line =~ /Jpeg (.*): (.*)$/){
-          my $type = $1;
-          my $file = $2;
-          $type_to_file{$type} = $file;
-        }
+      my($rows, $cols, $depth) = $nifti->RowsColsAndBytes;
+      my $gray_avg = "$tmp_dir/nifti_$nfid" . "_p_avg.gray";
+      my $gray_min = "$tmp_dir/nifti_$nfid" . "_p_min.gray";
+      my $gray_max = "$tmp_dir/nifti_$nfid" . "_p_max.gray";
+      my $jpeg_avg = "$tmp_dir/nifti_$nfid" . "_p_avg.jpeg";
+      my $jpeg_min = "$tmp_dir/nifti_$nfid" . "_p_min.jpeg";
+      my $jpeg_max = "$tmp_dir/nifti_$nfid" . "_p_max.jpeg";
+      open FILE, ">$gray_avg" or die "Can't open $gray_avg ($!0)";
+      open FILE1, ">$gray_min" or die "Can't open $gray_min ($!0)";
+      open FILE2, ">$gray_max" or die "Can't open $gray_max($!0)";
+      $nifti->PrintNormalizedFileProjections(\*FILE, \*FILE1, \*FILE2);
+      close FILE;
+      close FILE1;
+      close FILE2;
+      my $cmd1 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+        "-depth 8 $gray_avg $jpeg_avg";
+      my $cmd2 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+        "-depth 8 $gray_max $jpeg_max";
+      my $cmd3 = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+        "-depth 8 $gray_min $jpeg_min";
+      `$cmd1`;
+      `$cmd2`;
+      `$cmd3`;
+      unlink $gray_avg;
+      unlink $gray_max;
+      unlink $gray_min;
+      if(-r $jpeg_avg){
+        $type_to_file{avg} = $jpeg_avg;
       }
-      close REND;
+      if(-r $jpeg_max){
+        $type_to_file{max} = $jpeg_max;
+      }
+      if(-r $jpeg_min){
+        $type_to_file{min} = $jpeg_min;
+      }
       type:
       for my $t (@types_needed){
         unless (exists $type_to_file{$t}){
@@ -282,6 +395,7 @@ for my $nfid (keys %NiftiFilesInTp){
     $import_event_id = $row->[0];
   }, sub{}, $ImportComment);
   unless(defined $import_event_id) {
+    print STDERR "Couldn't retrieve import_event_id for $nfid\n";
     $b->WriteToEmail("Couldn't retrieve import_event_id for $nfid\n");
   }
   my %ImportedFileToFileId;
@@ -299,6 +413,7 @@ for my $nfid (keys %NiftiFilesInTp){
     my $render_type = $r->[1];
     my $file_id = $ImportedFileToFileId{$file_name};
     if(defined $file_id){
+      unlink $file_name;
       if($render_type eq "slice"){
         my $nifti_file_id = $r->[2];
         my $vol = $r->[3];
@@ -328,12 +443,14 @@ for my $nfid (keys %NiftiFilesInTp){
     }
   }
   my $db_update_time = time - $db_update_start;
-  $b->WriteToEmail("$files_imported rendered jpegs for $nfid\n" .
-    "$slice_rendering_time secs rendering slices; " .
-    "$vol_rendering_time secs rendering volumes; " .
-    "$projection_rendering_time secs rendering projection; " .
-    "$db_update_time updating db\n"
-  );
+  if($verbose > 0){
+    $b->WriteToEmail("$files_imported rendered jpegs for $nfid\n" .
+      "$slice_rendering_time secs rendering slices; " .
+      "$vol_rendering_time secs rendering volumes; " .
+      "$projection_rendering_time secs rendering projection; " .
+      "$db_update_time updating db\n"
+    );
+  }
 }
 
 $b->Finish("Done: $nifti_files_found found of $files_found");

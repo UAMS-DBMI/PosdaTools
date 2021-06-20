@@ -273,11 +273,42 @@ sub new{
     file_name => $file_name,
   };
   bless $self, $class;
+  $self->ReadHeader;
+  return $self;
+}
+sub new_from_zip{
+  my($class, $file_name, $file_id, $tmp_dir) = @_;
+  my $uncompressed_file_name = "$tmp_dir/nifti_$file_id.nii";
+print STDERR "In $class" . "::new_from_zip:\n" ,
+" file_name: $file_name\n" .
+" file_id: $file_id\n" .
+" temp_dir: $tmp_dir\n" .
+" uncompressed_file_name: $uncompressed_file_name\n";
+unless(-d $tmp_dir) { die "$tmp_dir is not a directory" }
+  my $fh;
+  `gunzip -c $file_name >$uncompressed_file_name`;
+  unless(open $fh, "<$uncompressed_file_name"){
+    die "Can't open file $uncompressed_file_name (unzipped from $file_name)";
+  }
+  my $self = {
+    file_id => $file_id,
+    fh => $fh,
+    is_from_zip => 1,
+    compressed_file_name => $file_name,
+    file_name => $uncompressed_file_name,
+    tmp_dir => $tmp_dir,
+  };
+  bless $self, $class;
+  $self->ReadHeader;
+  return $self;
+}
+sub ReadHeader{
+  my($self) = @_;
   for my $field (keys %$spec){
-    seek $fh, $spec->{$field}->{offset}, 0;
+    seek $self->{fh}, $spec->{$field}->{offset}, 0;
     my $buff;
     my @v;
-    read $fh, $buff, $spec->{$field}->{length};
+    read $self->{fh}, $buff, $spec->{$field}->{length};
     if($spec->{$field}->{type} eq "float"){
       my @float;
       @float = unpack('f*', pack('L*', unpack('V*', $buff)));
@@ -327,13 +358,60 @@ sub Open {
   my($self) = @_;
   if (defined $self->{fh}) { return }
   my $fh;
-  open $fh, $self->{file_name} or die "Can't open $self->{file_name}";
+  if($self->{is_from_zip}){
+    my $uncompressed_file_name = "$self->{tmp_dir}/" .
+      "nifti_$self->{file_id}.nii";
+print STDERR "In Open\n" ,
+" file_name: $self->{file_name}\n" .
+" commpressed_file_name: $self->{compressed_file_name}\n" .
+" file_id: $self->{file_id}\n" .
+" temp_dir: $self->{tmp_dir}\n" .
+" uncompressed_file_name: $uncompressed_file_name\n";
+    if(exists($self->{file_name}) && -r $self->{file_name}){
+print STDERR "Opening $self->{file_name}\n";
+      open $fh, $self->{file_name} or die "Can't open $self->{file_name}";
+    } else {
+      if(
+        exists($self->{compressed_file_name}) &&
+        -r $self->{compressed_file_name}
+      ){
+        my $cmd = 
+          "gunzip -c $self->{compressed_file_name} >$uncompressed_file_name";
+print STDERR "Command: $cmd\n";
+        `$cmd`;
+        $self->{file_name} = $uncompressed_file_name;
+        open $fh, $uncompressed_file_name or
+          die "Can't open $self->{file_name} " .
+            "(from zip of $self->{compressed_file_name}";
+      } else {
+        die "No compressed file name to decompress";
+      }
+    }
+  } else {
+    open $fh, $self->{file_name} or die "Can't open $self->{file_name}";
+  }
   $self->{fh} = $fh;
 }
 
 sub Close {
   my($self) = @_;
-  if (defined $self->{fh}) { return }
+  unless (defined $self->{fh}) { return }
+  close ($self->{fh});
+  delete $self->{fh};
+  if($self->{is_from_zip}){
+    if(
+      exists $self->{compressed_file_name} &&
+      -f $self->{compressed_file_name}
+    ){
+      unlink $self->{file_name};
+      delete $self->{file_name};
+    }
+  }
+}
+
+sub HalfClose {
+  my($self) = @_;
+  unless (defined $self->{fh}) { return }
   close ($self->{fh});
   delete $self->{fh};
 }
