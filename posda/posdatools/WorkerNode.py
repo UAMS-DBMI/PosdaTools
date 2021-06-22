@@ -255,7 +255,7 @@ def upload_file(fp):
     params = {'digest': digest}
     resp = requests.put(f'{BASE_URL}/import/file', params=params, data=fp)
     if resp.status_code != 200:
-        logging.error(f'File uploading failed: {resp.status_code}')
+        logging.error(f'File uploading failed: {resp.status_code} {resp.text}')
         raise Exception("File upload failed")
     return resp.json()['file_id']
 
