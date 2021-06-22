@@ -28,7 +28,7 @@ import logging
 from posda.config import Config
 import posda.logging.autoconfig
 
-VERSION = 1       # the version of this code, increment only
+VERSION = 2       # the version of this code, increment only
 BASE_URL = None   # the base of the Posda API, as accessible from this node
 NODE_NAME = None  # the name of this node reported in the work table
 
