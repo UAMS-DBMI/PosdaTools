@@ -37,7 +37,7 @@ if($#ARGV != 6){ die "Wrong args: $usage\n" }
 my($invoc_id, $act_id, $notify,
    $render_slices, $render_volumes, $render_projections, $verbose) = @ARGV;
 
-print "Forking background process\n";
+#print "Forking background process\n";
 #############################
 # This is code which sets up the Background Process and Starts it
 my $b = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
@@ -87,6 +87,13 @@ for my $nfid (keys %NiftiFilesInTp){
   $current_file += 1;
   my $nifti = $NiftiFilesInTp{$nfid};
   my $nifti_file_path = $nifti->{file_name};
+  unless(defined $nifti_file_path){
+    if(defined $nifti->{compressed_file_name}){
+    $nifti_file_path = $nifti->{compressed_file_name};
+    } else {
+      die "nifti $nfid has neither file_name nor compressed_file_name";
+    }
+  }
   my $start_file_processing = time;
   my $FileMessage = "File $nfid ($current_file of $num_niftis) TempDir: $tmp_dir";
   if($verbose > 0){
@@ -145,6 +152,8 @@ for my $nfid (keys %NiftiFilesInTp){
   my $hash = $ctx->hexdigest;
   my $short = substr($hash, 10, 5);
   $ImportComment = "($short)$ImportComment";
+  open IMPORT, "|ImportMultipleTempFilesIntoPosda.pl \"$ImportComment\"" or 
+    die "Can't open importer";
 
   my $slices_rendered = 0;
   my $slices_to_render = $expected_slice_renderings - $slice_renderings_found;
@@ -163,6 +172,7 @@ for my $nfid (keys %NiftiFilesInTp){
       $b->WriteToEmail("Nothing to render for nifti_file $nfid " .
         "($elapsed seconds)\n");
     }
+    $nifti->Close;
     next nifti_file;
   }
   my @JpegsRendered;
@@ -174,8 +184,6 @@ for my $nfid (keys %NiftiFilesInTp){
     if($verbose > 1){
       $b->WriteToEmail("$open_time seconds opening $FileMessage\n");
     }
-    open IMPORT, "|ImportMultipleFilesIntoPosda.pl \"$ImportComment\"" or 
-      die "Can't open importer";
     if($slices_to_render > 0){
       slice_rendering:
       for my $vol(0 .. $num_vols - 1){
@@ -386,6 +394,7 @@ for my $nfid (keys %NiftiFilesInTp){
       }
     }
   }
+  $nifti->Close;
   my $projection_rendering_time = time - $projection_rendering_start;
   my $db_update_start = time;
   close IMPORT;
@@ -413,7 +422,9 @@ for my $nfid (keys %NiftiFilesInTp){
     my $render_type = $r->[1];
     my $file_id = $ImportedFileToFileId{$file_name};
     if(defined $file_id){
-      unlink $file_name;
+      if(-f $file_name){
+        unlink $file_name;
+      }
       if($render_type eq "slice"){
         my $nifti_file_id = $r->[2];
         my $vol = $r->[3];
@@ -439,7 +450,7 @@ for my $nfid (keys %NiftiFilesInTp){
         $files_imported += 1;
       }
     } else {
-      print STDERR "Couldn't find imported file $file_name $nfid\n";
+      die "Couldn't find imported file $file_name $nfid\n";
     }
   }
   my $db_update_time = time - $db_update_start;
