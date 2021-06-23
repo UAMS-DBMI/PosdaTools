@@ -118,13 +118,25 @@ def process_work_item(work_id: int):
 
     stdin_fp.close()
 
-    stdout_file_id = upload_file(stdout_fp)
-    stderr_file_id = upload_file(stderr_fp)
+    try: 
+        stdout_file_id = upload_file(stdout_fp)
+        stderr_file_id = upload_file(stderr_fp)
 
-    logging.info(f'stdout:{stdout_file_id} stderr:{stderr_file_id}')
+        logging.info(f'stdout:{stdout_file_id} stderr:{stderr_file_id}')
+    except Exception:
+        logging.error("Could not upload stdout or stderr! "
+                      "First 5 lines of each follow...")
+        stderr_fp.seek(0)
+        stdout_fp.seek(0)
 
-    stdout_fp.close()
-    stderr_fp.close()
+        for i in range(5):
+            logging.error(stderr_fp.readline(500))
+        for i in range(5):
+            logging.error(stdout_fp.readline(500))
+
+    finally:
+        stdout_fp.close()
+        stderr_fp.close()
 
     metrics = parse_timefile(f"/tmp/{work_id}.time")
 
