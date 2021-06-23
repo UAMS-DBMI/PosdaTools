@@ -2,7 +2,7 @@
 use strict;
 use Posda::BackgroundProcess;
 use Posda::DB qw(Query);
-use File::Temp;
+#use File::Temp;
 use Nifti::Parser;
 use FileHandle;
 use Digest::MD5;
@@ -43,7 +43,16 @@ my($invoc_id, $act_id, $notify,
 my $b = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $b->Daemonize;
 # now in the background...
-my $tmp_dir = File::Temp->newdir;
+#my $tmp_dir = File::Temp->newdir;
+my $cache_dir = $ENV{POSDA_CACHE_ROOT};
+my $worker_temp = "$cache_dir/WorkerTemp";
+unless(-d $worker_temp){
+  unless(mkdir $worker_temp) { die "Can't create $worker_temp" }
+}
+my $tmp_dir = "$worker_temp/$invoc_id";
+unless(-d $tmp_dir){
+  unless(mkdir $tmp_dir) { die "Can't create $tmp_dir" }
+}
 $b->WriteToEmail("temp dir: $tmp_dir\n");
 $b->SetActivityStatus("Finding Files in Timepoint");
 my %NiftiFilesInTp;
