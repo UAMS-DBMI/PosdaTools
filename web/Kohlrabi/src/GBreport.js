@@ -3,7 +3,7 @@ import { useFetch } from './useFetch';
 
 function GBreport(props) {
 
-    var myfiles = [];
+    var myfilesdiv = [];
     const myfiles = useFetch(`/papi/v1/pathology/review/${props.VRindex}`);
     if(myfiles){
       myfilesdiv = myfiles.map((row, i) =>

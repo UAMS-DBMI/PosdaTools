@@ -40,16 +40,18 @@ def main(args):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
     for (file_id, svsfilepath) in results:
         myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-        #print("Creating previews for file " + svsfilepath + " : " + myfilename )
+        print("Creating previews for file " + svsfilepath + " : " + myfilename )
         if (myfilename[-3:].lower() == "svs"):
+            print("filename is svs:", myfilename)
             mytif = TiffFile(svsfilepath)
             for i, page in enumerate(mytif.pages):
+                print("on page", i)
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000):
                     data = page.asarray()
                     str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
                     im = Image.fromarray(data)
                     im.save(str) #create thumbnail
-                    #print(f"Creating an svs preview")
+                    print(f"Creating an svs preview")
                     process(str, file_id,vr_id) #import thumbnail
         elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
             mytif = TiffFile(svsfilepath)

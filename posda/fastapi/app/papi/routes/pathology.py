@@ -88,13 +88,15 @@ async def set_editB(pathid: int, db: Database = Depends()):
 @router.get("/review/{vr_id}")
 async def review(vr_id: int, db: Database = Depends()):
     query = """\
- select distinct
-      b.path_file_id , good
+    select distinct
+        d.file_name,
+        good
     from
-      pathology_visual_review_files b
-      left join pathology_visual_review_status c on b.path_file_id = c.path_file_id
+        pathology_visual_review_files b
+        left join file_import d on d.file_id = b.path_file_id
+        left join pathology_visual_review_status c on b.path_file_id = c.path_file_id
     where
-      pathology_visual_review_instance_id = $1
+        pathology_visual_review_instance_id = $1
       """
     return await db.fetch(query, [vr_id])
 
