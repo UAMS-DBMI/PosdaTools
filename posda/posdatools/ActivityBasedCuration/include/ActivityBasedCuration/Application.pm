@@ -1752,6 +1752,32 @@ sub TableSelected {
   }
 }
 
+sub LaunchNiftiProjectionViewer{
+  my($self, $http, $dyn) = @_;
+  my $hash = $self->{NewQueryToDisplay};
+  my $cur_query = $self->{ForegroundQueries}->{$hash};
+  my $scan_id = $cur_query->{args}->[0];
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    user => $self->get_user,
+    tmp_dir => $self->{TempDir},
+  };
+  my $class = "Posda::ImageDisplayer::NiftiProjections";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "nifti_scope_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
 sub LaunchKaleidoscope{
   my($self, $http, $dyn) = @_;
   my $hash = $self->{NewQueryToDisplay};

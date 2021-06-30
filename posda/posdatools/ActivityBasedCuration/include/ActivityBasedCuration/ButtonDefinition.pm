@@ -569,6 +569,17 @@ EOF
       visual_review_id => 0,
     }
   },
+  qbp_NiftiKaleidoscope => {
+    caption => "Review Nifti File Projections",
+    operation => "LaunchNiftiProjectionViewer",
+    obj_class => "Posda::ImageDisplayer::NiftiProjections",
+    queries => {
+      NiftiFileRenderingsByActvity => 1,
+    },
+    params => {
+      visual_review_id => 0,
+    }
+  },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
 # BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup

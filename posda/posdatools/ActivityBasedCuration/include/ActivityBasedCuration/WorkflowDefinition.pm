@@ -369,6 +369,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Process Nifti Files In Timepoint",
         action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
       },
+      {
+        caption => "Make a Downloadable Directory (including Non-Dicom)",
+        action =>  "MakeDownloadableNonDicomTp",
+      },
     ],
   },
 );
