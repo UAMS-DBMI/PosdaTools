@@ -196,5 +196,5 @@ while(my $path = <STDIN>){
   }
   FileIsReady($file_id);
 }
-print STDERR "End of process loop in ImportMultipleFilesIntoPosda.pl\n";
+#print STDERR "End of process loop in ImportMultipleFilesIntoPosda.pl\n";
 exit;

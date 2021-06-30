@@ -826,7 +826,7 @@ my $dicom_image_disp_js = <<EOF;
     ctx = canvas.getContext('2d');
     trackTransforms(ctx);
 //    EnableTracking();
-    ImageToDraw.src = '/ITCLogoWeb.jpg';
+    ImageToDraw.src = '/LoadingScreen.png';
     UpdateImage();
     var Loc = new String(document.location);
     var ques = Loc.indexOf('?');

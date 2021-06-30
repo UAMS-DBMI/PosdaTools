@@ -8,6 +8,7 @@ use Posda::FileVisualizer::DicomImage;
 use Posda::FileVisualizer::Segmentation;
 use Posda::FileVisualizer::StructureSet;
 use Posda::FileVisualizer::RtDose;
+use Nifti::Parser;
 use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
@@ -50,6 +51,14 @@ sub SpecificInitialize {
        non_dicom_file_subtype => $non_dicom_file_subtype
     };
   }, sub {}, $self->{file_id});
+  if($self->{file_desc}->{file_type} eq "parsed dicom file"){
+    unless($self->{file_desc}->{dicom_file_type}){
+      print STDERR "Not really DICOM file\n";
+      $self->{file_desc}->{file_type} = "unknown";
+      $self->{params}->{file_type} = "unknown";
+      $self->{is_dicom_file} = 0;
+    }
+  }
   Query("GetFilePath")->RunQuery(sub{
       my($row) = @_;
       $self->{file_path} = $row->[0];
@@ -78,7 +87,20 @@ sub SpecificInitialize {
       return $self->SpecificInitialize;
     }
   } else {
-    $self->{is_dicom_file} = 0;
+    my $nifti = Nifti::Parser->new($self->{file_path});
+    my $params = {
+      file_id => $self->{file_id},
+      file_path => $self->{file_path},
+      nifti => $nifti,
+      temp_path => $self->{temp_path},
+    };
+    if(defined $nifti){
+      $self->{is_dicom_file} = 0;
+      require Posda::FileVisualizer::Nifti;
+      bless $self, "Posda::FileVisualizer::Nifti";
+      return $self->SpecificInitialize($params);
+    }
+    #...  Here is place to all other file type checks ...
   }
 
 }

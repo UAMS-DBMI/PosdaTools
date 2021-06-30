@@ -668,6 +668,7 @@ CreateActivityTimepointFromImportEventId	CreateActivityTimepointFromImportEventI
 BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id>  "<notify>" "<skip_dispositions>" "<upd_nbia>" "<dir>"	background_process		{activity_timepoints}	\N	f	0
 SuggestPatientMappings	SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>	background_process		{}	\N	f	0
 AddPublicHierarchy	AddHierarchyToSpreadsheetByPublicSop.pl <new_root>	legacy	<file>&<Element>&<OldValue>&<NewValue>	{}	\N	f	0
+Path_SVS_VisualReview	PathologyScheduleSVSReview.py <activity_id> <notify>	background_process		{visual_review}	\N	f	0
 ApplyPrivateDispositionIntake	CsvApplyPrivateDispositionIntake.pl <dest_dir> <uid_root> <offset> <low_date> <high_date>	legacy	<patient_id>&<study_instance_uid>&<series_instance_uid>	{}	\N	f	0
 BackgroundEditBySop	BackgroundEditDicomFile.pl  <?bkgrnd_id?> /nas/public/posda/edited/<rel_dest_root> <who> "<edit_description>" <notify>	background_process	<command>&<arg1>&<arg2>&<arg3>&<arg4>	{obsolete}	\N	f	0
 BackgroundEditTp	BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_description>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N	f	0
@@ -698,7 +699,6 @@ CompareDupSopsInTimepoint	CompareDupSopsInTp.pl <?bkgrnd_id?> <activity_id> <act
 AddFilesToTimepoint	AddFilesToTimepoint.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<file_id>	{activity}	\N	f	0
 CompareFileList	CompareFileList.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<from_file_id>&<to_file_path>	{file_compare}	\N	f	0
 SelectGoodAndBadFilesFromDupSopsWorksheet	SelectGoodAndBadFilesFromDupSopsWorksheet.pl <?bkgrnd_id?> <activity_id> <comparison_id> <notify>	background_process	<equiv_class>&<select>	{dup_sops}	\N	f	0
-Path_SVS_VisualReview	Path_SVS_VisualReview.py <?bkgrnd_id?> <activity_id> <notify>	background_process		{visual_review}	\N	f	0
 ImportDownloadableDirectory	ImportDownloadableDirectory.pl <?bkgrnd_id?> <activity_id> "<comment>" "<sub_dir>" <notify>	background_process		{VA,dispositions}	\N	f	0
 PhiVaPublicScanDD	PhiVaPublicScanDD.pl <?bkgrnd_id?> <activity_id> <rel_dir> <max_rows> <notify>	background_process		{simple_phi,va}	\N	f	0
 MakeUIDMap	create-hashed-uid-mapping.py <?bkgrnd_id?> <notify> <timepoint_id>	background_process		{}	\N	f	0

@@ -3058,7 +3058,8 @@ CREATE TABLE public.non_dicom_file_change (
 CREATE TABLE public.pathology_visual_review_files (
     pathology_visual_review_instance_id integer,
     svsfile_id integer,
-    preview_file_id integer
+    preview_file_id integer,
+    needs_edit boolean
 );
 
 

@@ -6,11 +6,11 @@ import { useState } from "react";
 function Images(props) {
   const [invertValue, setInvertValue] = useState(0);
   const [rotValue, setRotValue] = useState(0);
-  const currentClass = "smallImage";
+  //const currentClass = "smallImage";
 
 
   function invertButtonPress(){
-    if (invertValue == 1){
+    if (invertValue === 1){
       setInvertValue(0);
     }else {
       setInvertValue(1);

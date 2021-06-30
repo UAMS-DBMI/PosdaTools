@@ -5,7 +5,6 @@
 -- Tags: ['visual_review']
 -- Description: View all visual review instance for a pathology collection activities
 --
---
 
 select
   pathology_visual_review_instance_id,

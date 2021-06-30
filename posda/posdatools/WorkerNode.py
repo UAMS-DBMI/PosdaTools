@@ -28,7 +28,7 @@ import logging
 from posda.config import Config
 import posda.logging.autoconfig
 
-VERSION = 1       # the version of this code, increment only
+VERSION = 3       # the version of this code, increment only
 BASE_URL = None   # the base of the Posda API, as accessible from this node
 NODE_NAME = None  # the name of this node reported in the work table
 
@@ -118,13 +118,25 @@ def process_work_item(work_id: int):
 
     stdin_fp.close()
 
-    stdout_file_id = upload_file(stdout_fp)
-    stderr_file_id = upload_file(stderr_fp)
+    try: 
+        stdout_file_id = upload_file(stdout_fp)
+        stderr_file_id = upload_file(stderr_fp)
 
-    logging.info(f'stdout:{stdout_file_id} stderr:{stderr_file_id}')
+        logging.info(f'stdout:{stdout_file_id} stderr:{stderr_file_id}')
+    except Exception:
+        logging.error("Could not upload stdout or stderr! "
+                      "First 5 lines of each follow...")
+        stderr_fp.seek(0)
+        stdout_fp.seek(0)
 
-    stdout_fp.close()
-    stderr_fp.close()
+        for i in range(5):
+            logging.error(stderr_fp.readline(500))
+        for i in range(5):
+            logging.error(stdout_fp.readline(500))
+
+    finally:
+        stdout_fp.close()
+        stderr_fp.close()
 
     metrics = parse_timefile(f"/tmp/{work_id}.time")
 
@@ -255,7 +267,7 @@ def upload_file(fp):
     params = {'digest': digest}
     resp = requests.put(f'{BASE_URL}/import/file', params=params, data=fp)
     if resp.status_code != 200:
-        logging.error(f'File uploading failed: {resp.status_code}')
+        logging.error(f'File uploading failed: {resp.status_code} {resp.text}')
         raise Exception("File upload failed")
     return resp.json()['file_id']
 

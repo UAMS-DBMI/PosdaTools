@@ -36,8 +36,8 @@ def parse_arguments():
     )
     parser.add_argument(
         'region',
-        help='{x1}x{y1},{x2}x{y2}. '
-        'Upper left corner first, lower right second. Example: 30x80,120x320'
+        help='{x1},{y1} {x2},{y2}. '
+        'Upper left corner first, lower right second. Example: 30,80 120,320'
     )
     parser.add_argument('--reassemble-filename', help='If set, a reassembled DICOM file is written here. If ommited, the raw bytes of the pixel data alone are written to stdout')
     parser.add_argument('--debug', action='store_true', help='print a lot of extra messages to stderr')
@@ -86,6 +86,7 @@ def generate_im_command(args, pixel_filename):
     # Note: the goal here is to make a black box. For MONOCHROME2,
     #       this should just be 0. But for MONOCHROME1 it needs to
     #       be the max_allowable_value
+    # Note2: Hopefully it is also just 0 for RGB
 
     hex_color = '0000'  # the default
 
@@ -97,10 +98,16 @@ def generate_im_command(args, pixel_filename):
 
     dprint("max, color:", max_allowable_value, color)
 
+    im_data_type = {
+        'MONOCHROME1': 'gray',
+        'MONOCHROME2': 'gray',
+        'RGB': 'rgb',
+    }[args.photometric_interpretation]
+
     commands = [
         "-size", f"{args.cols}x{args.rows}",
-        "-depth", "16",
-        f"gray:{pixel_filename}",
+        "-depth", str(args.bits_allocated),
+        f"{im_data_type}:{pixel_filename}",
         "-fill", color,
         # "-stroke", "blue",
         "-draw", rectangle
@@ -113,9 +120,16 @@ def apply_commands(pixel_filename, im_command, args):
 
     output_filename = tempfile.NamedTemporaryFile(delete=False).name
 
+
+    im_data_type = {
+        'MONOCHROME1': 'gray',
+        'MONOCHROME2': 'gray',
+        'RGB': 'rgb',
+    }[args.photometric_interpretation]
+
     output_commands = [
-        '-depth', '16',
-        f'gray:{output_filename}'
+        '-depth', str(args.bits_allocated),
+        f'{im_data_type}:{output_filename}'
     ]
 
     final_command = ['convert'] + im_command + output_commands
@@ -144,6 +158,11 @@ def main():
     if args.debug:
         DEBUG=True
 
+    # # test writing to args
+    # args.something_new = 4
+    # print(args.something_new)
+    # return
+
     pixel_filename = extract_pixels(args.filename, args.pixel_offset)
     dprint(pixel_filename)
 
@@ -166,5 +185,14 @@ def main():
         os.unlink(pixel_filename)
         os.unlink(output_filename)
 
+def test():
+    pixel_filename = extract_pixels(
+        '/nas/public/posda/storage/04/79/7c/04797c98f98ad6b3f72cd1de37c70c8f',
+        4006
+    )
+
+    print(pixel_filename)
+
 if __name__ == '__main__':
+    # test()
     main()

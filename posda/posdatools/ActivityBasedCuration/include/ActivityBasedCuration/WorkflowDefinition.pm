@@ -32,11 +32,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query_list_name => "FindImportEvents",
       },
       {
-        caption => "Suggested Queries for Creating a Timepoint from Series UIDs",
-        operation => "SelectQueryGroup",
-        query_list_name => "FindSeries",
-      },
-      {
         caption => "Suggested Queries for Creating a Timepoint from Date Range for CTP data",
         operation => "SelectQueryGroup",
         query_list_name => "CTPImports",
@@ -54,12 +49,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
        caption => "Import Patient Mappings For Timepoint",
        action =>  "ImportPatientMapping",
        special => "spreadsheetRequest"
-     },
-     {
-        operation => "InvokeNewOperation",
-        caption => "Suggest Patient Mappings [LEGACY]",
-        action =>  "SuggestPatientMappings",
-      },
+     }
     ],
   },
   {
@@ -101,11 +91,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
             operation => "InvokeNewOperation",
             caption => "Compare Duplicate Sops in Timepoint",
             action =>  "CompareDupSopsInTimepoint",
-          },
-          {
-            operation => "InvokeNewOperation",
-            caption => "Analyze Series Duplicates for Timepoint",
-            action =>  "AnalyzeSeriesDuplicatesForTimepoint",
           },
         ],
         queries => [
@@ -380,6 +365,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Make a hashed UID mapping spreadsheet",
         action =>  "MakeUIDMap",
       },
+      {
+        caption => "Process Nifti Files In Timepoint",
+        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+      },
     ],
   },
 );
@@ -388,59 +377,54 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   FindImportEvents => [
     "Suggested Queries for Import Events",
     [
-      {
-        caption => "ImportEventsByMatchingName",
-        query => "ImportEventsByMatchingName",
-      },
-      {
-        caption => "ImportEventsByMatchingNameAndType",
-        query => "ImportEventsByMatchingNameAndType",
-      },
-      {
-        caption =>"ImportEventsWithTypeAndPatientId",
-        query =>"ImportEventsWithTypeAndPatientId",
-      },
-      {
-        caption =>"ApiImportEvents",
-        query =>"ApiImportEvents",
-      },
-      {
-        caption =>"ApiImportEventsForPatient",
-        query =>"ApiImportEventsForPatient",
-      },
-      {
-        caption =>"ApiImportEventsDateRange",
-        query =>"ApiImportEventsDateRange",
-      },
-    ],
-  ],
-  FindSeries => [
-    "Suggested Queries for Series",
-    [
-      {
-        caption => "SeriesByMatchingImportEventsWithEventInfo",
-        query => "SeriesByMatchingImportEventsWithEventInfo",
-      },
-      {
-        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-      },
-      {
-        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
-        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed",
-      },
-      {
-        caption => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-        query => "SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID",
-      },
-      {
-        caption => "SeriesByMatchingImportEventsWithEventInfoCondensed",
-        query => "SeriesByMatchingImportEventsWithEventInfoCondensed",
-      },
-      {
-        caption => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
-        query => "SeriesByMatchingImportEventsWithEventInfoAndFileCountAll",
-      },
+    {
+      caption =>"ApiImportEvents",
+      query =>"ApiImportEvents",
+    },
+    {
+      caption =>"ApiImportEventsDateRange",
+      query =>"ApiImportEventsDateRange",
+    },
+    {
+      caption =>"ApiImportEventsForPatient",
+      query =>"ApiImportEventsForPatient",
+    },
+    {
+      caption =>"FindingImportEvent",
+      query =>"FindingImportEvent",
+    },
+    {
+      caption =>"GetAllFilesByImportEventId",
+      query =>"GetAllFilesByImportEventId",
+    },
+    {
+      caption =>"GetDicomFilesByImportEventId",
+      query =>"GetDicomFilesByImportEventId",
+    },
+    {
+      caption =>"GetImportEventIdByImportName",
+      query =>"GetImportEventIdByImportName",
+    },
+    {
+      caption => "ImportEvents",
+      query => "ImportEvents",
+    },
+    {
+      caption => "ImportEventsByDateRange",
+      query => "ImportEventsByDateRange",
+    },
+    {
+      caption => "ImportEventsByMatchingName",
+      query => "ImportEventsByMatchingName",
+    },
+    {
+      caption => "ImportEventsByMatchingNameAndType",
+      query => "ImportEventsByMatchingNameAndType",
+    },
+    {
+      caption =>"ImportEventsWithTypeAndPatientId",
+      query =>"ImportEventsWithTypeAndPatientId",
+    }
     ],
   ],
   CTPImports => [
@@ -458,6 +442,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "CTP Imports By Date Range",
         query => "CtpImportsByDateRange",
       },
+      {
+        caption => "CTP Imports By Date Range With Series and Study",
+        query => "CtpImportsByDateRangeWithSeriesStudy",
+      },
+      {
+        caption => "CTP Imports By Date Range With FileId",
+        query => "CtpImportsByDateRangeWithFileId",
+      },
     ],
   ],
   DupeSops => [
@@ -466,6 +458,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Series with Dup Sops in Tp with SOP and file counts",
         query => "SeriesWithDupSopsInTimepoint",
+      },
+      {
+        caption => "Dup Sops In Timepoint With Series File Ids And Load Times",
+        query => "DupSopsInTimepointWithSeriesFileIdsAndLoadTimes",
       },
     ],
   ],
@@ -486,7 +482,15 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     "Suggested Queries for Count Checks",
     [
       {
-	caption => "CountsByCollectionDateRange",
+	      caption => "CountsByCollectionLikeSite",
+        query => "CountsByCollectionLikeSite",
+      },
+      {
+        caption => "CountsByCollectionSite",
+        query => "CountsByCollectionSite",
+      },
+      {
+	      caption => "CountsByCollectionDateRange",
         query => "CountsByCollectionDateRange",
       },
       {

@@ -82,7 +82,7 @@ sub digest_file {
 }
 
 sub insert_file {
-  my ($filename, $comment) = @_;
+  my ($filename, $comment, $import_event_id) = @_;
 
   if (not defined $comment) {
     $comment = "Added by Perl Job";
@@ -96,10 +96,19 @@ sub insert_file {
 
   my $digest = digest_file($filename);
   my $url = URI->new($API_URL . '/v1/import/file');
-  $url->query_form(
-    digest => $digest,
-    comment => $comment
-  );
+  if(defined $import_event_id){
+    $url->query_form(
+      digest => $digest,
+      localpath => $filename,
+      import_event_id => $import_event_id
+    );
+  } else {
+    $url->query_form(
+      digest => $digest,
+      localpath => $filename,
+      comment => $comment
+    );
+  }
 
   my $req = HTTP::Request::StreamingUpload->new(
       PUT     => $url,
