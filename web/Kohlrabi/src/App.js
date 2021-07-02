@@ -27,10 +27,10 @@ function App(props) {
     alert("not yet implemented");
   }
   function buttonPressGood(){
-    fetch('/papi/v1/pathology/set_edit/' + original_files[index].svsfile_id +'/good', {method: 'PUT'}).then( () => nextButtonPress());
+    fetch('/papi/v1/pathology/set_edit/' + original_files[index].path_file_id +'/good', {method: 'PUT'}).then( () => nextButtonPress());
   }
   function buttonPressBad(){
-    fetch('/papi/v1/pathology/set_edit/' + original_files[index].svsfile_id +'/bad', {method: 'PUT'}).then( () => nextButtonPress());
+    fetch('/papi/v1/pathology/set_edit/' + original_files[index].path_file_id +'/bad', {method: 'PUT'}).then( () => nextButtonPress());
   }
 
 
@@ -65,7 +65,7 @@ function App(props) {
           <button className="btn btn-warning" onClick={() => nextButtonPress()}>Next</button>
         </div>
         <div>
-          <Images original_file={original_files[index].svsfile_id} />
+          <Images original_file={original_files[index].path_file_id} VRindex={props.VRindex} />
         </div>
       </div>
   );}

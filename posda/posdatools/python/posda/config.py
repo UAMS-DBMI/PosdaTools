@@ -36,6 +36,26 @@ class Config(object):
 
         return val
 
+    def get_storage_location(storage_class):
+        # delay loading of Database to avoid a circular reference
+        # plus, it is not needed unless this method is called
+        from .database import Database
+        with Database("posda_files").cursor() as cur:
+            cur.execute("""
+                select root_path
+                from file_storage_root
+                where storage_class = %s
+            """, [storage_class])
+
+            for val, in cur:
+                return val
+
+        # if we get here, it means there was no entry that matched
+        # the requested storage_class, and this is a fatal error
+        logging.fatal("Attempt to load nonexistent storage_class of "
+                      f"{storage_class}.")
+        raise RuntimeError(f"Fatal error: no such storage_class {storage_class}!")
+
     def load_db_config():
         file_location = Config.get("database_config")
 

@@ -1,57 +1,44 @@
 import './App.css';
 import { useFetch } from './useFetch';
 
+
 function GBreport(props) {
 
+    var myfilesdiv = [];
+    var filestatus = [];
+    const myfiles = useFetch(`/papi/v1/pathology/review/${props.VRindex}`);
+    if(myfiles){
+      let sortedfiles = [...myfiles];
+      sortedfiles.sort((a, b) => {
+        if (a.good < b.good) {
+          return -1;
+        }
+        if (a.good > b.good) {
+          return 1;
+        }
+        return 0;
+      });
 
-    var bad = [];
-    const bad_files = useFetch(`/papi/v1/pathology/review/${props.VRindex}/bad`);
-    if(bad_files){
-      bad = bad_files.map((row, i) =>
-        <tr>
-          <td>${row.file_name}</td>
-        </tr>
-       );
+        filestatus = sortedfiles.map((row, i) => {
+          var status = "Unreviewed";
+          if (row.good === true){
+            status = "Good";
+          }else if(row.good === false){
+            status = "Bad";
+          }
+          return  <div key={i}> <tr><td> {row.file_name} </td> <td>{status}</td> </tr></div>
+      });
     }
 
-    var good = [];
-    const good_files = useFetch(`/papi/v1/pathology/review/${props.VRindex}/good`);
-    if(good_files){
-      good = good_files.map((row, i) =>
-        <tr>
-          <td>${row.file_name}</td>
-        </tr>
-       );
-    }
 
-    var unreviewed = [];
-    const unreviewed_files = useFetch(`/papi/v1/pathology/review/${props.VRindex}/null`);
-    if(unreviewed_files){
-      unreviewed = unreviewed_files.map((row, i) =>
-        <tr>
-          <td>${row.file_name}</td>
-        </tr>
-       );
-    }
 
     return (
       <div>
           <div>
-            <h1>Files marked as Bad</h1>
+            <h1>Files as currently labeled</h1>
             <table>
-              {bad}
-            </table>
-          </div>
-          <div>
-            <h1>Files marked as Good</h1>
-            <table>
-              {good}
-            </table>
-          </div>
-          <div>
-            <h1>Files in need of Review</h1>
-            <table>
-              {unreviewed}
+            <tr><th>File</th><th>Status</th></tr>
+              {filestatus}
             </table>
           </div>
       </div>
