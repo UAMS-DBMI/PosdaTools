@@ -274,7 +274,11 @@ sub new{
   };
   bless $self, $class;
   $self->ReadHeader;
-  return $self;
+  if($self->{parsed}->{magic} eq "n+1"){
+    return $self;
+  } else {
+    return undef;
+  }
 }
 sub new_from_zip{
   my($class, $file_name, $file_id, $tmp_dir) = @_;
@@ -300,7 +304,12 @@ unless(-d $tmp_dir) { die "$tmp_dir is not a directory" }
   };
   bless $self, $class;
   $self->ReadHeader;
-  return $self;
+  if($self->{parsed}->{magic} eq "n+1"){
+    return $self;
+  } else {
+    unlink($uncompressed_file_name);
+    return undef;
+  }
 }
 sub Open {
   my($self) = @_;
@@ -699,11 +708,85 @@ sub PrintNormalizedFileProjections{
   }
   print $fh_max $new_slice_max;
 }
+sub ProjectionAnalysis{
+  my($self, $array, $len) = @_;
+  my $total_zero = 0;
+  my $total_nan = 0;
+  my $total_inf = 0;
+  my @Val;
+  my @NanCounts;
+  my @InfCounts;
+  my @Avg;
+  my @Min;
+  my @Max;
+  my $rows = $self->{parsed}->{dim}->[1];
+  my $cols = $self->{parsed}->{dim}->[2];
+  my $num_slices = $self->{parsed}->{dim}->[3];
+  my $num_vols = $self->{parsed}->{dim}->[4];
+  my $bytes_per_pix;
+  if($self->{bitpix} == 16){
+    $bytes_per_pix = 2;
+  } elsif($self->{bitpix} == 32){
+    $bytes_per_pix = 4;
+  }
+  for my $i (0 .. $rows * $cols){
+    $Val[$i] = undef;
+    $Min[$i] = undef;
+    $Max[$i] = undef;
+    $NanCounts[$i] = undef;
+    $InfCounts[$i] = undef;
+  }
+  my($offset, $length, $row_size) =
+    $self->GetSliceOffsetLengthAndRowLength(0, 0);
+  my $num_pix = $rows * $cols;
+  my $slice;
+  for my $i (0 .. ($num_slices * $num_vols) - 1){
+    my $offset_r = $offset + ($i * $length);
+    unless(seek $self->{fh}, $offset_r, 0){
+      die "seek ($!)";
+    }
+    my $len = read $self->{fh}, $slice, $length;
+    unless($len == $length){
+      die ("Read $len vs $length");
+    }
+    my $is_fl = $self->{parsed}->{datatype} == 16;
+    my $is_short = $self->{parsed}->{datatype} == 512 ||
+      $self->{parsed}->{datatype} == 4;
+    pix:
+    for my $j (0 .. ($num_pix - 1)){
+      my $val;
+      if($is_fl){
+        $val = unpack('f', substr($slice, $j * 4, 4));
+      }elsif($is_short){
+        $val = unpack('S', substr($slice, $j * 2, 2));
+      }
+      if($val eq "nan"){
+        $total_nan += 1;
+        $NanCounts[$i] += 1;
+        next pix;
+      }
+      if($val =~ /inf/){
+        $total_inf += 1;
+        $InfCounts[$i] += 1;
+        next pix;
+      }
+      $Val[$j] += $val;
+      if($val < $Min[$j]){ $Min[$j] = $val }
+      if($val > $Max[$j]){ $Max[$j] = $val }
+    }
+  }
+  for my $i (0 .. ($num_pix - 1)){
+    my $avg = $Val[$i] / $num_slices;
+    $Avg[$i] = $avg;
+  }
+}
 sub Normalize{
   my($self, $array, $len) = @_;
-  my $max = 0;
-  my $min = 0xffff;
+  my $max;
+  my $min;
   for my $i (0 .. $len - 1){
+    unless(defined($max) && $array->[$i] ne "nan"){ $max = $array->[$i] }
+    unless(defined($min) && $array->[$i] ne "nan"){ $min = $array->[$i] }
     if($array->[$i] > $max) { $max = $array->[$i] }
     if($array->[$i] < $min) { $min = $array->[$i] }
   }
@@ -712,6 +795,20 @@ sub Normalize{
       my $v = $array->[$i];
       my $sv = int(($v * 255)/$max);
       $array->[$i] = $sv;
+  }
+}
+
+sub DESTROY{
+  my($self) = @_;
+  if($self->{is_from_zip}){
+    if(
+      exists $self->{compressed_file_name} &&
+      -f $self->{compressed_file_name} &&
+      -f $self->{file_name}
+    ){
+      unlink $self->{file_name};
+      delete $self->{file_name};
+    }
   }
 }
 

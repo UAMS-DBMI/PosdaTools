@@ -1,0 +1,6 @@
+:operation_name: PopulateFileNiftiTp
+:command_line: PopulateFileNiftiTp.pl <?bkgrnd_id?> <activity_id> <update_existing> <notify>
+:operation_type: background_subprocess
+:input_line_format: 
+:tags: ['nifti']
+:can_chain: 

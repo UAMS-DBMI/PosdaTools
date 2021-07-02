@@ -86,7 +86,24 @@ sub SpecificInitialize {
       bless $self, "Posda::FileVisualizer::StructureSet";
       return $self->SpecificInitialize;
     }
-  } else {
+  } elsif($self->{file_desc}->{file_type} eq "Nifti Image (gzipped)") {
+    my $nifti = Nifti::Parser->new_from_zip(
+      $self->{file_desc}->{file_path},
+      $self->{file_desc}->{file_id},
+      $self->{temp_path});
+    my $params = {
+      file_id => $self->{file_id},
+      file_path => $self->{file_path},
+      nifti => $nifti,
+      temp_path => $self->{temp_path},
+    };
+    if(defined $nifti){
+      $self->{is_dicom_file} = 0;
+      require Posda::FileVisualizer::Nifti;
+      bless $self, "Posda::FileVisualizer::Nifti";
+      return $self->SpecificInitialize($params);
+    }
+  } elsif($self->{file_desc}->{file_type} eq "Nifti"){
     my $nifti = Nifti::Parser->new($self->{file_path});
     my $params = {
       file_id => $self->{file_id},
