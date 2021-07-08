@@ -43,17 +43,6 @@ EOF
       user_name => "user_name",
     },
   },
-  qc_3 => {
-    caption => "files",
-    chained_query_id => "qc_3",
-    from_query => "WhatHasComeInRecentlyWithSubject",
-    to_query => "ToExamineRecentFiles",
-    arg_map => {
-      subj => "patient_id",
-      time => "import_time_1",
-      time => "import_time_2",
-    },
-  },
   qc_4 => {
     chained_query_id => "qc_4",
     caption => "Image Data Consistent?",
