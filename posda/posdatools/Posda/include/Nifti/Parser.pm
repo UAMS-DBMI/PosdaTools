@@ -731,6 +731,7 @@ sub ProjectionAnalysis{
   my $total_zero = 0;
   my $total_nan = 0;
   my $total_inf = 0;
+  my($AbsMin, $AbsMax, $AbsNzMin);
   my @Val;
   my @NanCounts;
   my @InfCounts;
