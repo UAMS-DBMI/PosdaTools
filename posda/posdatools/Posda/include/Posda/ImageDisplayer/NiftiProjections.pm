@@ -90,6 +90,19 @@ sub FetchProjection{
   $self->SendCachedJpeg($http, $dyn, $path);
 }
 
+sub Skip{
+  my($self, $http, $dyn) = @_;
+  $self->{CurrentIndexList} += 1;
+  if($self->{CurrentIndexList} > $#{$self->{ImageList}}){
+    $self->{CurrentIndexList} = 0;
+  };
+}
+
+sub Index{
+  my($self, $http, $dyn) = @_;
+  $http->queue($self->{CurrentIndexList});
+}
+
 sub ImageHeight{
   my($self, $http, $dyn) = @_;
   $http->queue($self->{image_height});
@@ -106,6 +119,8 @@ my $content = <<EOF;
 <img src="FetchProjection?obj_path=<?dyn="q_path"?>&type=avg" alt="avg" width="<?dyn="ImageWidth"?>" height="<?dyn="ImageHeight"?>">
 <img src="FetchProjection?obj_path=<?dyn="q_path"?>&type=min" alt="min" width="<?dyn="ImageWidth"?>" height="<?dyn="ImageHeight"?>">
 </div>
+<input type="Button" class="btn btn-default" onclick="javascript:PosdaGetRemoteMethod('Skip', '', function () { Reload(); } )" value="Skip">
+Index: <?dyn="Index"?>
 EOF
 
 

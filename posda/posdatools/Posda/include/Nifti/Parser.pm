@@ -655,16 +655,25 @@ sub PrintNormalizedFileProjections{
   my @Max;
   my $rows = $self->{parsed}->{dim}->[1];
   my $cols = $self->{parsed}->{dim}->[2];
+  my $num_slices = $self->{parsed}->{dim}->[3];
+  my $num_vols = $self->{parsed}->{dim}->[4];
+  my $bytes_per_pix;
+  if($self->{parsed}->{bitpix} == 16){
+    $bytes_per_pix = 2;
+  } elsif($self->{parsed}->{bitpix} == 32){
+    $bytes_per_pix = 4;
+  }
   for my $i (0 .. $rows * $cols){
-    $Val[$i] = 0;
-    $Min[$i] = 0xffff;
-    $Max[$i] = 0;
+    $Val[$i] = undef;
+    $Min[$i] = undef;
+    $Max[$i] = undef;
   }
   my($offset, $length, $row_size) =
     $self->GetSliceOffsetLengthAndRowLength(0, 0);
-  my $num_pix = $length/2;
-  my $num_slices = $self->{parsed}->{dim}->[3];
-  my $num_vols = $self->{parsed}->{dim}->[4];
+  my $num_pix = $rows * $cols;
+  my $is_fl = $self->{parsed}->{datatype} == 16;
+  my $is_short = $self->{parsed}->{datatype} == 512 ||
+    $self->{parsed}->{datatype} == 4;
   my $slice;
   for my $i (0 .. ($num_slices * $num_vols) - 1){
     my $offset_r = $offset + ($i * $length);
@@ -676,8 +685,17 @@ sub PrintNormalizedFileProjections{
       die ("Read $len vs $length");
     }
     for my $j (0 .. ($num_pix - 1)){
-      my $val = unpack('S', substr($slice, $j * 2, 2));
+      my $val;
+      if($is_fl){
+        $val = unpack('f', substr($slice, $j * 4, 4));
+      }elsif($is_short){
+        $val = unpack('S', substr($slice, $j * 2, 2));
+      } else {
+        die "Unknown datatype $self->{parsed}->{datatype}";
+      }
       $Val[$j] += $val;
+      unless(defined($Min[$j])){ $Min[$j] = $val }
+      unless(defined($Max[$j])){ $Max[$j] = $val }
       if($val < $Min[$j]){ $Min[$j] = $val }
       if($val > $Max[$j]){ $Max[$j] = $val }
     }
@@ -724,9 +742,9 @@ sub ProjectionAnalysis{
   my $num_slices = $self->{parsed}->{dim}->[3];
   my $num_vols = $self->{parsed}->{dim}->[4];
   my $bytes_per_pix;
-  if($self->{bitpix} == 16){
+  if($self->{parsed}->{bitpix} == 16){
     $bytes_per_pix = 2;
-  } elsif($self->{bitpix} == 32){
+  } elsif($self->{parsed}->{bitpix} == 32){
     $bytes_per_pix = 4;
   }
   for my $i (0 .. $rows * $cols){
@@ -759,6 +777,8 @@ sub ProjectionAnalysis{
         $val = unpack('f', substr($slice, $j * 4, 4));
       }elsif($is_short){
         $val = unpack('S', substr($slice, $j * 2, 2));
+      } else {
+        die "Unknown datatype $self->{parsed}->{datatype}";
       }
       if($val eq "nan"){
         $total_nan += 1;
@@ -770,7 +790,22 @@ sub ProjectionAnalysis{
         $InfCounts[$i] += 1;
         next pix;
       }
+      if($val == 0){ $total_zero += 1 }
       $Val[$j] += $val;
+      unless(defined $AbsMin) { $AbsMin = $val }
+      unless(defined $AbsMax) { $AbsMax = $val }
+      if($val < $AbsMin) { $AbsMin = $val }
+      if($val > $AbsMax) { $AbsMax = $val }
+      unless(defined($AbsNzMin)){
+        if($val > 0){
+          $AbsNzMin = $val;
+        }
+      }
+      if($val > 0 && $val < $AbsNzMin){
+        $AbsNzMin = $val;
+      }
+      unless(defined $Min[$j]) { $Min[$j] = $val }
+      unless(defined $Max[$j]) { $Max[$j] = $val }
       if($val < $Min[$j]){ $Min[$j] = $val }
       if($val > $Max[$j]){ $Max[$j] = $val }
     }
@@ -779,6 +814,20 @@ sub ProjectionAnalysis{
     my $avg = $Val[$i] / $num_slices;
     $Avg[$i] = $avg;
   }
+  my $tot_pix = $num_pix * $num_slices * $num_vols;
+  if($self->{parsed}->{datatype} == 16){
+    my $range = sprintf("%5.3e to %5.3e", $AbsNzMin, $AbsMax);
+    print "file $self->{file_id} (FP) has $tot_pix values, " .
+      "$total_zero zeros, $total_nan NaN, $total_inf infinities, " .
+      "non_zero values range from $range\n";
+  } elsif ($self->{parsed}->{datatype} == 4){
+    print "file $self->{file_id} (short) has $tot_pix values, " .
+      "$total_zero zeros, non_zero values range from " .
+      "$AbsNzMin\n";
+  } else {
+    print "file $self->{file_id} unknown data type: " .
+      "$self->{parsed}->{datatype}\n";
+  } 
 }
 sub Normalize{
   my($self, $array, $len) = @_;
@@ -803,6 +852,9 @@ sub DESTROY{
   if($self->{is_from_zip}){
     if(
       exists $self->{compressed_file_name} &&
+      defined $self->{compressed_file_name} &&
+      exists $self->{file_name} &&
+      defined $self->{file_name} &&
       -f $self->{compressed_file_name} &&
       -f $self->{file_name}
     ){
