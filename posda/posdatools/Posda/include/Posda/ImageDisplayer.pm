@@ -88,6 +88,15 @@ function UpdateDiv(div_text, method_text){
   PosdaGetRemoteMethod(method_text, "", makeDivUpdater(div_text));
 }
 
+function UpdateDivs(div_list){
+  if(div_list == null) {
+    return;
+  }
+  if(div_list.length == 0) { return }
+  var next = div_list.pop();
+  PosdaGetRemoteMethod(next[1], "", makeDivListIterator(next[0], div_list));
+}
+
 function makeDivUpdater(div_text){
   var that = this;
   that.div_text = div_text;
@@ -98,6 +107,20 @@ function makeDivUpdater(div_text){
     } else {
       // console.log("Attempt to update unknown div: " + div_text);
     }
+  }
+}
+
+function makeDivListIterator(div_text, div_list){
+  var that = this;
+  that.div_text = div_text;
+  return function(text, status, xml){
+    var foo = document.getElementById(that.div_text);
+    if(foo != null) {
+      foo.innerHTML = text;
+    } else {
+      // console.log("Attempt to update unknown div: " + div_text);
+    }
+    UpdateDivs(div_list);
   }
 }
 
@@ -821,6 +844,7 @@ my $dicom_image_disp_js = <<EOF;
   }
   function Init() {
     canvas = document.getElementById('MyCanvas');
+    if(canvas == null){ return }
     LineWidth = 1;
 //    console.error("Init");
     ctx = canvas.getContext('2d');
