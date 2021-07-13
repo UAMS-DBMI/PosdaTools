@@ -235,6 +235,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     description => "Ensure all the files sent to the public server properly",
     operations => [
       {
+        caption => "Compare SOPs In Timepoint to Public",
+        action =>  "CompareSopsInTpToPublic",
+      },
+      {
         caption => "Public Phi Scan Based on Current TP by Activity",
         action =>  "PhiPublicScanTp",
       },
