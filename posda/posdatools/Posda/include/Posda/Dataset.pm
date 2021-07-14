@@ -895,7 +895,7 @@ sub WriteRawDicom{
   } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
     WriteExpLe($ds, \*FILE);
   } else {
-    die "unsupported transfer syntax $xfr_stx";
+    WriteExpLe($ds, \*FILE);
   }
   close FILE;
 };
@@ -909,23 +909,6 @@ sub CanonicalFileName{
 }
 sub WritePart10Fh{
   my($ds, $fh, $xfr_stx, $ae_title) = @_;
-  my $pix_ref = $ds->Get("(7fe0,0010)");
-  if(ref($pix_ref) eq "ARRAY"){
-    unless(
-      $xfr_stx eq '1.2.840.10008.1.2.4.90' ||
-      $xfr_stx eq '1.2.840.10008.1.2.4.70'
-    ){
-      die "Can't convert from compressed to non-compressed xfer_syntax";
-    }
-  } elsif (
-     $xfr_stx ne "1.2.840.10008.1.2" &&
-     $xfr_stx ne "1.3.6.1.4.1.22213.1.147" &&
-     $xfr_stx ne "1.2.840.10008.1.2.1" &&
-     $xfr_stx ne "1.2.840.10008.1.2.1" &&
-     $xfr_stx ne "1.2.840.10008.1.2.2"
-  ){
-    die "Can't convert from compressed to non-compressed xfer_syntax";
-  }
   # Preamble
   print $fh "\0" x 128;
   # Prefix
@@ -1010,33 +993,14 @@ sub WritePart10Fh{
     WriteExpBe($ds, *fh);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, *fh);
-  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
-    WriteExpLe($ds, $fh);
   } else {
-    die "unsupported transfer syntax $xfr_stx";
+    WriteExpLe($ds, $fh);
   }
   close $fh;
   return $start_data;
 }
 sub WritePart10{
   my($ds, $file_name, $xfr_stx, $ae_title, $private_uid, $private) = @_;
-  my $pix_ref = $ds->Get("(7fe0,0010)");
-  if(ref($pix_ref) eq "ARRAY"){
-    unless(
-      $xfr_stx eq '1.2.840.10008.1.2.4.90' ||
-      $xfr_stx eq '1.2.840.10008.1.2.4.70'
-    ){
-      die "Can't convert from compressed to non-compressed xfer_syntax";
-    }
-  } elsif (
-     $xfr_stx ne "1.2.840.10008.1.2" &&
-     $xfr_stx ne "1.3.6.1.4.1.22213.1.147" &&
-     $xfr_stx ne "1.2.840.10008.1.2.1" &&
-     $xfr_stx ne "1.2.840.10008.1.2.1" &&
-     $xfr_stx ne "1.2.840.10008.1.2.2"
-  ){
-    die "Can't convert from compressed to non-compressed xfer_syntax";
-  }
   unless(defined $file_name){
     my $sop_inst_uid = $ds->Get("(0008,0018)");
     my $sop_class_uid = $ds->Get("(0008,0016)");
@@ -1150,12 +1114,8 @@ sub WritePart10{
     WriteExpBe($ds, \*FILE);
   } elsif($xfr_stx eq "1.3.6.1.4.1.22213.1.147"){
     WriteExpLeLong($ds, \*FILE);
-  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.90'){
-    WriteExpLe($ds, \*FILE);
-  } elsif($xfr_stx eq '1.2.840.10008.1.2.4.70'){
-    WriteExpLe($ds, \*FILE);
   } else {
-    die "unsupported transfer syntax $xfr_stx";
+    WriteExpLe($ds, \*FILE);
   }
   close FILE;
   return $start_data;
@@ -1237,14 +1197,14 @@ sub DumpEncapsulatedOther {
   for my $i (0 .. $#{$v}){
     $tag = "$sig" . "[$i]";
     my $index = $i + 1;
-    $name = "Pixel Data Segment $index";
+    $s_name = "$name Segment $index";
     my $vi = $v->[$i];
     my $ctx = Digest::MD5->new;
     $ctx->add($vi);
     my $dig = $ctx->hexdigest;
     my $len = length($vi);
     $value_string = "<raw data $len bytes $dig>";
-    $pr->print("$tag:($vr, $vm):$name:$value_string\n");
+    $pr->print("$tag:($vr, $vm):$s_name:$value_string\n");
   }
 }
 
