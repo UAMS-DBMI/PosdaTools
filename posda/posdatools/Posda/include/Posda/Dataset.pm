@@ -1197,7 +1197,7 @@ sub DumpEncapsulatedOther {
   for my $i (0 .. $#{$v}){
     $tag = "$sig" . "[$i]";
     my $index = $i + 1;
-    $s_name = "$name Segment $index";
+    my $s_name = "$name Segment $index";
     my $vi = $v->[$i];
     my $ctx = Digest::MD5->new;
     $ctx->add($vi);
