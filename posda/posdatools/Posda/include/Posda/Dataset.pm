@@ -168,7 +168,8 @@ sub EncodeEle{
 
 
 sub MapOtVR{
-  my($ds, $sig, $errors) = @_;
+  my($ds, $sig, $ele) = @_;
+  my $errors;
   if(
     $sig eq "(0028,0106)" || # Smallest Image Pixel Value
     $sig eq "(0028,0107)" || # Largest Image Pixel Value
@@ -242,7 +243,7 @@ sub MapOtVR{
   } elsif($sig eq "(0028,1103)"){ # Blue Palette Color Lookup Table Descriptor
     return 'OW';
   }
-  return 'OW';
+  return $ele->{VR};
 }
 sub RmGrpLen{
   my($this, $errors) = @_;
@@ -339,7 +340,7 @@ sub FixUpOt{
       $ele->{VR} = 'UN';
     }
     if(exists($ele->{VR}) && $ele->{VR} =~ /^O/){
-      $ele->{VR} = MapOtVR($ds, $sig);
+      $ele->{VR} = MapOtVR($ds, $sig, $ele);
       if(
         $ele->{VR} eq "US" && $ele->{type} eq "raw" &&
          exists($ele->{value}) && defined($ele->{value})
@@ -464,7 +465,7 @@ sub MakeExpLeElementWriter{
       $len = $length;
     } else {
       if($vr eq "OT") { 
-        $vr = MapOtVR($root, $sig);
+        #$vr = MapOtVR($root, $sig);
         #die "Need to handle this for $sig";
         @vr = unpack("cc", $vr);
         if($vr eq "SS"){
