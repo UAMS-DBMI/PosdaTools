@@ -40,6 +40,51 @@ sub new{
   return $this;
 }
 
+sub PrintSimpleContent{
+  my($this, $printer) = @_;
+  $this->RecurPrintSimpleContent($printer, $this->{content}, 0);
+}
+
+sub RecurPrintSimpleContent{
+  my($this, $printer, $content, $indent) = @_;
+  if(ref($content) eq "ARRAY"){
+    for my $i (@$content){
+      $this->RecurPrintSimpleContent($printer, $i, $indent);
+    }
+  } elsif(ref($content) eq "HASH"){
+    my $line;
+    if(exists $content->{name}){
+      my $name = $content->{name};
+      if($name =~ /^(.*) \(.*\)$/){ $name = $1 } else {
+        print STDERR "$name doesn't match\n";
+      }
+      $line .= "$name:";
+      if(exists $content->{value}){
+        my $value = $content->{value};
+        if($value =~ /^([^\(]*) \(.*\)$/){ $value = $1 }
+        $line .= " $value";
+      } elsif($content->{rel_type} eq "CONTAINS" && $content->{val_type} eq "IMAGE"){
+        $line .= " $content->{image_ref}";
+      }
+    } elsif (exists $content->{image_ref}){
+      $line .= "$content->{image_ref}:";
+      if(exists $content->{value}){
+        my $value = $content->{value};
+        if($value =~ /^(.*) \(.*\)$/){ $value = $1 }
+        $line .= " $value";
+      }
+    }
+    &{$printer}("  " x $indent . "$line\n");
+    if(defined $content->{content}){
+      for my $i (0 .. $#{$content->{content}}){
+        $this->RecurPrintSimpleContent($printer, $content->{content}->[$i], $indent+1);
+      }
+    }
+  } else {
+    &{$printer}("  " x $indent . "couldn't parse $content->{path}\n");
+  }
+}
+
 sub PrintContent{
   my($this, $printer) = @_;
   $this->RecurPrintContent($printer, $this->{content}, 0);
