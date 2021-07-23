@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w 
+#!/usr/bin/perl -w
 #
 #Copyright 2008, Bill Bennett
 # Part of the Posda package
@@ -38,51 +38,6 @@ sub new{
   print "Document type: $doc_type\n";
   $this->{content} = $this->ParseContainer("(0040,a730)");
   return $this;
-}
-
-sub PrintSimpleContent{
-  my($this, $printer) = @_;
-  $this->RecurPrintSimpleContent($printer, $this->{content}, 0);
-}
-
-sub RecurPrintSimpleContent{
-  my($this, $printer, $content, $indent) = @_;
-  if(ref($content) eq "ARRAY"){
-    for my $i (@$content){
-      $this->RecurPrintSimpleContent($printer, $i, $indent);
-    }
-  } elsif(ref($content) eq "HASH"){
-    my $line;
-    if(exists $content->{name}){
-      my $name = $content->{name};
-      if($name =~ /^(.*) \(.*\)$/){ $name = $1 } else {
-        print STDERR "$name doesn't match\n";
-      }
-      $line .= "$name:";
-      if(exists $content->{value}){
-        my $value = $content->{value};
-        if($value =~ /^([^\(]*) \(.*\)$/){ $value = $1 }
-        $line .= " $value";
-      } elsif($content->{rel_type} eq "CONTAINS" && $content->{val_type} eq "IMAGE"){
-        $line .= " $content->{image_ref}";
-      }
-    } elsif (exists $content->{image_ref}){
-      $line .= "$content->{image_ref}:";
-      if(exists $content->{value}){
-        my $value = $content->{value};
-        if($value =~ /^(.*) \(.*\)$/){ $value = $1 }
-        $line .= " $value";
-      }
-    }
-    &{$printer}("  " x $indent . "$line\n");
-    if(defined $content->{content}){
-      for my $i (0 .. $#{$content->{content}}){
-        $this->RecurPrintSimpleContent($printer, $content->{content}->[$i], $indent+1);
-      }
-    }
-  } else {
-    &{$printer}("  " x $indent . "couldn't parse $content->{path}\n");
-  }
 }
 
 sub PrintContent{
@@ -186,7 +141,7 @@ if(defined $img_ref){ $has_image_ref = "yes" }
         } else {
           $item_st->{value} = "Error: val_type = code, but no Coded Value Found";
         }
-      
+
       } elsif($val_type eq "DATE"){
         $item_st->{value} = $ds->Get("$item(0040,a121)");
       } elsif($val_type eq "DATETIME"){
@@ -196,7 +151,7 @@ if(defined $img_ref){ $has_image_ref = "yes" }
       } elsif($val_type eq "UIDREF"){
         $item_st->{value} = $ds->Get("$item(0040,a124)");
       } elsif($val_type eq "NUM"){
-        $item_st->{value} = $this->GetMeasuredValueSequence("$item(0040,a300)[0]"); 
+        $item_st->{value} = $this->GetMeasuredValueSequence("$item(0040,a300)[0]");
       } elsif($val_type eq "PNAME"){
         $item_st->{value} = $ds->Get("$item(0040,a123)");
       }
@@ -206,9 +161,9 @@ if(defined $img_ref){ $has_image_ref = "yes" }
       } else {
         $root_path = "";
       }
-      
+
       if(exists $item_st->{name}) { $item_st->{semantic_path} = $root_path . $item_st->{name}
-      } elsif (exists $item_st->{image_ref}) { $item_st->{semantic_path} = $root_path . "IMAGE" 
+      } elsif (exists $item_st->{image_ref}) { $item_st->{semantic_path} = $root_path . "IMAGE"
       } else { $item_st->{semantic_path} = $root_path . "<none>" }
       my $content = $this->ParseContainer("$item(0040,a730)", $item_st->{semantic_path});
       if(defined $content){
