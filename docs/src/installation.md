@@ -1,5 +1,27 @@
 This is the installation guide for Posda.
 
+## Prerequisites
+The smallest installation requires one server, which can be running Linux,
+Windows or MacOS, as long as it meets these minimum hardware and software
+requirements.
+
+__Note__: Most installs will be much larger than these minimum requirements,
+and thus will require vastly more resources. The exact requirements will
+depend on your configuration. See the 
+[Type of Installation](#type-of-installation) section for more information.
+
+### Hardware requirements
+
+* Servers: 1 Linux, MacOS or Windows
+* vCPUs: 4
+* Memory: 8 GiB
+* Storage: 10 TiB
+
+### Software requirements
+
+* [Docker](#install-docker) (and docker-compose)
+* git
+
 ## Things to consider
 There are a handful of things you should consider before beginning
 installation, such as:
@@ -7,55 +29,59 @@ installation, such as:
 * What host OS will you use?
 * What type of installation?
 * Will storage be separate?
+	* This allows for shared storage, which is necessary if Posda will
+	be used alongside NBIA, for example.
+
 * Will database be separate?
 
 ### Host OS
 Posda is distributed as a set of [Docker](https://www.docker.com) containers,
 which means that it will technically work on any platform Docker supports
-(including Windows, MacOS, and Linux). However, we recommend Linux be used
-for the best compatibility. MacOS is the second-best choice, and we discourage
-the use of Windows.
+(including Windows, MacOS, and Linux). However, we _highly_ recommend Linux be 
+used for the best compatibility. 
 
 Any Linux distribution should work, as long as you can install Docker, though
 we have tested Posda on the following:
 
 * Ubuntu 16.04, 18.04, 20.04
 * RHEL 7
-* Alpine
-
+* CentOS 7
 
 ### Type of Installation
-Posda supports a number of different types of installation. The main options
-are if separate storage will be used, and/or a separate database server, and/or
-separate compute nodes (worker nodes).  The
-reasons why you would make these choices are beyond the scope of this
-documentation, but you should make those choices before beginning installation.
+Posda supports a number of different installation configurations. The main
+options are if separate storage will be used, and/or a separate database
+server, and/or separate compute nodes (worker nodes).  The reasons why you
+would make these choices are beyond the scope of this documentation, but you
+should make those choices before beginning installation.
 
 We have included three example configurations in this guide:
 
-* Small - Single machine, for a small site, or development, or demonstration
-* Medium - When separate storage is needed
-* Large - When separate storage, database, and worker node servers are needed
+* Small - All-in-one server (for a small site, or development, or demonstration)
+* Medium - Single server, separate storage
+* Large - Multiple servers; separate storage, database, and worker nodes
 
 
 ## Install Sizes / Types
-Here are three common types of installations, along with a list of which
-sections you would need to follow for each.
+Here are three common types of installation, along with a list of which
+sections you would need to complete for each.
 
 ### Small / Development Installation
-This is the appropriate set of sections you would follow to install Posda
+This is the appropriate set of sections you would complete to install Posda
 on a single machine, such as for development or demonstration purposes,
-or just an environment where this is all that is required.
+or a very small site. This option runs all services as Docker containers,
+and allows Docker to manage all storage.
 
-
-* [Install Docker](#install-docker)
 * [Clone the Repo](#clone-oneposda)
 * [Configure Common Settings](#configure-common-settings)
 * [Start Posda](#start-posda)
 
 
 ### Medium / Separate Storage
-* [Install Docker](#install-docker)
+This example configuration is for an installation where the main storage
+is not managed by Docker. This would allow you to, for example, use an
+existing network attached storage (NAS) device to house all image data. This
+configuration uses only one server for all components.
+
 * [Clone the Repo](#clone-oneposda)
 * Connect storage to Host
 * [Configure storage](#configure-storage) in docker-compose.yaml
@@ -63,15 +89,25 @@ or just an environment where this is all that is required.
 * [Start Posda](#start-posda)
 
 ### Large / Separate Storage, Separate Database, Separate Compute
+This example configuration represents a large installation with separate
+servers for the database and compute, as well as shared storage. This
+option provides the most power and flexibility, while requiring the most
+resources.
+
+__Note__: some steps are beyond the scope of this document.
+
 * Provision database server, install PostgreSQL
-* [Install Docker](#install-docker)
-* [Clone the Repo](#clone-oneposda)
-* Connect storage to Host
-* [Configure storage](#configure-storage) in docker-compose.yaml
-* [Configure database](#configure-database)
-* [Configure Common Settings](#configure-common-settings)
-* [Configure Worker Nodes](#configure-worker-nodes)
-* [Start Posda](#start-posda)
+* Provision the main host and all desired worker node hosts, and follow these
+  steps on each one:
+	* [Clone the Repo](#clone-oneposda)
+	* Connect storage to Host
+	* [Configure storage](#configure-storage) in docker-compose.yaml
+	* [Configure database](#configure-database)
+	* [Configure Common Settings](#configure-common-settings)
+	* [Configure Worker Nodes](#configure-worker-nodes)
+	* [Start Posda](#start-posda)
+
+_Warning_: Ensure the settings are consistent across all hosts!
 
 
 ## Install Docker
@@ -238,7 +274,7 @@ The `manage` script is a simple wrapper around `docker-compose`, but it
 configures some things before each run, so it is recommend you use it
 rather than using `docker-compose` directly.
 
-WARNING: If you have chosen to have a separate database host, you must skip
+__Warning__: If you have chosen to have a separate database host, you must skip
 the first command (because there will be no `db` container).
 
 From the `oneposda` directory, execute:
