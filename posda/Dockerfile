@@ -94,6 +94,28 @@ RUN cd /build/build && \
 	make install
 
 
+###############################################################################
+# Build dcm2niix (for covnerting to nifti)
+###############################################################################
+
+FROM alpine:3.11.3 as dcm2niixbuild
+
+RUN apk add --update --no-cache \
+	cmake \
+	alpine-sdk \
+	coreutils \
+	tar \
+	gzip \
+	bzip2 \
+	git
+
+RUN git clone https://github.com/rordenlab/dcm2niix.git
+RUN cd dcm2niix && \
+	mkdir build && \
+	cd build && \
+	cmake -DUSE_JPEGLS=ON .. && \
+	make
+
 FROM alpine:3.11.3
 
 # Base system deps
@@ -183,6 +205,8 @@ RUN pip3 install /numpy*.whl \
 	&&  pip3 install /imagecodecs*.whl \
 	&&  rm -f /*.whl
 
+# copy dcm2niix into place
+COPY --from=dcm2niixbuild /dcm2niix/build/bin/dcm2niix /usr/local/bin/dcm2niix
 
 # Add Imagemagick
 RUN apk --update --no-cache add imagemagick jpeg-dev
