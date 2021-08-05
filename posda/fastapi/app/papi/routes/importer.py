@@ -7,6 +7,7 @@ from starlette.requests import Request
 from .auth import logged_in_user, User
 
 from ..util import Database, asynctar, roi
+from ..util.digest import md5sum_file
 
 router = APIRouter()
 
@@ -24,6 +25,8 @@ class HTTPMethodView: pass
 FILE_STORAGE_PATH = "/home/posda/cache/created"
 TEMP_STORAGE_PATH = "/home/posda/cache/temp"
 FILE_STORAGE_ROOT = 3
+
+ROOT_MAP_CACHE = None
 
 @router.put("/event")
 async def import_event(source: str, origin: str = None, expected_count: int = None, db: Database = Depends()):
@@ -99,6 +102,63 @@ async def import_file(request: Request, digest: str, import_event_id: int = None
         "status": "success",
         "size": bytes_read,
         "digest": computed_digest,
+        "file_id": file_id,
+        "created": created,
+    }
+
+async def get_root_map(db: Database):
+    """Return the map of File Storage Roots. Cache when possible"""
+    global ROOT_MAP_CACHE
+
+    if ROOT_MAP_CACHE is None:
+        roots = await db.fetch("""\
+            select * from file_storage_root
+        """)
+
+        root_map = {}
+        for root in roots:
+            root_map[root['root_path']] = root['file_storage_root_id']
+
+        ROOT_MAP_CACHE = root_map
+
+    return ROOT_MAP_CACHE
+
+@router.post("/file_in_place")
+async def import_file_in_place(request: Request,
+                               import_event_id: int,
+                               localpath: str,
+                               db: Database = Depends()):
+
+    root_map = await get_root_map(db)
+
+    match_root = None
+    rel_path = None
+    for r in root_map:
+        if localpath.startswith(r):
+            match_root = root_map[r]
+            rel_path = localpath[len(r)+1:]
+    if match_root is None:
+        raise HTTPException(detail="no matching file_storage_root", status_code=422)
+
+
+    try:
+        size, digest = md5sum_file(localpath)
+    except FileNotFoundError:
+        raise HTTPException(detail="no such file", status_code=422)
+
+    created, file_id = \
+        await create_or_get_file_id(digest, size, db)
+
+    if created:
+        await create_file_location(file_id, match_root, rel_path, db)
+        await make_ready_to_process(file_id, db)
+
+    await create_file_import(file_id, int(import_event_id), localpath, db)
+
+    return {
+        "status": "success",
+        "size": size,
+        "digest": digest,
         "file_id": file_id,
         "created": created,
     }
