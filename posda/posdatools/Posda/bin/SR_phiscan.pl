@@ -9,28 +9,31 @@
 use strict;
 use Cwd;
 use Posda::SrSemanticParse;
-use Posda::DB::PosdaFilesQueries;
-use Posda::Dataset;
-use Dispatch::EventHandler;
-use Dispatch::LineReader;
 use Posda::DB 'Query';
+use Posda::BackgroundProcess;
+
+my $act_id = $ARGV[0];
+
+my $usage = "Usage: $0 <$act_id>";
+unless ($#ARGV >= 0) {die $usage;}
 
 
-my $usage = <<EOF;
-SR_phiScan.pl  <description>
-  description - description of scan
-Expects a list of <files> on STDIN
-EOF
-# unless($#ARGV == 1){
-#   die "$usage\n";
-# }
-my( $desc) = @ARGV;
 
+my $ActTpId;
+my %Files;
+my $mySeriesId;
+my %Paths;
+my $seriesId;
+my $filepath;
+my $file_id;
+my $q = Query('SeriesForFile');
+my $q2 = Query('FilesInSeriesWithPath');
 
 sub GetPaths{
   my($content) = @_;
   for my $i (@{$content}){
     if(exists $i->{value}){
+
       $Paths{$i->{semantic_path}}->{$i->{value}} = 1;
     } elsif(exists $i->{image_ref}){
       $Paths{$i->{semantic_path}}->{$i->{image_ref}} = 1;
@@ -43,65 +46,54 @@ sub GetPaths{
   }
 }
 
-
-
-my %Files;
-while(my $line = <STDIN>){
-  chomp $line;
-  if($line =~ /^([\d\.]+)\s*,\s*(.*)\s*$/){  ##FIX
-    my $s = $1; my $sig = $2;
-    $Files{$s} = $sig;
-  } else {
-    print STDERR "Can't process line: $line\n";
-  }
-}
-
-my $num_files = keys %Files;
-print "Received list of $num_files to scan\n";
-close STDOUT;
-close STDIN;
-fork and exit;
-print STDERR "Survived fork with $num_files to process\n";
-
-my $create_scan = PosdaDB::Queries->GetQueryInstance("SR_CreateScanEvent");
-# my $get_scan_id = PosdaDB::Queries->GetQueryInstance("SR_GetScanEventEventId");
-# my $finish_scan = PosdaDB::Queries->GetQueryInstance("SR_UpdateFilesFinished");
-
-#$create_scan->RunQuery(sub {}, sub {}, $desc, $num_files);
-
-my $scan_id;
-$get_scan_id->RunQuery(sub{
-    my($row) = @_;
-    $scan_id = $row->[0];
-  }, sub {});
-unless(defined $scan_id) { die "Can't get scan_id" }
-my $num_scanned = 0;
+Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
+  my($row) = @_;
+  my($activity_id, $activity_created,
+    $activity_description, $activity_timepoint_id,
+    $timepoint_created, $comment, $creating_user) = @$row;
+  $ActTpId = $activity_timepoint_id;
+}, sub {}, $act_id);
+#$background->SetActivityStatus("Found timepoint ($ActTpId) for " .  "activity: $act_id");
+Query('FileIdsByActivityTimepointId')->RunQuery(sub {
+  my($row) = @_;
+  $Files{$row->[0]} = 1;
+}, sub {}, $ActTpId);
 
 
 
-#####
-
-$max_len1 = 64;
-$max_len2 = 300;
-
-Posda::Dataset::InitDD();
-my $dd = $Posda::Dataset::DD;
-
-for my $files (keys %Files){
-		my $ParsedSR = Posda::SrSemanticParse->new($infile);
-		my %Paths;
-		my $content = $ParsedSR->{content};
-		GetPaths $content;
-		for my $path(sort keys %Paths){
-			for my $v (sort keys %{$Paths{$path}}){
-				$path =~ s/\s\([^)]+\)//g;
-				$v =~ s/\s\([^)]+\)//g;
-				print "$path|$v\n";
-				#DB here
-			}
-	}
-}
-$finish_scan->RunQuery(sub{}, sub{}, $scan_id);
+for  $file_id(keys %Files){
 
 
-}
+    $q->RunQuery(sub {
+      my($row) = @_;
+      $seriesId = $row->[0];}
+    , sub {}, $file_id);
+    $q2->RunQuery(sub {
+      my($row) = @_;
+      $filepath = $row->[0];}
+    , sub {}, $seriesId);
+
+    my $infile = $filepath;
+
+    my $max_len1 = $ARGV[1];
+    my $max_len2 = $ARGV[2];
+    unless(defined $max_len1) {$max_len1 = 64}
+    unless(defined $max_len2) {$max_len2 = 300}
+
+    Posda::Dataset::InitDD();
+    my $dd = $Posda::Dataset::DD;
+
+    my $ParsedSR = Posda::SrSemanticParse->new($infile);
+
+    my $content = $ParsedSR->{content};
+    GetPaths $content;
+    for my $path(sort keys %Paths){
+      for my $v (sort keys %{$Paths{$path}}){
+        #print "$path|$v\n";
+        #if($path =~ /^(.*) \(.*\)$/){ $path = $1 }
+        $path =~ s/\s\([^)]+\)//g;
+        $v =~ s/\s\([^)]+\)//g;
+        print "$path|$v\n";
+      }
+    }
+  };
