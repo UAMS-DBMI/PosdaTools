@@ -33,12 +33,22 @@ while(my $line = <STDIN>){
 #print STDERR "Received Compare Instructions: $line\n";
   my($sop_inst, $from_file, $to_file) =
     split(/\|/, $line);
-  my $f_try = Posda::Try->new($from_file);
+  my $f_try;
+  eval { $f_try = Posda::Try->new($from_file) };
+  if ($@){
+    print "Failed: $sop_inst|$from_file ($from_file => $to_file) failed to open\n";
+    next line;
+  }
   unless(exists $f_try->{dataset}){
     print "Failed: $sop_inst|$from_file is not a dicom file\n";
     next line;
   }
-  my $t_try = Posda::Try->new($to_file);
+  my $t_try;
+  eval { $t_try = Posda::Try->new($to_file) };
+  if ($@){
+    print "Failed: $sop_inst|$to_file ($from_file => $to_file) failed to open\n";
+    next line;
+  }
   unless(exists $t_try->{dataset}){
     print "Failed: $sop_inst|$to_file is not a dicom file\n";
     next line;
