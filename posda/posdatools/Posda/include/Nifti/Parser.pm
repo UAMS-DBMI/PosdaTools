@@ -263,7 +263,7 @@ my $spec = {
   },
 };
 sub new{
-  my($class, $file_name) = @_;
+  my($class, $file_name, $file_id) = @_;
   my $fh;
   unless(open $fh, "<$file_name"){
     die "Can't open file $file_name";
@@ -272,6 +272,7 @@ sub new{
     fh => $fh,
     file_name => $file_name,
   };
+  if(defined $file_id) { $self->{file_id} = $file_id }
   bless $self, $class;
   $self->ReadHeader;
   if($self->{parsed}->{magic} eq "n+1"){
@@ -524,13 +525,28 @@ sub PrintSliceScaled{
   my $num_pix = $length/($self->{parsed}->{bitpix}/8);
   my $sbuff = '\0' x $num_pix;
   my $len  = read $self->{fh}, $buff, $length;
+  my $ps;
+  my $datlen;
+  if($self->{parsed}->{datatype} == 4){
+    $ps = "s";
+    $datlen = 2;
+  } elsif($self->{parsed}->{datatype} == 512){
+    $ps = "S";
+    $datlen = 2;
+  } elsif($self->{parsed}->{datatype} == 16){
+    $ps = "f";
+    $datlen = 4;
+  } elsif($self->{parsed}->{datatype} == 2){
+    $ps = "C";
+    $datlen = 1;
+  }
   unless($len == $length) { die "Read $len vs $length" }
-  for my $i(0 .. ($length/2)-1){
-    my $val = unpack('S', substr($buff, $i *2, 2));
+  for my $i(0 .. ($length/$datlen)-1){
+    my $val = unpack($ps, substr($buff, $i * $datlen,  $datlen));
     $Val[$i] = $val;
   }
   my $num_val = @Val;
-  $self->Normalize(\@Val, ($length/2)-1);
+  $self->Normalize(\@Val, ($length/$datlen)-1);
   my $new_slice;
   for my $i (0 .. ($num_pix - 1)){
     no warnings;
@@ -557,6 +573,51 @@ sub PrintSliceFlipped {
 }
 
 sub PrintSliceFlippedScaled{
+  my($self, $v, $s, $fh) = @_;
+  my($offset, $length, $row_size) =
+    $self->GetSliceOffsetLengthAndRowLength($v, $s);
+  my $row_num_pix = $row_size/($self->{parsed}->{bitpix}/8);
+  my $num_rows = $self->{parsed}->{dim}->[2];
+  my $num_pix = $length/($self->{parsed}->{bitpix}/8);
+  $self->Open;
+  my @Val;
+  my $buff;
+  my $sbuff = '\0' x $num_pix;
+  my $len  = read $self->{fh}, $buff, $length;
+  my $ps;
+  if($self->{parsed}->{datatype} == 4){
+    $ps = "s";
+  } elsif($self->{parsed}->{datatype} == 512){
+    $ps = "S";
+  } elsif($self->{parsed}->{datatype} == 16){
+    $ps = "f";
+  } elsif($self->{parsed}->{datatype} == 2){
+    $ps = "C";
+  }
+  unless($len == $length) { die "Read $len vs $length" }
+  for my $r (1 .. $num_rows){
+    my $offset_r = $offset + (($num_rows - $r) * $row_size);
+    seek $self->{fh}, $offset_r, 0;
+    my $buff;
+    my $len  = read $self->{fh}, $buff, $row_size;
+    unless($len == $row_size) { die "Read $len vs $row_size" }
+    for my $i (0 .. $row_num_pix - 1){
+      my $row_offset = ($r - 1) * ($row_size / 2);
+      $Val[$i + $row_offset] = unpack($ps, substr($buff, $i *2, 2));
+    }
+  }
+  my $num_val = @Val;
+  $self->Normalize(\@Val, ($length/2)-1);
+  my $new_slice;
+  for my $i (0 .. ($num_pix - 1)){
+    no warnings;
+    substr($new_slice, $i, 1) = pack 'C', $Val[$i];
+  }
+  my $nslen = length($new_slice);
+  print $fh $new_slice;
+}
+
+sub PrintSliceFlippedScaledOld{
   my($self, $v, $s, $fh) = @_;
   my($offset, $length, $row_size) =
     $self->GetSliceOffsetLengthAndRowLength($v, $s);
@@ -821,10 +882,13 @@ sub ProjectionAnalysis{
     print "file $self->{file_id} (FP) has $tot_pix values, " .
       "$total_zero zeros, $total_nan NaN, $total_inf infinities, " .
       "non_zero values range from $range\n";
-  } elsif ($self->{parsed}->{datatype} == 4){
+  } elsif (
+    $self->{parsed}->{datatype} == 4 ||
+    $self->{parsed}->{datatype} == 512
+  ){
     print "file $self->{file_id} (short) has $tot_pix values, " .
       "$total_zero zeros, non_zero values range from " .
-      "$AbsNzMin\n";
+      "$AbsNzMin to $AbsMax\n";
   } else {
     print "file $self->{file_id} unknown data type: " .
       "$self->{parsed}->{datatype}\n";
@@ -840,10 +904,12 @@ sub Normalize{
     if($array->[$i] > $max) { $max = $array->[$i] }
     if($array->[$i] < $min) { $min = $array->[$i] }
   }
-  unless($max > 0) {return}
+  unless($max > $min) {return}
   for my $i (0 .. $len - 1){
       my $v = $array->[$i];
-      my $sv = int(($v * 255)/$max);
+      my $scale = $max - $min;
+      my $dist = $v - $min;
+      my $sv = int(($dist * 255)/$scale);
       $array->[$i] = $sv;
   }
 }

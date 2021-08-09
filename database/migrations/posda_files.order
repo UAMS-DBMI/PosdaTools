@@ -23,3 +23,4 @@ add_needs_edit_to_pathology_visual_review_files.sql
 create_nifti_jpegs.sql
 nifti_projection_review.sql
 file_nifti.sql
+fix_file_nifti.sql

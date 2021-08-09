@@ -20,7 +20,8 @@ my($file_id, $file,$v, $s, $f, $to_dir) = @ARGV;
 unless ($file =~ /^\//){
   $file = "$dir/$file";
 }
-my $nifti = Nifti::Parser->new($file);
+my $nifti;
+$nifti = Nifti::Parser->new($file, $file_id);
 #my($dig, $max, $min) = $nifti->SliceDigest($v, $s);
 my $to_root = "nifti_$file_id" . "_$v" . "_$s";
 if($f eq "f"){
@@ -47,4 +48,4 @@ my $cmd = "convert -endian MSB -size $rows" . 'x' . "$cols " .
   "-depth 8 gray:$gray_file $jpeg_file";
 `$cmd`;
 print "Convert:\n$cmd\n";
-#unlink $gray_file;
+unlink $gray_file;

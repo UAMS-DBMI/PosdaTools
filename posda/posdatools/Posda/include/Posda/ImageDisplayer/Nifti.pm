@@ -30,9 +30,14 @@ sub Init{
     "View NIFTI:  File_id: $self->{params}->{file_id}";
   ($self->{rows}, $self->{cols},$self->{bytes}) = 
     $params->{nifti}->RowsColsAndBytes();
-  $self->{canvas_width} = $self->{cols} * 2;
+  if($self->{cols} < 500){
+    $self->{canvas_width} = $self->{cols} * 2;
+    $self->{canvas_height} = $self->{rows} * 2;
+  } else {
+    $self->{canvas_width} = $self->{cols};
+    $self->{canvas_height} = $self->{rows};
+  }
   $self->{width} = $self->{canvas_width} + 20;
-  $self->{canvas_height} = $self->{rows} * 2;
   $self->{height} = $self->{canvas_height} + 100;
   ($self->{num_slices}, $self->{num_vols}) = 
     $params->{nifti}->NumSlicesAndVols();
@@ -117,6 +122,8 @@ sub SendCachedJpeg{
 sub RenderNiftiPixelToJpeg{
   my($self, $http, $dyn, $nifti_file_id, $path, $flip, $vol, $slice,
     $when_done) = @_;
+  my $nifti = $self->{params}->{nifti};
+  if($nifti->{is_from_zip}){ $path = $nifti->{file_name} }
   my $cmd = "ExtractNiftiSlice.pl $nifti_file_id $path $vol $slice " .
     "$flip $self->{params}->{temp_path}";
   print STDERR "Command: $cmd\n";
