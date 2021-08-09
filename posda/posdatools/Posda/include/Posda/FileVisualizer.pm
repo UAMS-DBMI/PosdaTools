@@ -63,7 +63,9 @@ sub SpecificInitialize {
       my($row) = @_;
       $self->{file_path} = $row->[0];
   }, sub{}, $self->{file_id});
+print STDERR "#######################################\n";
   if($self->{file_desc}->{file_type} eq "parsed dicom file"){
+print STDERR "Dicom file\n";
     $self->{is_dicom_file} = 1;
     $self->{sop_class_name} = $self->{file_desc}->{dicom_file_type};
 #    $self->InitializeDicomDump();
@@ -87,9 +89,10 @@ sub SpecificInitialize {
       return $self->SpecificInitialize;
     }
   } elsif($self->{file_desc}->{file_type} eq "Nifti Image (gzipped)") {
+print STDERR "Gzipped Nifti\n";
     my $nifti = Nifti::Parser->new_from_zip(
-      $self->{file_desc}->{file_path},
-      $self->{file_desc}->{file_id},
+      $self->{file_path},
+      $self->{file_id},
       $self->{temp_path});
     my $params = {
       file_id => $self->{file_id},
@@ -103,7 +106,8 @@ sub SpecificInitialize {
       bless $self, "Posda::FileVisualizer::Nifti";
       return $self->SpecificInitialize($params);
     }
-  } elsif($self->{file_desc}->{file_type} eq "Nifti"){
+  } elsif($self->{file_desc}->{file_type} eq "Nifti Image"){
+print STDERR "Nifti\n";
     my $nifti = Nifti::Parser->new($self->{file_path});
     my $params = {
       file_id => $self->{file_id},
@@ -119,6 +123,7 @@ sub SpecificInitialize {
     }
     #...  Here is place to all other file type checks ...
   }
+print STDERR "#######################################\n";
 
 }
 

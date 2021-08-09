@@ -68,8 +68,13 @@ sub Initialize{
   }, sub {}, $self->{params}->{activity_id});
   $self->{Reviewers} = \%Reviewers;
   $self->{Statii} = \%Statii;
-  $self->{image_width} = $max_cols * 2;
-  $self->{image_height} = $max_rows * 2;
+  if($max_rows < 500){
+    $self->{image_width} = $max_cols * 2;
+    $self->{image_height} = $max_rows * 2;
+  } else {
+    $self->{image_width} = $max_cols;
+    $self->{image_height} = $max_rows;
+  }
   $self->{width} = ($self->{image_width} * 3) + 20;
   $self->{height} = $self->{image_height} + 100;
 }

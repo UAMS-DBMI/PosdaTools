@@ -98,6 +98,7 @@ for my $f (keys %Files){
   } elsif($file_type eq "parsed dicom file"){
     $nifti = Nifti::Parser->new($file_path);
   }
+  if(defined $nifti) { $back->WriteToEmail("FoundNifti: $file_id\n")}
   unless(defined $nifti) { $num_not_parsed += 1; next file }
 
   # fix file_type if necessary
@@ -112,11 +113,16 @@ for my $f (keys %Files){
 
   my @parms;
   if(defined $existing_row){
+    $back->WriteToEmail("Existing Row for $file_id\n");
     @parms = SetUpdateParms($nifti, $file_id);
     $update_file_nifti->RunQuery(sub{}, sub{}, @parms);
     $num_updated += 1;
   } else {
+    $back->WriteToEmail("No Existing Row for $file_id\n");
     @parms = SetInsertParms($nifti, $file_id);
+    for my $i (0 .. $#parms){
+      $back->WriteToEmail("$i: $parms[$i]\n");
+    }
     $create_file_nifti->RunQuery(sub{}, sub{}, @parms);
     $num_inserted += 1;
   }
