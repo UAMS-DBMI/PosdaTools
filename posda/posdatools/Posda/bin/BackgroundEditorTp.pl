@@ -577,6 +577,9 @@ $rpt_pipe->print("\"Short Report\"," .
 my $rpt_pipe1 = $background->CreateReport("ShortEditDifferences");
 $rpt_pipe1->print("\"Short Report\"," .
   "\"short_file_id\",\"num_files\"\r\n");
+my $rpt_pipe_err = $background->CreateReport("Errors in Edits");
+$rpt_pipe_err->print("\"Error Report\"," .
+  "\"sop_instance_uid\",\"message\"\r\n");
 
 # Create row in dicom_edit_compare_disposition
 my $ins = Query("CreateDicomEditCompareDisposition");
@@ -728,7 +731,7 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
         }
         $report .= "#############################\n";
         $background->WriteToEmail($report);
-        print STDERR $report;
+#        print STDERR $report;
         if($this->{WeAreDone}) {
          $background->Finish("Done $num_compares_complete changed," .
            " $num_compares_failed failed in $elapsed seconds");
@@ -823,14 +826,14 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
         my($sop, $mess) = split(/\|/, $remain);
         delete $this->{comparing}->{$sop};
         $this->{compares_failed}->{$sop} = $mess;
-        $background->WriteToEmail("Compare failed:\n\tsop:$sop\n" .
-          "\tmessage: $mess\n");
+#        $background->WriteToEmail("Compare failed:\n\tsop:$sop\n" .
+#          "\tmessage: $mess\n");
       } else {
-        print STDERR
-          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!   !!!!!!!!!!!!!!!!!\n" .
-          "!!!!!!!  You idiot!  !!!!!!!!!!!!" .
-          "Bad line: \"$line\"\n" .
-          "!!!!!!!!! Always have default case !!!!!!!!";
+#        print STDERR
+#          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!   !!!!!!!!!!!!!!!!!\n" .
+#          "!!!!!!!  You idiot!  !!!!!!!!!!!!" .
+#          "Bad line: \"$line\"\n" .
+#          "!!!!!!!!! Always have default case !!!!!!!!";
         $background->WriteToEmail(
           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Auuuuugh!!!!!!!!!!!!!!!!!!!\n" .
           "!!!!!!!  You idiot !!!!!!!!!!!!" .
@@ -907,6 +910,11 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     my $num_failed = keys %{$this->{compares_failed}};
     my %data;
     my $num_rows = 0;
+    for my $sop (keys %{$this->{compares_failed}}){
+      my $mess = $this->{compares_failed}->{$sop};
+      $mess =~ s/"/""/g;
+      $rpt_pipe_err->print("$sop,\"$mess\"\r\n");
+    }
     my $get_list = Query("DifferenceReportByEditId");
     $get_list->RunQuery(sub {
         my($row) = @_;

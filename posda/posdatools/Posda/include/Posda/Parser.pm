@@ -238,7 +238,7 @@ sub ReadElementHeader {
           " doesn't match " .
           "DD ($dd_vr)" .
           " (coerced/recast ?)";
-        print STDERR "Parser::ReadElementHeader: " . $err_msg . "\n";
+#        print STDERR "Parser::ReadElementHeader: " . $err_msg . "\n";
         push(@{$this->{errors}}, $err_msg);
         unless($dd_vr eq "<undefined>"){
           $this->{vr_to_convert_to} = $dd_vr;
@@ -1065,9 +1065,9 @@ sub EleHandler{
   ){
     $element->{vax} = $this->{vax};
     $element->{bits_alloc} = $this->{dataset}->{0x28}->{0x100}->{value};
-    print STDERR "Wide dose ($element->{bits_alloc}) found in " .
-      ($element->{vax} ? "intel" : "motorola") .
-      " format.  VR = $element->{VR}\n";
+#    print STDERR "Wide dose ($element->{bits_alloc}) found in " .
+#      ($element->{vax} ? "intel" : "motorola") .
+#      " format.  VR = $element->{VR}\n";
   }
   ###  
   if($this->{grp} < 0x8 && $this->{grp} != 0x4){

@@ -99,9 +99,9 @@ sub RenderText{
     if($numeric){
       for my $i (0 .. $max_len - 1){
         my $try = $max_len - $i;
-        if($value =~ /\\/){
-          print STDERR "text contains backslash $sig\n";
-        }
+#        if($value =~ /\\/){
+#          print STDERR "text contains backslash $sig\n";
+#        }
         my $val = sprintf("%${try}e", $value);
         if(length($val) < $max_len){
           $val =~ s/^\s+//g;
@@ -117,10 +117,10 @@ sub RenderText{
       $value =~ /^(.{$max_len})/;
       my $new_value = $1;
       my $long = length($value);
-      print STDERR "truncating text in $sig: " .
-        "(max_len = $max_len, len = $long)\n" .
-        " from \"$value\"\n" .
-        " to   \"$new_value\"\n";
+#      print STDERR "truncating text in $sig: " .
+#        "(max_len = $max_len, len = $long)\n" .
+#        " from \"$value\"\n" .
+#        " to   \"$new_value\"\n";
       return $new_value;
     }
   } else {
@@ -383,8 +383,8 @@ die "Explicit Big Endian is deprecated.....";
     my @vr = unpack("cc", $vr);
     #### Here's where Jay Gaeta's hack goes
     if($vr eq "DS" && length($Value) > 65535) {
-      print STDERR "length too long for Explicit (Old) Xfer Syntax, " .
-        "$sig, VR: $vr - changed to UN\n";
+#      print STDERR "length too long for Explicit (Old) Xfer Syntax, " .
+#        "$sig, VR: $vr - changed to UN\n";
       $vr = 'UN';
     }
     ####
@@ -449,8 +449,8 @@ sub MakeExpLeElementWriter{
     my $element = $keys->[1];
     #### Here's where Jay Gaeta's hack goes
     if($vr eq "DS" && length($Value) > 65535) {
-      print STDERR "length too long for Explicit (Old) Xfer Syntax, " .
-        "$sig, VR: $vr - changed to UN\n";
+#      print STDERR "length too long for Explicit (Old) Xfer Syntax, " .
+#        "$sig, VR: $vr - changed to UN\n";
       $vr = 'UN';
     }
     ####
@@ -794,7 +794,7 @@ sub EncodeElementValue{
     } elsif($type eq 'raw'){
       # kludge for odd length owner tags
       if(length($ele->{value}) & 1){
-        print STDERR "Warning $ele has odd value (padding with space)\n";
+#        print STDERR "Warning $ele has odd value (padding with space)\n";
         $Value = "$ele->{value} ";
       } else {
         $Value = $ele->{value};
@@ -1779,10 +1779,10 @@ sub ConvertElementValue{
   if(defined $before->{VR} && $before->{VR} ne "UN"){
     if($ele_info->{VR} ne "UN" && $ele_info->{VR} ne $before->{VR}){
       for my $key (keys %$ele_info){
-        print STDERR "ele_info->{$key} = $ele_info->{$key}\n";
+#        print STDERR "ele_info->{$key} = $ele_info->{$key}\n";
       }
-      print STDERR "Explicit VR ($before->{VR}) doesn't match defined DD VR" .
-      " ($ele_info->{VR})\n";
+#      print STDERR "Explicit VR ($before->{VR}) doesn't match defined DD VR" .
+#      " ($ele_info->{VR})\n";
 #      die "Explicit VR ($before->{VR}) doesn't match defined DD VR" .
 #      " ($ele_info->{VR})";
     }
@@ -2567,10 +2567,10 @@ sub NewSearch{
       my $which = scalar @$accum;
       $index_list->{$index} = $which;
       unless($this->{$grp}->{private}->{$owner}->{$ele}->{VR} eq "SQ"){
-        print STDERR  sprintf(
-           "Warning: indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]" .
-           "  (%s)",
-           $grp, $ele, $remain);
+#        print STDERR  sprintf(
+#           "Warning: indexing a non seq VR $full_pat(%04x,\"$owner\",%02x)[$which]" .
+#           "  (%s)",
+#           $grp, $ele, $remain);
         #print STDERR "\n - ignoring this error.\n";
         return $list;
       }
