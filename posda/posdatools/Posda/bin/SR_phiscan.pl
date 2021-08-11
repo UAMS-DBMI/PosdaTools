@@ -12,12 +12,25 @@ use Posda::SrSemanticParse;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 
-my $act_id = $ARGV[0];
+my $usage = <<EOF;
+SR_phiscan.pl <bkgrnd_id> <activity_id> <notify>
+or
+SR_phiscan.pl -h
 
-my $usage = "Usage: $0 <$act_id>";
-unless ($#ARGV >= 0) {die $usage;}
+EOF
+$| = 1;
+if($#ARGV == 0 && $ARGV[0] eq "-h"){
+  print "$usage\n";
+  exit;
+}
+unless($#ARGV == 2){
+  die "$usage\n";
+}
+my ($invoc_id, $act_id, $notify) = @ARGV;
 
-
+print "All processing in background\n";
+my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
+$background->Daemonize;
 
 my $ActTpId;
 my %Files;
@@ -29,11 +42,7 @@ my $file_id;
 my $q = Query('SeriesForFile');
 my $q2 = Query('FilesInSeriesWithPath');
 
-
-
-
-
-
+$background->WriteToEmail("Starting SR PHI scan: \n");
 sub GetPaths{
   my($content) = @_;
   for my $i (@{$content}){
@@ -70,7 +79,7 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
     $timepoint_created, $comment, $creating_user) = @$row;
   $ActTpId = $activity_timepoint_id;
 }, sub {}, $act_id);
-#$background->SetActivityStatus("Found timepoint ($ActTpId) for " .  "activity: $act_id");
+$background->SetActivityStatus("Found timepoint ($ActTpId) for " .  "activity: $act_id");
 Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   my($row) = @_;
   $Files{$row->[0]} = 1;
@@ -82,20 +91,23 @@ $create_scan->RunQuery(sub {
     $scan_id = $row->[0];
   }, sub{}, $act_id);
 
-
+  $background->WriteToEmail("Scan ($scan_id)\n");
+  $background->WriteToEmail("Creating SR PHI Report report\n");
 
 for  $file_id(keys %Files){
 
-
+    # get the series ID
     $q->RunQuery(sub {
       my($row) = @_;
       $seriesId = $row->[0];}
     , sub {}, $file_id);
+    # get the filepaths
     $q2->RunQuery(sub {
       my($row) = @_;
       $filepath = $row->[0];}
     , sub {}, $seriesId);
 
+    #get the Unique Simplified SR Paths and Values
     my $infile = $filepath;
 
     my $max_len1 = $ARGV[1];
@@ -121,37 +133,56 @@ for  $file_id(keys %Files){
     # }
 
     #while(my $line = <SUBP>){
-    for my $path(sort keys %Paths){
-      my $tag_id;
-      my $path_id;
-      my $vr;
 
+    #loop through the path value pairs
+    for my $path(sort keys %Paths){
+      my $pathS = $path;
+      $pathS =~ s/\s\([^)]+\)//g;
+      my $path_id;
+
+      #for every path, see if it is a new unique path
       $get_path->RunQuery(sub {
         my($row) = @_;
         $path_id = $row->[0];
-      }, sub {}, $path, $vr);
+      }, sub {}, $pathS);
       unless(defined $path_id){
+        #if so store it
         $create_path->RunQuery(sub {
           my($row) = @_;
           $path_id = $row->[0];
         }, sub {},
-          $path, $vr);
+          $pathS);
       }
-      my $value_id;
-      my $v = $Paths{$path};
-      $get_value->RunQuery(sub {
-        my($row) = @_;
-        $value_id = $row->[0];
-      }, sub {}, $v);
-      unless(defined $value_id){
-        $create_value->RunQuery(sub {}, sub {},
-          $v);
-        $get_value_id->RunQuery(sub {
+      for my $v (sort keys %{$Paths{$path}}){
+
+        #for every value, see if it is a new unique value
+        my $value_id;
+        my $vS = $v;
+        $vS =~ s/\s\([^)]+\)//g;
+
+        $get_value->RunQuery(sub {
           my($row) = @_;
           $value_id = $row->[0];
-        }, sub {} );
+        }, sub {}, $vS);
+        #if so store it
+        unless(defined $value_id){
+          $create_value->RunQuery(sub {}, sub {},
+            $vS);
+          $get_value_id->RunQuery(sub {
+            my($row) = @_;
+            $value_id = $row->[0];
+          }, sub {} );
+        }
+
+        #associate this path and value
+        $create_occurance->RunQuery(sub {}, sub {},
+          $path_id, $value_id, $seriesId, $scan_id)
       }
-      $create_occurance->RunQuery(sub {}, sub {},
-        $path_id, $value_id, $seriesId, $scan_id)
     }
+    my $rpt3 = $background->CreateReport("Edit Skeleton");
+    $rpt3->print("path,q_value,edit_description," .
+      "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
+    $rpt3->print(",,,,,,,,,ProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
+    $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", %Paths.length, $scan_id);
+    $background->Finish;
   };
