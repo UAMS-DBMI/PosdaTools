@@ -1,5 +1,5 @@
 create table file_nifti(
-  file_id integer unique,
+  file_id integer primary key references file (file_id),
   magic text,
   is_zipped boolean,
   descrip text,

@@ -24,3 +24,5 @@ create_nifti_jpegs.sql
 nifti_projection_review.sql
 file_nifti.sql
 fix_file_nifti.sql
+create_file_nifti_defacing.sql
+series_to_nifti.sql
