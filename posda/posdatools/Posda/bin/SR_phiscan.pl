@@ -11,6 +11,7 @@ use Cwd;
 use Posda::SrSemanticParse;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+use Data::Dumper;
 
 my $usage = <<EOF;
 SR_phiscan.pl <bkgrnd_id> <activity_id> <notify>
@@ -39,7 +40,8 @@ my %Paths;
 my $seriesId;
 my $filepath;
 my $file_id;
-
+my $q = Query('SeriesForFile');
+my $q2 = Query('FilesInSeriesWithPath');
 
 $background->WriteToEmail("Starting SR PHI scan: \n");
 sub GetPaths{
@@ -59,14 +61,15 @@ sub GetPaths{
   }
 }
 
-my $get_series = Query('SeriesForFile');
-my $getFilePaths = Query('FilesInSeriesWithPath');
-my $create_scan = Query('SRCreateScanInstance');
-my $create_path = Query('SRCreatePathSeen');
-my $get_value = Query('GetSimpleValueSeen');
-my $create_value = Query('CreateSimpleValueSeen');
-my $get_path = Query('SRGetPathSeen');
-my $create_occurance = Query('SRCreatePathValueOccurance');
+my $create_scan = PosdaDB::Queries->GetQueryInstance("SRCreateScanInstance");
+my $create_path = PosdaDB::Queries->GetQueryInstance("SRCreatePathSeen");
+my $get_value = PosdaDB::Queries->GetQueryInstance("GetSimpleValueSeen");
+my $create_value = PosdaDB::Queries->GetQueryInstance("CreateSimpleValueSeen");
+my $get_path = PosdaDB::Queries->GetQueryInstance("SRGetPathSeen");
+my $get_value_id=
+  PosdaDB::Queries->GetQueryInstance("GetSimpleValueSeenId");
+my $create_occurance =
+  PosdaDB::Queries->GetQueryInstance("SRCreatePathValueOccurance");
 
 
 
@@ -83,30 +86,27 @@ Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   $Files{$row->[0]} = 1;
 }, sub {}, $ActTpId);
 
-# my $scan_id;
-# $create_scan->RunQuery(sub {
-#     my($row) = @_;
-#     $scan_id = $row->[0];
-#   }, sub{}, $act_id);
-  my $scan_id = $create_scan->FetchOneHash($act_id)->{sr_phi_scan_instance_id};
+my $scan_id;
+$create_scan->RunQuery(sub {
+    my($row) = @_;
+    $scan_id = $row->[0];
+  }, sub{}, $act_id);
+
   $background->WriteToEmail("Scan ($scan_id)\n");
   $background->WriteToEmail("Creating SR PHI Report report\n");
 
 for  $file_id(keys %Files){
 
     # get the series ID
-    # $q->RunQuery(sub {
-    #   my($row) = @_;
-    #   $seriesId = $row->[0];}
-    # , sub {}, $file_id);
-    my $seriesId = $get_series->FetchOneHash($file_id)->{series_instance_uid};
-
+    $q->RunQuery(sub {
+      my($row) = @_;
+      $seriesId = $row->[0];}
+    , sub {}, $file_id);
     # get the filepaths
-    # $q2->RunQuery(sub {
-    #   my($row) = @_;
-    #   $filepath = $row->[0];}
-    # , sub {}, $seriesId);
-    $filepath = $getFilePaths->FetchOneHash($seriesId)->{file};
+    $q2->RunQuery(sub {
+      my($row) = @_;
+      $filepath = $row->[0];}
+    , sub {}, $seriesId);
 
     #get the Unique Simplified SR Paths and Values
     my $infile = $filepath;
@@ -123,6 +123,9 @@ for  $file_id(keys %Files){
 
     my $content = $ParsedSR->{content};
     GetPaths $content;
+    print("########################################");
+    print Dumper(%Paths);
+    print("########################################");
     # for my $path(sort keys %Paths){
     #   for my $v (sort keys %{$Paths{$path}}){
     #     #print "$path|$v\n";
@@ -141,20 +144,19 @@ for  $file_id(keys %Files){
       $pathS =~ s/\s\([^)]+\)//g;
       my $path_id;
 
+
       #for every path, see if it is a new unique path
-      # $get_path->RunQuery(sub {
-      #   my($row) = @_;
-      #   $path_id = $row->[0];
-      # }, sub {}, $pathS);
-      $path_id = $get_path->FetchOneHash($pathS)->{sr_path_seen_id};
+      $get_path->RunQuery(sub {
+        my($row) = @_;
+        $path_id = $row->[0];
+      }, sub {}, $pathS);
       unless(defined $path_id){
         #if so store it
-        # $create_path->RunQuery(sub {
-        #   my($row) = @_;
-        #   $path_id = $row->[0];
-        # }, sub {},
-        #   $pathS);
-        $path_id = $create_path->FetchOneHash($pathS)->{sr_path_seen_id};
+        $create_path->RunQuery(sub {
+          my($row) = @_;
+          $path_id = $row->[0];
+        }, sub {},
+          $pathS);
       }
       for my $v (sort keys %{$Paths{$path}}){
 
@@ -162,35 +164,30 @@ for  $file_id(keys %Files){
         my $value_id;
         my $vS = $v;
         $vS =~ s/\s\([^)]+\)//g;
-        print("\nValue: $v, or, $vS\n");
-        # $get_value->RunQuery(sub {
-        #   my($row) = @_;
-        #   $value_id = $row->[0];
-        # }, sub {}, $vS);
-        $value_id = $get_value->FetchOneHash($vS)->{id};
+
+        $get_value->RunQuery(sub {
+          my($row) = @_;
+          $value_id = $row->[0];
+        }, sub {}, $vS);
         #if so store it
         unless(defined $value_id){
           $create_value->RunQuery(sub {}, sub {},
-             $vS);
-          # $get_value_id->RunQuery(sub {
-          #   my($row) = @_;
-          #   $value_id = $row->[0];
-          # }, sub {} );
-          $value_id = $get_value->FetchOneHash($vS)->{id};
+            $vS);
+          $get_value_id->RunQuery(sub {
+            my($row) = @_;
+            $value_id = $row->[0];
+          }, sub {} );
         }
-        print("\nValue ID: $value_id\n");
 
         #associate this path and value
-        print("\nAdding Occurance: $path_id, $value_id, $seriesId, $scan_id\n");
-        $create_occurance->FetchOneHash($path_id, $value_id, $seriesId, $scan_id);
-        #$create_occurance->RunQuery(sub {}, sub {}, $path_id, $value_id, $seriesId, $scan_id);
-
+        $create_occurance->RunQuery(sub {}, sub {},
+          $path_id, $value_id, $seriesId, $scan_id)
       }
     }
+    my $rpt3 = $background->CreateReport("Edit Skeleton");
+    $rpt3->print("path,q_value,edit_description," .
+      "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
+    $rpt3->print(",,,,,,,,,ProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
+    $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", %Paths.length, $scan_id);
+    $background->Finish;
   };
-  my $rpt3 = $background->CreateReport("Edit Skeleton");
-  $rpt3->print("path,q_value,edit_description," .
-  "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
-  $rpt3->print(",,,,,,,,,ProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
-  $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", %Paths.length, $scan_id);
-  $background->Finish;
