@@ -21,6 +21,7 @@ from papi.routes import dicom_roots
 from papi.routes import worker
 from papi.routes import pathology
 from papi.routes import work
+from papi.routes import deface
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -66,6 +67,7 @@ router_v1.include_router(dicom_roots.router, prefix="/dicom_roots")
 router_v1.include_router(worker.router, prefix="/worker")
 router_v1.include_router(pathology.router, prefix="/pathology")
 router_v1.include_router(work.router, prefix="/work")
+router_v1.include_router(deface.router, prefix="/deface")
 
 app.include_router(auth.router)
 app.include_router(router_v1, prefix="/v1")
