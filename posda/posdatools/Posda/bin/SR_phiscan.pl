@@ -46,12 +46,11 @@ sub GetPaths{
   my($content) = @_;
   for my $i (@{$content}){
     if(exists $i->{value}){
-
-      $Paths{$i->{semantic_path}}->{$i->{value}} = 1;
+      $Paths{$i->{semantic_path}} = [$i->{path},$i->{value}];
     } elsif(exists $i->{image_ref}){
-      $Paths{$i->{semantic_path}}->{$i->{image_ref}} = 1;
+      $Paths{$i->{semantic_path}} = [$i->{path},$i->{image_ref}];
     } else {
-      $Paths{$i->{semantic_path}}->{"<none>"} = 1;
+      $Paths{$i->{semantic_path}} = [$i->{path},"<none>"];
     }
     if(exists $i->{content}){
       GetPaths($i->{content});
@@ -83,11 +82,6 @@ Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   $Files{$row->[0]} = 1;
 }, sub {}, $ActTpId);
 
-# my $scan_id;
-# $create_scan->RunQuery(sub {
-#     my($row) = @_;
-#     $scan_id = $row->[0];
-#   }, sub{}, $act_id);
   my $scan_id = $create_scan->FetchOneHash($act_id)->{sr_phi_scan_instance_id};
   $background->WriteToEmail("Scan ($scan_id)\n");
   $background->WriteToEmail("Creating SR PHI Report report\n");
@@ -95,17 +89,9 @@ Query('FileIdsByActivityTimepointId')->RunQuery(sub {
 for  $file_id(keys %Files){
 
     # get the series ID
-    # $q->RunQuery(sub {
-    #   my($row) = @_;
-    #   $seriesId = $row->[0];}
-    # , sub {}, $file_id);
     my $seriesId = $get_series->FetchOneHash($file_id)->{series_instance_uid};
 
     # get the filepaths
-    # $q2->RunQuery(sub {
-    #   my($row) = @_;
-    #   $filepath = $row->[0];}
-    # , sub {}, $seriesId);
     $filepath = $getFilePaths->FetchOneHash($seriesId)->{file};
 
     #get the Unique Simplified SR Paths and Values
@@ -123,69 +109,44 @@ for  $file_id(keys %Files){
 
     my $content = $ParsedSR->{content};
     GetPaths $content;
-    # for my $path(sort keys %Paths){
-    #   for my $v (sort keys %{$Paths{$path}}){
-    #     #print "$path|$v\n";
-    #     #if($path =~ /^(.*) \(.*\)$/){ $path = $1 }
-    #     $path =~ s/\s\([^)]+\)//g;
-    #     $v =~ s/\s\([^)]+\)//g;
-    #     print "$path|$v\n";
-    #   }
-    # }
-
-    #while(my $line = <SUBP>){
 
     #loop through the path value pairs
     for my $path(sort keys %Paths){
       my $pathS = $path;
       $pathS =~ s/\s\([^)]+\)//g;
       my $path_id;
+      my $t = $Paths{$path}[0];
 
       #for every path, see if it is a new unique path
-      # $get_path->RunQuery(sub {
-      #   my($row) = @_;
-      #   $path_id = $row->[0];
-      # }, sub {}, $pathS);
-      $path_id = $get_path->FetchOneHash($pathS)->{sr_path_seen_id};
+      $path_id = $get_path->FetchResults($pathS)->[0]->[0];
       unless(defined $path_id){
         #if so store it
-        # $create_path->RunQuery(sub {
-        #   my($row) = @_;
-        #   $path_id = $row->[0];
-        # }, sub {},
-        #   $pathS);
-        $path_id = $create_path->FetchOneHash($pathS)->{sr_path_seen_id};
+        $path_id = $create_path->FetchOneHash($pathS,$t)->{sr_path_seen_id};
       }
-      for my $v (sort keys %{$Paths{$path}}){
 
-        #for every value, see if it is a new unique value
-        my $value_id;
-        my $vS = $v;
-        $vS =~ s/\s\([^)]+\)//g;
-        print("\nValue: $v, or, $vS\n");
-        # $get_value->RunQuery(sub {
-        #   my($row) = @_;
-        #   $value_id = $row->[0];
-        # }, sub {}, $vS);
-        $value_id = $get_value->FetchOneHash($vS)->{id};
-        #if so store it
-        unless(defined $value_id){
-          $create_value->RunQuery(sub {}, sub {},
-             $vS);
-          # $get_value_id->RunQuery(sub {
-          #   my($row) = @_;
-          #   $value_id = $row->[0];
-          # }, sub {} );
-          $value_id = $get_value->FetchOneHash($vS)->{id};
-        }
-        print("\nValue ID: $value_id\n");
 
-        #associate this path and value
-        print("\nAdding Occurance: $path_id, $value_id, $seriesId, $scan_id\n");
-        $create_occurance->FetchOneHash($path_id, $value_id, $seriesId, $scan_id);
-        #$create_occurance->RunQuery(sub {}, sub {}, $path_id, $value_id, $seriesId, $scan_id);
+      my $v = $Paths{$path}[1];
 
+      #for every value, see if it is a new unique value
+      my $value_id;
+      my $vS = $v;
+      $vS =~ s/\s\([^)]+\)//g;
+      print("\nValue: $v, or, $vS\n");
+      $value_id = $get_value->FetchOneHash($vS)->{id};
+      #if so store it
+      unless(defined $value_id){
+        $create_value->RunQuery(sub {}, sub {},
+           $vS);
+        $value_id = $get_value->FetchResults($vS)->[0]->[0];
       }
+      print("\nValue ID: $value_id\n");
+      print("\nTag: $t\n");
+
+      #associate this path and value
+      print("\nAdding Occurance: $path_id, $value_id, $seriesId, $scan_id\n");
+      $create_occurance->FetchOneHash($path_id, $value_id, $seriesId, $scan_id);
+      #$create_occurance->RunQuery(sub {}, sub {}, $path_id, $value_id, $seriesId, $scan_id);
+
     }
   };
   my $rpt3 = $background->CreateReport("Edit Skeleton");
