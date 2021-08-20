@@ -31,7 +31,7 @@ class ErrorFiles(BaseModel):
     three_d_rendered_face: int = None
     three_d_rendered_face_box: int = None
     three_d_rendered_defaced: int = None
-    comments: str = None
+    error_code: str = None
 
 
 @router.post("/{defacing_id}/complete")
@@ -44,7 +44,7 @@ async def set_work_status_finished(request: Request, error_files: ErrorFiles, de
             three_d_rendered_face = $3,
             three_d_rendered_face_box = $4,
             three_d_rendered_defaced = $5,
-            comments = $6,
+            error_code = $6,
             success = true,
             completed_time = now()
         where
@@ -58,7 +58,7 @@ async def set_work_status_finished(request: Request, error_files: ErrorFiles, de
             error_files.three_d_rendered_face,
             error_files.three_d_rendered_face_box,
             error_files.three_d_rendered_defaced,
-            error_files.comments,
+            error_files.error_code,
         ]
     )
 
@@ -76,7 +76,7 @@ async def set_work_status_errored(request: Request, error_files: ErrorFiles, def
             three_d_rendered_face = $3,
             three_d_rendered_face_box = $4,
             three_d_rendered_defaced = $5,
-            comments = $6,
+            error_code = $6,
             success = false,
             completed_time = now()
         where
@@ -90,7 +90,7 @@ async def set_work_status_errored(request: Request, error_files: ErrorFiles, def
             error_files.three_d_rendered_face,
             error_files.three_d_rendered_face_box,
             error_files.three_d_rendered_defaced,
-            error_files.comments,
+            error_files.error_code,
         ]
     )
 
