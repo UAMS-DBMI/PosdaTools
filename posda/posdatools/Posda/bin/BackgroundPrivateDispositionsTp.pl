@@ -373,7 +373,7 @@ for my $file_id (keys %Files){
   make_path($dirname);
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-            qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
+            qq{$file_id "$path" "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
             qq{"$upd_nbia"};
 
   push @cmds, $cmd;

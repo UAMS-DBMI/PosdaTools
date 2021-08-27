@@ -299,7 +299,7 @@ for my $patient_id (sort keys %Patients){
         make_path($dirname);
 
         my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
-                  qq{$file_id $path "$full_filename" $uid_root $offset } .
+                  qq{$file_id "$path" "$full_filename" $uid_root $offset } .
                   qq{$collection_name $site_name $site_code 0};
 
         push @cmds, $cmd;
