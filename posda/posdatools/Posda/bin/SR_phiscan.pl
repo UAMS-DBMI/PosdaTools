@@ -11,6 +11,7 @@ use Cwd;
 use Posda::SrSemanticParse;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
+#use Data::Dumper;
 
 my $usage = <<EOF;
 SR_phiscan.pl <bkgrnd_id> <activity_id> <notify>
@@ -46,11 +47,11 @@ sub GetPaths{
   my($content) = @_;
   for my $i (@{$content}){
     if(exists $i->{value}){
-      $Paths{$i->{semantic_path}} = [$i->{path},$i->{value}];
+      $Paths{$i->{semantic_path}} = ["" . $i->{path} . $i->{final_tag},$i->{value}];
     } elsif(exists $i->{image_ref}){
-      $Paths{$i->{semantic_path}} = [$i->{path},$i->{image_ref}];
+      $Paths{$i->{semantic_path}} = ["" . $i->{path} . $i->{final_tag},$i->{image_ref}];
     } else {
-      $Paths{$i->{semantic_path}} = [$i->{path},"<none>"];
+      $Paths{$i->{semantic_path}} = ["". $i->{path} . $i->{final_tag},"<none>"];
     }
     if(exists $i->{content}){
       GetPaths($i->{content});
@@ -108,6 +109,9 @@ for  $file_id(keys %Files){
     my $ParsedSR = Posda::SrSemanticParse->new($infile);
 
     my $content = $ParsedSR->{content};
+    # print ("\n#################\n");
+    # print Dumper($content);
+    # print ("\n#################\n");
     GetPaths $content;
 
     #loop through the path value pairs
@@ -115,7 +119,8 @@ for  $file_id(keys %Files){
       my $pathS = $path;
       $pathS =~ s/\s\([^)]+\)//g;
       my $path_id;
-      my $t = $Paths{$path}[0];
+      my $t = $Paths{$path}[0]; #this line is WRONG
+
 
       #for every path, see if it is a new unique path
       $path_id = $get_path->FetchResults($pathS)->[0]->[0];
@@ -127,23 +132,22 @@ for  $file_id(keys %Files){
 
       my $v = $Paths{$path}[1];
 
+
       #for every value, see if it is a new unique value
       my $value_id;
       my $vS = $v;
       $vS =~ s/\s\([^)]+\)//g;
-      print("\nValue: $v, or, $vS\n");
-      $value_id = $get_value->FetchOneHash($vS)->{id};
+
+      $value_id = $get_value->FetchResults($vS)->[0]->[0];
       #if so store it
       unless(defined $value_id){
         $create_value->RunQuery(sub {}, sub {},
            $vS);
         $value_id = $get_value->FetchResults($vS)->[0]->[0];
       }
-      print("\nValue ID: $value_id\n");
-      print("\nTag: $t\n");
+
 
       #associate this path and value
-      print("\nAdding Occurance: $path_id, $value_id, $seriesId, $scan_id\n");
       $create_occurance->FetchOneHash($path_id, $value_id, $seriesId, $scan_id);
       #$create_occurance->RunQuery(sub {}, sub {}, $path_id, $value_id, $seriesId, $scan_id);
 
