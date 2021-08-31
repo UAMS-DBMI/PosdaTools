@@ -67,6 +67,7 @@ my $get_value = Query('GetSimpleValueSeen');
 my $create_value = Query('CreateSimpleValueSeen');
 my $get_path = Query('SRGetPathSeen');
 my $create_occurance = Query('SRCreatePathValueOccurance');
+my $finalize_scan = Query('SRScanInstanceSetEndTime');
 
 
 
@@ -158,5 +159,6 @@ for  $file_id(keys %Files){
   "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
   $rpt3->print(",,,,,,SRProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
   my $size = keys %Paths;
+  $finalize_scan->RunQuery(sub {}, sub {}, $scan_id);
   $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", $size, $scan_id);
   $background->Finish;
