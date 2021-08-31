@@ -12,9 +12,7 @@ use Posda::SrSemanticParse;
 
 my $usage = "Usage: $0 <file>";
 unless ($#ARGV >= 0) {die $usage;}
-print "All processing in background\n";
-my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
-$background->Daemonize;
+
 
 my $dir = getcwd;
 my $infile = $ARGV[0];
