@@ -5,6 +5,7 @@ import os
 import tempfile
 import subprocess
 import hashlib
+import sys
 
 import pydicom
 import requests
@@ -12,6 +13,10 @@ import requests
 from fire import Fire
 
 URL = 'http://localhost/papi/v1/import/'
+
+def printe(*args):
+    """Print, but to STDERR"""
+    print(*args, file=sys.stderr)
 
 def md5sum(fname):
     hash_md5 = hashlib.md5()
@@ -45,8 +50,7 @@ def add_file(filename, import_event_id):
         resp = r.json()
         return r.status_code, resp
     except:
-        print(r.content)
-        raise
+        return r.status_code, r.content
 
 
 def get_xfer_syntax(filename):
@@ -104,13 +108,17 @@ def import_one_file(import_event_id, line_obj):
 
     code, result = add_file(filename, import_event_id)
     if code != 200:
-        print(code, result)
-        return
+        printe(code, result, line_obj)
+        return False
 
     if result['created']:
-        print("C", end='')
+        ccode = "C"
+    else:
+        ccode = " "
 
-    print(f"|{result['file_id']}")
+    print(f"{ccode}|{result['file_id']}")
+
+    return True
 
 def main(filename, import_comment="CLI API Import", base_url="http://localhost"):
     global URL
@@ -121,9 +129,11 @@ def main(filename, import_comment="CLI API Import", base_url="http://localhost")
 
     # Each line of a plist should be a json-encoded dictionary
     with open(filename) as infile:
-        for line in infile:
+        for i, line in enumerate(infile):
             obj = json.loads(line)
-            import_one_file(import_event_id, obj)
+            res = import_one_file(import_event_id, obj)
+            if i % 100 == 0:
+                print(f">{i}")
 
     close_import_event(import_event_id)
 
