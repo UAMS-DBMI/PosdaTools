@@ -92,6 +92,7 @@ for  $file_id(keys %Files){
 
     # get the series ID
     my $seriesId = $get_series->FetchOneHash($file_id)->{series_instance_uid};
+    print ("Series:  $seriesId");
 
     # get the filepaths
     $filepath = $getFilePaths->FetchOneHash($seriesId)->{file};
@@ -120,7 +121,7 @@ for  $file_id(keys %Files){
       my $pathS = $path;
       $pathS =~ s/\s\([^)]+\)//g;
       my $path_id;
-      my $t = $Paths{$path}[0]; #this line is WRONG
+      my $t = $Paths{$path}[0];
 
 
       #for every path, see if it is a new unique path

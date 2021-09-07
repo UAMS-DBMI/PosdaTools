@@ -7,9 +7,9 @@
 --
 
 select
-  distinct ''<'' || tag || ''>'' as element,
+  distinct '<' || tag || '>' as element,
  length(value) as val_length,
- ''<'' || value || ''>'' as q_value,
+ '<' || value || '>' as q_value,
  path_sig_pattern as description
 from sr_path_value_occurance natural join sr_path_seen natural join value_seen
 where

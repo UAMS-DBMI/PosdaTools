@@ -131,7 +131,7 @@ if(defined $img_ref){ $has_image_ref = "yes" }
       }
       if(defined $img_ref){
         $item_st->{image_ref} = $this->GetImageReference("$item(0008,1199)");
-        $item_st->{final_tag} = '(0008,1199)';
+        $item_st->{final_tag} = '(0008,1199)[0](0008,1150)';
       }
       $item_st->{val_type} = $val_type;
       $item_st->{rel_type} = $rel_type;
@@ -139,7 +139,7 @@ if(defined $img_ref){ $has_image_ref = "yes" }
         my $concept_code = $this->GetCodedValue("$item(0040,a168)");
         if(defined($concept_name)){
           $item_st->{value} = $concept_code;
-          $item_st->{final_tag} = '(0040,a168)';
+          $item_st->{final_tag} = '(0040,a168)[0](0008,0104)';
         } else {
           $item_st->{value} = "Error: val_type = code, but no Coded Value Found";
         }
@@ -158,10 +158,10 @@ if(defined $img_ref){ $has_image_ref = "yes" }
         $item_st->{final_tag} = '(0040,a124)';
       } elsif($val_type eq "NUM"){
         $item_st->{value} = $this->GetMeasuredValueSequence("$item(0040,a300)[0]");
-        $item_st->{final_tag} = '(0040,a300)[0]'
+        $item_st->{final_tag} = '(0040,a300)[0](0040,a30a)';
       } elsif($val_type eq "PNAME"){
         $item_st->{value} = $ds->Get("$item(0040,a123)");
-        $item_st->{final_tag} = '(0040,a123)'
+        $item_st->{final_tag} = '(0040,a123)';
       }
       my $root_path;
       if(defined $path){
