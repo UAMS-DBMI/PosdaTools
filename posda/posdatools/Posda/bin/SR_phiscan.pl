@@ -122,18 +122,14 @@ for  $file_id(keys %Files){
       $pathS =~ s/\s\([^)]+\)//g;
       my $path_id;
       my $t = $Paths{$path}[0];
-
+      my $v = $Paths{$path}[1];
 
       #for every path, see if it is a new unique path
       $path_id = $get_path->FetchResults($pathS)->[0]->[0];
       unless(defined $path_id){
         #if so store it
-        $path_id = $create_path->FetchOneHash($pathS,$t)->{sr_path_seen_id};
+        $path_id = $create_path->FetchOneHash($pathS)->{sr_path_seen_id};
       }
-
-
-      my $v = $Paths{$path}[1];
-
 
       #for every value, see if it is a new unique value
       my $value_id;
@@ -150,8 +146,8 @@ for  $file_id(keys %Files){
 
 
       #associate this path and value
-      $create_occurance->FetchOneHash($path_id, $value_id, $seriesId, $scan_id);
-      #$create_occurance->RunQuery(sub {}, sub {}, $path_id, $value_id, $seriesId, $scan_id);
+      $create_occurance->FetchOneHash($path_id, $value_id, $t, $seriesId, $scan_id);
+
 
     }
   };

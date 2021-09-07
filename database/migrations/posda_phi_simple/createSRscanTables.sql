@@ -7,13 +7,13 @@ CREATE TABLE public.sr_phi_scan_instance (
 
 CREATE TABLE public.sr_path_seen (
 	sr_path_seen_id serial NOT NULL,
-	path_sig_pattern text NULL,
-	tag text NULL
+	path_sig_pattern text NULL
 );
 
 CREATE TABLE public.sr_path_value_occurance (
 	sr_path_seen_id int4 NOT NULL,
 	value_seen_id int4 NOT NULL,
+	tag text NULL,
 	sr_series_scan_instance_id text NOT NULL,
 	sr_phi_scan_instance_id int4 NOT NULL
 );
