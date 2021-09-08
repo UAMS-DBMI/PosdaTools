@@ -411,8 +411,10 @@ with one_file_per_iec as (
 		natural join ctp_file
 )
 
+select * from (
 select distinct on (image_equivalence_class_id)
 	image_equivalence_class_id,
+        image_equivalence_class_id::int as id2,
 	image_equivalence_class.series_instance_uid,
 	equivalence_class_number,
 	processing_status,
@@ -439,8 +441,9 @@ join file_patient on file_patient.file_id = input_file_id
 where not hidden  -- this hidden is the IEC-level hidden, NOT file-level
   and processing_status = 'Reviewed'
   and review_status = '{state}'
-  and image_equivalence_class_id > $1
 order by image_equivalence_class_id
+) foo
+where id2 > $1
 limit 1
     """
 
