@@ -474,6 +474,12 @@ EOF
     operation => "OpenNewTableLevelPopup",
     obj_class => "Posda::NewerProcessPopup",
     queries => {
+      ApiImportEvents => 1,
+      ApiImportEventsDateRange => 1,
+      ApiImportEventsForPatient => 1,
+      GetImportEventIdByImportName => 1,
+      ImportEvents => 1,
+      ImportEventsByDateRange => 1,
       ImportEventsByMatchingName => 1,
       ImportEventsByMatchingNameAndType => 1,
       ImportEventsWithTypeAndPatientId => 1,

@@ -163,6 +163,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule PHI Scan",
         action =>  "PhiReviewFromTimepoint",
       },
+      {
+        caption => "Schedule Structured Report PHI Scan",
+        action =>  "SR_phiscanOp",
+      },
     ],
   },
   {
