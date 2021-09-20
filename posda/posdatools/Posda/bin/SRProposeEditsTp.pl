@@ -12,7 +12,7 @@ SRProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify> "<sep_char>"
              in lines on STDIN
 
 Expects lines on STDIN:
-<<element>>%<<q_value>>%<edit_description>%<p_op>%<<q_arg1>>%<<q_arg2>>
+<<element>>%<<q_value>>%<path_sig_pattern>%<p_op>%<<q_arg1>>%<<q_arg2>>
 
 Note:
   The double metaquotes in the line specification are not errors.
@@ -38,7 +38,7 @@ my @SeriesQueries;
 while(my $line = <STDIN>){
   chomp $line;
   $background->LogInputLine($line);
-  my($element, $q_value, $edit_description, $p_op, $q_arg1, $q_arg2) =
+  my($element, $q_value, $path_sig_pattern, $p_op, $q_arg1, $q_arg2) =
     split(/$sep_char/, $line);
   if($element =~ /^<(.*)>$/){ $element = $1 } elsif($element){
     print "Warning - element: \"$element\" not metaquoted\n";
@@ -55,7 +55,7 @@ while(my $line = <STDIN>){
   my $q = {
    element => $element,
    value => $q_value,
-   edit_description => $edit_description,
+   edit_description => $path_sig_pattern,
    op => $p_op,
    arg1 => $q_arg1,
    arg2 => $q_arg1,
@@ -106,7 +106,7 @@ for my $ii (0 .. $#SeriesQueries){
       sub {},
       $s
     );
-  
+
   }
   my $ith = $ii + 1;
   $background->SetActivityStatus("processed $ith of $num_qs");

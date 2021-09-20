@@ -152,7 +152,7 @@ for  $file_id(keys %Files){
     }
   };
   my $rpt3 = $background->CreateReport("Edit Skeleton");
-  $rpt3->print("element,q_value,edit_description," .
+  $rpt3->print("element,q_value,path_sig_pattern," .
   "p_op,q_arg1,q_arg2,Operation,activity_id,scan_id,notify,sep_char\r\n");
   $rpt3->print(",,,,,,SRProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
   my $size = keys %Paths;
