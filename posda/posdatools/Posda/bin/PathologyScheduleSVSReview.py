@@ -19,6 +19,7 @@ def process(filepath, original_file,vr_id):
     with Database("posda_files").cursor() as cur:
         #import the file
         file_id = insert_file(filepath)
+        os.unlink(filepath)  # clean up temp file
         #update table that tracks the relationship between preview files and the original file
         Query("InsertPathVRFiles").execute(
                 pathology_visual_review_instance_id = vr_id,
@@ -46,7 +47,7 @@ def main(args):
             for i, page in enumerate(mytif.pages):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000):
                     data = page.asarray()
-                    str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
+                    str = "/tmp/{}_page{}.jpg".format(file_id,i)
                     im = Image.fromarray(data)
                     im.save(str) #create thumbnail
                     #print(f"Creating an svs preview")
@@ -55,7 +56,7 @@ def main(args):
             mytif = TiffFile(svsfilepath)
             for i, page in enumerate(mytif.pages):
                 data = page.asarray()
-                str = "/home/posda/cache/created/{}_page{}.jpg".format(file_id,i)
+                str = "/tmp/{}_page{}.jpg".format(file_id,i)
                 im = Image.fromarray(data)
                 im.save(str) #create copy
                 mytif2 = Image.open(str)
@@ -66,7 +67,7 @@ def main(args):
                 process(str, file_id,vr_id) #import thumbnail
         elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp"):
                 myimg = Image.open(svsfilepath)
-                str = "/home/posda/cache/created/{}_thumb.jpg".format(file_id)
+                str = "/tmp/{}_thumb.jpg".format(file_id)
                 size = (700,700)
                 myimg.thumbnail(size) #change copy into a thumbnail
                 myimg.save(str) #save thumbnail
