@@ -53,7 +53,12 @@ while (1) {
   if (defined $key) {
     my ($file_id, $file_path) = @{decode_json($next_thing)};
     say "FPIW: Processing $file_id, $file_path";
-    PopulateOneFile($file_id, $file_path);
+    eval {
+      PopulateOneFile($file_id, $file_path);
+    } or do {
+      my $error = $@ || "unknown error";
+      say "FPIW: ERROR failed to process $file_id: $error";
+    };
   }
 
   my $should_we_quit_now = $redis->get('quit');
