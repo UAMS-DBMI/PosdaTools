@@ -55,6 +55,7 @@ while (1) {
     say "FPIW: Processing $file_id, $file_path";
     eval {
       PopulateOneFile($file_id, $file_path);
+      1; # worked okay, so don't execute the or block
     } or do {
       my $error = $@ || "unknown error";
       say "FPIW: ERROR failed to process $file_id: $error";
