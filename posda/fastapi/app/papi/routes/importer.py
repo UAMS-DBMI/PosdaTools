@@ -127,6 +127,7 @@ async def get_root_map(db: Database):
 async def import_file_in_place(request: Request,
                                import_event_id: int,
                                localpath: str,
+                               skip_processing: bool = False,
                                db: Database = Depends()):
 
     root_map = await get_root_map(db)
@@ -151,7 +152,10 @@ async def import_file_in_place(request: Request,
 
     if created:
         await create_file_location(file_id, match_root, rel_path, db)
-        await make_ready_to_process(file_id, db)
+        if not skip_processing:
+            await make_ready_to_process(file_id, db)
+        else:
+            await make_not_ready_to_process(file_id, db)
 
     await create_file_import(file_id, int(import_event_id), localpath, db)
 
@@ -197,6 +201,13 @@ async def make_ready_to_process(file_id: int, db: Database):
     await db.fetch("""\
         update file
         set ready_to_process = true
+        where file_id = $1
+    """, [file_id])
+
+async def make_not_ready_to_process(file_id: int, db: Database):
+    await db.fetch("""\
+        update file
+        set ready_to_process = false
         where file_id = $1
     """, [file_id])
 
