@@ -170,7 +170,7 @@ def generate_im_command(msg, args, pixel_filename):
 
     commands = [
         "-size", f"{args.cols}x{args.rows}",
-        "-depth", "16",
+        "-depth", str(args.bits_allocated),
         f"gray:{pixel_filename}",
         "-fill", color,
         # "-stroke", "blue",
@@ -188,7 +188,7 @@ def apply_commands(pixel_filename, im_command, args):
     output_filename = tempfile.NamedTemporaryFile(delete=False).name
 
     output_commands = [
-        '-depth', '16',
+        '-depth', str(args.bits_allocated),
         f'gray:{output_filename}'
     ]
 
