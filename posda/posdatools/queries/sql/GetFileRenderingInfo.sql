@@ -24,9 +24,9 @@ from
   join file_storage_root fsr using (file_storage_root_id)
   join file_image fi using (file_id)
   join image i using (image_id)
-  join file_win_lev fwl using (file_id)
-  join window_level wl using (window_level_id)
-  join file_slope_intercept using(file_id)
+  left join file_win_lev fwl using (file_id)
+  left join window_level wl using (window_level_id)
+  left join file_slope_intercept using(file_id)
   left join slope_intercept si using(slope_intercept_id)
 where
  file_id = ?

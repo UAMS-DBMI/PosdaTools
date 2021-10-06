@@ -1,10 +1,11 @@
 -- Name: CreatePathologyVisualReviewInstance
 -- Schema: posda_files
 -- Columns: ['pathology_visual_review_instance_id']
--- Args: ['activity_creation_id','scheduler']
+-- Args: ['activity_creation_id', 'scheduler']
 -- Tags: ['visual_review']
 -- Description: Create a visual review instance for a pathology collection activity
---
+-- 
+
 --
 
 insert into pathology_visual_review_instance(

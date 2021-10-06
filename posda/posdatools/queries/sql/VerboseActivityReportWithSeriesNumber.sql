@@ -1,4 +1,4 @@
--- Name: VerboseActivityReport
+-- Name: VerboseActivityReportWithSeriesNumber
 -- Schema: posda_files
 -- Columns: ['collection', 'site', 'patient_id', 'patient_age', 'study_instance_uid', 'study_date', 'study_description', 'series_instance_uid', 'series_date', 'series_description', 'series_number', 'dicom_file_type', 'modality', 'num_files']
 -- Args: ['activity_id']

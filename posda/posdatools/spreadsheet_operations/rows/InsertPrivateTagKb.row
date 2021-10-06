@@ -1,6 +1,6 @@
 :operation_name: InsertPrivateTagKb
-:command_line: InsertPrivateTagKb.pl <?bkgrnd_id?> <activity_id> <notify>
+:command_line: InsertPrivateTagKb.pl <?bkgrnd_id?> <activity_id> <is_dry_run> <notify>
 :operation_type: background_process
 :input_line_format: <pt_signature>&<pt_consensus_vr>&<pt_consensus_name>&<pt_consensus_vm>&<pt_consensus_description>&<pt_consensus_disposition>
-:tags: ['private_tag_kb']
+:tags: []
 :can_chain: 

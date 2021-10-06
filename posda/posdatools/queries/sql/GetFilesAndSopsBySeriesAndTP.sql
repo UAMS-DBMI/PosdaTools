@@ -4,6 +4,7 @@
 -- Args: ['series_instance_uid', 'activity_timepoint_id']
 -- Tags: ['ImageEdit', 'edit_files']
 -- Description: Get File id and visibility for all files in a series that are also in the Timepoint
+-- 
 
 select distinct
     patient_id,
@@ -20,9 +21,7 @@ from
     natural join file_sop_common
     natural join file_location
     natural join file_storage_root
-    natural
-    left join ctp_file
+
 where
     series_instance_uid = ?
-    and visibility is null
     and activity_timepoint_id = ?

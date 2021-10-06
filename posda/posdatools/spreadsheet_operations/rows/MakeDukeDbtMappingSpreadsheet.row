@@ -1,0 +1,6 @@
+:operation_name: MakeDukeDbtMappingSpreadsheet
+:command_line: MakeDukeDbtMappingSpreadsheet.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['Duke', 'DBT']
+:can_chain: 

@@ -1,0 +1,6 @@
+:operation_name: CollectUidsFromFileList
+:command_line: CollectAllUidsFromFileList.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <file_id>
+:tags: ['activity_timepoint']
+:can_chain: 

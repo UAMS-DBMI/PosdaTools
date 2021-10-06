@@ -1,0 +1,6 @@
+:operation_name: CreateImportEventFromSeriesInPublic
+:command_line: CreateImportEventFromSeriesInPublic.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>
+:tags: ['copy_from_public']
+:can_chain: 

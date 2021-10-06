@@ -1,0 +1,6 @@
+:operation_name: ConstructCrosswalk
+:command_line: CrosswalkConstructor.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <batch_1_uids><batch_2_uids><batch_3_uids><batch_4_uids><batch_5_uids>
+:tags: ['editor']
+:can_chain: 
