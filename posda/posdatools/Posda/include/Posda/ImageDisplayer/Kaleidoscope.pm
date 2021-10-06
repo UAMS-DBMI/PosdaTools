@@ -180,58 +180,64 @@ sub ImageDisplayPopup{
   my $equiv_class = 
     $self->{IndexToEquiv}->{$self->{CurrentUrlIndex}};
   my($rows, $cols);
-  Query('FileInfoForFilesInImageEquivalenceClass')->RunQuery(sub {
+  my $series;
+  Query('FilesInImageEquivalenceClass')->RunQuery(sub {
     my($row) = @_;
-    my(
-      $file_id, 
-      $series_instance_uid, 
-      $study_instance_uid, 
-      $sop_instance_uid, 
-      $instance_number, 
-      $modality, 
-      $dicom_file_type, 
-      $for_uid, 
-      $iop, 
-      $ipp, 
-      $pixel_data_digest, 
-      $samples_per_pixel, 
-      $pixel_spacing, 
-      $photometric_interpretation, 
-      $pixel_rows, 
-      $pixel_columns, 
-      $bits_allocated, 
-      $bits_stored, 
-      $high_bit, 
-      $pixel_representation, 
-      $planar_configuration, 
-      $number_of_frames
-    ) = @$row;
-    my $offset;
-    if(defined($ipp) && defined($iop)){
-      my @iop = split(/\\/, $iop);
-      my $dx = [$iop[0], $iop[1], $iop[2]];
-      my $dy = [$iop[3], $iop[4], $iop[5]];
-      my $dz = VectorMath::cross($dx, $dy);
-      my $rot = [$dx, $dy, $dz];
-      my @ipp = split(/\\/, $ipp);
-      my $rot_dx = VectorMath::Rot3D($rot, $dx);
-      my $rot_dy = VectorMath::Rot3D($rot, $dy);
-      my $rot_iop = [$rot_dx, $rot_dy];
-      my $rot_ipp = VectorMath::Rot3D($rot, \@ipp);
-      $offset = $rot_ipp->[2];
-    }
-    my $h = {
-      dicom_file_id => $file_id,
-      iop => $iop,
-      instance_number => $instance_number,
-      ipp => $ipp,
-      offset => $offset
-    };
-    unless(defined $rows) { $rows = $pixel_rows }
-    if($pixel_rows > $rows) { $rows = $pixel_rows }
-    unless(defined $cols) { $cols = $pixel_columns }
-    if($pixel_columns > $cols) { $cols = $pixel_columns }
-    push @FileList, $h;
+    my $f_id = $row->[0];
+    Query('FileInfoForFileInImageEquivalenceClass')->RunQuery(sub{
+      my($row) = @_;
+      my(
+        $file_id, 
+        $series_instance_uid, 
+        $study_instance_uid, 
+        $sop_instance_uid, 
+        $instance_number, 
+        $modality, 
+        $dicom_file_type, 
+        $for_uid, 
+        $iop, 
+        $ipp, 
+        $pixel_data_digest, 
+        $samples_per_pixel, 
+        $pixel_spacing, 
+        $photometric_interpretation, 
+        $pixel_rows, 
+        $pixel_columns, 
+        $bits_allocated, 
+        $bits_stored, 
+        $high_bit, 
+        $pixel_representation, 
+        $planar_configuration, 
+        $number_of_frames
+      ) = @$row;
+      my $offset;
+      if(defined($ipp) && defined($iop)){
+        my @iop = split(/\\/, $iop);
+        my $dx = [$iop[0], $iop[1], $iop[2]];
+        my $dy = [$iop[3], $iop[4], $iop[5]];
+        my $dz = VectorMath::cross($dx, $dy);
+        my $rot = [$dx, $dy, $dz];
+        my @ipp = split(/\\/, $ipp);
+        my $rot_dx = VectorMath::Rot3D($rot, $dx);
+        my $rot_dy = VectorMath::Rot3D($rot, $dy);
+        my $rot_iop = [$rot_dx, $rot_dy];
+        my $rot_ipp = VectorMath::Rot3D($rot, \@ipp);
+        $offset = $rot_ipp->[2];
+      }
+      my $h = {
+        dicom_file_id => $file_id,
+        iop => $iop,
+        instance_number => $instance_number,
+        ipp => $ipp,
+        offset => $offset
+      };
+      unless(defined $rows) { $rows = $pixel_rows }
+      if($pixel_rows > $rows) { $rows = $pixel_rows }
+      unless(defined $cols) { $cols = $pixel_columns }
+      if($pixel_columns > $cols) { $cols = $pixel_columns }
+      push @FileList, $h;
+      $series = $series_instance_uid;
+    }, sub {}, $f_id);
   }, sub {}, $equiv_class);
   @FileList = sort {
     $a->{instance_number} <=> $b->{instance_number} ||
@@ -247,11 +253,12 @@ sub ImageDisplayPopup{
     rows => $rows,
     cols => $cols,
     rois => {},
+    series => $series
   };
   my $class = "Posda::ImageDisplayer::KaleidoscopeSub";
   eval "require $class";
   if($@){
-    print STDERR "Class failed to compile\n\t$@\n";
+    print STDERR "Class $class failed to compile\n$@";
     return;
   }
 

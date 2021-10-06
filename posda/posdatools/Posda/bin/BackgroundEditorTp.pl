@@ -422,6 +422,7 @@ sub ProcessIndividualEdit{
     date_difference => 1,
     delete_matching_group => 1,
     move_owner_block => 1,
+    annotate_img => 1,
   };
   my($op, $tag, $v1, $v2) = @$edit;
   unless(exists $supported_edit_ops->{$op}){

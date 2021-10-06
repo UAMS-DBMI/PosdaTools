@@ -117,8 +117,11 @@ sub SortSliceInfo{
       $max_z = $z;
     }
   }
-  my $avg_x = $tot_x / $num_slice;
-  my $avg_y = $tot_y / $num_slice;
+  my($avg_x, $avg_y);
+  if($num_slice > 0){
+    $avg_x = $tot_x / $num_slice;
+    $avg_y = $tot_y / $num_slice;
+  }
 
   for my $i (keys %offset_info){
     my $off_info = $offset_info{$i};

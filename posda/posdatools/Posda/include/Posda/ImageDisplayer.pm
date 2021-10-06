@@ -227,8 +227,18 @@ my $dicom_image_disp_js = <<EOF;
 //    ajax.post(data);
     var data = JSON.stringify(RectsToDraw)
     var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
-      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });
+      '&DataName=Annotations', function () { ProcessAnnotations(); });
     ajax.post(data);
+  }
+  function ProcessAnnotations(){
+    PosdaGetRemoteMethod('ProcessAnnotations', '', 
+      function(associations){
+        var td = document.getElementById('Annotations');
+        if(td != null){
+          td.innerHTML = associations;
+        }
+        RenderImage(canvas,ctx);
+      });
   }
   function PopAnnotations(){
     var anot = RectsToDraw.pop();
@@ -590,6 +600,10 @@ my $dicom_image_disp_js = <<EOF;
     if(ImageLabels.d == null) {
       //console.error("ImageLabels.d is null");
       return;
+    }
+    if(ImageLabels.d.AnnotationsToDraw != null){
+      //console.log("ImageLabels.d.AnnotationsToDraw is present");
+      RectsToDraw = ImageLabels.d.AnnotationsToDraw;
     }
     var td = document.getElementById('LeftPositionText');
     if(td != null){
@@ -1430,7 +1444,12 @@ sub UploadJsonObject{
 #  print STDERR "text: \"$text\"\n";
 #  print STDERR
 #    "++++++++++++++++++++++++++++++++++++++++\n";
+  my $dispMeth = "Display$data_name";
+  if($self->can($dispMeth)){
+    $self->$dispMeth($http, $dyn);
+  }
 }
+
 
 sub CanvasHeight{
   my($self, $http, $dyn) = @_;
@@ -1463,6 +1482,7 @@ sub FetchDicomJpeg{
      "\"$window_ctr\" " .
      "$rendered_dicom_gray $jpeg_file;echo 'done'";
     my @render_list;
+#print STDERR "###########\nCommand: $cmd\n#############\n";
     Dispatch::LineReader->new_cmd($cmd,
       $self->HandleRenderersLines(\@render_list),
       $self->ContinueRenderingImage($http, $dyn, $jpeg_file,

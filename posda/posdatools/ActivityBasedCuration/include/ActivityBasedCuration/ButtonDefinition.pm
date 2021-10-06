@@ -437,6 +437,13 @@ EOF
     col_name => "pathology_visual_review_instance_id",
     caption => "Launch Visual Reviewer",
   },
+  qc_ImagesInEquivClass => {
+    query => "VisualReviewStatusDetails",
+    type => "ChainColumnToPopup",
+    obj => "Posda::ImageDisplayer::KaleidoscopeSub",
+    col_name => "image_equivalence_class_id",
+    caption => "view",
+  },
 );
 
 %QueryProcessingButtons = (

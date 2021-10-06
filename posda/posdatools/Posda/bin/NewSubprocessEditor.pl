@@ -247,8 +247,8 @@ for my $edit(@{$edits->{edits}}){
     unless($op eq "delete_matching_group"){
       die "tag_mode of group_pattern with op $op";
     }
-    unless($arg1 eq "60xx" || $arg1 eq "50xx"){
-      print STDERR "delete matching group: $arg1\n";
+    unless($tag eq "60xx" || $tag eq "50xx"){
+      print STDERR "delete matching group: $tag\n";
     }
     push(@effective_edits, [$tag, $op, $arg1, $arg2]);
   }elsif($tag_mode eq "private_group"){
@@ -434,8 +434,13 @@ print STDERR "###################\nCommand:\n$cmd\n###############\n";
   }else{
   }
 }
+my $xfr_stx = $try->{xfr_stx};
+if($xfr_stx eq "1.2.840.10008.1.2.2"){
+  print STDERR "converting file from big to little endian transfer syntax\n";
+  $xfr_stx = "1.2.840.10008.1.2.1";
+}
 eval {
-  $ds->WritePart10($edits->{to_file}, $try->{xfr_stx}, "POSDA", undef, undef);
+  $ds->WritePart10($edits->{to_file}, $xfr_stx, "POSDA", undef, undef);
 };
 if($@){
   print STDERR "Can't write $edits->{to_file} ($@)\n";

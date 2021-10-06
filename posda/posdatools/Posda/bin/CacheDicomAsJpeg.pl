@@ -31,6 +31,7 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
 }
 unless($#ARGV == 4){
   my $num_args = @ARGV;
+  print STDERR "Error: CacheDicomAsJpeg.pl requires 4 args, had $num_args\n";
   print "Error: CacheDicomAsJpeg.pl requires 4 args, had $num_args\n";
   exit 1;
 }
@@ -89,6 +90,7 @@ Query('GetFileRenderingInfo')->RunQuery(sub{
 }, sub{}, $file_id);
 my $num_file_paths = keys %file_paths;
 unless($num_file_paths == 1){
+  print STDERR "Error: found $num_file_paths file_paths for file_id $file_id\n";
   print "Error: found $num_file_paths file_paths for file_id $file_id\n";
   exit 1;
 }
@@ -97,6 +99,7 @@ my $source_file_name = [ keys %file_paths ]->[0];
 
 my $num_pixel_offsets = keys %pixel_data_offsets;
 unless($num_pixel_offsets == 1){
+  print STDERR "Error: found $num_pixel_offsets pixel_offsets for file_id $file_id\n";
   print "Error: found $num_pixel_offsets pixel_offsets for file_id $file_id\n";
   exit 1;
 }
@@ -104,6 +107,7 @@ my $pixel_data_offset = [ keys %pixel_data_offsets ]->[0];
 
 my $num_data_set_starts = keys %data_set_starts;
 unless($num_data_set_starts == 1){
+  print STDERR "Error: found $num_data_set_starts data_set_starts " .
   print "Error: found $num_data_set_starts data_set_starts " .
     "for file_id $file_id\n";
   exit 1;
@@ -115,6 +119,7 @@ my $pixel_offset = $pixel_data_offset;
 
 my $num_pixel_lengths = keys %pixel_lengths;
 unless($num_pixel_lengths == 1){
+  print STDERR "Error: found $num_pixel_lengths pixel_lengths for file_id $file_id\n";
   print "Error: found $num_pixel_lengths pixel_lengths for file_id $file_id\n";
   exit 1;
 }
@@ -126,6 +131,7 @@ my $jpeg_file_name = $dest_file;
 
 my $num_slopes = keys %slopes;
 unless($num_slopes == 1){
+  print STDERR "Error: found $num_slopes slopes for file_id $file_id\n";
   print "Error: found $num_slopes slopes for file_id $file_id\n";
   exit 1;
 }
@@ -133,25 +139,34 @@ my $slope = [ keys %slopes ]->[0];
 
 my $num_intercepts = keys %intercepts;
 unless($num_intercepts == 1){
+  print STDERR "Error: found $num_intercepts intercepts for file_id $file_id\n";
   print "Error: found $num_intercepts intercepts for file_id $file_id\n";
   exit 1;
 }
 my $intercept = [ keys %intercepts ]->[0];
 
+unless(
+  defined($slope) && defined($intercept) &&
+  $slope != 0 && $intercept != 0
+){
+  $slope = 1;
+  $intercept = 0;
+}
+
 my $window_center;
 my $window_width;
+my $num_windows = keys %windows;
 if(
   $win_ctr ne "" && $win_ctr ne "<undef>" &&
-  $win_w ne "" && $win_w ne "<undef>"
+  $win_w ne "" && $win_w ne "<undef>" && 
+  defined($win_ctr) && defined($win_w)
 ){
   $window_center = $win_ctr;
   $window_width = $win_w;
+} elsif ($num_windows == 0) {
+  $window_center = 2048;
+  $window_width = 4096;
 } else {
-  my $num_windows = keys %windows;
-  if($num_windows == 0){
-    print "Error: can't determine a window width/center for file_id $file_id\n";
-    exit 1;
-  }
   my @WinLevs;
   for my $k (keys %windows){
     my($row_num, $win_c, $win_w, $win_d) = split(/:/, $k);
@@ -165,18 +180,30 @@ if(
   print "\n";
   $window_center = $WinLevs[0]->[0];
   $window_width = $WinLevs[0]->[1];
+  unless($window_center != 0 && $window_width != 0){
+    $window_center = 2048;
+    $window_width = 4096;
+    print "Warning: no window level from dicom file, using: " .
+    "center: $window_center, width: $window_width";
+  }
 }
 
 my $num_bits_allocateds = keys %bits_allocateds;
 unless($num_bits_allocateds == 1){
+  print STDERR "Error: found $num_bits_allocateds bits_allocated " .
   print "Error: found $num_bits_allocateds bits_allocated " .
     "for file_id $file_id\n";
   exit 1;
 }
 my $bits_allocated = [ keys %bits_allocateds ]->[0];
+if($bits_allocated == 8){
+    $window_center = 128;
+    $window_width = 256;
+}
 
 my $num_bits_storeds = keys %bits_storeds;
 unless($num_bits_storeds == 1){
+  print STDERR "Error: found $num_bits_storeds bits_stored " .
   print "Error: found $num_bits_storeds bits_stored " .
     "for file_id $file_id\n";
   exit 1;
@@ -185,6 +212,7 @@ my $bits_stored = [ keys %bits_storeds ]->[0];
 
 my $num_high_bits = keys %high_bits;
 unless($num_high_bits == 1){
+  print STDERR "Error: found $num_high_bits high_bits " .
   print "Error: found $num_high_bits high_bits " .
     "for file_id $file_id\n";
   exit 1;
@@ -199,12 +227,14 @@ if($bits_allocated == 16){
 } elsif($bits_allocated == 32){
   $bytes = 4;
 } else {
+  print STDERR "Error: unknown bits_allocated: $bits_allocated\n";
   print "Error: unknown bits_allocated: $bits_allocated\n";
   exit 1;
 }
 
 my $num_pixel_representations = keys %pixel_representations;
 unless($num_pixel_representations == 1){
+  print STDERR "Error: found $num_pixel_representations pixel_representations " .
   print "Error: found $num_pixel_representations pixel_representations " .
     "for file_id $file_id\n";
   exit 1;
@@ -218,6 +248,7 @@ my $signed = [ keys %pixel_representations ]->[0];
 
 my $num_pixel_rowss = keys %pixel_rowss;
 unless($num_pixel_rowss == 1){
+  print STDERR "Error: found $num_pixel_rowss rows " .
   print "Error: found $num_pixel_rowss rows " .
     "for file_id $file_id\n";
   exit 1;
@@ -226,6 +257,7 @@ my $rows = [ keys %pixel_rowss ]->[0];
 
 my $num_pixel_columnss = keys %pixel_columnss;
 unless($num_pixel_columnss == 1){
+  print STDERR "Error: found $num_pixel_columnss rows " .
   print "Error: found $num_pixel_columnss rows " .
     "for file_id $file_id\n";
   exit 1;
@@ -235,9 +267,10 @@ my $cols = [ keys %pixel_columnss ]->[0];
 #unless(-f $gray_file_name) {
   my $cmd = "ExtractPixel.pl " .
     "\"$source_file_name\" " .
-    "$pixel_offset $pixel_length $bytes $slope $intercept " .
+    "$pixel_offset $pixel_length $bytes \"$slope\" \"$intercept\" " .
     "\"$window_center\" \"$window_width\" \"$signed\" " .
     "\"$gray_file_name\"";
+print STDERR "Cmd: $cmd\n";
   open my $fh, "$cmd|" or die "Can't open $cmd|\n($!)";
   my @lines;
   while (my $line = <$fh>){
@@ -254,6 +287,7 @@ my $cols = [ keys %pixel_columnss ]->[0];
 #unless(-f $jpeg_file_name){
   $cmd = "convert -endian MSB -size ${cols}x${rows} " .
     "-depth 8 gray:\"$gray_file_name\" \"$jpeg_file_name\"";
+print STDERR "Cmd: $cmd\n";
   open my $fh1, "$cmd|" or die "Can't open $cmd|\n($!)";
   my @lines1;
   while (my $line1  = <$fh1>){

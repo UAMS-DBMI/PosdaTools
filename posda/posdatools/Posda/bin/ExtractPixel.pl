@@ -32,8 +32,8 @@ unless($len == $length) {
   die "ExtractPixel.pl Incomplete read of $from_file: $len vs $length ($!)";
 }
 close($fh);
-my $output = "\0" x ($length/2);
-for my $i (0 .. ($length/2) - 1){
+my $output = "\0" x ($length/$bytes);
+for my $i (0 .. ($length/$bytes) - 1){
   my $pix;
   if($signed){
     if ($bytes == 2){
@@ -64,4 +64,7 @@ for my $i (0 .. ($length/2) - 1){
 }
 open $fh, ">$to_file" or die "ExtractPixel.pl can't open >$to_file ($!)";
 print $fh $output;
+close $fh;
+my $olen = length($output);
 print "wrote $to_file\n";
+print STDERR "wrote $to_file ($olen bytes)\n";
