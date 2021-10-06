@@ -1,0 +1,6 @@
+:operation_name: BackgroundFixRtstructTp
+:command_line: BackgroundFixStructLinkagesTp.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>
+:operation_type: background_process
+:input_line_format: <img_series>&<struct_file_id>
+:tags: ['activity_timepoints']
+:can_chain: 
