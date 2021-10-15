@@ -8,7 +8,7 @@ use ActivityBasedCuration::Quince;
 
 
 use vars qw( @ISA );
-@ISA = ("Posda::PopupWindow");
+@ISA = ("Posda::FileVisualizer");
 sub MakeQueuer{ 
   my($http) = @_;
   my $sub = sub {
@@ -22,7 +22,8 @@ sub SpecificInitialize {
   my ($self, $params) = @_;
   $self->{title} = "Generic SeriesVisualizer";
   # Determine temp dir
-  $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
+#  $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
+  $self->{temp_path} = $params->{temp_path};
   $self->{params} = $params;
   $self->{series_instance_uid} = $params->{series_instance_uid};
   $self->{activity_id} = $params->{activity_id};
@@ -75,9 +76,15 @@ sub SpecificInitialize {
       $patient_ids{$patient_id} = 1;
       $modalities{$modality} = 1;
       $dicom_file_types{$dicom_file_type} = 1;
-      $for_uids{$for_uid} = 1;
-      $iops{$iop} = 1;
-      $ipps{$ipp} = 1;
+      if(defined $for_uid){
+        $for_uids{$for_uid} = 1;
+      }
+      if(defined $iop){
+        $iops{$iop} = 1;
+      }
+      if(defined $ipp){
+        $ipps{$ipp} = 1;
+      }
       $pix_digs{$pixel_data_digest} = 1;
       $pix_rows{$pixel_rows} = 1;
       $pix_cols{$pixel_cols} = 1;
@@ -216,7 +223,11 @@ sub SeriesSummary{
     $http->queue("<tr>");
     $http->queue("<td>$i</td>");
     for my $k (@keys){
-      $http->queue("<td>$self->{FilesInSeries}->{$i}->{$k}</td>");
+      $http->queue("<td>");
+      if(defined $self->{FilesInSeries}->{$i}->{$k}){
+        $http->queue("$self->{FilesInSeries}->{$i}->{$k}");
+      }
+      $http->queue("</td>");
     }
     $http->queue("</tr>");
   }

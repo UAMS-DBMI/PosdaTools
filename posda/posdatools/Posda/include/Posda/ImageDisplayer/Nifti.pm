@@ -270,7 +270,6 @@ my $content = <<EOF;
     <?dyn="FlipOptions"?>
    </select>
 </div>
-<div id="div_contours_pending">&nbsp;</div>
 </div>
 </div>
 <div style="display: flex; flex-direction: row; align-items: flex-end; margin-left: 10px">
@@ -281,4 +280,14 @@ sub Content{
   my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn, $content);
 }
+sub GetContoursToRender{
+  my($self, $http, $dyn) = @_;
+  my $content_type = "application/json";
+  $http->HeaderSent;
+  $http->queue("HTTP/1.0 200 OK\n");
+  $http->queue("Content-type: $content_type\n\n");
+  $http->queue("[]");
+  return;
+}
+
 1;

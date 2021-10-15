@@ -1,0 +1,6 @@
+:operation_name: ReQueueFileNiftiDefacing
+:command_line: ReQueueFileNiftiDefacingTp.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_subprocess
+:input_line_format: 
+:tags: ['nifti']
+:can_chain: 

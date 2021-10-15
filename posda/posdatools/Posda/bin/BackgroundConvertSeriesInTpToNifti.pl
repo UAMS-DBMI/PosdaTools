@@ -3,6 +3,7 @@ use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 use File::Basename;
+use Posda::File::Import 'insert_file';
 use Debug;
 my $dbg = sub { print STDERR @_ };
 
@@ -60,9 +61,12 @@ unless(mkdir($dir) == 1) {
   exit;
 }
 
+my $activity_timepoint_id = Query('LatestActivityTimepointForActivity')->FetchOneHash($activity_id)
+  ->{activity_timepoint_id};
 my $start = time;
 my $count = 0;
-my $dicom_to_nifti_conversion_id = CreateDicomToNiftConversionTable($invoc_id, $activity_id);
+my $dicom_to_nifti_conversion_id = CreateDicomToNiftiConversionTable($invoc_id, $activity_timepoint_id);
+my $ImportEventId;
 series:
 for my $series (sort {$a cmp $b} keys %Series){
   $count += 1;
@@ -113,7 +117,7 @@ for my $series (sort {$a cmp $b} keys %Series){
   my $num_in_series = keys %{$FilesInSeries{$series}};
   my $nifti_file_from_series_id = CreateConversionNiftiFileFromSeriesRow(
     $dicom_to_nifti_conversion_id, $series, $num_in_series, $num_selected,
-    $modality, $dicom_file_type, $the_iop, $first_ipp, $last_ipp);
+    $modality, $dicom_file_type, $the_iop, $first_ipp, $last_ipp
   );
   AddNiftiConversionNotes($nifti_file_from_series_id, $SelectionNotes);
   my $series_dir = "$dir/$series";
@@ -218,10 +222,15 @@ for my $series (sort {$a cmp $b} keys %Series){
       print STDERR "Unrecognized file ($fn) in output directory\n";
     }
   }
-  my $nifti_file_id = PutFileAndGetId("$output_dir/$base_file.nii");
-  my $json_file_id = PutFileAndGetId("$output_dir/$base_file.json");
+  unless(defined $ImportEventId){
+    $ImportEventId = Query('CreateNewImportEvent')->FetchOneHash(
+      "DicomToNiftiConvesion", "Subprocess: $invoc_id"
+    )->{import_event_id};
+  }
+  my $nifti_file_id = PutFileAndGetId("$output_dir/$base_file.nii", $ImportEventId);
+  my $nifti_json_file_id = PutFileAndGetId("$output_dir/$base_file.json", $ImportEventId);
   AddDcm2NiftiStuff($nifti_file_from_series_id, $nifti_file_id, $nifti_json_file_id,
-    $nifti_base_file_name, $gantry_tilt_spec, $gantry_tilt_est, $conversion_time);
+    $base_file, $gantry_tilt_spec, $gantry_tilt_est, $conversion_time);
   
   
   print STDERR "dcm2niiX found $num_found and converted ($num_converted) DICOM files " .
@@ -244,7 +253,7 @@ for my $series (sort {$a cmp $b} keys %Series){
   }
   if(@other_niftis > 0){
     for my $i (@other_niftis){
-      my $file_id = PutFileAndGetId("$output_dir/$i");
+      my $file_id = PutFileAndGetId("$output_dir/$i", $ImportEventId);
       AddNiftiExtraFile($nifti_file_from_series_id, $file_id, $i);
     }
     print STDERR "Other nifti files produced:\n";
@@ -253,11 +262,16 @@ for my $series (sort {$a cmp $b} keys %Series){
     }
   }
   if(@warnings > 0){
+    AddNiftiDcm2niixWarnings($nifti_file_from_series_id, \@warnings);
+    ###  InsertNiftiInsert nifti_dcm2niix_warnings;
     print STDERR "Warnings:\n";
     for my $i (@warnings){
       print STDERR "\t$i\n";
     }
   }
+}
+if(defined $ImportEventId){
+  Query('CompleteImportEvent')->RunQuery(sub{},sub{}, $ImportEventId);
 }
 $back->Finish("Done after $count series in $dir");
 sub SelectFilesFromSeries{
@@ -382,40 +396,70 @@ sub SelectFilesFromSeries{
   return \@good_list, \@notes, $chosen_iop, $modality, $dicom_file_type;
 }
 
+sub PutFileAndGetId{
+  my($path, $ie_id) = @_;
+  my $resp = Posda::File::Import::insert_file($path, "", $ie_id);
+  if ($resp->is_error){
+    print STDERR "Unable to put file : $path\n";
+    return undef;
+  }else{
+    my $file_id =  $resp->file_id;
+    unlink $path;
+    return $file_id
+  }
+}
+
 #########################
 #  Database update routines....
 
-#my $dicom_to_nifti_conversion_id = CreateDicomToNiftConversionTable($invoc_id, $activity_id);
-sub CreateDicomToNiftConversionTable{
+sub CreateDicomToNiftiConversionTable{
   my($invoc_id, $activity_id) = @_;
+  my $new_id = Query('CreateDicomToNiftiConversionTable')->FetchOneHash(
+   $invoc_id, $activity_id)->{dicom_to_nifti_conversion_id};
+  return $new_id;
 }
 
-#my $nifi_file_from_series_id = CreateNonConversionNiftiFileFromSeriesRow($dicom_file_to_nifti_conversion_id, $series, $num_files)
 sub CreateNonConversionNiftiFileFromSeriesRow{
   my($dicom_ftnc_id, $series, $num_files) = @_;
+  my $new_id = Query('CreateNonConversionNiftiFileFromSeriesRow')->FetchOneHash(
+   $dicom_ftnc_id, $series, $num_files)->{nifti_file_from_series_id};
+  return $new_id;
 }
 
-#AddNiftiConversionNotes($dicom_file_to_nifti_conversion_id, $SelectionNotes);
 sub AddNiftiConversionNotes{
-  my($dicom_ftnc_id, $sel_notes) = @_;
+  my($nifti_ffs_id, $notes) = @_;
+  Query('AddNiftiConversionNotes')->RunQuery(sub{}, sub{},
+   $nifti_ffs_id, $notes);
 }
 
-#my $nifti_file_from_series_id = CreateConversionNiftiFileFromSeriesRow(
-#    $dicom_to_nifti_conversion_id, $series, $num_in_series, $num_selected,
-#    $modality, $dicom_file_type, $the_iop, $first_ipp, $last_ipp);
-#  );
 sub CreateConversionNiftiFileFromSeriesRow{
   my($dtnc_id, $series, $num_in_series, $num_selected, $modality,
      $dicom_file_type, $iop, $first_ipp, $last_ipp) = @_;
+  my $new_id = Query('CreateConversionNiftiFileFromSeriesRow')->FetchOneHash(
+    $dtnc_id, $series, $num_in_series, $num_selected, $modality,
+    $dicom_file_type, $iop, $first_ipp, $last_ipp
+  )->{nifti_file_from_series_id};
+  return $new_id;
 }
 
-#AddDcm2NiftiStuff($nifti_file_from_series_id, $nifti_file_id, $nifti_json_file_id,
-#    $nifti_base_file_name, $gantry_tilt_spec, $gantry_tilt_est, $conversion_time);
 sub AddDcm2NiftiStuff{
   my($nffs_id, $nifti_file_id, $json_file_id, $nifti_base_name, $gt_spec, $gt_est, $cov_time) = @_;
+  Query('AddDcm2NiftiStuff')->RunQuery(sub{}, sub{},
+    $nifti_file_id, $json_file_id, $nifti_base_name, $gt_spec, $gt_est, $cov_time, $nffs_id
+  );
 }
 
-#AddNiftiExtraFile($nifti_file_from_series_id, $file_id, $file_name);
 sub AddNiftiExtraFile{
-  my($nffs_id, $file_id, $json_file_id, $nifti_base_name, $gt_spec, $gt_est, $cov_time) = @_;
+  my($nffs_id, $file_id, $file_name) = @_;
+  Query('AddNiftiExtraFile')->RunQuery(sub{}, sub{},
+    $nffs_id, $file_id, $file_name
+  );
+}
+
+sub AddNiftiDcm2niixWarnings{
+  my($nifti_file_from_series_id, $warnings) = @_;
+  my $q = Query("AddNiftiDcm2niixWarnings");
+  for my $w (@$warnings){
+    $q->RunQuery(sub{}, sub{}, $nifti_file_from_series_id, $w);
+  }
 }

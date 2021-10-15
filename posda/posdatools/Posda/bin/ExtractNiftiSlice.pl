@@ -29,6 +29,28 @@ if($f eq "f"){
 } else {
   $to_root .= "_n";
 }
+if($nifti->{parsed}->{datatype} == 128){
+  my $rgb_file = "$to_dir/$to_root.rgb";
+  my $jpeg_file = "$to_dir/$to_root.jpeg";
+  print "RGB: $rgb_file\n";
+  print "Jpeg: $jpeg_file\n";
+  unless(open OUT, ">$rgb_file"){
+    die "Can't open $rgb_file for write ($!)";
+  }
+  if($f eq "f"){
+    $nifti->PrintRgbSliceFlipped($v, $s, *OUT);
+  } else {
+    $nifti->PrintRgbSlice($v, $s, *OUT);
+  }
+  close OUT;
+  my($rows,$cols,$bytes) = $nifti->RowsColsAndBytes;
+  my $cmd = "convert -endian MSB -size $rows" . 'x' . "$cols " .
+    "-depth 8 rgb:$rgb_file $jpeg_file";
+  `$cmd`;
+  print "Convert:\n$cmd\n";
+#  unlink $rgb_file;
+  exit;
+}
 my $gray_file = "$to_dir/$to_root.gray";
 my $jpeg_file = "$to_dir/$to_root.jpeg";
 print "Gray: $gray_file\n";
@@ -39,7 +61,6 @@ unless(open OUT, ">$gray_file"){
 if($f eq "f"){
   $nifti->PrintSliceFlippedScaled($v, $s, *OUT);
 } else {
-  print "Calling PrintSliceScaled\n";
   $nifti->PrintSliceScaled($v, $s, *OUT);
 }
 close OUT;

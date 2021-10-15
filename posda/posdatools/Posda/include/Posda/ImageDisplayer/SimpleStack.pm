@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 use strict;
-package Posda::ImageDisplayer;
+package Posda::ImageDisplayer::StackedSeries;
 use Posda::HttpApp::JsController;
 use Posda::DB qw(Query);
 
@@ -138,19 +138,15 @@ function ChangeMode(op, mode){
 }
 
 function Update(){ 
-  UpdateDivs([
-    ["menu", "MenuResponse"],
-    ["content", "ContentResponse"],
-    ["login", "LoginResponse"]
-  ]);
+  // UpdateMenu();
+  //  UpdateContent();
+  // UpdateLogin();
 }
 function UpdateOne(){ 
-  UpdateDivs([
-    ["header", "HeaderResponse"],
-    ["menu", "MenuResponse"],
-    ["content", "ContentResponse"],
-    ["login", "LoginResponse"]
-  ]);
+  // UpdateHeader();
+  // UpdateMenu();
+  // UpdateContent();
+  // UpdateLogin();
 }
 function UpdateAct(){ 
   // UpdateActivityTaskStatus();
@@ -206,7 +202,6 @@ my $dicom_image_disp_js = <<EOF;
   var ImageLabels;
   var ImageUrlPending = false;
   var ImageLabelsPending = false;
-  var ContoursPending = false;
   var BaseSessionUrl;
   var LineWidth = 1;
   var ToolType = "No tool";
@@ -215,14 +210,11 @@ my $dicom_image_disp_js = <<EOF;
   var CineEnabled = "No";
   var CineDir = "+";
   var ContourResp;
-  var ContoursToDraw = [
-  ];
   var AnnotationsToDraw = [
   ];
   var RectsToDraw = [
   ];
   var RectBeingConstructed = null;
-  var VisibleContours = {};
   var theSvg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
   function SendAnnotations(){
 //    var data = JSON.stringify(AnnotationsToDraw)
@@ -231,18 +223,8 @@ my $dicom_image_disp_js = <<EOF;
 //    ajax.post(data);
     var data = JSON.stringify(RectsToDraw)
     var ajax = new AjaxObj('UploadJsonObject' + "?obj_path=" + ObjPath +
-      '&DataName=Annotations', function () { ProcessAnnotations(); });
+      '&DataName=Annotations', function () { RenderImage(canvas,ctx); });
     ajax.post(data);
-  }
-  function ProcessAnnotations(){
-    PosdaGetRemoteMethod('ProcessAnnotations', '', 
-      function(associations){
-        var td = document.getElementById('Annotations');
-        if(td != null){
-          td.innerHTML = associations;
-        }
-        RenderImage(canvas,ctx);
-      });
   }
   function PopAnnotations(){
     var anot = RectsToDraw.pop();
@@ -269,22 +251,6 @@ my $dicom_image_disp_js = <<EOF;
 
       ctx.drawImage(ImageToDraw,0,0);
       var i;
-      for(i = 0; i < ContoursToDraw.length; i++){
-         var cont_name = ContoursToDraw[i].id;
-         var is_visible = VisibleContours[cont_name];
-         if(is_visible){
-           var contour = ContoursToDraw[i];
-           ctx.beginPath();
-           ctx.moveTo(contour.points[0][0], contour.points[0][1]);
-           for(j = 0; j < contour.points.length - 1; j++){
-             ctx.lineTo(contour.points[j+1][0],contour.points[j+1][1]);
-           }
-           ctx.closePath();
-           ctx.lineWidth = LineWidth;
-           ctx.strokeStyle = contour.color;
-           ctx.stroke();
-         }
-      }
       if(RectBeingConstructed != null){
          ctx.beginPath();
          ctx.rect(RectBeingConstructed.x, RectBeingConstructed.y,
@@ -605,10 +571,6 @@ my $dicom_image_disp_js = <<EOF;
       //console.error("ImageLabels.d is null");
       return;
     }
-    if(ImageLabels.d.AnnotationsToDraw != null){
-      //console.log("ImageLabels.d.AnnotationsToDraw is present");
-      RectsToDraw = ImageLabels.d.AnnotationsToDraw;
-    }
     var td = document.getElementById('LeftPositionText');
     if(td != null){
       td.innerHTML = ImageLabels.d.left_text;
@@ -648,16 +610,12 @@ my $dicom_image_disp_js = <<EOF;
     if(td != null){
       td.selectedIndex = ImageLabels.d.current_index;
     }
-    if(ImageLabels.d.VisibleContours != null){
-      VisibleContours = ImageLabels.d.VisibleContours;
-    }
     ImageLabelsPending = false;
     RenderImageIfReady();
   }
   var canvas;
   var ctx;
   WaitingForUpdates = function(){
-    if(ContoursPending) { return true };
     if(ImageUrlPending) { return true };
     if(ImageLabelsPending) { return true };
     return false;
@@ -738,23 +696,6 @@ my $dicom_image_disp_js = <<EOF;
       ImageToDraw.src = BaseSessionUrl + ImageUrl.d.image;
     }
   }
-  function ContoursReturned(obj) {
-    ContoursPending = false;
-    var td = document.getElementById('div_contours_pending');
-    if(td != null){
-      td.innerHTML="&nbsp;";
-    }
-    if(ContourResp == null){
-      console.error("ContourResp is null");
-      return;
-    }
-    if(ContourResp.d == null){
-      console.error("ContourResp.d is null");
-      return;
-    }
-    ContoursToDraw = ContourResp.d;
-    RenderImageIfReady(canvas, ctx);
-  }
   function UpdateImage(){
     //  Here get image from server, get overlays from server
     //  When complete:
@@ -775,19 +716,6 @@ my $dicom_image_disp_js = <<EOF;
       }
       ImageUrl =
         new PosdaAjaxObj("ImageUrl", ObjPath, ImageUrlReturned);
-    }
-    if(ContoursPending){
-      console.error("Update when Contours Pending");
-    } else {
-      ContoursPending = true;
-      //ContoursToDraw = [];
-      //RenderImage(canvas, ctx);
-      var td = document.getElementById('div_contours_pending');
-      if(td != null){
-        td.innerHTML="<small>contours pending</small>";
-      }
-      ContourResp = 
-        new PosdaAjaxMethod("GetContoursToRender", ObjPath, ContoursReturned);
     }
     if(WaitingForUpdates()){
       DisableImageControlButtons();
@@ -1189,59 +1117,6 @@ sub JsControllerLocal{
 
 ############################# Widgets
 
-sub RoiSelector{
-  my($self, $http, $dyn) = @_;
-  for my $ri (
-    sort { $a <=> $b }
-    keys %{$self->{params}->{rois}}
-  ){
-    my $roi = $self->{params}->{rois}->{$ri};
-    my $color = sprintf("%02x%02x%02x", $roi->{color}->[0],
-      $roi->{color}->[1], $roi->{color}->[2]);
-    $http->queue("<div style=\"display: flex; flex-direction: row;" .
-      " align-items: flex-beginning; margin-right: 5px\" id=\"div_roi_$ri\">");
-    $http->queue($self->CheckBoxDelegate("SelectRoiForDisplay", 0,
-        $self->{ImageLabels}->{VisibleContours}->{"roi_num_$ri"},
-        { op => "SelectRoiForDisplay",
-          sync => "UpdateImage();",
-          roi =>$ri
-        }
-      )
-    );
-    $http->queue("<font style=\"color: #$color\">$roi->{name}</font>");
-    $http->queue("</div>");
-  }
-}
-
-sub SelectRoiForDisplay{
-  my($self, $http, $dyn) = @_;
-  my $roi_id = "roi_num_$dyn->{roi}";
-  if($dyn->{checked} eq "true"){
-    $self->{ImageLabels}->{VisibleContours}->{$roi_id} = 1;
-  } elsif ($dyn->{checked} eq "false"){
-    $self->{ImageLabels}->{VisibleContours}->{$roi_id} = 0;
-  }
-}
-
-sub ToggleRoiVisible{
-  my($self, $http, $dyn) = @_;
-  if($self->{RoiVisible}){
-    $self->{RoiVisible} = 0;
-  } else {
-    $self->{RoiVisible} = 1;
-  }
-  $self->SetImageUrl;
-}
-
-sub ToggleRoiVisibilty{
-  my($self, $http, $dyn) = @_;
-  $self->NotSoSimpleButton($http, {
-     op => "ToggleRoiVisible",
-     caption => "Toggle Roi",
-     sync => "UpdateImage();"
-  });
-}
-
 sub IndexSelector{
   my($self, $http, $dyn) = @_;
   $self->RefreshEngine($http, $dyn,
@@ -1403,34 +1278,6 @@ sub ToolTypeOptions{
 
 sub ImageTypeSelector{
   my($self, $http, $dyn) = @_;
-  unless(
-    defined $self->{ImageTypes} &&
-    ref($self->{ImageTypes}) eq "ARRAY" &&
-    ref($self->{ImageTypes}->[0]) eq "ARRAY"
-  ){ return };
-  unless(defined $self->{ImageType}){
-    $self->{ImageType} = $self->{ImageTypes}->[0]->[0];
-  }
-  $self->SelectDelegateByValue($http, {
-    op => "SelectImageType",
-    id => "SelectImageTypeDropdown",
-    class => "form-control",
-    style => "",
-    sync => "UpdateImage();"
-  });
-  for my $i (@{$self->{ImageTypes}}){
-   $http->queue("<option value=\"$i->[0]\"");
-   if($i->[0] eq $self->{ImageType}){
-     $http->queue(" selected");
-   }
-   $http->queue(">$i->[1]</option>");
-  }
-  $http->queue("</select>");
-}
-sub SelectImageType{
-  my($self, $http, $dyn) = @_;
-  $self->{ImageType} = $dyn->{value};
-  $self->SetImageUrl;
 }
 
 sub UploadJsonObject{
@@ -1448,12 +1295,7 @@ sub UploadJsonObject{
 #  print STDERR "text: \"$text\"\n";
 #  print STDERR
 #    "++++++++++++++++++++++++++++++++++++++++\n";
-  my $dispMeth = "Display$data_name";
-  if($self->can($dispMeth)){
-    $self->$dispMeth($http, $dyn);
-  }
 }
-
 
 sub CanvasHeight{
   my($self, $http, $dyn) = @_;
@@ -1486,7 +1328,6 @@ sub FetchDicomJpeg{
      "\"$window_ctr\" " .
      "$rendered_dicom_gray $jpeg_file;echo 'done'";
     my @render_list;
-#print STDERR "###########\nCommand: $cmd\n#############\n";
     Dispatch::LineReader->new_cmd($cmd,
       $self->HandleRenderersLines(\@render_list),
       $self->ContinueRenderingImage($http, $dyn, $jpeg_file,
@@ -1575,13 +1416,6 @@ sub FetchTestPattern{
   }
   $self->SendCachedPng($http, $dyn, $tp_path);
 }
-sub ContinueRenderingTp{
-  my($self, $http, $dyn, $rendered_test_pat, $render_list) = @_;
-  my $sub = sub {
-    $self->SendCachedPng($http, $dyn, $rendered_test_pat);
-  };
-  return $sub;
-}
 sub SendCachedPng{
   my($self, $http, $dyn, $png_path) = @_;
   my $content_type = "image/png";
@@ -1598,39 +1432,19 @@ sub InitializeUrls{
   my($self)= @_;
     ######  Here is the "definition" of FileList #########
 #    push @{$self->{FileList}}, {
-#      dicom_file_id => $dicom_file_id, # if dicom file
-#      jpeg_file_id => $dicom_file_id,  # if jpeg file only
-#      contour_files => [
-#        {
-#          file_id => $contour_file_id,
-#          num_contours => $num_contours,
-#          contour_points => $contour_points,
-#          color => $color,
-#          roi_id => $roi_id,
-#          roi_name => $roi_name,
-#        },
-#        ...
-#      ],
-#      seg_bitmaps => [
-#        {
-#          seg_slice_bitmap_file_id => $seg_slice_bitmap_file_id,
-#          png_file_id => $png_file_id,
-#          frame_no => $frame_no,
-#          total_one_bits => $total_one_bits,
-#          num_bare_points => $num_bare_points,
-#        },
-#        ...
-#      ],
-#      offset => $offset,            #only if dicom and/or seg_bitmaps
-#      off_normal => $off_normal,    #
-#      iop => $iop,                  #
-#      ipp => $ipp,                  #
-#      instance_num => $instance_num #only if dicom
+#      dicom_file_id => $dicom_file_id,  # if dicom file
+#      jpeg_file_id => $dicom_file_id,   # if jpeg file only
+#      nifti_file_id => $nifti_file_id,  # if nifti file only
+#      nifti_vol => $nifti_vol,          # if nifti file only
+#      nifti_slice => $nifti_slice,      # if nifti slice only
+#      offset => $offset,                #only if dicom and/or seg_bitmaps
+#      off_normal => $off_normal,        #
+#      iop => $iop,                      #
+#      ipp => $ipp,                      #
+#      instance_num => $instance_num     #only if dicom
 #    };
     #^^^^^  Here is the "definition" of FileList ^^^^^^^^^
   delete $self->{BitmapImageUrls};
-  $self->{ContourFiles} = [];
-  $self->{JpegImageUrls} = [];
   for my $i (0 .. $#{$self->{FileList}}){
     my $ent = $self->{FileList}->[$i];
     if(exists $ent->{jpeg_file_id}){
@@ -1651,66 +1465,21 @@ sub InitializeUrls{
         url_type => "relative",
       });
     }
-    if(exists $ent->{contour_files} && ref($ent->{contour_files}) eq "ARRAY"){
-      push(@{$self->{ContourFiles}}, $ent->{contour_files});
-    } else {
-      push @{$self->{ContourFiles}}, [];
-    }
-   $self->InitializeSegs($ent);
   }
 };
 
-sub InitializeSegs{
-  my($self, $ent) = @_;
-  ## default does nothing  -- override if you want to display segmentations
-}
 
 #sub SetImageUrl{
 sub SetImageUrl{
   my($self)= @_;
   unless(defined $self->{CurrentUrlIndex}){ $self->{CurrentUrlIndex} = 0 }
-  unless(defined $self->{ImageType}){
-    if(
-      defined $self->{ImageTypes} &&
-      ref($self->{ImageTypes}) eq "ARRAY" &&
-      ref($self->{ImageTypes}->[0]) eq "ARRAY"
-    ){
-      $self->{ImageType} = $self->{ImageTypes}->[0]->[0];
-    } else {
-      $self->{ImageType} = "Dicom Image";
-    }
-  }
   my $current_index = $self->{CurrentUrlIndex};
-  if($self->{ImageType} eq "Rendered Bitmap"){
-    $self->{ImageUrl} = $self->{BitmapImageUrls}->[$current_index];
-  }elsif($self->{ImageType} eq "Dicom Image"){
-    $self->{ImageUrl} = $self->{JpegImageUrls}->[$current_index];
-  } elsif($self->{ImageType} eq "Test Pattern"){
-    $self->{ImageUrl} = {
-        url_type => "relative",
-        image => "FetchTestPattern?obj_path=$self->{path}"
-    };
-  }else{
-    die "WTF?  Image Type = $self->{ImageType} !!!";
-  }
-  $self->SetContourRendering;
   $self->{ImageLabels}->{current_instance} =
     $self->{FileList}->[$current_index]->{instance};
   $self->{ImageLabels}->{current_offset} =
     $self->{FileList}->[$current_index]->{offset};
   $self->{ImageLabels}->{current_index} = $current_index;
   $self->SetTextLabels;
-  if(exists $self->{RoiVisible}){
-    $self->{ImageLabels}->{VisibleContours} = {
-       "this_roi" => $self->{RoiVisible}
-    };
-  }
-}
-sub SetContourRendering{
-  my($self)= @_;
-  my $current_index = $self->{CurrentUrlIndex};
-  $self->{CurrentContourRendering} =
-    $self->{ContourFiles}->[$current_index];
 }
 sub SetTextLabels{
   my($self)= @_;
@@ -1755,89 +1524,6 @@ sub SetTextLabels{
   $self->{ImageLabels}->{right_text} = "<small>$right_text</small>";
   $self->{ImageLabels}->{left_text} = "<small>$left_text</small>";
 }
-
-
-############################# Fetch Contours
-
-sub GetContoursToRender{
-  my($self, $http, $dyn) = @_;
-  my $get_file = Query('GetFilePath');
-  unless(
-    exists($self->{CurrentContourRendering}) &&
-    ref($self->{CurrentContourRendering}) eq "ARRAY" &&
-    $#{$self->{CurrentContourRendering}} >= 0
-  ){
-    my $content_type = "application/json";
-    $http->HeaderSent;
-    $http->queue("HTTP/1.0 200 OK\n");
-    $http->queue("Content-type: $content_type\n\n");
-    $http->queue("[]");
-    return;
-  }
-  my $json_contours_path =
-    "$self->{params}->{tmp_dir}/contours_$self->{contour_root_file_id}";
-  my @contour_render_struct;
-  for my $cn (0 .. $#{$self->{CurrentContourRendering}}){
-    my $c = $self->{CurrentContourRendering}->[$cn];
-    $json_contours_path .= "_$c->{file_id}";
-    my $file_path;
-    $get_file->RunQuery(sub{
-      my($row) = @_;
-      $file_path = $row->[0];
-    }, sub {}, $c->{file_id});
-    my $roi_id;
-    if(exists $c->{id}){ $roi_id = $c->{id} }
-    else {$roi_id = "roi_num_" . $c->{roi_id} }
-    my $contour_render_hash = {
-      id => $roi_id,
-      color => $c->{color},
-      type => "2dContourBatch",
-      file => $file_path,
-      pix_sp_x => 1,
-      pix_sp_y => 1,
-      x_shift => $self->{x_shift},
-      y_shift => $self->{y_shift},
-    };
-    push @contour_render_struct, $contour_render_hash;
-  }
-  my $tmp1 = "$json_contours_path.contours";
-  $json_contours_path .= ".json";
-  unless(-f $json_contours_path){
-    Storable::store \@contour_render_struct, $tmp1;
-    my $cmd = "cat $tmp1|Construct2DContoursFromExtractedFile.pl > " .
-      "$json_contours_path;" .
-      "echo 'done'";
-    Dispatch::LineReader->new_cmd($cmd,
-      $self->NullLineHandler(),
-      $self->ContinueProcessingContours($http, $dyn, $tmp1,
-        $json_contours_path)
-    );
-    return;
-  }
-  $self->SendCachedContours($http, $dyn, $json_contours_path);
-}
-
-sub ContinueProcessingContours{
-  my($self, $http, $dyn, $tmp1, $json_contours_path) = @_;
-  my $sub = sub {
-    unlink $tmp1;
-    $self->SendCachedContours($http, $dyn, $json_contours_path);
-  };
-  return $sub;
-}
-sub SendCachedContours{
-  my($self, $http, $dyn, $json_contours_path) = @_;
-  my $contour_file_id = $self->{ContourFileId};
-  my $content_type = "text/json";
-  open my $sock, "cat $json_contours_path|" or die "Can't open " .
-    "$json_contours_path for reading ($!)";
-
-#  open FILE, "<$json_contours_path" or die "Can't open $json_contours_path" .
-#    " for reading ($!)";
-  $self->SendContentFromFh($http, $sock, "application/json",
-  $self->CreateNotifierClosure("NullNotifier", $dyn));
-}
-
 
 
 1;

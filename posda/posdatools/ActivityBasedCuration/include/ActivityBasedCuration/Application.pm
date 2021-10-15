@@ -1752,6 +1752,89 @@ sub TableSelected {
   }
 }
 
+sub BuildDicomDefacedSeries{
+  my($self, $http, $dyn) = @_;
+  my $hash = $self->{NewQueryToDisplay};
+  my $cur_query = $self->{ForegroundQueries}->{$hash};
+  my $si_id = $cur_query->{args}->[0];
+  my $rows = $cur_query->{filtered_rows};
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    user => $self->get_user,
+    tmp_dir => $self->{TempDir},
+    rows => $rows
+  };
+  my $class = "Posda::BuildDicomDefaced";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "buid_dicom_defaced$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+sub AnalyzeSeriesVisualizations{
+  my($self, $http, $dyn) = @_;
+  my $hash = $self->{NewQueryToDisplay};
+  my $cur_query = $self->{ForegroundQueries}->{$hash};
+  my $si_id = $cur_query->{args}->[0];
+  my $rows = $cur_query->{filtered_rows};
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    user => $self->get_user,
+    tmp_dir => $self->{TempDir},
+    rows => $rows
+  };
+  my $class = "Posda::AnalyzeSeriesVisualizations";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "buid_dicom_defaced$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
+sub LaunchNoFaceReport{
+  my($self, $http, $dyn) = @_;
+  my $hash = $self->{NewQueryToDisplay};
+  my $cur_query = $self->{ForegroundQueries}->{$hash};
+  my $si_id = $cur_query->{args}->[0];
+  my $params = {
+    activity_id => $self->{ActivitySelected},
+    user => $self->get_user,
+    tmp_dir => $self->{TempDir},
+    subprocess_invocation_id => $si_id,
+  };
+  my $class = "Posda::NiftiNoFacesReport";
+  eval "require $class";
+  if($@){
+    print STDERR "Class failed to compile\n\t$@\n";
+    return;
+  }
+
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "nifti_no_face_$self->{sequence_no}";
+  $self->{sequence_no} += 1;
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                              $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+}
+
 sub LaunchNiftiProjectionViewer{
   my($self, $http, $dyn) = @_;
   my $hash = $self->{NewQueryToDisplay};

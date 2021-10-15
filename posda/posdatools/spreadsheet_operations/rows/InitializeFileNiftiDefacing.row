@@ -1,0 +1,6 @@
+:operation_name: InitializeFileNiftiDefacing
+:command_line: InitializeFileNiftiDefacing.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <nifti_file_id>
+:tags: ['nifti']
+:can_chain: 

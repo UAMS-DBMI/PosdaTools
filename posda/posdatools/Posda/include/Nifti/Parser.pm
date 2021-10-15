@@ -281,6 +281,20 @@ sub new{
     return undef;
   }
 }
+sub CopyHeaderToFile{
+  my($self, $file) = @_;
+  $self->Open;
+  seek $self->{fh}, 0, 0;
+  my $buff;
+  my $len = read($self->{fh}, $buff, $self->{parsed}->{vox_offset});
+  unless($len == $self->{parsed}->{vox_offset}){
+    die "non matching length reading nifti header ($len vs " .
+      "$self->{parsed}->{vox_offset})";
+  }
+  open HEADER, ">$file" or die "Can't open $file for writing header";
+  print HEADER $buff;
+  close HEADER;
+}
 sub new_from_zip{
   my($class, $file_name, $file_id, $tmp_dir) = @_;
   my $uncompressed_file_name = "$tmp_dir/nifti_$file_id.nii";
@@ -513,6 +527,48 @@ sub PrintSlice{
   print $fh $buff;
 }
 
+sub PrintRgbSliceFlipped{
+  my($self, $v, $s, $fh) = @_;
+  my($offset, $length, $row_size) =
+    $self->GetSliceOffsetLengthAndRowLength($v, $s);
+  unless(seek $self->{fh}, $offset, 0){
+    die "seek $self->{fh}, $offset, 0) ($!)";
+  }
+  my @Val;
+  my $buff;
+  my $num_rows = $length/$row_size;
+  if($self->{parsed}->{datatype} == 128){
+    for my $r (1 .. $num_rows){
+      my $offset_r = $offset + (($num_rows - $r) * $row_size);
+      seek $self->{fh}, $offset_r, 0;
+      my $buff;
+      my $len  = read $self->{fh}, $buff, $row_size;
+      unless($len == $row_size) { die "Read $len vs $row_size" }
+      print $fh $buff;
+    }
+  } else {
+    die "Called PrintSliceRgb on non RGB image";
+  }
+}
+
+sub PrintRgbSlice{
+  my($self, $v, $s, $fh) = @_;
+  my($offset, $length, $row_size) =
+    $self->GetSliceOffsetLengthAndRowLength($v, $s);
+  unless(seek $self->{fh}, $offset, 0){
+    die "seek $self->{fh}, $offset, 0) ($!)";
+  }
+  my @Val;
+  my $buff;
+  my $len  = read $self->{fh}, $buff, $length;
+  if($self->{parsed}->{datatype} == 128){
+    unless($len == $length) { die "Read $len vs $length" }
+    print $fh $buff;
+  } else {
+    die "Called PrintSliceRgb on non RGB image";
+  }
+}
+
 sub PrintSliceScaled{
   my($self, $v, $s, $fh) = @_;
   my($offset, $length, $row_size) =
@@ -539,6 +595,9 @@ sub PrintSliceScaled{
   } elsif($self->{parsed}->{datatype} == 2){
     $ps = "C";
     $datlen = 1;
+  } elsif($self->{parsed}->{datatype} == 128){
+    $ps = "CCC";
+    $datlen = 3;
   }
   unless($len == $length) { die "Read $len vs $length" }
   for my $i(0 .. ($length/$datlen)-1){
@@ -570,6 +629,24 @@ sub PrintSliceFlipped {
     unless($len == $row_size) { die "Read $len vs $row_size" }
     print $fh $buff;
   }
+}
+
+sub GetSliceFlipped{
+  my($self, $v, $s) = @_;
+  my($offset, $length, $row_size) =
+    $self->GetSliceOffsetLengthAndRowLength($v, $s);
+  my $num_rows = $self->{parsed}->{dim}->[2];
+  my $val = "";
+  $self->Open;
+  for my $r (1 .. $num_rows){
+    my $offset_r = $offset + (($num_rows - $r) * $row_size);
+    seek $self->{fh}, $offset_r, 0;
+    my $buff;
+    my $len  = read $self->{fh}, $buff, $row_size;
+    unless($len == $row_size) { die "Read $len vs $row_size" }
+    $val .= $buff;
+  }
+  return $val;
 }
 
 sub PrintSliceFlippedScaled{

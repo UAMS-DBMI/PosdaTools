@@ -17,6 +17,15 @@ $ButtonDefinition = <<EOF;
 EOF
 
 %QueryChaining = (
+  d_series_2_nifti => {
+    chained_query_id => "d_series_2_nifti",
+    caption => "files",
+    from_query => "ListNiftiConversionsForActivity",
+    to_query => "ListNiftiFileFromSeriesByNiftiConversion",
+    arg_map => {
+      dicom_to_nifti_conversion_id => "dicom_to_nifti_conversion_id",
+    },
+  },
   qc_1 => {
     chained_query_id => "qc_1",
     caption => "files",
@@ -580,6 +589,28 @@ EOF
     },
     params => {
       visual_review_id => 0,
+    }
+  },
+  qbp_NoFaceInDefaceReport => {
+    caption => "Show Face Not Found Report",
+    operation => "LaunchNoFaceReport",
+    obj_class => "Posda::NiftiNoFacesReport",
+    queries => {
+      NoFaceInFileNiftiDefacingBySubprocess => 1,
+    },
+    params => {
+      subprocess_invocation_id => 0,
+    }
+  },
+  qbp_AnalyzeSeriesVisualiations => {
+    caption => "Analyze Series Visualizations",
+    operation => "AnalyzeSeriesVisualizations",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      ImageDefacingResultsByActivity => 1,
+    },
+    params => {
+      subprocess_invocation_id => 0,
     }
   },
 );

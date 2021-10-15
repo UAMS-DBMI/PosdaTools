@@ -383,6 +383,34 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   },
+  {
+    id => "17_defacing",
+    name => "Dicom Image Defacing",
+    note => "Operations and queries related to determing if images need defacing ".
+      "and defacig them if they do",
+    description => "Curators are expected to determine if DICOM series in the collection " .
+      "need to be defaced, and to see that they are defaced if they do.  Here is a " .
+      "set of scripts and queries to assist in this activity.",
+    operations => [
+      {
+        operation => "PopulateFileNiftiTp",
+        caption => "Find files In Timepoint which parse as Nifti, and populate file_nifti table",
+        action =>  "PopulateFileNiftiTp",
+      },
+      {
+        operation => "ReQueueFileNiftiDefacing",
+        caption => "Requeue Files in FileNiftiDefacing",
+        action =>  "ReQueueFileNiftiDefacing",
+      },
+    ],
+    queries => [
+      {
+        caption => "Suggested Queries for Managing Image Defacing",
+        operation => "SelectQueryGroup",
+        query_list_name => "ImageDefacing",
+      },
+    ],
+  },
 );
 
 %WorkflowQueries = (
@@ -392,8 +420,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     {
       caption =>"ApiImportEvents",
       query =>"ApiImportEvents",
-    },
-    {
+    }, {
       caption =>"ApiImportEventsDateRange",
       query =>"ApiImportEventsDateRange",
     },
@@ -622,6 +649,23 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Export Events Awaiting Closure",
         query => "ExportEventsAwaitingClosure",
+      },
+    ],
+  ],
+  ImageDefacing => [
+    "Suggested Queries for ImageDefacing",
+    [
+      {
+        caption => "Series Which May Need Defacing",
+        query => "SeriesWhichMayNeedDefacing",
+      },
+      {
+        caption => "Nifti Conversions For Timepoint",
+        query => "ListNiftiConversionsForActivityTp",
+      },
+      {
+        caption => "Nifti Files For Nifti Conversion",
+        query => "ListNiftiFileFromSeriesByNiftiConversion",
       },
     ],
   ],

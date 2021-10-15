@@ -88,6 +88,15 @@ print STDERR "Dicom file\n";
       bless $self, "Posda::FileVisualizer::StructureSet";
       return $self->SpecificInitialize;
     }
+  } elsif($self->{file_desc}->{file_type} =~ /PNG/) {
+    my $params = {
+      file_id => $self->{file_id},
+      path => $self->{file_path}
+    };
+    $self->{is_dicom_file} = 0;
+    require Posda::FileVisualizer::PNG;
+    bless $self, "Posda::FileVisualizer::PNG";
+    return $self->SpecificInitialize($params);
   } elsif($self->{file_desc}->{file_type} eq "Nifti Image (gzipped)") {
 print STDERR "Gzipped Nifti\n";
     my $nifti = Nifti::Parser->new_from_zip(

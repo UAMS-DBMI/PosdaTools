@@ -27,30 +27,48 @@ function ActivityTaskStatusReturned(text, status, xml){
   document.getElementById('activitytaskstatus').innerHTML = text;
 }
 
+//function UpdateHeader(){
+//  PosdaGetRemoteMethod("HeaderResponse", "" , HeaderResponseReturned);
+//}
+
 function UpdateHeader(){
-  PosdaGetRemoteMethod("HeaderResponse", "" , HeaderResponseReturned);
+  UpdateDiv("header", "HeaderResponse");
 }
+
+//function UpdateMenu(){
+//  PosdaGetRemoteMethod("MenuResponse", "" , MenuResponseReturned);
+//}
 
 function UpdateMenu(){
-  PosdaGetRemoteMethod("MenuResponse", "" , MenuResponseReturned);
+  UpdateDiv("menu", "MenuResponse");
 }
+
+//function UpdateContent(){
+//  PosdaGetRemoteMethod("ContentResponse", "" , ContentResponseReturned);
+//}
 
 function UpdateContent(){
-  PosdaGetRemoteMethod("ContentResponse", "" , ContentResponseReturned);
+  UpdateDiv("content", "ContentResponse");
 }
+
+//function UpdateLogin(){
+//  PosdaGetRemoteMethod("LoginResponse", "" , LoginResponseReturned);
+//}
 
 function UpdateLogin(){
-  PosdaGetRemoteMethod("LoginResponse", "" , LoginResponseReturned);
+  UpdateDiv("login", "LoginResponse");
 }
+
+//function UpdateActivityTaskStatus(){
+//  PosdaGetRemoteMethod("DrawActivityTaskStatus", "" , ActivityTaskStatusReturned);
+//}
 
 function UpdateActivityTaskStatus(){
-  PosdaGetRemoteMethod("DrawActivityTaskStatus", "" , ActivityTaskStatusReturned);
+  UpdateDiv("activitytaskstatus","DrawActivityTaskStatus");
 }
-
 function UpdateDiv(div_text, method_text){
   PosdaGetRemoteMethod(method_text, "", makeDivUpdater(div_text));
 }
-
 function makeDivUpdater(div_text){
   var that = this;
   that.div_text = div_text;
@@ -59,10 +77,41 @@ function makeDivUpdater(div_text){
     if(foo != null) {
       document.getElementById(that.div_text).innerHTML = text;
     } else {
-      // console.log("Attempt to update unknown div: " + div_text);
+       console.log("Attempt to update unknown div: " + div_text);
     }
   }
 }
+var in_update_divs = 0;
+function UpdateDivs(div_list){
+  if(in_update_divs){
+    console.log("UpdateDivs collision");
+    return;
+  }
+  in_update_divs = 1;
+  UpdateDivs1(div_list);
+}
+function UpdateDivs1(div_list){
+  if(div_list == null) {
+    in_update_divs = 0;
+    return;
+  }
+  if(div_list.length == 0) { in_update_divs = 0 ; return }
+  var next = div_list.pop();
+  PosdaGetRemoteMethod(next[1], "", makeDivListIterator(next[0], div_list));
+}
+function makeDivListIterator(div_text, div_list){
+  var that = this;
+  that.div_text = div_text;
+  return function(text, status, xml){
+    var foo = document.getElementById(that.div_text);
+    if(foo != null) {
+      foo.innerHTML = text;
+    } else {
+       console.log("Attempt to update unknown div: " + div_text);
+    }
+      UpdateDivs1(div_list);
+    }
+  }
 
 function ModeChanged(text, status, xml){
   if(status != 200) {
@@ -78,19 +127,39 @@ function ChangeMode(op, mode){
 }
 
 function Update(){ 
-  UpdateMenu();
-  UpdateContent();
-  UpdateLogin();
+  UpdateDivs([
+    ["menu", "MenuResponse"],
+    ["content", "ContentResponse"],
+    ["login", "LoginResponse"]
+  ]);
 }
 function UpdateOne(){ 
-  UpdateHeader();
-  UpdateMenu();
-  UpdateContent();
-  UpdateLogin();
+  UpdateDivs([
+    ["header", "HeaderResponse"],
+    ["menu", "MenuResponse"],
+    ["content", "ContentResponse"],
+    ["login", "LoginResponse"]
+  ]);
 }
+
 function UpdateAct(){ 
   UpdateActivityTaskStatus();
 }
+
+//function Update(){ 
+//  UpdateMenu();
+//  UpdateContent();
+//  UpdateLogin();
+//}
+//function UpdateOne(){ 
+//  UpdateHeader();
+//  UpdateMenu();
+//  UpdateContent();
+//  UpdateLogin();
+//}
+//function UpdateAct(){ 
+//  UpdateActivityTaskStatus();
+//}
 function Reload(){
   window.location.reload();
 }

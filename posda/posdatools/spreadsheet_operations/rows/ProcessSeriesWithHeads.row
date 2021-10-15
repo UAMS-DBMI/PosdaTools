@@ -1,0 +1,6 @@
+:operation_name: ProcessSeriesWithHeads
+:command_line: ProcessSeriesWithHeads.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <series_instance_uid>&<has_head>
+:tags: ['defacing']
+:can_chain: 

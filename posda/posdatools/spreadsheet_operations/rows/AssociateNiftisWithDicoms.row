@@ -1,0 +1,6 @@
+:operation_name: AssociateNiftisWithDicoms
+:command_line: AssociateNiftisWithDicoms.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <activity_timepoint_id>&<nifti_file_id>&<series_instance_uid>
+:tags: ['nifti']
+:can_chain: 
