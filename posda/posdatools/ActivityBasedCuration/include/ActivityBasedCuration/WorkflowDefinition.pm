@@ -338,6 +338,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "MakeDownloadableDirectoryTp",
       },
       {
+        caption => "Make a Downloadable Directory with non-dicom files",
+        action =>  "CreateDownloadableDirectoryAllTp",
+      },
+      {
         caption => "Import Downloadable Directory",
         action =>  "ImportDownloadableDirectory",
       },
