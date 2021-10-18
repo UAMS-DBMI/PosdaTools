@@ -234,12 +234,12 @@ sub ReadWriteChild{
   my($cmd) = @_;
   my($child, $parent, $oldfh);
   socketpair($parent, $child, AF_UNIX, SOCK_STREAM, PF_UNSPEC) or
-    $this->Die("socketpair: $!");
+    Die("socketpair: $!");
   $oldfh = select($parent); $| = 1; select($oldfh);
   $oldfh = select($child); $| = 1; select($oldfh);
   my $child_pid = fork;
   unless(defined $child_pid) {
-    $this->Die("couldn't fork: $!");
+    Die("couldn't fork: $!");
   }
   if($child_pid == 0){
     close $child;
@@ -256,5 +256,10 @@ sub ReadWriteChild{
   }
   return $child, $child_pid;
 
+}
+sub Die{
+  my($mess) = @_;
+  my $traceback = Dispatch::EventHandler->TraceBack;
+  die "Error: $mess\nTraceback:\n$traceback";
 }
 1;
