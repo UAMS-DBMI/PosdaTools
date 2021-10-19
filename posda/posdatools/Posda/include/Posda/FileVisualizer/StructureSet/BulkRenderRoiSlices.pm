@@ -139,7 +139,7 @@ sub StartBackgroundProcess{
     ->FetchOneHash(undef, 'background',
       "RenderSliceFromContours.pl <?bkgrnd_id?> " .
       "$self->{params}->{activity_id} " .
-      "$self->{params}->{notify}",
+      $self->get_user,
       undef,
       $self->get_user, 'RenderSliceFromContours'
     )->{subprocess_invocation_id};

@@ -1,0 +1,6 @@
+:operation_name: CreateActivityListFromPatientCountAndUploadSpecSpreadsheet
+:command_line: CreateActivityListFromPatientCountAndUploadSpecSpreadsheet.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <patient_id>&<num_files>&<import_comment_like>&<import_type_like>&<from>&<to>
+:tags: ['activity_timepoints']
+:can_chain: 

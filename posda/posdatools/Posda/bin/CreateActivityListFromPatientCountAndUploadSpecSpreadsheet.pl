@@ -30,6 +30,8 @@ while (my $line = <STDIN>){
   chomp $line;
   my($patient_id, $num_files, $import_comment_like, $import_type_like,
     $from, $to) = split /&/, $line;
+  if($from =~ /^<(.*)>$/) { $from = $1 }
+  if($to =~ /^<(.*)>$/) { $to = $1 }
   
   push @Qargs, {
     num_files_expected => $num_files,
