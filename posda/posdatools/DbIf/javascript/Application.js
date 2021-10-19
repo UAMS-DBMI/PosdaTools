@@ -76,6 +76,10 @@ function makeDivUpdater(div_text){
     var foo = document.getElementById(that.div_text);
     if(foo != null) {
       document.getElementById(that.div_text).innerHTML = text;
+      if(that.div_text == "content"){
+        Dropzone.discover();
+      }
+       console.log("UpdatedDiv: " + div_text);
     } else {
        console.log("Attempt to update unknown div: " + div_text);
     }
@@ -106,8 +110,16 @@ function makeDivListIterator(div_text, div_list){
     var foo = document.getElementById(that.div_text);
     if(foo != null) {
       foo.innerHTML = text;
+      if(that.div_text == "content"){
+        Dropzone.discover();
+      }
+      $('pre code').each(function(i, block) {
+       hljs.highlightBlock(block);
+      });
+      $('div.spinner').spin(spinner_opts);
+      console.log("UpdatedDiv: " + div_text);
     } else {
-       console.log("Attempt to update unknown div: " + div_text);
+      console.log("Attempt to update unknown div: " + div_text);
     }
       UpdateDivs1(div_list);
     }
