@@ -5,6 +5,7 @@ use Posda::PopupWindow;
 use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
+use Posda::FileVisualizer;
 
 
 use vars qw( @ISA );
