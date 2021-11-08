@@ -28,3 +28,4 @@ create_file_nifti_defacing.sql
 series_to_nifti.sql
 add_success_to_deface.sql
 add_result_to_deface.sql
+create_dicom_slice_nifti_slice.sql
