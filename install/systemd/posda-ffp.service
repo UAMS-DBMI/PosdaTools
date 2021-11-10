@@ -1,0 +1,11 @@
+[Unit]
+Description=Posda FastFileProcessor
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/oneposda/install/start-ffp.sh
+
+[Install]
+WantedBy=multi-user.target

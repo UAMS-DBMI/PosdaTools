@@ -1,0 +1,29 @@
+Scripts and other files for installing Posda directly without using containers
+
+
+The current plan:
+
+Currently targetting only RHEL 7/8
+
+An install script which
+* installs system deps (via yum)
+* installs perl deps (via cpan)
+* installs python deps (via pip)
+* installs pre-compiled local deps
+* installs systemd files for launching services
+
+In order to launch services, will probably need a special bash script
+that can load all of the .env files.
+
+
+For the database, currently it will need to be setup manually (though
+it can be done using all.sql)
+
+
+# Notes on things left to do
+[*] Get Redis running (needs to be started)
+[x] Get the FFP running
+[ ] Run the setup.pl script to create the dir structure
+[ ] The API is not getting all of it's required env vars! like paths
+[ ] Worker Nodes
+
