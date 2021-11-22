@@ -101,7 +101,11 @@ sub DisplaySegmentationInfo{
           sync => "Update();" }));
         $http->queue("</td>");
       } else {
-        $http->queue("<td>$row->[$i]</td>");
+        if(defined($row->[$i])){
+          $http->queue("<td>$row->[$i]</td>");
+        } else {
+          $http->queue("<td></td>");
+        }
       }
     }
     $http->queue("</tr>");
@@ -181,6 +185,8 @@ sub DisplaySegmentationSliceInfo{
       $n = keys %{$info->{sops}};
     }
     $http->queue("<td>$n</td>");
+    unless(defined $info->{num_contours}){ $info->{num_contours} = 0 }
+    unless(defined $info->{num_points}){ $info->{num_points} = 0 }
     $http->queue("<td>$info->{num_contours}</td>");
     $http->queue("<td>$info->{num_points}</td>");
     $http->queue("</tr>");

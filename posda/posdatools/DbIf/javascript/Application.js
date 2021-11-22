@@ -67,6 +67,11 @@ function UpdateActivityTaskStatus(){
   UpdateDiv("activitytaskstatus","DrawActivityTaskStatus");
 }
 function UpdateDiv(div_text, method_text){
+  if(in_update_divs){
+    console.log("UpdateDivs collision[0]");
+    return;
+  }
+  //console.log('{0}PosdaGetRemoteMethod(' + method_text + ', ' + div_text + ')');
   PosdaGetRemoteMethod(method_text, "", makeDivUpdater(div_text));
 }
 function makeDivUpdater(div_text){
@@ -79,19 +84,20 @@ function makeDivUpdater(div_text){
       if(that.div_text == "content"){
         Dropzone.discover();
       }
-       console.log("UpdatedDiv: " + div_text);
+       //console.log("UpdatedDiv: " + div_text);
     } else {
-       console.log("Attempt to update unknown div: " + div_text);
+       console.log("Attempt to update unknown div(1): " + div_text);
     }
   }
 }
 var in_update_divs = 0;
 function UpdateDivs(div_list){
   if(in_update_divs){
-    console.log("UpdateDivs collision");
+    console.log("UpdateDivs collision[1]");
     return;
   }
   in_update_divs = 1;
+  //console.log("Setting in_update_divs");
   UpdateDivs1(div_list);
 }
 function UpdateDivs1(div_list){
@@ -101,6 +107,7 @@ function UpdateDivs1(div_list){
   }
   if(div_list.length == 0) { in_update_divs = 0 ; return }
   var next = div_list.pop();
+  //console.log('{1}PosdaGetRemoteMethod(' + next[1] + ', ' + next[0] + ')');
   PosdaGetRemoteMethod(next[1], "", makeDivListIterator(next[0], div_list));
 }
 function makeDivListIterator(div_text, div_list){
@@ -117,9 +124,9 @@ function makeDivListIterator(div_text, div_list){
        hljs.highlightBlock(block);
       });
       $('div.spinner').spin(spinner_opts);
-      console.log("UpdatedDiv: " + div_text);
+      //console.log("UpdatedDiv: " + div_text);
     } else {
-      console.log("Attempt to update unknown div: " + div_text);
+      console.log("Attempt to update unknown div(2): " + div_text);
     }
       UpdateDivs1(div_list);
     }
@@ -129,12 +136,13 @@ function ModeChanged(text, status, xml){
   if(status != 200) {
     alert("Mode change failed");
   } else {
-    console.log("mode changed");
+    //console.log("mode changed");
     Update();
   }
 }
 
 function ChangeMode(op, mode){
+  //console.log('{2}PosdaGetRemoteMethod(' + op + ', ModeChanged)');
   PosdaGetRemoteMethod(op, 'value='+mode , ModeChanged);
 }
 

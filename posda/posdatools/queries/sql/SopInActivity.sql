@@ -1,7 +1,7 @@
 -- Name: SopInActivity
 -- Schema: posda_files
 -- Columns: ['file_id', 'instance_number']
--- Args: ['sop_instance_uid', 'activity_timepoint_id']
+-- Args: ['sop_instance_uid', 'activity_id']
 -- Tags: ['FileId']
 -- Description: Get the file_id of a Sop in an Activity
 -- 
@@ -13,6 +13,7 @@ from
 where
   sop_instance_uid = ?
   and activity_timepoint_id = (
-    select max(activity_timepoint_id) from activity_timepoint
-    where activity_timepoint_id = ?
+    select max(activity_timepoint_id) as activity_timepoint_id
+    from activity_timepoint
+    where activity_id = ?
   )

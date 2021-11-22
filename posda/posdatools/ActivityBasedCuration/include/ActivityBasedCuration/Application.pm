@@ -2045,7 +2045,7 @@ sub RenderActivityDropDown {
   $self->SelectDelegateByValue($http, {
     op => 'SetActivity',
     id => "SelectActivityDropDown",
-    sync => "UpdateDiv('header', 'BigTitle');Update();",
+    sync => "UpdateDivs([['header', 'BigTitle'],['content', 'ContentResponse']]);",
   });
   for my $i (@activity_list){
     $http->queue("<option value=\"$i->[0]\"");
@@ -2074,7 +2074,7 @@ sub SetActivity {
   my $activity_name = $self->{Activities}->{$dyn->{value}}->{desc};
   if($activity_name ne ""){
     $self->{title} = "Activity Based Curation (<small>$dyn->{value}: $activity_name</small>)";
-    $self->AutoRefreshDiv('header','BigTitle');
+    #$self->AutoRefreshDiv('header','BigTitle');
   } else {
     $self->{title} = "Activity Based Curation (<small>no activity</small>)";
     #$self->AutoRefreshDiv('header','BigTitle');
@@ -2242,7 +2242,7 @@ sub DrawClearActivityButton{
     op => "ClearActivity",
     id => "ClearCurrentActivity",
     caption => "Choose Another Activity",
-    sync => "UpdateDiv('header', 'BigTitle');Update();",
+    sync => "UpdateDivs([['header', 'BigTitle'],['content', 'ContentResponse']]);",
   });
 }
 sub ClearActivity{
