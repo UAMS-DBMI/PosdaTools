@@ -7,6 +7,8 @@ use Posda::Config ('Config','Database');
 use Posda::DB 'Query';
 use Posda::DB::PosdaFilesQueries;
 use Posda::File::Import 'insert_file';
+#use Encode qw(encode decode is_utf8 decode_utf8 encode_utf8);
+#use HexDump;
 
 use File::Temp 'tempfile';
 
@@ -334,19 +336,42 @@ sub DrawRenderedInputData{
     $http->queue("<hr>$num_lines lines to supply as input:\n<pre>");
     if($num_lines < 20){
       for my $line (@{$self->{InputLines}}){
-        $http->queue("$line\n");
+        $self->{SubstitutedInput} = [];
+        my $enc_line = $line;
+        $enc_line =~ s/</&lt;/g;
+        $enc_line =~ s/>/&gt;/g;
+        $http->queue("$enc_line\n");
+        push @{$self->{SubstitutedInput}}, $enc_line;
       }
     } else {
       my $lines = @{$self->{InputLines}};
       for my $i (0 .. 9){
-        $http->queue("$self->{InputLines}->[$i]\n");
+        my $line = $self->{InputLines}->[$i];
+        $line =~ s/</&lt;/g;
+        $line =~ s/>/&gt;/g;
+        $self->{SubstitutedInput}->[$i] = $line;
+        $http->queue("$line\n");
       }
       $http->queue("... (only first and last 10 lines shown)\n");
       for my $i ($lines - 10 .. $lines - 1){
-        $http->queue("$self->{InputLines}->[$i]\n");
+        my $line = $self->{InputLines}->[$i];
+        $line =~ s/</&lt;/g;
+        $line =~ s/>/&gt;/g;
+        $self->{SubstitutedInput}->[$i] = $line;
+        $http->queue("$line\n");
       }
     }
     $http->queue("</pre>");
+#    for my $i (0 .. $#{$self->{SubstitutedInput}}){
+#      my $sl = $self->{SubstitutedInput}->[$i];
+#      my $isutf8 = 0;
+#      if(is_utf8($sl)){
+#        $isutf8 = 1;
+#      }
+#      print STDERR "Line (" . ($isutf8? "utf8" : "not_utf8") ."): $sl\n";
+#      #HexDump::PrintVax(\*STDERR, $sl, 0);
+#      print STDERR "\n";
+#    }
   }
 }
 

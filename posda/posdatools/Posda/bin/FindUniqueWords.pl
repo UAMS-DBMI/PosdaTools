@@ -9,6 +9,8 @@
 use strict;
 use Posda::Try;
 use File::Temp qw/ tempfile /;
+use Encode qw(encode  decode is_utf8 from_to) ;
+use HexDump;
 my $file = $ARGV[0];
 sub UncompressGeProtocolDataBlock{
   my($v) = @_;
@@ -76,30 +78,38 @@ sub MakeEleFun{
       if($n_sig eq '(0025,"GEMS_SERS_01",1b)'){
         $v = UncompressGeProtocolDataBlock($v);
       }
-      unless($v =~ /^[[:print:][:cntrl:]]+$/){ next value }
+#      unless($v =~ /^[[:print:][:cntrl:]]+$/){ next value }
 #      if($v =~ /^[0-9\.\+\-Ee ]+$/) { next value }
       if($v =~ /\n/){
         my @values = split(/[\n,']/, $v);
         value1:
         for my $i (@values){
-          $i =~ tr/\000-\037/ /;
-          $i =~ s/\s*$//g;
-          $i =~ s/^\s*//g;
-          $i =~ s/\|/ /g;
-          if ($i eq "") { next value1 }
-          if($i =~ /[^[:print:]]/){
+          my $vd;
+          if($ele->{type} eq "text"){
+            $vd = decode('UTF-8', $i);
+#            print STDERR "Decode $i => $vd\n";
+            unless($vd =~ /^[[:print:][:cntrl:]]+$/){ next value1 }
+          } else {
+            $vd = $i;
+          }
+          $vd =~ tr/\000-\037/ /;
+          $vd =~ s/\s*$//g;
+          $vd =~ s/^\s*//g;
+          $vd =~ s/\|/ /g;
+          if ($vd eq "") { next value1 }
+          if($vd =~ /[^[:print:]]/){
             my @foo = split(/[^[:print:]]+/, $i);
             foo:
             for my $j (@foo){
-              $i =~ tr/\000-\037/ /;
-              $i =~ s/\s*$//g;
-              $i =~ s/^\s*//g;
+              $j =~ tr/\000-\037/ /;
+              $j =~ s/\s*$//g;
+              $j =~ s/^\s*//g;
               if($j eq "") { next foo }
               $values->{$j}->{$n_sig}->{$ele->{VR}} = 1;
               $num_text_values += 1;
             }
           } else {
-            $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+            $values->{$vd}->{$n_sig}->{$ele->{VR}} = 1;
             $num_text_values += 1;
           }
         }
@@ -107,8 +117,16 @@ sub MakeEleFun{
         my @values = split(/[\s,]+/, $v);
         value2:
         for my $i (@values){
-          if(length($i) > 64){
-            my $remain = $i;
+          my $vd;
+          if($ele->{type} eq "text"){
+            $vd = decode('UTF-8', $i);
+#            print STDERR "Decode $i => $vd\n";
+            unless($vd =~ /^[[:print:][:cntrl:]]+$/){ next value2 }
+          } else {
+            $vd = $i;
+          }
+          if(length($vd) > 64){
+            my $remain = $vd;
             value3:
             while($remain =~ /^(.....................)(.*)$/){
               my $j = $1;
@@ -133,22 +151,47 @@ sub MakeEleFun{
               }
             }
           } else {
-            $i =~ tr/\000-\037/ /;
-            $i =~ s/\|/ /g;
-            $i =~ s/\s*$//g;
-            $i =~ s/^\s*//g;
-            if($i eq "" ) { next value2 }
-            $values->{$i}->{$n_sig}->{$ele->{VR}} = 1;
+            $vd =~ tr/\000-\037/ /;
+            $vd =~ s/\|/ /g;
+            $vd =~ s/\s*$//g;
+            $vd =~ s/^\s*//g;
+            if($vd eq "" ) { next value2 }
+            $values->{$vd}->{$n_sig}->{$ele->{VR}} = 1;
             $num_text_values += 1;
           }
         }
       } else {
-        $v =~ tr/\000-\037/ /;
-        $v =~ s/\|/ /g;
-        $v =~ s/\s*$//g;
-        $v =~ s/^\s*//g;
-        if($v eq "") { next value }
-        $values->{$v}->{$n_sig}->{$ele->{VR}} = 1;
+        my $vd;
+        if($ele->{type} eq "text"){
+          $vd = $v;
+          from_to($vd, 'iso-8859-1', 'UTF-8');
+          if(Encode::is_utf8($v, 1)){
+            print ("Foo: is_utf8('$v', 1) returned true\n");
+          } else {
+            print ("Foo: is_utf8('$v', 1) returned false\n");
+          }
+          if(Encode::is_utf8($vd, 1)){
+            print ("Foo: is_utf8('$vd', 1) returned true\n");
+          } else {
+            print ("Foo: is_utf8('$vd', 1) returned false\n");
+          }
+          print "Decode $v => $vd\n";
+          print "Value of \$v: ";
+          HexDump::PrintVax(\*STDOUT, $v, 1);
+          print "\n";
+          print "Value of \$vd: ";
+          HexDump::PrintVax(\*STDOUT, $vd, 1);
+          print "\n";
+          #unless($vd =~ /^[[:print:][:cntrl:]]+$/){ next value }
+        } else {
+          $vd = $v;
+        }
+        $vd=~ tr/\000-\037/ /;
+        $vd=~ s/\|/ /g;
+        $vd=~ s/\s*$//g;
+        $vd=~ s/^\s*//g;
+        if($vd eq "") { next value }
+        $values->{$vd}->{$n_sig}->{$ele->{VR}} = 1;
         $num_text_values += 1;
       }
     }

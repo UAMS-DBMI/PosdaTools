@@ -20,7 +20,7 @@ Reads a csv file and produces a structure on STDOUT (serialized perl structure)
 EOF
 if($#ARGV != 0 || $ARGV[0] eq "-h"){ die $usage }
 
-my $csv = Text::CSV->new( { binary => 1 });
+my $csv = Text::CSV->new( { binary => 1, decode_utf8 => 0 });
 open my $fh, "<:encoding(utf_8)", $ARGV[0] or die "ARGV[0]: $!";
 my @rows;
 while(my $row = $csv->getline($fh)){
