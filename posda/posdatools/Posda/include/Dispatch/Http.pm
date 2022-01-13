@@ -839,6 +839,15 @@ print STDERR "##################################\n";
     if(defined $app_name) { $this->{app_name} = $app_name }
     return bless $this, $class;
   }
+  sub new_single_sess{
+    my($class, $app_name, $sess_id) = @_;
+    my $this = {
+      app_name => $app_name,
+      sess_id => $sess_id
+    };
+    return bless $this, $class;
+  }
+  
   sub Dispatch{
     my($app_root, $http, $sess, $op, $dyn) = @_;
     if(ref($app_root->{app}->{$op}) eq "CODE"){
@@ -858,7 +867,7 @@ print STDERR "##################################\n";
 # The following print statement will let you know if you are
 # dispatching objects at all (but will generate lots of output)
 #
-#  print STDERR "DispatchObj: method: $method q_string: $http->{q_string}\n";
+#    print STDERR "DispatchObj: method: $method q_string: $http->{q_string}\n";
 #
     my @pairs = split(/&/, $http->{q_string});
     my %env;
@@ -889,6 +898,370 @@ print STDERR "##################################\n";
         print STDERR "  $i => \"$env{$i}\", \n";
       }
       print STDERR"});\n";
+    }
+  }
+}
+{
+  package Dispatch::Http::App::SimplifiedServer;
+  use vars qw ( @ISA $ExtToMime $ServerPort );
+  $ExtToMime = {
+    "doc" => "application/msword",
+    "bmp" => "image/bmp",
+    "gif" => "image/gif",
+    "htm" => "text/html",
+    "html" => "text/html",
+    "jpg" => "image/jpeg",
+    "jpeg" => "image/jpeg",
+    "png" => "image/png",
+    "mpg" => "video/mpeg",
+    "ppt" => "application/ppt",
+    "qt" => "video/quicktime",
+    "rtf" => "application/rtf",
+    "tif" => "image/tiff",
+    "tiff" => "image/tiff",
+    "txt" => "text/plain",
+    "wav" => "audio/x-wav",
+    "xls" => "application/msexcel",
+    "js" => "application/x-javascript",
+    "css" => "text/css",
+    "ico" => "image/icon",
+    "svg" => "image/svg+xml",
+  };
+  @ISA = ( "Dispatch::Select::Socket" );
+  sub make_foo{
+    my($this, $port, $interval, $time_to_live) = @_;
+    my $foo = sub {
+      my($http) = @_;
+      if($http->{header_lines}->[0] =~ /^(\S*)\s*(\S*)\s*(\S*)\s*$/){
+        my $method = $1;
+        my $uri = $2;
+        my $prot = $3;
+ #The following print statement are for debuging recving a hdr
+
+# $Dispatch::Http::Connection::now = Time::HiRes::time;
+# my $elapsed = $Dispatch::Http::Connection::now - $Dispatch::Http::Connection::then;
+# if ($Dispatch::Http::Connection::then == 0) {
+#   print "time start: $Dispatch::Http::Connection::now: ";
+# } else {
+#   print "Elapsed time: $elapsed: ";
+# }
+# $Dispatch::Http::Connection::then = $Dispatch::Http::Connection::now;
+# print STDERR "Dispatch::Http::Connection: method: $method uri: $uri prot: $prot\n";
+# print STDERR "\t: file_root: $this->{file_root}, static: $this->{static}.\n";
+  
+        unless(defined($this->{file_root})){
+          $this->AppDispatch($http, $method, $uri);
+          return;
+        }
+        if($uri eq "/"){ $uri = "/index.html" }
+        if(defined $this->{static}->{$uri}){
+          unless($method eq "GET"){
+            return $http->InternalError(
+              "Only GET supported for static content");
+          }
+          if($uri =~ /\.([^\/\.]+)$/){
+            my $ext = $1;
+            if(exists $ExtToMime->{$ext}){
+              my $content_type = $ExtToMime->{$ext};
+              $http->HeaderSent;
+              $http->queue("HTTP/1.0 200 OK\n");
+              $http->queue("Content-type: $content_type\n\n");
+              $http->queue($this->{static}->{$uri});
+              $http->finish();
+            }
+          }
+          return;
+        }
+        my $path;
+        if(defined $this->{file_root}){
+          $path = "$this->{file_root}$uri";
+        }
+        unless(defined($path) && -r $path){
+          $this->AppDispatch($http, $method, $uri);
+          return;
+        }
+        unless($method eq "GET"){
+          die "Only GET supported for static content";
+        }
+        if(-d $path) {
+          if($path =~ /\/$/){
+            $path .= "index.html";
+          } else {
+            $path .= "/index.html";
+          }
+        }
+        unless(-r $path){
+          return $http->NotFound("No file:", $path);
+        }
+        my $fh = FileHandle->new("<$path");
+        unless($fh) {
+          print STDERR "Error ($!) opening $path\n";
+          print STDERR "Backtrace:\n";
+          my $i = 0;
+          while(caller($i)){
+            my @foo = caller($i);
+            $i++;
+            my $file = $foo[1];
+            my $line = $foo[2];
+            print STDERR "\tline $line of $file\n";
+          }
+          return $http->NotFound("No file:", $path);
+        }
+        $fh->binmode();
+        my $queue = $http->{output_queue};
+        delete $http->{output_queue};
+        my $content_type = "text/html";
+        if($path =~ /\.([^\/\.]+)$/){
+          my $ext = $1;
+          if(exists $ExtToMime->{$ext}){
+            $content_type = $ExtToMime->{$ext};
+            $http->HeaderSent;
+            $queue->queue("HTTP/1.0 200 OK\n");
+            $queue->queue("Content-type: $content_type\n\n");
+          }
+        }
+        $queue->CreateQueueFillerEvent($fh);
+        $queue->post_output();
+      } else {
+        die "unable to parse first line";
+      }
+    };
+    return $foo;
+  }
+  sub make_fie{
+    my($this, $port, $interval, $time_to_live) = @_;
+    my $count;
+    my $fie = sub {
+      my($back) = @_;
+      unless(defined($count)){ $count = 6 }
+      $count -= 1;
+      if($count < 0){
+        my $time = `date`;
+        chomp $time;
+        print STDERR "Log: $time\n";
+        $count = 6;
+      }
+      session:
+      for my $id(keys %{$this->{Inventory}}){
+        my $sess = $this->{Inventory}->{$id};
+        unless(exists $sess->{logged_in}){
+          unless(defined $sess->{login_time}){
+            $sess->{DieOnTimeout} = 1;
+            $sess->{login_time} = time;
+          }
+          if(time - $sess->{login_time} > $time_to_live){
+            print STDERR "Deleting login $id\n";
+            if ($sess->can("TearDown")) { $sess->TearDown(); }
+            delete $this->{Inventory}->{$id};
+            if(scalar keys %{$this->{Inventory}} <= 0){
+              unless($sess->{dont_die_on_timeout}){
+                die "Time out login, no other session\n";
+              }
+            }
+          }
+          next session;
+        }
+        unless(
+          defined $sess  &&  
+          ref($sess) eq "Dispatch::Http::Session"
+        ){
+          delete $this->{Inventory}->{$id};
+          next session;
+        }
+        if($sess->{NoTimeOut}){ next session }
+        if(
+          exists($sess->{log_me_out}) ||
+          time - $sess->{last_access} > $time_to_live
+        ){
+          if($sess->{DieOnTimeout}){
+            if($sess->{dont_die_on_timeout}){
+              my $num_sess = scalar keys %{$this->{Inventory}};
+              print "No refresh from web client ($num_sess)\n";
+            } else {
+              $ENV{POSDA_DEBUG} = 1;
+              print "Time Out: No refresh from web client\n";
+              die "Time Out";
+            }
+          }
+          if($sess->{logged_in}){
+            print STDERR "Deleting Inventory ($id)\n";
+#           We seem to be hitting this occasionally ...
+#           Setting debug doesn't work ...
+#           So its commented out
+#           To do: figure out what's going on
+print STDERR "##################################\n";
+print STDERR "#  See if you can figure out how to get here: " .
+   __FILE__ . ", line: " . __LINE__ . "\n";
+print STDERR "##################################\n";
+#            $ENV{POSDA_DEBUG} = 1;
+            if ($sess->can("TearDown")) { $sess->TearDown(); }
+            print STDERR "Delete session: $id\n";
+            delete $this->{Inventory}->{$id};
+          } else {
+            print STDERR "Not Logged in\n";
+          }
+        } elsif ((time - $sess->{last_access}) > ($time_to_live / 10)){
+          my $sess_count = scalar keys %{$this->{Inventory}};
+          print STDERR "$sess_count in inventory\n";
+          if($sess->{DieOnTimeout}){
+            my $time_remaining = $time_to_live - 
+              (time - $sess->{last_access});
+            print STDERR "Timing Out in $time_remaining seconds:\n";
+            for my $k (keys %{$this->{Inventory}}){
+              print STDERR "\t$k\n";
+            }
+          }
+        }
+      }
+      my $sess_count = scalar keys %{$this->{Inventory}};
+      unless($this->{shutting_down} && $sess_count <= 0){
+        return $back->timer($interval);
+      }
+    };
+    return $fie
+  }
+  sub Serve{
+    my($this, $port, $interval, $time_to_live) = @_;
+    my $foo = $this->make_foo($port, $interval, $time_to_live);
+    my $fie = $this->make_fie($port, $interval, $time_to_live);
+    $ServerPort = $port;
+    my $disp = Dispatch::HttpServer->new($port, $foo);
+    $this->{socket_server} = $disp;
+    $disp->Add("reader");
+    my $back = Dispatch::Select::Background->new($fie);
+    $back->queue;
+  }
+  sub Remove{
+    my($this) = @_;
+    if(defined($this->{socket_server})){
+      $this->{socket_server}->Remove();
+      delete($this->{socket_server});
+    }
+    $this->{shutting_down} = 1;
+  }
+  sub new {
+    my($class, $file_root, $app_root) = @_;
+    my $this = {
+      Inventory => {
+      },
+      shutting_down => 0,
+      app_root => $app_root,
+      file_root => $file_root,
+    };
+    bless $this, $class;
+    if($ENV{POSDA_DEBUG}){
+      print "NEW: $this\n";
+    }
+    return $this;
+  }
+  sub new_static {
+    my($class, $static, $app_root) = @_;
+    my $this = {
+      Inventory => {
+      },
+      shutting_down => 0,
+      app_root => $app_root,
+      static => $static,
+    };
+    bless $this, $class;
+    if($ENV{POSDA_DEBUG}){
+      print "NEW: $this\n";
+    }
+    return $this;
+  }
+  sub new_static_and_files {
+    my($class, $static, $file_root) = @_;
+    my $this = {
+      Inventory => {},
+      shutting_down => 0,
+      static => $static,
+      file_root => $file_root,
+    };
+    bless $this, $class;
+    if($ENV{POSDA_DEBUG}){
+      print "NEW: $this\n";
+    }
+    return $this;
+  }
+  sub GetSession {
+    my($this, $session) = @_;
+    return $this->{Inventory}->{$session};
+  }
+  sub DeleteSession {
+    my($this, $session) = @_;
+    print STDERR "Deleting session: $session\n";
+    $this->{Inventory}->{$session}->TearDown();
+    delete $this->{Inventory}->{$session};
+  }
+  sub DeleteAllSessions {
+    my($this) = @_;
+    for my $session (keys %{$this->{Inventory}}) {
+      $this->DeleteSession($session);
+    }
+  }
+  sub RandString{
+    my $ret;
+    for my $i ( 0 .. 4){
+      my $num = int rand() * 1000;
+      $ret .= sprintf("%03d", $num);
+    }
+    return $ret;
+  }
+  sub NewSession {
+    my($this, $inst_id) = @_;
+    print "NewSession: $inst_id\n";
+    $this->{Inventory}->{$inst_id} = bless {
+      session_id => $inst_id,
+      last_access => time(),
+    }, "Dispatch::Http::Session";
+  }
+  sub AppDispatch{
+    my($this, $http, $method, $uri) = @_;
+    $http->ParseIncomingHeader();
+    my $app_root = $this->{app_root};
+    $http->{method} = $method;
+    my $q_string = "";
+    if($uri =~ /^(.*)\?(.*)$/){
+      $uri = $1;
+      $q_string = $2;
+    }
+    $http->{uri} = $uri;
+    $http->{q_string} = $q_string;
+    if($uri =~ /^\/login/){
+      return $this->Login($http, $uri);
+    }
+    unless($uri =~ /^\/([^\/]+)(\/.*)$/){
+      return $http->NotFound("Can't find session_id in uri: \"$uri\"", $uri);
+    }
+    my $sess_id = $1;
+    my $op = $2;
+    unless(defined $this->{Inventory}->{$sess_id}){
+      return $http->NotLoggedIn($op, $sess_id);
+    }
+    my $sess = $this->{Inventory}->{$sess_id};
+    if(exists($sess->{log_me_out})){
+      $sess->TearDown();
+      delete $this->{Inventory}->{$sess_id};
+      return $http->NotLoggedIn($op, $sess_id);
+    }
+    unless(exists $sess->{logged_in}){
+      return $http->NotLoggedIn($op, $sess_id);
+    }
+    my $time = time;
+    $sess->{think_time} = $time - $sess->{last_access};
+    $sess->{last_access} = $time;
+    $app_root->DispatchObj($http, $sess_id, $op, {});
+  }
+  sub Login{
+    my($this, $http, $uri) = @_;
+    my $app_root = $this->{app_root};
+    &{$app_root->{login}}($this, $http, $app_root);
+  }
+  sub DESTROY{
+    my($this) = @_;
+    my $class = ref($this);
+    if($ENV{POSDA_DEBUG}){
+      print "Destroying $class\n";
     }
   }
 }
