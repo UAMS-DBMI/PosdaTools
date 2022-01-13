@@ -72,7 +72,7 @@
     },
     "UserAdmin": {
       "Directory": "POSDA_ROOT/Config/UserAdmin",
-      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Application" : "SimplifiedAppController.pl <host> <port> <dir> <hashed_token> <user>",
       "Description" : "User Administration",
       "WindowName" : "_new",
       "interactive": 1,
@@ -98,7 +98,7 @@
     },
     "DbIf": {
       "Directory": "POSDA_ROOT/Config/DbIf",
-      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Application" : "SimplifiedAppController.pl <host> <port> <dir> <hashed_token> <user>",
       "Description" : "Database Interface",
       "WindowName" : "_new",
       "interactive": 1,
@@ -111,7 +111,7 @@
     },
     "ActivityBasedCuration": {
       "Directory": "POSDA_ROOT/Config/ActivityBasedCuration",
-      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Application" : "SimplifiedAppController.pl <host> <port> <dir> <hashed_token> <user>",
       "Description" : "Activity Based Curration Application",
       "WindowName" : "_new",
       "interactive": 1,

@@ -44,7 +44,7 @@ $HTTP_APP_CONFIG = Posda::ConfigRead->new($dir);
 my $int = 10;
 my $ttl = 60;
 my $class = $HTTP_APP_CONFIG->{config}->{Environment}->{ApplicationInitClass};
-$HTTP_APP_CONFIG->{hashed_token} = $hashed_token;
+$HTTP_APP_CONFIG->{hashed_token} = $user;
 eval "require $class";
 if($@) { 
   print "Failed to compile: xyzzy\n$@\nxyzzy\n";
@@ -70,7 +70,7 @@ sub RandString{
   );
   my $ref_type = ref($main::HTTP_APP_SINGLETON);
   $HTTP_APP_SINGLETON->NewSession($session_id);
-  if(defined $hashed_token) { $HTTP_APP_SINGLETON->{token} = $hashed_token }
+  if(defined $user) { $HTTP_APP_SINGLETON->{token} = $user }
   if(defined $user) { $HTTP_APP_SINGLETON->{user} = $user }
   print STDERR "############################\n(Before) App Singleton ($ref_type): ";
   Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
