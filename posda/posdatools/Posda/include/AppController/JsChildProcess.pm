@@ -35,6 +35,7 @@ sub new{
   $this->{RealUser} = $this->{AuthUser};
   $this->{ImportsFromAbove}->{GetSocketList} = 1;
   $this->{expander} = $expander;
+  $this->{hashed_token} = "xxxxxxx";
   bless $this, $class;
   $this->{host} = $host;
   if($this->{host} =~ /^(.*):(.*)$/){
@@ -176,6 +177,7 @@ sub TryNextSocket{
     $this->{Command} =~ s/<host>/$this->{host}/;
     $this->{Command} =~ s/<port>/$next_socket/;
     $this->{Command} =~ s/<dir>/$dir/;
+    $this->{Command} =~ s/<hashed_token>/$this->{hashed_token}/;
     $this->{Command} =~ s/<color>/"$this->{color}"/;
     $this->{Command} =~ s/<user>/"$this->{AuthUser}"/;
     my $p_stdout = PipeChildren::GetSocketPair(my $to_stdout, my $from_stdout);

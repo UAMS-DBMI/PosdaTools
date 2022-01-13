@@ -3,7 +3,7 @@
 # A simple skeleton application
 #
 use strict;
-package GenericApp::Application;
+package NewGenericApp::Application;
 use Posda::HttpApp::JsController;
 use Dispatch::NamedObject;
 use Posda::HttpApp::DebugWindow;
@@ -70,16 +70,18 @@ sub new {
   my $session = $this->get_session;
   $session->{DieOnTimeout} = 1;
   if(
-    exists $main::HTTP_APP_SINGLETON->{token} &&
-    defined $main::HTTP_APP_SINGLETON->{token}
+    exists $main::HTTP_APP_SINGLETON->{user} &&
+    defined $main::HTTP_APP_SINGLETON->{user}
   ){
     $session->{logged_in} = 1;
-    $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{token};
-    $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
-    $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
+    $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{user};
+    $session->{real_user} = $main::HTTP_APP_SINGLETON->{user};
+    $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{user});
   }
-  if($this->{user_has_permission}('debug')){
-    Posda::HttpApp::DebugWindow->new($sess, "Debug");
+  if(defined $this->{user_has_permission}){
+    if($this->{user_has_permission}('debug')){
+      Posda::HttpApp::DebugWindow->new($sess, "Debug");
+    }
   }
   $this->{ExitOnLogout} = 1;
   $this->{DicomInfoCache} =
@@ -240,35 +242,7 @@ sub MenuResponse{
   });
 
   $http->queue(
-    $this->MakeHostLinkSync("DumpAppSingleton", "DumpAppSingleton",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
     $this->MakeHostLinkSync("New Scan", "NewScan",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("DumpAppSingleton2", "DumpAppSingleton2",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("DumpAppSingleton3", "DumpAppSingleton3",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("DumpAppSingleton4", "DumpAppSingleton4",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("DumpAppSingleton5", "DumpAppSingleton5",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("DumpInventory", "DumpInventory",
-      "", "", "Update();", "btn btn-default")
-  );
-  $http->queue(
-    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan",
       "", "", "Update();", "btn btn-default")
   );
   $http->queue(
@@ -293,54 +267,6 @@ sub MenuResponse{
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
   return $http->queue("content goes here");
-}
-
-sub DumpAppSingleton{
-  my($http, $dyn) = @_;
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\nApp Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
-  print STDERR "\n###########################\n";
-  
-}
-sub DumpAppSingleton2{
-  my($http, $dyn) = @_;
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\nApp Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 2);
-  print STDERR "\n###########################\n";
-  
-}
-sub DumpAppSingleton3{
-  my($http, $dyn) = @_;
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\nApp Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 3);
-  print STDERR "\n###########################\n";
-  
-}
-sub DumpAppSingleton4{
-  my($http, $dyn) = @_;
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\nApp Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 4);
-  print STDERR "\n###########################\n";
-  
-}
-sub DumpAppSingleton5{
-  my($http, $dyn) = @_;
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\nApp Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 5);
-  print STDERR "\n###########################\n";
-  
-}
-sub DumpInventory{
-  my($http, $dyn) = @_;
-  print STDERR "############################\nInventory: ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON->{Inventory}, 1, 10);
-  print STDERR "\n###########################\n";
-  
 }
 
 sub HeaderResponse{

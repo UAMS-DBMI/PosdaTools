@@ -1,0 +1,10 @@
+// 
+{
+  "ApplicationInitClass" : "NewGenericApp::Application",
+  "ApplicationName" : "Start",
+  "AppHttpRoot" : "POSDA_ROOT/HttpRoot/http_root",
+  "LoginTemp" : "POSDA_CACHE_ROOT/Data/TempDirectory",
+  "JavascriptRoot" : "POSDA_ROOT/NewGenericApp/javascript",
+  "DicomInfoCache" : "POSDA_CACHE_ROOT/Data",
+  "UserInfoDir" : "POSDA_CACHE_ROOT/UserData",
+}
