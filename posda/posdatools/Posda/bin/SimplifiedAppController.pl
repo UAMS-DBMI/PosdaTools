@@ -72,24 +72,37 @@ sub RandString{
   $HTTP_APP_SINGLETON->NewSession($session_id);
   if(defined $user) { $HTTP_APP_SINGLETON->{token} = $user }
   if(defined $user) { $HTTP_APP_SINGLETON->{user} = $user }
-  print STDERR "############################\n(Before) App Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
-  print STDERR "\n###########################\n";
+#  print STDERR "############################\n(Before) App Singleton ($ref_type): ";
+#  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
+#  print STDERR "\n###########################\n";
   $HTTP_APP_SINGLETON->{app_root} = Dispatch::Http::App->new_single_sess(
     $app_name, $session_id
   );
   my $app_inst = $class->new($session_id, $app_name);
   $HTTP_APP_SINGLETON->{port_served} = $port;
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
-  $HTTP_APP_SINGLETON->{base_url} = "http://$host/$port_mapper->{port}";
 
-  my $ref_type = ref($main::HTTP_APP_SINGLETON);
-  print STDERR "############################\n(After) App Singleton ($ref_type): ";
-  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
+  my $re_host = $host;
+#  if($host =~ /^(.*\.nip\.io)\/\.*/){
+#    $re_host = $1;
+#    print STDERR "###################\n$host remapped to $re_host\n###################\n";
+#  } else {
+#    die "!!!!!!!!!!!!!!!!!!!!!!!!!\n" .
+#    "Host: \"$host\" not recognized for remapping\n" .
+#    "!!!!!!!!!!!!!!!!!!!!!!!!!";
+#
+#  }
+  $HTTP_APP_SINGLETON->{base_url} = "http://$re_host/$port_mapper->{$port}";
+
+  $ref_type = ref($main::HTTP_APP_SINGLETON);
+#  print STDERR "############################\n(After) App Singleton ($ref_type): ";
+#  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
+  print STDERR "###########################\n";
+  print STDERR "Redirect to http://$re_host/$port_mapper->{$port}/$session_id" .
+    "/Refresh?obj_path=$app_name\n";
   print STDERR "\n###########################\n";
-
-  print "Redirect to http://$host/$port_mapper->{$port}/$session_id/Refresh" .
-    "?obj_path=$app_name\n";
+  print "Redirect to http://$re_host/$port_mapper->{$port}/$session_id" .
+    "/Refresh?obj_path=$app_name\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {
     my $old_handler = $SIG{$signal};
