@@ -16,8 +16,11 @@ use Posda::HttpApp::RoutingReport;
 use Posda::HttpApp::RoutingDebug;
 use Posda::HttpApp::Controller;
 use Posda::HttpApp::WindowButtons;
+use Debug;
+my $dbg = sub {print STDERR @_ };
 my $content = <<EOF;
 <table width=100%><tr><td width="100%" align="right">
+<?dyn="Button" caption="Show HTTP_APP_SINGLETON" op="DumpAppSingleton"?><br>
 <?dyn="Button" caption="Show Routing" op="ShowRouting"?><br>
 <?dyn="Button" caption="Routing Debug" op="RoutingDebug"?><br>
 </td></tr></table>
@@ -68,6 +71,12 @@ sub Content{
   my($this, $http, $dyn) = @_;
   $this->OpenSubwindows;
   $this->RefreshEngine($http, $dyn, $content);
+}
+sub DumpAppSingleton{
+  my($this, $path) = @_;
+  print STDERR "AppSingleton: ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 3);
+  print STDERR "\n";
 }
 sub ShowRouting{
   my($this, $path) = @_;

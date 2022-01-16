@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#{!/usr/bin/env bash
+
 #
 # This file should be loaded as a bash rc file. Executing it directly
 # will not be very useful.
@@ -53,7 +54,7 @@ function start {
 function start_foreground {
   echo "Starting Posda in the foreground..."
 
-  AppController.pl localhost $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
+  AppController.pl $POSDA_EXTERNAL_HOSTNAME $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
 }
 
 function stop {
