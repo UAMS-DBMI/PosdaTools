@@ -138,7 +138,12 @@ sub Init{
   $HTTP_APP_SINGLETON->{port_served} = $port;
   if(defined $token) { $HTTP_APP_SINGLETON->{token} = $token }
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
-  $HTTP_APP_SINGLETON->{base_url} = "http://$host:$port";
+print STDERR "###############\nHost:$host, Port:$port\n###########\n";
+  if($port eq "64610"){
+    $HTTP_APP_SINGLETON->{base_url} = "http://$host/posda";
+  } else {
+    $HTTP_APP_SINGLETON->{base_url} = "http://$host:$port";
+  }
   print "Redirect to http://$host:$port\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {

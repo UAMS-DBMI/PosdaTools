@@ -115,6 +115,7 @@ print STDERR "Ewouldblock\n";
   sub NotLoggedIn{
     my($http, $uri, $sess_id) = @_;
       my $queue = $http->{output_queue};
+      my $host = $http->{header}->{host};
       delete $http->{output_queue};
       $http->HeaderSent;
       $queue->queue("HTTP/1.0 200 OK\ncontent-type: text/html\n\n");
@@ -123,10 +124,25 @@ print STDERR "Ewouldblock\n";
       $queue->queue("There is no session $sess_id.  Perhaps you logged out, ");
       $queue->queue("or perhaps your session timed out.</p>");
       $queue->queue("<p>Try <a target=\"_top\" ");
-      $queue->queue("href=\"http://$http->{header}->{host}/\">");
+      $queue->queue("href=\"http://$host/posda\">");
       $queue->queue("returning</a> to the root of the server.</p>");
       $queue->queue("</body></html>");
       $queue->finish();
+  }
+  sub NotLoggedInApp{
+    my($http, $uri, $sess_id) = @_;
+    my $queue = $http->{output_queue};
+    my $host = $http->{header}->{host};
+    delete $http->{output_queue};
+    $http->HeaderSent;
+    $queue->queue("HTTP/1.0 200 OK\ncontent-type: text/html\n\n");
+    $queue->queue("<html><head><title>Not logged in</title></head>");
+    $queue->queue("<body><h3>Not logged in</h3><p>");
+    $queue->queue("There is no session $sess_id.  Perhaps you logged out, ");
+    $queue->queue("or perhaps your session timed out.</p>");
+    $queue->queue("Please close this window.");
+    $queue->queue("</body></html>");
+    $queue->finish();
   }
   sub InternalError{
     my($http, $message) = @_;
@@ -758,7 +774,8 @@ print STDERR "##################################\n";
     $http->{uri} = $uri;
     $http->{q_string} = $q_string;
     if($uri =~ /^\/login/){
-      return $this->Login($http, $uri);
+      print STDERR "login uri: $uri\n";
+      return $this->Login($http, "/posda/login");
     }
     unless($uri =~ /^\/([^\/]+)(\/.*)$/){
       return $http->NotFound("Can't find session_id in uri: \"$uri\"", $uri);
@@ -785,6 +802,7 @@ print STDERR "##################################\n";
   sub Login{
     my($this, $http, $uri) = @_;
     my $app_root = $this->{app_root};
+    print STDERR "\&{\$app_root->{login}}($this, $http, $app_root)\n";
     &{$app_root->{login}}($this, $http, $app_root);
   }
   sub DESTROY{
@@ -1236,16 +1254,16 @@ print STDERR "##################################\n";
     my $sess_id = $1;
     my $op = $2;
     unless(defined $this->{Inventory}->{$sess_id}){
-      return $http->NotLoggedIn($op, $sess_id);
+      return $http->NotLoggedInApp($op, $sess_id);
     }
     my $sess = $this->{Inventory}->{$sess_id};
     if(exists($sess->{log_me_out})){
       $sess->TearDown();
       delete $this->{Inventory}->{$sess_id};
-      return $http->NotLoggedIn($op, $sess_id);
+      return $http->NotLoggedInApp($op, $sess_id);
     }
     unless(exists $sess->{logged_in}){
-      return $http->NotLoggedIn($op, $sess_id);
+      return $http->NotLoggedInApp($op, $sess_id);
     }
     my $time = time;
     $sess->{think_time} = $time - $sess->{last_access};

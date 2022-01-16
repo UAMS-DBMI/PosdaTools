@@ -5,19 +5,19 @@
     64680, 64681, 64682, 64683, 64684, 64685, 64686, 64687, 64688, 64689
   ],
   "Apps": {
-    "DicomLookup": {
-      "Directory": "POSDA_ROOT/Config/DicomLookup",
-      "Application" : "AppController.pl <host> <port> <dir> <color>",
-      "Description" : "Dicom Element Lookup",
-      "WindowName" : "_new",
-      "interactive": 1,
-      "scrollbar" : 1,
-      "top" : 100,
-      "left" : 100,
-      "h" : 525,
-      "w" : 800,
-      "sort_order" : 7,
-    },
+//    "DicomLookup": {
+//      "Directory": "POSDA_ROOT/Config/DicomLookup",
+//      "Application" : "SimplifiedAppController.pl <host> <port> <dir> <hashed_token> <user>",
+//      "Description" : "Dicom Element Lookup",
+//      "WindowName" : "_new",
+//      "interactive": 1,
+//      "scrollbar" : 1,
+//      "top" : 100,
+//      "left" : 100,
+//      "h" : 525,
+//      "w" : 800,
+//      "sort_order" : 7,
+//    },
     "NewItcTools": {
       "Directory": "POSDA_ROOT/Config/NewItcToolsConfig",
       "Application" : "AppController.pl <host> <port> <dir> <color>",
@@ -46,7 +46,7 @@
     },
     "GenericApp": {
       "Directory": "/home/posda/posdatools/Config/GenericApp",
-      "Application" : "AppController.pl <host> <port> <dir> <color> <user>",
+      "Application" : "SimplifiedAppController.pl <host> <port> <dir> <hashed_token> <user>",
       "Description" : "GenericApp",
       "WindowName" : "_new",
       "interactive": 1,

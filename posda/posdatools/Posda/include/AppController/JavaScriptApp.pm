@@ -1,4 +1,4 @@
-# main entry point for Posda???
+# main entry point for Posda???  Yes!!!
 #
 use strict;
 use POSIX 'strftime';
@@ -566,13 +566,13 @@ EOF
     $this->RefreshEngine($http, $dyn, '<table class="table" width="100%">');
 
 
-    if(scalar(keys %$default_apps) >= 1){
-      $this->RefreshEngine($http, $dyn,
-        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
-        $table_headers
-      );
-      $this->AppTableRows($http, $dyn, $default_apps);
-    }
+#    if(scalar(keys %$default_apps) >= 1){
+#      $this->RefreshEngine($http, $dyn,
+#        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
+#        $table_headers
+#      );
+#      $this->AppTableRows($http, $dyn, $default_apps);
+#    }
 
     my $user = $this->get_user;
     unless(defined $user) {

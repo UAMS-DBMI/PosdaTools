@@ -307,7 +307,7 @@ sub NullLogin {
 sub StartLogin{
   my($this, $http, $app, $session) = @_;
   &{$this->{app_root}->{app_init}}($this, $session);
-  my $url = "http://$http->{header}->{host}/$session/" .
+  my $url = "http://$http->{header}->{host}/posda/$session/" .
            "Refresh?obj_path=$this->{app_root}->{app_name}";
   # print "Logins::LoginScreen::Login: dest_obj: $dest_obj, url: $url.\n";
   $http->HeaderSent;
