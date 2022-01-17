@@ -144,7 +144,7 @@ print STDERR "###############\nHost:$host, Port:$port\n###########\n";
   } else {
     $HTTP_APP_SINGLETON->{base_url} = "http://$host:$port";
   }
-  print "Redirect to http://$host:$port\n";
+  print "Redirect to https://$host:$port\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {
     my $old_handler = $SIG{$signal};
