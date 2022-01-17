@@ -98,7 +98,7 @@ sub RandString{
 #  print STDERR "############################\n(After) App Singleton ($ref_type): ";
 #  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
   print STDERR "###########################\n";
-  print STDERR "Redirect to http://$re_host/$port_mapper->{$port}/$session_id" .
+  print STDERR "Redirect to https://$re_host/$port_mapper->{$port}/$session_id" .
     "/Refresh?obj_path=$app_name\n";
   print STDERR "\n###########################\n";
   print "Redirect to http://$re_host/$port_mapper->{$port}/$session_id" .
