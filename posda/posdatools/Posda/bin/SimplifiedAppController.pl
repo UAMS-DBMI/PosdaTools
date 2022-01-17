@@ -101,7 +101,7 @@ sub RandString{
   print STDERR "Redirect to https://$re_host/$port_mapper->{$port}/$session_id" .
     "/Refresh?obj_path=$app_name\n";
   print STDERR "\n###########################\n";
-  print "Redirect to http://$re_host/$port_mapper->{$port}/$session_id" .
+  print "Redirect to https://$re_host/$port_mapper->{$port}/$session_id" .
     "/Refresh?obj_path=$app_name\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {

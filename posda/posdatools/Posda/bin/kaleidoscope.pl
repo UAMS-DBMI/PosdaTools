@@ -23,10 +23,10 @@ try {
   my $token = $resp->{token};
 
 
-  print "Redirect to http://$external_url/k/?token=$token\n";
+  print "Redirect to https://$external_url/k/?token=$token\n";
 } catch {
   print "Login token error: $@\n";
-  print "Redirect to http://$external_url/k/error.html\n";
+  print "Redirect to https://$external_url/k/error.html\n";
 };
 
 sleep 20;

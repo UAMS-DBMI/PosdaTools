@@ -124,7 +124,7 @@ print STDERR "Ewouldblock\n";
       $queue->queue("There is no session $sess_id.  Perhaps you logged out, ");
       $queue->queue("or perhaps your session timed out.</p>");
       $queue->queue("<p>Try <a target=\"_top\" ");
-      $queue->queue("href=\"http://$host/posda\">");
+      $queue->queue("href=\"https://$host/posda\">");
       $queue->queue("returning</a> to the root of the server.</p>");
       $queue->queue("</body></html>");
       $queue->finish();

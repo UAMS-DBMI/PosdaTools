@@ -26,9 +26,10 @@ COPY Kohlrabi /kohlrabi
 RUN cd /kohlrabi && \
   make
 
-FROM nginx:1.13.10-alpine
+#FROM nginx:1.13.10-alpine
+FROM bitnami/nginx:1.21
 
-COPY default.conf /etc/nginx/conf.d/
+COPY default.conf /opt/bitnami/nginx/conf/server_blocks/
 COPY www /www
 
 
@@ -36,5 +37,3 @@ COPY --from=dashboard-builder /dashboard/dist/posda-dashboard /www/dashboard
 COPY --from=quince-builder /quince/dist /www/quince
 COPY --from=roots-builder /roots/dist/dicom-root /www/roots
 COPY --from=kohlrabi-builder /kohlrabi/build /www/kohlrabi
-
-EXPOSE 80

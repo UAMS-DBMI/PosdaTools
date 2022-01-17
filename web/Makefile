@@ -8,12 +8,12 @@ build: last_built
 
 last_built: Dockerfile default.conf
 	cd ../docs && mkdocs build
-	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
+	docker build . -t ${IMAGE_NAME}:${TAG}k -t ${IMAGE_NAME}:kubes
 	date > last_built
 
 push: last_built
-	docker image push ${IMAGE_NAME}:${TAG}
-	docker image push ${IMAGE_NAME}:latest
+	docker image push ${IMAGE_NAME}:${TAG}k
+	docker image push ${IMAGE_NAME}:kubes
 
 clean:
 	rm -f last_built
