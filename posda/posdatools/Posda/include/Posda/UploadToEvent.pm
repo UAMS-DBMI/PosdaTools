@@ -67,31 +67,41 @@ sub StoreFile {
   $self->{UploadCount}++;
   my $file = $http->ParseMultipart(
      "$self->{TempDir}/$self->{UploadCount}.upld");
-  print STDERR "File uploaded: $file\n";
-  print IMPORTER "$file\n";
+  my $command = "ExtractUpload.pl \"$file\" \"$self->{TempDir}\"";
+  my $hash = {};
+  Dispatch::LineReader->new_cmd($command, $self->ReadConvertLine($hash),
+    $self->ConvertLinesComplete($hash, $file));
+
   $http->queue("<pre>");
   $http->queue("File uploaded into $file\n");
   $http->queue("</pre>");
-#  &{$self->UploadDone($http, $dyn)}($file);
 }
 
-sub UploadDone{
-  my ($self, $http, $dyn) = @_;
+sub ReadConvertLine{
+  my ($self, $hash) = @_;
   my $sub = sub {
-    my($file) = @_;
-    $http->queue("<pre>");
-    $http->queue("File uploaded into $file\n");
-    for my $k (keys %$dyn){
-      $http->queue("dyn{$k} = $dyn->{$k}\n");
+    my($line) = @_;
+    if($line =~ /^(.*):\s*(.*)$/){
+      my $k = $1; my $v = $2;
+      $hash->{$k} = $v;
     }
-    for my $k (keys %$http){
-      $http->queue("http{$k} = $http->{$k}\n");
+  };
+  return $sub;
+}
+
+sub ConvertLinesComplete{
+  my ($self, $hash, $enc_file) = @_;
+  my $sub = sub {
+    my $file = $hash->{"Output file"};
+    if(-f $file){
+      print STDERR "Extracted File uploaded: $file\n";
+      print IMPORTER "$file\n";
+      if(-f $enc_file){
+        unlink $enc_file;
+      }
+    } else {
+      printy STDERR "ExtractUpload.pl barfed on $enc_file\n";
     }
-    for my $k (keys %{$http->{header}}){
-      $http->queue("http{header}->{$k} = $http->{header}->{$k}\n");
-    }
-    $http->queue("<a href=\"Refresh?obj_path=$self->{path}\">Go back</a>");
-    $http->queue("<hr><pre>");
   };
   return $sub;
 }
