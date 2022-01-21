@@ -109,6 +109,11 @@ sub SpecificInitialize {
         mode => 'Upload',
         sync => 'Update();'
       },
+      {
+        caption => "UploadToEvent",
+        op => 'LaunchUploadToEventWindow',
+        sync => 'Update();',
+      },
     ],
     DefaultTail => [
       {
@@ -2620,6 +2625,30 @@ sub ActivityOperations{
     }
     $http->queue('</blockquote></div>');
   }
+}
+
+sub LaunchUploadToEventWindow{
+  my($self, $http, $dyn) = @_;
+  my $params = {};
+  $params->{user} = $self->get_user;
+  $params->{TempDir} = $self->{LoginTempDir};
+  my $class = "Posda::UploadToEvent";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Background_list_$self->{sequence_no}";
+  $self->{sequence_no}++;
+  $params->{upload_comment_string} = $self->{session} . "_" .
+    $self->{sequence_no} . "_upload_event";
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                            $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+  return;
 }
 
 sub LaunchBackground{
