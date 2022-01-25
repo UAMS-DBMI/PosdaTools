@@ -41,6 +41,7 @@ unless($db) { die "couldn't connect to DB: DBNAME" }
 my $redis = Redis->new(server => REDIS_HOST); #hostname from Docker-compose
 
 while (1) {
+  $db->ping or die "Lost connection to database";
   my ($key, $next_thing) = $redis->brpop('files', 5);
   # say $next_thing;
 
