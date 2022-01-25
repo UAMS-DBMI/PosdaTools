@@ -81,7 +81,9 @@ sub _make {
 
   $dbh->disconnect();
 
-  $self->{link} = "$URL/file/$dl_file_id/$uuid";
+  my $rel_url = "/papi/file/$dl_file_id/$uuid";
+  # link is now a full a tag, to allow for relative links
+  $self->{link} = qq{<a href="$rel_url">downloaded_file_$dl_file_id</a>};
   $self->{downloadable_file_id} = $dl_file_id;
   $self->{security_hash} = $uuid;
 }
