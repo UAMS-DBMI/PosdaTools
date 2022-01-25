@@ -47,6 +47,7 @@ for my $i (1..WORKER_COUNT) {
 
 
 while (1) {
+  $db->ping or die "Lost connection to database";
   my $redis_queue_size = $redis->llen('files');
 
   if ($redis_queue_size == 0) {
