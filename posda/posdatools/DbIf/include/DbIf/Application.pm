@@ -439,7 +439,7 @@ sub InboxItem {
   my $file_content = $self->{inbox}->ReportContent($msg_details->{file_id});
 
   # Turn any URLs into actual links
-  $file_content =~    s( ($RE{URI}{HTTP}) )
+  $file_content =~    s( ($RE{URI}{HTTP}{-scheme => qr<https?>}) )
                 (<a href="$1">$1</a>)gx  ;
 
   my $date_dismissed;
