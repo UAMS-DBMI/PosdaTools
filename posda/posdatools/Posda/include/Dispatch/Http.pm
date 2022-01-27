@@ -124,7 +124,12 @@ print STDERR "Ewouldblock\n";
       $queue->queue("There is no session $sess_id.  Perhaps you logged out, ");
       $queue->queue("or perhaps your session timed out.</p>");
       $queue->queue("<p>Try <a target=\"_top\" ");
-      $queue->queue("href=\"https://$host/posda\">");
+      my $prot = "http:";
+      if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+        $prot = "https:";
+      }
+
+      $queue->queue("href=\"$prot//$host/posda\">");
       $queue->queue("returning</a> to the root of the server.</p>");
       $queue->queue("</body></html>");
       $queue->finish();
@@ -140,7 +145,7 @@ print STDERR "Ewouldblock\n";
     $queue->queue("<body><h3>Not logged in</h3><p>");
     $queue->queue("There is no session $sess_id.  Perhaps you logged out, ");
     $queue->queue("or perhaps your session timed out.</p>");
-    $queue->queue("Please close this window.");
+    $queue->queue("Please <a href=\"javascript:window.close;\">close</a> this window.");
     $queue->queue("</body></html>");
     $queue->finish();
   }
@@ -442,6 +447,8 @@ if($http->{header_sent}){
 }
 {
   package Dispatch::Http::App::Server;
+  use Debug;
+  my $dbg = sub { print STDERR @_ };
   use vars qw ( @ISA $ExtToMime $ServerPort );
   $ExtToMime = {
     "doc" => "application/msword",
@@ -467,6 +474,40 @@ if($http->{header_sent}){
     "svg" => "image/svg+xml",
   };
   @ISA = ( "Dispatch::Select::Socket" );
+
+  sub dollar_zero{
+    my($this, $whence) = @_;
+    my $app_name = $this->{app_root}->{app_name};
+    my $fullapp = "Posda::$app_name";
+    my $port_served = $this->{port_served};
+    my @sessions = keys %{$this->{Inventory}};
+    my $user_list = '(';
+    for my $si (0 .. $#sessions){
+      my $s = $sessions[$si];
+      my $luser;
+      if(
+        defined($main::HTTP_APP_SINGLETON->{Inventory}->{$s}->{AuthUser})
+        and $main::HTTP_APP_SINGLETON->{Inventory}->{$s}->{AuthUser} ne ""
+      ){
+        $luser .= $main::HTTP_APP_SINGLETON->{Inventory}->{$s}->{AuthUser};
+      } else {
+        $luser .= "anon";
+      }
+      $user_list .= $luser;
+      if($si != $#sessions){
+        $user_list .= ", ";
+      } else { $user_list .= ")" }
+    }
+    my $dollar_zero ="$port_served $fullapp $user_list";
+    $0 = $dollar_zero;
+#    print STDERR "#####################\n";
+#    print STDERR "In Posda::HttpApp::HttpObj::dollar_zero($whence)\n";
+#    print STDERR "\$this = ";
+#    Debug::GenPrint($dbg, $this, 1, 4);
+#    print STDERR "\n\n\$0 = $dollar_zero\n";
+#    print STDERR "\n#####################\n";
+  }
+
   sub make_foo{
     my($this, $port, $interval, $time_to_live) = @_;
     my $foo = sub {
@@ -628,14 +669,15 @@ if($http->{header_sent}){
 #           Setting debug doesn't work ...
 #           So its commented out
 #           To do: figure out what's going on
-print STDERR "##################################\n";
-print STDERR "#  See if you can figure out how to get here: " .
-   __FILE__ . ", line: " . __LINE__ . "\n";
-print STDERR "##################################\n";
+#print STDERR "##################################\n";
+#print STDERR "#  See if you can figure out how to get here: " .
+#   __FILE__ . ", line: " . __LINE__ . "\n";
+#print STDERR "##################################\n";
 #            $ENV{POSDA_DEBUG} = 1;
             if ($sess->can("TearDown")) { $sess->TearDown(); }
             print STDERR "Delete session: $id\n";
             delete $this->{Inventory}->{$id};
+            $main::HTTP_APP_SINGLETON->dollar_zero("In time out from client");
           } else {
             print STDERR "Not Logged in\n";
           }
@@ -921,6 +963,8 @@ print STDERR "##################################\n";
 }
 {
   package Dispatch::Http::App::SimplifiedServer;
+  use Debug;
+  my $dbg = sub { print STDERR @_ };
   use vars qw ( @ISA $ExtToMime $ServerPort );
   $ExtToMime = {
     "doc" => "application/msword",
@@ -946,6 +990,32 @@ print STDERR "##################################\n";
     "svg" => "image/svg+xml",
   };
   @ISA = ( "Dispatch::Select::Socket" );
+
+  sub dollar_zero{
+    my($this, $whence) = @_;
+    my $app_name = $this->{app_root}->{app_name};
+    my $fullapp = "Posda::$app_name";
+    my $port_served = $this->{port_served};
+    my @sessions = keys %{$this->{Inventory}};
+    my $user_list = '(';
+    for my $si (0 .. $#sessions){
+      my $s = $sessions[$si];
+      $user_list .= $main::HTTP_APP_SINGLETON->{Inventory}->{$s}->{AuthUser};
+      if($si != $#sessions){
+        $user_list .= ", ";
+      } else { $user_list .= ")" }
+    }
+    my $dollar_zero ="$port_served $fullapp $user_list";
+    $0 = $dollar_zero;
+#    print STDERR "#####################\n";
+#    print STDERR "In Posda::HttpApp::HttpObj::dollar_zero($whence)\n";
+#    print STDERR "\$this = ";
+#    Debug::GenPrint($dbg, $this, 1, 4);
+#    print STDERR "\n\n\$0 = $dollar_zero\n";
+#    print STDERR "\n#####################\n";
+  }
+
+
   sub make_foo{
     my($this, $port, $interval, $time_to_live) = @_;
     my $foo = sub {

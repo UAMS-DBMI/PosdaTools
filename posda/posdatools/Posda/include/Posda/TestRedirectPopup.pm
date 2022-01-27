@@ -30,8 +30,14 @@ sub new {
 #  "processing_status" => "Reviewed",
 #  "review_status" => "Good"
 
+
+  my $prot = "http:";
+  if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+    $prot = "https:";
+  }
+
   my $host_url = $ENV{POSDA_EXTERNAL_HOSTNAME};
-  my $base_url = "http://$host_url/k/work?";
+  my $base_url = "$prot//$host_url/k/work?";
   $base_url .= "review_status=$parameters->{review_status}&";
   $base_url .= "processing_status=$parameters->{processing_status}&";
   $base_url .= "dicom_file_type=$parameters->{dicom_file_type}&";

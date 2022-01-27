@@ -54,8 +54,17 @@ EOF
 
   sub Shutdown{
     my($this, $http, $dyn) = @_;
-    my $url = "http://$http->{header}->{host}/";
+    my $prot = "http:";
+    if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+      $prot = "https:";
+    }
+    my $url = "$prot//$http->{header}->{host}/";
+    print STDERR "!!!!!!!!!!!!!!!!!!\n";
+    print STDERR "In AppController::JavascriptApp::Shutdown redirecting to $url\n";
+    print STDERR "!!!!!!!!!!!!!!!!!!\n";
+
     $this->DeleteMySession;
+    $main::HTTP_APP_SINGLETON->dollar_zero("Shutdown");
     $this->RefreshEngine($http, {url => $url}, $redirect);
   }
 ##################################################################
