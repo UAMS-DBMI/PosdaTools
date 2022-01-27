@@ -13,6 +13,30 @@ use JSON;
 
 $| = 1;
 
+my $port_mapper = {
+  64615 => 'pa1',
+  64616 => 'pa2',
+  64617 => 'pa3',
+  64618 => 'pa4',
+  64619 => 'pa5',
+  64620 => 'pa6',
+  64621 => 'pa7',
+  64622 => 'pa8',
+  64623 => 'pa9',
+  64624 => 'pa10',
+  64625 => 'pa11',
+  64626 => 'pa12',
+  64627 => 'pa13',
+  64628 => 'pa14',
+  64629 => 'pa15',
+};
+
+my $TheProtocol = "http:";
+if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+  $TheProtocol = "https:";
+}
+
+
 use vars qw( $HTTP_APP_SINGLETON $HTTP_APP_CONFIG %HTTP_RUNNING_SUB_PROGRAMS %HTTP_STATIC_OBJS  *sym *sys *code );
 ######### Don't modify
 $SIG{PIPE} = 'IGNORE';
@@ -139,12 +163,14 @@ sub Init{
   if(defined $token) { $HTTP_APP_SINGLETON->{token} = $token }
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
 print STDERR "###############\nHost:$host, Port:$port\n###########\n";
+  my $base_url;
   if($port eq "64610"){
-    $HTTP_APP_SINGLETON->{base_url} = "http://$host/posda";
+    $base_url = "$TheProtocol//posda";
   } else {
-    $HTTP_APP_SINGLETON->{base_url} = "http://$host:$port";
+    $base_url = "$TheProtocol//host:$port_mapper->{$port}";
   }
-  print "Redirect to https://$host:$port\n";
+  $HTTP_APP_SINGLETON->{base_url} = $base_url;
+  print "Redirect to $base_url\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {
     my $old_handler = $SIG{$signal};

@@ -40,6 +40,12 @@ my $port_mapper = {
   64628 => 'pa14',
   64629 => 'pa15',
 };
+
+my $TheProtocol = "http:";
+if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+  $TheProtocol = "https:";
+}
+
 $HTTP_APP_CONFIG = Posda::ConfigRead->new($dir);
 my $int = 10;
 my $ttl = 60;
@@ -69,40 +75,21 @@ sub RandString{
       \%Static, "$HTTP_APP_CONFIG->{config}->{Environment}->{AppHttpRoot}"
   );
   my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  $HTTP_APP_SINGLETON->{port_served} = $port;
   $HTTP_APP_SINGLETON->NewSession($session_id);
   if(defined $user) { $HTTP_APP_SINGLETON->{token} = $user }
   if(defined $user) { $HTTP_APP_SINGLETON->{user} = $user }
-#  print STDERR "############################\n(Before) App Singleton ($ref_type): ";
-#  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
-#  print STDERR "\n###########################\n";
   $HTTP_APP_SINGLETON->{app_root} = Dispatch::Http::App->new_single_sess(
     $app_name, $session_id
   );
   my $app_inst = $class->new($session_id, $app_name);
-  $HTTP_APP_SINGLETON->{port_served} = $port;
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
 
-  my $re_host = $host;
-#  if($host =~ /^(.*\.nip\.io)\/\.*/){
-#    $re_host = $1;
-#    print STDERR "###################\n$host remapped to $re_host\n###################\n";
-#  } else {
-#    die "!!!!!!!!!!!!!!!!!!!!!!!!!\n" .
-#    "Host: \"$host\" not recognized for remapping\n" .
-#    "!!!!!!!!!!!!!!!!!!!!!!!!!";
-#
-#  }
-  $HTTP_APP_SINGLETON->{base_url} = "http://$re_host/$port_mapper->{$port}";
+  my $base_url = "$TheProtocol//$host/$port_mapper->{$port}";
+  $HTTP_APP_SINGLETON->{base_url} = $base_url;
 
   $ref_type = ref($main::HTTP_APP_SINGLETON);
-#  print STDERR "############################\n(After) App Singleton ($ref_type): ";
-#  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
-  print STDERR "###########################\n";
-  print STDERR "Redirect to https://$re_host/$port_mapper->{$port}/$session_id" .
-    "/Refresh?obj_path=$app_name\n";
-  print STDERR "\n###########################\n";
-  print "Redirect to https://$re_host/$port_mapper->{$port}/$session_id" .
-    "/Refresh?obj_path=$app_name\n";
+  print "Redirect to $base_url/$session_id/Refresh?obj_path=$app_name\n";
   for my $signal (qw(TERM ABRT QUIT HUP))
   {
     my $old_handler = $SIG{$signal};

@@ -14,6 +14,11 @@ my $dir = $ARGV[2];
 my $color = $ARGV[3];
 my $user = $ARGV[4];
 
+my $prot = "http:";
+if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+  $prot = "https:";
+}
+
 try {
   my $client = REST::Client->new();
   # Currently, assume the webservice is running on localhost
@@ -23,10 +28,10 @@ try {
   my $token = $resp->{token};
 
 
-  print "Redirect to https://$external_url/k/?token=$token\n";
+  print "Redirect to $prot//$external_url/k/?token=$token\n";
 } catch {
   print "Login token error: $@\n";
-  print "Redirect to https://$external_url/k/error.html\n";
+  print "Redirect to $prot//$external_url/k/error.html\n";
 };
 
 sleep 20;
