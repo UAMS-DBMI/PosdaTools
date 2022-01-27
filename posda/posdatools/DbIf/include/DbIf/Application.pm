@@ -1268,8 +1268,12 @@ sub OpenPopup {
 
 sub OpenQuince {
   my ($self, $name, $params) = @_;
+  my $prot = "http:";
+  if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+    $prot = "https:";
+  }
   my $external_hostname = Config('external_hostname');
-  my $quince_url = "http://$external_hostname/viewer";
+  my $quince_url = "$prot//$external_hostname/viewer";
   my $mode;
   my $val;
 

@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 #
+die "Obsolete!  Do not use!";
 use strict;
 use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;

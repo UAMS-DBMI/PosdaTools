@@ -2915,7 +2915,11 @@ sub NewQueryWait {
 sub openKohlrabi{
     my ($self, $name, $params) = @_;
     my $external_hostname = Config('external_hostname');
-    my $kohlrabi_url = "http://$external_hostname/kohlrabi";
+    my $prot = "http:";
+    if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+      $prot = "https:";
+    }
+    my $kohlrabi_url = "$prot//$external_hostname/kohlrabi";
     my $val;
 
     if (defined $params->{pathology_visual_review_instance_id}) {
