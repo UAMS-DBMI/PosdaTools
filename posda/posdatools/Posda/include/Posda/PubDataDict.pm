@@ -11753,9 +11753,9 @@ $Posda::DataDict::Dict->{24}->{37954} = {
 $Posda::DataDict::Dict->{24}->{37957} = {
     group => "0018",
     ele => "9445",
-    VM => "",
-    VR => "",
-    Name => "",
+    VM => "1",
+    VR => "FD",
+    Name => "Philips Tag of contention",
     Keyword => "Retired Tag 1 2004",
     RET => "1",
 };

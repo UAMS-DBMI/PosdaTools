@@ -61,7 +61,7 @@ sub SortSliceInfo{
   frame:
   for my $frame_no (keys %{$self->{params}->{segmentation_slice_info}}){
     my $slice_info = $self->{params}->{segmentation_slice_info}->{$frame_no};
-    my $rel_sop = [ keys %{$slice_info->{sops}} ]->[0];
+    my $rel_sop = [ keys %{$slice_info->{sop_in_tp}} ]->[0];
     my $file_id;
     my $instance_number;
     $get_file_id->RunQuery(sub{

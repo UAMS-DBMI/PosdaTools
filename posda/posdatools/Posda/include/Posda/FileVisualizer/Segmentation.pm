@@ -138,7 +138,8 @@ sub GatherSegmentationSliceInfo{
       $self->{SegmentationSliceInfo}->{$sn}->{num_points} = $num_points;
     }
     if(defined $sop_instance_uid){
-      $self->{SegmentationSliceInfo}->{$sn}->{sops}->{$sop_instance_uid} = 1;
+      my $sop_char = $self->CharacterizeSop($sop_instance_uid, $self->{params}->{activity_id});
+      $self->{SegmentationSliceInfo}->{$sn}->{$sop_char}->{$sop_instance_uid} = 1;
     }
     if(defined $bm_slice_file_id){
       $self->{SegmentationSliceInfo}->{$sn}->{seg_slice_bitmap_file_id} = 
@@ -155,6 +156,29 @@ sub GatherSegmentationSliceInfo{
   }, sub{}, $self->{file_id}, $self->{SelectedSegmentation});
 }
 
+sub CharacterizeSop{
+  my($self, $sop, $activity_id) = @_;
+  my $fid;
+  Query("GetLatestFileForSop")->RunQuery(sub{
+    my($row) = @_;
+    $fid = $row->[0];
+  }, sub{}, $sop);
+  unless(defined $fid){ return "sop_not_found" }
+  my $tp_id;
+  Query("LatestActivityTimepointForActivity")->RunQuery(sub{
+    my($row) = @_;
+    $tp_id = $row->[0];
+  }, sub {}, $activity_id);
+  unless (defined $tp_id) { return "sop_not_in_tp" }
+  my $fid1;
+  Query("SopInActivityTimepoint")->RunQuery(sub{
+    my($row) = @_;
+    $fid1 = $row->[0];
+  }, sub{}, $sop, $tp_id);
+  if(defined $fid1) { return "sop_in_tp" }
+  return "sop_not_in_tp";
+}
+
 sub DisplaySegmentationSliceInfo{
   my($self, $http, $dyn) = @_;
   $http->queue("Segmentations:");
@@ -165,7 +189,8 @@ sub DisplaySegmentationSliceInfo{
   });
   $http->queue("<table class=\"table table-striped\">");
   $http->queue("<tr><th>slice_no</th><th>iop</th><th>ipp</th>" .
-    "<th>one_bits</th><th>bare_points</th><th>num_ref_sops</th>" .
+    "<th>one_bits</th><th>bare_points</th><th>ref_sops_in_tp</th>" .
+    "<th>ref_sops_not_in_tp</th><th>ref_sops_not_found</th>" .
     "<th>num_contours</th><th>num_points</th></tr>");
   for my $i (sort {$a <=> $b} keys %{$self->{SegmentationSliceInfo}}){
     my $info = $self->{SegmentationSliceInfo}->{$i};
@@ -181,8 +206,18 @@ sub DisplaySegmentationSliceInfo{
     $http->queue("<td>$info->{iop}</td><td>$info->{ipp}</td>" .
       "<td>$info->{total_one_bits}</td><td>$info->{num_bare_points}</td>");
     my $n = 0;
-    if(defined $info->{sops}){
-      $n = keys %{$info->{sops}};
+    if(defined $info->{sop_in_tp}){
+      $n = keys %{$info->{sop_in_tp}};
+    }
+    $http->queue("<td>$n</td>");
+    $n = 0;
+    if(defined $info->{sop_not_in_tp}){
+      $n = keys %{$info->{sop_not_in_tp}};
+    }
+    $http->queue("<td>$n</td>");
+    $n = 0;
+    if(defined $info->{sop_not_found}){
+      $n = keys %{$info->{sop_not_found}};
     }
     $http->queue("<td>$n</td>");
     unless(defined $info->{num_contours}){ $info->{num_contours} = 0 }
