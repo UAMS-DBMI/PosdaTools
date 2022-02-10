@@ -32,20 +32,20 @@ services:
             - common.env
             - posda.env
 
-    ream:
-        image: tcia/ream:latest
-        restart: always
-        volumes:
-            - posda_cache_alpine:/home/posda/cache
-            - ./posda/posdatools:/home/posda/posdatools
-            - ./ream:/ream
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file:
-            - database.env
-            - common.env
-            - ream.env
-            - posda.env
+    # ream:
+    #     image: tcia/ream:latest
+    #     restart: always
+    #     volumes:
+    #         - posda_cache_alpine:/home/posda/cache
+    #         - ./posda/posdatools:/home/posda/posdatools
+    #         - ./ream:/ream
+    #         - /mnt:/mnt
+    #         - /nas:/nas
+    #     env_file:
+    #         - database.env
+    #         - common.env
+    #         - ream.env
+    #         - posda.env
 
     exodus:
         image: tcia/exodus:latest
