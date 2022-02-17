@@ -5,7 +5,7 @@ asyncpg==0.5.1
 httptools==0.0.9
 packaging==16.8
 pyparsing==2.2.0
-sanic==0.4.1
+sanic==20.12.6
 six==1.10.0
 ujson==1.35
 uvloop==0.8.0
