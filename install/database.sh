@@ -5,29 +5,14 @@
 # This script can be skipped if this has been done by a DBA or someone else.
 
 
-# TODO: add a switch here so we always do the right one!
+yum module enable -y postgresql:13
 
-# enabled Software Collections - different on RHEL vs CentOS
+yum install -y postgresql-server
 
-# CentOS
-yum install -y centos-release-scl
+/usr/bin/postgresql-setup --initdb
 
-# RHEL 7
-#yum-config-manager --enable rhel-server-rhscl-7-rpms
+systemctl enable --now postgresql
 
-# install postgresql13
-yum install -y rh-postgresql13 rh-postgresql13-server
-
-# initialize the database
-sudo -u postgres scl enable rh-postgresql13 -- postgresql-setup --initdb
-
-# enable and start
-systemctl enable --now rh-postgresql13-postgresql
-
-# add root as a user
-sudo -u postgres scl enable rh-postgresql13 -- createuser -s root
-
-# enable in local scope - finally, we can interact normally with the database
-source scl_source enable rh-postgresql13
+sudo -u postgres createuser -s root
 
 psql postgres < /oneposda/database/all.sql
