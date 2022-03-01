@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/kohlrabi/static/css/main.b5c74bb9.chunk.css",
+    "main.js": "/kohlrabi/static/js/main.d4378845.chunk.js",
+    "main.js.map": "/kohlrabi/static/js/main.d4378845.chunk.js.map",
+    "runtime-main.js": "/kohlrabi/static/js/runtime-main.f86637ca.js",
+    "runtime-main.js.map": "/kohlrabi/static/js/runtime-main.f86637ca.js.map",
+    "static/css/2.ef9168ec.chunk.css": "/kohlrabi/static/css/2.ef9168ec.chunk.css",
+    "static/js/2.f837ea64.chunk.js": "/kohlrabi/static/js/2.f837ea64.chunk.js",
+    "static/js/2.f837ea64.chunk.js.map": "/kohlrabi/static/js/2.f837ea64.chunk.js.map",
+    "index.html": "/kohlrabi/index.html",
+    "static/css/2.ef9168ec.chunk.css.map": "/kohlrabi/static/css/2.ef9168ec.chunk.css.map",
+    "static/css/main.b5c74bb9.chunk.css.map": "/kohlrabi/static/css/main.b5c74bb9.chunk.css.map",
+    "static/js/2.f837ea64.chunk.js.LICENSE.txt": "/kohlrabi/static/js/2.f837ea64.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f86637ca.js",
+    "static/css/2.ef9168ec.chunk.css",
+    "static/js/2.f837ea64.chunk.js",
+    "static/css/main.b5c74bb9.chunk.css",
+    "static/js/main.d4378845.chunk.js"
+  ]
+}
