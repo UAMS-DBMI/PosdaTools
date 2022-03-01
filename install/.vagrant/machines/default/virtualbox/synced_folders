@@ -1,1 +1,0 @@
-{"virtualbox":{"/oneposda":{"guestpath":"/oneposda","hostpath":"/home/quasar/projects/oneposda","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/quasar/projects/oneposda/install","disabled":false,"__vagrantfile":true}}}
