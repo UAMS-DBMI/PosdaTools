@@ -66,8 +66,8 @@ use HTTP::Request::StreamingUpload;
 use LWP::UserAgent;
 
 
-# my $API_URL = Config('api_url');
-my $API_URL = 'http://posda-api:8087';
+my $API_URL = Config('internal_api_url');
+#my $API_URL = 'http://posda-api:8087';
 # my $API_URL = 'http://144.30.104.84:1339';
 
 sub digest_file {
