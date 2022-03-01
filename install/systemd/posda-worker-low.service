@@ -1,0 +1,11 @@
+[Unit]
+Description=Posda Worker Node (low / 0)
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/oneposda/install/start-worker.sh 0
+
+[Install]
+WantedBy=multi-user.target

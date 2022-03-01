@@ -11,8 +11,5 @@ Pillow
 wheel
 "
 
-# enable the right python
-source scl_source enable rh-python38
-
 pip3 install $DEPS
 pip3 install -r ../posda/fastapi/app/requirements.txt
