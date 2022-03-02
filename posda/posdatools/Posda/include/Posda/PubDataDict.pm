@@ -758,10 +758,10 @@ $Posda::DataDict::Dict->{8}->{513} = {
 $Posda::DataDict::Dict->{8}->{514} = {
     group => "0008",
     ele => "0202",
-    VM => "",
-    VR => "",
-    Name => "",
-    Keyword => "",
+    VM => "1",
+    VR => "UN",
+    Name => "Unknown Retired Element",
+    Keyword => "Unknown Retired Element",
     RET => "1",
 };
 #####(0008,0220)#####
