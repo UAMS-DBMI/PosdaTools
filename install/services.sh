@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ./posda-setup.sh
+./k-deps.sh
 
 cp /oneposda/install/systemd/* /etc/systemd/system/
 cp web/default.conf /etc/nginx/conf.d/
@@ -13,4 +14,5 @@ systemctl enable --now nginx
 systemctl enable --now posda
 systemctl enable --now posda-worker-low
 systemctl enable --now posda-worker-high
+systemctl enable --now kaleidoscope
 

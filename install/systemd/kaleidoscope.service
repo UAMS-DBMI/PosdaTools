@@ -1,0 +1,11 @@
+[Unit]
+Description=Posda Kaleidoscope Server
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=python3 /oneposda/kaleidoscope/kaleidoscope/server/server.py
+
+[Install]
+WantedBy=multi-user.target
