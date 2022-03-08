@@ -15,4 +15,5 @@ systemctl enable --now posda
 systemctl enable --now posda-worker-low
 systemctl enable --now posda-worker-high
 systemctl enable --now kaleidoscope
+systemctl enable --now magicka
 
