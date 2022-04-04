@@ -216,6 +216,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "BackgroundPrivateDispositionsTpBaseline",
       },
       {
+        caption => "Apply Background Dispositions by Patient Mapping (Baseline or Date Shift)",
+        action =>  "BackgroundPrivateDispositionsTpDual",
+      },
+      {
         caption => "Queue An Export of All Files in Timepoint",
         action =>  "ExportTimepoint",
       },
