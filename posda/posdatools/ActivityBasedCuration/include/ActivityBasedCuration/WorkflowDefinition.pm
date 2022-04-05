@@ -385,6 +385,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Make a Downloadable Directory (including Non-Dicom)",
         action =>  "MakeDownloadableNonDicomTp",
       },
+      {
+        caption => "Byte Swap Dicom Pixel Data",
+        action =>  "BackgroundSwapDicomPixelsData",
+      },
     ],
   },
   {
