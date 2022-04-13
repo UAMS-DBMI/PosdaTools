@@ -63,7 +63,7 @@ sub new_with_digest_and_length{
     );
   };
   if($@){
-    my $cmd = "file $infile";
+    my $cmd = "file \"$infile\"";
     open FILE, "$cmd|";
     my @lines;
     while (my $line = <FILE>){
