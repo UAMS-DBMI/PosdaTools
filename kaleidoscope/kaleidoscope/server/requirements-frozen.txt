@@ -1,0 +1,13 @@
+aiofiles==0.8.0
+appdirs==1.4.4
+asyncpg==0.25.0
+httptools==0.4.0
+multidict==6.0.2
+packaging==21.3
+pyparsing==3.0.8
+sanic==22.3.0
+sanic-routing==22.3.0
+six==1.16.0
+ujson==5.2.0
+uvloop==0.16.0
+websockets==10.2
