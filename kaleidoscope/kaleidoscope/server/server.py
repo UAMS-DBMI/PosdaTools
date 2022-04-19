@@ -19,7 +19,7 @@ LOGIN_TIMEOUT = datetime.timedelta(seconds=2*60*60) # 2 hours
 
 sessions = {} # token => username
 
-app = Sanic()
+app = Sanic("Kaleidoscope")
 
 pool = None
 eventloop = None
@@ -786,7 +786,7 @@ async def image_from_id(request):
     return HTTPResponse(status=200,
                         headers=None,
                         content_type="image/jpeg",
-                        body_bytes=data)
+                        body=data)
 
 
 @app.route("/api/new_token/<user>")
