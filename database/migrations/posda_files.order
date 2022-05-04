@@ -20,12 +20,6 @@ pathology_visual_review_files.sql
 add_metrics_to_work.sql
 add_png_to_seg_slice_bitmap_file.sql
 add_needs_edit_to_pathology_visual_review_files.sql
-create_nifti_jpegs.sql
-nifti_projection_review.sql
 file_nifti.sql
 fix_file_nifti.sql
-create_file_nifti_defacing.sql
-series_to_nifti.sql
-add_success_to_deface.sql
-add_result_to_deface.sql
-create_dicom_slice_nifti_slice.sql
+create_new_nifti_defacing.sql
