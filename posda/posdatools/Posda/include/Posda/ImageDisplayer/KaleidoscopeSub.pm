@@ -9,6 +9,7 @@ use Storable qw ( store_fd fd_retrieve );
 use JSON;
 use Debug;
 use File::Temp qw/ tempfile /;
+use VectorMath;
 my $dbg = sub {print STDERR @_ };
 ##################################################
 #Data Fetched via Ajax (AjaxPosdaGet):
