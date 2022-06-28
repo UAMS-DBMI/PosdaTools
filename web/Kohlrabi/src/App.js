@@ -53,16 +53,19 @@ function App(props) {
   }else{
     return (
       <div>
-          <h1>Now Viewing Image {index+1} out of {original_files.length}</h1>
+          <h1>
+            Kohlrabi Pathology Viewer
+            <small>Now Viewing Image {index+1} out of {original_files.length}</small>
+          </h1>
           <div>
             <button className="btn btn-success" onClick={() => buttonPressGood()}>Good</button>
             <button className="btn btn-error" onClick={() => buttonPressBad()}>Bad</button>
-            <button className="btn btn-warning" onClick={() => buttonPress()}>Edit</button>
-            <button className="btn btn-warning" onClick={() => buttonPress()}>Download</button>
+            <button className="btn btn-primary" onClick={() => buttonPress()}>Edit</button>
+            <button className="btn btn-primary" onClick={() => buttonPress()}>Download</button>
           </div>
         <div>
-          <button className="btn btn-warning" onClick={() => backButtonPress()}>Back</button>
-          <button className="btn btn-warning" onClick={() => nextButtonPress()}>Next</button>
+          <button className="btn btn-primary" onClick={() => backButtonPress()}>Back</button>
+          <button className="btn btn-primary" onClick={() => nextButtonPress()}>Next</button>
         </div>
         <div>
           <Images original_file={original_files[index].path_file_id} VRindex={props.VRindex} />

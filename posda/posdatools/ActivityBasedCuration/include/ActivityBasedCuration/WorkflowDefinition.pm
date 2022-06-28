@@ -167,7 +167,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule Structured Report PHI Scan",
         action =>  "SR_phiscanOp",
       },
+      {
+        caption => "Schedule Pathology TIFF PHI Scan",
+        action =>  "Path_PHI_Scan",
+      },
     ],
+    queries => [
+        {
+         caption => "View Pathology PHI Scan",
+         operation => "SelectQueryGroup",
+         query_list_name => "RunTiffPHIReport",
+       },
+     ],
   },
   {
     id => "10_structlinkcheck",
