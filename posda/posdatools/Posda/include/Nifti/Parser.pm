@@ -656,6 +656,7 @@ sub PrintSliceFlippedScaled{
   my $row_num_pix = $row_size/($self->{parsed}->{bitpix}/8);
   my $num_rows = $self->{parsed}->{dim}->[2];
   my $num_pix = $length/($self->{parsed}->{bitpix}/8);
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   $self->Open;
   my @Val;
   my $buff;
@@ -679,8 +680,8 @@ sub PrintSliceFlippedScaled{
     my $len  = read $self->{fh}, $buff, $row_size;
     unless($len == $row_size) { die "Read $len vs $row_size" }
     for my $i (0 .. $row_num_pix - 1){
-      my $row_offset = ($r - 1) * ($row_size / 2);
-      $Val[$i + $row_offset] = unpack($ps, substr($buff, $i *2, 2));
+      my $row_offset = ($r - 1) * ($row_size / $bytes_per_pix);
+      $Val[$i + $row_offset] = unpack($ps, substr($buff, $i * $bytes_per_pix, 2));
     }
   }
   my $num_val = @Val;
@@ -795,12 +796,7 @@ sub PrintNormalizedFileProjections{
   my $cols = $self->{parsed}->{dim}->[2];
   my $num_slices = $self->{parsed}->{dim}->[3];
   my $num_vols = $self->{parsed}->{dim}->[4];
-  my $bytes_per_pix;
-  if($self->{parsed}->{bitpix} == 16){
-    $bytes_per_pix = 2;
-  } elsif($self->{parsed}->{bitpix} == 32){
-    $bytes_per_pix = 4;
-  }
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   for my $i (0 .. $rows * $cols){
     $Val[$i] = undef;
     $Min[$i] = undef;
@@ -880,12 +876,7 @@ sub ProjectionAnalysis{
   my $cols = $self->{parsed}->{dim}->[2];
   my $num_slices = $self->{parsed}->{dim}->[3];
   my $num_vols = $self->{parsed}->{dim}->[4];
-  my $bytes_per_pix;
-  if($self->{parsed}->{bitpix} == 16){
-    $bytes_per_pix = 2;
-  } elsif($self->{parsed}->{bitpix} == 32){
-    $bytes_per_pix = 4;
-  }
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   for my $i (0 .. $rows * $cols){
     $Val[$i] = undef;
     $Min[$i] = undef;
