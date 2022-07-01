@@ -158,5 +158,4 @@ $bg->WriteToEmail ("Unhid $tot_hidden files in tp $new_activity_timepoint_id\n")
 #$bg->WriteToEmail("Hid $num_to_hide files\n");
 
 $bg->Finish("Done - copied $num_files files unhid $tot_hidden files " .
-  "from tp $old_tp_id to tp $new_activity_timepoint_id and hid " .
-  "$num_to_hide duplicate SOPs");
+  "from tp $old_tp_id to tp $new_activity_timepoint_id");
