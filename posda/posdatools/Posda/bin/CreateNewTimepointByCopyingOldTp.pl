@@ -116,30 +116,30 @@ $bg->SetActivityStatus("Waiting for unhide of $tot_hidden files to clear");
 close UNHIDE;
 $bg->WriteToEmail ("Unhid $tot_hidden files in tp $new_activity_timepoint_id\n");
 
-##
-## Get a list of SOP duplicates for all files in new timepoint
-##
+###
+### Get a list of SOP duplicates for all files in new timepoint
+###
 
-my %DuplicateSopFiles;
-Query("DuplicatesOfSopsInTp")->RunQuery(sub{
-  my($row) = @_;
-  $DuplicateSopFiles{$row->[0]} = 1;
-}, sub {}, $new_activity_timepoint_id, $new_activity_timepoint_id);
+#my %DuplicateSopFiles;
+#Query("DuplicatesOfSopsInTp")->RunQuery(sub{
+#  my($row) = @_;
+#  $DuplicateSopFiles{$row->[0]} = 1;
+#}, sub {}, $new_activity_timepoint_id, $new_activity_timepoint_id);
 
-##
-## Hide all of the Duplicate SOPs outside the timepoint
-##
-my $num_to_hide = keys %DuplicateSopFiles;
+###
+### Hide all of the Duplicate SOPs outside the timepoint
+###
+#my $num_to_hide = keys %DuplicateSopFiles;
 
-open HIDE, "|HideFilesWithStatusIrrespectiveOfCtp.pl $notify " .
-  "\"Hiding files which are dups of files from tp " .
-  "$new_activity_timepoint_id\"";
-for my $file_id (keys %DuplicateSopFiles){
-  print HIDE "$file_id&<undef>\n";
-}
-$bg->SetActivityStatus("Waiting for hide of $num_to_hide files to clear");
-close HIDE;
-$bg->WriteToEmail("Hid $num_to_hide files\n");
+#open HIDE, "|HideFilesWithStatusIrrespectiveOfCtp.pl $notify " .
+#  "\"Hiding files which are dups of files from tp " .
+#  "$new_activity_timepoint_id\"";
+#for my $file_id (keys %DuplicateSopFiles){
+#  print HIDE "$file_id&<undef>\n";
+#}
+#$bg->SetActivityStatus("Waiting for hide of $num_to_hide files to clear");
+#close HIDE;
+#$bg->WriteToEmail("Hid $num_to_hide files\n");
 
 $bg->Finish("Done - copied $num_files files unhid $tot_hidden files " .
   "from tp $old_tp_id to tp $new_activity_timepoint_id and hid " .
