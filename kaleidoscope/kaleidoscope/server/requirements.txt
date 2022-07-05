@@ -7,5 +7,5 @@ packaging==16.8
 pyparsing==2.2.0
 sanic==0.4.1
 six==1.10.0
-ujson==1.35
+ujson==5.4.0
 uvloop==0.8.0
