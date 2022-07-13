@@ -55,7 +55,6 @@ def convert_tempfiles_to_projection(directory: str,
 
 def convert_filelist_to_tempfiles(files: list, output_directory: str) -> None:
     for i, filename in enumerate(files):
-        print(i)
         subprocess.call([
             'convert',
             "-define", "dcm:rescale=true",

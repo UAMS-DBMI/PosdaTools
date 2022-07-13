@@ -5,7 +5,7 @@ use Posda::DB qw( Query );
 #use Debug;
 #my $dbg = sub {print STDERR @_ };
 my $usage = <<EOF;
-CacheDicomAsJpeg.pl <dicom_file_id> <window_c> <window_w> <tmp_f> <dest_file>
+lacheDicomAsJpeg.pl <dicom_file_id> <window_c> <window_w> <tmp_f> <dest_file>
 
 Fetches/Computes the following from the Posda database based on dicom_file_id:
   source_file_name
@@ -19,6 +19,7 @@ Fetches/Computes the following from the Posda database based on dicom_file_id:
   signed 
   rows
   cols
+  photometric_interpretation
 
 Then it invokes "ExtractPixel.pl" to write an 8 bit grayscale file with
 properly scaled, windowed and leveled pixel data into tmp_f.
@@ -96,7 +97,18 @@ unless($num_file_paths == 1){
 }
 
 my $source_file_name = [ keys %file_paths ]->[0];
+my $conversion_type = "gray";
+my $num_photometeric_interpretations = keys %photometric_interpretations;
+unless($num_photometeric_interpretations == 1){
+  print STDERR "Error: found $num_photometeric_interpretations photometeric_interpretations for file_id $file_id\n";
+  print "Error: found $num_photometeric_interpretations photometeric_interpretations for file_id $file_id\n";
+  exit 1;
+}
+my $photometeric_interpretation = [ keys %photometric_interpretations ]->[0];
 
+if($photometeric_interpretation eq "RGB"){
+  $conversion_type = "rgb";
+}
 my $num_pixel_offsets = keys %pixel_data_offsets;
 unless($num_pixel_offsets == 1){
   print STDERR "Error: found $num_pixel_offsets pixel_offsets for file_id $file_id\n";
@@ -286,7 +298,7 @@ print STDERR "Cmd: $cmd\n";
 #}
 #unless(-f $jpeg_file_name){
   $cmd = "convert -endian MSB -size ${cols}x${rows} " .
-    "-depth 8 gray:\"$gray_file_name\" \"$jpeg_file_name\"";
+    "-depth 8 $conversion_type:\"$gray_file_name\" \"$jpeg_file_name\"";
 print STDERR "Cmd: $cmd\n";
   open my $fh1, "$cmd|" or die "Can't open $cmd|\n($!)";
   my @lines1;
