@@ -291,8 +291,9 @@ sub DownloadDvh{
     $self->DownloadSingleDvh($http, $dyn);
   } elsif($type eq "Selected"){
     $self->DownloadSelectedDvhs($http, $dyn);
+  } else {
+    print STDERR "Unknown type: $type in DownloadDvh\n";
   }
-  print STDERR "Unknown type: $type in DownloadDvh\n";
 }
 sub DownloadSelectedDvhs{
   my($self, $http, $dyn) = @_;
@@ -308,7 +309,7 @@ sub DownloadSelectedDvhs{
       $dvh_data{$i} = $h;
     }
   }
-  $http->queue("Dose (mGy),");
+  $http->queue("Dose (Gy),");
   my @keys = sort keys %dvh_data;
   my $max_rows;
   for my $i (0 .. $#keys){
@@ -378,6 +379,38 @@ sub GetDvhData{
   my $cmd = "GetFilePart.pl \"$self->{file_path}\" $file_offset $length";
   my $dvh_txt = `$cmd`;
   my $dvh_data = [ split(/\\/, $dvh_txt) ];
+#  return $dvh_data;
+# $self->{DebugDvhData} = $dvh_data;
+  my $small_dvh_data = [];
+  if(0){
+  ##  Here we do the following:
+  ##  The first point in the dvh is (0, $dvh_data->[1])
+  ##  The second point is (1, $dvh_data->[201]);
+  ##  The third point is (2, $dvh_data->[401]);
+  ##  ...
+  ## The end point is (n, $dvh_data->[$#dvh_data];
+  push @{$small_dvh_data}, 0;
+  push @{$small_dvh_data}, $dvh_data->[1];
+  my $next = 201;
+  while ($next < $#{$dvh_data}){
+    push @{$small_dvh_data}, 1;
+    push @{$small_dvh_data}, $dvh_data->[$next];
+    $next += 200;
+  }
+  push @{$small_dvh_data}, 1;
+  push @{$small_dvh_data}, $dvh_data->[$#{$dvh_data}];
+  } else {
+    my $step = 20;
+    my $next = $step;
+    while($next < $#{$dvh_data}){
+      my $bin_size = .1;
+      my $val = $dvh_data->[$next + 1];
+      push @{$small_dvh_data}, $bin_size;
+      push @{$small_dvh_data}, $val;
+      $next += $step;
+    }
+  }
+  return $small_dvh_data;
 }
 sub DownloadSingleDvh{
   my($self, $http, $dyn) = @_;
@@ -395,25 +428,19 @@ sub DownloadSingleDvh{
     }
     $roi_num = $r->{num};
   }
-#  $http->DownloadHeader("text/csv", "Dvh_$roi_num" . "_Dose_$self->{file_id}.csv");
   $http->DownloadHeader("text/csv", "Dvh_$rtext" . "_Dose_$self->{file_id}.csv");
-  print STDERR "################\n" .
-    "Dvh_$rtext" . "_Dose_$self->{file_id}.csv\n" .
-    "################\n";
   
-  $http->queue("bin width, value, percent area, has dose greater than or equal\n");
+  $http->queue("has dose greater than or equal, bin_width, value, percent\n");
     my $tot_area = $self->{SelectedDvhData}->[1];
     my $cum_dose = 0;
     for my $i (0 .. $#{$self->{SelectedDvhData}}/2){
       my $bw = $self->{SelectedDvhData}->[$i * 2];
       my $area = $self->{SelectedDvhData}->[($i * 2) + 1];
-      $http->queue("$bw, ");
-      $http->queue("$area, ");
       my $low = sprintf("%3.2f", $cum_dose);
       my $high = $cum_dose + $bw;
       $cum_dose = $high;
       my $percent = ($area / $tot_area) * 100;
-      $http->queue("$percent, $low\n");
+      $http->queue("$low, $bw, $area, $percent\n");
     }
 }
 
@@ -431,13 +458,10 @@ sub SelectDvh{
 
 sub LoadSelectedDvh{
   my($self, $http, $dyn) = @_;
-#  my $file_offset = $self->{RtDoseAnalysis}->{ds_offset} +
-#    $self->{SelectedDvhStruct}->{file_pos};
   my $file_offset = $self->{SelectedDvhStruct}->{file_pos};
   my $length = $self->{SelectedDvhStruct}->{file_len};
-  my $cmd = "GetFilePart.pl \"$self->{file_path}\" $file_offset $length";
-  my $dvh_txt = `$cmd`;
-  $self->{SelectedDvhData} = [ split(/\\/, $dvh_txt) ];
+  
+  $self->{SelectedDvhData} = $self->GetDvhData($self->{SelectedDvh});
 }
 
 sub ShowDvhReport{
@@ -495,5 +519,4 @@ sub RoiComplete{
   };
   return $sub;
 }
-
 1;

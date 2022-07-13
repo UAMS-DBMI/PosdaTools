@@ -133,24 +133,10 @@
     ]
   },
   "public" : {
-    "database" : "ncia",
+    "database" : "nbiadb",
     "driver"   : "mysql",
-    "host"     : "tcia-public-rh-1.ad.uams.edu",
-    "user"     : "nciauser",
-    "password" : "nciA#112"
-  },
-  "intake" : {
-    "database" : "ncia",
-    "driver"   : "mysql",
-    "host"     : "144.30.1.71",
-    "user"     : "nciauser",
-    "password" : "nciA#112"
-  },
-  "nlst" : {
-    "database" : "ncia",
-    "driver"   : "mysql",
-    "host"     : "144.30.5.97",
-    "user"     : "nciauser",
-    "password" : "nciA#112"
+    "host"     : "aries-nbia-1.ad.uams.edu",
+    "user"     : "posda",
+    "password" : "VrTcpe2jPXivlvkCWa51"
   }
 }
