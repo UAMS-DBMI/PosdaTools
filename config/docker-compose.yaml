@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
     db:
-        image: postgres:13-alpine
+        image: postgres:10.1-alpine
         restart: always
         environment:
             POSTGRES_PASSWORD: example
@@ -22,36 +22,36 @@ services:
         command: "/home/posda/posdatools/systemd/run_in_posda_env.sh /steve/steve.py"
         restart: always
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./steve:/steve
             - /mnt:/mnt
             - /nas:/nas
-        env_file:
+        env_file: 
             - database.env
             - common.env
             - posda.env
 
-    # ream:
-    #     image: tcia/ream:latest
-    #     restart: always
-    #     volumes:
-    #         - posda_cache_alpine:/home/posda/cache
-    #         - ./posda/posdatools:/home/posda/posdatools
-    #         - ./ream:/ream
-    #         - /mnt:/mnt
-    #         - /nas:/nas
-    #     env_file:
-    #         - database.env
-    #         - common.env
-    #         - ream.env
-    #         - posda.env
+    ream:
+        image: tcia/ream:latest
+        restart: always
+        volumes:
+            - /nas/dbmi/aries/posda:/home/posda/cache
+            - ./posda/posdatools:/home/posda/posdatools
+            - ./ream:/ream
+            - /mnt:/mnt
+            - /nas:/nas
+        env_file: 
+            - database.env
+            - common.env
+            - ream.env
+            - posda.env
 
     exodus:
         image: tcia/exodus:latest
         restart: always
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./exodus:/exodus
             - /mnt:/mnt
@@ -62,27 +62,27 @@ services:
             - exodus.env
             - posda.env
 
+
     thumbs:
         image: tcia/lanterna:latest
         command: "/scripts/thumbs.py"
         restart: always
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./lanterna:/scripts
             - /mnt:/mnt
             - /nas:/nas
-        env_file:
+        env_file: 
             - database.env
             - common.env
-            - posda.env
 
     magicka:
         image: tcia/lanterna:latest
         command: "/scripts/magicka.py"
         restart: always
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./lanterna:/scripts
             - /mnt:/mnt
@@ -101,11 +101,11 @@ services:
             - 64610-64699:64610-64699
             - 11112:11112
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file:
+        env_file: 
             - database.env
             - common.env
             - nbia.env
@@ -115,13 +115,11 @@ services:
         image: tcia/posda:latest
         command: worker
         restart: always
-        deploy:
-            replicas: 1
         depends_on:
             - db
             - redis
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
@@ -131,22 +129,17 @@ services:
             - nbia.env
             - posda.env
         environment:
-          POSDA_WORKER_PRIORITY: 0
-          # this is optional, if omitted worker name will default to 
-          # the hostname of the container
-          POSDA_WORKER_NAME: "low-worker"
+          WORKER_PRIORITY: 0
 
     posda-worker-high:
         image: tcia/posda:latest
         command: worker
         restart: always
-        deploy:
-            replicas: 1
         depends_on:
             - db
             - redis
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
@@ -156,8 +149,7 @@ services:
             - nbia.env
             - posda.env
         environment:
-          POSDA_WORKER_PRIORITY: 1
-          POSDA_WORKER_NAME: "high-worker"
+          WORKER_PRIORITY: 1
 
     posda-fast-file-process:
         image: tcia/posda:latest
@@ -167,11 +159,11 @@ services:
             - db
             - redis
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file:
+        env_file: 
             - database.env
             - common.env
             - posda.env
@@ -183,14 +175,14 @@ services:
         depends_on:
             - db
             - posda
-        env_file:
+        env_file: 
             - database.env
             - common.env
             - api.env
             - posda.env
 
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - ./posda/fastapi/app:/fastapi
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
@@ -203,9 +195,9 @@ services:
             - db
             - posda
         volumes:
-            - posda_cache_alpine:/home/posda/cache
+            - /nas/dbmi/aries/posda:/home/posda/cache
             - kaleidoscope_files:/html
-        env_file:
+        env_file: 
             - database.env
             - common.env
             - posda.env
@@ -213,10 +205,10 @@ services:
         #     DEBUG: 1
 
     web:
-        image: tcia/posda_web:latest
+        image: tcia/posda_web:kubes
         restart: always
         ports:
-            - 80:80
+            - 80:8080
         depends_on:
             - posda
             - kaleidoscope
@@ -225,6 +217,7 @@ services:
             - posda-api:posda-api
             - kaleidoscope:kaleidoscope
         volumes:
+            - ./web/default.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf
             - type: volume
               source: kaleidoscope_files
               target: /kaleidoscope
@@ -232,7 +225,7 @@ services:
                 nocopy: true
 
 volumes:
-    posda_cache_alpine:
+    # posda_cache_alpine:
     # posda_submission_root:
     pgdata_alpine:
     kaleidoscope_files:
