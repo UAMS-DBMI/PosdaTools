@@ -808,6 +808,7 @@ sub PrintNormalizedFileProjections{
   my $is_fl = $self->{parsed}->{datatype} == 16;
   my $is_short = $self->{parsed}->{datatype} == 512 ||
     $self->{parsed}->{datatype} == 4;
+  my $is_char = $self->{parsed}->{datatype} == 2;
   my $slice;
   for my $i (0 .. ($num_slices * $num_vols) - 1){
     my $offset_r = $offset + ($i * $length);
@@ -824,6 +825,8 @@ sub PrintNormalizedFileProjections{
         $val = unpack('f', substr($slice, $j * 4, 4));
       }elsif($is_short){
         $val = unpack('S', substr($slice, $j * 2, 2));
+      }elsif($is_char){
+        $val = unpack('C', substr($slice, $j, 2));
       } else {
         die "Unknown datatype $self->{parsed}->{datatype}";
       }
@@ -900,6 +903,7 @@ sub ProjectionAnalysis{
     my $is_fl = $self->{parsed}->{datatype} == 16;
     my $is_short = $self->{parsed}->{datatype} == 512 ||
       $self->{parsed}->{datatype} == 4;
+    my $is_char = $self->{parsed}->{datatype} == 2;
     pix:
     for my $j (0 .. ($num_pix - 1)){
       my $val;
@@ -907,6 +911,8 @@ sub ProjectionAnalysis{
         $val = unpack('f', substr($slice, $j * 4, 4));
       }elsif($is_short){
         $val = unpack('S', substr($slice, $j * 2, 2));
+      }elsif($is_char){
+        $val = unpack('C', substr($slice, $j, 2));
       } else {
         die "Unknown datatype $self->{parsed}->{datatype}";
       }

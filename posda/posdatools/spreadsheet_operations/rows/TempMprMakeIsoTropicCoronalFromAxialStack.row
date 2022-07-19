@@ -1,0 +1,6 @@
+:operation_name: TempMprMakeIsoTropicCoronalFromAxialStack
+:command_line: TempMprMakeIsoTropicCoronalFromAxialStack.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['temp_mpr']
+:can_chain: 
