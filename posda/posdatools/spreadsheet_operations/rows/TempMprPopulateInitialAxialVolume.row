@@ -1,0 +1,6 @@
+:operation_name: TempMprPopulateInitialAxialVolume
+:command_line: TempMprPopulateInitialAxialVolume.pl <?bkgrnd_id?> <activity_id> <series> <notify>
+:operation_type: background_process
+:input_line_format: <file_id>&<pix_rows>&<pix_cols>&<ipp_x>&<ipp_y>&<ipp_z>&<row_spc>&<col_spc>
+:tags: ['temp_mpr']
+:can_chain: 

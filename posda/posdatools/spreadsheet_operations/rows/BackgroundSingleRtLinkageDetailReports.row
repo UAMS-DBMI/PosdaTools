@@ -1,0 +1,6 @@
+:operation_name: BackgroundSingleRtLinkageDetailReports
+:command_line: BackgroundSingleRtLinkageDetailReports.pl <?bkgrnd_id?> <activity_id> <file_path> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['StuctLinkages']
+:can_chain: 

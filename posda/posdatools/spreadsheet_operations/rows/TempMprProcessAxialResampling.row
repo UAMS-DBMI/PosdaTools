@@ -1,0 +1,6 @@
+:operation_name: TempMprProcessAxialResampling
+:command_line: TempMprProcessAxialResampling.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>
+:operation_type: background_process
+:input_line_format: <i_slice_no>&<slice_offset>&<slice_spacing>
+:tags: ['temp_mpr']
+:can_chain: 

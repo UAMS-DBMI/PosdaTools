@@ -1,4 +1,4 @@
--- Name: ActivityCrosstalkFile
+-- Name: ActivityCrosstalkSeries
 -- Schema: posda_files
 -- Columns: ['activity_id', 'brief_description', 'when_created', 'who_created', 'when_closed', 'third_party_analysis_url', 'num_timepoints', 'num_files']
 -- Args: ['activity_id']
@@ -13,11 +13,12 @@ select
   count(distinct file_id) as num_files
 from
   activity a join activity_timepoint using (activity_id) natural join activity_timepoint_file 
-where file_id in (
+  natural join file_series
+where series_instance_uid in (
   select 
-    distinct file_id
+    distinct series_instance_uid
   from
-    activity_timepoint_file natural join activity_timepoint
+    file_series natural join activity_timepoint_file natural join activity_timepoint
   where activity_id = ?
 )
 group by activity_id, brief_description, a.when_created, a.who_created, when_closed,
