@@ -15,7 +15,7 @@ async def stream_directory(path, dl_filename):
         path += '/'
 
 
-    z = zipstream.ZipFile()
+    z = zipstream.ZipFile(allowZip64=True)
 
     for dirpath, dirnames, filenames in os.walk(path):
         for filename in filenames:
@@ -29,7 +29,7 @@ async def stream_directory(path, dl_filename):
 
 
 async def stream_files(filelist, dl_filename):
-    z = zipstream.ZipFile()
+    z = zipstream.ZipFile(allowZip64=True)
 
     for filename in filelist:
         z.write(str(filename))
