@@ -129,7 +129,7 @@ print STDERR "Ewouldblock\n";
         $prot = "https:";
       }
 
-      $queue->queue("href=\"$prot//$host/posda\">");
+      $queue->queue("href=\"$prot//$host/posda/\">");
       $queue->queue("returning</a> to the root of the server.</p>");
       $queue->queue("</body></html>");
       $queue->finish();
