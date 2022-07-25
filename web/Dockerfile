@@ -1,26 +1,22 @@
-FROM alpine:latest as node-builder
-RUN apk --update add nodejs-npm make
-
-FROM node-builder as dashboard-builder
-
+FROM node:16-alpine as dashboard-builder
+RUN apk --update add make
 COPY dashboard /dashboard
-
 RUN cd /dashboard && \
     make
 
-
-FROM node-builder as quince-builder
+FROM node:16-alpine as quince-builder
+RUN apk --update add make
 COPY quince /quince
 RUN cd /quince && \
 	make
 
-FROM node:current-alpine as roots-builder
+FROM node:16-alpine as roots-builder
 RUN apk --update add make
 COPY dicom-root /roots
 RUN cd /roots && \
 	make
 
-FROM node:current-alpine as kohlrabi-builder
+FROM node:16-alpine as kohlrabi-builder
 RUN apk --update add make
 COPY Kohlrabi /kohlrabi
 RUN cd /kohlrabi && \

@@ -176,7 +176,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         {
          caption => "View Pathology PHI Scan",
          operation => "SelectQueryGroup",
-         query_list_name => "RunTiffPHIReport",
+         query_list_name => "Display_TiffPHI_Report",
        },
      ],
   },
@@ -701,6 +701,15 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Nifti Files For Nifti Conversion",
         query => "ListNiftiFileFromSeriesByNiftiConversion",
+      },
+    ],
+  ],
+  Display_TiffPHI_Report => [
+    "Suggested Queries for Tiff PHI Reporting",
+    [
+      {
+        caption => "Display created Tiff PHI Report",
+        query => "RunTiffPHIReport",
       },
     ],
   ],

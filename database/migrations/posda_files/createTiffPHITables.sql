@@ -40,12 +40,12 @@ CREATE TABLE public.tiff_phi_scan_instance (
 
 -- Drop table
 
---DROP TABLE public.tiff_tag_value_occurance;
+--DROP TABLE public.tiff_tag_value_occurrence;
 
-CREATE TABLE public.tiff_tag_value_occurance (
+CREATE TABLE public.tiff_tag_value_occurrence (
 	tiff_tag_seen_id int4 NOT NULL,
 	tiff_value_seen_id int4 NOT NULL,
 	tiff_phi_scan_instance_id int4 NOT null,
 	file_id int4 not null
 );
-CREATE INDEX tiff_tag_seen_and_tiff_value_seen_index ON public.tiff_tag_value_occurance USING btree (tiff_tag_seen_id, tiff_value_seen_id);
+-- CREATE INDEX tiff_tag_seen_and_tiff_value_seen_index ON public.tiff_tag_value_occurrence USING btree (tiff_tag_seen_id, tiff_value_seen_id);
