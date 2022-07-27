@@ -71,8 +71,8 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
     query = """
         select distinct
             root_path || '/' || rel_path as file,
-            file_offset,
-            size,
+            pixel_data_offset as file_offset,
+            pixel_data_length as size,
             bits_stored,
             bits_allocated,
             pixel_representation,
@@ -92,8 +92,7 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
         from
             file_image
             natural join image
-            natural join unique_pixel_data
-            natural join pixel_location
+            natural join dicom_file
             natural join file_location
             natural join file_storage_root
             natural join file_equipment
