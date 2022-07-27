@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "Adding all 'not in DB' queries to the DB..."
+
+FindMissingQueries.pl 2>/dev/null | awk '\
+/not in DB/ { 
+	print $1
+	system("SynchronizeQuery.pl "$1" take_disk")
+}
+
+'

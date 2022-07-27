@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.0
+-- Dumped from database version 13.6
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
@@ -441,6 +441,111 @@ ALTER SEQUENCE public.series_scan_instance_series_scan_instance_id_seq OWNED BY 
 
 
 --
+-- Name: tiff_phi_scan_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tiff_phi_scan_instance (
+    tiff_phi_scan_instance_id integer NOT NULL,
+    description text NOT NULL,
+    start_time timestamp with time zone,
+    end_time timestamp with time zone
+);
+
+
+--
+-- Name: tiff_phi_scan_instance_tiff_phi_scan_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tiff_phi_scan_instance_tiff_phi_scan_instance_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tiff_phi_scan_instance_tiff_phi_scan_instance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tiff_phi_scan_instance_tiff_phi_scan_instance_id_seq OWNED BY public.tiff_phi_scan_instance.tiff_phi_scan_instance_id;
+
+
+--
+-- Name: tiff_tag_seen; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tiff_tag_seen (
+    tiff_tag_seen_id integer NOT NULL,
+    is_private boolean,
+    tag_name text
+);
+
+
+--
+-- Name: tiff_tag_seen_tiff_tag_seen_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tiff_tag_seen_tiff_tag_seen_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tiff_tag_seen_tiff_tag_seen_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tiff_tag_seen_tiff_tag_seen_id_seq OWNED BY public.tiff_tag_seen.tiff_tag_seen_id;
+
+
+--
+-- Name: tiff_tag_value_occurrence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tiff_tag_value_occurrence (
+    tiff_tag_seen_id integer NOT NULL,
+    tiff_value_seen_id integer NOT NULL,
+    tiff_phi_scan_instance_id integer NOT NULL,
+    file_id integer NOT NULL
+);
+
+
+--
+-- Name: tiff_value_seen; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tiff_value_seen (
+    tiff_value_seen_id integer NOT NULL,
+    value text NOT NULL
+);
+
+
+--
+-- Name: tiff_value_seen_tiff_value_seen_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tiff_value_seen_tiff_value_seen_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tiff_value_seen_tiff_value_seen_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tiff_value_seen_tiff_value_seen_id_seq OWNED BY public.tiff_value_seen.tiff_value_seen_id;
+
+
+--
 -- Name: value_seen; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -540,10 +645,47 @@ ALTER TABLE ONLY public.series_scan_instance ALTER COLUMN series_scan_instance_i
 
 
 --
+-- Name: tiff_phi_scan_instance tiff_phi_scan_instance_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tiff_phi_scan_instance ALTER COLUMN tiff_phi_scan_instance_id SET DEFAULT nextval('public.tiff_phi_scan_instance_tiff_phi_scan_instance_id_seq'::regclass);
+
+
+--
+-- Name: tiff_tag_seen tiff_tag_seen_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tiff_tag_seen ALTER COLUMN tiff_tag_seen_id SET DEFAULT nextval('public.tiff_tag_seen_tiff_tag_seen_id_seq'::regclass);
+
+
+--
+-- Name: tiff_value_seen tiff_value_seen_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tiff_value_seen ALTER COLUMN tiff_value_seen_id SET DEFAULT nextval('public.tiff_value_seen_tiff_value_seen_id_seq'::regclass);
+
+
+--
 -- Name: value_seen value_seen_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.value_seen ALTER COLUMN value_seen_id SET DEFAULT nextval('public.value_seen_value_seen_id_seq'::regclass);
+
+
+--
+-- Name: tiff_tag_seen tiff_tag_seen_tag_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tiff_tag_seen
+    ADD CONSTRAINT tiff_tag_seen_tag_key UNIQUE (tag_name);
+
+
+--
+-- Name: tiff_value_seen tiff_value_seen_value_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tiff_value_seen
+    ADD CONSTRAINT tiff_value_seen_value_key UNIQUE (value);
 
 
 --

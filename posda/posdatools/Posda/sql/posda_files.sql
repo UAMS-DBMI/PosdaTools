@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.0
+-- Dumped from database version 13.6
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
@@ -2288,6 +2288,112 @@ CREATE TABLE public.file_mr (
 
 
 --
+-- Name: file_nifti; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file_nifti (
+    file_id integer NOT NULL,
+    magic text,
+    is_zipped boolean,
+    descrip text,
+    aux_file text,
+    bitpix integer,
+    datatype integer,
+    num_dim integer,
+    dim1 integer,
+    dim2 integer,
+    dim3 integer,
+    dim4 integer,
+    dim5 integer,
+    dim6 integer,
+    dim7 integer,
+    pixdim_0 text,
+    pixdim_1 text,
+    pixdim_2 text,
+    pixdim_3 text,
+    pixdim_4 text,
+    pixdim_5 text,
+    pixdim_6 text,
+    pixdim_7 text,
+    intent_code integer,
+    intent_name text,
+    intent_p1 double precision,
+    intent_p2 double precision,
+    intent_p3 double precision,
+    cal_max double precision,
+    cal_min double precision,
+    scl_slope double precision,
+    scl_inter double precision,
+    slice_start integer,
+    slice_end integer,
+    slice_code integer,
+    sform_code integer,
+    xyzt_units integer,
+    s_row_x_0 double precision,
+    s_row_x_1 double precision,
+    s_row_x_2 double precision,
+    s_row_x_3 double precision,
+    s_row_y_0 double precision,
+    s_row_y_1 double precision,
+    s_row_y_2 double precision,
+    s_row_y_3 double precision,
+    s_row_z_0 double precision,
+    s_row_z_1 double precision,
+    s_row_z_2 double precision,
+    s_row_z_3 double precision,
+    qform_code integer,
+    quatern_b double precision,
+    quatern_c double precision,
+    quatern_d double precision,
+    q_offset_x double precision,
+    q_offset_y double precision,
+    q_offset_z double precision,
+    vox_offset integer
+);
+
+
+--
+-- Name: file_nifti_defacing; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file_nifti_defacing (
+    file_nifti_defacing_id integer NOT NULL,
+    operation text NOT NULL,
+    face_box jsonb,
+    from_nifti_file integer NOT NULL,
+    to_nifti_file integer,
+    three_d_rendered_face integer,
+    three_d_rendered_face_box integer,
+    three_d_rendered_defaced integer,
+    completed_time timestamp with time zone,
+    comments text,
+    success boolean,
+    subprocess_invocation_id integer,
+    error_code text
+);
+
+
+--
+-- Name: file_nifti_defacing_file_nifti_defacing_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.file_nifti_defacing_file_nifti_defacing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: file_nifti_defacing_file_nifti_defacing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.file_nifti_defacing_file_nifti_defacing_id_seq OWNED BY public.file_nifti_defacing.file_nifti_defacing_id;
+
+
+--
 -- Name: file_patient; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3057,7 +3163,7 @@ CREATE TABLE public.non_dicom_file_change (
 
 CREATE TABLE public.pathology_visual_review_files (
     pathology_visual_review_instance_id integer,
-    svsfile_id integer,
+    path_file_id integer,
     preview_file_id integer,
     needs_edit boolean
 );
@@ -3093,6 +3199,16 @@ CREATE SEQUENCE public.pathology_visual_review_insta_pathology_visual_review_ins
 --
 
 ALTER SEQUENCE public.pathology_visual_review_insta_pathology_visual_review_insta_seq OWNED BY public.pathology_visual_review_instance.pathology_visual_review_instance_id;
+
+
+--
+-- Name: pathology_visual_review_status; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_visual_review_status (
+    path_file_id integer,
+    good boolean
+);
 
 
 --
@@ -4984,6 +5100,13 @@ ALTER TABLE ONLY public.file_import_study ALTER COLUMN file_import_study_id SET 
 
 
 --
+-- Name: file_nifti_defacing file_nifti_defacing_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing ALTER COLUMN file_nifti_defacing_id SET DEFAULT nextval('public.file_nifti_defacing_file_nifti_defacing_id_seq'::regclass);
+
+
+--
 -- Name: file_storage_root file_storage_root_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5392,6 +5515,22 @@ ALTER TABLE ONLY public.file_mr
 
 
 --
+-- Name: file_nifti_defacing file_nifti_defacing_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_pkey PRIMARY KEY (file_nifti_defacing_id);
+
+
+--
+-- Name: file_nifti file_nifti_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti
+    ADD CONSTRAINT file_nifti_pkey PRIMARY KEY (file_id);
+
+
+--
 -- Name: file_patient file_patient_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5445,6 +5584,14 @@ ALTER TABLE ONLY public.image_equivalence_class_input_image
 
 ALTER TABLE ONLY public.non_dicom_edit_compare_disposition
     ADD CONSTRAINT non_dicom_edit_compare_disposition_subprocess_invocation_id_key UNIQUE (subprocess_invocation_id);
+
+
+--
+-- Name: pathology_visual_review_status pathology_visual_review_status_path_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pathology_visual_review_status
+    ADD CONSTRAINT pathology_visual_review_status_path_file_id_key UNIQUE (path_file_id);
 
 
 --
@@ -6463,6 +6610,62 @@ ALTER TABLE ONLY public.file_export
 
 ALTER TABLE ONLY public.file_export
     ADD CONSTRAINT file_export_transfer_status_id_fkey FOREIGN KEY (transfer_status_id) REFERENCES public.transfer_status(transfer_status_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_from_nifti_file_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_from_nifti_file_fkey FOREIGN KEY (from_nifti_file) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_subprocess_invocation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_subprocess_invocation_id_fkey FOREIGN KEY (subprocess_invocation_id) REFERENCES public.subprocess_invocation(subprocess_invocation_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_three_d_rendered_defaced_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_three_d_rendered_defaced_fkey FOREIGN KEY (three_d_rendered_defaced) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_three_d_rendered_face_box_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_three_d_rendered_face_box_fkey FOREIGN KEY (three_d_rendered_face_box) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_three_d_rendered_face_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_three_d_rendered_face_fkey FOREIGN KEY (three_d_rendered_face) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_nifti_defacing file_nifti_defacing_to_nifti_file_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti_defacing
+    ADD CONSTRAINT file_nifti_defacing_to_nifti_file_fkey FOREIGN KEY (to_nifti_file) REFERENCES public.file(file_id);
+
+
+--
+-- Name: file_nifti file_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_nifti
+    ADD CONSTRAINT file_nifti_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
 
 
 --

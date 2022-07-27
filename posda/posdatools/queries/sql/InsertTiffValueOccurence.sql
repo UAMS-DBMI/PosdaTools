@@ -7,4 +7,4 @@
 --
 --
 
-insert into tiff_tag_value_occurence (tiff_tag_seen_id,tiff_value_seen_id,tiff_phi_scan_instance_id,file_id) values (?,?,?,?);
+insert into tiff_tag_value_occurrence (tiff_tag_seen_id,tiff_value_seen_id,tiff_phi_scan_instance_id,file_id) values (?,?,?,?);
