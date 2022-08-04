@@ -54,7 +54,7 @@ def main(args):
             mytif = TiffFile(svsfilepath)
             saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
-                if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000):
+                if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
                     str = "/tmp/{}_page{}.jpg".format(file_id,i)
                     im = Image.fromarray(data)

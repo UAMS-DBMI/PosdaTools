@@ -442,7 +442,7 @@ EOF
   qc_cc_80 => {
     query_pat => "%",
     type => "ChainColumnToPopup",
-    obj => "PathologyViewerLauncher",
+    obj => "Posda::PathologyViewer",#PathologyViewerLauncher
     col_name => "pathology_visual_review_instance_id",
     caption => "Launch Visual Reviewer",
   },
