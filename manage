@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 help() {
@@ -19,37 +19,49 @@ Supported operations:
     "
 }
 
+# Figure out which docker compose to use, if any are installed
+DOCKER="docker compose"
+
+if ! docker compose version 2>/dev/null >/dev/null; then
+	DOCKER="docker-compose --compatibility"
+	if ! [[ $(type -P "docker-compose") ]] ; then
+		echo "Did not detect 'docker-compose' or 'docker compose'."\
+			 "At least one is required!"
+		exit 1;
+	fi
+fi
+
 
 case "$1" in
   restart)
     shift
     git describe --tags > posda/posdatools/versionInfo.txt
-    exec docker-compose --compatibility restart $*
+    exec $DOCKER restart $*
     ;;
   up)
     shift
     git describe --tags > posda/posdatools/versionInfo.txt
-    exec docker-compose --compatibility up $*
+    exec $DOCKER up $*
     ;;
 
   down)
     shift
-    exec docker-compose --compatibility down $*
+    exec $DOCKER down $*
     ;;
 
   psql)
     shift
-    exec docker-compose --compatibility exec db psql -U postgres $*
+    exec $DOCKER exec db psql -U postgres $*
     ;;
 
   shell)
     shift
-    exec docker-compose --compatibility exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
+    exec $DOCKER exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
     ;;
 
   logs)
     shift
-    exec docker-compose --compatibility logs -f --tail=10
+    exec $DOCKER logs -f --tail=10 $*
     ;;
 
   help)
@@ -58,6 +70,6 @@ case "$1" in
     ;;
 
   *)
-    exec docker-compose --compatibility $@
+    exec $DOCKER $@
     ;;
 esac

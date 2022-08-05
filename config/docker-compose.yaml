@@ -1,8 +1,11 @@
 version: '3.2'
 
 services:
+    ## The main relational database
+    ## Change the pgdata_alpine volume to a drive location to preserve
+    ## data long-term.
     db:
-        image: postgres:10.1-alpine
+        image: postgres:13.7-alpine
         restart: always
         environment:
             POSTGRES_PASSWORD: example
@@ -12,77 +15,85 @@ services:
         ports:
             - 5433:5432
 
+    ## Queue server for synchronizing things
     redis:
         image: redis:latest
         restart: always
 
+    ## Periodic job runner
     steve:
         image: tcia/posda:latest
         working_dir: "/home/posda/posdatools/systemd"
         command: "/home/posda/posdatools/systemd/run_in_posda_env.sh /steve/steve.py"
         restart: always
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./steve:/steve
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file: 
-            - database.env
-            - common.env
-            - posda.env
-
-    ream:
-        image: tcia/ream:latest
-        restart: always
-        volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
-            - ./posda/posdatools:/home/posda/posdatools
-            - ./ream:/ream
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file: 
-            - database.env
-            - common.env
-            - ream.env
-            - posda.env
-
-    exodus:
-        image: tcia/exodus:latest
-        restart: always
-        volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
-            - ./posda/posdatools:/home/posda/posdatools
-            - ./exodus:/exodus
             - /mnt:/mnt
             - /nas:/nas
         env_file:
             - database.env
             - common.env
-            - exodus.env
             - posda.env
 
+    ## Service for submitting files to NBIA. Only needed if NBIA is used.
+    # ream:
+    #     image: tcia/ream:latest
+    #     restart: always
+    #     volumes:
+    #         - posda_cache_alpine:/home/posda/cache
+    #         - ./posda/posdatools:/home/posda/posdatools
+    #         - ./ream:/ream
+    #         - /mnt:/mnt
+    #         - /nas:/nas
+    #     env_file:
+    #         - database.env
+    #         - common.env
+    #         - ream.env
+    #         - posda.env
 
+    ## Service for exporting files to an external Posda instance.
+    # exodus:
+    #     image: tcia/exodus:latest
+    #     restart: always
+    #     volumes:
+    #         - posda_cache_alpine:/home/posda/cache
+    #         - ./posda/posdatools:/home/posda/posdatools
+    #         - ./exodus:/exodus
+    #         - /mnt:/mnt
+    #         - /nas:/nas
+    #     env_file:
+    #         - database.env
+    #         - common.env
+    #         - exodus.env
+    #         - posda.env
+
+
+    ## Generates thumnails for images submitted to NBIA
     thumbs:
         image: tcia/lanterna:latest
         command: "/scripts/thumbs.py"
         restart: always
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./lanterna:/scripts
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
+        deploy:
+            replicas: 1
 
+    ## Generates Kaleidoscope projections
     magicka:
         image: tcia/lanterna:latest
         command: "/scripts/magicka.py"
         restart: always
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - ./lanterna:/scripts
             - /mnt:/mnt
@@ -91,7 +102,10 @@ services:
             - database.env
             - common.env
             - posda.env
+        deploy:
+            replicas: 1
 
+    ## The main application server
     posda:
         image: tcia/posda:latest
         restart: always
@@ -101,16 +115,18 @@ services:
             - 64610-64699:64610-64699
             - 11112:11112
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - nbia.env
             - posda.env
 
+    ## A worker that processes the low-priority queue (0)
+    ## Increase the replicas to increase concurrent processes
     posda-worker-low:
         image: tcia/posda:latest
         command: worker
@@ -119,7 +135,7 @@ services:
             - db
             - redis
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
@@ -129,8 +145,12 @@ services:
             - nbia.env
             - posda.env
         environment:
-          WORKER_PRIORITY: 0
+            WORKER_PRIORITY: 0
+        deploy:
+            replicas: 1
 
+    ## A worker that processes the high-priority queue (1)
+    ## Increase the replicas to increase concurrent processes
     posda-worker-high:
         image: tcia/posda:latest
         command: worker
@@ -139,7 +159,7 @@ services:
             - db
             - redis
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
@@ -149,8 +169,11 @@ services:
             - nbia.env
             - posda.env
         environment:
-          WORKER_PRIORITY: 1
+            WORKER_PRIORITY: 1
+        deploy:
+            replicas: 1
 
+    ## Service which performs DICOM file parsing and importing to the db
     posda-fast-file-process:
         image: tcia/posda:latest
         command: file-process
@@ -159,15 +182,16 @@ services:
             - db
             - redis
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - posda.env
 
+    ## Main API server
     posda-api:
         image: tcia/posda:latest
         command: api
@@ -175,19 +199,19 @@ services:
         depends_on:
             - db
             - posda
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - api.env
             - posda.env
-
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - ./posda/fastapi/app:/fastapi
             - ./posda/posdatools:/home/posda/posdatools
             - /mnt:/mnt
             - /nas:/nas
 
+    ## API server for Kaleidoscope application
     kaleidoscope:
         image: tcia/kaleidoscope:latest
         restart: always
@@ -195,15 +219,16 @@ services:
             - db
             - posda
         volumes:
-            - /nas/dbmi/aries/posda:/home/posda/cache
+            - posda_cache_alpine:/home/posda/cache
             - kaleidoscope_files:/html
-        env_file: 
+        env_file:
             - database.env
             - common.env
             - posda.env
         # environment:
         #     DEBUG: 1
 
+    ## The main web server which proxies traffic to all other services
     web:
         image: tcia/posda_web:kubes
         restart: always
@@ -222,10 +247,9 @@ services:
               source: kaleidoscope_files
               target: /kaleidoscope
               volume:
-                nocopy: true
+                  nocopy: true
 
 volumes:
-    # posda_cache_alpine:
-    # posda_submission_root:
+    posda_cache_alpine:
     pgdata_alpine:
     kaleidoscope_files:
