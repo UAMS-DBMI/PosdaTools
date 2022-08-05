@@ -40,6 +40,7 @@ sub SpecificInitialize {
   $self->{startup} = 1;# as true
   $self->{end} = 0; # as false
   $self->{index} = 0;
+  $self->{current_user} = $self->get_user;
 
 
 
@@ -48,7 +49,7 @@ sub SpecificInitialize {
 sub ContentResponse {
  my ($self, $http, $dyn) = @_;
   if ($self->{startup}){
-    $http->queue("<h3>Scan Instance $self->{pathology_visual_review_instance_id} has $self->{num_files} image files.</h3>");
+    $http->queue("<h3>Hello $self->{current_user}, Scan Instance $self->{pathology_visual_review_instance_id} has $self->{num_files} image files.</h3>");
     $self->NotSoSimpleButton($http, {
       op => "Begin",
       caption => "Begin",
@@ -56,7 +57,7 @@ sub ContentResponse {
     });
   }elsif($self->{index} < $self->{num_files}){
      $self->{pathid} = $self->{path_files_for_review}->[$self->{index}]->{path_file_id};
-     $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}/$self->{pathology_visual_review_instance_id}");
+     $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}");
      $self->{preview_array}  = decode_json($self->{client}->responseContent());
      $self->{num_prevs}  = scalar(@{$self->{preview_array}});
      $http->queue("<h3>Now viewing file $self->{pathid} of $self->{num_files} </h3>");
@@ -68,6 +69,17 @@ sub ContentResponse {
      $self->NotSoSimpleButton($http, {
        op => "nextButtonPress",
        caption => "Next",
+       sync => "Update();",
+     });
+     $http->queue("</br>");
+     $self->NotSoSimpleButton($http, {
+       op => "badButtonPress",
+       caption => "Bad",
+       sync => "Update();",
+     });
+     $self->NotSoSimpleButton($http, {
+       op => "goodButtonPress",
+       caption => "Good",
        sync => "Update();",
      });
      $http->queue("</br>");
@@ -108,6 +120,18 @@ sub backButtonPress(){
   if ($self->{index} > 0){
     $self->{index}--;
   }
+}
+
+sub goodButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/true/$self->{current_user}");
+  $self->nextButtonPress();
+}
+
+sub badButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+  $self->nextButtonPress();
 }
 
 sub MenuResponse {
