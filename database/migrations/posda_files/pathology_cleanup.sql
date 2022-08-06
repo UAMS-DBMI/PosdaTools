@@ -3,9 +3,9 @@
 -- Name: pathology_cleanup script
 --
 
-drop table pathology_visual_review_instance
-drop table pathology_visual_review_files
-drop table pathology_visual_review_status
+drop table pathology_visual_review_instance;
+drop table pathology_visual_review_files;
+drop table pathology_visual_review_status;
 
 create table if not exists pathology_visual_review_instance (
 	pathology_visual_review_instance_id serial not null,
