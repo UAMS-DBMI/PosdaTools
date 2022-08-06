@@ -583,11 +583,27 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   ],
   PathVisualReviewStatus => [
-    "Pathology Suggested Queries for Visual Review Status",
+    "Pathology Suggested Queries for Visual Review",
     [
       {
-        caption => "View Pathology Visual Review Instances",
+        caption => "View Pathology VR Instances (Launcher)",
         query => "ViewPathologyVisualReviewInstances",
+      },
+      {
+        caption => "PathologyVRlogs",
+        query => "PathologyVRlogs",
+      },
+      {
+        caption => "PathologyReviewCountByActivity",
+        query => "PathologyReviewCountByActivity",
+      },
+      {
+        caption => "PathologyReviewCountByActivityTimepoint",
+        query => "PathologyReviewCountByActivityTimepoint",
+      },
+      {
+        caption => "PathologyBadFilesInTPCheck",
+        query => "PathologyBadFilesInTPCheck",
       },
     ],
   ],
