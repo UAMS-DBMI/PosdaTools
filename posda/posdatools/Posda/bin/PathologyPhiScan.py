@@ -26,7 +26,7 @@ def saveTiffMetaData(mytif, activity_id, file_id, phi_scan_id):
                 if not value_seen_id:
                     value_seen_id = Query("InsertTiffValueSeen").get_single_value(value = str(tag.value))
                 #print("\n Tag ID: {0}, Value: {1}, Scan: {2}, Page: {3}, File: {4}  \n".format(tag_seen_id,value_seen_id,phi_scan_id,p,file_id))
-                Query("InsertTiffValueOccurence").execute(tiff_tag_seen_id = tag_seen_id,tiff_value_seen_id = value_seen_id,tiff_phi_scan_instance_id = phi_scan_id, page_id = p,file_id = file_id)
+                Query("InsertTiffValueOccurrence").execute(tiff_tag_seen_id = tag_seen_id,tiff_value_seen_id = value_seen_id,tiff_phi_scan_instance_id = phi_scan_id, page_id = p,file_id = file_id)
 
 
 

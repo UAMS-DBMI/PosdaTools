@@ -45,6 +45,7 @@ CREATE TABLE public.tiff_phi_scan_instance (
 CREATE TABLE public.tiff_tag_value_occurrence (
 	tiff_tag_seen_id int4 NOT NULL,
 	tiff_value_seen_id int4 NOT NULL,
+	page_id int4 not null,
 	tiff_phi_scan_instance_id int4 NOT null,
 	file_id int4 not null
 );
