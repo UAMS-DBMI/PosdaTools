@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.6
+-- Dumped from database version 13.7
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
@@ -511,7 +511,8 @@ CREATE TABLE public.tiff_tag_value_occurrence (
     tiff_tag_seen_id integer NOT NULL,
     tiff_value_seen_id integer NOT NULL,
     tiff_phi_scan_instance_id integer NOT NULL,
-    file_id integer NOT NULL
+    file_id integer NOT NULL,
+    page_id integer NOT NULL
 );
 
 

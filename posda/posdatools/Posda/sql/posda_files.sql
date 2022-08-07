@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.6
+-- Dumped from database version 13.7
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
@@ -3162,10 +3162,8 @@ CREATE TABLE public.non_dicom_file_change (
 --
 
 CREATE TABLE public.pathology_visual_review_files (
-    pathology_visual_review_instance_id integer,
-    path_file_id integer,
-    preview_file_id integer,
-    needs_edit boolean
+    pathology_visual_review_instance_id integer NOT NULL,
+    path_file_id integer NOT NULL
 );
 
 
@@ -3202,12 +3200,24 @@ ALTER SEQUENCE public.pathology_visual_review_insta_pathology_visual_review_inst
 
 
 --
+-- Name: pathology_visual_review_preview_files; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_visual_review_preview_files (
+    path_file_id integer,
+    preview_file_id integer
+);
+
+
+--
 -- Name: pathology_visual_review_status; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.pathology_visual_review_status (
     path_file_id integer,
-    good boolean
+    good_status boolean,
+    reviewing_user text,
+    review_time timestamp without time zone
 );
 
 
@@ -5587,11 +5597,11 @@ ALTER TABLE ONLY public.non_dicom_edit_compare_disposition
 
 
 --
--- Name: pathology_visual_review_status pathology_visual_review_status_path_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: pathology_visual_review_files pathology_visual_review_files_path_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pathology_visual_review_status
-    ADD CONSTRAINT pathology_visual_review_status_path_file_id_key UNIQUE (path_file_id);
+ALTER TABLE ONLY public.pathology_visual_review_files
+    ADD CONSTRAINT pathology_visual_review_files_path_file_id_key UNIQUE (path_file_id);
 
 
 --
