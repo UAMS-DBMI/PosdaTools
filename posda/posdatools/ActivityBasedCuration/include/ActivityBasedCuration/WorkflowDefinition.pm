@@ -400,6 +400,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Byte Swap Dicom Pixel Data",
         action =>  "BackgroundSwapDicomPixelsData",
       },
+      {
+        caption => "Big Endian -> Little Endian",
+        action =>  "ConvertBigEndianToLittle",
+      },
     ],
   },
   {
