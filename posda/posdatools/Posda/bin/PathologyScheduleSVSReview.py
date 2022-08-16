@@ -25,13 +25,13 @@ def process(filepath, original_file):
                 path_file_id = original_file,
                 preview_file_id = file_id)
 
-def saveTiffMetaData(mytif, file_id):
-   print('\n***********\n')
-   for p, page in enumerate(mytif.pages):
-       if page.tags['ImageDescription']:
-            print('ImageDescription:\n')
-            print(page.tags['ImageDescription'].value)
-            print('\n')
+#def saveTiffMetaData(mytif, file_id):
+   #print('\n***********\n')
+   #for p, page in enumerate(mytif.pages):
+       #if page.tags['ImageDescription']:
+            #print('ImageDescription:\n')
+            #print(page.tags['ImageDescription'].value)
+            #print('\n')
 
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
@@ -53,7 +53,7 @@ def main(args):
                 path_file_id = file_id)
         if (myfilename[-3:].lower() == "svs"):
             mytif = TiffFile(svsfilepath)
-            saveTiffMetaData(mytif, file_id)
+            #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()

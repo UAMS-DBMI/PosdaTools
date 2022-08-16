@@ -62,7 +62,7 @@ sub ContentResponse {
      $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}");
      $self->{preview_array}  = decode_json($self->{client}->responseContent());
      $self->{num_prevs}  = scalar(@{$self->{preview_array}});
-     $http->queue("<h3>Now viewing file $self->{pathid} of $self->{num_files} </h3>");
+     $http->queue("<h3>Now viewing file $self->{index} of $self->{num_files} </h3>");
      $self->NotSoSimpleButton($http, {
        op => "backButtonPress",
        caption => "Back",
