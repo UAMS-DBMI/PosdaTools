@@ -85,6 +85,11 @@ sub RandString{
   my $app_inst = $class->new($session_id, $app_name);
   $HTTP_APP_SINGLETON->Serve($port, $int, $ttl);
 
+  # Added by Quasar, to force the host to always be the configured
+  # external hostname instead of whatever was read. This is is a test
+  # to see if we can force it to include a port number here.
+  $host = $ENV{POSDA_EXTERNAL_HOSTNAME};
+
   my $base_url = "$TheProtocol//$host/$port_mapper->{$port}";
   $HTTP_APP_SINGLETON->{base_url} = $base_url;
 
