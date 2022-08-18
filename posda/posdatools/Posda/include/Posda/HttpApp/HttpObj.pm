@@ -332,7 +332,13 @@ sub StartLogin{
     $prot = "https:";
   }
 
-  my $url = "$prot//$http->{header}->{host}/posda/$session/" .
+  # Added by Quasar, to force the host to always be the configured
+  # external hostname instead of whatever was read. This is is a test
+  # to see if we can force it to include a port number here.
+  $host = $ENV{POSDA_EXTERNAL_HOSTNAME};
+
+
+  my $url = "$prot//$host/posda/$session/" .
            "Refresh?obj_path=$this->{app_root}->{app_name}";
 print STDERR "#####################\n";
 print STDERR "StartLogin called\n";
