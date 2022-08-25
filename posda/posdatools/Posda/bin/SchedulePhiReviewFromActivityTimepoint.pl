@@ -70,13 +70,15 @@ $background->WriteToEmail("Created scan id: $id in $elapsed seconds\n");
 $background->SetActivityStatus("Preparing Reports");
 $background->WriteToEmail("Creating " .
   "\"SimplePublicPhiReportSelectedVrWithMetaquotes\" report.\n");
-my $rpt1 = $background->CreateReport("Selected Public VR");
+# second parameter indicates this is a Glendor-processable report
+my $rpt1 = $background->CreateReport("Selected Public VR", 1);
 my $lines = $scan->PrintTableFromQuery(
   "SimplePublicPhiReportSelectedVrWithMetaquotes", $rpt1);
 
 $background->WriteToEmail("Creating " .
   "\"SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes\" report.\n");
-my $rpt2 = $background->CreateReport("Selected Private");
+# second parameter indicates this is a Glendor-processable report
+my $rpt2 = $background->CreateReport("Selected Private", 1);
 $lines = $scan->PrintTableFromQuery(
   "SimplePhiReportAllRelevantPrivateOnlyWithMetaQuotes", $rpt2);
 

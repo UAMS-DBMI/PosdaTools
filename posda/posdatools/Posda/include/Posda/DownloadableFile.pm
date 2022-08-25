@@ -56,6 +56,11 @@ sub _get_path {
   $dbh->disconnect();
 
   $self->{path} = $path;
+
+  # This is used only for some reports (PHI) which can be 
+  # processed by the Glendor tool, *if installed*
+  my $rel_url = "/glendor/process?f=$path";
+  $self->{glendor_link} = qq{<a href="$rel_url" target="_blank">Glendor processed</a>};
 }
 
 sub _make {

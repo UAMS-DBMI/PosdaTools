@@ -7,7 +7,7 @@
   use File::Temp qw/ tempfile /;
 
   sub new {
-  my ($class, $report_name) = @_;
+  my ($class, $report_name, $glendor) = @_;
     my ($fh, $filename) = tempfile();
 
     my $self = {
@@ -15,6 +15,7 @@
       file_handle => $fh,
       temp_filename => $filename,
       open => 1,
+      glendor => defined($glendor) ? 1 : 0
     };
     bless $self, $class;
 
@@ -45,6 +46,7 @@
       my $dlf = Posda::DownloadableFile::make_csv($new_id);
       $self->{downloadable_file_object} = $dlf;
       $self->{link} = $dlf->{link};
+      $self->{glendor_link} = $dlf->{glendor_link};
       $self->{path} = $dlf->{path};
       $self->{downloadable_file_id} = $dlf->{downloadable_file_id};
       unlink $file_path;
@@ -133,13 +135,13 @@ sub SetActivityManualUpdate {
 }
 
 sub CreateReport {
-  my ($self, $report_name) = @_;
+  my ($self, $report_name, $glendor) = @_;
   if (not defined $report_name) {
     $report_name = 'Default Report';
   }
 
   if (not defined $self->{reports}->{$report_name}) {
-    my $report = Posda::BackgroundProcess::Report->new($report_name);
+    my $report = Posda::BackgroundProcess::Report->new($report_name, $glendor);
     $self->{reports}->{$report_name} = $report;
   }
 
@@ -240,7 +242,11 @@ sub Finish() {
         $rpt->close;
 
         # add download links for those reports to the mail
-        $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+        if ($rpt->{glendor}) {
+          $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{glendor_link}\n");
+        } else {
+          $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+        }
       }
     }
   }
