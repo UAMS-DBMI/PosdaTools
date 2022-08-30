@@ -187,9 +187,15 @@ def apply_commands(pixel_filename, im_command, args):
 
     output_filename = tempfile.NamedTemporaryFile(delete=False).name
 
+    im_data_type = {
+        'MONOCHROME1': 'gray',
+        'MONOCHROME2': 'gray',
+        'RGB': 'rgb',
+    }[args.photometric_interpretation]
+
     output_commands = [
         '-depth', str(args.bits_allocated),
-        f'gray:{output_filename}'
+        f'{im_data_type}:{output_filename}'
     ]
 
     final_command = ['convert'] + im_command + output_commands

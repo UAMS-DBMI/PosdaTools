@@ -5,11 +5,13 @@ use Digest::MD5;
 use Posda::BackgroundProcess;
 
 my $usage = <<EOF;
-CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> <notify>
+CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> <check_public> <notify>
 or
 CheckStructLinkagesTpId.pl -h
 
-The script doesn't expect lines on STDIN:
+If check_public is empty or 0, Public will not be checked.
+
+The script doesn't expect lines on STDIN
 
 EOF
 $| = 1;
@@ -18,11 +20,17 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 
-unless($#ARGV == 2){
+unless($#ARGV == 3){
   die "$usage\n";
 }
 
-my ($invoc_id, $act_id, $notify) = @ARGV;
+my ($invoc_id, $act_id, $check_public, $notify) = @ARGV;
+
+if ($check_public eq "" or $check_public eq "0") {
+  $check_public = 0;
+} else {
+  $check_public = 1;
+}
 
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 
@@ -139,9 +147,11 @@ for my $row(@Rows){
   InternalLinkages(\%RowInfo);
   FrameOfRefExternal(\%RowInfo);
   VolumeFilesInPosda(\%RowInfo);
-  VolumeFilesInPublic(\%RowInfo);
   RoiFilesInPosda(\%RowInfo);
-  RoiFilesInPublic(\%RowInfo);
+  if ($check_public) {
+    VolumeFilesInPublic(\%RowInfo);
+    RoiFilesInPublic(\%RowInfo);
+  }
   FrameOfReferenceMatches(\%RowInfo);
   UnlinkedClosedPlanar(\%RowInfo);
   PointsWithinVolume(\%RowInfo);

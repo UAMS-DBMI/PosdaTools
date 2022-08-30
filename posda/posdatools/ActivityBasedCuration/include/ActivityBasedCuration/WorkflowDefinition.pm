@@ -167,7 +167,18 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule Structured Report PHI Scan",
         action =>  "SR_phiscanOp",
       },
+      {
+        caption => "Schedule Pathology TIFF PHI Scan",
+        action =>  "Path_PHI_Scan",
+      },
     ],
+    queries => [
+        {
+         caption => "View Pathology PHI Scan",
+         operation => "SelectQueryGroup",
+         query_list_name => "Display_TiffPHI_Report",
+       },
+     ],
   },
   {
     id => "10_structlinkcheck",
@@ -385,6 +396,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Make a Downloadable Directory (including Non-Dicom)",
         action =>  "MakeDownloadableNonDicomTp",
       },
+      {
+        caption => "Byte Swap Dicom Pixel Data",
+        action =>  "BackgroundSwapDicomPixelsData",
+      },
+      {
+        caption => "Big Endian -> Little Endian",
+        action =>  "ConvertBigEndianToLittle",
+      },
     ],
   },
   {
@@ -568,11 +587,27 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   ],
   PathVisualReviewStatus => [
-    "Pathology Suggested Queries for Visual Review Status",
+    "Pathology Suggested Queries for Visual Review",
     [
       {
-        caption => "View Pathology Visual Review Instances",
+        caption => "View Pathology VR Instances (Launcher)",
         query => "ViewPathologyVisualReviewInstances",
+      },
+      {
+        caption => "PathologyVRlogs",
+        query => "PathologyVRlogs",
+      },
+      {
+        caption => "PathologyReviewCountByActivity",
+        query => "PathologyReviewCountByActivity",
+      },
+      {
+        caption => "PathologyReviewCountByActivityTimepoint",
+        query => "PathologyReviewCountByActivityTimepoint",
+      },
+      {
+        caption => "PathologyBadFilesInTPCheck",
+        query => "PathologyBadFilesInTPCheck",
       },
     ],
   ],
@@ -670,6 +705,15 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Nifti Files For Nifti Conversion",
         query => "ListNiftiFileFromSeriesByNiftiConversion",
+      },
+    ],
+  ],
+  Display_TiffPHI_Report => [
+    "Suggested Queries for Tiff PHI Reporting",
+    [
+      {
+        caption => "Display created Tiff PHI Report",
+        query => "RunTiffPHIReport",
       },
     ],
   ],

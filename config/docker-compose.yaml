@@ -1,8 +1,11 @@
 version: '3.2'
 
 services:
+    ## The main relational database
+    ## Change the pgdata_alpine volume to a drive location to preserve
+    ## data long-term.
     db:
-        image: postgres:13-alpine
+        image: postgres:13.7-alpine
         restart: always
         environment:
             POSTGRES_PASSWORD: example
@@ -12,10 +15,12 @@ services:
         ports:
             - 5433:5432
 
+    ## Queue server for synchronizing things
     redis:
         image: redis:latest
         restart: always
 
+    ## Periodic job runner
     steve:
         image: tcia/posda:latest
         working_dir: "/home/posda/posdatools/systemd"
@@ -32,6 +37,7 @@ services:
             - common.env
             - posda.env
 
+    ## Service for submitting files to NBIA. Only needed if NBIA is used.
     # ream:
     #     image: tcia/ream:latest
     #     restart: always
@@ -47,21 +53,24 @@ services:
     #         - ream.env
     #         - posda.env
 
-    exodus:
-        image: tcia/exodus:latest
-        restart: always
-        volumes:
-            - posda_cache_alpine:/home/posda/cache
-            - ./posda/posdatools:/home/posda/posdatools
-            - ./exodus:/exodus
-            - /mnt:/mnt
-            - /nas:/nas
-        env_file:
-            - database.env
-            - common.env
-            - exodus.env
-            - posda.env
+    ## Service for exporting files to an external Posda instance.
+    # exodus:
+    #     image: tcia/exodus:latest
+    #     restart: always
+    #     volumes:
+    #         - posda_cache_alpine:/home/posda/cache
+    #         - ./posda/posdatools:/home/posda/posdatools
+    #         - ./exodus:/exodus
+    #         - /mnt:/mnt
+    #         - /nas:/nas
+    #     env_file:
+    #         - database.env
+    #         - common.env
+    #         - exodus.env
+    #         - posda.env
 
+
+    ## Generates thumnails for images submitted to NBIA
     thumbs:
         image: tcia/lanterna:latest
         command: "/scripts/thumbs.py"
@@ -75,8 +84,10 @@ services:
         env_file:
             - database.env
             - common.env
-            - posda.env
+        deploy:
+            replicas: 1
 
+    ## Generates Kaleidoscope projections
     magicka:
         image: tcia/lanterna:latest
         command: "/scripts/magicka.py"
@@ -91,7 +102,10 @@ services:
             - database.env
             - common.env
             - posda.env
+        deploy:
+            replicas: 1
 
+    ## The main application server
     posda:
         image: tcia/posda:latest
         restart: always
@@ -111,12 +125,12 @@ services:
             - nbia.env
             - posda.env
 
+    ## A worker that processes the low-priority queue (0)
+    ## Increase the replicas to increase concurrent processes
     posda-worker-low:
         image: tcia/posda:latest
         command: worker
         restart: always
-        deploy:
-            replicas: 1
         depends_on:
             - db
             - redis
@@ -131,17 +145,16 @@ services:
             - nbia.env
             - posda.env
         environment:
-          POSDA_WORKER_PRIORITY: 0
-          # this is optional, if omitted worker name will default to 
-          # the hostname of the container
-          POSDA_WORKER_NAME: "low-worker"
+            WORKER_PRIORITY: 0
+        deploy:
+            replicas: 1
 
+    ## A worker that processes the high-priority queue (1)
+    ## Increase the replicas to increase concurrent processes
     posda-worker-high:
         image: tcia/posda:latest
         command: worker
         restart: always
-        deploy:
-            replicas: 1
         depends_on:
             - db
             - redis
@@ -156,9 +169,11 @@ services:
             - nbia.env
             - posda.env
         environment:
-          POSDA_WORKER_PRIORITY: 1
-          POSDA_WORKER_NAME: "high-worker"
+            WORKER_PRIORITY: 1
+        deploy:
+            replicas: 1
 
+    ## Service which performs DICOM file parsing and importing to the db
     posda-fast-file-process:
         image: tcia/posda:latest
         command: file-process
@@ -176,6 +191,7 @@ services:
             - common.env
             - posda.env
 
+    ## Main API server
     posda-api:
         image: tcia/posda:latest
         command: api
@@ -188,7 +204,6 @@ services:
             - common.env
             - api.env
             - posda.env
-
         volumes:
             - posda_cache_alpine:/home/posda/cache
             - ./posda/fastapi/app:/fastapi
@@ -196,6 +211,7 @@ services:
             - /mnt:/mnt
             - /nas:/nas
 
+    ## API server for Kaleidoscope application
     kaleidoscope:
         image: tcia/kaleidoscope:latest
         restart: always
@@ -212,11 +228,12 @@ services:
         # environment:
         #     DEBUG: 1
 
+    ## The main web server which proxies traffic to all other services
     web:
-        image: tcia/posda_web:latest
+        image: tcia/posda_web:kubes
         restart: always
         ports:
-            - 80:80
+            - 80:8080
         depends_on:
             - posda
             - kaleidoscope
@@ -225,14 +242,15 @@ services:
             - posda-api:posda-api
             - kaleidoscope:kaleidoscope
         volumes:
+            - ./web/default.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf
+            - ./web/posda-error.html:/www/posda-error.html
             - type: volume
               source: kaleidoscope_files
               target: /kaleidoscope
               volume:
-                nocopy: true
+                  nocopy: true
 
 volumes:
     posda_cache_alpine:
-    # posda_submission_root:
     pgdata_alpine:
     kaleidoscope_files:

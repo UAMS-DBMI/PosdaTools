@@ -28,8 +28,10 @@ function Images(props) {
     const preview_files = useFetch(`/papi/v1/pathology/preview/${props.original_file}/${props.VRindex}`);
     if(preview_files){
       images = preview_files.map((row, i) =>
-         <img className="smallImage" style={{filter: `invert(${invertValue})`,  transform: `rotate(${rotValue}deg)`}} src={`/papi/v1/files/${row.preview_file_id}/data`} key={i} alt="svs-preview"/>
-       );
+          <div className ="row">
+            <img className="smallImage" style={{filter: `invert(${invertValue})`,  transform: `rotate(${rotValue}deg)`}} src={`/papi/v1/files/${row.preview_file_id}/data`} key={i} alt="svs-preview"/>
+          </div>
+      );
     }
 
     var filestatus = [];
@@ -43,19 +45,21 @@ function Images(props) {
         }else if(row.good === false){
           status = "Bad";
         }
-        return <div key={i}> <h2>File {row.file_name}</h2> <h3>Status: {status} </h3> </div>
+        return <div key={i}> <label>File: {row.file_name} Review Status: {status} </label> </div>
       });
     }
 
 
     return (
       <div>
+        <div className="row">
           <div>
-            <button className="btn btn-warning" onClick={() => invertButtonPress()}>Invert</button>
-            <button className="btn btn-warning" onClick={() => rotateButtonPress()}>Rotate</button>
+            <button className="btn btn-warning m-1" onClick={() => invertButtonPress()}>Invert</button>
+            <button className="btn btn-warning m-1" onClick={() => rotateButtonPress()}>Rotate</button>
           </div>
+        </div>
         <div className ="imgdisplay">
-          {filestatus}
+          <div className ="row"> {filestatus} </div>
           {images}
         </div>
       </div>

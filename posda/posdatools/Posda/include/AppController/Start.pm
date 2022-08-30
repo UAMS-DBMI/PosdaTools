@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 #
 use strict;
+die "Obsolete!!! Do not use!!!";
 use POSIX 'strftime';
 use Posda::HttpApp::HttpObj;
 use Posda::HttpApp::GenericMfWindow;

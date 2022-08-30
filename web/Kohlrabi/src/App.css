@@ -2,8 +2,21 @@
   width: 650px;
 }
 
-
 .imgdisplay{
-  margin-top: 250px;
-  height:700px;
+  /*margin-top: 250px;
+  height:700px;*/
+}
+
+.h1{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: 36px;
+  font-weight: 500px;
+  line-height: 1.1;
+  color: inherit;
+}
+
+.label{
+  font-weight: 700;
 }

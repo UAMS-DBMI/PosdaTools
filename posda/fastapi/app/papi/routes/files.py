@@ -15,6 +15,7 @@ from ..util import asynctar, asynczip
 import os
 from io import BytesIO
 import aiofiles
+import asyncio
 import logging
 import tempfile
 
@@ -22,6 +23,22 @@ import tempfile
 @router.get("/")
 async def get_all_files():
     raise HTTPException(detail="listing all files is not allowed", status_code=401)
+
+@router.get("/listfiles")
+async def get_listfiles(path: str):
+    return_list = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            return_list.append(os.path.join(root, name))
+            await asyncio.sleep(0)
+            if len(return_list) > 1000:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="More than 1000 results. I refuse.")
+
+
+    return return_list
+
 
 @router.get("/{file_id}")
 async def get_single_file(file_id: int, db: Database = Depends()):
@@ -32,6 +49,7 @@ async def get_single_file(file_id: int, db: Database = Depends()):
     """
 
     return await db.fetch_one(query, [file_id])
+
 
 @router.get("/series/{series_instance_uid}")
 async def get_series_files(series_instance_uid: str, db: Database = Depends()):
@@ -71,8 +89,8 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
     query = """
         select distinct
             root_path || '/' || rel_path as file,
-            file_offset,
-            size,
+            pixel_data_offset as file_offset,
+            pixel_data_length as size,
             bits_stored,
             bits_allocated,
             pixel_representation,
@@ -92,8 +110,7 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
         from
             file_image
             natural join image
-            natural join unique_pixel_data
-            natural join pixel_location
+            natural join dicom_file
             natural join file_location
             natural join file_storage_root
             natural join file_equipment

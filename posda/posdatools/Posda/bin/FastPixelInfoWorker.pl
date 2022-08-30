@@ -47,6 +47,7 @@ my $insert_pixel_info = Query('PopulatePixelInfoInDicomFile');
 my $redis = Redis->new(server => REDIS_HOST); #hostname from Docker-compose
 
 while (1) {
+  $db->ping or die "Lost connection to database";
   my ($key, $next_thing) = $redis->brpop('pixel_location', 5);
   # say $next_thing;
 

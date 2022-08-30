@@ -7,8 +7,9 @@
 -- 
 
 insert into file_nifti_defacing(
-  from_nifti_file, comments
+  operation, from_nifti_file, comments
 ) values (
+  'deface',
   ?, ?
 )
 returning file_nifti_defacing_id as id

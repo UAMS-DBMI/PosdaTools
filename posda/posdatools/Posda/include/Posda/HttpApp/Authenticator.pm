@@ -9,6 +9,8 @@ use Posda::Passwords;
 use Posda::Auth;
 
 use Posda::Config ('Config', 'Database');
+use Debug;
+my $dbg = sub { print STDERR @_ };
 
 sub LoginResponse {
   my($this, $http, $dyn) = @_;
@@ -55,7 +57,6 @@ sub LoginResponse {
 sub AppControllerLogout {
   my($this, $http, $dyn) = @_;
   $this->RevokeLogin;
-  $this->AutoRefresh;
 }
 sub AppControllerLogin {
   my($this, $http, $dyn) = @_;
@@ -99,11 +100,7 @@ sub SetUserPrivs {
   my $cap_config = $main::HTTP_APP_CONFIG->{config}->{Capabilities};
   $sess->{Privileges}->{capability} = $cap_config->{$user};
   $this->{capability} = $cap_config->{$user};
-
-  my $app_name = ($this->{Environment}->{ApplicationName} or '');
-  $0 = $Dispatch::Http::App::Server::ServerPort .
-    " AppController ($app_name)" .
-    " ($user)";
+  $main::HTTP_APP_SINGLETON->dollar_zero("HttpApp::Authenticator");
 }
 sub RevokeLogin {
   my($this) = @_;
@@ -118,6 +115,7 @@ sub RevokeLogin {
   if(exists $cap_config->{Default}) {
     $this->{capability} = $cap_config->{Default};
   }
+  $main::HTTP_APP_SINGLETON->dollar_zero("RevokeLogin");
   $this->AutoRefresh;
 }
 sub DbValidation {

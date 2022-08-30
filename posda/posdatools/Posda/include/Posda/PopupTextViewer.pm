@@ -50,7 +50,7 @@ sub ContentResponse {
      $file_content =~ s/</&lt;/gx;
      $file_content =~ s/>/&gt;/gx;
   } else {
-    $file_content =~    s( ($RE{URI}{HTTP}) )
+    $file_content =~    s( ($RE{URI}{HTTP}{-scheme => qr<https?>}) )
                   (<a href="$1">$1</a>)gx  ;
   }
 

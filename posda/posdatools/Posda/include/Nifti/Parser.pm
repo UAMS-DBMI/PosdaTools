@@ -656,6 +656,7 @@ sub PrintSliceFlippedScaled{
   my $row_num_pix = $row_size/($self->{parsed}->{bitpix}/8);
   my $num_rows = $self->{parsed}->{dim}->[2];
   my $num_pix = $length/($self->{parsed}->{bitpix}/8);
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   $self->Open;
   my @Val;
   my $buff;
@@ -679,8 +680,8 @@ sub PrintSliceFlippedScaled{
     my $len  = read $self->{fh}, $buff, $row_size;
     unless($len == $row_size) { die "Read $len vs $row_size" }
     for my $i (0 .. $row_num_pix - 1){
-      my $row_offset = ($r - 1) * ($row_size / 2);
-      $Val[$i + $row_offset] = unpack($ps, substr($buff, $i *2, 2));
+      my $row_offset = ($r - 1) * ($row_size / $bytes_per_pix);
+      $Val[$i + $row_offset] = unpack($ps, substr($buff, $i * $bytes_per_pix, 2));
     }
   }
   my $num_val = @Val;
@@ -795,12 +796,7 @@ sub PrintNormalizedFileProjections{
   my $cols = $self->{parsed}->{dim}->[2];
   my $num_slices = $self->{parsed}->{dim}->[3];
   my $num_vols = $self->{parsed}->{dim}->[4];
-  my $bytes_per_pix;
-  if($self->{parsed}->{bitpix} == 16){
-    $bytes_per_pix = 2;
-  } elsif($self->{parsed}->{bitpix} == 32){
-    $bytes_per_pix = 4;
-  }
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   for my $i (0 .. $rows * $cols){
     $Val[$i] = undef;
     $Min[$i] = undef;
@@ -812,6 +808,7 @@ sub PrintNormalizedFileProjections{
   my $is_fl = $self->{parsed}->{datatype} == 16;
   my $is_short = $self->{parsed}->{datatype} == 512 ||
     $self->{parsed}->{datatype} == 4;
+  my $is_char = $self->{parsed}->{datatype} == 2;
   my $slice;
   for my $i (0 .. ($num_slices * $num_vols) - 1){
     my $offset_r = $offset + ($i * $length);
@@ -828,6 +825,8 @@ sub PrintNormalizedFileProjections{
         $val = unpack('f', substr($slice, $j * 4, 4));
       }elsif($is_short){
         $val = unpack('S', substr($slice, $j * 2, 2));
+      }elsif($is_char){
+        $val = unpack('C', substr($slice, $j, 2));
       } else {
         die "Unknown datatype $self->{parsed}->{datatype}";
       }
@@ -880,12 +879,7 @@ sub ProjectionAnalysis{
   my $cols = $self->{parsed}->{dim}->[2];
   my $num_slices = $self->{parsed}->{dim}->[3];
   my $num_vols = $self->{parsed}->{dim}->[4];
-  my $bytes_per_pix;
-  if($self->{parsed}->{bitpix} == 16){
-    $bytes_per_pix = 2;
-  } elsif($self->{parsed}->{bitpix} == 32){
-    $bytes_per_pix = 4;
-  }
+  my $bytes_per_pix = $self->{parsed}->{bitpix}/8;
   for my $i (0 .. $rows * $cols){
     $Val[$i] = undef;
     $Min[$i] = undef;
@@ -909,6 +903,7 @@ sub ProjectionAnalysis{
     my $is_fl = $self->{parsed}->{datatype} == 16;
     my $is_short = $self->{parsed}->{datatype} == 512 ||
       $self->{parsed}->{datatype} == 4;
+    my $is_char = $self->{parsed}->{datatype} == 2;
     pix:
     for my $j (0 .. ($num_pix - 1)){
       my $val;
@@ -916,6 +911,8 @@ sub ProjectionAnalysis{
         $val = unpack('f', substr($slice, $j * 4, 4));
       }elsif($is_short){
         $val = unpack('S', substr($slice, $j * 2, 2));
+      }elsif($is_char){
+        $val = unpack('C', substr($slice, $j, 2));
       } else {
         die "Unknown datatype $self->{parsed}->{datatype}";
       }

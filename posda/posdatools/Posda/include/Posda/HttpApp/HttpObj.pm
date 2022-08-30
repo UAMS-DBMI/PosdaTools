@@ -72,10 +72,14 @@ If it didn't close, please close it.</p>
 EOF
 sub Login {
   my($this, $http, $app) = @_;
+print STDERR "#####################\n";
+print STDERR "Login called\n";
+print STDERR "#####################\n";
   my $app_name = $main::HTTP_APP_CONFIG->{dir};
-  $0 = $Dispatch::Http::App::Server::ServerPort .
-     " AppController ($app_name)" .
-     " awaiting login";
+  $main::HTTP_APP_SINGLETON->dollar_zero("Posda::HttpApp::HttpObj 1");
+#  $0 = $Dispatch::Http::App::Server::ServerPort .
+#     " AppController ($app_name)" .
+#     " awaiting login";
   unless($http->{method} eq "POST"){
     my $session = $this->NewSession();
     my $sess = $this->GetSession($session);
@@ -136,6 +140,9 @@ sub Login {
 }
 sub ValidateLogin{
   my($this, $real_user, $auth_user, $password) = @_;
+print STDERR "#####################\n";
+print STDERR "ValidateLogin called\n";
+print STDERR "#####################\n";
   my $db_type =
     $main::HTTP_APP_CONFIG->{config}->{Environment}->{AuthenticationDbType};
   if(defined($db_type) && $db_type eq "File"){
@@ -245,15 +252,20 @@ sub ValidateDbLogin{
     }
   }
 }
+
 sub LoginSuccessful{
   my($this, $http, $app, $sess, $session, $auth_user, $real_user) = @_;
+print STDERR "#####################\n";
+print STDERR "LoginSuccessful called\n";
+print STDERR "#####################\n";
   $sess->{logged_in} = 1;
   $sess->{AuthUser} = $auth_user;
   $sess->{real_user} = $real_user;
   my $app_name = $main::HTTP_APP_CONFIG->{dir};
-  $0 = $Dispatch::Http::App::Server::ServerPort .
-    " AppController ($app_name)" .
-    " with login: $auth_user $real_user";
+  $main::HTTP_APP_SINGLETON->dollar_zero("Posda::HttpApp::HttpObj 2");
+#  $0 = $Dispatch::Http::App::Server::ServerPort .
+#    " AppController ($app_name)" .
+#    " with login: $auth_user $real_user";
   print "Logged in $auth_user $real_user\n";
   $sess->{DieOnTimeout} = 1;
 #    my $color = Posda::BgColor::GetUnusedColor;
@@ -262,6 +274,9 @@ sub LoginSuccessful{
 }
 sub LoginFailed{
   my($this, $http, $app, $session) = @_;
+print STDERR "#####################\n";
+print STDERR "LoginFailed called\n";
+print STDERR "#####################\n";
   $http->HtmlHeader();
   my $LoginTitle = 
     $main::HTTP_APP_CONFIG->{config}->{Identity}->{LoginTitle};
@@ -292,13 +307,17 @@ sub LoginFailed{
 # Null Login
 sub NullLogin {
   my($this, $http, $app) = @_;
+print STDERR "#####################\n";
+print STDERR "NullLogin called\n";
+print STDERR "#####################\n";
   my $session = $this->NewSession();
   my $sess = $this->GetSession($session);
   $sess->{DieOnTimeout} = 1;
   my $app_name = $main::HTTP_APP_CONFIG->{dir};
-  $0 = $Dispatch::Http::App::Server::ServerPort .
-    " AppController ($app_name)" .
-    " with uninitialized login";
+  $main::HTTP_APP_SINGLETON->dollar_zero("Posda::HttpApp::HttpObj 3");
+#  $0 = $Dispatch::Http::App::Server::ServerPort .
+#    " AppController ($app_name)" .
+#    " with uninitialized login";
 #  $0 = $Dispatch::Http::App::Server::ServerPort .
 #    " AppController ($app_name)" .
 #    " ($this->{permissions}->{user_name})";
@@ -307,8 +326,18 @@ sub NullLogin {
 sub StartLogin{
   my($this, $http, $app, $session) = @_;
   &{$this->{app_root}->{app_init}}($this, $session);
-  my $url = "http://$http->{header}->{host}/$session/" .
+
+  my $prot = "http:";
+  if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+    $prot = "https:";
+  }
+
+  my $url = "$prot//$http->{header}->{host}/posda/$session/" .
            "Refresh?obj_path=$this->{app_root}->{app_name}";
+print STDERR "#####################\n";
+print STDERR "StartLogin called\n";
+print STDERR "Redirecting to $url\n";
+print STDERR "#####################\n";
   # print "Logins::LoginScreen::Login: dest_obj: $dest_obj, url: $url.\n";
   $http->HeaderSent;
   $http->queue("HTTP/1.0 201 Created\n" .
@@ -356,6 +385,9 @@ sub Shutdown{
 }
 sub CancelLogin{
   my($this, $http, $app) = @_;
+print STDERR "#####################\n";
+print STDERR "CancelLogin called\n";
+print STDERR "#####################\n";
   $http->queue($close);
   my $exiter = Dispatch::EventHandler::MakeExit();
   my $bkg = Dispatch::Select::Background->new($exiter);

@@ -185,7 +185,12 @@ function NewQueueRepeatingServerCmd(method, t){
   var chk_cmd = "NewCheckServer(" + '"' +method+'"' + " ,2500);";
   server_timer = setTimeout(chk_cmd, t);
 }
+var polling_shut_down = 0;
 function NewCheckServer(method, t){
+  if(polling_shut_down){
+    console.log('ServerPollingShutDown');
+    return;
+  }
   PosdaGetRemoteMethod(method, '', function(text, status, xml){
     if(status == 200){
       if(text == null) {
@@ -208,8 +213,10 @@ function NewCheckServer(method, t){
   });
 }
 function DetachAndRedirect(url){
+  polling_shutdown = 1;
   PosdaGetRemoteMethod('Detach', '', function(text, status, xml){
     if(status == 200){
+      document.write('setting window.location = '+url);
       window.location = url;
     } else {
       alert('Detach failed');

@@ -240,7 +240,35 @@ sub MenuResponse{
   });
 
   $http->queue(
+    $this->MakeHostLinkSync("DumpAppSingleton", "DumpAppSingleton",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
     $this->MakeHostLinkSync("New Scan", "NewScan",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("DumpAppSingleton2", "DumpAppSingleton2",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("DumpAppSingleton3", "DumpAppSingleton3",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("DumpAppSingleton4", "DumpAppSingleton4",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("DumpAppSingleton5", "DumpAppSingleton5",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("DumpInventory", "DumpInventory",
+      "", "", "Update();", "btn btn-default")
+  );
+  $http->queue(
+    $this->MakeHostLinkSync("This is a very long button that does nothing important", "NewScan",
       "", "", "Update();", "btn btn-default")
   );
   $http->queue(
@@ -265,6 +293,54 @@ sub MenuResponse{
 sub ContentResponse{
   my($this, $http, $dyn) = @_;
   return $http->queue("content goes here");
+}
+
+sub DumpAppSingleton{
+  my($http, $dyn) = @_;
+  my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  print STDERR "############################\nApp Singleton ($ref_type): ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1);
+  print STDERR "\n###########################\n";
+  
+}
+sub DumpAppSingleton2{
+  my($http, $dyn) = @_;
+  my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  print STDERR "############################\nApp Singleton ($ref_type): ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 2);
+  print STDERR "\n###########################\n";
+  
+}
+sub DumpAppSingleton3{
+  my($http, $dyn) = @_;
+  my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  print STDERR "############################\nApp Singleton ($ref_type): ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 3);
+  print STDERR "\n###########################\n";
+  
+}
+sub DumpAppSingleton4{
+  my($http, $dyn) = @_;
+  my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  print STDERR "############################\nApp Singleton ($ref_type): ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 4);
+  print STDERR "\n###########################\n";
+  
+}
+sub DumpAppSingleton5{
+  my($http, $dyn) = @_;
+  my $ref_type = ref($main::HTTP_APP_SINGLETON);
+  print STDERR "############################\nApp Singleton ($ref_type): ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON, 1, 5);
+  print STDERR "\n###########################\n";
+  
+}
+sub DumpInventory{
+  my($http, $dyn) = @_;
+  print STDERR "############################\nInventory: ";
+  Debug::GenPrint($dbg, $main::HTTP_APP_SINGLETON->{Inventory}, 1, 10);
+  print STDERR "\n###########################\n";
+  
 }
 
 sub HeaderResponse{

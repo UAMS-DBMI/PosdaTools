@@ -14,7 +14,7 @@ RUN apk add --update --no-cache \
 
 RUN mkdir /build
 RUN wget -O /build/tools.tar.bz2 \
-	http://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20200806153050.tar.bz2
+	https://posda.tools/downloads/dicom3tools_1.00.snapshot.20200806153050.tar.bz2
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \
 	cd dicom3tools_1.00.snapshot.20200806153050 && \
@@ -27,39 +27,42 @@ RUN cd /build && \
 	###############################################################################
 	# Build imagecodecs
 	###############################################################################
-	FROM alpine:3.11.3 as icbuild
-	RUN apk add --update --no-cache \
-	        imake \
-	        makedepend \
-	        alpine-sdk \
-	        coreutils \
-	        tar \
-	        gzip \
-	        bzip2 \
-	        python3 \
-	        python3-dev \
-	        bzip2-dev \
-	        giflib-dev \
-	        openjpeg-dev \
-	        lcms2-dev \
-	        lz4-dev \
-	        xz-dev \
-	        libpng-dev \
-	        snappy-dev \
-	        libwebp-dev \
-	        zstd-dev
 
-	RUN pip3 install wheel
-	RUN pip3 install numpy
-	RUN pip3 wheel imagecodecs \
-	                                   --global-option="build_ext" \
-	                                   --global-option="--skip-bitshuffle" \
-	                                   --global-option="--skip-zopfli" \
-	                                   --global-option="--skip-jpegxr" \
-	                                   --global-option="--skip-deflate" \
-	                                   --global-option="--skip-brotli" \
-	                                   --global-option="--skip-aec" \
-	                                   --global-option="--skip-blosc"
+	## Removed due to issues building imagecodecs 2022-04-12 Q
+
+	# FROM alpine:3.11.3 as icbuild
+	# RUN apk add --update --no-cache \
+	#         imake \
+	#         makedepend \
+	#         alpine-sdk \
+	#         coreutils \
+	#         tar \
+	#         gzip \
+	#         bzip2 \
+	#         python3 \
+	#         python3-dev \
+	#         bzip2-dev \
+	#         giflib-dev \
+	#         openjpeg-dev \
+	#         lcms2-dev \
+	#         lz4-dev \
+	#         xz-dev \
+	#         libpng-dev \
+	#         snappy-dev \
+	#         libwebp-dev \
+	#         zstd-dev
+
+	# RUN pip3 install wheel
+	# RUN pip3 install numpy
+	# RUN pip3 wheel imagecodecs \
+	#                                    --global-option="build_ext" \
+	#                                    --global-option="--skip-bitshuffle" \
+	#                                    --global-option="--skip-zopfli" \
+	#                                    --global-option="--skip-jpegxr" \
+	#                                    --global-option="--skip-deflate" \
+	#                                    --global-option="--skip-brotli" \
+	#                                    --global-option="--skip-aec" \
+	#                                    --global-option="--skip-blosc"
 ###############################################################################
 # Build GDCM (Grassroots DICOM)
 ###############################################################################
@@ -199,11 +202,11 @@ COPY --from=gdcmbuild /usr/local/lib/* /usr/local/lib/
 
 
 # copy the built wheels from the icbuild container into the real one
-copy --from=icbuild /imagecodecs*.whl /
-copy --from=icbuild /numpy*.whl /
-RUN pip3 install /numpy*.whl \
-	&&  pip3 install /imagecodecs*.whl \
-	&&  rm -f /*.whl
+# copy --from=icbuild /imagecodecs*.whl /
+# copy --from=icbuild /numpy*.whl /
+# RUN pip3 install /numpy*.whl \
+# 	&&  pip3 install /imagecodecs*.whl \
+# 	&&  rm -f /*.whl
 
 # copy dcm2niix into place
 COPY --from=dcm2niixbuild /dcm2niix/build/bin/dcm2niix /usr/local/bin/dcm2niix

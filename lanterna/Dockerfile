@@ -28,6 +28,7 @@ RUN apk --update add \
 	libgomp \
 	libgcc \
 	python3 \
+	py3-pip \
 	redis \
 	openjdk8-jre-base \
     py3-psycopg2
@@ -40,6 +41,8 @@ ENV PATH="/opt/im/bin:/opt/dcm4che-5.22.1/bin:${PATH}"
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
+
+COPY *.py /scripts/
 
 # FROM node-builder as quince-builder
 # COPY quince /quince

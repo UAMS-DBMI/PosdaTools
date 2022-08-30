@@ -20,6 +20,7 @@ use DBD::Pg;
 
 use Posda::Config ('Database', 'Config');
 
+use Posda::NewTry;
 use Posda::Try;
 use Posda::DB::DicomDir;
 use Posda::DB::DicomIod;
@@ -31,7 +32,7 @@ use Redis;
 use constant REDIS_HOST => Config('redis_host') . ':6379';
 $| = 1; # Set non-buffered output mode
 
-say "FFPW: FastFileProcessWorker Starting up...";
+say "FFPW: FastFileProcessWorker (NewTry) Starting up...";
 
 # Setup phase
 #
@@ -41,6 +42,7 @@ unless($db) { die "couldn't connect to DB: DBNAME" }
 my $redis = Redis->new(server => REDIS_HOST); #hostname from Docker-compose
 
 while (1) {
+  $db->ping or die "Lost connection to database";
   my ($key, $next_thing) = $redis->brpop('files', 5);
   # say $next_thing;
 
@@ -82,14 +84,14 @@ sub InsertOneFile {
   $qp->execute($h->{file_id});
 
 
-  my $try = Posda::Try->new($h->{path});
+  my $try = Posda::NewTry->new($h->{path});
   if(exists $try->{dataset}){
     my $has_meta = 0;
     my $df;
     my $ds = $try->{dataset};
     my $xfr_stx = $try->{xfr_stx};
-    if(exists $try->{has_meta_header}){
-      $df = $try->{meta_header};
+    if(exists $try->{metaheader}){
+      $df = $try->{metaheader};
       if(defined $df->{metaheader}->{"(0002,0001)"}){
         InsertMeta($db, $h->{file_id}, $df);
         $has_meta = 1;
@@ -97,7 +99,7 @@ sub InsertOneFile {
         push(@errors, "Meta header with no (0002,0001) (entry not created)");
       }
     }
-    my $dataset_digest = $try->{dataset_digest};
+    my $dataset_digest = $try->{digest};
     my $is_dicom_dir = 0;
     my $has_sop_common = 0;
     my $dicom_file_type = "";
@@ -111,6 +113,7 @@ sub InsertOneFile {
     }
     my $sop_class = $ds->ExtractElementBySig("(0008,0016)");
     if(defined $sop_class){
+      # print "############# sop class: $sop_class ##################\n";
       $has_sop_common = 1;
       if(exists $Posda::Dataset::DD->{SopCl}->{$sop_class}){
         $dicom_file_type =
@@ -118,7 +121,8 @@ sub InsertOneFile {
       } else {
         $dicom_file_type = $sop_class;
       }
-    }    my $q = $db->prepare(
+    }    
+    my $q = $db->prepare(
       "update file set\n" .
       "  is_dicom_file = ?,\n" .
       "  file_type = 'parsed dicom file'\n" .
@@ -157,12 +161,8 @@ sub InsertOneFile {
       ## todo - what if its neither a DICOMDIR nor a known UID?
     }
   } else {
-    my $file_type = `file $h->{path}`;
-    chomp $file_type;
+    my $file_type = $try->{file_type};
     print "import: Non DICOM ($file_type) ($h->{file_id})\n";
-    if($file_type =~ /^[^:]*:\s*(.*)$/){
-      $file_type = $1;
-    }
     my $q = $db->prepare(
       "update file set\n" .
       "  is_dicom_file = false,\n" .
@@ -174,6 +174,7 @@ sub InsertOneFile {
 }
 
 sub InsertMeta{
+  # print "########### InsertMeta ##############\n";
   my($db, $file_id, $df) = @_;
   my $ins_part10 = $db->prepare(
     "insert into file_meta\n" .
@@ -204,3 +205,4 @@ sub InsertMeta{
      $mh->{'(0002,0102)'}
   );
 }
+

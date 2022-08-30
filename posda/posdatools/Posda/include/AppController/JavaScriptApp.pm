@@ -1,4 +1,4 @@
-# main entry point for Posda???
+# main entry point for Posda???  Yes!!!
 #
 use strict;
 use POSIX 'strftime';
@@ -54,8 +54,17 @@ EOF
 
   sub Shutdown{
     my($this, $http, $dyn) = @_;
-    my $url = "http://$http->{header}->{host}/";
+    my $prot = "http:";
+    if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+      $prot = "https:";
+    }
+    my $url = "$prot//$http->{header}->{host}/";
+    print STDERR "!!!!!!!!!!!!!!!!!!\n";
+    print STDERR "In AppController::JavascriptApp::Shutdown redirecting to $url\n";
+    print STDERR "!!!!!!!!!!!!!!!!!!\n";
+
     $this->DeleteMySession;
+    $main::HTTP_APP_SINGLETON->dollar_zero("Shutdown");
     $this->RefreshEngine($http, {url => $url}, $redirect);
   }
 ##################################################################
@@ -566,13 +575,13 @@ EOF
     $this->RefreshEngine($http, $dyn, '<table class="table" width="100%">');
 
 
-    if(scalar(keys %$default_apps) >= 1){
-      $this->RefreshEngine($http, $dyn,
-        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
-        $table_headers
-      );
-      $this->AppTableRows($http, $dyn, $default_apps);
-    }
+#    if(scalar(keys %$default_apps) >= 1){
+#      $this->RefreshEngine($http, $dyn,
+#        '<tr><td colspan=3><h4>Apps Available to All</h4></td</tr>' .
+#        $table_headers
+#      );
+#      $this->AppTableRows($http, $dyn, $default_apps);
+#    }
 
     my $user = $this->get_user;
     unless(defined $user) {

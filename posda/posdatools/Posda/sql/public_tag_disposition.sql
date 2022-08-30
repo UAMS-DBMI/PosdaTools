@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.0
+-- Dumped from database version 13.7
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;

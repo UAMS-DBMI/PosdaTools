@@ -56,6 +56,11 @@ sub _get_path {
   $dbh->disconnect();
 
   $self->{path} = $path;
+
+  # This is used only for some reports (PHI) which can be 
+  # processed by the Glendor tool, *if installed*
+  my $rel_url = "/glendor/process?f=$path";
+  $self->{glendor_link} = qq{<a href="$rel_url" target="_blank">Glendor processed</a>};
 }
 
 sub _make {
@@ -81,7 +86,9 @@ sub _make {
 
   $dbh->disconnect();
 
-  $self->{link} = "$URL/file/$dl_file_id/$uuid";
+  my $rel_url = "/papi/file/$dl_file_id/$uuid";
+  # link is now a full a tag, to allow for relative links
+  $self->{link} = qq{<a href="$rel_url">downloaded_file_$dl_file_id</a>};
   $self->{downloadable_file_id} = $dl_file_id;
   $self->{security_hash} = $uuid;
 }

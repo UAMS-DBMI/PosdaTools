@@ -8,6 +8,7 @@ use Posda::FileVisualizer::DicomImage;
 use Posda::FileVisualizer::Segmentation;
 use Posda::FileVisualizer::StructureSet;
 use Posda::FileVisualizer::RtDose;
+use Posda::FileVisualizer::JPEG;
 use Nifti::Parser;
 use Posda::DB qw( Query );
 use Digest::MD5;
@@ -32,6 +33,15 @@ sub SpecificInitialize {
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
   $self->{params} = $params;
   $self->{file_id} = $params->{file_id};
+  Query('GetFileType')->RunQuery(sub{
+    my($row) = @_;
+    $self->{file_type} = $row->[0];
+  }, sub{}, $self->{file_id});
+  if($self->{file_type} =~ /JPEG/){
+    require Posda::FileVisualizer::JPEG;
+    bless $self, "Posda::FileVisualizer::JPEG";
+    return $self->SpecificInitialize($params);
+  }
   Query('GetDatasetStart')->RunQuery(sub{
     my($row) = @_;
     $self->{data_set_start} = $row->[0];
@@ -131,6 +141,10 @@ print STDERR "Nifti\n";
       return $self->SpecificInitialize($params);
     }
     #...  Here is place to all other file type checks ...
+  } elsif($self->{file_desc}->{file_type} =~ /JPEG/){
+    require Posda::FileVisualizer::Nifti;
+    bless $self, "Posda::FileVisualizer::Nifti";
+    return $self->SpecificInitialize($params);
   }
 print STDERR "#######################################\n";
 

@@ -1,5 +1,5 @@
 :operation_name: CheckStructLinkagesTp
-:command_line: CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> <notify>
+:command_line: CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> "<check_public>" <notify>
 :operation_type: background_process
 :input_line_format: 
 :tags: ['timepoint_buttons']

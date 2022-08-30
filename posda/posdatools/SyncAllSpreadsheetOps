@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "Adding all 'not in DB' spreadsheet ops to the DB..."
+
+FindMissingSpreadsheetOperations.pl 2>/dev/null | awk '\
+/not in DB/ { 
+	print $1
+	system("SynchronizeSpreadsheetOperations.pl "$1" take_disk")
+}
+'

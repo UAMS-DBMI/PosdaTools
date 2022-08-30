@@ -109,6 +109,11 @@ sub SpecificInitialize {
         mode => 'Upload',
         sync => 'Update();'
       },
+      {
+        caption => "UploadToEvent",
+        op => 'LaunchUploadToEventWindow',
+        sync => 'Update();',
+      },
     ],
     DefaultTail => [
       {
@@ -440,7 +445,7 @@ sub InboxItem {
   my $file_content = $self->{inbox}->ReportContent($msg_details->{file_id});
 
   # Turn any URLs into actual links
-  $file_content =~    s( ($RE{URI}{HTTP}) )
+  $file_content =~    s( ($RE{URI}{HTTP}{-scheme => qr<https?>}) )
                 (<a href="$1">$1</a>)gx  ;
 
   my $date_dismissed;
@@ -2622,6 +2627,30 @@ sub ActivityOperations{
   }
 }
 
+sub LaunchUploadToEventWindow{
+  my($self, $http, $dyn) = @_;
+  my $params = {};
+  $params->{user} = $self->get_user;
+  $params->{TempDir} = $self->{LoginTempDir};
+  my $class = "Posda::UploadToEvent";
+  eval "require $class";
+  if($@){
+    print STDERR "$class failed to compile\n\t$@\n";
+    return;
+  }
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  my $name = "Background_list_$self->{sequence_no}";
+  $self->{sequence_no}++;
+  $params->{upload_comment_string} = $self->{session} . "_" .
+    $self->{sequence_no} . "_upload_event";
+
+  my $child_path = $self->child_path($name);
+  my $child_obj = $class->new($self->{session},
+                            $child_path, $params);
+  $self->StartJsChildWindow($child_obj);
+  return;
+}
+
 sub LaunchBackground{
   my($self, $http, $dyn) = @_;
   my $params = {};
@@ -2886,7 +2915,11 @@ sub NewQueryWait {
 sub openKohlrabi{
     my ($self, $name, $params) = @_;
     my $external_hostname = Config('external_hostname');
-    my $kohlrabi_url = "http://$external_hostname/kohlrabi";
+    my $prot = "http:";
+    if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+      $prot = "https:";
+    }
+    my $kohlrabi_url = "$prot//$external_hostname/kohlrabi";
     my $val;
 
     if (defined $params->{pathology_visual_review_instance_id}) {

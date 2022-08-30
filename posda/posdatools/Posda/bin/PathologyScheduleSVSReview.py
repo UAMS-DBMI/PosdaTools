@@ -13,7 +13,7 @@ from posda.background.process import BackgroundProcess
 from posda.main.file import insert_file
 Image.MAX_IMAGE_PIXELS = None
 
-def process(filepath, original_file,vr_id):
+def process(filepath, original_file):
 
 
     with Database("posda_files").cursor() as cur:
@@ -21,10 +21,17 @@ def process(filepath, original_file,vr_id):
         file_id = insert_file(filepath)
         os.unlink(filepath)  # clean up temp file
         #update table that tracks the relationship between preview files and the original file
-        Query("InsertPathVRFiles").execute(
-                pathology_visual_review_instance_id = vr_id,
+        Query("InsertPathPreviewFiles").execute(
                 path_file_id = original_file,
                 preview_file_id = file_id)
+
+#def saveTiffMetaData(mytif, file_id):
+   #print('\n***********\n')
+   #for p, page in enumerate(mytif.pages):
+       #if page.tags['ImageDescription']:
+            #print('ImageDescription:\n')
+            #print(page.tags['ImageDescription'].value)
+            #print('\n')
 
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
@@ -41,19 +48,23 @@ def main(args):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
     for (file_id, svsfilepath) in results:
         myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-        #print("Creating previews for file " + svsfilepath + " : " + myfilename )
+        Query("InsertPathVRFiles").execute(
+                pathology_visual_review_instance_id = vr_id,
+                path_file_id = file_id)
         if (myfilename[-3:].lower() == "svs"):
             mytif = TiffFile(svsfilepath)
+            #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
-                if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000):
+                if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
                     str = "/tmp/{}_page{}.jpg".format(file_id,i)
                     im = Image.fromarray(data)
                     im.save(str) #create thumbnail
                     #print(f"Creating an svs preview")
-                    process(str, file_id,vr_id) #import thumbnail
+                    process(str, file_id) #import thumbnail
         elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
             mytif = TiffFile(svsfilepath)
+            saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 data = page.asarray()
                 str = "/tmp/{}_page{}.jpg".format(file_id,i)
@@ -72,9 +83,10 @@ def main(args):
                 myimg.thumbnail(size) #change copy into a thumbnail
                 myimg.save(str) #save thumbnail
                 #print(f"Creating a jpg/bmp preview")
-                process(str, file_id,vr_id) #import thumbnail
+                process(str, file_id) #import thumbnail
 
     background.finish(f"Thumbnail files created and imported")
+
 
 
 if __name__ == "__main__":

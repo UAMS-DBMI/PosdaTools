@@ -1,0 +1,6 @@
+:operation_name: TempMprPopulateIsoTropicCoronalFromAxialStack
+:command_line: TempMprPopulateIsoTropicCoronalFromAxialStack.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <key>&<value>&<x>&<y>&<z>&<gray_file_id>&<jpeg_file_id>
+:tags: ['temp_mpr']
+:can_chain: 

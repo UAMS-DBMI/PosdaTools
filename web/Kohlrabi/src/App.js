@@ -5,6 +5,7 @@ import Images from "./Images";
 import GBReport from "./GBreport";
 
 
+
 function App(props) {
   const [index, setIndex] = useState(0);
   const [complete, setComplete] = useState(0);
@@ -52,20 +53,33 @@ function App(props) {
     )
   }else{
     return (
-      <div>
-          <h1>Now Viewing Image {index+1} out of {original_files.length}</h1>
-          <div>
-            <button className="btn btn-success" onClick={() => buttonPressGood()}>Good</button>
-            <button className="btn btn-error" onClick={() => buttonPressBad()}>Bad</button>
-            <button className="btn btn-warning" onClick={() => buttonPress()}>Edit</button>
-            <button className="btn btn-warning" onClick={() => buttonPress()}>Download</button>
-          </div>
-        <div>
-          <button className="btn btn-warning" onClick={() => backButtonPress()}>Back</button>
-          <button className="btn btn-warning" onClick={() => nextButtonPress()}>Next</button>
+      <div class="container-fluid">
+        <div class="page-header">
+          <center>
+            <h1>Kohlrabi Pathology Viewer</h1>
+          </center>
         </div>
-        <div>
-          <Images original_file={original_files[index].path_file_id} VRindex={props.VRindex} />
+        <hr>
+        </hr>
+          <div class="row"><h3 align-center>Image File {index+1} of {original_files.length}</h3></div>
+          <div class="row">
+            <div class ="col">
+              <div class="row">
+                <button className="btn btn-success m-1 " onClick={() => buttonPressGood()}>Good</button>
+                <button className="btn btn-danger m-1" onClick={() => buttonPressBad()}>Bad</button>
+              </div>
+              {/* <button className="btn btn-primary" onClick={() => buttonPress()}>Edit</button>
+              <button className="btn btn-primary" onClick={() => buttonPress()}>Download</button> */}
+              <div>
+              <div class="row">
+                <button className="btn btn-primary m-1" onClick={() => backButtonPress()}>Back</button>
+                <button className="btn btn-primary m-1" onClick={() => nextButtonPress()}>Next</button>
+              </div>
+              </div>
+            </div>
+            <div className="col-md-10 col-sm-8">
+                <Images original_file={original_files[index].path_file_id} VRindex={props.VRindex} />
+            </div>
         </div>
       </div>
   );}

@@ -50,5 +50,5 @@ while(my $path = <STDIN>){
   unlink $path;
 }
 Query('CompleteImportEvent')->RunQuery(sub{},sub{}, $ie_id);
-#print STDERR "End of process loop in ImportMultipleFilesIntoPosda.pl\n";
+print STDERR "End of process loop in ImportTempMultipleFilesIntoPosda.pl\n";
 exit;

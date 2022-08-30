@@ -3,7 +3,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.0
+-- Dumped from database version 13.6
 -- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
@@ -627,7 +627,6 @@ ModifySeriesInActivityTp	ModifySeriesInActivityTimepoint.pl <?bkgrnd_id?> <activ
 UpdateActivityTimepoint	UpdateActivityTimepointForChange.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	\N	{timepoint_buttons}	\N	f	0
 ConsistencyFromTimePoint	AnalyzeStudySeriesConsistencyByActivity.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N	f	0
 LinkRtFromTimepoint	LinkRtByActivityTimepoint.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N	f	0
-CheckStructLinkagesTp	CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N	f	0
 CondensedActivityTimepointReport	CondensedActivityTimepointReport.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	\N	{timepoint_buttons}	\N	f	0
 ImportPatientMapping	ImportPatientMapping.pl <?bkgrnd_id?> <notify>	background_process	<from_patient_id>&<to_patient_id>&<to_patient_name>&<collection_name>&<site_name>&<batch_number>&<date_shift>&<diagnosis_date>&<baseline_date>&<uid_root>	{bills_test,mapping_tables,patient_mapping}	\N	f	0
 PrivateTagReports	PrivateElementReports.pl <?bkgrnd_id?> <notify>	background_process	\N	{phi_maint}	\N	f	0
@@ -655,7 +654,6 @@ SeriesWithDupSopsDifferentSopClassTp	SeriesWithDupSopsDifferentSopClassTp.pl <?b
 CreateActivityTimepointFromImportId	CreateActivityTimepointFromImportEventId.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<import_event_id>	{activity_timepoints}	\N	f	0
 KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator	KeepOnlyFilesDupFilesInTimepointAndSeriesWithMatchingDescriminator.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>:<descriminator>:<value>	{dup_sops,background}	\N	f	0
 BackgroundHideFilesWithStatusTp	BackgroundHideFilesWithStatusTp.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<file_id>&<visibility>	{update_timepoint,activities}	\N	f	0
-InsertPrivateTagKb	InsertPrivateTagKb.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<pt_signature>&<pt_consensus_vr>&<pt_consensus_name>&<pt_consensus_vm>&<pt_consensus_description>&<pt_consensus_disposition>	{}	\N	f	0
 HideFilesBySeriesAndPatient	BackgroundHideFilesBySeriesAndPatient.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<patient_id>&<series_instance_uid>	{hide_files}	\N	f	0
 MakeDownloadableDirectoryFromSpreadsheet	MakeDownloadableDirectoryFromSpreadsheet.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>	background_process	<uploaded_file_name>&<stored_file_name>	{update_timepoint,activities}	\N	f	0
 HelloWorldPerl	BackgroundHelloWorldWithInput.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>	{foo}	\N	f	0
@@ -665,10 +663,10 @@ UpdateOrCreatePatientMapping	UpdateOrCreatePatientMapping.pl <?bkgrnd_id?> <acti
 FindCorrespondingPosdaPublicPath	CorrespondingFilesPosdaPublic.pl <?bkgrnd_id?> <notify>	background_process	<file_id>	{public_posda_compare}	\N	f	0
 HideEquivalenceClassesTp	HideEquivalenceClassesTp.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<image_equivalence_class_id>&<processing_status>&<review_status>	{visual_review_status}	\N	f	0
 CreateActivityTimepointFromImportEventId	CreateActivityTimepointFromImportEventIdAll.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<import_event_id>	{activity_timepoints}	\N	f	0
-BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id>  "<notify>" "<skip_dispositions>" "<upd_nbia>" "<dir>"	background_process		{activity_timepoints}	\N	f	0
 SuggestPatientMappings	SuggestPatientMapping.pl <?bkgrnd_id?> <activity_id> "<col_name>" "<crc>" "<site_name>" "<src>" "<date_spec>" "<pat_map_pat>" "<num_dig>" <notify>	background_process		{}	\N	f	0
 AddPublicHierarchy	AddHierarchyToSpreadsheetByPublicSop.pl <new_root>	legacy	<file>&<Element>&<OldValue>&<NewValue>	{}	\N	f	0
-Path_SVS_VisualReview	PathologyScheduleSVSReview.py <activity_id> <notify>	background_process		{visual_review}	\N	f	0
+InsertPrivateTagKb	InsertPrivateTagKb.pl <?bkgrnd_id?> <activity_id> <is_dry_run> <notify>	background_process	<pt_signature>&<pt_consensus_vr>&<pt_consensus_name>&<pt_consensus_vm>&<pt_consensus_description>&<pt_consensus_disposition>	{}	\N	f	0
+Path_SVS_VisualReview	PathologyScheduleSVSReview.py <?bkgrnd_id?> <activity_id> <notify>	background_process		{visual_review}	\N	f	0
 ApplyPrivateDispositionIntake	CsvApplyPrivateDispositionIntake.pl <dest_dir> <uid_root> <offset> <low_date> <high_date>	legacy	<patient_id>&<study_instance_uid>&<series_instance_uid>	{}	\N	f	0
 BackgroundEditBySop	BackgroundEditDicomFile.pl  <?bkgrnd_id?> /nas/public/posda/edited/<rel_dest_root> <who> "<edit_description>" <notify>	background_process	<command>&<arg1>&<arg2>&<arg3>&<arg4>	{obsolete}	\N	f	0
 BackgroundEditTp	BackgroundEditorTp.pl <?bkgrnd_id?> <activity_id> "<edit_description>" <notify>	background_process	<series_instance_uid>&<op>&<tag>&<val1>&<val2>	{activity_timepoints}	\N	f	0
@@ -704,6 +702,37 @@ PhiVaPublicScanDD	PhiVaPublicScanDD.pl <?bkgrnd_id?> <activity_id> <rel_dir> <ma
 MakeUIDMap	create-hashed-uid-mapping.py <?bkgrnd_id?> <notify> <timepoint_id>	background_process		{}	\N	f	0
 SlowRoll0	SlowRoll.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{demo_background}	\N	f	0
 SlowRoll1	SlowRoll.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{demo_background}	\N	f	0
+CreateDownloadableDirectoryAllTp	CreateDownloadableDirectoryAllTp.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>	background_process		{test}	\N	f	0
+InitializeFileNiftiDefacing	InitializeFileNiftiDefacing.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<nifti_file_id>	{nifti}	\N	f	0
+ProcessSeriesWithHeads	ProcessSeriesWithHeads.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>&<has_head>	{defacing}	\N	f	0
+ConstructCrosswalk	CrosswalkConstructor.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<batch_1_uids><batch_2_uids><batch_3_uids><batch_4_uids><batch_5_uids>	{editor}	\N	f	0
+CopySeriesFromPublic	CopySeriesFromPublic.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>	{nbia_copy}	\N	f	0
+SR_phiscanOp	SR_phiscan.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{"PHI report"}	\N	f	0
+BackgroundConvertSeriesInTpToNifti	BackgroundConvertSeriesInTpToNifti.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<series_instance_uid>	{nifti}	\N	f	0
+CollectUidsFromFileList	CollectAllUidsFromFileList.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<file_id>	{activity_timepoint}	\N	f	0
+MakeDownloadableNonDicomTp	MakeDownloadableNonDicomTp.pl <?bkgrnd_id?> <activity_id> <sub_dir> <notify>	background_process		{send_series}	\N	f	0
+PopulateNiftiSlicesAndProjectionsForTimepoint	PopulateNiftiSlicesAndProjectionsForTimepoint.pl <?bkgrnd_id?> <activity_id> <notify> <render_slices> <render_volumes> <render_projections> <verbose>	background_process		{nifti}	\N	f	0
+TempMprPopulateInitialAxialVolume	TempMprPopulateInitialAxialVolume.pl <?bkgrnd_id?> <activity_id> <series> <notify>	background_process	<file_id>&<pix_rows>&<pix_cols>&<ipp_x>&<ipp_y>&<ipp_z>&<row_spc>&<col_spc>	{temp_mpr}	\N	f	0
+TempMprRotateTransposedConronalToSagittal	TempMprRotateTransposedConronalToSagittal.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<key>,<value>,<x>,<y>,<z>,<gray_file_id>,<jpeg_file_id>	{temp_mpr}	\N	f	0
+BackgroundConvertDefacedNiftisToDicom	BackgroundConvertDefacedNiftisToDicom.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<nifti_file_id>	{nifti}	\N	f	0
+CreateImportEventFromSeriesInPublic	CreateImportEventFromSeriesInPublic.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<series_instance_uid>	{copy_from_public}	\N	f	0
+ReQueueFileNiftiDefacing	ReQueueFileNiftiDefacingTp.pl <?bkgrnd_id?> <activity_id> <notify>	background_subprocess		{nifti}	\N	f	0
+TempMprTempMprProcessAxialResampling	TempMprTempMprProcessAxialResampling.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>	background_process	<i_slice_no>&<slice_offset>&<slice_spacing>	{temp_mpr}	\N	f	0
+Path_PHI_Scan	PathologyPhiScan.py <?bkgrnd_id?> <activity_id> <notify>	background_process		{phi_reports}	\N	f	0
+CreateActivityListFromPatientCountAndUploadSpecSpreadsheet	CreateActivityListFromPatientCountAndUploadSpecSpreadsheet.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<patient_id>&<num_files>&<import_comment_like>&<import_type_like>&<from>&<to>	{activity_timepoints}	\N	f	0
+TempMprMakeRotatedAxialFromCoronalStack	TempMprMakeRotatedAxialFromCoronalStack.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>	background_process		{temp_mpr}	\N	f	0
+PopulateFileNiftiTp	PopulateFileNiftiTp.pl <?bkgrnd_id?> <activity_id> <update_existing> <notify>	background_subprocess		{nifti}	\N	f	0
+TempMprMakeIsoTropicCoronalFromAxialStack	TempMprMakeIsoTropicCoronalFromAxialStack.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>	background_process		{temp_mpr}	\N	f	0
+BackgroundFixRtstructTp	BackgroundFixStructLinkagesTp.pl <?bkgrnd_id?> <activity_id> "<comment>" <notify>	background_process	<img_series>&<struct_file_id>	{activity_timepoints}	\N	f	0
+SRProposeEditsTp	SRProposeEditsTp.pl <?bkgrnd_id?> <activity_id> <scan_id> <notify> "<sep_char>"	background_process	<element><sep_char><q_value><sep_char><path_sig_pattern><sep_char><p_op><sep_char><q_arg1><sep_char><q_arg2>	{simple_phi,activity_timepoints}	\N	f	0
+MakeDukeDbtMappingSpreadsheet	MakeDukeDbtMappingSpreadsheet.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{Duke,DBT}	\N	f	0
+AssociateNiftisWithDicoms	AssociateNiftisWithDicoms.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<activity_timepoint_id>&<nifti_file_id>&<series_instance_uid>	{nifti}	\N	f	0
+TempMprPopulateIsoTropicCoronalFromAxialStack	TempMprPopulateIsoTropicCoronalFromAxialStack.pl <?bkgrnd_id?> <activity_id> <notify>	background_process	<key>&<value>&<x>&<y>&<z>&<gray_file_id>&<jpeg_file_id>	{temp_mpr}	\N	f	0
+TempMprProcessAxialResampling	TempMprProcessAxialResampling.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>	background_process	<i_slice_no>&<slice_offset>&<slice_spacing>	{temp_mpr}	\N	f	0
+TempMprTransposeVolume	TempMprTransposeVolume.pl <?bkgrnd_id?> <activity_id> <temp_mpr_volume_id> <notify>	background_process		{temp_mpr}	\N	f	0
+BackgroundSingleRtLinkageDetailReports	BackgroundSingleRtLinkageDetailReports.pl <?bkgrnd_id?> <activity_id> <file_path> <notify>	background_process		{StuctLinkages}	\N	f	0
+BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id>  "<notify>" "<skip_dispositions>" "<upd_nbia>" "<dir>"	background_process		{activity_timepoints}	\N	f	0
+CheckStructLinkagesTp	CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> "<check_public>" <notify>	background_process		{timepoint_buttons}	\N	f	0
 \.
 
 

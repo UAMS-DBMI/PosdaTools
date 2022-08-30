@@ -439,7 +439,7 @@ sub InboxItem {
   my $file_content = $self->{inbox}->ReportContent($msg_details->{file_id});
 
   # Turn any URLs into actual links
-  $file_content =~    s( ($RE{URI}{HTTP}) )
+  $file_content =~    s( ($RE{URI}{HTTP}{-scheme => qr<https?>}) )
                 (<a href="$1">$1</a>)gx  ;
 
   my $date_dismissed;
@@ -1268,8 +1268,12 @@ sub OpenPopup {
 
 sub OpenQuince {
   my ($self, $name, $params) = @_;
+  my $prot = "http:";
+  if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+    $prot = "https:";
+  }
   my $external_hostname = Config('external_hostname');
-  my $quince_url = "http://$external_hostname/viewer";
+  my $quince_url = "$prot//$external_hostname/viewer";
   my $mode;
   my $val;
 

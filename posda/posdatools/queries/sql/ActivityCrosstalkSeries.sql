@@ -4,7 +4,8 @@
 -- Args: ['activity_id']
 -- Tags: ['ActivityCrosstalk']
 -- Description: Get list of activities with potential cross talk based on shared files
---
+-- 
+
 
 select
   distinct activity_id, brief_description, a.when_created, a.who_created, when_closed,
