@@ -3,6 +3,7 @@ use strict;
 use Posda::DB::PosdaFilesQueries;
 use Debug;
 use VectorMath;
+use experimental 'smartmatch';
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
 NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_timepoint_id> <visual_review_inst_id>
