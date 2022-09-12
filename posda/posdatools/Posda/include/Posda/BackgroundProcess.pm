@@ -46,6 +46,7 @@
       my $dlf = Posda::DownloadableFile::make_csv($new_id);
       $self->{downloadable_file_object} = $dlf;
       $self->{link} = $dlf->{link};
+      $self->{rel_url} = $dlf->{rel_url};
       $self->{glendor_link} = $dlf->{glendor_link};
       $self->{path} = $dlf->{path};
       $self->{downloadable_file_id} = $dlf->{downloadable_file_id};
@@ -60,11 +61,14 @@
 package Posda::BackgroundProcess;
 
 use Modern::Perl;
+use 5.30.0;
+use experimental 'signatures';
 
 
 use Posda::DB qw/ Query ResetDBHandles /;
 use Posda::DownloadableFile;
 use Posda::Inbox;
+use Posda::Config 'Config';
 
 use File::Temp qw/ tempfile /;
 use DateTime;
@@ -83,13 +87,17 @@ sub new {
     script_start_time => time,
     input_line_query => Query("CreateBackgroundInputLine"),
     input_line_no => 0,
-    reports => {}
+    reports => {},
+    cl_mode => 0,
+    activity_id => $activity_id
   };
   bless($this, $class);
-  if($activity_id){
-    Query('InsertActivityTaskStatus')->RunQuery(sub {}, sub {},
-    $activity_id, $invoc_id);
-    $this->{activity_id} = $activity_id;
+
+  if ($activity_id && $this->{cl_mode}) {
+    Query('InsertActivityTaskStatus')->RunQuery(
+      sub {}, sub {}, $activity_id, $invoc_id
+    );
+    # $this->{activity_id} = $activity_id;
     $this->{UpdStatusQ} = Query("UpdateActivityTaskStatus");
   }
 
@@ -102,8 +110,15 @@ sub new {
     $this->{notify} = $r->{user_name};
   }
 
-  $this->_start_process($invoc_id, $this->{command_line},
-                        $this->{child_pid}, $notify);
+  if ($invoc_id) {
+    $this->_start_process($invoc_id, $this->{command_line},
+                          $this->{child_pid}, $notify);
+  } else {
+    # assume we are running in commandline mode
+    say "NOTE: Running in CL mode. Email output is being written to STDOUT.";
+    say "      Lines beginning with >> are Activity Task Status updates.";
+    $this->{cl_mode} = 1;
+  }
 
   return $this;
 }
@@ -111,6 +126,16 @@ sub new {
 sub SetActivityStatus{
   my($self, $status, $time_remaining) = @_;
   unless($self->{activity_id}) { return }
+
+  if ($self->{cl_mode}) {
+    if (defined $time_remaining) {
+      say ">> $status $time_remaining";
+    } else {
+      say ">> $status";
+    }
+    return;
+  }
+
   if(defined $time_remaining) {
     Query('UpdateActivityTaskStatusAndCompletionTime')->RunQuery(
       sub{}, sub{}, $status, $time_remaining,
@@ -215,14 +240,20 @@ sub ForkAndExit {
 
 sub WriteToEmail {
   my ($self, $line) = @_;
-  $self->{email_handle}->print($line);
+  if ($self->{cl_mode}) {
+    print $line;
+  } else { 
+    $self->{email_handle}->print($line);
+  }
 }
 
-sub Finish() {
+sub Finish {
   my($self,$mess) = @_;
-  # log completion time
-  $self->{add_comp_time_query}->RunQuery(
-    sub{}, sub{}, $self->{background_id});
+  unless ($self->{cl_mode}) {
+    # log completion time
+    $self->{add_comp_time_query}->RunQuery(
+      sub{}, sub{}, $self->{background_id});
+  }
 
   $self->{script_end_time} = time;
   my $end_time = DateTime->from_epoch(epoch => $self->{script_end_time});
@@ -242,10 +273,15 @@ sub Finish() {
         $rpt->close;
 
         # add download links for those reports to the mail
-        if ($rpt->{glendor}) {
-          $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{glendor_link}\n");
+        if ($self->{cl_mode}) {
+          my $ehost = Config('external_hostname');
+          say "Report '$h': ($rpt->{file_id}) http://${ehost}$rpt->{rel_url}";
         } else {
-          $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+          if ($rpt->{glendor}) {
+            $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{glendor_link}\n");
+          } else {
+            $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+          }
         }
       }
     }
@@ -263,26 +299,29 @@ sub Finish() {
   for my $h (keys %{$self->{reports}}) {
     my $rpt = $self->{reports}->{$h};
 
-    # FetchOneHash because CreateBackgroundReport returns the ID of the
-    # created report
-    my $report = $add_report_query->FetchOneHash(
-        $self->{background_id}, $rpt->{file_id}, $h
-    );
-    
-    if ($h eq 'Email') {
-      # Add mail to user inbox
-      my $inbox = Posda::Inbox->new('nobody');
-      $inbox->SendMail(
-        $self->{notify},
-        $report->{background_subprocess_report_id},
-        'Posda::BackgroundProcess',
-        $self->{activity_id}
+    unless ($self->{cl_mode}) {  # loop over them anyway, so we can unlink
+      # FetchOneHash because CreateBackgroundReport returns the ID of the
+      # created report
+      my $report = $add_report_query->FetchOneHash(
+          $self->{background_id}, $rpt->{file_id}, $h
       );
+      
+      if ($h eq 'Email') {
+        # Add mail to user inbox
+        my $inbox = Posda::Inbox->new('nobody');
+        $inbox->SendMail(
+          $self->{notify},
+          $report->{background_subprocess_report_id},
+          'Posda::BackgroundProcess',
+          $self->{activity_id}
+        );
+      }
     }
 
     unlink $rpt->{temp_filename};
   }
-  if($self->{activity_id}){
+
+  if($self->{activity_id} && not $self->{cl_mode}){
     if($mess eq "Schedule Complete - Manual Process Follows"){
       $self->SetActivityManualUpdate($mess);
       return;
