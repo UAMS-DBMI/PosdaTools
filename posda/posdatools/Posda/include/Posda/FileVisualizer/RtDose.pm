@@ -344,7 +344,6 @@ sub DownloadSelectedDvhs{
   }
   my $dose = 0;
   for my $i (0  .. $max_rows){
-    $dose += 0.1;
     my $dose_t = sprintf("%1.2f", $dose);
     $http->queue("$dose_t,");
     for my $j (0 .. $#keys){
@@ -354,6 +353,7 @@ sub DownloadSelectedDvhs{
       }
       $http->queue(",");
     }
+    $dose += 0.1;
     for my $j (0 .. $#keys){
       my $k = $keys[$j];
       if($dvh_data{$k}->{num_rows} >= $i) {
@@ -399,9 +399,9 @@ sub GetDvhData{
   }
   push @{$small_dvh_data}, 1;
   push @{$small_dvh_data}, $dvh_data->[$#{$dvh_data}];
-  } else {
+  } else {    
     my $step = 20;
-    my $next = $step;
+    my $next = 0;
     while($next < $#{$dvh_data}){
       my $bin_size = .1;
       my $val = $dvh_data->[$next + 1];
