@@ -49,6 +49,12 @@ use vars qw(@ActivityCategories %WorkflowQueries);
        caption => "Import Patient Mappings For Timepoint",
        action =>  "ImportPatientMapping",
        special => "spreadsheetRequest"
+     },
+     {
+      operation => "InvokeNewOperation",
+      caption => "Pathology Patient Mapping",
+      action =>  "Path_Patient_Mapping",
+      special => "spreadsheetRequest"
      }
     ],
   },
