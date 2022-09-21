@@ -16,10 +16,9 @@ from posda.background.process import BackgroundProcess
 
 def saveTiffMetaData(mytif, activity_id, file_id, phi_scan_id):
     for p, page in enumerate(mytif.pages):
-        # tag over 32768 are private TODO
         for t, tag in enumerate(page.tags):
             tag_seen_id = Query("GetTiffTagSeen").get_single_value(tag_name = tag.name)
-            #save the iamge description data
+            #save the image description data
             if tag_seen_id == 'ImageDescription':
                Query("InsertPathologyImageDesc").run(file_id = file_id, image_desc = tag.value)
             #Determine if the tag is public or private

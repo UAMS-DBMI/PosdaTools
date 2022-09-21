@@ -25,7 +25,7 @@ def main(args,mappingData):
         if myfilename in mappingData:
           count = count+1
           Query("InsertPathologyPatientMapping").execute(file_id = file_id,patient_id = mappingData[myfilename],original_file_name = myfilename,collection_name = args.collection_name, site_name = args.site_name)
-    print("Patholgy patient mapping created. {0} files mapped out of {1} files in mapping. Activity total files {2}".format(count, len(results)+1, len(row+1)))
+    print("Patholgy patient mapping created.\n{0} files mapped out of {1} files in mapping.\nActivity total files {2}.\n".format(count, len(results)+1, len(row)+1))
     background.finish("Complete")
 
 
