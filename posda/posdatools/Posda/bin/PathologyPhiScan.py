@@ -16,24 +16,19 @@ from posda.background.process import BackgroundProcess
 
 def saveTiffMetaData(mytif, activity_id, file_id, phi_scan_id):
     for p, page in enumerate(mytif.pages):
+        # tag over 32768 are private TODO
         for t, tag in enumerate(page.tags):
-            tag_seen_id = Query("GetTiffTagSeen").get_single_value(tag_name = tag.name)
-            #save the image description data
-            if tag_seen_id == 'ImageDescription':
-               Query("InsertPathologyImageDesc").run(file_id = file_id, image_desc = tag.value)
-            #Determine if the tag is public or private
-            if tag.code < 32768:
-                priv = False
-            else:
-                priv = True
-            #save tags and values for reporting
-            if not tag_seen_id:
-                tag_seen_id = Query("InsertTiffTagSeen").get_single_value(is_private=priv,tag_name = tag.name)
-            value_seen_id = Query("GetTiffValueSeen").get_single_value(value = tag.value)
-            if not value_seen_id:
-                value_seen_id = Query("InsertTiffValueSeen").get_single_value(value = tag.value)
-            Query("InsertTiffValueOccurance").run(tiff_tag_seen_id = tag_seen_id,tiff_value_seen_id = value_seen_id,tiff_phi_scan_instance_id = phi_scan_id,file_id = file_id)
-    background.finish("Tag data has been saved. Tiff PHI Scan ID:{0}".format(phi_scan_id))
+            if sys.getsizeof(tag.value) < 2000:
+                tag_seen_id = Query("GetTiffTagSeen").get_single_value(tag_name = str(tag.name))
+                if not tag_seen_id:
+                    tag_seen_id = Query("InsertTiffTagSeen").get_single_value(is_private=False,tag_name = str(tag.name))
+                value_seen_id = Query("GetTiffValueSeen").get_single_value(value = str(tag.value))
+                if not value_seen_id:
+                    value_seen_id = Query("InsertTiffValueSeen").get_single_value(value = str(tag.value))
+                #print("\n Tag ID: {0}, Value: {1}, Scan: {2}, Page: {3}, File: {4}  \n".format(tag_seen_id,value_seen_id,phi_scan_id,p,file_id))
+                Query("InsertTiffValueOccurrence").execute(tiff_tag_seen_id = tag_seen_id,tiff_value_seen_id = value_seen_id,tiff_phi_scan_instance_id = phi_scan_id, page_id = p,file_id = file_id)
+
+
 
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
