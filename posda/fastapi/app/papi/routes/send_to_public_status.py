@@ -5,6 +5,7 @@ from typing import List
 import datetime
 from pprint import pformat
 from jinja2 import Template as JinjaTemplate
+from urllib.parse import quote_plus
 
 router = APIRouter()
 
@@ -54,6 +55,7 @@ async def report(subprocess_invocation_id: int, pretty: bool = False, db: Databa
 
         file_dict = file_obj._asdict()
         file_dict['error_message'] = str(error_list[0])[:500]
+        file_dict['curl'] = file_obj.get_curl_command()
 
         obj_subset.append(file_dict)
 
@@ -137,12 +139,22 @@ def render_pretty(invoc_id: int, rows, total_files, file_objs):
     <td>{{file.filename}}</td>
 </tr>
 <tr>
+    <th>batch</th>
+    <td>{{file.batch}}</td>
+</tr>
+<tr>
     <th>third_party_analysis_url</th>
     <td>{{file.third_party_analysis_url}}</td>
 </tr>
 <tr>
     <th>error_message</th>
     <td>{{file.error_message}}</td>
+</tr>
+<tr>
+    <th>API Command for NBIA Debugging</th>
+    <td>
+        {{file.curl}}
+    </td>
 </tr>
 </table>
 {% endfor %}
