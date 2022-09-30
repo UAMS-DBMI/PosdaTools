@@ -93,11 +93,10 @@ sub new {
   };
   bless($this, $class);
 
-  if ($activity_id && $this->{cl_mode}) {
+  if ($activity_id && !$this->{cl_mode}) {
     Query('InsertActivityTaskStatus')->RunQuery(
       sub {}, sub {}, $activity_id, $invoc_id
     );
-    # $this->{activity_id} = $activity_id;
     $this->{UpdStatusQ} = Query("UpdateActivityTaskStatus");
   }
 
