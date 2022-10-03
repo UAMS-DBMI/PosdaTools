@@ -26,6 +26,7 @@ export class SeriesComponent implements OnInit {
 
   ngOnInit() {
     let uid = this.route.snapshot.params['uid'];
+	let activity_id = this.route.snapshot.queryParams['activity_id'];
     this.series_instance_uid = uid;
 
     if (uid === undefined) {
@@ -36,8 +37,13 @@ export class SeriesComponent implements OnInit {
         res => this.handleResponse(res)
       );
     } else {
+			console.log(activity_id);
+			let url = "/papi/v1/series/" + this.series_instance_uid + "/files";
+			if (activity_id !== undefined) {
+				url = url + "?activity_id=" + activity_id;
+			}
       this.show_download = true;
-		this.http.get("/papi/v1/series/" + this.series_instance_uid + "/files").subscribe(
+			this.http.get(url).subscribe(
         res => this.handleResponse(res)
       );
     }
