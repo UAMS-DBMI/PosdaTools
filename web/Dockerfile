@@ -33,3 +33,4 @@ COPY --from=dashboard-builder /dashboard/dist/posda-dashboard /www/dashboard
 COPY --from=quince-builder /quince/dist /www/quince
 COPY --from=roots-builder /roots/dist/dicom-root /www/roots
 COPY --from=kohlrabi-builder /kohlrabi/build /www/kohlrabi
+COPY --from=ohif/viewer:builder /usr/src/app/platform/viewer/dist /www/ohif
