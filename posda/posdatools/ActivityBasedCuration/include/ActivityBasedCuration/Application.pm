@@ -2038,7 +2038,7 @@ sub RenderActivityDropDown {
   my @activity_list;
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
 #  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
-  my @sorted_ids = sort {$a <=> $b} keys %{$self->{Activities}};
+  my @sorted_ids = sort {$b <=> $a} keys %{$self->{Activities}};
   sorted_id:
   for my $i (@sorted_ids){
     if($self->{ActivityFilter}){
