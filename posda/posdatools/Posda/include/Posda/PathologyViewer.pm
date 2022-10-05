@@ -62,12 +62,15 @@ sub ContentResponse {
      $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}");
      $self->{preview_array}  = decode_json($self->{client}->responseContent());
      $self->{num_prevs}  = scalar(@{$self->{preview_array}});
-     $http->queue("<h3>Now viewing file $self->{index} of $self->{num_files} </h3>");
+     $self->{visible_index} = $self->{index}+1;
+     $http->queue("<h3>Now viewing file $self->{visible_index} of $self->{num_files} </h3>");
 
      $self->{client}->GET("$self->{MY_API_URL}/mapping/$self->{pathid}");
      $self->{patient_id} = (decode_json($self->{client}->responseContent()))->[0]->{patient_id};
      $self->{client}->GET("$self->{MY_API_URL}/image_desc/$self->{pathid}");
      $self->{image_desc} = (decode_json($self->{client}->responseContent()))->[0]->{image_desc};
+     $http->queue("<b>Posda File ID:</b> <br> $self->{pathid}");
+     $http->queue(" <br>----------------------------- <br>");
      if ($self->{patient_id}){
       $http->queue("<b>Patient ID:</b> $self->{patient_id}");
       $http->queue(" <br>----------------------------- <br>");
