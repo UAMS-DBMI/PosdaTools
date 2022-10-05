@@ -79,12 +79,12 @@ def main(args):
     for row in Query("FilePathsFromActivity").run(
             activity_id=args.activity_id):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
-        for (file_id, svsfilepath) in results:
-            myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-            #print("Creating previews for file " + svsfilepath + " : " + myfilename )
-            if (myfilename[-3:].lower() == "svs" or myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff"):
-                mytif = TiffFile(svsfilepath)
-                saveTiffMetaData(mytif, args.activity_id, file_id,phi_scan_id)
+    for (file_id, svsfilepath) in results:
+        myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
+        #print("Creating previews for file " + svsfilepath + " : " + myfilename )
+        if (myfilename[-3:].lower() == "svs" or myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff"):
+            mytif = TiffFile(svsfilepath)
+            saveTiffMetaData(mytif, args.activity_id, file_id,phi_scan_id)
 
     createCSVReports(phi_scan_id, background)
     background.finish("Tag data has been saved. Tiff PHI Scan ID:{0}".format(phi_scan_id))
