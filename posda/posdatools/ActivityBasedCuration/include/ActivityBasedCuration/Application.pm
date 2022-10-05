@@ -2042,7 +2042,9 @@ sub RenderActivityDropDown {
   sorted_id:
   for my $i (@sorted_ids){
     if($self->{ActivityFilter}){
-      unless($self->{Activities}->{$i}->{desc} =~ /$self->{ActivityFilter}/){ next sorted_id }
+      $self->{ActDesc} = uc $self->{Activities}->{$i}->{desc};
+      $self->{ActFilter} = uc $self->{ActivityFilter};
+      unless($self->{ActDesc} =~ /$self->{ActFilter}/){ next sorted_id }
     }
     push @activity_list, [$i , "$i: $self->{Activities}->{$i}->{desc}" .
       " ($self->{Activities}->{$i}->{user})"];
