@@ -3878,9 +3878,15 @@ sub FilterQueryRows {
   row:
   for my $r (@{$sfq->{rows}}){
     for my $k (keys %{$sfq->{filter}}){
-      unless($r->[$name_to_i{$k}] =~ /$sfq->{filter}->{$k}/){
+      #unless($r->[$name_to_i{$k}] =~ /$sfq->{filter}->{$k}/){
+      #  next row;
+      #}
+      $self->{ColValue} = uc $r->[$name_to_i{$k}];
+      $self->{ColFilter} = uc $sfq->{filter}->{$k};
+      unless($self->{ColValue} =~ /$self->{ColFilter}/){
         next row;
       }
+
     }
     push @filtered_rows, $r;
   }
