@@ -2038,11 +2038,13 @@ sub RenderActivityDropDown {
   my @activity_list;
   push @activity_list, ["<none>", "----- No Activity Selected ----"];
 #  my @sorted_ids = $self->SortedActivityIds($self->{Activities});
-  my @sorted_ids = sort {$a <=> $b} keys %{$self->{Activities}};
+  my @sorted_ids = sort {$b <=> $a} keys %{$self->{Activities}};
   sorted_id:
   for my $i (@sorted_ids){
     if($self->{ActivityFilter}){
-      unless($self->{Activities}->{$i}->{desc} =~ /$self->{ActivityFilter}/){ next sorted_id }
+      $self->{ActDesc} = uc $self->{Activities}->{$i}->{desc};
+      $self->{ActFilter} = uc $self->{ActivityFilter};
+      unless($self->{ActDesc} =~ /$self->{ActFilter}/){ next sorted_id }
     }
     push @activity_list, [$i , "$i: $self->{Activities}->{$i}->{desc}" .
       " ($self->{Activities}->{$i}->{user})"];
@@ -3876,9 +3878,15 @@ sub FilterQueryRows {
   row:
   for my $r (@{$sfq->{rows}}){
     for my $k (keys %{$sfq->{filter}}){
-      unless($r->[$name_to_i{$k}] =~ /$sfq->{filter}->{$k}/){
+      #unless($r->[$name_to_i{$k}] =~ /$sfq->{filter}->{$k}/){
+      #  next row;
+      #}
+      $self->{ColValue} = uc $r->[$name_to_i{$k}];
+      $self->{ColFilter} = uc $sfq->{filter}->{$k};
+      unless($self->{ColValue} =~ /$self->{ColFilter}/){
         next row;
       }
+
     }
     push @filtered_rows, $r;
   }
