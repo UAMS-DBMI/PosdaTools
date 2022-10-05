@@ -79,6 +79,30 @@ async def review(vr_id: int, db: Database = Depends()):
       """
     return await db.fetch(query, [vr_id])
 
+@router.get("/mapping/{file_id}")
+async def get_mapping(file_id: int, db: Database = Depends()):
+    query = """\
+         select
+            patient_id
+        from
+            pathology_patient_mapping a
+        where
+            a.file_id = $1
+             """
+    return await db.fetch(query, [file_id])
+
+@router.get("/image_desc/{file_id}")
+async def get_image_desc(file_id: int, db: Database = Depends()):
+    query = """\
+         select
+            image_desc
+        from
+            pathology_image_desc a
+        where
+            a.file_id = $1
+             """
+    return await db.fetch(query, [file_id])
+
 @router.get("/getcount")
 def get_current_count():
     return len(images)
