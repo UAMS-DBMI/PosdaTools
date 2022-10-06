@@ -10,5 +10,5 @@ select
 from
   file_patient natural join file_series natural join file_study natural join ctp_file
 where
-  project_name = ? and visibility is null
+  project_name = ?
 

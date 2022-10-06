@@ -20,7 +20,6 @@ from
   natural join file_patient natural join dicom_file 
   natural join file_sop_common natural left join ctp_file 
 where 
-  visibility is null and 
   file_id in (
   select file_id 
   from activity_timepoint_file

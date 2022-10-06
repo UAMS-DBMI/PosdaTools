@@ -24,4 +24,3 @@ from
       file_sop_common natural join activity_timepoint_file
     where activity_timepoint_id = ?
   )
-  and visibility is null

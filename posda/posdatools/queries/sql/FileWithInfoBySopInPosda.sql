@@ -21,4 +21,3 @@ from
   join image using (image_id)
 where
   sop_instance_uid = ?
-  and visibility is null

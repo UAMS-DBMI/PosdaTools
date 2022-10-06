@@ -10,6 +10,6 @@ select
 from
   file_patient natural join file_series natural join file_study natural join ctp_file
 where
-  project_name = ? and visibility is null
+  project_name = ?
 group by
   patient_id, study_date, patient_age order by patient_id
