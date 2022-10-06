@@ -446,6 +446,13 @@ EOF
     col_name => "pathology_visual_review_instance_id",
     caption => "Launch Visual Reviewer",
   },
+  qc_cc_DicomRootsView => {
+    query => "ViewDICOMRoots",
+    type => "ChainColumnToPopup",
+    obj => "Posda::NewerProcessPopup",#Dicom Root Edit
+    col_name => "DicomRootPairID",
+    caption => "Edit",
+  },
   qc_ImagesInEquivClass => {
     query => "VisualReviewStatusDetails",
     type => "ChainColumnToPopup",
