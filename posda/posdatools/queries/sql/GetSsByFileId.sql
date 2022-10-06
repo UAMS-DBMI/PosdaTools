@@ -13,4 +13,4 @@ select
   patient_id, file_id
 from
   ctp_file natural join file_patient natural join file_structure_set
-where file_id = ? and visibility is null
+where file_id = ?

@@ -17,7 +17,6 @@ from
   ctp_file
 where
   series_instance_uid = ?
-  and visibility is null
   and not exists (
     select * from image_equivalence_class iec
     where iec.series_instance_uid = ser.series_instance_uid
