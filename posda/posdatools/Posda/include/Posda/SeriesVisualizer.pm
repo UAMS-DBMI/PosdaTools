@@ -6,6 +6,7 @@ use Posda::DB qw( Query );
 use Digest::MD5;
 use ActivityBasedCuration::Quince;
 use Posda::FileVisualizer;
+use Posda::OHIF;
 
 
 use vars qw( @ISA );
@@ -324,6 +325,9 @@ sub MenuResponse {
      caption => "Open in Quince",
      sync => "Reload();"
   });
+  $http->queue(
+    Posda::OHIF::OpenSeriesButton($self->{params}->{series_instance_uid}));
+
 }
 
 1;

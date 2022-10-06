@@ -39,7 +39,7 @@ def unhide_all():
         print(cur.rowcount, "files unhidden")
 
 
-background = BackgroundProcess(1, 'admin', 1)
+background = BackgroundProcess("", 'admin', 1)
 background.print_to_email("test email write")
 background.daemonize()
 

@@ -13,7 +13,12 @@ from datetime import datetime
 
 class MissingActivityIdError(KeyError): pass
 
-class BackgroundProcess:
+def BackgroundProcess(invoc_id, notify_address, activity_id=None):
+    if invoc_id is None or invoc_id == "":
+        return CLBackgroundProcess(activity_id)
+    return TrueBackgroundProcess(invoc_id, notify_address, activity_id)
+
+class TrueBackgroundProcess:
     """Represents a background process
 
     Contains methods for beginning and ending a background process,
@@ -136,6 +141,29 @@ class BackgroundProcess:
         )
 
 
+    def _report_finished_time(self):
+        self.finish_time = datetime.now()
+        print("Background process ended at:", self.finish_time)
+        print("Total time elapsed:", self.finish_time - self.start_time)
+
+    def _close_reports(self, skip_query=False):
+        for report_name, report in self.reports.items():
+            # skip the email for now, because if we close it we can't write
+            # any further lines
+            if report_name == 'Email':
+                continue
+            report.close()
+            file_id = insert_file(report.name)
+            os.unlink(report.name)
+            url = make_csv(file_id)
+            if not skip_query:
+                Query('CreateBackgroundReport').execute(
+                    background_subprocess_id=self.background_id,
+                    file_id=file_id,
+                    name=report_name
+                )
+            print(f"Report '{report_name}': {url}")
+
     def finish(self, final_status_message: str=None) -> None:
         """Indicate that the BackgroundProcess has finished.
 
@@ -147,27 +175,11 @@ class BackgroundProcess:
         Query("AddCompletionTimeToBackgroundProcess").execute(
             background_subprocess_id=self.background_id
         )
-        self.finish_time = datetime.now()
-        print("Background process ended at:", self.finish_time)
-        print("Total time elapsed:", self.finish_time - self.start_time)
+        self._report_finished_time()
 
         self._finish_activity_task_status(final_status_message)
 
-        for report_name, report in self.reports.items():
-            # skip the email for now, because if we close it we can't write
-            # any further lines
-            if report_name == 'Email':
-                continue
-            report.close()
-            file_id = insert_file(report.name)
-            os.unlink(report.name)
-            url = make_csv(file_id)
-            Query('CreateBackgroundReport').execute(
-                background_subprocess_id=self.background_id,
-                file_id=file_id,
-                name=report_name
-            )
-            print(f"Report '{report_name}': {url}")
+        self._close_reports()
 
         # close email last
         self.email.close()
@@ -205,3 +217,32 @@ class BackgroundProcess:
                 activity_id=self.activity_id,
                 subprocess_invocation_id=self.invoc_id
             )
+
+class CLBackgroundProcess(TrueBackgroundProcess):
+    def __init__(self, activity_id):
+        self.reports = {}
+        self.child_pid = 0
+        self.parent_pid = 0
+        self.start_time = datetime.now()
+
+        print("Running in CL Mode!")
+
+    def print_to_email(self, *args, **kwargs):
+        print(*args, **kwargs)
+
+    def set_activity_status(self, status: str, time_remaining: str=None) -> None:
+        if time_remaining is not None:
+            print(">>", status, time_remaining)
+        else:
+            print(">>", status)
+
+    def daemonize(self):
+        pass
+
+    def finish(self, final_status_message: str=None) -> None:
+
+        if final_status_message is not None:
+            self.set_activity_status(final_status_message)
+
+        self._report_finished_time()
+        self._close_reports(skip_query=True)
