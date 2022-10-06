@@ -9,8 +9,7 @@ def send_email_old(address, subject, content):
     msg['To'] = address
     p.communicate(msg.as_bytes())
 
-
-def send_email(from_username, to_username, background_subprocess_report_id, how):
+def send_email(from_username, to_username, background_subprocess_report_id, how, activity_id=None):
     with Database("posda_files").cursor() as cur:
         cur.execute("""\
             insert into user_inbox_content (
@@ -42,3 +41,13 @@ def send_email(from_username, to_username, background_subprocess_report_id, how)
               %s, %s, now(), %s, %s
             )
         """, [user_inbox_content_id, 'entered', how, from_username])
+
+        # autofile
+        if activity_id is not None:
+            cur.execute("""\
+                insert into activity_inbox_content(
+                    activity_id, user_inbox_content_id
+                ) values (
+                    %s, %s
+                )
+            """, [activity_id, user_inbox_content_id])

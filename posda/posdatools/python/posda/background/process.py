@@ -191,7 +191,7 @@ class TrueBackgroundProcess:
             file_id=email_file_id,
             name='Email'
         ):
-            send_email('nobody', self.notify_address, report_id, 'posda.background.process')
+            send_email('nobody', self.notify_address, report_id, 'posda.background.process', self.activity_id)
         # TODO: make this 'send email' via posda
         # send_email(self.notify_address,
         #            "Posda job complete",
