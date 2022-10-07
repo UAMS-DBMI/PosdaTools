@@ -127,7 +127,28 @@ async def find_site_name_from_code(site_code: int, db: Database = Depends()) -> 
        """, [str(site_code)])
     return PlainTextResponse(record['site_name'])
 
-
+@router.get("/getRecord/{submission_id}")
+async def getRecord(submission_id: int, db: Database = Depends()):
+    query = """\
+        select
+            b.collection_name,
+            b.collection_code,
+            c.site_name,
+            c.site_code,
+            a.patient_id_prefix,
+            a.body_part,
+            a.access_type,
+            a.baseline_date,
+            a.date_shift,
+            a.submission_id as rootid
+        from
+            submissions a
+            natural join collection_codes b
+            natural join site_codes c
+        where
+            a.submission_id = $1;
+           """
+    return await db.fetch(query, [submission_id])
 
 class Submission(BaseModel):
     input_site_code: int
@@ -152,7 +173,7 @@ class Submission(BaseModel):
         baseline_date = self.input_baseline_date
         if len(baseline_date) < 1:
             baseline_date = None
-        
+
         return (str(self.input_site_code),
                 str(self.input_collection_code),
                 self.input_patient_id_prefix,
@@ -179,7 +200,7 @@ async def add_new_submission(submission: Submission, db: Database = Depends()):
         try:
             print("inserting")
             await db.execute(
-                "insert into site_codes (site_code, site_name) values ($1, $2)", 
+                "insert into site_codes (site_code, site_name) values ($1, $2)",
                 [str(submission.input_site_code), submission.input_site_name]
             )
         except UniqueViolationError:
