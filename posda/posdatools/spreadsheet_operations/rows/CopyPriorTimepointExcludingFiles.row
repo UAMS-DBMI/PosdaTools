@@ -1,5 +1,5 @@
 :operation_name: CopyPriorTimepointExcludingFiles
-:command_line: CopyPriorTimepointExcludingFiles.pl <?bkgrnd_id?> <activity_id> <old_tp_id> <notify>
+:command_line: CopyPriorTimepointExcludingFiles.py <?bkgrnd_id?> <activity_id> <old_tp_id> <notify>
 :operation_type: background_process
 :input_line_format: <file_id>
 :tags: ['activity_timepoints']
