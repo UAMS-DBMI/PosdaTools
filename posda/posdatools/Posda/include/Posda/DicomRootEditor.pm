@@ -33,7 +33,7 @@ sub SpecificInitialize {
 
 sub ContentResponse {
  my ($self, $http, $dyn) = @_;
- $http->queue("<h3>Requesting changes to DICOM Root record  image files.</h3>");
+ $http->queue("<h3>Requesting changes to DICOM Root record.</h3>");
  $http->queue("Site Name:   $self->{record_data}->[0]->{site_name}</br>");
  $http->queue("Site Code: $self->{record_data}->[0]->{site_code}</br>");
  $http->queue("Collection Name: $self->{record_data}->[0]->{collection_name}</br>");
