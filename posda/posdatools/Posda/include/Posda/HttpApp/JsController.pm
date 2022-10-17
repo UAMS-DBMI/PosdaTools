@@ -417,7 +417,9 @@ sub ClasslessBlurEntryBox{
    (defined($dyn->{size}) ? " size=\"$dyn->{size}\" " : "") .
     "onblur=\"" . $op . "event=onblur&value='+this.value);$sync\" " .
    "/>";
+#print STDERR "################################\n";
 #print STDERR "Blur Entry Box: $txt\n";
+#print STDERR "################################\n";
    $http->queue($txt);
 #  $http->queue("<input class='$class' type='text'" .
 #    ($dyn->{name} ? " name=\"$dyn->{name}\" " : "") .
@@ -537,6 +539,7 @@ sub LinkedDelegateTextArea{
   for my $i (keys %$dyn){
     if($i eq "op") { next }
     if($i eq "value") { next }
+    if($i eq "init_value") { next }
     if(
       $i eq "length" || $i eq "name" || $i eq "rows" || $i eq "cols"
     ) {
@@ -571,6 +574,7 @@ sub LinkedDelegateTextArea{
   my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
   $http->queue('<textarea ' .
     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\"" .
+    " value=\"$dyn->{init_value}\"" .
     "/>");
   for my $i (@value){ $http->queue("$i\n") }
   $http->queue('</textarea>' .
@@ -632,6 +636,7 @@ sub LinkedDelegateEntryBox{
   my @attrs;
   for my $i (keys %$dyn){
     if($i eq "op") { next }
+    if($i eq "init_value") { next }
     if($i eq "length" || $i eq "name" || $i eq "size") {
       push @attrs, "$i=\"$dyn->{$i}\"";
       next
@@ -654,9 +659,9 @@ sub LinkedDelegateEntryBox{
   }
 #yea STDERR "value string: $v_string\"\n##################\n";
   my $default;
-  if(exists $dyn->{index}){
+  if(exists($dyn->{index}) && exists($dyn->{linked})){
     $default = $this->{$dyn->{linked}}->{$dyn->{index}};
-  } else {
+  } elsif(exists $dyn->{linked}) {
     $default = $this->{$dyn->{linked}};
   }
   if (not defined $default) {
@@ -664,7 +669,7 @@ sub LinkedDelegateEntryBox{
   }
   $default =~ s/"/&quot;/g;
   my $op = "PosdaGetRemoteMethod('Delegate', '$v_string";
-  $http->queue('<input type="text"' . $attr_s .
+  my $text = '<input type="text"' . $attr_s .
     ($default ? " value=\"$default\" " : " ") .
     "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
     "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
@@ -680,7 +685,29 @@ sub LinkedDelegateEntryBox{
     "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
     "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
     "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
-    "/>");
+    (exists($dyn->{init_value}) ? "value=\"$dyn->{init_value}\"" : "") .
+    "/>";
+  $http->queue($text);
+#print STDERR "##########################\n";
+#print STDERR "LinkedDelegateEntryBox: $text\n";
+#print STDERR "##########################\n";
+#  $http->queue('<input type="text"' . $attr_s .
+#    ($default ? " value=\"$default\" " : " ") .
+#    "onblur=\"" . $op . "event=onblur&amp;value='+this.value);\" " .
+#    "onchange=\"" . $op . "event=onchange&amp;value='+this.value);\" " .
+#    "onclick=\"" . $op . "event=onclick&amp;value='+this.value);\" " .
+#    "ondblclick=\"" . $op . "event=ondblclick&amp;value='+this.value);\" " .
+#    "onfocus=\"" . $op . "event=onfocus&amp;value='+this.value);\" " .
+#    "onmousedown=\"" . $op . "event=onmousedown&amp;value='+this.value);\" " .
+#    # "onmousemove=\"" . $op . "event=onmousemove&amp;value='+this.value);\" " .
+#    "onmouseout=\"" . $op . "event=onmouseout&amp;value='+this.value);\" " .
+#    "onmouseover=\"" . $op . "event=onmouseover&amp;value='+this.value);\" " .
+#    "onmouseup=\"" . $op . "event=onmouseup&amp;value='+this.value);\" " .
+#    "onkeydown=\"" . $op . "event=onkeydown&amp;value='+this.value);\" " .
+#    "onkeypress=\"" . $op . "event=onkeypress&amp;value='+this.value);\" " .
+#    "onkeyup=\"" . $op . "event=onkeyup&amp;value='+this.value);\" " .
+#    "onselect=\"" . $op . "event=onselect&amp;value='+this.value);\" " .
+#    "/>");
 }
 sub StoreLinkedValue{
   my($this, $http, $dyn) = @_;

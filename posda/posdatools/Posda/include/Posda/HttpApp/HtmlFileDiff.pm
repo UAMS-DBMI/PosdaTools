@@ -11,6 +11,7 @@ use strict;
 use Posda::Try;
 use Text::Diff;
 use Debug;
+my $dbg = sub {print STDERR @_};
 package Posda::HttpApp::HtmlFileDiff;
 sub new{
   my($class, $from_file, $to_file) = @_;
@@ -124,10 +125,10 @@ sub render_text_diff {
   line:
   while(my $line = <FILE>){
     $line_no += 1;
-    unless($html){
+#    unless($html){
       $line =~ s/</&lt;/g;
       $line =~ s/>/&gt;/g;
-    }
+#    }
     if($skip_count > 0){
       $skip_count -= 1; 
       $HTTP->queue("<strike>$line</strike>");
@@ -150,10 +151,10 @@ sub render_text_diff {
       }
       if($skip_count == 0){
         for my $i (@{$item->{changes}}){
-          unless($html){
+#          unless($html){
             $i =~ s/</&lt;/g;
             $i =~ s/>/&gt;/g;
-          }
+#          }
           $HTTP->queue("<b>$i\n</b>");
         }
       }
