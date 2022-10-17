@@ -958,7 +958,8 @@ sub ProjectionAnalysis{
       "non_zero values range from $range\n";
   } elsif (
     $self->{parsed}->{datatype} == 4 ||
-    $self->{parsed}->{datatype} == 512
+    $self->{parsed}->{datatype} == 512 ||
+    $self->{parsed}->{datatype} == 2
   ){
     print "file $self->{file_id} (short) has $tot_pix values, " .
       "$total_zero zeros, non_zero values range from " .

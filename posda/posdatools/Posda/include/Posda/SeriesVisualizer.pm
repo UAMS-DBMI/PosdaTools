@@ -7,10 +7,11 @@ use Digest::MD5;
 use ActivityBasedCuration::Quince;
 use Posda::FileVisualizer;
 use Posda::OHIF;
+use Posda::FileVisualizer::DicomImage;
 
 
 use vars qw( @ISA );
-@ISA = ("Posda::FileVisualizer");
+@ISA = ("Posda::PopupWindow");
 sub MakeQueuer{ 
   my($http) = @_;
   my $sub = sub {
@@ -25,7 +26,7 @@ sub SpecificInitialize {
   $self->{title} = "Generic SeriesVisualizer";
   # Determine temp dir
 #  $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
-  $self->{temp_path} = $params->{temp_path};
+#  $self->{temp_path} = $params->{temp_path};
   $self->{params} = $params;
   $self->{series_instance_uid} = $params->{series_instance_uid};
   $self->{activity_id} = $params->{activity_id};
@@ -200,6 +201,18 @@ sub SeriesReport{
   $http->queue("</pre>");
 }
 
+my $Decorations = {
+  file_id => sub {
+    my ($self, $http, $dyn, $i) = @_;
+    $http->queue("&nbsp;");
+    $self->NotSoSimpleButton($http, {
+      op => "OpenDicomImageVisualizer",
+      caption => "view",
+      file_id => $i,
+      sync => "Update();",
+    });
+  },
+};
 sub SeriesSummary{
   my ($self, $http, $dyn) = @_;
   $http->queue(
@@ -223,7 +236,11 @@ sub SeriesSummary{
   }
   for my $i (@files){
     $http->queue("<tr>");
-    $http->queue("<td>$i</td>");
+    $http->queue("<td>$i");
+    if(exists $Decorations->{file_id}){
+      &{$Decorations->{file_id}}($self, $http, $dyn, $i);
+    }
+    $http->queue("</td>");
     for my $k (@keys){
       $http->queue("<td>");
       if(defined $self->{FilesInSeries}->{$i}->{$k}){
@@ -303,15 +320,36 @@ sub SetSeriesReport{
   $self->{mode} = "series_report";
 }
 
-sub OpenInQuince{
+sub OpenDicomImageVisualizer{
   my ($self, $http, $dyn) = @_;
-  bless $self, "ActivityBasedCuration::Quince";
-  $self->Initialize({
-    type => "series",
-    series_instance_uid => $self->{params}->{series_instance_uid}
-  });
+  my $class = "Posda::FileVisualizer";
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  $self->{sequence_no} += 1;
+  my $child_path = $self->{path} . "_di_$self->{sequence_no}";
+  my $child_obj = $class->new($self->{session},
+    $child_path, { activity_id => $self->{activity_id}, file_id => $dyn->{file_id}});
+  $self->StartJsChildWindow($child_obj);
 }
 
+#sub OpenInQuince{
+#  my ($self, $http, $dyn) = @_;
+#  bless $self, "ActivityBasedCuration::Quince";
+#  $self->Initialize({
+#    type => "series",
+#    series_instance_uid => $self->{params}->{series_instance_uid}
+#  });
+#}
+sub OpenInQuince{
+  my ($self, $http, $dyn) = @_;
+  my $class = "ActivityBasedCuration::Quince";
+  #require $class;
+  unless(exists $self->{sequence_no}){$self->{sequence_no} = 0}
+  $self->{sequence_no} += 1;
+  my $child_path = $self->{path} . "_quince_$self->{sequence_no}";
+  my $child_obj = $class->new($self->{session},
+    $child_path, { type => "series", series_instance_uid => $self->{series_instance_uid}});
+  $self->StartJsChildWindow($child_obj);
+}
 
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;

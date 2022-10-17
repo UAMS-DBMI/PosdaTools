@@ -9,10 +9,10 @@
 use Cwd;
 use Posda::HttpApp::HtmlFileDiff;
 use Posda::HttpApp::HttpObj;
+use Posda::DB 'Query';
 use File::Temp qw( tempdir );
 use Debug;
 my $dbg = sub {print STDERR @_ };
-my $tmpdir;
 use strict;
 {
   package Queuer;
@@ -45,9 +45,10 @@ use strict;
   sub RenderDiffs{
     my($this, $http, $dyn) = @_;
     $this->RefreshEngine($http, $dyn,
-      '<html><head><title>Differences</title></head><body>' .
-      "Difference<ul><li>From: $dyn->{from}</li>" .
-      "<li>To: $dyn->{to}</li></ul>" .
+      '<html><head><title>Dicom File Differences</title></head><body>' .
+      "<h3>Differences Between Dicom Files</h3>" . 
+      "<ul><li>From: ($dyn->{from_file_id}) $dyn->{from}</li>" .
+      "<li>To: ($dyn->{to_file_id}) $dyn->{to}</li></ul>" .
       '<hr>' .
       '<?dyn="RenderLinks"?>' .
       '<?dyn="RenderDifferences"?>' .
@@ -65,16 +66,25 @@ use strict;
     $diffs->render_text_diff($http, 1);
   }
 }
-$tmpdir = &tempdir(CLEANUP => 1);
-my $usage =  "usage: IheCompareFiles.pl  <from file> <to file> " .
-  "[<results file>]\n";
-unless($#ARGV == 2 || $#ARGV ==1) { die $usage }
+my $usage =  "usage: CompareDicomFilesById.pl  <from file_id> <to file_id> " .
+  "<tmpdir> <results_file>\n";
+unless($#ARGV == 3) { die $usage }
 my $cwd = getcwd;
-my $from_file = $ARGV[0];
-my $to_file = $ARGV[1];
+my $from_file_id = $ARGV[0];
+my $to_file_id = $ARGV[1];
+my $tmpdir = $ARGV[2];
+my $results_file = $ARGV[3];
+my($from_file, $to_file);
+Query('GetFilePath')->RunQuery(sub {
+  my($row) = @_;
+  $from_file = $row->[0];
+}, sub{}, $from_file_id);
+Query('GetFilePath')->RunQuery(sub {
+  my($row) = @_;
+  $to_file = $row->[0];
+}, sub{}, $to_file_id);
 my $from_dump = "$tmpdir/DumpFrom.txt";
 my $to_dump = "$tmpdir/DumoTo.txt";
-my $results_file = $ARGV[2];
 unless($from_file =~ /^\//) { $from_file = "$cwd/$from_file" }
 unless(-f $from_file) { die "$from_file is not a file" }
 unless($to_file =~ /^\//) { $to_file = "$cwd/$to_file" }
@@ -86,19 +96,13 @@ while(my $line = <FOO>){
   print STDERR "Error from dumping from: $line\n";
 }
 close FOO;
-my $cmd = "DumpDicom.pl $to_file >$to_dump";
+$cmd = "DumpDicom.pl $to_file >$to_dump";
 open FOO, "$cmd|";
 while(my $line = <FOO>){
   chomp $line;
   print STDERR "Error from dumping to: $line\n";
 }
 close FOO;
-if($results_file){
-  unless($results_file =~ /^\//) { $results_file = "$cwd/$results_file" }
-  my($results_root, $results_leaf) = $results_file =~ /(^.+)\/([^\/]+)$/;
-  unless(-d $results_root) { die "$results_root is not a directory" }
-  if(-e $results_file) { die "$results_file already exists" }
-}
 
 my $Changes = Posda::HttpApp::HtmlFileDiff->new($from_dump, $to_dump);
 print STDERR "Changes: ";
@@ -110,8 +114,11 @@ my $http = Queuer->new("");
 $hr->RenderDiffs($http, {
   from  => $from_file,
   to => $to_file,
+  from_file_id => $from_file_id,
+  to_file_id => $to_file_id,
   diffs => $Changes,
 });
+print "Results file: $results_file\n";
 if($results_file){
   open my $fh, ">$results_file"
     or die "Can't open $results_file";

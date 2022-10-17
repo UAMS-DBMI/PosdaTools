@@ -28,6 +28,9 @@ sub MakeQueuer{
 
 sub SpecificInitialize {
   my ($self, $params) = @_;
+print STDERR "#######################################\n";
+print STDERR "In Generic File Visualizer Specific Initialize\n";
+print STDERR "#######################################\n";
   $self->{title} = "Generic File Visualizer";
   # Determine temp dir
   $self->{temp_path} = "$self->{LoginTemp}/$self->{session}";
@@ -83,10 +86,6 @@ print STDERR "Dicom file\n";
       bless $self, "Posda::FileVisualizer::SR";
       print STDERR "bless \$self, Posda::FileVisualizer::SR\n";
       return $self->SpecificInitialize;
-    } elsif ($self->{file_desc}->{dicom_file_type} =~ /Image/){
-      print STDERR "bless \$self, Posda::FileVisualizer::DicomImage\n";
-      bless $self, "Posda::FileVisualizer::DicomImage";
-      return $self->SpecificInitialize;
     } elsif ($self->{file_desc}->{dicom_file_type} =~ /Segmentation/){
       print STDERR "bless \$self, Posda::FileVisualizer::Segmentation\n";
       bless $self, "Posda::FileVisualizer::Segmentation";
@@ -97,6 +96,13 @@ print STDERR "Dicom file\n";
     } elsif ($self->{file_desc}->{dicom_file_type} =~ /Structure/){
       bless $self, "Posda::FileVisualizer::StructureSet";
       return $self->SpecificInitialize;
+    } elsif ($self->{file_desc}->{dicom_file_type} =~ /Image/){
+      print STDERR "bless \$self, Posda::FileVisualizer::DicomImage\n";
+      bless $self, "Posda::FileVisualizer::DicomImage";
+      return $self->SpecificInitialize({
+        file_id => $self->{file_id},
+        activity_id => $self->{params}->{activity_id}
+      });
     }
   } elsif($self->{file_desc}->{file_type} =~ /PNG/) {
     my $params = {

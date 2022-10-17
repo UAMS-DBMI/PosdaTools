@@ -16,8 +16,8 @@ sub get_uuid {
 }
 
 
-#use Debug;
-#my $dbg = sub { print STDERR @_ };
+use Debug;
+my $dbg = sub { print STDERR @_ };
 #my $dbg = sub { print @_ };
 $| = 1; # this should probably be at the top of the script, maybe in the lib?
 
@@ -423,6 +423,7 @@ sub ProcessIndividualEdit{
     delete_matching_group => 1,
     move_owner_block => 1,
     annotate_img => 1,
+    add_tag_to_seq => 1,
   };
   my($op, $tag, $v1, $v2) = @$edit;
   unless(exists $supported_edit_ops->{$op}){
@@ -579,7 +580,7 @@ my $rpt_pipe1 = $background->CreateReport("ShortEditDifferences");
 $rpt_pipe1->print("\"Short Report\"," .
   "\"short_file_id\",\"num_files\"\r\n");
 my $rpt_pipe_err = $background->CreateReport("Errors in Edits");
-$rpt_pipe_err->print("\"Error Report\"," .
+$rpt_pipe_err->print(
   "\"sop_instance_uid\",\"message\"\r\n");
 
 # Create row in dicom_edit_compare_disposition
@@ -912,9 +913,23 @@ $ins->RunQuery(sub {}, sub{}, $invoc_id, $BackgroundPid, $DestDir);
     my %data;
     my $num_rows = 0;
     for my $sop (keys %{$this->{compares_failed}}){
-      my $mess = $this->{compares_failed}->{$sop};
-      $mess =~ s/"/""/g;
-      $rpt_pipe_err->print("$sop,\"$mess\"\r\n");
+      my $stat_hash = $this->{compares_failed}->{$sop};
+      if(ref($stat_hash) eq "HASH"){
+        if(exists $stat_hash->{report}){
+          if($stat_hash->{report}->{Status} eq "Error"){
+            $rpt_pipe_err->print("$sop, $stat_hash->{report}->{message}\n");
+          }
+        }
+      } else {
+        my $mess = $stat_hash;
+        $mess =~ s/"/""/g;
+        $rpt_pipe_err->print("$sop,\"$mess\"\r\n");
+      }
+print STDERR "#######################\n";
+print STDERR "sop: $sop\nmess = ";
+Debug::GenPrint($dbg, $stat_hash, 1);
+print STDERR "\n";
+print STDERR "#######################\n";
     }
     my $get_list = Query("DifferenceReportByEditId");
     $get_list->RunQuery(sub {

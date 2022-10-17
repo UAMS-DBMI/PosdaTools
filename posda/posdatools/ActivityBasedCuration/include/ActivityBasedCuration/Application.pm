@@ -104,6 +104,12 @@ sub SpecificInitialize {
         sync => 'Update();',
       },
       {
+        caption => "QueryEngines",
+        op => 'SetMode',
+        mode => 'QueryEngines',
+        sync => "Update();",
+      },
+      {
         caption => "Upload",
         op => 'SetMode',
         mode => 'Upload',
@@ -756,6 +762,767 @@ sub ContentResponse {
     $http->queue("Unknown mode: $self->{Mode}");
   }
 }
+##############################################################f
+##  Query Engine Stuff (beginning);
+my $QueryEnginesSync = "UpdateDivs(" .
+      "[['engine_selection_div', 'QE_esd_content']," .
+      " ['available_cols_div', 'QE_acd_content'], " .
+      " ['selected_cols_div', 'QE_scd_content'], " .
+      " ['available_aggregates_div', 'QE_aad_content'], " .
+      " ['selected_aggregates_div', 'QE_sad_content'], " .
+      " ['available_where_div', 'QE_awd_content'], " .
+      " ['selected_where_div', 'QE_swd_content'], " .
+      " ['query_params_div', 'QE_qpd_content'], " .
+      " ['query_and_results_div', 'QE_qrd_content'], " .
+      "]);";
+my $query_engine_content = "<div id=\"engine_selection_div\">" .
+  "</div><div id=\"available_cols_div\">" .
+  "</div><div id=\"selected_cols_div\">" .
+  "</div><div id=\"available_aggregates_div\">" .
+  "</div><div id=\"selected_aggregates_div\">" .
+  "</div><div id=\"available_where_div\">" .
+  "</div><div id=\"selected_where_div\">" .
+  "</div><div id=\"query_params_div\">" .
+  "</div><div id=\"query_and_results_div\">" .
+  "</div>";
+sub QueryEngines {
+  my($self, $http, $dyn) = @_;
+  unless(exists $self->{QueryEnginesData}){
+    $self->{QueryEnginesData} = {
+      Config => $main::HTTP_APP_CONFIG->{config}->{QueryEngines},
+      SelectedEngine => "none",
+     EngineStates => {
+      },
+    };
+  }
+  $http->queue("$query_engine_content");
+  $self->QueueJsCmd($QueryEnginesSync);
+}
+sub QE_esd_content{
+  my($self, $http, $dyn) = @_;
+  $http->queue("Select query engine:&nbsp;&nbsp;&nbsp;");
+  $self->SelectDelegateByValue($http, {
+    op => 'SetQueryEngine',
+    id => "QueryEngineSelector",
+    sync => $QueryEnginesSync,
+  });
+  my @qe;
+  push @qe, "none";
+  for my $k (keys %{$self->{QueryEnginesData}->{Config}}){
+    push @qe, $k;
+  }
+  for my $k (@qe){
+    $http->queue("<option value=\"$k\"");
+    if($k eq $self->{QueryEnginesData}->{SelectedEngine}){
+      $http->queue(" selected")
+    }
+    $http->queue(">$k</option>");
+  }
+  $http->queue(qq{
+    </select>
+  });
+}
+sub SetQueryEngine{
+  my($self, $http, $dyn) = @_;
+  $self->{QueryEnginesData}->{SelectedEngine} = $dyn->{value};
+  if($dyn->{value} eq "none"){return}
+  unless(exists $self->{QueryEnginesData}->{EngineStates}->{$dyn->{value}}){
+    $self->InitializeQueryEngineState($dyn->{value});
+  }
+}
+sub InitializeQueryEngineState{
+  my($self, $qe) = @_;
+  my $qe_spec = $self->{QueryEnginesData}->{Config}->{$qe};
+  my %qe_state;
+  for my $k(keys %{$qe_spec->{selectable_columns}}){
+    $qe_state{selectable_columns}->{$k} = 1;
+  }
+  for my $k(keys %{$qe_spec->{aggregates}}){
+    $qe_state{aggregates}->{$k} = 1;
+  }
+  $qe_state{query_state} = "building";
+  $self->{QueryEnginesData}->{EngineStates}->{$qe} = \%qe_state;
+}
+#<input type="button" id="<gen>" class="btn btn-default"
+# onclick="javascript:PosdaGetRemoteMethod('QE_select_acd',
+# '<var>=<value>', $QueryEnginesSync" value="<caption>">
+sub QE_acd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  if($qed->{SelectedEngine} eq "none"){ return }
+  my $qes = $qed->{EngineStates}->{$qed->{SelectedEngine}};
+  if($qes->{query_state} eq "running"){
+    return;
+  }
+  my $conf = $qed->{Config}->{$qed->{SelectedEngine}};
+  $http->queue("Available columns: &nbsp;");
+  select_c:
+  for my $acd (keys %{$qes->{selectable_columns}}){
+    if(exists $qes->{selected_columns}->{index}->{$acd}){ next select_c }
+    my $sc_desc = $conf->{selectable_columns}->{$acd};
+    my $tag = $sc_desc->{tag};
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_select_acd',";
+    $button .= "'acd_name=$acd',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"$tag\">";
+    $http->queue("$button&nbsp;");
+  }
+  #$http->queue("available_cols_div");
+}
+sub QE_select_acd{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $acd_name = $dyn->{acd_name};
+  unless(exists $qe_state->{selected_columns}->{list}){
+    $qe_state->{selected_columns}->{list} = [];
+  }
+  push @{$qe_state->{selected_columns}->{list}}, $acd_name;
+  $qe_state->{selected_columns}->{index} = {};
+  for my $i (0 .. $#{$qe_state->{selected_columns}->{list}}){
+    my $an = $qe_state->{selected_columns}->{list}->[$i];
+    $qe_state->{selected_columns}->{index}->{$an} = $i;
+  }
+}
+sub QE_scd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  if($qed->{SelectedEngine} eq "none"){ return }
+  my $qes = $qed->{EngineStates}->{$qed->{SelectedEngine}};
+  if($qes->{query_state} eq "running"){
+    return;
+  }
+  my $conf = $qed->{Config}->{$qed->{SelectedEngine}};
+  $http->queue("Selected columns: &nbsp;");
+  for my $scd (@{$qes->{selected_columns}->{list}}){
+    my $sc_desc = $conf->{selectable_columns}->{$scd};
+    my $tag = $sc_desc->{tag};
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_unselect_scd',";
+    $button .= "'scd_name=$scd',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"$tag\">";
+    $http->queue("$button&nbsp;");
+  }
+}
+sub QE_unselect_scd{
+  my($self, $http, $dyn) = @_;
+  my $scd_name = $dyn->{scd_name};
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $list = $qe_state->{selected_columns}->{list};
+  my @new_list;
+  for my $scd (@$list){
+    unless($scd eq $scd_name) { push @new_list, $scd };
+  }
+  $qe_state->{selected_columns}->{list} = \@new_list;
+  $qe_state->{selected_columns}->{index} = {};
+  for my $i (0 .. $#{$qe_state->{selected_columns}->{list}}){
+    my $an = $qe_state->{selected_columns}->{list}->[$i];
+    $qe_state->{selected_columns}->{index}->{$an} = $i;
+  }
+}
+sub QE_aad_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  if($qed->{SelectedEngine} eq "none"){ return }
+  my $qes = $qed->{EngineStates}->{$qed->{SelectedEngine}};
+  if($qes->{query_state} eq "running"){
+    return;
+  }
+  my $conf = $qed->{Config}->{$qed->{SelectedEngine}};
+  $http->queue("Available aggregates: &nbsp;");
+  select_c:
+  for my $acd (keys %{$qes->{aggregates}}){
+    if(exists $qes->{selected_aggregates}->{index}->{$acd}){ next select_c }
+    my $sc_desc = $conf->{aggregates}->{$acd};
+#    my $tag = $sc_desc->{tag};
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_select_agg',";
+    $button .= "'agg_name=$acd',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"$acd\">";
+    $http->queue("$button&nbsp;");
+  }
+}
+sub QE_select_agg{
+  my($self, $http, $dyn) = @_;
+  my $agg = $dyn->{agg_name};
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  unless(exists $qe_state->{selected_aggregates}->{list}){
+    $qe_state->{selected_aggregates}->{list} = [];
+  }
+  push @{$qe_state->{selected_aggregates}->{list}}, $agg;
+  $qe_state->{selected_aggregates}->{index} = {};
+  for my $i (0 .. $#{$qe_state->{selected_aggregates}->{list}}){
+    my $an = $qe_state->{selected_aggregates}->{list}->[$i];
+    $qe_state->{selected_aggregates}->{index}->{$an} = $i;
+  }
+ 
+}
+sub QE_sad_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  if($qed->{SelectedEngine} eq "none"){ return }
+  my $qes = $qed->{EngineStates}->{$qed->{SelectedEngine}};
+  if($qes->{query_state} eq "running"){
+    return;
+  }
+  my $conf = $qed->{Config}->{$qed->{SelectedEngine}};
+  $http->queue("Selected aggregates: &nbsp;");
+  for my $sag (@{$qes->{selected_aggregates}->{list}}){
+#    my $sc_desc = $conf->{selectable_aggregates}->{$sag};
+#    my $tag = $sc_desc->{tag};
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_sag_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_unselect_sag',";
+    $button .= "'sag_name=$sag',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"$sag\">";
+    $http->queue("$button&nbsp;");
+  }
+}
+sub QE_unselect_sag{
+  my($self, $http, $dyn) = @_;
+  my $sag_name = $dyn->{sag_name};
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $list = $qe_state->{selected_aggregates}->{list};
+  my @new_list;
+  for my $scd (@$list){
+    unless($scd eq $sag_name) { push @new_list, $scd };
+  }
+  $qe_state->{selected_aggregates}->{list} = \@new_list;
+  $qe_state->{selected_aggregates}->{index} = {};
+  for my $i (0 .. $#{$qe_state->{selected_aggregates}->{list}}){
+    my $an = $qe_state->{selected_aggregates}->{list}->[$i];
+    $qe_state->{selected_aggregates}->{index}->{$an} = $i;
+  }
+}
+sub QE_awd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  if($qe_state->{query_state} eq "running"){
+    return;
+  }
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  unless(exists $qe_state->{WhereConfig}->{state}){
+    $qe_state->{WhereConfig}->{state} = "idle";
+  }
+  if($qe_state->{WhereConfig}->{state} eq "idle"){
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_wb_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod" .
+      "('QE_StartAddingWhere',";
+    $button .= "'function=QE_StartAddingWhere',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"Add Where\">";
+    $http->queue("$button&nbsp;");
+    $qe_state->{WhereConfig}->{SelectedOperation} = "none";
+  } elsif ($qe_state->{WhereConfig}->{state} eq "first select"){
+    $http->queue("Select operation:&nbsp;&nbsp;&nbsp;");
+    $self->SelectDelegateByValue($http, {
+      op => 'QE_set_where_op',
+      id => "QE_set_where_op",
+      sync => $QueryEnginesSync,
+      width => 50,
+    });
+    my @ops;
+    push @ops, "none";
+    for my $k (keys %{$qe_conf->{wheres}}){
+      push @ops, $k;
+    }
+    unless(exists $qe_state->{WhereConfig}->{SelectedOperation}){
+      $qe_state->{WhereConfig}->{SelectedOperation} = "none";
+    }
+    for my $k (@ops){
+      $http->queue("<option value=\"$k\"");
+      if($k eq $qe_state->{WhereConfig}->{SelectedOperation}){
+        $http->queue(" selected")
+      }
+      $http->queue(">$k</option>");
+    }
+    $http->queue(qq{
+      </select>
+    });
+  } elsif ($qe_state->{WhereConfig}->{state} eq "second select"){
+    my $sel_op = $qe_state->{WhereConfig}->{SelectedOperation};
+    $http->queue("Selected operation: " .
+      "$sel_op&nbsp;&nbsp;");
+    $http->queue("Select column:&nbsp;&nbsp;");
+    $self->SelectDelegateByValue($http, {
+      op => 'QE_set_where_col',
+      id => "QE_set_where_col",
+      sync => $QueryEnginesSync,
+      width => 50,
+    });
+    my @cols;
+    push @cols, "none";
+    unless(exists $qe_state->{WhereConfig}->{SelectedColumn}){
+      $qe_state->{WhereConfig}->{SelectedColumn} = "none";
+    }
+    my $col_sel = $qe_state->{WhereConfig}->{SelectedColumn};
+    for my $k (keys %{$qe_conf->{wheres}->{$sel_op}->{columns}}){
+      push @cols, $k;
+    }
+    for my $k (@cols){
+      $http->queue("<option value=\"$k\"");
+      if($k eq $col_sel){
+        $http->queue(" selected")
+      }
+      $http->queue(">$k</option>");
+    }
+    $http->queue(qq{
+      </select>
+    });
+    #$http->queue("available_where_div_second_select");
+  } else {
+    die "unknown WhereConfig state";
+  }
+#  $http->queue("available_where_div");
+}
+sub QE_set_where_col{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $sel_col = $dyn->{value};
+  my $where_name = $sel_col . " $qew_state->{SelectedOperation}";
+  unless(exists $qew_state->{selected_wheres}){
+    $qew_state->{selected_wheres} = {
+      index => {},
+      list => [],
+    };
+  }
+  if(exists $qew_state->{selected_wheres}->{index}->{$sel_col}){
+    return;
+  }
+  push @{$qew_state->{selected_wheres}->{list}}, $where_name;
+  for my $i (0 .. $#{$qew_state->{selected_wheres}->{list}}){
+    my $v = $qew_state->{selected_wheres}->{list}->[$i];
+    $qew_state->{selected_wheres}->{index}->{$v} = $i;
+  }
+  $qew_state->{state} = "idle";
+}
+sub QE_set_where_op{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $sel_op = $dyn->{value};
+  $qe_state->{WhereConfig}->{SelectedOperation} = $sel_op;
+  $qe_state->{WhereConfig}->{state} = "second select";
+}
+sub QE_StartAddingWhere{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  $qe_state->{WhereConfig}->{state} = "first select";
+}
+sub QE_swd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  if($qed->{SelectedEngine} eq "none"){ return }
+  my $qes = $qed->{EngineStates}->{$qed->{SelectedEngine}};
+  if($qes->{query_state} eq "running"){
+    return;
+  }
+  my $qews = $qed->{EngineStates}->{$qed->{SelectedEngine}}->{WhereConfig};
+  my $conf = $qed->{Config}->{$qed->{SelectedEngine}};
+  $http->queue("Selected where clauses: &nbsp;");
+  for my $where (@{$qews->{selected_wheres}->{list}}){
+    $self->{Sequence} += 1;
+    my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+    $button .= "class=\"btn btn-default\" ";
+    $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_unselect_where',";
+    $button .= "'where_name=$where',";
+    $button .= "function() { $QueryEnginesSync })\" value=\"$where\">";
+    $http->queue("$button&nbsp;");
+  }
+}
+sub QE_unselect_where{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qew_state = $qed->{EngineStates}->{$qed->{SelectedEngine}}->{WhereConfig};
+  my $where = $dyn->{where_name};
+print STDERR "########################\n";
+print STDERR "Deleting where $where\n";
+  my @new_wheres;
+  where:
+  for my $w (@{$qew_state->{selected_wheres}->{list}}){
+    if($w eq $where) { next where }
+    push @new_wheres, $w;
+  }
+  $qew_state->{selected_wheres}->{index} = {};
+my $num_new = @new_wheres;
+my $num_old = @{$qew_state->{selected_wheres}->{list}};
+print STDERR "Num old: $num_old\nNum new: $num_new\n";
+  $qew_state->{selected_wheres}->{list} = \@new_wheres;
+  for my $i (0 .. $#{$qew_state->{selected_wheres}->{list}}){
+    my $v = $qew_state->{selected_wheres}->{list}->[$i];
+    $qew_state->{selected_wheres}->{index}->{$v} = $i;
+  }
+  for my $i (keys %{$qew_state->{where_selector_values}}){
+    unless(exists $qew_state->{selected_wheres}->{index}->{$i}){
+print STDERR "Deleted $i from where_selector_values\n";
+      delete $qew_state->{where_selector_values}->{$i};
+    }
+  }
+print STDERR "########################\n";
+}
+
+sub QE_qpd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  if($qe_name eq "none") {
+    $http->queue("no query engine selected");
+    return;
+  }
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  if($qe_state->{query_state} eq "running"){
+    return;
+  }
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $dr_conf = $qe_conf->{date_range_entry_boxes};
+  for my $eb (@{$dr_conf->{list}}){
+    my $fr_v = $self->QE_GetFromDateRange($qe_state);
+    my $dyn = {
+      name => $eb->{dyn}->{name},
+      size => $eb->{dyn}->{size},
+      length => $eb->{dyn}->{length},
+      op => $eb->{dyn}->{op},
+    };
+    my $gm = $eb->{dyn}->{value_fetch};
+    my $value = $self->$gm($qe_state);
+    $dyn->{init_value} = $value;
+    $http->queue("$eb->{name}:&nbsp;&nbsp;");
+    $self->LinkedDelegateEntryBox($http, $dyn,
+    "function() { $QueryEnginesSync }");
+    $http->queue("<br>");
+  }
+  my $qew_state = $qe_state->{WhereConfig};
+  if(
+    exists($qew_state->{selected_wheres}->{list}) &&
+    ref($qew_state->{selected_wheres}->{list}) eq "ARRAY" &&
+    $#{$qew_state->{selected_wheres}->{list}} >= 0
+  ){
+    print STDERR "Building selection boxes\n";
+    for my $wh (@{$qew_state->{selected_wheres}->{list}}){
+      my $init_value;
+      if(exists $qew_state->{where_selector_values}->{$wh}){
+        $init_value = $qew_state->{where_selector_values}->{$wh};
+      }
+      unless(defined $init_value) { $init_value = "none" }
+      $http->queue("$wh:&nbsp;&nbsp;");
+      my $dyn = {
+        name => $wh,
+        size => 64,
+        length => 64,
+        op => "QE_set_where_value",
+        init_value => $init_value,
+        index => $wh,
+      };
+      $self->LinkedDelegateEntryBox($http, $dyn,
+        "function() { $QueryEnginesSync }");
+      $http->queue("<br>");
+    }
+  } else {
+  }
+}
+sub QE_set_where_value{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  my $index = $dyn->{index};
+  my $value = $dyn->{value};
+  if($index =~ /like$/){
+    $qew_state->{where_selector_values}->{$index} = "$value";
+  } else {
+    $qew_state->{where_selector_values}->{$index} = $value;
+  }
+}
+sub QE_SetDateRangeFrom{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  if($qe_name eq "none") {
+    return;
+  }
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $value = $dyn->{value};
+  $qe_state->{DateRangeSelections}->{from} = $value;
+}
+sub QE_SetDateRangeTo{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  if($qe_name eq "none") {
+    return;
+  }
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $value = $dyn->{value};
+  $qe_state->{DateRangeSelections}->{to} = $value;
+}
+sub QE_GetFromDateRange{
+  my($self, $qe_state) = @_;
+  unless(exists ($qe_state->{DateRangeSelections})){
+    $qe_state->{DateRangeSelections} = {
+       from => "none",
+       to => "none",
+    };
+  }
+  return $qe_state->{DateRangeSelections}->{from};
+}
+sub QE_GetToDateRange{
+  my($self, $qe_state) = @_;
+  unless(exists ($qe_state->{DateRangeSelections})){
+    $qe_state->{DateRangeSelections} = {
+       from => "none",
+       to => "none",
+    };
+  }
+  return $qe_state->{DateRangeSelections}->{to};
+}
+sub QE_qrd_content{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  if($qe_name eq "none") {
+    $http->queue("no query engine selected");
+    return;
+  }
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  unless(exists $qe_state->{query_state}){
+   $qe_state->{query_state} = "building";
+  }
+  if($qe_state->{query_state} eq "building"){
+    return $self->QE_qrd_content_building($http, $dyn);
+  } elsif ($qe_state->{query_state} eq "running"){
+    return $self->QE_qrd_content_running($http, $dyn);
+  } else {
+    die "Bad query_state";
+  }
+}
+sub QE_qrd_content_building{
+  my($self, $http, $dyn) = @_;
+  #$http->queue("query_and_results_div");
+  my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+  $button .= "class=\"btn btn-default\" ";
+  $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_run_query',";
+  $button .= "'where_name=QE_run_query',";
+  $button .= "function() { $QueryEnginesSync })\" value=\"QE_run_query\">";
+  $http->queue("$button<br>");
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  if($qe_name eq "none") {
+    $http->queue("no query engine selected");
+    return;
+  }
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  unless(exists $qe_state->{query_state}){
+   $qe_state->{query_state} = "building";
+  }
+  if($qe_state->{query_state} eq "building"){
+    unless(exists($qe_state->{selected_columns}->{list})) {
+      $http->queue("no selected columns");
+      return;
+    }
+    my @selected_cols = @{$qe_state->{selected_columns}->{list}};
+    unless(exists $qe_state->{selected_aggregates}){
+      $qe_state->{selected_aggregates} = {
+         index => {},
+         list => [],
+      };
+    }
+    my @selected_aggregates = @{$qe_state->{selected_aggregates}->{list}};
+    my $select_clause = "";
+    my $group_by = "";
+    selected_col:
+    for my $i (0 .. $#selected_cols){
+      my $name = $selected_cols[$i];
+      my $cnf = $qe_conf->{selectable_columns}->{$name};
+      $select_clause .= "  $cnf->{code}";
+      if($#selected_aggregates >= 0){
+	$group_by .= "  $cnf->{group}";
+      }
+      if($i < $#selected_cols){
+	$select_clause .= ",\n";
+	unless($group_by eq ""){
+	  $group_by .= ",\n";
+	}
+	next selected_col;
+      }
+    }
+    my $agg_sel = "";
+    if($#selected_aggregates >= 0){
+      if($select_clause ne ""){
+        $select_clause .= ",\n";
+      }
+      for my $i (0 .. $#selected_aggregates){
+        my $name = $selected_aggregates[$i];
+        my $cnf = $qe_conf->{aggregates}->{$name};
+        my $code = $cnf->{code};
+        $agg_sel .= "  $code";
+        unless($i == $#selected_aggregates){
+          $agg_sel .= ",\n";
+        }
+      }
+    }
+    my $where_clauses = "";
+    if($#{$qew_state->{selected_wheres}->{list}} >= 0){
+      for my $i (0 .. $#{$qew_state->{selected_wheres}->{list}}){
+        my $where = $qew_state->{selected_wheres}->{list}->[$i];
+        my($col, $op) = split(" ", $where);
+        if($op eq "equals"){
+          $where_clauses .= "    $col = ?"
+        } elsif ($op eq "like"){
+          $where_clauses .= "    $col ilike ?"
+        } else {
+          print STDERR "Only handling equals and like right now";
+        }
+        unless($i == $#{$qew_state->{selected_wheres}->{list}}){
+          $where_clauses .= " and\n";
+        }
+      }
+    }
+    $qe_state->{building_query} = {
+      selected_cols => \@selected_cols,
+      selected_aggregates => \@selected_aggregates,
+      select_clause => $select_clause,
+      group_by => $group_by,
+      agg_selection => $agg_sel,
+      where_clauses => $where_clauses
+    };
+    if(defined $agg_sel){
+      $select_clause = $select_clause . $agg_sel;
+    }
+    $qe_state->{building_query}->{from} = $qe_conf->{from_clause};
+    my $query = "select\n" . "$select_clause\n" . 
+      "from\n" . "$qe_conf->{from_clause}\n" .
+      "where\n $qe_conf->{date_range_where}\n";
+    if($where_clauses ne ""){
+      $query .= "  and (\n$where_clauses\n  )\n";
+    }
+    if($group_by ne ""){
+      $query .=  "group by\n$group_by\n";
+    }
+    $http->queue("<pre>$query</pre>");
+    $qe_state->{full_query} = $query;
+  } else {
+    die "Query State changed";
+  }
+}
+sub QE_qrd_content_running{
+  my($self, $http, $dyn) = @_;
+  my $button = "<input type=\"button\" id=\"QE_sc_$self->{Sequence}\" ";
+  $button .= "class=\"btn btn-default\" ";
+  $button .= "onclick=\"javascript:PosdaGetRemoteMethod('QE_clear_query',";
+  $button .= "'where_name=QE_run_query',";
+  $button .= "function() { $QueryEnginesSync })\" value=\"QE_clear_query\">";
+  $http->queue("$button<br>");
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  my $qr = $qe_state->{running_query};
+  $http->queue("<table class=\"table table-striped table-condensed\"><tr>");
+  for my $i (@{$qr->{col_headers}}){
+    $http->queue("<th>$i</th>");
+  }
+  $http->queue("</tr>");
+  for my $row (@{$qr->{results}}){
+    $http->queue("<tr>");
+    for my $h (@{$qr->{col_headers}}){
+      $http->queue("<td>$row->{$h}</td>");
+    }
+    $http->queue("</tr>");
+  }
+  $http->queue("</table>");
+}
+sub QE_clear_query{
+  my($self, $http, $dyn) = @_;
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+  delete $qe_state->{running_query};
+  $qe_state->{query_state} = 'building';
+}
+sub QE_run_query{
+  my($self, $http, $dyn) = @_;
+open FOO, "psql -l|";
+#my @psqldashl;
+#while(my $line = <FOO>){
+##  push @psqldashl, $line;
+#}
+  my $qed = $self->{QueryEnginesData};
+  my $qe_name = $qed->{SelectedEngine};
+  my $qe_state = $qed->{EngineStates}->{$qe_name};
+#$qe_state->{psqldashl} = \@psqldashl;
+  my $qe_conf = $qed->{Config}->{$qe_name};
+  my $qew_state = $qe_state->{WhereConfig};
+  my %RunningQuery;
+  my @col_headers;
+  for my $c (@{$qe_state->{selected_columns}->{list}}){
+    push @col_headers, $qe_conf->{selectable_columns}->{$c}->{col_head};
+  }
+  for my $a (@{$qe_state->{selected_aggregates}->{list}}){
+    push @col_headers, $qe_conf->{aggregates}->{$a}->{col_head};
+  }
+  my @bind_values;
+  push @bind_values, $qe_state->{DateRangeSelections}->{from};
+  push @bind_values, $qe_state->{DateRangeSelections}->{to};
+  for my $bc (@{$qew_state->{selected_wheres}->{list}}){
+    my $sel_value;
+    if($bc =~ /like$/){
+      push(@bind_values, "%$qew_state->{where_selector_values}->{$bc}%");
+    } else {
+      push(@bind_values, $qew_state->{where_selector_values}->{$bc});
+    }
+  }
+  $qe_state->{running_query} = {
+    col_headers => \@col_headers,
+    bind_values => \@bind_values,
+  };
+  my $db_handle = DBI->connect(Database('posda_files'));
+
+  my $q = $db_handle->prepare($qe_state->{full_query});
+  print STDERR "prepare returned: $q\n";
+  my $n = $q->execute(@{$qe_state->{running_query}->{bind_values}});
+  print STDERR "execute returned $n\n";
+  my @results;
+  while(my $hash = $q->fetchrow_hashref()){
+    push @results, $hash;
+  }
+  $qe_state->{running_query}->{results} = \@results;
+  $qe_state->{query_state} = "running";
+}
+##  Query Engine Stuff (end)
+##############################################################f
 
 my $table_free_seq = 0;
 sub OpenTableFreePopup{

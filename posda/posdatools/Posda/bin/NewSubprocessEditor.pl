@@ -147,9 +147,10 @@ my $buff;
 #print STDERR "read $count bytes\n";
 #exit;
 my $edits = fd_retrieve(\*STDIN);
-#print STDERR "Edits: ";
-#Debug::GenPrint($dbg, $edits, 1);
-#print STDERR "\n#######################\n";
+print STDERR "\n#######################\n";
+print STDERR "Edits: ";
+Debug::GenPrint($dbg, $edits, 1);
+print STDERR "\n#######################\n";
 unless(exists $edits->{from_file}){ Error("No from_file in edits") }
 unless(-f $edits->{from_file}){ Error("file not found: $edits->{from_file}") }
 $results->{from_file} = $edits->{from_file};
@@ -235,6 +236,7 @@ for my $edit(@{$edits->{edits}}){
       for my $m (@$list){
         my $tag_inst = $ds->DefaultSubstitute($tag, $m);
         push(@effective_edits, [$tag_inst, $op, $arg1, $arg2]);
+print STDERR "pushing [$tag_inst, $op, $arg1, $arg2] to effective edits\n";
       }
     }
   }elsif($tag_mode eq "leaf"){
@@ -431,7 +433,23 @@ print STDERR "###################\nCommand:\n$cmd\n###############\n";
       };
       $ds->Insert("(7fe0,0010)", $pix);
     }
+  }elsif($eop eq "add_tag_to_seq"){
+    my $seq = $ds->Get($etag);
+    if(defined $seq){
+      my $seq_ref = ref($seq);
+      print STDERR "Got a seq of ref($seq_ref)\n";
+      my $count = @$seq;
+      print STDERR "has $count elements\n";
+      for my $n (0 .. $#{$seq}){
+        my $iref = ref($seq->[$n]);
+        my $item = $seq->[$n];
+        $item->Insert($earg1, $earg2);
+        print STDERR "item->Insert($earg1, $earg2)\n";
+      }
+    }
   }else{
+    Error("unknown eop ($eop)");
+print STDERR "unknown eop: $eop\n";
   }
 }
 my $xfr_stx = $try->{xfr_stx};

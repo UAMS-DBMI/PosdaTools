@@ -1,0 +1,151 @@
+{
+  "ImportQueryEngine": {
+    "name": "ImportQueryEngine",
+    "description": "For finding DICOM file Imports",
+    "from_clause": "  import_event ie\n  left join file_import fi using (import_event_id)\n  left join file_series ser using(file_id)\n  left join file_study std using(file_id)\n  join file_sop_common sc using(file_id)\n  join dicom_file df using(file_id)\n  left join ctp_file ctp using(file_id)\n  join file_patient pat using(file_id)",
+    "selectable_columns": {
+      "import_event_id": {
+      "code": "ie.import_event_id",
+      "tag": "import",
+        "group": "import_event_id",
+      "col_head": "import_event_id"
+      },
+      "import_comment": {
+        "code": "ie.import_comment",
+        "tag": "comment",
+        "group": "import_comment",
+        "col_head": "import_comment"
+      },
+      "collection": {
+        "code": "ctp.project_name as collection",
+        "tag": "coll",
+        "group": "collection",
+        "col_head": "collection"
+      },
+      "patient_id": {
+        "code": "pat.patient_id",
+        "tag": "pat",
+        "group": "patient_id",
+        "col_head": "patient_id"
+      },
+      "patient_name": {
+        "code": "pat.patient_name",
+        "tag": "pname",
+        "group": "patient_name",
+        "col_head": "patient_name"
+      },
+      "series_instance_uid": {
+        "code": "ser.series_instance_uid",
+        "tag": "series",
+        "group": "series_instance_uid",
+        "col_head": "series_instance_uid"
+      },
+      "study_instance_uid": {
+        "code": "std.study_instance_uid",
+        "tag": "study",
+        "group": "study_instance_uid",
+        "col_head": "study_instance_uid"
+      },
+      "sop_instance_uid": {
+        "code": "sc.sop_instance_uid",
+        "tag": "sop",
+        "group": "sop_instance_uid",
+        "col_head": "sop_instance_uid"
+      },
+      "file_id": {
+        "code": "fi.file_id",
+        "tag": "file",
+        "group": "file_id",
+        "col_head": "file_id"
+      },
+      "import_time": {
+        "code": "ie.import_time",
+        "tag": "itime",
+        "group": "import_time",
+        "col_head": "import_time"
+      },
+      "file_import_time": {
+        "code": "fi.file_import_time",
+        "tag": "ftime",
+        "group": "file_import_time",
+        "col_head": "file_import_time"
+      },
+    }, 
+    "aggregates": {
+      "num_patients": {
+        "code": "count(distinct pat.patient_id) as num_patients",
+        "col_head": "num_patients"
+      },
+      "num_studies": {
+        "code": "count(distinct std.study_instance_uid) as num_studies",
+        "col_head": "num_studies"
+      },
+      "num_series": {
+        "code": "count(distinct ser.series_instance_uid) as num_series",
+        "col_head": "num_series"
+      },
+      "num_files": {
+        "code": "count(distinct file_id) as num_files",
+        "col_head": "num_files"
+      }
+    },
+    "date_range_where": " file_import_time > ? and file_import_time < ?",
+    "date_range_entry_boxes": {
+       "index": {
+         "date_range_from": 0,
+         "date_range_to": 1
+       },
+       "list": [
+          {
+            "name": "date_range_from",
+            "dyn": {
+              "op": "QE_SetDateRangeFrom",
+              "size": 16,
+              "length": 20,
+              "name": "FromDateRangeInput",
+              "value_fetch": "QE_GetFromDateRange",
+            }
+          },
+          {
+            "name": "date_range_to",
+            "dyn": {
+              "op": "QE_SetDateRangeTo",
+              "size": 16,
+              "length": 20,
+              "name": "ToDateRangeInput",
+              "value_fetch": "QE_GetToDateRange",
+            }
+          }
+       ],
+    },
+    "wheres": {
+      "like": {
+        "columns": {
+          "import_comment" : 1,
+          "project_name" : 1,
+          "patient_id" : 1,
+          "patient_name" : 1,
+          "collection": 1,
+        }
+      },
+      "equals": {
+        "columns": {
+          "import_comment" : 1,
+          "project_name" : 1,
+          "patient_id" : 1,
+          "patient_name" : 1,
+          "study_instance_uid": 1,
+          "series_instance_uid": 1,
+          "sop_instance_uid": 1,
+          "collection": 1,
+        }
+      },
+    }
+  },
+  "UsageStatistics": {
+    "name": "UsageStatistics",
+    "description": "For exploring statistics of usage of Posda",
+    "from_clause": 
+"  subprocess_invocation si\n  left join background_subprocess bs using (subprocess_invocation_id)\n  left join activity_task_status ats using (subprocess_invocation_id)\n  left join work using (subprocess_invocation_id)"
+  }, 
+}
