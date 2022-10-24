@@ -1,5 +1,5 @@
 :operation_name: ConsolidateActivities
-:command_line: ConsolidateActivities.pl <?bkgrnd_id?> <activity_id> <notify>
+:command_line: ConsolidateActivities.py <?bkgrnd_id?> <activity_id> <notify>
 :operation_type: background_process
 :input_line_format: <activity_id>
 :tags: ['activity_timepoints']
