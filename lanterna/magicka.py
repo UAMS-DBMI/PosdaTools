@@ -8,6 +8,7 @@ import hashlib
 from enum import Enum
 from typing import List
 import time
+import sys
 
 import requests
 import fire
@@ -44,28 +45,39 @@ def add_file(filename: str) -> int:
 def convert_tempfiles_to_projection(directory: str, 
                                     output_filename: str, 
                                     projection_type: ProjectionType) -> None:
-    subprocess.call([
+    # print(f"converting {directory} to {output_filename}")
+    commands = [
         'convert',
-        "-define", "dcm:rescale=true",
-        "-define", "dcm:unsigned=true",
-        f'{directory}/*.png',
+        # "-define", "dcm:rescale=true",
+        # "-define", "dcm:unsigned=true",
+        f'{directory}/*',
         projection_type.value,
         output_filename
-    ])
+    ]
+    # print(">>", commands)
+    subprocess.check_call(commands)
 
 def convert_filelist_to_tempfiles(files: list, output_directory: str) -> None:
     for i, filename in enumerate(files):
-        print(i)
-        subprocess.call([
-            'convert',
-            "-define", "dcm:rescale=true",
-            "-define", "dcm:unsigned=true",
-            filename,
-            f"{output_directory}/{i}.png"
-        ])
+        # print(i, filename)
+        try:
+            subprocess.check_call([
+                'convert',
+                "-define", "dcm:rescale=true",
+                "-define", "dcm:unsigned=true",
+                filename,
+                f"{output_directory}/{i}.jpg"
+            ])
+        except:
+            print("convert failed due to previous error, trying dcm4che...")
+            subprocess.check_call([
+                '/opt/dcm4che-5.22.1/bin/dcm2jpg',
+                filename,
+                f"{output_directory}/{i}.jpg"
+            ])
 
 def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: str) -> None:
-    subprocess.call([
+    commands = [
         'montage',
         max_file,
         avg_file,
@@ -73,7 +85,9 @@ def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: s
         '-geometry',
         '512x512+4+4',
         output_filename
-    ])
+    ]
+    # print(">>", commands)
+    subprocess.call(commands)
 
 def render_projection_from_filelist(files: list) -> str:
     """Render a full projection montage from the given list of files
@@ -85,11 +99,11 @@ def render_projection_from_filelist(files: list) -> str:
     temp_dir = tempfile.TemporaryDirectory()
     convert_filelist_to_tempfiles(files, temp_dir.name)
 
-    # by using jpeg for the output format, we avoid including the
+    # by using png for the output format, we avoid including the
     # rendered projections in the subsequent renders
-    max_file = os.path.join(temp_dir.name, "max.jpg")
-    min_file = os.path.join(temp_dir.name, "min.jpg")
-    avg_file = os.path.join(temp_dir.name, "avg.jpg")
+    max_file = os.path.join(temp_dir.name, "max.png")
+    min_file = os.path.join(temp_dir.name, "min.png")
+    avg_file = os.path.join(temp_dir.name, "avg.png")
 
     convert_tempfiles_to_projection(temp_dir.name, max_file, ProjectionType.MAX)
     convert_tempfiles_to_projection(temp_dir.name, min_file, ProjectionType.MIN)
@@ -99,7 +113,6 @@ def render_projection_from_filelist(files: list) -> str:
     make_montage(min_file, max_file, avg_file, output_filename)
 
     temp_dir.cleanup()
-
     return output_filename
 
 
@@ -232,13 +245,18 @@ def process_all_unprocessed():
             log_error(cur, iec, e)
 
 
-def main(visual_review_instance_id: int = None) -> None:
+def main(visual_review_instance_id: int = None, test: bool = False) -> None:
     """If visual_review_instance_id is specified, 
     process that Visual Review and exit.
 
     If visual_review_instance_id is not specified,
     begin processing all IECs in ReadyToProcess status,
-    and never exit."""
+    and never exit.
+
+    If test is specified, run some tests instead."""
+
+    if test:
+        return run_test()
 
     if visual_review_instance_id is not None:
         print("Processing single VR...")
@@ -247,13 +265,13 @@ def main(visual_review_instance_id: int = None) -> None:
         print("Processing all unprocessed IECs...")
         process_all_unprocessed()
 
-def test():
+def run_test():
     # f = render_projection_from_filelist("test-filelist")
     # print(f)
     conn = connect()
     cur = conn.cursor()
 
-    render_projection(cur, 399696)
+    render_projection(cur, 6)
 
     conn.close()
 
