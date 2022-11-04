@@ -1,5 +1,12 @@
 #!/usr/bin/python3 -u
+USAGE="""\
+Render MIP projections for review in Kaleidoscope.
 
+By default, run in a loop and process all waiting IECs.
+
+See optional arguments for more ways to run.
+
+"""
 import psycopg2
 import tempfile
 import subprocess
@@ -9,9 +16,12 @@ from enum import Enum
 from typing import List
 import time
 import sys
+import shutil
+import logging
 
 import requests
-import fire
+import argparse
+
 
 URL = os.environ.get("POSDA_INTERNAL_API_URL") + '/v1/import/'
 DEBUG = True
@@ -39,37 +49,62 @@ def add_file(filename: str) -> int:
             resp = r.json()
             return resp['file_id']
         except:
-            print(r.content)
+            logging.error(r.content)
             raise
+
+def log_dir_contents(directory):
+    logging.error("Running identify on all files in the temp dir now:")
+    for f in os.scandir(directory):
+        subprocess.check_call([
+            'identify',
+            os.path.join(directory, f.name)
+        ])
 
 def convert_tempfiles_to_projection(directory: str, 
                                     output_filename: str, 
                                     projection_type: ProjectionType) -> None:
-    # print(f"converting {directory} to {output_filename}")
+    logging.debug(f"converting {directory} to {output_filename}")
     commands = [
         'convert',
-        # "-define", "dcm:rescale=true",
-        # "-define", "dcm:unsigned=true",
-        f'{directory}/*',
+        f'{directory}/*.jpg',
         projection_type.value,
         output_filename
     ]
-    # print(">>", commands)
-    subprocess.check_call(commands)
+    logging.debug(f">> {commands}")
+    try:
+        subprocess.check_call(commands)
+    except subprocess.CalledProcessError as e:
+        logging.error("converting to projection failed!")
+        log_dir_contents(directory)
+        raise e
+
 
 def convert_filelist_to_tempfiles(files: list, output_directory: str) -> None:
     for i, filename in enumerate(files):
-        # print(i, filename)
+        logging.debug(f"{i}: {filename}")
+
+        # here we output into a temp dir for this file 
+        # because if IM fails, it may produce extra bogus files that
+        # we need to ignore..
         try:
-            subprocess.check_call([
-                'convert',
-                "-define", "dcm:rescale=true",
-                "-define", "dcm:unsigned=true",
-                filename,
-                f"{output_directory}/{i}.jpg"
-            ])
+            with tempfile.TemporaryDirectory() as tempdir:
+                outfile = os.path.join(tempdir, f"{i}.jpg")
+                final_location = os.path.join(output_directory, f"{i}.jpg")
+                subprocess.check_call([
+                    'convert',
+                    "-define", "dcm:rescale=true",
+                    "-define", "dcm:unsigned=true",
+                    filename,
+                    outfile
+                ])
+                # copy the single produced output file into the other directory
+                # if an exception occurrs in here, no file will end up in 
+                # the true output directory
+                logging.debug(f"copying from {outfile} to {final_location}")
+                shutil.copy(outfile, final_location)
+
         except:
-            print("convert failed due to previous error, trying dcm4che...")
+            logging.info("convert failed due to previous error, trying dcm4che...")
             subprocess.check_call([
                 '/opt/dcm4che-5.22.1/bin/dcm2jpg',
                 filename,
@@ -86,7 +121,7 @@ def make_montage(min_file: str, max_file: str, avg_file: str, output_filename: s
         '512x512+4+4',
         output_filename
     ]
-    # print(">>", commands)
+    logging.debug(f">> {commands}")
     subprocess.call(commands)
 
 def render_projection_from_filelist(files: list) -> str:
@@ -126,7 +161,7 @@ def render_projection(cursor, iec: int) -> None:
     * generate a final montage
     """
 
-    print(f"Rendering projection for IEC: {iec}.")
+    logging.info(f"Rendering projection for IEC: {iec}.")
     # look up the input files
     cursor.execute("""
         select root_path || '/' || rel_path as path
@@ -139,21 +174,15 @@ def render_projection(cursor, iec: int) -> None:
     # get their paths
     # assemble into a filelist
     with tempfile.NamedTemporaryFile(delete=False) as outfile:
-        # for i, (path,) in enumerate(cursor):
-        #     outfile.write(path.encode())
-        #     outfile.write(b'\n')
-        # outfile.close()
-
         files = [path.encode() for path, in cursor]
 
-        print(f"Found {len(files)} images in this IEC.")
+        logging.info(f"Found {len(files)} images in this IEC.")
 
         projection_filename = render_projection_from_filelist(files)
 
         # import final file into posda and get file_id
         file_id = add_file(projection_filename)
-        if DEBUG:
-            print(f"file_id: {file_id}")
+        logging.debug(f"file_id: {file_id}")
 
         # insert row into output_image table
         cursor.execute("""
@@ -187,9 +216,9 @@ def process_single_vr(visual_review_instance_id: int) -> None:
 
 
     iecs = get_iecs_in_visual_review(cur, visual_review_instance_id)
-    print(f"Found {len(iecs)} IECs in visual review {visual_review_instance_id}.")
+    logging.info(f"Found {len(iecs)} IECs in visual review {visual_review_instance_id}.")
     if len(iecs) > 0:
-        print("Rendering projections...")
+        logging.info("Rendering projections...")
 
     for iec in iecs:
         render_projection(cur, iec)
@@ -205,7 +234,7 @@ def connect():
 
 
 def log_error(cur, iec: int, e: Exception):
-    print(f"Magicka ERROR: IEC {iec} failed, err is: {e}")
+    logging.error(f"Magicka ERROR: IEC {iec} failed, err is: {e}")
     query = """
         update image_equivalence_class i
         set processing_status = 'error'
@@ -244,39 +273,44 @@ def process_all_unprocessed():
         except Exception as e:
             log_error(cur, iec, e)
 
+def parse_args():
+    parser = argparse.ArgumentParser(description=USAGE)
+    parser.add_argument('--vr', help='a visual_review_instance_id to run for')
+    parser.add_argument('--iec', help='an IEC to run for')
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='be extremely verbose'
+    )
 
-def main(visual_review_instance_id: int = None, test: bool = False) -> None:
-    """If visual_review_instance_id is specified, 
-    process that Visual Review and exit.
+    return parser.parse_args()
 
-    If visual_review_instance_id is not specified,
-    begin processing all IECs in ReadyToProcess status,
-    and never exit.
-
-    If test is specified, run some tests instead."""
-
-    if test:
-        return run_test()
-
-    if visual_review_instance_id is not None:
-        print("Processing single VR...")
-        process_single_vr(visual_review_instance_id)
+def main(args) -> None:
+    if args.vr is not None:
+        logging.info(f"Processing a single VR: {args.vr}")
+        process_single_vr(args.vr)
+    elif args.iec is not None:
+        logging.info(f"Processing a single IEC: {args.iec}")
+        cur = connect().cursor()
+        render_projection(cur, args.iec)
     else:
-        print("Processing all unprocessed IECs...")
+        logging.info("Processing all unprocessed IECs...")
         process_all_unprocessed()
 
-def run_test():
-    # f = render_projection_from_filelist("test-filelist")
-    # print(f)
-    conn = connect()
-    cur = conn.cursor()
+def configure_logging(args):
+    """Setup sane default logging settings"""
+    if args.debug:
+        format = "%(levelname)s:%(asctime)s:%(lineno)s:%(funcName)s:%(message)s"
 
-    render_projection(cur, 6)
+        logging.basicConfig(level=logging.DEBUG,
+                            format=format,
+                            datefmt='%Y-%m-%d/%H:%M:%S')
 
-    conn.close()
-
+    else:
+        logging.basicConfig(level=logging.INFO,
+                            format="%(message)s")
 
 if __name__ == '__main__':
-    # main(2)
-    fire.Fire(main)
-    # test()
+    args = parse_args()
+    configure_logging(args)
+    main(args)
