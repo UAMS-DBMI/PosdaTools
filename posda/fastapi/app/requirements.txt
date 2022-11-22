@@ -8,3 +8,4 @@ uvicorn
 jinja2
 zipstream
 python-multipart
+chardet
