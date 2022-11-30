@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, Response
 from pydantic import BaseModel
 from typing import List
 import datetime
@@ -27,4 +27,7 @@ async def get_reviewed_percentage_for_vr(system_key: str,
     #         processing_status
     # """
     # return await db.fetch(query,[visual_review_instance_id])
-    return HTMLResponse(f"<i>Test Message for {system_key}</i>")
+    return HTMLResponse(f"<i>Test Message for {system_key}</i>",
+                        headers={
+                            "Access-Control-Allow-Origin": '*',
+                        })
