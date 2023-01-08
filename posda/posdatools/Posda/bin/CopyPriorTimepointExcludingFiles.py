@@ -105,19 +105,22 @@ def main(args):
 
     old_tp_files = get_files_in_timepoint(db, args.old_timepoint_id)
 
-    print(f"Old timepoint has {len(old_tp_files)} files.")
-    background.set_activity_status(
-        f"Read files from old tp, found {len(old_tp_files)}")
+    if len(old_tp_files) <= 0:
+        print("Old timepoint is empty! Aborting!")
+    else:
+        print(f"Old timepoint has {len(old_tp_files)} files.")
+        background.set_activity_status(
+            f"Read files from old tp, found {len(old_tp_files)}")
 
-    print(f"Removing {len(input_lines)} files...")
-    old_tp_files = old_tp_files - input_lines
+        print(f"Removing {len(input_lines)} files...")
+        old_tp_files = old_tp_files - input_lines
 
-    print(f"Adding {len(old_tp_files)} files to new timepoint...")
+        print(f"Adding {len(old_tp_files)} files to new timepoint...")
 
-    new_tp_id = create_activity_timepoint(args, db)
+        new_tp_id = create_activity_timepoint(args, db)
 
-    print(f"New activity_timepoint_id is {new_tp_id}")
-    insert_files_into_timepoint(db, new_tp_id, old_tp_files)
+        print(f"New activity_timepoint_id is {new_tp_id}")
+        insert_files_into_timepoint(db, new_tp_id, old_tp_files)
 
     background.finish("Complete")
 
