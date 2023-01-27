@@ -150,6 +150,22 @@ async def getRecord(submission_id: int, db: Database = Depends()):
            """
     return await db.fetch(query, [submission_id])
 
+@router.put("/updateRecord/{submission_id}/{field}/{value}")
+async def updateRecord(submission_id: int, value: str,  field: str, db: Database = Depends()):
+    if field not in ["body_part", "collection_name", "collection_code", "site_name", "site_code", "patient_id_prefix", "access_type", "baseline_date", "date_shift"]:
+        return JSONResponse(
+            {'message': "Your field is not valid\n"},
+            status_code=400)
+    else:
+        query = f"""\
+            update
+                submissions
+            set {field} = $1
+            where
+                submission_id = $2;
+               """
+        return await db.fetch(query, [value, submission_id])
+
 class Submission(BaseModel):
     input_site_code: int
     input_site_name: str
