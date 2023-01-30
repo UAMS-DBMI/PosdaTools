@@ -64,7 +64,7 @@ def main(args):
                     process(str, file_id) #import thumbnail
         elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
             mytif = TiffFile(svsfilepath)
-            saveTiffMetaData(mytif, file_id)
+            #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 data = page.asarray()
                 str = "/tmp/{}_page{}.jpg".format(file_id,i)
