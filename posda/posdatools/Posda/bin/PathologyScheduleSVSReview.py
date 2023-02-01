@@ -75,7 +75,7 @@ def main(args):
                 mytif2.thumbnail(size) #change copy into a thumbnail
                 mytif2.save(str)
                 #print(f"Creating a tif preview")
-                process(str, file_id,vr_id) #import thumbnail
+                process(str, file_id) #import thumbnail
         elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp"):
                 myimg = Image.open(svsfilepath)
                 str = "/tmp/{}_thumb.jpg".format(file_id)
