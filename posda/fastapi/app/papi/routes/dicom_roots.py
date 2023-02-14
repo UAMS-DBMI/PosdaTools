@@ -150,6 +150,24 @@ async def getRecord(submission_id: int, db: Database = Depends()):
            """
     return await db.fetch(query, [submission_id])
 
+@router.get("/getSitePairs")
+async def getSitePairs( db: Database = Depends()):
+    query = """\
+        select
+            site_code || '-' || site_name
+        from
+            site_codes c;"""
+    return await db.fetch(query)
+
+@router.get("/getCollectionPairs")
+async def getCollectionPairs( db: Database = Depends()):
+    query = """\
+        select
+            collection_code || '-' || collection_name
+        from
+            collection_codes c;"""
+    return await db.fetch(query)
+
 @router.put("/updateRecord/{submission_id}/{field}/{value}")
 async def updateRecord(submission_id: int, value: str,  field: str, db: Database = Depends()):
     if field not in ["body_part", "collection_name", "collection_code", "site_name", "site_code", "patient_id_prefix", "access_type", "baseline_date", "date_shift"]:

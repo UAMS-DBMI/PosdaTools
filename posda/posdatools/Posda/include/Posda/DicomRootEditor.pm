@@ -178,6 +178,7 @@ sub ContentResponse {
      name => "site_box",
      op => "SetArg",
      });
+   #$self->RenderSiteDropDown($self,$http,$dyn);
    $self->NotSoSimpleButton($http, {
      op => "RefreshSite",
      caption => "Check Site Info",
@@ -279,4 +280,29 @@ sub RefreshSite{
 }
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;
+}
+
+#causign errors
+sub RenderSiteDropDown {
+  my ($self, $http, $dyn) = @_;
+  my @sitelist;
+  push @sitelist, ["<none>", "----- No Site Selected ----"];
+  $self->{client}->GET("$self->{MY_API_URL}/getSitePairs");
+  my $search_r  = decode_json($self->{client}->responseContent());
+  my $j = 0;
+    for( $j < $search_r.length){
+     push @sitelist, [$j]
+  }
+  $self->SelectDelegateByValue($http, {
+    op => 'RefreshSite',
+    id => "SelectSiteDropDown",
+    sync => "Update();",
+  });
+  for my $m (@sitelist){
+    $http->queue("<option value=\"$m->[0]\"");
+    $http->queue(">$m->[1]</option>");
+  }
+  $http->queue(qq{
+    </select>
+  });
 }
