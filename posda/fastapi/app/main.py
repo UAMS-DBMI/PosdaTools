@@ -73,7 +73,7 @@ router_v1.include_router(deface.router, prefix="/deface")
 router_v1.include_router(edits.router, prefix="/edits")
 router_v1.include_router(sysstatus.router, prefix="/sysstatus")
 
-app.include_router(auth.router)
+app.include_router(auth.router, prefix="/auth")
 app.include_router(router_v1, prefix="/v1")
 # For backward compatiblity, also include the download router at the root
 app.include_router(download.router)
