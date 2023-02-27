@@ -2,58 +2,49 @@ from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from starlette.status import HTTP_401_UNAUTHORIZED
+import uuid
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
-        "disabled": False,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-    },
-}
+from ..util import Database
+from ..util.password import is_valid
+from ..util.redisqueue import get_redis_connection
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
-
+TOKEN_EXPIRE=(1 * 60 * 60) # 1 hour
 
 class User(BaseModel):
+    user_id: int
     username: str
-    email: str = None
     full_name: str = None
     disabled: bool = None
-
 
 # Extend the User object to add a field
 class UserInDB(User):
     hashed_password: str
 
+async def get_user(db, username: str):
+    user_dict = await get_user_from_database(db, username)
+    if user_dict:
+        return User(**user_dict)
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
 
+async def decode_token(db, token):
+    redis_db = get_redis_connection()
+    
+    username = redis_db.get(token)
+    if username is None:
+        return None
 
-def fake_decode_token(token):
-    # This doesn't provide any security at all
-    # Check the next version
-    user = get_user(fake_users_db, token)
+    redis_db.expire(token, TOKEN_EXPIRE)
+
+    user = await get_user(db, username)
     return user
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    user = fake_decode_token(token)
+async def get_current_user(token: str = Depends(oauth2_scheme),
+                           db: Database = Depends()):
+    user = await decode_token(db, token)
     if not user:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
@@ -68,15 +59,30 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
+async def get_user_from_database(db: Database, username: str):
+    query = """
+        select
+            user_id,
+            user_name as username,
+            full_name,
+            password as hashed_password,
+            disabled
+        from auth.users
+        where user_name = $1
+    """
+
+    return await db.fetch_one(query, [username])
 
 @router.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(form_data: OAuth2PasswordRequestForm = Depends(),
+                db: Database = Depends()):
     # Here we should make a token, and store it in Redis with an expire
     # then extend the expire every time it is retrieved?
 
-    # test if this user exists
-    # TODO: this should be checking against the real db
-    user_dict = fake_users_db.get(form_data.username)
+    redis_db = get_redis_connection()
+
+    # retrieve this user from the database
+    user_dict = await get_user_from_database(db, form_data.username)
 
     # fail if the user didn't exist
     if not user_dict:
@@ -85,22 +91,22 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     # instantiate the user (this is a subclass of User, see above)
     user = UserInDB(**user_dict)
 
-    # hash the supplied password
-    # TODO: make this some real hashing, whatever Posda currently uses?
-    # TODO: go figure out what posda is currently using and replicate here
-    hashed_password = fake_hash_password(form_data.password)
-
     # fail if the password was wrong
-    if not hashed_password == user.hashed_password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    # if not hashed_password == user.hashed_password:
+    if not is_valid(user.hashed_password, form_data.password):
+        raise HTTPException(status_code=400,
+                            detail="Incorrect username or password")
 
     # return a token if everything was good
-    # TODO: this needs to create a true random token here (maybe just a UUID)
-    # TODO: the token also must be inserted into Redis, with the username,
-    # TODO: and an expiration date
-    return {"access_token": user.username, "token_type": "bearer"}
+    access_token = str(uuid.uuid4())
+
+    # add the token to reids with an expiration (to auto log out)
+    redis_db.set(access_token, user.username, ex=TOKEN_EXPIRE)
+
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
+# These are just test functions
 @router.get("/users/me")
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
@@ -109,5 +115,5 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
 async def testpoint():
     return {"message":"everything looks good"}
 
-
+# TODO: do we really want this here?
 logged_in_user = Depends(get_current_active_user)

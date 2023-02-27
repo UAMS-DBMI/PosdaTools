@@ -17,7 +17,8 @@ async def get_all_studies():
     raise HTTPException(detail="listing all series is not allowed", status_code=401)
 
 @router.get("/{series_instance_uid}")
-async def get_single_series(series_instance_uid: str, db: Database = Depends()):
+async def get_single_series(series_instance_uid: str, db: Database = Depends(),
+        user: User = logged_in_user):
     query = """
         select distinct
             series_instance_uid,
