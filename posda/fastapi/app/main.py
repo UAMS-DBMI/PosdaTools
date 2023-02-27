@@ -43,7 +43,7 @@ if not os.path.exists(importer.TEMP_STORAGE_PATH):
     os.makedirs(importer.TEMP_STORAGE_PATH)
 
 
-app = FastAPI()
+app = FastAPI(root_path="/papi")
 
 @app.on_event("startup")
 async def startup_event():

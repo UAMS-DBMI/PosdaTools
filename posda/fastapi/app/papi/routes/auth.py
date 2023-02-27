@@ -9,7 +9,7 @@ from ..util.password import is_valid
 from ..util.redisqueue import get_redis_connection
 
 router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/papi/auth/token")
 
 TOKEN_EXPIRE=(1 * 60 * 60) # 1 hour
 
