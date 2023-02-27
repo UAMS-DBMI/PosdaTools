@@ -9,8 +9,10 @@ use Posda::BgColor;
 use PipeChildren;
 use IO::Socket::INET;
 use Debug;
+
 my $dbg = sub { print @_ };
 package AppController::JsChildProcess;
+use Data::Dumper;
 use Fcntl;
 use vars qw( @ISA );
 @ISA = ("Posda::HttpApp::JsController");
@@ -26,7 +28,7 @@ my $expander = <<EOF;
 <?dyn="Footer"?>
 EOF
 sub new{
-  my($class, $sess, $path, $process_desc, $host) = @_;
+  my($class, $sess, $path, $process_desc, $host, $hashed_token) = @_;
   my $this = Posda::HttpApp::JsController->new($sess, $path);
   $this->{title} = "SubProcessHandler";
   $this->{color} = Posda::BgColor::GetUnusedColor;
@@ -35,7 +37,11 @@ sub new{
   $this->{RealUser} = $this->{AuthUser};
   $this->{ImportsFromAbove}->{GetSocketList} = 1;
   $this->{expander} = $expander;
-  $this->{hashed_token} = "xxxxxxx";
+  if (not defined $hashed_token) {
+      $this->{hashed_token} = "xxxxxxx";
+  } else {
+      $this->{hashed_token} = $hashed_token;
+  }
   bless $this, $class;
   $this->{host} = $host;
   if($this->{host} =~ /^(.*):(.*)$/){
@@ -180,6 +186,7 @@ sub TryNextSocket{
     $this->{Command} =~ s/<hashed_token>/$this->{hashed_token}/;
     $this->{Command} =~ s/<color>/"$this->{color}"/;
     $this->{Command} =~ s/<user>/"$this->{AuthUser}"/;
+
     my $p_stdout = PipeChildren::GetSocketPair(my $to_stdout, my $from_stdout);
     my $p_stderr = PipeChildren::GetSocketPair(my $to_stderr, my $from_stderr);
     $this->{child_pid} = fork();

@@ -1,6 +1,7 @@
 package Posda::HttpApp::Authenticator;
 
 use Modern::Perl '2010';
+use Data::Dumper;
 
 use Storable qw( store retrieve store_fd fd_retrieve );
 
@@ -64,9 +65,10 @@ sub AppControllerLogin {
   my $passwd = $dyn->{password};
   my $user = lc($dyn->{name});
 
-  if (Posda::Auth::is_authorized($user, $passwd)) {
+  my $token_or_failure = Posda::Auth::is_authorized($user, $passwd);
+  if ($token_or_failure) {
     print STDERR "Login succeeded.\n";
-    $this->SetUserPrivs($user);
+    $this->SetUserPrivs($user, $token_or_failure);
     $this->AutoRefresh;
   } else {
     print STDERR "Login failed!\n";
@@ -91,9 +93,13 @@ sub DbFileValidation {
   return 1;
 }
 sub SetUserPrivs {
-  my($this, $user) = @_;
+  my($this, $user, $token) = @_;
   my $sess = $main::HTTP_APP_SINGLETON->GetSession($this->{session});
   $sess->{AuthUser} = $user;
+  if (defined $token) {
+      $this->{Token} = $token;
+  }
+
   $sess->{permissions} = Posda::Permissions->new($user); 
   $this->{permissions} = $sess->{permissions};
   $this->{user_has_permission} = $sess->{permissions}->has_permission_partial($this->{Environment}->{ApplicationName});

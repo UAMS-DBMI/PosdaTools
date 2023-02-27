@@ -70,13 +70,15 @@ sub new {
   my $session = $this->get_session;
   $session->{DieOnTimeout} = 1;
   if(
-    exists $main::HTTP_APP_SINGLETON->{token} &&
-    defined $main::HTTP_APP_SINGLETON->{token}
+    exists $main::HTTP_APP_SINGLETON->{user} &&
+    defined $main::HTTP_APP_SINGLETON->{user}
   ){
     $session->{logged_in} = 1;
-    $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{token};
-    $session->{real_user} = $main::HTTP_APP_SINGLETON->{token};
-    $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{token});
+    $session->{AuthUser} = $main::HTTP_APP_SINGLETON->{user};
+    $session->{real_user} = $main::HTTP_APP_SINGLETON->{user};
+    $session->{Token} = $main::HTTP_APP_SINGLETON->{token};
+    $this->{Token} = $main::HTTP_APP_SINGLETON->{token};
+    $this->SetUserPrivs($main::HTTP_APP_SINGLETON->{user});
   }
   if($this->{user_has_permission}('debug')){
     Posda::HttpApp::DebugWindow->new($sess, "Debug");

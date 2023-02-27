@@ -841,7 +841,7 @@ sub StartJsChildProcess{
   my $win_name = $child_path;
   $win_name =~ s/\//_/g;
   AppController::JsChildProcess->new($this->{session}, $child_path,
-     $process_desc, $host);
+     $process_desc, $host, $this->{Token});
   my $url = "Refresh?obj_path=$child_path";
   my $win_width = $process_desc->{w} + 50;
   my $win_height = $process_desc->{h} + 150;
