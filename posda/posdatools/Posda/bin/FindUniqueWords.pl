@@ -68,7 +68,7 @@ sub MakeEleFun{
         $num_text_values += 1;
         next value;
       }
-      if($v eq "") { 
+      if($v eq "") {
         $values->{"<empty>"}->{$n_sig}->{$ele->{VR}} = 1;
         $num_text_values += 1;
         next value;
@@ -76,7 +76,7 @@ sub MakeEleFun{
       if($n_sig eq '(0025,"GEMS_SERS_01",1b)'){
         $v = UncompressGeProtocolDataBlock($v);
       }
-      unless($v =~ /^[[:print:][:cntrl:]]+$/){ next value }
+      unless($v =~ /^[[:print:][:cntrl:]]+$/u){ next value }
 #      if($v =~ /^[0-9\.\+\-Ee ]+$/) { next value }
       if($v =~ /\n/){
         my @values = split(/[\n,']/, $v);
