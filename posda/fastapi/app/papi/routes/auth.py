@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from starlette.status import HTTP_401_UNAUTHORIZED
 import uuid
+import os
 
 from ..util import Database
 from ..util.password import is_valid
@@ -12,6 +13,11 @@ router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/papi/auth/token")
 
 TOKEN_EXPIRE=(1 * 60 * 60) # 1 hour
+
+API_SYSTEM_TOKEN = os.environ.get(
+    'POSDA_API_SYSTEM_TOKEN',
+    "nologinallowed"
+)
 
 class User(BaseModel):
     user_id: int
@@ -31,6 +37,9 @@ async def get_user(db, username: str):
 
 async def decode_token(db, token):
     redis_db = get_redis_connection()
+
+    if token == API_SYSTEM_TOKEN:
+        return await get_user(db, "system")
     
     username = redis_db.get(token)
     if username is None:
