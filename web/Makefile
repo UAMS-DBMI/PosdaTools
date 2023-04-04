@@ -7,8 +7,8 @@ default: build
 build: last_built 
 
 last_built: Dockerfile default.conf
-	cd ../docs && mkdocs build
-	cd ../ohif && make
+	#cd ../docs && mkdocs build
+	#cd ../ohif && make
 	docker build . -t ${IMAGE_NAME}:${TAG}k -t ${IMAGE_NAME}:kubes
 	date > last_built
 

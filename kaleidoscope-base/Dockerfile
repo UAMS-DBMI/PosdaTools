@@ -1,6 +1,6 @@
 # k-base
 
-FROM alpine:latest
+FROM alpine:3.8
 
 # Base system deps
 RUN apk --update add alpine-sdk \
