@@ -7,11 +7,14 @@ from pprint import pformat
 from jinja2 import Template as JinjaTemplate
 from urllib.parse import quote_plus
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
 from ..util import Database
 from ..util.evil import evil_eval
+
+router = APIRouter(
+    tags=["Send to Public Status"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/")
 async def get_all_studies():

@@ -2,12 +2,18 @@ from fastapi import Depends, APIRouter, HTTPException
 from starlette.requests import Request
 from starlette.responses import StreamingResponse
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
 from ..util import asynctar
 
 from io import BytesIO
+
+router = APIRouter(
+    tags=["Other"],
+    # NOTE: putting this here makes ALL routes in this file REQUIRE login!
+    # If you want to add one that doesn't, you would have to remove this
+    # and add the dependency to all routes except the new one
+    dependencies=[logged_in_user]
+)
 
 @router.get("/streamtest")
 async def stream_test():
@@ -50,8 +56,9 @@ async def test_me(
     return user_dict
 
 @router.get("/query/{query_name}/execute")
-async def request_Test(query_name: str, request: Request):
+async def request_Test(query_name: str, request: Request, user: User = logged_in_user):
     return {
         "query": query_name,
-        "params": dict(request.query_params)
+        "params": dict(request.query_params),
+        "user": user,
     }

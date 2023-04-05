@@ -6,7 +6,10 @@ from starlette.responses import Response, FileResponse
 from .auth import logged_in_user, User
 from ..util import Database, asynctar
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Visual Review Status"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/")
 async def test():

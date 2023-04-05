@@ -2,21 +2,35 @@ from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
-
 from ..util import Database
 
+router = APIRouter(
+    tags=["Collections"],
+    dependencies=[logged_in_user]
+)
 
 class CollectionInfo(BaseModel):
     collection: str
     site: str
     file_count: int
 
+class CollectionSiteInfo(CollectionInfo):
+    patient_count: int
 
 @router.get("/", response_model=List[CollectionInfo])
-async def get_all_collections(collection: str = None, site: str = None, db: Database = Depends()) -> List[CollectionInfo]:
+async def get_all_collections(
+    collection: str = None,
+    site: str = None,
+    db: Database = Depends()) -> List[CollectionInfo]:
+    """
+    Get a list of collections in this Posda instance.
+
+    If collection is set, it will return only collections with that exact name.
+    If site is set, it will return only collections with that exact site name.
+
+    If both are set, site is ignored.
+    """
     async def get_collections_by_collection(collection_name):
         query = """
             select
@@ -43,7 +57,6 @@ async def get_all_collections(collection: str = None, site: str = None, db: Data
 
         return await db.fetch(query, [site_name])
 
-
     query = """
         select
             project_name as collection,
@@ -62,8 +75,7 @@ async def get_all_collections(collection: str = None, site: str = None, db: Data
     return await db.fetch(query)
 
 
-
-@router.get("/{collection_name}/{site_name}")
+@router.get("/{collection_name}/{site_name}", response_model=CollectionSiteInfo)
 async def get_collection_info(collection_name: str, site_name: str, db: Database = Depends()):
     query = """
         select 

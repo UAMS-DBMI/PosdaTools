@@ -4,14 +4,15 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Union
 from enum import Enum
-
-router = APIRouter()
+import json
 
 from .auth import logged_in_user, User
-
 from ..util import Database
 
-import json
+router = APIRouter(
+    tags=["Edits"],
+    dependencies=[logged_in_user]
+)
 
 # An example of how to easily restrict the allowed states
 # just set them here and then change the types below to State
@@ -36,8 +37,6 @@ async def set_state(
     db: Database = Depends()
 ):
     """Modify the state of an edit
-
-    TODO: This really needs to require authentication!
     """
 
     query = f"""

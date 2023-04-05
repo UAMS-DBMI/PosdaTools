@@ -5,7 +5,11 @@ from .auth import logged_in_user, User
 
 from ..util import Database
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Pathology"],
+    dependencies=[logged_in_user]
+)
+
 images = {}
 current_user:User = logged_in_user
 

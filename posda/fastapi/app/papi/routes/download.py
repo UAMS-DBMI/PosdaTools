@@ -9,7 +9,10 @@ import mimetypes
 import logging
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Downloads"],
+    dependencies=[logged_in_user]
+)
 
 
 @router.get("/file/{downloadable_file_id}/{hash}") 

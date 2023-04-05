@@ -1,13 +1,14 @@
 from fastapi import Depends, APIRouter, HTTPException, Form, Request
 from pydantic import BaseModel
-
-router = APIRouter()
+import json
 
 from .auth import logged_in_user, User
-
 from ..util import Database
 
-import json
+router = APIRouter(
+    tags=["Defacing"],
+    dependencies=[logged_in_user]
+)
 
 
 @router.get("/{defacing_id}")

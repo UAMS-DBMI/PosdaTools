@@ -9,11 +9,13 @@ from .auth import logged_in_user, User
 from ..util import Database, asynctar, roi
 from ..util.digest import md5sum_file
 
-router = APIRouter()
-
 import hashlib
 import tempfile
 import os
+
+router = APIRouter(
+    tags=["Import"],
+)
 
 # TODO delete this
 class HTTPMethodView: pass

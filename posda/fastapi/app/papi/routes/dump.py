@@ -1,23 +1,43 @@
+# this is a hard coded value that will probably only work inside 
+# the intended docker container
 script_location = '/fastapi/dump_dicom.sh'
 
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 import datetime
-from starlette.responses import Response, FileResponse, PlainTextResponse
-
-router = APIRouter()
+from starlette.responses import Response, FileResponse, HTMLResponse
 
 from .auth import logged_in_user, User
-
 from ..util import Database
 
 import asyncio
 import logging
 
+router = APIRouter(
+    tags=["DICOM Dump"],
+    dependencies=[logged_in_user],
+    responses={
+        401:  {"description": "User is not logged in"},
+    }
+)
 
-@router.get("/{file_id}")
-async def dump_dicom(file_id: int, db: Database = Depends()):
+@router.get(
+    "/{file_id}",
+    response_class=HTMLResponse,
+    responses={
+        404:  {"description": "The file_id was not found/invalid"},
+    }
+)
+async def dump_dicom(file_id: int, db: Database = Depends()) -> HTMLResponse:
+    """
+    Returns an HTML-formatted DICOM Dump of the given file_id,
+    if it is a DICOM file.
+
+    The resulting dump is decoded as utf8 if possible, and if not
+    the correct encoding is guessed by chardet.
+    """
+
     # get the filename from the database
     logging.debug(f"Generating dump for {file_id}")
     query = """
@@ -59,5 +79,4 @@ async def dump_dicom(file_id: int, db: Database = Depends()):
         encoding = chardet.detect(data)['encoding']
         new_data = data.decode(encoding)
 
-
-    return PlainTextResponse(new_data)
+    return HTMLResponse(new_data)

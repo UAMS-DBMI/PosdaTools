@@ -6,14 +6,16 @@ from typing import List
 import datetime
 from enum import Enum
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
 
 from ..util import Database
 from ..util import db as db_module
 from asyncpg.exceptions import UniqueViolationError, InvalidTextRepresentationError
 
+router = APIRouter(
+    tags=["DICOM Roots Table"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/")
 async def get_all_roots():

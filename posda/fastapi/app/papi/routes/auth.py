@@ -9,7 +9,12 @@ from ..util import Database
 from ..util.password import is_valid
 from ..util.redisqueue import get_redis_connection
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Authentication"],
+    responses={
+        401:  {"description": "User is not logged in"},
+    }
+)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/papi/auth/token")
 
 TOKEN_EXPIRE=(1 * 60 * 60) # 1 hour
@@ -116,8 +121,14 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(),
 
 
 # These are just test functions
-@router.get("/users/me")
+@router.get(
+    "/users/me",
+    response_model=User,
+)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
+    """
+    Get the current logged in user
+    """
     return current_user
 
 @router.get("/test")

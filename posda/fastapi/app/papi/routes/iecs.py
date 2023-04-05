@@ -4,12 +4,13 @@ from typing import List
 import datetime
 from starlette.responses import Response, FileResponse
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
-
 from ..util import Database
 
+router = APIRouter(
+    tags=["Image Equivalence Classes (IEC)"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/")
 async def get_all_iecs(request, **kwargs):

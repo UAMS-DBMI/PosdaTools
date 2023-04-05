@@ -4,12 +4,8 @@ from typing import List
 import datetime
 from starlette.responses import Response, FileResponse
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
-
 from ..util import Database
-
 from ..util import asynctar, asynczip
 
 import os
@@ -19,6 +15,10 @@ import asyncio
 import logging
 import tempfile
 
+router = APIRouter(
+    tags=["Files"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/")
 async def get_all_files():

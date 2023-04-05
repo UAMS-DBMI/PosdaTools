@@ -7,7 +7,10 @@ from .auth import logged_in_user, User
 
 from ..util import Database, asynctar, roi
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Regions of Interest (ROI)"],
+    dependencies=[logged_in_user]
+)
 
 
 @router.get("/")

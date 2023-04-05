@@ -1,14 +1,14 @@
 from fastapi import Depends, APIRouter, HTTPException, Form, Request
 from pydantic import BaseModel
-
-router = APIRouter()
-
-from .auth import logged_in_user, User
-
-from ..util import Database
-
 import json
 
+from .auth import logged_in_user, User
+from ..util import Database
+
+router = APIRouter(
+    tags=["Work"],
+    dependencies=[logged_in_user]
+)
 
 @router.get("/items")
 async def get_work_status(status: str, count: int = 20, db: Database = Depends()):

@@ -4,13 +4,18 @@ from typing import List
 import datetime
 import os
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
-
 from ..util import Database
 
 API_URL = os.environ.get("POSDA_API_URL")
+router = APIRouter(
+    tags=["Series"],
+    dependencies=[logged_in_user],
+    responses={
+        401:  {"description": "User is not logged in"},
+    }
+)
+
 
 @router.get("/")
 async def get_all_studies():

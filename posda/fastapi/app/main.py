@@ -1,3 +1,14 @@
+description = """
+This is a complete listing of the Posda API.
+This API is used internally by Posda and its various applications,
+and can also be used by you.
+
+## Test
+this is just a *test*.
+
+_this is some italics_
+
+"""
 import os
 from fastapi import FastAPI, APIRouter
 
@@ -43,7 +54,35 @@ if not os.path.exists(importer.TEMP_STORAGE_PATH):
     os.makedirs(importer.TEMP_STORAGE_PATH)
 
 
-app = FastAPI(root_path="/papi")
+
+# metadata for all tags that are used in routes
+tags_metadata = [
+    {
+        "name": "Authentication",
+        "description": "Operations related to authorization.",
+    },
+    {
+        "name": "default",
+        "description": "test",
+    },
+    {
+        "name": "Other",
+        "description": "Deprecated, testing, and other non-useful operations. Do not use.",
+    },
+    {
+        "name": "Collections",
+        "description": "Retrieve collection info",
+    },
+]
+
+
+app = FastAPI(
+    title="PosdaAPI",
+    description=description,
+    version="0.1",
+    root_path="/papi",
+    openapi_tags=tags_metadata,
+)
 
 @app.on_event("startup")
 async def startup_event():

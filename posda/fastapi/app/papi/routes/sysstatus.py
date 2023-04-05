@@ -8,11 +8,6 @@ from ..util import Database, asynctar
 
 router = APIRouter()
 
-@router.get("/")
-async def test():
-    raise HTTPException(detail="test error, not allowed", status_code=401)
-
-
 @router.get("/system/{system_key}")
 async def get_reviewed_percentage_for_vr(system_key: str, 
                                          db: Database = Depends()):

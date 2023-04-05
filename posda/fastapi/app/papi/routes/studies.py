@@ -3,13 +3,13 @@ from pydantic import BaseModel
 from typing import List
 import datetime
 
-router = APIRouter()
-
 from .auth import logged_in_user, User
-
 from ..util import Database
 
-
+router = APIRouter(
+    tags=["Studies"],
+    dependencies=[logged_in_user]
+)
 
 
 @router.get("/")
