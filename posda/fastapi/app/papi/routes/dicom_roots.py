@@ -175,6 +175,10 @@ async def updateRecord(submission_id: int, value: str,  field: str, db: Database
             {'message': "Your field is not valid\n"},
             status_code=400)
     else:
+        if field == "baseline_date":
+            value = datetime.datetime.strptime(value, '%Y-%m-%d').date()
+        if field == "date_shift":
+            value = int(value)
         query = f"""\
             update
                 submissions

@@ -134,7 +134,7 @@ sub ContentResponse {
       sync => "Update();",
     });
     }elsif($self->{changing} eq "bd"){
-    $http->queue("</br>Baseline Date: $self->{record_data}->[0]->{baseline_date}</br>");
+    $http->queue("</br>Baseline Date: $self->{record_data}->[0]->{baseline_date} (YYYY-MM-DD)</br>");
     $self->{field} = "baseline_date";
     $self->NewEntryBox($http, {
       name => "bd_box",
