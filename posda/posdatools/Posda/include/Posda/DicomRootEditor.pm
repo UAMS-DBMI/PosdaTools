@@ -178,40 +178,101 @@ sub ContentResponse {
      name => "site_box",
      op => "SetArg",
      });
-   #$self->RenderSiteDropDown($self,$http,$dyn);
    $self->NotSoSimpleButton($http, {
      op => "RefreshSite",
      caption => "Check Site Info",
      sync => "Update();",
     });
+    my $search_results2 = [];
     if ($self->{site_code_in_examination}){
+      if ($self->{site_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
         $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$self->{site_code_in_examination}");
-        my $site_name  = decode_json($self->{client}->responseContent());
+        my $site_name = decode_json($self->{client}->responseContent());
         $http->queue("<br>------------------------------------------------</br>");
         $http->queue("$site_name ($self->{site_code_in_examination}) is used by the following collection+site combinations:</br>");
-        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{record_data}->[0]->{site_code}");
-        my $search_results  = decode_json($self->{client}->responseContent());
-        if ($search_results){
-          my $i = 0;
-          for( $i < $search_results.length){
-            $http->queue("$search_results->[0]->{collection_name} + $search_results->[0]->{site_name}</br>");
-          }
-       }else{
-          $http->queue("No collections are using this site</br>");
+        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{record_data}->[0]->{site_code_in_examination}");
+        $search_results2 = decode_json($self->{client}->responseContent());
+     }else{
+        $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$self->{site_code_in_examination}");
+        my $site_code = decode_json($self->{client}->responseContent());
+        $http->queue("<br>------------------------------------------------</br>");
+        $http->queue("($self->{site_code_in_examination}) $site_code  is used by the following collection+site combinations:</br>");
+        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
+        $search_results2  = decode_json($self->{client}->responseContent());
+     }
+     if ($search_results2 and $search_results2->[0] != ''){
+       my $i = 0;
+       for( $i < $search_results2.length){
+         $http->queue("$search_results2->[0]->{collection_name} + $search_results2->[0]->{site_name}</br>");
        }
-       $http->queue("<br>------------------------------------------------</br>");
-       $self->NotSoSimpleButton($http, {
-          op => "changeValue",
-          caption => "Change to this Site?",
-          sync => "Update();",
-        });
-    }
+      }else{
+       $http->queue("No collections are using this site</br>");
+      }
+   }
+   $http->queue("<br>------------------------------------------------</br>");
+   $self->{field} = "site_code";
+   $self->NotSoSimpleButton($http, {
+      op => "changeValue",
+      caption => "Change to this Site!",
+      sync => "Update();",
+    });
   }elsif($self->{changing} eq "col"){
     $http->queue("Collection Name: $self->{record_data}->[0]->{collection_name}</br>");
     $http->queue("Collection Code: $self->{record_data}->[0]->{collection_code}</br>");
-    $self->NotSoSimpleButton($http, {
+    $http->queue("<br>------------------------------------------------</br>");
+    $http->queue("This Collection is associated with the following collection+site combinations:</br>");
+    $self->{client}->GET("$self->{MY_API_URL}/searchRoots?collection_code=$self->{record_data}->[0]->{collection_code}");
+    my $search_results  = decode_json($self->{client}->responseContent());
+    if ($search_results){
+      my $i = 0;
+      for( $i < $search_results.length){
+        $http->queue("$search_results->[0]->{collection_name} + $search_results->[0]->{site_name}</br>");
+      }
+   }else{
+      $http->queue("No collections are  associated with this collection</br>");
+   }
+   $http->queue("<br>------------------------------------------------</br>");
+   $http->queue("I want to change the collection associated with this site to:</br>");
+   $self->NewEntryBox($http, {
+     name => "collection_box",
+     op => "SetArg",
+     });
+   $self->NotSoSimpleButton($http, {
+     op => "RefreshCollection",
+     caption => "Check Collection Info",
+     sync => "Update();",
+    });
+    my $search_results2 = [];
+    if ($self->{collection_code_in_examination}){
+      if ($self->{collection_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
+        $self->{client}->GET("$self->{MY_API_URL}/findCollectionNameFromCode/$self->{collection_code_in_examination}");
+        my $collection_name = decode_json($self->{client}->responseContent());
+        $http->queue("<br>------------------------------------------------</br>");
+        $http->queue("$collection_name ($self->{collection_code_in_examination}) is associated with the following collection+site combinations:</br>");
+        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?collection_code=$self->{record_data}->[0]->{collection_code_in_examination}");
+        $search_results2 = decode_json($self->{client}->responseContent());
+     }else{
+        $self->{client}->GET("$self->{MY_API_URL}/findCollectionCodeFromName/$self->{collection_code_in_examination}");
+        my $collection_code = decode_json($self->{client}->responseContent());
+        $http->queue("<br>------------------------------------------------</br>");
+        $http->queue("($self->{collection_code_in_examination}) $collection_code  is associated with the following collection+site combinations:</br>");
+        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?collection_code=$collection_code");
+        $search_results2  = decode_json($self->{client}->responseContent());
+     }
+     if ($search_results2 and $search_results2->[0] != ''){
+       my $i = 0;
+       for( $i < $search_results2.length){
+         $http->queue("$search_results2->[0]->{collection_name} + $search_results2->[0]->{collection_name}</br>");
+       }
+      }else{
+       $http->queue("No sites are associated with this collection</br>");
+      }
+   }
+   $http->queue("<br>------------------------------------------------</br>");
+   $self->{field} = "collection_code";
+   $self->NotSoSimpleButton($http, {
       op => "changeValue",
-      caption => "submit",
+      caption => "Change to this Collection!",
       sync => "Update();",
     });
   }
@@ -277,6 +338,10 @@ sub RefreshData{
 sub RefreshSite{
   my ($self, $http, $dyn) = @_;
   $self->{site_code_in_examination} = $self->{value};
+}
+sub RefreshCollection{
+  my ($self, $http, $dyn) = @_;
+  $self->{collection_code_in_examination} = $self->{value};
 }
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;

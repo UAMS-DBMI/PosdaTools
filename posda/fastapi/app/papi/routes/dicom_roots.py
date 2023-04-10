@@ -104,15 +104,15 @@ async def search_roots(
 
 @router.get("/findCollectionNameFromCode/{collection_code}")
 async def find_collection_name_from_code(collection_code: int, db: Database = Depends()) -> PlainTextResponse:
-    record = await db.fetch_one("""\
-        select
-         collection_name
-        from
-         collection_codes
-        where
-         collection_code = $1
-        """, [str(collection_code)])
-    return PlainTextResponse(record['collection_name'])
+     record = await db.fetch_one("""\
+         select
+          collection_name
+         from
+          collection_codes
+         where
+          collection_code = $1
+         """, [str(collection_code)])
+     return record['collection_name']
 
 
 @router.get("/findSiteNameFromCode/{site_code}")
@@ -125,7 +125,32 @@ async def find_site_name_from_code(site_code: int, db: Database = Depends()) -> 
        where
         site_code = $1
        """, [str(site_code)])
-    return PlainTextResponse(record['site_name'])
+    return record['site_name']
+
+@router.get("/findCollectionCodeFromName/{collection_name}")
+async def find_collection_code_from_name(collection_name: str, db: Database = Depends()) -> PlainTextResponse:
+     record = await db.fetch_one("""\
+         select
+          collection_code
+         from
+          collection_codes
+         where
+          collection_name = $1
+         """, [str(collection_name)])
+     return record['collection_code']
+
+
+@router.get("/findSiteCodeFromName/{site_name}")
+async def find_site_code_from_name(site_name: str, db: Database = Depends()) -> PlainTextResponse:
+    record = await db.fetch_one("""\
+       select
+        site_code
+       from
+        site_codes
+       where
+        site_name = $1
+       """, [str(site_name)])
+    return record['site_code']
 
 @router.get("/getRecord/{submission_id}")
 async def getRecord(submission_id: int, db: Database = Depends()):
