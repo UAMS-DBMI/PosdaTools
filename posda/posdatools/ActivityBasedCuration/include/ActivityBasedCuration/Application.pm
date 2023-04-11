@@ -103,12 +103,12 @@ sub SpecificInitialize {
         mode => 'Inbox',
         sync => 'Update();',
       },
-      {
-        caption => "QueryEngines",
-        op => 'SetMode',
-        mode => 'QueryEngines',
-        sync => "Update();",
-      },
+      # {
+      #   caption => "QueryEngines",
+      #   op => 'SetMode',
+      #   mode => 'QueryEngines',
+      #   sync => "Update();",
+      # },
       {
         caption => "Upload",
         op => 'SetMode',
