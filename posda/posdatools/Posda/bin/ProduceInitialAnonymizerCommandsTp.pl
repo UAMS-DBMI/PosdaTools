@@ -129,8 +129,7 @@ $get_patient_mapping->RunQuery(sub{
     site_code => $site_code,
     collection_code => $collection_code,
     site_id => $site_code . $collection_code,
-    uid_root => "1.3.6.1.4.1.14519.5.2.1." . $site_code . 
-      "." . $collection_code,
+    uid_root => "1.3.6.1.4.1.14519.5.2.1.",
   };
   if(defined $diagnosis_date) { $hash->{diagnosis_date} = $diagnosis_date }
   if(defined $baseline_date) { $hash->{baseline_date} = $baseline_date }
@@ -276,8 +275,8 @@ sub ProduceLinesForPatientEdits{
   my $diagnosis_date_trunc = substr($map->{diagnosis_date}, 1, 10);
   $diagnosis_date_trunc =~ s/-//g;
 
-  $rpt->print(qq{,date_difference,"<(0012,0050)>","<(0008,0020)>","<$diagnosis_date_trunc>"\n});
-  $rpt->print(qq{,set_tag,"<(0012,0051)>",<Days offset from diagnosis>,<>\n});
+  $rpt->print(qq{,date_difference,"<(0012,0052)>","<(0008,0020)>","<$diagnosis_date_trunc>"\n});
+  $rpt->print(qq{,set_tag,"<(0012,0053)>",<DIAGNOSIS>,<>\n});
   $rpt->print(qq{,set_tag,"<(0012,0062)>",<YES>,<>\n});
 
   # Show de-identification was done
