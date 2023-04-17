@@ -59,6 +59,11 @@ case "$1" in
     exec $DOCKER exec posda bash -c 'cd /home/posda/posdatools; ./posda_shell'
     ;;
 
+  redis)
+    shift
+    exec $DOCKER exec redis redis-cli $*
+    ;;
+
   logs)
     shift
     exec $DOCKER logs -f --tail=10 $*
