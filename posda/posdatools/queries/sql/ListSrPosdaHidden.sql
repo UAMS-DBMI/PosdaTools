@@ -14,5 +14,5 @@ from
   natural join file_study natural join ctp_file
   join file_location using (file_id) natural join file_storage_root
 where
-  visibility is not null and dicom_file_type like '%SR%' and
+  dicom_file_type like '%SR%' and
   project_name like ?

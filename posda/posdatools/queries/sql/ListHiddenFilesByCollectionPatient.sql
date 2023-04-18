@@ -17,6 +17,5 @@ from
   file_patient natural join
   file_series
 where
-  visibility is not null and
   project_name = ? and
   patient_id = ?

@@ -38,8 +38,6 @@ from (
            ctp_file natural join file_study natural join
            file_series natural join file_sop_common
            natural join file_patient
-        where
-          visibility is null
       ) as foo
       group by
         project_name, site_name, patient_id, 

@@ -15,7 +15,7 @@ select * from (
     file_sop_common natural join file_series
     natural left join ctp_file natural join file_import
   where
-    visibility is null and import_event_id = ?
+    import_event_id = ?
   group by sop_instance_uid, series_instance_uid
 ) as foo where num_files > 1
 

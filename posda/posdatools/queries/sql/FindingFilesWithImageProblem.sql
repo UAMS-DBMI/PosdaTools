@@ -15,4 +15,4 @@ from (
     where import_time > '2018-09-17'
   )
 ) as foo natural join ctp_file natural join file_location natural join file_storage_root
-where image_id is null and visibility is null
+where image_id is null

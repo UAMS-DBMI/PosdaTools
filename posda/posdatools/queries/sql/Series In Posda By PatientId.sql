@@ -10,5 +10,5 @@ select
 from
   file_series natural join file_patient natural join ctp_file
 where 
-  visibility is null and patient_id = ?
+  patient_id = ?
 

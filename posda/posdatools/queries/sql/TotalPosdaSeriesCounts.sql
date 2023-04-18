@@ -10,6 +10,5 @@ select
   count(distinct file_id) as num_files
 from 
   ctp_file natural join file_series 
-where
-  visibility is null group by collection, site           
+group by collection, site           
 order by collection, site

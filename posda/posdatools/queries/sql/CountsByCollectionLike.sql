@@ -33,7 +33,7 @@ where
   file_id in (
     select file_id 
     from file_import natural join import_event
-  ) and project_name like ? and visibility is null
+  ) and project_name like ?
 group by
   collection, site, patient_id, image_type, dicom_file_type, modality, study_date, 
   series_date, study_description,

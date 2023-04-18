@@ -11,5 +11,5 @@ from file_patient
 where file_id in (
   select distinct file_id
   from file_import natural join import_event natural left join ctp_file
-  where import_event_id = ? and visibility is null
+  where import_event_id = ?
 ) group by patient_id order by patient_id

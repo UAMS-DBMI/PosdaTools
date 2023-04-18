@@ -20,5 +20,4 @@ from
   natural join file_storage_root
 where
   patient_id = ? 
-  and visibility is null
 group by patient_id

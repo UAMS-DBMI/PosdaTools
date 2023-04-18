@@ -23,7 +23,6 @@ from
   natural join import_event
 where
   project_name = ? and
-  visibility is null and
   import_time > ?
   and import_time < ?
 group by

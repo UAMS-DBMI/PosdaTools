@@ -12,5 +12,5 @@ select
 from
   roi natural join file_structure_set natural join ctp_file
 where 
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 order by file_id, for_uid

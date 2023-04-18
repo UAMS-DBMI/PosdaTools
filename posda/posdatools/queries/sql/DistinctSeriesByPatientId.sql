@@ -14,7 +14,7 @@ from
   file_patient natural join
   dicom_file natural join ctp_file
 where
-  patient_id = ? and visibility is null
+  patient_id = ?
 group by 
   collection, site, patient_id, study_instance_uid,
   series_instance_uid, dicom_file_type, modality

@@ -12,6 +12,5 @@ from
 where
   not exists (
     select file_id from file_study st where st.file_id = se.file_id
-  ) and
-  visibility is null
+  ) 
   and project_name = ?

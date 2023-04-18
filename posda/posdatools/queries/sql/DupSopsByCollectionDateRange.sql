@@ -26,19 +26,18 @@ from (
       from (
         select distinct sop_instance_uid, count(distinct file_id)
         from file_sop_common natural join ctp_file
-        where visibility is null and sop_instance_uid in (
+        where sop_instance_uid in (
           select distinct sop_instance_uid
           from file_sop_common natural join ctp_file
             join file_import using(file_id) 
             join import_event using(import_event_id)
           where project_name = ?  and
-             visibility is null and import_time > ?
+             import_time > ?
               and import_time < ?
         ) group by sop_instance_uid
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 group by collection, site, subj_id, sop_instance_uid
 

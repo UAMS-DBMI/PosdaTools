@@ -12,6 +12,6 @@ from
   file_series natural join file_patient natural join file_sop_common
   natural left join ctp_file
 where
-  patient_id = ? and visibility is null
+  patient_id = ?
 group by series_instance_uid, patient_id
 

@@ -22,7 +22,6 @@ from
   file_patient natural join
   file_series
 where
-  visibility is null and
   project_name = ?
 group by
   collection,

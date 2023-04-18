@@ -17,7 +17,6 @@ from
   file_patient natural join 
   file_series
 where
-  project_name = ? and
-  visibility is not null
+  project_name = ?
 group by collection, site, patient_id, user_name, time, reason_for
 order by time, collection, site, patient_id

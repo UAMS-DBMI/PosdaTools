@@ -30,7 +30,7 @@ where
     select file_id 
     from file_series
     where series_instance_uid  = ?
-  ) and project_name = ? and visibility is null
+  ) and project_name = ?
 group by
   patient_id, study_date, series_instance_uid, study_description, series_description, modality
 order by

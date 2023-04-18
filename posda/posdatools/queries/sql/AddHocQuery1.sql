@@ -16,5 +16,5 @@ from
   file_study join file_import using(file_id) join import_event using (import_event_id)
 where file_id in(
   select distinct file_id from file_patient where patient_id = 'ER-1125'
-) and visibility is null 
+) 
 group by collection, site, patient_id, study_instance_uid, series_instance_uid, dicom_file_type, modality

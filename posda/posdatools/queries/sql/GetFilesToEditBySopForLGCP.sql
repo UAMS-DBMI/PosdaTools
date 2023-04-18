@@ -12,4 +12,3 @@ from
   file_location natural join file_storage_root natural join ctp_file
 where 
   sop_instance_uid = ? and series_instance_uid != ?
-  and visibility is null

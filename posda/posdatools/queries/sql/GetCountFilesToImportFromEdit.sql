@@ -16,7 +16,7 @@ where
     (
       select distinct from_file_digest 
       from dicom_edit_compare dec, file f natural join ctp_file
-      where dec.from_file_digest = f.digest and visibility is null and subprocess_invocation_id = ?
+      where dec.from_file_digest = f.digest and subprocess_invocation_id = ?
       intersect
       select from_file_digest from dicom_edit_compare dec
       where not exists

@@ -22,5 +22,4 @@ where
   and f.file_id in (
   select distinct file_id
   from ctp_file
-  where visibility is null
 )

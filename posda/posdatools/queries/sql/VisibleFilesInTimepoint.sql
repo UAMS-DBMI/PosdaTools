@@ -10,4 +10,4 @@ select
 from
   activity_timepoint_file natural left join ctp_file
 where
-  activity_timepoint_id = ? and visibility is null
+  activity_timepoint_id = ?

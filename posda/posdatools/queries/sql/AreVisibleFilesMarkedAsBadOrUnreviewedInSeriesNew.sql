@@ -42,8 +42,7 @@ from (
       series_instance_uid = ?
   ) as foo
 ) as foo
-where
-  visibility is null and 
+where 
   review_status != 'Good' and
   review_status != 'PassThrough'
 group by

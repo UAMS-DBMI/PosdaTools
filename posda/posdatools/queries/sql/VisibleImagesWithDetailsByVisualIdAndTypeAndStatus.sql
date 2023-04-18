@@ -24,4 +24,3 @@ where series_instance_uid in (
     processing_status = ? and review_status = ? and 
     dicom_file_type = ?
 )
-and visibility is null

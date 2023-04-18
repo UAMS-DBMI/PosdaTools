@@ -15,8 +15,7 @@ select
  from file_series natural join file_sop_common natural join file_patient
    natural join ctp_file
 where
-  project_name = ? and patient_id like ?
-  and visibility is null)
+  project_name = ? and patient_id like ?)
 as foo
 group by patient_id, series_instance_uid, sop_instance_uid, modality)
 as foo

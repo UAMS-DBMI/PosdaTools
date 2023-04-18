@@ -32,12 +32,11 @@ from (
             ctp_file natural join file_sop_common
             natural join file_patient
           where
-            visibility is null and project_name = ? and site_name = ?
+            project_name = ? and site_name = ?
         ) as foo group by sop_instance_uid order by count desc
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 order by sop_instance_uid
 ) as foo

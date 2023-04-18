@@ -14,4 +14,4 @@ from
   natural join ctp_file natural join file_series
   natural join file_sop_common
 where
-  series_instance_uid = ? and visibility is null
+  series_instance_uid = ?

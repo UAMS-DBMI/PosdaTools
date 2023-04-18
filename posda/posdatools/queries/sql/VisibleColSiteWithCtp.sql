@@ -15,6 +15,4 @@ from
   file_series
   natural join file_import natural join import_event
   natural join ctp_file
-where
-  visibility is null
 group by collection, site

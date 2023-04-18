@@ -11,4 +11,4 @@ select
 from
   file_study natural join ctp_file
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?

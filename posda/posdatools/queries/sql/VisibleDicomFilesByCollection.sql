@@ -11,5 +11,5 @@ select
 from
   ctp_file natural join file_sop_common
 where
-  project_name = ? and visibility is null
+  project_name = ?
 group by sop_instance_uid

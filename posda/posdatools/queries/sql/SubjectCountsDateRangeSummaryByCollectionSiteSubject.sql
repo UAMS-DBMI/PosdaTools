@@ -24,6 +24,6 @@ from
   file_import natural join 
   import_event
 where
-  project_name = ? and site_name = ? and visibility is null and patient_id = ?
+  project_name = ? and site_name = ? and patient_id = ?
 group by patient_id, study_instance_uid, series_instance_uid, study_date
 order by patient_id, study_date

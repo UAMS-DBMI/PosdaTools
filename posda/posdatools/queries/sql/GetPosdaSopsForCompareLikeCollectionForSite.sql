@@ -27,4 +27,3 @@ from
   natural join file_storage_root
 where
   project_name like ? and site_name = ?
-  and visibility is null

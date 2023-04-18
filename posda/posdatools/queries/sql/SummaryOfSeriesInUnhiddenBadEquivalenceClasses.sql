@@ -8,6 +8,6 @@
 
 select distinct project_name as collection, site_name as site, patient_id, series_instance_uid, modality, dicom_file_type, count(distinct file_id) as num_files from
 ctp_file natural join file_patient natural join file_series natural join dicom_file where file_id in (
-select distinct file_id from file_sop_common natural join ctp_file where visibility is null and sop_instance_uid in (
+select distinct file_id from file_sop_common natural join ctp_file where sop_instance_uid in (
 select sop_instance_uid from file_sop_common where file_id in (
 select distinct file_id from image_equivalence_class natural join image_equivalence_class_input_image where visual_review_instance_id = ? and review_status = 'Bad' ))) group by collection, site, patient_id, series_instance_uid, modality, dicom_file_type

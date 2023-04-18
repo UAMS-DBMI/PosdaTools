@@ -15,8 +15,6 @@ select distinct study_instance_uid from (
       admitting_diag
     from
       file_study natural join file_patient natural join ctp_file
-    where
-      visibility is null
     group by
       patient_id, study_instance_uid, study_date,
       referring_phy_name, study_id, accession_number,

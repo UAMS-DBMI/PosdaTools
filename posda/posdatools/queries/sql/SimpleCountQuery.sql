@@ -19,7 +19,7 @@ from
   join file_sop_common using(file_id)
   join file_study using(file_id)
 where
-  project_name = ?  and site_name = ? and visibility is null
+  project_name = ?  and site_name = ?
 group by
   patient_id, dicom_file_type, modality,
   study_instance_uid, series_instance_uid

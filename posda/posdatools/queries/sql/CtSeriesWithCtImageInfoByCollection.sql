@@ -10,4 +10,4 @@
 select
   distinct series_instance_uid, count(distinct file_id) as num_files
 from file_series natural join file_ct_image natural join ctp_file
-where kvp is not null and visibility is null and project_name = ? group by series_instance_uid
+where kvp is not null and project_name = ? group by series_instance_uid

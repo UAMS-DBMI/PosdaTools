@@ -10,4 +10,4 @@ select
 from
   file_storage_root natural join file_location natural join ctp_file natural join file_patient
 where
-  project_name = ? and visibility is null and patient_age is null
+  project_name = ? and patient_age is null

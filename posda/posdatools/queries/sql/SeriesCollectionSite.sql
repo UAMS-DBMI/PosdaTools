@@ -10,4 +10,4 @@ select distinct
   series_instance_uid
 from
   file_series natural join ctp_file
-where project_name = ? and site_name = ? and visibility is null
+where project_name = ? and site_name = ?

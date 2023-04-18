@@ -20,7 +20,7 @@ where series_instance_uid in (
     ctp_file
     natural join file_series 
     join image_equivalence_class using(series_instance_uid) 
-  where project_name = ? and visibility is null and review_status = ?
+  where project_name = ? and review_status = ?
 ) group by
    series_instance_uid,
    equivalence_class_number,

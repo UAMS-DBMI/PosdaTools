@@ -15,10 +15,10 @@ from (
     select distinct sop_instance_uid from (
       select distinct sop_instance_uid, count(distinct file_id)
       from file_sop_common natural join ctp_file
-      where project_name = ? and visibility is null group by sop_instance_uid
+      where project_name = ? group by sop_instance_uid
       ) as foo
     where count > 1
-    ) and visibility is null
+    )
   group by sop_instance_uid, file_id
 ) as foo
 group by sop_instance_uid

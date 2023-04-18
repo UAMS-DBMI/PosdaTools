@@ -24,7 +24,7 @@ from
   image_equivalence_class using(series_instance_uid)
 where
   project_name = ? and
-  site_name = ? and review_status = ? and visibility is null
+  site_name = ? and review_status = ?
 group by
   collection,
   site,

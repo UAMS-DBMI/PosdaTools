@@ -19,7 +19,6 @@ from
 where
   project_name = ? and
   site_name = ? and review_status = ?
-  and visibility is null
 group by
   series_instance_uid,
   dicom_file_type,

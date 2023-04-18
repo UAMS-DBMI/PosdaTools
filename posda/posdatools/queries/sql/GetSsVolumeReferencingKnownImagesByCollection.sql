@@ -26,5 +26,4 @@ where file_id in (
   )
 )
 and project_name = ?
-and visibility is null
 order by collection, site, patient_id

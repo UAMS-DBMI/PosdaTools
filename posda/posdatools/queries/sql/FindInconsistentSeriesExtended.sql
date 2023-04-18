@@ -21,7 +21,7 @@ select distinct series_instance_uid, count(*) from (
     left join file_image using(file_id)
     left join image using(image_id)
   where
-    project_name = ? and visibility is null
+    project_name = ?
   group by
     series_instance_uid, image_type,
     modality, series_number, laterality, series_date,

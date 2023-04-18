@@ -29,12 +29,11 @@ from (
             ctp_file natural join file_sop_common
             natural join file_patient
           where
-            visibility is null and project_name = ? and site_name = ?
+            project_name = ? and site_name = ?
         ) as foo group by sop_instance_uid order by count desc
       ) as foo 
       where count > 2
     )
-    and visibility is null
   ) as foo
 group by collection, site, subj_id, study_instance_uid, series_instance_uid
 

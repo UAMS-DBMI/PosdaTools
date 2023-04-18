@@ -16,8 +16,7 @@ select
    natural join file_patient
    natural join ctp_file natural join dicom_file
 where
-  project_name = ? and site_name = ? and patient_id = ?
-  and visibility is null)
+  project_name = ? and site_name = ? and patient_id = ?)
 as foo
 group by patient_id, series_instance_uid, sop_instance_uid, dicom_file_type, modality)
 as foo

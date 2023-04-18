@@ -24,7 +24,6 @@ from
   join import_event using (import_event_id)
 where
   sop_instance_uid = ?
-  and visibility is null
 group by
   project_name, site_name, patient_id, sop_instance_uid, modality, 
   file_id, file_path

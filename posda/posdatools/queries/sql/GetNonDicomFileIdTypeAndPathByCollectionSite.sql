@@ -12,4 +12,3 @@ from
   file_storage_root natural join file_location natural join non_dicom_file
 where
   collection = ? and site = ?
-  and visibility is null

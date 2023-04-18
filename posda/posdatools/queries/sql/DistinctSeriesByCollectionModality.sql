@@ -11,5 +11,4 @@ select distinct series_instance_uid, patient_id, dicom_file_type, modality, coun
    natural join ctp_file natural join dicom_file natural join file_patient
 where
   project_name = ? and modality = ?
-  and visibility is null
 group by series_instance_uid, patient_id, dicom_file_type, modality

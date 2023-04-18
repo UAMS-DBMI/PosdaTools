@@ -8,5 +8,5 @@
 select
   distinct project_name as collection, site_name as site, count(*) as num_files
 from ctp_file
-where visibility is null and project_name like ?
+where project_name like ?
 group by collection, site order by collection

@@ -53,4 +53,4 @@ select
         join file_meta
                 on file_meta.file_id = fril.file_id
         natural join roi
-        where sop_instance_uid = ? and visibility is null
+        where sop_instance_uid = ?
