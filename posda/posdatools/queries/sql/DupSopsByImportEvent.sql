@@ -25,7 +25,7 @@ select sop_instance_uid, num_files from (
          ) as foo
       )
     )
-  ) as foo where visibility is null
+  ) as foo
   group by sop_instance_uid
 ) as foo
 where num_files > 1

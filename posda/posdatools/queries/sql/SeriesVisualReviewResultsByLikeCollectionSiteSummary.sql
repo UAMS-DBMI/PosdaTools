@@ -19,8 +19,7 @@ from
   ctp_file join 
   image_equivalence_class using(series_instance_uid)
 where
-  project_name like  ? and
-  visibility is null
+  project_name like  ?
 group by
   dicom_file_type,
   modality,

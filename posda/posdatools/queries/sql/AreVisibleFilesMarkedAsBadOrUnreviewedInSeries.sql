@@ -43,7 +43,6 @@ from (
   ) as foo
 ) as foo
 where
-  visibility is null and 
   review_status != 'Good' and
   review_status != 'PassThrough'
 group by

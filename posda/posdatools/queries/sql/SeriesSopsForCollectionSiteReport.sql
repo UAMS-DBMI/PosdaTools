@@ -11,6 +11,5 @@ select
   count(distinct series_instance_uid) as num_series, count(distinct sop_instance_uid) as num_images
 from
   ctp_file natural join file_patient natural join file_series natural join file_sop_common natural join file_image
-where visibility is null
 group by collection, site
 order by num_images desc

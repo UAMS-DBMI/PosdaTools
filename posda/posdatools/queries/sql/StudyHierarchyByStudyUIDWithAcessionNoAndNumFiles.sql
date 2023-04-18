@@ -13,7 +13,7 @@ select distinct
   count(distinct sop_instance_uid) as num_files
 from
   file_study natural join ctp_file natural join file_series natural join file_sop_common
-where study_instance_uid = ? and visibility is null
+where study_instance_uid = ?
 group by
   study_instance_uid, study_description,
   series_instance_uid, series_description, modality,accession_number

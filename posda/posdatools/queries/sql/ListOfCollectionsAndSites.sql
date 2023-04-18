@@ -13,8 +13,5 @@ select
 	count(*) 
 from 
 	ctp_file 
-where
-  visibility is null
-
 group by project_name, site_name
 order by project_name, site_name

@@ -15,4 +15,4 @@ from file
   natural join file_storage_root 
   natural join ctp_file 
 where project_name = ? 
-  and site_name = ? and visibility is null
+  and site_name = ?

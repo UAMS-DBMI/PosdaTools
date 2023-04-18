@@ -19,7 +19,7 @@ select distinct series_instance_uid, count(*) from (
   from
     file_series natural join ctp_file
   where
-    project_name like ? and visibility is null
+    project_name like ?
   group by
     series_instance_uid, modality, series_number, laterality, series_date,
     performing_phys, protocol_name, series_description,

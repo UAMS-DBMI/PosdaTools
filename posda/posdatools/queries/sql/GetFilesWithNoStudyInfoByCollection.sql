@@ -17,7 +17,6 @@ from
  ctp_file c
 where
   project_name = ? and 
-  visibility is null and 
   not exists (
     select
       file_id 

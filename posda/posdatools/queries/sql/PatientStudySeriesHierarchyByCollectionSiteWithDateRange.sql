@@ -22,7 +22,6 @@ where
       file_import natural join
       import_event
     where project_name = ? and site_name = ? and
-    visibility is null and
     import_time > ? and import_time < ?
   )
 order by patient_id, study_instance_uid, series_instance_uid

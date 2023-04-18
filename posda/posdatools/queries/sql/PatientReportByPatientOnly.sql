@@ -21,7 +21,6 @@ from
   file_import natural join import_event
 where
   patient_id = ?
-  and visibility is null
 group by 
   collection, site, site_id,
   patient_id, study_instance_uid, study_description,

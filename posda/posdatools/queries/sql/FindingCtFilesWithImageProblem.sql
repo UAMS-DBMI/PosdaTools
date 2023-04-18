@@ -13,7 +13,7 @@ from (
     select
        distinct file_id from file_import natural join import_event
        natural join ctp_file natural join file_series
-    where import_time > '2018-09-17' and visibility is null and
+    where import_time > '2018-09-17' and 
       project_name = 'Exceptional-Responders' and modality = 'CT'
   )
 ) as foo natural join file_location natural join file_storage_root

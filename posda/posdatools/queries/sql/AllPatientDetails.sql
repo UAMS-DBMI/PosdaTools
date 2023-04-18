@@ -23,7 +23,7 @@ from
   file_series natural left join
   ctp_file
 where
-  project_name is null and site_name is null and visibility is null
+  project_name is null and site_name is null
 group by
   project_name, site_name, visibility, 
   patient_id, patient_name, study_instance_uid, study_date,

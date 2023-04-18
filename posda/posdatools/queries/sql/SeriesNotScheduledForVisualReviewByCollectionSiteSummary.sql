@@ -24,7 +24,7 @@ where
        from file_series fs natural join ctp_file
        where
          project_name = ? and
-         site_name = ? and visibility is null
+         site_name = ?
          and not exists (
            select series_instance_uid
            from image_equivalence_class ie

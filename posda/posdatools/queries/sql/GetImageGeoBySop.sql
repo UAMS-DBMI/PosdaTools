@@ -22,4 +22,4 @@ from
   file_image_geometry using (file_id) join
   image_geometry using (image_geometry_id) 
 where 
-  sop_instance_uid = ? and visibility is null
+  sop_instance_uid = ?

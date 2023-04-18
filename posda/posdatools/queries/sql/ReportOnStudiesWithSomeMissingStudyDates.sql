@@ -16,7 +16,7 @@ where file_id in (
     select distinct study_instance_uid from (
       select distinct study_date, study_instance_uid
       from ctp_file natural join file_series natural join file_study natural join activity_timepoint_file
-      where activity_timepoint_id = ? and visibility is null
+      where activity_timepoint_id = ?
     ) as foo 
     where study_date is null
   )

@@ -12,7 +12,6 @@ from
   file_sop_common natural
   join ctp_file
 where
-  visibility is null and
   sop_instance_uid in (
     select
       sop_instance_uid

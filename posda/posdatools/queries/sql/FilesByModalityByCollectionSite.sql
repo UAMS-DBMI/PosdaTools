@@ -13,5 +13,4 @@ from
 where
   modality = ? and
   project_name = ? and 
-  site_name = ? and
-  visibility is null
+  site_name = ?

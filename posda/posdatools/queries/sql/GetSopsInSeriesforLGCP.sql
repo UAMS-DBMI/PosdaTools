@@ -10,4 +10,4 @@ select
 from 
   file_series natural join file_for natural join ctp_file
   natural join file_sop_common
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?

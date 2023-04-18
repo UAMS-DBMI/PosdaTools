@@ -28,7 +28,6 @@ from
   ctp_file
 where 
   study_instance_uid = ?
-  and visibility is null
 group by 
   collection,
   site,

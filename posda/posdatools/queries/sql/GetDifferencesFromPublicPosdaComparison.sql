@@ -17,5 +17,5 @@ from
   file_series natural join
   file_study natural join ctp_file
 where
-  compare_public_to_posda_instance_id = ? and visibility is null
+  compare_public_to_posda_instance_id = ?
 order by study_instance_uid, series_instance_uid

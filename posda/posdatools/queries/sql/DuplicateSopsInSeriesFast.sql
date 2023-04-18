@@ -13,6 +13,6 @@ select * from (
   from file_sop_common where file_id in (
     select distinct file_id
     from file_series natural join ctp_file 
-    where series_instance_uid = ? and visibility is null
+    where series_instance_uid = ?
   ) group by sop_instance_uid
 ) as foo where num_sops > 1

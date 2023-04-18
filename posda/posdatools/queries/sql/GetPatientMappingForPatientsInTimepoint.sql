@@ -23,7 +23,7 @@ from
 where from_patient_id in (
   select patient_id as from_patient_id
   from file_patient natural left join ctp_file
-  where visibility is null and file_id in (
+  where and file_id in (
     select file_id from activity_timepoint_file
     where activity_timepoint_id in (
       select max(activity_timepoint_id) as activity_timepoint_id

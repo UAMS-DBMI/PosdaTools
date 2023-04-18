@@ -13,5 +13,4 @@ from
 where
   patient_id in
    ('HN-CHUM-050', 'HN-CHUM-052', 'HN-CHUM-054', 'HN-CHUM-056', 'HN-CHUM-030', 'HN-CHUM-032')
-  and visibility is null
 group by patient_id, study_uid, series_uid

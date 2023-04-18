@@ -21,4 +21,4 @@ from
   left join file_image_geometry using (file_id)
   left join image_geometry using (image_geometry_id)
   left join activity_timepoint_file using (file_id)
-  where series_instance_uid = ? and visibility is null and activity_timepoint_id = ?
+  where series_instance_uid = ? and activity_timepoint_id = ?

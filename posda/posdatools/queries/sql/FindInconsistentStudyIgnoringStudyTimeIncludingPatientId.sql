@@ -16,7 +16,7 @@ select distinct study_instance_uid from (
     from
       file_study natural join file_patient natural join ctp_file
     where
-      project_name = ? and visibility is null
+      project_name = ?
     group by
       patient_id, study_instance_uid, study_date,
       referring_phy_name, study_id, accession_number,

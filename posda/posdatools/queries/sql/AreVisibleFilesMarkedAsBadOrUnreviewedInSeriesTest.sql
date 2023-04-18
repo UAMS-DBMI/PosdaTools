@@ -42,8 +42,6 @@ from (
       series_instance_uid = ?
   ) as foo
 ) as foo
-where
-  visibility is null 
 group by
   collection,
   site,

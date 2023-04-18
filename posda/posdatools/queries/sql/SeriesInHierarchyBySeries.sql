@@ -23,7 +23,7 @@ where file_id in (
   from
     file_series natural join ctp_file
   where
-    series_instance_uid = ? and visibility is null
+    series_instance_uid = ?
 )
 order by
   project_name, site_name, patient_id,

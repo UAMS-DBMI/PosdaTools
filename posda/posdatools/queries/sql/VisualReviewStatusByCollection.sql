@@ -15,5 +15,5 @@ from
   image_equivalence_class_input_image natural join
   file_series natural join ctp_file
 where
-  project_name = ? and visibility is null and review_status = ?
+  project_name = ? and review_status = ?
 group by series_instance_uid, visibility, review_status, modality, series_description, series_date;

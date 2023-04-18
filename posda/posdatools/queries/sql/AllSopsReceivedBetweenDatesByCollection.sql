@@ -33,13 +33,13 @@ from (
         file_sop_common natural join file_import natural join
         import_event
       where
-        visibility is null and sop_instance_uid in (
+        sop_instance_uid in (
           select distinct sop_instance_uid
           from 
             file_import natural join import_event natural join file_sop_common
             natural join ctp_file
           where import_time > ? and import_time < ? and
-            project_name = ? and visibility is null
+            project_name = ?
         )
       ) as foo
     group by

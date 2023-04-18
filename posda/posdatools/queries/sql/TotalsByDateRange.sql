@@ -27,8 +27,7 @@ from
 	natural join file_patient
 
 where
-	visibility is null
-	and import_time between ? and ? 
+	import_time between ? and ? 
 
 group by
 	project_name,

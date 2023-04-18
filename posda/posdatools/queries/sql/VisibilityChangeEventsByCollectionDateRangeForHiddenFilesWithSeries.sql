@@ -18,7 +18,6 @@ from
   file_series
 where
   project_name = ? and
-  visibility is not null and
   time_of_change > ? and time_of_change < ?
 group by 
   collection, site, patient_id, user_name, prior_visibility, new_visibility,

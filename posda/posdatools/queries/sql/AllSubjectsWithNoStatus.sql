@@ -27,6 +27,5 @@ where
             p.patient_id = s.patient_id
        )
   ) 
-  and visibility is null
 group by patient_id, project_name, site_name
 order by project_name, site_name, patient_id

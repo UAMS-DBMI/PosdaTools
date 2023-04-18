@@ -12,5 +12,4 @@ select
 from
   non_dicom_file join file using (file_id) natural join file_location natural join file_storage_root
 where
-  visibility is null
-  and subject = ?
+  subject = ?

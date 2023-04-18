@@ -12,5 +12,5 @@ from
   file_series natural join file_patient natural join ctp_file natural join
   file_sop_common natural join dicom_file
 where
-  visibility is null and series_instance_uid = ?
+  series_instance_uid = ?
 order by sop_instance_uid

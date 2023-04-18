@@ -23,8 +23,7 @@ from
   image_equivalence_class using(series_instance_uid)
 where
   series_instance_uid = ?
-  and visibility is null and 
-  review_status != 'Good' and
+  and review_status != 'Good' and
   review_status != 'PassThrough'
 group by
   collection,

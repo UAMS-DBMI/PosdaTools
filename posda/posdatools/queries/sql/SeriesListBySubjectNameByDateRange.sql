@@ -27,7 +27,6 @@ from
   join import_event using(import_event_id)
 where 
   patient_id = ?
-  and visibility is null
   and import_time > ? 
   and import_time < ?
 group by 

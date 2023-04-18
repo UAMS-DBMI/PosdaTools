@@ -15,7 +15,7 @@ from (
   from
      file_series natural join file_sop_common natural join ctp_file
   where
-     series_instance_uid = ? and visibility is null
+     series_instance_uid = ?
   group by sop_instance_uid
 ) as foo
 where first_f < last_f

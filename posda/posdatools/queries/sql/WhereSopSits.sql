@@ -25,5 +25,5 @@ where file_id in (
   from
     file_sop_common natural join ctp_file
   where
-    sop_instance_uid = ? and visibility is null
+    sop_instance_uid = ?
 )

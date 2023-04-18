@@ -23,5 +23,5 @@ where
   select distinct file_id
   from
     ctp_file natural join file_image natural join image
-  where visibility is null and photometric_interpretation = ?
+  where photometric_interpretation = ?
 )

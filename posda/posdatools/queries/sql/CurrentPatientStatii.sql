@@ -12,5 +12,3 @@ select
   patient_import_status
 from 
   ctp_file natural join file_patient natural left join patient_import_status
-where 
-  visibility is null

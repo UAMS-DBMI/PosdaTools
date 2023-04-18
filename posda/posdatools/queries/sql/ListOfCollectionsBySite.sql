@@ -12,6 +12,6 @@ from
    ctp_file natural join file_study natural join
    file_series
 where
-  visibility is null and site_name = ?
+  site_name = ?
 group by project_name, site_name
 order by project_name, site_name

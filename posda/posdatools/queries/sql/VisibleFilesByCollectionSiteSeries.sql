@@ -15,6 +15,5 @@ from
 where
   project_name = ? and
   site_name = ? and
-  series_instance_uid = ? and
-  visibility is null
+  series_instance_uid = ?
 order by collection, site

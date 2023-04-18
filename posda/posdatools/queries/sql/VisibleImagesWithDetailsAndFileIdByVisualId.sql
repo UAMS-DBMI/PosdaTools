@@ -21,4 +21,3 @@ where series_instance_uid in (
   where
     visual_review_instance_id = ? 
 )
-and visibility is null

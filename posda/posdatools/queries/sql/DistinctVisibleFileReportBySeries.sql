@@ -25,5 +25,4 @@ from
 	natural left join ctp_file
 where
 	series_instance_uid = ?
-	and visibility is null
 order by series_instance_uid

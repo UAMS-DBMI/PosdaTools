@@ -15,7 +15,6 @@ from
 where
   project_name = ? and
   site_name = ? and
-  patient_id = ? and
-  visibility is null
+  patient_id = ?
 order by collection, site, patient_id
 

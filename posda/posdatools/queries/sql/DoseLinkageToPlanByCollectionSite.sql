@@ -13,4 +13,4 @@ select
 from
   rt_dose natural join file_dose natural join file_sop_common natural join ctp_file
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?

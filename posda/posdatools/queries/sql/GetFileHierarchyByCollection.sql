@@ -21,4 +21,3 @@ from
   file_storage_root
 where
   project_name = ?
-  and visibility is null

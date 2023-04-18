@@ -16,7 +16,7 @@ select
    natural join file_patient natural join ctp_file
 where
   patient_id = ? and project_name = ? 
-  and site_name = ? and visibility is null)
+  and site_name = ?)
 as foo
 group by series_instance_uid, sop_instance_uid, modality)
 as foo

@@ -15,4 +15,4 @@ from
   natural join file_study
   natural join file_sop_common
 where
-  study_instance_uid = ? and visibility is null
+  study_instance_uid = ?

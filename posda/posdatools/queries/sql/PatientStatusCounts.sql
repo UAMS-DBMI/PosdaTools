@@ -11,7 +11,5 @@ select
   count(distinct patient_id) as num_patients
 from
   patient_import_status natural join file_patient natural join ctp_file
-where
-  visibility is null
 group by collection, status
 order by collection, status

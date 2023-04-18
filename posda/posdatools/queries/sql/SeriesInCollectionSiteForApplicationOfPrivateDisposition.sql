@@ -12,4 +12,4 @@ from
   file_patient natural join ctp_file natural join file_study 
   natural join file_sop_common natural join file_series
 where
-  collection = ? and site = ? and visibility is null
+  collection = ? and site = ?

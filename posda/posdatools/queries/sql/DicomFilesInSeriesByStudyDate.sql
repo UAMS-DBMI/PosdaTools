@@ -12,5 +12,4 @@ from
   file_series natural join file_study natural join ctp_file
 where
   series_instance_uid = ? and
-  study_date = ? and
-  visibility is null
+  study_date = ?

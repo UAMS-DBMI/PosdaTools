@@ -19,7 +19,6 @@ where sop_instance_uid in (
         natural join file_patient
       where project_name = ? and site_name = ? and patient_id = ?
     ) as foo natural join ctp_file
-    where visibility is null
     group by sop_instance_uid order by count desc
   ) as foo where count > 1
 ) group by sop_instance_uid;

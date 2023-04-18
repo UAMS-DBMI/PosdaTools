@@ -11,4 +11,4 @@ from
   file_series natural join file_image natural join ctp_file natural join file_sop_common
   natural join image natural join image_geometry
 where
-  series_instance_uid = ? and visibility is null
+  series_instance_uid = ?
