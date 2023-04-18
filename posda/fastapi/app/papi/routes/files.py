@@ -55,13 +55,12 @@ async def get_single_file(file_id: int, db: Database = Depends()):
 async def get_series_files(series_instance_uid: str, db: Database = Depends()):
     query = """
 	select root_path || '/' || rel_path as file
-			    from
-				file_series
-				natural join ctp_file
-				natural join file_location
-				natural join file_storage_root
-			    where series_instance_uid = $1
-			      and visibility is null
+	from
+	file_series
+	natural left join ctp_file
+	natural left join file_location
+	natural left join file_storage_root
+	where series_instance_uid = $1
     """
     records = [x[0] for x in await db.fetch(query, [series_instance_uid])]
 
@@ -72,13 +71,12 @@ async def get_series_files(series_instance_uid: str, db: Database = Depends()):
 async def get_iec_files(iec: int, db: Database = Depends()):
     query = """
 	select root_path || '/' || rel_path as file
-			    from
-				ctp_file
-				natural join file_location
-				natural join file_storage_root
-                natural join image_equivalence_class_input_image
-			    where image_equivalence_class_id = $1
-			      and visibility is null
+	from
+	image_equivalence_class_input_image
+    natural left join ctp_file 
+	natural left join file_location
+	natural left join file_storage_root
+	where image_equivalence_class_id = $1
     """
     records = await db.fetch(query, [iec])
 

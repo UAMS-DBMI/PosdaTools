@@ -105,7 +105,6 @@ async def get_contours_for_sop(sop_instance_uid: str, db: Database = Depends()):
                 on file_meta.file_id = fril.file_id
         natural join roi
         where sop_instance_uid = $1
-          and ctp_file.visibility is null
     """
 
     raw_contours = await db.fetch(query, [sop_instance_uid])

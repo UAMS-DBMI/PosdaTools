@@ -255,10 +255,9 @@ async def get_all_files(series_instance_uid: str,
             select file_id
             from
                 file_series
-                natural join file_sop_common
-                natural join ctp_file
+                natural left join file_sop_common
+                natural left join ctp_file
             where series_instance_uid = $1
-              and visibility is null
             order by
                 -- sometimes instance_number is empty string or null
                 case instance_number
