@@ -16,7 +16,7 @@
       "num_performed": 3,
       "incoming_message_handler": "std",
       "pres_contexts": "ImpOnly",
-      "end_handler": "populate_posda_db",
+      "end_handler": "queue_to_redis",
     },
     "OSIRIX_FIND": {
       "ae_title": "OSIRIX_TEST",
@@ -49,7 +49,7 @@
       "num_performed": 3,
       "incoming_message_handler": "std",
       "pres_contexts": "ImpOnly",
-      "end_handler": "populate_posda_db",
+      "end_handler": "queue_to_redis",
     },
     "FD_TEST_2": {
       "ae_title": "FD_TEST_2",
@@ -66,7 +66,7 @@
       "num_performed": 3,
       "incoming_message_handler": "std",
       "pres_contexts": "ImpOnly",
-      "end_handler": "populate_posda_db",
+      "end_handler": "queue_to_redis",
     },
     "<UNKNOWN>": {
       "allowed_calling_ae_titles": {
@@ -81,7 +81,7 @@
       "num_performed": 3,
       "incoming_message_handler": "std",
       "pres_contexts": "ImpOnly",
-      "end_handler": "populate_posda_db",
+      "end_handler": "queue_to_redis",
     },
   },
   "association_end_handlers" : {
@@ -93,6 +93,13 @@
     },
     "populate_posda_db" : {
       "script": "ImportFromReceiveDirIntoDigestDir.pl <assoc_dir> <db_name> <comment>",
+      "db_name" : "posda_files",
+      "comment" : "'association receive'",
+      "processing_prio" : 1,
+      "LinkDir" : "POSDA_CACHE_ROOT/DicomFiles",
+    },
+    "queue_to_redis" : {
+      "script": "QueueReceiveDirToRedis.py <assoc_dir>",
       "db_name" : "posda_files",
       "comment" : "'association receive'",
       "processing_prio" : 1,
