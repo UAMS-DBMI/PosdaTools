@@ -413,23 +413,25 @@ sub PostProcessAssociations{
   ){
     # Start a handler ...
     # then try again:
-    if($num_queued > 100){
-      $this->QueueMultiple(100);
-    } elsif ($num_queued > 10) {
-      $this->QueueMultiple(10);
-    } else {
-      $this->QueueMultiple(1);
-    }
-#    my $cmd = shift(@{$this->{PostProcessingQueue}});
-#    eval {
-#      Dispatch::LineReader->new_cmd($cmd, $this->ProcessingStatus($cmd),
-#        $this->ProcessingEnd($cmd));
-#    };
-#    if($@){
-#      print STDERR "Dispatch::LineRead->new_cmd exception:\n$@\n";
+#    if($num_queued > 100){
+#      $this->QueueMultiple(100);
+#    } elsif ($num_queued > 10) {
+#      $this->QueueMultiple(10);
 #    } else {
-#      $this->{RunningPostProcesses}->{$cmd} = 1;
+#      $this->QueueMultiple(1);
 #    }
+
+
+    my $cmd = shift(@{$this->{PostProcessingQueue}});
+    eval {
+      Dispatch::LineReader->new_cmd($cmd, $this->ProcessingStatus($cmd),
+        $this->ProcessingEnd($cmd));
+    };
+    if($@){
+      print STDERR "Dispatch::LineRead->new_cmd exception:\n$@\n";
+    } else {
+      $this->{RunningPostProcesses}->{$cmd} = 1;
+    }
     $num_running = keys %{$this->{RunningPostProcesses}};
     $num_queued = @{$this->{PostProcessingQueue}};
   }
@@ -458,7 +460,7 @@ sub QueueMultiple{
       my $dir = $1;  $db = $2; $comment = $3;
       push(@dir_list, $dir);
     } else {
-      print "Didn't match\n";
+      print STDERR "Didn't match\n";
     }
   }
   my $cmd_struct = {
