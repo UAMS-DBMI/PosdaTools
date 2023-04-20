@@ -129,7 +129,8 @@ $get_patient_mapping->RunQuery(sub{
     site_code => $site_code,
     collection_code => $collection_code,
     site_id => $site_code . $collection_code,
-    uid_root => "1.3.6.1.4.1.14519.5.2.1.",
+    uid_root => "1.3.6.1.4.1.14519.5.2.1." . $site_code .
+      "." . $collection_code,
   };
   if(defined $diagnosis_date) { $hash->{diagnosis_date} = $diagnosis_date }
   if(defined $baseline_date) { $hash->{baseline_date} = $baseline_date }
