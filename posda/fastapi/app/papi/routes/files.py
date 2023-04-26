@@ -31,10 +31,10 @@ async def get_listfiles(path: str):
         for name in files:
             return_list.append(os.path.join(root, name))
             await asyncio.sleep(0)
-            if len(return_list) > 1000:
+            if len(return_list) > 5000:
                     raise HTTPException(
                         status_code=400,
-                        detail="More than 1000 results. I refuse.")
+                        detail="More than 5000 results. I refuse.")
 
 
     return return_list
