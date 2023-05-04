@@ -87,7 +87,7 @@ $bg->WriteToEmail("Adding $num_files files to new timepoint\n");
 my $new_activity_timepoint_id;
 Query("CreateActivityTimepoint")->RunQuery(sub{
   my($row) = @_;
-}, sub{}, $activity_id, $notify, "HideEquivalenceClasses $invoc_id", $notify);
+}, sub{}, $activity_id, $notify, "CopyPriorTimepointExcludingFiles $invoc_id", $notify);
 Query("GetActivityTimepointId")->RunQuery(sub{
   my($row) = @_;
   $new_activity_timepoint_id = $row->[0];
