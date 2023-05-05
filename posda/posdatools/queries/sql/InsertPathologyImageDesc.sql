@@ -1,4 +1,4 @@
--- Name: InsertPatholgyImageDesc
+-- Name: InsertPathologyImageDesc
 -- Schema: posda_files
 -- Columns: []
 -- Args: ['file_id','image_desc']
