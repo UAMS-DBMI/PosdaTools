@@ -171,5 +171,5 @@ for  $file_id(keys %Files){
   $rpt3->print(",,,,,,SRProposeEditsTp,$act_id,$scan_id,$notify,\"%\"\r\n");
   my $size = keys %Paths;
   $finalize_scan->RunQuery(sub {}, sub {}, $scan_id);
-  $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", $size, $scan_id);
+  $background->PrepareBackgroundReportBasedOnQuery("CreateSRReport", "SR PHI Report", 10000, $scan_id);
   $background->Finish;
