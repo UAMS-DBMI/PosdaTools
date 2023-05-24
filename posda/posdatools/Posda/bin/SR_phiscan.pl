@@ -91,7 +91,14 @@ Query('FileIdsByActivityTimepointId')->RunQuery(sub {
 for  $file_id(keys %Files){
 
     # get the series ID
-    my $seriesId = $get_series->FetchOneHash($file_id)->{series_instance_uid};
+    my $maybe_series = $get_series->FetchOneHash($file_id);
+    my $seriesId;
+    if (defined $maybe_series) {
+      $seriesId = $maybe_series->{series_instance_uid};
+    } else {
+      print "didn't get a series for file $file_id\n";
+      next;
+    }
     print ("Series:  $seriesId");
 
     # get the filepaths
@@ -108,7 +115,14 @@ for  $file_id(keys %Files){
     Posda::Dataset::InitDD();
     my $dd = $Posda::Dataset::DD;
 
-    my $ParsedSR = Posda::SrSemanticParse->new($infile);
+    my $ParsedSR;
+    eval {
+      $ParsedSR = Posda::SrSemanticParse->new($infile);
+    };
+    if ($@) {
+      print STDERR "Skipping $file_id because: $@\n";
+      next;
+    }
 
     my $content = $ParsedSR->{content};
     # print ("\n#################\n");
