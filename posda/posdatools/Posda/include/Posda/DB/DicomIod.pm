@@ -854,6 +854,15 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Equipment,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.13.1.5' =>{
+    name => 'Breast Projection X-Ray Image Storage - For Processing',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+    ],
+  },
 };
 my $sop_common_parms = {
   spec_char_set => "(0008,0005)",
