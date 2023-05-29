@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { FileService } from '../file.service';
 import { timer } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-series',
@@ -18,32 +20,41 @@ export class SeriesComponent implements OnInit {
   public length: number = 500;
 
   private timerSub: any = undefined;
+  private headers = new HttpHeaders({});
+  private requestOptions = { headers: this.headers };
 
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
-              private router: Router
+              private router: Router,
+              private cookieService: CookieService,
+              private fileService: FileService
               ) { }
 
   ngOnInit() {
     let uid = this.route.snapshot.params['uid'];
-	let activity_id = this.route.snapshot.queryParams['activity_id'];
+    let activity_id = this.route.snapshot.queryParams['activity_id'];
     this.series_instance_uid = uid;
 
     if (uid === undefined) {
       let iec = this.route.snapshot.params['iec'];
       this.iec_id = iec;
       this.show_download = true;
-		this.http.get("/papi/v1/iecs/" + iec + "/files").subscribe(
+      this.http.get(
+        "/papi/v1/iecs/" + iec + "/files",
+        this.requestOptions
+      ).subscribe(
         res => this.handleResponse(res)
       );
     } else {
-			console.log(activity_id);
-			let url = "/papi/v1/series/" + this.series_instance_uid + "/files";
-			if (activity_id !== undefined) {
-				url = url + "?activity_id=" + activity_id;
-			}
+      console.log(activity_id);
+      let url = "/papi/v1/series/" + this.series_instance_uid + "/files";
+
+      if (activity_id !== undefined) {
+        url = url + "?activity_id=" + activity_id;
+      }
       this.show_download = true;
-			this.http.get(url).subscribe(
+
+      this.fileService.getUrl(url).subscribe(
         res => this.handleResponse(res)
       );
     }

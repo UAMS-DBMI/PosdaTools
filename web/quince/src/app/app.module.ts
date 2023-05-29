@@ -17,6 +17,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { FileService } from './file.service';
 import { DetailsComponent } from './details/details.component';
 import { DumpComponent } from './dump/dump.component';
+import { CookieService } from 'ngx-cookie-service';
 
 
 const appRoutes: Routes = [
@@ -44,7 +45,7 @@ const appRoutes: Routes = [
     MyMaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [FileService],
+  providers: [FileService, CookieService],
   bootstrap: [AppComponent],
   entryComponents: [DetailsComponent, DumpComponent]
 })

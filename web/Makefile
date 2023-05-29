@@ -18,3 +18,11 @@ push: last_built
 
 clean:
 	rm -f last_built
+
+
+dev: Dockerfile
+	docker run -it \
+		-p 4200:4200 \
+		-v $(PWD):/work \
+		-w /work \
+		node:16-alpine sh

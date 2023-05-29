@@ -67,7 +67,8 @@ tags_metadata = [
     },
     {
         "name": "Other",
-        "description": "Deprecated, testing, and other non-useful operations. Do not use.",
+        "description": "Deprecated, testing, and other non-useful "
+                       "operations. Do not use.",
     },
     {
         "name": "Collections",

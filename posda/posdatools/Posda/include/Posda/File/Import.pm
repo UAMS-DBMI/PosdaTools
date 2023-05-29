@@ -11,6 +11,7 @@ package Posda::File::Import;
     if ($response->is_success) {
       return new_from_success($class, $response->decoded_content);
     } else {
+      print STDERR "API response failure: $response->decoded_content\n";
       return new_from_error($class, $response->decoded_content);
     }
   }
@@ -67,8 +68,7 @@ use LWP::UserAgent;
 
 
 my $API_URL = Config('internal_api_url');
-#my $API_URL = 'http://posda-api:8087';
-# my $API_URL = 'http://144.30.104.84:1339';
+my $API_TOKEN = Config('api_system_token');
 
 sub digest_file {
   my ($filename) = @_;
@@ -83,6 +83,9 @@ sub digest_file {
 
 sub insert_file {
   my ($filename, $comment, $import_event_id) = @_;
+
+  print STDERR "========= Posda::File::Import::insert_file called!\n";
+  print STDERR "API_KEY=$API_TOKEN\n";
 
   if (not defined $comment) {
     $comment = "Added by Perl Job";

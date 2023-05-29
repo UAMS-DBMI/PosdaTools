@@ -23,3 +23,5 @@ add_needs_edit_to_pathology_visual_review_files.sql
 file_nifti.sql
 fix_file_nifti.sql
 create_new_nifti_defacing.sql
+move_auth_to_files.sh
+add_disabled_to_users.sql

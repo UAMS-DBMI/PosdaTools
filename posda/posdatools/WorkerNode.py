@@ -26,16 +26,26 @@ import platform
 import logging
 
 from posda.config import Config
-import posda.logging.autoconfig
+# import posda.logging.autoconfig
+
+format = '[%(levelname).4s|%(asctime)s|%(module)-15.15s] %(message)s'
+
+logging.basicConfig(level=logging.DEBUG,
+                    format=format,
+                    datefmt='%Y-%m-%d/%H:%M:%S')
 
 VERSION = 3       # the version of this code, increment only
 BASE_URL = None   # the base of the Posda API, as accessible from this node
 NODE_NAME = None  # the name of this node reported in the work table
+API_KEY = None    # system API key to use for requests
 
+HEADERS = None
 
 def main():
     global BASE_URL
     global NODE_NAME
+    global API_KEY
+    global HEADERS
 
     logging.info("worker node started")
 
@@ -43,6 +53,10 @@ def main():
     redis_host = Config.get('redis-host', default='redis')
     worker_priority = Config.get('worker-priority', default=0)
     NODE_NAME = Config.get('worker-name', default=platform.node())
+    API_KEY = Config.get('api_system_token')
+
+    HEADERS = {'Authorization': f'Bearer {API_KEY}'}
+    logging.debug(HEADERS)
 
     logging.info("configuration loaded: %s",
                  {
@@ -67,7 +81,9 @@ def work_loop(redis_db, priority):
 
     while True:
         restart_if_needed(redis_db)
+        logging.debug(f"BRBPOP from {queue_name}")
         sr = redis_db.brpop(keys=queue_name, timeout=5)
+        logging.debug(sr)
         if sr is None:
             # if the timeout is reached, sr will be None
             continue
@@ -183,7 +199,8 @@ def set_status_x(status: str,
     })
     req = requests.post(
         f'{BASE_URL}/worker/status/{work_id}/{status}',
-        json=metrics
+        json=metrics,
+        headers=HEADERS
     )
 
     if req.status_code != 200:
@@ -192,7 +209,8 @@ def set_status_x(status: str,
 
 def get_subprocess_info(subprocess_invocation_id: int) -> dict:
     req = requests.get(
-        f'{BASE_URL}/worker/subprocess/{subprocess_invocation_id}')
+        f'{BASE_URL}/worker/subprocess/{subprocess_invocation_id}',
+        headers=HEADERS)
     if req.status_code != 200:
         logging.error(f'Subprocess info returned: {req.status_code}')
         raise RuntimeError(f'Subprocess info returned: {req.status_code}')
@@ -212,7 +230,8 @@ def get_subprocess_info(subprocess_invocation_id: int) -> dict:
 
 
 def get_path_from_file_id(file_id: int) -> str:
-    req = requests.get(f'{BASE_URL}/files/{file_id}/path')
+    req = requests.get(f'{BASE_URL}/files/{file_id}/path',
+                       headers=HEADERS)
     if req.status_code != 200:
         logging.error(f'Filepath returned: {req.status_code}')
         raise RuntimeError(f'Filepath returned: {req.status_code}')
@@ -230,7 +249,8 @@ def get_path_from_file_id(file_id: int) -> str:
 
 def set_status_running(work_id: int) -> None:
     req = requests.post(f'{BASE_URL}/worker/status/{work_id}/running',
-                        json={"node_hostname": NODE_NAME})
+                        json={"node_hostname": NODE_NAME},
+                        headers=HEADERS)
     logging.debug(f'changed status to running: {work_id}')
 
     if req.status_code != 200:
@@ -238,7 +258,8 @@ def set_status_running(work_id: int) -> None:
 
 
 def get_work_item(work_id: int) -> object:
-    req = requests.get(f'{BASE_URL}/worker/status/{work_id}')
+    req = requests.get(f'{BASE_URL}/worker/status/{work_id}',
+                       headers=HEADERS)
     if req.status_code != 200:
         logging.error(f'Work item status returned: {req.status_code}')
         raise RuntimeError(f'Work item status returned: {req.status_code}')
@@ -265,7 +286,7 @@ def upload_file(fp):
     digest = md5sum(fp)
     fp.seek(0)
     params = {'digest': digest}
-    resp = requests.put(f'{BASE_URL}/import/file', params=params, data=fp)
+    resp = requests.put(f'{BASE_URL}/import/file', params=params, data=fp, headers=HEADERS)
     if resp.status_code != 200:
         logging.error(f'File uploading failed: {resp.status_code} {resp.text}')
         raise Exception("File upload failed")

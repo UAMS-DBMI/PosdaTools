@@ -1,10 +1,10 @@
-FROM python:3.7
+FROM python:3.10
 
 COPY ./app/requirements.txt /
 RUN pip install -r /requirements.txt
 
-COPY start.sh /
+COPY start_api.sh /
 COPY ./app /app
 
 WORKDIR /app
-CMD ["/start.sh"]
+CMD ["/start_api.sh"]

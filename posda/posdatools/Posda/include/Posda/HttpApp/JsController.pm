@@ -45,196 +45,7 @@ my $base_header = qq{<?dyn="html_header"?><!DOCTYPE html>
     <title><?dyn="title"?></title>
 };
 
-my $js_controller_hdr = <<EOF;
-var server_timer;
-function rt(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes," +
-    "status=0,left=100,top=100,location=yes";
-  remote=window.open(u,n,args);
-  if (remote != null) {
-    remote.opener = self;
-    remote.location.href = u;
-//    remote.location.reload(true);
-    remote.focus();
-  }
-  if (x == 1) { return remote; }
-}
 
-var ObjPath = "<?dyn="echo" field="path"?>";
-var IsExpert = <?dyn="QueueIsExpert"?>;
-var CanDebug = <?dyn="QueueCanDebug"?>;
-function AjaxObj(url, cb){
-  var that=this;
-  this.updating = false;
-  this.abort = function(){
-    if(that.updating) {
-      that.updating = false;
-      that.AJAX.abort();
-      that.AJAX=null;
-    }
-  }
-  this.post = function(data){
-    if(that.updating) { alert('reload before update finished'); return }
-    that.AJAX = null;
-    if (window.XMLHttpRequest) {
-      that.AJAX=new XMLHttpRequest();
-    } else {
-      that.AJAX=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    if (that.AJAX==null) {
-      alert('unable to create XMLHttpRequest');
-      return false;
-    } else {
-      that.AJAX.onreadystatechange = function() {
-        if (that.AJAX.readyState==4) {
-          that.updating=false;
-          that.callback(that.AJAX.responseText,
-            that.AJAX.status,that.AJAX.responseXML);
-          that.AJAX=null;
-        }
-      }
-      that.updating = new Date();
-      var uri=saveUrl+'&ts='+that.updating.getTime();
-      //alert('ajaxObject::update POST called, url: '+uri);
-      that.AJAX.open("POST", uri, true);
-      that.AJAX.setRequestHeader(
-        "Content-type", "text/plain");
-        // "Content-type", "application/x-www-form-urlencoded");
-      that.AJAX.send(data);
-    }
-  }
-  this.get = function(){
-    if(that.updating) { alert('reload before update finished'); return }
-    that.AJAX = null;
-    if (window.XMLHttpRequest) {
-      that.AJAX=new XMLHttpRequest();
-    } else {
-      that.AJAX=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    if (that.AJAX==null) {
-      alert('unable to create XMLHttpRequest');
-      return false;
-    } else {
-      that.AJAX.onreadystatechange = function() {
-        if (that.AJAX.readyState==4) {
-          that.updating=false;
-          that.callback(that.AJAX.responseText,
-            that.AJAX.status,that.AJAX.responseXML);
-          that.AJAX=null;
-        }
-      }
-      that.updating = new Date();
-      var uri=saveUrl+'&ts='+that.updating.getTime();
-      that.AJAX.open("GET", uri, true);
-      that.AJAX.setRequestHeader(
-        "Content-type", "text/plain");
-        // "Content-type", "application/x-www-form-urlencoded");
-      that.AJAX.send(null);
-    }
-  }
-  var saveUrl = url;
-  this.callback = cb || function () { };
-}
-function AJAXPostForm(formId){
-  var elem = document.getElementById(formId).elements;
-  var params = "";
-  url = document.getElementById(formId).action;
-  for(var i = 0; i < elem.length; i++){
-      if (elem[i].tagName == "SELECT"){
-          params += elem[i].name + "=" +
-            encodeURIComponent(elem[i].options[elem[i].selectedIndex].value)
-            + "&";
-      }else{
-          params += elem[i].name + "=" +
-          encodeURIComponent(elem[i].value) + "&";
-      }
-  }
-  xmlhttp=new XMLHttpRequest();
-  xmlhttp.open("POST",url,false);
-  xmlhttp.setRequestHeader("Content-type",
-    "application/x-www-form-urlencoded");
-  xmlhttp.setRequestHeader("Content-length", params.length);
-  xmlhttp.setRequestHeader("Connection", "close");
-  xmlhttp.send(params);
-  return xmlhttp.responseText;
-}
-function PosdaPostRemoteMethod(meth, content, cb){
-  var ajax = new AjaxObj(meth + "?obj_path=" + ObjPath, cb);
-  ajax.post(content);
-}
-function PosdaNewPostRemoteMethod(url, content, cb){
-  var ajax = new AjaxObj(url,  cb);
-  ajax.post(content);
-}
-function PosdaGetRemoteMethod(meth, args, cb){
-  var url = meth + "?obj_path=" + ObjPath;
-  if(args != '') url = url + "&" + args;
-  var ajax = new AjaxObj(url, cb);
-  ajax.get();
-}
-function CloseThisWindow(){
-  var that=this;
-  PosdaGetRemoteMethod("JavascriptCloseWindow", '',
-    function(responseText){
-      window.close();
-    }
-  );
-}
-function NewQueueRepeatingServerCmd(method, t){
-  //console.log("queue repeating server command");
-  var chk_cmd = "NewCheckServer(" + '"' +method+'"' + " ,2500);";
-  server_timer = setTimeout(chk_cmd, t);
-}
-var polling_shut_down = 0;
-function NewCheckServer(method, t){
-  if(polling_shut_down){
-    console.log('ServerPollingShutDown');
-    return;
-  }
-  PosdaGetRemoteMethod(method, '', function(text, status, xml){
-    if(status == 200){
-      if(text == null) {
-        alert('nothing returned');
-      } else if (text == '0'){
-      } else {
-        eval(text);
-      }
-      NewQueueRepeatingServerCmd(method, t);
-    } else {
-      console.log("status: %d", status);
-      //alert('Bad Ajax Response');
-      //window.location.reload();
-      document.write("<h1>Bad Ajax Response</h1>");
-      document.write("<p>Your connection to the server was lost.</p>");
-      document.write("<p>This could be due to a server error, or a disruption ");
-      document.write("in your internet connection.</p>");
-      document.write("<p>Refreshing this page may help.</p>");
-    }
-  });
-}
-function DetachAndRedirect(url){
-  polling_shutdown = 1;
-  PosdaGetRemoteMethod('Detach', '', function(text, status, xml){
-    if(status == 200){
-      document.write('setting window.location = '+url);
-      window.location = url;
-    } else {
-      alert('Detach failed');
-    }
-  });
-}
-window.onload = function(){
-  NewQueueRepeatingServerCmd('ServerCheck', 500);
-  Update();
-}
-function ChangeSelection(myNewSelected){
-  var substohide = document.getElementsByClassName("subdiv");
-  for (var i=0,len=substohide.length|0;i<len; i=i+1|0){
-    substohide[i].style.display = "none"
-  }
-  document.getElementById(myNewSelected).style.display= "block";
-}
-EOF
 sub InitApp{
   my($class, $sess, $app_name) = @_;
   my $obj = $class->new($sess, $app_name);
@@ -813,6 +624,200 @@ sub html_header{
 sub JsController{
   my($this, $http, $dyn) = @_;
   $dyn->{path} = $this->{path};
+
+  my $js_controller_hdr = qq{
+  var server_timer;
+  function rt(n,u,w,h,x) {
+    args="width="+w+",height="+h+",resizable=yes,scrollbars=yes," +
+      "status=0,left=100,top=100,location=yes";
+    remote=window.open(u,n,args);
+    if (remote != null) {
+      remote.opener = self;
+      remote.location.href = u;
+  //    remote.location.reload(true);
+      remote.focus();
+    }
+    if (x == 1) { return remote; }
+  }
+
+  var ObjPath = "<?dyn="echo" field="path"?>";
+  var IsExpert = <?dyn="QueueIsExpert"?>;
+  var CanDebug = <?dyn="QueueCanDebug"?>;
+  function AjaxObj(url, cb){
+    var that=this;
+    this.updating = false;
+    this.abort = function(){
+      if(that.updating) {
+        that.updating = false;
+        that.AJAX.abort();
+        that.AJAX=null;
+      }
+    }
+    this.post = function(data){
+      if(that.updating) { alert('reload before update finished'); return }
+      that.AJAX = null;
+      if (window.XMLHttpRequest) {
+        that.AJAX=new XMLHttpRequest();
+      } else {
+        that.AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      if (that.AJAX==null) {
+        alert('unable to create XMLHttpRequest');
+        return false;
+      } else {
+        that.AJAX.onreadystatechange = function() {
+          if (that.AJAX.readyState==4) {
+            that.updating=false;
+            that.callback(that.AJAX.responseText,
+              that.AJAX.status,that.AJAX.responseXML);
+            that.AJAX=null;
+          }
+        }
+        that.updating = new Date();
+        var uri=saveUrl+'&ts='+that.updating.getTime();
+        //alert('ajaxObject::update POST called, url: '+uri);
+        that.AJAX.open("POST", uri, true);
+        that.AJAX.setRequestHeader(
+          "Content-type", "text/plain");
+          // "Content-type", "application/x-www-form-urlencoded");
+        that.AJAX.send(data);
+      }
+    }
+    this.get = function(){
+      if(that.updating) { alert('reload before update finished'); return }
+      that.AJAX = null;
+      if (window.XMLHttpRequest) {
+        that.AJAX=new XMLHttpRequest();
+      } else {
+        that.AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      if (that.AJAX==null) {
+        alert('unable to create XMLHttpRequest');
+        return false;
+      } else {
+        that.AJAX.onreadystatechange = function() {
+          if (that.AJAX.readyState==4) {
+            that.updating=false;
+            that.callback(that.AJAX.responseText,
+              that.AJAX.status,that.AJAX.responseXML);
+            that.AJAX=null;
+          }
+        }
+        that.updating = new Date();
+        var uri=saveUrl+'&ts='+that.updating.getTime();
+        that.AJAX.open("GET", uri, true);
+        that.AJAX.setRequestHeader(
+          "Content-type", "text/plain");
+          // "Content-type", "application/x-www-form-urlencoded");
+        that.AJAX.send(null);
+      }
+    }
+    var saveUrl = url;
+    this.callback = cb || function () { };
+  }
+  function AJAXPostForm(formId){
+    var elem = document.getElementById(formId).elements;
+    var params = "";
+    url = document.getElementById(formId).action;
+    for(var i = 0; i < elem.length; i++){
+        if (elem[i].tagName == "SELECT"){
+            params += elem[i].name + "=" +
+              encodeURIComponent(elem[i].options[elem[i].selectedIndex].value)
+              + "&";
+        }else{
+            params += elem[i].name + "=" +
+            encodeURIComponent(elem[i].value) + "&";
+        }
+    }
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.open("POST",url,false);
+    xmlhttp.setRequestHeader("Content-type",
+      "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader("Content-length", params.length);
+    xmlhttp.setRequestHeader("Connection", "close");
+    xmlhttp.send(params);
+    return xmlhttp.responseText;
+  }
+  function PosdaPostRemoteMethod(meth, content, cb){
+    var ajax = new AjaxObj(meth + "?obj_path=" + ObjPath, cb);
+    ajax.post(content);
+  }
+  function PosdaNewPostRemoteMethod(url, content, cb){
+    var ajax = new AjaxObj(url,  cb);
+    ajax.post(content);
+  }
+  function PosdaGetRemoteMethod(meth, args, cb){
+    var url = meth + "?obj_path=" + ObjPath;
+    if(args != '') url = url + "&" + args;
+    var ajax = new AjaxObj(url, cb);
+    ajax.get();
+  }
+  function CloseThisWindow(){
+    var that=this;
+    PosdaGetRemoteMethod("JavascriptCloseWindow", '',
+      function(responseText){
+        window.close();
+      }
+    );
+  }
+  function NewQueueRepeatingServerCmd(method, t){
+    //console.log("queue repeating server command");
+    var chk_cmd = "NewCheckServer(" + '"' +method+'"' + " ,2500);";
+    server_timer = setTimeout(chk_cmd, t);
+  }
+  var polling_shut_down = 0;
+  function NewCheckServer(method, t){
+    if(polling_shut_down){
+      console.log('ServerPollingShutDown');
+      return;
+    }
+    PosdaGetRemoteMethod(method, '', function(text, status, xml){
+      if(status == 200){
+        if(text == null) {
+          alert('nothing returned');
+        } else if (text == '0'){
+        } else {
+          eval(text);
+        }
+        NewQueueRepeatingServerCmd(method, t);
+      } else {
+        console.log("status: %d", status);
+        //alert('Bad Ajax Response');
+        //window.location.reload();
+        document.write("<h1>Bad Ajax Response</h1>");
+        document.write("<p>Your connection to the server was lost.</p>");
+        document.write("<p>This could be due to a server error, or a disruption ");
+        document.write("in your internet connection.</p>");
+        document.write("<p>Refreshing this page may help.</p>");
+      }
+    });
+  }
+  function DetachAndRedirect(url){
+    polling_shutdown = 1;
+    PosdaGetRemoteMethod('Detach', '', function(text, status, xml){
+      if(status == 200){
+        document.write('setting window.location = '+url);
+        window.location = url;
+      } else {
+        alert('Detach failed');
+      }
+    });
+  }
+  window.onload = function(){
+    NewQueueRepeatingServerCmd('ServerCheck', 500);
+    Update();
+    document.cookie = 'logintoken=$this->{Token};path=/;max-age=31536000';
+  }
+  function ChangeSelection(myNewSelected){
+    var substohide = document.getElementsByClassName("subdiv");
+    for (var i=0,len=substohide.length|0;i<len; i=i+1|0){
+      substohide[i].style.display = "none"
+    }
+    document.getElementById(myNewSelected).style.display= "block";
+  }
+  };
+
+
   $this->RefreshEngine($http, $dyn, $js_controller_hdr);
 }
 sub AutoRefresh{
