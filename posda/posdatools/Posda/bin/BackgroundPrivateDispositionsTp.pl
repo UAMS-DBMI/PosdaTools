@@ -172,62 +172,65 @@ print "Going to background for further processing\n";
 $background->Daemonize;
 
 
+# no need to look at private tag dispositions at all if we are just
+# skipping them!
+unless ($skip_dispositions) {
+  $background->SetActivityStatus("Checking and Marking Tags");
+  my $q1 = PosdaDB::Queries->GetQueryInstance(
+    "PrivateTagsWhichArentMarked");
+  my $q2 = PosdaDB::Queries->GetQueryInstance(
+    "DoAnyPrivateTagsNeedDispositions");
+  my $error = 0;
 
-$background->SetActivityStatus("Checking and Marking Tags");
-my $q1 = PosdaDB::Queries->GetQueryInstance(
-  "PrivateTagsWhichArentMarked");
-my $q2 = PosdaDB::Queries->GetQueryInstance(
-  "DoAnyPrivateTagsNeedDispositions");
-my $error = 0;
-
-my @new_tags;
-$q1->RunQuery(sub{
-  my($row) = @_;
-  my($id, $ele_sig, $vr, $name, $disp) = @$row;
-  push(@new_tags, [$id, $ele_sig, $vr, $name, $disp]);
-}, sub {});
-if(@new_tags > 0){
-  my $num_new_tags = @new_tags;
-  $background->WriteToEmail("Error: there are $num_new_tags new private tags to be processed (for name)\n");
-  open PIPE, "UpdatePrivateElementNames.pl|";
-  $background->WriteToEmail("Running UpdatePrivateElementNames.pl:\n");
-  while(my $line = <PIPE>){
-    chomp $line;
-    $background->WriteToEmail(">>>>$line\n");
+  my @new_tags;
+  $q1->RunQuery(sub{
+    my($row) = @_;
+    my($id, $ele_sig, $vr, $name, $disp) = @$row;
+    push(@new_tags, [$id, $ele_sig, $vr, $name, $disp]);
+  }, sub {});
+  if(@new_tags > 0){
+    my $num_new_tags = @new_tags;
+    $background->WriteToEmail("Error: there are $num_new_tags new private tags to be processed (for name)\n");
+    open PIPE, "UpdatePrivateElementNames.pl|";
+    $background->WriteToEmail("Running UpdatePrivateElementNames.pl:\n");
+    while(my $line = <PIPE>){
+      chomp $line;
+      $background->WriteToEmail(">>>>$line\n");
+    }
+    my $now = `date`;
+    chomp $now;
+    $background->WriteToEmail("$now: finished UpdatePrivateElementNames.pl:\n");
   }
-  my $now = `date`;
-  chomp $now;
-  $background->WriteToEmail("$now: finished UpdatePrivateElementNames.pl:\n");
-}
-$background->SetActivityStatus("Checking Missing Dispositions");
+  $background->SetActivityStatus("Checking Missing Dispositions");
 
-my @dispositions_needed;
-$q2->RunQuery(sub {
-  my($row) = @_;
-  my($id, $ele_sig, $vr, $name) = @$row;
-  push @dispositions_needed, [$id, $ele_sig, $vr, $name];
-}, sub {});
-my $num_needing_disp = @dispositions_needed;
+  my @dispositions_needed;
+  $q2->RunQuery(sub {
+    my($row) = @_;
+    my($id, $ele_sig, $vr, $name) = @$row;
+    push @dispositions_needed, [$id, $ele_sig, $vr, $name];
+  }, sub {});
+  my $num_needing_disp = @dispositions_needed;
 
-if($num_needing_disp > 0){
-  $background->WriteToEmail("\n############\n" .
-    "$num_needing_disp private tags need dispositions\n");
-  my %SeriesNeedingDispositions;
-  my $c_series = Query('DoesSeriesHaveAnyTagsWithNoDispositions');
-  for my $series (keys %Series){
-    $c_series->RunQuery(sub{
-      my($row) = @_;
-      $SeriesNeedingDispositions{$row->[0]} = 1;
-    }, sub {}, $series);
-  }
-  my $num_series_missing_dispositions = keys %SeriesNeedingDispositions;
-  if($num_series_missing_dispositions > 0){
-    $background->WriteToEmail("including $num_series_missing_dispositions" .
-      " series in this timepoint\n############\n");
-    $background->Finish("$num_series_missing_dispositions missing dispositions");
-    exit;
-  } else {
-    $background->WriteToEmail("$num_needing_disp private tags need dispositions\n");
+  if($num_needing_disp > 0){
+    $background->WriteToEmail("\n############\n" .
+      "$num_needing_disp private tags need dispositions\n");
+    my %SeriesNeedingDispositions;
+    my $c_series = Query('DoesSeriesHaveAnyTagsWithNoDispositions');
+    for my $series (keys %Series){
+      $c_series->RunQuery(sub{
+        my($row) = @_;
+        $SeriesNeedingDispositions{$row->[0]} = 1;
+      }, sub {}, $series);
+    }
+    my $num_series_missing_dispositions = keys %SeriesNeedingDispositions;
+    if($num_series_missing_dispositions > 0){
+      $background->WriteToEmail("including $num_series_missing_dispositions" .
+        " series in this timepoint\n############\n");
+      $background->Finish("$num_series_missing_dispositions missing dispositions");
+      exit;
+    } else {
+      $background->WriteToEmail("$num_needing_disp private tags need dispositions\n");
+    }
   }
 }
 
