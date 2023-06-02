@@ -164,17 +164,26 @@ def render_projection(cursor, iec: int) -> None:
     logging.info(f"Rendering projection for IEC: {iec}.")
     # look up the input files
     cursor.execute("""
-        select root_path || '/' || rel_path as path
+        select root_path || '/' || rel_path as path, number_of_frames
         from image_equivalence_class_input_image
         natural join file_location
         natural join file_storage_root
+        natural join file_image
+        natural join image
         where image_equivalence_class_id = %s
     """, [iec])
     
     # get their paths
     # assemble into a filelist
     with tempfile.NamedTemporaryFile(delete=False) as outfile:
-        files = [path.encode() for path, in cursor]
+        files = []
+        for path, number_of_frames in cursor:
+            if number_of_frames is not None:
+                if number_of_frames > 1:
+                    raise TypeError("This IEC contains files with "
+                                    "multiple frames. Projections for "
+                                    "these files are currently disabled!")
+            files.append(path.encode())
 
         logging.info(f"Found {len(files)} images in this IEC.")
 
@@ -221,7 +230,10 @@ def process_single_vr(visual_review_instance_id: int) -> None:
         logging.info("Rendering projections...")
 
     for iec in iecs:
-        render_projection(cur, iec)
+        try:
+            render_projection(cur, iec)
+        except Exception as e:
+            log_error(cur, iec, e)
 
     conn.close()
 
