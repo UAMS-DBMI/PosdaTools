@@ -34,10 +34,12 @@ sub _get_handle {
 }
 
 sub _get_handle_main {
-  my ($connect) = @_;
+  my ($self) = @_;
+  my $connect = $self->{connect};
   if (not defined $db_handle_cache->{$connect}) {
     $db_handle_cache->{$connect} = DBI->connect($connect)
       or die "Could not connect to DB with connect string: $connect";
+    $self->_log_retrival($self->{name});
   }
 
   return $db_handle_cache->{$connect};
@@ -62,7 +64,6 @@ sub new {
   bless $self, $class;
 
   $self->_load_query($name);
-  $self->_log_retrival($name);
 
   return $self;
 };
@@ -221,7 +222,7 @@ sub FetchOneHash {
   # Fetch the first row of results as a hash
   my ($self) = shift;
 
-  my $dbh = _get_handle_main($self->{connect});
+  my $dbh = $self->_get_handle_main();
 
   if (not defined $self->{handle}) {
     $self->Prepare($dbh);
@@ -238,7 +239,7 @@ sub FetchResults {
 
   my ($self) = shift;
 
-  my $dbh = _get_handle_main($self->{connect});
+  my $dbh = $self->_get_handle_main();
 
   if (not defined $self->{handle}) {
     $self->Prepare($dbh);
@@ -254,7 +255,7 @@ sub _RunQueryBlocking {
   my $row_callback = shift;
   my $end_callback = shift;
 
-  my $dbh = _get_handle_main($self->{connect});
+  my $dbh = $self->_get_handle_main();
 
   if (not defined $self->{handle}) {
     $self->Prepare($dbh);
