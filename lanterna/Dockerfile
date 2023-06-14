@@ -1,4 +1,4 @@
-FROM alpine:latest as builder
+FROM alpine:3.17 as builder
 RUN apk --update add alpine-sdk tar make xz \
 	libpng libjpeg openjpeg-dev \
 	bzip2-dev \
@@ -20,7 +20,7 @@ RUN cd / \
  && make install
 
 
-FROM alpine:latest
+FROM alpine:3.17
 RUN apk --update add \
 	imagemagick \
 	xz-libs \
