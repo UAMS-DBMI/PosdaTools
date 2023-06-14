@@ -9,3 +9,7 @@ default:
 	make -C posda
 	make -C lanterna
 	make -C kaleidoscope
+
+
+test:
+	echo "There are no tests yet :("
