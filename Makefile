@@ -1,10 +1,5 @@
-TOPTARGETS := all push clean
-SUBDIRS := $(wildcard */.)
-
-$(TOPTARGETS): $(SUBDIRS)
-
-$(SUBDIRS):
-	$(MAKE) -C $@ $(MAKECMDGOALS)
-
-
-.PHONY: $(TOPTARGETS) $(SUBDIRS)
+default:
+	git submodule init
+	git submodule update
+	make -C docs
+	make -C ohif
