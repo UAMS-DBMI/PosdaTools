@@ -124,7 +124,7 @@ async def find_site_name_from_code(site_code: int, db: Database = Depends()) -> 
         site_codes
        where
         site_code = $1
-       """, [str(site_code)])
+       """, [int(site_code)])
     return record['site_name']
 
 @router.get("/findCollectionCodeFromName/{collection_name}")

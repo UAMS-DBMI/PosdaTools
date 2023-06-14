@@ -183,32 +183,36 @@ sub ContentResponse {
      caption => "Check Site Info",
      sync => "Update();",
     });
-    my $search_results2 = [];
-    if ($self->{site_code_in_examination}){
-      if ($self->{site_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
-        $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$self->{site_code_in_examination}");
-        my $site_name = decode_json($self->{client}->responseContent());
-        $http->queue("<br>------------------------------------------------</br>");
-        $http->queue("$site_name ($self->{site_code_in_examination}) is used by the following collection+site combinations:</br>");
-        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{record_data}->[0]->{site_code_in_examination}");
-        $search_results2 = decode_json($self->{client}->responseContent());
-     }else{
-        $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$self->{site_code_in_examination}");
-        my $site_code = decode_json($self->{client}->responseContent());
-        $http->queue("<br>------------------------------------------------</br>");
-        $http->queue("($self->{site_code_in_examination}) $site_code  is used by the following collection+site combinations:</br>");
-        $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
-        $search_results2  = decode_json($self->{client}->responseContent());
-     }
-     if ($search_results2 and $search_results2->[0] != ''){
-       my $i = 0;
-       for( $i < $search_results2.length){
-         $http->queue("$search_results2->[0]->{collection_name} + $search_results2->[0]->{site_name}</br>");
+    try{
+      my $search_results2 = [];
+      if ($self->{site_code_in_examination}){
+        if ($self->{site_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
+          $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$self->{site_code_in_examination}");
+          my $site_name = decode_json($self->{client}->responseContent());
+          $http->queue("<br>------------------------------------------------</br>");
+          $http->queue("$site_name ($self->{site_code_in_examination}) is used by the following collection+site combinations:</br>");
+          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{record_data}->[0]->{site_code_in_examination}");
+          $search_results2 = decode_json($self->{client}->responseContent());
+       }else{
+          $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$self->{site_code_in_examination}");
+          my $site_code = decode_json($self->{client}->responseContent());
+          $http->queue("<br>------------------------------------------------</br>");
+          $http->queue("($self->{site_code_in_examination}) $site_code  is used by the following collection+site combinations:</br>");
+          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
+          $search_results2  = decode_json($self->{client}->responseContent());
        }
-      }else{
-       $http->queue("No collections are using this site</br>");
+       if ($search_results2 and $search_results2->[0] != ''){
+         my $i = 0;
+         for( $i < $search_results2.length){
+           $http->queue("$search_results2->[0]->{collection_name} + $search_results2->[0]->{site_name}</br>");
+         }
+        }else{
+         $http->queue("No collections are using this site</br>");
+        }
       }
-   }
+   } catch {
+      $http->queue("Search failed, please enter a different code / name</br>");
+   };
    $http->queue("<br>------------------------------------------------</br>");
    $self->{field} = "site_code";
    $self->NotSoSimpleButton($http, {
