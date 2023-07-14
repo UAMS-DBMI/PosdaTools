@@ -148,6 +148,21 @@ def files_from_series(cursor, series):
         for path, sop in cursor
     ]
 
+def failed_files_from_copy(cursor, subprocess_invocation_id):
+    cursor.execute("""
+        select storage_path(file_id), sop_instance_uid
+        from public_copy_status 
+        natural join file_sop_common
+        where subprocess_invocation_id = %s 
+        and success = false
+    """, [subprocess_invocation_id])
+
+    return [
+        (sop, path)
+        for path, sop in cursor
+    ]
+
+
 def make_filename_from_sop(sop):
     md5 = hashlib.md5()
     md5.update(sop.encode())
@@ -178,35 +193,25 @@ def copy_sops_into_place(sops):
 
     return ret
 
-def main(series_list_file: str,
+def main(subprocess_invocation_id: int,
          collection_name: str,
          site_name: str,
          site_id: int,
-         base_dir: str = "/nas/public/storage-from-posda",
-         copy_into_place: bool = False):
-    """Send existing files via the NBIA Submissions API
+         base_dir: str = "/nas/public/storage-from-posda"):
+    """Resend failed files for a subprocess_invocation_id
 
-    This program submit files to NBIA via the NBIA Submissions API. The
-    files must already exist in their final form in the dedicated
-    NBIA storage location. Normally they get there via the Apply Private
-    Dispositions script.
-
-    For each series in the series_list_file, this program will:
-        1) get all files in the series
-        2) calculate the expected filename
-        3) verify the file exists in that location
-        4) submit the file via the NBIA API
+    For each success=false file in public_copy_status, this program will:
+        1) calculate the expected filename
+        2) verify the file exists in that location
+        3) submit the file via the NBIA API
 
     Args:
-        series_list_file: a file containing a list of series to operate on
+        subprocess_invocation_id:
         collection_name: the collection name to submit to the API
         site_name: the site name to submit to the API
         site_id: the 8 digit site id contianing collection_code and site_code
 
         base_dir: the base location where files are expected to be (or will be placed). Defaults to: /nas/public/storage-from-posda
-
-        copy_into_place: copy files into place instead of expecting them
-                         to already be there.
 
     """
     global TOKEN
@@ -225,38 +230,26 @@ def main(series_list_file: str,
     print("# connected to postgres")
 
 
-    with open(series_list_file, "r") as infile:
-        series_list = [
-            row.strip()
-            for row in infile
-        ]
+    # with open(sop_list_file, "r") as infile:
+    #     sops = [
+    #         row.strip()
+    #         for row in infile
+    #     ]
+    # print("Sops read from file:", len(sops))
+
+    # get all failed files from public_copy_status
+    # select file_id from public_copy_status where subprocess_invocation_id = 21854 and success = false;
 
 
-    print("Series read from file:", len(series_list))
+    # generate the expected filename
+    filenames = failed_files_from_copy(psql_db_cur, subprocess_invocation_id)
 
-    # get sops from series
-    print("Getting sops from series...")
-    sops = []
-    for series in series_list:
-        sops.extend(files_from_series(psql_db_cur, series))
+    print(filenames)
+    return
 
-    print("Sops read from database:", len(sops))
-
-    if copy_into_place:
-        print(f"Copying {len(sops)} files into place...")
-        existing_files = copy_sops_into_place(sops)
-        print("Done.")
-    else:
-
-        # generate the expected filename
-        filenames = [
-            make_filename_from_sop(sop)
-            for sop, orig_filename in sops
-        ]
-
-        # verify they exist
-        existing_files = list(filter(os.path.exists, filenames))
-        print(f"Found {len(existing_files)} files.")
+    # verify they exist
+    existing_files = list(filter(os.path.exists, filenames))
+    print(f"Found {len(existing_files)} files.")
 
     TOKEN = login_or_die()
     print(f"logged in to api, token={TOKEN}")

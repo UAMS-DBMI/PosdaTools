@@ -255,7 +255,7 @@ def main(series_list_file: str,
         ]
 
         # verify they exist
-        existing_files = list(filter(os.path.exists, filenames))
+        existing_files = filter(os.path.exists, filenames)
         print(f"Found {len(existing_files)} files.")
 
     TOKEN = login_or_die()
@@ -271,4 +271,4 @@ def main(series_list_file: str,
 
 
 if __name__ == "__main__":
-    Fire(main)
+    print(login_or_die())
