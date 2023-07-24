@@ -77,6 +77,8 @@ def submit_file(f):
             time.sleep(1)  # wait a bit for the server to get over it's funk
         except LoginExpiredError:
             TOKEN = login_to_api()
+        except Exception as e:
+            errors.append(e)
 
     raise SubmitFailedError(("Failed to submit the file; error details follow", f, errors))
 
@@ -110,6 +112,7 @@ def _submit_file(f):
         print(f.filename)
         return
     elif req.status_code == 401:
+        print(req.content)
         # indicates an acess error, generally an expired token
         message = req.json()
         if message['error'] == "invalid_token":
