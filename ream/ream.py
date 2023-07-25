@@ -101,7 +101,7 @@ def _submit_file(f):
                'uri': f.filename,
                'thirdPartyAnalysis': tpa,
                'descriptionURI': tpa_url,
-               'posdaTransferId': file_id,
+               'posdaTransferId': f.file_id,
                }
     headers = {
         "Authorization": "Bearer {}".format(TOKEN),
