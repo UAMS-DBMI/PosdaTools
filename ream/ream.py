@@ -114,7 +114,11 @@ def _submit_file(f):
     elif req.status_code == 401:
         print(req.content)
         # indicates an acess error, generally an expired token
-        message = req.json()
+        try:
+            message = req.json()
+        except:
+            # if it wasn't json at all, just report it?
+            raise SubmitFailedError(req.content)
         if message['error'] == "invalid_token":
             raise LoginExpiredError()
         else:
