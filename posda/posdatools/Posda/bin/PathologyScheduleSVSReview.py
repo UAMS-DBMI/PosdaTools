@@ -76,7 +76,7 @@ def main(args):
                 mytif2.save(str)
                 #print(f"Creating a tif preview")
                 process(str, file_id) #import thumbnail
-        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp"):
+        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ):
                 myimg = Image.open(svsfilepath)
                 str = "/tmp/{}_thumb.jpg".format(file_id)
                 size = (700,700)
