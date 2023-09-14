@@ -58,7 +58,7 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 
   ![image](Posda_example_images/Example_Posda_main_application_launcher.png)
   
-  ![alt text](Posda Main Application Launcher.png)
+  ![alt text](Posda_example_images/Posda Main Application Launcher.png)
 
 <br><br>
 <details>
@@ -74,9 +74,9 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 <br><br>
 <details>
   <summary>Posda Helper Applications -  Example Screenshots</summary>
-  !([image]("./Posda_example_images/Example_DICOM_roots_application.png" name="Example_DICOM_roots_application.png" ![alt text]("DICOM Collection ID creation application: DICOM Roots Editor">
-  !([image]("./Posda_example_images/Example_Kaliedoscope_UI.png" name="Example_Kaliedoscope_UI.png" ![alt text]("DICOM Visual Review application: Kaliedoscope">
-  !([image]("./Posda_example_images/Example_QuinceUI.png.png" name="Example_QuinceUI.png" ![alt text]("Lightweight DICOM  Viewer Quince">
+  ![image]("./Posda_example_images/Example_DICOM_roots_application.png" name="Example_DICOM_roots_application.png" ![alt text]("DICOM Collection ID creation application: DICOM Roots Editor">
+  ![image]("./Posda_example_images/Example_Kaliedoscope_UI.png" name="Example_Kaliedoscope_UI.png" ![alt text]("DICOM Visual Review application: Kaliedoscope">
+  ![image]("./Posda_example_images/Example_QuinceUI.png.png" name="Example_QuinceUI.png" ![alt text]("Lightweight DICOM  Viewer Quince">
 </details>
 
 <sub>© 2022 The Board of Trustees of the University of Arkansas</sub>
