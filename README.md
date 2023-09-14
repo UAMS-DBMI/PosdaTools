@@ -45,12 +45,12 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 ## Images
 <details>
   <summary>Network Diagram:</summary>
-  <img src="https://posda.com/wp-content/uploads/Posda-Client-Network-Diagram-r1.3.png" name="Posda_Network_Diagram" alt="Posda Network Diagram">
+  <img src="https://posda.com/wp-content/uploads/Posda-Client-Network-Diagram-r1.3.png" name="Posda_Network_Diagram" alt="Posda Network Diagram" width="200">
 </details>
 <details>
   <summary>Landing Page Example Screenshots</summary>
-  <img src="./Posda_example_images/Example_posda_launcher_page1.png" name="Example_posda_launcher_page1.png" alt="Posda toolset landing page">
-  <img src="./Posda_example_images/Example_Posda_main_application_launcher.png" name="Example_Posda_main_application_launcher.png" alt="Posda Main Application Launcher.png">
+  <img src="Posda_example_images/Example_posda_launcher_page1.png" name="Example_posda_launcher_page1.png" alt="Posda toolset landing page">
+  <img src="Posda_example_images/Example_Posda_main_application_launcher.png" name="Example_Posda_main_application_launcher.png" alt="Posda Main Application Launcher.png">
 </details>
 <details>
   <summary>Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots</summary>
