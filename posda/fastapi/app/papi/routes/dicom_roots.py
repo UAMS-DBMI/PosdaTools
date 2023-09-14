@@ -103,7 +103,7 @@ async def search_roots(
 
 
 @router.get("/findCollectionNameFromCode/{collection_code}")
-async def find_collection_name_from_code(collection_code: int, db: Database = Depends()) -> PlainTextResponse:
+async def find_collection_name_from_code(collection_code: str, db: Database = Depends()) -> PlainTextResponse:
      record = await db.fetch_one("""\
          select
           collection_name
@@ -116,7 +116,7 @@ async def find_collection_name_from_code(collection_code: int, db: Database = De
 
 
 @router.get("/findSiteNameFromCode/{site_code}")
-async def find_site_name_from_code(site_code: int, db: Database = Depends()) -> PlainTextResponse:
+async def find_site_name_from_code(site_code: str, db: Database = Depends()) -> PlainTextResponse:
     record = await db.fetch_one("""\
        select
         site_name
