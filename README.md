@@ -59,13 +59,13 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 <br><br>
 <details>
   <summary>Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots</summary>
-  ![image]("./Posda_example_images/Example_ABC_UI.png" "Activity Based Curation module interface")
-  ![image]("./Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png" "ABC Query Page with labels")
-  ![image]("./Posda_example_images/Example_ABC_US_QueryResults.png" "ABC Query Results")
-  ![image]("./Posda_example_images/Example_ABC_UI_Running_a_process_from_query_results_with_labels.png" "ABC Running a process from query_results with labels.png")
-  ![image]("./Posda_example_images/Example_Uploading_Edits.png" "Example of Spreadsheet for Running an Edit")
-  ![image]("./Posda_example_images/Example_ABC_UI_process_completion_inbox_item.png" "ABC Process Completion Results")
-  ![image]("./Posda_example_images/Example_ABC_UI_accept_edits.png" "Example ABC Process Results with buttons to accept or reject proposed DICOM file edits")
+  ![image]("Posda_example_images/Example_ABC_UI.png" "Activity Based Curation module interface")
+  ![image]("Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png" "ABC Query Page with labels")
+  ![image]("Posda_example_images/Example_ABC_US_QueryResults.png" "ABC Query Results")
+  ![image]("Posda_example_images/Example_ABC_UI_Running_a_process_from_query_results_with_labels.png" "ABC Running a process from query_results with labels.png")
+  ![image]("Posda_example_images/Example_Uploading_Edits.png" "Example of Spreadsheet for Running an Edit")
+  ![image]("Posda_example_images/Example_ABC_UI_process_completion_inbox_item.png" "ABC Process Completion Results")
+  ![image]("Posda_example_images/Example_ABC_UI_accept_edits.png" "Example ABC Process Results with buttons to accept or reject proposed DICOM file edits")
 </details>
 
 <br><br>
