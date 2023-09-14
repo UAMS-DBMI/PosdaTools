@@ -1,4 +1,11 @@
 #!/usr/bin/python3 -u
+ABOUT="""\
+
+This program submits new files to the NBIA submitDICOM API.
+
+See the interface at: https://github.com/CBIIT/NBIA-TCIA/blob/master/software/nbia-api/src/gov/nih/nci/nbia/restAPI/DICOMSubmission.java
+
+"""
 
 import redis
 import json
@@ -17,6 +24,7 @@ CLIENTID=os.environ['REAM_CLIENTID']
 CLIENTSECRET=os.environ['REAM_CLIENTSECRET']
 RETRY_COUNT=int(os.environ['REAM_RETRY_COUNT'])
 PSQL_DB_NAME=os.environ['REAM_PSQL_DB_NAME']
+OVERWRITE=os.environ.get('REAM_OVERWRITE')
 REDIS_HOST=os.environ['POSDA_REDIS_HOST']
 
 TOKEN=None
@@ -94,6 +102,13 @@ def _submit_file(f):
     else:
         tpa = "NO"
 
+    # note that if unset on the REST call, overwrite is the default
+    if OVERWRITE is None:
+        overwrite = "NO"
+    else:
+        overwrite = "YES"
+
+
     payload = {'project': f.collection,
                'siteName': f.site,
                'siteID': f.site_id,
@@ -102,6 +117,7 @@ def _submit_file(f):
                'thirdPartyAnalysis': tpa,
                'descriptionURI': tpa_url,
                'posdaTransferId': f.file_id,
+               'overwrite': overwrite,
                }
     headers = {
         "Authorization": "Bearer {}".format(TOKEN),
