@@ -24,6 +24,7 @@ sub SpecificInitialize {
   $self->{value}  = "";
   $self->{changing} = "none";
   $self->{site_code_in_examination}  = "";
+  $self->{site_name_in_examination}  = "";
 }
 
 sub ContentResponse {
@@ -187,17 +188,20 @@ sub ContentResponse {
       my $search_results2 = [];
       if ($self->{site_code_in_examination}){
         if ($self->{site_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
-          $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$self->{site_code_in_examination}");
+          my $site_code = $self->{site_code_in_examination};
+          $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$site_code");
           my $site_name = decode_json($self->{client}->responseContent());
           $http->queue("<br>------------------------------------------------</br>");
-          $http->queue("$site_name ($self->{site_code_in_examination}) is used by the following collection+site combinations:</br>");
-          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{record_data}->[0]->{site_code_in_examination}");
+          $http->queue("$site_name ($site_code) is used by the following collection+site combinations:</br>");
+          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
           $search_results2 = decode_json($self->{client}->responseContent());
        }else{
-          $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$self->{site_code_in_examination}");
+          my $site_name = $self->{site_code_in_examination}; #this is actually the name not the code
+          $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$site_name");
           my $site_code = decode_json($self->{client}->responseContent());
+          $self->{site_code_in_examination} = $site_code;
           $http->queue("<br>------------------------------------------------</br>");
-          $http->queue("($self->{site_code_in_examination}) $site_code  is used by the following collection+site combinations:</br>");
+          $http->queue("($site_name) $site_code  is used by the following collection+site combinations:</br>");
           $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
           $search_results2  = decode_json($self->{client}->responseContent());
        }

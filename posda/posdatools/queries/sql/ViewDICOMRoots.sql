@@ -1,6 +1,6 @@
 -- Name: ViewDICOMRoots
 -- Schema: posda_queries
--- Columns: ['collection_name', 'collection_code', 'site_name', 'site_code', 'patient_id_prefix', 'body_part', 'access_type', 'baseline_date', 'date_shift', 'DicomRootPairID']
+-- Columns: ['collection_name', 'collection_code', 'site_name', 'site_code', 'patient_id_prefix', 'body_part', 'access_type', 'baseline_date', 'date_shift', 'rootid']
 -- Args: []
 -- Tags: ['dicom_roots']
 -- Description: View the dicom_roots
@@ -15,7 +15,7 @@ select
     a.access_type,
     a.baseline_date,
     a.date_shift,
-    a.submission_id as DicomRootPairID
+    a.submission_id as rootid
 from
     submissions a
     natural join collection_codes b
