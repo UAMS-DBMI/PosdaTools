@@ -49,16 +49,12 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 </details>
 <br><br>
 
-![Your alt text here](Posda_example_images/Example_posda_launcher_page1.png){height=100}
 
-
-  <summary>Landing Page Example Screenshots</summary>
+# Landing Page Example Screenshots
   
-![Alt text](Posda_example_images/Example_posda_launcher_page1.png "Posda toolset landing page")
-
-  ![image](Posda_example_images/Example_Posda_main_application_launcher.png)
-  
-  ![alt text](Posda_example_images/Posda Main Application Launcher.png)
+![Alt text](Posda_example_images/Example_posda_launcher_page1.png "Posda toolset landing page"){width=50%}
+![image](Posda_example_images/Example_Posda_main_application_launcher.png){width=50%}
+![alt text](Posda_example_images/Posda Main Application Launcher.png){width=50%}
 
 <br><br>
 <details>
