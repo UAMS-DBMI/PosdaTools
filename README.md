@@ -42,18 +42,18 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
  * Send to Server / Repository
  * Compare Posda Data to Server Data for verification
 
-
-Network Diagram:
-<img src="https://posda.com/wp-content/uploads/Posda-Client-Network-Diagram-r1.3.png" name="Posda_Network_Diagram" alt="Posda Network Diagram">
-
-Screenshots:
+## Images
 <details>
-  <summary>Landing Pages</summary>
+  <summary>Network Diagram:</summary>
+  <img src="https://posda.com/wp-content/uploads/Posda-Client-Network-Diagram-r1.3.png" name="Posda_Network_Diagram" alt="Posda Network Diagram">
+</details>
+<details>
+  <summary>Landing Page Example Screenshots</summary>
   <img src="./Posda_example_images/Example_posda_launcher_page1.png" name="Example_posda_launcher_page1.png" alt="Posda toolset landing page">
   <img src="./Posda_example_images/Example_Posda_main_application_launcher.png" name="Example_Posda_main_application_launcher.png" alt="Posda Main Application Launcher.png">
 </details>
 <details>
-  <summary>Posda Main Application - Activity Based Curation Module</summary>
+  <summary>Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots</summary>
   <img src="./Posda_example_images/Example_ABC_UI.png" name="Example_ABC_UI.png" alt="Activity Based Curation module interface">
   <img src="./Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png" name="Example_ABC_UI_Query_Page_with_labels.png" alt="ABC Query Page with labels">
   <img src="./Posda_example_images/Example_ABC_US_QueryResults.png" name="Example_ABC_UI_QueryResults.png" alt="ABC Query Results">
@@ -63,7 +63,7 @@ Screenshots:
   <img src="./Posda_example_images/Example_ABC_UI_accept_edits.png" name="Example_ABC_UI_accept_edits.png" alt="Example ABC Process Results with buttons to accept or reject proposed DICOM file edits">
 </details>
 <details>
-  <summary>Posda Helper Applications</summary>
+  <summary>Posda Helper Applications -  Example Screenshots</summary>
   <img src="./Posda_example_images/Example_DICOM_roots_application.png" name="Example_DICOM_roots_application.png" alt="DICOM Collection ID creation application: DICOM Roots Editor">
   <img src="./Posda_example_images/Example_Kaliedoscope_UI.png" name="Example_Kaliedoscope_UI.png" alt="DICOM Visual Review application: Kaliedoscope">
   <img src="./Posda_example_images/Example_QuinceUI.png.png" name="Example_QuinceUI.png" alt="Lightweight DICOM  Viewer Quince">
@@ -76,6 +76,7 @@ Screenshots:
 <sub>Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.</sub>
 
 <sub>You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
 <sub>Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an “AS IS” BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</sub>
