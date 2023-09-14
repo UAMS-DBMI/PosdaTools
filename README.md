@@ -56,12 +56,12 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 ![image](Posda_example_images/Example_Posda_main_application_launcher.png){width=50%}
 ![alt text](Posda_example_images/Posda Main Application Launcher.png){width=50%}
 
-<br><br>
 
-  <summary>Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots</summary>
+
+## Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots
   
 ![Alt Text](Posda_example_images/Example_ABC_UI.png "Activity Based Curation module interface")
-![image]("Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png" "ABC Query Page with labels")
+![image](Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png "ABC Query Page with labels")
 ![image]("Posda_example_images/Example_ABC_US_QueryResults.png" "ABC Query Results")
 ![image]("Posda_example_images/Example_ABC_UI_Running_a_process_from_query_results_with_labels.png" "ABC Running a process from query_results with labels.png")
 ![image]("Posda_example_images/Example_Uploading_Edits.png" "Example of Spreadsheet for Running an Edit")
@@ -70,7 +70,8 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
  
 
 
-<br><br>
+# Ignore after here
+
 <details>
   <summary>Posda Helper Applications -  Example Screenshots</summary>
   ![image]("./Posda_example_images/Example_DICOM_roots_application.png" name="Example_DICOM_roots_application.png" ![alt text]("DICOM Collection ID creation application: DICOM Roots Editor">
