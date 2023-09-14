@@ -49,7 +49,7 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 </details>
 <br><br>
 
-![Your alt text here](Posda_example_images/Example_posda_launcher_page1.png)
+![Your alt text here](Posda_example_images/Example_posda_launcher_page1.png){height=100}
 
 
   <summary>Landing Page Example Screenshots</summary>
