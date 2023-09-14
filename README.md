@@ -47,24 +47,24 @@ The user guide for Posda  includes detailed explanations for curation and de-ide
 <details>
   <img src="https://posda.com/wp-content/uploads/Posda-Client-Network-Diagram-r1.3.png" name="Posda_Network_Diagram" ![alt text]("Posda Network Diagram") width="500">
 </details>
-<br>
-<details>
+<br><br>
+
   <summary>Landing Page Example Screenshots</summary>
-  !([image]("Posda_example_images/Example_posda_launcher_page1.png") ![alt text](""Posda toolset landing page")>
-  !([image]("Posda_example_images/Example_Posda_main_application_launcher.png") ![alt text]("Posda Main Application Launcher.png")>
-</details>
-<br>
+  !([image]("Posda_example_images/Example_posda_launcher_page1.png") ![alt text](""Posda toolset landing page")
+  !([image]("Posda_example_images/Example_Posda_main_application_launcher.png") ![alt text]("Posda Main Application Launcher.png")
+
+<br><br>
 <details>
   <summary>Posda Main Application - Activity Based Curation Module-  Example Images and Screenshots</summary>
-  !([image]("./Posda_example_images/Example_ABC_UI.png") ![alt text]("Activity Based Curation module interface")>
-  !([image]("./Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png")  ![alt text]("ABC Query Page with labels")>
-  !([image]("./Posda_example_images/Example_ABC_US_QueryResults.png")  ![alt text]("ABC Query Results")>
+  !([image]("./Posda_example_images/Example_ABC_UI.png") ![alt text]("Activity Based Curation module interface")
+  !([image]("./Posda_example_images/Example_ABC_UI_Query_Page_with_labels.png")  ![alt text]("ABC Query Page with labels")
+  !([image]("./Posda_example_images/Example_ABC_US_QueryResults.png")  ![alt text]("ABC Query Results")
   !([image]("./Posda_example_images/Example_ABC_UI_Running_a_process_from_query_results_with_labels.png" name="Example_ABC_UI_Running_a_process_from_query_results_with_labels.png" ![alt text]("ABC Running a process from query_results with labels.png">
   !([image]("./Posda_example_images/Example_Uploading_Edits.png" name="Example_Uploading_Edits.png" ![alt text]("Example of Spreadsheet for Running an Edit">
   !([image]("./Posda_example_images/Example_ABC_UI_process_completion_inbox_item.png" name="Example_ABC_UI_process_completion_inbox_item.png" ![alt text]("ABC Process Completion Results">
   !([image]("./Posda_example_images/Example_ABC_UI_accept_edits.png" name="Example_ABC_UI_accept_edits.png" ![alt text]("Example ABC Process Results with buttons to accept or reject proposed DICOM file edits">
 </details>
-<br>
+<br><br>
 <details>
   <summary>Posda Helper Applications -  Example Screenshots</summary>
   !([image]("./Posda_example_images/Example_DICOM_roots_application.png" name="Example_DICOM_roots_application.png" ![alt text]("DICOM Collection ID creation application: DICOM Roots Editor">
