@@ -12,3 +12,4 @@ insert into activity_timepoint(
 ) values (
   ?, now(), ?, ?, ?
 )
+returning activity_timepoint_id
