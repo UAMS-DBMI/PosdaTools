@@ -806,7 +806,11 @@ sub JsController{
   window.onload = function(){
     NewQueueRepeatingServerCmd('ServerCheck', 500);
     Update();
-    document.cookie = 'logintoken=$this->{Token};path=/;max-age=31536000';
+	var login_token = '$this->{Token}';
+	console.log('Token: "' + login_token + '"');
+	if (login_token != '') {
+		document.cookie = 'logintoken=$this->{Token};path=/;max-age=31536000;SameSite=Strict';
+	}
   }
   function ChangeSelection(myNewSelected){
     var substohide = document.getElementsByClassName("subdiv");
