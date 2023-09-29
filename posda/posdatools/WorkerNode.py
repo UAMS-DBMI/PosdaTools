@@ -248,9 +248,32 @@ def get_path_from_file_id(file_id: int) -> str:
 
 
 def set_status_running(work_id: int) -> None:
-    req = requests.post(f'{BASE_URL}/worker/status/{work_id}/running',
+    logging.debug(HEADERS)
+    
+    ### TODO remove all of this debug junk, or make it better
+    def pretty_print_POST(req):
+        """
+        At this point it is completely built and ready
+        to be fired; it is "prepared".
+
+        However pay attention at the formatting used in 
+        this function because it is programmed to be pretty 
+        printed and may differ from the actual request.
+        """
+        print('{}\n{}\r\n{}\r\n\r\n{}'.format(
+            '-----------START-----------',
+            req.method + ' ' + req.url,
+            '\r\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+            req.body,
+        ))
+
+
+    req = requests.Request('POST', f'{BASE_URL}/worker/status/{work_id}/running',
                         json={"node_hostname": NODE_NAME},
                         headers=HEADERS)
+    prepared = req.prepare()
+    pretty_print_POST(prepared)
+    raise RuntimeError("dying on purpose")
     logging.debug(f'changed status to running: {work_id}')
 
     if req.status_code != 200:

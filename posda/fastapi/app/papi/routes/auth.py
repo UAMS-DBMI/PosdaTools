@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from starlette.status import HTTP_401_UNAUTHORIZED
 import uuid
 import os
+import logging
 
 from ..util import Database
 from ..util.password import is_valid
@@ -43,6 +44,9 @@ async def get_user(db, username: str):
 async def decode_token(db, token):
     redis_db = get_redis_connection()
 
+    
+    print("System token: " + API_SYSTEM_TOKEN)
+    print("supplied token: " + token)
     if token == API_SYSTEM_TOKEN:
         return await get_user(db, "system")
     

@@ -7,14 +7,12 @@ default: build
 build: last_built 
 
 last_built: Dockerfile default.conf
-	#cd ../docs && mkdocs build
-	#cd ../ohif && make
-	docker build . -t ${IMAGE_NAME}:${TAG}k -t ${IMAGE_NAME}:kubes
+	docker build . -t ${IMAGE_NAME}:${TAG} -t ${IMAGE_NAME}:latest
 	date > last_built
 
 push: last_built
-	docker image push ${IMAGE_NAME}:${TAG}k
-	docker image push ${IMAGE_NAME}:kubes
+	docker image push ${IMAGE_NAME}:${TAG}
+	docker image push ${IMAGE_NAME}:latest
 
 clean:
 	rm -f last_built
