@@ -40,7 +40,7 @@ while(my $line = <STDIN>){
 }
 my $num_old_activity_timepoint_ids = keys %OldTpIds;
 
-print "Going to baackground to consolidate $num_old_activity_timepoint_ids\n";
+print "Going to background to consolidate $num_old_activity_timepoint_ids\n";
 
 my $bg = Posda::BackgroundProcess->new($invoc_id, $notify, $activity_id);
 
