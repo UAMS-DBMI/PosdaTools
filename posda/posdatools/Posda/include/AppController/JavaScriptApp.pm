@@ -1239,12 +1239,12 @@ EOF
       return;
     }
 
-    my $dbh = DBI->connect(Database('posda_auth'));
+    my $dbh = DBI->connect(Database('posda_files'));
 
     # verify current pass
     my $stmt = $dbh->prepare(qq{
       select password
-      from users
+      from auth.users
       where user_name = ?
     });
 
@@ -1262,7 +1262,7 @@ EOF
     my $enc_pass = Posda::Passwords::encode($new_pass);
 
     $stmt = $dbh->prepare(qq{
-      update users
+      update auth.users
       set password = ?
       where user_name = ?
     });

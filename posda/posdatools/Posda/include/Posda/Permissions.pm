@@ -21,17 +21,17 @@ sub new {
 sub _init {
   my ($self) = @_;
   # Connect to DB, load all permission data for this user
-  my $dbh = DBI->connect(Database('posda_auth'));
+  my $dbh = DBI->connect(Database('posda_files'));
   my $stmt = $dbh->prepare(qq{
     select
       user_name,
       app_name,
       permission_name
 
-    from user_permissions
-    natural join users
-    natural join apps
-    natural join permissions
+    from auth.user_permissions
+    natural join auth.users
+    natural join auth.apps
+    natural join auth.permissions
     where user_name = ?
   });
 

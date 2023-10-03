@@ -19,7 +19,12 @@ use Data::Dumper;
 
 sub SpecificInitialize {
   my ($self) = @_;
-  $self->{dbh} = DBI->connect(Database('posda_auth'));
+  $self->{dbh} = DBI->connect(Database('posda_files'));
+  # This was previously a unique database, but now it is just a schema
+  # within posda_files (auth). Here we adjust the search_path so that all
+  # of the queries in this program continue to work as-is
+  $self->{dbh}->do("set search_path = auth,public");
+
   # Needed for creating user_inbox entry
   $self->{queries_dbh} = DBI->connect(Database('posda_queries'));
   $self->{AllPermissions} = $self->GetAllPermissionList();

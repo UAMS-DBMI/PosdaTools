@@ -31,11 +31,11 @@ sub is_authorized {
 
 sub db_auth {
   my ($username, $password) = @_;
-  my $dbh = DBI->connect(Database('posda_auth'));
+  my $dbh = DBI->connect(Database('posda_files'));
 
   my $stmt = $dbh->prepare(qq{
     select password
-    from users
+    from auth.users
     where user_name = ?
   });
 
