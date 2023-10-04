@@ -14,9 +14,9 @@ use Posda::BackgroundProcess;
 #use Data::Dumper;
 
 my $usage = <<EOF;
-SR_phiscan.pl <bkgrnd_id> <activity_id> <notify>
+SRPhiScan.pl <bkgrnd_id> <activity_id> <notify>
 or
-SR_phiscan.pl -h
+SRPhiScan.pl -h
 
 EOF
 $| = 1;

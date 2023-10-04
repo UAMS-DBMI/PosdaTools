@@ -42,7 +42,7 @@ $background->ForkAndExit;
 my $start_time = `date`;
 chomp $start_time;
 $background->WriteToEmail(
-  "Starting ImportEditedFilesFromDicomEditCompare.pl at $start_time\n");
+  "Starting TotalFilesForSelectedSeries.pl at $start_time\n");
 my $get_series_count = Query("NumFilesInSeries");
 my $rpt = $background->CreateReport("SeriesCounts");
 $rpt->print("series_instance_uid,num_files\n");

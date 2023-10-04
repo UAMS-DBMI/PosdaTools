@@ -269,7 +269,7 @@ my $caption = "Reject Edits and Delete Temporary Files";
 my $param_hash = {
   op => "OpenTableFreePopup",
   class_ => "Posda::NewerProcessPopup",
-  cap_ => "RejectEdits",
+  cap_ => "RejectEditsTp",
   subprocess_invoc_id => $invoc_id,
   notify => $notify
 };

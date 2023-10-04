@@ -1,0 +1,6 @@
+:operation_name: SRPhiScanOp
+:command_line: SRPhiScan.pl <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format:
+:tags: ['PHI report']
+:can_chain:

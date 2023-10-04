@@ -521,7 +521,7 @@ EOF
   },
   qbp_BackgroundApplyPrivateDispositions => {
     caption => "Apply Private Dispositions",
-    spreadsheet_operation => "BackgroundApplyPrivateDispositions",
+    spreadsheet_operation => "BackgroundPrivateDispositionsTp",
     operation => "OpenNewTableLevelPopup",
     obj_class => "Posda::NewerProcessPopup",
     queries => {
