@@ -273,11 +273,12 @@ def set_status_running(work_id: int) -> None:
                         headers=HEADERS)
     prepared = req.prepare()
     pretty_print_POST(prepared)
-    raise RuntimeError("dying on purpose")
-    logging.debug(f'changed status to running: {work_id}')
+    # raise RuntimeError("dying on purpose")
 
     if req.status_code != 200:
         raise RuntimeError(req.content)
+
+    logging.debug(f'changed status to running: {work_id}')
 
 
 def get_work_item(work_id: int) -> object:
