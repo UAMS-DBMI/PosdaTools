@@ -11,7 +11,6 @@ import logging
 
 router = APIRouter(
     tags=["Downloads"],
-    dependencies=[logged_in_user]
 )
 
 
