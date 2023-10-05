@@ -20,8 +20,7 @@ from
   natural join file_series
   natural join file_patient
 where
-  project_name = ? and
-  visibility is null
+  project_name = ?
 group by
   patient_id, 
   study_instance_uid,

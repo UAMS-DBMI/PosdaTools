@@ -17,7 +17,7 @@ from
   file_study natural join file_series natural join file_patient
   natural join patient_import_status
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by patient_id, patient_import_status
 EOF
 my $cq = <<EOF;
@@ -31,8 +31,7 @@ where file_id in (
     ctp_file natural join file_patient natural join file_series
   where
     project_name = ? and site_name = ? and
-    patient_id = ? and
-    visibility is null
+    patient_id = ?
 )
 EOF
 my $mq = <<EOF;
@@ -47,8 +46,7 @@ where file_id in (
     ctp_file natural join file_patient
   where
     project_name = ? and site_name = ? and
-    patient_id = ? and
-    visibility is null
+    patient_id = ?
 )
 EOF
 unless($#ARGV == 1) { 

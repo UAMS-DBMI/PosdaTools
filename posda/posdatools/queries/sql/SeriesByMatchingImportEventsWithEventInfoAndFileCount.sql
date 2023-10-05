@@ -13,8 +13,7 @@ from
   file_series natural join file_import natural join import_event
   natural left join ctp_file
 where
-  visibility is null
-  and import_event_id in (
+  import_event_id in (
   select
     import_event_id
   from 

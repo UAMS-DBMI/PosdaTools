@@ -8,7 +8,7 @@ my $dbh = DBI->connect("dbi:Pg:dbname=posda_files");
 my $get_files = $dbh->prepare(
   "select\n" .
   "  distinct (file_id) from file_series natural join ctp_file\n" .
-  "where series_instance_uid = ? and visibility is null"
+  "where series_instance_uid = ?"
 );
 $get_files->execute($series);
 my @file_ids;

@@ -16,6 +16,6 @@ from (
      ctp_file natural join file_series
   where
      modality = ? and project_name = ? and site_name = ? and 
-     series_description not like ? and visibility is null
+     series_description not like ?
 ) as foo
 group by series_instance_uid, series_description

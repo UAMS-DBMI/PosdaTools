@@ -15,4 +15,4 @@ from
   natural join file_patient
   natural join file_sop_common
 where
- patient_id = ? and visibility is null
+ patient_id = ?

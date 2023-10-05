@@ -16,7 +16,7 @@ select distinct
   count(*)
 from
   file_series natural join ctp_file
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?
 group by
   series_instance_uid, modality, series_number, laterality, series_date,
   series_time, performing_phys, protocol_name, series_description,

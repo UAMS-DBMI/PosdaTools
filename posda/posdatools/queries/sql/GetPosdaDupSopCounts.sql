@@ -28,7 +28,6 @@ from
   natural join file_location
   natural join file_storage_root
 where
-  project_name = ? 
-  and visibility is null
+  project_name = ?
 ) as foo group by sop_instance_uid
 ) as foo where num_files > 1

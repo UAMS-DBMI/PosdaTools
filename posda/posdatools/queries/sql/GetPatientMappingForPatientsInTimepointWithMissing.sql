@@ -15,7 +15,7 @@ from (
   from
     file_patient natural join ctp_file
   where
-     visibility is null and file_id in (                                                                                                                                                                                                                                                                                  
+     file_id in (                                                                                                                                                                                                                                                                                  
        select file_id 
        from activity_timepoint_file
        where activity_timepoint_id = (                                                                                                                                                                                                                                                                                                                                                                                          

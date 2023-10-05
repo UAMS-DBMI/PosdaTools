@@ -10,4 +10,4 @@ select
 from
   non_dicom_file
 where
- collection = ? and file_type = 'xls' and visibility is null
+ collection = ? and file_type = 'xls'

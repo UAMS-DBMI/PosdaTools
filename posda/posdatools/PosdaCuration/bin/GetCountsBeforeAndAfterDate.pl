@@ -15,7 +15,7 @@ from
   import_event natural join file_import natural join ctp_file
   natural join file_series natural join file_study natural join file_patient
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by file_id, patient_id, study_instance_uid, series_instance_uid, modality
 EOF
 my $before = <<EOF;

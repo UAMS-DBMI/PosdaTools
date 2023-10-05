@@ -25,9 +25,8 @@ from (
         natural join file_patient
       where
         project_name = ? and site_name = ? 
-        and patient_id = ? and visibility is null
+        and patient_id = ?
     )
   ) as foo natural join ctp_file
-  where visibility is null
   group by sop_instance_uid
 )as foo where count > 1

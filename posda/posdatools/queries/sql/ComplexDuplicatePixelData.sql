@@ -36,7 +36,6 @@ where
               image natural join file_image natural join 
               ctp_file natural join file_patient fq
               join unique_pixel_data using(unique_pixel_data_id)
-            where visibility is null
           ) as foo 
           group by 
             unique_pixel_data_id, project_name, pixel_digest,
@@ -46,7 +45,6 @@ where
       ) as foo 
       where count = ?
     )
-    and visibility is null
   ) 
 group by project_name, site_name, patient_id, series_instance_uid
 order by count desc;

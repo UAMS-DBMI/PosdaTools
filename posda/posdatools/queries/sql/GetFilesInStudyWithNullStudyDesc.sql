@@ -9,4 +9,4 @@
 select
   file_id
 from file_study natural join ctp_file
-where study_instance_uid =? and visibility is null
+where study_instance_uid = ?

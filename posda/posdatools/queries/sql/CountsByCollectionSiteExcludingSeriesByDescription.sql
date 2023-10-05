@@ -22,7 +22,7 @@ from
   left join file_image using(file_id)
   left join image using (image_id)
 where
-  project_name = ? and site_name = ? and visibility is null and
+  project_name = ? and site_name = ? and
   series_description not like ?
 group by
   patient_id, image_type, modality, study_date, study_description,

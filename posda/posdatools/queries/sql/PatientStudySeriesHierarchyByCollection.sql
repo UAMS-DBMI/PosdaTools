@@ -15,6 +15,6 @@ where
   file_id in (
     select distinct file_id
     from ctp_file
-    where project_name = ? and visibility is null
+    where project_name = ?
   )
 order by patient_id, study_instance_uid, series_instance_uid

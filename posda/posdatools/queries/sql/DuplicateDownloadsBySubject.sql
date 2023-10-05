@@ -17,7 +17,7 @@ select count(*) from (
       file_patient natural join ctp_file
     where
       patient_id = ? and project_name = ? 
-      and site_name = ? and visibility is null
+      and site_name = ?
   )
   group by file_id
 ) as foo

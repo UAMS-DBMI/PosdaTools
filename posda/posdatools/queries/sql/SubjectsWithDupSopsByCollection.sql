@@ -30,11 +30,10 @@ from (
             ctp_file natural join file_sop_common
             natural join file_patient
           where
-            project_name = ? and visibility is null
+            project_name = ?
         ) as foo group by sop_instance_uid order by count desc
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 group by collection, site, subj_id

@@ -23,4 +23,4 @@ select
   convolution_kernal,
   table_feed_per_rot
 from file_ct_image natural join file_patient natural join file_series natural join ctp_file 
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?

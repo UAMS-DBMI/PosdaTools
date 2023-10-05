@@ -19,7 +19,6 @@ from
   natural join dicom_file
 where 
   dicom_file_type = 'RT Plan Storage' and 
-  visibility is null and
   modality != 'RTPLAN'
 group by
   collection, site, patient_id, series_instance_uid, modality, dicom_file_type

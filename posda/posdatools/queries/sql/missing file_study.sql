@@ -12,4 +12,4 @@ file_patient natural join dicom_file natural join file_series
 natural join file_import natural join import_event
 where file_id in (
 select file_id from 
-ctp_file where project_name =? and site_name = ? and visibility is null and not exists (select file_id from file_study where file_study.file_id = ctp_file.file_id)) group by patient_id, dicom_file_type, series_instance_uid, modality
+ctp_file where project_name =? and site_name = ? and not exists (select file_id from file_study where file_study.file_id = ctp_file.file_id)) group by patient_id, dicom_file_type, series_instance_uid, modality

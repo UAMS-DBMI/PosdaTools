@@ -17,4 +17,4 @@ from
   natural join file_sop_common natural join file_series
   natural join file_meta natural join file
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?

@@ -19,7 +19,7 @@ from
   image_equivalence_class using(series_instance_uid)
 where
   project_name = ? and
-  site_name = ? and visibility is null
+  site_name = ?
 group by
   dicom_file_type,
   modality,

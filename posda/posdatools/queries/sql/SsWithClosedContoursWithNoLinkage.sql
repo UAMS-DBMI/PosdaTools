@@ -11,7 +11,7 @@ select
   distinct project_name as collection,
   site_name as site, patient_id, series_instance_uid, file_id
 from ctp_file natural join file_patient natural join file_series 
-where project_name = ? and visibility is null
+where project_name = ?
   and file_id in (
   select distinct file_id from file_structure_set where structure_set_id in (
     select distinct structure_set_id from roi where roi_id in (

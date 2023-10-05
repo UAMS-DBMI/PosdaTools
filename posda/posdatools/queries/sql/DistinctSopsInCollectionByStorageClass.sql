@@ -16,6 +16,6 @@ where file_id in (
   from
     ctp_file natural join file_location natural join file_storage_root
   where
-    project_name = ? and visibility is null and storage_class = ?
+    project_name = ? and storage_class = ?
 ) and current
 order by sop_instance_uid

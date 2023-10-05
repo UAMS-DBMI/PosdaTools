@@ -11,7 +11,6 @@ from (
     distinct sop_instance_uid, count(*)
   from
     file_sop_common natural join ctp_file
-  where visibility is null
   group by sop_instance_uid) as foo 
 where count > 1
 EOF

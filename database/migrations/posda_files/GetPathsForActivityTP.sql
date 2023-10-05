@@ -13,5 +13,4 @@ from
   natural left join ctp_file
   natural join activity_timepoint_file
 where
-  visibility is null
-  and activity_timepoint_id = ?
+  activity_timepoint_id = ?

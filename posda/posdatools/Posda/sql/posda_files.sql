@@ -3556,7 +3556,7 @@ CREATE MATERIALIZED VIEW public.roi_body_parts AS
      JOIN public.file_roi_image_linkage ON ((file_roi_image_linkage.linked_sop_instance_uid = file_sop_common.sop_instance_uid)))
      JOIN public.ctp_file ON ((ctp_file.file_id = file_sop_common.file_id)))
      JOIN public.roi USING (roi_id))
-  WHERE ((roi.roi_name ~~ 'GTV%'::text) AND (ctp_file.visibility IS NULL))
+  WHERE (roi.roi_name ~~ 'GTV%'::text)
   GROUP BY file_series.series_instance_uid, file_series.body_part_examined
  HAVING (array_length(array_agg(file_sop_common.file_id), 1) > 0)
   WITH NO DATA;

@@ -25,12 +25,9 @@ from (
           from
             ctp_file natural join file_sop_common
             natural join file_patient
-          where
-            visibility is null
         ) as foo group by sop_instance_uid order by count desc
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 group by collection, site, subj_id, study_instance_uid, series_instance_uid

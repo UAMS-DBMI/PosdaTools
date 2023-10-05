@@ -23,8 +23,7 @@ where
   site_name = ? and
   patient_id = ? and
   import_time > ? and
-  import_time < ? and
-  visibility is null
+  import_time < ?
 group by 
   collection, site,
   patient_id, study_instance_uid, study_description,

@@ -9,12 +9,12 @@ use Dispatch::LineReader;
 use Digest::MD5;
 use FileHandle;
 use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
-  package Posda::BackgroundEditor;
+  package Posda::BackgroundEditorTp;
   use Posda::DB 'Query';
   use vars qw( @ISA );
   @ISA = ( "Dispatch::EventHandler" );
   sub new{
-    my($class, $list, $hash, $invoc_id, $notify, $back) = @_;
+    my($class, $list, $hash, $act_id, $invoc_id, $notify, $back) = @_;
     my $this = {
      list_of_files => $list,
       file_hash => $hash,
@@ -25,6 +25,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
       compares_complete => {},
       compares_failed => {},
       start_time => time(),
+      act_id => $act_id,
       invoc_id => $invoc_id,
       notify => $notify,
       back => $back,
@@ -362,6 +363,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
       op => "OpenTableFreePopup",
       class_ => "Posda::NewerProcessPopup",
       cap_ => "RejectEdits",
+      activity_id => $this->{act_id},
       subprocess_invoc_id => $this->{invoc_id},
       notify => $this->{notify}
     };
@@ -372,6 +374,7 @@ use Storable qw( store retrieve fd_retrieve store_fd );use Data::UUID;
       op => "OpenTableFreePopup",
       class_ => "Posda::NewerProcessPopup",
       cap_ => "ImportEdits",
+      activity_id => $this->{act_id},
       subprocess_invoc_id => $this->{invoc_id},
       notify => $this->{notify}
     };

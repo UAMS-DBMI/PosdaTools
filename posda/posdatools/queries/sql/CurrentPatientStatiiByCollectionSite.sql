@@ -13,4 +13,4 @@ select
 from 
   ctp_file natural join file_patient natural left join patient_import_status
 where
-  visibility is null and project_name = ? and site_name = ?
+  project_name = ? and site_name = ?

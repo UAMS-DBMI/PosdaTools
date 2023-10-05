@@ -11,7 +11,7 @@ select
 from 
   ctp_file natural join file_series 
 where 
-  project_name = ? and visibility is null
+  project_name = ?
   and file_id in (
     select 
       distinct file_id
@@ -37,7 +37,6 @@ where
               image natural join file_image natural join 
               ctp_file natural join file_patient fq
               join unique_pixel_data using(unique_pixel_data_id)
-            where visibility is null
           ) as foo 
           group by 
             unique_pixel_data_id, project_name, pixel_digest,
@@ -47,7 +46,6 @@ where
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) 
 group by series_instance_uid
 order by count desc;

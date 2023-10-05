@@ -29,7 +29,7 @@ where
     select file_id 
     from file_import natural join import_event
     where import_time > ? and import_time < ?
-  ) and project_name = ? and visibility is null
+  ) and project_name = ?
 group by
   patient_id
 order by

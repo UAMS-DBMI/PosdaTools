@@ -9,5 +9,3 @@ select
   file_id, file_type, file_sub_type, collection, site, subject, visibility, date_last_categorized
 from
   non_dicom_file
-where
-  visibility is null

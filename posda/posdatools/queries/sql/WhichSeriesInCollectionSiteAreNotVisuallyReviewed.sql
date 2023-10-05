@@ -22,7 +22,6 @@ from
 where
   project_name = ? and
   site_name = ?
-  and visibility is null
   and not exists (
     select * from image_equivalence_class iec
     where iec.series_instance_uid = ser.series_instance_uid

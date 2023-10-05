@@ -10,4 +10,4 @@ select
 from
   non_dicom_file
 where
- collection = ? and file_type = 'docx' and file_sub_type = 'radcomp data submittal form' and visibility is null
+ collection = ? and file_type = 'docx' and file_sub_type = 'radcomp data submittal form'

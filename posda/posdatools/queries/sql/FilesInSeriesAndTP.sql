@@ -15,5 +15,4 @@ natural join file_series
 natural join activity_timepoint_file
 where
 series_instance_uid = ?
-and visibility is null
 and activity_timepoint_id = ?

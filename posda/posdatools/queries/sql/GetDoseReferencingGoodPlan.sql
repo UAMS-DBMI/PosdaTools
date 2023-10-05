@@ -18,7 +18,6 @@ from
   file_patient natural join ctp_file
 where
   project_name = ? and
-  visibility is null and
   file_id in (
 select file_id from rt_dose d  natural join file_dose  where
 exists (select sop_instance_uid from file_sop_common fsc where d.rt_dose_referenced_plan_uid

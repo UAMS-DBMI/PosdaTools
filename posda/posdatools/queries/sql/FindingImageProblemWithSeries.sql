@@ -23,6 +23,6 @@ where file_id in (
       where import_time > '2018-09-17'
     )
   ) as foo where image_id is null
-) and visibility is null
+)
  group by dicom_file_type, project_name, patient_id, series_instance_uid
 order by patient_id

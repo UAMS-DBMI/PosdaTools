@@ -15,8 +15,7 @@ select
  from file_series natural join file_sop_common
    natural join ctp_file natural join dicom_file natural join file_patient natural join file_study
 where
-  project_name = ? and site_name = ?
-  and visibility is null)
+  project_name = ? and site_name = ?)
 as foo
 group by study_instance_uid, series_instance_uid, patient_id, sop_instance_uid, dicom_file_type, modality)
 as foo

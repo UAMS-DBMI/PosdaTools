@@ -13,7 +13,7 @@ select distinct
   admitting_diag, count(distinct file_id)
 from
   file_study natural join file_patient natural join ctp_file
-where study_instance_uid = ? and visibility is null
+where study_instance_uid = ?
 group by
   patient_id, study_instance_uid, study_date, study_time,
   referring_phy_name, study_id, accession_number,

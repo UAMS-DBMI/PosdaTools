@@ -20,7 +20,7 @@ from
   left join file_image using(file_id)
   left join image using (image_id)
   left join image_geometry using (image_id)
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?
 group by
   series_instance_uid, dicom_file_type, modality, series_number, laterality,
   series_date, image_type, iop, pixel_rows, pixel_columns,

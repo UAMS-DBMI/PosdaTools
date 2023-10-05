@@ -16,6 +16,6 @@ where
   file_id in (
     select file_id 
     from ctp_file natural join file_structure_set 
-    where project_name = ? and site_name = ? and visibility is null
+    where project_name = ? and site_name = ?
   )
 order by patient_id

@@ -10,7 +10,5 @@ select
   distinct dicom_file_type, count(distinct file_id)
 from
   dicom_file natural join ctp_file
-where
-  visibility is null  
 group by dicom_file_type
 order by count desc

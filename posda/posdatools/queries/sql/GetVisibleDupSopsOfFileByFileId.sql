@@ -14,4 +14,4 @@ from
   file_sop_common natural left join ctp_file
 where sop_instance_uid = (
   select sop_instance_uid from file_sop_common where file_id = ?
-) and visibility is null
+)

@@ -15,7 +15,7 @@ from
   natural join file_study natural join ctp_file
   join file_location using (file_id) natural join file_storage_root
 where
-  visibility is null and dicom_file_type like '%SR%' and
+  dicom_file_type like '%SR%' and
   file_id in (
    select file_id from activity_timepoint_file
    where activity_timepoint_id = (

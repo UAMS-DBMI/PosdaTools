@@ -25,7 +25,7 @@ where file_id in (
     join image using(image_id)
     join unique_pixel_data using(unique_pixel_data_id)
   where digest = ?
-  ) and visibility is null 
+  )
 group by 
   collection,
   site,

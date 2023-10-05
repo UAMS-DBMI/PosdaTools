@@ -12,4 +12,4 @@ from
   ctp_file natural join dicom_file natural join file_study natural join file_series
   natural join file_patient natural join file_sop_common
 where 
-  dicom_file_type = 'RT Structure Set Storage' and visibility is null and project_name = 'Soft-tissue-Sarcoma'
+  dicom_file_type = 'RT Structure Set Storage' and project_name = 'Soft-tissue-Sarcoma'

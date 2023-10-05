@@ -29,7 +29,7 @@ from
   left join file_image using(file_id)
   left join image using (image_id)
 where
-  patient_id = ? and visibility is null
+  patient_id = ?
 group by
   patient_id, image_type, dicom_file_type, modality, study_date, 
   series_date, study_description,

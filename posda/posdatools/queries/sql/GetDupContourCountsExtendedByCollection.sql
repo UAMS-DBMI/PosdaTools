@@ -30,5 +30,5 @@ from (
     where count > 1
   ) group by file_id 
 ) foo join ctp_file using (file_id) join file_patient using(file_id)
-where project_name = ? and visibility is null
+where project_name = ?
 order by num_dup_contours desc

@@ -17,6 +17,6 @@ where pixel_data_digest in (
   from
     file_series natural join ctp_file natural join dicom_file
   where 
-    visibility is null and series_instance_uid = ?
+    series_instance_uid = ?
   )
 order by pixel_data_digest

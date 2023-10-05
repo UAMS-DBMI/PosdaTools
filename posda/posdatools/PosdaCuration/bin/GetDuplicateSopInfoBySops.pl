@@ -14,7 +14,6 @@ from
   where file_id in (
     select file_id from file_sop_common where sop_instance_uid = ?
   )
-  and visibility is null
 EOF
 my %SopInfo;
 my $qh = $dbh->prepare($q);

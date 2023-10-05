@@ -10,6 +10,6 @@ select
 from 
   ctp_file natural join file_import natural join import_event
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
   and import_time < ?
  

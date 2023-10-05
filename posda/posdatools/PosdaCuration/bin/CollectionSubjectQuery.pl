@@ -14,7 +14,7 @@ from
   ctp_file natural join file_patient natural join file natural join
   file_series natural join file_study
 where
-  project_name = ? and site_name = ? and patient_id = ? and visibility is null
+  project_name = ? and site_name = ? and patient_id = ?
 order by
   study_instance_uid, series_instance_uid
 EOF

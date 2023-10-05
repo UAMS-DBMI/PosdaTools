@@ -16,5 +16,5 @@ from
 where file_id in (
  select distinct file_id from file_structure_set
 )
-and project_name = ? and site_name = ? and visibility is null
+and project_name = ? and site_name = ?
 order by collection, site, patient_id, file_id

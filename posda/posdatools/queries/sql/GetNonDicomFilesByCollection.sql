@@ -10,5 +10,4 @@ select
 from
   non_dicom_file
 where
-  collection = ? and
-  visibility is null
+  collection = ?

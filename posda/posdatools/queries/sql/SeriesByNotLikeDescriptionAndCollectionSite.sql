@@ -12,5 +12,4 @@ from
   file_series natural join ctp_file
 where 
   project_name = ? and site_name = ? and 
-  visibility is null and
   series_description not like ?

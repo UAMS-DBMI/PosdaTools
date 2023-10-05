@@ -10,5 +10,5 @@ select distinct series_instance_uid, dicom_file_type, modality, count(distinct f
 from
   file_series natural join dicom_file natural join ctp_file
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by series_instance_uid, dicom_file_type, modality

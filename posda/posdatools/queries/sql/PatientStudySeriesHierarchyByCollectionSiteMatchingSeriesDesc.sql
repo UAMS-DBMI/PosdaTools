@@ -16,6 +16,6 @@ where
     select distinct file_id
     from ctp_file natural join file_series
     where project_name = ? and site_name = ? 
-    and visibility is null and series_description like ?
+    and series_description like ?
   )
 order by patient_id, study_instance_uid, series_instance_uid

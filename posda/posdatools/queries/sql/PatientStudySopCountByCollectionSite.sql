@@ -14,6 +14,6 @@ from
   file_patient natural join 
   file_study
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by patient_id, study_instance_uid
 order by patient_id

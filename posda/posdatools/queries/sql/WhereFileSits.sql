@@ -19,4 +19,4 @@ from
   file_series natural join
   file_sop_common natural left join
   ctp_file
-where file_id = ? and visibility is null
+where file_id = ?

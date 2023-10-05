@@ -21,5 +21,4 @@ from
   file_storage_root natural left join
   ctp_file
 where 
-  study_instance_uid = ? and
-  visibility is null
+  study_instance_uid = ?

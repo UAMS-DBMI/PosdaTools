@@ -16,6 +16,6 @@ from
   patient_mapping
 where
   patient_id = to_patient_id and
-  ctp_file.project_name = ? and ctp_file.visibility is null
+  ctp_file.project_name = ?
 group by
   patient_id, study_uid, series_uid, shift

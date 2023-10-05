@@ -20,7 +20,7 @@ where file_id in (
         file_patient natural join ctp_file
       where
         project_name = ? 
-        and site_name = ? and visibility is null
+        and site_name = ?
     )
     group by file_id
   ) as foo

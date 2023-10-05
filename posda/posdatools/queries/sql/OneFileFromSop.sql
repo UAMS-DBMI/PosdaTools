@@ -13,5 +13,5 @@ from
   natural join ctp_file
   natural join file_sop_common
 where
-  sop_instance_uid = ? and visibility is null
+  sop_instance_uid = ?
 limit 1

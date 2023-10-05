@@ -15,6 +15,6 @@ from patient_import_status_change
 where patient_id in(
   select distinct patient_id
   from file_patient natural join ctp_file
-  where project_name = ? and visibility is null
+  where project_name = ?
 )
 order by patient_id, when_pat_stat_changed

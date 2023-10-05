@@ -11,6 +11,5 @@ select
 from
   file_series natural join dicom_file natural join ctp_file
 where
-  dicom_file_type = ? and
-  visibility is null  
+  dicom_file_type = ?
 group by series_instance_uid, dicom_file_type

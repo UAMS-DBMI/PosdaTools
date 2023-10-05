@@ -12,4 +12,4 @@ select
 from
   file_plan natural join plan join file_sop_common using(file_id) natural join ctp_file
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?

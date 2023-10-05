@@ -22,7 +22,7 @@ from
   left join file_image using(file_id)
   left join image using (image_id)
 where
-  project_name = ? and visibility is null
+  project_name = ?
 group by
   patient_id, image_type, modality, study_date, study_description,
   series_description, study_instance_uid, series_instance_uid,

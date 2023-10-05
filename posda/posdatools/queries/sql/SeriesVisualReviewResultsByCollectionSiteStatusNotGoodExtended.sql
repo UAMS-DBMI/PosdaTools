@@ -28,7 +28,6 @@ from
 where
   project_name = ? and
   site_name = ? and review_status != 'Good'
-  and visibility is null
 group by
   series_instance_uid,
   dicom_file_type,
@@ -39,6 +38,4 @@ group by
   join file_study using (file_id) 
   join file_patient using(file_id)
   join ctp_file using(file_id)
-where
-  visibility is null
 order by patient_id, study_instance_uid, series_instance_uid

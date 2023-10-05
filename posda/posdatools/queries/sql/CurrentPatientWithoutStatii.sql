@@ -13,5 +13,4 @@ select
 from 
   ctp_file natural join file_patient p
 where 
-  visibility is null and
   not exists (select * from patient_import_status s where p.patient_id = s.patient_id)

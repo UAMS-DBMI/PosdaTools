@@ -18,5 +18,5 @@ where file_id in (
 from
     file_series natural join ctp_file
   where 
-    visibility is null and series_instance_uid = ?
+    series_instance_uid = ?
   )

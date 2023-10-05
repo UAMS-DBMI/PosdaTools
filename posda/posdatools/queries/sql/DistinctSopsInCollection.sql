@@ -16,6 +16,6 @@ where file_id in (
   from
     ctp_file
   where
-    project_name = ? and visibility is null
+    project_name = ?
 )
 order by sop_instance_uid

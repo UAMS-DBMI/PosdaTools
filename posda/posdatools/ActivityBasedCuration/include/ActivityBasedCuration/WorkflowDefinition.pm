@@ -171,7 +171,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
       {
         caption => "Schedule Structured Report PHI Scan",
-        action =>  "SR_phiscanOp",
+        action =>  "SRPhiScanOp",
       },
       {
         caption => "Schedule Pathology TIFF PHI Scan",
@@ -272,10 +272,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "ImportDownloadableDirectory",
       },
       {
-        caption => "Public Phi Scan Based on Collection, Site",
-        action =>  "PhiPublicScan",
-      },
-      {
         caption => "Find Files in Tp, not in Public",
         action =>  "FilesInTpNotInPublic",
       },
@@ -313,15 +309,9 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       action => "CopyPriorTimepoint"
     },
     {
-      operation => "Copy Prior Timepoint Excluding Files",
-      caption => "CopyPriorTimepointExcludingFiles",
+      operation => "CopyPriorTimepointExcludingFiles",
+      caption => "Copy Prior Timepoint Excluding Files",
       action => "CopyPriorTimepointExcludingFiles",
-      special => "spreadsheetRequest"
-    },
-    {
-      operation => "CopyPriorTimepointInSeriesOnly",
-      caption =>"Copy Prior Timepoint In Series Only",
-      action =>"CopyPriorTimepointInSeriesOnly",
       special => "spreadsheetRequest"
     },
     {

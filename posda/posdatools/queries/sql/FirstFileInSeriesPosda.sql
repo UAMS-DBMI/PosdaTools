@@ -18,7 +18,6 @@ select file_id from
     natural join file_sop_common
   where 
     series_instance_uid = ?
-    and visibility is null
   group by sop_instance_uid
 ) as foo)
 limit 1

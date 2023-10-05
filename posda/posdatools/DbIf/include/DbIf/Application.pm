@@ -3301,7 +3301,6 @@ sub ActivityOperations {
     [ "CondensedActivityTimepointReport", "Produce Condensed Activity Timepoint Report", 1, 3],
     [ "AnalyzeSeriesDuplicates", "Analyze Series With Duplicates", 1, 4],
     [ "FilesInTpNotInPublic", "Find Files in Tp, not in Public", 1, 5],
-    [ "CompareSopsInTpToPublic", "Compare Corresponding SOPs in Time Point to Public", 1, 6],
     [ "BackgroundHelloWorld.pl", "Perl Hello World Background", 1, 7],
     [ "AnalyzeSeriesDuplicatesForTimepoint", "Analyze Series In Time Point with Duplicates", 2, 0],
     [ "CompareSopsTpPosdaPublic", "Compare Sops in Timepoint, Posda, and Public", 2, 1],

@@ -2,7 +2,7 @@
 use strict;
 use Posda::DB 'Query';
 use Posda::BackgroundProcess;
-use Posda::Background::SR_phiscan;
+use Posda::Background::SRPhiScan;
 
 my $usage = <<EOF;
 ScheduleSRPhiReviewFromActivityTimepoint.pl <bkgrnd_id> <activity_id> <notify>
@@ -59,7 +59,7 @@ $background->Daemonize;
 my $start_time = time;
 $background->WriteToEmail("Starting SR PHI scan: \"$description\"\n");
 #$background->WriteToEmail("$num_series series to scan\n");
-my $scan = Posda::Background::SR_phiscan->NewFromScan(
+my $scan = Posda::Background::SRPhiScan->NewFromScan(
   \@FileList, $description, "Posda", $invoc_id, $act_id, $background);
 my $end_time = time;
 my $elapsed = $end_time - $start_time;

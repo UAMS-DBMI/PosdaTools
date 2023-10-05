@@ -35,7 +35,7 @@ my $query = qq{
     file_id in (
       select file_id
       from ctp_file
-      where project_name = ? and site_name = ? and visibility is null
+      where project_name = ? and site_name = ?
     )
   group by
     modality,

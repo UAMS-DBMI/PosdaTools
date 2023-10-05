@@ -31,7 +31,7 @@ from (
            file_series natural join file_sop_common natural join file_patient
            natural join file_import natural join import_event
         where
-          visibility is null and import_time >= ? and
+          import_time >= ? and
           import_time < ? and project_name = ?
       ) as foo
       group by

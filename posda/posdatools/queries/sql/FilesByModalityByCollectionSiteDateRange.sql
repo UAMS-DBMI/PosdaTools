@@ -18,6 +18,5 @@ where
   modality = ? and
   project_name = ? and 
   site_name = ? and
-  import_time > ? and import_time < ? and
-  visibility is null
+  import_time > ? and import_time < ?
 group by patient_id, modality, series_instance_uid, sop_instance_uid, path

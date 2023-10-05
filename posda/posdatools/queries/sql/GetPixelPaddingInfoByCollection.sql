@@ -13,6 +13,6 @@ from
   file_series natural join file_equipment natural join ctp_file natural join
   file_slope_intercept natural join slope_intercept natural join file_image natural join image
 where                                                 
-  modality = 'CT' and project_name = ? and visibility is null
+  modality = 'CT' and project_name = ?
 group by 
   modality, pixel_pad, slope, intercept, manufacturer, image_type, signed

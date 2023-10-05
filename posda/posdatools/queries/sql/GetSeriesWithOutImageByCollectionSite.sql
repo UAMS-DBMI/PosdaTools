@@ -17,7 +17,7 @@ from
   natural join file_patient
   natural join ctp_file ctp
   natural join file_import natural join import_event
-where project_name = ? and site_name = ? and visibility is null
+where project_name = ? and site_name = ?
   and not exists (select image_id from file_image fi where ctp.file_id = fi.file_id)
 group by
   collection, site, patient_id, modality, series_instance_uid

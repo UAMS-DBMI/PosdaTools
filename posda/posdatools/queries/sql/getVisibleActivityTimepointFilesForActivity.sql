@@ -33,5 +33,4 @@ activity_timepoint
 natural join activity_timepoint_file
 where
 activity_id = ?)
-and visibility is null
 order by series_instance_uid

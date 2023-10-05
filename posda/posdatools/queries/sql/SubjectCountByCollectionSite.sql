@@ -12,7 +12,7 @@ select
 from
   ctp_file natural join file_patient
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by
   patient_id 
 order by
