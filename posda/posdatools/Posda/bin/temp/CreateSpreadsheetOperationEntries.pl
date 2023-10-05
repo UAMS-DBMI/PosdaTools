@@ -156,15 +156,6 @@ my $rows = {
       ],
       can_chain => undef
     },
-    CompareSopsInTpToPublic => {
-      command_line => 'CompareSopsInTpToPublic.pl <?bkgrnd_id?> <activity_id> <notify>',
-      operation_type => 'background_process',
-      input_line_format => undef,
-      tags => [
-        "activity_timepoints_support"
-      ],
-      can_chain => undef
-    },
     AnalyzeSeriesDuplicatesForTimepoint => {
       command_line => 'AnalyzeTpSeriesDuplicates.pl <?bkgrnd_id?> <activity_id> <notify>',
       operation_type => 'background_process',

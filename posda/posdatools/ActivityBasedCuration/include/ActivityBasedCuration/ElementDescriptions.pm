@@ -620,19 +620,6 @@ EOF
     is_posda_button => 1,
     action => [invoke_operation => [quote => "FilesInTpNotInPublic"]],
   },
-  btn_activity_op_CompareSopsInTpToPublic => {
-    caption => "Compare Corresponding SOPs in Time Point to Public",
-    class => "btn btn-default",
-    occurance => {
-      where =>"tbl_ActivityOperations",
-      col => 1, row => 6,
-      condition => [and => [eq => "Mode", [quote => "Activities"]], [eq => "ActivityMode", [quote => "ActivityOperations"]]],
-    },
-    tag => "input",
-    type => "button",
-    is_posda_button => 1,
-    action => [invoke_operation => [quote => "CompareSopsInTpToPublic"]],
-  },
   btn_activity_op_HelloWorldPerl => {
     caption => "Perl Hello World Background",
     class => "btn btn-default",

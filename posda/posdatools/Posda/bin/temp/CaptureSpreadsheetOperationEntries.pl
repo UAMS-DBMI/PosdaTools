@@ -14,7 +14,6 @@ my $operation_names = [
     "CondensedActivityTimepointReport",
     "AnalyzeSeriesDuplicates",
     "FilesInTpNotInPublic",
-    "CompareSopsInTpToPublic",
     "AnalyzeSeriesDuplicatesForTimepoint",
     "CompareSopsTpPosdaPublic",
     "BackgroundPrivateDispositionsTp",

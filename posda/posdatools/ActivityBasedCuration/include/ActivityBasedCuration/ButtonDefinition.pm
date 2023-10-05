@@ -449,23 +449,6 @@ EOF
 );
 
 %QueryProcessingButtons = (
-  qpb_CreateActivityTimepointFromSeriesList => {
-    caption => "Create Timepoint From Series List",
-    spreadsheet_operation => "CreateActivityTimepointFromSeriesList",
-    operation => "OpenNewTableLevelPopup",
-    obj_class => "Posda::NewerProcessPopup",
-    queries => {
-      DistinctVisibleSeriesByCollectionSite => 1,
-      DistinctSeriesByPatientId => 1,
-      SeriesByMatchingImportEventsWithEventInfo => 1,
-      SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID => 1,
-      SeriesByMatchingImportEventsAndDateRangeWithEventInfoCondensed => 1,
-      SeriesByMatchingImportEventsAndDateRangeWithEventInfoAndPatientID => 1,
-      SeriesByMatchingImportEventsWithEventInfoCondensed => 1,
-      SeriesByMatchingImportEventsWithEventInfoAndFileCountAll => 1,
-      SeriesByMatchingImportEventsWithEventInfoAndFileCount => 1,
-    },
-  },
   qpb_CreateActivityTimepointFromImportId => {
     caption => "Create Timepoint From DICOM Files in Import Event List",
     spreadsheet_operation => "CreateActivityTimepointFromImportId",
