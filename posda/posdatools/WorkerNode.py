@@ -273,10 +273,14 @@ def set_status_running(work_id: int) -> None:
                         headers=HEADERS)
     prepared = req.prepare()
     pretty_print_POST(prepared)
+
+    session = requests.Session()
+    resp = session.send(prepared)
+
     # raise RuntimeError("dying on purpose")
 
-    if req.status_code != 200:
-        raise RuntimeError(req.content)
+    if resp.status_code != 200:
+        raise RuntimeError(resp.content)
 
     logging.debug(f'changed status to running: {work_id}')
 
