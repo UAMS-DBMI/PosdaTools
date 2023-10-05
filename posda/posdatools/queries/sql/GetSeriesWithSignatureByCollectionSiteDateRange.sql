@@ -17,6 +17,6 @@ from
   file_series natural join file_equipment natural join ctp_file
   natural join dicom_file join file_import using(file_id)
   join import_event using(import_event_id)
-where project_name = ? and site_name = ? and visibility is null
+where project_name = ? and site_name = ?
   and import_time > ? and import_time < ?
 group by series_instance_uid, dicom_file_type, signature

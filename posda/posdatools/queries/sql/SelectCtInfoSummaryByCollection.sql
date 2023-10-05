@@ -28,7 +28,7 @@ select
   table_feed_per_rot,
   count(*) as num_files
 from file_ct_image natural join file_patient natural join file_series natural join ctp_file 
-where project_name = ? and visibility is null
+where project_name = ?
 group by
   collection,
   site,

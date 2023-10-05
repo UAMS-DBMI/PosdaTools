@@ -19,8 +19,7 @@ from
   natural join file_patient
   natural join ctp_file
 where 
-  visibility is null 
-  and image_id in (
+  image_id in (
 select image_id from (
   select distinct image_id, count(*)
   from (
@@ -47,7 +46,7 @@ select image_id from (
                 from file_image where file_id in (
                   select distinct file_id
                   from ctp_file
-                  where project_name = ? and visibility is null
+                  where project_name = ?
                 )
               ) as foo
               group by image_id

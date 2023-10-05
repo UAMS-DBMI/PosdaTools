@@ -30,7 +30,6 @@ select
           natural join file_patient
 
         where import_time > now() - interval '1' day
-          and visibility is null
     ) as foo
     group by
         project_name,

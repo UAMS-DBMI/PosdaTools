@@ -12,6 +12,6 @@ from
   natural join file_import natural join import_event
 where 
   project_name = ? and site_name = ?
-  and visibility is null and import_time > ? and 
+  and import_time > ? and 
   import_time < ?
   and modality = 'RTSTRUCT'

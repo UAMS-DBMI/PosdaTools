@@ -393,13 +393,6 @@ EOF
     col_name => "file_path",
     caption => "view",
   },
-  qc_cc_72 => {
-    query => "ListSrPosdaHidden",
-    type => "ChainColumnToPopup",
-    obj => "DbIf::ShowSr",
-    col_name => "file_path",
-    caption => "view",
-  },
   qc_cc_75 => {
     query => "GetEditStatusByDisposition",
     type => "ChainColumnToPopup",

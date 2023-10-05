@@ -34,7 +34,6 @@ from (
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 order by sop_instance_uid
 

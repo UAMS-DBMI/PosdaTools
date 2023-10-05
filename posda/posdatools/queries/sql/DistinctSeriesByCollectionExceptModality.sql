@@ -15,8 +15,7 @@ select
  from file_series natural join file_sop_common
    natural join ctp_file
 where
-  project_name = ? and modality != ?
-  and visibility is null)
+  project_name = ? and modality != ?)
 as foo
 group by series_instance_uid, sop_instance_uid, modality)
 as foo

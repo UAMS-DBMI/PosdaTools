@@ -15,7 +15,7 @@ from
    natural join ctp_file natural join file_series
 where
    data_set_start is null
-   and series_instance_uid = ? and visibility is null
+   and series_instance_uid = ?
 limit 1000
 EOF
 my $update = <<EOF;

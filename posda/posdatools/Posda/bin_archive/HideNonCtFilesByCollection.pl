@@ -12,8 +12,7 @@ from
    ctp_file natural join file_patient natural join dicom_file
 where
    project_name = ? and
-   dicom_file_type != 'CT Image Storage' and
-   visibility is null
+   dicom_file_type != 'CT Image Storage'
 EOF
 my $gf = $dbh->prepare($get_file);
 my $hide_Q = <<EOF;

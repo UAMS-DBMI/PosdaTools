@@ -33,7 +33,6 @@ select
     project_name = ? 
     and site_name = ? 
     and series_description like ?
-    and visibility is null
 ) as foo
 group by collection, site, patient_id, 
   series_instance_uid, series_description, dicom_file_type, modality

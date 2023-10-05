@@ -30,9 +30,7 @@ where file_id in (
         file_roi_image_linkage
     ) foo left join file_sop_common using(sop_instance_uid)
     join ctp_file using(file_id)
-  where
-    visibility is null
   ) as foo
 )
-and project_name = ? and visibility is null
+and project_name = ?
 order by collection, site, patient_id, file_id

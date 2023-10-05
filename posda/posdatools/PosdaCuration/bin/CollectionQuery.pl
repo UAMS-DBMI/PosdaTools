@@ -14,7 +14,7 @@ from
   ctp_file natural join file_patient natural join
   file_series natural join file_study
 where
-  project_name = ? and site_name = ? and visibility is null
+  project_name = ? and site_name = ?
 group by
   modality, body_part_examined, series_description,
   series_date, patient_name, patient_id, sex, series_instance_uid,

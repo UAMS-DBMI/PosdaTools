@@ -26,7 +26,6 @@ from
   ctp_file
 where 
   patient_id = ?
-  and visibility is null
 group by 
   collection,
   site,

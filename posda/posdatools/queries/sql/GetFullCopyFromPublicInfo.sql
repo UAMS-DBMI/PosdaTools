@@ -14,7 +14,7 @@ select
     where fc.copy_from_public_id = copy_from_public.copy_from_public_id and 
        not exists
        (
-         select file_id from ctp_file where ctp_file.file_id = fc.replace_file_id and visibility is not null
+         select file_id from ctp_file where ctp_file.file_id = fc.replace_file_id
        )
   ),
   (

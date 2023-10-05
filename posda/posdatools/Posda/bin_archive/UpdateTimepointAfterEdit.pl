@@ -134,19 +134,19 @@ my $bk = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 print "Entering Background\n";
 $bk->Daemonize;
 
-$bk->SetActivityStatus("Unhiding $hid_to files in edit $subproc_invoc_id\n");
-if($hid_to > 0){
-  my $start = time;
-  open HIDE,
-    "|UnhideFilesWithStatus.pl $notify \"Unhiding to files " .
-    "in dicom_edit_compare($subproc_invoc_id)\"";
-  for my $file_id (keys %HiddenToFiles){
-    print HIDE "$file_id&hidden\n";
-  }
-  close HIDE;
-  my $elapsed = time - $start;
-  $bk->WriteToEmail("Unhid $hid_to to files in: $elapsed seconds\n");
-}
+#$bk->SetActivityStatus("Unhiding $hid_to files in edit $subproc_invoc_id\n");
+#if($hid_to > 0){
+#  my $start = time;
+#  open HIDE,
+#    "|UnhideFilesWithStatus.pl $notify \"Unhiding to files " .
+#    "in dicom_edit_compare($subproc_invoc_id)\"";
+#  for my $file_id (keys %HiddenToFiles){
+#    print HIDE "$file_id&hidden\n";
+#  }
+#  close HIDE;
+#  my $elapsed = time - $start;
+#  $bk->WriteToEmail("Unhid $hid_to to files in: $elapsed seconds\n");
+#}
 
 $bk->SetActivityStatus("Creating Activity Timepoint");
 my $cre = Query("CreateActivityTimepoint");

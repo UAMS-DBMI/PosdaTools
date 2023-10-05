@@ -13,7 +13,7 @@ from (
     distinct sop_instance_uid, count(*)
   from
     file_sop_common natural join ctp_file natural join file_patient
-  where visibility is null and patient_id = ?
+  where patient_id = ?
   group by sop_instance_uid) as foo 
 where count > 1
 EOF

@@ -737,18 +737,5 @@ EOF
     is_posda_button => 1,
     action => [invoke_operation => [quote => "InitialAnonymizerCommandsTp"]],
   },
-  btn_activity_op_UpdateTimepointAfterEdit => {
-    caption => "Update Timepoint After Edit",
-    class => "btn btn-default",
-    occurance => {
-      where =>"tbl_ActivityOperations",
-      col => 2, row => 7,
-      condition => [and => [eq => "Mode", [quote => "Activities"]], [eq => "ActivityMode", [quote => "ActivityOperations"]]],
-    },
-    tag => "input",
-    type => "button",
-    is_posda_button => 1,
-    action => [invoke_operation => [quote => "UpdateTimepointAfterEdit"]],
-  },
 );
 1;

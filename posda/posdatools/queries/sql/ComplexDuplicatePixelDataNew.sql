@@ -34,7 +34,6 @@ from (
       join ctp_file using(file_id)
       join file_patient fq using(file_id)
       join unique_pixel_data using(unique_pixel_data_id)
-    where visibility is null
   ) as foo 
   group by 
     unique_pixel_data_id, project_name, pixel_digest,

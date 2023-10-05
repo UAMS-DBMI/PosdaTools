@@ -7,7 +7,7 @@ my $get_files = $dbh->prepare(
   "select distinct file_id, root_path || '/' || rel_path as path\n" .    
   "from file_storage_root natural join file_location\n" .
   "  natural join file_sop_common natural join ctp_file\n" .
-  "where sop_instance_uid = ? and visibility is null\n" .
+  "where sop_instance_uid = ?\n" .
   "order by file_id"
 );
 my $usage = "CompareDupSopList.pl";

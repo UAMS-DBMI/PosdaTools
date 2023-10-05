@@ -30,7 +30,7 @@ from (
            ctp_file natural join file_study natural join
            file_series natural join file_sop_common natural join file_patient
          where
-           project_name like ? and visibility is null
+           project_name like ?
        ) as foo
        group by
          project_name, site_name, patient_id, 

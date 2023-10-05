@@ -14,4 +14,3 @@ from
   natural join ctp_file
 where
   photometric_interpretation = 'RGB'
-  and visibility is null

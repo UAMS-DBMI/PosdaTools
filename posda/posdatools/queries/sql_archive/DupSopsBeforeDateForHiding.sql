@@ -18,6 +18,6 @@ select distinct file_id, latest from (
       where project_name = ? and visibility is null group by sop_instance_uid
       ) as foo
     where count > 1
-    ) and visibility is null
+    )
   group by sop_instance_uid, file_id
 ) as foo where latest < ?

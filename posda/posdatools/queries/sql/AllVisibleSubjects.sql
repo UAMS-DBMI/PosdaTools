@@ -18,9 +18,6 @@ where
     select patient_id 
     from
       file_patient natural join ctp_file 
-    where
-      visibility is null
-  ) and
-  visibility is null
+  )
 group by patient_id, status, project_name, site_name
 order by project_name, status, site_name, patient_id;

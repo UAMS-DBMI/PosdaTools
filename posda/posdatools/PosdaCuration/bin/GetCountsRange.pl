@@ -15,8 +15,6 @@ select
 from
   import_event natural join file_import natural join ctp_file
   natural join file_series natural join file_study natural join file_patient
-where
-  visibility is null
 group by
   project_name, site_name,
   file_id, patient_id, study_instance_uid, series_instance_uid, modality

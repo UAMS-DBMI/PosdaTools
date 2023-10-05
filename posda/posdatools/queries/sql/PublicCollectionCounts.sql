@@ -30,7 +30,6 @@ select
         s.study_pk_id = t.study_pk_id and
         t.patient_pk_id = p.patient_pk_id and
         p.trial_dp_pk_id = tdp.trial_dp_pk_id and
-        tdp.project =? and
-        s.visibility = ?
+        tdp.project =?
  
      group by tdp.project

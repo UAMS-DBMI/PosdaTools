@@ -23,5 +23,5 @@ where
   and f.file_id in (
   select distinct file_id
   from file_series natural join ctp_file
-  where series_instance_uid = ? and visibility is null
+  where series_instance_uid = ?
 )

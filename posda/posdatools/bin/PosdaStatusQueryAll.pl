@@ -5,7 +5,7 @@ use Debug;
 my $dbg = sub {print @_ };
 my $dbh = DBI->connect("DBI:Pg:dbname=posda_files", "", "");
 my $lq = <<EOF;
-select distinct project_name, site_name from ctp_file where visibility is null;
+select distinct project_name, site_name from ctp_file;
 EOF
 my $q = $dbh->prepare($lq);
 $q->execute;

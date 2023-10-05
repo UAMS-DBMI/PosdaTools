@@ -10,4 +10,4 @@ select
 from file_copy_from_public c, ctp_file p
 where
   c.copy_from_public_id = ? and
-  (p.file_id = c.replace_file_id and p.visibility is null) 
+  (p.file_id = c.replace_file_id) 

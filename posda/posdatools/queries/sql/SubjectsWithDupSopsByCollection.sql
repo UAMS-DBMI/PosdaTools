@@ -35,6 +35,5 @@ from (
       ) as foo 
       where count > 1
     )
-    and visibility is null
   ) as foo
 group by collection, site, subj_id

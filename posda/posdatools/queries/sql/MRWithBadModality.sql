@@ -19,7 +19,6 @@ from
   natural join dicom_file
 where 
   dicom_file_type = 'MR Image Storage' and 
-  visibility is null and
   modality != 'MR'
 group by
   collection, site, patient_id, series_instance_uid, modality, dicom_file_type

@@ -23,7 +23,7 @@ select
   pti_reconstruction_diameter as recon_diam, 
   count(*) as num_files
 from file_pt_image natural join file_patient natural join file_series natural join ctp_file 
-where project_name = ? and visibility is null
+where project_name = ?
 group by
   collection,
   site,

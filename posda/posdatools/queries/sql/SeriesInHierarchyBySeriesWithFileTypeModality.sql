@@ -27,7 +27,7 @@ where file_id in (
   from
     file_series natural join ctp_file
   where
-    series_instance_uid = ? and visibility is null
+    series_instance_uid = ?
 )
 group by collection, site, patient_id, 
   study_instance_uid, series_instance_uid,

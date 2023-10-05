@@ -12,5 +12,5 @@ select
 from
   file_sop_common natural join ctp_file natural join dicom_file natural join file_patient
 where
-  dicom_file_type = 'RT Structure Set Storage' and visibility is null
+  dicom_file_type = 'RT Structure Set Storage'
 order by project_name, site_name, patient_id

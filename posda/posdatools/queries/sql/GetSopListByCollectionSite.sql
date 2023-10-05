@@ -16,4 +16,4 @@ from
   ctp_file natural join file_patient natural join
   file_study natural join file_series natural join file_sop_common
 where
-  project_name = ? and site_name = ? and visibility is null;
+  project_name = ? and site_name = ?;

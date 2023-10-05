@@ -44,7 +44,7 @@ where
        ) as foo
      where count > 10
   )
-) and visibility is null 
+) 
 group by collection, site, patient_id, series_instance_uid,
 modality, dicom_file_type,
 digest, pixel_rows, pixel_columns, bits_allocated

@@ -11,4 +11,4 @@ select
   distinct 
   dicom_file_type as dicom_object_type
 from dicom_file natural join file_series natural join ctp_file 
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?

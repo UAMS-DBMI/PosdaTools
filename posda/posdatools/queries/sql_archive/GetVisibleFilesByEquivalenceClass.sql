@@ -8,7 +8,7 @@
 select
   file_id, visibility
 from ctp_file
-where visibility is null and file_id in (
+where file_id in (
   select
     file_id
   from

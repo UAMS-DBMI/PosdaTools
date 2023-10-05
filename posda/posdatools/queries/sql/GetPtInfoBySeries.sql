@@ -18,4 +18,4 @@ select
   pti_collimator_type as coll_type,
   pti_reconstruction_diameter as recon_diam
 from file_pt_image natural join file_patient natural join file_series natural join ctp_file 
-where series_instance_uid = ? and visibility is null
+where series_instance_uid = ?

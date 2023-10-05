@@ -11,7 +11,6 @@ select
 from
   dicom_file d natural join ctp_file
 where
-  visibility is null  and
   not exists (
     select file_id 
     from file_series s

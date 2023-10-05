@@ -32,7 +32,7 @@ where file_id in (
   from
     file_patient natural left join ctp_file
   where
-    patient_id  = ? and visibility is null
+    patient_id  = ?
   )
 group by collection, site, patient_id, study_date, study_instance_uid, 
   series_instance_uid, dicom_file_type, modality, visibility

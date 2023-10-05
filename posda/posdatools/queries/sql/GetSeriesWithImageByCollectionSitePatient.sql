@@ -19,7 +19,6 @@ from
 where 
   project_name = ? and 
   site_name = ? and 
-  patient_id = ? and
-  visibility is null
+  patient_id = ?
 group by
   collection, site, patient_id, modality, series_instance_uid

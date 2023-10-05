@@ -12,7 +12,7 @@ select distinct date_trunc as date, count(*) as num_uploads from (
   file_id
 from file_import natural join import_event natural join file_sop_common
   natural join ctp_file
-where project_name = ? and site_name = ? and visibility is null
+where project_name = ? and site_name = ?
 ) as foo
 group by date
 order by date
