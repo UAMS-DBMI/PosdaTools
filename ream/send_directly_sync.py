@@ -3,8 +3,10 @@
 import json
 import time
 import os
+import shutil
 from typing import NamedTuple
 import hashlib
+from pprint import pprint
 
 import requests
 import psycopg2
@@ -31,6 +33,7 @@ except KeyError:
 
 BASE_DIR=None
 TOKEN=None
+DRY=False
 
 
 class File(NamedTuple):
@@ -94,7 +97,12 @@ def _submit_file(f):
     headers = {
         "Authorization": "Bearer {}".format(TOKEN),
     }
-    req = requests.post(URL + "/nbia-api/services/submitDICOM", headers=headers, data=payload)
+    
+    full_url = URL + "/nbia-api/services/submitDICOM"
+    # pprint(full_url)
+    # pprint(headers)
+    # pprint(payload)
+    req = requests.post(full_url, headers=headers, data=payload)
 
     if req.status_code == 200:
         print(f.filename)
@@ -162,57 +170,88 @@ def make_filename_from_sop(sop):
 
     return BASE_DIR + '/' + path
 
-def copy_sops_into_place(sops):
-    # sops should be: [(sop, current_filename), ..]
-
-    ret = []
-    for sop, current_filename in sops:
-        new_filename = make_filename_from_sop(sop)
-        dirname = os.path.dirname(new_filename)
-        if not os.path.exists(dirname):
+def copy_sop_into_place(sop, current_filename):
+    new_filename = make_filename_from_sop(sop)
+    dirname = os.path.dirname(new_filename)
+    if not os.path.exists(dirname):
+        if DRY:
+            print("would create dir:", dirname)
+        else:
             os.makedirs(dirname)
-        try:
-            os.symlink(current_filename, new_filename)
-        except FileExistsError: pass
-        ret.append(new_filename)
+    try:
+        if DRY:
+            print(f"would copy {current_filename} -> {new_filename}")
+        else:
+            # copyfile copies the file but NOT the metadata
+            # This is to prevent copying files that are user readable only
+            shutil.copyfile(current_filename, new_filename)
+    except FileExistsError: pass
 
-    return ret
+    return new_filename
 
-def main(series_list_file: str,
+
+def sops_from_activity(db_conn, activity_id: int):
+    cur = db_conn.cursor()
+    cur.execute("""
+        select max(activity_timepoint_id)
+        from activity_timepoint
+        where activity_id = %s
+    """, [activity_id])
+
+    activity_timepoint_id = cur.fetchone()
+
+    cur.execute("""
+        select file_id, storage_path(file_id), sop_instance_uid
+        from activity_timepoint_file
+        natural join file_sop_common
+        where activity_timepoint_id = %s
+    """, [activity_timepoint_id])
+
+    for file_id, path, sop in cur:
+        yield file_id, sop, path
+
+
+def main(activity_id: int,
          collection_name: str,
          site_name: str,
          site_id: int,
-         base_dir: str = "/nas/public/storage-from-posda",
-         copy_into_place: bool = False):
-    """Send existing files via the NBIA Submissions API
+         base_dir: str = "/nas/public/test-storage",
+         dry_run: bool = False,
+         limit_count: int = 0):
+    """Send existing files via the NBIA Submissions API, from Posda
 
-    This program submit files to NBIA via the NBIA Submissions API. The
-    files must already exist in their final form in the dedicated
-    NBIA storage location. Normally they get there via the Apply Private
-    Dispositions script.
+    This program submits files to NBIA via the NBIA Submissions API.
 
-    For each series in the series_list_file, this program will:
-        1) get all files in the series
-        2) calculate the expected filename
-        3) verify the file exists in that location
-        4) submit the file via the NBIA API
+    The files must be in Posda, and the environment must be configured
+    for the Posda instance you want to send from. This program must
+    be able to access the files directly, wherever they are. The files
+    are NOT modified (Private Dispositions are not applied, nor are any
+    tags removed, such as Site Name).
+
+    For each file in the current timepiont for the activity_id, this program will:
+        1) calculate the expected filename
+        2) copy the file into that location
+        3) submit the file via the NBIA API
+
+    NOTE: The Collection, Site and Site ID are NOT read from the source
+          files, but are specified directly on the command line!
 
     Args:
-        series_list_file: a file containing a list of series to operate on
+        activity_id: the Activity ID to send
         collection_name: the collection name to submit to the API
         site_name: the site name to submit to the API
-        site_id: the 8 digit site id contianing collection_code and site_code
+        site_id: the 8 digit site id containing site_code and collection_code
 
-        base_dir: the base location where files are expected to be (or will be placed). Defaults to: /nas/public/storage-from-posda
-
-        copy_into_place: copy files into place instead of expecting them
-                         to already be there.
-
+        base_dir: the base location where files are expected to be (or will be placed). Defaults to: /nas/public/test-storage
+        dry_run: If set, talk verbosely about what would be done if it weren't set.
     """
     global TOKEN
     global BASE_DIR
+    global DRY
 
+    copy_into_place = True
     BASE_DIR = base_dir
+    DRY = dry_run
 
     print(f"Collection: {collection_name}")
     print(f"Site: {site_name}")
@@ -223,51 +262,37 @@ def main(series_list_file: str,
     psql_db_conn.autocommit = True
     psql_db_cur = psql_db_conn.cursor()
     print("# connected to postgres")
-
-
-    with open(series_list_file, "r") as infile:
-        series_list = [
-            row.strip()
-            for row in infile
-        ]
-
-
-    print("Series read from file:", len(series_list))
-
-    # get sops from series
-    print("Getting sops from series...")
-    sops = []
-    for series in series_list:
-        sops.extend(files_from_series(psql_db_cur, series))
-
-    print("Sops read from database:", len(sops))
-
-    if copy_into_place:
-        print(f"Copying {len(sops)} files into place...")
-        existing_files = copy_sops_into_place(sops)
-        print("Done.")
-    else:
-
-        # generate the expected filename
-        filenames = [
-            make_filename_from_sop(sop)
-            for sop, orig_filename in sops
-        ]
-
-        # verify they exist
-        existing_files = list(filter(os.path.exists, filenames))
-        print(f"Found {len(existing_files)} files.")
-
+    
     TOKEN = login_or_die()
     print(f"logged in to api, token={TOKEN}")
 
-    print("Beginning send...")
-    for filename in existing_files:
-        f = File(0, 0, collection_name, site_name, site_id, 0, filename)
-        try:
-            submit_file(f)
-        except SubmitFailedError as e:
-            print(e)
+    #### NOTE: We copy all files first, then submit, because of timing
+    #          issues with the NAS. We need to give the files time to show
+    #          up on the server.
+
+    print(f"Copying files into place...")
+    files = []
+    for i, (file_id, sop, source_path) in enumerate(sops_from_activity(psql_db_conn, activity_id)):
+        files.append((file_id, copy_sop_into_place(sop, source_path)))
+        if i % 100 == 0:
+            print(i)
+
+        if limit_count > 0 and i + 1 >= limit_count:
+            break
+
+    print(f"Done. {i+1} files copied.")
+
+    print("Beginning submit...")
+    for file_id, filename in files:
+        f = File(-1, file_id, collection_name, site_name, site_id, 0, filename)
+        if DRY:
+            print("would now submit:", f)
+        else:
+            try:
+                submit_file(f)
+                print("Submitted:", f)
+            except SubmitFailedError as e:
+                print(e)
 
 
 if __name__ == "__main__":

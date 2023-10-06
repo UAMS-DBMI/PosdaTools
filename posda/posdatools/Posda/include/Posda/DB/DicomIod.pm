@@ -256,6 +256,7 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Equipment,
       \&Posda::DB::Modules::FrameOfReference,
       \&Posda::DB::Modules::Synchronization,
+      \&Posda::DB::Modules::ImagePixel,
       \&Posda::DB::Modules::USImage,
     ],
   },

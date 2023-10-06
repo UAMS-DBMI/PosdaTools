@@ -178,12 +178,11 @@ def copy_sops_into_place(sops):
 
     return ret
 
-def main(series_list_file: str,
+def main(sop_list_file: str,
          collection_name: str,
          site_name: str,
          site_id: int,
-         base_dir: str = "/nas/public/storage-from-posda",
-         copy_into_place: bool = False):
+         base_dir: str = "/nas/public/storage-from-posda"):
     """Send existing files via the NBIA Submissions API
 
     This program submit files to NBIA via the NBIA Submissions API. The
@@ -191,22 +190,18 @@ def main(series_list_file: str,
     NBIA storage location. Normally they get there via the Apply Private
     Dispositions script.
 
-    For each series in the series_list_file, this program will:
-        1) get all files in the series
-        2) calculate the expected filename
-        3) verify the file exists in that location
-        4) submit the file via the NBIA API
+    For each sop in the sop_list_file, this program will:
+        1) calculate the expected filename
+        2) verify the file exists in that location
+        3) submit the file via the NBIA API
 
     Args:
-        series_list_file: a file containing a list of series to operate on
+        sop_list_file: a file containing a list of sops to operate on
         collection_name: the collection name to submit to the API
         site_name: the site name to submit to the API
         site_id: the 8 digit site id contianing collection_code and site_code
 
         base_dir: the base location where files are expected to be (or will be placed). Defaults to: /nas/public/storage-from-posda
-
-        copy_into_place: copy files into place instead of expecting them
-                         to already be there.
 
     """
     global TOKEN
@@ -225,38 +220,22 @@ def main(series_list_file: str,
     print("# connected to postgres")
 
 
-    with open(series_list_file, "r") as infile:
-        series_list = [
+    with open(sop_list_file, "r") as infile:
+        sops = [
             row.strip()
             for row in infile
         ]
+    print("Sops read from file:", len(sops))
 
+    # generate the expected filename
+    filenames = [
+        make_filename_from_sop(sop)
+        for sop in sops
+    ]
 
-    print("Series read from file:", len(series_list))
-
-    # get sops from series
-    print("Getting sops from series...")
-    sops = []
-    for series in series_list:
-        sops.extend(files_from_series(psql_db_cur, series))
-
-    print("Sops read from database:", len(sops))
-
-    if copy_into_place:
-        print(f"Copying {len(sops)} files into place...")
-        existing_files = copy_sops_into_place(sops)
-        print("Done.")
-    else:
-
-        # generate the expected filename
-        filenames = [
-            make_filename_from_sop(sop)
-            for sop, orig_filename in sops
-        ]
-
-        # verify they exist
-        existing_files = list(filter(os.path.exists, filenames))
-        print(f"Found {len(existing_files)} files.")
+    # verify they exist
+    existing_files = list(filter(os.path.exists, filenames))
+    print(f"Found {len(existing_files)} files.")
 
     TOKEN = login_or_die()
     print(f"logged in to api, token={TOKEN}")
