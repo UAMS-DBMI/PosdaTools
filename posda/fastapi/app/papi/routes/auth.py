@@ -2,6 +2,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from starlette.status import HTTP_401_UNAUTHORIZED
+from starlette.requests import Request
 import uuid
 import os
 import logging
@@ -16,7 +17,10 @@ router = APIRouter(
         401:  {"description": "User is not logged in"},
     }
 )
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/papi/auth/token")
+
+# disabling auto_error caues it to return None if unauthenticated
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/papi/auth/token",
+                                     auto_error=False)
 
 TOKEN_EXPIRE=(1 * 60 * 60) # 1 hour
 
@@ -42,11 +46,14 @@ async def get_user(db, username: str):
 
 
 async def decode_token(db, token):
+    if token is None:
+        return None
+
     redis_db = get_redis_connection()
 
     
-    print("System token: " + API_SYSTEM_TOKEN)
-    print("supplied token: " + token)
+    print(f"System token: {API_SYSTEM_TOKEN}")
+    print(f"supplied token: {token}")
     if token == API_SYSTEM_TOKEN:
         return await get_user(db, "system")
     
@@ -60,8 +67,18 @@ async def decode_token(db, token):
     return user
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme),
+async def get_current_user(request: Request,
+                           token: str = Depends(oauth2_scheme),
                            db: Database = Depends()):
+
+    # If the token wasn't supplied via header...
+    if token is None:
+        print("No bearer token supplied, checking cookie...")
+        # maybe it was supplied via cookie instead?
+        token = request.cookies.get("logintoken")
+
+    print(f"Token is now: {token}")
+
     user = await decode_token(db, token)
     if not user:
         raise HTTPException(
