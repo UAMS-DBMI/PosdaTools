@@ -98,7 +98,7 @@ sub ContentResponse {
       caption => "Cancel",
       sync => "CloseThisWindow();",
     });
-  }  elsif($self->{changing} eq "pp"){
+  }elsif($self->{changing} eq "pp"){
     $http->queue("Patient Id Prefix: $self->{record_data}->[0]->{patient_id_prefix}</br>");
     $self->{field} = "patient_id_prefix";
     $self->NewEntryBox($http, {
@@ -170,40 +170,38 @@ sub ContentResponse {
       for( $i < $search_results.length){
         $http->queue("$search_results->[0]->{collection_name} + $search_results->[0]->{site_name}</br>");
       }
-   }else{
+    }else{
       $http->queue("No collections are using this site</br>");
-   }
-   $http->queue("<br>------------------------------------------------</br>");
-   $http->queue("I want to change the site for this collection to:</br>");
-   $self->NewEntryBox($http, {
-     name => "site_box",
-     op => "SetArg",
+    }
+    $http->queue("<br>------------------------------------------------</br>");
+    $http->queue("I want to change the site for this collection by:</br>");
+    $http->queue("Site Code:</br>");
+    $self->NewEntryBox($http, {
+      name => "site_box_C",
+      op => "SetArg",
+      });
+    $self->NotSoSimpleButton($http, {
+      op => "RefreshSite_C",
+      caption => "Check Site Info With Code",
+      sync => "Update();",
      });
-   $self->NotSoSimpleButton($http, {
-     op => "RefreshSite",
-     caption => "Check Site Info",
-     sync => "Update();",
-    });
+    $http->queue("</br></br>Site Name:</br>");
+    $self->NewEntryBox($http, {
+      name => "site_box_N",
+      op => "SetArg",
+      });
+    $self->NotSoSimpleButton($http, {
+      op => "RefreshSite_N",
+      caption => "Check Site Info With Name",
+      sync => "Update();",
+     });
     try{
       my $search_results2 = [];
       if ($self->{site_code_in_examination}){
-        if ($self->{site_code_in_examination} =~ /^\d{4}$/){ #if they enter a code
-          my $site_code = $self->{site_code_in_examination};
-          $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$site_code");
-          my $site_name = decode_json($self->{client}->responseContent());
-          $http->queue("<br>------------------------------------------------</br>");
-          $http->queue("$site_name ($site_code) is used by the following collection+site combinations:</br>");
-          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
-          $search_results2 = decode_json($self->{client}->responseContent());
-       }else{
-          my $site_name = $self->{site_code_in_examination}; #this is actually the name not the code
-          $self->{client}->GET("$self->{MY_API_URL}/findSiteCodeFromName/$site_name");
-          my $site_code = decode_json($self->{client}->responseContent());
-          $self->{site_code_in_examination} = $site_code;
-          $http->queue("<br>------------------------------------------------</br>");
-          $http->queue("($site_name) $site_code  is used by the following collection+site combinations:</br>");
-          $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$site_code");
-          $search_results2  = decode_json($self->{client}->responseContent());
+         $http->queue("<br>------------------------------------------------</br>");
+         $http->queue("$self->{site_name_in_examination} ($self->{site_code_in_examination}) is used by the following collection+site combinations:</br>");
+         $self->{client}->GET("$self->{MY_API_URL}/searchRoots?site_code=$self->{site_code_in_examination}");
+         $search_results2 = decode_json($self->{client}->responseContent());
        }
        if ($search_results2 and $search_results2->[0] != ''){
          my $i = 0;
@@ -213,17 +211,17 @@ sub ContentResponse {
         }else{
          $http->queue("No collections are using this site</br>");
         }
-      }
-   } catch {
+    } catch {
       $http->queue("Search failed, please enter a different code / name</br>");
-   };
-   $http->queue("<br>------------------------------------------------</br>");
-   $self->{field} = "site_code";
-   $self->NotSoSimpleButton($http, {
-      op => "changeValue",
-      caption => "Change to this Site!",
-      sync => "Update();",
-    });
+    };
+    $http->queue("<br>------------------------------------------------</br>");
+    $self->{field} = "site_code";
+    $self->{value} = $self->{site_code_in_examination};
+    $self->NotSoSimpleButton($http, {
+       op => "changeValue",
+       caption => "Change to this Site!",
+       sync => "Update();",
+     });
   }elsif($self->{changing} eq "col"){
     $http->queue("Collection Name: $self->{record_data}->[0]->{collection_name}</br>");
     $http->queue("Collection Code: $self->{record_data}->[0]->{collection_code}</br>");
@@ -343,9 +341,16 @@ sub RefreshData{
     $self->QueueJsCmd("Update();");
 }
 
-sub RefreshSite{
+sub RefreshSite_C{
   my ($self, $http, $dyn) = @_;
   $self->{site_code_in_examination} = $self->{value};
+  $self->{client}->GET("$self->{MY_API_URL}/findSiteNameFromCode/$self->{site_code_in_examination}");
+  my $site_name = decode_json($self->{client}->responseContent());
+  $self->{site_name_in_examination} = $site_name;
+}
+sub RefreshSite_N{
+  my ($self, $http, $dyn) = @_;
+  $self->{site_name_in_examination} = $self->{value};
 }
 sub RefreshCollection{
   my ($self, $http, $dyn) = @_;
@@ -367,7 +372,7 @@ sub RenderSiteDropDown {
      push @sitelist, [$j]
   }
   $self->SelectDelegateByValue($http, {
-    op => 'RefreshSite',
+    op => 'RefreshSite_C',
     id => "SelectSiteDropDown",
     sync => "Update();",
   });

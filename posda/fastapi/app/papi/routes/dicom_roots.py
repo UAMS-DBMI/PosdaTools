@@ -116,7 +116,7 @@ async def find_collection_name_from_code(collection_code: str, db: Database = De
 
 
 @router.get("/findSiteNameFromCode/{site_code}")
-async def find_site_name_from_code(site_code: str, db: Database = Depends()) -> PlainTextResponse:
+async def find_site_name_from_code(site_code: int, db: Database = Depends()) -> PlainTextResponse:
     record = await db.fetch_one("""\
        select
         site_name
@@ -124,7 +124,7 @@ async def find_site_name_from_code(site_code: str, db: Database = Depends()) -> 
         site_codes
        where
         site_code = $1
-       """, [int(site_code)])
+       """, (site_code))
     return record['site_name']
 
 @router.get("/findCollectionCodeFromName/{collection_name}")
