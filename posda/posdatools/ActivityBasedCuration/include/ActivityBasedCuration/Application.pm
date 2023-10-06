@@ -116,7 +116,7 @@ sub SpecificInitialize {
         sync => 'Update();'
       },
       {
-        caption => "UploadToEvent",
+        caption => "Upload To Event",
         op => 'LaunchUploadToEventWindow',
         sync => 'Update();',
       },
@@ -138,7 +138,7 @@ sub SpecificInitialize {
 #        sync => 'Update();'
 #      },
       {
-        caption => "ShowBackground",
+        caption => "Show Background",
         op => 'LaunchBackground',
         mode => 'ShowBackground',
         sync => 'Update();'
@@ -151,8 +151,16 @@ sub SpecificInitialize {
         sync => 'Update();',
         query_name => 'VerboseActivityReport'
       },
+            {
+        caption => "Timepoint File Report",
+        op => 'setForegroundQuery',
+        id => 'query_menu_setForegroundQuery4',
+        mode => 'Queries',
+        sync => 'Update();',
+        query_name => 'AllFilesInActivityTimepointReport'
+      },
       {
-        caption => "GetVisualReviewByActivityId",
+        caption => "Visual Reviews",
         op => 'setForegroundQuery',
         id => 'query_menu_setForegroundQuery2',
         mode => 'Queries',
@@ -160,7 +168,7 @@ sub SpecificInitialize {
         query_name => 'GetVisualReviewByActivityId'
       },
       {
-        caption => "PublicCollectionCounts",
+        caption => "Public Collection Counts",
         op => 'setForegroundQuery',
         id => 'query_menu_setForegroundQuery3',
         mode => 'Queries',

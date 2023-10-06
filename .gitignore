@@ -13,3 +13,4 @@ tags
 *.sln
 *.pyproj
 posda.env
+/oneposda.pyproj.user
