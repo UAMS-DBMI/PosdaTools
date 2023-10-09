@@ -7,7 +7,7 @@ use Posda::ImageDisplayer;
 use Posda::FileVisualizer::JPEG;
 use Posda::DB qw( Query );
 use JSON;
-use REST::Client;
+use Posda::Api;
 use Try::Tiny;
 
 use vars qw( @ISA );
@@ -31,7 +31,7 @@ sub SpecificInitialize {
   $self->{pathology_visual_review_instance_id} = $params->{pathology_visual_review_instance_id};
 
 
-  $self->{client} = REST::Client->new();
+  $self->{client} = Posda::Api->new_rest_client();
   $self->{client}->GET("$self->{MY_API_URL}/start/$self->{pathology_visual_review_instance_id}");
   #$self->{path_files_for_review} = "$ENV{POSDA_API_URL}/v1/pathology/start/$self->{pathology_visual_review_instance_id}";
   #$self->{path_files_for_review}  = $client->responseContent()

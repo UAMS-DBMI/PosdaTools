@@ -1,9 +1,12 @@
 #!/usr/bin/perl -w
 use strict;
+use Modern::Perl;
+
 package Posda::EditStateChange;
-use REST::Client;
 use JSON;
 use Posda::Config 'Config';
+use Posda::Api;
+
 my $API_URL = Config('internal_api_url');
 my $STATE_URL = "$API_URL/v1/edits/state";
 
@@ -20,7 +23,7 @@ sub Trans{
 
   my $encoded_payload = encode_json($payload);
 
-  my $client = REST::Client->new();
+  my $client = Posda::Api->new_rest_client();
   $client->POST($STATE_URL, $encoded_payload);
 
   my $code = $client->responseCode();
