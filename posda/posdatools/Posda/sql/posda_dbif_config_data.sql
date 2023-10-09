@@ -3,8 +3,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.6
--- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
+-- Dumped from database version 13.7
+-- Dumped by pg_dump version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16,6 +16,39 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Data for Name: apps; Type: TABLE DATA; Schema: auth; Owner: -
+--
+
+COPY auth.apps (app_id, app_name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: permissions; Type: TABLE DATA; Schema: auth; Owner: -
+--
+
+COPY auth.permissions (permission_id, app_id, permission_name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: -
+--
+
+COPY auth.users (user_id, user_name, full_name, password, disabled) FROM stdin;
+0	system	System Account	\N	f
+\.
+
+
+--
+-- Data for Name: user_permissions; Type: TABLE DATA; Schema: auth; Owner: -
+--
+
+COPY auth.user_permissions (user_id, permission_id) FROM stdin;
+\.
+
 
 --
 -- Data for Name: background_buttons; Type: TABLE DATA; Schema: dbif_config; Owner: -
@@ -733,7 +766,31 @@ TempMprTransposeVolume	TempMprTransposeVolume.pl <?bkgrnd_id?> <activity_id> <te
 BackgroundSingleRtLinkageDetailReports	BackgroundSingleRtLinkageDetailReports.pl <?bkgrnd_id?> <activity_id> <file_path> <notify>	background_process		{StuctLinkages}	\N	f	0
 BackgroundPrivateDispositionsTpBaseline	BackgroundPrivateDispositionsTpBaseline.pl <?bkgrnd_id?> <activity_id>  "<notify>" "<skip_dispositions>" "<upd_nbia>" "<dir>"	background_process		{activity_timepoints}	\N	f	0
 CheckStructLinkagesTp	CheckStructLinkagesTpId.pl <?bkgrnd_id?> <activity_id> "<check_public>" <notify>	background_process		{timepoint_buttons}	\N	f	0
+Path_Patient_Mapping	PathologyCreatePatientMapping.py <?bkgrnd_id?> <activity_id> <notify> <collection_name> <site_name>	background_process	<patient_id>&<original_file_name>	{pathology,patient_mapping}	\N	f	0
+ConvertBigEndianToLittle	ConvertBigEndianToLittle.py <?bkgrnd_id?> "<activity_id>" "<notify>"	background_process		{visual_review}	\N	f	0
+SRPhiScanOp	SRPhiScan.pl <?bkgrnd_id?> <activity_id> <notify>	background_process		{"PHI report"}	\N	f	0
 \.
+
+
+--
+-- Name: apps_app_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: -
+--
+
+SELECT pg_catalog.setval('auth.apps_app_id_seq', 1, false);
+
+
+--
+-- Name: permissions_permission_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: -
+--
+
+SELECT pg_catalog.setval('auth.permissions_permission_id_seq', 1, false);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: -
+--
+
+SELECT pg_catalog.setval('auth.users_user_id_seq', 1, false);
 
 
 --

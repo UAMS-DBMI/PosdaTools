@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 13.7
--- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
+-- Dumped by pg_dump version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -55,6 +55,20 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: auth; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA auth;
+
+
+--
+-- Name: SCHEMA auth; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON SCHEMA auth IS 'standard auth schema';
+
 
 --
 -- Name: db_version; Type: SCHEMA; Schema: -; Owner: -
@@ -189,6 +203,107 @@ $$;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: apps; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.apps (
+    app_id integer NOT NULL,
+    app_name text NOT NULL
+);
+
+
+--
+-- Name: apps_app_id_seq; Type: SEQUENCE; Schema: auth; Owner: -
+--
+
+CREATE SEQUENCE auth.apps_app_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: apps_app_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: -
+--
+
+ALTER SEQUENCE auth.apps_app_id_seq OWNED BY auth.apps.app_id;
+
+
+--
+-- Name: permissions; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.permissions (
+    permission_id integer NOT NULL,
+    app_id integer,
+    permission_name text NOT NULL
+);
+
+
+--
+-- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: auth; Owner: -
+--
+
+CREATE SEQUENCE auth.permissions_permission_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: permissions_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: -
+--
+
+ALTER SEQUENCE auth.permissions_permission_id_seq OWNED BY auth.permissions.permission_id;
+
+
+--
+-- Name: user_permissions; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.user_permissions (
+    user_id integer,
+    permission_id integer
+);
+
+
+--
+-- Name: users; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.users (
+    user_id integer NOT NULL,
+    user_name text NOT NULL,
+    full_name text NOT NULL,
+    password text,
+    disabled boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: auth; Owner: -
+--
+
+CREATE SEQUENCE auth.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: -
+--
+
+ALTER SEQUENCE auth.users_user_id_seq OWNED BY auth.users.user_id;
+
 
 --
 -- Name: version; Type: TABLE; Schema: db_version; Owner: -
@@ -785,6 +900,25 @@ ALTER SEQUENCE public.background_subprocess_report_background_subprocess_report_
 
 
 --
+-- Name: bad_struct_contours_to_slice; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bad_struct_contours_to_slice (
+    structure_set_file_id integer NOT NULL,
+    image_file_id integer NOT NULL,
+    roi_num integer NOT NULL,
+    rows integer NOT NULL,
+    cols integer NOT NULL,
+    num_contours integer NOT NULL,
+    num_points integer NOT NULL,
+    total_one_bits integer NOT NULL,
+    contour_slice_file_id integer NOT NULL,
+    segmentation_slice_file_id integer NOT NULL,
+    png_slice_file_id integer NOT NULL
+);
+
+
+--
 -- Name: beam_applicator; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1247,6 +1381,22 @@ CREATE TABLE public.dedup_dicom_file (
 
 
 --
+-- Name: defaced_dicom_series; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.defaced_dicom_series (
+    subprocess_invocation_id integer NOT NULL,
+    undefaced_nifti_file integer NOT NULL,
+    defaced_nifti_file integer NOT NULL,
+    original_dicom_series_instance_uid text NOT NULL,
+    defaced_dicom_series_instance_uid text NOT NULL,
+    number_of_files integer NOT NULL,
+    import_event_comment text NOT NULL,
+    difference_nifti_file integer
+);
+
+
+--
 -- Name: dicom_dir; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1583,6 +1733,21 @@ CREATE TABLE public.dicom_series_dir_rec (
 
 
 --
+-- Name: dicom_slice_nifti_slice; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dicom_slice_nifti_slice (
+    dicom_file_id integer NOT NULL,
+    nifti_file_id integer NOT NULL,
+    dicom_frame_number integer,
+    nifti_slice_number integer NOT NULL,
+    nifti_volume_number integer NOT NULL,
+    pixel_data_digest text,
+    comment text
+);
+
+
+--
 -- Name: dicom_study_dir_rec; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1597,6 +1762,37 @@ CREATE TABLE public.dicom_study_dir_rec (
     study_instance_uid text,
     study_id text
 );
+
+
+--
+-- Name: dicom_to_nifti_conversion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dicom_to_nifti_conversion (
+    dicom_to_nifti_conversion_id integer NOT NULL,
+    subprocess_invocation_id integer NOT NULL,
+    activity_timepoint_id integer NOT NULL
+);
+
+
+--
+-- Name: dicom_to_nifti_conversion_dicom_to_nifti_conversion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dicom_to_nifti_conversion_dicom_to_nifti_conversion_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dicom_to_nifti_conversion_dicom_to_nifti_conversion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dicom_to_nifti_conversion_dicom_to_nifti_conversion_id_seq OWNED BY public.dicom_to_nifti_conversion.dicom_to_nifti_conversion_id;
 
 
 --
@@ -3065,6 +3261,130 @@ CREATE TABLE public.missing_from_fs (
 
 
 --
+-- Name: nifti_conversion_notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_conversion_notes (
+    nifti_file_from_series_id integer NOT NULL,
+    note text NOT NULL
+);
+
+
+--
+-- Name: nifti_dcm2niix_warnings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_dcm2niix_warnings (
+    nifti_file_from_series_id integer NOT NULL,
+    warning text NOT NULL
+);
+
+
+--
+-- Name: nifti_extra_file_from_series; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_extra_file_from_series (
+    nifti_file_from_series_id integer NOT NULL,
+    nifti_extra_file_id integer NOT NULL,
+    nifti_extra_file_name text NOT NULL
+);
+
+
+--
+-- Name: nifti_file_from_series; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_file_from_series (
+    nifti_file_from_series_id integer NOT NULL,
+    dicom_to_nifti_conversion_id integer NOT NULL,
+    series_instance_uid text NOT NULL,
+    num_files_in_series integer NOT NULL,
+    num_files_selected_from_series integer NOT NULL,
+    dcm2nii_invoked boolean NOT NULL,
+    modality text,
+    dicom_file_type text,
+    iop text,
+    first_ipp text,
+    last_ipp text,
+    nifti_file_id integer,
+    nifti_json_file_id integer,
+    nifti_base_file_name text,
+    specified_gantry_tilt text,
+    computed_gantry_tilt text,
+    conversion_time interval
+);
+
+
+--
+-- Name: nifti_file_from_series_nifti_file_from_series_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.nifti_file_from_series_nifti_file_from_series_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: nifti_file_from_series_nifti_file_from_series_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.nifti_file_from_series_nifti_file_from_series_id_seq OWNED BY public.nifti_file_from_series.nifti_file_from_series_id;
+
+
+--
+-- Name: nifti_jpeg_projection; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_jpeg_projection (
+    nifti_file_id integer NOT NULL,
+    proj_type text NOT NULL,
+    jpeg_file_id integer NOT NULL
+);
+
+
+--
+-- Name: nifti_jpeg_slice; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_jpeg_slice (
+    nifti_file_id integer NOT NULL,
+    vol_num integer NOT NULL,
+    slice_number integer NOT NULL,
+    flipped boolean NOT NULL,
+    jpeg_file_id integer NOT NULL
+);
+
+
+--
+-- Name: nifti_jpeg_vol_projection; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_jpeg_vol_projection (
+    nifti_file_id integer NOT NULL,
+    vol_num integer NOT NULL,
+    proj_type text NOT NULL,
+    jpeg_file_id integer NOT NULL
+);
+
+
+--
+-- Name: nifti_projection_review; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nifti_projection_review (
+    nifti_file_id integer NOT NULL,
+    reviewer text NOT NULL,
+    review_status text NOT NULL,
+    review_time timestamp with time zone NOT NULL
+);
+
+
+--
 -- Name: non_dicom_attachments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3154,6 +3474,29 @@ CREATE TABLE public.non_dicom_file_change (
     when_recategorized timestamp with time zone,
     who_recategorized text,
     why_recategorized text
+);
+
+
+--
+-- Name: pathology_image_desc; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_image_desc (
+    file_id integer NOT NULL,
+    image_desc text
+);
+
+
+--
+-- Name: pathology_patient_mapping; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pathology_patient_mapping (
+    file_id integer NOT NULL,
+    patient_id text,
+    original_file_name text,
+    collection_name text,
+    site_name text
 );
 
 
@@ -3556,7 +3899,7 @@ CREATE MATERIALIZED VIEW public.roi_body_parts AS
      JOIN public.file_roi_image_linkage ON ((file_roi_image_linkage.linked_sop_instance_uid = file_sop_common.sop_instance_uid)))
      JOIN public.ctp_file ON ((ctp_file.file_id = file_sop_common.file_id)))
      JOIN public.roi USING (roi_id))
-  WHERE (roi.roi_name ~~ 'GTV%'::text)
+  WHERE ((roi.roi_name ~~ 'GTV%'::text) AND (ctp_file.visibility IS NULL))
   GROUP BY file_series.series_instance_uid, file_series.body_part_examined
  HAVING (array_length(array_agg(file_sop_common.file_id), 1) > 0)
   WITH NO DATA;
@@ -4942,6 +5285,27 @@ CREATE TABLE quasar.site_ids (
 
 
 --
+-- Name: apps app_id; Type: DEFAULT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.apps ALTER COLUMN app_id SET DEFAULT nextval('auth.apps_app_id_seq'::regclass);
+
+
+--
+-- Name: permissions permission_id; Type: DEFAULT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.permissions ALTER COLUMN permission_id SET DEFAULT nextval('auth.permissions_permission_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.users ALTER COLUMN user_id SET DEFAULT nextval('auth.users_user_id_seq'::regclass);
+
+
+--
 -- Name: background_buttons background_button_id; Type: DEFAULT; Schema: dbif_config; Owner: -
 --
 
@@ -5054,6 +5418,13 @@ ALTER TABLE ONLY public.dicom_send_event ALTER COLUMN dicom_send_event_id SET DE
 
 
 --
+-- Name: dicom_to_nifti_conversion dicom_to_nifti_conversion_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dicom_to_nifti_conversion ALTER COLUMN dicom_to_nifti_conversion_id SET DEFAULT nextval('public.dicom_to_nifti_conversion_dicom_to_nifti_conversion_id_seq'::regclass);
+
+
+--
 -- Name: downloadable_dir downloadable_dir_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5149,6 +5520,13 @@ ALTER TABLE ONLY public.image_geometry ALTER COLUMN image_geometry_id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.import_event ALTER COLUMN import_event_id SET DEFAULT nextval('public.import_event_import_event_id_seq'::regclass);
+
+
+--
+-- Name: nifti_file_from_series nifti_file_from_series_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_file_from_series ALTER COLUMN nifti_file_from_series_id SET DEFAULT nextval('public.nifti_file_from_series_nifti_file_from_series_id_seq'::regclass);
 
 
 --
@@ -5338,6 +5716,38 @@ ALTER TABLE ONLY public.window_level ALTER COLUMN window_level_id SET DEFAULT ne
 --
 
 ALTER TABLE ONLY public.work ALTER COLUMN work_id SET DEFAULT nextval('public.work_work_id_seq'::regclass);
+
+
+--
+-- Name: apps apps_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.apps
+    ADD CONSTRAINT apps_pkey PRIMARY KEY (app_id);
+
+
+--
+-- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.permissions
+    ADD CONSTRAINT permissions_pkey PRIMARY KEY (permission_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: users users_user_name_key; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.users
+    ADD CONSTRAINT users_user_name_key UNIQUE (user_name);
 
 
 --
@@ -5589,11 +5999,43 @@ ALTER TABLE ONLY public.image_equivalence_class_input_image
 
 
 --
+-- Name: nifti_jpeg_projection nifti_jpeg_projection_nifti_file_id_proj_type_jpeg_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_projection
+    ADD CONSTRAINT nifti_jpeg_projection_nifti_file_id_proj_type_jpeg_file_id_key UNIQUE (nifti_file_id, proj_type, jpeg_file_id);
+
+
+--
+-- Name: nifti_jpeg_slice nifti_jpeg_slice_nifti_file_id_vol_num_slice_number_flipped_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_slice
+    ADD CONSTRAINT nifti_jpeg_slice_nifti_file_id_vol_num_slice_number_flipped_key UNIQUE (nifti_file_id, vol_num, slice_number, flipped, jpeg_file_id);
+
+
+--
+-- Name: nifti_jpeg_vol_projection nifti_jpeg_vol_projection_nifti_file_id_vol_num_proj_type_j_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_vol_projection
+    ADD CONSTRAINT nifti_jpeg_vol_projection_nifti_file_id_vol_num_proj_type_j_key UNIQUE (nifti_file_id, vol_num, proj_type, jpeg_file_id);
+
+
+--
 -- Name: non_dicom_edit_compare_disposition non_dicom_edit_compare_disposition_subprocess_invocation_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.non_dicom_edit_compare_disposition
     ADD CONSTRAINT non_dicom_edit_compare_disposition_subprocess_invocation_id_key UNIQUE (subprocess_invocation_id);
+
+
+--
+-- Name: pathology_patient_mapping pathology_patient_mapping_file_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pathology_patient_mapping
+    ADD CONSTRAINT pathology_patient_mapping_file_id_key UNIQUE (file_id);
 
 
 --
@@ -6543,6 +6985,30 @@ CREATE INDEX phantom_files_idx ON quasar.phantom_files USING btree (file_id);
 
 
 --
+-- Name: permissions permissions_app_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.permissions
+    ADD CONSTRAINT permissions_app_id_fkey FOREIGN KEY (app_id) REFERENCES auth.apps(app_id) ON DELETE CASCADE;
+
+
+--
+-- Name: user_permissions user_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.user_permissions
+    ADD CONSTRAINT user_permissions_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES auth.permissions(permission_id) ON DELETE CASCADE;
+
+
+--
+-- Name: user_permissions user_permissions_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.user_permissions
+    ADD CONSTRAINT user_permissions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(user_id) ON DELETE CASCADE;
+
+
+--
 -- Name: role_tabs role_tabs_query_tab_name_fkey; Type: FK CONSTRAINT; Schema: dbif_config; Owner: -
 --
 
@@ -6564,6 +7030,22 @@ ALTER TABLE ONLY dbif_config.role_tabs
 
 ALTER TABLE ONLY public.background_subprocess_report
     ADD CONSTRAINT background_subprocess_report_background_subprocess_id_fkey FOREIGN KEY (background_subprocess_id) REFERENCES public.background_subprocess(background_subprocess_id);
+
+
+--
+-- Name: dicom_slice_nifti_slice dicom_slice_nifti_slice_dicom_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dicom_slice_nifti_slice
+    ADD CONSTRAINT dicom_slice_nifti_slice_dicom_file_id_fkey FOREIGN KEY (dicom_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: dicom_slice_nifti_slice dicom_slice_nifti_slice_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dicom_slice_nifti_slice
+    ADD CONSTRAINT dicom_slice_nifti_slice_nifti_file_id_fkey FOREIGN KEY (nifti_file_id) REFERENCES public.file(file_id);
 
 
 --
@@ -6676,6 +7158,62 @@ ALTER TABLE ONLY public.file_nifti_defacing
 
 ALTER TABLE ONLY public.file_nifti
     ADD CONSTRAINT file_nifti_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_projection nifti_jpeg_projection_jpeg_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_projection
+    ADD CONSTRAINT nifti_jpeg_projection_jpeg_file_id_fkey FOREIGN KEY (jpeg_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_projection nifti_jpeg_projection_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_projection
+    ADD CONSTRAINT nifti_jpeg_projection_nifti_file_id_fkey FOREIGN KEY (nifti_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_slice nifti_jpeg_slice_jpeg_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_slice
+    ADD CONSTRAINT nifti_jpeg_slice_jpeg_file_id_fkey FOREIGN KEY (jpeg_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_slice nifti_jpeg_slice_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_slice
+    ADD CONSTRAINT nifti_jpeg_slice_nifti_file_id_fkey FOREIGN KEY (nifti_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_vol_projection nifti_jpeg_vol_projection_jpeg_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_vol_projection
+    ADD CONSTRAINT nifti_jpeg_vol_projection_jpeg_file_id_fkey FOREIGN KEY (jpeg_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_jpeg_vol_projection nifti_jpeg_vol_projection_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_jpeg_vol_projection
+    ADD CONSTRAINT nifti_jpeg_vol_projection_nifti_file_id_fkey FOREIGN KEY (nifti_file_id) REFERENCES public.file(file_id);
+
+
+--
+-- Name: nifti_projection_review nifti_projection_review_nifti_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nifti_projection_review
+    ADD CONSTRAINT nifti_projection_review_nifti_file_id_fkey FOREIGN KEY (nifti_file_id) REFERENCES public.file(file_id);
 
 
 --
