@@ -4,8 +4,6 @@ SCHEMA_FILES := \
 		${SQL}/dicom_dd.sql \
 		${SQL}/dicom_roots.sql \
 		${SQL}/posda_appstats.sql \
-		${SQL}/posda_auth.sql \
-		${SQL}/posda_auth_setup.sql \
 		${SQL}/posda_backlog.sql \
 		${SQL}/posda_counts.sql \
 		${SQL}/posda_files.sql \
@@ -24,6 +22,8 @@ DATA_FILES := \
 		${SQL}/posda_files_data.sql \
 		${SQL}/posda_dbif_config_data.sql
 
+		# ${SQL}/posda_auth.sql \
+		# ${SQL}/posda_auth_setup.sql \
 # ${SQL}/posda_backlog_data.sql
 
 all: all.sql
