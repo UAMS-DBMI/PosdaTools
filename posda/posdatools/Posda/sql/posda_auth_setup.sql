@@ -1,4 +1,4 @@
-COPY public.apps (app_id, app_name) FROM stdin;
+COPY auth.apps (app_id, app_name) FROM stdin;
 1	UserAdmin
 2	PosdaCuration
 3	PhiFixer
@@ -14,9 +14,9 @@ COPY public.apps (app_id, app_name) FROM stdin;
 13	ActivityBasedCuration
 \.
 
-SELECT pg_catalog.setval('public.apps_app_id_seq', 12, true);
+SELECT pg_catalog.setval('auth.apps_app_id_seq', 12, true);
 
-COPY public.permissions (permission_id, app_id, permission_name) FROM stdin;
+COPY auth.permissions (permission_id, app_id, permission_name) FROM stdin;
 1	1	launch
 2	2	launch
 3	3	launch
@@ -49,15 +49,15 @@ COPY public.permissions (permission_id, app_id, permission_name) FROM stdin;
 50	13	debug
 \.
 
-SELECT pg_catalog.setval('public.permissions_permission_id_seq', 49, true);
+SELECT pg_catalog.setval('auth.permissions_permission_id_seq', 49, true);
 
-COPY public.users (user_id, user_name, full_name, password) FROM stdin;
+COPY auth.users (user_id, user_name, full_name, password) FROM stdin;
 1	admin	Default Admin Account	aJE5lY8D,2wUueoiymAn8HsfbdAp0kPfTiODV7kpeNUttYTgQGbE
 \.
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 2, true);
+SELECT pg_catalog.setval('auth.users_user_id_seq', 2, true);
 
-COPY public.user_permissions (user_id, permission_id) FROM stdin;
+COPY auth.user_permissions (user_id, permission_id) FROM stdin;
 1	20
 1	1
 1	11
