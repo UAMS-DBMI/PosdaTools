@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: posda_auth; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE posda_auth WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.UTF-8';
+CREATE DATABASE posda_auth WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.utf8';
 
 
 \connect posda_auth
