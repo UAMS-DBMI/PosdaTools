@@ -7,12 +7,24 @@
 -- 
 
 select
-  file_id, patient_id,
-  study_instance_uid, study_date, study_description, series_instance_uid,
-  modality, series_date, series_description, dicom_file_type, file_name
+    file_id,
+    patient_id,
+    study_instance_uid,
+    study_date,
+    study_description,
+    series_instance_uid,
+    modality,
+    series_date,
+    series_description,
+    dicom_file_type,
+    file_name
 from
-  file_import natural join file_patient natural join file_series natural join
-  file_study natural join dicom_file
+    file_import
+    natural left join file_patient
+    natural left join file_series
+    natural left join file_study
+    natural left join dicom_file
 where
-  import_event_id = ?
-order by file_name
+    import_event_id = ?
+order by
+    file_name
