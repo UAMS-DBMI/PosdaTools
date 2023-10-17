@@ -41,7 +41,7 @@ def list_queries():
     """)
 
     rows = cur.fetchall()
-    conn.close()
+    # conn.close()
 
     return rows
 
