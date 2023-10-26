@@ -58,35 +58,55 @@ def main(args):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
                     str = "/tmp/{}_page{}.jpg".format(file_id,i)
+                    strg1 = "/tmp/{}_thumb_gamma1.jpg".format(file_id)
                     im = Image.fromarray(data)
+                    myimg_g = gammaShift(im)
+                    myimg_g.save(strg1)
                     im.save(str) #create thumbnail
                     #print(f"Creating an svs preview")
                     process(str, file_id) #import thumbnail
+                    process(strg1, file_id)
         elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
             mytif = TiffFile(svsfilepath)
             #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 data = page.asarray()
                 str = "/tmp/{}_page{}.jpg".format(file_id,i)
+                strg1 = "/tmp/{}_thumb_gamma1.jpg".format(file_id)
                 im = Image.fromarray(data)
                 im.save(str) #create copy
                 mytif2 = Image.open(str)
                 size = (700,700)
+                myimg_g = gammaShift(mytif2)
+                myimg_g.thumbnail(size) #change copy into a thumbnail
+                myimg_g.save(strg1)
                 mytif2.thumbnail(size) #change copy into a thumbnail
                 mytif2.save(str)
                 #print(f"Creating a tif preview")
                 process(str, file_id) #import thumbnail
+                process(strg1, file_id)
         elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ):
                 myimg = Image.open(svsfilepath)
-                str = "/tmp/{}_thumb.jpg".format(file_id)
+                str = "/tmp/{}_thumb_gamma0.jpg".format(file_id)
+                strg1 = "/tmp/{}_thumb_gamma1.jpg".format(file_id)
                 size = (700,700)
+                myimg_g = gammaShift(myimg)
+                myimg_g.thumbnail(size) #change copy into a thumbnail
+                myimg_g.save(strg1)
                 myimg.thumbnail(size) #change copy into a thumbnail
                 myimg.save(str) #save thumbnail
                 #print(f"Creating a jpg/bmp preview")
                 process(str, file_id) #import thumbnail
+                process(strg1, file_id)
 
     background.finish(f"Thumbnail files created and imported")
 
+def gammaShift(myimg):
+    gammaValue = 1.0 / 2.2
+    lookup = [int(255 * (i / 255.0) ** gammaValue) for i in range(256)]
+    lookup = lookup * 3
+    new_image = myimg.point(lookup)
+    return new_image
 
 
 if __name__ == "__main__":

@@ -44,7 +44,7 @@ sub SpecificInitialize {
   $self->{invertValue} = 0;
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 0;
-
+  $self->{gammaIndex} = 0;
 
 }
 
@@ -122,13 +122,24 @@ sub ContentResponse {
        caption => "Hue Rotation",
        sync => "Update();",
      });
+     if ( $self->{gammaIndex} == 0){
+      $http->queue("Gamma Value: Base </br>");
+     }else{
+      $http->queue("Gamma Value: 2.2 </br>");
+     }
+
+     $self->NotSoSimpleButton($http, {
+       op => "gammaButtonPress",
+       caption => "gamma",
+       sync => "Update();",
+     });
      $http->queue("Hue Rotation Value:  $self->{hueRotValue} degrees </br>");
      $self->NotSoSimpleButton($http, {
        op => "clearManipulations",
        caption => "Clear",
        sync => "Update();",
      });
-     $http->queue(" </br>");
+     $http->queue("</br>");
      my $i = 0;
      my $preview_file_id = 0;
      while ($i < $self->{num_prevs}){
@@ -157,6 +168,7 @@ sub clearManipulations(){
   $self->{invertValue} = 0;
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 1;
+  $self->{gammaIndex} = 0;
 }
 
 sub nextButtonPress(){
@@ -217,6 +229,14 @@ sub hueButtonPress(){
   }
 }
 
+sub gammaButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  if ($self->{gammaIndex} <= 0){
+    $self->{gammaIndex} = 1;
+  }else{
+    $self->{gammaIndex} = 0;
+  }
+}
 
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;
