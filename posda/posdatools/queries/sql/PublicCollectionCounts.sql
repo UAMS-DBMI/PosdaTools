@@ -1,7 +1,7 @@
 -- Name: PublicCollectionCounts
 -- Schema: public
 -- Columns: ['Collection', 'Modalities', 'Pts', 'Studies', 'Series', 'Images', 'GBytes']
--- Args: ['collection', 'visibility']
+-- Args: ['collection']
 -- Tags: ['AllCollections', 'DateRange', 'Kirk', 'Totals', 'count_queries', 'end_of_month']
 -- Description: Get public totals for collection
 -- 
