@@ -196,7 +196,7 @@ Query('GetDicomEditCompareDigestsAndToPath')->RunQuery(sub{
     }
     my $resp = Posda::File::Import::insert_file($tf_path, "", $IeId);
     if ($resp->is_error){
-      die $resp->error;
+      print STDERR $resp->message;
     }else{
       $num_new_imported += 1;
       $tf_id =  $resp->file_id;

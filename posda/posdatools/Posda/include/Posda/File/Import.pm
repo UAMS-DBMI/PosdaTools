@@ -84,8 +84,8 @@ sub digest_file {
 sub insert_file {
   my ($filename, $comment, $import_event_id) = @_;
 
-  print STDERR "========= Posda::File::Import::insert_file called!\n";
-  print STDERR "API_KEY=$API_TOKEN\n";
+  # print STDERR "========= Posda::File::Import::insert_file called!\n";
+  # print STDERR "API_KEY=$API_TOKEN\n";
 
   if (not defined $comment) {
     $comment = "Added by Perl Job";
