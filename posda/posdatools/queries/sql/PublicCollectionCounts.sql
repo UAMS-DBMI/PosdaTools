@@ -1,7 +1,7 @@
 -- Name: PublicCollectionCounts
 -- Schema: public
 -- Columns: ['Collection', 'Modalities', 'Pts', 'Studies', 'Series', 'Images', 'GBytes']
--- Args: ['collection']
+-- Args: ['collection', 'visibility']
 -- Tags: ['AllCollections', 'DateRange', 'Kirk', 'Totals', 'count_queries', 'end_of_month']
 -- Description: Get public totals for collection
 -- 
@@ -30,6 +30,7 @@ select
         s.study_pk_id = t.study_pk_id and
         t.patient_pk_id = p.patient_pk_id and
         p.trial_dp_pk_id = tdp.trial_dp_pk_id and
-        tdp.project =?
+        tdp.project =? and
+        s.visibility = ?
  
      group by tdp.project
