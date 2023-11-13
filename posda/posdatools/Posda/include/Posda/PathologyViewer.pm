@@ -44,7 +44,7 @@ sub SpecificInitialize {
   $self->{invertValue} = 0;
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 0;
-  $self->{gammaIndex} = 0;
+  $self->{gammaIndex} = 2;
 
 }
 
@@ -59,7 +59,7 @@ sub ContentResponse {
     });
   }elsif($self->{index} < $self->{num_files}){
      $self->{pathid} = $self->{path_files_for_review}->[$self->{index}]->{path_file_id};
-     $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}");
+     $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}/$self->{gammaIndex}");
      $self->{preview_array}  = decode_json($self->{client}->responseContent());
      $self->{num_prevs}  = scalar(@{$self->{preview_array}});
      $self->{visible_index} = $self->{index}+1;
@@ -105,40 +105,58 @@ sub ContentResponse {
      $http->queue("<div border-bottom: 1px solid #eee;>");
      $http->queue("<h3> Visual Manipulations </h3>");
      $http->queue("</div>");
+
+     #invert tools
      $self->NotSoSimpleButton($http, {
        op => "invertButtonPress",
        caption => "Invert",
        sync => "Update();",
      });
      $http->queue("Invert Value:  $self->{invertValue}00% </br>");
+
+     #contrast tools
      $self->NotSoSimpleButton($http, {
        op => "contrastButtonPress",
        caption => "Contrast",
        sync => "Update();",
      });
      $http->queue("Contrast Value:  $self->{contrastValue}00% </br>");
+
+     #hue tools
      $self->NotSoSimpleButton($http, {
        op => "hueButtonPress",
        caption => "Hue Rotation",
        sync => "Update();",
      });
-     if ( $self->{gammaIndex} == 0){
-      $http->queue("Gamma Value: Base </br>");
-     }else{
-      $http->queue("Gamma Value: 2.2 </br>");
-     }
+     $http->queue("Hue Rotation Value:  $self->{hueRotValue} degrees </br>");
 
+     #gamma tools
      $self->NotSoSimpleButton($http, {
        op => "gammaButtonPress",
        caption => "gamma",
        sync => "Update();",
      });
-     $http->queue("Hue Rotation Value:  $self->{hueRotValue} degrees </br>");
+      if ( $self->{gammaIndex} == 0){
+      $http->queue("Gamma Value: 0.4 </br>");
+      }elsif ( $self->{gammaIndex} == 1){
+       $http->queue("Gamma Value: 0.2 </br>");
+      }elsif ( $self->{gammaIndex} == 2) {
+       $http->queue("Gamma Value: Base </br>");
+      }elsif ( $self->{gammaIndex} == 3){
+       $http->queue("Gamma Value: 1.2 </br>");
+     }else{
+      $http->queue("Gamma Value: 2.2 </br>");
+     }
+
      $self->NotSoSimpleButton($http, {
        op => "clearManipulations",
        caption => "Clear",
        sync => "Update();",
      });
+
+
+
+
      $http->queue("</br>");
      my $i = 0;
      my $preview_file_id = 0;
@@ -168,7 +186,7 @@ sub clearManipulations(){
   $self->{invertValue} = 0;
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 1;
-  $self->{gammaIndex} = 0;
+  $self->{gammaIndex} = 2;
 }
 
 sub nextButtonPress(){
@@ -231,10 +249,10 @@ sub hueButtonPress(){
 
 sub gammaButtonPress(){
   my ($self, $http, $dyn) = @_;
-  if ($self->{gammaIndex} <= 0){
-    $self->{gammaIndex} = 1;
-  }else{
+  if ($self->{gammaIndex} == 4){
     $self->{gammaIndex} = 0;
+  }else{
+    $self->{gammaIndex} = $self->{gammaIndex} + 1;
   }
 }
 

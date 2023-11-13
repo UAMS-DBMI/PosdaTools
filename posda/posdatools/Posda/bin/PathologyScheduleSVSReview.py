@@ -49,75 +49,42 @@ def main(args):
             for i, page in enumerate(mytif.pages):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
-                    str = "/tmp/{}_page{}_gamma0.jpg".format(file_id,i)
-                    strg1 = "/tmp/{}_page{}_gamma1.jpg".format(file_id,i)
-                    strg2 = "/tmp/{}_page{}_gamma2.jpg".format(file_id,i)
                     im = Image.fromarray(data)
-
-                    myimg_g1 = gammaShift(im,0.05)
-                    myimg_g1.save(strg1)
-                    myimg_g2 = gammaShift(im,2.2)
-                    myimg_g2.save(strg2)
-
-                    im.save(str) #create thumbnail
-                    #print(f"Creating an svs preview")
-                    process(str, file_id, 0) #import thumbnail
-                    process(strg1, file_id, 1)
-                    process(strg2, file_id, 2)
+                    gammaSet(im, file_id,i, False)
         elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
             mytif = TiffFile(svsfilepath)
             #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 data = page.asarray()
-                str = "/tmp/{}_page{}_gamma0.jpg".format(file_id,i)
-                strg1 = "/tmp/{}_page{}_gamma1.jpg".format(file_id,i)
-                strg2 = "/tmp/{}_page{}_gamma2.jpg".format(file_id,i)
                 im = Image.fromarray(data)
-                im.save(str) #create copy
-                mytif2 = Image.open(str)
-                size = (700,700)
-
-
-                myimg_g1 = gammaShift(mytif2,0.05)
-                myimg_g1.thumbnail(size) #change copy into a thumbnail
-                myimg_g1.save(strg1)
-                myimg_g2 = gammaShift(mytif2,2.2)
-                myimg_g2.thumbnail(size) #change copy into a thumbnail
-                myimg_g2.save(strg2)
-
-                mytif2.thumbnail(size) #change copy into a thumbnail
-                mytif2.save(str)
-                #print(f"Creating a tif preview")
-                process(str, file_id, 0) #import thumbnail
-                process(strg1, file_id, 1)
-                process(strg2, file_id, 2)
+                gammaSet(im,file_id, page_id, True)
         elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ):
                 myimg = Image.open(svsfilepath)
-                str = "/tmp/{}_thumb_gamma0.jpg".format(file_id)
-                strg1 = "/tmp/{}_thumb_gamma1.jpg".format(file_id)
-                strg2 = "/tmp/{}_thumb_gamma2.jpg".format(file_id)
-                size = (700,700)
-                myimg_g1 = gammaShift(myimg,0.05)
-                myimg_g1.thumbnail(size) #change copy into a thumbnail
-                myimg_g1.save(strg1)
-                myimg_g2 = gammaShift(myimg,2.2)
-                myimg_g2.thumbnail(size) #change copy into a thumbnail
-                myimg_g2.save(strg2)
-                myimg.thumbnail(size) #change copy into a thumbnail
-                myimg.save(str) #save thumbnail
-                #print(f"Creating a jpg/bmp preview")
-                process(str, file_id, 0) #import thumbnail
-                process(strg1, file_id, 1)
-                process(strg2, file_id, 2)
+                gammaSet(myimg,file_id,0, True)
 
     background.finish(f"Thumbnail files created and imported")
 
 def gammaShift(myimg,v):
     gammaValue = 1.0 / v
     lookup = [int(255 * (i / 255.0) ** gammaValue) for i in range(256)]
-    lookup = lookup * 3
+    if myimg.mode != 'L' and myimg.mode != 'LA':  #greyscale should not be multiplied
+        lookup = lookup * 3
     new_image = myimg.point(lookup)
     return new_image
+
+def gammaSet(myImage,file_id,page, thumbs):
+    size = (700,700)
+    gammaV = [0.4,0.2,0, 1.2,2.2]
+    for i in range(len(gammaV)):
+        image = myImage
+        if (thumbs):
+            image.thumbnail(size)
+        if i != 2: #do not gamma the base image (value 0).
+            image = gammaShift(image, gammaV[i])
+        str = "/tmp/{}_thumb_page{}_gamma{}.jpg".format(file_id,page,i)
+        print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
+        image.save(str)
+        process(str, file_id, i)
 
 
 if __name__ == "__main__":
