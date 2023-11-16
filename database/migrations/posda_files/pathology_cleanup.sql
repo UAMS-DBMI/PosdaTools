@@ -3,9 +3,9 @@
 -- Name: pathology_cleanup script
 --
 
-drop table pathology_visual_review_instance;
-drop table pathology_visual_review_files;
-drop table pathology_visual_review_status;
+-- drop table pathology_visual_review_instance;
+-- drop table pathology_visual_review_files;
+-- drop table pathology_visual_review_status;
 
 create table if not exists pathology_visual_review_instance (
 	pathology_visual_review_instance_id serial not null,
@@ -19,7 +19,8 @@ create table if not exists pathology_visual_review_files (
 
 create table if not exists pathology_visual_review_preview_files (
 	path_file_id int,
-	preview_file_id int);
+	preview_file_id int
+	gammaIndex int);
 
 create table if not exists pathology_visual_review_status (
 	path_file_id int4,

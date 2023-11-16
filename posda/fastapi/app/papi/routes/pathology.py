@@ -41,8 +41,8 @@ async def get_filename(pathid: int, db: Database = Depends()):
              """
     return await db.fetch(query, [pathid])
 
-@router.get("/preview/{pathid}")
-async def get_previews(pathid: int, db: Database = Depends()):
+@router.get("/preview/{pathid}/{gammaIndex}")
+async def get_previews(pathid: int, gammaIndex: int, db: Database = Depends()):
     query = """\
         select
          distinct preview_file_id
@@ -50,8 +50,9 @@ async def get_previews(pathid: int, db: Database = Depends()):
         	pathology_visual_review_preview_files
         where
         	path_file_id = $1
+            and gammaindex = $2
         """
-    return await db.fetch(query, [pathid])
+    return await db.fetch(query, [pathid,gammaIndex])
 
 @router.put("/set_edit/{pathid}/{good_status}/{user}")
 async def set_edit(pathid: int, good_status: bool ,user: str, db: Database = Depends()):
