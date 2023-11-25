@@ -25,8 +25,8 @@ interface Point {
   inputs: ['file_id']
 })
 export class ImageComponent implements OnInit {
-  @ViewChild('canvas') canvasRef: ElementRef;
-  @ViewChild('zoomdiv') zoomRef: ElementRef;
+  @ViewChild('canvas', { static: true }) canvasRef: ElementRef;
+  @ViewChild('zoomdiv', { static: false }) zoomRef: ElementRef;
   @Input() image: ArrayBuffer;
   @Input() width: number;
   @Input() height: number;
