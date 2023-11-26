@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --disable-host-check",
-    "build": "ng build --prod --base-href '/viewer/'",
+    "build": "ng build --configuration production --base-href '/viewer/'",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -27,10 +27,10 @@
     "ngx-cookie-service": "^2.4.0",
     "rxjs": "^6.6.7",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.8"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular/cli": "11.2.19",
+    "@angular/cli": "12.2.18",
     "@angular/compiler-cli": "12.2.17",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
