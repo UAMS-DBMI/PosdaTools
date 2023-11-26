@@ -56,18 +56,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dicom:build"
+            "buildTarget": "dicom:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "dicom:build:production"
+              "buildTarget": "dicom:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dicom:build"
+            "buildTarget": "dicom:build"
           }
         },
         "test": {
