@@ -29,24 +29,23 @@ const appRoutes: Routes = [
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ImageComponent,
-    SeriesComponent,
-    WelcomeComponent,
-    DetailsComponent,
-    DumpComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MyMaterialModule,
-    RouterModule.forRoot(appRoutes)
-  ],
-  providers: [FileService, CookieService],
-  bootstrap: [AppComponent],
-  entryComponents: [DetailsComponent, DumpComponent]
+    declarations: [
+        AppComponent,
+        ImageComponent,
+        SeriesComponent,
+        WelcomeComponent,
+        DetailsComponent,
+        DumpComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MyMaterialModule,
+        RouterModule.forRoot(appRoutes)
+    ],
+    providers: [FileService, CookieService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
