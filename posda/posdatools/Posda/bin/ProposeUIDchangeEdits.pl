@@ -5,8 +5,8 @@ use Posda::BackgroundProcess;
 use Posda::PrivateDispositions;
 
 my $usage = <<EOF;
-ProposeCsvEdits.pl <?bkgrnd_id?> <scan_id> <description> <notify>
-  scan_id - id of scan to query
+ProposeUIDchangeEdits.pl <?bkgrnd_id?> <act_id> <description> <notify>
+  act_id - id of scan to query
   description - well, description
   notify - email address for completion notification
 
@@ -26,31 +26,68 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
-
-my @FileQueries;
-  my $q = {
-   type => $type,
-   path => $path,
-   value => $q_value,
-   num_files => $num_files,
-   op => $p_op,
-   arg1 => $q_arg1,
-   arg2 => $q_arg2,
-   arg3 => $q_arg3,
-  };
-  push @FileQueries, $q;
-}
-
-
 $background->Daemonize;
-#get all files in activity
-#get their uids
-# make a EditSpreadsheet with the edit syntax
-# element, vr, q_value, edit_description, diso, num series, p_op, q_arg1, q_arg2, Operation, activity_id, scan_id, notify, sep_char
+
+
+
+
+my $ActTpId;
+my $ActTpIdComment;
+my $ActTpIdDate;
+my $FilesInTp;
+my $SeriesInTp;
+my $StudiesInTp;
+
+Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
+  my($row) = @_;
+  my($activity_id, $activity_created,
+    $activity_description, $activity_timepoint_id,
+    $timepoint_created, $comment, $creating_user) = @$row;
+  $ActTpId = $activity_timepoint_id;
+  $ActTpIdComment = $comment;
+  $ActTpIdDate = $timepoint_created;
+}, sub {}, $act_id);
+Query('FileIdsByActivityTimepointId')->RunQuery(sub {
+  my($row) = @_;
+  $FilesInTp{$row->[0]} = 1;
+}, sub {}, $ActTpId);
+my $q = Query('StudySeriesForFile');
+for my $file_id(keys %FilesInTp){
+  $q->RunQuery(sub {
+    my($row) = @_;
+    $SeriesInTp{$row->[1]} = 1;
+    $StudiesInTp{$row->[0]} = 1;
+  }, sub {}, $file_id);
+}
+my $num_tp_files = keys $FilesInTp;
+my $num_tp_series = keys %SeriesInTp;
+my $num_tp_studies = keys %StudiesInTp;
+print "Found $num_tp_files files, $num_tp_studies studies, $num_tp_series series\n";
+
+# SOP and Series -  Study not required
 
 # element = find the uid dicom tags <(####),(####)>
-# vr = find the VR for that tag,
-# q_value , edit_description, diso, num series, p_op, q_arg1, q_arg2, Operation, activity_id, scan_id, notify, sep_char
+# vr = find the VR for that tag
+# q_value = original uid uid_root
+#  edit_description = UID shift for + "user input from op"
+# disp = null
+# num series - calculate
+# p_op = hash_uid
+# q_arg1 = new uid?
+# q_arg2 = null
+# Operation = name for this?
+# activity_id = from user input
+# act_id = ?
+# notify =  "user input from op"
+# sep_char = %
+for my $file_id(keys %FilesInTp){
+  my @myFiles;
+    my $f = {
+     $q_value => getUID
+     $id = getFileID
+    };
+    push @FileQueries, $q;
+}
 
 my $rpt = $background->CreateReport("EditSpreadsheet");
 my $num_edit_groups = keys %FilesByEditGroups;
@@ -58,45 +95,17 @@ $background->WriteToEmail("$num_edit_groups distinct edit groups found\n");
 $rpt->print("file_id,subj," .
   "op,path,val1,val2,val3,Operation,description,notify\n");
 my $first_line = 1;
-for my $c (sort keys %FilesByEditGroups){
-  for my $f (keys %{$FilesByEditGroups{$c}}){
-    $rpt->print("$f,$FileToSubj{$f}");
-    if($first_line){
-      $rpt->print(",,,,,,BackgroundCsvEdit," .
-        "\"From non-dicom PHI scan ($scan_id)\",\"$notify\"\n");
-      $first_line = 0;
-    } else {
-      $rpt->print("\n");
-    }
-  }
-#  $background->WriteToEmail("Command group: $c\n");
-  my @edits = split /&/, $c;
-  my @edit_h;
-  for my $edit (@edits){
-#  $background->WriteToEmail("Edit: $edit\n");
-#   bucket => "$p_op|$type|$path|$q_arg1|$q_arg2|$q_arg3",
-    my($op, $type, $path, $arg1, $arg2, $arg3) = split(/\|/, $edit);
-    $op =~ s/"/""/g;
-    $type =~ s/"/""/g;
-    $path =~ s/"/""/g;
-    $arg1 =~ s/"/""/g;
-    $arg2 =~ s/"/""/g;
-    $arg3 =~ s/"/""/g;
-print STDERR "Op: $op\n";
-    push @edit_h, {
-      op => $op, type => $type, path => $path,
-      arg1 => $arg1, arg2 => $arg2, arg3 => $arg3
-    };
-  }
-  for my $e (
-    sort
-    {$edit_sort_order->{$a->{op}} cmp $edit_sort_order->{$b->{op}}}
-    @edit_h
-  ){
-    $rpt->print(",,\"$e->{op}\",\"<$e->{path}>\",\"<$e->{arg1}>\"," .
-      "\"<$e->{arg2}>\",<$e->{arg3}>\n");
-  }
+
+my $rpt3 = $background->CreateReport("Edit UIDs");
+
+
+foreach my $current_file (@myFiles) {
+    $rpt3->print("<(0020,000D)>,UI,$q_value,$description,,$num_series," . #study
+    "hash_uid,$q_arg1,$q_arg2,$Operation,$id,$notify\r\n");
 }
+
+#check Structs and reassign them too, is that done here??
+# should it also make a new Activity for these?
 my $end = time;
 my $duration = $end - $start_time;
 $background->WriteToEmail("finished scan\nduration $duration seconds\n");
