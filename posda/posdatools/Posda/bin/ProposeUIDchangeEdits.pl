@@ -37,9 +37,7 @@ my $ActTpIdDate;
 my %FilesInTp;
 my %SeriesInTp;
 my %StudiesInTp;
-# my $series_instance_uid;
-# my $study_instance_uid;
-# my $sop;
+my %SopsInTp;
 
 Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   my($row) = @_;
@@ -62,46 +60,39 @@ for my $file_id(keys %FilesInTp){
     $StudiesInTp{$row->[0]} = 1;
   }, sub {}, $file_id);
 }
+my $q = Query('GetSeriesAndStudyUID');
+for my $file_id (keys %FilesInTp) {
+      $q->RunQuery(sub {
+        my($row) = @_;
+        $SopsInTp{$row->[2]} = 1;
+      }, sub {}, $file_id);
+}
 my $num_tp_files = keys %FilesInTp;
 my $num_tp_series = keys %SeriesInTp;
 my $num_tp_studies = keys %StudiesInTp;
-print "Found $num_tp_files files, $num_tp_studies studies, $num_tp_series series\n";
-
-
-my @myFiles;
-for my $file_id (keys %FilesInTp) {
-    my $series_instance_uid;
-    my $study_instance_uid;
-    my $sop;
-    Query('GetSeriesAndStudyUID')->RunQuery(sub{
-      my($row) = @_;
-      my($series_instance_uid, $study_instance_uid, $sop) = @$row;
-    }, sub {}, $file_id);
-    my $f = {
-        series_instance_uid => $series_instance_uid,
-        study_instance_uid => $study_instance_uid,
-        sop => $sop,
-        q_arg1 => "1.3.6.1.4.1.14519.5.2.1.",
-    };
-    push @myFiles, $f;
-}
+my $num_tp_sops = keys %SopsInTp;
+print "Found $num_tp_files files, $num_tp_sops sops, $num_tp_studies studies, $num_tp_series series\n";
+#my $q_arg1 = "1.3.6.1.4.1.14519.5.2.1.";
+my $q_arg1 = "1.3.7.1.4.1.14519.5.2.1.";
 
 my $rpt;
 $rpt = $background->CreateReport("Edit UIDs");
 $rpt->print("element,vr,q_value,edit_description,disp,num_series,p_op,q_arg1,q_arg2,Operation,Operation,activity_id,scan_id,notify,sep_char\n");
-foreach my $current_file (@myFiles) {
-    if ($include_series_instance_uid == 1){
-      $rpt->print("\"<(0020,000E)>\",UI,$current_file->{series_instance_uid},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
-    }
-    if ($include_study_instance_uid == 1){
-      $rpt->print("\"<(0020,000D)>\",UI,$current_file->{study_instance_uid},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
-    }
-    if ($include_sop == 1){
-      $rpt->print("\"<(0008,0018)>\",UI,$current_file->{sop},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
-    }
+if ($include_sop == 1){
+  foreach my $current_sop (keys %SopsInTp) {
+    $rpt->print("\"<(0008,0018)>\",UI,$current_sop,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+  }
 }
-
-
+if ($include_study_instance_uid == 1){
+  foreach my $current_study (keys %StudiesInTp){
+      $rpt->print("\"<(0020,000D)>\",UI,$current_study,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+  }
+}
+if ($include_series_instance_uid == 1){
+  foreach my $current_series (keys %SeriesInTp) {
+    $rpt->print("\"<(0020,000E)>\",UI,$current_series,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+  }
+}
 #check Structs and reassign them too, is that done here??
 # should it also make a new Activity for these?
 my $end = time;
