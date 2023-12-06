@@ -421,6 +421,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Requeue Files in FileNiftiDefacing",
         action =>  "ReQueueFileNiftiDefacing",
       },
+      {
+        operation => "ProposeUIDchangeEdits",
+        caption => "Shift UIDs for new version",
+        action =>  "ProposeUIDchangeEdits",
+      },
     ],
     queries => [
       {

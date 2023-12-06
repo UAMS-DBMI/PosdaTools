@@ -5,8 +5,8 @@ use Posda::BackgroundProcess;
 use Posda::PrivateDispositions;
 
 my $usage = <<EOF;
-ProposeUIDchangeEdits.pl <?bkgrnd_id?> <act_id> <description> <notify>
-  act_id - id of scan to query
+ProposeUIDchangeEdits.pl <?bkgrnd_id?> <activity_id> <include_series_instance_uid> <include_study_instance_uid> <include_sop> <notify> <description>
+  activity_id - id of scan to query
   description - well, description
   notify - email address for completion notification
 
@@ -25,18 +25,21 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
   exit;
 }
+
+my($invoc_id, $activity_id,$include_series_instance_uid, $include_study_instance_uid, $include_sop, $notify, $description) = @ARGV;
+
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify);
 $background->Daemonize;
-
-
-
-
+my $start_time = time;
 my $ActTpId;
 my $ActTpIdComment;
 my $ActTpIdDate;
-my $FilesInTp;
-my $SeriesInTp;
-my $StudiesInTp;
+my %FilesInTp;
+my %SeriesInTp;
+my %StudiesInTp;
+# my $series_instance_uid;
+# my $study_instance_uid;
+# my $sop;
 
 Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   my($row) = @_;
@@ -46,7 +49,7 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
   $ActTpId = $activity_timepoint_id;
   $ActTpIdComment = $comment;
   $ActTpIdDate = $timepoint_created;
-}, sub {}, $act_id);
+}, sub {}, $activity_id);
 Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   my($row) = @_;
   $FilesInTp{$row->[0]} = 1;
@@ -59,50 +62,45 @@ for my $file_id(keys %FilesInTp){
     $StudiesInTp{$row->[0]} = 1;
   }, sub {}, $file_id);
 }
-my $num_tp_files = keys $FilesInTp;
+my $num_tp_files = keys %FilesInTp;
 my $num_tp_series = keys %SeriesInTp;
 my $num_tp_studies = keys %StudiesInTp;
 print "Found $num_tp_files files, $num_tp_studies studies, $num_tp_series series\n";
 
-# SOP and Series -  Study not required
 
-# element = find the uid dicom tags <(####),(####)>
-# vr = find the VR for that tag
-# q_value = original uid uid_root
-#  edit_description = UID shift for + "user input from op"
-# disp = null
-# num series - calculate
-# p_op = hash_uid
-# q_arg1 = new uid?
-# q_arg2 = null
-# Operation = name for this?
-# activity_id = from user input
-# act_id = ?
-# notify =  "user input from op"
-# sep_char = %
-for my $file_id(keys %FilesInTp){
-  my @myFiles;
+my @myFiles;
+for my $file_id (keys %FilesInTp) {
+    my $series_instance_uid;
+    my $study_instance_uid;
+    my $sop;
+    Query('GetSeriesAndStudyUID')->RunQuery(sub{
+      my($row) = @_;
+      my($series_instance_uid, $study_instance_uid, $sop) = @$row;
+    }, sub {}, $file_id);
     my $f = {
-     $q_value => getUID
-     $id = getFileID
+        series_instance_uid => $series_instance_uid,
+        study_instance_uid => $study_instance_uid,
+        sop => $sop,
+        q_arg1 => "1.3.6.1.4.1.14519.5.2.1.",
     };
-    push @FileQueries, $q;
+    push @myFiles, $f;
 }
 
-my $rpt = $background->CreateReport("EditSpreadsheet");
-my $num_edit_groups = keys %FilesByEditGroups;
-$background->WriteToEmail("$num_edit_groups distinct edit groups found\n");
-$rpt->print("file_id,subj," .
-  "op,path,val1,val2,val3,Operation,description,notify\n");
-my $first_line = 1;
-
-my $rpt3 = $background->CreateReport("Edit UIDs");
-
-
+my $rpt;
+$rpt = $background->CreateReport("Edit UIDs");
+$rpt->print("element,vr,q_value,edit_description,disp,num_series,p_op,q_arg1,q_arg2,Operation,Operation,activity_id,scan_id,notify,sep_char\n");
 foreach my $current_file (@myFiles) {
-    $rpt3->print("<(0020,000D)>,UI,$q_value,$description,,$num_series," . #study
-    "hash_uid,$q_arg1,$q_arg2,$Operation,$id,$notify\r\n");
+    if ($include_series_instance_uid == 1){
+      $rpt->print("\"<(0020,000E)>\",UI,$current_file->{series_instance_uid},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+    }
+    if ($include_study_instance_uid == 1){
+      $rpt->print("\"<(0020,000D)>\",UI,$current_file->{study_instance_uid},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+    }
+    if ($include_sop == 1){
+      $rpt->print("\"<(0008,0018)>\",UI,$current_file->{sop},$description,,$num_tp_series,hash_uid,$current_file->{q_arg1},, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+    }
 }
+
 
 #check Structs and reassign them too, is that done here??
 # should it also make a new Activity for these?
@@ -110,3 +108,19 @@ my $end = time;
 my $duration = $end - $start_time;
 $background->WriteToEmail("finished scan\nduration $duration seconds\n");
 $background->Finish;
+
+
+# element = DICOM tag for relevant uid
+# vr = UI
+# q_value = original uid
+# edit_description = user input
+# disp = null
+# num series - calculated
+# p_op = hash_uid
+# q_arg1 = new uid root to use for hashing
+# q_arg2 = null
+# Operation = ProposeEditsTp
+# activity_id = from user input
+# scan_id = 1
+# notify =  "user input from op"
+# sep_char = %
