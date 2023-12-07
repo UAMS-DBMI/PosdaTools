@@ -60,9 +60,9 @@ for my $file_id(keys %FilesInTp){
     $StudiesInTp{$row->[0]} = 1;
   }, sub {}, $file_id);
 }
-my $q = Query('GetSeriesAndStudyUID');
+my $q2 = Query('GetSeriesAndStudyUID');
 for my $file_id (keys %FilesInTp) {
-      $q->RunQuery(sub {
+      $q2->RunQuery(sub {
         my($row) = @_;
         $SopsInTp{$row->[2]} = 1;
       }, sub {}, $file_id);
@@ -72,46 +72,35 @@ my $num_tp_series = keys %SeriesInTp;
 my $num_tp_studies = keys %StudiesInTp;
 my $num_tp_sops = keys %SopsInTp;
 print "Found $num_tp_files files, $num_tp_sops sops, $num_tp_studies studies, $num_tp_series series\n";
-#my $q_arg1 = "1.3.6.1.4.1.14519.5.2.1.";
-my $q_arg1 = "1.3.7.1.4.1.14519.5.2.1.";
-
+my $uid_root = "1.3.6.1.4.1.14519.5.2.1.";
+#my $uid_root = "1.3.7.1.4.1.14519.5.2.1."; #testing
 my $rpt;
 $rpt = $background->CreateReport("Edit UIDs");
-$rpt->print("element,vr,q_value,edit_description,disp,num_series,p_op,q_arg1,q_arg2,Operation,Operation,activity_id,scan_id,notify,sep_char\n");
-if ($include_sop == 1){
-  foreach my $current_sop (keys %SopsInTp) {
-    $rpt->print("\"<(0008,0018)>\",UI,$current_sop,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
+$rpt->print("series_instance_uid,num_files,op,tag,val1,val2,Operation,edit_description,notify,activity_id\n");
+
+my $i = 0;
+foreach my $current_series (keys %SeriesInTp) {
+  if ($i == 0){
+    $rpt->print("$current_series,$num_tp_files,,,,,BackgroundEditTp,From Shift UIDs, $notify, $activity_id\n");
+  }else{
+    $rpt->print("$current_series,$num_tp_files,,,,,,,,\n"); #$num_tp_files is not the correct number, calculate actual files per series
   }
+  $i++;
 }
+
 if ($include_study_instance_uid == 1){
-  foreach my $current_study (keys %StudiesInTp){
-      $rpt->print("\"<(0020,000D)>\",UI,$current_study,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
-  }
+  $rpt->print(",,hash_unhashed_uid,\"<(0020,000D)>\",$uid_root,,,,,,\n");
 }
+if ($include_sop == 1){
+    $rpt->print(",,hash_unhashed_uid,\"<(0008,0018)>\",$uid_root,,,,,,\n");
+}
+
 if ($include_series_instance_uid == 1){
-  foreach my $current_series (keys %SeriesInTp) {
-    $rpt->print("\"<(0020,000E)>\",UI,$current_series,$description,,$num_tp_series,hash_uid,$q_arg1,, ProposeEditsTp,$activity_id,1,$notify,%\r\n");
-  }
+    $rpt->print(",,hash_unhashed_uid,\"<(0020,000E)>\",$uid_root,,,,,,\n");
 }
-#check Structs and reassign them too, is that done here??
+# check Structs and reassign them too, is that done here??
 # should it also make a new Activity for these?
 my $end = time;
 my $duration = $end - $start_time;
 $background->WriteToEmail("finished scan\nduration $duration seconds\n");
 $background->Finish;
-
-
-# element = DICOM tag for relevant uid
-# vr = UI
-# q_value = original uid
-# edit_description = user input
-# disp = null
-# num series - calculated
-# p_op = hash_uid
-# q_arg1 = new uid root to use for hashing
-# q_arg2 = null
-# Operation = ProposeEditsTp
-# activity_id = from user input
-# scan_id = 1
-# notify =  "user input from op"
-# sep_char = %
