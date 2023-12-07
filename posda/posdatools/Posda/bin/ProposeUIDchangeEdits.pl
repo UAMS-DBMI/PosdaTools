@@ -9,16 +9,24 @@ ProposeUIDchangeEdits.pl <?bkgrnd_id?> <activity_id> <include_series_instance_ui
   activity_id - id of scan to query
   description - well, description
   notify - email address for completion notification
+  include_series_instance_uid - 1 means change the series uid
+  include_study_instance_uid - 1 means change the study uid
+  include_sop_instance_uid - 1 means change the sop uid
 
-Expects lines on STDIN:
-<type>&<<path>>&<<q_value>>&<num_files>&<p_op>&<<q_arg1>>&<<q_arg2>>&<<q_arg3>>
+  Creates a spreadsheet to upload to BackgroundEditTp
+  in order to create new UIDs for the specificed tags.
+  Used to create new versions of a collection after defacing or other major changes
+
+  WARNING - this does not shift RtStructs
 
 Note:
   The double metaquotes in the line specification are not errors.
   Those fields are to be metaquoted themselves.
 
 Uses the following query:
-  NonDicomFileInPosdaByScanPathValue
+  LatestActivityTimepointsForActivity
+  FileIdsByActivityTimepointId
+  GetSeriesAndStudyUID
 EOF
 
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
@@ -76,27 +84,27 @@ my $uid_root = "1.3.6.1.4.1.14519.5.2.1.";
 #my $uid_root = "1.3.7.1.4.1.14519.5.2.1."; #testing
 my $rpt;
 $rpt = $background->CreateReport("Edit UIDs");
-$rpt->print("series_instance_uid,num_files,op,tag,val1,val2,Operation,edit_description,notify,activity_id\n");
+$rpt->print("series_instance_uid,op,tag,val1,val2,Operation,edit_description,notify,activity_id\n");
 
 my $i = 0;
 foreach my $current_series (keys %SeriesInTp) {
   if ($i == 0){
-    $rpt->print("$current_series,$num_tp_files,,,,,BackgroundEditTp,From Shift UIDs, $notify, $activity_id\n");
+    $rpt->print("$current_series,,,,,BackgroundEditTp,From Shift UIDs, $notify, $activity_id\n");
   }else{
-    $rpt->print("$current_series,$num_tp_files,,,,,,,,\n"); #$num_tp_files is not the correct number, calculate actual files per series
+    $rpt->print("$current_series,,,,,,,\n"); #$num_tp_files is not the correct number, calculate actual files per series
   }
   $i++;
 }
 
 if ($include_study_instance_uid == 1){
-  $rpt->print(",,hash_unhashed_uid,\"<(0020,000D)>\",$uid_root,,,,,,\n");
+  $rpt->print(",hash_unhashed_uid,\"<(0020,000D)>\",$uid_root,,,,,,\n");
 }
 if ($include_sop == 1){
-    $rpt->print(",,hash_unhashed_uid,\"<(0008,0018)>\",$uid_root,,,,,,\n");
+    $rpt->print(",hash_unhashed_uid,\"<(0008,0018)>\",$uid_root,,,,,,\n");
 }
 
 if ($include_series_instance_uid == 1){
-    $rpt->print(",,hash_unhashed_uid,\"<(0020,000E)>\",$uid_root,,,,,,\n");
+    $rpt->print(",hash_unhashed_uid,\"<(0020,000E)>\",$uid_root,,,,,,\n");
 }
 # check Structs and reassign them too, is that done here??
 # should it also make a new Activity for these?
