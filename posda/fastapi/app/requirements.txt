@@ -11,3 +11,4 @@ zipstream
 python-multipart
 chardet
 redis
+pandas

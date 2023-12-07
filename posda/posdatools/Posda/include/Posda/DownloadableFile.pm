@@ -89,6 +89,7 @@ sub _make {
   my $rel_url = "/papi/file/$dl_file_id/$uuid";
   # link is now a full a tag, to allow for relative links
   $self->{link} = qq{<a href="$rel_url">downloaded_file_$dl_file_id</a>};
+  $self->{macrolink} = qq{<a href="$rel_url?process=1">Macro processed</a>};
   $self->{downloadable_file_id} = $dl_file_id;
   $self->{security_hash} = $uuid;
   $self->{rel_url} = $rel_url;

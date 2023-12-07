@@ -46,6 +46,7 @@
       my $dlf = Posda::DownloadableFile::make_csv($new_id);
       $self->{downloadable_file_object} = $dlf;
       $self->{link} = $dlf->{link};
+      $self->{macrolink} = $dlf->{macrolink};
       $self->{rel_url} = $dlf->{rel_url};
       $self->{glendor_link} = $dlf->{glendor_link};
       $self->{path} = $dlf->{path};
@@ -276,11 +277,7 @@ sub Finish {
           my $ehost = Config('external_hostname');
           say "Report '$h': ($rpt->{file_id}) http://${ehost}$rpt->{rel_url}";
         } else {
-          if ($rpt->{glendor}) {
-            $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{glendor_link}\n");
-          } else {
-            $self->WriteToEmail("Report '$h': $rpt->{link}\n");
-          }
+          $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{macrolink}\n");
         }
       }
     }

@@ -7,6 +7,7 @@ from .auth import logged_in_user, User
 from ..util import Database, asynctar
 import mimetypes
 import logging
+import asyncio
 
 
 router = APIRouter(
@@ -15,7 +16,11 @@ router = APIRouter(
 
 
 @router.get("/file/{downloadable_file_id}/{hash}") 
-async def download_file(downloadable_file_id: int, hash: str, db: Database = Depends()):
+async def download_file(downloadable_file_id: int,
+                        hash: str,
+                        process: bool = False,
+                        db: Database = Depends()):
+
     query = """
         select
             root_path || '/' || rel_path as file, 
@@ -44,6 +49,20 @@ async def download_file(downloadable_file_id: int, hash: str, db: Database = Dep
     mime_type = record['mime_type']
 
     ext = mimetypes.guess_extension(mime_type)
+
+    if process:
+        proc = await asyncio.create_subprocess_shell(
+            # f"/home/posda/posdatools/phimacro/phimacro.py {path}",
+            f"/home/posda/posdatools/phimacro/run.sh {path}",
+            # f"pwd",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await proc.communicate()
+
+        output = stdout.decode() + stderr.decode()
+
+        return Response(content=output, media_type=mime_type)
 
     return FileResponse(path, filename=f"downloaded_file_{downloadable_file_id}{ext}")
 
