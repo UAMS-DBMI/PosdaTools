@@ -1,28 +1,37 @@
 <div id="container">
-  <div style="width: 562px; height: 562px;">
-    <canvas #canvas
-      [height]="512"
-      [width]="512"
-      (mousemove)="onMouseMove($event)"
-      (mousedown)="onMouseDown($event)"
-      (mouseup)="onMouseUp($event)"
-      (wheel)="onMouseWheel($event)"
-    ></canvas>
-    <mat-slider #wwidth vertical thumbLabel
-      class="slider-tall"
-      min="-1000"
-      max="1000"
-      [value]="getWindowWidth()"
-      (input)="onChangeWidth($event)"
-    ></mat-slider>
-    <mat-slider #wcenter thumbLabel
-      class="slider-wide"
-      min="-1000"
-      max="1000"
-        [value]="getWindowCenter()"
-        (input)="onChangeCenter($event)"
-    ></mat-slider>
+  <div>
+	  <mat-card>
+		  <mat-card-content>
+		<canvas #canvas
+		[height]="800"
+		[width]="800"
+		(mousemove)="onMouseMove($event)"
+		(mousedown)="onMouseDown($event)"
+		(mouseup)="onMouseUp($event)"
+		(wheel)="onMouseWheel($event)"
+		></canvas>
+		  </mat-card-content> 
+	  </mat-card>
   </div>
+    <mat-slider discrete
+      min="-5000"
+      max="5000"
+    >
+		<input matSliderThumb 
+		[(ngModel)]="w_width"
+		(ngModelChange)="onWinLevChange($event)"
+		#slider>
+	</mat-slider>
+    <mat-slider discrete
+      min="-1000"
+      max="1000"
+    >
+		<input matSliderThumb 
+		[(ngModel)]="w_center"
+		(ngModelChange)="onWinLevChange($event)"
+		#slider>
+	</mat-slider>
+
   <mat-menu #appMenu="matMenu">
     <button mat-menu-item (click)="winlev(2000, 300)">Bone</button>
     <button mat-menu-item (click)="winlev(470, 20)">Soft Tissue</button>
@@ -42,11 +51,11 @@
     <button mat-raised-button [matMenuTriggerFor]="appMenu">
       Presets
     </button>
-    <button mat-raised-button (click)="reset()">Reset Window/Level</button>
     <button mat-raised-button (click)="resetZoom()">Reset Zoom</button>
     <button mat-raised-button [color]="roi_display ? 'accent' : 'basic'" (click)="toggleROI()">ROI</button>
     <button mat-raised-button (click)="openDetails()">Details</button>
     <button mat-raised-button (click)="openDump()">Dump</button>
+    <button mat-raised-button (click)="toggleEndian()">Endianness</button>
   </div>
 </div>
 <div *ngIf="roi_display" id="roi_toggles">

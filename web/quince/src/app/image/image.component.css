@@ -1,14 +1,12 @@
 canvas {
   /* border: 1px solid black; */
+  width: 800px;
 }
 
-.slider-tall {
-  float: right;
-  height: 512px;
+mat-slider {
+	width: 500px;
 }
-.slider-wide {
-  width: 512px;
-}
+
 #container {
   display: flex;
   flex-direction: column;
@@ -18,7 +16,7 @@ canvas {
 }
 
 #zoomdiv {
-  display: inline;
+  /* display: inline; */
 }
 
 .buttons {

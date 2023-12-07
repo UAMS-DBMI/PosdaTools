@@ -4,11 +4,15 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { timer } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { MatSliderModule} from '@angular/material/slider';
 
 @Component({
   selector: 'app-series',
   templateUrl: './series.component.html',
-  styleUrls: ['./series.component.css']
+  styleUrls: ['./series.component.css'],
+  imports: [
+    MatSliderModule,
+  ],
 })
 export class SeriesComponent implements OnInit {
   private series_instance_uid: string = '1.3.6.1.4.1.14519.5.2.1.7009.2401.339279835610748520609872183315';
@@ -65,17 +69,20 @@ export class SeriesComponent implements OnInit {
     this.current_file_id = file_id;
   }
 
-  handleResponse(data: any): void {
+  async handleResponse(data: any){
     this.file_ids = data.file_ids;
     this.length = this.file_ids.length - 1;
 
     this.current_offset = 0;
     this.current_file_id = this.file_ids[this.current_offset];
+
+	
+    // for (let i = 0; i < this.file_ids.length; i++) {
+    //     await this.fileService.getFile(this.file_ids[i]);
+	// }
   }
 
   onChange(event: any): void {
-    let val = event.value;
-    this.current_offset = val;
     this.current_file_id = this.file_ids[this.current_offset];
     // console.log(this.current_file_id);
   }

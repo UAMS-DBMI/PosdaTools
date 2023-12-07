@@ -3,20 +3,22 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FileService } from '../file.service';
 import { Image } from '../image';
 import { DetailsComponent } from '../details/details.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { DumpComponent } from '../dump/dump.component';
 import { Roi , Contour, ContourSet} from '../roi';
 
 // extern def of this built-in js func
 declare function createImageBitmap(file: any): Promise<any>;
 
+function swap16(val) {
+    return ((val & 0xFF) << 8)
+           | ((val >> 8) & 0xFF);
+}
 
 interface Point {
   x: number;
   y: number;
 };
-
-
 
 @Component({
   selector: 'app-image',
@@ -48,6 +50,8 @@ export class ImageComponent implements OnInit {
 
   private file_id: number;
   private last_file_id: number = -1;
+
+  private swapbytes: boolean = false;
 
 
   private canvas: any;
@@ -86,9 +90,10 @@ export class ImageComponent implements OnInit {
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d');
     // Do not smooth scaled images on the canvas
-    this.context.imageSmoothingEnabled = true;
+    this.context.imageSmoothingEnabled = false;
   }
 
+  // TODO does this ever fire?
   ngOnChanges(changes) {
     if (this.file_id == this.last_file_id || this.file_id == undefined)
       return;
@@ -100,6 +105,16 @@ export class ImageComponent implements OnInit {
     this.loadFile();
   }
 
+  toggleEndian() {
+	  this.swapbytes = !this.swapbytes;
+	  this.draw();
+  }
+
+  updateWinLev(image: Image) {
+    this.w_width = image.window_width;
+    this. w_center = image.window_center;
+  }
+
   loadFile(): void {
     this.image_loaded = false;
     this.service.getFile(this.file_id).subscribe(
@@ -108,8 +123,10 @@ export class ImageComponent implements OnInit {
         if (this.current_image == undefined) {
           this.current_image = res;
           this.resetZoom();
+		  this.updateWinLev(res);
         } else {
           this.current_image = res;
+		  this.updateWinLev(res);
           this.draw();
         }
 
@@ -179,14 +196,9 @@ export class ImageComponent implements OnInit {
     }
 
     let intercept = this.current_image.intercept;
-    let w_width = this.current_image.window_width;
-    let w_center = this.current_image.window_center;
-    if (this.w_width_override != undefined) {
-      w_width = this.w_width_override;
-    }
-    if (this.w_center_override != undefined) {
-      w_center = this.w_center_override;
-    }
+    let w_width = this.w_width;
+    let w_center = this.w_center;
+
     let ppad = this.current_image.pixel_pad;
     // ---------------------
 
@@ -195,7 +207,12 @@ export class ImageComponent implements OnInit {
 
     // window/level into 8bit array
     for (let i = 0; i < source.length; i++) {
-      let val = (source[i] * slope) + intercept;
+	  let val;
+	  if (this.swapbytes) {
+        val = (swap16(source[i]) * slope) + intercept;
+	  } else {
+        val = (source[i] * slope) + intercept;
+	  }
       // Apply window and level if more than 8 bits allocated
       if(this.current_image.bits_allocated > 8){
         if (val <= w_bottom) {
@@ -418,21 +435,19 @@ export class ImageComponent implements OnInit {
     }
   }
 
-  reset(): void {
-    this.w_width_override = undefined;
-    this.w_center_override = undefined;
-    this.draw();
-  }
-
   winlev(width: number, center: number): void {
-    this.w_width_override = width;
-    this.w_center_override = center;
+    this.w_width = width;
+    this.w_center = center;
 
     this.draw();
   }
 
+	onWinLevChange(event: any): void {
+		this.draw();
+	}
   onChangeCenter(event: any) {
     this.w_center_override = event.value;
+    console.log(this.w_center_override);
     this.draw();
   }
   onChangeWidth(event: any) {
@@ -498,8 +513,8 @@ export class ImageComponent implements OnInit {
 
   resetZoom(): void {
     this.zoom_level = 1;
-    this.offset = { x: (512/2) - (this.current_image.width / 2),
-                    y: (512/2) - (this.current_image.height / 2) };
+    this.offset = { x: (800/2) - (this.current_image.width / 2),
+                    y: (800/2) - (this.current_image.height / 2) };
     this.draw();
   }
 

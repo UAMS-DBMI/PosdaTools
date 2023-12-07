@@ -13,7 +13,7 @@ dist: node_modules $(SRCFILES)
 	$(NG) build --prod --base-href "/viewer/"
 
 serve: node_modules
-	$(NG) s --proxy-config proxy.conf.json --host 0.0.0.0 --base-href "/viewer"
+	npm run start
 
 node_modules: package.json package-lock.json
 	npm install

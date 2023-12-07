@@ -7,9 +7,12 @@
         class="slider"
         min="0"
         [max]="length"
-        [value]="current_offset"
-        (input)="onChange($event)"
-      ></mat-slider>
+      >
+		<input matSliderThumb
+		[(ngModel)]="current_offset"
+		(ngModelChange)="onChange($event)"
+		#slider>
+	  </mat-slider>
       <button mat-icon-button (click)="movePrevious()"><mat-icon>keyboard_arrow_left</mat-icon></button>
       <button mat-icon-button (click)="moveNext()"><mat-icon>keyboard_arrow_right</mat-icon></button>
       <a *ngIf="show_download" [href]="download_link()"><button mat-icon-button><mat-icon>save_alt</mat-icon></button></a>
