@@ -1,5 +1,5 @@
 :operation_name: ProposeUIDchangeEdits
-:command_line: <?bkgrnd_id?> <activity_id> <include_series_instance_uid> <include_study_instance_uid> <include_sop>
+:command_line: ProposeUIDchangeEdits.pl <?bkgrnd_id?> <activity_id> <include_series_instance_uid> <include_study_instance_uid> <include_sop> <notify> <description>
 :operation_type: background_process
 :input_line_format:
 :tags: 
