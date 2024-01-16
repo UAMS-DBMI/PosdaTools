@@ -43,6 +43,7 @@ Query('LatestActivityTimepointsForActivity')->RunQuery(sub{
 }, sub {}, $act_id);
 $background->SetActivityStatus("Found timepoint ($OldActTpId) for " .
   "activity: $act_id");
+print "Operating on timepoint $OldActTpId";
 Query('FileIdsByActivityTimepointId')->RunQuery(sub {
   my($row) = @_;
   $FilesInOldTp{$row->[0]} = 1;

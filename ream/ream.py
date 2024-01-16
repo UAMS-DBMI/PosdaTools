@@ -129,7 +129,8 @@ def _submit_file(f):
         return
     elif req.status_code == 401:
         print(req.content)
-        if req.content == b'Insufficiant Privileges':
+        if req.content == b'Insufficiant Privileges' \
+                or b'Unauthorized' in req.content:
             raise LoginExpiredError()
         # indicates an acess error, generally an expired token
         try:
