@@ -102,6 +102,17 @@ sub ContentResponse {
        sync => "Update();",
      });
      $http->queue("</br>");
+     $self->NotSoSimpleButton($http, {
+       op => "removeMacroButtonPress",
+       caption => "Remove Macro",
+       sync => "Update();",
+     });
+     $self->NotSoSimpleButton($http, {
+       op => "removeLabelButtonPress",
+       caption => "Remove Label",
+       sync => "Update();",
+     });
+     $http->queue("</br>");
      $http->queue("<div border-bottom: 1px solid #eee;>");
      $http->queue("<h3> Visual Manipulations </h3>");
      $http->queue("</div>");
@@ -254,6 +265,22 @@ sub gammaButtonPress(){
   }else{
     $self->{gammaIndex} = $self->{gammaIndex} + 1;
   }
+}
+
+sub removeMacroButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->badButtonPress();
+}
+
+sub removeLabelButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/remR/$self->{pathid}");
+  $self->badButtonPress();
+}
+
+sub updatePatientIDButtonPress(){
+  my ($self, $http, $dyn) = @_;
+
 }
 
 sub MenuResponse {

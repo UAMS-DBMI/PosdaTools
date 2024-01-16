@@ -69,6 +69,36 @@ async def set_edit(pathid: int, good_status: bool ,user: str, db: Database = Dep
         'status': 'success',
     }
 
+@router.put("/remM/{pathid}")
+async def remM(pathid: int,  db: Database = Depends()):
+    record = await db.fetch("""\
+        INSERT INTO pathology_edit_queue
+        VALUES($1 , 1, NULL, 'waiting');
+        """, [pathid])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+@router.put("/remM/{pathid}")
+async def remL(pathid: int, db: Database = Depends()):
+    record = await db.fetch("""\
+        INSERT INTO pathology_edit_queue
+        VALUES($1 , 2, NULL, 'waiting');
+        """, [pathid])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
 @router.get("/review/{vr_id}")
 async def review(vr_id: int, db: Database = Depends()):
     query = """\
@@ -107,6 +137,7 @@ async def get_image_desc(file_id: int, db: Database = Depends()):
             a.file_id = $1
              """
     return await db.fetch(query, [file_id])
+
 
 @router.get("/getcount")
 def get_current_count():
