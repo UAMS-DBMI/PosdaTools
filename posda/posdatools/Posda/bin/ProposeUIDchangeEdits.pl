@@ -80,8 +80,8 @@ my $num_tp_series = keys %SeriesInTp;
 my $num_tp_studies = keys %StudiesInTp;
 my $num_tp_sops = keys %SopsInTp;
 print "Found $num_tp_files files, $num_tp_sops sops, $num_tp_studies studies, $num_tp_series series\n";
-my $uid_root = "1.3.6.1.4.1.14519.5.2.1.";
-#my $uid_root = "1.3.7.1.4.1.14519.5.2.1."; #testing
+my $uid_root = "!1.3.6.1.4.1.14519.5.2.1.";
+
 my $rpt;
 $rpt = $background->CreateReport("Edit UIDs");
 $rpt->print("series_instance_uid,op,tag,val1,val2,Operation,edit_description,notify,activity_id\n");
