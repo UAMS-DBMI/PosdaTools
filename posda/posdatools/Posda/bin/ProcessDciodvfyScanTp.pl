@@ -188,10 +188,6 @@ my $start_xact = PosdaDB::Queries->GetQueryInstance(
   "StartTransaction");
 my $stop_xact = PosdaDB::Queries->GetQueryInstance(
   "StopTransaction");
-my $lock_errors = PosdaDB::Queries->GetQueryInstance(
-  "LockErrors");
-my $lock_warnings = PosdaDB::Queries->GetQueryInstance(
-  "LockWarnings");
 
 my $num_warnings = 0;
 my $num_errors = 0;
@@ -199,7 +195,6 @@ for my $i (@Records){
   my $class = $i->[0];
   if($class eq "Error"){
     $start_xact->RunQuery(sub{}, sub{});
-    $lock_errors->RunQuery(sub{}, sub{});
     my($error_type, $error_tag, $error_subtype, $error_module,
       $error_reason, $error_index, $error_value, $error_text);
     $error_type = $i->[1];
@@ -372,7 +367,6 @@ for my $i (@Records){
     $num_errors += 1;
   } elsif($class eq "Warning"){
     $start_xact->RunQuery(sub{}, sub{});
-    $lock_warnings->RunQuery(sub{}, sub {});
     my($warn_type, $warn_tag, $warn_desc, $warn_iod, $warn_text,
       $warn_comment, $warn_value, $warn_reason, $warn_index);
     $warn_type = $i->[1];
