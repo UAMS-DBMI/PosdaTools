@@ -354,6 +354,11 @@ for my $e (@effective_edits){
   }elsif($eop eq "hash_unhashed_uid"){
     my $value = $ds->Get($etag);
     unless($value =~ /^$earg1.*$/){
+      # Remove any leading ! from the new root. This allows
+      # a user to force hashing of a UID with the same root 
+      # by suppying the new root with a leading !, example:
+      # !1.2.3.4567
+      $earg1 =~ s/^\!//;
       my $ctx = Digest::MD5->new;
       $ctx->add($value);
       my $dig = $ctx->digest;
