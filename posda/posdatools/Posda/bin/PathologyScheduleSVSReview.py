@@ -82,7 +82,7 @@ def gammaSet(myImage,file_id,page, thumbs):
         if i != 2: #do not gamma the base image (value 0).
             image = gammaShift(image, gammaV[i])
         str = "/tmp/{}_thumb_page{}_gamma{}.jpg".format(file_id,page,i)
-        print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
+        #print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
         image.save(str)
         process(str, file_id, i)
 

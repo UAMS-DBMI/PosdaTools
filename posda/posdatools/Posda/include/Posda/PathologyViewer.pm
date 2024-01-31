@@ -269,13 +269,13 @@ sub gammaButtonPress(){
 
 sub removeMacroButtonPress(){
   my ($self, $http, $dyn) = @_;
-  $self->badButtonPress();
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 
 sub removeLabelButtonPress(){
   my ($self, $http, $dyn) = @_;
   $self->{client}->PUT("$self->{MY_API_URL}/remR/$self->{pathid}");
-  $self->badButtonPress();
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 
 sub updatePatientIDButtonPress(){
