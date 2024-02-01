@@ -72,10 +72,12 @@ RUN apt-get update && apt-get install -y \
 	python3-psycopg2 \
 	python3-numpy \
 	redis-tools \
-	procps
+	procps \
+	rclone \
+	less
 
 
-# Perl modules from Alpine repos
+# Perl modules from repos
 RUN apt-get update && apt-get install -y \
 	libdata-uuid-perl \
 	libdbd-pg-perl \
