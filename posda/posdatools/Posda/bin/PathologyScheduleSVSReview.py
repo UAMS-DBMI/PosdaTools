@@ -4,6 +4,7 @@ import argparse
 import csv
 import sys
 import os
+from openslide import OpenSlide
 
 from tifffile import TiffFile
 from PIL import Image, ImageFile
@@ -43,22 +44,25 @@ def main(args):
         Query("InsertPathVRFiles").execute(
                 pathology_visual_review_instance_id = vr_id,
                 path_file_id = file_id)
-        if (myfilename[-3:].lower() == "svs"):
+        if (myfilename[-3:].lower() == "svs"): #Aperio File
             mytif = TiffFile(svsfilepath)
-            #saveTiffMetaData(mytif, file_id)
             for i, page in enumerate(mytif.pages):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
                     im = Image.fromarray(data)
                     gammaSet(im, file_id,i, False)
-        elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff") :
-            mytif = TiffFile(svsfilepath)
-            #saveTiffMetaData(mytif, file_id)
-            for i, page in enumerate(mytif.pages):
-                data = page.asarray()
-                im = Image.fromarray(data)
-                gammaSet(im,file_id, page_id, True)
-        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ):
+        elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff" or myfilename[-4:].lower() == "ndpi" or myfilename[-4:].lower() == "mrxs" ): #Tiff, Hanamatsu, or Mirax file
+             myImage = OpenSlide((myfilename))
+             if is_increasing(myImage.level_downsamples):
+                 closest_level = myImage.get_best_level_for_downsample(max(myImage.level_dimensions[0]) / 700)
+                 downsampled_dimensions = myImage.level_dimensions[closest_level]
+                 im = myImage.read_region((0, 0), closest_level, downsampled_dimensions)
+                 im_rgb = im.convert('RGB')
+                 gammaSet(im_rgb,closest_level,False)
+             else:
+                 print('Warning: Layers may not be the same image! Cannot make thumbnail!')
+
+        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ): #non-layered file
                 myimg = Image.open(svsfilepath)
                 gammaSet(myimg,file_id,0, True)
 
@@ -82,7 +86,7 @@ def gammaSet(myImage,file_id,page, thumbs):
         if i != 2: #do not gamma the base image (value 0).
             image = gammaShift(image, gammaV[i])
         str = "/tmp/{}_thumb_page{}_gamma{}.jpg".format(file_id,page,i)
-        print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
+        #print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
         image.save(str)
         process(str, file_id, i)
 

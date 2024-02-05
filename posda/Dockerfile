@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /build
 RUN wget -O /build/tools.tar.bz2 \
 	https://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20220618093127.tar.bz2
-	
+
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \
 	cd dicom3tools* && \
@@ -109,7 +109,7 @@ RUN cpanm --notest \
 
 
 # Install needed python utils
-RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis tifffile imagecodecs
+RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis tifffile imagecodecs openslide-python
 
 
 RUN addgroup --gid 2123 fakeposda
