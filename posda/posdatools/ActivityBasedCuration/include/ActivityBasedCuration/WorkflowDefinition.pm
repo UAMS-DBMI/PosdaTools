@@ -142,7 +142,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
       {
         operation => "InvokeNewOperation",
-        caption => "Pathology Schedule SVS VisualReview",
+        caption => "Pathology Schedule Visual Review",
         action =>  "Path_SVS_VisualReview",
       },
     ],
