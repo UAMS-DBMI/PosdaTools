@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posda Import In-Place</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 2em;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        label, input, button {
+            margin-bottom: 1em;
+        }
+
+        input, button {
+            padding: 0.5em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="text"] {
+            width: 300px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 0.5em;
+            margin-top: 0.5em;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .error {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Posda Import In-Place</h1>
+
+    <label for="pathInput">Path:</label>
+    <input type="text" id="pathInput" value="/home/posda/cache">
+    <button onclick="fetchFiles()">Fetch Files</button>
+
+
+    <label for="commentInput">Comment:</label>
+    <input type="text" id="commentInput">
+    <button onclick="submitCommentAndProcess()">Submit</button>
+
+	<div id="importEventId"></div>
+	<h2>Files (will be listed once fetched):</h2>
+    <ul id="fileList">
+        <!-- Files will be populated here -->
+    </ul>
+
+    <script>
+		var import_event_id = 0;
+        // Function to fetch the list of files
+        function fetchFiles() {
+            const path = document.getElementById('pathInput').value;
+            fetch(`/papi/v1/files/listfiles?path=${encodeURIComponent(path)}`)
+                .then(response => response.json())
+                .then(data => {
+                    let fileList = document.getElementById('fileList');
+                    fileList.innerHTML = ''; // Clear existing items
+                    data.forEach(file => {
+                        let li = document.createElement('li');
+                        li.textContent = file;
+                        fileList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the files:', error);
+                });
+        }
+
+        // Function to submit the comment and then process the files
+        function submitCommentAndProcess() {
+            const source = document.getElementById('commentInput').value;
+            const origin = "web";
+            const expected_count = document.getElementById('fileList').children.length;
+
+            const eventUrl = `/papi/v1/import/event?source=${encodeURIComponent(source)}&origin=${origin}&expected_count=${expected_count}`;
+
+            fetch(eventUrl, {
+                method: 'PUT',
+            })
+            .then(response => {
+                if (!response.ok) {
+					console.log(response);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Import event created", data.import_event_id);
+				import_event_id = data.import_event_id;
+				document.getElementById('importEventId').textContent = `import_event_id: ${import_event_id}`;
+                processFiles(); // Call processFiles once the comment is successfully submitted
+            })
+            .catch(error => {
+                console.error('There was an error submitting the comment:', error);
+            });
+        }
+
+        // Function to process each file entry
+        function processFiles() {
+            let fileList = document.getElementById('fileList').children;
+            for (let item of fileList) {
+                // Construct the URL with query parameters
+				let fileUrl = `/papi/v1/import/file_in_place?localpath=${encodeURIComponent(item.textContent)}&import_event_id=${import_event_id}`;
+
+                fetch(fileUrl, {
+                    method: 'POST',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    item.classList.add('success');
+                })
+                .catch(error => {
+                    item.classList.add('error');
+                    console.error('There was an error processing the file:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
