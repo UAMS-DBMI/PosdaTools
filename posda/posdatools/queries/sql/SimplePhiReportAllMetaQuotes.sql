@@ -1,6 +1,6 @@
 -- Name: SimplePhiReportAllMetaQuotes
 -- Schema: posda_phi_simple
--- Columns: ['element', 'vr', 'q_value', 'description', disposition, 'num_series']
+-- Columns: ['element', 'vr', 'q_value', 'description', 'disposition', 'num_series']
 -- Args: ['scan_id']
 -- Tags: ['adding_ctp', 'for_scripting', 'phi_reports']
 -- Description: Simple Phi Report with Meta Quotes
