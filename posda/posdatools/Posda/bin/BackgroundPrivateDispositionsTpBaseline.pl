@@ -417,7 +417,7 @@ for my $file_id (keys %Files){
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
             qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
-            qq{"$upd_nbia"};
+            qq{"$upd_nbia" "$sop_instance_uid"};
 
   push @cmds, $cmd;
 }
