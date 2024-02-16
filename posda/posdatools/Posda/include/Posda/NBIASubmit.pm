@@ -1,11 +1,12 @@
 package Posda::NBIASubmit;
 
+use Modern::Perl;
 use REST::Client;
 use JSON;
 use Data::Dumper;
 use Redis;
 use Digest::MD5;
-use Posda::Config 'Config';
+use Posda::Config ('Config', 'Database');
 
 use constant REDIS_HOST => Config('redis_host') . ':6379';
 
@@ -22,6 +23,34 @@ sub GenerateFilename {
   $dig =~ /(..)(..)(..).*/;
 
   return "$1/$2/$3/$dig.dcm";
+}
+
+
+=head2 SubmitToDcm4chee($subprocess_invocation_id, $file_id, $sop_instance_uid)
+
+Submit the given file for import into dcm4chee.
+
+This method just creates an entry in the table dcm4chee_copy.
+A seperate daemon must monitor the table for unprocessed (processed = false)
+rows and actually perform the work.
+
+=cut
+sub SubmitToDcm4chee {
+  my ($subprocess_invocation_id, $file_id, $sop_instance_uid) = @_;
+
+  my $rel_path = GenerateFilename($sop_instance_uid);
+
+  my $handle = DBI->connect(Database('posda_files'));
+
+  my $query = $handle->prepare(qq{
+    insert into dcm4chee_copy 
+    (subprocess_invocation_id, file_id, rel_path)
+    values
+    (?, ?, ?)
+  });
+
+  my $rows_ret = $query->execute($subprocess_invocation_id, $file_id, $rel_path);
+
 }
 
 

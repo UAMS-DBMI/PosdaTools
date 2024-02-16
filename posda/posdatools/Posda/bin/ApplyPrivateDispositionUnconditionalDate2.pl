@@ -9,7 +9,7 @@ use Time::Piece;
 use Posda::NBIASubmit;
 
 my $usage = <<EOF;
-ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions> <upd_nbia>
+ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions> <upd_nbia> <sop_instance_uid>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
@@ -21,13 +21,13 @@ ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file>
   skip private dispositions if <skip_dispositions> is set to 1
 EOF
 
-unless($#ARGV == 8) {
+unless($#ARGV == 9) {
  my $num_parms = @ARGV;
  print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 9\n";
  die $usage;
 }
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
-    $offset, $batch, $skip_dispositions, $upd_nbia) = @ARGV;
+    $offset, $batch, $skip_dispositions, $upd_nbia, $sop_instance_uid) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -306,5 +306,10 @@ if($upd_nbia){
     $batch,
     $to_file,
     $tpa_url
+  );
+  Posda::NBIASubmit::SubmitToDcm4chee(
+    $subprocess_invocation_id,
+    $file_id,
+    $sop_instance_uid
   );
 }
