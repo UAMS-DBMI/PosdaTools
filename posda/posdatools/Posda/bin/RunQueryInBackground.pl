@@ -73,7 +73,7 @@ $pipe->print("\n");
 for my $row (@Rows){
   for my $col (0 .. $#{$row}){
     my $val = $row->[$col];
-    $val =~ s/""/"/g;
+    $val =~ s/"/""/g;
     $pipe->print("\"$val\"");
     unless($col == $#{$row}) {$pipe->print(",")};
   }
