@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -u
+#!/usr/local/bin/python3 -u
 
 import os
 import subprocess
@@ -11,6 +11,7 @@ from botocore.exceptions import ClientError
 import requests
 import logging
 import signal
+import time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -140,7 +141,11 @@ def main():
 
             # process in batches
             batch = [row for row in cur]
-            process(batch, token)
+            if len(batch) > 0:
+                process(batch, token)
+            else:
+                logging.debug("sleeping 5 seconds because nothing to do")
+                time.sleep(5)
 
             conn.commit()
 

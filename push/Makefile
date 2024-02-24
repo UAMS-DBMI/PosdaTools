@@ -31,4 +31,4 @@ test: last_built
 		--env-file push.env \
 		-v ${PWD}:/work \
 		${IMAGE_NAME}:latest \
-		bash
+		sh
