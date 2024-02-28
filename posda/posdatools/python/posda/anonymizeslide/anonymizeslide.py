@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-#  anonymize-slide.py - Delete the label from a whole-slide image.
+#  anonymizeslide.py - Delete the label from a whole-slide image.
 #
 #  Copyright (c) 2007-2013 Carnegie Mellon University
 #  Copyright (c) 2011      Google, Inc.
@@ -23,18 +23,18 @@
 #  Boston, MA 02110-1301 USA.
 #
 
-
-from configparser import RawConfigParser
-from io import StringIO
-from glob import glob
-from optparse import OptionParser
 import os
 import string
 import struct
 import sys
 import logging
-from tags import TiffTag
 import enum
+from configparser import RawConfigParser
+from io import StringIO
+from glob import glob
+from optparse import OptionParser
+from posda.tifftags import TiffTag
+
 
 PROG_DESCRIPTION = '''
 Delete the slide label from an MRXS, NDPI, or SVS whole-slide image.
