@@ -45,6 +45,10 @@ sub SpecificInitialize {
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 0;
   $self->{gammaIndex} = 2;
+  $self->{label_setting} = 0;
+  $self->{macro_setting} = 0;
+  $self->{review_status} = "";
+  $self->{edit_status} = "";
 
 }
 
@@ -269,12 +273,16 @@ sub gammaButtonPress(){
 
 sub removeMacroButtonPress(){
   my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/remM/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+  #grey button out
+  #alert user
+
 }
 
 sub removeLabelButtonPress(){
   my ($self, $http, $dyn) = @_;
-  $self->{client}->PUT("$self->{MY_API_URL}/remR/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/remL/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 

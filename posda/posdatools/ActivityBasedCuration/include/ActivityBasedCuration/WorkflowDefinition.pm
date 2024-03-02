@@ -50,12 +50,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
        action =>  "ImportPatientMapping",
        special => "spreadsheetRequest"
      },
-     {
-      operation => "InvokeNewOperation",
-      caption => "Pathology Patient Mapping",
-      action =>  "Path_Patient_Mapping",
-      special => "spreadsheetRequest"
-     }
     ],
   },
   {
@@ -140,11 +134,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule Visual Review",
         action =>  "VisualReviewFromTimepoint",
       },
-      {
-        operation => "InvokeNewOperation",
-        caption => "Pathology Schedule SVS VisualReview",
-        action =>  "Path_SVS_VisualReview",
-      },
     ],
     queries => [
       {
@@ -152,11 +141,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         operation => "SelectQueryGroup",
         query_list_name => "VisualReviewStatus",
       },
-      {
-        caption => "Pathology Queries for Visual Review Status",
-        operation => "SelectQueryGroup",
-        query_list_name => "PathVisualReviewStatus",
-      }
     ],
   },
   {
@@ -173,18 +157,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Schedule Structured Report PHI Scan",
         action =>  "SRPhiScanOp",
       },
-      {
-        caption => "Schedule Pathology TIFF PHI Scan",
-        action =>  "Path_PHI_Scan",
-      },
     ],
-    queries => [
-        {
-         caption => "View Pathology PHI Scan",
-         operation => "SelectQueryGroup",
-         query_list_name => "Display_TiffPHI_Report",
-       },
-     ],
   },
   {
     id => "10_structlinkcheck",
@@ -336,7 +309,54 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "16_other",
+    id => "16_Pathology",
+    name => "Pathology",
+    note => "These operations are PATHOLOGY specific",
+    description => "Sometimes in order to solve an unusual issue " .
+      "you will want to make a second copy of the Timepoint " .
+      "You may also want to merge Timepoints together.",
+    operations => [
+    {
+      operation => "InvokeNewOperation",
+      caption => "Patient Mapping",
+      action =>  "Path_Patient_Mapping",
+      special => "spreadsheetRequest"
+    },
+    {
+      caption => "Schedule PHI Scan",
+      action =>  "Path_PHI_Scan",
+    },
+    {
+      operation => "InvokeNewOperation",
+      caption => "Create Visual Review",
+      action =>  "Path_SVS_VisualReview",
+    },
+    {
+      operation => "InvokeNewOperation",
+      caption => "Pathology Commit Queued Edits",
+      action =>  "Path_Commit_Edits",
+    },
+   ],
+    queries => [
+      {
+        caption => "Copy Files",
+        operation => "SelectQueryGroup",
+        query_list_name => "CopyFiles",
+      },
+      {
+         caption => "View PHI Scan",
+         operation => "SelectQueryGroup",
+         query_list_name => "Display_TiffPHI_Report",
+       },
+      {
+        caption => "Visual Review and Status",
+        operation => "SelectQueryGroup",
+        query_list_name => "PathVisualReviewStatus",
+       },
+    ],
+  },
+  {
+    id => "17_other",
     name => "Other",
     description => "Miscellaneous operations",
     operations => [
@@ -403,7 +423,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "17_defacing",
+    id => "18_defacing",
     name => "Dicom Image Defacing",
     note => "Operations and queries related to determing if images need defacing ".
       "and defacig them if they do",
@@ -587,31 +607,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   ],
-  PathVisualReviewStatus => [
-    "Pathology Suggested Queries for Visual Review",
-    [
-      {
-        caption => "View Pathology VR Instances (Launcher)",
-        query => "ViewPathologyVisualReviewInstances",
-      },
-      {
-        caption => "PathologyVRlogs",
-        query => "PathologyVRlogs",
-      },
-      {
-        caption => "PathologyReviewCountByActivity",
-        query => "PathologyReviewCountByActivity",
-      },
-      {
-        caption => "PathologyReviewCountByActivityTimepoint",
-        query => "PathologyReviewCountByActivityTimepoint",
-      },
-      {
-        caption => "PathologyBadFilesInTPCheck",
-        query => "PathologyBadFilesInTPCheck",
-      },
-    ],
-  ],
   ActivityReports => [
     "Suggested Queries for Activity Timepoint Reports",
     [
@@ -718,4 +713,33 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
     ],
   ],
+  PathVisualReviewStatus => [
+    "Pathology Suggested Queries for Visual Review",
+    [
+      {
+        caption => "View Pathology VR Instances (Launcher)",
+        query => "ViewPathologyVisualReviewInstances",
+      },
+      {
+        caption => "PathologyVRlogs",
+        query => "PathologyVRlogs",
+      },
+      {
+        caption => "PathologyReviewCountByActivity",
+        query => "PathologyReviewCountByActivity",
+      },
+      {
+        caption => "PathologyReviewCountByActivityTimepoint",
+        query => "PathologyReviewCountByActivityTimepoint",
+      },
+      {
+        caption => "PathologyBadFilesInTPCheck",
+        query => "PathologyBadFilesInTPCheck",
+      },
+      {
+        caption => "PathologyViewEdits",
+        query => "PathologyViewEdits",
+      },
+    ],
+   ],
 );

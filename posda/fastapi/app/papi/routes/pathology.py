@@ -73,6 +73,7 @@ async def set_edit(pathid: int, good_status: bool ,user: str, db: Database = Dep
 async def remM(pathid: int,  db: Database = Depends()):
     record = await db.fetch("""\
         INSERT INTO pathology_edit_queue
+        (file_id,edit_type, edit_details, status)
         VALUES($1 , 1, NULL, 'waiting');
         """, [pathid])
 
@@ -88,6 +89,7 @@ async def remM(pathid: int,  db: Database = Depends()):
 async def remL(pathid: int, db: Database = Depends()):
     record = await db.fetch("""\
         INSERT INTO pathology_edit_queue
+        (file_id,edit_type, edit_details, status)
         VALUES($1 , 2, NULL, 'waiting');
         """, [pathid])
 
@@ -161,7 +163,7 @@ async def find_files(activity_id: int, db: Database = Depends()):
 @router.get("/find_edits/{file_id}")
 async def find_edits(file_id: int, db: Database = Depends()):
     query = """\
-     select edit_type, edit_details
+     select pathology_edit_queue_id, edit_type, edit_details
             from pathology_edit_queue
              where
                  file_id = $1
@@ -173,23 +175,52 @@ async def find_edits(file_id: int, db: Database = Depends()):
 async def find_relpath(file_id: int, db: Database = Depends()):
     query = """\
       select root_path, rel_path
-      from file_location f 
+      from file_location f
       natural join file_storage_root fsr
       where f.file_id = $1
      """
     return await db.fetch(query, [file_id])
 
-@router.put("/completeEdit/{pathid}")
-async def completeEdit(pathid: int, db: Database = Depends()):
+@router.patch("/completeEdit/{edit_id}")
+async def completeEdit(edit_id: int, db: Database = Depends()):
         record = await db.fetch("""\
-        INSERT INTO pathology_visual_review_status
-        VALUES($1 , $2, $3, now());
-              );
-        """,  [file_id, "Review", current_user])
+        update pathology_edit_queue set status = 'complete' where pathology_edit_queue_id = $1;
+        """, [edit_id])
 
         if len(record) < 1:
             raise HTTPException(detail="Error updating edit status", status_code=422)
 
         return {
            'status': 'success',
+        }
+
+@router.put("/create_path_activity_timepoint/{activity_id}/{user}")
+async def create_path_activity_timepoint(activity_id: int, user: str, db: Database = Depends()):
+        record = await db.fetch("""\
+            insert into activity_timepoint(
+                activity_id,
+                when_created,
+                who_created,
+                comment,
+                creating_user
+            ) values (
+                $1, now(), $2, 'Post Edit Pathology TP', $2);
+            """, [activity_id, user])
+        if len(record) < 1:
+            raise HTTPException(detail="Error updating edit status", status_code=422)
+        return {
+        'status': 'success',
+        }
+
+@router.put("/add_file_to_path_activity_timepoint/{atf_id}/{file_id}")
+async def add_file_to_path_activity_timepoint(atf_id: int, file_id: int, db: Database = Depends()):
+        record = await db.fetch("""\
+                     insert into activity_timepoint_files(
+                          $1, $2);
+                    """, [atf_id, file_id])
+
+        if len(record) < 1:
+            raise HTTPException(detail="Error updating edit status", status_code=422)
+        return {
+        'status': 'success',
         }
