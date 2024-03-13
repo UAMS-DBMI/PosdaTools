@@ -538,6 +538,7 @@ def accept(filename, format):
 
 
 def do_aperio_svs(filename):
+    print('In the do_aperio_svs')
     fh = TiffFile(filename)
     # Check for SVS file
     try:
@@ -555,20 +556,20 @@ def do_aperio_svs(filename):
         lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
         # the macro should be the very last layer
         if len(lines) >= 2 and lines[1].startswith(b'macro '):
-            logging.info("Found macro")
+            print("Found macro")
             directory.delete(expected_prefix=JPEG_SOI)
-            # deleted_macro = True
+            deleted_macro = True
             # continue
         if len(lines) >= 2 and lines[1].startswith(b'label '):
-            logging.info("Found label")
+            print("Found label")
             directory.delete(expected_prefix=LZW_CLEARCODE)
-            # deleted_label = True
+            deleted_label = True
             # continue
 
-    # if deleted_label is False:
-    #     raise IOError("No label in SVS file")
-    # if deleted_macro is False:
-    #     raise IOError("No macro in SVS file")
+    if deleted_label is False:
+        print("label not removed")
+    if deleted_lmacro is False:
+        print("macro not removed")
 
 
 # def do_hamamatsu_ndpi(filename):
@@ -661,6 +662,7 @@ def _main():
     sys.exit(exit_code)
 
 def anonymize(filepaths):
+    print('anonymizing now')
     for filename in filepaths:
         try:
             for handler in format_handlers:

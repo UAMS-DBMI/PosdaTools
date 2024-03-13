@@ -15,7 +15,6 @@ from posda.anonymizeslide import anonymizeslide
 from posda.main.file import insert_file
 
 
-
 #Input of the Export Structure
 #Get all the Path Files
 #Get all the 'wating' edits for those files
@@ -77,8 +76,8 @@ def removeSlide(filepath):
     files = [filepath]
     anonymizeslide.anonymize(files);
 
-def create_path_activity_timepoint(activity_id):
-    str = "/create_path_activity_timepoint/{}".format(activity_id)
+def create_path_activity_timepoint(activity_id, user):
+    str = "/create_path_activity_timepoint/{}/{}".format(activity_id,user)
     return call_api(str, 2)
 
 def add_file_to_path_activity_timepoint(atf_id, file_id):
@@ -144,6 +143,7 @@ def main(pargs):
 
     myFiles = get_files_for_activity(pargs.activity_id)
     myNewFiles = []
+    totalEdits = 0
     print("myFiles:")
 
 
@@ -154,6 +154,7 @@ def main(pargs):
         edits = get_edits_for_file_id(f['file_id'])
 
         if (edits and len(edits) > 0):
+            totalEdits = totalEdits + 1
             for e in edits:
                if e['edit_type'] == '1' or e['edit_type'] == '2': #seperate later?
                     print("removing slide now")
@@ -166,14 +167,19 @@ def main(pargs):
         else:
             print("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
-
-    if (edits and len(edits) > 0):
-        new_atp = create_path_activity_timepoint(pargs.activity_id)
+        print ('Edits {}'.format(edits))
+    if (totalEdits > 0):
+        get_atp = create_path_activity_timepoint(pargs.activity_id, pargs.notify)
+        new_atp = get_atp[0]['activity_timepoint_id']
+        print("My new TP is {}".format(new_atp))
         for n in myNewFiles:
+           print('adding file to tp')
+           print("My file to insert is {}".format(n))
            add_file_to_path_activity_timepoint(new_atp, n)
-        background.finish("Completed edits on activity {}.".format(pargs.activity_id))
+        print("Completed edits on activity {}. TP should now be ".format(pargs.activity_id),new_atp)
     else:
-        background.finish("No waiting edits exist for activity {}.".format(pargs.activity_id))
+        print("No waiting edits exist for activity {}.".format(pargs.activity_id))
+    background.finish()
 
 
 if __name__ == "__main__":

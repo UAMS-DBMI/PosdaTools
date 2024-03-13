@@ -184,11 +184,11 @@ async def find_relpath(file_id: int, db: Database = Depends()):
 @router.patch("/completeEdit/{edit_id}")
 async def completeEdit(edit_id: int, db: Database = Depends()):
         record = await db.fetch("""\
-        update pathology_edit_queue set status = 'complete' where pathology_edit_queue_id = $1;
+        update pathology_edit_queue set status = 'complete' where pathology_edit_queue_id = $1 returning pathology_edit_queue_id;
         """, [edit_id])
 
         if len(record) < 1:
-            raise HTTPException(detail="Error updating edit status", status_code=422)
+            raise HTTPException(detail="Complete Edit: Error updating edit status", status_code=422)
 
         return {
            'status': 'success',
@@ -196,7 +196,7 @@ async def completeEdit(edit_id: int, db: Database = Depends()):
 
 @router.put("/create_path_activity_timepoint/{activity_id}/{user}")
 async def create_path_activity_timepoint(activity_id: int, user: str, db: Database = Depends()):
-        record = await db.fetch("""\
+       query = """\
             insert into activity_timepoint(
                 activity_id,
                 when_created,
@@ -204,23 +204,19 @@ async def create_path_activity_timepoint(activity_id: int, user: str, db: Databa
                 comment,
                 creating_user
             ) values (
-                $1, now(), $2, 'Post Edit Pathology TP', $2);
-            """, [activity_id, user])
-        if len(record) < 1:
-            raise HTTPException(detail="Error updating edit status", status_code=422)
-        return {
-        'status': 'success',
-        }
+                $1, now(), $2, 'Post Edit Pathology TP', $2)
+            returning activity_timepoint_id;
+            """
+       return await db.fetch(query, [activity_id, user])
 
 @router.put("/add_file_to_path_activity_timepoint/{atf_id}/{file_id}")
 async def add_file_to_path_activity_timepoint(atf_id: int, file_id: int, db: Database = Depends()):
-        record = await db.fetch("""\
-                     insert into activity_timepoint_files(
-                          $1, $2);
-                    """, [atf_id, file_id])
-
-        if len(record) < 1:
-            raise HTTPException(detail="Error updating edit status", status_code=422)
-        return {
-        'status': 'success',
-        }
+         query = """\
+                    insert into activity_timepoint_file(
+                         activity_timepoint_id,
+                         file_id
+                        ) values (
+                          $1, $2)
+                    returning file_id;
+                    """
+         return await db.fetch(query, [atf_id, file_id])
