@@ -258,12 +258,12 @@ class TiffDirectory:
         # out_pointer_offset = location of the pointer to the NEXT IFD
 
         # Remove directory
-        logging.info('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
+        print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
         self._fh.seek(self._out_pointer_offset)
         out_pointer = self._fh.read_fmt('D')
-        logging.info('Read out_pointer as %d', out_pointer)
+        print('Read out_pointer as %d', out_pointer)
         self._fh.seek(self._in_pointer_offset)
-        logging.info('Writing it over in_pointer at %d', self._in_pointer_offset)
+        print('Writing it over in_pointer at %d', self._in_pointer_offset)
         # self._fh.write_fmt('D', out_pointer)
         self._fh.write_fmt('D', 0)
 
@@ -533,8 +533,8 @@ class TiffEntry:
 #         self.section = dat.get(MRXS_HIERARCHICAL, self.section_key)
 
 
-def accept(filename, format):
-    logging.debug(filename + ':' + format)
+# def accept(filename, format):
+#     logging.debug(filename + ':' + format)
 
 
 def do_aperio_svs(filename):
@@ -547,14 +547,20 @@ def do_aperio_svs(filename):
             raise UnrecognizedFile
     except KeyError:
         raise UnrecognizedFile
-    accept(filename, 'SVS')
-
+    print('Past aperio try')
+    # accept(filename, 'SVS')
+    # print('Past Aperio Accept')
     # Find and delete label
     deleted_label = False
     deleted_macro = False
+    print("about to enter for loop")
     for directory in fh.directories:
         lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
         # the macro should be the very last layer
+        print("len(lines)")
+        print(len(lines))
+        print("lines[1]")
+        print(lines[1])
         if len(lines) >= 2 and lines[1].startswith(b'macro '):
             print("Found macro")
             directory.delete(expected_prefix=JPEG_SOI)
@@ -565,10 +571,11 @@ def do_aperio_svs(filename):
             directory.delete(expected_prefix=LZW_CLEARCODE)
             deleted_label = True
             # continue
+    print('about to finsih aperio svs section')
 
     if deleted_label is False:
         print("label not removed")
-    if deleted_lmacro is False:
+    if deleted_macro is False:
         print("macro not removed")
 
 

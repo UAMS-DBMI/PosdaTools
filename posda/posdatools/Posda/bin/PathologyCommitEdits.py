@@ -114,13 +114,16 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
 
     # Get the root_path and rel_path separately
     rpath = get_root_and_rel_path(file_id)
+    print("Paths!")
+    print(destination_root_path)
     root_path = rpath[0]
     rel_path = rpath[1]
+    print(rel_path)
     source_file = pathlib.Path(root_path) / rel_path
 
     # calculate the output path (destination_root_path + rel_path)
     output_file = pathlib.Path(destination_root_path) / rel_path
-
+    print(output_file)
     # create the output tree if necessary
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -163,7 +166,10 @@ def main(pargs):
                     completeEdit(e['pathology_edit_queue_id'])
 
                print("Completed {} edit on file {}".format(len(edits), f['file_id']))
-               myNewFiles.append(process(new_destination_path))
+               new_file_id = process(new_destination_path)
+               myNewFiles.append(new_file_id)
+               print("File {} should  now be file {}".format(f['file_id']), new_file_id)
+
         else:
             print("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
