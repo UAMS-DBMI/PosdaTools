@@ -13,6 +13,7 @@ def insert_file(filename, comment="Added by Python Job"):
 def insert_file_via_api(filename, comment):
     payload = {
         'digest': md5sum(filename),
+        'localpath': filename,
     }
     with open(filename, "rb") as infile:
         r = requests.put(f"{API_URL}/v1/import/file", params=payload, data=infile)
