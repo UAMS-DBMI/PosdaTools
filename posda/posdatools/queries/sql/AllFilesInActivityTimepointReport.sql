@@ -44,10 +44,6 @@ select a.activity_id,
     on fse.file_id = atf.file_id 
   left join file_sop_common fsc
     on fsc.file_id = atf.file_id
-  left join dicom_file df
-    on df.file_id = atf.file_id 
-  left join ctp_file cf
-    on cf.file_id = atf.file_id 
  where atf.activity_timepoint_id = ?
  order by patient_id, study_instance_uid, series_instance_uid, sop_instance_uid  
 
