@@ -72,9 +72,9 @@ def get_root_and_rel_path(file_id):
         res = call_api(str, 0)
         return res[0]['root_path'],res[0]['rel_path']
 
-def removeSlide(filepath):
+def removeSlide(filepath,slide_type):
     files = [filepath]
-    anonymizeslide.anonymize(files);
+    anonymizeslide.anonymize(files,slide_type);
 
 def create_path_activity_timepoint(activity_id, user):
     str = "/create_path_activity_timepoint/{}/{}".format(activity_id,user)
@@ -114,16 +114,15 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
 
     # Get the root_path and rel_path separately
     rpath = get_root_and_rel_path(file_id)
-    print("Paths!")
-    print(destination_root_path)
+
     root_path = rpath[0]
     rel_path = rpath[1]
-    print(rel_path)
+
     source_file = pathlib.Path(root_path) / rel_path
 
     # calculate the output path (destination_root_path + rel_path)
     output_file = pathlib.Path(destination_root_path) / rel_path
-    print(output_file)
+
     # create the output tree if necessary
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -147,7 +146,7 @@ def main(pargs):
     myFiles = get_files_for_activity(pargs.activity_id)
     myNewFiles = []
     totalEdits = 0
-    print("myFiles:")
+
 
 
     for f in myFiles:
@@ -159,28 +158,23 @@ def main(pargs):
         if (edits and len(edits) > 0):
             totalEdits = totalEdits + 1
             for e in edits:
-               if e['edit_type'] == '1' or e['edit_type'] == '2': #seperate later?
-                    print("removing slide now")
-                    removeSlide(new_destination_path)
-                    print("Completed an edit on {}".format(f['file_id']))
+               if e['edit_type'] == '1' or e['edit_type'] == '2':
+                    removeSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
 
-               print("Completed {} edit on file {}".format(len(edits), f['file_id']))
-               new_file_id = process(new_destination_path)
-               myNewFiles.append(new_file_id)
-               print("File {} should  now be file {}".format(f['file_id']), new_file_id)
-
+            print("Completed {} edit on file {}".format(len(edits), f['file_id']))
+            new_file_id = process(new_destination_path)
+            myNewFiles.append(new_file_id)
+            print("File {} should  now be file {}".format(f['file_id'], new_file_id))
         else:
             print("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
-        print ('Edits {}'.format(edits))
+
     if (totalEdits > 0):
         get_atp = create_path_activity_timepoint(pargs.activity_id, pargs.notify)
         new_atp = get_atp[0]['activity_timepoint_id']
-        print("My new TP is {}".format(new_atp))
+
         for n in myNewFiles:
-           print('adding file to tp')
-           print("My file to insert is {}".format(n))
            add_file_to_path_activity_timepoint(new_atp, n)
         print("Completed edits on activity {}. TP should now be ".format(pargs.activity_id),new_atp)
     else:

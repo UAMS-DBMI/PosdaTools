@@ -308,236 +308,7 @@ class TiffEntry:
             return items
 
 
-# class MrxsFile(object):
-#     def __init__(self, filename):
-#         # Split filename
-#         dirname, ext = os.path.splitext(filename)
-#         if ext != '.mrxs':
-#             raise UnrecognizedFile
-
-#         # Parse slidedat
-#         self._slidedatfile = os.path.join(dirname, 'Slidedat.ini')
-#         self._dat = RawConfigParser()
-#         self._dat.optionxform = str
-#         try:
-#             with open(self._slidedatfile, 'rb') as fh:
-#                 self._have_bom = (fh.read(len(UTF8_BOM)) == UTF8_BOM)
-#                 if not self._have_bom:
-#                     fh.seek(0)
-#                 self._dat.readfp(fh)
-#         except IOError:
-#             raise UnrecognizedFile
-
-#         # Get file paths
-#         self._indexfile = os.path.join(dirname,
-#                 self._dat.get(MRXS_HIERARCHICAL, 'INDEXFILE'))
-#         self._datafiles = [os.path.join(dirname,
-#                 self._dat.get('DATAFILE', 'FILE_%d' % i))
-#                 for i in range(self._dat.getint('DATAFILE', 'FILE_COUNT'))]
-
-#         # Build levels
-#         self._make_levels()
-
-#     def _make_levels(self):
-#         self._levels = {}
-#         self._level_list = []
-#         layer_count = self._dat.getint(MRXS_HIERARCHICAL, 'NONHIER_COUNT')
-#         for layer_id in range(layer_count):
-#             level_count = self._dat.getint(MRXS_HIERARCHICAL,
-#                     'NONHIER_%d_COUNT' % layer_id)
-#             for level_id in range(level_count):
-#                 level = MrxsNonHierLevel(self._dat, layer_id, level_id,
-#                         len(self._level_list))
-#                 self._levels[(level.layer_name, level.name)] = level
-#                 self._level_list.append(level)
-
-#     @classmethod
-#     def _read_int32(cls, f):
-#         buf = f.read(4)
-#         if len(buf) != 4:
-#             raise IOError('Short read')
-#         return struct.unpack('<i', buf)[0]
-
-#     @classmethod
-#     def _assert_int32(cls, f, value):
-#         v = cls._read_int32(f)
-#         if v != value:
-#             raise ValueError('%d != %d' % (v, value))
-
-#     def _get_data_location(self, record):
-#         with open(self._indexfile, 'rb') as fh:
-#             fh.seek(MRXS_NONHIER_ROOT_OFFSET)
-#             # seek to record
-#             table_base = self._read_int32(fh)
-#             fh.seek(table_base + record * 4)
-#             # seek to list head
-#             list_head = self._read_int32(fh)
-#             fh.seek(list_head)
-#             # seek to data page
-#             self._assert_int32(fh, 0)
-#             page = self._read_int32(fh)
-#             fh.seek(page)
-#             # check pagesize
-#             self._assert_int32(fh, 1)
-#             # read rest of prologue
-#             self._read_int32(fh)
-#             self._assert_int32(fh, 0)
-#             self._assert_int32(fh, 0)
-#             # read values
-#             position = self._read_int32(fh)
-#             size = self._read_int32(fh)
-#             fileno = self._read_int32(fh)
-#             return (self._datafiles[fileno], position, size)
-
-#     def _zero_record(self, record):
-#         path, offset, length = self._get_data_location(record)
-#         with open(path, 'r+b') as fh:
-#             fh.seek(0, 2)
-#             do_truncate = (fh.tell() == offset + length)
-#             if DEBUG:
-#                 if do_truncate:
-#                     print('Truncating', path, 'to', offset)
-#                 else:
-#                     print('Zeroing', path, 'at', offset, 'for', length)
-#             fh.seek(offset)
-#             buf = fh.read(len(JPEG_SOI))
-#             if buf != JPEG_SOI:
-#                 raise IOError('Unexpected data in nonhier image')
-#             if do_truncate:
-#                 fh.truncate(offset)
-#             else:
-#                 fh.seek(offset)
-#                 fh.write('\0' * length)
-
-#     def _delete_index_record(self, record):
-#         if DEBUG:
-#             print('Deleting record', record)
-#         with open(self._indexfile, 'r+b') as fh:
-#             entries_to_move = len(self._level_list) - record - 1
-#             if entries_to_move == 0:
-#                 return
-#             # get base of table
-#             fh.seek(MRXS_NONHIER_ROOT_OFFSET)
-#             table_base = self._read_int32(fh)
-#             # read tail of table
-#             fh.seek(table_base + (record + 1) * 4)
-#             buf = fh.read(entries_to_move * 4)
-#             if len(buf) != entries_to_move * 4:
-#                 raise IOError('Short read')
-#             # overwrite the target record
-#             fh.seek(table_base + record * 4)
-#             fh.write(buf)
-
-#     def _hier_keys_for_level(self, level):
-#         ret = []
-#         for k, _ in self._dat.items(MRXS_HIERARCHICAL):
-#             if k == level.key_prefix or k.startswith(level.key_prefix + '_'):
-#                 ret.append(k)
-#         return ret
-
-#     def _rename_section(self, old, new):
-#         if self._dat.has_section(old):
-#             if DEBUG:
-#                 print('[%s] -> [%s]' % (old, new))
-#             self._dat.add_section(new)
-#             for k, v in self._dat.items(old):
-#                 self._dat.set(new, k, v)
-#             self._dat.remove_section(old)
-#         elif DEBUG:
-#             print('[%s] does not exist' % old)
-
-#     def _delete_section(self, section):
-#         if DEBUG:
-#             print('Deleting [%s]' % section)
-#         self._dat.remove_section(section)
-
-#     def _set_key(self, section, key, value):
-#         if DEBUG:
-#             prev = self._dat.get(section, key)
-#             print('[%s] %s: %s -> %s' % (section, key, prev, value))
-#         self._dat.set(section, key, value)
-
-#     def _rename_key(self, section, old, new):
-#         if DEBUG:
-#             print('[%s] %s -> %s' % (section, old, new))
-#         v = self._dat.get(section, old)
-#         self._dat.remove_option(section, old)
-#         self._dat.set(section, new, v)
-
-#     def _delete_key(self, section, key):
-#         if DEBUG:
-#             print('Deleting [%s] %s' % (section, key))
-#         self._dat.remove_option(section, key)
-
-#     def _write(self):
-#         buf = StringIO()
-#         self._dat.write(buf)
-#         with open(self._slidedatfile, 'wb') as fh:
-#             if self._have_bom:
-#                 fh.write(UTF8_BOM)
-#             fh.write(buf.getvalue().replace('\n', '\r\n'))
-
-#     def delete_level(self, layer_name, level_name):
-#         level = self._levels[(layer_name, level_name)]
-#         record = level.record
-
-#         # Zero image data
-#         self._zero_record(record)
-
-#         # Delete pointer from nonhier table in index
-#         self._delete_index_record(record)
-
-#         # Remove slidedat keys
-#         for k in self._hier_keys_for_level(level):
-#             self._delete_key(MRXS_HIERARCHICAL, k)
-
-#         # Remove slidedat section
-#         self._delete_section(level.section)
-
-#         # Rename section and keys for subsequent levels in the layer
-#         prev_level = level
-#         for cur_level in self._level_list[record + 1:]:
-#             if cur_level.layer_id != prev_level.layer_id:
-#                 break
-#             for k in self._hier_keys_for_level(cur_level):
-#                 new_k = k.replace(cur_level.key_prefix,
-#                         prev_level.key_prefix, 1)
-#                 self._rename_key(MRXS_HIERARCHICAL, k, new_k)
-#             self._set_key(MRXS_HIERARCHICAL, prev_level.section_key,
-#                     prev_level.section)
-#             self._rename_section(cur_level.section, prev_level.section)
-#             prev_level = cur_level
-
-#         # Update level count within layer
-#         count_k = 'NONHIER_%d_COUNT' % level.layer_id
-#         count_v = self._dat.getint(MRXS_HIERARCHICAL, count_k)
-#         self._set_key(MRXS_HIERARCHICAL, count_k, count_v - 1)
-
-#         # Write slidedat
-#         self._write()
-
-#         # Refresh metadata
-#         self._make_levels()
-
-
-# class MrxsNonHierLevel(object):
-#     def __init__(self, dat, layer_id, level_id, record):
-#         self.layer_id = layer_id
-#         self.id = level_id
-#         self.record = record
-#         self.layer_name = dat.get(MRXS_HIERARCHICAL,
-#                 'NONHIER_%d_NAME' % layer_id)
-#         self.key_prefix = 'NONHIER_%d_VAL_%d' % (layer_id, level_id)
-#         self.name = dat.get(MRXS_HIERARCHICAL, self.key_prefix)
-#         self.section_key = self.key_prefix + '_SECTION'
-#         self.section = dat.get(MRXS_HIERARCHICAL, self.section_key)
-
-
-# def accept(filename, format):
-#     logging.debug(filename + ':' + format)
-
-
-def do_aperio_svs(filename):
+def remove_macro_aperio_svs(filename):
     print('In the do_aperio_svs')
     fh = TiffFile(filename)
     # Check for SVS file
@@ -547,83 +318,37 @@ def do_aperio_svs(filename):
             raise UnrecognizedFile
     except KeyError:
         raise UnrecognizedFile
-    print('Past aperio try')
-    # accept(filename, 'SVS')
-    # print('Past Aperio Accept')
-    # Find and delete label
-    deleted_label = False
     deleted_macro = False
-    print("about to enter for loop")
     for directory in fh.directories:
         lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
         # the macro should be the very last layer
-        print("len(lines)")
-        print(len(lines))
-        print("lines[1]")
-        print(lines[1])
         if len(lines) >= 2 and lines[1].startswith(b'macro '):
             print("Found macro")
             directory.delete(expected_prefix=JPEG_SOI)
             deleted_macro = True
-            # continue
+    if deleted_macro is False:
+        print("macro not removed")
+
+def remove_label_aperio_svs(filename):
+    print('In the do_aperio_svs')
+    fh = TiffFile(filename)
+    # Check for SVS file
+    try:
+        desc0 = fh.directories[0].entries[TiffTag.ImageDescription].value()
+        if not desc0.startswith(b'Aperio'):
+            raise UnrecognizedFile
+    except KeyError:
+        raise UnrecognizedFile
+    deleted_label = False
+    for directory in fh.directories:
+        lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
+        # the macro should be the very last layer
         if len(lines) >= 2 and lines[1].startswith(b'label '):
             print("Found label")
             directory.delete(expected_prefix=LZW_CLEARCODE)
             deleted_label = True
-            # continue
-    print('about to finsih aperio svs section')
-
     if deleted_label is False:
         print("label not removed")
-    if deleted_macro is False:
-        print("macro not removed")
-
-
-# def do_hamamatsu_ndpi(filename):
-#     with TiffFile(filename) as fh:
-#         # Check for NDPI file
-#         if NDPI_MAGIC not in fh.directories[0].entries:
-#             raise UnrecognizedFile
-#         accept(filename, 'NDPI')
-
-#         # Find and delete macro image
-#         macro_deleted = False
-#         label_deleted = False
-
-#         for directory in list(fh.directories):
-#             if directory.entries[NDPI_SOURCELENS].value()[0] == -2:
-#                 print("deleting label")
-#                 directory.delete() # the prefix may not be known
-#                 label_deleted = True
-#                 continue
-#             if directory.entries[NDPI_SOURCELENS].value()[0] == -1:
-#                 print("deleting macro")
-#                 directory.delete(expected_prefix=JPEG_SOI)
-#                 macro_deleted = True
-#                 continue
-
-#         if not macro_deleted:
-#             print("No macro found in NDPI file")
-#         if not label_deleted:
-#             print("No label found in NDPI file")
-#         if (not macro_deleted) or (not label_deleted):
-#             raise IOError("One or more layers already deleted (see previous errors)")
-
-
-# def do_3dhistech_mrxs(filename):
-#     mrxs = MrxsFile(filename)
-#     try:
-#         mrxs.delete_level('Scan data layer', 'ScanDataLayer_SlideBarcode')
-#     except KeyError:
-#         raise IOError('No label in MRXS file')
-
-
-format_handlers = [
-    do_aperio_svs,
-    # do_hamamatsu_ndpi,
-    # do_3dhistech_mrxs,
-]
-
 
 def _main():
     global DEBUG
@@ -668,18 +393,16 @@ def _main():
             exit_code = 1
     sys.exit(exit_code)
 
-def anonymize(filepaths):
-    print('anonymizing now')
+def anonymize(filepaths,slide_type):
+    print("removing slide")
     for filename in filepaths:
         try:
-            for handler in format_handlers:
-                try:
-                    handler(filename)
-                    break
-                except UnrecognizedFile:
-                    pass
-            else:
-                raise IOError('Unrecognized file type')
+            if slide_type == '1':
+                print("removing macro")
+                remove_macro_aperio_svs(filename)
+            elif slide_type == '2':
+                print("removing layer")
+                remove_label_aperio_svs(filename)
         except Exception as e:
             print('%s: %s' % (filename, str(e)), file=sys.stderr)
 
