@@ -12,7 +12,7 @@ from posda.main import args
 from posda.main import get_stdin_input
 from posda.background import BackgroundProcess
 from posda.anonymizeslide import anonymizeslide
-from posda.main.file import insert_file
+from posda.main.file import insert_file_via_api_inplace
 
 
 #Input of the Export Structure
@@ -87,7 +87,7 @@ def add_file_to_path_activity_timepoint(atf_id, file_id):
 def process(filepath):
     with Database("posda_files").cursor() as cur:
         #import the file
-        newF = insert_file(filepath)
+        newF = insert_file_via_api_inplace(filepath)
     return newF
 
 def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> str:
@@ -135,7 +135,8 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
 
 #start***
 
-destination_root_path = "/tmp/output" #/nas/ross/pathology-nfs/export
+#destination_root_path = "/tmp/output" #/nas/ross/pathology-nfs/export
+destination_root_path = "/nas/pathology-nfs/export"
 
 
 
