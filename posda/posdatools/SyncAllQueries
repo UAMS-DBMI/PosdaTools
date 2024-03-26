@@ -8,3 +8,12 @@ FindMissingQueries.pl 2>/dev/null | awk '\
 }
 
 '
+
+echo "Adding all 'non matching' queries to the DB..."
+FindMissingQueries.pl 2>/dev/null | awk '\
+/non matching/ { 
+	print $1
+	system("SynchronizeQuery.pl "$1" take_disk")
+}
+
+'
