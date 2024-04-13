@@ -16,6 +16,6 @@ select
 from
   file f left join non_dicom_file nd using(file_id)
   natural left join file_patient natural left join dicom_file d
-  natural join activity_timepoint_file
+  /* natural join activity_timepoint_file */
 where
   file_id = ?
