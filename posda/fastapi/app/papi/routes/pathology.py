@@ -194,6 +194,44 @@ async def completeEdit(edit_id: int, db: Database = Depends()):
            'status': 'success',
         }
 
+@router.get("/getXfiles/{import_id}/{file_type}")
+async def getXfiles(import_id: int, file_type: str, db: Database = Depends()):
+       query = """\
+            select
+                file_id
+            from
+                file_import
+            where
+                import_event_id = $1
+                AND SUBSTRING(file_name FROM '\.([^\.]*)$') = $2;
+            """
+       return await db.fetch(query, [import_id, file_type])
+
+@router.get("/get_files_from_import/{import_id}")
+async def get_files_from_import(import_id: int, db: Database = Depends()):
+       query = """\
+            select
+                file_id
+            from
+                file_import
+            where
+                import_event_id = $1;
+            """
+       return await db.fetch(query, [import_id])
+
+@router.put("/create_path_activity/{activity_name}/{user}")
+async def create_path_activit(activity_name: str, user: str, db: Database = Depends()):
+       query = """\
+            insert into activity (
+                brief_description,
+                when_created,
+                who_created
+            ) values (
+             $1 ,now(), $2)
+             returning activity_id;
+            """
+       return await db.fetch(query, [activity_name, user])
+
 @router.put("/create_path_activity_timepoint/{activity_id}/{user}")
 async def create_path_activity_timepoint(activity_id: int, user: str, db: Database = Depends()):
        query = """\

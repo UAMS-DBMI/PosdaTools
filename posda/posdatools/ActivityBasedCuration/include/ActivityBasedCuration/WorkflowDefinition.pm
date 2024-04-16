@@ -312,10 +312,13 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     id => "16_Pathology",
     name => "Pathology",
     note => "These operations are PATHOLOGY specific",
-    description => "Sometimes in order to solve an unusual issue " .
-      "you will want to make a second copy of the Timepoint " .
-      "You may also want to merge Timepoints together.",
+    description => "Pathology workflow items",
     operations => [
+    {
+      operation => "InvokeNewOperation",
+      caption => "Create Activity from Import",
+      action =>  "PathologyCreateActivityAndTP"
+    },
     {
       operation => "InvokeNewOperation",
       caption => "Patient Mapping",
@@ -333,16 +336,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     },
     {
       operation => "InvokeNewOperation",
-      caption => "Pathology Commit Queued Edits",
+      caption => "Commit Queued Edits",
       action =>  "Path_Commit_Edits",
     },
    ],
     queries => [
-      {
-        caption => "Copy Files",
-        operation => "SelectQueryGroup",
-        query_list_name => "CopyFiles",
-      },
       {
          caption => "View PHI Scan",
          operation => "SelectQueryGroup",

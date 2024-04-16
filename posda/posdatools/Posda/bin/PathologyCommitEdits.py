@@ -15,19 +15,17 @@ from posda.anonymizeslide import anonymizeslide
 from posda.main.file import insert_file_via_api_inplace
 
 
-#Input of the Export Structure
 #Get all the Path Files
-#Get all the 'wating' edits for those files
-#For each file create a copy (new location or old and move?)
-#do all of its edits (to create only one edited copy)
-#Once all edits are complete set the edited files to Good status....but not unedited? should REMOVE FILE be an 'edit'
-#Export the file to the new location with name based on patient mapping
-
+#For each file create a copy to the new location (require inplace import)
+#Get all the 'waiting' edits for those files
+#Do all of each file's edits
+#Create new TP
+#Put all edited files(and files that had no edits) in the new TP
 
 help = """
 Input activity_id is expected from STDIN.
 For all files in the activity with pathology edits,
- a new edited version of the file willl be created
+ a new edited version of the file willl be created, and placed in a new TP
 """
 
 def  call_api(unique_url, call_type):
@@ -132,16 +130,13 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     # return the final destination path (destination_root_path + rel_path)
     return output_file
 
-
-#start***
-
 #destination_root_path = "/tmp/output" #/nas/ross/pathology-nfs/export
 destination_root_path = "/nas/pathology-nfs/export"
 
 
 
 def main(pargs):
-    background = BackgroundProcess(pargs.background_id, pargs.notify)
+    background = BackgroundProcess(pargs.background_id, pargs.notify,pargs.activity_id)
     background.daemonize()
 
     myFiles = get_files_for_activity(pargs.activity_id)
@@ -163,12 +158,12 @@ def main(pargs):
                     removeSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
 
-            print("Completed {} edit on file {}".format(len(edits), f['file_id']))
+            background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
             new_file_id = process(new_destination_path)
             myNewFiles.append(new_file_id)
-            print("File {} should  now be file {}".format(f['file_id'], new_file_id))
+            background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
         else:
-            print("No edits found for file {}".format(f['file_id']))
+            background.print_to_email("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
 
     if (totalEdits > 0):
@@ -177,14 +172,14 @@ def main(pargs):
 
         for n in myNewFiles:
            add_file_to_path_activity_timepoint(new_atp, n)
-        print("Completed edits on activity {}. TP should now be ".format(pargs.activity_id),new_atp)
+        background.print_to_email("Completed edits on activity {}. TP should now be ".format(pargs.activity_id),new_atp)
     else:
-        print("No waiting edits exist for activity {}.".format(pargs.activity_id))
+        background.print_to_email("No waiting edits exist for activity {}.".format(pargs.activity_id))
     background.finish()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Takes an Activity and creates the thumbnails for review for the SVS files")
+    parser = argparse.ArgumentParser(description="Commits edits on SVS files")
     parser.add_argument("background_id")
     parser.add_argument("activity_id")
     parser.add_argument("notify")
