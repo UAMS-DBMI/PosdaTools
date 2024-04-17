@@ -127,8 +127,8 @@ async def get_root_map(db: Database):
 
 @router.post("/file_in_place")
 async def import_file_in_place(request: Request,
-                               import_event_id: int,
                                localpath: str,
+                               import_event_id: int = None,
                                skip_processing: bool = False,
                                db: Database = Depends()):
 
@@ -158,6 +158,12 @@ async def import_file_in_place(request: Request,
             await make_ready_to_process(file_id, db)
         else:
             await make_not_ready_to_process(file_id, db)
+
+    if import_event_id is None:
+        import_event_id = await create_import_event(
+            db,
+            'single-file in-place api import'
+        )
 
     await create_file_import(file_id, int(import_event_id), localpath, db)
 

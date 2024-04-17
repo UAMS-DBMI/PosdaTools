@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6 -u
+#!/usr/bin/python3 -u
 
 import json
 import os

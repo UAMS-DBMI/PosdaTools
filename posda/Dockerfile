@@ -109,7 +109,16 @@ RUN cpanm --notest \
 
 
 # Install needed python utils
-RUN pip3 install xlsx2csv mysql-connector python-box pydicom redis tifffile imagecodecs openslide-python
+RUN pip3 install \
+	xlsx2csv \
+	mysql-connector \
+	python-box \
+	pydicom \
+	redis \
+	tifffile \
+	imagecodecs \
+	openslide-python \
+	pandas
 
 
 RUN addgroup --gid 2123 fakeposda
@@ -140,6 +149,9 @@ RUN apt-get update && apt-get install -y \
 	imagemagick \
 	libjpeg-dev
 RUN pip3 install Pillow
+
+# Required for python-openslide above
+RUN apt-get install -y libopenslide-dev
 
 RUN apt-get clean && \
 	rm -rf /var/lib/{apt,dpkg,cache,log}/

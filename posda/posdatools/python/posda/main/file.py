@@ -9,10 +9,22 @@ API_URL = Config.get("internal-api-url")
 def insert_file(filename, comment="Added by Python Job"):
     return insert_file_via_api(filename, comment)
 
+def insert_file_via_api_inplace(filename, comment="Added by Python Job"):
+    payload = {
+        'localpath': filename,
+    }
+    r = requests.post(f"{API_URL}/v1/import/file_in_place", params=payload)
+
+    if r.status_code == 200:
+        obj = r.json()
+        return obj['file_id']
+    else:
+        raise RuntimeError(f"Failed to insert file into posda! {r.content.decode()}")
 
 def insert_file_via_api(filename, comment):
     payload = {
         'digest': md5sum(filename),
+        'localpath': filename,
     }
     with open(filename, "rb") as infile:
         r = requests.put(f"{API_URL}/v1/import/file", params=payload, data=infile)

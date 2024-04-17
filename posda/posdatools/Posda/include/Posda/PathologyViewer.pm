@@ -45,6 +45,10 @@ sub SpecificInitialize {
   $self->{contrastValue} = 1;
   $self->{hueRotValue} = 0;
   $self->{gammaIndex} = 2;
+  $self->{label_setting} = 0;
+  $self->{macro_setting} = 0;
+  $self->{review_status} = "";
+  $self->{edit_status} = "";
 
 }
 
@@ -71,6 +75,10 @@ sub ContentResponse {
      $self->{image_desc} = (decode_json($self->{client}->responseContent()))->[0]->{image_desc};
      $http->queue("<b>Posda File ID:</b> <br> $self->{pathid}");
      $http->queue(" <br>----------------------------- <br>");
+     $self->{client}->GET("$self->{MY_API_URL}/find_edits/$self->{pathid}");
+     $self->{edits} = (decode_json($self->{client}->responseContent()));
+     $self->{num_edits} = scalar(@{$self->{edits}});
+
      if ($self->{patient_id}){
       $http->queue("<b>Patient ID:</b> $self->{patient_id}");
       $http->queue(" <br>----------------------------- <br>");
@@ -78,6 +86,23 @@ sub ContentResponse {
      if ($self->{image_desc}){
       $http->queue("<b>Image Description:</b> <br> $self->{image_desc}");
       $http->queue(" <br>----------------------------- <br>");
+     }
+
+     if ($self->{num_edits} and $self->{num_edits} > 0){
+      $http->queue("<br>----------------------------- <br>");
+      $http->queue("<b>This file has  $self->{num_edits} queued edits.</b></br>");
+      my $j = 0;
+      while ($j < $self->{num_edits}){
+         if ($self->{edits}->[$j]->{edit_type} == '1'){
+            $http->queue("<b>Macro removal is queued</b></br>");
+         }elsif ($self->{edits}->[$j]->{edit_type} == '2'){
+            $http->queue("<b>Label removal is queued</b></br>");
+         }else{
+            $http->queue("<b>Edit unrelated to slide removal queued</b></br>");
+         }
+         $j++;
+      }
+      $http->queue("<br>----------------------------- <br>");
      }
 
      $self->NotSoSimpleButton($http, {
@@ -99,6 +124,17 @@ sub ContentResponse {
      $self->NotSoSimpleButton($http, {
        op => "goodButtonPress",
        caption => "Good",
+       sync => "Update();",
+     });
+     $http->queue("</br>");
+     $self->NotSoSimpleButton($http, {
+       op => "removeMacroButtonPress",
+       caption => "Remove Macro",
+       sync => "Update();",
+     });
+     $self->NotSoSimpleButton($http, {
+       op => "removeLabelButtonPress",
+       caption => "Remove Label",
        sync => "Update();",
      });
      $http->queue("</br>");
@@ -254,6 +290,26 @@ sub gammaButtonPress(){
   }else{
     $self->{gammaIndex} = $self->{gammaIndex} + 1;
   }
+}
+
+sub removeMacroButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/remM/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+  #grey button out
+  #alert user
+
+}
+
+sub removeLabelButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/remL/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+}
+
+sub updatePatientIDButtonPress(){
+  my ($self, $http, $dyn) = @_;
+
 }
 
 sub MenuResponse {
