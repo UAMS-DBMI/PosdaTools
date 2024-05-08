@@ -108,7 +108,7 @@
         }
 
         // Function to submit the comment and then process the files
-        function submitCommentAndProcess() {
+        async function submitCommentAndProcess() {
             const source = document.getElementById('commentInput').value;
             const origin = "web";
             const expected_count = document.getElementById('fileList').children.length;
@@ -129,7 +129,7 @@
                 console.log("Import event created", data.import_event_id);
 				import_event_id = data.import_event_id;
 				document.getElementById('importEventId').textContent = `import_event_id: ${import_event_id}`;
-                processFiles(); // Call processFiles once the comment is successfully submitted
+                await processFiles(); // Call processFiles once the comment is successfully submitted
             })
             .catch(error => {
                 console.error('There was an error submitting the comment:', error);
@@ -137,28 +137,20 @@
         }
 
         // Function to process each file entry
-        function processFiles() {
+        async function processFiles() {
             let fileList = document.getElementById('fileList').children;
             for (let item of fileList) {
                 // Construct the URL with query parameters
 				let fileUrl = `/papi/v1/import/file_in_place?localpath=${encodeURIComponent(item.textContent)}&import_event_id=${import_event_id}`;
 
-                fetch(fileUrl, {
-                    method: 'POST',
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    item.classList.add('success');
-                })
-                .catch(error => {
-                    item.classList.add('error');
-                    console.error('There was an error processing the file:', error);
-                });
+				const response = await fetch(fileUrl, {method: 'POST'});
+				if (!response.ok) {
+					item.classList.add('error');
+					// throw new Error('failed');
+				} else {
+					const files = await response.json();
+					item.classList.add('success');
+				}
             }
         }
     </script>
