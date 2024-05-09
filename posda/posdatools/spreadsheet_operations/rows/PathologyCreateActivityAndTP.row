@@ -1,0 +1,6 @@
+:operation_name: PathologyCreateActivityAndTP
+:command_line: PathologyNewTPfromImport.py <?bkgrnd_id?> <activity_name> <import_id> <file_type> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['pathology']
+:can_chain:

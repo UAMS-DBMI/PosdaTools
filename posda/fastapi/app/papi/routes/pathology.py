@@ -131,7 +131,7 @@ async def get_mapping(file_id: int, db: Database = Depends()):
 @router.get("/image_desc/{file_id}")
 async def get_image_desc(file_id: int, db: Database = Depends()):
     query = """\
-         select
+        select
             image_desc
         from
             pathology_image_desc a
