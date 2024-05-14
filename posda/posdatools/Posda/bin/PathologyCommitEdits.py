@@ -70,9 +70,9 @@ def get_root_and_rel_path(file_id):
         res = call_api(str, 0)
         return res[0]['root_path'],res[0]['rel_path']
 
-def removeSlide(filepath,slide_type):
+def editSlide(filepath,edit_type):
     files = [filepath]
-    anonymizeslide.anonymize(files,slide_type);
+    anonymizeslide.anonymize(files,edit_type);
 
 def create_path_activity_timepoint(activity_id, user):
     str = "/create_path_activity_timepoint/{}/{}".format(activity_id,user)
@@ -130,8 +130,8 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     # return the final destination path (destination_root_path + rel_path)
     return output_file
 
-#destination_root_path = "/tmp/output" #/nas/ross/pathology-nfs/export
-destination_root_path = "/nas/pathology-nfs/export"
+destination_root_path = "/home/posda/cache/created/tmp/output" #/nas/ross/pathology-nfs/export
+#destination_root_path = "/nas/pathology-nfs/export"
 
 
 
@@ -154,9 +154,8 @@ def main(pargs):
         if (edits and len(edits) > 0):
             totalEdits = totalEdits + 1
             for e in edits:
-               if e['edit_type'] == '1' or e['edit_type'] == '2':
-                    removeSlide(new_destination_path, e['edit_type'])
-                    completeEdit(e['pathology_edit_queue_id'])
+                editSlide(new_destination_path, e['edit_type'])
+                completeEdit(e['pathology_edit_queue_id'])
 
             background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
             new_file_id = process(new_destination_path)

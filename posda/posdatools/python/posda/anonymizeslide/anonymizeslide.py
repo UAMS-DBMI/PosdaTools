@@ -6,6 +6,7 @@
 #  Copyright (c) 2011      Google, Inc.
 #  Copyright (c) 2014      Benjamin Gilbert
 #  Copyright (c) 2023      Quasar Jarosz
+#  Copyright (c) 2024      S Utecht
 #  All rights reserved.
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -34,6 +35,7 @@ from io import StringIO
 from glob import glob
 from optparse import OptionParser
 from posda.tifftags import TiffTag
+import tifffile
 
 
 PROG_DESCRIPTION = '''
@@ -267,6 +269,43 @@ class TiffDirectory:
         # self._fh.write_fmt('D', out_pointer)
         self._fh.write_fmt('D', 0)
 
+    def replace(self, replacement,expected_prefix=None,):
+        # Get strip offsets/lengths
+        try:
+            offsets = self.entries[TiffTag.StripOffsets].value()
+            lengths = self.entries[TiffTag.StripByteCounts].value()
+        except KeyError:
+            raise IOError('Directory is not stripped')
+
+        # Wipe strips
+        for offset, length in zip(offsets, lengths):
+            offset = self._fh.near_pointer(self._out_pointer_offset, offset)
+            logging.debug('Zeroing %d for %d', offset, length)
+            self._fh.seek(offset)
+            if expected_prefix:
+                buf = self._fh.read(len(expected_prefix))
+                if buf != expected_prefix:
+                    raise IOError('Unexpected data in image strip')
+                self._fh.seek(offset)
+            newLdiff = length - len(replacement)
+            if newLdiff < 0:
+                raise IOError('Edit data larger than data strip')
+            self._fh.write(replacement)
+            self._fh.write(b'\0' * newLdiff)
+
+        # in_pointer_offset = location of the pointer to this IFD
+        # out_pointer_offset = location of the pointer to the NEXT IFD
+
+        # Remove directory
+        print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
+        self._fh.seek(self._out_pointer_offset)
+        out_pointer = self._fh.read_fmt('D')
+        print('Read out_pointer as %d', out_pointer)
+        self._fh.seek(self._in_pointer_offset)
+        print('Writing it over in_pointer at %d', self._in_pointer_offset)
+        # self._fh.write_fmt('D', out_pointer)
+        self._fh.write_fmt('D', 0)
+
 class TiffEntry:
     def __init__(self, fh):
         self.start = fh.tell()
@@ -350,62 +389,136 @@ def remove_label_aperio_svs(filename):
     if deleted_label is False:
         print("label not removed")
 
-def _main():
-    global DEBUG
+def getImageDesc(filename):
+    #tifffile.tifffile.TiffFile(filename, mode='r+b').pages[0].tags['ImageDescription'].overwrite('REDACTED')
+    print('In the edit_desc function')
+    fh = TiffFile(filename)
+    # Check for SVS file
+    try:
+        desc0 = fh.directories[0].entries[TiffTag.ImageDescription].value()
+        if not desc0.startswith(b'Aperio'):
+            raise UnrecognizedFile
+    except KeyError:
+        raise UnrecognizedFile
+    for directory in fh.directories:
+        lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
+        pages = []
+        j = 0
+        for l in lines:
+            #from MR
+            split_desc = l.split('|')
+            for i, value in enumerate(split_desc):
+                if i == 0:
+                    img_desc_dict['desc'] = value
+                else:
+                    split_entry = value.split(' = ')
+                    print('Layer {}: Value {}: {} = {}'.format(j, i, split_entry[0], split_entry[1] if len(split_entry) > 1 else ''))
+                    img_desc_dict[split_entry[0]] = split_entry[1] if len(split_entry) > 1 else ''
+            pages.append({j: img_desc_dict})
+            j = j+1
+    return pages
 
-    parser = OptionParser(usage='%prog [options] file [file...]',
-            description=PROG_DESCRIPTION, version=PROG_VERSION)
-    parser.add_option('-d', '--debug', action='store_true',
-            help='show debugging information')
-    opts, args = parser.parse_args()
-    if not args:
-        parser.error('specify a file')
-    DEBUG = opts.debug
+def editImageDesc(filename):
+    layers = getImageDesc(filename)
+    tagsToBeChanged = {'Filename':'REDACTED', 'USER':'REDACTED'} #testing
+    for data in layers:
+        for key in data:
+            if key in tagsToBeChanged:
+                data[key] = tagsToBeChanged[key]
+                changed = True
+        if changed:
+            data[key] = combine_image_desc(data)
+        else:
+            data[key] = 'SKIP_TOKEN'
+        changed = False
 
-    if DEBUG:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+    fh = TiffFile(filename)
+    # Check for SVS file
+    try:
+        desc0 = fh.directories[0].entries[TiffTag.ImageDescription].value()
+        if not desc0.startswith(b'Aperio'):
+            raise UnrecognizedFile
+    except KeyError:
+        raise UnrecognizedFile
+    for i, directory in enumerate(fh.directories):
+        if data[i] != 'SKIP_TOKEN':
+            print('Trying to replace layer {}: New Value {}'.format(i, data))
+            directory.replace(data)
 
-    if sys.platform == 'win32':
-        # The shell expects us to do wildcard expansion
-        filenames = []
-        for arg in args:
-            filenames.extend(glob(arg) or [arg])
-    else:
-        filenames = args
 
-    exit_code = 0
-    for filename in filenames:
-        try:
-            for handler in format_handlers:
-                try:
-                    handler(filename)
-                    break
-                except UnrecognizedFile:
-                    pass
-            else:
-                raise IOError('Unrecognized file type')
-        except Exception as e:
-            if DEBUG:
-                raise
-            print('%s: %s' % (filename, str(e)), file=sys.stderr)
-            exit_code = 1
-    sys.exit(exit_code)
 
-def anonymize(filepaths,slide_type):
+#from MR
+def combine_image_desc(desc_dict):
+    desc = ''
+    values = ''
+    for key in desc_dict.keys():
+        if key == 'desc':
+            desc = desc_dict[key]
+        else:
+            values += f'|{key} = {desc_dict[key]}'
+    image_desc = f'{desc}{values}'
+    return image_desc
+
+# def _main():
+#     global DEBUG
+#
+#     parser = OptionParser(usage='%prog [options] file [file...]',
+#             description=PROG_DESCRIPTION, version=PROG_VERSION)
+#     parser.add_option('-d', '--debug', action='store_true',
+#             help='show debugging information')
+#     opts, args = parser.parse_args()
+#     if not args:
+#         parser.error('specify a file')
+#     DEBUG = opts.debug
+#
+#     if DEBUG:
+#         logging.basicConfig(level=logging.DEBUG)
+#     else:
+#         logging.basicConfig(level=logging.INFO)
+#
+#     if sys.platform == 'win32':
+#         # The shell expects us to do wildcard expansion
+#         filenames = []
+#         for arg in args:
+#             filenames.extend(glob(arg) or [arg])
+#     else:
+#         filenames = args
+#
+#     exit_code = 0
+#     for filename in filenames:
+#         try:
+#             for handler in format_handlers:
+#                 try:
+#                     handler(filename)
+#                     break
+#                 except UnrecognizedFile:
+#                     pass
+#             else:
+#                 raise IOError('Unrecognized file type')
+#         except Exception as e:
+#             if DEBUG:
+#                 raise
+#             print('%s: %s' % (filename, str(e)), file=sys.stderr)
+#             exit_code = 1
+#     sys.exit(exit_code)
+
+def anonymize(filepaths,edit_type):
     print("removing slide")
     for filename in filepaths:
         try:
-            if slide_type == '1':
+            if edit_type == '1':
                 print("removing macro")
                 remove_macro_aperio_svs(filename)
-            elif slide_type == '2':
+            elif edit_type == '2':
                 print("removing layer")
                 remove_label_aperio_svs(filename)
+            elif edit_type == '3':
+                print("removing ImageDesc")
+                editImageDesc(filename)
         except Exception as e:
             print('%s: %s' % (filename, str(e)), file=sys.stderr)
 
 
-if __name__ == '__main__':
-    _main()
+
+# if __name__ == '__main__':
+#     _main()

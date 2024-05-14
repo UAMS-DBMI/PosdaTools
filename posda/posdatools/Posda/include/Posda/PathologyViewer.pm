@@ -87,7 +87,11 @@ sub ContentResponse {
       $http->queue("<b>Image Description:</b> <br> $self->{image_desc}");
       $http->queue(" <br>----------------------------- <br>");
      }
-
+     $self->NotSoSimpleButton($http, {
+       op => "metaEditButtonPress",
+       caption => "Edit Needed",
+       sync => "Update();",
+     });
      if ($self->{num_edits} and $self->{num_edits} > 0){
       $http->queue("<br>----------------------------- <br>");
       $http->queue("<b>This file has  $self->{num_edits} queued edits.</b></br>");
@@ -304,6 +308,12 @@ sub removeMacroButtonPress(){
 sub removeLabelButtonPress(){
   my ($self, $http, $dyn) = @_;
   $self->{client}->PUT("$self->{MY_API_URL}/remL/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+}
+
+sub metaEditButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/editMeta/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 

@@ -319,6 +319,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     note => "These operations are PATHOLOGY specific",
     description => "Pathology workflow items",
     operations => [
+      # {
+      #   caption => "View Latest VR",
+      #   action => 'setForegroundQuery',
+      #   query_name => 'ViewPathologyVisualReviewInstances'
+      # },
     {
       operation => "InvokeNewOperation",
       caption => "Create Activity from Import",

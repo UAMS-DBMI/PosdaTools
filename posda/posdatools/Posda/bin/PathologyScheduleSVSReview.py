@@ -58,7 +58,6 @@ def main(args):
                 scan_started = True
             if scan_started:
                 saveImageMetaData(mytif,args.activity_id,file_id,phi_scan_id)
-
             for i, page in enumerate(mytif.pages):
                 if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
                     data = page.asarray()
