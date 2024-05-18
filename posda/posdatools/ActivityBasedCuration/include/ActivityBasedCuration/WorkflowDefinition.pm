@@ -312,9 +312,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     id => "16_Pathology",
     name => "Pathology",
     note => "These operations are PATHOLOGY specific",
-    description => "Sometimes in order to solve an unusual issue " .
-      "you will want to make a second copy of the Timepoint " .
-      "You may also want to merge Timepoints together.",
+    description => "",
     operations => [
     {
       operation => "InvokeNewOperation",
@@ -356,7 +354,48 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "17_other",
+    id => "17_Nifti",
+    name => "NIfTI",
+    note => "These operations are NIfTI specific",
+    description => "",
+    operations => [
+      {
+        caption => "Find and Parse Nifti Files In Timepoint",
+        action =>  "PopulateFileNiftiTp",
+      },
+      {
+        caption => "Process Nifti Files In Timepoint",
+        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+      },
+      {
+        caption => "Schedule PHI Scan",
+        action =>  "??",
+      },
+      {
+        caption => "Create Visual Review",
+        action =>  "??",
+      },
+   ],
+    queries => [
+      {
+        caption => "Copy Files",
+        operation => "SelectQueryGroup",
+        query_list_name => "CopyFiles",
+      },
+      {
+         caption => "View PHI Scan",
+         operation => "SelectQueryGroup",
+         query_list_name => "??",
+       },
+      {
+        caption => "Visual Review and Status",
+        operation => "SelectQueryGroup",
+        query_list_name => "??",
+       },
+    ],
+  },
+  {
+    id => "18_other",
     name => "Other",
     description => "Miscellaneous operations",
     operations => [
@@ -401,14 +440,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "MakeUIDMap",
       },
       {
-        caption => "Process Nifti Files In Timepoint",
-        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
-      },
-      {
-        caption => "Find Nifti Files In Timepoint",
-        action =>  "PopulateFileNiftiTp",
-      },
-      {
         caption => "Make a Downloadable Directory (including Non-Dicom)",
         action =>  "MakeDownloadableNonDicomTp",
       },
@@ -423,7 +454,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "18_defacing",
+    id => "19_defacing",
     name => "Dicom Image Defacing",
     note => "Operations and queries related to determing if images need defacing ".
       "and defacig them if they do",
