@@ -88,10 +88,17 @@ sub ContentResponse {
       $http->queue(" <br>----------------------------- <br>");
      }
      $self->NotSoSimpleButton($http, {
+       op => "removeFButtonPress",
+       caption => "Remove File from Collection",
+       sync => "Update();",
+     });
+     $http->queue("</br>");
+     $self->NotSoSimpleButton($http, {
        op => "metaEditButtonPress",
        caption => "Edit Needed",
        sync => "Update();",
      });
+     $http->queue("</br>");
      if ($self->{num_edits} and $self->{num_edits} > 0){
       $http->queue("<br>----------------------------- <br>");
       $http->queue("<b>This file has  $self->{num_edits} queued edits.</b></br>");
@@ -314,6 +321,12 @@ sub removeLabelButtonPress(){
 sub metaEditButtonPress(){
   my ($self, $http, $dyn) = @_;
   $self->{client}->PUT("$self->{MY_API_URL}/editMeta/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
+}
+
+sub removeFButtonPress(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/removeF/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 

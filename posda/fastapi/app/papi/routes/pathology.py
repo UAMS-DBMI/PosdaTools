@@ -101,6 +101,22 @@ async def remL(pathid: int, db: Database = Depends()):
         'status': 'success',
     }
 
+@router.put("/removeF/{pathid}")
+async def remL(pathid: int, db: Database = Depends()):
+    record = await db.fetch("""\
+        INSERT INTO pathology_edit_queue
+        (file_id,edit_type, edit_details, status)
+        VALUES($1 , 4, NULL, 'waiting');
+        """, [pathid])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
 @router.put("/editMeta/{pathid}")
 async def remL(pathid: int, db: Database = Depends()):
     record = await db.fetch("""\

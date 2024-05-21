@@ -46,38 +46,42 @@ def main(args):
             activity_id=args.activity_id):
         results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
     for (file_id, svsfilepath) in results:
-        myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
-        Query("InsertPathVRFiles").execute(
-                pathology_visual_review_instance_id = vr_id,
-                path_file_id = file_id)
-        if (myfilename[-3:].lower() == "svs"): #Aperio File
-            mytif = TiffFile(svsfilepath)
-            if not scan_started:
-                phi_scan_id = Query("CreateTiffPHIScan").get_single_value(description = desc)
-                background.print_to_email("Tiff PHI Scan ID:{0}".format(phi_scan_id))
-                scan_started = True
-            if scan_started:
-                saveImageMetaData(mytif,args.activity_id,file_id,phi_scan_id)
-            for i, page in enumerate(mytif.pages):
-                if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
-                    data = page.asarray()
-                    im = Image.fromarray(data)
-                    gammaSet(im, file_id,i, False)
-        elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff" or myfilename[-4:].lower() == "ndpi" or myfilename[-4:].lower() == "mrxs" ): #Tiff, Hanamatsu, or Mirax file
-             myImage = OpenSlide((svsfilepath))
-             print("Trying to use OpenSlide, {}".format(myImage))
-             if is_increasing(myImage.level_downsamples):
-                 closest_level = myImage.get_best_level_for_downsample(max(myImage.level_dimensions[0]) / 700)
-                 downsampled_dimensions = myImage.level_dimensions[closest_level]
-                 im = myImage.read_region((0, 0), closest_level, downsampled_dimensions)
-                 im_rgb = im.convert('RGB')
-                 gammaSet(im_rgb,file_id,0,False)
-             else:
-                 print('Warning: Layers may not be the same image! Cannot make thumbnail!')
+        try:
+            myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
+            Query("InsertPathVRFiles").execute(
+                    pathology_visual_review_instance_id = vr_id,
+                    path_file_id = file_id)
+            if (myfilename[-3:].lower() == "svs"): #Aperio File
+                mytif = TiffFile(svsfilepath)
+                if not scan_started:
+                    phi_scan_id = Query("CreateTiffPHIScan").get_single_value(description = desc)
+                    background.print_to_email("Tiff PHI Scan ID:{0}".format(phi_scan_id))
+                    scan_started = True
+                if scan_started:
+                    saveImageMetaData(mytif,args.activity_id,file_id,phi_scan_id)
+                for i, page in enumerate(mytif.pages):
+                    if (i == 1 or page.tags['NewSubfileType'] != 0 ) and (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
+                        data = page.asarray()
+                        im = Image.fromarray(data)
+                        gammaSet(im, file_id,i, False)
+            elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff" or myfilename[-4:].lower() == "ndpi" or myfilename[-4:].lower() == "mrxs" ): #Tiff, Hanamatsu, or Mirax file
+                 myImage = OpenSlide((svsfilepath))
+                 print("Trying to use OpenSlide, {}".format(myImage))
+                 if is_increasing(myImage.level_downsamples):
+                     closest_level = myImage.get_best_level_for_downsample(max(myImage.level_dimensions[0]) / 700)
+                     downsampled_dimensions = myImage.level_dimensions[closest_level]
+                     im = myImage.read_region((0, 0), closest_level, downsampled_dimensions)
+                     im_rgb = im.convert('RGB')
+                     gammaSet(im_rgb,file_id,0,False)
+                 else:
+                     print('Warning: Layers may not be the same image! Cannot make thumbnail!')
 
-        elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ): #non-layered file
-                myimg = Image.open(svsfilepath)
-                gammaSet(myimg,file_id,0, True)
+            elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ): #non-layered file
+                    myimg = Image.open(svsfilepath)
+                    gammaSet(myimg,file_id,0, True)
+        except Exception as e:
+            print('Warning: File {} - Cannot make thumbnail! Review outside posda!'.format(file_id))
+            pass
 
     background.finish(f"Thumbnail files created and imported")
 
