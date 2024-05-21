@@ -154,19 +154,18 @@ def main(pargs):
         if (edits and len(edits) > 0):
             totalEdits = totalEdits + 1
             for e in edits:
-                if e['edit_type'] != 4:
+                if e['edit_type'] != '4':
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
-                else:
-                    remove = True
-                    completeEdit(e['pathology_edit_queue_id'])
-                if not remove:
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
                     new_file_id = process(new_destination_path)
                     myNewFiles.append(new_file_id)
                     background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
                 else:
+                    completeEdit(e['pathology_edit_queue_id'])
+                    #myNewFiles.remove(file_id)
                     background.print_to_email("File {} removed".format(f['file_id']))
+                    break
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])

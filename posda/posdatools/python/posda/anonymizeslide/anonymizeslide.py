@@ -348,7 +348,7 @@ class TiffEntry:
 
 
 def remove_macro_aperio_svs(filename):
-    print('In the do_aperio_svs')
+    #print('In the do_aperio_svs')
     fh = TiffFile(filename)
     # Check for SVS file
     try:
@@ -362,14 +362,14 @@ def remove_macro_aperio_svs(filename):
         lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
         # the macro should be the very last layer
         if len(lines) >= 2 and lines[1].startswith(b'macro '):
-            print("Found macro")
+            #print("Found macro")
             directory.delete(expected_prefix=JPEG_SOI)
             deleted_macro = True
     if deleted_macro is False:
         print("macro not removed")
 
 def remove_label_aperio_svs(filename):
-    print('In the do_aperio_svs')
+    #print('In the do_aperio_svs')
     fh = TiffFile(filename)
     # Check for SVS file
     try:
@@ -383,7 +383,7 @@ def remove_label_aperio_svs(filename):
         lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
         # the macro should be the very last layer
         if len(lines) >= 2 and lines[1].startswith(b'label '):
-            print("Found label")
+            #print("Found label")
             directory.delete(expected_prefix=LZW_CLEARCODE)
             deleted_label = True
     if deleted_label is False:
@@ -391,7 +391,7 @@ def remove_label_aperio_svs(filename):
 
 def getImageDesc(filename):
     #tifffile.tifffile.TiffFile(filename, mode='r+b').pages[0].tags['ImageDescription'].overwrite('REDACTED')
-    print('In the edit_desc function')
+    #print('In the edit_desc function')
     fh = TiffFile(filename)
     # Check for SVS file
     try:
@@ -503,17 +503,17 @@ def combine_image_desc(desc_dict):
 #     sys.exit(exit_code)
 
 def anonymize(filepaths,edit_type):
-    print("removing slide")
+    #print("removing slide")
     for filename in filepaths:
         try:
             if edit_type == '1':
-                print("removing macro")
+                #print("removing macro")
                 remove_macro_aperio_svs(filename)
             elif edit_type == '2':
-                print("removing layer")
+                #print("removing layer")
                 remove_label_aperio_svs(filename)
             elif edit_type == '3':
-                print("removing ImageDesc")
+                #print("removing ImageDesc")
                 editImageDesc(filename)
         except Exception as e:
             print('%s: %s' % (filename, str(e)), file=sys.stderr)
