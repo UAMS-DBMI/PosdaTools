@@ -41,3 +41,4 @@ create_dcm4chee_copy.sql
 add_grouping_tables.sql
 add_pathology_edit_queue.sql
 fix_file_nifti2.sql
+add_file_name_table.sql

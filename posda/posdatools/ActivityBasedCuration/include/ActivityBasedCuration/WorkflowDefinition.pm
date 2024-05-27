@@ -360,19 +360,19 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     description => "",
     operations => [
       {
-        caption => "Find and Parse Nifti Files In Timepoint",
+        caption => "Find and Parse NIfTI Files In Timepoint",
         action =>  "PopulateFileNiftiTp",
       },
+      #{
+      #  caption => "Process Nifti Files In Timepoint",
+      #  action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+      #},
       {
-        caption => "Process Nifti Files In Timepoint",
-        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+        caption => "Schedule NIfTI PHI Scan",
+        action =>  "NiftiPhiScan",
       },
       {
-        caption => "Schedule PHI Scan",
-        action =>  "??",
-      },
-      {
-        caption => "Create Visual Review",
+        caption => "Create NIfTI Visual Review",
         action =>  "??",
       },
    ],
