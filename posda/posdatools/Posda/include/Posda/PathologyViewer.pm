@@ -9,7 +9,7 @@ use Posda::DB qw( Query );
 use JSON;
 use Posda::Api;
 use Try::Tiny;
-
+use Data::Dumper;
 use vars qw( @ISA );
 @ISA = ("Posda::PopupWindow", "Posda::ImageDisplayer");
 sub MakeQueuer{
@@ -49,6 +49,8 @@ sub SpecificInitialize {
   $self->{macro_setting} = 0;
   $self->{review_status} = "";
   $self->{edit_status} = "";
+  $self->{pvrid_edit_counts};
+  $self->{num_pvrid_edit_counts}
 
 }
 
@@ -220,7 +222,18 @@ sub ContentResponse {
     }
 
   }else{
+    print STDERR Dumper($self);
     $http->queue("<h3>Review Complete</h3>");
+    $self->{client}->GET("$self->{MY_API_URL}/getActEditsByPVRID/$self->{pathology_visual_review_instance_id}");
+    $self->{pvrid_edit_counts} = (decode_json($self->{client}->responseContent()));
+    $self->{num_pvrid_edit_counts} = scalar(@{$self->{pvrid_edit_counts}});
+    my $l = 0;
+    print STDERR Dumper($self);
+    while ($l < $self->{num_pvrid_edit_counts}){
+      $http->queue("File $self->{pvrid_edit_counts}->[$l]->{file} has $self->{pvrid_edit_counts}->[$l]->{count} edit(s) waiting.</br>");
+      $l++;
+    }
+    $http->queue("</br></br>Please commit any awaiting edits and then create another visual review.");
   }
 }
 

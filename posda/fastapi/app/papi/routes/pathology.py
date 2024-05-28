@@ -54,6 +54,47 @@ async def get_previews(pathid: int, gammaIndex: int, db: Database = Depends()):
         """
     return await db.fetch(query, [pathid,gammaIndex])
 
+@router.get("/getActEdits/{act_id}")
+async def get_path_edits_on_act(act_id: int, db: Database = Depends()):
+    query = """\
+        select
+            atf.file_id, count(p.status)
+        from activity_timepoint_file atf
+            left join pathology_edit_queue p on atf.file_id = p.file_id and p.status = 'waiting'
+        where atf.activity_timepoint_id =
+               ( select
+                    max(activity_timepoint_id) as activity_timepoint_id
+                from
+                    activity_timepoint
+                where
+                    activity_id = $1 )
+        group by atf.file_id
+        """
+    return await db.fetch(query, [act_id])
+
+@router.get("/getActEditsByPVRID/{pvr_id}")
+async def get_path_edits_pvr_instance(pvr_id: int, db: Database = Depends()):
+    query = """\
+        select
+            atf.file_id as file, count(p.status) as count
+        from activity_timepoint_file atf
+            left join pathology_edit_queue p on atf.file_id = p.file_id and p.status = 'waiting'
+        where atf.activity_timepoint_id =
+           (select
+                max(activity_timepoint_id) as activity_timepoint_id
+            from
+                activity_timepoint
+            where
+                activity_id =
+                (select
+                    activity_creation_id
+                from pathology_visual_review_instance pvri
+                where pvri.pathology_visual_review_instance_id = $1 ))
+         group by atf.file_id;
+        """
+    return await db.fetch(query, [pvr_id])
+
+
 @router.put("/set_edit/{pathid}/{good_status}/{user}")
 async def set_edit(pathid: int, good_status: bool ,user: str, db: Database = Depends()):
     record = await db.fetch("""\

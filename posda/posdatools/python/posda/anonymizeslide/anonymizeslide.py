@@ -269,7 +269,7 @@ class TiffDirectory:
         # self._fh.write_fmt('D', out_pointer)
         self._fh.write_fmt('D', 0)
 
-    def replace(self, replacement,expected_prefix=None,):
+    def replace(self,expected_prefix=None,):
         # Get strip offsets/lengths
         try:
             offsets = self.entries[TiffTag.StripOffsets].value()
@@ -287,24 +287,22 @@ class TiffDirectory:
                 if buf != expected_prefix:
                     raise IOError('Unexpected data in image strip')
                 self._fh.seek(offset)
-            newLdiff = length - len(replacement)
             if newLdiff < 0:
                 raise IOError('Edit data larger than data strip')
-            self._fh.write(replacement)
-            self._fh.write(b'\0' * newLdiff)
+            self._fh.write(b'\0' * length)
 
         # in_pointer_offset = location of the pointer to this IFD
         # out_pointer_offset = location of the pointer to the NEXT IFD
 
-        # Remove directory
-        print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
-        self._fh.seek(self._out_pointer_offset)
-        out_pointer = self._fh.read_fmt('D')
-        print('Read out_pointer as %d', out_pointer)
-        self._fh.seek(self._in_pointer_offset)
-        print('Writing it over in_pointer at %d', self._in_pointer_offset)
-        # self._fh.write_fmt('D', out_pointer)
-        self._fh.write_fmt('D', 0)
+        # # Remove directory
+        # print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
+        # self._fh.seek(self._out_pointer_offset)
+        # out_pointer = self._fh.read_fmt('D')
+        # print('Read out_pointer as %d', out_pointer)
+        # self._fh.seek(self._in_pointer_offset)
+        # print('Writing it over in_pointer at %d', self._in_pointer_offset)
+        # # self._fh.write_fmt('D', out_pointer)
+        # self._fh.write_fmt('D', 0)
 
 class TiffEntry:
     def __init__(self, fh):
@@ -416,19 +414,23 @@ def getImageDesc(filename):
                     img_desc_dict[split_entry[0]] = split_entry[1] if len(split_entry) > 1 else ''
             pages.append({j: img_desc_dict})
             j = j+1
+    print("I think the currect img desc is {}".format(pages))
     return pages
 
 def editImageDesc(filename):
+    print("trying to edit a desc")
     layers = getImageDesc(filename)
-    tagsToBeChanged = {'Filename':'REDACTED', 'USER':'REDACTED'} #testing
+    tagsToBeChanged = {'Filename','USER'} #testing
     for data in layers:
         for key in data:
             if key in tagsToBeChanged:
                 data[key] = tagsToBeChanged[key]
                 changed = True
         if changed:
+            print("there is a key needing changes")
             data[key] = combine_image_desc(data)
         else:
+            print("No changes")
             data[key] = 'SKIP_TOKEN'
         changed = False
 
@@ -452,10 +454,13 @@ def combine_image_desc(desc_dict):
     desc = ''
     values = ''
     for key in desc_dict.keys():
+        print("Key = : {}.format")
         if key == 'desc':
+            print("Desc Key found = : {}".format(key))
             desc = desc_dict[key]
         else:
             values += f'|{key} = {desc_dict[key]}'
+            print("Other Key  = : {} \n value now {}".format(key,values)
     image_desc = f'{desc}{values}'
     return image_desc
 
