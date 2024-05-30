@@ -35,6 +35,7 @@ from papi.routes import work
 from papi.routes import deface
 from papi.routes import edits
 from papi.routes import sysstatus
+from papi.routes import masking
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -112,6 +113,7 @@ router_v1.include_router(work.router, prefix="/work")
 router_v1.include_router(deface.router, prefix="/deface")
 router_v1.include_router(edits.router, prefix="/edits")
 router_v1.include_router(sysstatus.router, prefix="/sysstatus")
+router_v1.include_router(masking.router, prefix="/masking")
 
 app.include_router(auth.router, prefix="/auth")
 app.include_router(router_v1, prefix="/v1")
