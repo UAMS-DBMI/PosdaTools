@@ -20,19 +20,51 @@ class MaskerParameters(BaseModel):
     i: int
     d: int
 
-class ImportEventId(BaseModel):
+class CompleteParams(BaseModel):
     import_event_id: int
+    exit_code: int
 
 
 @router.get("/")
-async def get_all_iecs():
+async def get_all_iecs(
+    Database = Depends(),
+    current_user: User = logged_in_user
+):
     raise HTTPException(detail="not allowed", status_code=401)
+
+@router.get("/getwork")
+async def get_work_for_masker(
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Get work for the worker program
+    """
+
+    query = """
+        update masking
+        set masking_status = 'in-process'
+        where image_equivalence_class_id = (
+            select image_equivalence_class_id
+            from masking
+            where masking_status = 'ready-to-process'
+            limit 1
+            for update skip locked
+        )
+        returning image_equivalence_class_id
+    """
+
+    for item in await db.fetch(query):
+        return item
+
+    raise HTTPException(status_code=404)
+
 
 @router.post("/{iec}/mask")
 async def request_for_masking(
     iec: int,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """Flag for masking
 
     Creates a new entry in `masking` for this IEC.
@@ -62,14 +94,27 @@ async def request_for_masking(
 
 @router.get("/{iec}")
 async def get_masking_details(iec: int, db: Database = Depends()):
+    """Return details about the given masking item, including history
+    """
+
     query = """
         select *
         from masking
         where image_equivalence_class_id = $1
     """
 
-    for item in await db.fetch(query, [iec]):
-        return item
+    item = dict(await db.fetch_one(query, [iec]))
+    item['history'] = await db.fetch("""\
+        select
+            h.new_status,
+            h.when_changed,
+            u.user_name as who_changed
+        from masking_history h
+        join auth.users u on u.user_id = h.who_changed
+        where image_equivalence_class_id = $1
+    """, [iec])
+
+    return item
 
 
 @router.post("/{iec}/parameters")
@@ -77,7 +122,8 @@ async def update_masking_parameters(
     iec: int,
     item: MaskerParameters,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """Update/Set masking parameters
 
     """
@@ -108,31 +154,35 @@ async def update_masking_parameters(
 @router.post("/{iec}/complete")
 async def mark_processing_complete(
     iec: int,
-    item: ImportEventId,
+    item: CompleteParams,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """Mark as process-complete
 
     This should not be called by users.
     The new ID needs to be submitted in the body as json, as
-    { import_event_id: x }
+    { import_event_id: x, exit_code: 0 }
     """
-
-    # TODO: perhaps expand ImportEventId to include return_code,
-    # and if that return_code is not success, set to failed ? 
 
     # TODO: should only be called by the system, so should we hardcode
     # a check for user_id of 0 here?
 
     new_status = 'process-complete'
+    import_event_id = item.import_event_id
+
+    if item.exit_code != 0:
+        new_status = 'errored'
+        import_event_id = None
 
     try:
         await db.fetch("""\
             update masking
             set import_event_id = $1,
-                masking_status = $2
-            where image_equivalence_class_id = $3
-        """, [item.import_event_id, new_status, iec])
+                masking_exit_code = $2,
+                masking_status = $3
+            where image_equivalence_class_id = $4
+        """, [import_event_id, item.exit_code, new_status, iec])
 
         await db.fetch("""\
             insert into masking_history
@@ -148,7 +198,8 @@ async def mark_processing_complete(
 async def mark_accept(
     iec: int,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """
     """
 
@@ -174,7 +225,8 @@ async def mark_accept(
 async def mark_reject(
     iec: int,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """
     """
 
@@ -196,11 +248,12 @@ async def mark_reject(
     except asyncpg.exceptions.ForeignKeyViolationError as e:
         raise HTTPException(detail="Invalid IEC supplied", status_code=422)
 
-@router.post("/visualreview/{visual_review_instance_id}")
+@router.get("/visualreview/{visual_review_instance_id}")
 async def get_for_visualreview(
     visual_review_instance_id: int,
     db: Database = Depends(),
-    current_user: User = logged_in_user):
+    current_user: User = logged_in_user
+):
     """Return list of all IECs in this VR that are flagged for Masking
     """
 
@@ -219,3 +272,4 @@ async def get_for_visualreview(
 
     except:
         pass
+
