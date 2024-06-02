@@ -39,6 +39,8 @@ def main(args):
             scheduler = args.notify)
 
 
+    #lower priority - failing when thumbnails already exist?
+    # high priority, why isnt the imagr description getting saved
     results = []
     scan_started = False
     desc = "Tiff PHI Scan for activity {0}".format(args.activity_id)
@@ -108,13 +110,16 @@ def gammaSet(myImage,file_id,page, thumbs):
         process(str, file_id, i)
 
 def saveImageMetaData(mytif, activity_id, file_id, phi_scan_id):
+    print('saving metadata')
     for p, page in enumerate(mytif.pages):
         for t, tag in enumerate(page.tags):
             if tag.name not in ('BitsPerSample','Compression','ImageDepth', 'ImageLength', 'ImageWidth', 'TileLength', 'TileWidth', 'RowsPerStrip', 'SamplesPerPixel', 'YCbCrSubSampling', 'JPEGTables', 'TileOffsets', 'TileByteCounts', 'InterColorProfile' ):
                 if sys.getsizeof(tag.value) < 2500:
                     #save the image description data
                     if tag.name == 'ImageDescription':
-                       Query("InsertPathologyImageDesc").execute(file_id = file_id, image_desc = str(tag.value))
+                       print('calling insert - {} : {} : {}'.format(file_id, p, str(tag.value)))
+                       Query("InsertPathologyImageDesc").execute(file_id = file_id, layer_id = p, image_desc = str(tag.value))
+                       print('called insert')
                     #Determine if the tag is public or private
                     if tag.code < 32768:
                         priv = False

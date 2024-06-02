@@ -205,9 +205,9 @@ async def get_mapping(file_id: int, db: Database = Depends()):
 async def get_image_desc(file_id: int, db: Database = Depends()):
     query = """\
         select
-            image_desc
+            layer_id, image_desc
         from
-            pathology_image_desc a
+            pathology_image_description a
         where
             a.file_id = $1
              """

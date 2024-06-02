@@ -49,8 +49,7 @@ sub SpecificInitialize {
   $self->{macro_setting} = 0;
   $self->{review_status} = "";
   $self->{edit_status} = "";
-  $self->{pvrid_edit_counts};
-  $self->{num_pvrid_edit_counts}
+
 
 }
 
@@ -74,7 +73,8 @@ sub ContentResponse {
      $self->{client}->GET("$self->{MY_API_URL}/mapping/$self->{pathid}");
      $self->{patient_id} = (decode_json($self->{client}->responseContent()))->[0]->{patient_id};
      $self->{client}->GET("$self->{MY_API_URL}/image_desc/$self->{pathid}");
-     $self->{image_desc} = (decode_json($self->{client}->responseContent()))->[0]->{image_desc};
+     $self->{image_desc_array} = (decode_json($self->{client}->responseContent()));
+     $self->{num_image_desc} = scalar(@{$self->{image_desc_array}});
      $http->queue("<b>Posda File ID:</b> <br> $self->{pathid}");
      $http->queue(" <br>----------------------------- <br>");
      $self->{client}->GET("$self->{MY_API_URL}/find_edits/$self->{pathid}");
@@ -85,10 +85,17 @@ sub ContentResponse {
       $http->queue("<b>Patient ID:</b> $self->{patient_id}");
       $http->queue(" <br>----------------------------- <br>");
      }
-     if ($self->{image_desc}){
-      $http->queue("<b>Image Description:</b> <br> $self->{image_desc}");
-      $http->queue(" <br>----------------------------- <br>");
-     }
+     if ($self->{num_image_desc} and $self->{num_image_desc} > 0){
+        $http->queue("<b>Image Description:</b> <br>");
+        $http->queue("<br>----------------------------- <br>");
+        my $j = 0;
+        while ($j < $self->{num_image_desc}){
+           $http->queue("Layer $self->{image_desc_array}->[$j]->{layer_id}: $self->{image_desc_array}->[$j]->{image_desc}</br></br>");
+           $j++;
+        }
+      }
+
+
      $self->NotSoSimpleButton($http, {
        op => "removeFButtonPress",
        caption => "Remove File from Collection",
@@ -107,11 +114,15 @@ sub ContentResponse {
       my $j = 0;
       while ($j < $self->{num_edits}){
          if ($self->{edits}->[$j]->{edit_type} == '1'){
-            $http->queue("<b>Macro removal is queued</b></br>");
+            $http->queue("<b>Macro slide removal queued</b></br>");
          }elsif ($self->{edits}->[$j]->{edit_type} == '2'){
-            $http->queue("<b>Label removal is queued</b></br>");
+            $http->queue("<b>Label slide removal queued</b></br>");
+         }elsif ($self->{edits}->[$j]->{edit_type} == '3'){
+            $http->queue("<b>Metadata edit queued</b></br>");
+         }elsif ($self->{edits}->[$j]->{edit_type} == '4'){
+            $http->queue("<b>Removal of entire file queued</b></br>");
          }else{
-            $http->queue("<b>Edit unrelated to slide removal queued</b></br>");
+            $http->queue("<b>Edit queued</b></br>");
          }
          $j++;
       }
@@ -222,13 +233,13 @@ sub ContentResponse {
     }
 
   }else{
-    print STDERR Dumper($self);
+    #print STDERR Dumper($self);
     $http->queue("<h3>Review Complete</h3>");
     $self->{client}->GET("$self->{MY_API_URL}/getActEditsByPVRID/$self->{pathology_visual_review_instance_id}");
     $self->{pvrid_edit_counts} = (decode_json($self->{client}->responseContent()));
     $self->{num_pvrid_edit_counts} = scalar(@{$self->{pvrid_edit_counts}});
     my $l = 0;
-    print STDERR Dumper($self);
+    #print STDERR Dumper($self);
     while ($l < $self->{num_pvrid_edit_counts}){
       $http->queue("File $self->{pvrid_edit_counts}->[$l]->{file} has $self->{pvrid_edit_counts}->[$l]->{count} edit(s) waiting.</br>");
       $l++;
