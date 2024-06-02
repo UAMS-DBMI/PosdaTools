@@ -6,7 +6,7 @@
 #  Copyright (c) 2011      Google, Inc.
 #  Copyright (c) 2014      Benjamin Gilbert
 #  Copyright (c) 2023      Quasar Jarosz
-#  Copyright (c) 2024      S Utecht
+#  Copyright (c) 2024      Modified into posda library - S Utecht
 #  All rights reserved.
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -260,49 +260,36 @@ class TiffDirectory:
         # out_pointer_offset = location of the pointer to the NEXT IFD
 
         # Remove directory
-        print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
+        #print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
         self._fh.seek(self._out_pointer_offset)
         out_pointer = self._fh.read_fmt('D')
-        print('Read out_pointer as %d', out_pointer)
+        #print('Read out_pointer as %d', out_pointer)
         self._fh.seek(self._in_pointer_offset)
-        print('Writing it over in_pointer at %d', self._in_pointer_offset)
+        #print('Writing it over in_pointer at %d', self._in_pointer_offset)
         # self._fh.write_fmt('D', out_pointer)
         self._fh.write_fmt('D', 0)
 
-    def replace(self,expected_prefix=None,):
-        # Get strip offsets/lengths
-        try:
-            offsets = self.entries[TiffTag.StripOffsets].value()
-            lengths = self.entries[TiffTag.StripByteCounts].value()
-        except KeyError:
-            raise IOError('Directory is not stripped')
+    def replace(self, new_data):
+        descObj = self.entries[TiffTag.ImageDescription]
+        old = descObj.value()
+        oldLen = descObj.my_data_length()
+        newLen = len(new_data.encode('utf-8'))
+        lenDiff = oldLen - newLen
+        #print('oldLen:{} newLen:{}, lenDiff: {}'.format(oldLen, newLen, lenDiff))
+        if lenDiff < 0:
+            raise IOError('Edit data larger than data strip')
 
-        # Wipe strips
-        for offset, length in zip(offsets, lengths):
-            offset = self._fh.near_pointer(self._out_pointer_offset, offset)
-            logging.debug('Zeroing %d for %d', offset, length)
-            self._fh.seek(offset)
-            if expected_prefix:
-                buf = self._fh.read(len(expected_prefix))
-                if buf != expected_prefix:
-                    raise IOError('Unexpected data in image strip')
-                self._fh.seek(offset)
-            if newLdiff < 0:
-                raise IOError('Edit data larger than data strip')
-            self._fh.write(b'\0' * length)
+        self._fh.seek(descObj.my_data_start())
+        bytesToWrite = new_data.encode('utf-8')
+        bytesToWrite = bytesToWrite + (b'\0' * lenDiff)
+        if oldLen == len(bytesToWrite):
+            self._fh.write(bytesToWrite)
+            #print('replace completed')
+        else:
+            print('oldLen not same as new: {} vs {}'.format(oldLen,len(bytesToWrite)))
+            print('replace failed')
 
-        # in_pointer_offset = location of the pointer to this IFD
-        # out_pointer_offset = location of the pointer to the NEXT IFD
 
-        # # Remove directory
-        # print('Deleting directory %d @ %d', self._number, self._in_pointer_offset)
-        # self._fh.seek(self._out_pointer_offset)
-        # out_pointer = self._fh.read_fmt('D')
-        # print('Read out_pointer as %d', out_pointer)
-        # self._fh.seek(self._in_pointer_offset)
-        # print('Writing it over in_pointer at %d', self._in_pointer_offset)
-        # # self._fh.write_fmt('D', out_pointer)
-        # self._fh.write_fmt('D', 0)
 
 class TiffEntry:
     def __init__(self, fh):
@@ -311,24 +298,38 @@ class TiffEntry:
                 fh.read_fmt('HHZZ')
         self._fh = fh
 
-    def value(self):
         if self.type == Datatype.ASCII:
-            item_fmt = 'c'
+            self.item_fmt = 'c'
         elif self.type == Datatype.SHORT:
-            item_fmt = 'H'
+            self.item_fmt = 'H'
         elif self.type == Datatype.LONG:
-            item_fmt = 'I'
+            self.item_fmt = 'I'
         elif self.type == Datatype.LONG8:
-            item_fmt = 'Q'
+            self.item_fmt = 'Q'
         elif self.type == Datatype.FLOAT:
-            item_fmt = 'f'
+            self.item_fmt = 'f'
         elif self.type == Datatype.DOUBLE:
-            item_fmt = 'd'
-        else:
-            # raise ValueError('Unsupported type:', Datatype(self.type))
-            return []
+            self.item_fmt = 'd'
 
-        fmt = '%d%s' % (self.count, item_fmt)
+
+    def my_data_start(self):
+        fmt = '%d%s' % (self.count, self.item_fmt)
+        len = self._fh.fmt_size(fmt)
+        if len <= self._fh.fmt_size('Z'):
+            # Inline value
+            return self.start + self._fh.fmt_size('HHZ')
+        else:
+            # Out-of-line value
+            return self._fh.near_pointer(self.start, self.value_offset)
+
+    def my_data_length(self):
+        fmt = '%d%s' % (self.count, self.item_fmt)
+        return int(self._fh.fmt_size(fmt))
+
+    def value(self):
+
+
+        fmt = '%d%s' % (self.count, self.item_fmt)
         len = self._fh.fmt_size(fmt)
         if len <= self._fh.fmt_size('Z'):
             # Inline value
@@ -387,125 +388,57 @@ def remove_label_aperio_svs(filename):
     if deleted_label is False:
         print("label not removed")
 
-def getImageDesc(filename):
-    #tifffile.tifffile.TiffFile(filename, mode='r+b').pages[0].tags['ImageDescription'].overwrite('REDACTED')
-    #print('In the edit_desc function')
-    fh = TiffFile(filename)
-    # Check for SVS file
-    try:
-        desc0 = fh.directories[0].entries[TiffTag.ImageDescription].value()
-        if not desc0.startswith(b'Aperio'):
-            raise UnrecognizedFile
-    except KeyError:
-        raise UnrecognizedFile
-    for directory in fh.directories:
-        lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
-        pages = []
-        j = 0
-        for l in lines:
-            #from MR
-            split_desc = l.split('|')
-            for i, value in enumerate(split_desc):
-                if i == 0:
-                    img_desc_dict['desc'] = value
-                else:
-                    split_entry = value.split(' = ')
-                    print('Layer {}: Value {}: {} = {}'.format(j, i, split_entry[0], split_entry[1] if len(split_entry) > 1 else ''))
-                    img_desc_dict[split_entry[0]] = split_entry[1] if len(split_entry) > 1 else ''
-            pages.append({j: img_desc_dict})
-            j = j+1
-    print("I think the currect img desc is {}".format(pages))
-    return pages
+def getImageDesc(directory):
+    img_desc_dict = {}
+    lines = directory.entries[TiffTag.ImageDescription].value().splitlines()
+    for l in lines:
+        split_desc = l.decode('utf-8').split('|')
+        for tag_key, value in enumerate(split_desc):
+            split_entry = value.split(' = ')
+            img_desc_dict[split_entry[0]] = split_entry[1] if len(split_entry) > 1 else ''
+    return img_desc_dict
 
 def editImageDesc(filename):
-    print("trying to edit a desc")
-    layers = getImageDesc(filename)
-    tagsToBeChanged = {'Filename','USER'} #testing
-    for data in layers:
-        for key in data:
-            if key in tagsToBeChanged:
-                data[key] = tagsToBeChanged[key]
-                changed = True
-        if changed:
-            print("there is a key needing changes")
-            data[key] = combine_image_desc(data)
-        else:
-            print("No changes")
-            data[key] = 'SKIP_TOKEN'
-        changed = False
-
+    to_change = 0
     fh = TiffFile(filename)
-    # Check for SVS file
+
     try:
         desc0 = fh.directories[0].entries[TiffTag.ImageDescription].value()
         if not desc0.startswith(b'Aperio'):
             raise UnrecognizedFile
     except KeyError:
         raise UnrecognizedFile
-    for i, directory in enumerate(fh.directories):
-        if data[i] != 'SKIP_TOKEN':
-            print('Trying to replace layer {}: New Value {}'.format(i, data))
-            directory.replace(data)
+
+    for directory in fh.directories:
+        desc_dict = getImageDesc(directory)
+        #print("desc_dict {}".format(desc_dict))
+        for tag in desc_dict:
+            if tag in ('User','Filename','ImageID'):
+                #print("bad tag")
+                desc_dict[tag]  = '0'
+                to_change = to_change+1
+        if to_change != 0:
+            new_img_desc = combine_image_desc(desc_dict)
+            directory.replace(new_img_desc)
+            print('{} elements of description edited'.format(to_change))
+            to_change = 0
+
+
 
 
 
 #from MR
 def combine_image_desc(desc_dict):
-    desc = ''
-    values = ''
-    for key in desc_dict.keys():
-        print("Key = : {}.format")
-        if key == 'desc':
-            print("Desc Key found = : {}".format(key))
-            desc = desc_dict[key]
+    image_desc = ''
+    for e in desc_dict.keys():
+        if desc_dict[e] == '' or  desc_dict[e] == '':
+            image_desc = image_desc + e  + '|'
         else:
-            values += f'|{key} = {desc_dict[key]}'
-            print("Other Key  = : {} \n value now {}".format(key,values)
-    image_desc = f'{desc}{values}'
+            image_desc = image_desc + e + ' = ' + desc_dict[e] + '|'
+    #print('Combine complete: {}'.format(image_desc))
     return image_desc
 
-# def _main():
-#     global DEBUG
-#
-#     parser = OptionParser(usage='%prog [options] file [file...]',
-#             description=PROG_DESCRIPTION, version=PROG_VERSION)
-#     parser.add_option('-d', '--debug', action='store_true',
-#             help='show debugging information')
-#     opts, args = parser.parse_args()
-#     if not args:
-#         parser.error('specify a file')
-#     DEBUG = opts.debug
-#
-#     if DEBUG:
-#         logging.basicConfig(level=logging.DEBUG)
-#     else:
-#         logging.basicConfig(level=logging.INFO)
-#
-#     if sys.platform == 'win32':
-#         # The shell expects us to do wildcard expansion
-#         filenames = []
-#         for arg in args:
-#             filenames.extend(glob(arg) or [arg])
-#     else:
-#         filenames = args
-#
-#     exit_code = 0
-#     for filename in filenames:
-#         try:
-#             for handler in format_handlers:
-#                 try:
-#                     handler(filename)
-#                     break
-#                 except UnrecognizedFile:
-#                     pass
-#             else:
-#                 raise IOError('Unrecognized file type')
-#         except Exception as e:
-#             if DEBUG:
-#                 raise
-#             print('%s: %s' % (filename, str(e)), file=sys.stderr)
-#             exit_code = 1
-#     sys.exit(exit_code)
+
 
 def anonymize(filepaths,edit_type):
     #print("removing slide")
@@ -522,8 +455,3 @@ def anonymize(filepaths,edit_type):
                 editImageDesc(filename)
         except Exception as e:
             print('%s: %s' % (filename, str(e)), file=sys.stderr)
-
-
-
-# if __name__ == '__main__':
-#     _main()
