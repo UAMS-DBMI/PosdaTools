@@ -40,3 +40,4 @@ series_to_nifti.sql
 create_dcm4chee_copy.sql
 add_grouping_tables.sql
 add_pathology_edit_queue.sql
+add_masking_tables.sql
