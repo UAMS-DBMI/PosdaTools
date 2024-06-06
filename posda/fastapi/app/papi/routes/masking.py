@@ -273,3 +273,22 @@ async def get_for_visualreview(
     except:
         pass
 
+@router.get("/{iec}/reviewfiles")
+async def get_iec_review_files(
+    iec: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Get list of completed files for review"""
+
+    records = await db.fetch("""\
+        select
+            file_id
+        from
+            masking
+            natural join file_import
+        where
+            image_equivalence_class_id = $1
+    """, [iec])
+
+    return [x[0] for x in records]
