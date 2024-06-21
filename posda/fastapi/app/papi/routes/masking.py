@@ -287,6 +287,7 @@ async def get_iec_review_files(
         from
             masking
             natural join file_import
+            natural join dicom_file
         where
             image_equivalence_class_id = $1
     """, [iec])
