@@ -14,5 +14,7 @@ See the README files of each subdirectory for build requirements.
 
 ## Running
 Simply type:
-
-`./manage up -d`
+```sh
+./init
+./manage up -d
+```
