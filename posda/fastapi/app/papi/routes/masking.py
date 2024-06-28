@@ -287,9 +287,16 @@ async def get_iec_review_files(
         from
             masking
             natural join file_import
-            natural join dicom_file
+            natural join file_sop_common
         where
             image_equivalence_class_id = $1
+        order by
+            -- sometimes instance_number is empty string or null
+            case instance_number
+                when '' then '0'
+                when null then '0'
+                else instance_number
+            end::int
     """, [iec])
 
     return [x[0] for x in records]
