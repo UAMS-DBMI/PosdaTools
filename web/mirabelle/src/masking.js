@@ -30,6 +30,28 @@ export async function flagForMasking(iec) {
 
 	return details;
 }
+export async function flagAsAccepted(iec) {
+	const response = await fetch(
+		`/papi/v1/masking/${iec}/accept`,
+		{
+			method: "POST",
+		}
+	);
+	const details = await response.json();
+
+	return details;
+}
+export async function flagAsRejected(iec) {
+	const response = await fetch(
+		`/papi/v1/masking/${iec}/reject`,
+		{
+			method: "POST",
+		}
+	);
+	const details = await response.json();
+
+	return details;
+}
 export async function setParameters(iec, { lr, pa, s, i, d }) {
 	const response = await fetch(
 		`/papi/v1/masking/${iec}/parameters`,

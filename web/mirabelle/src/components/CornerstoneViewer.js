@@ -18,7 +18,7 @@ import {
 	calculateDistance,
 } from '../utilities';
 
-import { setParameters, loaded } from '../masking';
+import { setParameters, loaded, flagAsAccepted, flagAsRejected } from '../masking';
 
 function getOrCreateToolgroup(toolgroup_name) {
   let group = cornerstoneTools.ToolGroupManager.getToolGroup(toolgroup_name);
@@ -345,7 +345,7 @@ function CornerstoneViewer({ volumeName,
       const container = containerRef.current;
       container.innerHTML = ''; // Clear previous content
 
-      if (layout === 'Masker') {
+      if (layout === 'Masker' || layout === 'MaskerVR' || layout === 'MaskerReview') {
         const viewportInput = [];
 
         container.style.display = 'grid';
@@ -392,11 +392,11 @@ function CornerstoneViewer({ volumeName,
         renderingEngine.setViewports(viewportInput);
       }
 
-      if (layout === 'all' || layout === 'volumes' || layout === 'Masker') {
+      if (layout === 'MaskerVR' || layout === 'MaskerReview' || layout === 'Masker') {
         setupVolViewportTools();
       }
 
-      if (layout === 'all' || layout === '3d' | layout === 'Masker') {
+      if (layout === 'MaskerVR' || layout === 'MaskerReview' | layout === 'Masker') {
         setup3dViewportTools();
       }
       setLoading(false); // signal that setup is complete
@@ -586,6 +586,14 @@ function CornerstoneViewer({ volumeName,
   async function handleAcceptSelection() {
     await finalCalc(coords, volumeId, iec);
   }
+  async function handleMarkAccepted() {
+    await flagAsAccepted(iec);
+    alert("Marked as accepted!");
+  }
+  async function handleMarkRejected() {
+    await flagAsRejected(iec);
+    alert("Marked as rejected!");
+  }
 
   return (
     <>
@@ -596,6 +604,8 @@ function CornerstoneViewer({ volumeName,
         onAccept={handleAcceptSelection}
         onClear={handleClearSelection}
         onExpand={handleExpandSelection}
+        onMarkAccepted={handleMarkAccepted}
+        onMarkRejected={handleMarkRejected}
       />
     </>
   );

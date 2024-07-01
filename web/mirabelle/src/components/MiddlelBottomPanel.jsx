@@ -4,7 +4,13 @@ import { Context } from './Context.js';
 import MaskerPanel from './MaskerPanel.jsx';
 import NavigationPanel from './NavigationPanel.jsx';
 
-function MiddlelBottomPanel({ onExpand, onClear, onAccept, onNext, onPrevious }) {
+function MiddlelBottomPanel({ onExpand,
+                              onClear,
+                              onAccept,
+                              onNext, 
+                              onPrevious,
+                              onMarkAccepted,
+                              onMarkRejected }) {
   const {
     template,
   } = useContext(Context);
@@ -15,6 +21,8 @@ function MiddlelBottomPanel({ onExpand, onClear, onAccept, onNext, onPrevious })
           onExpand={onExpand}
           onClear={onClear}
           onAccept={onAccept}
+          onMarkAccepted={onMarkAccepted}
+          onMarkRejected={onMarkRejected}
         />
         {template === "MaskerVR" && (
           <NavigationPanel 
