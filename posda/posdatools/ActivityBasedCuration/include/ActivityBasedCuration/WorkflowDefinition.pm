@@ -141,6 +141,11 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         operation => "SelectQueryGroup",
         query_list_name => "VisualReviewStatus",
       },
+      {
+        caption => "Suggested Queries for Masking",
+        operation => "SelectQueryGroup",
+        query_list_name => "MaskingStatus",
+      },
     ],
   },
   {
@@ -604,6 +609,19 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "VisualReviewForActivity",
         query => "GetVisualReviewByActivityId",
+      },
+    ],
+  ],
+  MaskingStatus => [
+    "Suggested Queries for Masking Status",
+    [
+      {
+        caption => "MaskingStatus",
+        query => "MaskingStatus",
+      },
+      {
+        caption => "MaskingReview",
+        query => "MaskingReview",
       },
     ],
   ],
