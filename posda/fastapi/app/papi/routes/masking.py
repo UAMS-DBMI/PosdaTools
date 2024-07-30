@@ -19,6 +19,8 @@ class MaskerParameters(BaseModel):
     s: int
     i: int
     d: int
+    form: str | None = 'cylinder'
+    function: str | None = 'mask'
 
 class CompleteParams(BaseModel):
     import_event_id: int
