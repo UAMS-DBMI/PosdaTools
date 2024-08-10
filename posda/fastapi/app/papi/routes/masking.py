@@ -1,6 +1,6 @@
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import datetime
 from starlette.responses import Response, FileResponse
 import asyncpg.exceptions
@@ -20,8 +20,8 @@ class MaskerParameters(BaseModel):
     width: int
     height: int
     depth: int
-    form: str | None = 'cylinder'
-    function: str | None = 'mask'
+    form: Optional[str] = 'cylinder'
+    function: Optional[str] = 'mask'
 
 class CompleteParams(BaseModel):
     import_event_id: int
