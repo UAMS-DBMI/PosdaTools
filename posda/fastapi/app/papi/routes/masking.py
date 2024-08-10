@@ -16,9 +16,10 @@ router = APIRouter(
 class MaskerParameters(BaseModel):
     lr: int
     pa: int
-    s: int
-    i: int
-    d: int
+    is: int
+    width: int
+    height: int
+    depth: int
     form: str | None = 'cylinder'
     function: str | None = 'mask'
 
