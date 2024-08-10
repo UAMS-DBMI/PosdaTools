@@ -14,9 +14,9 @@ router = APIRouter(
 )
 
 class MaskerParameters(BaseModel):
-    lr: int
-    pa: int
-    is: int
+    LR: int
+    PA: int
+    IS: int
     width: int
     height: int
     depth: int
