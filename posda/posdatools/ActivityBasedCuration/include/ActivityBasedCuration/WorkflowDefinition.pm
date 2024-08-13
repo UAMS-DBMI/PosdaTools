@@ -373,7 +373,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       },
       {
         caption => "Create NIfTI Visual Review",
-        action =>  "??",
+        action =>  "NiftiScheduleVisualReview",
       },
    ],
     queries => [
