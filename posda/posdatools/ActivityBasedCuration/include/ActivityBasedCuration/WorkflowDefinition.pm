@@ -383,14 +383,14 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query_list_name => "CopyFiles",
       },
       {
-         caption => "View PHI Scan",
+         caption => "View Nifti PHI Scan",
          operation => "SelectQueryGroup",
-         query_list_name => "??",
+         query_list_name => "DisplayNiftiPHIReport",
        },
       {
-        caption => "Visual Review and Status",
+        caption => "Nifti Visual Review and Status",
         operation => "SelectQueryGroup",
-        query_list_name => "??",
+        query_list_name => "NiftiVisualReviewStatus",
        },
     ],
   },
@@ -772,5 +772,39 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query => "PathologyViewEdits",
       },
     ],
-   ],
+  ],
+  DisplayNiftiPHIReport => [
+    "Suggested Queries for Nifti PHI Reporting",
+    [
+      {
+        caption => "Display created Nifti PHI Report",
+        query => "RunNiftiPHIReport",
+      },
+    ],
+  ],
+  NiftiVisualReviewStatus => [
+    "Nifti Suggested Queries for Visual Review",
+    [
+      {
+        caption => "View Nifti VR Instances (Launcher)",
+        query => "ViewNiftiVisualReviewInstances",
+      },
+      {
+        caption => "List all Nifti visual reviews for an activity",
+        query => "NiftiVRlogs",
+      },
+      {
+        caption => "Get a summmary of Nifti visual review status by activity",
+        query => "NiftiReviewCountByActivity",
+      },
+      {
+        caption => "Get a summmary of Nifti visual review status by timepoint",
+        query => "NiftiReviewCountByActivityTimepoint",
+      },
+      {
+        caption => "List review summary for nifti files that were marked bad or have had too few reviews",
+        query => "NiftiBadFilesInTPCheck",
+      },
+    ],
+  ],
 );

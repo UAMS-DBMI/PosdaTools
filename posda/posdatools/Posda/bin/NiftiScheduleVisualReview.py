@@ -18,22 +18,29 @@ def create_nifti_visual_review(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
 
+    #print(f'Activity ID: {args.activity_id}')
+    #print(f'Notify: {args.notify}')
+
     vr_id = Query("CreateNiftiVisualReviewInstance").get_single_value(
             activity_creation_id = args.activity_id,
             scheduler = args.notify)
 
+    #print(f'VR ID: {vr_id}')
+
     results = []
     for row in Query("NiftiFilePathsFromActivity").run(activity_id=args.activity_id):
-        results.append((row.file_id, os.path.join(row.root_path, row.rel_path)))
+        results.append((row.file_id, os.path.join(row.root_path, row.rel_path), row.file_name))
 
-    for (file_id, file_path) in results:
-        myfilename = Query("SimpleFilenameFetch").get_single_value(file_id = file_id)
+    for (file_id, file_path, file_name) in results:
         
+        #print(f'File: {file_id} : {file_name}')
+
         Query("InsertNiftiVRFiles").execute(
                 nifti_visual_review_instance_id = vr_id,
-                nifti_file_id = file_id)
+                nifti_file_id = file_id,
+                nifti_file_name = file_name)
 
-    background.finish(f"Thumbnail files created and imported")
+    background.finish(f"Nifti files recorded for Visual Review")
 
 def main(args):
     create_nifti_visual_review(args)

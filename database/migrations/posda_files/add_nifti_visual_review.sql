@@ -15,11 +15,11 @@ create table if not exists nifti_visual_review_instance (
 
 create table if not exists nifti_visual_review_files (
 	nifti_visual_review_instance_id int not null,
-	nifti_file_id int not null unique);
+	nifti_file_id int not null unique,
+	nifti_file_name text);
 
 create table if not exists nifti_visual_review_status (
 	nifti_file_id int4,
 	good_status bool,
 	reviewing_user text,
-	review_time timestamp NULL
-);
+	review_time timestamp NULL);
