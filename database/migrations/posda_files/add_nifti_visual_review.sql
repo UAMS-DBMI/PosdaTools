@@ -9,7 +9,7 @@
 
 create table if not exists nifti_visual_review_instance (
 	nifti_visual_review_instance_id serial not null,
-	activity_creation_id int,
+	activity_id int,
 	scheduler text,
 	scheduled timestamp);
 

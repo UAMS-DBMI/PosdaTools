@@ -17,6 +17,6 @@ join (select nifti_file_id, count(b.good_status) as num_reviews,
 from nifti_visual_review_files a  
 natural left join nifti_visual_review_status b
 natural join nifti_visual_review_instance c
-group by a.nifti_file_id,activity_creation_id) as rev_counts 
+group by a.nifti_file_id,activity_id) as rev_counts 
 on atf.file_id = rev_counts.nifti_file_id
 where activity_timepoint_id = ?

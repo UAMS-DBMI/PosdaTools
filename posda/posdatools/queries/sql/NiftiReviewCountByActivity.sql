@@ -1,7 +1,7 @@
 -- Name: NiftiReviewCountByActivity
 -- Schema: posda_files
 -- Columns: ['nifti_file_id', 'num_reviews', 'num_reviewers','num_bad','most_recent_timepoint_containing']
--- Args: ['activity_creation_id']
+-- Args: ['activity_id']
 -- Tags: ['nifti', 'visual_review']
 -- Description: Get a summmary of Nifti visual review status by activity
 --
@@ -23,6 +23,6 @@ join (select file_id, max(e.activity_timepoint_id) as most_recent_timepoint_cont
     on e.activity_timepoint_id = f.activity_timepoint_id
 group by file_id) as latestAT 
 on a.nifti_file_id = latestAT.file_id
-where activity_creation_id = ?
+where activity_id = ?
 group by a.nifti_file_id, most_recent_timepoint_containing
 order by most_recent_timepoint_containing desc

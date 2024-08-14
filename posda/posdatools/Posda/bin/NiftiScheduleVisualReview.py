@@ -22,7 +22,7 @@ def create_nifti_visual_review(args):
     #print(f'Notify: {args.notify}')
 
     vr_id = Query("CreateNiftiVisualReviewInstance").get_single_value(
-            activity_creation_id = args.activity_id,
+            activity_id = args.activity_id,
             scheduler = args.notify)
 
     #print(f'VR ID: {vr_id}')
