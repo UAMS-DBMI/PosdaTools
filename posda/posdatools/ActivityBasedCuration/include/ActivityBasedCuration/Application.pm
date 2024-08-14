@@ -3739,7 +3739,7 @@ sub openMirabelle{
     }
 
     $self->QueueJsCmd(
-      "rt('Mirabelle', '$base_url/$extra_url', 700, 1000, 0);"
+      "rt('Mirabelle', '$base_url/$extra_url', 0, 0, 0);"
     );
 }
 
