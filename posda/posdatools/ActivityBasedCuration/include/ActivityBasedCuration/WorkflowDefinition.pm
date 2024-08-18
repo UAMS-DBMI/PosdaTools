@@ -425,6 +425,10 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         caption => "Big Endian -> Little Endian",
         action =>  "ConvertBigEndianToLittle",
       },
+      {
+        caption => "Apply Masks",
+        action =>  "ApplyMasks",
+      },
     ],
   },
   {
