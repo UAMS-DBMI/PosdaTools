@@ -251,6 +251,61 @@ async def mark_reject(
     except asyncpg.exceptions.ForeignKeyViolationError as e:
         raise HTTPException(detail="Invalid IEC supplied", status_code=422)
 
+@router.post("/{iec}/skip")
+async def mark_accept(
+    iec: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """
+    """
+
+    new_status = 'skipped'
+
+    try:
+        await db.fetch("""\
+            update masking
+            set masking_status = $1
+            where image_equivalence_class_id = $2
+        """, [new_status, iec])
+
+        await db.fetch("""\
+            insert into masking_history
+            values
+            ($1, $2, now(), $3)
+        """, [iec, new_status, current_user.user_id])
+
+    except asyncpg.exceptions.ForeignKeyViolationError as e:
+        raise HTTPException(detail="Invalid IEC supplied", status_code=422)
+
+
+@router.post("/{iec}/nonmaskable")
+async def mark_accept(
+    iec: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """
+    """
+
+    new_status = 'nonmaskable'
+
+    try:
+        await db.fetch("""\
+            update masking
+            set masking_status = $1
+            where image_equivalence_class_id = $2
+        """, [new_status, iec])
+
+        await db.fetch("""\
+            insert into masking_history
+            values
+            ($1, $2, now(), $3)
+        """, [iec, new_status, current_user.user_id])
+
+    except asyncpg.exceptions.ForeignKeyViolationError as e:
+        raise HTTPException(detail="Invalid IEC supplied", status_code=422)
+
 @router.get("/visualreview/{visual_review_instance_id}")
 async def get_for_visualreview(
     visual_review_instance_id: int,
