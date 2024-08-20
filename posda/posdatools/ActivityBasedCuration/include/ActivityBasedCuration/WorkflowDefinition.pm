@@ -426,41 +426,61 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         action =>  "ConvertBigEndianToLittle",
       },
       {
-        caption => "Apply Masks",
-        action =>  "ApplyMasks",
-      },
-    ],
-  },
-  {
-    id => "18_defacing",
-    name => "Dicom Image Defacing",
-    note => "Operations and queries related to determing if images need defacing ".
-      "and defacig them if they do",
-    description => "Curators are expected to determine if DICOM series in the collection " .
-      "need to be defaced, and to see that they are defaced if they do.  Here is a " .
-      "set of scripts and queries to assist in this activity.",
-    operations => [
-      {
-        operation => "PopulateFileNiftiTp",
-        caption => "Find files In Timepoint which parse as Nifti, and populate file_nifti table",
-        action =>  "PopulateFileNiftiTp",
-      },
-      {
-        operation => "ReQueueFileNiftiDefacing",
-        caption => "Requeue Files in FileNiftiDefacing",
-        action =>  "ReQueueFileNiftiDefacing",
-      },
-      {
         operation => "ProposeUIDchangeEdits",
         caption => "Shift UIDs for new version",
         action =>  "ProposeUIDchangeEdits",
       },
     ],
+  },
+  # {
+  #   id => "18_defacing",
+  #   name => "Dicom Image Defacing",
+  #   note => "Operations and queries related to determing if images need defacing ".
+  #     "and defacig them if they do",
+  #   description => "Curators are expected to determine if DICOM series in the collection " .
+  #     "need to be defaced, and to see that they are defaced if they do.  Here is a " .
+  #     "set of scripts and queries to assist in this activity.",
+  #   operations => [
+  #     {
+  #       operation => "PopulateFileNiftiTp",
+  #       caption => "Find files In Timepoint which parse as Nifti, and populate file_nifti table",
+  #       action =>  "PopulateFileNiftiTp",
+  #     },
+  #     {
+  #       operation => "ReQueueFileNiftiDefacing",
+  #       caption => "Requeue Files in FileNiftiDefacing",
+  #       action =>  "ReQueueFileNiftiDefacing",
+  #     },
+  #     {
+  #       operation => "ProposeUIDchangeEdits",
+  #       caption => "Shift UIDs for new version",
+  #       action =>  "ProposeUIDchangeEdits",
+  #     },
+  #   ],
+  #   queries => [
+  #     {
+  #       caption => "Suggested Queries for Managing Image Defacing",
+  #       operation => "SelectQueryGroup",
+  #       query_list_name => "ImageDefacing",
+  #     },
+  #   ],
+  # },
+  {
+    id => "19_masking",
+    name => "Masking",
+    note => "Operations and queries related to masking",
+    description => "",
+    operations => [
+      {
+        caption => "Apply Masks",
+        action =>  "ApplyMasks",
+      },
+    ],
     queries => [
       {
-        caption => "Suggested Queries for Managing Image Defacing",
+        caption => "Suggested Queries for Masking",
         operation => "SelectQueryGroup",
-        query_list_name => "ImageDefacing",
+        query_list_name => "MaskingStatus",
       },
     ],
   },
