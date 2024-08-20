@@ -68,8 +68,14 @@ sub ContentResponse {
     });
   }elsif($self->{index} < $self->{num_files}){
      if($self->{pixel_view}){
+      my $prev_id = 0;
+      $self->{preview_file_id}  = $self->{preview_array}->[$prev_id]->{preview_file_id};
       $self->NotSoSimpleButton($http, {
         op => "submit_redaction",
+        x => 0,
+        y => 0,
+        w => 0,
+        h => 0,
         caption => "Submit",
         sync => "Update();",
       });
@@ -153,6 +159,8 @@ sub ContentResponse {
               $http->queue("<b>Metadata edit queued</b></br>");
            }elsif ($self->{edits}->[$j]->{edit_type} == '4'){
               $http->queue("<b>Removal of entire file queued</b></br>");
+           }elsif ($self->{edits}->[$j]->{edit_type} == '5'){
+              $http->queue("<b>Pixel Redaction edit queued</b></br>");
            }else{
               $http->queue("<b>Edit queued</b></br>");
            }
@@ -245,10 +253,10 @@ sub ContentResponse {
        while ($i < $self->{num_prevs}){
         $self->{preview_file_id}  = $self->{preview_array}->[$i]->{preview_file_id};
         #$http->queue("- $preview_file_id -");
-         Query("GetFilePath")->RunQuery(sub{
-             my($row) = @_;
-             $self->{file_path} = $row->[0];
-         }, sub{}, $self->{preview_file_id}  );
+         # Query("GetFilePath")->RunQuery(sub{
+         #     my($row) = @_;
+         #     $self->{file_path} = $row->[0];
+         # }, sub{}, $self->{preview_file_id}  );
          $http->queue("<img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{preview_file_id}\"  style=\"width:650px; filter: invert($self->{invertValue}) contrast($self->{contrastValue}) hue-rotate($self->{hueRotValue}deg) \" />");
          #ActivityBasedCuration/StartBackground_0
          $i++;
@@ -346,9 +354,17 @@ sub pixel_mode_start {
    $self->{pixel_view} = 1;
  }
 
-sub  submit_redaction{
+sub submit_redaction{
   my ($self, $http, $dyn) = @_;
+  my $correct_preview = $dyn->{prev_id};
+  my $x = $dyn->{x};
+  my $y = $dyn->{y};
+  my $w = $dyn->{w};
+  my $h = $dyn->{h};
+  $self->{client}->PUT("$self->{MY_API_URL}/redact/$x/$y/$w/$h/$self->{pathid}");
+  $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
   $self->{pixel_view} = 0;
+
 }
 sub clearManipulations(){
   my ($self, $http, $dyn) = @_;
