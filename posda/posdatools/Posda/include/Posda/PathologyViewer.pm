@@ -73,7 +73,25 @@ sub ContentResponse {
         caption => "Submit",
         sync => "Update();",
       });
-      $http->queue("<h3>Now viewing file $self->{visible_index} of $self->{num_files} </h3>");
+      $http->queue("<h3>Now editing file $self->{visible_index} of $self->{num_files} </h3>");
+             $http->queue(qq{
+                 <form>
+                 <table>
+                  <tr>
+                      <td><label>Start X: </label></td>
+                      <td><input type="text" id="x_box" readonly></td>
+                      <td><label>Start Y: </label></td>
+                      <td><input type="text" id="y_box" readonly></td>
+                  </tr>
+                  <tr>
+                      <td><label>Width: </label></td>
+                      <td><input type="text" id="w_box" readonly></td>
+                      <td><label>Height: </label></td>
+                      <td><input type="text" id="h_box" readonly></td>
+                  </tr>
+                </table>
+                </form>
+              });
       $http->queue(qq{<div style="visibility:hidden;">
               <img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{preview_file_id}\"  style=\"width:50px; filter: invert($self->{invertValue}) contrast($self->{contrastValue}) hue-rotate($self->{hueRotValue}deg)\" id=\"my_pixel_image\"/>
               </div>});
@@ -86,7 +104,6 @@ sub ContentResponse {
        $self->{num_prevs}  = scalar(@{$self->{preview_array}});
        $self->{visible_index} = $self->{index}+1;
        $http->queue("<h3>Now viewing file $self->{visible_index} of $self->{num_files} </h3>");
-
        $self->{client}->GET("$self->{MY_API_URL}/mapping/$self->{pathid}");
        $self->{patient_id} = (decode_json($self->{client}->responseContent()))->[0]->{patient_id};
        $self->{client}->GET("$self->{MY_API_URL}/image_desc/$self->{pathid}");
@@ -243,6 +260,11 @@ sub ContentResponse {
           console.log("Window loaded, running script...");
           const mycanvas = document.getElementById('mycanvas');
           const myimage = document.getElementById('my_pixel_image');
+          const x_box = document.getElementById('x_box');
+          const y_box = document.getElementById('y_box');
+          const w_box = document.getElementById('w_box');
+          const h_box = document.getElementById('h_box');
+
 
           if (mycanvas && myimage && myimage.complete) {
               const mycontent = mycanvas.getContext('2d');
@@ -276,6 +298,20 @@ sub ContentResponse {
                   let currentY = e.offsetY;
                   mycontent.fillStyle = 'black';
                   mycontent.fillRect(startX, startY, currentX - startX, currentY - startY);
+                  let width = currentX - startX
+                  let height = currentY - startY
+                  if (width > 0){
+                    x_box.value = startX;
+                  }else{
+                    x_box.value = currentX;
+                  }
+                  if (height > 0){
+                    y_box.value = startY;
+                  }else{
+                    y_box.value = currentY;
+                  }
+                  w_box.value = Math.abs(width)
+                  h_box.value = Math.abs(height)
               });
 
           } else {
