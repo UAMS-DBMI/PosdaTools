@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-function NavigationPanel({ iecs, onIecChange }) {
-  const [ iecOffset, setIecOffset ] = useState(0);
-
-  function clickForward() {
-    const newOffset = iecOffset + 1;
-    // console.log("### Forward clicked, new offset is", newOffset);
-    onIecChange(newOffset);
-    setIecOffset(newOffset);
-  }
-
-  function onClickBack() {
-    const newOffset = iecOffset - 1;
-    onIecChange(newOffset);
-    setIecOffset(newOffset);
-  }
-
+function NavigationPanel({ onNext, onPrevious }) {
   return (
-    <div id="navigationPanel" className="flex gap-2">
-      <button id="goBack" onClick={onClickBack}>Back</button>
-      <button id="skipForward" onClick={clickForward}>Forward</button>
-    </div>
+    <>
+      <label>IEC:</label>
+      <li className="pt-1 dark:bg-opacity-5 rounded-lg">
+        <button onClick={onNext} className={`w-full bg-white dark:bg-slate-900`}>
+          Next
+        </button>
+      </li>
+      <li className="pb-4 pt-2 dark:bg-opacity-5 rounded-lg">
+        <button onClick={onPrevious} className={`w-full bg-white dark:bg-slate-900`}>
+          Previous
+        </button>
+      </li>
+    </>
   );
 }
 
