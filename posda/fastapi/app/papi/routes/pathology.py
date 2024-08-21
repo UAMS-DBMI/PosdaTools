@@ -126,9 +126,8 @@ async def remM(pathid: int,  db: Database = Depends()):
         'status': 'success',
     }
 
-@router.put("/redact/{x}/{y}/{w}/{h}/{pathid}")
-async def redact(x: str, y: str,w: str, h: str,pathid: int,  db: Database = Depends()):
-    dims = '' + x + ',' + y + ',' + w + ',' + h
+@router.put("/redact/{dims}/{pathid}")
+async def redact(dims: str,pathid: int,  db: Database = Depends()):
     record = await db.fetch("""\
         INSERT INTO pathology_edit_queue
         (file_id,edit_type, edit_details, status)

@@ -70,18 +70,17 @@ sub ContentResponse {
      if($self->{pixel_view}){
       my $prev_id = 0;
       $self->{preview_file_id}  = $self->{preview_array}->[$prev_id]->{preview_file_id};
-      $self->NotSoSimpleButton($http, {
+      $self->SubmitValueButton($http, {
         op => "submit_redaction",
-        x => 0,
-        y => 0,
-        w => 0,
-        h => 0,
+        element_id => 'composite_box',
+        id => 'redaction_submission',
         caption => "Submit",
         sync => "Update();",
       });
       $http->queue("<h3>Now editing file $self->{visible_index} of $self->{num_files} </h3>");
              $http->queue(qq{
                  <form>
+                 <td><input type="text" id="composite_box" readonly hidden></td>
                  <table>
                   <tr>
                       <td><label>Start X: </label></td>
@@ -272,6 +271,7 @@ sub ContentResponse {
           const y_box = document.getElementById('y_box');
           const w_box = document.getElementById('w_box');
           const h_box = document.getElementById('h_box');
+          const composite_box = document.getElementById('composite_box');
 
 
           if (mycanvas && myimage && myimage.complete) {
@@ -320,6 +320,7 @@ sub ContentResponse {
                   }
                   w_box.value = Math.abs(width)
                   h_box.value = Math.abs(height)
+                  composite_box.value = x_box.value + ',' + y_box.value + ',' + w_box.value + ',' + h_box.value
               });
 
           } else {
@@ -357,11 +358,8 @@ sub pixel_mode_start {
 sub submit_redaction{
   my ($self, $http, $dyn) = @_;
   my $correct_preview = $dyn->{prev_id};
-  my $x = $dyn->{x};
-  my $y = $dyn->{y};
-  my $w = $dyn->{w};
-  my $h = $dyn->{h};
-  $self->{client}->PUT("$self->{MY_API_URL}/redact/$x/$y/$w/$h/$self->{pathid}");
+  my $dims = $dyn->{value};
+  $self->{client}->PUT("$self->{MY_API_URL}/redact/$dims/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
   $self->{pixel_view} = 0;
 
