@@ -126,6 +126,22 @@ async def remM(pathid: int,  db: Database = Depends()):
         'status': 'success',
     }
 
+@router.put("/redact/{x}/{y}/{w}/{h}/{pathid}")
+async def redact(x: str, y: str,w: str, h: str,pathid: int,  db: Database = Depends()):
+    dims = '' + x + ',' + y + ',' + w + ',' + h
+    record = await db.fetch("""\
+        INSERT INTO pathology_edit_queue
+        (file_id,edit_type, edit_details, status)
+        VALUES($1 , 5, $2, 'waiting');
+        """, [pathid, dims])
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+    return {
+        'status': 'success',
+    }
+
+
 @router.put("/remL/{pathid}")
 async def remL(pathid: int, db: Database = Depends()):
     record = await db.fetch("""\
