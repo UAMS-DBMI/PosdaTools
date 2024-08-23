@@ -35,7 +35,11 @@ from io import StringIO
 from glob import glob
 from optparse import OptionParser
 from posda.tifftags import TiffTag
-import tifffile
+from openslide import OpenSlide
+from tifffile import TiffWriter
+from tifffile import TiffFile as Tifffile_tiff
+import numpy as np
+from PIL import Image
 
 
 PROG_DESCRIPTION = '''
@@ -423,9 +427,65 @@ def editImageDesc(filename):
             print('{} elements of description edited'.format(to_change))
             to_change = 0
 
+def blackout(im1, l, dims, coords):
+    im = Image.new("RGB", (im1.size[0], im1.size[1]))
+    im.paste(im1)
 
+    list_dims = list(dims)
+    scale = list_dims[-1] / list_dims[l]
+    if scale > 0:
+        x = int(int(coords[0]) * scale)
+        y = int(int(coords[1]) * scale)
+        w = int(int(coords[2]) * scale)
+        h = int(int(coords[3]) * scale)
 
+        print("X,Y: ({},{})".format(x,y))
+        print("W,H: ({},{})".format(w,h))
+        img2 = Image.new('RGB', (w ,h ))
+        im.paste(img2, (x,y))
+    return im
 
+def is_increasing(sequence):
+    return all(earlier < later for earlier, later in zip(sequence, sequence[1:]))
+
+def redactPixels(filepath, ogpath, coord_set):
+    coordinates = coord_set.split(',')
+    new_pixels = {}
+    filetype = OpenSlide.detect_format(filepath)
+    myImage = OpenSlide(ogpath)
+    layers = myImage.level_count
+    if is_increasing(myImage.level_downsamples):
+        for l in range(layers):
+            print("Layer {}".format(l))
+            downsampled_dimensions = myImage.level_dimensions[l]
+            if l > 1: #skip label and thumbnail
+                im = myImage.read_region((0, 0), l, downsampled_dimensions)
+                img1 = im.convert('RGB')
+                new_pixels[l] = np.array(blackout(img1,l,myImage.level_downsamples,coordinates))
+        saveNew(filepath, ogpath, new_pixels)
+
+def saveNew(filepath, ogpath, pixel_data_by_layer):
+    tw = TiffWriter(filepath, bigtiff=True)
+    og = Tifffile_tiff(ogpath)
+    fullRezOkay = False
+    print('layers expecting modification {}'.format(pixel_data_by_layer.keys()))
+    for i, page in enumerate(og.pages):
+        if (page.size < 5000000000 or fullRezOkay):
+            # Replace the modified data for the specific layer, keep others intact
+            if i in pixel_data_by_layer.keys():
+                print('writing modified layer')
+                tw.write(
+                    pixel_data_by_layer[i],  # The modified layer data
+                    photometric='rgb'
+                    #description=page.tags['ImageDescription']
+                )
+            else:
+                print('writing original layer layer')
+                tw.write(
+                    page.asarray(),  # Unmodified layers
+                    photometric='rgb',)
+        else:
+            print('Original layer {} was skipped due to size.'.format(i))
 
 #from MR
 def combine_image_desc(desc_dict):
@@ -453,5 +513,8 @@ def anonymize(filepaths,edit_type):
             elif edit_type == '3':
                 #print("removing ImageDesc")
                 editImageDesc(filename)
+            #4 is remove whole file, no edit
+            #5 is handled in redactPixels
+
         except Exception as e:
             print('%s: %s' % (filename, str(e)), file=sys.stderr)

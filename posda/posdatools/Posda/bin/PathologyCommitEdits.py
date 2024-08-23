@@ -72,7 +72,7 @@ def get_root_and_rel_path(file_id):
 
 def editSlide(filepath,edit_type):
     files = [filepath]
-    anonymizeslide.anonymize(files,edit_type);
+    anonymizeslide.anonymize(files,edit_type)
 
 def create_path_activity_timepoint(activity_id, user):
     str = "/create_path_activity_timepoint/{}/{}".format(activity_id,user)
@@ -154,7 +154,19 @@ def main(pargs):
         if (edits and len(edits) > 0):
             totalEdits = totalEdits + 1
             for e in edits:
-                if e['edit_type'] != '4':
+                if e['edit_type'] == '5':
+                    # Get the root_path and rel_path separately
+                    rpath = get_root_and_rel_path(f['file_id'])
+                    root_path = rpath[0]
+                    rel_path = rpath[1]
+                    og_file_path = pathlib.Path(root_path) / rel_path
+                    anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
+                    completeEdit(e['pathology_edit_queue_id'])
+                    background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
+                    new_file_id = process(new_destination_path)
+                    myNewFiles.append(new_file_id)
+                    background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
+                elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
