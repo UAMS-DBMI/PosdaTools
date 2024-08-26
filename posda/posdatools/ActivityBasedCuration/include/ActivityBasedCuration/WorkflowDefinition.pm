@@ -41,7 +41,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "2_pmap",
     name => "Patient Mapping",
-    note => " This step should not be needed if your data was imported through CTP",
+    note => "
+This step should not be needed if your data was imported through CTP",
     description => "Maps each patient to a new identifier that does not contain PHI. (e.g. Pat_030)",
     operations => [
       {
@@ -55,7 +56,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "3_ianon",
     name => "Initial Anonymization",
-    note => " This step should not be needed if your data was imported through CTP",
+    note => "
+This step should not be needed if your data was imported through CTP",
     description => "Once the mapping is in place, we can run the initial " .
       "anonymization step. Again, this step can often be skipped if the data is " .
       "already initially de-identified, such as when it was sent from CTP(A tool " .
@@ -164,7 +166,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     name => "Check Struct Linkage",
     note => "Radiation Therapy Data only",
     description => "Verify that the ROIs and Structures are properly " .
-      "linked to the image files and pixel data. ",
+      "linked to the image files and pixel data.
+",
     operations => [
       {
         caption => "Check Structure Set Linkage",
@@ -175,7 +178,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "11_linkrt",
     name => "Link RT Data",
-    note => "Radiation Therapy Data only ",
+    note => "Radiation Therapy Data only
+",
     description => "Link RT data",
     operations => [
       {
