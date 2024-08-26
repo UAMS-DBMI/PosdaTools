@@ -439,6 +439,27 @@ EOF
     col_name => "pathology_visual_review_instance_id",
     caption => "Launch Visual Reviewer",
   },
+  qc_cc_81 => {
+    query => "MaskingStatus",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleMaskIEC",
+    col_name => "image_equivalence_class_id",
+    caption => "Mask",
+  },
+  # qc_cc_82 => {
+  #   query => "MaskingStatus",
+  #   type => "ChainColumnToPopup",
+  #   obj => "MirabelleMaskVR",
+  #   col_name => "visual_review_instance_id",
+  #   caption => "Mirabelle",
+  # },
+  qc_cc_83 => {
+    query => "MaskingReview",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewIEC",
+    col_name => "image_equivalence_class_id",
+    caption => "Review Mask",
+  },
   qc_ImagesInEquivClass => {
     query => "VisualReviewStatusDetails",
     type => "ChainColumnToPopup",

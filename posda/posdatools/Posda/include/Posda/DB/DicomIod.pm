@@ -871,6 +871,20 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Equipment,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.77.1.6' =>{
+    name => 'VL Whole Slide Microscopy Image Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::ImagePixel,
+      \&Posda::DB::Modules::ImagePlane,
+      \&Posda::DB::Modules::FrameOfReference,
+      \&Posda::DB::Modules::SlopeIntercept,
+      \&Posda::DB::Modules::WindowLevel,
+    ],
+  },
 };
 my $sop_common_parms = {
   spec_char_set => "(0008,0005)",

@@ -16,3 +16,5 @@ posda.env
 util/*.env
 posda.env
 /oneposda.pyproj.user
+ream/*.env
+push/*.env

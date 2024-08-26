@@ -1,0 +1,6 @@
+:operation_name: ApplyMasks
+:command_line: ApplyMasks.py <?bkgrnd_id?> <activity_id> <visual_review_instance_id> <notify>
+:operation_type: background_process
+:input_line_format: 
+:tags: ['export']
+:can_chain: 

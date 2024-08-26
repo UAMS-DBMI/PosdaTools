@@ -246,6 +246,8 @@ services:
             - ./web/posda-error.html:/www/posda-error.html
             - ./web/www/import.html:/www/import.html
             - ./web/www/upload.html:/www/upload.html
+            - ./web/nginx.crt:/nginx.crt
+            - ./web/nginx.key:/nginx.key
             - type: volume
               source: kaleidoscope_files
               target: /kaleidoscope

@@ -82,4 +82,26 @@ sub api_auth {
   return $bearer_token;
 }
 
+# Access the API with a token, just to update the TTL on the token
+# (to keep the user from auto logging out)
+sub api_refresh {
+  my ($token) = @_;
+
+  my $client = REST::Client->new();
+  $client->setHost(Config('internal_api_url'));
+
+  $client->GET(
+    '/v1/other/testme',
+    {'Authorization' => "Bearer $token"}
+  );
+
+  my $resp_code = $client->responseCode();
+  if ($resp_code != 200) {
+    print STDERR $resp_code, $client->responseContent(), "\n";
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
 1;

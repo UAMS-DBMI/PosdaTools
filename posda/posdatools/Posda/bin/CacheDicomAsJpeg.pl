@@ -246,6 +246,9 @@ my $signed = [ keys %pixel_representations ]->[0];
 #  $number_of_framess{$number_of_frames} = 1;
 #  $planar_configurations{$planar_configurations} = 1;
 
+my $bits_allocated = [ keys %bits_allocateds ]->[0];
+my $photometric_interp = [ keys %photometric_interpretations ]->[0];
+
 my $num_pixel_rowss = keys %pixel_rowss;
 unless($num_pixel_rowss == 1){
   print STDERR "Error: found $num_pixel_rowss rows " .
@@ -285,8 +288,12 @@ print STDERR "Cmd: $cmd\n";
   close $fh;
 #}
 #unless(-f $jpeg_file_name){
+my $ftype = 'gray';
+if ($photometric_interp eq 'RGB') {
+  $ftype = 'RGB';
+}
   $cmd = "convert -endian MSB -size ${cols}x${rows} " .
-    "-depth 8 gray:\"$gray_file_name\" \"$jpeg_file_name\"";
+    "-depth 8 $ftype:\"$gray_file_name\" \"$jpeg_file_name\"";
 print STDERR "Cmd: $cmd\n";
   open my $fh1, "$cmd|" or die "Can't open $cmd|\n($!)";
   my @lines1;

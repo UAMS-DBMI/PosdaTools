@@ -22,6 +22,12 @@ COPY Kohlrabi /kohlrabi
 RUN cd /kohlrabi && \
   make
 
+FROM node:16-alpine as mirabelle-builder
+RUN apk --update add make
+COPY mirabelle /mirabelle
+RUN cd /mirabelle && \
+  make build
+
 #FROM nginx:1.13.10-alpine
 FROM bitnami/nginx:1.21
 
@@ -34,3 +40,4 @@ COPY --from=quince-builder /quince/dist /www/quince
 COPY --from=roots-builder /roots/dist/dicom-root /www/roots
 COPY --from=kohlrabi-builder /kohlrabi/build /www/kohlrabi
 COPY --from=ohif/viewer:builder /usr/src/app/platform/viewer/dist /www/ohif
+COPY --from=mirabelle-builder /mirabelle/dist /www/mira

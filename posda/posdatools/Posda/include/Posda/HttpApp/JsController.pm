@@ -14,6 +14,7 @@ use Dispatch::NamedObject;
 use Dispatch::LineReader;
 use Posda::HttpApp::HttpObj;
 use Posda::DB 'Query';
+use Posda::Auth;
 use IO::Socket::INET;
 
 use Data::Dumper;
@@ -57,6 +58,7 @@ sub new{
   my $timer = Dispatch::Select::Background->new($this->PollTimer);
   $timer->timer(10);
   $this->{timer_count} = 6; # one minute timeout
+  $this->{refresh_count} = 10; # used to throttle api_refresh calls
   return $this;
 }
 sub PollTimer{
@@ -872,6 +874,7 @@ sub StartJsChildWindow{
 }
 sub ServerCheck{
   my($this, $http, $dyn) = @_;
+  print STDERR "ServerCheck\n";
   $this->{timer_count} = 6;
   if(
     exists($http->{header}->{content_length}) &&
@@ -889,6 +892,15 @@ sub ServerCheck{
   } else {
     $this->text_header($http, { content_length => 1 } );
     $http->queue("0");
+  }
+  if ($this->{refresh_count} == 0) {
+    print STDERR "Refreshing API token: $this->{Token}\n";
+    Posda::Auth::api_refresh($this->{Token});
+    # Reset the counter, this just makes sure we only make an expenisve
+    # call to the API once every 10 refreshes from the server
+    $this->{refresh_count} = 10;
+  } else {
+    $this->{refresh_count} -= 1;
   }
 }
 sub QueueJsCmd{
