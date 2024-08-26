@@ -16,3 +16,11 @@ posda.env
 util/*.env
 posda.env
 /oneposda.pyproj.user
+<<<<<<< Updated upstream
+=======
+ream/*.env
+push/*.env
+*.DS_Store
+*.python_history
+inplace/
+>>>>>>> Stashed changes

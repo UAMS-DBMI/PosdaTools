@@ -20,12 +20,12 @@ def process(filepath, original_file, gammaI):
         file_id = insert_file(filepath)
         os.unlink(filepath)  # clean up temp file
         #update table that tracks the relationship between preview files and the original file
-        #print("Processing")
+        print("Processing")
         Query("InsertPathPreviewFiles").execute(
                 path_file_id = original_file,
                 preview_file_id = file_id,
                 gammaindex = gammaI)
-        #print("Processed")
+        print("Processed")
 
 def is_increasing(sequence): #used to verify layers are pyramidal
     return all(earlier < later for earlier, later in zip(sequence, sequence[1:]))
@@ -105,7 +105,7 @@ def gammaSet(myImage,file_id,page, thumbs):
         if i != 2: #do not gamma the base image (value 0).
             image = gammaShift(image, gammaV[i])
         str = "/tmp/{}_thumb_page{}_gamma{}.jpg".format(file_id,page,i)
-        #print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
+        print("Preview file {} created, which is gamma value {}".format(str, gammaV[i]))
         image.save(str)
         process(str, file_id, i)
 
