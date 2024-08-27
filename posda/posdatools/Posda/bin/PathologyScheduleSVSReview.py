@@ -20,12 +20,12 @@ def process(filepath, original_file, gammaI):
         file_id = insert_file(filepath)
         os.unlink(filepath)  # clean up temp file
         #update table that tracks the relationship between preview files and the original file
-        print("Processing")
+        #print("Processing")
         Query("InsertPathPreviewFiles").execute(
                 path_file_id = original_file,
                 preview_file_id = file_id,
                 gammaindex = gammaI)
-        print("Processed")
+        #print("Processed")
 
 def is_increasing(sequence): #used to verify layers are pyramidal
     return all(earlier < later for earlier, later in zip(sequence, sequence[1:]))
@@ -76,7 +76,7 @@ def main(args):
                      im_rgb = im.convert('RGB')
                      gammaSet(im_rgb,file_id,0,False)
                  else:
-                     print('Warning: Layers may not be the same image! Cannot make thumbnail!')
+                     print('Warning: Cannot make thumbnail!')
 
             elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ): #non-layered file
                     myimg = Image.open(svsfilepath)

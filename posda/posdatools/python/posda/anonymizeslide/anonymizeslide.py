@@ -452,40 +452,51 @@ def redactPixels(filepath, ogpath, coord_set):
     coordinates = coord_set.split(',')
     new_pixels = {}
     filetype = OpenSlide.detect_format(filepath)
-    myImage = OpenSlide(ogpath)
-    layers = myImage.level_count
-    if is_increasing(myImage.level_downsamples):
-        for l in range(layers):
-            print("Layer {}".format(l))
-            downsampled_dimensions = myImage.level_dimensions[l]
-            if l > 1: #skip label and thumbnail
-                im = myImage.read_region((0, 0), l, downsampled_dimensions)
-                img1 = im.convert('RGB')
-                new_pixels[l] = np.array(blackout(img1,l,myImage.level_downsamples,coordinates))
-        saveNew(filepath, ogpath, new_pixels)
+    try:
+        myImage = OpenSlide(ogpath)
+        layers = myImage.level_count
+        if is_increasing(myImage.level_downsamples):
+            for l in range(layers):
+                print("Layer {}".format(l))
+                downsampled_dimensions = myImage.level_dimensions[l]
+                if l > 1: #skip label and thumbnail
+                    im = myImage.read_region((0, 0), l, downsampled_dimensions)
+                    img1 = im.convert('RGB')
+                    new_pixels[l] = np.array(blackout(img1,l,myImage.level_downsamples,coordinates))
+    except:
+        print("File at {} is not recognized as an image file".format(ogpath))
+        pass
+    return saveNew(filepath, ogpath, new_pixels)
 
 def saveNew(filepath, ogpath, pixel_data_by_layer):
-    tw = TiffWriter(filepath, bigtiff=True)
-    og = Tifffile_tiff(ogpath)
-    fullRezOkay = False
-    print('layers expecting modification {}'.format(pixel_data_by_layer.keys()))
-    for i, page in enumerate(og.pages):
-        if (page.size < 5000000000 or fullRezOkay):
-            # Replace the modified data for the specific layer, keep others intact
-            if i in pixel_data_by_layer.keys():
-                print('writing modified layer')
-                tw.write(
-                    pixel_data_by_layer[i],  # The modified layer data
-                    photometric='rgb'
-                    #description=page.tags['ImageDescription']
-                )
+    if pixel_data_by_layer:
+        strE = '' + str(filepath) + '_redacted.tiff'
+        tw = TiffWriter(strE, bigtiff=True)
+        og = Tifffile_tiff(ogpath)
+        fullRezOkay = False
+        print('layers expecting modification {}'.format(pixel_data_by_layer.keys()))
+        for i, page in enumerate(og.pages):
+            if (page.size < 5000000000 or fullRezOkay):
+                # Replace the modified data for the specific layer, keep others intact
+                if i in pixel_data_by_layer.keys():
+                    print('writing modified layer')
+                    tw.write(
+                        pixel_data_by_layer[i],  # The modified layer data
+                        photometric='rgb'
+                        #description=page.tags['ImageDescription']
+                    )
+                else:
+                    print('writing original layer layer')
+                    tw.write(
+                        page.asarray(),  # Unmodified layers
+                        photometric='rgb')
             else:
-                print('writing original layer layer')
-                tw.write(
-                    page.asarray(),  # Unmodified layers
-                    photometric='rgb',)
-        else:
-            print('Original layer {} was skipped due to size.'.format(i))
+                print('Original layer {} was skipped due to size.'.format(i))
+        print('Redaction Succesful: new file: {}'.format(strE))
+        return strE
+    else:
+        print('*** Redaction FAILED: returning original file: {}  ***'.format(ogpath))
+        return ogpath
 
 #from MR
 def combine_image_desc(desc_dict):

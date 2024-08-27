@@ -160,10 +160,10 @@ def main(pargs):
                     root_path = rpath[0]
                     rel_path = rpath[1]
                     og_file_path = pathlib.Path(root_path) / rel_path
-                    anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
+                    new_file = anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
-                    new_file_id = process(new_destination_path)
+                    new_file_id = process(new_file)
                     myNewFiles.append(new_file_id)
                     background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
