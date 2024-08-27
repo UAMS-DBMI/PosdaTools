@@ -245,6 +245,10 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Study,
       \&Posda::DB::Modules::Series,
       \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::FrameOfReference,
+      \&Posda::DB::Modules::Synchronization,
+      \&Posda::DB::Modules::ImagePixel,
+      \&Posda::DB::Modules::USImage,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.6.1' =>{
