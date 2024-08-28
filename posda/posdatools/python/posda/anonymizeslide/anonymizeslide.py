@@ -478,18 +478,32 @@ def saveNew(filepath, ogpath, pixel_data_by_layer):
         for i, page in enumerate(og.pages):
             if (page.size < 5000000000 or fullRezOkay):
                 # Replace the modified data for the specific layer, keep others intact
+                extratags = [
+                    (tag.code, tag.dtype, tag.count, tag.value)
+                    for tag in page.tags.values()
+                ]
                 if i in pixel_data_by_layer.keys():
                     print('writing modified layer')
                     tw.write(
                         pixel_data_by_layer[i],  # The modified layer data
-                        photometric='rgb'
-                        #description=page.tags['ImageDescription']
-                    )
+                        photometric=page.photometric,
+                        compression=page.compression,
+                        planarconfig=page.planarconfig,
+                        tile=(page.tilewidth, page.tilelength) if page.is_tiled else None,
+                        description='Redacted image derived from original|:{}'.format(page.description),
+                        extratags=extratags,  # Include all extracted tags
+                        )
                 else:
                     print('writing original layer layer')
                     tw.write(
                         page.asarray(),  # Unmodified layers
-                        photometric='rgb')
+                        photometric=page.photometric,
+                        compression=page.compression,
+                        planarconfig=page.planarconfig,
+                        tile=(page.tilewidth, page.tilelength) if page.is_tiled else None,
+                        description='Redacted image derived from original| :{}'.format(page.description),
+                        extratags=extratags,  # Include all extracted tags
+                        )
             else:
                 print('Original layer {} was skipped due to size.'.format(i))
         print('Redaction Succesful: new file: {}'.format(strE))
