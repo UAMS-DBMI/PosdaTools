@@ -26,7 +26,7 @@ def set_update_parms(nifti, file_id):
     return parms
 
 def set_remaining_parms(parms, nifti):
-    p = nifti.parsed_header
+    p = nifti.header_parsed
     parms.extend([
         p['magic'],
         nifti.is_zipped,
@@ -50,7 +50,7 @@ def main(args):
 
     invoc_id = args.background_id
     activity_id = args.activity_id
-    update_existing = args.update_existing
+    update_existing = bool(int(str(args.update_existing).strip().lower() in ['true', '1']))
     notify = args.notify
 
     back = BackgroundProcess(invoc_id, notify, activity_id)
@@ -79,12 +79,12 @@ def main(args):
     for file_id, file_info in files.items():
         file_type = file_info['type']
         file_path = file_info['path']
-   
+        
         row_count = get_file_nifti.execute(file_id)
         existing_row = True if row_count > 0 else False
-    
+        
         current += 1
-        back.set_activity_status(f"processing {current} of {num_files}; skipped: {num_skipped}; inserted: {num_inserted}; not_parsed: {num_not_parsed}; updated: {num_updated}")
+        back.set_activity_status(f"Processing {current} of {num_files}; skipped: {num_skipped}; inserted: {num_inserted}; not_parsed: {num_not_parsed}; updated: {num_updated}")
     
         if existing_row:
             if not update_existing:
@@ -94,18 +94,24 @@ def main(args):
         nifti = None
         if file_type.startswith("Nifti") or file_type.startswith("gzip"):
             nifti = NiftiParser(file_path)
+        elif file_type == "data":
+            file_data = open(file_path, 'rb')
+            file_data.seek(0)
+            type_check = file_data.read(352)
+            if type_check[344:348] in [b'n+1\0', b'ni1\0'] or type_check[4:8] in [b'n+2\0', b'ni2\0']:
+                nifti = NiftiParser(file_path)
     
         if nifti:
-            back.print_to_email(f"FoundNifti: {file_id}")
+            back.print_to_email(f"Nifti File: {file_id}")
         else:
             num_not_parsed += 1
             continue
 
         nifti_file_type = "Nifti Image (gzipped)" if nifti.is_zipped else "Nifti Image"
-    
+        
         if nifti_file_type != file_type:
-            change_file_type.run(nifti_file_type, file_id)
-
+            change_file_type.execute(nifti_file_type, file_id)
+            
         if existing_row:
             back.print_to_email(f"Existing Row for {file_id}")
             parms = set_update_parms(nifti, file_id)
@@ -134,8 +140,3 @@ def parse_args():
 
 if __name__ == '__main__':
     main(parse_args())
-
-
-
-
-
