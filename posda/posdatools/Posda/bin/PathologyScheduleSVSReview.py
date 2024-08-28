@@ -66,7 +66,31 @@ def main(args):
                         data = page.asarray()
                         im = Image.fromarray(data)
                         gammaSet(im, file_id,i, False)
-            elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff" or myfilename[-4:].lower() == "ndpi" or myfilename[-4:].lower() == "mrxs" ): #Tiff, Hanamatsu, or Mirax file
+            elif(myfilename[-13:].lower() == "redacted.tiff"):
+                print('Redacted file detected')
+                mytif = TiffFile(svsfilepath)
+                for i, page in enumerate(mytif.pages):
+                        data = page.asarray()
+                        im = Image.fromarray(data)
+                        gammaSet(im, file_id,i, False)
+            elif(myfilename[-3:].lower() == "tif" or myfilename[-4:].lower() == "tiff"):
+                try:
+                    myImage = OpenSlide((svsfilepath))
+                    if is_increasing(myImage.level_downsamples):
+                        closest_level = myImage.get_best_level_for_downsample(max(myImage.level_dimensions[0]) / 700)
+                        downsampled_dimensions = myImage.level_dimensions[closest_level]
+                        im = myImage.read_region((0, 0), closest_level, downsampled_dimensions)
+                        im_rgb = im.convert('RGB')
+                        gammaSet(im_rgb,file_id,0,False)
+                except:
+                    print('Not recognized by Openslide')
+                    mytif = TiffFile(svsfilepath)
+                    for i, page in enumerate(mytif.pages):
+                        if (page.size < 5000000): # Potentially switch to using mytif.series info instead 1 and NewSubfileType?
+                            data = page.asarray()
+                            im = Image.fromarray(data)
+                            gammaSet(im, file_id,i, False)
+            elif(myfilename[-4:].lower() == "ndpi" or myfilename[-4:].lower() == "mrxs"): #Hanamatsu, or Mirax file
                  myImage = OpenSlide((svsfilepath))
                  print("Trying to use OpenSlide, {}".format(myImage))
                  if is_increasing(myImage.level_downsamples):
@@ -75,14 +99,12 @@ def main(args):
                      im = myImage.read_region((0, 0), closest_level, downsampled_dimensions)
                      im_rgb = im.convert('RGB')
                      gammaSet(im_rgb,file_id,0,False)
-                 else:
-                     print('Warning: Cannot make thumbnail!')
-
             elif(myfilename[-3:].lower() == "jpg" or myfilename[-4:].lower() == "jpeg" or myfilename[-3:].lower() == "bmp" or myfilename[-3:].lower() == "png" or myfilename[-3:].lower() == "PNG" ): #non-layered file
                     myimg = Image.open(svsfilepath)
                     gammaSet(myimg,file_id,0, True)
         except Exception as e:
-            print('Warning: File {} - Cannot make thumbnail! Review outside posda!'.format(file_id))
+            print('Warning: File {} - {} Cannot make thumbnail! Review outside posda!'.format(file_id,myfilename))
+            print(e)
             pass
 
     background.finish(f"Thumbnail files created and imported")
