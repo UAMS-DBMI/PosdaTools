@@ -54,6 +54,7 @@ sub SpecificInitialize {
   $self->{review_status} = "";
   $self->{edit_status} = "";
   $self->{preview_file_id} = 0;
+  $self->{prev_id} = 0;
 
 }
 
@@ -68,8 +69,7 @@ sub ContentResponse {
     });
   }elsif($self->{index} < $self->{num_files}){
      if($self->{pixel_view}){
-      my $prev_id = 0;
-      $self->{preview_file_id}  = $self->{preview_array}->[$prev_id]->{preview_file_id};
+      $self->{pixel_preview_file_id}  = $self->{preview_array}->[$self->{prev_id}]->{preview_file_id};
       $self->SubmitValueButton($http, {
         op => "submit_redaction",
         element_id => 'composite_box',
@@ -77,7 +77,18 @@ sub ContentResponse {
         caption => "Submit",
         sync => "Update();",
       });
-      $http->queue("<h3>Now editing file $self->{visible_index} of $self->{num_files} </h3>");
+      $self->NotSoSimpleButton($http, {
+        op => "update_pixel_image",
+        caption => "Change Preview Image",
+        sync => "Update();",
+      });
+      $self->NotSoSimpleButton($http, {
+        op => "cancel_redaction",
+        caption => "Cancel",
+        sync => "Update();",
+      });
+      $http->queue("<h3>Now redacting file $self->{visible_index} of $self->{num_files} </h3>");
+      $http->queue("File $self->{path_file_id} preview: $self->{preview_array}->[$self->{prev_id}]->{preview_file_id} the $self->{prev_id} index.");
              $http->queue(qq{
                  <form>
                  <td><input type="text" id="composite_box" readonly hidden></td>
@@ -98,7 +109,7 @@ sub ContentResponse {
                 </form>
               });
       $http->queue(qq{<div style="visibility:hidden;">
-              <img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{preview_file_id}\"  style=\"width:50px; filter: invert($self->{invertValue}) contrast($self->{contrastValue}) hue-rotate($self->{hueRotValue}deg)\" id=\"my_pixel_image\"/>
+              <img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{pixel_preview_file_id}\"  style=\"width:50px; filter: invert($self->{invertValue}) contrast($self->{contrastValue}) hue-rotate($self->{hueRotValue}deg)\" id=\"my_pixel_image\"/>
               </div>});
       $http->queue("<canvas id=\"mycanvas\" width=\"1500\" height=\"1500\"> </canvas>");
 
@@ -276,7 +287,7 @@ sub ContentResponse {
 
           if (mycanvas && myimage && myimage.complete) {
               const mycontent = mycanvas.getContext('2d');
-              mycontent.drawImage(myimage, 10,10);
+              mycontent.drawImage(myimage, 0,0);
 
               isDrawing = true;
               let startX;
@@ -293,7 +304,7 @@ sub ContentResponse {
                       let currentX = e.offsetX;
                       let currentY = e.offsetY;
                       mycontent.clearRect(0, 0, mycanvas.width, mycanvas.height);
-                      mycontent.drawImage(myimage, 10, 10);
+                      mycontent.drawImage(myimage, 0, 0);
                       mycontent.strokeStyle = 'red';
                       mycontent.lineWidth = 2;
                       mycontent.strokeRect(startX, startY, currentX - startX, currentY - startY);
@@ -345,25 +356,40 @@ sub ContentResponse {
   }
 }
 
-sub Begin {
+sub Begin() {
   my ($self, $http, $dyn) = @_;
   $self->{startup} = 0;
 }
 
-sub pixel_mode_start {
+sub pixel_mode_start(){
    my ($self, $http, $dyn) = @_;
    $self->{pixel_view} = 1;
  }
 
-sub submit_redaction{
+sub submit_redaction(){
   my ($self, $http, $dyn) = @_;
-  my $correct_preview = $dyn->{prev_id};
   my $dims = $dyn->{value};
   $self->{client}->PUT("$self->{MY_API_URL}/redact/$dims/$self->{pathid}");
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
   $self->{pixel_view} = 0;
-
 }
+
+sub cancel_redaction(){
+  my ($self, $http, $dyn) = @_;
+  $self->{pixel_view} = 0;
+}
+
+sub update_pixel_image(){
+  my ($self, $http, $dyn) = @_;
+  if ($self->{prev_id} < $self->{num_prevs}){
+      $self->{prev_id} = $self->{prev_id}  + 1;
+  }else{
+    $self->{prev_id} = 0;
+  }
+  $self->{pixel_preview_file_id}  = $self->{preview_array}->[$self->{prev_id}]->{preview_file_id};
+}
+
+
 sub clearManipulations(){
   my ($self, $http, $dyn) = @_;
   $self->{invertValue} = 0;
