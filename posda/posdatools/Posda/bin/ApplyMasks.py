@@ -12,6 +12,7 @@ import csv
 
 import sys
 import argparse
+import itertools
 from typing import List, Set
 
 
@@ -34,11 +35,16 @@ def main(args):
     ## get all files in latest tp
     all_files = get_files_in_timepoint(db, latest_timepoint)
 
-    ## Get the set of input images to the masked IECs (masked and nonmaskable status)
-    premasked_images = get_input_images_to_masked_iecs(db, args.visual_review_instance_id)
+    ## Get the set of input images to the masked IECs (masked and nonmaskable)
+    premasked_images = get_input_images_to_masked_iecs(
+        db, args.visual_review_instance_id)
     premasked_image_ids = [i.file_id for i in premasked_images]
-    premasked_image_series = {(i.series_instance_uid, i.project_name, i.site_name) 
-                              for i in premasked_images}
+    premasked_image_series = {
+        (i.series_instance_uid, i.project_name, i.site_name, i.function) 
+        for i in premasked_images
+    }
+    print(f"Found {len(premasked_images)} masked files...")
+
 
     ## Get the file_ids from all outputs (from the import events) for the masked IECs
     masked_image_ids = get_output_images_to_masked_iecs(db, args.visual_review_instance_id)
@@ -48,23 +54,36 @@ def main(args):
 
     ## Get the list of series from the "input images" set and produce a report
     report = background.create_report(f"Premasked Series")
-    populate_edit_skeleton_report(report, premasked_image_series, args)
+
+    ## Sort the series and break up by Function
+    premasked_image_series = sorted(
+        premasked_image_series, key=lambda x: (x[1], x[2], x[3]))
+
+    non_mask_series = filter(lambda x: x[3] != 'mask', premasked_image_series)
+    mask_series = filter(lambda x: x[3] == 'mask', premasked_image_series)
+
+    ## Build the output reports
+    populate_edit_skeleton_report(sys.stdout, mask_series, args)
+    populate_remove_skeleton_report(sys.stdout, non_mask_series, args)
+
 
     background.set_activity_status("Creating new timepoint")
     ## Create a new timepoint with the new all_files set
     new_tp = create_activity_timepoint(args, db)
+
     print(f"Creating new timepoint with id {new_tp}")
     insert_files_into_timepoint(db, new_tp, all_files)
 
     background.finish("Complete")
 
-def populate_edit_skeleton_report(report, premasked_image_series, args):
+def populate_edit_skeleton_report(report, series_list, args):
 
     writer = csv.writer(report)
     writer.writerow([
         "series_instance_uid",
         "collection_name",
         "site_name",
+        "masking_function",
         "op",
         "tag",
         "val1",
@@ -75,20 +94,57 @@ def populate_edit_skeleton_report(report, premasked_image_series, args):
         "activity_id"
     ])
 
-    for i, (series, collection, site) in enumerate(premasked_image_series):
+    writer.writerow([
+        None, None, None, None,
+        None, None, None, None, 
+        "BackgroundEditTp",     # Operation
+        "Edit for ApplyMasks",  # edit_description
+        args.notify,
+        args.activity_id
+    ])
+
+    # Group by project_name and site_name
+    for key, group in itertools.groupby(series_list, key=lambda x: (x[1], x[2])):
+        for row in group:
+            writer.writerow(row)
+
+        writer.writerow([None, None, None, None,
+                        "set_tag", "<(0013,\"CTP\",12)>", "<site_name>"])
+        writer.writerow([None, None, None, None,
+                        "set_tag", "<(0013,\"CTP\",13)>", "<site_id>"])
+
+def populate_remove_skeleton_report(report, premasked_image_series, args):
+
+    writer = csv.writer(report)
+    writer.writerow([
+        "series_instance_uid",
+        "collection_name",
+        "site_name",
+        "masking_function",
+        "op",
+        "tag",
+        "val1",
+        "val2",
+        "Operation",
+        "edit_description",
+        "notify",
+        "activity_id"
+    ])
+
+    for i, (series, collection, site, function) in enumerate(premasked_image_series):
+        if function == 'mask':
+            continue
         if i == 0:
             writer.writerow([
-                series, collection, site,
+                series, collection, site, function,
                 None, None, None, None, 
-                "BackgroundEditTp", # Operation
-                "Edit for ApplyMasks", # edit_description
+                "CopyPriorTimepointExcludingSeries",     # Operation
+                "Edit for ApplyMasks",  # edit_description
                 args.notify,
                 args.activity_id
             ])
         else:
-            writer.writerow([series, collection, site])
-
-    writer.writerow([None, None, None, "set_tag", "<(0013,0012)>", "new-site-name"])
+            writer.writerow([series, collection, site, function])
 
 
 def create_activity_timepoint(args, db) -> int:
@@ -156,7 +212,8 @@ def get_files_in_timepoint(db, timepoint_id: int) -> Set[int]:
 def get_input_images_to_masked_iecs(db, visual_review_instance_id: int):
     query = """\
         select
-            file_id, series_instance_uid, project_name, site_name
+            file_id, series_instance_uid, project_name, site_name,
+            coalesce(masking_parameters->>'function', 'mask') as function
         from
             image_equivalence_class
             natural join image_equivalence_class_input_image
