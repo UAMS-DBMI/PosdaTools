@@ -427,22 +427,48 @@ def editImageDesc(filename):
             print('{} elements of description edited'.format(to_change))
             to_change = 0
 
-def blackout(im1, l, dims, coords):
+def blackout(im1, l,l_dims, dims, coords):
     im = Image.new("RGB", (im1.size[0], im1.size[1]))
     im.paste(im1)
 
     list_dims = list(dims)
-    scale = list_dims[-1] / list_dims[l]
-    if scale > 0:
-        x = int(int(coords[0]) * scale)
-        y = int(int(coords[1]) * scale)
-        w = int(int(coords[2]) * scale)
-        h = int(int(coords[3]) * scale)
+    print('list_dims:{}'.format(list_dims))
 
-        print("X,Y: ({},{})".format(x,y))
-        print("W,H: ({},{})".format(w,h))
+    list_l_dims = list(l_dims)
+    print('list_l_dims:{}'.format(list_l_dims))
+
+    scale_x = 1
+    scale_y = 1
+    ui_width = int(coords[4])
+    ui_height  = int(coords[5])
+    full_width = int(list_dims[0])
+    full_height = int(list_dims[1])
+    level_width = int(list_l_dims[0])
+    level_height = int(list_l_dims[1])
+    if (ui_width > 0 and ui_height > 0 and full_width > 0 and full_height > 0):
+        scale_thumbx = full_width/ui_width
+        scale_thumby = full_height/ui_height
+        scale_layerx = full_width/level_width
+        scale_layery = full_height/level_height
+        scale_x = scale_thumbx / scale_layerx
+        scale_y = scale_thumby / scale_layery
+    print('coords:{}'.format(coords))
+    print('scale_x:{}'.format(scale_x))
+    print('scale_y:{}'.format(scale_y))
+
+
+    x = int(int(coords[0]) * scale_x)
+    y = int(int(coords[1]) * scale_y)
+    w = int(int(coords[2]) * scale_x)
+    h = int(int(coords[3]) * scale_y)
+
+    print("X,Y: ({},{})".format(x,y))
+    print("W,H: ({},{})".format(w,h))
+    if w <= level_width:
         img2 = Image.new('RGB', (w ,h ))
         im.paste(img2, (x,y))
+    else:
+        print("X,Y: ({},{}) is beyond the layer bound {},{}!!! Cannot redact".format(x,y,level_width,level_height))
     return im
 
 def is_increasing(sequence):
@@ -462,9 +488,10 @@ def redactPixels(filepath, ogpath, coord_set):
                 if l > 1: #skip label and thumbnail
                     im = myImage.read_region((0, 0), l, downsampled_dimensions)
                     img1 = im.convert('RGB')
-                    new_pixels[l] = np.array(blackout(img1,l,myImage.level_downsamples,coordinates))
-    except:
+                    new_pixels[l] = np.array(blackout(img1,l,downsampled_dimensions,myImage.dimensions,coordinates))
+    except Exception as e:
         print("File at {} is not recognized as an image file".format(ogpath))
+        print(e)
         pass
     return saveNew(filepath, ogpath, new_pixels)
 

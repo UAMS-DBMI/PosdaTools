@@ -108,11 +108,11 @@ sub ContentResponse {
                 </table>
                 </form>
               });
-      $http->queue(qq{<div style="visibility:hidden;">
-              <img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{pixel_preview_file_id}\"  style=\"width:50px; filter: invert($self->{invertValue}) contrast($self->{contrastValue}) hue-rotate($self->{hueRotValue}deg)\" id=\"my_pixel_image\"/>
-              </div>});
-      $http->queue("<canvas id=\"mycanvas\" width=\"1500\" height=\"1500\"> </canvas>");
 
+      $http->queue("<canvas id=\"mycanvas\" width=\"1500\" height=\"1500\"> </canvas>");
+      $http->queue(qq{<div style="visibility:hidden;">
+              <img src=\"FetchPng?obj_path=$self->{path}&file_id=$self->{pixel_preview_file_id}\" id=\"my_pixel_image\"/>
+              </div>});
      }else{
        $self->{pathid} = $self->{path_files_for_review}->[$self->{index}]->{path_file_id};
        $self->{client}->GET("$self->{MY_API_URL}/preview/$self->{pathid}/$self->{gammaIndex}");
@@ -331,7 +331,7 @@ sub ContentResponse {
                   }
                   w_box.value = Math.abs(width)
                   h_box.value = Math.abs(height)
-                  composite_box.value = x_box.value + ',' + y_box.value + ',' + w_box.value + ',' + h_box.value
+                  composite_box.value = x_box.value + ',' + y_box.value + ',' + w_box.value + ',' + h_box.value + ',' + myimage.width + ',' + myimage.height
               });
 
           } else {
@@ -381,7 +381,7 @@ sub cancel_redaction(){
 
 sub update_pixel_image(){
   my ($self, $http, $dyn) = @_;
-  if ($self->{prev_id} < $self->{num_prevs}){
+  if ($self->{prev_id} < ($self->{num_prevs}-1)){
       $self->{prev_id} = $self->{prev_id}  + 1;
   }else{
     $self->{prev_id} = 0;
