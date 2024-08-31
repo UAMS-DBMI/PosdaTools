@@ -5,6 +5,7 @@ import pathlib
 import shutil
 import requests
 import argparse
+import sys
 from posda.config import Config
 from posda.database import Database
 from posda.queries import Query
@@ -14,6 +15,11 @@ from posda.background import BackgroundProcess
 from posda.anonymizeslide import anonymizeslide
 from posda.main.file import insert_file_via_api_inplace
 
+
+destination_root_path = sys.environ.get(
+    'POSDA_PATHOLOGY_OUTPUT_PATH',
+    '/home/posda/cache/created/tmp/output' # default value
+)
 
 #Get all the Path Files
 #For each file create a copy to the new location (require inplace import)
@@ -130,8 +136,6 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     # return the final destination path (destination_root_path + rel_path)
     return output_file
 
-destination_root_path = "/home/posda/cache/created/tmp/output" #/nas/ross/pathology-nfs/export
-#destination_root_path = "/nas/pathology-nfs/export"
 
 
 
