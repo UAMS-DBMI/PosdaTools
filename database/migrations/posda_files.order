@@ -45,3 +45,4 @@ add_file_name_table.sql
 add_nifti_visual_review.sql
 add_masking_tables.sql
 add_values_to_masking_status_type.sql
+add_uid_root_to_submissions.sql
