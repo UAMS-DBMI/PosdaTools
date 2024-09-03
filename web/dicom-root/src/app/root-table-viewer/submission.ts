@@ -8,4 +8,5 @@ export class Submission {
   access_type: string;
   baseline_date: string;
   date_shift: string;
+  uid_root: string;
 }
