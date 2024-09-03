@@ -22,7 +22,7 @@ services:
 
     ## Periodic job runner
     steve:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         working_dir: "/home/posda/posdatools/systemd"
         command: "/home/posda/posdatools/systemd/run_in_posda_env.sh /steve/steve.py"
         restart: always
@@ -39,7 +39,7 @@ services:
 
     ## Service for submitting files to NBIA. Only needed if NBIA is used.
     # ream:
-    #     image: tcia/ream:1.0
+    #     image: tcia/ream:1.0.2
     #     restart: always
     #     volumes:
     #         - posda_cache_alpine:/home/posda/cache
@@ -55,7 +55,7 @@ services:
 
     ## Service for exporting files to an external Posda instance.
     # exodus:
-    #     image: tcia/exodus:1.0
+    #     image: tcia/exodus:1.0.2
     #     restart: always
     #     volumes:
     #         - posda_cache_alpine:/home/posda/cache
@@ -72,7 +72,7 @@ services:
 
     ## Generates thumnails for images submitted to NBIA
     thumbs:
-        image: tcia/lanterna:1.0
+        image: tcia/lanterna:1.0.2
         command: "/scripts/thumbs.py"
         restart: always
         volumes:
@@ -89,7 +89,7 @@ services:
 
     ## Generates Kaleidoscope projections
     magicka:
-        image: tcia/lanterna:1.0
+        image: tcia/lanterna:1.0.2
         command: "/scripts/magicka.py"
         restart: always
         volumes:
@@ -107,7 +107,7 @@ services:
 
     ## The main application server
     posda:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         restart: always
         depends_on:
             - db
@@ -128,7 +128,7 @@ services:
     ## A worker that processes the low-priority queue (0)
     ## Increase the replicas to increase concurrent processes
     posda-worker-low:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         command: worker
         restart: always
         depends_on:
@@ -152,7 +152,7 @@ services:
     ## A worker that processes the high-priority queue (1)
     ## Increase the replicas to increase concurrent processes
     posda-worker-high:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         command: worker
         restart: always
         depends_on:
@@ -175,7 +175,7 @@ services:
 
     ## Service which performs DICOM file parsing and importing to the db
     posda-fast-file-process:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         command: file-process
         restart: always
         depends_on:
@@ -193,7 +193,7 @@ services:
 
     ## Main API server
     posda-api:
-        image: tcia/posda:1.0
+        image: tcia/posda:1.0.2
         command: api
         restart: always
         depends_on:
@@ -213,7 +213,7 @@ services:
 
     ## API server for Kaleidoscope application
     kaleidoscope:
-        image: tcia/kaleidoscope:1.0
+        image: tcia/kaleidoscope:1.0.2
         restart: always
         depends_on:
             - db
@@ -230,7 +230,7 @@ services:
 
     ## The main web server which proxies traffic to all other services
     web:
-        image: tcia/posda_web:1.0
+        image: tcia/posda_web:1.0.2
         restart: always
         ports:
             - 80:8080
