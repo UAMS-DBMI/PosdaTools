@@ -1,21 +1,27 @@
 -- Name: NiftiBadFilesInTPCheck
 -- Schema: posda_files
--- Columns: ['nifti_file_id', 'num_reviews', 'num_reviewers', 'num_bad']
--- Args: ['activity_timepoint_id', 'minimum_review_count', 'minimum_reviewers']
+-- Columns: ['nifti_file_id', 'review_status', 'activity_timepoint_id', 'num_reviewers']
+-- Args: ['activity_timepoint_id', 'minimum_reviewers']
 -- Tags: ['nifti', 'visual_review']
 -- Description: List review summary for nifti files that were marked bad or have had too few reviews
 --
 
-select nifti_file_id, num_reviews, num_reviewers, num_bad
-from
-activity_timepoint b
-natural join activity_timepoint_file atf
-join (select nifti_file_id, count(b.good_status) as num_reviews, 
-    count(distinct b.reviewing_user) as num_reviewers,  
-    count(b.good_status) filter (where not good_status) as num_bad
-    from nifti_visual_review_files a 
-    natural left join nifti_visual_review_status b
-    natural join nifti_visual_review_instance c
-    group by a.nifti_file_id,activity_id) as rev_counts 
-on atf.file_id = rev_counts.nifti_file_id
-where activity_timepoint_id = ? and (num_reviews < ? or num_reviewers < ? or num_bad > 0)
+select * from (
+	select nvrf.nifti_file_id,
+	       nvrs.review_status,
+	       at_files.activity_timepoint_id,
+	       count(nvrs.reviewing_user) as num_reviewers
+	from nifti_visual_review_files nvrf
+	left join nifti_visual_review_status nvrs on nvrs.nifti_file_id = nvrf.nifti_file_id
+	join (select a.activity_id,
+	             atp.activity_timepoint_id,
+	             atpf.file_id
+		    from activity a
+		    join activity_timepoint atp
+		    on atp.activity_id = a.activity_id
+		    join activity_timepoint_file atpf
+		    on atpf.activity_timepoint_id = atp.activity_timepoint_id) as at_files
+	on at_files.file_id = nvrf.nifti_file_id        
+	where at_files.activity_timepoint_id = ?
+	group by nvrf.nifti_file_id, nvrs.review_status, at_files.activity_timepoint_id) a
+where (num_reviewers < ? or review_status != 'Good')

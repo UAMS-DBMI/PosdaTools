@@ -3737,6 +3737,9 @@ sub openMirabelle{
     if ($class eq 'MirabelleMaskVR') {
       $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
     }
+    if ($class eq 'MirabelleNiftiVR') {
+      $extra_url = 'review/nifti/' . $params->{nifti_review_file_id};
+    }
 
     $self->QueueJsCmd(
       "rt('Mirabelle', '$base_url/$extra_url', 0, 0, 0);"
