@@ -245,6 +245,15 @@ EOF
       visual_review_instance_id => "id",
     },
   },
+  qc_25=> {
+    chained_query_id => "qc_25",
+    caption => "chain",
+    from_query => "ViewNiftiVisualReviewInstances",
+    to_query => "ViewNiftiVisualReviewFiles",
+    arg_map => {
+      nifti_visual_review_instance_id => "nifti_visual_review_instance_id",
+    },
+  },
 );
 
 %QueryChainColumnButtons = (
@@ -466,6 +475,13 @@ EOF
     obj => "Posda::ImageDisplayer::KaleidoscopeSub",
     col_name => "image_equivalence_class_id",
     caption => "view",
+  },
+  qc_cc_84 => {
+    query => "ViewNiftiVisualReviewFiles",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleNiftiVR",
+    col_name => "nifti_review_file_id",
+    caption => "review",
   },
 );
 
