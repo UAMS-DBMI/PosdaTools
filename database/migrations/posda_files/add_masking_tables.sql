@@ -40,6 +40,6 @@ insert into masking_exit_code values
 (2, 'ARG_ERROR', null),
 (3, 'UNSUPPORTED_FILETYPE', null),
 (5, 'FEW_SLICES', null),
-(6, 'BINARY_MASK', null)
+(6, 'BINARY_MASK', null),
 (7, 'DUP_SOPS', null)
 ;

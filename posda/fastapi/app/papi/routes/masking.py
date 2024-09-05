@@ -101,8 +101,20 @@ async def get_masking_details(iec: int, db: Database = Depends()):
     """
 
     query = """
+        with input_image as (
+            select distinct image_equivalence_class_id, site_id
+            from masking
+            natural join image_equivalence_class_input_image
+            natural join ctp_file
+        ), uid_root as (
+            select input_image.*, uid_root
+            from input_image
+            join submissions on submissions.site_code || submissions.collection_code = input_image.site_id
+        )
+
         select *
         from masking
+        natural left join uid_root
         where image_equivalence_class_id = $1
     """
 

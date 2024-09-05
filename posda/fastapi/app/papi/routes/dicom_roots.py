@@ -91,7 +91,8 @@ async def search_roots(
         a.body_part,
         a.access_type,
         a.baseline_date,
-        a.date_shift
+        a.date_shift,
+        a.uid_root
         from
         	submissions a
         	natural join collection_codes b
@@ -141,6 +142,7 @@ class Submission(BaseModel):
     input_access_type: str
     input_baseline_date: str = None
     input_date_shift: str = None
+    input_uid_root: str = None
 
     def for_query(self):
         """Return the 7 values needed for insert into the submissions table"""
@@ -161,7 +163,8 @@ class Submission(BaseModel):
                 self.input_body_part,
                 self.input_access_type,
                 baseline_date,
-                toint(self.input_date_shift))
+                toint(self.input_date_shift),
+                self.input_uid_root)
 
 
 @router.post("/addNewSubmission")
@@ -242,9 +245,9 @@ async def add_new_submission(submission: Submission, db: Database = Depends()):
                 insert
                     into submissions
                     (site_code, collection_code, patient_id_prefix,
-                     body_part,access_type, baseline_date, date_shift)
+                     body_part,access_type, baseline_date, date_shift, uid_root)
                     values
-                    ($1, $2, $3, $4, $5, $6, $7)""",
+                    ($1, $2, $3, $4, $5, $6, $7, $8)""",
                     *(submission.for_query())
                 )
     except UniqueViolationError:

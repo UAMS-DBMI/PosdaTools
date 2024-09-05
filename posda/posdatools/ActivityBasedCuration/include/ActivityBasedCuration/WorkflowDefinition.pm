@@ -41,7 +41,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "2_pmap",
     name => "Patient Mapping",
-    note => " This step should not be needed if your data was imported through CTP",
+    note => "
+This step should not be needed if your data was imported through CTP",
     description => "Maps each patient to a new identifier that does not contain PHI. (e.g. Pat_030)",
     operations => [
       {
@@ -55,7 +56,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "3_ianon",
     name => "Initial Anonymization",
-    note => " This step should not be needed if your data was imported through CTP",
+    note => "
+This step should not be needed if your data was imported through CTP",
     description => "Once the mapping is in place, we can run the initial " .
       "anonymization step. Again, this step can often be skipped if the data is " .
       "already initially de-identified, such as when it was sent from CTP(A tool " .
@@ -149,6 +151,25 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
+    id => "9_masking",
+    name => "Masking",
+    note => "Operations and queries related to masking",
+    description => "",
+    operations => [
+      {
+        caption => "Finalize Masking",
+        action =>  "ApplyMasks",
+      },
+    ],
+    queries => [
+      {
+        caption => "Suggested Queries for Masking",
+        operation => "SelectQueryGroup",
+        query_list_name => "MaskingStatus",
+      },
+    ],
+  },
+  {
     id => "9_phirev",
     name => "PHI Review",
     description => "This will create a report. Any PHI found should be " .
@@ -169,7 +190,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     name => "Check Struct Linkage",
     note => "Radiation Therapy Data only",
     description => "Verify that the ROIs and Structures are properly " .
-      "linked to the image files and pixel data. ",
+      "linked to the image files and pixel data.
+",
     operations => [
       {
         caption => "Check Structure Set Linkage",
@@ -180,7 +202,8 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   {
     id => "11_linkrt",
     name => "Link RT Data",
-    note => "Radiation Therapy Data only ",
+    note => "Radiation Therapy Data only
+",
     description => "Link RT data",
     operations => [
       {
@@ -317,9 +340,7 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     id => "16_Pathology",
     name => "Pathology",
     note => "These operations are PATHOLOGY specific",
-    description => "Sometimes in order to solve an unusual issue " .
-      "you will want to make a second copy of the Timepoint " .
-      "You may also want to merge Timepoints together.",
+    description => "",
     operations => [
     {
       operation => "InvokeNewOperation",
@@ -361,7 +382,48 @@ use vars qw(@ActivityCategories %WorkflowQueries);
     ],
   },
   {
-    id => "17_other",
+    id => "17_Nifti",
+    name => "NIfTI",
+    note => "These operations are NIfTI specific",
+    description => "",
+    operations => [
+      {
+        caption => "Find and Parse NIfTI Files In Timepoint",
+        action =>  "PopulateFileNiftiTp",
+      },
+      #{
+      #  caption => "Process Nifti Files In Timepoint",
+      #  action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
+      #},
+      {
+        caption => "Schedule NIfTI PHI Scan",
+        action =>  "NiftiPhiScan",
+      },
+      {
+        caption => "Create NIfTI Visual Review",
+        action =>  "NiftiScheduleVisualReview",
+      },
+   ],
+    queries => [
+      {
+        caption => "Copy Files",
+        operation => "SelectQueryGroup",
+        query_list_name => "CopyFiles",
+      },
+      {
+         caption => "View Nifti PHI Scan",
+         operation => "SelectQueryGroup",
+         query_list_name => "DisplayNiftiPHIReport",
+       },
+      {
+        caption => "Nifti Visual Review and Status",
+        operation => "SelectQueryGroup",
+        query_list_name => "NiftiVisualReviewStatus",
+       },
+    ],
+  },
+  {
+    id => "18_other",
     name => "Other",
     description => "Miscellaneous operations",
     operations => [
@@ -404,14 +466,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
       {
         caption => "Make a hashed UID mapping spreadsheet",
         action =>  "MakeUIDMap",
-      },
-      {
-        caption => "Process Nifti Files In Timepoint",
-        action =>  "PopulateNiftiSlicesAndProjectionsForTimepoint",
-      },
-      {
-        caption => "Find Nifti Files In Timepoint",
-        action =>  "PopulateFileNiftiTp",
       },
       {
         caption => "Make a Downloadable Directory (including Non-Dicom)",
@@ -465,25 +519,6 @@ use vars qw(@ActivityCategories %WorkflowQueries);
   #     },
   #   ],
   # },
-  {
-    id => "19_masking",
-    name => "Masking",
-    note => "Operations and queries related to masking",
-    description => "",
-    operations => [
-      {
-        caption => "Apply Masks",
-        action =>  "ApplyMasks",
-      },
-    ],
-    queries => [
-      {
-        caption => "Suggested Queries for Masking",
-        operation => "SelectQueryGroup",
-        query_list_name => "MaskingStatus",
-      },
-    ],
-  },
 );
 
 %WorkflowQueries = (
@@ -783,5 +818,39 @@ use vars qw(@ActivityCategories %WorkflowQueries);
         query => "PathologyViewEdits",
       },
     ],
-   ],
+  ],
+  DisplayNiftiPHIReport => [
+    "Suggested Queries for Nifti PHI Reporting",
+    [
+      {
+        caption => "Display created Nifti PHI Report",
+        query => "RunNiftiPHIReport",
+      },
+    ],
+  ],
+  NiftiVisualReviewStatus => [
+    "Nifti Suggested Queries for Visual Review",
+    [
+      {
+        caption => "View Nifti VR Instances (Launcher)",
+        query => "ViewNiftiVisualReviewInstances",
+      },
+      {
+        caption => "List all Nifti visual reviews for an activity",
+        query => "NiftiVRlogs",
+      },
+      {
+        caption => "Get a summmary of Nifti visual review status by activity",
+        query => "NiftiReviewCountByActivity",
+      },
+      {
+        caption => "Get a summmary of Nifti visual review status by timepoint",
+        query => "NiftiReviewCountByActivityTimepoint",
+      },
+      {
+        caption => "List review summary for nifti files that were marked bad or have had too few reviews",
+        query => "NiftiBadFilesInTPCheck",
+      },
+    ],
+  ],
 );

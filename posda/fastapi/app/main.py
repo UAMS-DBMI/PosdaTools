@@ -10,7 +10,10 @@ _this is some italics_
 
 """
 import os
+import sys
 from fastapi import FastAPI, APIRouter
+import asyncio
+import signal
 
 from papi.util import db
 
@@ -34,6 +37,7 @@ from papi.routes import pathology
 from papi.routes import work
 from papi.routes import deface
 from papi.routes import edits
+from papi.routes import nifti
 from papi.routes import sysstatus
 from papi.routes import masking
 
@@ -86,11 +90,22 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 
+
+def handle_sigterm(*_):
+    print("SIGTERM received, shutting down...")
+    # Exit immediately.
+    # TODO: Do some nice cleanup, like disconnect from DB at least
+    sys.exit(0)
+
 @app.on_event("startup")
 async def startup_event():
     print(20*"#", "database connecting")
     await db.setup(database='posda_files')
     print(20*"#", "database connected")
+
+    # hook SIGTERM so we can shutdown quickly
+    loop = asyncio.get_event_loop()
+    loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
 
 router_v1 = APIRouter()
 router_v1.include_router(other.router, prefix="/other")
@@ -112,6 +127,7 @@ router_v1.include_router(pathology.router, prefix="/pathology")
 router_v1.include_router(work.router, prefix="/work")
 router_v1.include_router(deface.router, prefix="/deface")
 router_v1.include_router(edits.router, prefix="/edits")
+router_v1.include_router(nifti.router, prefix="/nifti")
 router_v1.include_router(sysstatus.router, prefix="/sysstatus")
 router_v1.include_router(masking.router, prefix="/masking")
 

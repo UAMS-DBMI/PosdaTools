@@ -269,6 +269,14 @@ function CornerstoneViewer({ volumeName,
   const [ loading, setLoading ] = useState(true);
   const [ filesLoaded, setFilesLoaded ] = useState(false);
 
+  // set a state variable that will save each viewport's normal/expanded/minimized state
+  const [ expandedViewports, setExpandedViewports ] = useState([
+    { id: 'axial', state: 'normal' },
+    { id: 'sagittal', state: 'normal' },
+    { id: 'coronal', state: 'normal' },
+    { id: 't3d_coronal', state: 'normal' },
+  ]);
+
   const containerRef = useRef(null);
   const renderingEngineRef = useRef(null);
 
@@ -338,49 +346,53 @@ function CornerstoneViewer({ volumeName,
 
 
     const resizeObserver = new ResizeObserver(() => {
+      const renderingEngine = cornerstone.getRenderingEngine('viewer_render_engine');
+      if (renderingEngine) {
+          renderingEngine.resize(true, true);
+      }
       // console.log("Zoo---------------------------------ming! ")
       // console.log("Previous zoom level:");
       // save the zoom level in all viewports
-      const zoomLevel = [];
-      const renderingEngine = renderingEngineRef.current;
-      if (renderingEngine) {
-        renderingEngine.getViewports().forEach((viewport, index) => {
-          const camera = viewport.getCamera();
-          zoomLevel[index] = camera.parallelScale;
-          // console.log(index, viewport.id, zoomLevel[index] );
-        });
+      // const zoomLevel = [];
+      // const renderingEngine = renderingEngineRef.current;
+      // if (renderingEngine) {
+      //   renderingEngine.getViewports().forEach((viewport, index) => {
+      //     const camera = viewport.getCamera();
+      //     zoomLevel[index] = camera.parallelScale;
+      //     // console.log(index, viewport.id, zoomLevel[index] );
+      //   });
 
-        // save the pan location in all viewports
-        const panLocation = [];
-        renderingEngine.getViewports().forEach((viewport, index) => {
-          const camera = viewport.getCamera();
-          panLocation[index] = camera.position;
-          // console.log(index, viewport.id, panLocation[index] );
-        });
+      //   // save the pan location in all viewports
+      //   const panLocation = [];
+      //   renderingEngine.getViewports().forEach((viewport, index) => {
+      //     const camera = viewport.getCamera();
+      //     panLocation[index] = camera.position;
+      //     // console.log(index, viewport.id, panLocation[index] );
+      //   });
 
-        renderingEngine.resize(true, true);
+      //   renderingEngine.resize(true, true);
 
-        setTimeout(() => {
-          //console.log("Current zoom level:");
-          renderingEngine.getViewports().forEach((viewport, index) => {
-            const camera = viewport.getCamera();
-            camera.parallelScale = zoomLevel[index];
-            viewport.setCamera(camera);
-            // console.log(index, viewport.id, camera.parallelScale );
-            viewport.render();
-          });
+      //   setTimeout(() => {
+      //     //console.log("Current zoom level:");
+      //     renderingEngine.getViewports().forEach((viewport, index) => {
+      //       const camera = viewport.getCamera();
+      //       camera.parallelScale = zoomLevel[index];
+      //       viewport.setCamera(camera);
+      //       // console.log(index, viewport.id, camera.parallelScale );
+      //       viewport.render();
+      //     });
 
-          // console.log("Current pan location:");
-          renderingEngine.getViewports().forEach((viewport, index) => {
-            const camera = viewport.getCamera();
-            camera.position = panLocation[index];
-            viewport.setCamera(camera);
-            // console.log(index, viewport.id, camera.position );
-            viewport.render();
-          });
+      //     // console.log("Current pan location:");
+      //     renderingEngine.getViewports().forEach((viewport, index) => {
+      //       const camera = viewport.getCamera();
+      //       camera.position = panLocation[index];
+      //       viewport.setCamera(camera);
+      //       // console.log(index, viewport.id, camera.position );
+      //       viewport.render();
+      //     });
         
-        }, 50);
-      }
+      //   }, 50);
+      // }
 
       
     });
@@ -406,21 +418,36 @@ function CornerstoneViewer({ volumeName,
       resizeButton.style.outline = 'none';
       resizeButton.style.cursor = 'pointer';
       resizeButton.style.backgroundColor = 'transparent';
-      resizeButton.style.padding = '0';
+      resizeButton.style.padding = '8px';
 
       // set resizeButton backgorund image to the resizeButtonLogo
       resizeButton.id = panelId + '_resize_button';
-      resizeButton.style.backgroundImage = `url(${resizeButtonLogo})`;
-      resizeButton.style.backgroundSize = 'contain';
-      resizeButton.style.backgroundRepeat = 'no-repeat';
-      resizeButton.style.backgroundPosition = 'center';
-      resizeButton.style.width = '30px';
-      resizeButton.style.height = '30px';
+      //resizeButton.innerHTML = '<span class="material-symbols-rounded" style="color: white">open_in_full</span>';
+      resizeButton.style.backgroundColor = '#424242';
+      resizeButton.style.color = 'white';
+      resizeButton.classList.add('material-symbols-rounded');
+      resizeButton.textContent = 'open_in_full';
+      // resizeButton.style.backgroundImage = `url(${resizeButtonLogo})`;
+      // resizeButton.style.backgroundSize = 'contain';
+      // resizeButton.style.backgroundRepeat = 'no-repeat';
+      // resizeButton.style.backgroundPosition = 'center';
+      // resizeButton.style.padding = '8px 8px';
+      // resizeButton.style.paddingBottom = '3px';
+      ///resizeButton.style.width = '30px';
+      //resizeButton.style.height = '30px';
       resizeButton.style.position = 'absolute';
       resizeButton.style.top = '10px';
       resizeButton.style.left = '10px';
       resizeButton.style.zIndex = '1000';
       resizeButton.style.display = 'none';
+
+      resizeButton.onmouseover = () => {  
+        resizeButton.style.backgroundColor = 'rgb(59 130 246)';
+      };
+      resizeButton.onmouseleave = () => {  
+        resizeButton.style.backgroundColor = '#424242';
+      };
+
       // set button to show when mouse is over panelWrapper
       panelWrapper.onmouseover = () => {  
         resizeButton.style.display = 'block';
@@ -437,41 +464,65 @@ function CornerstoneViewer({ volumeName,
         // panelWrapper.style.zIndex = '1000';
         // resizeButton.style.display = 'none';
 
-        setTimeout(() => {
-          if (event.target.parentNode.classList.contains('Expanded')) {
-            event.target.parentNode.classList.remove('Expanded');
-            event.target.parentNode.style.gridColumn = 'span 1';
-            event.target.parentNode.style.gridRow = 'span 1';
-            // show all other panelWrappers
-            const allPanelWrappers = event.target.parentNode.parentNode.childNodes;
-            allPanelWrappers.forEach((panelWrapper) => {
+        // Haydex: I can improve this code by using a state variable to keep track of the expanded viewport
+        
+        // Minimization
+        if (event.currentTarget.parentNode.classList.contains('Expanded')) {
+          event.currentTarget.textContent = 'open_in_full';
+          event.currentTarget.title = 'Maximize';
+          event.currentTarget.parentNode.classList.remove('Expanded');
+          event.currentTarget.parentNode.style.gridColumn = 'span 1';
+          event.currentTarget.parentNode.style.gridRow = 'span 1';
+          // set the gridArea of the panelWrapper to the saved gridArea
+          event.currentTarget.parentNode.style.gridArea = event.currentTarget.parentNode.getAttribute('data-gridArea');
+          
+          
+          // Show all other minimized panelWrappers
+          const allPanelWrappers = event.currentTarget.parentNode.parentNode.childNodes;
+          allPanelWrappers.forEach((panelWrapper) => {
+            if (panelWrapper.classList.contains('Minimized')) {
+              panelWrapper.querySelector('button').title = 'Maximize';
+              panelWrapper.style.visibility = 'visible';
               panelWrapper.style.display = 'block';
-            });
-            // render all viewports
-            renderingEngineRef.current.getViewports().forEach((viewport) => {
-              viewport.render();
-            });
-            console.log('Minimized', event.target.parentNode.id);
-          } else {
-            // console.log (event.target.parentNode.id);
-            event.target.parentNode.classList.add('Expanded');
-            event.target.parentNode.style.gridColumn = 'span 2';
-            event.target.parentNode.style.gridRow = 'span 2';
-            
-            // hide all other panelWrappers
-            const allPanelWrappers = event.target.parentNode.parentNode.childNodes;
-            allPanelWrappers.forEach((panelWrapper) => {
-              if (panelWrapper.id !== event.target.parentNode.id) {
-                panelWrapper.style.display = 'none';
-              }
-            });
-            // render all viewports
-            renderingEngineRef.current.getViewports().forEach((viewport) => {
-              viewport.render();
-            });
-            console.log('Expanded', event.target.parentNode.id);
-          }
-        }, 0);
+              panelWrapper.classList.remove('Minimized');
+            }
+          });
+          // render all viewports
+          renderingEngineRef.current.getViewports().forEach((viewport) => {
+            viewport.render();
+          });
+          console.log('Minimized', event.currentTarget.parentNode.id);
+
+        } else { // Maximization
+          // console.log (event.currentTarget.parentNode.id);
+          // Get the gridArea of the panelWrapper
+          const gridArea = event.currentTarget.parentNode.style.gridArea;
+          // save the gridArea into the panelWrapper
+          event.currentTarget.parentNode.setAttribute('data-gridArea', gridArea);
+          event.currentTarget.parentNode.style.gridColumn = 'span 2';
+          event.currentTarget.parentNode.style.gridRow = 'span 2';
+          event.currentTarget.parentNode.classList.add('Expanded');
+          expandedViewports.id = event.currentTarget.parentNode.id;
+          event.currentTarget.textContent = 'close_fullscreen';
+          event.currentTarget.title = 'Minimize';
+          
+          // hide all other visible panelWrappers
+          const allPanelWrappers = event.currentTarget.parentNode.parentNode.childNodes;
+          allPanelWrappers.forEach((panelWrapper) => {
+            if (panelWrapper.id !== event.currentTarget.parentNode.id && panelWrapper.style.visibility === 'visible') {
+              panelWrapper.querySelector('button').title = 'Minimize';
+              panelWrapper.style.visibility = 'hidden';
+              panelWrapper.style.display = 'none';
+              panelWrapper.classList.add('Minimized');
+            }
+          });
+          // render all viewports
+          renderingEngineRef.current.getViewports().forEach((viewport) => {
+            viewport.render();
+          });
+          console.log('Expanded', event.currentTarget.parentNode.id);
+        }
+        
       };
 
       panel.id = panelId;
@@ -535,6 +586,15 @@ function CornerstoneViewer({ volumeName,
           ],
         });
       }
+
+      // Pan
+      t3dToolGroup.setToolActive(cornerstoneTools.PanTool.toolName, {
+          bindings: [
+              {
+                  mouseButton: cornerstoneTools.Enums.MouseBindings.Auxiliary, // Middle Click
+              },
+          ],
+      });
 
       // Segmentation Display
       // cornerstoneTools.addTool(cornerstoneTools.SegmentationDisplayTool);
@@ -641,6 +701,15 @@ function CornerstoneViewer({ volumeName,
           ],
         });
       }
+
+      // Pan
+      group.setToolActive(cornerstoneTools.PanTool.toolName, {
+          bindings: [
+              {
+                  mouseButton: cornerstoneTools.Enums.MouseBindings.Auxiliary, // Middle Click
+              },
+          ],
+      });
 
       // Window Level
       group.addTool(cornerstoneTools.WindowLevelTool.toolName);
@@ -777,6 +846,15 @@ function CornerstoneViewer({ volumeName,
           ],
         });
       }
+
+      // Pan
+      group.setToolActive(cornerstoneTools.PanTool.toolName, {
+          bindings: [
+              {
+                  mouseButton: cornerstoneTools.Enums.MouseBindings.Auxiliary, // Middle Click
+              },
+          ],
+      });
 
       // Window Level
       group.addTool(cornerstoneTools.WindowLevelTool.toolName);
@@ -984,6 +1062,17 @@ function CornerstoneViewer({ volumeName,
       t3dCoronalContent.style.gridColumn = 'span 3';
     } else if (view === 'Volume') {
 
+      // Haydex: I can improve this code by using a state variable to keep track of the expanded viewport
+
+      // remove all viewports Minimized and Expanded classes
+      const allPanelWrappers = container.childNodes;
+      allPanelWrappers.forEach((panelWrapper) => {
+        panelWrapper.classList.remove('Minimized');
+        panelWrapper.classList.remove('Expanded');
+        panelWrapper.querySelector('button').textContent = 'open_in_full';
+        panelWrapper.querySelector('button').title = 'Maximize';
+      });
+
       container.style.gridTemplateColumns = 'repeat(2, 1fr)';
       container.style.gridTemplateRows = 'repeat(2, 1fr)';
 
@@ -1014,10 +1103,23 @@ function CornerstoneViewer({ volumeName,
       volCoronalContent.style.gridColumn = 1;
       volCoronalContent.style.gridRow = 2;
 
+      volSagittalContent.style.gridColumn = 2;
+      volSagittalContent.style.gridRow = 2;
 
+      volAxialContent.style.gridColumn = 1;
+      volAxialContent.style.gridRow = 1;
       
       // t3dCoronalContent.style.gridColumn = 'span 3';
     } else if (view === 'Projection') {
+
+      // Haydex: I can improve this code by using a state variable to keep track of the expanded viewport
+
+      // remove all viewports Minimized and Expanded classes
+      const allPanelWrappers = container.childNodes;
+      allPanelWrappers.forEach((panelWrapper) => {
+        panelWrapper.classList.remove('Minimized');
+        panelWrapper.classList.remove('Expanded');
+      });
 
       container.style.gridTemplateColumns = 'repeat(2, 1fr)';
       container.style.gridTemplateRows = 'repeat(2, 1fr)';
@@ -1047,6 +1149,12 @@ function CornerstoneViewer({ volumeName,
       // move mipCoronalContent to the bottom left cell of the grid
       mipCoronalContent.style.gridColumn = 1;
       mipCoronalContent.style.gridRow = 2;
+
+      mipSagittalContent.style.gridColumn = 2;
+      mipSagittalContent.style.gridRow = 2;
+
+      mipAxialContent.style.gridColumn = 1;
+      mipAxialContent.style.gridRow = 1;
 
       // t3dCoronalContent.style.gridColumn = 'span 3';
     }
@@ -1436,7 +1544,13 @@ function CornerstoneViewer({ volumeName,
       setWindowLevel(defaults.windowLevel);
       setCrosshairs(defaults.crosshairs);
       setRectangleScissors(defaults.rectangleScissors);
-      setView(defaults.view);
+
+      // Haydex: I can improve this code by using a state variable to keep track of the expanded viewport
+      setView(defaults.view + " "); // force a re-render
+      setTimeout(() => {
+       setView(defaults.view);
+      }, 50);
+
       setViewportNavigation(defaults.viewportNavigation);
       setResetViewports(defaults.resetViewports);
 
@@ -1480,7 +1594,7 @@ function CornerstoneViewer({ volumeName,
           const crosshairsToolInstance = volToolGroup.getToolInstance(cornerstoneTools.CrosshairsTool.toolName);
           crosshairsToolInstance.resetCrosshairs();
         }
-      }, 100);
+      }, 150);
     }
   }, [resetViewports]);
 

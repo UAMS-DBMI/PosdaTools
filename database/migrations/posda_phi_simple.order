@@ -1,2 +1,3 @@
 createSRscanTables.sql
 createTiffPHITables.sql
+add_nifti_phi_tables.sql

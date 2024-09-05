@@ -1,0 +1,6 @@
+:operation_name: NiftiPhiScan
+:command_line: NiftiPhiScan.py <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format:
+:tags: ['phi_reports']
+:can_chain:

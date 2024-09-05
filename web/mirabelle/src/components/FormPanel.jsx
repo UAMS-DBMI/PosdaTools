@@ -18,13 +18,13 @@ function FormPanel() {
             title="Cuboid"
             onClick={() => change("cuboid")}
             className={`w-full ${ maskForm === "cuboid" ? 'text-white bg-blue-500' : 'bg-white dark:bg-slate-900'}`}>
-          <span className='material-symbols-outlined'>square</span>
+          <span className='material-symbols-rounded'>square</span>
         </button>
         <button 
             title="Cylinder"
             onClick={() => change("cylinder")}
             className={`w-full ${ maskForm === "cylinder" ? 'text-white bg-blue-500' : 'bg-white dark:bg-slate-900'}`}>
-          <span className='material-symbols-outlined'>circle</span>
+          <span className='material-symbols-rounded'>circle</span>
         </button>
       </li>
     </>

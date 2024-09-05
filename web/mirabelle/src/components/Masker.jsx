@@ -62,7 +62,7 @@ function Masker({ files, iecs, iec }) {
           className={`z-[100] box-content flex items-center justify-center absolute w-5 h-5 leading-5 top-1/2 left-[18.2rem] transform translate-y-[36%] bg-blue-500 rounded-full p-1 transition-transform ${leftPanelVisibility ? 'translate-x-0' : 'rotate-180 -translate-x-72'}`}
         
         >
-          <span className="material-symbols-outlined rounded-full leading-5 text-white">chevron_left</span>
+          <span className="material-symbols-rounded rounded-full leading-5 text-white">chevron_left</span>
         </button>
         <button
           id="rightPanelButton"
@@ -70,7 +70,7 @@ function Masker({ files, iecs, iec }) {
           className={`z-[100] box-content flex items-center justify-center absolute w-5 h-5 leading-5 top-1/2 right-[18.2rem] transform translate-y-[36%] bg-blue-500 rounded-full p-1 transition-transform ${rightPanelVisibility ? 'translate-x-0' : 'rotate-180 translate-x-72'}`}
         
         >
-          <span className="material-symbols-outlined rounded-full leading-5 text-white">chevron_right</span>
+          <span className="material-symbols-rounded rounded-full leading-5 text-white">chevron_right</span>
         </button>
     </div>
   )
