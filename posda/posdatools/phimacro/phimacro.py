@@ -220,23 +220,32 @@ def apply_study_year_check():
 def apply_sop_class_check():
     """Check SOP Classes are valid"""
 
-    def is_sop_class(thing):
+    def is_sop_class_element(thing):
+        # rows are SOP Class UID OR Referenced SOP Class UID
         return re.search('<\(0008,0016\)>|\(0008,1150\)', thing) is not None
+    
+    def is_sec_capture(thing):
+        # rows are Secondary Capture SOP Class UID (includes multiframe .1, .2, .3, .4)
+        return re.search('1.2.840.10008.5.1.4.1.1.7', thing) is not None
 
     uid_rows = data[data['vr'] == 'UI']
-
-    # mask to select any row where the element is SOP Class UID 
-    # OR Referenced SOP Class UID
-    class_mask = (uid_rows['element'].apply(is_sop_class))
-
-    # apply mask to get just sop rows
-    sop_rows = uid_rows[class_mask]
     
-    good_rows = sop_rows[sop_rows['q_value'].isin(sop_classes.index)]
-    bad_rows = sop_rows[~sop_rows['q_value'].isin(sop_classes.index)]
+    # apply mask to get just sop rows
+    sop_rows = uid_rows[uid_rows['element'].apply(is_sop_class_element)]
 
+    # split sc and non sc rows
+    sc_rows = sop_rows[sop_rows['q_value'].apply(is_sec_capture)]
+    non_sc_rows = sop_rows[~sop_rows['q_value'].apply(is_sec_capture)]
+    
+    # get valid and invalid rows   
+    good_rows = non_sc_rows[non_sc_rows['q_value'].isin(sop_classes.index)]
+    bad_rows = non_sc_rows[~non_sc_rows['q_value'].isin(sop_classes.index)]
+
+    # output messages
     data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
-    data.loc[data.index.isin(bad_rows.index), 'review'] = "The SOP Class UID is not valid"
+    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is not valid"
+    data.loc[data.index.isin(sc_rows.index), 'review'] = "This SOP Class UID is not supported or flagged for removal. Remove series if possible"
+
 
 
 def main(args):
