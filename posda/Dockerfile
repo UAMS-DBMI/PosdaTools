@@ -119,6 +119,8 @@ RUN pip3 install \
 	imagecodecs \
 	openslide-python \
 	pandas \
+	numpy \
+	nibabel \
 	pyarrow
 
 
