@@ -178,7 +178,12 @@ async def get_ohif_config(series_instance_uid: str,
     return output
 
 
-@router.get("/{series_instance_uid}/files")
+@router.get("/{series_instance_uid}/files", 
+            summary="Get ALL files for a series")
+@router.get("/{series_instance_uid}:{activity_timepoint_id}/files", 
+            summary="Get files for a series in the given timepoint")
+@router.get("/{series_instance_uid}@{activity_id}/files",
+            summary="Get files for a series in the given activity")
 async def get_all_files(series_instance_uid: str, 
                         activity_id: int = None,
                         activity_timepoint_id: int = None,
@@ -197,17 +202,9 @@ async def get_all_files(series_instance_uid: str,
 
     If both activity_id and activity_timepoint_id are set, 
     activity_timepoint_id takes precedence.
-
-    Additionally, an activity_timepoint_id can be given by appending it
-    to the series after a colon, such as:
-
-    "1.2.3.4553452342234:13"
-     
-    This will take precedence over all other timepoint directives.
-
     """
-    if ":" in series_instance_uid:
-        series_instance_uid, activity_timepoint_id = series_instance_uid.split(':')
+
+    # return dict(series=series_instance_uid, a=activity_id, tp=activity_timepoint_id)
 
     if activity_timepoint_id is not None:
         query = f"""
