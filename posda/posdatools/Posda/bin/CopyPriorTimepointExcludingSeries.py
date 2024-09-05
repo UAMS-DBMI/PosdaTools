@@ -31,26 +31,51 @@ def main(args):
     background.daemonize()
 
     print(f"Preparing to copy activity_timepoint_id {args.old_timepoint_id} "
-          f"to activity_id {args.activity_id}.")
+          f"to activity_id {args.activity_id}. {len(series)} "
+          "series will be excluded.")
 
     db = Database("posda_files")
 
-    old_tp_files = get_files_in_timepoint(db, args.old_timepoint_id)
+    old_tp_files = get_files_in_timepoint_excluding_series(
+        db, args.old_timepoint_id, series
+    )
 
     if len(old_tp_files) <= 0:
         print("Old timepoint is empty! Aborting!")
     else:
-        print(f"Old timepoint has {len(old_tp_files)} files.")
+        print(f"Found {len(old_tp_files)} files in old timepoint")
         background.set_activity_status(
             f"Read files from old tp, found {len(old_tp_files)}")
 
-        return
         new_tp_id = create_activity_timepoint(args, db)
 
         print(f"New activity_timepoint_id is {new_tp_id}")
         insert_files_into_timepoint(db, new_tp_id, old_tp_files)
 
     background.finish("Complete")
+
+def get_files_in_timepoint_excluding_series(db, old_timepoint_id, series_list):
+    with db.cursor() as cur:
+        cur.execute(
+            "create temp table series_to_remove(series_instance_uid text);"
+        )
+
+        # force into tuples, needed for executemany
+        tuple_series = [(s,) for s in series_list]
+        cur.executemany("insert into series_to_remove values (%s)", tuple_series)
+
+        cur.execute("""\
+            select file_id
+            from activity_timepoint_file
+            natural join file_series
+            where activity_timepoint_id = %s
+              and series_instance_uid not in (select * from series_to_remove)
+        """, [old_timepoint_id])
+
+        results = cur.fetchall()
+
+        return [r[0] for r in results]
+
 
 def create_activity_timepoint(args, db) -> int:
     query = """\
