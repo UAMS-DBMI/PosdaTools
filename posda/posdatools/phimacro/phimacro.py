@@ -9,7 +9,8 @@ import sys
 
 data = None
 flag = None
-allowed = None
+body_parts = None
+sop_classes = None
 
 
 flag_text = {
@@ -45,7 +46,6 @@ def apply_flag_table():
 
     # data[data.index.isin(new_vals.index)]
 
-
 def apply_bpe():
     """Apply Body Part Examined rules"""
     global data
@@ -59,12 +59,14 @@ def apply_bpe():
     remains = bpe[~empty_mask] # select rows that DON'T match the mask
 
     # mask of rows with q_value that is explicitly allowed
-    allowed_mask = remains['q_value'].isin(allowed.index)
+    allowed_mask = remains['q_value'].isin(body_parts.index)
+    
+    good_rows = remains[allowed_mask] # rows that match that mask
     bad_rows = remains[~allowed_mask] # rows that don't match that mask
 
+    data.loc[data.index.isin(good_rows.index), 'review'] = 'Valid'
     data.loc[data.index.isin(bad_rows.index), 'review'] = \
         'Body Part Examined is not in the table'
-
 
 def apply_undef():
     """Apply undefined description rule"""
@@ -72,7 +74,6 @@ def apply_undef():
     data.loc[(data['description'] == '<undef>') | \
              (data['description'] == '<<undef>>'), 'review'] = \
         "The tag description is undefined"
-
 
 def apply_patient_age():
     """Check patient age"""
@@ -93,16 +94,18 @@ def apply_patient_age():
 
         return False # age is good
 
-
     pe = data[data['element'] == "<(0010,1010)>"]
     empty_mask = (pe['q_value'] == '<empty>') | (pe['q_value'] == '<<empty>>')
     remains = pe[~empty_mask]
 
-    bad_rows = remains[remains['q_value'].apply(is_age_bad)]
+    bad_mask = remains['q_value'].apply(is_age_bad)
 
+    good_rows = remains[~bad_mask]
+    bad_rows = remains[bad_mask]
+
+    data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
     data.loc[data.index.isin(bad_rows.index), 'review'] = \
         "Invalid format/value in patient age tag."
-
 
 def apply_uid_check():
     """Check UIDs are hashed"""
@@ -128,26 +131,26 @@ def apply_uid_check():
     is_tcia_mask = without_mask['q_value'].apply(is_tcia_uid)
 
     # invert the mask to select only rows that don't match
+    good_rows = without_mask[is_tcia_mask]
     bad_rows = without_mask[~is_tcia_mask]
 
+    data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
     data.loc[data.index.isin(bad_rows.index), 'review'] = \
         "The UID does not have the TCIA prefix"
-
 
 def apply_un():
     """Flag UN VR"""
 
     data.loc[data['vr'] == 'UN', 'review'] = "The VR is unknown"
 
-
 def apply_modality():
     """Flag potentially unsupported modalities"""
 
-    # constrcut a mask that selects Modality tags where the modality 
+    # construct a mask that selects Modality tags where the modality 
     # value is unsupported
     # TODO: this could be a configuration var
     mask = (data['element'] == "<(0008,0060)>") & \
-           (data['q_value'].isin(['<OT>', '<PR>', '<SR>', '<KO>']))
+           (data['q_value'].isin(['<OT>', '<PR>', '<SR>', '<KO>', '<SC>']))
 
     data.loc[mask, 'review'] = \
         "This modality may not be supported by Posda. Remove series if possible"
@@ -171,7 +174,6 @@ def apply_patient_id_check():
     data.loc[data['q_value'].isin(difference), 'review'] = \
         "PatientID/Name mismatch!"
 
-
 def apply_no_text_value_found():
     """Check for no text value found"""
 
@@ -182,7 +184,6 @@ def apply_no_text_value_found():
         "If SQ tag, follow protocol discussed in Curation Meeting "
         "(in Curation Meeting Notes)"
     )
-
 
 def apply_study_year_check():
     """Check all dates against Study Year"""
@@ -216,8 +217,30 @@ def apply_study_year_check():
         data.loc[data.index.isin(years[years > study_date].index), 'review'] = \
             f"The date is outside of the study year range.\nThe Year of Study in the Group 13 tag is: {study_date}"
 
+def apply_sop_class_check():
+    """Check SOP Classes are valid"""
+
+    def is_sop_class(thing):
+        return re.search('<\(0008,0016\)>|\(0008,1150\)', thing) is not None
+
+    uid_rows = data[data['vr'] == 'UI']
+
+    # mask to select any row where the element is SOP Class UID 
+    # OR Referenced SOP Class UID
+    class_mask = (uid_rows['element'].apply(is_sop_class))
+
+    # apply mask to get just sop rows
+    sop_rows = uid_rows[class_mask]
+    
+    good_rows = sop_rows[sop_rows['q_value'].isin(sop_classes.index)]
+    bad_rows = sop_rows[~sop_rows['q_value'].isin(sop_classes.index)]
+
+    data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
+    data.loc[data.index.isin(bad_rows.index), 'review'] = "The SOP Class UID is not valid"
+
+
 def main(args):
-    global data, flag, allowed
+    global data, flag, body_parts, sop_classes
 
     data = pd.read_csv(args.input)
     # data = pd.read_csv("small.csv")
@@ -225,7 +248,8 @@ def main(args):
     # data = pd.read_csv("big.csv")
 
     flag = pd.read_csv("flag.csv").set_index('element')
-    allowed = pd.read_csv("allowed.csv").set_index('Body Part Examined')
+    body_parts = pd.read_csv("body_parts.csv").set_index('Body Part Examined')
+    sop_classes = pd.read_csv("sop_classes.csv").set_index('sop_class_uid')
 
     # add the review column, set it to empty by default
     data['review'] = pd.NA
@@ -240,6 +264,7 @@ def main(args):
     apply_patient_id_check()
     apply_no_text_value_found()
     apply_study_year_check()
+    apply_sop_class_check()
 
     data.to_csv(sys.stdout)
 

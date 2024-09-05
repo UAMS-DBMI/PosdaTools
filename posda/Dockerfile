@@ -118,7 +118,8 @@ RUN pip3 install \
 	tifffile \
 	imagecodecs \
 	openslide-python \
-	pandas
+	pandas \
+	pyarrow
 
 
 RUN addgroup --gid 2123 fakeposda

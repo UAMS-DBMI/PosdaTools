@@ -1,0 +1,166 @@
+﻿sop_class_name,sop_class_uid,iod_spec,specialization
+Computed Radiography Image Storage,<1.2.840.10008.5.1.4.1.1.1>,<sect_A.2>,
+Digital X-Ray Image Storage - For Presentation,<1.2.840.10008.5.1.4.1.1.1.1>,<sect_A.26>,<sect_B.5.1.1>
+Digital X-Ray Image Storage - For Processing,<1.2.840.10008.5.1.4.1.1.1.1.1>,<sect_A.26>,<sect_B.5.1.1>
+Digital Mammography X-Ray Image Storage - For Presentation,<1.2.840.10008.5.1.4.1.1.1.2>,<sect_A.27>,<sect_B.5.1.2>
+Digital Mammography X-Ray Image Storage - For Processing,<1.2.840.10008.5.1.4.1.1.1.2.1>,<sect_A.27>,<sect_B.5.1.2>
+Digital Intra-Oral X-Ray Image Storage - For Presentation,<1.2.840.10008.5.1.4.1.1.1.3>,<sect_A.28>,<sect_B.5.1.3>
+Digital Intra-Oral X-Ray Image Storage - For Processing,<1.2.840.10008.5.1.4.1.1.1.3.1>,<sect_A.28>,<sect_B.5.1.3>
+CT Image Storage,<1.2.840.10008.5.1.4.1.1.2>,<sect_A.3>,
+Enhanced CT Image Storage,<1.2.840.10008.5.1.4.1.1.2.1>,<sect_A.38.1>,<sect_B.5.1.7> <sect_B.5.1.23>
+Legacy Converted Enhanced CT Image Storage,<1.2.840.10008.5.1.4.1.1.2.2>,<sect_A.70>,<sect_B.5.1.7> <sect_B.5.1.23>
+Ultrasound Multi-frame Image Storage,<1.2.840.10008.5.1.4.1.1.3.1>,<sect_A.7>,
+MR Image Storage,<1.2.840.10008.5.1.4.1.1.4>,<sect_A.4>,
+Enhanced MR Image Storage,<1.2.840.10008.5.1.4.1.1.4.1>,<sect_A.36.2>,<sect_B.5.1.6> <sect_B.5.1.23>
+MR Spectroscopy Storage,<1.2.840.10008.5.1.4.1.1.4.2>,<sect_A.36.3>,
+Enhanced MR Color Image Storage,<1.2.840.10008.5.1.4.1.1.4.3>,<sect_A.36.4>,<sect_B.5.1.8> <sect_B.5.1.23>
+Legacy Converted Enhanced MR Image Storage,<1.2.840.10008.5.1.4.1.1.4.4>,<sect_A.71>,<sect_B.5.1.6> <sect_B.5.1.23>
+Ultrasound Image Storage,<1.2.840.10008.5.1.4.1.1.6.1>,<sect_A.6>,
+Enhanced US Volume Storage,<1.2.840.10008.5.1.4.1.1.6.2>,<sect_A.59>,
+Photoacoustic Image Storage,<1.2.840.10008.5.1.4.1.1.6.3>,<sect_A.89>,
+Secondary Capture Image Storage,<1.2.840.10008.5.1.4.1.1.7>,<sect_A.8.1>,
+Multi-frame Single Bit Secondary Capture Image Storage,<1.2.840.10008.5.1.4.1.1.7.1>,<sect_A.8.2>,
+Multi-frame Grayscale Byte Secondary Capture Image Storage,<1.2.840.10008.5.1.4.1.1.7.2>,<sect_A.8.3>,
+Multi-frame Grayscale Word Secondary Capture Image Storage,<1.2.840.10008.5.1.4.1.1.7.3>,<sect_A.8.4>,
+Multi-frame True Color Secondary Capture Image Storage,<1.2.840.10008.5.1.4.1.1.7.4>,<sect_A.8.5>,
+12-lead ECG Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.1.1>,<sect_A.34.3>,
+General ECG Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.1.2>,<sect_A.34.4>,
+Ambulatory ECG Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.1.3>,<sect_A.34.5>,
+General 32-bit ECG Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.1.4>,<sect_A.34.18>,
+Hemodynamic Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.2.1>,<sect_A.34.6>,
+Cardiac Electrophysiology Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.3.1>,<sect_A.34.7>,
+Basic Voice Audio Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.4.1>,<sect_A.34.2>,
+General Audio Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.4.2>,<sect_A.34.10>,
+Arterial Pulse Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.5.1>,<sect_A.34.8>,
+Respiratory Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.6.1>,<sect_A.34.9>,
+Multi-channel Respiratory Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.6.2>,<sect_A.34.16>,
+Routine Scalp Electroencephalogram Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.7.1>,<sect_A.34.12>,
+Electromyogram Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.7.2>,<sect_A.34.13>,
+Electrooculogram Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.7.3>,<sect_A.34.14>,
+Sleep Electroencephalogram Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.7.4>,<sect_A.34.15>,
+Body Position Waveform Storage,<1.2.840.10008.5.1.4.1.1.9.8.1>,<sect_A.34.17>,
+Grayscale Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.1>,<sect_A.33.1>,
+Color Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.2>,<sect_A.33.2>,
+Pseudo-Color Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.3>,<sect_A.33.3>,
+Blending Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.4>,<sect_A.33.4>,
+XA/XRF Grayscale Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.5>,<sect_A.33.6>,
+Grayscale Planar MPR Volumetric Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.6>,<sect_A.80.1>,<sect_B.5.1.19>
+Compositing Planar MPR Volumetric Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.7>,<sect_A.80.1>,<sect_B.5.1.19>
+Advanced Blending Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.8>,<sect_A.33.7>,
+Volume Rendering Volumetric Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.9>,<sect_A.80.2>,<sect_B.5.1.24>
+Segmented Volume Rendering Volumetric Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.10>,<sect_A.80.2>,<sect_B.5.1.24>
+Multiple Volume Rendering Volumetric Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.11>,<sect_A.80.2>,<sect_B.5.1.24>
+Variable Modality LUT Softcopy Presentation State Storage,<1.2.840.10008.5.1.4.1.1.11.12>,<sect_A.33.8>,
+X-Ray Angiographic Image Storage,<1.2.840.10008.5.1.4.1.1.12.1>,<sect_A.14>,
+Enhanced XA Image Storage,<1.2.840.10008.5.1.4.1.1.12.1.1>,<sect_A.47>,
+X-Ray Radiofluoroscopic Image Storage,<1.2.840.10008.5.1.4.1.1.12.2>,<sect_A.16>,
+Enhanced XRF Image Storage,<1.2.840.10008.5.1.4.1.1.12.2.1>,<sect_A.48>,
+X-Ray 3D Angiographic Image Storage,<1.2.840.10008.5.1.4.1.1.13.1.1>,<sect_A.53>,
+X-Ray 3D Craniofacial Image Storage,<1.2.840.10008.5.1.4.1.1.13.1.2>,<sect_A.54>,
+Breast Tomosynthesis Image Storage,<1.2.840.10008.5.1.4.1.1.13.1.3>,<sect_A.55>,
+Breast Projection X-Ray Image Storage - For Presentation,<1.2.840.10008.5.1.4.1.1.13.1.4>,<sect_A.74>,<sect_B.5.1.18>
+Breast Projection X-Ray Image Storage - For Processing,<1.2.840.10008.5.1.4.1.1.13.1.5>,<sect_A.74>,<sect_B.5.1.18>
+Intravascular Optical Coherence Tomography Image Storage - For Presentation,<1.2.840.10008.5.1.4.1.1.14.1>,<sect_A.66>,<sect_B.5.1.13>
+Intravascular Optical Coherence Tomography Image Storage - For Processing,<1.2.840.10008.5.1.4.1.1.14.2>,<sect_A.66>,<sect_B.5.1.13>
+Nuclear Medicine Image Storage,<1.2.840.10008.5.1.4.1.1.20>,<sect_A.5>,
+Parametric Map Storage,<1.2.840.10008.5.1.4.1.1.30>,<sect_A.75>,
+Raw Data Storage,<1.2.840.10008.5.1.4.1.1.66>,<sect_A.37>,<sect_B.5.1.22>
+Spatial Registration Storage,<1.2.840.10008.5.1.4.1.1.66.1>,<sect_A.39.1>,
+Spatial Fiducials Storage,<1.2.840.10008.5.1.4.1.1.66.2>,<sect_A.40>,
+Deformable Spatial Registration Storage,<1.2.840.10008.5.1.4.1.1.66.3>,<sect_A.39.2>,
+Segmentation Storage,<1.2.840.10008.5.1.4.1.1.66.4>,<sect_A.51>,
+Surface Segmentation Storage,<1.2.840.10008.5.1.4.1.1.66.5>,<sect_A.57>,
+Tractography Results Storage,<1.2.840.10008.5.1.4.1.1.66.6>,<sect_A.78>,
+Real World Value Mapping Storage,<1.2.840.10008.5.1.4.1.1.67>,<sect_A.46>,
+Surface Scan Mesh Storage,<1.2.840.10008.5.1.4.1.1.68.1>,<sect_A.68>,
+Surface Scan Point Cloud Storage,<1.2.840.10008.5.1.4.1.1.68.2>,<sect_A.69>,
+VL Endoscopic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.1>,<sect_A.32.1>,
+Video Endoscopic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.1.1>,<sect_A.32.5>,
+VL Microscopic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.2>,<sect_A.32.2>,
+Video Microscopic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.2.1>,<sect_A.32.6>,
+VL Slide-Coordinates Microscopic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.3>,<sect_A.32.3>,
+VL Photographic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.4>,<sect_A.32.4>,
+Video Photographic Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.4.1>,<sect_A.32.7>,
+Ophthalmic Photography 8 Bit Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.1>,<sect_A.41>,
+Ophthalmic Photography 16 Bit Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.2>,<sect_A.42>,
+Stereometric Relationship Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.3>,<sect_A.43>,
+Ophthalmic Tomography Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.4>,<sect_A.52>,
+Wide Field Ophthalmic Photography Stereographic Projection Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.5>,<sect_A.76>,
+Wide Field Ophthalmic Photography 3D Coordinates Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.6>,<sect_A.77>,
+Ophthalmic Optical Coherence Tomography En Face Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.7>,<sect_A.83>,
+Ophthalmic Optical Coherence Tomography B-scan Volume Analysis Storage,<1.2.840.10008.5.1.4.1.1.77.1.5.8>,<sect_A.84>,
+VL Whole Slide Microscopy Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.6>,<sect_A.32.8>,
+Dermoscopic Photography Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.7>,<sect_A.32.11>,
+Confocal Microscopy Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.8>,<sect_A.90.1>,
+Confocal Microscopy Tiled Pyramidal Image Storage,<1.2.840.10008.5.1.4.1.1.77.1.9>,<sect_A.90.2>,
+Lensometry Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.1>,<sect_A.60.1>,
+Autorefraction Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.2>,<sect_A.60.2>,
+Keratometry Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.3>,<sect_A.60.3>,
+Subjective Refraction Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.4>,<sect_A.60.4>,
+Visual Acuity Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.5>,<sect_A.60.5>,
+Spectacle Prescription Report Storage,<1.2.840.10008.5.1.4.1.1.78.6>,<sect_A.35.9>,<sect_B.5.1.5>
+Ophthalmic Axial Measurements Storage,<1.2.840.10008.5.1.4.1.1.78.7>,<sect_A.60.6>,<sect_B.5.1.11>
+Intraocular Lens Calculations Storage,<1.2.840.10008.5.1.4.1.1.78.8>,<sect_A.60.7>,
+Macular Grid Thickness and Volume Report,<1.2.840.10008.5.1.4.1.1.79.1>,<sect_A.35.11>,<sect_B.5.1.5>
+Ophthalmic Visual Field Static Perimetry Measurements Storage,<1.2.840.10008.5.1.4.1.1.80.1>,<sect_A.65>,
+Ophthalmic Thickness Map Storage,<1.2.840.10008.5.1.4.1.1.81.1>,<sect_A.67>,<sect_B.5.1.14>
+Corneal Topography Map Storage,<1.2.840.10008.5.1.4.1.1.82.1>,<sect_A.73>,<sect_B.5.1.17>
+Basic Text SR Storage,<1.2.840.10008.5.1.4.1.1.88.11>,<sect_A.35.1>,<sect_B.5.1.5>
+Enhanced SR Storage,<1.2.840.10008.5.1.4.1.1.88.22>,<sect_A.35.2>,<sect_B.5.1.5>
+Comprehensive SR Storage,<1.2.840.10008.5.1.4.1.1.88.33>,<sect_A.35.3>,<sect_B.5.1.5>
+Comprehensive 3D SR Storage,<1.2.840.10008.5.1.4.1.1.88.34>,<sect_A.35.13>,<sect_B.5.1.5>
+Extensible SR Storage,<1.2.840.10008.5.1.4.1.1.88.35>,<sect_A.35.15>,<sect_B.5.1.5>
+Procedure Log Storage,<1.2.840.10008.5.1.4.1.1.88.40>,<sect_A.35.7>,<sect_B.5.1.5>
+Mammography CAD SR Storage,<1.2.840.10008.5.1.4.1.1.88.50>,<sect_A.35.5>,<sect_B.5.1.5>
+Key Object Selection Document Storage,<1.2.840.10008.5.1.4.1.1.88.59>,<sect_A.35.4>,
+Chest CAD SR Storage,<1.2.840.10008.5.1.4.1.1.88.65>,<sect_A.35.6>,<sect_B.5.1.5>
+X-Ray Radiation Dose SR Storage,<1.2.840.10008.5.1.4.1.1.88.67>,<sect_A.35.8>,<sect_B.5.1.5>
+Radiopharmaceutical Radiation Dose SR Storage,<1.2.840.10008.5.1.4.1.1.88.68>,<sect_A.35.14>,<sect_B.5.1.5>
+Colon CAD SR Storage,<1.2.840.10008.5.1.4.1.1.88.69>,<sect_A.35.10>,<sect_B.5.1.5>
+Implantation Plan SR Storage,<1.2.840.10008.5.1.4.1.1.88.70>,<sect_A.35.12>,<sect_B.5.1.5>
+Acquisition Context SR Storage,<1.2.840.10008.5.1.4.1.1.88.71>,<sect_A.35.16>,<sect_B.5.1.5>
+Simplified Adult Echo SR Storage,<1.2.840.10008.5.1.4.1.1.88.72>,<sect_A.35.17>,<sect_B.5.1.5>
+Patient Radiation Dose SR Storage,<1.2.840.10008.5.1.4.1.1.88.73>,<sect_A.35.18>,<sect_B.5.1.5>
+Planned Imaging Agent Administration SR Storage,<1.2.840.10008.5.1.4.1.1.88.74>,<sect_A.35.19>,<sect_B.5.1.5>
+Performed Imaging Agent Administration SR Storage,<1.2.840.10008.5.1.4.1.1.88.75>,<sect_A.35.20>,<sect_B.5.1.5>
+Enhanced X-Ray Radiation Dose SR Storage,<1.2.840.10008.5.1.4.1.1.88.76>,<sect_A.35.22>,<sect_B.5.1.5>
+Content Assessment Results Storage,<1.2.840.10008.5.1.4.1.1.90.1>,<sect_A.81>,<sect_B.5.1.20>
+Microscopy Bulk Simple Annotations Storage,<1.2.840.10008.5.1.4.1.1.91.1>,<sect_A.87>,
+Encapsulated PDF Storage,<1.2.840.10008.5.1.4.1.1.104.1>,<sect_A.45.1>,
+Encapsulated CDA Storage,<1.2.840.10008.5.1.4.1.1.104.2>,<sect_A.45.2>,
+Encapsulated STL Storage,<1.2.840.10008.5.1.4.1.1.104.3>,<sect_A.85.1>,
+Encapsulated OBJ Storage,<1.2.840.10008.5.1.4.1.1.104.4>,<sect_A.85.2>,
+Encapsulated MTL Storage,<1.2.840.10008.5.1.4.1.1.104.5>,<sect_A.85.3>,
+Positron Emission Tomography Image Storage,<1.2.840.10008.5.1.4.1.1.128>,<sect_A.21>,
+Enhanced PET Image Storage,<1.2.840.10008.5.1.4.1.1.130>,<sect_A.56>,<sect_B.5.1.16> <sect_B.5.1.23>
+Legacy Converted Enhanced PET Image Storage,<1.2.840.10008.5.1.4.1.1.128.1>,<sect_A.72>,<sect_B.5.1.23>
+Basic Structured Display Storage,<1.2.840.10008.5.1.4.1.1.131>,<sect_A.33.5>,<sect_B.5.1.9>
+CT Performed Procedure Protocol Storage,<1.2.840.10008.5.1.4.1.1.200.2>,<sect_A.82.1>,<sect_B.5.1.21>
+XA Performed Procedure Protocol Storage,<1.2.840.10008.5.1.4.1.1.200.8>,<sect_A.82.4>,<sect_B.5.1.21>
+RT Image Storage,<1.2.840.10008.5.1.4.1.1.481.1>,<sect_A.17>,
+RT Dose Storage,<1.2.840.10008.5.1.4.1.1.481.2>,<sect_A.18>,
+RT Structure Set Storage,<1.2.840.10008.5.1.4.1.1.481.3>,<sect_A.19>,
+RT Beams Treatment Record Storage,<1.2.840.10008.5.1.4.1.1.481.4>,<sect_A.29>,
+RT Plan Storage,<1.2.840.10008.5.1.4.1.1.481.5>,<sect_A.20>,
+RT Brachy Treatment Record Storage,<1.2.840.10008.5.1.4.1.1.481.6>,<sect_A.30>,
+RT Treatment Summary Record Storage,<1.2.840.10008.5.1.4.1.1.481.7>,<sect_A.31>,
+RT Ion Plan Storage,<1.2.840.10008.5.1.4.1.1.481.8>,<sect_A.49>,
+RT Ion Beams Treatment Record Storage,<1.2.840.10008.5.1.4.1.1.481.9>,<sect_A.50>,
+RT Physician Intent Storage,<1.2.840.10008.5.1.4.1.1.481.10>,<sect_A.86.1.2>,
+RT Segment Annotation Storage,<1.2.840.10008.5.1.4.1.1.481.11>,<sect_A.86.1.3>,
+RT Radiation Set Storage,<1.2.840.10008.5.1.4.1.1.481.12>,<sect_A.86.1.4>,
+C-Arm Photon-Electron Radiation Storage,<1.2.840.10008.5.1.4.1.1.481.13>,<sect_A.86.1.5>,
+Tomotherapeutic Radiation Storage,<1.2.840.10008.5.1.4.1.1.481.14>,<sect_A.86.1.6>,
+Robotic-Arm Radiation Storage,<1.2.840.10008.5.1.4.1.1.481.15>,<sect_A.86.1.7>,
+RT Radiation Record Set Storage,<1.2.840.10008.5.1.4.1.1.481.16>,<sect_A.86.1.8>,
+RT Radiation Salvage Record Storage,<1.2.840.10008.5.1.4.1.1.481.17>,<sect_A.86.1.9>,
+Tomotherapeutic Radiation Record Storage,<1.2.840.10008.5.1.4.1.1.481.18>,<sect_A.86.1.11>,
+C-Arm Photon-Electron Radiation Record Storage,<1.2.840.10008.5.1.4.1.1.481.19>,<sect_A.86.1.10>,
+Robotic Radiation Record Storage,<1.2.840.10008.5.1.4.1.1.481.20>,<sect_A.86.1.12>,
+RT Radiation Set Delivery Instruction Storage,<1.2.840.10008.5.1.4.1.1.481.21>,<sect_A.86.1.13>,
+RT Treatment Preparation Storage,<1.2.840.10008.5.1.4.1.1.481.22>,<sect_A.86.1.14>,
+Enhanced RT Image Storage,<1.2.840.10008.5.1.4.1.1.481.23>,<sect_A.86.1.15>,
+Enhanced Continuous RT Image Storage,<1.2.840.10008.5.1.4.1.1.481.24>,<sect_A.86.1.16>,
+RT Patient Position Acquisition Instruction Storage,<1.2.840.10008.5.1.4.1.1.481.25>,<sect_A.86.1.17>,
+RT Beams Delivery Instruction Storage,<1.2.840.10008.5.1.4.34.7>,<sect_A.64>,
+RT Brachy Application Setup Delivery Instruction Storage,<1.2.840.10008.5.1.4.34.10>,<sect_A.79>,
