@@ -13,6 +13,7 @@ import './transitions.css';
 import App from './App';
 
 import Home from './routes/home';
+
 import MaskIEC, {
 	loader as iecLoader,
 } from './routes/mask/iec';
@@ -20,6 +21,10 @@ import MaskIEC, {
 import ReviewIEC, {
   loader as iecReviewLoader,
 } from './routes/mask/review';
+
+import ReviewNIFTI, {
+  loader as niftiReviewLoader,
+} from './routes/nifti/review';
 
 import MaskVR, {
 	loader as vrLoader,
@@ -45,6 +50,11 @@ const router = createBrowserRouter([
 		path: "review/iec/:iec",
 		element: <ReviewIEC />,
 		loader: iecReviewLoader,
+	},
+	{
+		path: "review/nifti/:fileId",
+		element: <ReviewNIFTI />,
+		loader: niftiReviewLoader,
 	},
 ], {
 	basename: "/mira",

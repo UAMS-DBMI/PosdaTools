@@ -71,27 +71,27 @@ function ToolsPanel() {
 
   const handleZoomButtonClick = () => {
     setViewportNavigation("Zoom");
-    console.log('Zoom button clicked');
+    // console.log('Zoom button clicked');
   };
 
   const handlePanButtonClick = () => {
     setViewportNavigation("Pan");
-    console.log('Pan button clicked');
+    // console.log('Pan button clicked');
   };
 
   const handleVolumeButtonClick = () => {
     setView("Volume");
-    console.log('Volume button clicked');
+    // console.log('Volume button clicked');
   };
 
   const handleProjectionButtonClick = () => {
     setView("Projection");
-    console.log('Projection button clicked');
+    // console.log('Projection button clicked');
   };
 
   const handleAllButtonClick = () => {
     setView("All");
-    console.log('All button clicked');
+    // console.log('All button clicked');
   };
 
   const handleResetViewportsButtonClick = () => {
@@ -136,7 +136,7 @@ function ToolsPanel() {
         </li>*/}
 
         {
-          layout !== "MaskerReview" &&  
+          layout === "Masker" &&  
           <>
             <FunctionPanel />
             <FormPanel />
@@ -169,7 +169,7 @@ function ToolsPanel() {
         </li>
 
         {
-          layout !== "MaskerReview" &&  
+          layout === "Masker" &&  
           <li className="mb-1 pt-1 rounded-lg">
             <button onClick={handleRectangleScissorsButtonClick} className={`w-full ${ rectangleScissors ? 'text-white bg-blue-500' : 'bg-white dark:bg-slate-900'}`}>
               Selection

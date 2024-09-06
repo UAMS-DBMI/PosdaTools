@@ -25,23 +25,22 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "@cornerstonejs/core": "^1.74.1",
-    "@cornerstonejs/dicom-image-loader": "^1.74.1",
-    "@cornerstonejs/nifti-image-loader": "^1.0.9",
-    "@cornerstonejs/nifti-volume-loader": "^1.74.1",
-    "@cornerstonejs/streaming-image-volume-loader": "^1.65.3",
-    "@cornerstonejs/tools": "^1.74.1",
+    "@cornerstonejs/core": "^1.84.1",
+    "@cornerstonejs/dicom-image-loader": "^1.84.1",
+    "@cornerstonejs/nifti-volume-loader": "^1.84.1",
+    "@cornerstonejs/streaming-image-volume-loader": "^1.84.1",
+    "@cornerstonejs/tools": "^1.84.1",
     "autoprefixer": "^10.4.19",
     "dcmjs": "^0.33.0",
     "dicom-parser": "^1.8.21",
     "dicomweb-client": "^0.10.4",
     "html-webpack-plugin": "^5.6.0",
+    "mathjs": "13.0.3",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
-    "tailwindcss": "^3.4.3",
-    "mathjs": "13.0.3"
+    "tailwindcss": "^3.4.3"
   }
 }

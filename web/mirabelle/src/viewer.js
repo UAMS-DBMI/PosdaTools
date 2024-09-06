@@ -31,7 +31,7 @@ let volume = null;
 
 // Adjusts the rendered size when the window size changes
 const resizeObserver = new ResizeObserver(() => {
-    console.log('Size changed');
+    // console.log('Size changed');
 
     const renderingEngine = cornerstone.getRenderingEngine('viewer_render_engine');
 

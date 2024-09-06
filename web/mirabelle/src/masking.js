@@ -83,7 +83,7 @@ export async function setParameters(
   const body = JSON.stringify({ 
     LR: lr, PA: pa, IS: is, width, height, depth, form, function: maskFunction
   });
-  console.log("setParameters", body);
+  // console.log("setParameters", body);
 
 	const response = await fetch(
 		`/papi/v1/masking/${iec}/parameters`,
@@ -114,6 +114,7 @@ export async function getReviewFiles(iec) {
 
 	return details;
 }
+
 export async function getIECsForVR(visual_review_id) {
 
 	const response = await fetch(
@@ -123,28 +124,27 @@ export async function getIECsForVR(visual_review_id) {
 	return details;
 }
 
-
 export async function tests() {
 	const iec = 3;
 
-	console.log("getDetails");
-	console.log(await getDetails(iec));
+	// console.log("getDetails");
+	// console.log(await getDetails(iec));
 
-	console.log("flagForMasking");
-	console.log(await flagForMasking(iec));
+	// console.log("flagForMasking");
+	// console.log(await flagForMasking(iec));
 
-	console.log("setParameters");
+	// console.log("setParameters");
 	let lr = 212;
 	let pa = 47;
 	let s = 24;
 	let i = 1;
 	let d = 200;
-	console.log(await setParameters(iec, { lr, pa, s, i, d }));
+	// console.log(await setParameters(iec, { lr, pa, s, i, d }));
 
-	console.log("getFiles");
-	console.log(await getFiles(iec));
+	// console.log("getFiles");
+	// console.log(await getFiles(iec));
 
-	console.log("getIECsForVR");
-	console.log(await getIECsForVR(1));
+	// console.log("getIECsForVR");
+	// console.log(await getIECsForVR(1));
 
 }

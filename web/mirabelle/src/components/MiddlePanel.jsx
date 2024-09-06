@@ -20,9 +20,11 @@ function MiddlePanel({ files, iecs, iec }) {
 
   useEffect(() => {
     const doTheThing = async () => {
-
+      
       // console.log(">>> MiddlePanel useEffect firing, iecOffset=", iecOffset);
+      // console.log("files=", files, "iec=", iec);
       if (files === undefined) {
+        
         const iecfiles = await getFiles(iecs[iecOffset]);
         setRealFiles(iecfiles);
         setVolumeName(iecs[iecOffset]);
