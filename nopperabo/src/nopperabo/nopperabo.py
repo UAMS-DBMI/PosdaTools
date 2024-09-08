@@ -12,6 +12,7 @@ import subprocess
 import hashlib
 import json
 import time
+import signal
 from datetime import timedelta
 from loguru import logger
 from jsonargparse import CLI
@@ -26,6 +27,12 @@ TEMP='/tmp'
 headers = {
     'Authorization': f'Bearer {TOKEN}',
 }
+
+# Convert SIGTERM into an exception
+class SigTerm(SystemExit): pass
+def termhandler(a, b):
+    raise SigTerm(1)
+signal.signal(signal.SIGTERM, termhandler)
 
 def main(debug: bool=False,
          token: str='xxxx',
@@ -68,10 +75,17 @@ def main(debug: bool=False,
             else:
                 # wait a bit so we don't spam the server
                 time.sleep(delay)
+        except SigTerm as e:
+            logger.info("Shutdown requested!")
+            # If we were processing something, update it to aborted
+            if iec is not None:
+                abort_work(iec)
+            raise
         except Exception as e:
             print(repr(e))
             print("Waiting a bit and then trying to continue...")
             time.sleep(delay)
+
 
 def md5sum(fname):
     hash_md5 = hashlib.md5()
@@ -94,6 +108,9 @@ def get_work():
     else:
         logger.debug(f"get_work() failed {r=}")
         return None
+
+def abort_work(iec):
+    r = httpx.post(url(f'masking/abortwork?iec={iec}'), headers=headers)
 
 def get_masking_details(iec):
     r = httpx.get(url(f'masking/{iec}'), headers=headers)

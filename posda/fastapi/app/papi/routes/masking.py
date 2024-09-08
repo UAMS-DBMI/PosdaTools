@@ -61,6 +61,27 @@ async def get_work_for_masker(
 
     raise HTTPException(status_code=404)
 
+@router.post("/abortwork")
+async def get_work_for_masker(
+    iec: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Reset an IEC back to ready-to-process
+
+    Used only when Nopperabo is shutdown while working.
+    If the IEC is not in in-process status, nothing is done.
+    """
+
+    query = """
+        update masking
+        set masking_status = 'ready-to-process'
+        where image_equivalence_class_id = $1
+          and masking_status = 'in-process'
+    """
+
+    await db.fetch(query, [iec])
+
 
 @router.post("/{iec}/mask")
 async def request_for_masking(
