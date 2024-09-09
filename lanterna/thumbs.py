@@ -2,9 +2,15 @@
 import redis
 import subprocess
 import os
+import signal
 
 REDIS_HOST=os.environ['POSDA_REDIS_HOST']
 
+# Convert SIGTERM into an exception
+class SigTerm(SystemExit): pass
+def termhandler(a, b):
+    raise SigTerm(1)
+signal.signal(signal.SIGTERM, termhandler)
 
 def main():
 
