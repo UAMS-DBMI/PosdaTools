@@ -28,6 +28,7 @@ use constant REDIS_HOST => Config('redis_host') . ':6379';
 $| = 1;
 
 $SIG{INT}  = \&shut_down; # catch SIGINT
+$SIG{TERM}  = \&shut_down; # catch SIGTERM
 
 my $db = DBI->connect(Database(DBNAME));
 unless($db) { die "couldn't connect to DB: DBNAME" }
