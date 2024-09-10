@@ -627,6 +627,17 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Document,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.88.34' =>{
+    name => 'Comprehensive 3D SR Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::SRSeries,
+      \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::Document,
+    ],
+  },
   '1.2.840.10008.5.1.4.1.1.88.50' =>{
     name => 'Mammography CAD SR Storage',
     handlers => [
