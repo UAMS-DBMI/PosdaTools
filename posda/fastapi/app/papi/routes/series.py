@@ -1,4 +1,5 @@
 from fastapi import Depends, APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
 import datetime
@@ -272,9 +273,22 @@ async def get_all_files(series_instance_uid: str,
 
     return {"file_ids": [x[0] for x in await db.fetch(query, [series_instance_uid])]}
 
+
+class Timepoint(BaseModel):
+    activity_id: int
+    activity_timepoint_id: int
+    creating_user: str
+    when_created: datetime.datetime
+
+class ActivityModel(BaseModel):
+    activities: list[int]
+    timepoints: list[Timepoint]
+
 @router.get("/{series_instance_uid}/activities")
-async def get_all_files(series_instance_uid: str, 
-                        db: Database = Depends()):
+async def get_all_activities(series_instance_uid: str, 
+                        db: Database = Depends()) -> ActivityModel:
+    """Get a list of all activities and timepoints this series occurs in.
+    """
 
     act_query = """\
         select distinct
@@ -301,9 +315,13 @@ async def get_all_files(series_instance_uid: str,
             series_instance_uid = $1
     """
 
-    activities = await db.fetch(act_query, [series_instance_uid])
-    print(activities)
+    # convert to true python objects so Pydantic verification works
+    activities = [x['activity_id'] for x in 
+                  await db.fetch(act_query, [series_instance_uid])]
+
+    timepoints = [dict(x) for x in await db.fetch(tp_query, [series_instance_uid])]
+
     return {
-        "activities": [x['activity_id'] for x in activities],
-        "timepoints": await db.fetch(tp_query, [series_instance_uid])
+        "activities": activities,
+        "timepoints": timepoints,
     }
