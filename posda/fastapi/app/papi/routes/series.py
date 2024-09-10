@@ -271,3 +271,39 @@ async def get_all_files(series_instance_uid: str,
         """
 
     return {"file_ids": [x[0] for x in await db.fetch(query, [series_instance_uid])]}
+
+@router.get("/{series_instance_uid}/activities")
+async def get_all_files(series_instance_uid: str, 
+                        db: Database = Depends()):
+
+    act_query = """\
+        select distinct
+                activity_id
+        from
+            file_series
+                natural join activity_timepoint_file
+                natural join activity_timepoint
+        where
+            series_instance_uid = $1
+    """
+
+    tp_query = """\
+        select distinct
+                activity_id,
+                activity_timepoint_id,
+                when_created,
+                creating_user
+        from
+            file_series
+                natural join activity_timepoint_file
+                natural join activity_timepoint
+        where
+            series_instance_uid = $1
+    """
+
+    activities = await db.fetch(act_query, [series_instance_uid])
+    print(activities)
+    return {
+        "activities": [x['activity_id'] for x in activities],
+        "timepoints": await db.fetch(tp_query, [series_instance_uid])
+    }
