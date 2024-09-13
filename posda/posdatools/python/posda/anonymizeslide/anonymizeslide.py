@@ -417,7 +417,7 @@ def editImageDesc(filename):
         desc_dict = getImageDesc(directory)
         #print("desc_dict {}".format(desc_dict))
         for tag in desc_dict:
-            if tag in ('User','Filename','ImageID'):
+            if tag.replace(" ", "").lower() in ('user','filename','imageid','scanscopeid','dsrid'):
                 #print("bad tag")
                 desc_dict[tag]  = '0'
                 to_change = to_change+1
