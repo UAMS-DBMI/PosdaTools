@@ -1,4 +1,5 @@
 from fastapi import Depends, APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
 import datetime
@@ -178,7 +179,12 @@ async def get_ohif_config(series_instance_uid: str,
     return output
 
 
-@router.get("/{series_instance_uid}/files")
+@router.get("/{series_instance_uid}/files", 
+            summary="Get ALL files for a series")
+@router.get("/{series_instance_uid}:{activity_timepoint_id}/files", 
+            summary="Get files for a series in the given timepoint")
+@router.get("/{series_instance_uid}@{activity_id}/files",
+            summary="Get files for a series in the given activity")
 async def get_all_files(series_instance_uid: str, 
                         activity_id: int = None,
                         activity_timepoint_id: int = None,
@@ -197,17 +203,9 @@ async def get_all_files(series_instance_uid: str,
 
     If both activity_id and activity_timepoint_id are set, 
     activity_timepoint_id takes precedence.
-
-    Additionally, an activity_timepoint_id can be given by appending it
-    to the series after a colon, such as:
-
-    "1.2.3.4553452342234:13"
-     
-    This will take precedence over all other timepoint directives.
-
     """
-    if ":" in series_instance_uid:
-        series_instance_uid, activity_timepoint_id = series_instance_uid.split(':')
+
+    # return dict(series=series_instance_uid, a=activity_id, tp=activity_timepoint_id)
 
     if activity_timepoint_id is not None:
         query = f"""
@@ -274,3 +272,56 @@ async def get_all_files(series_instance_uid: str,
         """
 
     return {"file_ids": [x[0] for x in await db.fetch(query, [series_instance_uid])]}
+
+
+class Timepoint(BaseModel):
+    activity_id: int
+    activity_timepoint_id: int
+    creating_user: str
+    when_created: datetime.datetime
+
+class ActivityModel(BaseModel):
+    activities: list[int]
+    timepoints: list[Timepoint]
+
+@router.get("/{series_instance_uid}/activities")
+async def get_all_activities(series_instance_uid: str, 
+                        db: Database = Depends()) -> ActivityModel:
+    """Get a list of all activities and timepoints this series occurs in.
+    """
+
+    act_query = """\
+        select distinct
+                activity_id
+        from
+            file_series
+                natural join activity_timepoint_file
+                natural join activity_timepoint
+        where
+            series_instance_uid = $1
+    """
+
+    tp_query = """\
+        select distinct
+                activity_id,
+                activity_timepoint_id,
+                when_created,
+                creating_user
+        from
+            file_series
+                natural join activity_timepoint_file
+                natural join activity_timepoint
+        where
+            series_instance_uid = $1
+    """
+
+    # convert to true python objects so Pydantic verification works
+    activities = [x['activity_id'] for x in 
+                  await db.fetch(act_query, [series_instance_uid])]
+
+    timepoints = [dict(x) for x in await db.fetch(tp_query, [series_instance_uid])]
+
+    return {
+        "activities": activities,
+        "timepoints": timepoints,
+    }

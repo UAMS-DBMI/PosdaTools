@@ -245,6 +245,10 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Study,
       \&Posda::DB::Modules::Series,
       \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::FrameOfReference,
+      \&Posda::DB::Modules::Synchronization,
+      \&Posda::DB::Modules::ImagePixel,
+      \&Posda::DB::Modules::USImage,
     ],
   },
   '1.2.840.10008.5.1.4.1.1.6.1' =>{
@@ -623,6 +627,17 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Document,
     ],
   },
+  '1.2.840.10008.5.1.4.1.1.88.34' =>{
+    name => 'Comprehensive 3D SR Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::SRSeries,
+      \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::Document,
+    ],
+  },
   '1.2.840.10008.5.1.4.1.1.88.50' =>{
     name => 'Mammography CAD SR Storage',
     handlers => [
@@ -869,6 +884,20 @@ my $SopHandlers = {
       \&Posda::DB::Modules::Study,
       \&Posda::DB::Modules::Series,
       \&Posda::DB::Modules::Equipment,
+    ],
+  },
+  '1.2.840.10008.5.1.4.1.1.77.1.6' =>{
+    name => 'VL Whole Slide Microscopy Image Storage',
+    handlers => [
+      \&Posda::DB::Modules::Patient,
+      \&Posda::DB::Modules::Study,
+      \&Posda::DB::Modules::Series,
+      \&Posda::DB::Modules::Equipment,
+      \&Posda::DB::Modules::ImagePixel,
+      \&Posda::DB::Modules::ImagePlane,
+      \&Posda::DB::Modules::FrameOfReference,
+      \&Posda::DB::Modules::SlopeIntercept,
+      \&Posda::DB::Modules::WindowLevel,
     ],
   },
 };

@@ -24,6 +24,7 @@ import tempfile
 import hashlib
 import platform
 import logging
+import signal
 
 from posda.config import Config
 # import posda.logging.autoconfig
@@ -40,6 +41,12 @@ NODE_NAME = None  # the name of this node reported in the work table
 API_KEY = None    # system API key to use for requests
 
 HEADERS = None
+
+# Convert SIGTERM into an exception
+class SigTerm(SystemExit): pass
+def termhandler(a, b):
+    raise SigTerm(1)
+signal.signal(signal.SIGTERM, termhandler)
 
 def main():
     global BASE_URL

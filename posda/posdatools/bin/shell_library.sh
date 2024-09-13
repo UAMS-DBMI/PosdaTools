@@ -54,7 +54,7 @@ function start {
 function start_foreground {
   echo "Starting Posda in the foreground..."
 
-  AppController.pl $POSDA_EXTERNAL_HOSTNAME $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
+  exec AppController.pl $POSDA_EXTERNAL_HOSTNAME $POSDA_PORT $APP_CONTROLLER_ROOT/Config/AppConfig
 }
 
 function stop {

@@ -10,6 +10,8 @@ package Posda::Dataset;
 use Posda::Parser;
 use HexDump;
 use Digest::MD5;
+use Posda::Config 'Config';
+use Posda::UID;
 #use Debug;
 #my $Debug = 0;
 #my $dbg = sub {print STDERR @_};
@@ -1020,6 +1022,15 @@ sub WritePart10Fh{
 }
 sub WritePart10{
   my($ds, $file_name, $xfr_stx, $ae_title, $private_uid, $private) = @_;
+
+  if (Config('always_write_explicit') eq '1') {
+    if ($xfr_stx eq Posda::UID->ImplicitVRLittleEndian) {
+      print STDERR "Posda::Dataset - Automatically converting Implicit to Explicit Tranfser Syntax!\n";
+      $xfr_stx = Posda::UID->ExplicitVRLittleEndian;
+    }
+  }
+
+
   my $pix_ref = $ds->Get("(7fe0,0010)");
   if(ref($pix_ref) eq "ARRAY"){
     unless(

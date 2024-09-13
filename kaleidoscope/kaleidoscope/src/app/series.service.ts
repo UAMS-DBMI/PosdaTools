@@ -141,6 +141,13 @@ export class SeriesService {
       .map(res => res.json());
   }
 
+  flagForMasking(iec: number): Observable<any> {
+    console.log("SeriesService.flagForMasking()", iec);
+    let url = '/papi/v1/masking/' + iec + '/mask';
+    return this.http.post(url, {})
+      .map(res => res.json());
+  }
+
   hideProject(project: Project) {
     let params: URLSearchParams = new URLSearchParams();
     params.set("token", this.token);

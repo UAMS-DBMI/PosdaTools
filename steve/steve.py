@@ -3,8 +3,15 @@ import os
 import time
 import datetime
 import subprocess
+import signal
 from datetime import timedelta
 from posda.database import Database
+
+# Convert SIGTERM into an exception
+class SigTerm(SystemExit): pass
+def termhandler(a, b):
+    raise SigTerm(1)
+signal.signal(signal.SIGTERM, termhandler)
 
 class Job():
     def __init__(self,name,schedule,db,instructions):

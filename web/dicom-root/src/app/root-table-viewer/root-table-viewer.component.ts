@@ -33,7 +33,7 @@ export class RootTableViewerComponent implements OnInit {
 
   public myNewRootForms:FormGroup;
   //private columnsToDisplay:String[] = ["collection_code"];
-  public columnsToDisplay:String[] = ["site_code","site_name","collection_code","collection_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift"];
+  public columnsToDisplay:String[] = ["site_code","site_name","collection_code","collection_name","patient_id_prefix","body_part","access_type","baseline_date","date_shift","uid_root"];
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
@@ -48,6 +48,7 @@ export class RootTableViewerComponent implements OnInit {
       input_access_type: '',
       input_baseline_date: '',
       input_date_shift: '',
+      input_uid_root: '',
     });
   }
 

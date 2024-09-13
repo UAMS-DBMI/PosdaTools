@@ -1,5 +1,5 @@
 # Version to tag all images with
-export POSDA_IMG_VERSION=1.0
+include ./VERSION
 
 default: everything
 
@@ -14,6 +14,24 @@ everything:
 	make -C kaleidoscope
 	make -C ream
 	make -C exodus
+	make -C nopperabo
 
 test:
 	echo "There are no tests yet :("
+
+.PHONY: push
+push:
+	docker image push tcia/exodus:${POSDA_IMG_VERSION}
+	docker image push tcia/exodus:latest
+	docker image push tcia/ream:${POSDA_IMG_VERSION}
+	docker image push tcia/ream:latest
+	docker image push tcia/lanterna:${POSDA_IMG_VERSION}
+	docker image push tcia/lanterna:latest
+	docker image push tcia/posda:${POSDA_IMG_VERSION}
+	docker image push tcia/posda:latest
+	docker image push tcia/posda_web:${POSDA_IMG_VERSION}
+	docker image push tcia/posda_web:latest
+	docker image push tcia/kaleidoscope:${POSDA_IMG_VERSION}
+	docker image push tcia/kaleidoscope:latest
+	docker image push tcia/nopperabo:${POSDA_IMG_VERSION}
+	docker image push tcia/nopperabo:latest

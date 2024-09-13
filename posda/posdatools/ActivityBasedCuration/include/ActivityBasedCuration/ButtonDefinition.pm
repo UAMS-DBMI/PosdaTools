@@ -245,6 +245,15 @@ EOF
       visual_review_instance_id => "id",
     },
   },
+  qc_25=> {
+    chained_query_id => "qc_25",
+    caption => "chain",
+    from_query => "ViewNiftiVisualReviewInstances",
+    to_query => "ViewNiftiVisualReviewFiles",
+    arg_map => {
+      nifti_visual_review_instance_id => "nifti_visual_review_instance_id",
+    },
+  },
 );
 
 %QueryChainColumnButtons = (
@@ -439,12 +448,40 @@ EOF
     col_name => "pathology_visual_review_instance_id",
     caption => "Launch Visual Reviewer",
   },
+  qc_cc_81 => {
+    query => "MaskingStatus",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleMaskIEC",
+    col_name => "image_equivalence_class_id",
+    caption => "Mask",
+  },
+  # qc_cc_82 => {
+  #   query => "MaskingStatus",
+  #   type => "ChainColumnToPopup",
+  #   obj => "MirabelleMaskVR",
+  #   col_name => "visual_review_instance_id",
+  #   caption => "Mirabelle",
+  # },
+  qc_cc_83 => {
+    query => "MaskingReview",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewIEC",
+    col_name => "image_equivalence_class_id",
+    caption => "Review Mask",
+  },
   qc_ImagesInEquivClass => {
     query => "VisualReviewStatusDetails",
     type => "ChainColumnToPopup",
     obj => "Posda::ImageDisplayer::KaleidoscopeSub",
     col_name => "image_equivalence_class_id",
     caption => "view",
+  },
+  qc_cc_84 => {
+    query => "ViewNiftiVisualReviewFiles",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleNiftiVR",
+    col_name => "nifti_review_file_id",
+    caption => "review",
   },
 );
 

@@ -51,20 +51,74 @@ async def get_single_file(file_id: int, db: Database = Depends()):
     return await db.fetch_one(query, [file_id])
 
 
-@router.get("/series/{series_instance_uid}")
-async def get_series_files(series_instance_uid: str, db: Database = Depends()):
-    query = """
-	select root_path || '/' || rel_path as file
-	from
-	file_series
-	natural left join ctp_file
-	natural left join file_location
-	natural left join file_storage_root
-	where series_instance_uid = $1
-    """
-    records = [x[0] for x in await db.fetch(query, [series_instance_uid])]
+@router.get("/series/{series_instance_uid}",
+            summary="Download a zip of ALL files in this series")
+@router.get("/series/{series_instance_uid}:{activity_timepoint_id}", 
+            summary="Download a zip of files in this series and timepoint")
+@router.get("/series/{series_instance_uid}@{activity_id}",
+            summary="Download a zip of files in this series and activity id")
+async def get_series_files(
+    series_instance_uid: str,
+    activity_id: int = None,
+    activity_timepoint_id: int = None,
+    db: Database = Depends()
+):
+    if activity_timepoint_id is not None:
+        query = """
+        select distinct root_path || '/' || rel_path as file
+        from file_series
+        natural left join ctp_file
+        natural left join file_location
+        natural left join file_storage_root
+        natural left join activity_timepoint_file
+        where series_instance_uid = $1
+          and activity_timepoint_id = $2
+        """
 
-    file_name = f"{series_instance_uid}.zip"
+        records = [x[0] for x in await db.fetch(query, [
+            series_instance_uid, activity_timepoint_id
+        ])]
+
+        file_name = f"{series_instance_uid}_tp{activity_timepoint_id}.zip"
+
+    elif activity_id is not None:
+        query = """
+        select distinct root_path || '/' || rel_path as file
+        from file_series
+        natural left join ctp_file
+        natural left join file_location
+        natural left join file_storage_root
+        natural left join activity_timepoint_file
+        where series_instance_uid = $1
+        and activity_timepoint_id = (
+            select max(activity_timepoint_id)
+            from activity_timepoint
+            where activity_id = $2
+        )
+        """
+
+        records = [x[0] for x in await db.fetch(query, [
+            series_instance_uid, activity_id
+        ])]
+
+        file_name = f"{series_instance_uid}_act{activity_id}.zip"
+
+    else:
+        query = """
+        select distinct root_path || '/' || rel_path as file
+        from file_series
+        natural left join ctp_file
+        natural left join file_location
+        natural left join file_storage_root
+        where series_instance_uid = $1
+        """
+
+        records = [x[0] for x in await db.fetch(query, [
+            series_instance_uid
+        ])]
+
+        file_name = f"{series_instance_uid}_ALL.zip"
+
     return await asynczip.stream_files(records, file_name)
 
 @router.get("/iec/{iec}")

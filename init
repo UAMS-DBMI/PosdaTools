@@ -1,4 +1,5 @@
 #!/bin/bash
+export POSDA_IMG_VERSION=1.0.3
 
 echo "Setting up your environment..."
 
@@ -34,10 +35,9 @@ if [ ! -f posda.env ]; then
   cp config/posda.env .
 fi
 
-docker pull tcia/posda:latest
-docker pull tcia/kaleidoscope:latest
-docker pull tcia/k-base:latest
-docker pull tcia/ream:latest
-docker pull tcia/exodus:latest
-docker pull tcia/lanterna:latest
-docker pull tcia/posda_web:latest
+docker image pull tcia/exodus:${POSDA_IMG_VERSION}
+docker image pull tcia/ream:${POSDA_IMG_VERSION}
+docker image pull tcia/lanterna:${POSDA_IMG_VERSION}
+docker image pull tcia/posda:${POSDA_IMG_VERSION}
+docker image pull tcia/posda_web:${POSDA_IMG_VERSION}
+docker image pull tcia/kaleidoscope:${POSDA_IMG_VERSION}

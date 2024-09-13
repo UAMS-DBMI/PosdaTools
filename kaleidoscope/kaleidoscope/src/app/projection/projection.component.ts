@@ -27,5 +27,18 @@ export class ProjectionComponent implements OnInit {
   	window.open("/viewer/iec/" + this.series.image_equivalence_class_id,
                 "Series Viewer", "height=900,width=600");
   }
+  flagForMasking(): void {
+	  console.log("would flag here");
+	  this.service.flagForMasking(this.series.image_equivalence_class_id).subscribe(
+      resp => {
+        console.log("flagged for mask", resp);
+        alert("Successfully flagged for masking.");
+      },
+      error => {
+        console.log("some error", error);
+        alert("Failed to flag for masking. Maybe try again?");
+      }
+    );
+  }
 
 }

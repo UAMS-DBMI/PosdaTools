@@ -3669,6 +3669,11 @@ print STDERR "###########class: $class\n";
     $self->openKohlrabi($name, $params);
     return;
   }
+  # if Mirabelle, do it differently, too
+  if ($class =~ /^Mirabelle/) {
+    $self->openMirabelle($class, $params);
+    return;
+  }
   eval "require $class";
   if($@){
     print STDERR "$class failed to compile\n\t$@\n";
@@ -3705,6 +3710,40 @@ sub openKohlrabi{
     my $cmd = "rt('$name', '$kohlrabi_url/$val', 700, 1000, 0);";
     $self->QueueJsCmd($cmd);
   }
+}
+sub openMirabelle{
+    my ($self, $class, $params) = @_;
+
+    my $external_hostname = Config('external_hostname');
+
+    # NOTE currently Mirabelle must always be https. 
+    # TODO you must make sure this is configured right!
+    my $prot = "https:";
+
+    # my $prot = "http:";
+    # if(exists($ENV{POSDA_SECURE_ONLY}) && $ENV{POSDA_SECURE_ONLY}){
+    #   $prot = "https:";
+    # }
+    
+    my $base_url = "$prot//$external_hostname/mira";
+
+    my $extra_url;
+    if ($class eq 'MirabelleMaskIEC') {
+      $extra_url = 'mask/iec/' . $params->{image_equivalence_class_id};
+    }
+    if ($class eq 'MirabelleReviewIEC') {
+      $extra_url = 'review/iec/' . $params->{image_equivalence_class_id};
+    }
+    if ($class eq 'MirabelleMaskVR') {
+      $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
+    }
+    if ($class eq 'MirabelleNiftiVR') {
+      $extra_url = 'review/nifti/' . $params->{nifti_review_file_id};
+    }
+
+    $self->QueueJsCmd(
+      "rt('Mirabelle', '$base_url/$extra_url', 0, 0, 0);"
+    );
 }
 
 sub Queries{

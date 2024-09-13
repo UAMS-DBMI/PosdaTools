@@ -82,6 +82,7 @@
       <td><input matInput placeholder="Access Type" formControlName="input_access_type"></td>
       <td><input matInput placeholder="Baseline Date (XX-XX-XXXX)" formControlName="input_baseline_date"></td>
       <td><input matInput placeholder="Date Shift" formControlName="input_date_shift"></td>
+      <td><input matInput placeholder="UID Root" formControlName="input_uid_root"></td>
     </tr>
   </table>
       <button mat-button color="primary" type="submit">Add This Submission</button>
@@ -134,6 +135,11 @@
     <ng-container matColumnDef="date_shift">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Shift</th>
       <td mat-cell *matCellDef="let element"> {{element.date_shift}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="uid_root">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>UID Root</th>
+      <td mat-cell *matCellDef="let element"> {{element.uid_root}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

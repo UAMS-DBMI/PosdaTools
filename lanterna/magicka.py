@@ -18,6 +18,7 @@ import time
 import sys
 import shutil
 import logging
+import signal
 
 import requests
 import argparse
@@ -25,6 +26,12 @@ import argparse
 
 URL = os.environ.get("POSDA_INTERNAL_API_URL") + '/v1/import/'
 DEBUG = True
+
+# Convert SIGTERM into an exception
+class SigTerm(SystemExit): pass
+def termhandler(a, b):
+    raise SigTerm(1)
+signal.signal(signal.SIGTERM, termhandler)
 
 class ProjectionType(Enum):
     MIN = "-minimum"
