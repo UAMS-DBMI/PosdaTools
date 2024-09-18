@@ -5,7 +5,7 @@ import pathlib
 import shutil
 import requests
 import argparse
-import sys
+import os
 from posda.config import Config
 from posda.database import Database
 from posda.queries import Query
@@ -16,7 +16,7 @@ from posda.anonymizeslide import anonymizeslide
 from posda.main.file import insert_file_via_api_inplace
 
 
-destination_root_path = sys.environ.get(
+destination_root_path = os.environ.get(
     'POSDA_PATHOLOGY_OUTPUT_PATH',
     '/home/posda/cache/created/tmp/output' # default value
 )
