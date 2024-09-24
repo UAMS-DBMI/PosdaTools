@@ -21,7 +21,7 @@ def saveTiffMetaData(mytif, activity_id, file_id, phi_scan_id):
                 if sys.getsizeof(tag.value) < 2500:
                     #save the image description data
                     if tag.name == 'ImageDescription':
-                       Query("InsertPathologyImageDesc").execute(file_id = file_id, image_desc = str(tag.value))
+                        Query("InsertPathologyImageDesc").execute(file_id = file_id, layer_id = p, image_desc = str(tag.value))
                     #Determine if the tag is public or private
                     if tag.code < 32768:
                         priv = False

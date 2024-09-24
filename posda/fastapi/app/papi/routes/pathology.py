@@ -158,7 +158,7 @@ async def remL(pathid: int, db: Database = Depends()):
     }
 
 @router.put("/removeF/{pathid}")
-async def remL(pathid: int, db: Database = Depends()):
+async def remF(pathid: int, db: Database = Depends()):
     record = await db.fetch("""\
         INSERT INTO pathology_edit_queue
         (file_id,edit_type, edit_details, status)
@@ -174,7 +174,7 @@ async def remL(pathid: int, db: Database = Depends()):
     }
 
 @router.put("/editMeta/{pathid}")
-async def remL(pathid: int, db: Database = Depends()):
+async def editM(pathid: int, db: Database = Depends()):
     record = await db.fetch("""\
         INSERT INTO pathology_edit_queue
         (file_id,edit_type, edit_details, status)
@@ -188,6 +188,25 @@ async def remL(pathid: int, db: Database = Depends()):
     return {
         'status': 'success',
     }
+
+@router.put("/cancelEdit/{pathid}")
+async def cancelEdit(pathid: int, db: Database = Depends()):
+    record = await db.fetch("""\
+        update pathology_edit_queue
+        set status = 'canceled'
+        where
+        status = 'waiting'
+        and file_id = $1
+        """, [pathid])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
 
 @router.get("/review/{vr_id}")
 async def review(vr_id: int, db: Database = Depends()):

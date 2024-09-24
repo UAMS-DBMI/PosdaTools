@@ -152,7 +152,7 @@ sub ContentResponse {
        $http->queue("</br>");
        $self->NotSoSimpleButton($http, {
          op => "metaEditButtonPress",
-         caption => "Edit Needed",
+         caption => "Metadata Redaction",
          sync => "Update();",
        });
        $http->queue("</br>");
@@ -176,6 +176,11 @@ sub ContentResponse {
            }
            $j++;
         }
+        $self->NotSoSimpleButton($http, {
+           op => "editCancelButtonPress",
+           caption => "Cancel queued edits",
+           sync => "Update();",
+        });
         $http->queue("<br>----------------------------- <br>");
        }
 
@@ -492,9 +497,12 @@ sub removeFButtonPress(){
   $self->{client}->PUT("$self->{MY_API_URL}/set_edit/$self->{pathid}/false/$self->{current_user}");
 }
 
-sub updatePatientIDButtonPress(){
+sub editCancelButtonPress(){
   my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/cancelEdit/$self->{pathid}");
 }
+
+
 
 sub MenuResponse {
   my ($self, $http, $dyn) = @_;
