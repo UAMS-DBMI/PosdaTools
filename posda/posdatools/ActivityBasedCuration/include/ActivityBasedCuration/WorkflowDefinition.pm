@@ -394,7 +394,6 @@ This step should not be needed if your data was imported through CTP",
         operation => "SelectQueryGroup",
         query_list_name => "PathVisualReviewStatus",
        },
-    ],
       {
         caption => "Exports",
         operation => "SelectQueryGroup",
