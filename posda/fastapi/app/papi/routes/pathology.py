@@ -235,6 +235,26 @@ async def get_mapping(file_id: int, db: Database = Depends()):
              """
     return await db.fetch(query, [file_id])
 
+@router.put("/setmapping/{file_id}/{patient_id}/{original_file_name}/{collection_name}/{site_name}/{study_name}/{image_id}/{clinical_trial_subject_id}")
+async def set_mapping(file_id: int, db: Database = Depends()):
+    query = """\
+        insert
+            (file_id,patient_id,original_file_name,collection_name,site_name,study_name,image_id,clinical_trial_subject_id) VALUES
+            ($1,$2,$3,$4,$5,$6,$7,$8)
+        into
+            pathology_patient_mapping a
+        ON CONFLICT (file_id) DO UPDATE
+        set
+            patient_id=$2,
+            original_file_name=$3,
+            collection_name=$4,
+            site_name=$5,
+            study_name=$6,
+            image_id=$7,
+            clinical_trial_subject_id=$8
+             """
+    return await db.fetch(query, [file_id,patient_id,original_file_name,collection_name,site_name,study_name,image_id,clinical_trial_subject_id])
+
 @router.get("/image_desc/{file_id}")
 async def get_image_desc(file_id: int, db: Database = Depends()):
     query = """\

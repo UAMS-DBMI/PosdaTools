@@ -357,16 +357,10 @@ This step should not be needed if your data was imported through CTP",
       caption => "Create Activity from Import",
       action =>  "PathologyCreateActivityAndTP"
     },
-    {
-      operation => "InvokeNewOperation",
-      caption => "Patient Mapping",
-      action =>  "Path_Patient_Mapping",
-      special => "spreadsheetRequest"
-    },
-    {
-      caption => "Schedule PHI Scan",
-      action =>  "Path_PHI_Scan",
-    },
+    # {
+    #   caption => "Schedule PHI Scan",
+    #   action =>  "Path_PHI_Scan",
+    # },
     {
       operation => "InvokeNewOperation",
       caption => "Create Visual Review",
@@ -376,6 +370,17 @@ This step should not be needed if your data was imported through CTP",
       operation => "InvokeNewOperation",
       caption => "Commit Queued Edits",
       action =>  "Path_Commit_Edits",
+    },
+    {
+      operation => "InvokeNewOperation",
+      caption => "Patient Mapping",
+      action =>  "Path_Patient_Mapping",
+      special => "spreadsheetRequest"
+    },
+    {
+      operation => "InvokeNewOperation",
+      caption => "Create Export Spreadsheet",
+      action =>  "Path_create_export_sheet",
     },
    ],
     queries => [

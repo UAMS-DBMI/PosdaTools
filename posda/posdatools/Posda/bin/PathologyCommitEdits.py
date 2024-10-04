@@ -125,6 +125,7 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     source_file = pathlib.Path(root_path) / rel_path
 
     # calculate the output path (destination_root_path + rel_path)
+    rel_path = rel_path.replace('/tmp/output','') #prevent the destination folder from repeating into subfolders
     output_file = pathlib.Path(destination_root_path) / rel_path
 
     # create the output tree if necessary
