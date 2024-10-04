@@ -395,6 +395,12 @@ This step should not be needed if your data was imported through CTP",
         query_list_name => "PathVisualReviewStatus",
        },
     ],
+      {
+        caption => "Exports",
+        operation => "SelectQueryGroup",
+        query_list_name => "PathologyExportQueries",
+       },
+    ],
   },
   {
     id => "17_Nifti",
@@ -802,6 +808,15 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "Display created Tiff PHI Report",
         query => "RunTiffPHIReport",
+      },
+    ],
+  ],
+  PathologyExportQueries => [
+    "Suggested Queries for Pathology Export",
+    [
+      {
+        caption => "PathDB Style: 1",
+        query => "PathologyExportQuery1",
       },
     ],
   ],
