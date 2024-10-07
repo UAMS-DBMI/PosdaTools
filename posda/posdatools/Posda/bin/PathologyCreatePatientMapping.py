@@ -4,11 +4,11 @@ import argparse
 import csv
 import sys
 import os
-
-
+import requests
 from posda.database import Database
 from posda.queries import Query
 from posda.background.process import BackgroundProcess
+from posda.config import Config
 
 
 def  call_api(unique_url, call_type):
@@ -41,14 +41,14 @@ def get_files_for_activity(activity_id):
         return call_api(str, 0)
 
 def get_relpath(file_id):
-        str = "/find_relpath/{}".format(activity_id)
+        str = "/find_relpath/{}".format(file_id)
         return call_api(str, 0)
 
-def  set_mapping(file_id,patient_id,original_file_name,collection_name,site_name,study_name,image_id,clinical_trial_subject_id):
-        str = "/setmapping/{}/{}/{}/{}/{}/{}/{}/{}/{}".format(file_id,patient_id,original_file_name,collection_name,site_name,study_name,image_id,clinical_trial_subject_id)
-        return call_api(str, 0)
+def  set_mapping(file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id):
+        str = "/setmapping/{}/{}/{}/{}/{}/{}/{}".format(file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id)
+        return call_api(str, 2)
 
-def main(pargs):
+def main(pargs,records,filenames):
 # needs to respect new import process
 # needs to include the features necessary for Export
 # should repeated values be in their own table?
@@ -58,16 +58,26 @@ def main(pargs):
     background = BackgroundProcess(pargs.background_id, pargs.notify, pargs.activity_id)
     background.daemonize()
 
-    results = []
     count = 0
     myFiles = get_files_for_activity(args.activity_id)
+
     for f in myFiles:
-        my_path = get_relpath(f).replace('inplace/','').replace('/tmp/output','')
-        print('File {} has path {}'.format(file_id,my_path))
-        if my_path in pargs.original_file_name:
-          count = count+1
-          set_mapping(file_id,pargs.patient_id,my_path,pargs.collection_name,pargs.site_name,pargs.study_id,pargs.clinical_trial_subject_id)
-    print("Patholgy patient mapping created.\n{0} files mapped out of {1} files in mapping.\nActivity total files {2}.\n".format(count, len(results)+1, len(row)+1))
+        p = get_relpath(f['file_id'])[0]
+        my_path = str(p['rel_path'])
+        my_path = my_path.replace('inplace/', '').replace('/tmp/output', '')
+        #print('File {} has path {}'.format(f, my_path))
+        if my_path in filenames:
+            count += 1
+            j = filenames.index(my_path)
+            rec = records[j]
+            try:
+                set_mapping(f['file_id'], rec['patient_id'], rec['collection_name'], rec['site_name'],  rec['study_id'], rec['image_id'], rec['clinical_trial_subject_id'])
+            except  Exception as e:
+                print('Error! Mapping found but not set! {} : {}'.format(f['file_id'],e))
+
+
+    print("Pathology patient mapping created.\n{0} files mapped out of {1} files in mapping.\nActivity total files {2}.\n".format(
+    count, len(filenames), len(myFiles)))
     background.finish("Complete")
 
 
@@ -76,13 +86,30 @@ if __name__ == "__main__":
     parser.add_argument("background_id")
     parser.add_argument("activity_id")
     parser.add_argument("notify")
-    parser.add_argument("patient_id")
-    parser.add_argument("original_file_name")
-    parser.add_argument("collection_name")
-    parser.add_argument("site_name")
-    parser.add_argument("image_id")
-    parser.add_argument("study_id")
-    parser.add_argument("clinical_trial_subject_id")
-    args = parser.parse_args()
 
-    main(args)
+    # parser.add_argument("patient_id")
+    # parser.add_argument("original_file_name")
+    # parser.add_argument("collection_name")
+    # parser.add_argument("site_name")
+    # parser.add_argument("image_id")
+    # parser.add_argument("study_id")
+    # parser.add_argument("clinical_trial_subject_id")
+
+    #get the STDIN data
+    records = []
+    filenames = []
+    mappingData = {}
+    for line in sys.stdin:
+        patient_id, original_file_name, collection_name, site_name, study_id, image_id, clinical_trial_subject_id = (line.rstrip()).split('&')
+        mappingData['patient_id'] = patient_id
+        mappingData['original_file_name'] = original_file_name
+        mappingData['collection_name'] = collection_name
+        mappingData['site_name'] = site_name
+        mappingData['study_id'] = study_id
+        mappingData['image_id'] = image_id
+        mappingData['clinical_trial_subject_id'] = clinical_trial_subject_id
+        records.append(mappingData)
+        filenames.append(original_file_name)
+
+    args = parser.parse_args()
+    main(args,records,filenames)
