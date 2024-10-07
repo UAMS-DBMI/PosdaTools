@@ -61,6 +61,9 @@ def main(pargs,records,filenames):
     count = 0
     myFiles = get_files_for_activity(args.activity_id)
 
+    #print('Records: {}'.format(records))
+    #print('Names: {}'.format(filenames))
+    #print('Files: {}'.format(myFiles))
     for f in myFiles:
         p = get_relpath(f['file_id'])[0]
         my_path = str(p['rel_path'])
@@ -98,9 +101,11 @@ if __name__ == "__main__":
     #get the STDIN data
     records = []
     filenames = []
-    mappingData = {}
+
+
     for line in sys.stdin:
         patient_id, original_file_name, collection_name, site_name, study_id, image_id, clinical_trial_subject_id = (line.rstrip()).split('&')
+        mappingData = {}
         mappingData['patient_id'] = patient_id
         mappingData['original_file_name'] = original_file_name
         mappingData['collection_name'] = collection_name

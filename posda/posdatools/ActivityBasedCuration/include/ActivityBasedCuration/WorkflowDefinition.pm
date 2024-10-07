@@ -377,11 +377,6 @@ This step should not be needed if your data was imported through CTP",
       action =>  "Path_Patient_Mapping",
       special => "spreadsheetRequest"
     },
-    {
-      operation => "InvokeNewOperation",
-      caption => "Create Export Spreadsheet",
-      action =>  "Path_create_export_sheet",
-    },
    ],
     queries => [
       {
