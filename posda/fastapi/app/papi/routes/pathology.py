@@ -223,6 +223,20 @@ async def review(vr_id: int, db: Database = Depends()):
       """
     return await db.fetch(query, [vr_id])
 
+@router.put("/copymapping/{oldfile_id}/{newfile_id}")
+async def copymapping(oldfile_id: int, newfile_id: int, db: Database = Depends()):
+    query = """\
+        	insert into pathology_patient_mapping
+            (file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id)
+        select
+           $2, patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id
+        from
+            pathology_patient_mapping a
+        where
+            a.file_id = $1;
+             """
+    return await db.fetch(query, [oldfile_id,newfile_id])
+
 @router.get("/mapping/{file_id}")
 async def get_mapping(file_id: int, db: Database = Depends()):
     query = """\

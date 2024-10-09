@@ -94,6 +94,11 @@ def process(filepath):
         newF = insert_file_via_api_inplace(filepath)
     return newF
 
+def updateMapping(old_id, new_id):
+    str = "/copymapping/{}/{}".format(old_id, new_id)
+    return call_api(str, 2)
+
+
 def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> str:
     """Copy a file (normally pathology) given by `file_id` to some destination
 
@@ -169,6 +174,7 @@ def main(pargs):
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
                     new_file_id = process(new_file)
+                    updateMapping(f['file_id'], new_file_id)
                     myNewFiles.append(new_file_id)
                     background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
@@ -176,6 +182,7 @@ def main(pargs):
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
                     new_file_id = process(new_destination_path)
+                    updateMapping(f['file_id'], new_file_id)
                     myNewFiles.append(new_file_id)
                     background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
                 else:
