@@ -23,7 +23,7 @@ EOF
 
 unless($#ARGV == 9) {
  my $num_parms = @ARGV;
- print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 9\n";
+ print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 10\n";
  die $usage;
 }
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
