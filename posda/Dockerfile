@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
 	xutils-dev
 
 RUN mkdir /build
-RUN wget -O /build/tools.tar.bz2 \
-	https://www.dclunie.com/dicom3tools/workinprogress/dicom3tools_1.00.snapshot.20220618093127.tar.bz2
+COPY get-latest-dicom3tools.sh /build/
+RUN /build/get-latest-dicom3tools.sh
 
 RUN cd /build && \
 	tar xf tools.tar.bz2 && \

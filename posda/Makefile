@@ -1,6 +1,5 @@
-ifndef POSDA_IMG_VERSION
-	override POSDA_IMG_VERSION=0
-endif
+include ../VERSION
+
 TAG=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=tcia/posda
 .PHONY: push clean
