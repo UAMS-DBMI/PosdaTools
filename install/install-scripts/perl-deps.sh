@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Install required Perl deps using cpanm.
+# This script must be run after the system-deps, or
+# otherwise after having installed cpanm
+#
 
 DEPS="
 Method::Signatures::Simple
