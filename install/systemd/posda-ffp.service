@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/oneposda/install/start-ffp.sh
+ExecStart=/oneposda/install/start-scripts/start-ffp.sh
 
 [Install]
 WantedBy=multi-user.target

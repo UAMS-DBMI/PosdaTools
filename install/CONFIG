@@ -11,6 +11,10 @@ export INSTALL_DIR=$ONEPOSDA_LOCATION/install
 export POSDA_DIR=$ONEPOSDA_LOCATION/posda/posdatools
 export CONFIG_DIR=$INSTALL_DIR/configs
 
+# The actual python interpreter to use, and pip
+export PYTHONBIN=/usr/bin/python3.9
+export PIPBIN=/usr/bin/pip3.9
+
 # Always include the python dir
 export PYTHONPATH=$POSDA_DIR/python
 
