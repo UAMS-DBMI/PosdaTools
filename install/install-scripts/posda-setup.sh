@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+if [ -z "$CONFIG_DIR" ]; then
+        echo "Missing install configuration, load CONFIG first!";
+        exit 1;
+fi
+
 setup() {
 	./setup.sh
 
@@ -20,11 +25,11 @@ setup() {
 	echo 2 > /home/posda/cache/POSDA_VERSION
 }
 
+cd $INSTALL_DIR
 # load the env files that Docker would normally load
 for f in configs/*.env; do
 	export $(grep -v ^# $f)
 done
 
-# assuming this is run from the install dir!
-cd ../posda/posdatools
+cd $POSDA_DIR
 setup

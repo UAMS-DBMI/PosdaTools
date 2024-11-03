@@ -1,0 +1,25 @@
+# This is the master config file for locations
+# It is used in install scripts and start scripts
+
+# The base location of the oneposda folder for this install
+export ONEPOSDA_LOCATION=/oneposda
+
+export INSTALL_DIR=$ONEPOSDA_LOCATION/install
+
+
+# Setup dirs used in start scripts
+export POSDA_DIR=$ONEPOSDA_LOCATION/posda/posdatools
+export CONFIG_DIR=$INSTALL_DIR/configs
+
+# Always include the python dir
+export PYTHONPATH=$POSDA_DIR/python
+
+# Report it
+function report_config() {
+	echo "Using Posda config:"
+	env | grep POSDA
+	env | grep CONFIG_DIR
+	env | grep PYTHONPATH
+	echo "---------"
+}
+report_config
