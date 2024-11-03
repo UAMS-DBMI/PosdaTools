@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=python3 /oneposda/kaleidoscope/kaleidoscope/server/server.py
+ExecStart=python3.9 /oneposda/kaleidoscope/kaleidoscope/server/server.py
 
 [Install]
 WantedBy=multi-user.target

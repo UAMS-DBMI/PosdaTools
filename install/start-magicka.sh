@@ -11,4 +11,4 @@ done
 # ensure we can reach the python posda module
 export PYTHONPATH=$POSDA_DIR/python
 cd $POSDA_DIR
-python3 -u $POSDA_DIR/../../lanterna/magicka.py
+python3.9 -u $POSDA_DIR/../../lanterna/magicka.py
