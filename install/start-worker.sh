@@ -1,7 +1,7 @@
 #!/bin/bash
 
 POSDA_DIR=/oneposda/posda/posdatools
-CONFIG_DIR=/oneposda/install/temp-config
+CONFIG_DIR=/oneposda/install/configs
 
 export POSDA_WORKER_PRIORITY=$1
 #export POSDA_WORKER_NAME=??

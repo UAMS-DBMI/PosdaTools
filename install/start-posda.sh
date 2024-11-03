@@ -1,7 +1,7 @@
 #!/bin/bash
 
 POSDA_DIR=/oneposda/posda/posdatools
-CONFIG_DIR=/oneposda/install/temp-config
+CONFIG_DIR=/oneposda/install/configs
 
 # load the env files that Docker would normally load
 for f in $CONFIG_DIR/*.env; do

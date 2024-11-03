@@ -21,7 +21,7 @@ setup() {
 }
 
 # load the env files that Docker would normally load
-for f in temp-config/*.env; do
+for f in configs/*.env; do
 	export $(grep -v ^# $f)
 done
 
