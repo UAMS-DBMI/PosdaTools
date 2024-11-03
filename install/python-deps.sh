@@ -11,5 +11,5 @@ Pillow
 wheel
 "
 
-pip3 install $DEPS
-pip3 install -r ../posda/fastapi/app/requirements.txt
+pip3.9 install $DEPS
+pip3.9 install -r ../posda/fastapi/app/requirements.txt
