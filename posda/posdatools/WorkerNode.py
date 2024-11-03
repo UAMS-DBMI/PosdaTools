@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -u
+#!/usr/bin/python3.9 -u
 """
 Posda Worker Node management program.
 
