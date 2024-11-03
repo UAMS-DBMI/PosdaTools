@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/oneposda/install/start-nopperabo.sh
+ExecStart=/oneposda/install/start-scripts/start-nopperabo.sh
 
 [Install]
 WantedBy=multi-user.target

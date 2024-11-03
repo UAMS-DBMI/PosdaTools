@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/oneposda/install/start-worker.sh 0
+ExecStart=/oneposda/install/start-scripts/start-worker.sh 0
 
 [Install]
 WantedBy=multi-user.target

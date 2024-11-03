@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/oneposda/install/start-magicka.sh
+ExecStart=/oneposda/install/start-scripts/start-magicka.sh
 
 [Install]
 WantedBy=multi-user.target
