@@ -9,4 +9,4 @@ echo "API_ROOT = $API_ROOT"
 cd $API_ROOT
 
 #scl enable rh-python38 -- \
-python3 -m uvicorn --workers $API_WORKERS --host 0.0.0.0 --port $API_PORT main:app
+python3.9 -m uvicorn --workers $API_WORKERS --host 0.0.0.0 --port $API_PORT main:app
