@@ -1,7 +1,7 @@
 -- Name: InsertPathologyImageDesc
 -- Schema: posda_files
 -- Columns: []
--- Args: ['file_id',layer_id,'image_desc']
+-- Args: ['file_id', 'layer_id','image_desc']
 -- Tags: ['pathology']
 -- Description: Insert an image Description record for a file in a pathology collection
 --
