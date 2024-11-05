@@ -7,6 +7,7 @@
 --
 
 select
+  c,
   from_patient_id,
   to_patient_id,
   to_patient_name,
