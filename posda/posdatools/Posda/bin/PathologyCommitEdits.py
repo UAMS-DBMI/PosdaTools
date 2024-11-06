@@ -163,36 +163,34 @@ def main(pargs):
         remove = False
         if (edits and len(edits) > 0):
             totalEdits = totalEdits + 1
+            current_file_id = f['file_id']
             for e in edits:
                 if e['edit_type'] == '5':
                     # Get the root_path and rel_path separately
-                    rpath = get_root_and_rel_path(f['file_id'])
+                    rpath = get_root_and_rel_path(current_file_id)
                     root_path = rpath[0]
                     rel_path = rpath[1]
                     og_file_path = pathlib.Path(root_path) / rel_path
                     new_file = anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
                     completeEdit(e['pathology_edit_queue_id'])
-                    background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
-                    new_file_id = process(new_file)
-                    updateMapping(f['file_id'], new_file_id)
-                    myNewFiles.append(new_file_id)
-                    background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
+                    background.print_to_email("Completed {} edit on file {}".format(len(edits), current_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
-                    background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
-                    new_file_id = process(new_destination_path)
-                    updateMapping(f['file_id'], new_file_id)
-                    myNewFiles.append(new_file_id)
-                    background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
+
                 else:
                     completeEdit(e['pathology_edit_queue_id'])
-                    #myNewFiles.remove(file_id)
-                    background.print_to_email("File {} removed".format(f['file_id']))
+                    background.print_to_email("File {} removed".format(current_file_id))
                     break
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
+
+        new_file_id = process(new_destination_path)
+        updateMapping(current_file_id, new_file_id)
+        myNewFiles.append(new_file_id) #should only add the final id to the TP
+        background.print_to_email("Completed {} edit on file.".format(len(edits)))
+        background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
 
     if (totalEdits > 0):
         get_atp = create_path_activity_timepoint(pargs.activity_id, pargs.notify)
