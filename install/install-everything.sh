@@ -12,4 +12,5 @@ $SCRIPT_DIR/system-deps.sh
 $SCRIPT_DIR/perl-deps.sh
 $SCRIPT_DIR/python-deps.sh
 $SCRIPT_DIR/custom-deps.sh
+$SCRIPT_DIR/masker.sh
 $SCRIPT_DIR/services.sh
