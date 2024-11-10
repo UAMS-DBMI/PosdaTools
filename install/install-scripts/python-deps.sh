@@ -20,7 +20,7 @@ wheel
 httpx>=0.27.0
 loguru>=0.7.2
 jsonargparse[signatures]>=4.32.0
-sanic==0.4.1
+sanic>=24.6.0
 "
 
 pip3.9 install $DEPS

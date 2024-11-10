@@ -21,4 +21,5 @@ systemctl enable --now posda-worker-low
 systemctl enable --now posda-worker-high
 systemctl enable --now kaleidoscope
 systemctl enable --now magicka
+systemctl enable --now nopperabo
 
