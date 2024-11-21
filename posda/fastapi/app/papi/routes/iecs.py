@@ -46,3 +46,33 @@ async def get_iec_files(iec: int, db: Database = Depends()):
     """
 
     return {"file_ids": [x[0] for x in await db.fetch(query, [iec])]}
+
+
+class Frame(BaseModel):
+    file_id: int
+    frames: int
+
+
+@router.get("/{iec}/frames")
+async def get_iec_frames(iec: int, db: Database = Depends()) -> list[Frame]:
+    query = """
+    select
+        file_id,
+        coalesce(number_of_frames, 1) as frames
+    from
+        image_equivalence_class_input_image
+        natural join file_sop_common
+        natural left join file_image
+        natural left join image
+    where
+        image_equivalence_class_id = $1
+    order by
+        -- sometimes instance_number is empty string or null
+        case instance_number
+            when '' then '0'
+            when null then '0'
+            else instance_number
+        end::int
+    """
+
+    return [dict(x) for x in await db.fetch(query, [iec])]

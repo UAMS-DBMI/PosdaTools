@@ -179,6 +179,96 @@ async def get_ohif_config(series_instance_uid: str,
     return output
 
 
+class Frame(BaseModel):
+    file_id: int
+    frames: int
+
+@router.get("/{series_instance_uid}@{activity_id}/frames",
+            summary="Get frames for a series in the given activity")
+async def get_frames_activity(series_instance_uid: str,
+                              activity_id: int,
+                              db: Database = Depends()) -> list[Frame]:
+    query = f"""\
+        select max(activity_timepoint_id)
+        from activity_timepoint
+        where activity_id = $1
+    """
+    
+    res = await db.fetch_one(query, [activity_id])
+
+    activity_timepoint_id = res["max"]
+    return await get_frames_timepoint(series_instance_uid, activity_timepoint_id, db)
+
+
+@router.get("/{series_instance_uid}:{activity_timepoint_id}/frames",
+            summary="Get frames for a series in the given timepoint")
+async def get_frames_timepoint(series_instance_uid: str,
+                               activity_timepoint_id: int,
+                               db: Database = Depends()) -> list[Frame]:
+
+    query = f"""\
+        with timepoint_files as (
+            select file_id
+            from activity_timepoint_file
+            where activity_timepoint_id = $2
+        )
+        select 
+            file_id, 
+            coalesce(number_of_frames, 1) as frames
+
+        from
+            timepoint_files
+            natural join file_series
+            natural join file_sop_common
+            natural left join file_image
+            natural left join image
+        where series_instance_uid = $1
+        order by
+            -- sometimes instance_number is empty string or null
+            case instance_number
+                when '' then '0'
+                when null then '0'
+                else instance_number
+            end::int
+    """
+
+    return [dict(x) for x in await db.fetch(query, [series_instance_uid, activity_timepoint_id])]
+
+@router.get("/{series_instance_uid}/frames",
+            summary="Get ALL frames for a series")
+async def get_frames_latest(series_instance_uid: str,
+                            db: Database = Depends()) -> list[Frame]:
+    """Get ALL frames for a series.
+
+    This will include files from any and all activities and timepoints.
+    This is seldom what you want.
+    """
+    query = f"""\
+        select 
+            file_id, 
+            coalesce(number_of_frames, 1) as frames
+
+        from
+            file_series
+            natural join file_sop_common
+            natural left join file_image
+            natural left join image
+        where series_instance_uid = $1
+        order by
+            -- sometimes instance_number is empty string or null
+            case instance_number
+                when '' then '0'
+                when null then '0'
+                else instance_number
+            end::int
+    """
+
+    # have to convert to dict for FastAPI's type checking to work
+    frames = [dict(x) for x in await db.fetch(query, [series_instance_uid])]
+    return frames
+
+
+
 @router.get("/{series_instance_uid}/files", 
             summary="Get ALL files for a series")
 @router.get("/{series_instance_uid}:{activity_timepoint_id}/files", 
