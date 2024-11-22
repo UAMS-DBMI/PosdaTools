@@ -32,7 +32,9 @@ clean:
 	rm -f *.sql
 
 all.sql: schema.sql data.sql queries.sql
-	cat $+ > all.sql
+	cat $+ > $@
+	# Remove all changes to tablespaces
+	sed -i '/default_tablespace/d' $@
 
 schema.sql: $(SCHEMA_FILES)
 	cat $+ > schema.sql
