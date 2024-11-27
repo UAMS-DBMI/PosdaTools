@@ -105,7 +105,7 @@ def consistent(file_objs) -> tuple[list[File], bool]:
 
     # not enough slices to have any idea
     if len(file_objs) < 2:
-        return False
+        return (file_objs, False)
 
     sorted_by_proj_position = sorted(file_objs, key=lambda x: x.projected_position())
 
@@ -132,7 +132,6 @@ async def get_iec_frames(iec: int, db: Database = Depends()) -> FrameResponse:
             coalesce(number_of_frames, 1) as frame_count,
             iop,
             ipp
-
         from
             image_equivalence_class_input_image
             natural left join file_image
