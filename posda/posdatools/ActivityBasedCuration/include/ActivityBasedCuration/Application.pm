@@ -3734,6 +3734,9 @@ sub openMirabelle{
     if ($class eq 'MirabelleReviewIEC') {
       $extra_url = 'review/iec/' . $params->{image_equivalence_class_id};
     }
+    if ($class eq 'MirabelleReviewDICOMIEC') {
+      $extra_url = 'review/dicom/iec/' . $params->{image_equivalence_class_id};
+    }
     if ($class eq 'MirabelleMaskVR') {
       $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
     }
