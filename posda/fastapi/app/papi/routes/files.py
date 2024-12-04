@@ -157,7 +157,8 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
             window_center,
             pixel_pad,
             samples_per_pixel,
-            planar_configuration
+            planar_configuration,
+            coalesce(number_of_frames, 1) as number_of_frames
 
         from
             file_image
@@ -208,6 +209,7 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
                              'Q-DICOM-Samples-Per-Pixel': str(record['samples_per_pixel']),
                              'Q-DICOM-PhotoRep': str(record['photometric_interpretation']),
                              'Q-DICOM-Planar-Config': str(record['planar_configuration']),
+                             'Q-DICOM-Num-of-Frames': str(record['number_of_frames']),
                              },
                     media_type="application/octet-stream",
                     content=data)
