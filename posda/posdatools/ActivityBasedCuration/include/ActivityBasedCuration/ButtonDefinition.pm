@@ -476,13 +476,6 @@ EOF
     col_name => "processing_status",
     caption => "Mirabelle",
   },
-  qc_cc_86 => {
-    query => "VisualReviewStatusByIdAndPatient",
-    type => "ChainColumnToPopup",
-    obj => "MirabelleReviewDICOMIEC",
-    col_name => "processing_status",
-    caption => "Mirabelle",
-  },
   qc_cc_87 => {
     query => "VisualReviewStatusDetailsByPatient",
     type => "ChainColumnToPopup",
