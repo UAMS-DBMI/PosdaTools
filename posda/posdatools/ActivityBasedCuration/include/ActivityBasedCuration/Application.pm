@@ -3732,13 +3732,16 @@ sub openMirabelle{
       $extra_url = 'mask/iec/' . $params->{image_equivalence_class_id};
     }
     if ($class eq 'MirabelleReviewIEC') {
-      $extra_url = 'review/iec/' . $params->{image_equivalence_class_id};
+      $extra_url = 'review/mask/iec/' . $params->{image_equivalence_class_id};
+    }
+    if ($class eq 'MirabelleReviewDICOMIEC') {
+      $extra_url = 'review/dicom/iec/' . $params->{image_equivalence_class_id};
     }
     if ($class eq 'MirabelleMaskVR') {
       $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
     }
     if ($class eq 'MirabelleNiftiVR') {
-      $extra_url = 'review/nifti/' . $params->{nifti_review_file_id};
+      $extra_url = 'review/nifti/fileId/' . $params->{nifti_review_file_id};
     }
 
     $self->QueueJsCmd(

@@ -683,6 +683,14 @@ This step should not be needed if your data was imported through CTP",
         caption => "VisualReviewForActivity",
         query => "GetVisualReviewByActivityId",
       },
+      {
+        caption => "VisualReviewStatusById",
+        query => "VisualReviewStatusById",
+      },
+      {
+        caption => "VisualReviewStatusDetailsByPatient",
+        query => "VisualReviewStatusDetailsByPatient",
+      },
     ],
   ],
   MaskingStatus => [
