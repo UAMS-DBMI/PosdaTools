@@ -6,6 +6,7 @@ import os
 from typing import NamedTuple
 import hashlib
 
+from pprint import pprint
 import requests
 import psycopg2
 from fire import Fire
@@ -244,12 +245,16 @@ def main(subprocess_invocation_id: int,
     # generate the expected filename
     filenames = failed_files_from_copy(psql_db_cur, subprocess_invocation_id)
 
-    print(filenames)
-    return
+    # pprint(filenames)
+    # return
 
     # verify they exist
-    existing_files = list(filter(os.path.exists, filenames))
+    existing_files = list(filter(os.path.exists, [make_filename_from_sop(sop) for sop, fn in filenames]))
     print(f"Found {len(existing_files)} files.")
+    # pprint(existing_files)
+    # return
+
+
 
     TOKEN = login_or_die()
     print(f"logged in to api, token={TOKEN}")
