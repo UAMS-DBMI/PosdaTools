@@ -8,6 +8,8 @@ import asyncpg.exceptions
 from .auth import logged_in_user, User
 from ..util import Database
 
+from ..util.models import File, FrameResponse, consistent
+
 router = APIRouter(
     tags=["Functions for masking series"],
     dependencies=[logged_in_user]
@@ -364,6 +366,7 @@ async def get_for_visualreview(
     except:
         pass
 
+
 @router.get("/{iec}/reviewfiles")
 async def get_iec_review_files(
     iec: int,
@@ -372,22 +375,43 @@ async def get_iec_review_files(
 ):
     """Get list of completed files for review"""
 
-    records = await db.fetch("""\
+    query = """
         select
-            file_id
+            file_id,
+            image_type,
+            coalesce(number_of_frames, 1) as frame_count,
+            iop,
+            ipp
         from
             masking
             natural join file_import
-            natural join file_sop_common
+            natural left join file_image
+            natural left join image
+            natural left join file_image_geometry
+            natural left join image_geometry
         where
             image_equivalence_class_id = $1
-        order by
-            -- sometimes instance_number is empty string or null
-            case instance_number
-                when '' then '0'
-                when null then '0'
-                else instance_number
-            end::int
-    """, [iec])
+    """
 
-    return [x[0] for x in records]
+    def raw_to_obj(rows):
+        return [File.from_raw(i) for i in rows]
+
+    framelist = raw_to_obj([list(x) for x in await db.fetch(query, [iec])])
+    if len(framelist) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    sorted_framelist, consistent_frames = consistent(framelist)
+
+    simplified = [
+        { 
+            "file_id": x.file_id,
+            "num_of_frames": x.frame_count,
+        }
+        for x in sorted_framelist
+    ]
+
+    return {
+        "volumetric": consistent_frames,
+        "frames": simplified,
+    }
+
