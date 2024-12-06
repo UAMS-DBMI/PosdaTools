@@ -385,6 +385,7 @@ async def get_iec_review_files(
         from
             masking
             natural join file_import
+            natural join dicom_file
             natural left join file_image
             natural left join image
             natural left join file_image_geometry
