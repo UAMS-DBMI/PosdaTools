@@ -40,6 +40,7 @@ def  call_api(unique_url, call_type):
     API_KEY = Config.get('api_system_token')
     HEADERS = {'Authorization': f'Bearer {API_KEY}'}
     url = "{}{}".format(base_url,unique_url)
+    print("working on {} type {}".format(unique_url,call_type))
     if call_type == 0:
         response = requests.get(url,headers=HEADERS)
     elif call_type == 1:
