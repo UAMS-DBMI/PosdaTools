@@ -188,7 +188,7 @@ def main(pargs):
             myNewFiles.append(f['file_id'])
 
         new_file_id = process(new_destination_path)
-        if (current_file_id != f['file_id'] )
+        if current_file_id != f['file_id']:
             updateMapping(current_file_id, new_file_id)
         myNewFiles.append(new_file_id) #should only add the final id to the TP
         background.print_to_email("Completed {} edit on file.".format(len(edits)))
