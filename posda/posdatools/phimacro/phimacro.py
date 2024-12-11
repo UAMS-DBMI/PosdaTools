@@ -243,7 +243,7 @@ def apply_sop_class_check():
 
     # output messages
     data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
-    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is not valid"
+    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is potentially invalid"
     data.loc[data.index.isin(sc_rows.index), 'review'] = "This SOP Class UID is not supported or flagged for removal. Remove series if possible"
 
 
