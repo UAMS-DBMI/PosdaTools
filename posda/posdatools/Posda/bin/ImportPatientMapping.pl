@@ -42,7 +42,10 @@ my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
 
 $back->Daemonize;
 my $q = Query("InsertIntoPatientMappingNew");
+my $p = Query("PatientIdMappingByFromPatientId");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
+
+
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
     $date_shift, $diagnosis_date, $baseline_date, $uid_root) =
@@ -57,9 +60,32 @@ for my $line (@lines){
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
-  $q->RunQuery(sub {}, sub{},
-    $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
-    $diagnosis_date, $baseline_date, $uid_root);
+  my $i = 0;
+  my $j = 0;
+  my @rejects;
+  $p->RunQuery(sub{
+    my($row) = @_;
+    my($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+        $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+        $uid_root_e, $site_code_e) = @$row;
+    }, sub {}, $from);
+  if ($from_patient_id_e){
+    if ($collection_name_e == $coll and $site_name_e == $site){
+        $back->WriteToEmail("$from_patient_id_e skipped [$from , $to_id ,$coll ,$site, $date_shift, $baseline_date] vs existing[$from_patient_id_e , $to_patient_id_e ,$collection_name_e ,$site_name_e, $date_shift_e, $baseline_date_e]\n");
+        push(@rejects,[$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+            $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+            $uid_root_e, $site_code_e]);
+        $j++;
+      }
+  }else{
+    $q->RunQuery(sub {}, sub{},
+      $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
+      $diagnosis_date, $baseline_date, $uid_root);
+      $i++;
+  }
 }
-$back->WriteToEmail("$num_lines Insertions done\n");
+
+$back->WriteToEmail("$num_lines $i Insertions done and $j conflicts skipped.\n");
+
+# create and display overwrite report
 $back->Finish;
