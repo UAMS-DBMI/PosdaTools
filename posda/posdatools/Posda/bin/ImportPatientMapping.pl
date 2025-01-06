@@ -60,32 +60,33 @@ for my $line (@lines){
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
-  my $i = 0;
-  my $j = 0;
-  my @rejects;
-  $p->RunQuery(sub{
-    my($row) = @_;
-    my($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
-        $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-        $uid_root_e, $site_code_e) = @$row;
-    }, sub {}, $from);
-  if ($from_patient_id_e){
-    if ($collection_name_e == $coll and $site_name_e == $site){
-        $back->WriteToEmail("$from_patient_id_e skipped [$from , $to_id ,$coll ,$site, $date_shift, $baseline_date] vs existing[$from_patient_id_e , $to_patient_id_e ,$collection_name_e ,$site_name_e, $date_shift_e, $baseline_date_e]\n");
-        push(@rejects,[$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+
+    my @rejects;
+    my ($insertions, $conflicts) = (0, 0);
+
+    # Presuming $p is your database handle for querying existing records
+    $p->RunQuery(sub {
+        my ($row) = @_;
+        my ($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
             $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-            $uid_root_e, $site_code_e]);
-        $j++;
-      }
-  }else{
-    $q->RunQuery(sub {}, sub{},
-      $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
-      $diagnosis_date, $baseline_date, $uid_root);
-      $i++;
-  }
+            $uid_root_e, $site_code_e) = @$row;
+
+        if ($from_patient_id_e) {
+            if ($collection_name_e eq $coll and $site_name_e eq $site) {
+                $back->WriteToEmail("$from_patient_id_e skipped [$from, $to_id, $coll, $site, $date_shift, $baseline_date] vs existing[$from_patient_id_e, $to_patient_id_e, $collection_name_e, $site_name_e, $date_shift_e, $baseline_date_e]\n");
+                push(@rejects, [$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+                    $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+                    $uid_root_e, $site_code_e]);
+                $conflicts++;
+            }
+        } else {
+            $q->RunQuery(sub {}, sub {},
+                $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
+                $diagnosis_date, $baseline_date, $uid_root);
+            $insertions++;
+        }
+    }, sub {}, $from);
 }
 
-$back->WriteToEmail("$num_lines $i Insertions done and $j conflicts skipped.\n");
-
-# create and display overwrite report
+$back->WriteToEmail(scalar(@lines) . " $insertions Insertions done and $conflicts conflicts skipped.\n");
 $back->Finish;
