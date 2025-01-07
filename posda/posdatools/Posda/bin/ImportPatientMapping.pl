@@ -45,6 +45,8 @@ my $q = Query("InsertIntoPatientMappingNew");
 my $p = Query("PatientIdMappingByFromPatientId");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 
+  my @rejects;
+  my ($insertions, $conflicts) = (0, 0);
 
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
@@ -61,31 +63,27 @@ for my $line (@lines){
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
 
-    my @rejects;
-    my ($insertions, $conflicts) = (0, 0);
+  $p->RunQuery(sub {
+      my ($row) = @_;
+      my ($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+          $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+          $uid_root_e, $site_code_e) = @$row;
 
-    # Presuming $p is your database handle for querying existing records
-    $p->RunQuery(sub {
-        my ($row) = @_;
-        my ($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
-            $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-            $uid_root_e, $site_code_e) = @$row;
-
-        if ($from_patient_id_e) {
-            if ($collection_name_e eq $coll and $site_name_e eq $site) {
-                $back->WriteToEmail("$from_patient_id_e skipped [$from, $to_id, $coll, $site, $date_shift, $baseline_date] vs existing[$from_patient_id_e, $to_patient_id_e, $collection_name_e, $site_name_e, $date_shift_e, $baseline_date_e]\n");
-                push(@rejects, [$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
-                    $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-                    $uid_root_e, $site_code_e]);
-                $conflicts++;
-            }
-        } else {
-            $q->RunQuery(sub {}, sub {},
-                $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
-                $diagnosis_date, $baseline_date, $uid_root);
-            $insertions++;
-        }
-    }, sub {}, $from);
+      if ($from_patient_id_e) {
+          if ($collection_name_e eq $coll and $site_name_e eq $site) {
+              $back->WriteToEmail("$from_patient_id_e skipped [$from, $to_id, $coll, $site, $date_shift, $baseline_date] vs existing[$from_patient_id_e, $to_patient_id_e, $collection_name_e, $site_name_e, $date_shift_e, $baseline_date_e]\n");
+              push(@rejects, [$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+                  $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+                  $uid_root_e, $site_code_e]);
+              $conflicts++;
+          }
+      } else {
+          $q->RunQuery(sub {}, sub {},
+              $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
+              $diagnosis_date, $baseline_date, $uid_root);
+          $insertions++;
+      }
+  }, sub {}, $from);
 }
 
 $back->WriteToEmail(scalar(@lines) . " $insertions Insertions done and $conflicts conflicts skipped.\n");
