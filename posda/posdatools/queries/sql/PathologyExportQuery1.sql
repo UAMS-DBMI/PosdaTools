@@ -9,7 +9,7 @@
 select
 	rel_path as path,
 	collection_name as collectionname,
-	site_name as studyid,
+	study_name as studyid,
 	clinical_trial_subject_id as clinicaltrialsubjectid,
 	image_id imageid
 from file f
