@@ -75,8 +75,11 @@ def main(pargs,records,filenames):
             rec = records[j]
             try:
                 set_mapping(f['file_id'], rec['patient_id'], rec['collection_name'], rec['site_name'],  rec['study_id'], rec['image_id'], rec['clinical_trial_subject_id'])
+                print("Mapping created for {}".format(rec['patient_id']));
             except  Exception as e:
                 print('Error! Mapping found but not set! {} : {}'.format(f['file_id'],e))
+        else:
+            print("Mapping record {} not found in activity".format(my_path));
 
 
     print("Pathology patient mapping created.\n{0} files mapped out of {1} files in mapping.\nActivity total files {2}.\n".format(

@@ -157,13 +157,15 @@ def main(pargs):
 
 
     for f in myFiles:
-        new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
 
         #do all of its edits
         edits = get_edits_for_file_id(f['file_id'])
         remove = False
         current_file_id = f['file_id']
+        rpath = get_root_and_rel_path(file_id)
+
         if (edits and len(edits) > 0):
+            new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             totalEdits = totalEdits + 1
             for e in edits:
                 if e['edit_type'] == '5':
@@ -185,6 +187,9 @@ def main(pargs):
                     break
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
+            if ('/tmp/output' not in rpath = get_root_and_rel_path(current_file_id)[1]):
+                #file does not exist yet in output bucket. copy it over.
+                new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             myNewFiles.append(f['file_id'])
 
         new_file_id = process(new_destination_path)
