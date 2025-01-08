@@ -498,6 +498,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "Shift UIDs for new version",
         action =>  "ProposeUIDchangeEdits",
       },
+      {
+        caption => "Populate Segmentation Bitmaps",
+        action =>  "PopulateSegBitmaps",
+      },
     ],
   },
   # {
