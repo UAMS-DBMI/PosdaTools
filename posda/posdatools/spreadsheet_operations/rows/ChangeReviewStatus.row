@@ -1,5 +1,5 @@
 :operation_name: ChangeReviewStatus
-:command_line: ChangeReviewStatus.pl <?bkgrnd_id?> <review_status> <processing_status> <notify>
+:command_line: ChangeReviewStatus.pl <?bkgrnd_id?> <activity_id> <review_status> <processing_status> <notify>
 :operation_type: background_process
 :input_line_format: <image_equivalence_class_id>&<processing_status>&<review_status>
 :tags: ['visual_review_status']
