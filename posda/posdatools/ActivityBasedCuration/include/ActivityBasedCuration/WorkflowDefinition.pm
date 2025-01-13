@@ -352,15 +352,21 @@ This step should not be needed if your data was imported through CTP",
       #   action => 'setForegroundQuery',
       #   query_name => 'ViewPathologyVisualReviewInstances'
       # },
+      # {
+      #   operation => "InvokeNewOperation",
+      #   caption => "Create Activity from Import",
+      #   action =>  "PathologyCreateActivityAndTP"
+      # },
     {
       operation => "InvokeNewOperation",
-      caption => "Create Activity from Import",
-      action =>  "PathologyCreateActivityAndTP"
+      caption => "Patient Mapping",
+      action =>  "Path_Patient_Mapping",
+      special => "spreadsheetRequest"
     },
-    # {
-    #   caption => "Schedule PHI Scan",
-    #   action =>  "Path_PHI_Scan",
-    # },
+    {
+      caption => "Schedule PHI Scan",
+      action =>  "Path_PHI_Scan",
+    },
     {
       operation => "InvokeNewOperation",
       caption => "Create Visual Review",
@@ -379,6 +385,11 @@ This step should not be needed if your data was imported through CTP",
     },
    ],
     queries => [
+      {
+         caption => "Create Timepoint from Import",
+         operation => "SelectQueryGroup",
+         query_list_name => "PathImportEvents",
+       },
       {
          caption => "View PHI Scan",
          operation => "SelectQueryGroup",
@@ -586,6 +597,10 @@ This step should not be needed if your data was imported through CTP",
     {
       caption =>"ImportEventsWithTypeAndPatientId",
       query =>"ImportEventsWithTypeAndPatientId",
+    },
+    {
+      caption =>"PathologyImportEventsByDateRange",
+      query =>"PathologyImportEventsByDateRange",
     }
     ],
   ],
@@ -840,6 +855,15 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "PathologyViewEdits",
         query => "PathologyViewEdits",
+      },
+    ],
+  ],
+  PathImportEvents => [
+    "Pathology Suggested Queries for Visual Review",
+    [
+      {
+        caption => "PathologyImportEventsByDateRange",
+        query => "PathologyImportEventsByDateRange",
       },
     ],
   ],
