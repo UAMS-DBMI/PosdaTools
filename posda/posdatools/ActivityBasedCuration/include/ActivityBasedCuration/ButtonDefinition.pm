@@ -512,6 +512,7 @@ EOF
       ImportEventsByMatchingName => 1,
       ImportEventsByMatchingNameAndType => 1,
       ImportEventsWithTypeAndPatientId => 1,
+      PathologyImportEventsByDateRange => 1,
     },
   },
   qpb_BogusQueryHandlingButton => {
