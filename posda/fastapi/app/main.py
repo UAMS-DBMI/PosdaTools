@@ -40,6 +40,7 @@ from papi.routes import edits
 from papi.routes import nifti
 from papi.routes import sysstatus
 from papi.routes import masking
+from papi.routes import wadors
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -108,6 +109,7 @@ async def startup_event():
     loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
 
 router_v1 = APIRouter()
+router_v1.include_router(wadors.router, prefix="/wadors")
 router_v1.include_router(other.router, prefix="/other")
 router_v1.include_router(collections.router, prefix="/collections")
 router_v1.include_router(studies.router, prefix="/studies")
