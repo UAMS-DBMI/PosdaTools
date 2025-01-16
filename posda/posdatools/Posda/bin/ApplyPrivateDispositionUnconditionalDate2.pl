@@ -244,6 +244,9 @@ for my $e (keys %OffsetDate){
       #print "\tElement: $e\n";
       #print "\t$date => $new_date\n";
       $ds->Insert($e, $new_date);
+    }else{
+      print "\tWARNING Dates not shifted, verify this is purposeful\n";
+      $ds->Insert($e, $new_date);
     }
   }
 }
@@ -256,7 +259,6 @@ for my $e (keys %OffsetDateByPattern){
 #      print STDERR "tag: $tag\n";
       my $date = $ds->Get($tag);
       if(defined($date) && $date ne ""){
-
         my $new_date;
         eval {
           $new_date = ShiftDate($date);
