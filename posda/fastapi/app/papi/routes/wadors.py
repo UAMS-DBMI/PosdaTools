@@ -1,5 +1,6 @@
 from fastapi import Depends, APIRouter, HTTPException
 from starlette.responses import Response
+from pydantic import BaseModel
 import os
 import logging
 import aiofiles
@@ -17,19 +18,70 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def get_all_studies():
-    raise HTTPException(detail="missing endpoint", status_code=401)
+class ValueModel(BaseModel):
+    Value: list
+    vr: str
 
-#/papi/v1/wadors/timepoint/1/studies/s/series/ss/instances/i/frames/1
-@router.get("/timepoint/{timepoint_id}/studies/{study}/series/{series}/instances/{sop}/frames/{frame}")
+    def from_record(vr, v):
+        if isinstance(v, int):
+            value = [v]
+        else:
+            value = v.split("\\")
+
+        if vr == 'US':
+            value = [int(i) for i in value]
+        if vr == 'DS':
+            value = [float(i) for i in value]
+
+        return ValueModel(Value=value, vr=vr)
+
+@router.get("/studies/iec:{iec}/series/{series}/instances/{sop}/frames/{frame}")
+async def get_frames_for_iec(
+    sop: str,
+    frame: int,
+    iec: int,
+    db: Database = Depends(),
+):
+    """Get the pixel data for the given SOP Instance UID in the given IEC"""
+
+    query = """
+        select
+            root_path || '/' || rel_path as file,
+            pixel_data_offset as file_offset,
+            xfer_syntax
+        from
+                image_equivalence_class_input_image
+                natural join dicom_file
+                natural join file_meta
+                natural join file_sop_common
+                natural join file_location
+                natural join file_storage_root
+        where
+                image_equivalence_class_id = $1
+                and sop_instance_uid = $2
+    """
+
+    record = await db.fetch_one(query, [iec, sop])
+
+    if len(record) == 0:
+        logging.debug("Query returned no results. Query follows:")
+        logging.debug(query)
+        logging.debug(f"parameters {iec=},{sop=}")
+        raise HTTPException(status_code=404, detail="no records returned")
+
+    return await stream_file(record['file'], record['xfer_syntax'], record['file_offset'])
+
+@router.get("/studies/timepoint:{timepoint_id}/series/{series}/instances/{sop}/frames/{frame}")
+@router.get("/studies/activity:{activity_id}/series/{series}/instances/{sop}/frames/{frame}")
 async def get_frames(
     sop: str,
     frame: int,
-    # activity_id: int = None,
+    activity_id: int = None,
     timepoint_id: int = None,
     db: Database = Depends(),
 ):
+    """Get the pixel data for the given SOP Instance UID"""
+
     query = """
         select
             root_path || '/' || rel_path as file,
@@ -55,33 +107,42 @@ async def get_frames(
         logging.debug(f"parameters {timepoint_id=},{sop=}")
         raise HTTPException(status_code=404, detail="no records returned")
 
+    return await stream_file(record['file'], record['xfer_syntax'], record['file_offset'])
 
-    filename = record['file']
+async def stream_file(filename, transfer_syntax, data_offset):
     # TODO: This reads the entire pixel data into memory. We should
     # be doing a chunked read, but it wasn't working with starlette's
     # StreamingResponse for some reason.
     async with aiofiles.open(filename, 'rb') as f:
-        await f.seek(record['file_offset'])
+        await f.seek(data_offset)
         data = await f.read()
 
     return Response( 
-        headers={'transfer-syntax': str(record['xfer_syntax']),},
-        media_type="application/octet-stream; transfer-syntax={}".format(record['xfer_syntax']),
+        media_type="application/octet-stream; transfer-syntax={}".format(transfer_syntax),
         content=data
     )
 
-@router.get("/activity/{activity_id}/studies/{study}/series/{series}/metadata")
-@router.get("/timepoint/{timepoint_id}/studies/{study}/series/{series}/metadata")
-async def get_metadata(
-    study: str,
+@router.get("/studies/activity:{activity_id}/series/{series}/metadata",
+            summary="Get metdata for a series in an activity")
+@router.get("/studies/timepoint:{timepoint_id}/series/{series}/metadata",
+            summary="Get metdata for a series in an activity timepoint")
+async def get_metadata2(
     series: str,
     activity_id: int = None,
     timepoint_id: int = None,
     db: Database = Depends(),
-):
+) -> list[dict[str, ValueModel]]:
+    """Get metadata for the given series in the given timepoint,
+    
+    or if an activity is given, for the latest timepoint.
+
+    Note: this returns only a subset of the metadata for the given series. Only
+    that which is required by Cornerstone to display the images.
+    """
 
     if timepoint_id is None:
         # TODO set it by looking up the latest tp for the activity
+        raise HTTPException("not implemented yet")
         
         if activity_id is None:
             raise HTTPException()
@@ -145,41 +206,92 @@ async def get_metadata(
 
     return output
 
+@router.get("/studies/iec:{iec}/series/{series}/metadata")
+async def get_iec_metadata(
+    iec: int,
+    db: Database = Depends(),
+) -> list[dict[str, ValueModel]]:
+    """Get series metadata for a specific IEC"""
 
-def to_value(v, vr='UK'):
-    if isinstance(v, int):
-        value = [v]
-    else:
-        value = v.split("\\")
+    query = """
+        select distinct
+            root_path || '/' || rel_path as file,
+            pixel_data_offset as file_offset,
+            pixel_data_length as size,
+            bits_stored,
+            bits_allocated,
+            high_bit,
+            pixel_representation,
+            pixel_columns,
+            pixel_rows,
+            photometric_interpretation,
 
-    if vr == 'US':
-        value = [int(i) for i in value]
-    if vr == 'DS':
-        value = [float(i) for i in value]
+            slope,
+            intercept,
 
-    return {
-            "Value": value,
-            "vr": vr
-    }
+            window_width,
+            window_center,
+            pixel_pad,
+            samples_per_pixel,
+            planar_configuration,
+            coalesce(number_of_frames, 1) as number_of_frames,
+            iop,
+            ipp,
+            study_instance_uid,
+            series_instance_uid,
+            sop_instance_uid,
+            pixel_spacing,
+            file_id
+
+        from
+			image_equivalence_class_input_image
+            natural join file_series
+            natural join file_study
+            natural join file_sop_common
+            natural join file_image
+            natural join image
+            natural join image_geometry
+            natural join dicom_file
+            natural join file_location
+            natural join file_storage_root
+            natural join file_equipment
+
+            natural left join file_slope_intercept
+            natural left join slope_intercept
+
+            natural left join file_win_lev
+            natural left join window_level
+
+        where 
+			image_equivalence_class_id = $1
+        order by file_id desc
+    """
+
+    output = [conv(a) for a in await db.fetch(query, [iec])]
+
+    return output
+
 def conv(record):
+    c = ValueModel.from_record
+
     return {
-        '00280030': to_value(record['pixel_spacing'], 'DS'),
-        '00080018': to_value(record['sop_instance_uid'], 'UI'),
-        '0020000E': to_value(record['series_instance_uid'], 'UI'),
-        '0020000D': to_value(record['study_instance_uid'], 'UI'),
-        '00280010': to_value(record['pixel_rows'], 'US'),
-        '00280011': to_value(record['pixel_columns'], 'US'),
-        '00280101': to_value(record['bits_stored'], 'US'),
-        '00280100': to_value(record['bits_allocated'], 'US'),
-        '00280102': to_value(record['high_bit'], 'US'),
-        '00280103': to_value(record['pixel_representation'], 'US'),
-        '00281053': to_value(record['slope'], 'DS'),
-        '00281052': to_value(record['intercept'], 'DS'),
-        '00281050': to_value(record['window_center'], 'DS'),
-        '00281051': to_value(record['window_width'], 'DS'),
-        '00280002': to_value(record['samples_per_pixel'], 'US'),
-        '00280004': to_value(record['photometric_interpretation'], 'CS'),
-        "00200032": to_value(record['ipp'], 'DS'),
-        "00200037": to_value(record['iop'], 'DS'),
+        '00280030': c('DS', record['pixel_spacing']),
+        '00080018': c('UI', record['sop_instance_uid']),
+        '0020000E': c('UI', record['series_instance_uid']),
+        '0020000D': c('UI', record['study_instance_uid']),
+        '00280010': c('US', record['pixel_rows']),
+        '00280011': c('US', record['pixel_columns']),
+        '00280101': c('US', record['bits_stored']),
+        '00280100': c('US', record['bits_allocated']),
+        '00280102': c('US', record['high_bit']),
+        '00280103': c('US', record['pixel_representation']),
+        '00281053': c('DS', record['slope']),
+        '00281052': c('DS', record['intercept']),
+        '00281050': c('DS', record['window_center']),
+        '00281051': c('DS', record['window_width']),
+        '00280002': c('US', record['samples_per_pixel']),
+        '00280004': c('CS', record['photometric_interpretation']),
+        "00200032": c('DS', record['ipp']),
+        "00200037": c('DS', record['iop']),
     }
 
