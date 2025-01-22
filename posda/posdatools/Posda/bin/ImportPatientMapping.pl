@@ -45,8 +45,6 @@ my $q = Query("InsertIntoPatientMappingNew");
 my $p = Query("PatientIdMappingByFromPatientId");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 
-  my @rejects;
-  my ($insertions, $conflicts) = (0, 0);
 
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
@@ -62,29 +60,43 @@ for my $line (@lines){
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
+  my $i = 0;
+  my $j = 0;
+  my %RepeatedPatientMapping;
+  $p->RunQuery(sub{
+    my($row) = @_;
+    my($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
+        $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
+        $uid_root_e, $site_code_e) = @$row;
+        %RepeatedPatientMapping{$line}->{$from_patient_id_e} = {
+          from_patient_id => $from_patient_id_e,
+          to_patient_id => $to_patient_id_e,
+          to_patient_name => $to_patient_name_e,
+          collection_name => $collection_name_e,
+          site_name => $site_name_e,
+          batch_number => $batch_number_e,
+          diagnosis_date => $diagnosis_date_e,
+          baseline_date => $baseline_date,
+          date_shift => $date_shift_e,
+          uid_root => $uid_root_e,
+          site_code => $site_code_e
+        }
+  };, sub {}, $from);
 
-  $p->RunQuery(sub {
-      my ($row) = @_;
-      my ($from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
-          $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-          $uid_root_e, $site_code_e) = @$row;
-
-      if ($from_patient_id_e) {
-          if ($collection_name_e eq $coll and $site_name_e eq $site) {
-              $back->WriteToEmail("$from_patient_id_e skipped [$from, $to_id, $coll, $site, $date_shift, $baseline_date] vs existing[$from_patient_id_e, $to_patient_id_e, $collection_name_e, $site_name_e, $date_shift_e, $baseline_date_e]\n");
-              push(@rejects, [$from_patient_id_e, $to_patient_id_e, $to_patient_name_e, $collection_name_e,
-                  $site_name_e, $batch_number_e, $diagnosis_date_e, $baseline_date_e, $date_shift_e,
-                  $uid_root_e, $site_code_e]);
-              $conflicts++;
-          }
-      } else {
-          $q->RunQuery(sub {}, sub {},
-              $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
-              $diagnosis_date, $baseline_date, $uid_root);
-          $insertions++;
+  if (%RepeatedPatientMapping{$line}){
+    if ($collection_name_e == $coll and $site_name_e == $site){
+        $back->WriteToEmail("$from_patient_id_e  was skipped. \n Requested:[$from , $to_id ,$coll ,$site, $date_shift, $baseline_date]\n Existing[%RepeatedPatientMapping{$line}->{$from_patient_id_e} , %RepeatedPatientMapping{$line}->{$to_patient_id_e} , %RepeatedPatientMapping{$line}->{$collection_name_e} ,%RepeatedPatientMapping{$line}->{$site_name_e}, %RepeatedPatientMapping{$line}->{$date_shift_e}, %RepeatedPatientMapping{$line}->{$baseline_date_e}\n]");
+        $j++;
       }
-  }, sub {}, $from);
+  }else{
+    $q->RunQuery(sub {}, sub{},
+      $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
+      $diagnosis_date, $baseline_date, $uid_root);
+      $i++;
+  }
 }
 
-$back->WriteToEmail(scalar(@lines) . " $insertions Insertions done and $conflicts conflicts skipped.\n");
+$back->WriteToEmail("$num_lines lines read. $i insertions done and $j conflicts skipped.\n");
+
+# create and display overwrite report
 $back->Finish;
