@@ -45,7 +45,8 @@ my $q = Query("InsertIntoPatientMappingNew");
 my $p = Query("PatientIdMappingByFromPatientId");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 
-
+my $i = 0;
+my $j = 0;
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
     $date_shift, $diagnosis_date, $baseline_date, $uid_root) =
@@ -60,8 +61,7 @@ for my $line (@lines){
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
-  my $i = 0;
-  my $j = 0;
+
   my %RepeatedPatientMapping;
   $p->RunQuery(sub{
     my($row) = @_;
@@ -81,7 +81,7 @@ for my $line (@lines){
           uid_root => $uid_root_e,
           site_code => $site_code_e
         }
-  };, sub {}, $from);
+}, sub {}, $from);
 
   if (%RepeatedPatientMapping{$line}){
     if ($collection_name_e == $coll and $site_name_e == $site){
