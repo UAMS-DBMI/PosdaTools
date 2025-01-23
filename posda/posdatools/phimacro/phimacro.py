@@ -231,19 +231,19 @@ def apply_sop_class_check():
     uid_rows = data[data['vr'] == 'UI']
     
     # apply mask to get just sop rows
-    sop_rows = uid_rows[uid_rows['element'].apply(is_sop_class_element)]
+    sop_rows = uid_rows.loc[uid_rows['element'].apply(is_sop_class_element)]
 
     # split sc and non sc rows
-    sc_rows = sop_rows[sop_rows['q_value'].apply(is_sec_capture)]
-    non_sc_rows = sop_rows[~sop_rows['q_value'].apply(is_sec_capture)]
+    sc_rows = sop_rows.loc[sop_rows['q_value'].apply(is_sec_capture)]
+    non_sc_rows = sop_rows.loc[~sop_rows['q_value'].apply(is_sec_capture)]
     
     # get valid and invalid rows   
-    good_rows = non_sc_rows[non_sc_rows['q_value'].isin(sop_classes.index)]
-    bad_rows = non_sc_rows[~non_sc_rows['q_value'].isin(sop_classes.index)]
+    good_rows = non_sc_rows.loc[non_sc_rows['q_value'].isin(sop_classes.index)]
+    bad_rows = non_sc_rows.loc[~non_sc_rows['q_value'].isin(sop_classes.index)]
 
     # output messages
     data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
-    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is potentially invalid"
+    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is potentially invalid"                
     data.loc[data.index.isin(sc_rows.index), 'review'] = "This SOP Class UID is not supported or flagged for removal. Remove series if possible"
 
 
