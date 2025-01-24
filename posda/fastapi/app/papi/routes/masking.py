@@ -410,8 +410,12 @@ async def get_iec_review_files(
         for x in sorted_framelist
     ]
 
+    # TODO: consistent_frames is not very accurate and is causing issues
+    #       with the UI. For now it is being ignored and all responoses
+    #       are True. This should be fixed ASAP!
     return {
-        "volumetric": consistent_frames,
+        # "volumetric": consistent_frames,
+        "volumetric": True,
         "frames": simplified,
     }
 
