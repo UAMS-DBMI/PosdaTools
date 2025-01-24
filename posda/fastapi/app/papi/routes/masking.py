@@ -388,7 +388,6 @@ async def get_iec_review_files(
             natural join dicom_file
             natural left join file_image
             natural left join image
-            natural left join file_image_geometry
             natural left join image_geometry
         where
             image_equivalence_class_id = $1
