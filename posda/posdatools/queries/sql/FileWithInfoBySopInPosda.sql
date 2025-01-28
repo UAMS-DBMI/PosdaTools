@@ -17,7 +17,7 @@ select
 from
   file_sop_common natural join ctp_file
   natural join file_for natural join file_image
-  join image_geometry using (image_id)
   join image using (image_id)
+  left join image_geometry using (image_id)
 where
   sop_instance_uid = ?
