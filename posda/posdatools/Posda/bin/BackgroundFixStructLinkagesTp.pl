@@ -109,7 +109,7 @@ for my $item (@Worklist){
     ($sop, $modality, $path, $f_dig) = @$row;
   },sub {}, $ss_file_id);
   my $dest_file = "$DestDir/${modality}_$sop.dcm";
-  my $cmd = "TestStructFixer.pl $img_series $ss_file_id $dest_file";
+  my $cmd = "TestStructFixerTp.pl $img_series $ss_file_id $dest_file $activity_id";
   $background->SetActivityStatus("Relinking $ss_file_id to " .
     "$img_series ($num_loops of $num_edits)");
   $background->WriteToEmail("cmd: $cmd\n");
