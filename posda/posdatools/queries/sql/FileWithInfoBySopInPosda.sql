@@ -7,17 +7,18 @@
 -- 
 -- 
 
-select 
-  file_for.for_uid as frame_of_ref,
-  iop, 
-  ipp,
-  pixel_spacing,
-  pixel_rows,
-  pixel_columns
+select
+    file_for.for_uid as frame_of_ref,
+    iop,
+    ipp,
+    pixel_spacing,
+    pixel_rows,
+    pixel_columns
 from
-  file_sop_common natural join ctp_file
-  natural join file_for natural join file_image
-  join image using (image_id)
-  left join image_geometry using (image_id)
+    file_sop_common
+    natural join file_for
+    natural left join file_image
+    left join image using (image_id)
+    left join image_geometry using (image_id)
 where
-  sop_instance_uid = ?
+    sop_instance_uid = ?
