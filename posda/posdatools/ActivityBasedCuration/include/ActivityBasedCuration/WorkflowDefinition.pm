@@ -377,12 +377,6 @@ This step should not be needed if your data was imported through CTP",
       caption => "Commit Queued Edits",
       action =>  "Path_Commit_Edits",
     },
-    {
-      operation => "InvokeNewOperation",
-      caption => "Patient Mapping",
-      action =>  "Path_Patient_Mapping",
-      special => "spreadsheetRequest"
-    },
    ],
     queries => [
       {
