@@ -55,7 +55,7 @@ sub Init{
 }
 sub SortSliceInfo{
   my($self) = @_;
-  my $get_file_id = Query('SopInActivity');
+  my $get_file_id = Query('LikelyGoodSop');
   my %offset_info;
   my $iop;
   frame:
