@@ -68,7 +68,7 @@ sub SortSliceInfo{
       my($row) = @_;
       $file_id = $row->[0];
       $instance_number = $row->[1];
-    }, sub{}, $rel_sop, $self->{params}->{activity_id});
+    }, sub{}, $rel_sop);
     unless(defined $file_id){
       my $msg = "Error: frame $frame_no has no related file";
       print STDERR "####################\n$msg\n####################\n";
