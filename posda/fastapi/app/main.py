@@ -41,6 +41,7 @@ from papi.routes import nifti
 from papi.routes import sysstatus
 from papi.routes import masking
 from papi.routes import wadors
+from papi.routes import segs
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
