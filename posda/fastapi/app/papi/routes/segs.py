@@ -104,6 +104,21 @@ async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
         """
     return await find_segs_in_activity(query['activity_id'], db)
 
+@router.get("/getLatestFileForSop/{sop_instance_uid}")
+async def getLatestFileForSop(sop_instance_uid: int, db: Database = Depends()):
+    query = """\
+        select max(file_id) as file_id
+        from file_sop_common
+        where sop_instance_uid = ?;
+        """
+    return await getLatestFileForSop(query['sop_instance_uid'], db)
+
+
+
+select max(file_id) as file_id
+from file_sop_common
+where sop_instance_uid = ?
+
 @router.put("/populate_seg_linkages/{file_id}/{seg_id}/{linked_sop_instance_uid}/{linked_sop_class_uid}")
 async def populate_seg_linkages(activity_name: str, user: str, db: Database = Depends()):
        query = """\
