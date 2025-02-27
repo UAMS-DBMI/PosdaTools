@@ -4,6 +4,7 @@ import os
 import sys
 import csv
 import argparse
+import pydicom
 
 from posda.database import Database
 from posda.queries import Query
@@ -47,15 +48,30 @@ def populate_seg_linkages(file_id, seg_id, linked_sop_instance_uid, linked_sop_c
         str = "/populate_seg_linkages/{}/{}/{}/{}".format(file_id, seg_id, linked_sop_instance_uid, linked_sop_class_uid)
         return call_api(str, 2)
 
+def get_linked_file_info(SOPInst,SOPClass):
+    str = "/".format(file_id)
+    return call_api(str, 0)
+
+def find_path(file_id):
+    str = "/".format(file_id)
+    return call_api(str, 0)
+
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
 
     myFiles = find_segs_in_activity(args.activity_id);
-    #for each file
-    #    get its sop list  -??
-    #       insert each sop item with populate_seg_linkages
-
+    for f in myFiles:
+        path = find_path(f['file_id'])
+        ds = pydicom.dcmread(path)
+        if hasattr(ds, "ReferencedSeriesSequence"):
+            referenced_series = ds.ReferencedSeriesSequence[0]
+             if hasattr(referenced_series, "ReferencedInstanceSequence"):
+                 referenced_instances = referenced_series.ReferencedInstanceSequence
+                 for instance in referenced_instances:
+                     #find the corresponding file and get its file_id
+                     linked_file = get_linked_file_info(instance.ReferencedSOPInstanceUID, instance.ReferencedSOPClassUID)
+                     populate_seg_linkages(linked_file, f['file_id'], instance.ReferencedSOPInstanceUID, instance.ReferencedSOPClassUID):
 
 
     background.finish(f"Process complete")
