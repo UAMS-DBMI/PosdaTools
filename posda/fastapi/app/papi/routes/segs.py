@@ -78,30 +78,30 @@ async def get_file_from_sop(file_id: int, db: Database = Depends()):
 
 @router.get("/find_segs_in_activity/{activity_id}")
 async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
-        #find files
-        f = {}
-        query = """\
-            select
-              file_id,
-              root_path || '/' || rel_path as path
-            from
-              file_storage_root natural join file_location
-            where file_id in (
-              select distinct file_id
-              from dicom_file df natural join ctp_file natural join activity_timepoint_file
-              where
-              dicom_file_type = 'Segmentation Storage'
-              and has_no_roi_linkages is null
-              and not exists (
-                select file_id from file_roi_image_linkage r where r.file_id = df.file_id
-              )
-              and activity_timepoint_id = (
-                select max(activity_timepoint_id) as activity_timepoint_id
-                from activity_timepoint
-                where activity_id = $1
-              )
-            );
-            """
+    #find files
+    f = {}
+    query = """\
+        select
+          file_id,
+          root_path || '/' || rel_path as path
+        from
+          file_storage_root natural join file_location
+        where file_id in (
+          select distinct file_id
+          from dicom_file df natural join ctp_file natural join activity_timepoint_file
+          where
+          dicom_file_type = 'Segmentation Storage'
+          and has_no_roi_linkages is null
+          and not exists (
+            select file_id from file_roi_image_linkage r where r.file_id = df.file_id
+          )
+          and activity_timepoint_id = (
+            select max(activity_timepoint_id) as activity_timepoint_id
+            from activity_timepoint
+            where activity_id = $1
+          )
+        );
+        """
     return await find_segs_in_activity(query['activity_id'], db)
 
 @router.put("/populate_seg_linkages/{file_id}/{seg_id}/{linked_sop_instance_uid}/{linked_sop_class_uid}")
