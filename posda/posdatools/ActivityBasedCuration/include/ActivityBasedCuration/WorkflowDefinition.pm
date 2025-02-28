@@ -192,17 +192,20 @@ This step should not be needed if your data was imported through CTP",
   },
   {
     id => "10_structlinkcheck",
-    name => "Check Struct Linkage",
-    note => "Radiation Therapy Data only",
-    description => "Verify that the ROIs and Structures are properly " .
-      "linked to the image files and pixel data.
-",
+    name => "Check Linkages",
+    note => "RT = Radiation Therapy Data only",
+    description => "Verify that the ROIs or Segs are properly " .
+      "linked to the image files and pixel data.",
     operations => [
       {
-        caption => "Check Structure Set Linkage",
+        caption => "Check RT Structure Set Linkage",
         action =>  "CheckStructLinkagesTp",
       },
-    ],
+      {
+        caption => "Check Segmentation Linkages",
+        action =>  "CheckSegLinkages",
+      },
+   ],
   },
   {
     id => "11_linkrt",

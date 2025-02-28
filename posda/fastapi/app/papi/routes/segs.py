@@ -17,69 +17,9 @@ router = APIRouter(
 async def test():
     raise HTTPException(detail="test error, not allowed", status_code=401)
 
-@router.get("/series/{series_instance_uid}")
-async def get_segs_for_series(series_instance_uid: str, db: Database = Depends()):
-    query = """\
-        select
-            seg_id,
-            array_agg(file_sop_common.file_id) as file_ids
-        from file_series
-        natural join file_sop_common
-        join file_seg_image_linkage
-            on linked_sop_instance_uid = sop_instance_uid
-        where series_instance_uid = $1
-        group by seg_id
-        order by seg_id
-    """
-
-    results = await db.fetch(query, [series_instance_uid])
-    seg_links = []
-    for result in results:
-        r = {}
-        r['seg_id'] = result['seg_id']
-        r['file_ids'] = result['file_ids']
-        rois.append(r)
-
-    return seg_links
-
-
-@router.get("/sop/{sop_instance_uid}")
-async def get_seg_ids_for_linked_sop(sop_instance_uid: str, db: Database = Depends()):
-    query = """\
-        select
-            seg_id,
-            array_agg(file_sop_common.file_id) as file_ids
-        from file_series
-        natural join file_sop_common
-        join file_seg_image_linkage
-            on linked_sop_instance_uid = ?
-        group by seg_id
-        order by seg_id
-    """
-
-    results = await db.fetch(query, [series_instance_uid])
-    seg_links = []
-    for result in results:
-        r = {}
-        r['seg_id'] = result['seg_id']
-        r['file_ids'] = result['file_ids']
-        rois.append(r)
-    return seg_links
-
-
-@router.get("/file/{file_id}")
-async def get_file_from_sop(file_id: int, db: Database = Depends()):
-    ret = await db.fetch_one("""\
-        select sop_instance_uid
-        from file_sop_common
-        where file_id = $1
-    """, [file_id])
-    return await get_file_from_sop(ret['sop_instance_uid'], db)
 
 @router.get("/find_segs_in_activity/{activity_id}")
 async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
-    #find files
-    f = {}
     query = """\
         select
           file_id,
@@ -102,28 +42,26 @@ async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
           )
         );
         """
-    return await find_segs_in_activity(query['activity_id'], db)
+    return await db.fetch(query, [activity_id])
 
 @router.get("/getLatestFileForSop/{sop_instance_uid}")
-async def getLatestFileForSop(sop_instance_uid: int, db: Database = Depends()):
+async def getLatestFileForSop(sop_instance_uid: str, db: Database = Depends()):
     query = """\
         select max(file_id) as file_id
         from file_sop_common
-        where sop_instance_uid = ?;
+        where sop_instance_uid = $1;
         """
-    return await getLatestFileForSop(query['sop_instance_uid'], db)
+    return await db.fetch(query, [sop_instance_uid])
 
-
-
-select max(file_id) as file_id
-from file_sop_common
-where sop_instance_uid = ?
 
 @router.put("/populate_seg_linkages/{file_id}/{seg_id}/{linked_sop_instance_uid}/{linked_sop_class_uid}")
-async def populate_seg_linkages(activity_name: str, user: str, db: Database = Depends()):
+async def populate_seg_linkages(file_id: int, seg_id: int, linked_sop_instance_uid: str, linked_sop_class_uid: str, db: Database = Depends()):
        query = """\
             INSERT INTO public.file_seg_image_linkage
             (file_id, seg_id, linked_sop_instance_uid, linked_sop_class_uid)
-            VALUES($1, $2, $3, $4);
+            VALUES($1, $2, $3, $4)
+            ON CONFLICT (file_id,seg_id) DO UPDATE SET
+              linked_sop_instance_uid=EXCLUDED.linked_sop_instance_uid,
+              linked_sop_class_uid=EXCLUDED.linked_sop_class_uid;
             """
-       return await populate_seg_linkages(query['file_id, seg_id, linked_sop_instance_uid, linked_sop_class_uid'], db)
+       return await db.fetch(query, [file_id, seg_id, linked_sop_instance_uid, linked_sop_class_uid ])
