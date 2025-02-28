@@ -192,7 +192,7 @@ This step should not be needed if your data was imported through CTP",
   },
   {
     id => "10_structlinkcheck",
-    name => "Check Linkages",
+    name => "Radiation Therapy",
     note => "RT = Radiation Therapy Data only",
     description => "Verify that the ROIs or Segs are properly " .
       "linked to the image files and pixel data.",
@@ -202,23 +202,10 @@ This step should not be needed if your data was imported through CTP",
         action =>  "CheckStructLinkagesTp",
       },
       {
-        caption => "Check Segmentation Linkages",
-        action =>  "CheckSegLinkages",
-      },
-   ],
-  },
-  {
-    id => "11_linkrt",
-    name => "Link RT Data",
-    note => "Radiation Therapy Data only
-",
-    description => "Link RT data",
-    operations => [
-      {
         caption => "Link RT Data",
         action =>  "LinkRtFromTimepoint",
       },
-    ],
+   ],
     queries => [
        {
         caption => "Series Linked to RtStructs",
@@ -226,6 +213,20 @@ This step should not be needed if your data was imported through CTP",
         query_list_name => "LinkedRtStructs",
       },
     ],
+  },
+  {
+    id => "11_linkrt",
+    name => "Segmenation Objects",
+    note => "Radiation Therapy Data only
+",
+    description => "Link RT data",
+    operations => [
+      {
+        caption => "Segmentation Linkages",
+        action =>  "CheckSegLinkages",
+      },
+    ],
+
   },
   {
     id => "12_send",
