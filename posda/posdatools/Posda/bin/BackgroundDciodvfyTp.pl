@@ -188,6 +188,20 @@ my $report_time = time - $start_report;
 $background->WriteToEmail("Took $report_time seconds to generate report\n");
 ### Finished Report
 ###################################################################
+
+###################################################################
+### Begin DciodvfyNew experimental output
+###################################################################
+
+my $new_report = $background->CreateReport("DciodvfySeriesReport-New");
+open FILE, "dciodvfynew.py $ActTpId |";
+while (my $line = <FILE>) {
+  # chomp $line;
+  $new_report->print($line);
+}
+close FILE;
+
+
 $background->Finish;
 exit;
 sub ConvertString{
