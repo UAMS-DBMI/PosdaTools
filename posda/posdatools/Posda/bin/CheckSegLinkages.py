@@ -53,21 +53,28 @@ def get_linked_file_info(sop_instance_uid):
     str = "/getLatestFileForSop/{}".format(sop_instance_uid)
     return call_api(str, 0)
 
+def get_Linked_FileFOR(file_id):
+    str = "/getFORfromfile/{}".format(file_id)
+    return call_api(str, 0)
 
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
     success = 0
     fail = 0
+    for_fail = 0
     numSEGs = 0
     mySEGFiles = find_segs_in_activity(args.activity_id)
     if (mySEGFiles):
         numSEGs = len(mySEGFiles)
         for f in mySEGFiles:
-            print("\nSegmentation {} found.".format(f['file_id']))
             current = success
             ds = pydicom.dcmread(f['path'])
+
             try:
+                if hasattr(ds, "FrameOfReferenceUID"):
+                    segFOR = ds.FrameOfReferenceUID
+                    print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
                 if hasattr(ds, "ReferencedSeriesSequence"):
                     referenced_series = ds.ReferencedSeriesSequence[0]
                     #print("ReferencedSeriesSequence = {}".format(ds.ReferencedSeriesSequence))
@@ -78,9 +85,18 @@ def main(args):
                             #print(" * ReferencedSOPInstanceUID = {}".format(instance.ReferencedSOPInstanceUID))
                             #print(" * ReferencedSOPClassUID = {}".format(instance.ReferencedSOPClassUID))
                             linked_file = get_linked_file_info(instance.ReferencedSOPInstanceUID)[0]['file_id']
-                            print("Linked File {}, Seg File {}, SOP UID {}, SOP Class {}".format(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID)))
-                            populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
-                            success = success + 1
+                            if (linked_file):
+                                    #print("Linked File {}, Seg File {}, SOP UID {}, SOP Class {}".format(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID)))
+                                    linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
+                                    if linked_FOR and segFOR == linked_FOR:
+                                        success = success + 1
+                                        populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
+                                    else:
+                                        for_fail = for_fail + 1
+                                        print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
+                            else:
+                                print ("Reference SOP: {} was not found".format(instance))
+                                fail = fail + 1
             except Exception as e:
                 print( "Linkage failed. {}".format(e))
                 fail = fail + 1
@@ -89,7 +105,7 @@ def main(args):
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
-        print("\n{} files successfully linked to {} segmentations. {} failed linkages.".format(success, numSEGs, fail))
+        print("\n{} file linkages verified for {} segmentations. {} failed linkages. {} files had non matching Frame OF References".format(success, numSEGs, fail, for_fail))
     background.finish("Process complete")
 
 def parse_args():

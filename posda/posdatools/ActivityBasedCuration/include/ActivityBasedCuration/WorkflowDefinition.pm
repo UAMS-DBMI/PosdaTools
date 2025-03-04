@@ -194,7 +194,7 @@ This step should not be needed if your data was imported through CTP",
     id => "10_structlinkcheck",
     name => "Radiation Therapy",
     note => "RT = Radiation Therapy Data only",
-    description => "Verify that the ROIs or Segs are properly " .
+    description => "Verify that the ROIs are properly " .
       "linked to the image files and pixel data.",
     operations => [
       {
@@ -217,9 +217,8 @@ This step should not be needed if your data was imported through CTP",
   {
     id => "11_linkrt",
     name => "Segmenation Objects",
-    note => "Radiation Therapy Data only
-",
-    description => "Link RT data",
+    description => "Verify that the SEGs are properly " .
+      "linked to the image files.",
     operations => [
       {
         caption => "Segmentation Linkages",

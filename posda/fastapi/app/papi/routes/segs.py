@@ -53,6 +53,12 @@ async def getLatestFileForSop(sop_instance_uid: str, db: Database = Depends()):
         """
     return await db.fetch(query, [sop_instance_uid])
 
+@router.get("/getFORfromfile/{file_id}")
+async def getFORfromfile(file_id: int, db: Database = Depends()):
+    query = """\
+            select for_uid from file_for ff where file_id  = $1;
+        """
+    return await db.fetch(query, [file_id])
 
 @router.put("/populate_seg_linkages/{file_id}/{seg_id}/{linked_sop_instance_uid}/{linked_sop_class_uid}")
 async def populate_seg_linkages(file_id: int, seg_id: int, linked_sop_instance_uid: str, linked_sop_class_uid: str, db: Database = Depends()):
