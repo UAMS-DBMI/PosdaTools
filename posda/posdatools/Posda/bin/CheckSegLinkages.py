@@ -71,13 +71,13 @@ def createCSVReports(args,background,result_data,cname,direction):
             if len(k) == 2:
                 if(direction):
                     if(firstline):
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>','ProposeEditsTp',args.activity_id,args.background_id,args.notify,'%'])
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>','ProposeEditsTp',args.activity_id,args.scan_id,args.notify,'%'])
                         firstline = False
                     else:
                         writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>'])
                 else:
                     if(firstline):
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>','ProposeEditsTp',args.activity_id,args.background_id,args.notify,'%'])
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>','ProposeEditsTp',args.activity_id,args.scan_id,args.notify,'%'])
                         firstline = False
                     else:
                         writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>'])
@@ -121,7 +121,7 @@ def main(args):
                                         for_fail = for_fail + 1
                                         pair = (segFOR, linked_FOR)
                                         csv_data.add(pair)
-                                        print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
+                                        #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
                                 print ("Reference SOP: {} was not found".format(instance))
                                 fail = fail + 1
@@ -133,11 +133,9 @@ def main(args):
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
-        print("\n{} file linkages verified for {} segmentations. {} failed linkages. {} files had non matching Frame OF References".format(success, numSEGs, fail, for_fail))
-        print("\n Edit skeleton to change SEG FOR to match")
+        print("\n{} failed linkages. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         name = "change_seg_for_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
         createCSVReports(args,background,csv_data,name,1)
-        print("\n Edit skeleton to change Image FORs to match")
         name = "change_image_fors_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
         createCSVReports(args, background,csv_data,name,0)
 
@@ -147,6 +145,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=about)
     parser.add_argument('background_id', nargs='?', default='', help='the background_subprocess_id (blank for CL Mode)')
     parser.add_argument('activity_id', help='the activity seg files are in')
+    parser.add_argument('scan_id', help='phi scan to reference if edits are needed')
     parser.add_argument('notify', help='user to notify when complete')
     return parser.parse_args()
 
