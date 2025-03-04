@@ -57,6 +57,36 @@ def get_Linked_FileFOR(file_id):
     str = "/getFORfromfile/{}".format(file_id)
     return call_api(str, 0)
 
+def createCSVReports(args,background,result_data,cname,direction):
+     result_list = list(result_data)
+     result_container = []
+     firstline = True;
+     for i in range(0,len(result_list),500):
+        result_container.append(result_list[i:i+500])
+     for j in range(len(result_container)):
+        r = background.create_report(cname)
+        writer = csv.writer(r)
+        writer.writerow(['element','vr','q_value','edit_description','disp','num_series','p_op','q_arg1','q_arg2','Operation','activity_id','scan_id','notify','sep_char'])
+        for k in result_container[j]:
+            if len(k) == 2:
+                if(direction):
+                    if(firstline):
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>','ProposeEditsTp',args.activity_id,args.background_id,args.notify,'%'])
+                        firstline = False
+                    else:
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>'])
+                else:
+                    if(firstline):
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>','ProposeEditsTp',args.activity_id,args.background_id,args.notify,'%'])
+                        firstline = False
+                    else:
+                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>'])
+            else:
+                # Handle error or different data structure
+                print("Tuple does not contain the expected number of elements.")
+
+
+
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
@@ -64,26 +94,22 @@ def main(args):
     fail = 0
     for_fail = 0
     numSEGs = 0
+    csv_data = set()
     mySEGFiles = find_segs_in_activity(args.activity_id)
     if (mySEGFiles):
         numSEGs = len(mySEGFiles)
         for f in mySEGFiles:
             current = success
             ds = pydicom.dcmread(f['path'])
-
             try:
                 if hasattr(ds, "FrameOfReferenceUID"):
                     segFOR = ds.FrameOfReferenceUID
                     print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
                 if hasattr(ds, "ReferencedSeriesSequence"):
                     referenced_series = ds.ReferencedSeriesSequence[0]
-                    #print("ReferencedSeriesSequence = {}".format(ds.ReferencedSeriesSequence))
                     if hasattr(referenced_series, "ReferencedInstanceSequence"):
                         referenced_instances = referenced_series.ReferencedInstanceSequence
-                        #print("ReferencedInstanceSequence = {}".format(referenced_series.ReferencedInstanceSequence))
                         for instance in referenced_instances:
-                            #print(" * ReferencedSOPInstanceUID = {}".format(instance.ReferencedSOPInstanceUID))
-                            #print(" * ReferencedSOPClassUID = {}".format(instance.ReferencedSOPClassUID))
                             linked_file = get_linked_file_info(instance.ReferencedSOPInstanceUID)[0]['file_id']
                             if (linked_file):
                                     #print("Linked File {}, Seg File {}, SOP UID {}, SOP Class {}".format(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID)))
@@ -93,6 +119,8 @@ def main(args):
                                         populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
                                         for_fail = for_fail + 1
+                                        pair = (segFOR, linked_FOR)
+                                        csv_data.add(pair)
                                         print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
                                 print ("Reference SOP: {} was not found".format(instance))
@@ -106,6 +134,13 @@ def main(args):
 
     if numSEGs > 0:
         print("\n{} file linkages verified for {} segmentations. {} failed linkages. {} files had non matching Frame OF References".format(success, numSEGs, fail, for_fail))
+        print("\n Edit skeleton to change SEG FOR to match")
+        name = "change_seg_for_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+        createCSVReports(args,background,csv_data,name,1)
+        print("\n Edit skeleton to change Image FORs to match")
+        name = "change_image_fors_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+        createCSVReports(args, background,csv_data,name,0)
+
     background.finish("Process complete")
 
 def parse_args():
