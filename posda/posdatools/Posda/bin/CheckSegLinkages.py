@@ -116,9 +116,13 @@ def main(args):
                                     linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
                                     if linked_FOR and segFOR == linked_FOR:
                                         success = success + 1
-                                        populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
+                                        #populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
                                         for_fail = for_fail + 1
+                                        if segFOR is None:
+                                            segFOR = ''
+                                        if linked_FOR is None:
+                                                linked_FOR = ''
                                         pair = (segFOR, linked_FOR)
                                         csv_data.add(pair)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
