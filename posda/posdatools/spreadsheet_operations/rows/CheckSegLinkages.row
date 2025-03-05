@@ -1,5 +1,5 @@
 :operation_name: CheckSegLinkages
-:command_line: CheckSegLinkages.py <?bkgrnd_id?> <activity_id> <scan_id> <notify>
+:command_line: CheckSegLinkages.py <?bkgrnd_id?> <activity_id> <notify>
 :operation_type: background_process
 :input_line_format:
 :tags: ['timepoint_buttons']

@@ -60,6 +60,16 @@ async def getFORfromfile(file_id: int, db: Database = Depends()):
         """
     return await db.fetch(query, [file_id])
 
+@router.get("/getSeries/{file_id}")
+async def getSeries(file_id: int, db: Database = Depends()):
+    query = """\
+            select series_instance_uid
+            from file_series 
+            natural join file
+            where file_id = $1;
+        """
+    return await db.fetch(query, [file_id])
+
 @router.put("/populate_seg_linkages/{file_id}/{seg_id}/{linked_sop_instance_uid}/{linked_sop_class_uid}")
 async def populate_seg_linkages(file_id: int, seg_id: int, linked_sop_instance_uid: str, linked_sop_class_uid: str, db: Database = Depends()):
        query = """\

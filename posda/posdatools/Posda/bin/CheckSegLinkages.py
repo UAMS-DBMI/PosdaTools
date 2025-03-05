@@ -57,35 +57,36 @@ def get_Linked_FileFOR(file_id):
     str = "/getFORfromfile/{}".format(file_id)
     return call_api(str, 0)
 
+def getSeries(file_id):
+    str = "/getSeries/{}".format(file_id)
+    return call_api(str, 0)
+
 def createCSVReports(args,background,result_data,cname,direction):
      result_list = list(result_data)
      result_container = []
-     firstline = True;
+     firstline = True
      for i in range(0,len(result_list),500):
         result_container.append(result_list[i:i+500])
      for j in range(len(result_container)):
         r = background.create_report(cname)
         writer = csv.writer(r)
-        writer.writerow(['element','vr','q_value','edit_description','disp','num_series','p_op','q_arg1','q_arg2','Operation','activity_id','scan_id','notify','sep_char'])
+        writer.writerow(['series_instance_uid','op','tag','val1','val2','Operation','activity_id','edit_description','notify'])
+        lastSeries = ''
         for k in result_container[j]:
-            if len(k) == 2:
-                if(direction):
+                if k[0] != lastSeries:
                     if(firstline):
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>','ProposeEditsTp',args.activity_id,args.scan_id,args.notify,'%'])
+                        writer.writerow([k[0],'','','','','BackgroundEditTp', args.activity_id, 'Repairing SEG Frame of Reference Linkages', args.notify])
                         firstline = False
                     else:
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[0]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[1]), '<>'])
+                        writer.writerow([k[0]])
+                if(direction):
+                        writer.writerow(['','set_tag', '<(0020,0052)>','<{}>'.format(k[1]),'<{}>'.format(k[2])])
                 else:
                     if(firstline):
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>','ProposeEditsTp',args.activity_id,args.scan_id,args.notify,'%'])
+                        writer.writerow(['', 'set_tag', '<(0020,0052)>','<{}>'.format(k[2]),'<{}>'.format(k[1])])
                         firstline = False
                     else:
-                        writer.writerow(['(0020,0052)', 'UI', '<{}>'.format(k[1]), 'FrameOfReferenceUID', '', '', 'set_tag', '<{}>'.format(k[0]), '<>'])
-            else:
-                # Handle error or different data structure
-                print("Tuple does not contain the expected number of elements.")
-
-
+                        writer.writerow(['', 'set_tag', '<(0020,0052)>','<{}>'.format(k[2]),'<{}>'.format(k[1])])
 
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
@@ -110,21 +111,24 @@ def main(args):
                     if hasattr(referenced_series, "ReferencedInstanceSequence"):
                         referenced_instances = referenced_series.ReferencedInstanceSequence
                         for instance in referenced_instances:
+                            #get the file_id for the SOP proving the linked file is in posda
                             linked_file = get_linked_file_info(instance.ReferencedSOPInstanceUID)[0]['file_id']
                             if (linked_file):
-                                    #print("Linked File {}, Seg File {}, SOP UID {}, SOP Class {}".format(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID)))
+                                    #Get the series and frame of reference
                                     linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
+                                    linked_series = getSeries(linked_file)[0]['series_instance_uid']
+                                    #if the FOR matches the linkage is good
                                     if linked_FOR and segFOR == linked_FOR:
                                         success = success + 1
-                                        #populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
+                                        populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
                                         for_fail = for_fail + 1
                                         if segFOR is None:
                                             segFOR = ''
                                         if linked_FOR is None:
                                                 linked_FOR = ''
-                                        pair = (segFOR, linked_FOR)
-                                        csv_data.add(pair)
+                                        triple = (linked_series, segFOR, linked_FOR)
+                                        csv_data.add(triple)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
                                 print ("Reference SOP: {} was not found".format(instance))
@@ -137,19 +141,17 @@ def main(args):
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
-        print("\n{} failed linkages. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
+        print("\n{} missing SOPs. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         name = "change_seg_for_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
         createCSVReports(args,background,csv_data,name,1)
         name = "change_image_fors_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
         createCSVReports(args, background,csv_data,name,0)
-
     background.finish("Process complete")
 
 def parse_args():
     parser = argparse.ArgumentParser(description=about)
     parser.add_argument('background_id', nargs='?', default='', help='the background_subprocess_id (blank for CL Mode)')
     parser.add_argument('activity_id', help='the activity seg files are in')
-    parser.add_argument('scan_id', help='phi scan to reference if edits are needed')
     parser.add_argument('notify', help='user to notify when complete')
     return parser.parse_args()
 
