@@ -117,16 +117,12 @@ def main(args):
                                     #Get the series and frame of reference
                                     linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
                                     linked_series = getSeries(linked_file)[0]['series_instance_uid']
-                                    #if the FOR matches the linkage is good
-                                    if linked_FOR and segFOR == linked_FOR:
+                                    #if the FOR matches or does not exist the linkage is good
+                                    if linked_FOR is None or linked_FOR is '' or segFOR == linked_FOR:
                                         success = success + 1
                                         populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
                                         for_fail = for_fail + 1
-                                        if segFOR is None:
-                                            segFOR = ''
-                                        if linked_FOR is None:
-                                                linked_FOR = ''
                                         triple = (linked_series, segFOR, linked_FOR)
                                         csv_data.add(triple)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
@@ -142,10 +138,11 @@ def main(args):
 
     if numSEGs > 0:
         print("\n{} missing SOPs. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
-        name = "change_seg_for_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-        createCSVReports(args,background,csv_data,name,1)
-        name = "change_image_fors_{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-        createCSVReports(args, background,csv_data,name,0)
+        if fail > 1 or for_fail > 1:
+            name = "change_seg_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            createCSVReports(args,background,csv_data,name,1)
+            name = "change_ref_image_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            createCSVReports(args, background,csv_data,name,0)
     background.finish("Process complete")
 
 def parse_args():
