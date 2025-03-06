@@ -42,7 +42,8 @@ async def get_nifti_details(
     query = """
         select fi.file_name, 
                fsr.root_path, 
-               fl.rel_path
+               fl.rel_path,
+               fn.is_zipped
         from file_nifti fn
         natural join file_location fl
         natural join file_storage_root fsr

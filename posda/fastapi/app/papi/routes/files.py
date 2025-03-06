@@ -215,6 +215,7 @@ async def get_pixel_data(file_id: int, db: Database = Depends()):
                     content=data)
 
 @router.get("/{file_id}/data")
+@router.get("/{file_id}/data.gz")
 async def get_data(file_id: int, db: Database = Depends()):
     query = """
         select
