@@ -118,7 +118,7 @@ def main(args):
                                     linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
                                     linked_series = getSeries(linked_file)[0]['series_instance_uid']
                                     #if the FOR matches or does not exist the linkage is good
-                                    if linked_FOR is None or linked_FOR is '' or segFOR == linked_FOR:
+                                    if linked_FOR is None or linked_FOR == '' or segFOR == linked_FOR:
                                         success = success + 1
                                         populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
