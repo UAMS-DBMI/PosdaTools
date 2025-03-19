@@ -25,6 +25,8 @@ class ValueModel(BaseModel):
     def from_record(vr, v):
         if isinstance(v, int):
             value = [v]
+        elif v is None:
+            value = []
         else:
             if "\\" in v:
                 value = v.split("\\")
