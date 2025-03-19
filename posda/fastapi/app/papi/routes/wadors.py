@@ -26,7 +26,11 @@ class ValueModel(BaseModel):
         if isinstance(v, int):
             value = [v]
         else:
-            value = v.split("\\")
+            if "\\" in v:
+                value = v.split("\\")
+            else:
+                value = [v]
+            
 
         if vr == 'US':
             value = [int(i) for i in value]
