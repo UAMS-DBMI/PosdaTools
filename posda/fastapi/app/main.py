@@ -12,6 +12,7 @@ _this is some italics_
 import os
 import sys
 from fastapi import FastAPI, APIRouter
+from fastapi.middleware.gzip import GZipMiddleware
 import asyncio
 import signal
 
@@ -91,6 +92,8 @@ app = FastAPI(
     root_path="/papi",
     openapi_tags=tags_metadata,
 )
+
+app.add_middleware(GZipMiddleware, minimum_size=500, compresslevel=9)
 
 
 def handle_sigterm(*_):
