@@ -6,16 +6,23 @@
 -- Description: Get Series in A Collection, site with dicom_file_type, modality, and sop_count
 -- 
 
-select
-  distinct activity_id, a.when_created as activity_created,
-  brief_description as activity_description, activity_timepoint_id,
-  t.when_created as timepoint_created, 
-  comment, creating_user, count(distinct file_id) as file_count
+select 
+    activity_id,
+    a.when_created as activity_created,
+    brief_description as activity_description,
+    activity_timepoint_id,
+    t.when_created as timepoint_created,
+    comment,
+    creating_user,
+    (
+		select count(file_id)
+		from activity_timepoint_file atf
+		where atf.activity_timepoint_id = t.activity_timepoint_id
+	) as file_count
 from
-  activity a join activity_timepoint t using(activity_id)
-  left join activity_timepoint_file using (activity_timepoint_id)
+    activity a
+    join activity_timepoint t using (activity_id)
 where
-  activity_id = ?
-group by activity_id, a.when_created, brief_description,
-  activity_timepoint_id, t.when_created, comment, creating_user
-order by t.when_created desc
+    activity_id = ?
+order by
+    t.when_created desc
