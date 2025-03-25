@@ -40,6 +40,7 @@ def  call_api(unique_url, call_type):
     API_KEY = Config.get('api_system_token')
     HEADERS = {'Authorization': f'Bearer {API_KEY}'}
     url = "{}{}".format(base_url,unique_url)
+    print("working on {} type {}".format(unique_url,call_type))
     if call_type == 0:
         response = requests.get(url,headers=HEADERS)
     elif call_type == 1:
@@ -94,6 +95,11 @@ def process(filepath):
         newF = insert_file_via_api_inplace(filepath)
     return newF
 
+def updateMapping(old_id, new_id):
+    str = "/copymapping/{}/{}".format(old_id, new_id)
+    return call_api(str, 2)
+
+
 def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> str:
     """Copy a file (normally pathology) given by `file_id` to some destination
 
@@ -125,6 +131,7 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     source_file = pathlib.Path(root_path) / rel_path
 
     # calculate the output path (destination_root_path + rel_path)
+    rel_path = rel_path.replace('/tmp/output','') #prevent the destination folder from repeating into subfolders
     output_file = pathlib.Path(destination_root_path) / rel_path
 
     # create the output tree if necessary
@@ -150,41 +157,46 @@ def main(pargs):
 
 
     for f in myFiles:
-        new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
-
         #do all of its edits
         edits = get_edits_for_file_id(f['file_id'])
         remove = False
+        current_file_id = f['file_id']
+        rpath = get_root_and_rel_path(current_file_id)
+
         if (edits and len(edits) > 0):
+            new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             totalEdits = totalEdits + 1
             for e in edits:
                 if e['edit_type'] == '5':
                     # Get the root_path and rel_path separately
-                    rpath = get_root_and_rel_path(f['file_id'])
+                    rpath = get_root_and_rel_path(current_file_id)
                     root_path = rpath[0]
                     rel_path = rpath[1]
                     og_file_path = pathlib.Path(root_path) / rel_path
                     new_file = anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
                     completeEdit(e['pathology_edit_queue_id'])
-                    background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
-                    new_file_id = process(new_file)
-                    myNewFiles.append(new_file_id)
-                    background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
+                    background.print_to_email("Completed {} edit on file {}".format(len(edits), current_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
-                    background.print_to_email("Completed {} edit on file {}".format(len(edits), f['file_id']))
-                    new_file_id = process(new_destination_path)
-                    myNewFiles.append(new_file_id)
-                    background.print_to_email("File {} should  now be file {}".format(f['file_id'], new_file_id))
+
                 else:
                     completeEdit(e['pathology_edit_queue_id'])
-                    #myNewFiles.remove(file_id)
-                    background.print_to_email("File {} removed".format(f['file_id']))
+                    background.print_to_email("File {} removed".format(current_file_id))
                     break
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
+            if ('/tmp/output' not in get_root_and_rel_path(current_file_id)[1]):
+                #file does not exist yet in output bucket. copy it over.
+                new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             myNewFiles.append(f['file_id'])
+
+        new_file_id = process(new_destination_path)
+        if current_file_id != f['file_id']:
+            updateMapping(current_file_id, new_file_id)
+        myNewFiles.append(new_file_id) #should only add the final id to the TP
+        background.print_to_email("Completed {} edit on file.".format(len(edits)))
+        background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
 
     if (totalEdits > 0):
         get_atp = create_path_activity_timepoint(pargs.activity_id, pargs.notify)
