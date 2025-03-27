@@ -17,37 +17,32 @@ class File:
     file_id: int
     image_type: list[str]
     frame_count: int
-    orientation: list
-    position: list
+    orientation: list[float]
+    position: list[float]
 
-    def from_raw(tup):
-        file_id, image_type, num_frames, iop, ipp = tup
+    def from_raw(file_id: int, image_type: str, num_frames: int, iop: str, ipp: str) -> "File":
 
-        if num_frames is None:
-            num_frames = 1
-        else:
-            num_frames = int(num_frames)
+        num_frames = 1 if num_frames is None else int(num_frames)
 
-        image_types = image_type.split('\\')
+        image_types = image_type.split("\\") if image_type else []
 
         # iop and ipp need to be broken into lists
-        iop_parts = iop.split('\\')
-        orientation = [float(i) for i in iop_parts]
-
-        ipp_parts = ipp.split('\\')
-        position = [float(i) for i in ipp_parts]
+        orientation = [float(i) for i in iop.split('\\')] if iop else []
+        position = [float(i) for i in ipp.split('\\')] if ipp else []
 
         return File(file_id, image_types, num_frames, orientation, position)
 
-    def normals(self):
+    def normals(self) -> np.ndarray:
+        """Computes the normal vector using the orientation matrix."""
         return np.cross(self.orientation[:3], self.orientation[3:])
 
     def projected_position(self):
+        """Computes the projected position using the normal vector."""
         return np.dot(self.position, self.normals())
 
 
 
-def consistent(file_objs) -> tuple[list[File], bool]:
+def consistent(file_objs: list[File]) -> tuple[list[File], bool]:
     """Detect if the list of frames is consistent or not.
 
     Also returns the list sorted appropriately by projecting 
