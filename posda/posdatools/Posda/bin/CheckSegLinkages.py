@@ -137,11 +137,11 @@ def main(args):
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
-        print("\n{} missing SOPs. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
+        print("\n{} missing SOPs. {} files had non matching Frame Of References(FOR).\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         if fail > 1 or for_fail > 1:
-            name = "change_seg_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            name = "change_seg_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
             createSegReports(args,background,csv_data,name,1)
-            name = "change_ref_image_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            name = "change_ref_image_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
             createSegReports(args, background,csv_data,name,0)
     background.finish("Process complete")
 
