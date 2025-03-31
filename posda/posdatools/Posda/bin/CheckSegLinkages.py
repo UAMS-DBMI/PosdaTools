@@ -105,7 +105,7 @@ def main(args):
             try:
                 if hasattr(ds, "FrameOfReferenceUID"):
                     segFOR = ds.FrameOfReferenceUID
-                    print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
+                    # print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
                 if hasattr(ds, "ReferencedSeriesSequence"):
                     referenced_series = ds.ReferencedSeriesSequence[0]
                     if hasattr(referenced_series, "ReferencedInstanceSequence"):
@@ -127,10 +127,10 @@ def main(args):
                                         csv_data.add(triple)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
-                                print ("Reference SOP: {} was not found".format(instance))
+                                #print ("Reference SOP: {} was not found".format(instance))
                                 fail = fail + 1
             except Exception as e:
-                print( "Linkage failed. {}".format(e))
+                #print( "Linkage failed. {}".format(e))
                 fail = fail + 1
             print("\n{} linkages found for this segmentation.\n".format((success - current)))
     else:
