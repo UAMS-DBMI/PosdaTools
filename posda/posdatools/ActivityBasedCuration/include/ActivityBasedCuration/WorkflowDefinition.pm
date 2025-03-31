@@ -216,7 +216,7 @@ This step should not be needed if your data was imported through CTP",
   },
   {
     id => "11_linkrt",
-    name => "Segmenation Objects",
+    name => "Segmentation Objects",
     description => "Verify that the SEGs are properly " .
       "linked to the image files.",
     operations => [

@@ -61,14 +61,14 @@ def getSeries(file_id):
     str = "/getSeries/{}".format(file_id)
     return call_api(str, 0)
 
-def createCSVReports(args,background,result_data,cname,direction):
+def createSegReports(args,background,result_data,cname,direction):
      result_list = list(result_data)
      result_container = []
      firstline = True
      for i in range(0,len(result_list),500):
         result_container.append(result_list[i:i+500])
      for j in range(len(result_container)):
-        r = background.create_report(cname)
+        r = background.create_report("{}{}".format(cname,j))
         writer = csv.writer(r)
         writer.writerow(['series_instance_uid','op','tag','val1','val2','Operation','activity_id','edit_description','notify'])
         lastSeries = ''
@@ -140,9 +140,9 @@ def main(args):
         print("\n{} missing SOPs. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         if fail > 1 or for_fail > 1:
             name = "change_seg_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-            createCSVReports(args,background,csv_data,name,1)
+            createSegReports(args,background,csv_data,name,1)
             name = "change_ref_image_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-            createCSVReports(args, background,csv_data,name,0)
+            createSegReports(args, background,csv_data,name,0)
     background.finish("Process complete")
 
 def parse_args():
