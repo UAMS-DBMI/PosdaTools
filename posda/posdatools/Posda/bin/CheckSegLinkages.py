@@ -61,14 +61,14 @@ def getSeries(file_id):
     str = "/getSeries/{}".format(file_id)
     return call_api(str, 0)
 
-def createCSVReports(args,background,result_data,cname,direction):
+def createSegReports(args,background,result_data,cname,direction):
      result_list = list(result_data)
      result_container = []
      firstline = True
      for i in range(0,len(result_list),500):
         result_container.append(result_list[i:i+500])
      for j in range(len(result_container)):
-        r = background.create_report(cname)
+        r = background.create_report("{}{}".format(cname,j))
         writer = csv.writer(r)
         writer.writerow(['series_instance_uid','op','tag','val1','val2','Operation','activity_id','edit_description','notify'])
         lastSeries = ''
@@ -105,7 +105,7 @@ def main(args):
             try:
                 if hasattr(ds, "FrameOfReferenceUID"):
                     segFOR = ds.FrameOfReferenceUID
-                    print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
+                    # print("\nSegmentation {} found. Frame of Reference UID: {} \n".format(f['file_id'], segFOR))
                 if hasattr(ds, "ReferencedSeriesSequence"):
                     referenced_series = ds.ReferencedSeriesSequence[0]
                     if hasattr(referenced_series, "ReferencedInstanceSequence"):
@@ -127,22 +127,22 @@ def main(args):
                                         csv_data.add(triple)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
-                                print ("Reference SOP: {} was not found".format(instance))
+                                #print ("Reference SOP: {} was not found".format(instance))
                                 fail = fail + 1
             except Exception as e:
-                print( "Linkage failed. {}".format(e))
+                #print( "Linkage failed. {}".format(e))
                 fail = fail + 1
             print("\n{} linkages found for this segmentation.\n".format((success - current)))
     else:
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
-        print("\n{} missing SOPs. {} files had non matching Frame OF References.\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
+        print("\n{} missing SOPs. {} files had non matching Frame Of References(FOR).\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         if fail > 1 or for_fail > 1:
-            name = "change_seg_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-            createCSVReports(args,background,csv_data,name,1)
-            name = "change_ref_image_for_uid{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
-            createCSVReports(args, background,csv_data,name,0)
+            name = "change_seg_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            createSegReports(args,background,csv_data,name,1)
+            name = "change_ref_image_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            createSegReports(args, background,csv_data,name,0)
     background.finish("Process complete")
 
 def parse_args():
