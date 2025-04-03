@@ -18,7 +18,7 @@ from posda.main.file import insert_file_via_api_inplace
 
 destination_root_path = os.environ.get(
     'POSDA_PATHOLOGY_OUTPUT_PATH',
-    '/home/posda/cache/created/tmp/output' # default value
+    '/home/posda/cache/created/output' # default value
 )
 
 #Get all the Path Files
@@ -131,7 +131,7 @@ def copy_path_file_for_editing(file_id: int,  destination_root_path: str ) -> st
     source_file = pathlib.Path(root_path) / rel_path
 
     # calculate the output path (destination_root_path + rel_path)
-    rel_path = rel_path.replace('/tmp/output','') #prevent the destination folder from repeating into subfolders
+    rel_path = rel_path.replace('/output','') #prevent the destination folder from repeating into subfolders
     output_file = pathlib.Path(destination_root_path) / rel_path
 
     # create the output tree if necessary
@@ -186,9 +186,6 @@ def main(pargs):
                     break
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
-            if ('/tmp/output' not in get_root_and_rel_path(current_file_id)[1]):
-                #file does not exist yet in output bucket. copy it over.
-                new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             myNewFiles.append(f['file_id'])
 
         new_file_id = process(new_destination_path)
