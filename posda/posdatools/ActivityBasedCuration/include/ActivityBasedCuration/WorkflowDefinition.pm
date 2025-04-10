@@ -225,7 +225,13 @@ This step should not be needed if your data was imported through CTP",
         action =>  "CheckSegLinkages",
       },
     ],
-
+   queries => [
+      {
+       caption => "Examine Check Results",
+       operation => "SelectQueryGroup",
+       query_list_name => "SegCheckQueries",
+     },
+   ],
   },
   {
     id => "12_send",
@@ -913,5 +919,14 @@ This step should not be needed if your data was imported through CTP",
         query => "NiftiBadFilesInTPCheck",
       },
     ],
+  ],
+  SegCheckQueries => [
+    "Queries for examining segmentation linkages",
+    [
+      {
+        caption => "Get Linked File FORs by Activity",
+        query => "GetSegsAndLinkedFORsAfterCheck",
+      },
+    ]
   ],
 );

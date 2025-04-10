@@ -132,13 +132,13 @@ def main(args):
             except Exception as e:
                 #print( "Linkage failed. {}".format(e))
                 fail = fail + 1
-            print("\n{} linkages found for this segmentation.\n".format((success - current)))
+            #print("{} linkages found for this segmentation.".format((success - current)))
     else:
         print("No Segmentation objects found in activity.")
 
     if numSEGs > 0:
         print("\n{} missing SOPs. {} files had non matching Frame Of References(FOR).\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
-        if fail > 1 or for_fail > 1:
+        if fail > 0 or for_fail > 0:
             name = "change_seg_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
             createSegReports(args,background,csv_data,name,1)
             name = "change_ref_image_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
