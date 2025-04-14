@@ -394,7 +394,7 @@ async def get_iec_review_files(
     """
 
     def raw_to_obj(rows):
-        return [File.from_raw(i) for i in rows]
+        return [File.from_raw(*i) for i in rows]
 
     framelist = raw_to_obj([list(x) for x in await db.fetch(query, [iec])])
     if len(framelist) < 1:
