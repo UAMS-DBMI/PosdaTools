@@ -52,7 +52,7 @@ $get_structs->RunQuery(sub {
   my @copied = @$row;
   push @Rows, \@copied;
 }, sub {});
-my @cols =  ("id", "vr","tag_name", "disp", "values", "Operation", "why", "notify");
+my @cols =  ("id", "element_sig_pattern", "vr","tag_name", "disp", "values", "Operation", "why", "notify");
 my %ColHeaders = (
   "id" => "id",
   "element_sig_pattern" => "element_sig_pattern",
