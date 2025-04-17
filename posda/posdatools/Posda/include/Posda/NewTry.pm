@@ -88,7 +88,7 @@ sub new_with_digest_and_length{
   unless(defined $parser->{metaheader}){ die "No metaheader in default parser" }
   my $this;
   eval {
-    $parser->{skip_large} = 64;
+    $parser->{skip_large} = 256;
     $ds = $parser->ReadDataset();
   };
   if($@){
