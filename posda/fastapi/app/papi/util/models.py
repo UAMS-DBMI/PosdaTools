@@ -59,6 +59,9 @@ def consistent(file_objs: list[File]) -> tuple[list[File], bool]:
 
     all_differences = np.diff(all_positions, axis=0)
 
+    # NOTE: we toss out all the 0s, which represent identical frames
+    all_differences = [i for i in all_differences if i != 0.0]
+
     consistent_slices = np.allclose(all_differences, all_differences[0], atol=1e-3)
 
     return (sorted_by_proj_position, consistent_slices)
