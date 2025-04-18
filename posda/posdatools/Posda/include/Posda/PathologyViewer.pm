@@ -67,6 +67,22 @@ sub ContentResponse {
       caption => "Begin",
       sync => "Update();",
     });
+    $http->queue("<h2>Bulk edits for Activity:</h2>");
+    $self->NotSoSimpleButton($http, {
+      op => "BulkEditMacro",
+      caption => "Remove Macros",
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "BulkEditLabel",
+      caption => "Remove Labels",
+      sync => "Update();",
+    });
+    $self->NotSoSimpleButton($http, {
+      op => "BulkEditMeta",
+      caption => "Edit Metadata elements",
+      sync => "Update();",
+    });
   }elsif($self->{index} < $self->{num_files}){
      if($self->{pixel_view}){
       $self->{pixel_preview_file_id}  = $self->{preview_array}->[$self->{prev_id}]->{preview_file_id};
@@ -500,6 +516,21 @@ sub removeFButtonPress(){
 sub editCancelButtonPress(){
   my ($self, $http, $dyn) = @_;
   $self->{client}->PUT("$self->{MY_API_URL}/cancelEdit/$self->{pathid}");
+}
+
+sub BulkEditMacro(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkMacro/$self->{act_id}");
+}
+
+sub BulkEditLabel(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkLabel/$self->{act_id}");
+}
+
+sub BulkEditMeta(){
+  my ($self, $http, $dyn) = @_;
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkMeta/$self->{act_id}");
 }
 
 
