@@ -40,9 +40,23 @@ class File:
         """Computes the projected position using the normal vector."""
         return np.dot(self.position, self.normals())
 
-
-
 def consistent(file_objs: list[File]) -> tuple[list[File], bool]:
+
+    # one slice, must be non-volumetric
+    if len(file_objs) < 2:
+        return (file_objs, False)
+
+    # if iop or ipp is missing from any slice, assume it's non-volumetric
+    if [] in [o.orientation for o in file_objs] or [] in [o.position for o in file_objs]:
+        # We can't sort them by position because we can't calculate the position
+        return (file_objs, False)
+
+    sorted_by_proj_position = sorted(file_objs, key=lambda x: x.projected_position())
+
+    return (sorted_by_proj_position, True)
+
+
+def consistent_old(file_objs: list[File]) -> tuple[list[File], bool]:
     """Detect if the list of frames is consistent or not.
 
     Also returns the list sorted appropriately by projecting 
