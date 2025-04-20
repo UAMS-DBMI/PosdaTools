@@ -341,6 +341,48 @@ async def mark_accept(
     except asyncpg.exceptions.ForeignKeyViolationError as e:
         raise HTTPException(detail="Invalid IEC supplied", status_code=422)
 
+@router.get("/visualreview/{visual_review_instance_id}/next-for-review")
+async def get_next_to_review_for_review(
+    visual_review_instance_id: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Return the "next" IEC in this VR that is waiting to be Reviewed
+
+    The IEC is chosen from the set of all IECs in this VR that are 
+    waiting to be reviewed (masking_status of 'process-complete').
+    It then chooses one from this set randomly.
+
+    This can be used to select an IEC for a curator to work on. The 
+    exact one is chosen randomly as a cheap way to ensure multiple
+    people working on th same VR don't end up working on the same IEC.
+    """
+
+    record = await db.fetch_one("""\
+        with all_ready_for_review as (
+            select
+                image_equivalence_class_id
+            from
+                image_equivalence_class
+                natural join masking
+                natural join file_import
+            where
+                visual_review_instance_id = $1
+                and masking_status = 'process-complete'
+        )
+
+        select *
+        from all_ready_for_review
+        order by random()
+        limit 1
+    """, [visual_review_instance_id])
+
+    if len(record) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    return record[0]
+
+
 @router.get("/visualreview/{visual_review_instance_id}/next")
 async def get_next_to_review(
     visual_review_instance_id: int,
