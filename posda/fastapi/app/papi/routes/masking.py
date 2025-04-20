@@ -341,6 +341,55 @@ async def mark_accept(
     except asyncpg.exceptions.ForeignKeyViolationError as e:
         raise HTTPException(detail="Invalid IEC supplied", status_code=422)
 
+@router.get("/visualreview/{visual_review_instance_id}/next")
+async def get_next_to_review(
+    visual_review_instance_id: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Return the "next" IEC in this VR that is waiting to be Masked
+
+    The IEC is chosen from the set of all IECs in this VR that are 
+    flagged for Masking, minus those that are in a status that indicates
+    they have already had masking coordiantes assigned. It then chooses
+    one from this set randomly.
+
+    This can be used to select an IEC for a curator to work on. The 
+    exact one is chosen randomly as a cheap way to ensure multiple
+    people working on th same VR don't end up working on the same IEC.
+    """
+
+    record = await db.fetch_one("""\
+        with all_ready_iecs as (
+            select
+                image_equivalence_class_id
+            from
+                image_equivalence_class
+                natural join masking
+            where
+                visual_review_instance_id = $1
+                /*
+                NOTE:
+                This will only select those records that have been
+                freshly created. It may be necessary in the future
+                to also select others, for example those in "rejected" 
+                or "errored" status might also need to show up here.
+                */
+                and masking_status = 'created'
+        )
+
+        select *
+        from all_ready_iecs
+        order by random()
+        limit 1
+    """, [visual_review_instance_id])
+
+    if len(record) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    return record[0]
+
+
 @router.get("/visualreview/{visual_review_instance_id}")
 async def get_for_visualreview(
     visual_review_instance_id: int,
