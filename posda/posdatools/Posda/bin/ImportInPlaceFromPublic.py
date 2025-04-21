@@ -139,4 +139,5 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
+    printe("Running with args: ", args)
     main(args.background_id, args.activity_id, args.notify, args.collection_name)
