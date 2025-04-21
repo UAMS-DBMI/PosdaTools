@@ -76,7 +76,7 @@ def import_one_file(import_event_id, filename):
 
     return True
 
-def main(background_id, notify, activity_id, collection_name):
+def main(background_id, activity_id, notify, collection_name):
     background = BackgroundProcess(background_id, notify, activity_id)
     background.daemonize()
 
