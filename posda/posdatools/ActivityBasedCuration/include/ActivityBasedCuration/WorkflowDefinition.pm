@@ -521,6 +521,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "Populate Segmentation Bitmaps",
         action =>  "PopulateSegBitmaps",
       },
+      {
+        caption => "Import a full collection from Public",
+        action =>  "ImportInPlaceFromPublic",
+      },
     ],
   },
   # {
