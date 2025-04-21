@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Import-in-place from Public
+"""
 import json
 import os
 import tempfile
@@ -11,10 +14,11 @@ import requests
 
 from posda.database import Database
 from posda.config import Config
+from posda.background.process import BackgroundProcess
 
-# URL = 'http://localhost/papi/v1/import/'
+import argparse
+
 URL = Config.get("internal_api_url") + "/v1/import/"
-# print(URL)
 
 def printe(*args):
     """Print, but to STDERR"""
@@ -63,23 +67,38 @@ def import_one_file(import_event_id, filename):
         printe(code, result, filename)
         return False
 
-    if result['created']:
-        ccode = "C"
-    else:
-        ccode = " "
+    # if result['created']:
+    #     ccode = "C"
+    # else:
+    #     ccode = " "
 
-    print(f"{ccode}|{result['file_id']}")
+    # print(f"{ccode}|{result['file_id']}")
 
     return True
 
-def main():
+def main(background_id, notify, activity_id, collection_name):
+    background = BackgroundProcess(background_id, notify, activity_id)
+    background.daemonize()
 
-    import_comment="CLI API Import"
+    print(f"Beginning import of collection {collection_name} from Public.")
+    import_comment=f"Importing {collection_name} from public (in-place)"
     import_event_id = create_import_event(import_comment)
-    project_name = 'CPTAC-AML'
+    print(f"Import event id: {import_event_id}")
 
     with Database("public") as conn:
         cur = conn.cursor()
+
+
+        cur.execute("""\
+            select count(*)
+            from general_series gs
+            join general_image gi 
+                on gi.general_series_pk_id = gs.general_series_pk_id
+            where gs.project = %s
+        """, [collection_name])
+
+        for count, in cur:
+            total_files_to_import = count
 
         cur.execute("""\
             select gi.dicom_file_uri
@@ -87,16 +106,37 @@ def main():
             join general_image gi 
                 on gi.general_series_pk_id = gs.general_series_pk_id
             where gs.project = %s
-        """, [project_name])
+        """, [collection_name])
 
-        for uri, in cur:
-            # Each line of a plist should be a json-encoded dictionary
-            import_one_file(import_event_id, uri)
+        error_count = 0
+        for i, (uri,) in enumerate(cur):
+            if i % 1000 == 0:
+                background.set_activity_status(
+                    f"Imported {i} of {total_files_to_import}"
+                )
+            if not import_one_file(import_event_id, uri):
+                error_count += 1
 
     close_import_event(import_event_id)
 
-    print(import_event_id)
+    if error_count > 0:
+        print(f"Unfortunately there were {error_count} errors! See STDERR")
+    background.finish(f"Complete - imported {total_files_to_import - error_count} files")
 
 
-if __name__ == '__main__':
-    main()
+def parse_args():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        'background_id',
+        help='background_subprocess_id, should be supplied by Posda'
+    )
+    parser.add_argument('activity_id', help='the activity you want to convert')
+    parser.add_argument('notify', help='the person to notify when complete')
+    parser.add_argument('collection_name', help='the collection to import')
+
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    args = parse_args()
+
+    main(args.background_id, args.activity_id, args.notify, args.collection_name)
