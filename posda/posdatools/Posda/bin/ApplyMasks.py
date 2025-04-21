@@ -49,23 +49,23 @@ def main(args):
     ## Get the file_ids from all outputs (from the import events) for the masked IECs
     masked_image_ids = get_output_images_to_masked_iecs(db, args.visual_review_instance_id)
 
-    ## Add the output fiels to the all_files set
+    ## Add the output files to the all_files set
     all_files.update(masked_image_ids)
 
     ## Get the list of series from the "input images" set and produce a report
-    report1 = background.create_report(f"Mask Edit Skeleton")
-    report2 = background.create_report(f"Blackout/Sliceremove Delete Skeleton")
+    report1 = background.create_report(f"Edit Skeleton")
+    report2 = background.create_report(f"Delete Skeleton")
 
     ## Sort the series and break up by Function
     premasked_image_series = sorted(
         premasked_image_series, key=lambda x: (x[1], x[2], x[3]))
 
-    non_mask_series = filter(lambda x: x[3] != 'mask', premasked_image_series)
-    mask_series = filter(lambda x: x[3] == 'mask', premasked_image_series)
+    # non_mask_series = filter(lambda x: x[3] != 'mask', premasked_image_series)
+    # mask_series = filter(lambda x: x[3] == 'mask', premasked_image_series)
 
     ## Build the output reports
-    populate_edit_skeleton_report(report1, mask_series, args)
-    populate_remove_skeleton_report(report2, non_mask_series, args)
+    populate_edit_skeleton_report(report1, premasked_image_series, args)
+    populate_remove_skeleton_report(report2, premasked_image_series, args)
 
 
     background.set_activity_status("Creating new timepoint")
@@ -133,8 +133,6 @@ def populate_remove_skeleton_report(report, premasked_image_series, args):
     ])
 
     for i, (series, collection, site, function) in enumerate(premasked_image_series):
-        if function == 'mask':
-            continue
         if i == 0:
             writer.writerow([
                 series, collection, site, function,
