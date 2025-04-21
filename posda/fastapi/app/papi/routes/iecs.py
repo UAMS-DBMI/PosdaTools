@@ -55,7 +55,7 @@ async def get_iec_files(iec: int, db: Database = Depends()):
 
 
 @router.get("/{iec}/frames")
-async def get_iec_frames(iec: int, db: Database = Depends()) -> FrameResponse:
+async def get_iec_frames(iec: int, include_frames: bool = True, db: Database = Depends()) -> FrameResponse:
     """Get a list of frames (files and frame counts) from this IEC.
 
     Also returns a guess for if the data is intended to be volumetric.
@@ -72,7 +72,6 @@ async def get_iec_frames(iec: int, db: Database = Depends()) -> FrameResponse:
             image_equivalence_class_input_image
             natural left join file_image
             natural left join image
-            natural left join file_image_geometry
             natural left join image_geometry
         where
             image_equivalence_class_id = $1
@@ -87,18 +86,25 @@ async def get_iec_frames(iec: int, db: Database = Depends()) -> FrameResponse:
 
     sorted_framelist, consistent_frames = consistent(framelist)
 
-    simplified = [
-        { 
-            "file_id": x.file_id,
-            "num_of_frames": x.frame_count,
-        }
-        for x in sorted_framelist
-    ]
+    if include_frames:
 
-    return {
-        "volumetric": consistent_frames,
-        "frames": simplified,
-    }
+        simplified = [
+            { 
+                "file_id": x.file_id,
+                "num_of_frames": x.frame_count,
+            }
+            for x in sorted_framelist
+        ]
+
+        return {
+            "volumetric": consistent_frames,
+            "frames": simplified,
+        }
+
+    else:
+        return {
+            "volumetric": consistent_frames,
+        }
 
 
 @router.get("/{iec}/info")
@@ -106,8 +112,11 @@ async def get_iec_info(iec: int, db: Database = Depends()):
     """Get details for an IEC.
     """
 
+    frames = await get_iec_frames(iec=iec, include_frames=False, db=db)
+
     query = """
     select
+        visual_review_instance_id,
         image_equivalence_class_id,
         series_instance_uid,
         equivalence_class_number,
@@ -141,5 +150,6 @@ async def get_iec_info(iec: int, db: Database = Depends()):
     if item:
         item['download_path'] = f"/papi/v1/files/iec/{iec}"
         item['download_name'] = f"iec_{iec}.zip"
+        item['volumetric'] = frames['volumetric']
 
     return item
