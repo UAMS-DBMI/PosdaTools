@@ -520,17 +520,17 @@ sub editCancelButtonPress(){
 
 sub BulkEditMacro(){
   my ($self, $http, $dyn) = @_;
-  $self->{client}->PUT("$self->{MY_API_URL}/bulkMacro/$self->{act_id}");
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkMacro/$self->{pathology_visual_review_instance_id}");
 }
 
 sub BulkEditLabel(){
   my ($self, $http, $dyn) = @_;
-  $self->{client}->PUT("$self->{MY_API_URL}/bulkLabel/$self->{act_id}");
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkLabel/$self->{pathology_visual_review_instance_id}");
 }
 
 sub BulkEditMeta(){
   my ($self, $http, $dyn) = @_;
-  $self->{client}->PUT("$self->{MY_API_URL}/bulkMeta/$self->{act_id}");
+  $self->{client}->PUT("$self->{MY_API_URL}/bulkMeta/$self->{pathology_visual_review_instance_id}");
 }
 
 
