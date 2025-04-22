@@ -162,6 +162,10 @@ This step should not be needed if your data was imported through CTP",
     description => "",
     operations => [
       {
+        caption => "Flag VR for Masking",
+        action =>  "FlagVRForMasking",
+      },
+      {
         caption => "Finalize Masking",
         action =>  "ApplyMasks",
       },
