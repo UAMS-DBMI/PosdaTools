@@ -146,6 +146,36 @@ async def get_iec_info(iec: int, db: Database = Depends()):
     """
 
     item = dict(await db.fetch_one(query, [iec]))
+
+    if not item:
+        # It may not have an output image, which means we need to try a different query
+        query = """
+        select
+            visual_review_instance_id,
+            image_equivalence_class_id,
+            series_instance_uid,
+            equivalence_class_number,
+            processing_status,
+            review_status,
+            update_user,
+            to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
+            (select count(file_id)
+                from image_equivalence_class_input_image i
+                where i.image_equivalence_class_id =
+                    image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+                from file_series
+                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+                (select patient_id
+                from file_patient
+                natural join file_series
+                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id
+        from image_equivalence_class    
+        where image_equivalence_class_id = $1
+        """
+
+        item = dict(await db.fetch_one(query, [iec]))
+
     
     if item:
         item['download_path'] = f"/papi/v1/files/iec/{iec}"
