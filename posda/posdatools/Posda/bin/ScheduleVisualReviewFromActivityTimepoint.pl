@@ -4,9 +4,12 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 
 my $usage = <<EOF;
-ScheduleVisualReviewFromActivityTimepoint.pl <bkgrnd_id> <activity_id> <notify>
+ScheduleVisualReviewFromActivityTimepoint.pl <bkgrnd_id> <activity_id> <notify> <skip_rendering>
 or
 ScheduleVisualReviewFromActivityTimepoint.pl -h
+
+If skip_rendering is 1, IECs are created but rendering of projections
+is skipped. If it is 0 or blank, the script operates normally.
 
 Expects lines of the following form on STDIN:
 <series_instance_uid>
@@ -17,10 +20,10 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   print "$usage\n";
   exit;
 }
-unless($#ARGV == 2){
+unless($#ARGV == 3){
   die "$usage\n";
 }
-my ($invoc_id, $act_id, $notify) = @ARGV;
+my ($invoc_id, $act_id, $notify, $skip_rendering) = @ARGV;
 print "All processing in background\n";
 my $background = Posda::BackgroundProcess->new($invoc_id, $notify, $act_id);
 $background->Daemonize;
@@ -77,7 +80,7 @@ for my $i (0 .. $#series){
     "process $ith of $num_series in timepoint $OldActTpId");
   my $s = $series[$i];
   my $tot_equiv = 0;
-  my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $OldActTpId $visual_review_instance_id";
+  my $cmd = "NewCreateSeriesEquivalenceClasses.pl $s $OldActTpId $visual_review_instance_id \"$skip_rendering\"";
   open CMD, "$cmd|";
   while(my $line = <CMD>){
     if($line =~ /\s*(\d+)\s*classes for series\s*(.*)\s*$/){
