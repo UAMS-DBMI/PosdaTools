@@ -20,6 +20,19 @@ import argparse
 
 URL = Config.get("internal_api_url") + "/v1/import/"
 
+def parse_visibility(s):
+    if s == "":
+        return None
+
+    try:
+        parts = s.split(',')
+        int_parts = [int(i) for i in parts]
+
+        return [str(i) for i in int_parts]
+    except ValueError as ve:
+        print("Error converting visibility parameter:", ve)
+        return None
+
 def printe(*args):
     """Print, but to STDERR"""
     print(*args, file=sys.stderr)
@@ -76,7 +89,46 @@ def import_one_file(import_event_id, filename):
 
     return True
 
-def main(background_id, activity_id, notify, collection_name):
+def execute_count_query(cur, collection_name, vis):
+    if vis is None:
+        cur.execute("""\
+            select count(*)
+            from general_series gs
+            join general_image gi 
+                on gi.general_series_pk_id = gs.general_series_pk_id
+            where gs.project = %s
+        """, [collection_name])
+
+    else:
+        cur.execute(f"""\
+            select count(*)
+            from general_series gs
+            join general_image gi 
+                on gi.general_series_pk_id = gs.general_series_pk_id
+            where gs.project = %s
+            and gs.visibility in ({','.join(vis)})
+        """, [collection_name])
+
+def execute_select_query(cur, collection_name, vis):
+    if vis is None:
+        cur.execute("""\
+            select gi.dicom_file_uri
+            from general_series gs
+            join general_image gi 
+                on gi.general_series_pk_id = gs.general_series_pk_id
+            where gs.project = %s
+        """, [collection_name])
+    else:
+        cur.execute(f"""\
+            select gi.dicom_file_uri
+            from general_series gs
+            join general_image gi 
+                on gi.general_series_pk_id = gs.general_series_pk_id
+            where gs.project = %s
+            and gs.visibility in ({','.join(vis)})
+        """, [collection_name])
+
+def main(background_id, activity_id, notify, collection_name, visibility):
     background = BackgroundProcess(background_id, notify, activity_id)
     background.daemonize()
 
@@ -89,24 +141,14 @@ def main(background_id, activity_id, notify, collection_name):
         cur = conn.cursor()
 
 
-        cur.execute("""\
-            select count(*)
-            from general_series gs
-            join general_image gi 
-                on gi.general_series_pk_id = gs.general_series_pk_id
-            where gs.project = %s
-        """, [collection_name])
+        vis_list = parse_visibility(visibility)
+
+        execute_count_query(cur, collection_name, vis_list)
 
         for count, in cur:
             total_files_to_import = count
 
-        cur.execute("""\
-            select gi.dicom_file_uri
-            from general_series gs
-            join general_image gi 
-                on gi.general_series_pk_id = gs.general_series_pk_id
-            where gs.project = %s
-        """, [collection_name])
+        execute_select_query(cur, collection_name, vis_list)
 
         error_count = 0
         for i, (uri,) in enumerate(cur):
@@ -133,6 +175,9 @@ def parse_args():
     parser.add_argument('activity_id', help='the activity you want to convert')
     parser.add_argument('notify', help='the person to notify when complete')
     parser.add_argument('collection_name', help='the collection to import')
+    parser.add_argument('visibility', help='''comma-seperated list of 
+                        visibilities to include in the copy. If left blank,
+                        all files are copied.''')
 
     return parser.parse_args()
 
@@ -140,4 +185,4 @@ if __name__ == "__main__":
     args = parse_args()
 
     printe("Running with args: ", args)
-    main(args.background_id, args.activity_id, args.notify, args.collection_name)
+    main(args.background_id, args.activity_id, args.notify, args.collection_name, args.visibility)
