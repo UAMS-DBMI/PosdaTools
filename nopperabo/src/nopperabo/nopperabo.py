@@ -180,12 +180,12 @@ def upload_file(import_event_id, filename):
             print(r.content)
             raise
 
-def upload_output_files(iec):
+def upload_output_files(iec, output_path):
     # create an import event
     import_event_id = create_import_event(iec)
 
     # upload the files
-    for root, dirs, files in os.walk('/output'):
+    for root, dirs, files in os.walk(output_path):
         for file in files:
             path = os.path.join(root, file)
             upload_file(import_event_id, path)
@@ -223,8 +223,9 @@ def do_work(iec):
     # create dir for iec
     logger.debug("Creating temporary directory to store files")
     path = os.path.join(TEMP, str(iec))
+    output_path = os.path.join(path, 'output')
     os.makedirs(path, exist_ok=True)
-    os.makedirs('/output', exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
 
     # download each file to a temporary location
     logger.info(f"Downloading {len(files)} files for iec...")
@@ -242,7 +243,7 @@ def do_work(iec):
             '--norender',
             '--multiprocessing',
             '-i', path,
-            '-o', '/output',
+            '-o', output_path,
             '-c', *[str(details[x]) for x in details_order],
             '--form', form,
             '--function', function,
@@ -260,7 +261,7 @@ def do_work(iec):
 
         # if successful, upload the resulting dicom files to posda
         logger.debug("Uploading output files")
-        import_event_id = upload_output_files(iec)
+        import_event_id = upload_output_files(iec, output_path)
     else:
         logger.info(f"Masker failed with exit code {result}")
         logger.info(proc.stderr)
@@ -274,7 +275,6 @@ def do_work(iec):
     # delete the temp path
     logger.debug("Cleaning up temp files")
     shutil.rmtree(path)
-    shutil.rmtree("/output")
 
     total_eapsed_time = timedelta(seconds=(time.time() - start_time))
     logger.info(f"Completed IEC {iec}, took {total_eapsed_time} seconds")
