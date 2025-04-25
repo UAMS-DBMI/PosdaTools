@@ -50,12 +50,13 @@ def close_import_event(import_event_id):
     resp = r.json()
 
 
-def add_file(filename, import_event_id):
+def add_file(filename, digest, import_event_id):
     """add one file using file_in_place endpoint"""
 
     r = requests.post(URL + "file_in_place", params={
         'import_event_id': import_event_id,
         'localpath': filename,
+        'digest': digest,
     })
 
     try:
@@ -72,10 +73,10 @@ def get_xfer_syntax(filename):
     except:
         return None
 
-def import_one_file(import_event_id, filename):
+def import_one_file(import_event_id, filename, digest):
     """import one file using the file_in_place endpoint"""
 
-    code, result = add_file(filename, import_event_id)
+    code, result = add_file(filename, digest, import_event_id)
     if code != 200:
         printe(code, result, filename)
         return False
@@ -112,7 +113,7 @@ def execute_count_query(cur, collection_name, vis):
 def execute_select_query(cur, collection_name, vis):
     if vis is None:
         cur.execute("""\
-            select gi.dicom_file_uri
+            select gi.dicom_file_uri, gi.md5_digest
             from general_series gs
             join general_image gi 
                 on gi.general_series_pk_id = gs.general_series_pk_id
@@ -120,7 +121,7 @@ def execute_select_query(cur, collection_name, vis):
         """, [collection_name])
     else:
         cur.execute(f"""\
-            select gi.dicom_file_uri
+            select gi.dicom_file_uri, gi.md5_digest
             from general_series gs
             join general_image gi 
                 on gi.general_series_pk_id = gs.general_series_pk_id
@@ -158,12 +159,12 @@ def main(background_id, activity_id, notify, collection_name, visibility):
         )
         all_records = cur.fetchall()
         error_count = 0
-        for i, (uri,) in enumerate(all_records):
+        for i, (uri, digest) in enumerate(all_records):
             if i % 1000 == 0:
                 background.set_activity_status(
                     f"Imported {i} of {total_files_to_import}"
                 )
-            if not import_one_file(import_event_id, uri):
+            if not import_one_file(import_event_id, uri, digest):
                 error_count += 1
 
     close_import_event(import_event_id)
