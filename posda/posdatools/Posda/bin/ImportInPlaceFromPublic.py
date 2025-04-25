@@ -150,8 +150,15 @@ def main(background_id, activity_id, notify, collection_name, visibility):
 
         execute_select_query(cur, collection_name, vis_list)
 
+        # collect all of the filenames into memory
+        # NOTE: This is done because, for larger collections
+        # some MySQL timeout is exceeded if we step over them
+        background.set_activity_status(
+            "Selecting filenames from database, this might take a long time.."
+        )
+        all_records = cur.fetchall()
         error_count = 0
-        for i, (uri,) in enumerate(cur):
+        for i, (uri,) in enumerate(all_records):
             if i % 1000 == 0:
                 background.set_activity_status(
                     f"Imported {i} of {total_files_to_import}"
