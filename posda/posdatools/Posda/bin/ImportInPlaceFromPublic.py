@@ -19,6 +19,9 @@ from posda.background.process import BackgroundProcess
 import argparse
 
 URL = Config.get("internal_api_url") + "/v1/import/"
+OLD_PATH = '/usr/local/apps/ncia/CTP-server/CTP/storage'
+NEW_PATH = '/nas/public/storage'
+
 
 def parse_visibility(s):
     if s == "":
@@ -75,6 +78,11 @@ def get_xfer_syntax(filename):
 
 def import_one_file(import_event_id, filename, digest):
     """import one file using the file_in_place endpoint"""
+
+    # There was a time when files stored in NBIA used
+    # a special mount location, which has since changed
+    if OLD_PATH in filename:
+        filename = filename.replace(OLD_PATH, NEW_PATH)
 
     code, result = add_file(filename, digest, import_event_id)
     if code != 200:
