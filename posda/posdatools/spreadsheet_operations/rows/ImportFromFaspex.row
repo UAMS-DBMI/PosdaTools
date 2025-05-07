@@ -1,5 +1,5 @@
 :operation_name: ImportFromFaspex
-:command_line: ImportFromFaspex.py <?bkgrnd_id?> <activity_id> <package_dir> <notify>
+:command_line: ImportFromFaspex.py <?bkgrnd_id?> <activity_id> "<package_dir>" <notify>
 :operation_type: background_process
 :input_line_format: 
 :tags: ['activity_timepoints']
