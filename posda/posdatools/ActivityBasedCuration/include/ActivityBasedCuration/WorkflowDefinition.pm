@@ -376,6 +376,11 @@ This step should not be needed if your data was imported through CTP",
       # },
     {
       operation => "InvokeNewOperation",
+      caption => "Import from Faspex package",
+      action =>  "ImportFromFaspex",
+    },
+    {
+      operation => "InvokeNewOperation",
       caption => "Patient Mapping",
       action =>  "Path_Patient_Mapping",
       special => "spreadsheetRequest"
