@@ -13,6 +13,8 @@ import numpy as np
 from dataclasses import dataclass, asdict
 from collections import defaultdict
 
+
+
 router = APIRouter(
     tags=["Image Equivalence Classes (IEC)"],
     dependencies=[logged_in_user]
@@ -183,3 +185,51 @@ async def get_iec_info(iec: int, db: Database = Depends()):
         item['volumetric'] = frames['volumetric']
 
     return item
+
+class IECSeries(BaseModel):
+    file_count: int
+    image_equivalence_class_id: int
+    series_description: str
+
+# For a list of series
+IECSeriesList = List[IECSeries]
+
+
+@router.get("/{iec}/other_iecs_in_for", response_model=IECSeriesList)
+async def iecs_for_for(
+    iec: int,
+    db: Database = Depends(),
+):
+    """
+    Get all other IECs that share this IEC's Frame of Reference
+
+    For the given IEC, this returns a list of all IECs (other than
+    the original one) inside the same visual review that share a
+    Frame of Reference.
+    """
+    query = """\
+        with seg_for as (
+            select distinct for_uid, visual_review_instance_id
+            from image_equivalence_class_input_image
+            natural join image_equivalence_class
+            natural join file_for
+            where image_equivalence_class_id = $1
+            limit 1
+        ), candidate_files as (
+            select file_id, image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            where visual_review_instance_id = (select visual_review_instance_id from seg_for)
+        )
+
+        select image_equivalence_class_id, series_description, count(file_id) as file_count
+        from candidate_files
+        natural join file_for
+        natural join file_series
+        where for_uid = (select for_uid from seg_for)
+        and image_equivalence_class_id != $1
+        group by 1, 2
+        order by file_count desc
+    """
+
+    return [dict(i) for i in await db.fetch(query, [iec])]
