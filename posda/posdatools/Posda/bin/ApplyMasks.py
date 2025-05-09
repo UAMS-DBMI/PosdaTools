@@ -53,8 +53,9 @@ def main(args):
     all_files.update(masked_image_ids)
 
     ## Get the list of series from the "input images" set and produce a report
-    report1 = background.create_report(f"Edit Skeleton")
-    report2 = background.create_report(f"Delete Skeleton")
+    report1 = background.create_report("Edit Skeleton")
+    report2 = background.create_report("Delete Skeleton")
+    report3 = background.create_report("Copy Skeleton")
 
     ## Sort the series and break up by Function
     premasked_image_series = sorted(
@@ -71,6 +72,7 @@ def main(args):
     background.set_activity_status("Creating new timepoint")
     ## Create a new timepoint with the new all_files set
     new_tp = create_activity_timepoint(args, db)
+    populate_copy_skeleton_report(report3, premasked_image_series, args, new_tp)
 
     print(f"Creating new timepoint with id {new_tp}")
     insert_files_into_timepoint(db, new_tp, all_files)
@@ -113,6 +115,35 @@ def populate_edit_skeleton_report(report, series_list, args):
                         "set_tag", "<(0013,\"CTP\",12)>", "<site_name>"])
         writer.writerow([None, None, None, None,
                         "set_tag", "<(0013,\"CTP\",13)>", "<site_id>"])
+
+def populate_copy_skeleton_report(report, premasked_image_series, args, new_tp):
+
+    writer = csv.writer(report)
+    writer.writerow([
+        "series_instance_uid",
+        "collection_name",
+        "site_name",
+        "masking_function",
+        "op",
+        "tag",
+        "val1",
+        "val2",
+        "Operation",
+        "other_tp_id",
+        "notify",
+    ])
+
+    for i, (series, collection, site, function) in enumerate(premasked_image_series):
+        if i == 0:
+            writer.writerow([
+                series, collection, site, function,
+                None, None, None, None, 
+                "CopySeriesFromOtherTimepoint",     # Operation
+                new_tp,
+                args.notify
+            ])
+        else:
+            writer.writerow([series, collection, site, function])
 
 def populate_remove_skeleton_report(report, premasked_image_series, args):
 
