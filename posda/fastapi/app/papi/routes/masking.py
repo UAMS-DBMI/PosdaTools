@@ -6,7 +6,7 @@ from starlette.responses import Response, FileResponse
 import asyncpg.exceptions
 
 from .auth import logged_in_user, User
-from ..util import Database
+from ..util import Database, asynczip
 
 from ..util.models import File, FrameResponse, consistent
 
@@ -510,3 +510,19 @@ async def get_iec_review_files(
         "frames": simplified,
     }
 
+@router.get("/{iec}/reviewfiles/download")
+async def get_iec_files(iec: int, db: Database = Depends()):
+    query = """
+        select
+            root_path || '/' || file_location.rel_path as file
+        from
+            masking
+            natural join file_import
+            join file_location using(file_id)
+            natural join file_storage_root
+        where
+            image_equivalence_class_id = $1
+    """
+    records = await db.fetch(query, [iec])
+
+    return await asynczip.stream_files([r['file'] for r in records], f"{iec}.zip")
