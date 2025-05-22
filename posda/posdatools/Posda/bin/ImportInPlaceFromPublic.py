@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Import-in-place from Public
+
+This program will import all files in a Collection (and Site)
+from Public into Posda.
 """
 import sys
 
@@ -57,7 +60,10 @@ def add_file(filename, digest, import_event_id):
         params={
             "import_event_id": import_event_id,
             "localpath": filename,
-            "digest": digest,
+            # It was discovered that trusting the digest in NBIA was
+            # not wise. Not sending it here will cause the server
+            # to generate it from the actual file on disk
+            # "digest": digest,
         },
     )
 
@@ -188,6 +194,8 @@ def main(background_id, activity_id, notify, collection_name, visibility, site_n
         for (count,) in cur:
             total_files_to_import = count
 
+        print(f"Found {total_files_to_import} files to import.")
+
 
         execute_select_query(cur, collection_name, vis_list, site_name)
 
@@ -226,9 +234,22 @@ def parse_args():
     parser.add_argument("collection_name", help="the collection to import")
     parser.add_argument(
         "visibility",
-        help="""comma-seperated list of 
-                        visibilities to include in the copy. If left blank,
-                        all files are copied.""",
+        help="""comma-seperated list of visibilities to include; leave blank
+                for all. Possible values are: 
+                0: Not Yet Reviewed,
+                1: Visible,
+                2: Not Visible,
+                3: To Be Deleted,
+                4: Delete,
+                5: 1st Review,
+                6: 2nd Review,
+                7: 3rd Review,
+                8: 4th Review,
+                9: 5th Review,
+                10: 6th Review,
+                11: 7th Review,
+                12: Downloadable
+        """,
     )
     parser.add_argument(
         "site_name",
