@@ -116,7 +116,7 @@ async def get_for_visualreview(
             select nifti_file_id 
             from nifti_visual_review_files
             where nifti_visual_review_instance_id = $1
-        """, [visual_review_instance_id])
+        """, [nifti_visual_review_instance_id])
 
         return [x[0] for x in records]
 
