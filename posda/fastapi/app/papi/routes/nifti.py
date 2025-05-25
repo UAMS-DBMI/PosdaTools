@@ -104,7 +104,7 @@ async def set_status(
 
 @router.get("/visualreview/{nifti_visual_review_instance_id}")
 async def get_for_visualreview(
-    visual_review_instance_id: int,
+    nifti_visual_review_instance_id: int,
     db: Database = Depends(),
     current_user: User = logged_in_user
 ):
