@@ -247,7 +247,8 @@ async def get_iec_metadata(
             series_instance_uid,
             sop_instance_uid,
             pixel_spacing,
-            file_id
+            file_id,
+            modality
 
         from
 			image_equivalence_class_input_image
@@ -298,6 +299,7 @@ def conv(record):
         '00281051': c('DS', record['window_width']),
         '00280002': c('US', record['samples_per_pixel']),
         '00280004': c('CS', record['photometric_interpretation']),
+        '00080060': c('CS', record['modality']),
     }
 
     # If these are null, we don't want to include the tag at all
