@@ -6,7 +6,7 @@ A script to automate importing of data from Faspex packages
 # from posda.database import Database
 # from posda.queries import Query
 from posda.background.process import BackgroundProcess
-from posda.util import b3sum, md5sum
+from posda.util import md5sum
 from posda.config import Config
 from pathlib import Path
 import requests
@@ -186,8 +186,8 @@ def perform_import(args, background, files_to_import):
     total_to_import = len(files_to_import)
     for i, filename in enumerate(files_to_import):
         background.set_activity_status(f"Importing {i+1} of {total_to_import}")
-        digest = b3sum(filename)
-        # digest = md5sum(filename)
+        # digest = b3sum(filename)
+        digest = md5sum(filename)
         retries = 5
         while True:
             # Attempt to insert the file (this could fail)
