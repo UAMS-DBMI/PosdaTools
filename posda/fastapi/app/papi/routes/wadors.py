@@ -256,11 +256,12 @@ async def get_iec_metadata(
             natural join file_sop_common
             natural join file_image
             natural join image
-            natural join image_geometry
             natural join dicom_file
             natural join file_location
             natural join file_storage_root
             natural join file_equipment
+
+            natural left join image_geometry
 
             natural left join file_slope_intercept
             natural left join slope_intercept
