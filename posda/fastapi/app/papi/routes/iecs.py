@@ -117,82 +117,49 @@ async def get_iec_info(iec: int, db: Database = Depends()):
     frames = await get_iec_frames(iec=iec, include_frames=False, db=db)
 
     query = """
-        select
-            visual_review_instance_id,
-            image_equivalence_class_id,
-            series_instance_uid,
-            equivalence_class_number,
-            processing_status,
-            review_status,
-            projection_type,
-            file_id,
-            root_path || '/' || rel_path as path,
-            update_user,
-            to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
-            (select count(file_id)
-                from image_equivalence_class_input_image i
-                where i.image_equivalence_class_id =
-                    image_equivalence_class.image_equivalence_class_id) as file_count,
-            (select body_part_examined
-                from file_series
-                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-                (select patient_id
-                from file_patient
-                natural join file_series
-                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id,
-            (
-                select series_description
-                from image_equivalence_class_input_image
-                natural join file_series
-                where image_equivalence_class_input_image.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id
-                limit 1
-            ) as series_description
-        from image_equivalence_class    
-        natural join image_equivalence_class_out_image
-        natural join file_location
-        natural join file_storage_root
-        where image_equivalence_class_id = $1
+        with iec_image_count as (
+            select image_equivalence_class_id, count(file_id) as file_count
+            from image_equivalence_class_input_image
+            group by image_equivalence_class_id
+        ),
+        series_info as (
+            select
+                series_instance_uid,
+                body_part_examined,
+                modality,
+                patient_id,
+                series_description
+            from file_series
+            natural left join file_patient
+        )
+        select distinct on (iec.image_equivalence_class_id)
+            iec.visual_review_instance_id,
+            iec.image_equivalence_class_id,
+            iec.series_instance_uid,
+            iec.equivalence_class_number,
+            iec.processing_status,
+            iec.review_status,
+            iec_out.projection_type,
+            fl.file_id,
+            coalesce(fsr.root_path || '/' || fl.rel_path, NULL) as path,
+            iec.update_user,
+            to_char(iec.update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
+            iic.file_count,
+            si.body_part_examined,
+            si.modality,
+            si.patient_id,
+            si.series_description
+        from image_equivalence_class iec
+        left join image_equivalence_class_out_image iec_out using (image_equivalence_class_id)
+        left join file_location fl using (file_id)
+        left join file_storage_root fsr using (file_storage_root_id)
+        left join iec_image_count iic using (image_equivalence_class_id)
+        left join series_info si on si.series_instance_uid = iec.series_instance_uid
+        where iec.image_equivalence_class_id = $1
     """
 
     item = dict(await db.fetch_one(query, [iec]))
 
-    if not item:
-        # It may not have an output image, which means we need to try a different query
-        query = """
-        select
-            visual_review_instance_id,
-            image_equivalence_class_id,
-            series_instance_uid,
-            equivalence_class_number,
-            processing_status,
-            review_status,
-            update_user,
-            to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
-            (select count(file_id)
-                from image_equivalence_class_input_image i
-                where i.image_equivalence_class_id =
-                    image_equivalence_class.image_equivalence_class_id) as file_count,
-            (select body_part_examined
-                from file_series
-                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
-                (select patient_id
-                from file_patient
-                natural join file_series
-                where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id,
-            (
-                select series_description
-                from image_equivalence_class_input_image
-                natural join file_series
-                where image_equivalence_class_input_image.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id
-                limit 1
-            ) as series_description
-        from image_equivalence_class    
-        where image_equivalence_class_id = $1
-        """
-
-        item = dict(await db.fetch_one(query, [iec]))
-
-    
     if item:
         item['download_path'] = f"/papi/v1/files/iec/{iec}"
         item['download_name'] = f"iec_{iec}.zip"
