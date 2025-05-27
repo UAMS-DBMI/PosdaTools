@@ -281,7 +281,7 @@ async def get_iec_metadata(
 def conv(record):
     c = ValueModel.from_record
 
-    return {
+    ret = {
         '00280030': c('DS', record['pixel_spacing']),
         '00080018': c('UI', record['sop_instance_uid']),
         '0020000E': c('UI', record['series_instance_uid']),
@@ -298,7 +298,13 @@ def conv(record):
         '00281051': c('DS', record['window_width']),
         '00280002': c('US', record['samples_per_pixel']),
         '00280004': c('CS', record['photometric_interpretation']),
-        "00200032": c('DS', record['ipp']),
-        "00200037": c('DS', record['iop']),
     }
 
+    # If these are null, we don't want to include the tag at all
+    if record['iop'] is not None:
+        ret["00200037"] = c('DS', record['iop'])
+
+    if record['ipp'] is not None:
+        ret["00200032"] = c('DS', record['ipp'])
+
+    return ret
