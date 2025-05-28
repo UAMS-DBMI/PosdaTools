@@ -399,6 +399,11 @@ This step should not be needed if your data was imported through CTP",
       caption => "Commit Queued Edits",
       action =>  "Path_Commit_Edits",
     },
+    {
+      operation => "InvokeNewOperation",
+      caption => "Test PathDB connection",
+      action =>  "PathologyBridge",
+    },
    ],
     queries => [
       {

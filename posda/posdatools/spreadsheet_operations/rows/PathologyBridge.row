@@ -1,0 +1,6 @@
+:operation_name: PathologyBridge
+:command_line: PathologyBridge.py <?bkgrnd_id?> "<collection_name>" <notify>
+:operation_type: background_process
+:input_line_format:
+:tags: ['pathology']
+:can_chain:
