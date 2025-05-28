@@ -12,6 +12,7 @@ from ..util.models import File, FrameResponse, consistent
 import numpy as np
 from dataclasses import dataclass, asdict
 from collections import defaultdict
+from typing import Optional
 
 
 
@@ -168,9 +169,9 @@ async def get_iec_info(iec: int, db: Database = Depends()):
 class IECSeries(BaseModel):
     file_count: int
     image_equivalence_class_id: int
-    series_description: str
-    series_instance_uid: str
-    modality: str
+    series_description: Optional[str]
+    series_instance_uid: Optional[str]
+    modality: Optional[str]
 
 # For a list of series
 IECSeriesList = List[IECSeries]
