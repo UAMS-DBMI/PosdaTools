@@ -169,10 +169,11 @@ class IECSeries(BaseModel):
     file_count: int
     image_equivalence_class_id: int
     series_description: str
+    series_instance_uid: str
+    modality: str
 
 # For a list of series
 IECSeriesList = List[IECSeries]
-
 
 @router.get("/{iec}/other_iecs_in_for", response_model=IECSeriesList)
 async def iecs_for_for(
