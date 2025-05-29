@@ -435,27 +435,28 @@ async def get_next_to_review(
 @router.get("/visualreview/{visual_review_instance_id}")
 async def get_for_visualreview(
     visual_review_instance_id: int,
+    awaiting_review: bool = False,
     db: Database = Depends(),
     current_user: User = logged_in_user
 ):
     """Return list of all IECs in this VR that are flagged for Masking
+
+    If awaiting_review is true, it only returns those which are currently
+    awaiting review (that is, masking_status is 'process-complete').
     """
 
-    try:
-        records = await db.fetch("""\
-            select
-                image_equivalence_class_id
-            from
-                image_equivalence_class
-                natural join masking
-            where
-                visual_review_instance_id = $1
-        """, [visual_review_instance_id])
+    records = await db.fetch("""\
+        select
+            image_equivalence_class_id
+        from
+            image_equivalence_class
+            natural join masking
+        where
+            visual_review_instance_id = $1
+            and ($2 = false or masking_status = 'process-complete')
+    """, [visual_review_instance_id, awaiting_review])
 
-        return [x[0] for x in records]
-
-    except:
-        pass
+    return [x[0] for x in records]
 
 
 @router.get("/{iec}/reviewfiles")
