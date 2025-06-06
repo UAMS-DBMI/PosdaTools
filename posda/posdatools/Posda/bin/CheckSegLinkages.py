@@ -38,7 +38,7 @@ def  call_api(unique_url, call_type):
             print(f"Error decoding JSON from response: {e}")
             return None  # or {}, [] based on expected data type
     else:
-        print(f"Error fetching data. Status code: {response.status_code}, Response: {response.text}")
+        print(f"Error fetching data. Call: {unique_url} Status code: {response.status_code}, Response: {response.text}")
         return None  # or {}, [] based on expected data type
 
 def find_segs_in_activity(activity_id):
@@ -72,22 +72,26 @@ def createSegReports(args,background,result_data,cname,direction):
         writer = csv.writer(r)
         writer.writerow(['series_instance_uid','op','tag','val1','val2','Operation','activity_id','edit_description','notify'])
         lastSeries = ''
-        for k in result_container[j]:
-                if k[0] != lastSeries:
-                    if(firstline):
-                        writer.writerow([k[0],'','','','','BackgroundEditTp', args.activity_id, 'Repairing SEG Frame of Reference Linkages', args.notify])
-                        firstline = False
-                    else:
-                        writer.writerow([k[0]])
-                if(direction):
-                        writer.writerow(['','set_tag', '<(0020,0052)>','<{}>'.format(k[1]),'<{}>'.format(k[2])])
-                else:
-                    if(firstline):
-                        writer.writerow(['', 'set_tag', '<(0020,0052)>','<{}>'.format(k[2]),'<{}>'.format(k[1])])
-                        firstline = False
-                    else:
-                        writer.writerow(['', 'set_tag', '<(0020,0052)>','<{}>'.format(k[2]),'<{}>'.format(k[1])])
-
+        #ref changer
+        if(direction):
+            for k in result_container[j]:
+                    if k[0] != lastSeries:
+                        if(firstline):
+                            writer.writerow([k[0],'','','','','BackgroundEditTp', args.activity_id, 'Repairing SEG Frame of Reference Linkages', args.notify])
+                            firstline = False
+                        else:
+                            writer.writerow([k[0]])
+                    writer.writerow(['','set_tag', '<(0020,0052)>','<{}>'.format(k[1]),'<>'])
+        #seg changer
+        else:
+            for k in result_container[j]:
+                    if k[3] != lastSeries:
+                        if(firstline):
+                            writer.writerow([k[3],'','','','','BackgroundEditTp', args.activity_id, 'Repairing SEG Frame of Reference Linkages', args.notify])
+                            firstline = False
+                        else:
+                            writer.writerow([k[3]])
+                    writer.writerow(['', 'set_tag', '<(0020,0052)>','<{}>'.format(k[2]),'<>'])
 def main(args):
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
@@ -117,14 +121,16 @@ def main(args):
                                     #Get the series and frame of reference
                                     linked_FOR = get_Linked_FileFOR(linked_file)[0]['for_uid']
                                     linked_series = getSeries(linked_file)[0]['series_instance_uid']
+                                    seg_series = getSeries(f['file_id'])[0]['series_instance_uid']
                                     #if the FOR matches or does not exist the linkage is good
+                                    #test = False
                                     if linked_FOR is None or linked_FOR == '' or segFOR == linked_FOR:
                                         success = success + 1
                                         populate_seg_linkages(linked_file, f['file_id'], str(instance.ReferencedSOPInstanceUID), str(instance.ReferencedSOPClassUID))
                                     else:
                                         for_fail = for_fail + 1
-                                        triple = (linked_series, segFOR, linked_FOR)
-                                        csv_data.add(triple)
+                                        data = (linked_series, segFOR, linked_FOR, seg_series)
+                                        csv_data.add(data)
                                         #print ("Reference SOP: {} was found, but has non-matching Frame of Reference {}".format(linked_file,linked_FOR))
                             else:
                                 #print ("Reference SOP: {} was not found".format(instance))
@@ -139,9 +145,9 @@ def main(args):
     if numSEGs > 0:
         print("\n{} missing SOPs. {} files had non matching Frame Of References(FOR).\n{} file linkages verified for {} segmentations.\n".format( fail, for_fail,success, numSEGs))
         if fail > 0 or for_fail > 0:
-            name = "change_seg_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            name = "change_seg_FORs_to_match_images{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
             createSegReports(args,background,csv_data,name,1)
-            name = "change_ref_image_FOR{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
+            name = "change_image_FORs_to_match_segs{}{}{}{}.csv".format(args.background_id,numSEGs,for_fail,args.activity_id)
             createSegReports(args, background,csv_data,name,0)
     background.finish("Process complete")
 
