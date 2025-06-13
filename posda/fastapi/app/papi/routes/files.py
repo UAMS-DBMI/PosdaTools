@@ -282,7 +282,8 @@ async def get_details(file_id: int, db: Database = Depends()):
             study_instance_uid
 
         from
-            file_image
+            file
+            natural left join file_image
             natural left join image
             natural left join unique_pixel_data
             natural left join pixel_location
@@ -301,7 +302,7 @@ async def get_details(file_id: int, db: Database = Depends()):
             natural left join file_win_lev
             natural left join window_level
 
-        where file_image.file_id = $1
+        where file.file_id = $1
     """
 
 
