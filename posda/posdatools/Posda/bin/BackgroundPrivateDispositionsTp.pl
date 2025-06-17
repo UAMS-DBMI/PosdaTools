@@ -14,13 +14,15 @@ sub get_uuid {
   return lc $ug->create_str();
 }
 my $usage = <<EOF;
-BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions> <upd_nbia> <dir>
+BackgroundPrivateDispositionsTp.pl <?bkgrnd_id?> <activity_id> <uid_root> <offset> <notify> <skip_dispositions> <upd_nbia> <dir> <override_site_name>
   UID's not hashed if they begin with <uid_root>
   date's always offset with offset (days)
   email sent to <notify>
   skip private dispositions if <skip_dispositions> is set to 1
   if <upd_nbia> use nbia file conventions and nbia-api to update nbia
   else <dir> contains name of download subdirectory (no spaces or special characters)
+  if <override_site_name> is set, all files are placed in this site, regardless
+  of what is in the group 13 tags.
 
 Expects nothing on <STDIN>
 
@@ -39,13 +41,13 @@ if($#ARGV == 0 && $ARGV[0] eq "-h"){
   exit;
 }
 my $script_start_time = time;
-unless($#ARGV == 7){
+unless($#ARGV == 8){
   print "$usage\n";
   die "######################## subprocess failed to start:\n" .
       "$usage\n" .
       "#####################################################\n";
 }
-my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions, $upd_nbia, $rel_dir) = @ARGV;
+my($invoc_id, $act_id, $uid_root, $offset, $notify, $skip_dispositions, $upd_nbia, $rel_dir, $override_site_name) = @ARGV;
 
 unless(defined $skip_dispositions) { $skip_dispositions = 0}
 if($skip_dispositions == "") { $skip_dispositions = 0}
@@ -377,7 +379,7 @@ for my $file_id (keys %Files){
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
             qq{$file_id "$path" "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
-            qq{"$upd_nbia" "$sop_instance_uid"};
+            qq{"$upd_nbia" "$sop_instance_uid" "$override_site_name"};
 
   push @cmds, $cmd;
 }
@@ -385,8 +387,6 @@ my $num_commands = @cmds;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
 $background->SetActivityStatus("Queueing Commands (in parallel)");
-open SCRIPT1, "|/bin/sh";
-open SCRIPT2, "|/bin/sh";
 open SCRIPT3, "|/bin/sh";
 open SCRIPT4, "|/bin/sh";
 open SCRIPT5, "|/bin/sh";
