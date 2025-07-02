@@ -228,6 +228,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "Segmentation Linkages",
         action =>  "CheckSegLinkages",
       },
+      {
+        caption => "PET Linkages (TESTING)",
+        action =>  "CheckPetLinkages",
+      },
     ],
    queries => [
       {
