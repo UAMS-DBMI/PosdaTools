@@ -387,6 +387,8 @@ my $num_commands = @cmds;
 $background->WriteToEmail(`date`);
 $background->WriteToEmail("about to execute $num_commands in 5 subshells\n");
 $background->SetActivityStatus("Queueing Commands (in parallel)");
+open SCRIPT1, "|/bin/sh";
+open SCRIPT2, "|/bin/sh";
 open SCRIPT3, "|/bin/sh";
 open SCRIPT4, "|/bin/sh";
 open SCRIPT5, "|/bin/sh";
