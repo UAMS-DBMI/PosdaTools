@@ -244,7 +244,7 @@ def do_work(iec):
             '--multiprocessing',
             '-i', path,
             '-o', output_path,
-            '-c', *[str(details[x]) for x in details_order],
+            '-cs', *[str(details[x]) for x in details_order],
             '--form', form,
             '--function', function,
             '--hashuids',
