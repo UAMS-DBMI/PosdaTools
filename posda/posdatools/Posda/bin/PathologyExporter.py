@@ -65,9 +65,9 @@ if __name__ == "__main__":
     parser.add_argument("background_id")
     parser.add_argument("activity_id")
     parser.add_argument("notify")
-
+    records = []
     for line in sys.stdin:
-        patient_id, original_file_name, collection_name, site_name, study_id, image_id, clinical_trial_subject_id = (line.rstrip()).split('&')
+        path, collectionname, studyid, clinicaltrialsubjectid, imageid = (line.rstrip()).split('&')
         mappingData = {}
         mappingData['path'] = path
         mappingData['collectionname'] = collectionname
