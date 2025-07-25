@@ -34,6 +34,10 @@ def termhandler(a, b):
     raise SigTerm(1)
 signal.signal(signal.SIGTERM, termhandler)
 
+def get_masker_version():
+    version = subprocess.check_output(["masker", "-v"])
+    return version.decode().strip()
+
 def main(debug: bool=False,
          token: str='xxxx',
          hostname: str='localhost',
@@ -60,8 +64,10 @@ def main(debug: bool=False,
         'Authorization': f'Bearer {TOKEN}',
     }
 
+    masker_version = get_masker_version()
+
     # print some startup messages
-    logger.info(f"starting up {HOSTNAME=} {TOKEN=}")
+    logger.info(f"starting up {HOSTNAME=} {TOKEN=} {masker_version=}")
 
     # enter infinite loop
     while True:
