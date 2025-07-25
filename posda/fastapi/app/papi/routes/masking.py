@@ -172,11 +172,13 @@ async def update_masking_parameters(
 
     try:
         await db.fetch("""\
-            update masking
-            set masking_parameters = $1,
-                masking_status = $2
-            where image_equivalence_class_id = $3
-        """, [json_str, new_status, iec])
+            INSERT INTO masking (image_equivalence_class_id, masking_status, masking_parameters)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (image_equivalence_class_id)
+            DO UPDATE SET 
+                masking_status = EXCLUDED.masking_status,
+                masking_parameters = EXCLUDED.masking_parameters
+        """, [iec, new_status, json_str])
 
         await db.fetch("""\
             insert into masking_history
