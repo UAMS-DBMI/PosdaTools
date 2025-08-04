@@ -22,6 +22,8 @@ class MaskerParameters(BaseModel):
     width: int
     height: int
     depth: int
+    fill: Optional[int] = None
+    noise: Optional[int] = None
     form: Optional[str] = 'cylinder'
     function: Optional[str] = 'mask'
 
