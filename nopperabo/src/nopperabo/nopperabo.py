@@ -212,14 +212,11 @@ def do_work(iec):
     if uid_root is None:
         uid_root = '1.3.6.1.4.1.14519.5.2.1'
 
-    form = 'cylinder'
-    function = 'mask'
 
-    if 'form' in details:
-        form = details.pop('form')
-
-    if 'function' in details:
-        function = details.pop('function')
+    form = details.pop('form', 'cylinder')
+    function = details.pop('function', 'mask')
+    fill = details.pop('fill', None)
+    noise = details.pop('noise', None)
 
     # get list of files in IEC
     logger.debug("Getting file list for iec")
@@ -255,6 +252,8 @@ def do_work(iec):
             '--function', function,
             '--hashuids',
             '--uidroot', uid_root,
+            *(['--fill', fill] if fill is not None else []),
+            *(['--noise', noise] if noise is not None else []),
         ],
         capture_output=True,
         text=True
