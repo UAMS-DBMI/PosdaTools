@@ -648,6 +648,18 @@ EOF
       subprocess_invocation_id => 0,
     }
   },
+  qbp_Pathology_Export => {
+    caption => "Export to PathDB",
+    spreadsheet_operation => "Path_Export_parse",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      PathologyExportQuery1 => 1,
+    },
+    params => {
+      subprocess_invocation_id => 0,
+    }
+  },
 );
 # BackgroundDoseLinkageCheck            │ GetDoses                                  │ Posda::NewerProcessPopup
 # BackgroundPhiScan                     │ DistinctSeriesByCollection                │ Posda::NewerProcessPopup
