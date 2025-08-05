@@ -240,8 +240,7 @@ def do_work(iec):
     details_order = ['LR', 'PA', 'IS', 'width', 'height', 'depth']
 
     logger.debug("Running Masker...")
-    proc = subprocess.run(
-        [
+    command = [
             'masker',
             '--norender',
             '--multiprocessing',
@@ -252,9 +251,12 @@ def do_work(iec):
             '--function', function,
             '--hashuids',
             '--uidroot', uid_root,
-            *(['--fill', fill] if fill is not None else []),
-            *(['--noise', noise] if noise is not None else []),
-        ],
+            *(['--fill', str(fill)] if fill is not None else []),
+            *(['--noise', str(noise)] if noise is not None else []),
+        ]
+    logger.debug(command)
+    proc = subprocess.run(
+        command,
         capture_output=True,
         text=True
     )
