@@ -176,10 +176,21 @@ def main(pargs):
                     new_file = anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), current_file_id))
+                    new_file_id = process(new_destination_path)
+                    if current_file_id != f['file_id']:
+                        updateMapping(current_file_id, new_file_id)
+                    myNewFiles.append(new_file_id) #should only add the final id to the TP
+                    background.print_to_email("Completed {} edit on file.".format(len(edits)))
+                    background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
-
+                    new_file_id = process(new_destination_path)
+                    if current_file_id != f['file_id']:
+                        updateMapping(current_file_id, new_file_id)
+                    myNewFiles.append(new_file_id) #should only add the final id to the TP
+                    background.print_to_email("Completed {} edit on file.".format(len(edits)))
+                    background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
                 else:
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("File {} removed".format(current_file_id))
@@ -187,13 +198,6 @@ def main(pargs):
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
-
-        new_file_id = process(new_destination_path)
-        if current_file_id != f['file_id']:
-            updateMapping(current_file_id, new_file_id)
-        myNewFiles.append(new_file_id) #should only add the final id to the TP
-        background.print_to_email("Completed {} edit on file.".format(len(edits)))
-        background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
 
     if (totalEdits > 0):
         get_atp = create_path_activity_timepoint(pargs.activity_id, pargs.notify)
