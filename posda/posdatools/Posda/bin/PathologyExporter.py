@@ -36,26 +36,35 @@ def  call_api(unique_url, call_type):
         print(f"Error fetching data. Status code: {response.status_code}, Response: {response.text}")
         return None  # or {}, [] based on expected data type
 
-def export_file(path,collectionname,studyid,clinicaltrialsubjectid,imageid,microns_per_pixel_x,microns_per_pixel_y,bounds_x,bounds_y,bounds_w,bounds_h,vendor ):
+def export_file(path, collectionname, studyid, clinicaltrialsubjectid, imageid ,reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height):
         str = "/importPathDB/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}".format(path,collectionname,studyid,clinicaltrialsubjectid,imageid,microns_per_pixel_x,microns_per_pixel_y,bounds_x,bounds_y,bounds_w,bounds_h,vendor )
         print(str)
-        #return call_api(str, 0)
+
 
 def main(pargs,records):
     background = BackgroundProcess(pargs.background_id, pargs.notify, pargs.activity_id)
     background.daemonize()
 
     for r in records:
-        myImage = OpenSlide(path)
-        microns_per_pixel_x = myImage.PROPERTY_NAME_MPP_X
-        microns_per_pixel_y = myImage.PROPERTY_NAME_MPP_Y
-        bounds_x = myImage.PROPERTY_NAME_BOUNDS_X
-        bounds_y = myImage.PROPERTY_NAME_BOUNDS_Y
-        bounds_w = myImage.PROPERTY_NAME_BOUNDS_WIDTH
-        bounds_h = myImage.PROPERTY_NAME_BOUNDS_HEIGHT
-        vendor   = myImage.PROPERTY_NAME_VENDOR
-        export_file(r['path'],r['collectionname'],r['studyid'],r['clinicaltrialsubjectid'],r['imageid'],microns_per_pixel_x,microns_per_pixel_y,bounds_x,bounds_y,bounds_w,bounds_h,vendor )
-
+        print(r['path'])
+        try:
+            myImage = OpenSlide(r['path'])
+            dims = myImage.dimensions()
+            image_volume_width = float(dims[0])
+            image_volume_height =  float(dims[1])
+            reference_pixel_physical_value_x = 0
+            reference_pixel_physical_value_y = 0
+            if myImage.properties['openslide.mpp-x'] and myImage.properties['openslide.mpp-y']:
+                reference_pixel_physical_value_x = myImage.properties['openslide.mpp-x']
+                reference_pixel_physical_value_y = myImage.properties['openslide.mpp-y']
+            else: #calculate
+                area = (image_volume_width) * (image_volume_height)
+                if area > 0: #TODO fix this
+                    reference_pixel_physical_value_x = 10000 / area
+                    reference_pixel_physical_value_y = 10000 / area
+            export_file(r['path'],r['collectionname'],r['studyid'],r['clinicaltrialsubjectid'],r['imageid'],reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height)
+        except Exception as e:
+            print(f"Error decoding ImageFile: {e}")
 
     print("Pathology export complete.")
     background.finish("Complete")
@@ -67,9 +76,9 @@ if __name__ == "__main__":
     parser.add_argument("notify")
     records = []
     for line in sys.stdin:
-        path, collectionname, studyid, clinicaltrialsubjectid, imageid = (line.rstrip()).split('&')
+        root, path, collectionname, studyid, clinicaltrialsubjectid, imageid = (line.rstrip()).split('&')
         mappingData = {}
-        mappingData['path'] = path
+        mappingData['path'] = os.path.join(root, path)
         mappingData['collectionname'] = collectionname
         mappingData['studyid'] = studyid
         mappingData['clinicaltrialsubjectid'] = clinicaltrialsubjectid

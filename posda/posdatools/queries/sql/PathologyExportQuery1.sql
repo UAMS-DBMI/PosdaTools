@@ -1,12 +1,13 @@
 -- Name: PathologyExportQuery1
 -- Schema: posda_files
--- Columns: ['path', 'collectionname', 'studyid', 'clinicaltrialsubjectid', 'imageid']
+-- Columns: ['root',path', 'collectionname', 'studyid', 'clinicaltrialsubjectid', 'imageid']
 -- Args: ['activity_id']
 -- Tags: ['pathology', 'export']
 -- Description: Get mapping and path info for exporting data to pathdb
 --
 
 select
+  root_path as root,
 	rel_path as path,
 	collection_name as collectionname,
 	study_name as studyid,
@@ -14,6 +15,7 @@ select
 	image_id imageid
 from file f
 	natural join file_location fl
+  natural join file_storage_root fr
 	natural join pathology_patient_mapping ppm
 where f.file_id in (
 	select
