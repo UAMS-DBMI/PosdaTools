@@ -37,7 +37,7 @@ def  call_api(unique_url, call_type):
         return None  # or {}, [] based on expected data type
 
 def export_file(path, collectionname, studyid, clinicaltrialsubjectid, imageid ,reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height):
-        str = "/importPathDB/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}".format(path,collectionname,studyid,clinicaltrialsubjectid,imageid,microns_per_pixel_x,microns_per_pixel_y,bounds_x,bounds_y,bounds_w,bounds_h,vendor )
+        str = "/importPathDB/{}/{}/{}/{}/{}/{}/{}/{}/{}".format(path,collectionname,studyid,clinicaltrialsubjectid,imageid,reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height)
         print(str)
 
 
@@ -49,19 +49,26 @@ def main(pargs,records):
         print(r['path'])
         try:
             myImage = OpenSlide(r['path'])
-            dims = myImage.dimensions()
+            prop = myImage.properties
+            dims = myImage.dimensions
             image_volume_width = float(dims[0])
             image_volume_height =  float(dims[1])
             reference_pixel_physical_value_x = 0
             reference_pixel_physical_value_y = 0
-            if myImage.properties['openslide.mpp-x'] and myImage.properties['openslide.mpp-y']:
-                reference_pixel_physical_value_x = myImage.properties['openslide.mpp-x']
-                reference_pixel_physical_value_y = myImage.properties['openslide.mpp-y']
+            if prop.get("openslide.mpp-x", 0) and prop.get("openslide.mpp-y", 0):
+                reference_pixel_physical_value_x = float(prop.get("openslide.mpp-x", 0))
+                reference_pixel_physical_value_y = float(prop.get("openslide.mpp-y", 0))
             else: #calculate
-                area = (image_volume_width) * (image_volume_height)
-                if area > 0: #TODO fix this
-                    reference_pixel_physical_value_x = 10000 / area
-                    reference_pixel_physical_value_y = 10000 / area
+                res_unit = prop.get("tiff.ResolutionUnit")  # 2 = inch, 3 = cm
+                xres = prop.get("tiff.XResolution")
+                yres = prop.get("tiff.YResolution")
+                divisor = 10000.0 #cm default
+                if res_unit:
+                    if res_unit == "inch":
+                        divisor = 25400.0
+                if xres and yres:
+                    reference_pixel_physical_value_x = divisor / (float(xres.split('/')[0]) / float(xres.split('/')[1]))
+                    reference_pixel_physical_value_y = divisor / (float(yres.split('/')[0]) / float(yres.split('/')[1]))
             export_file(r['path'],r['collectionname'],r['studyid'],r['clinicaltrialsubjectid'],r['imageid'],reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height)
         except Exception as e:
             print(f"Error decoding ImageFile: {e}")
