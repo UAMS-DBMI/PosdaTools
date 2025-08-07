@@ -49,6 +49,13 @@ CREATE TABLE public.pathology_image_description (
 	image_desc text NULL
 );
 
+CREATE table if not exists public.pathology_path_db_linkage (
+	pathology_path_db_linkage_id serial4 NOT NULL,
+	file_id int4 NOT NULL,
+	node_id text NULL,
+	upload_time timestamp null
+);
+
 ALTER TABLE pathology_image_description
 ADD CONSTRAINT unique_layer_file_id UNIQUE (layer_id, file_id);
 

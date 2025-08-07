@@ -1,5 +1,5 @@
 :operation_name: Path_Export_parse
 :command_line: PathologyExporter.py <?bkgrnd_id?> <activity_id> <notify>
-:input_line_format: <root>&<path>&<collectionname>&<studyid>&<clinicaltrialsubjectid>&<imageid>
+:input_line_format: <root>&<path>&<collectionname>&<studyid>&<clinicaltrialsubjectid>&<imageid>&<fileid>
 :tags: ['pathology','patient_mapping','export']
 :can_chain:
