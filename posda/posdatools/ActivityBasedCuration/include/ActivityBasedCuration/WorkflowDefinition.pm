@@ -169,6 +169,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "Finalize Masking",
         action =>  "ApplyMasks",
       },
+      {
+        caption => "New Finalize Masking (experimental)",
+        action =>  "NewApplyMasks",
+      },
     ],
     queries => [
       {
