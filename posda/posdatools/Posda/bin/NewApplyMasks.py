@@ -106,16 +106,25 @@ def insert_files_into_timepoint(
         execute_values(cur, query, value_list)
 
 
-def get_files_in_timepoint(db, timepoint_id: int) -> Set[int]:
+def get_files_in_activity(db, activity_id: int) -> Set[int]:
+    """
+    Get all files in the current timepoint for the activity 
+    """
     query = """
-        select file_id
-        from activity_timepoint_file
-        where activity_timepoint_id = %s
+        select
+                file_id
+        from
+                activity_timepoint_file
+        where
+                activity_timepoint_id = (
+                        select max(activity_timepoint_id)
+                        from activity_timepoint
+                        where activity_id = %s
+                )
     """
 
-    file_ids = []
     with db.cursor() as cur:
-        cur.execute(query, [timepoint_id])
+        cur.execute(query, [activity_id])
         results = cur.fetchall()
 
         return {r[0] for r in results}
@@ -754,9 +763,11 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
         )
 
     ## TODO: get all existing files from the timepoint!
-    original_files = get_files_in_timepoint(
+    original_files = get_files_in_activity(
         conn, activity_id
     )
+
+    print(f"Length of original_files is {len(original_files)}")
 
     new_timepoint = create_activity_timepoint(
         activity_id, notify, conn
