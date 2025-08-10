@@ -21,10 +21,9 @@ from psycopg2.extras import execute_values
 from pprint import pprint
 
 # the real one
-# TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
+TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
 # for testing only, use an easily identifable root
-TCIA_UID_ROOT = "1207885"
-TEMP_LOCATION = "/tmp/posda"
+# TCIA_UID_ROOT = "1207885"
 
 def create_activity_timepoint(activity_id, notify, db) -> int:
     query = """\
@@ -185,8 +184,8 @@ def verify_iec_status(visual_review_instance_id, conn):
             # print(f"{count} are set to {status}")
             print(f"\t{status}: {count} IECs")
 
-        # raise ValueError("IEC status verification failed.")
-        print("NOTE: continuing anyway, uncomment above for PROD")
+        raise ValueError("IEC status verification failed.")
+        # print("NOTE: continuing anyway, uncomment above for PROD")
 
 
 def get_orphaned_sops(visual_review_instance_id, conn):
@@ -798,8 +797,7 @@ def main(args, temp_dir):
 
     ## Sanity check, these two sets should not overlap
     if len(orphan_sops.intersection(masked_sops)) > 0:
-        # raise ValueError(
-        print(
+        raise ValueError(
             "Orphaned SOPs and masked SOPs should not overlap, something is very wrong."
         )
 
