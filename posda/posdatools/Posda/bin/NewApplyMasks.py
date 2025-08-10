@@ -762,7 +762,7 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
         activity_id, notify, conn
     )
     files_to_insert = original_files.union(set(files_to_add)).difference(set(files_to_remove))
-    print(f"{files_to_insert=}")
+    print(f"Length of files_to_insert is {len(files_to_insert)}")
     insert_files_into_timepoint(conn, new_timepoint, list(files_to_insert))
 
 
