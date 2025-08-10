@@ -25,6 +25,7 @@ TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
 # for testing only, use an easily identifable root
 # TCIA_UID_ROOT = "1207885"
 
+
 def create_activity_timepoint(activity_id, notify, db) -> int:
     query = """\
         insert into activity_timepoint(
@@ -40,20 +41,13 @@ def create_activity_timepoint(activity_id, notify, db) -> int:
     """
 
     with db.cursor() as cur:
-        cur.execute(
-            query, 
-            [
-                activity_id,
-                notify,
-                "NewApplyMasks.py",
-                notify
-            ]
-        )
+        cur.execute(query, [activity_id, notify, "NewApplyMasks.py", notify])
 
-        for activity_timepoint_id, in cur:
+        for (activity_timepoint_id,) in cur:
             return activity_timepoint_id
 
         return -1
+
 
 def get_output_images_to_masked_iecs(db, visual_review_instance_id: int):
     """
@@ -108,7 +102,7 @@ def insert_files_into_timepoint(
 
 def get_files_in_activity(db, activity_id: int) -> Set[int]:
     """
-    Get all files in the current timepoint for the activity 
+    Get all files in the current timepoint for the activity
     """
     query = """
         select
@@ -128,6 +122,7 @@ def get_files_in_activity(db, activity_id: int) -> Set[int]:
         results = cur.fetchall()
 
         return {r[0] for r in results}
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -711,25 +706,51 @@ def get_all_files_in_activity(activity_id, conn):
         yield (row)
 
 
-def create_premasked_report(report, files, notify):
+def create_premasked_report(report, files, notify, activity_id):
     writer = csv.writer(report)
-    writer.writerow([
-        "file_id",
-        "op",
-        "tag",
-        "val1",
-        "val2",
-        "Operation",
-        "notify",
-    ])
+    writer.writerow(
+        [
+            "file_id",
+            "op",
+            "tag",
+            "val1",
+            "val2",
+            "Operation",
+            "activity_id",
+            "comment",
+            "notify",
+        ]
+    )
 
     # write the operation row
-    writer.writerow([
-        None, None, None, None, None,
-        "??? something to merge files to an activity",     # Operation
-        notify,
-    ])
-    
+    writer.writerow(
+        [
+            None,
+            None,
+            None,
+            None,
+            None,
+            "AddFilesToTimepoint",  # Operation
+            None,
+            "Pre-masked files from activity {activity_id}",
+            notify,
+        ]
+    )
+    # write a second operation row, curators will choose one
+    writer.writerow(
+        [
+            None,
+            None,
+            None,
+            None,
+            None,
+            "CreateActivityTimepointFromFileList",  # Operation
+            None,
+            "Pre-masked files from activity {activity_id}",
+            notify,
+        ]
+    )
+
     for file_id in files:
         writer.writerow([file_id])
 
@@ -762,25 +783,17 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
             "Files to remove and files to add should not overlap, something is very wrong."
         )
 
-    ## TODO: get all existing files from the timepoint!
-    original_files = get_files_in_activity(
-        conn, activity_id
-    )
+    original_files = get_files_in_activity(conn, activity_id)
 
-    print(f"Length of original_files is {len(original_files)}")
-
-    new_timepoint = create_activity_timepoint(
-        activity_id, notify, conn
+    new_timepoint = create_activity_timepoint(activity_id, notify, conn)
+    files_to_insert = original_files.union(set(files_to_add)).difference(
+        set(files_to_remove)
     )
-    files_to_insert = original_files.union(set(files_to_add)).difference(set(files_to_remove))
-    print(f"Length of files_to_insert is {len(files_to_insert)}")
     insert_files_into_timepoint(conn, new_timepoint, list(files_to_insert))
 
 
 def main(args, temp_dir):
-    background = BackgroundProcess(args.background_id,
-                                   args.notify,
-                                   args.activity_id)
+    background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
 
     generate_arg_report(args)
@@ -809,6 +822,10 @@ def main(args, temp_dir):
 
     ## Sanity check, these two sets should not overlap
     if len(orphan_sops.intersection(masked_sops)) > 0:
+        # count of orphaned sops
+        print("Orphaned SOPs:", len(orphan_sops))
+        print("Masked SOPs:", len(masked_sops))
+        print(orphan_sops.intersection(masked_sops))
         raise ValueError(
             "Orphaned SOPs and masked SOPs should not overlap, something is very wrong."
         )
@@ -884,7 +901,7 @@ def main(args, temp_dir):
     print("Masked list (files edited by Masker):", len(masked_sops))
 
     premasked_report = background.create_report(f"Premasked files import skeleton")
-    create_premasked_report(premasked_report, move_list, args.notify)
+    create_premasked_report(premasked_report, move_list, args.notify, args.activity_id)
 
     ## New files that need to be added to the current timepoint
     ## This is all files we just edited, plus the post-mask files
@@ -897,6 +914,7 @@ def main(args, temp_dir):
     update_timepoint(args.activity_id, args.notify, files_to_remove, files_to_add, conn)
 
     background.finish("Complete")
+
 
 if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as temp_dir:
