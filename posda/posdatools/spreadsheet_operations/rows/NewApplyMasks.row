@@ -1,5 +1,5 @@
 :operation_name: NewApplyMasks
-:command_line: NewApplyMasks.py <?bkgrnd_id?> <activity_id> <notify> <visual_review_instance_id> <process_masks> <process_sliceremove> <process_blackout> 
+:command_line: NewApplyMasks.py <?bkgrnd_id?> <activity_id> <notify> <visual_review_instance_id> "<process_masks>" "<process_sliceremove>" "<process_blackout>" 
 :operation_type: background_process
 :input_line_format: 
 :tags: ['export']
