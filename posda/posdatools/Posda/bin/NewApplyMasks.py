@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import tempfile
 import pydicom
+import sys
+import os
 import csv
 from collections import defaultdict
 from posda.database import Database
@@ -13,6 +15,7 @@ from posda.main.file import insert_file
 from typing import List, Set
 
 from posda.database import Database
+from posda.config import Config
 from pydicom.sequence import Sequence
 from posda.background.process import BackgroundProcess
 from pydicom import uid
@@ -706,7 +709,7 @@ def get_all_files_in_activity(activity_id, conn):
         yield (row)
 
 
-def create_premasked_report(report, files, notify, activity_id):
+def create_report_from_files(report, files, notify, comment):
     writer = csv.writer(report)
     writer.writerow(
         [
@@ -732,7 +735,7 @@ def create_premasked_report(report, files, notify, activity_id):
             None,
             "AddFilesToTimepoint",  # Operation
             None,
-            "Pre-masked files from activity {activity_id}",
+            comment,
             notify,
         ]
     )
@@ -746,7 +749,7 @@ def create_premasked_report(report, files, notify, activity_id):
             None,
             "CreateActivityTimepointFromFileList",  # Operation
             None,
-            "Pre-masked files from activity {activity_id}",
+            comment,
             notify,
         ]
     )
@@ -768,7 +771,6 @@ def import_edits(edit_list):
 
 def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
     print("Updating timepoint with new files...")
-    print(activity_id)
     print(f"Replacing {len(files_to_remove)} files with {len(files_to_add)} new files")
 
     if len(files_to_remove) != len(files_to_add):
@@ -791,11 +793,29 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
     )
     insert_files_into_timepoint(conn, new_timepoint, list(files_to_insert))
 
+    # return the list of files that were not edited or changed
+    return original_files.difference(files_to_remove)
 
 def main(args, temp_dir):
+    """
+        Main entry point, just wraps the other main and catches
+        exceptions, so that the script always finishes. It still
+        exits with a nonzero exit code so the script will be flagged
+        as failed.
+    """
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
+    
+    try:
+        main2(args, temp_dir, background)
+    except Exception as e:
+        print("FATAL ERROR:", e)
+        background.finish("Failed")
+        return 1
 
+    return 0
+
+def main2(args, temp_dir, background):
     generate_arg_report(args)
 
     conn = Database("posda_files")
@@ -901,7 +921,12 @@ def main(args, temp_dir):
     print("Masked list (files edited by Masker):", len(masked_sops))
 
     premasked_report = background.create_report(f"Premasked files import skeleton")
-    create_premasked_report(premasked_report, move_list, args.notify, args.activity_id)
+    create_report_from_files(
+        premasked_report,
+        move_list,
+        args.notify,
+        f"Pre-masked files from activity {args.activity_id}",
+    )
 
     ## New files that need to be added to the current timepoint
     ## This is all files we just edited, plus the post-mask files
@@ -911,11 +936,22 @@ def main(args, temp_dir):
 
     files_to_remove = move_list
 
-    update_timepoint(args.activity_id, args.notify, files_to_remove, files_to_add, conn)
+    unedited_files = update_timepoint(
+        args.activity_id, args.notify, files_to_remove, files_to_add, conn
+    )
+
+    edited_report = background.create_report("Files that were not edited")
+    create_report_from_files(
+        edited_report,
+        unedited_files,
+        args.notify,
+        f"Files that were not edited in activity {args.activity_id}",
+    )
 
     background.finish("Complete")
 
 
 if __name__ == "__main__":
-    with tempfile.TemporaryDirectory() as temp_dir:
-        main(parse_args(), temp_dir)
+    temp_dir_base = os.path.join(Config.get("cache_root"), "edits")
+    with tempfile.TemporaryDirectory(dir=temp_dir_base) as temp_dir:
+        sys.exit(main(parse_args(), temp_dir))
