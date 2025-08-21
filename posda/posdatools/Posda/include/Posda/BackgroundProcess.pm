@@ -277,7 +277,13 @@ sub Finish {
           my $ehost = Config('external_hostname');
           say "Report '$h': ($rpt->{file_id}) http://${ehost}$rpt->{rel_url}";
         } else {
-          $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{macrolink}\n");
+          if ($h eq "Selected Private" or
+              $h eq "Selected Public VR" or
+              $h eq "DciodvfySeriesReport") {
+            $self->WriteToEmail("Report '$h': $rpt->{link} / $rpt->{macrolink}\n");
+          } else {
+            $self->WriteToEmail("Report '$h': $rpt->{link}\n");
+          }
         }
       }
     }

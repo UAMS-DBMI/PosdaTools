@@ -25,11 +25,13 @@ async def download_file(downloadable_file_id: int,
         select
             root_path || '/' || rel_path as file, 
             size,
-            mime_type
+            mime_type,
+            name as report_name
         from downloadable_file
         natural join file
         natural join file_location 
         natural join file_storage_root
+        natural left join background_subprocess_report
         where downloadable_file_id = $1
           and security_hash = $2
           and (valid_until is null or now() < valid_until)
@@ -51,10 +53,13 @@ async def download_file(downloadable_file_id: int,
     ext = mimetypes.guess_extension(mime_type)
 
     if process:
+        if record['report_name'] == 'DciodvfySeriesReport':
+            cmd = f"/home/posda/posdatools/dciodvfymacro/run.sh {path}"
+        else:
+            cmd = f"/home/posda/posdatools/phimacro/run.sh {path}"
+
         proc = await asyncio.create_subprocess_shell(
-            # f"/home/posda/posdatools/phimacro/phimacro.py {path}",
-            f"/home/posda/posdatools/phimacro/run.sh {path}",
-            # f"pwd",
+            cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
@@ -62,7 +67,15 @@ async def download_file(downloadable_file_id: int,
 
         output = stdout.decode() + stderr.decode()
 
-        return Response(content=output, media_type=mime_type)
+        filename = f"downloaded_file_{downloadable_file_id}_macro{ext}"
+
+        return Response(
+            content=output,
+            media_type=mime_type,
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"'
+            }
+        )
 
     return FileResponse(path, filename=f"downloaded_file_{downloadable_file_id}{ext}")
 
