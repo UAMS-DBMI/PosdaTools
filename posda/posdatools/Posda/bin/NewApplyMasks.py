@@ -12,11 +12,12 @@ import csv
 from collections import defaultdict
 from posda.database import Database
 from posda.main.file import insert_file
-from typing import List, Set
+from typing import List, Set, Iterator, Tuple
 
 from posda.database import Database
 from posda.config import Config
 from pydicom.sequence import Sequence
+from pydicom.dataset import Dataset
 from posda.background.process import BackgroundProcess
 from pydicom import uid
 from psycopg2.extras import execute_values
@@ -28,6 +29,39 @@ TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
 # for testing only, use an easily identifable root
 # TCIA_UID_ROOT = "1207885"
 
+TAGS_TO_SCAN = [
+    "SOPInstanceUID",
+    "ReferencedSOPInstanceUID",
+    "MultiFrameSourceSOPInstanceUID",
+    "SeriesInstanceUID",
+    "SOPInstanceUIDOfConcatenationSource",
+]
+
+
+def walk_dataset(ds: Dataset, depth: int = 0) -> Iterator[Tuple[int, object]]:
+    for elem in ds:
+        if isinstance(elem.value, Sequence):
+            for i, item in enumerate(elem.value):
+                yield from walk_dataset(item, depth + 1)
+        elif isinstance(elem.value, Dataset):
+            yield from walk_dataset(elem.value, depth + 1)
+        # skip the pixel data
+        elif elem.tag == (0x7FE0, 0x0010):
+            continue
+        else:
+            # Leaf node
+            yield depth, elem
+
+def walk_dataset_for_referencing(ds: Dataset) -> Iterator[Tuple[int, object]]:
+    """
+    Walk the dataset and yield only those tags we care about.
+
+    We care about tags that are in TAGS_TO_SCAN and are NOT at the root
+    level (that is, have a depth over 0).
+    """
+    for depth, elem in walk_dataset(ds):
+        if elem.keyword in TAGS_TO_SCAN and depth > 0:
+            yield depth, elem
 
 def create_activity_timepoint(activity_id, notify, db) -> int:
     query = """\
@@ -796,24 +830,26 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
     # return the list of files that were not edited or changed
     return original_files.difference(files_to_remove)
 
+
 def main(args, temp_dir):
     """
-        Main entry point, just wraps the other main and catches
-        exceptions, so that the script always finishes. It still
-        exits with a nonzero exit code so the script will be flagged
-        as failed.
+    Main entry point, just wraps the other main and catches
+    exceptions, so that the script always finishes. It still
+    exits with a nonzero exit code so the script will be flagged
+    as failed.
     """
     background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
     background.daemonize()
-    
+
     try:
         main2(args, temp_dir, background)
     except Exception as e:
         print("FATAL ERROR:", e)
         background.finish("Failed")
-        return 1
+        raise e
 
     return 0
+
 
 def main2(args, temp_dir, background):
     generate_arg_report(args)
@@ -826,7 +862,7 @@ def main2(args, temp_dir, background):
     orphan_sops = get_orphaned_sops(args.visual_review_instance_id, conn)
 
     # Map of SOP Class UIDs to sequences that need hashed
-    sop_map = load_map()
+    # sop_map = load_map()
 
     function_list = [
         *(["mask"] if args.process_masks else []),
@@ -858,6 +894,9 @@ def main2(args, temp_dir, background):
     edit_list = []
 
     for i, file in enumerate(get_all_files_in_activity(args.activity_id, conn)):
+        if "posda-archive" in file.storage_path:
+            print("## skipping this posda-archive file!", file.storage_path)
+            continue
         ds = None
         edited = False
 
@@ -871,25 +910,17 @@ def main2(args, temp_dir, background):
             edited = True
 
         # Scan for referencing sequences
-        sop_map_entry = sop_map.get(file.media_storage_sop_class, None)
-        ## TODO: remove this, just for testing to restrict to a small
-        # set of SOP Classes
-        if file.media_storage_sop_class != "1.2.840.10008.5.1.4.1.1.66.4":
-            sop_map_entry = None
-        if sop_map_entry is not None:
-            if ds is None:
-                ds = pydicom.dcmread(file.storage_path)
-            for seq_key in sop_map_entry:
-                for value, full_path, ele in get_dicom_sequence_items_list(
-                    ds, seq_key, list(sop_map_entry[seq_key])
-                ):
-                    if (
-                        value in masked_sops or value in orphan_sops
-                    ):  # only needs changed if we edited it!
-                        edited = True
-                        ele.value = hash_uid(ele.value, TCIA_UID_ROOT)
-                        class_name = uid.UID(file.media_storage_sop_class).keyword
-                        print(file.file_id, class_name, ele.keyword, value)
+        if ds is None:
+            ds = pydicom.dcmread(file.storage_path)
+        
+        for depth, ele in walk_dataset_for_referencing(ds):
+            if (
+                ele.value in masked_sops or ele.value in orphan_sops
+            ):  # only needs changed if we edited it!
+                edited = True
+                ele.value = hash_uid(ele.value, TCIA_UID_ROOT)
+                # class_name = uid.UID(file.media_storage_sop_class).keyword
+                print(file.file_id, ele.keyword, ele.value)
 
         if edited:  # if the file was already edited (or needs to be now)
             # Load the file if we haven't yet
