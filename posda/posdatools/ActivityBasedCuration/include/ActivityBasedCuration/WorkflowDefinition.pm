@@ -892,6 +892,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "PathologyViewEdits",
         query => "PathologyViewEdits",
       },
+      {
+        caption => "FilePathsFromActivity",
+        query => "FilePathsFromActivity",
+      }
     ],
   ],
   PathImportEvents => [

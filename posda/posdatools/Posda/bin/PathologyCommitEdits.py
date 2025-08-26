@@ -40,7 +40,7 @@ def  call_api(unique_url, call_type):
     API_KEY = Config.get('api_system_token')
     HEADERS = {'Authorization': f'Bearer {API_KEY}'}
     url = "{}{}".format(base_url,unique_url)
-    print("working on {} type {}".format(unique_url,call_type))
+    #print("working on {} type {}".format(unique_url,call_type))
     if call_type == 0:
         response = requests.get(url,headers=HEADERS)
     elif call_type == 1:
@@ -177,7 +177,7 @@ def main(pargs):
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), current_file_id))
                     new_file_id = process(new_destination_path)
-                    if current_file_id != f['file_id']:
+                    if current_file_id != new_file_id:
                         updateMapping(current_file_id, new_file_id)
                     myNewFiles.append(new_file_id) #should only add the final id to the TP
                     background.print_to_email("Completed {} edit on file.".format(len(edits)))
@@ -186,7 +186,7 @@ def main(pargs):
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
                     new_file_id = process(new_destination_path)
-                    if current_file_id != f['file_id']:
+                    if current_file_id != new_file_id:
                         updateMapping(current_file_id, new_file_id)
                     myNewFiles.append(new_file_id) #should only add the final id to the TP
                     background.print_to_email("Completed {} edit on file.".format(len(edits)))

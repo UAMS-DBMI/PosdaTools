@@ -478,3 +478,19 @@ async def editBulkMeta(pathology_visual_review_instance_id: int, db: Database = 
     return {
         'status': 'success',
     }
+
+@router.put("/recordPathDBresponse/{file_id}/{node_id}")
+async def recordPathDBresponse(file_id: int, node_id: str,  db: Database = Depends()):
+    record = await db.fetch("""\
+        INSERT INTO pathology_path_db_linkage
+        (file_id,node_id,upload_time)
+        VALUES($1 , $2, now());
+        """, [file_id,node_id])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }

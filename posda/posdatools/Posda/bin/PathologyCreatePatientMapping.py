@@ -67,7 +67,7 @@ def main(pargs,records,filenames):
     for f in myFiles:
         p = get_relpath(f['file_id'])[0]
         my_path = str(p['rel_path'])
-        my_path = my_path.replace('inplace/', '').replace('/tmp/output', '')
+        #my_path = my_path.replace('inplace/', '').replace('/tmp/output', '')
         #print('File {} has path {}'.format(f, my_path))
         if my_path in filenames:
             count += 1
