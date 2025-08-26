@@ -15,8 +15,8 @@ from openslide import OpenSlide
 
 URL = "https://pathdb.cancerimagingarchive.net"
 USERNAME = "imageloader"
-PASSWORD = "{redacted}"
-DEBUGMODE = True
+PASSWORD = "REDACTED"
+DEBUGMODE = False
 
 def  call_api(unique_url, call_type):
     base_url = '{}/v1/pathology'.format(Config.get('internal-api-url'))
@@ -268,7 +268,8 @@ def main(pargs,records):
                 if xres and yres:
                     reference_pixel_physical_value_x = divisor / (float(xres.split('/')[0]) / float(xres.split('/')[1]))
                     reference_pixel_physical_value_y = divisor / (float(yres.split('/')[0]) / float(yres.split('/')[1]))
-            successful = export_file(r['fileid'],r['path'],r['collectionname'],r['studyid'],r['clinicaltrialsubjectid'],r['imageid'],reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height)
+            cropped_path = str(r['path']).replace('/nas/ross/','')
+            successful = export_file(r['fileid'],cropped_path,r['collectionname'],r['studyid'],r['clinicaltrialsubjectid'],r['imageid'],reference_pixel_physical_value_x,reference_pixel_physical_value_y,image_volume_width, image_volume_height)
         except Exception as e:
             print(f"Error: {e}")
         if successful:
