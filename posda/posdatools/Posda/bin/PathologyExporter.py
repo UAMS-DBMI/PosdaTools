@@ -160,7 +160,7 @@ def create_new_node(
         ],
         "field_utarget" : [
             {
-                "value" : f"private://wsi/ross/{filename}"
+                "value" : f"private://wsi/{filename}"
             }
         ],
         "imagedvolumeheight" : [
