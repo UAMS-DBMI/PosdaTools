@@ -85,6 +85,7 @@ for my $i (0 .. $#Rows){
   $RowInfo{vr} = $row->[2];
   $RowInfo{tag_name} = $row->[3];
   $RowInfo{tag_name} =~ s/"/""/g;
+  $RowInfo{element_sig_pattern} =~ s/"/""/g;
   if($i == 0) {
     $RowInfo{Operation} = "BackgroundUpdatePrivateDisposition";
     $RowInfo{notify} = $notify;
