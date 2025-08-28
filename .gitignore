@@ -10,6 +10,7 @@ exodus.env
 tags
 
 .vs
+.vscode
 *.sln
 *.pyproj
 posda.env
