@@ -7,3 +7,12 @@ FindMissingSpreadsheetOperations.pl 2>/dev/null | awk '\
 	system("SynchronizeSpreadsheetOperations.pl "$1" take_disk")
 }
 '
+
+echo "Adding all 'non matching' spreadsheet ops to the DB..."
+
+FindMissingSpreadsheetOperations.pl 2>/dev/null | awk '\
+/non matching/ { 
+	print $1
+	system("SynchronizeSpreadsheetOperations.pl "$1" take_disk")
+}
+'
