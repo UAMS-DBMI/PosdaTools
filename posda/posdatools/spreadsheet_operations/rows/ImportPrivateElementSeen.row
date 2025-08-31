@@ -1,0 +1,6 @@
+:operation_name: ImportPrivateElementSeen
+:command_line: ImportPrivateElementSeen.py <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format: <element_sig_pattern>|<tag_name>|<vr>|<private_disposition>
+:tags: ['import']
+:can_chain: 
