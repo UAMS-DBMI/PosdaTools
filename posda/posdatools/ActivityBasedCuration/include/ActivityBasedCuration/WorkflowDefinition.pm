@@ -538,6 +538,10 @@ This step should not be needed if your data was imported through CTP",
         caption => "Import a full collection from Public",
         action =>  "ImportInPlaceFromPublic",
       },
+      {
+        caption => "Export Private Tag data",
+        action =>  "ExportPrivateTagData",
+      },
     ],
   },
   # {
