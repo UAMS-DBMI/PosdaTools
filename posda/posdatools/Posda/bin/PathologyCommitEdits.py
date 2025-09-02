@@ -167,7 +167,7 @@ def main(pargs):
             new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             totalEdits = totalEdits + 1
             for e in edits:
-                if e['edit_type'] == '5':
+                if e['edit_type'] == '5': # edit pixesl
                     # Get the root_path and rel_path separately
                     rpath = get_root_and_rel_path(current_file_id)
                     root_path = rpath[0]
@@ -182,7 +182,7 @@ def main(pargs):
                     myNewFiles.append(new_file_id) #should only add the final id to the TP
                     background.print_to_email("Completed {} edit on file.".format(len(edits)))
                     background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
-                elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
+                elif e['edit_type'] == '1' or e['edit_type'] == '2' or e['edit_type'] == '3': #remove layers or Image description
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
                     new_file_id = process(new_destination_path)
@@ -191,7 +191,7 @@ def main(pargs):
                     myNewFiles.append(new_file_id) #should only add the final id to the TP
                     background.print_to_email("Completed {} edit on file.".format(len(edits)))
                     background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
-                else:
+                else:  #4 is remove file, just dont add to new activity
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("File {} removed".format(current_file_id))
                     break
