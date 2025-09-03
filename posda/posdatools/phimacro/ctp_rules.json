@@ -1,0 +1,7981 @@
+{
+  "params": {
+    "DATEINC": "-9999",
+    "UIDROOT": "2.25"
+  },
+  "rules_by_tag": {
+    "(0000,1000)": [
+      {
+        "name": "AffectedSOPInstanceUID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0000,1001)": [
+      {
+        "name": "RequestedSOPInstanceUID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0002,0003)": [
+      {
+        "name": "MediaStorageSOPInstanceUID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0004,1511)": [
+      {
+        "name": "ReferencedSOPInstanceUIDinFile",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0012)": [
+      {
+        "name": "Instance​Creation​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0013)": [
+      {
+        "name": "Instance​Creation​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0014)": [
+      {
+        "name": "Instance​Creator​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0015)": [
+      {
+        "name": "Instance​Coercion​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0016)": [
+      {
+        "name": "SOP​Class​UID",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0017)": [
+      {
+        "name": "Acquisition​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0018)": [
+      {
+        "name": "SOP​Instance​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0019)": [
+      {
+        "name": "Pyramid​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0020)": [
+      {
+        "name": "Study​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0021)": [
+      {
+        "name": "Series​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0022)": [
+      {
+        "name": "Acquisition​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0023)": [
+      {
+        "name": "Content​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0024)": [
+      {
+        "name": "Overlay​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0025)": [
+      {
+        "name": "Curve​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,002a)": [
+      {
+        "name": "Acquisition​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0008,0030)": [
+      {
+        "name": "Study​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0031)": [
+      {
+        "name": "Series​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0032)": [
+      {
+        "name": "Acquisition​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0033)": [
+      {
+        "name": "Content​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0034)": [
+      {
+        "name": "Overlay​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0035)": [
+      {
+        "name": "Curve​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0050)": [
+      {
+        "name": "Accession​Number",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0008,0054)": [
+      {
+        "name": "Retrieve​AE​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0055)": [
+      {
+        "name": "Station​AE​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0058)": [
+      {
+        "name": "Failed​SOP​Instance​UID​List",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0070)": [
+      {
+        "name": "Manufacturer",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0080)": [
+      {
+        "name": "Institution​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0081)": [
+      {
+        "name": "Institution​Address",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0082)": [
+      {
+        "name": "Institution​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0090)": [
+      {
+        "name": "Referring​Physician​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0008,0092)": [
+      {
+        "name": "Referring​Physician​Address",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0094)": [
+      {
+        "name": "Referring​Physician​Telephone​Numbers",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0096)": [
+      {
+        "name": "Referring​Physician​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,009c)": [
+      {
+        "name": "Consulting​Physician​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0008,009d)": [
+      {
+        "name": "Consulting​Physician​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,0106)": [
+      {
+        "name": "Context​Group​Version",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,0107)": [
+      {
+        "name": "Context​Group​Local​Version",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,010d)": [
+      {
+        "name": "Context​Group​Extension​Creator​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,0201)": [
+      {
+        "name": "Timezone​Offset​From​UTC",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1000)": [
+      {
+        "name": "Network​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1010)": [
+      {
+        "name": "Station​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1030)": [
+      {
+        "name": "Study​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,103e)": [
+      {
+        "name": "Series​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,1040)": [
+      {
+        "name": "Institutional​Department​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1041)": [
+      {
+        "name": "Institutional​Department​Type​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1048)": [
+      {
+        "name": "Physicians​Of​Record",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1049)": [
+      {
+        "name": "Physicians​Of​Record​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1050)": [
+      {
+        "name": "Performing​Physician​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1052)": [
+      {
+        "name": "Performing​Physician​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1060)": [
+      {
+        "name": "Name​Of​Physicians​Reading​Study",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1062)": [
+      {
+        "name": "Physicians​Reading​Study​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1070)": [
+      {
+        "name": "Operators​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1072)": [
+      {
+        "name": "Operator​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1080)": [
+      {
+        "name": "Admitting​Diagnoses​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,1084)": [
+      {
+        "name": "Admitting​Diagnoses​Code​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1088)": [
+      {
+        "name": "Pyramid​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,1090)": [
+      {
+        "name": "Manufacturer​Model​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,1110)": [
+      {
+        "name": "Referenced​Study​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1111)": [
+      {
+        "name": "Referenced​Performed​Procedure​Step​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1115)": [
+      {
+        "name": "Referenced​Series​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1120)": [
+      {
+        "name": "Referenced​Patient​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,1140)": [
+      {
+        "name": "Referenced​Image​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,114a)": [
+      {
+        "name": "Referenced​Instance​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1150)": [
+      {
+        "name": "Referenced​SOP​Class​UID",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0008,1155)": [
+      {
+        "name": "Referenced​SOP​Instance​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,1195)": [
+      {
+        "name": "Transaction​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,1199)": [
+      {
+        "name": "Referenced​SOP​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1200)": [
+      {
+        "name": "Studies​Containing​Other​Referenced​Instances​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,1250)": [
+      {
+        "name": "Related​Series​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,2111)": [
+      {
+        "name": "Derivation​Description",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,2112)": [
+      {
+        "name": "Source​Image​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,3010)": [
+      {
+        "name": "Irradiation​Event​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,4000)": [
+      {
+        "name": "Identifying​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0008,9092)": [
+      {
+        "name": "Referenced​Image​Evidence​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0008,9123)": [
+      {
+        "name": "Creator​Version​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0008,9124)": [
+      {
+        "name": "Derivation​Image​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0009,\"EMAGEON JPEG2K INFO\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"EMAGEON JPEG2K INFO\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"EMAGEON STUDY HOME\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"EMAGEON STUDY HOME\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",0d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",39)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",3b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",3d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEIIS\",6c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",11)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",1e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",21)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",41)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",42)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",43)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_GENIE_1\",46)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",0d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",31)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",37)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",39)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",3b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",3d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",5f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",67)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",6c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",7b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",e4)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_IDEN_01\",e7)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",32)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",33)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",58)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",5f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",64)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",65)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",71)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",72)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",82)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",83)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",96)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",99)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",c8)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",c9)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",ca)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",d2)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",e4)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",ea)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",eb)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"GEMS_PETD_01\",ec)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"IMBIO JSON REPORT CONTENTS\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"SECTRA_Ident_01\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"SIEMENS CT VA1 DUMMY\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"SPI RELEASE 1\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",0d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",39)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",3b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",3d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0009,\"Unnamed Private Block - 10\",6c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,0010)": [
+      {
+        "name": "Patient​Name",
+        "enabled": true,
+        "action": "@lookup(PatientID,ptid)"
+      }
+    ],
+    "(0010,0020)": [
+      {
+        "name": "Patient​ID",
+        "enabled": true,
+        "action": "@lookup(this,ptid)"
+      }
+    ],
+    "(0010,0021)": [
+      {
+        "name": "Issuer​Of​Patient​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,0030)": [
+      {
+        "name": "Patient​Birth​Date",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0010,0032)": [
+      {
+        "name": "Patient​Birth​Time",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,0040)": [
+      {
+        "name": "Patient​Sex",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,0050)": [
+      {
+        "name": "Patient​Insurance​Plan​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,0101)": [
+      {
+        "name": "Patient​Primary​Language​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,0102)": [
+      {
+        "name": "Patient​Primary​Language​Modifier​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1000)": [
+      {
+        "name": "Other​Patient​IDs",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1001)": [
+      {
+        "name": "Other​Patient​Names",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1002)": [
+      {
+        "name": "Other​Patient​IDs​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1005)": [
+      {
+        "name": "Patient​Birth​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1010)": [
+      {
+        "name": "Patient​Age",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,1020)": [
+      {
+        "name": "Patient​Size",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,1030)": [
+      {
+        "name": "Patient​Weight",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,1040)": [
+      {
+        "name": "Patient​Address",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1050)": [
+      {
+        "name": "Insurance​Plan​Identification",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1060)": [
+      {
+        "name": "Patient​Mother​Birth​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1080)": [
+      {
+        "name": "Military​Rank",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1081)": [
+      {
+        "name": "Branch​Of​Service",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1090)": [
+      {
+        "name": "Medical​Record​Locator",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,1100)": [
+      {
+        "name": "Referenced​Patient​Photo​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2000)": [
+      {
+        "name": "Medical​Alerts",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,2110)": [
+      {
+        "name": "Allergies",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2150)": [
+      {
+        "name": "Country​Of​Residence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2152)": [
+      {
+        "name": "Region​Of​Residence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2154)": [
+      {
+        "name": "Patient​Telephone​Numbers",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2155)": [
+      {
+        "name": "Patient​Telecom​Information​",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2160)": [
+      {
+        "name": "Ethnic​Group",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,2180)": [
+      {
+        "name": "Occupation",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,21a0)": [
+      {
+        "name": "Smoking​Status",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,21b0)": [
+      {
+        "name": "Additional​Patient​History",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,21c0)": [
+      {
+        "name": "Pregnancy​Status",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,21d0)": [
+      {
+        "name": "Last​Menstrual​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0010,21f0)": [
+      {
+        "name": "Patient​Religious​Preference",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2203)": [
+      {
+        "name": "Patient​Sex​Neutered",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0010,2297)": [
+      {
+        "name": "Responsible​Person",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,2299)": [
+      {
+        "name": "Responsible​Organization",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0010,4000)": [
+      {
+        "name": "Patient​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",0a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",3f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",44)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",45)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",46)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_GENIE_1\",57)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"GEMS_PETD_01\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",21)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",31)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",33)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",34)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",35)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",36)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",42)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",50)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",51)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",52)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",53)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",54)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",55)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",56)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",57)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",58)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",59)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",5a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",5b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",5c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",5e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",5f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",60)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",61)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",64)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",65)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",66)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",67)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0011,\"IPKCREP 2Q00+0C  TMIGA ERPVITA EADAT\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0012,0010)": [
+      {
+        "name": "Clinical​Trial​Sponsor​Name",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0012,0020)": [
+      {
+        "name": "Clinical​Trial​Protocol​ID",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0012,0021)": [
+      {
+        "name": "Clinical​Trial​Protocol​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0012,0030)": [
+      {
+        "name": "Clinical​Trial​Site​ID",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0012,0031)": [
+      {
+        "name": "Clinical​Trial​Site​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0012,0040)": [
+      {
+        "name": "Clinical​Trial​Subject​ID",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0012,0042)": [
+      {
+        "name": "Clinical​Trial​Subject​Reading​ID",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0012,0050)": [
+      {
+        "name": "Clinical​Trial​Time​Point​ID",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0012,0051)": [
+      {
+        "name": "Clinical​Trial​Time​Point​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0012,0060)": [
+      {
+        "name": "Clinical​Trial​Coordinating​Center​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0012,0062)": [
+      {
+        "name": "Patient​Identity​Removed",
+        "enabled": true,
+        "action": "@always()YES"
+      }
+    ],
+    "(0012,0063)": [
+      {
+        "name": "Deidentification​Method",
+        "enabled": true,
+        "action": "@always()@append(){Per DICOM PS 3.15 AnnexE. Details in 0012,0064}"
+      }
+    ],
+    "(0012,0064)": [
+      {
+        "name": "Deidentification​Method​Code​Sequence",
+        "enabled": true,
+        "action": "113100/113101/113105/113107/113108/113109/113111"
+      }
+    ],
+    "(0012,0071)": [
+      {
+        "name": "Clinical​Trial​Series​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0012,0072)": [
+      {
+        "name": "Clinical​Trial​Series​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0012,0081)": [
+      {
+        "name": "Clinical​Trial​Protocol​Ethics​Committee​Name",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0012,0082)": [
+      {
+        "name": "Clinical​Trial​Protocol​Ethics​Committee​Approval​Number",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0012,0086)": [
+      {
+        "name": "Ethics​Committee​Approval​Effectiveness​Start​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0012,0087)": [
+      {
+        "name": "Ethics​Committee​Approval​Effectiveness​End​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0014,407c)": [
+      {
+        "name": "Calibration​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0014,407e)": [
+      {
+        "name": "Calibration​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0016,002b)": [
+      {
+        "name": "Maker​Note",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0016,004b)": [
+      {
+        "name": "Device​Setting​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0016,004d)": [
+      {
+        "name": "Camera​Owner​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,004e)": [
+      {
+        "name": "Lens​Specification",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,004f)": [
+      {
+        "name": "Lens​Make",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0050)": [
+      {
+        "name": "Lens​Model",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0051)": [
+      {
+        "name": "Lens​Serial​Number",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0070)": [
+      {
+        "name": "GPS​Version​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0071)": [
+      {
+        "name": "GPS​Latitude​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0072)": [
+      {
+        "name": "GPS​Latitude​",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0073)": [
+      {
+        "name": "GPS​Longitude​​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0074)": [
+      {
+        "name": "GPS​Longitude",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0075)": [
+      {
+        "name": "GPS​Altitude​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0076)": [
+      {
+        "name": "GPS​Altitude​",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0077)": [
+      {
+        "name": "GPS​Time​Stamp",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0078)": [
+      {
+        "name": "GPS​Satellites",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0079)": [
+      {
+        "name": "GPS​Status",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007a)": [
+      {
+        "name": "GPS​Measure​​Mode",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007b)": [
+      {
+        "name": "GPS​DOP",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007c)": [
+      {
+        "name": "GPS​Speed​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007d)": [
+      {
+        "name": "GPS​Speed​",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007e)": [
+      {
+        "name": "GPS​Track​​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,007f)": [
+      {
+        "name": "GPS​Track",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0080)": [
+      {
+        "name": "GPS​Img​Direction​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0081)": [
+      {
+        "name": "GPS​Img​Direction",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0082)": [
+      {
+        "name": "GPS​Map​​Datum",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0083)": [
+      {
+        "name": "GPS​Dest​Latitude​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0084)": [
+      {
+        "name": "GPS​Dest​Latitude",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0085)": [
+      {
+        "name": "GPS​Dest​Longitude​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0086)": [
+      {
+        "name": "GPS​Dest​​Longitude",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0087)": [
+      {
+        "name": "GPS​Dest​Bearing​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0088)": [
+      {
+        "name": "GPS​Dest​Bearing",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,0089)": [
+      {
+        "name": "GPS​Dest​Distance​Ref",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,008a)": [
+      {
+        "name": "GPS​Dest​Distance",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,008b)": [
+      {
+        "name": "GPS​Processing​Method",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,008c)": [
+      {
+        "name": "GPS​Area​Information",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0016,008d)": [
+      {
+        "name": "GPS​Date​Stamp",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0016,008e)": [
+      {
+        "name": "GPS​Differential",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0017,\"Unnamed Private Block - 10\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,0010)": [
+      {
+        "name": "Contrast​Bolus​Agent",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,0015)": [
+      {
+        "name": "Body​Part​Examined",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,0027)": [
+      {
+        "name": "Intervention​Drug​Stop​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,0035)": [
+      {
+        "name": "Intervention​Drug​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1000)": [
+      {
+        "name": "Device​Serial​Number",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1002)": [
+      {
+        "name": "Device​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0018,1004)": [
+      {
+        "name": "Plate​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1005)": [
+      {
+        "name": "Generator​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1007)": [
+      {
+        "name": "Cassette​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1008)": [
+      {
+        "name": "Gantry​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1009)": [
+      {
+        "name": "Unique​Device​Identifier",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,100a)": [
+      {
+        "name": "UDI​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,100b)": [
+      {
+        "name": "Manufacturer​Device​Class​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0018,1010)": [
+      {
+        "name": "Secondary​Capture​Device​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1012)": [
+      {
+        "name": "Date​Of​Secondary​Capture",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1014)": [
+      {
+        "name": "Time​Of​Secondary​Capture",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1020)": [
+      {
+        "name": "Software​Versions",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1030)": [
+      {
+        "name": "Protocol​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1042)": [
+      {
+        "name": "Contrast​Bolus​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1043)": [
+      {
+        "name": "Contrast​Bolus​Stop​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1072)": [
+      {
+        "name": "Radio​pharmaceutical​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1073)": [
+      {
+        "name": "Radio​pharmaceutical​Stop​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1078)": [
+      {
+        "name": "Radio​pharmaceutical​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1079)": [
+      {
+        "name": "Radio​pharmaceutical​Stop​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,11bb)": [
+      {
+        "name": "Acquisition​Field​Of​View​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,1200)": [
+      {
+        "name": "Date​Of​Last​Calibration",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1201)": [
+      {
+        "name": "Time​Of​Last​Calibration",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,1202)": [
+      {
+        "name": "Date​Time​Of​Last​Calibration",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1203)": [
+      {
+        "name": "Calibration​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1204)": [
+      {
+        "name": "Date​Of​Manufacture",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1205)": [
+      {
+        "name": "Date​Of​Installation",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,1400)": [
+      {
+        "name": "Acquisition​Device​Processing​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,2042)": [
+      {
+        "name": "Target​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0018,4000)": [
+      {
+        "name": "Acquisition​Comments",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,5011)": [
+      {
+        "name": "Transducer​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,700a)": [
+      {
+        "name": "Detector​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,700c)": [
+      {
+        "name": "Date​Of​Last​Detector​Calibration",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,700e)": [
+      {
+        "name": "Time​Of​Last​Detector​Calibration",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,9074)": [
+      {
+        "name": "Frame​Acquisition​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9151)": [
+      {
+        "name": "Frame​Reference​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9185)": [
+      {
+        "name": "Respiratory​Motion​Compensation​Technique​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,9367)": [
+      {
+        "name": "XRay​Source​ID",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0018,9369)": [
+      {
+        "name": "Source​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,936a)": [
+      {
+        "name": "Source​End​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9371)": [
+      {
+        "name": "XRay​Detector​ID",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0018,9373)": [
+      {
+        "name": "XRay​Detector​Label",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0018,937b)": [
+      {
+        "name": "Multienergy​Acquisition​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,937f)": [
+      {
+        "name": "Decomposition​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,9424)": [
+      {
+        "name": "Acquisition​Protocol​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,9516)": [
+      {
+        "name": "Start​Acquisition​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9517)": [
+      {
+        "name": "End​Acquisition​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9623)": [
+      {
+        "name": "Functional​Sync​Pulse",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,9701)": [
+      {
+        "name": "Decay​Correction​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9804)": [
+      {
+        "name": "Exclusion​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9919)": [
+      {
+        "name": "Instruction​Performed​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,9937)": [
+      {
+        "name": "Requested​Series​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0018,a001)": [
+      {
+        "name": "Contributing​Equipment​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0018,a002)": [
+      {
+        "name": "Contribution​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0018,a003)": [
+      {
+        "name": "Contribution​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",a7)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",a8)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",a9)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",aa)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",ab)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",ac)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",ad)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",ae)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",af)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b1)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b2)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b3)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b4)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b5)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b6)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b7)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b8)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",b9)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",ba)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",bb)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",bc)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",bd)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",df)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"GEMS_ACQU_01\",e0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"SIEMENS MR HEADER\",08)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"SIEMENS MR HEADER\",09)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"SIEMENS MR HEADER\",0a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"SIEMENS MR HEADER\",29)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"SIEMENS SIENET\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0019,\"Unnamed Private Block - 10\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,000d)": [
+      {
+        "name": "Study​Instance​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,000e)": [
+      {
+        "name": "Series​Instance​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,0010)": [
+      {
+        "name": "Study​ID",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0020,0027)": [
+      {
+        "name": "PyramidLabel",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0020,0052)": [
+      {
+        "name": "Frame​Of​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,0200)": [
+      {
+        "name": "Synchronization​Frame​Of​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,3401)": [
+      {
+        "name": "Modifying​Device​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,3403)": [
+      {
+        "name": "Modified​Image​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0020,3404)": [
+      {
+        "name": "Modifying​Device​Manufacturer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,3405)": [
+      {
+        "name": "Modified​Image​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0020,3406)": [
+      {
+        "name": "Modified​Image​Description",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,4000)": [
+      {
+        "name": "Image​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,9158)": [
+      {
+        "name": "Frame​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0020,9161)": [
+      {
+        "name": "Concatenation​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,9164)": [
+      {
+        "name": "Dimension​Organization​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0020,9221)": [
+      {
+        "name": "Dimension​Organization​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0020,9222)": [
+      {
+        "name": "Dimension​Index​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0021,\"GEMS_RELA_01\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"GEMS_RELA_01\",07)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"GEMS_RELA_01\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"GEMS_RELA_01\",35)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"GEMS_RELA_01\",37)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"SIEMENS MED ECAT FILE INFO\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0021,\"SIEMENS MED ECAT FILE INFO\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0023,\"GEMS_STDY_01\",80)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0025,\"GEMS_SERS_01\",1a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0025,\"GEMS_SERS_01\",1b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0027,\"GEMS_IMAG_01\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0028,0301)": [
+      {
+        "name": "Burned​In​Annotation",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0028,0303)": [
+      {
+        "name": "Longitudinal​Temporal​Information​Modified",
+        "enabled": true,
+        "action": "@always()MODIFIED"
+      }
+    ],
+    "(0028,1199)": [
+      {
+        "name": "Palette​Color​Lookup​Table​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0028,1214)": [
+      {
+        "name": "Large​Palette​Color​Lookup​Table​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0028,4000)": [
+      {
+        "name": "Image​Presentation​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA MARKUP 1.0\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA MARKUP 1.0\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA MARKUP 1.0\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA MARKUP 1.0\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA MARKUP 1.0\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA OBJECT DOCUMENT 1.0\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"MITRA PRESENTATION 1.0\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",08)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",09)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS CSA HEADER\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",31)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",32)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",33)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",34)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM HEADER\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM OOG\",08)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM OOG\",09)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0029,\"SIEMENS MEDCOM OOG\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0031,\"AGFA PACS Archive Mirroring 1.0\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0031,\"AGFA PACS Archive Mirroring 1.0\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0031,\"MITRA LINKED ATTRIBUTES 1.0\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,0012)": [
+      {
+        "name": "Study​ID​Issuer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,0032)": [
+      {
+        "name": "Study​Verified​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,0033)": [
+      {
+        "name": "Study​Verified​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,0034)": [
+      {
+        "name": "Study​Read​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,0035)": [
+      {
+        "name": "Study​Read​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1000)": [
+      {
+        "name": "Scheduled​Study​Start​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,1001)": [
+      {
+        "name": "Scheduled​Study​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1010)": [
+      {
+        "name": "Scheduled​Study​Stop​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,1011)": [
+      {
+        "name": "Scheduled​Study​Stop​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1020)": [
+      {
+        "name": "Scheduled​Study​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1021)": [
+      {
+        "name": "Scheduled​Study​Location​AE​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1030)": [
+      {
+        "name": "Reason​For​Study",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1032)": [
+      {
+        "name": "Requesting​Physician",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1033)": [
+      {
+        "name": "Requesting​Service",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1040)": [
+      {
+        "name": "Study​Arrival​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,1041)": [
+      {
+        "name": "Study​Arrival​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1050)": [
+      {
+        "name": "Study​Completion​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0032,1051)": [
+      {
+        "name": "Study​Completion​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1060)": [
+      {
+        "name": "Requested​Procedure​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,1066)": [
+      {
+        "name": "Reason​For​Visit",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1067)": [
+      {
+        "name": "Reason​For​Visit​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0032,1070)": [
+      {
+        "name": "Requested​Contrast​Agent",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0032,4000)": [
+      {
+        "name": "Study​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"GEMS_GENIE_1\",07)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",0c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",16)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0033,\"MITRA OBJECT UTF8 ATTRIBUTES 1.0\",1c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0034,0001)": [
+      {
+        "name": "Flow​Identifier​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0034,0002)": [
+      {
+        "name": "Flow​Identifier",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0034,0005)": [
+      {
+        "name": "Source​Identifier",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0034,0007)": [
+      {
+        "name": "Frame​Origin​Timestamp",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0004)": [
+      {
+        "name": "Referenced​Patient​Alias​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0010)": [
+      {
+        "name": "Admission​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0011)": [
+      {
+        "name": "Issuer​Of​Admission​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0014)": [
+      {
+        "name": "Issuer​Of​Admission​ID​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,001a)": [
+      {
+        "name": "Scheduled​Admission​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0038,001b)": [
+      {
+        "name": "Scheduled​Admission​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,001c)": [
+      {
+        "name": "Scheduled​Discharge​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0038,001d)": [
+      {
+        "name": "Scheduled​Discharge​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,001e)": [
+      {
+        "name": "Scheduled​Patient​Institution​Residence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0020)": [
+      {
+        "name": "Admitting​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0038,0021)": [
+      {
+        "name": "Admitting​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,0030)": [
+      {
+        "name": "Discharge​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0038,0032)": [
+      {
+        "name": "Discharge​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,0040)": [
+      {
+        "name": "Discharge​Diagnosis​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,0050)": [
+      {
+        "name": "Special​Needs",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0060)": [
+      {
+        "name": "Service​Episode​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0061)": [
+      {
+        "name": "Issuer​Of​Service​Episode​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0062)": [
+      {
+        "name": "Service​Episode​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0038,0064)": [
+      {
+        "name": "Issuer​Of​Service​Episode​ID​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0300)": [
+      {
+        "name": "Current​Patient​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0400)": [
+      {
+        "name": "Patient​Institution​Residence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,0500)": [
+      {
+        "name": "Patient​State",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0038,4000)": [
+      {
+        "name": "Visit​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(003a,0310)": [
+      {
+        "name": "Multiplex​Group​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(003a,0314)": [
+      {
+        "name": "Impedance​Measurement​DateTime",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(003a,0329)": [
+      {
+        "name": "Waveform​Filter​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(003a,032b)": [
+      {
+        "name": "Filter​Lookup​Table​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0001)": [
+      {
+        "name": "Scheduled​Station​AE​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0002)": [
+      {
+        "name": "Scheduled​Procedure​Step​Start​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,0003)": [
+      {
+        "name": "Scheduled​Procedure​Step​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0004)": [
+      {
+        "name": "Scheduled​Procedure​Step​End​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,0005)": [
+      {
+        "name": "Scheduled​Procedure​Step​End​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0006)": [
+      {
+        "name": "Scheduled​Performing​Physician​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0007)": [
+      {
+        "name": "Scheduled​Procedure​Step​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0009)": [
+      {
+        "name": "Scheduled​Procedure​Step​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,000b)": [
+      {
+        "name": "Scheduled​Performing​Physician​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0010)": [
+      {
+        "name": "Scheduled​Station​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0011)": [
+      {
+        "name": "Scheduled​Procedure​Step​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0012)": [
+      {
+        "name": "Pre​Medication",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0241)": [
+      {
+        "name": "Performed​Station​AE​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0242)": [
+      {
+        "name": "Performed​Station​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0243)": [
+      {
+        "name": "Performed​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0244)": [
+      {
+        "name": "Performed​Procedure​Step​Start​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,0245)": [
+      {
+        "name": "Performed​Procedure​Step​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0250)": [
+      {
+        "name": "Performed​Procedure​Step​End​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,0251)": [
+      {
+        "name": "Performed​Procedure​Step​End​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0253)": [
+      {
+        "name": "Performed​Procedure​Step​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0254)": [
+      {
+        "name": "Performed​Procedure​Step​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0275)": [
+      {
+        "name": "Request​Attributes​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0280)": [
+      {
+        "name": "Comments​On​The​Performed​Procedure​Step",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,030e)": [
+      {
+        "name": "Exposure​Dose​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,0310)": [
+      {
+        "name": "Comments​On​Radiation​Dose",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,050a)": [
+      {
+        "name": "Specimen​Accession​Number",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,0512)": [
+      {
+        "name": "Container​Identifier",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,0513)": [
+      {
+        "name": "Issuer​Of​The​Container​Identifier​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,051a)": [
+      {
+        "name": "Container​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0551)": [
+      {
+        "name": "Specimen​Identifier",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,0554)": [
+      {
+        "name": "Specimen​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,0555)": [
+      {
+        "name": "Acquisition​Context​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,0562)": [
+      {
+        "name": "Issuer​Of​The​Specimen​Identifier​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,0600)": [
+      {
+        "name": "Specimen​Short​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0602)": [
+      {
+        "name": "Specimen​Detailed​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,0610)": [
+      {
+        "name": "Specimen​Preparation​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,06fa)": [
+      {
+        "name": "Slide​Identifier",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,08ea)": [
+      {
+        "name": "Measurement​Units​Code​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,1001)": [
+      {
+        "name": "Requested​Procedure​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1002)": [
+      {
+        "name": "Reason​For​The​Requested​Procedure",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1004)": [
+      {
+        "name": "Patient​Transport​Arrangements",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1005)": [
+      {
+        "name": "Requested​Procedure​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,100a)": [
+      {
+        "name": "Reason​For​Requested​Procedure​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1010)": [
+      {
+        "name": "Names​Of​Intended​Recipients​Of​Results",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1011)": [
+      {
+        "name": "Intended​Recipients​Of​Results​Identification​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1101)": [
+      {
+        "name": "Person​Identification​Code​Sequence",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,1102)": [
+      {
+        "name": "Person​Address",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1103)": [
+      {
+        "name": "Person​Telephone​Numbers",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1104)": [
+      {
+        "name": "Person​Telecom​Information",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,1400)": [
+      {
+        "name": "Requested​Procedure​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2001)": [
+      {
+        "name": "Reason​For​The​Imaging​Service​Request",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2004)": [
+      {
+        "name": "Issue​Date​Of​Imaging​Service​Request",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,2005)": [
+      {
+        "name": "Issue​Time​Of​Imaging​Service​Request",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,2008)": [
+      {
+        "name": "Order​Entered​By",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2009)": [
+      {
+        "name": "Order​Enterer​Location",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2010)": [
+      {
+        "name": "Order​Callback​Phone​Number",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2011)": [
+      {
+        "name": "Order​Callback​Telecom​Information",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,2016)": [
+      {
+        "name": "Placer​Order​Number​Imaging​Service​Request",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0040,2017)": [
+      {
+        "name": "Filler​Order​Number​Imaging​Service​Request",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0040,2400)": [
+      {
+        "name": "Imaging​Service​Request​Comments",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,3001)": [
+      {
+        "name": "Confidentiality​Constraint​On​Patient​Data​Description",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4005)": [
+      {
+        "name": "Scheduled​Procedure​Step​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4008)": [
+      {
+        "name": "Scheduled​Procedure​Step​Expiration​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4010)": [
+      {
+        "name": "Scheduled​Procedure​Step​Modification​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4011)": [
+      {
+        "name": "Expected​Completion​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4023)": [
+      {
+        "name": "Referenced​General​Purpose​Scheduled​Procedure​Step​Transaction​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,4025)": [
+      {
+        "name": "Scheduled​Station​Name​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4027)": [
+      {
+        "name": "Scheduled​Station​Geographic​Location​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4028)": [
+      {
+        "name": "Performed​Station​Name​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4030)": [
+      {
+        "name": "Performed​Station​Geographic​Location​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4034)": [
+      {
+        "name": "Scheduled​Human​Performers​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4035)": [
+      {
+        "name": "Actual​Human​Performers​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4036)": [
+      {
+        "name": "Human​Performer​Organization",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4037)": [
+      {
+        "name": "Human​Performer​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,4050)": [
+      {
+        "name": "Performed​Procedure​Step​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4051)": [
+      {
+        "name": "Performed​Procedure​Step​End​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,4052)": [
+      {
+        "name": "Procedure​Step​Cancellation​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a023)": [
+      {
+        "name": "Findings​Group​Recording​Date​Trial",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a024)": [
+      {
+        "name": "Findings​Group​Recording​Time​Trial",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a027)": [
+      {
+        "name": "Verifying​Organization",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,a030)": [
+      {
+        "name": "Verification​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a032)": [
+      {
+        "name": "Observation​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a033)": [
+      {
+        "name": "Observation​Start​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a043)": [
+      {
+        "name": "Concept​Name​Code​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,a073)": [
+      {
+        "name": "Verifying​Observer​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,a075)": [
+      {
+        "name": "Verifying​Observer​Name",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,a078)": [
+      {
+        "name": "Author​Observer​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a07a)": [
+      {
+        "name": "Participant​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a07c)": [
+      {
+        "name": "Custodial​Organization​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a082)": [
+      {
+        "name": "Participation​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a088)": [
+      {
+        "name": "Verifying​Observer​Identification​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a110)": [
+      {
+        "name": "Date​Of​Document​Or​Verbal​Transaction​Trial",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a112)": [
+      {
+        "name": "Time​Of​Document​Creation​Or​Verbal​Transaction​Trial",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,a120)": [
+      {
+        "name": "Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a121)": [
+      {
+        "name": "Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a122)": [
+      {
+        "name": "Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,a123)": [
+      {
+        "name": "Person​Name",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0040,a124)": [
+      {
+        "name": "UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,a13a)": [
+      {
+        "name": "Referenced​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a168)": [
+      {
+        "name": "Concept​Code​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,a171)": [
+      {
+        "name": "Observation​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,a172)": [
+      {
+        "name": "Referenced​Observation​UID​Trial",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,a192)": [
+      {
+        "name": "Observation​Date​Trial",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0040,a193)": [
+      {
+        "name": "Observation​Time​Trial",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,a300)": [
+      {
+        "name": "Measured​Value​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,a307)": [
+      {
+        "name": "Current​Observer​Trial",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a352)": [
+      {
+        "name": "Verbal​Source​Trial",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a353)": [
+      {
+        "name": "Address​Trial",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a354)": [
+      {
+        "name": "Telephone​Number​Trial",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a358)": [
+      {
+        "name": "Verbal​Source​Identifier​Code​Sequence​Trial",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0040,a402)": [
+      {
+        "name": "Observation​Subject​UID​Trial",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,a504)": [
+      {
+        "name": "Content​Template​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,a730)": [
+      {
+        "name": "Content​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0040,db06)": [
+      {
+        "name": "Template​Version",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,db07)": [
+      {
+        "name": "Template​Local​Version",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0040,db0c)": [
+      {
+        "name": "Template​Extension​Organization​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,db0d)": [
+      {
+        "name": "Template​Extension​Creator​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0040,e004)": [
+      {
+        "name": "HL7Document​Effective​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0042,0011)": [
+      {
+        "name": "Encapsulated​Document",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",28)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",29)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",2a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",60)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",61)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",64)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",6f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",80)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0043,\"GEMS_PARM_01\",82)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0044,0004)": [
+      {
+        "name": "Approval​Status​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0044,000b)": [
+      {
+        "name": "Product​Expiration​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0044,0010)": [
+      {
+        "name": "Substance​Administration​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0044,0104)": [
+      {
+        "name": "Assertion​DateTime",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0044,0105)": [
+      {
+        "name": "Assertion​Expiration​DateTime",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0047,\"GEMS_3DSTATE_001\",e9)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0047,\"GEMS_3DSTATE_001\",ea)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0047,\"GEMS_3DSTATE_001\",eb)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0047,\"GEMS_3DSTATE_001\",ec)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0047,\"GEMS_3DSTATE_001\",ed)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0050,001b)": [
+      {
+        "name": "Container​Component​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0050,0020)": [
+      {
+        "name": "Device​Description",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0050,0021)": [
+      {
+        "name": "Long​Device​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",0a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",0c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",0d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",11)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",16)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",17)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0051,\"SIEMENS MR HEADER\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0053,\"GEHC_CT_ADVAPP_001\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0053,\"GEHC_CT_ADVAPP_001\",6a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0053,\"GEHC_CT_ADVAPP_001\",6b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0053,\"GEHC_CT_ADVAPP_001\",9d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0054,0016)": [
+      {
+        "name": "Radio​pharmaceutical​Information​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0062,0021)": [
+      {
+        "name": "Tracking​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0064,0003)": [
+      {
+        "name": "Source​Frame​Of​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0068,6226)": [
+      {
+        "name": "Effective​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0068,6270)": [
+      {
+        "name": "Information​Issue​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(006a,0003)": [
+      {
+        "name": "Annotation​Group​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(006a,0005)": [
+      {
+        "name": "Annotation​Group​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(006a,0006)": [
+      {
+        "name": "Annotation​Group​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0070,0001)": [
+      {
+        "name": "Graphic​Annotation​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0070,0082)": [
+      {
+        "name": "Presentation​Creation​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0070,0083)": [
+      {
+        "name": "Presentation​Creation​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0070,0084)": [
+      {
+        "name": "Content​Creator​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0070,0086)": [
+      {
+        "name": "Content​Creator​Identification​Code​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0070,0308)": [
+      {
+        "name": "Registration​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(0070,031a)": [
+      {
+        "name": "Fiducial​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0070,1101)": [
+      {
+        "name": "Presentation​Display​Collection​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0070,1102)": [
+      {
+        "name": "Presentation​Sequence​Collection​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0072,000a)": [
+      {
+        "name": "Hanging​Protocol​Creation​Date​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,005e)": [
+      {
+        "name": "Selector​AEValue",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0072,005f)": [
+      {
+        "name": "Selector​ASValue",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0061)": [
+      {
+        "name": "Selector​DAValue",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0063)": [
+      {
+        "name": "Selector​DTValue",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0065)": [
+      {
+        "name": "Selector​OBValue",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0072,0066)": [
+      {
+        "name": "Selector​LO​Value",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0068)": [
+      {
+        "name": "Selector​LT​Value",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,006a)": [
+      {
+        "name": "Selector​PN​Value",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0072,006b)": [
+      {
+        "name": "Selector​TMValue",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,006c)": [
+      {
+        "name": "Selector​SH​Value",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,006d)": [
+      {
+        "name": "Selector​UNValue",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0072,006e)": [
+      {
+        "name": "Selector​ST​Value",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0070)": [
+      {
+        "name": "Selector​UT​Value",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0072,0071)": [
+      {
+        "name": "Selector​URValue",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0073,\"STENTOR\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0073,\"STENTOR\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0073,\"STENTOR\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0073,\"STENTOR\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0073,\"STENTOR\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0074,1234)": [
+      {
+        "name": "Receiving​AE",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0074,1236)": [
+      {
+        "name": "Requesting​AE",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0088,0140)": [
+      {
+        "name": "Storage​Media​File​Set​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0088,0200)": [
+      {
+        "name": "Icon​Image​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0088,0904)": [
+      {
+        "name": "Topic​Title",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0088,0906)": [
+      {
+        "name": "Topic​Subject",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0088,0910)": [
+      {
+        "name": "Topic​Author",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0088,0912)": [
+      {
+        "name": "Topic​Keywords",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0091,\"SIENET\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0095,\"SIENET\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0097,\"SIENET\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0099,\"SIENET\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",24)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",25)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",36)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",39)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",3f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",42)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",51)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",61)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",a0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(00e1,\"ELSCINT1\",c2)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0100,0420)": [
+      {
+        "name": "SOP​Authorization​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(01e1,\"ELSCINT1\",41)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",31)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",36)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",37)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",38)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",42)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",43)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",44)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",46)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",47)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",49)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",4a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",4b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",4c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",4d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",4e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f1,\"ELSCINT1\",53)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",11)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",16)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",17)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",23)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f3,\"ELSCINT1\",24)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",11)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",16)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",17)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",1a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",1b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",1c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",1e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",1f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",22)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",23)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",25)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",26)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",27)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",28)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",29)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",2b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",2c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",2d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",31)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",70)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",73)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",74)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",75)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",7f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",95)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",97)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",99)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(01f7,\"ELSCINT1\",9b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0100)": [
+      {
+        "name": "Digital​Signature​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(0400,0105)": [
+      {
+        "name": "Digital​Signature​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0400,0115)": [
+      {
+        "name": "Certificate​Of​Signer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0310)": [
+      {
+        "name": "Certified​Timestamp",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0402)": [
+      {
+        "name": "Referenced​Digital​Signature​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0403)": [
+      {
+        "name": "Referenced​SOP​Instance​MAC​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0404)": [
+      {
+        "name": "MAC",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0550)": [
+      {
+        "name": "Modified​Attributes​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0551)": [
+      {
+        "name": "Nonconforming​Modified​Attributes​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0552)": [
+      {
+        "name": "Nonconforming​Data​Element​Value",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0561)": [
+      {
+        "name": "Original​Attributes​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0400,0562)": [
+      {
+        "name": "Attribute​Modification​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(0400,0563)": [
+      {
+        "name": "Modifying​System",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(0400,0564)": [
+      {
+        "name": "Source​Of​Previous​Values",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(0400,0565)": [
+      {
+        "name": "Reason​For​The​Attribute​Modification",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(0400,0600)": [
+      {
+        "name": "Instance​Origin​Status",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",11)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",2a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",2b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",36)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",3d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",40)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",42)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",43)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",47)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",50)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",56)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",58)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",5d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",5f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",70)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",71)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",75)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",82)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",85)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",88)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",98)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",a7)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",c2)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a1,\"ELSCINT1\",d0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",17)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",19)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",1f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",22)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",23)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",24)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",26)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",34)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",43)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",55)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",5c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",65)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",80)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",8f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",99)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",9c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",b4)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",b5)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",b6)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",b7)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",b9)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",bb)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",c0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",c6)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",ca)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",cb)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a3,\"ELSCINT1\",ce)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",54)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",56)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",59)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",69)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",98)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(07a5,\"ELSCINT1\",c8)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0903,\"GEIIS PACS\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(0905,\"GEIIS\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(1001,\"Philips Imaging DD 001\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(1099,\"TABLE_HEIGHT\",99)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2001,\"Philips Imaging DD 001\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2001,\"Philips Imaging DD 001\",de)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2001,\"Philips Imaging DD 002\",6b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2001,\"Philips Imaging DD 129\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 001\",2a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 001\",83)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 002\",34)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 003\",49)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 004\",91)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 005\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 005\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 005\",0e)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 005\",0f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 005\",92)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",53)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",54)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",55)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",56)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",57)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",58)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",59)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",60)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",61)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",62)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2005,\"Philips MR Imaging DD 006\",68)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2030,0020)": [
+      {
+        "name": "Text​String",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2100,0040)": [
+      {
+        "name": "Creation​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(2100,0050)": [
+      {
+        "name": "Creation​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(2100,0070)": [
+      {
+        "name": "Originator",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(2100,0140)": [
+      {
+        "name": "Destination​AE",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(2200,0002)": [
+      {
+        "name": "Label​Text",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(2200,0005)": [
+      {
+        "name": "Barcode​Value",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(3002,0121)": [
+      {
+        "name": "Position​Acquisition​Template​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3002,0123)": [
+      {
+        "name": "Position​Acquisition​Template​Description",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3006,0002)": [
+      {
+        "name": "Structure​Set​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0004)": [
+      {
+        "name": "Structure​Set​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0006)": [
+      {
+        "name": "Structure​Set​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0008)": [
+      {
+        "name": "Structure​Set​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3006,0009)": [
+      {
+        "name": "Structure​Set​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0010)": [
+      {
+        "name": "Referenced​Frame​Of​Reference​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0012)": [
+      {
+        "name": "RT​Referenced​Study​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0014)": [
+      {
+        "name": "RT​Referenced​Series​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0016)": [
+      {
+        "name": "Contour​Image​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0020)": [
+      {
+        "name": "Structure​Set​ROI​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0024)": [
+      {
+        "name": "Referenced​Frame​Of​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3006,0026)": [
+      {
+        "name": "ROI​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0028)": [
+      {
+        "name": "ROI​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0038)": [
+      {
+        "name": "ROI​Generation​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0039)": [
+      {
+        "name": "ROI​Contour​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0040)": [
+      {
+        "name": "Contour​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(3006,0085)": [
+      {
+        "name": "ROI​Observation​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,0088)": [
+      {
+        "name": "ROI​Observation​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3006,00a6)": [
+      {
+        "name": "ROI​Interpreter",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(3006,00c2)": [
+      {
+        "name": "Related​Frame​Of​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3008,0024)": [
+      {
+        "name": "Treatment​Control​Point​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0025)": [
+      {
+        "name": "Treatment​Control​Point​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3008,0054)": [
+      {
+        "name": "First​Treatment​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0056)": [
+      {
+        "name": "Most​Recent​Treatment​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0105)": [
+      {
+        "name": "Source​Serial​Number",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(3008,0162)": [
+      {
+        "name": "Safe​Position​Exit​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0164)": [
+      {
+        "name": "Safe​Position​Exit​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3008,0166)": [
+      {
+        "name": "Safe​Position​Return​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0168)": [
+      {
+        "name": "Safe​Position​Return​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3008,0250)": [
+      {
+        "name": "Treatment​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3008,0251)": [
+      {
+        "name": "Treatment​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0002)": [
+      {
+        "name": "RT​Plan​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0003)": [
+      {
+        "name": "RT​Plan​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0004)": [
+      {
+        "name": "RT​Plan​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0006)": [
+      {
+        "name": "RT​Plan​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,0007)": [
+      {
+        "name": "RT​Plan​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,000b)": [
+      {
+        "name": "Treatment​Sites",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,000e)": [
+      {
+        "name": "Prescription​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0010)": [
+      {
+        "name": "Dose​Reference​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300a,0013)": [
+      {
+        "name": "Dose​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,0016)": [
+      {
+        "name": "Dose​Reference​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0070)": [
+      {
+        "name": "Fraction​Group​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300a,0072)": [
+      {
+        "name": "Fraction​Group​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0083)": [
+      {
+        "name": "Referenced​Dose​Reference​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,00b0)": [
+      {
+        "name": "Beam​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300a,00b2)": [
+      {
+        "name": "Treatment​Machine​Name",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(300a,00c3)": [
+      {
+        "name": "Beam​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,00dd)": [
+      {
+        "name": "Bolus​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0180)": [
+      {
+        "name": "Patient​Setup​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300a,0196)": [
+      {
+        "name": "Fixation​Device​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,01a6)": [
+      {
+        "name": "Shielding​Device​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,01b2)": [
+      {
+        "name": "Setup​Technique​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0216)": [
+      {
+        "name": "Source​Manufacturer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(300a,022c)": [
+      {
+        "name": "Source​Strength​Reference​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,022e)": [
+      {
+        "name": "Source​Strength​Reference​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,02eb)": [
+      {
+        "name": "Compensator​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,03a2)": [
+      {
+        "name": "Ion​Beam​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300a,0608)": [
+      {
+        "name": "Treatment​Position​Group​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0609)": [
+      {
+        "name": "Treatment​Position​Group​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,0611)": [
+      {
+        "name": "RTAccessory​Holder​Slot​ID",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(300a,0615)": [
+      {
+        "name": "RTAccessory​Device​Slot​ID",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(300a,0619)": [
+      {
+        "name": "Radiation​Dose​Identification​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0623)": [
+      {
+        "name": "Radiation​Dose​In​Vivo​Measurement​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,062a)": [
+      {
+        "name": "RTTolerance​Set​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0650)": [
+      {
+        "name": "Patient​Setup​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,0676)": [
+      {
+        "name": "Equipment​Frame​Of​Reference​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,067c)": [
+      {
+        "name": "Radiation​Generation​Mode​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,067d)": [
+      {
+        "name": "Radiation​Generation​Mode​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0700)": [
+      {
+        "name": "Treatment​Session​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,0734)": [
+      {
+        "name": "Treatment​Tolerance​Violation​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0736)": [
+      {
+        "name": "Treatment​Tolerance​Violatio​nDate​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,073a)": [
+      {
+        "name": "Recorded​RT​Contro​lPoint​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,0741)": [
+      {
+        "name": "Interlock​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,0742)": [
+      {
+        "name": "Interlock​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0760)": [
+      {
+        "name": "Override​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300a,0783)": [
+      {
+        "name": "Interlock​Origin​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0785)": [
+      {
+        "name": "Referenced​Treatment​Position​Group​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(300a,078e)": [
+      {
+        "name": "Patient​Treatment​Preparation​Procedure​Parameter​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0792)": [
+      {
+        "name": "Patient​Treatment​Preparation​Method​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,0794)": [
+      {
+        "name": "Patient​Setup​Photo​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300a,079a)": [
+      {
+        "name": "Displacement​Reference​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300c,0002)": [
+      {
+        "name": "Referenced​RT​Plan​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300c,0004)": [
+      {
+        "name": "Referenced​Beam​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300c,0042)": [
+      {
+        "name": "Referenced​Reference​Image​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300c,0060)": [
+      {
+        "name": "Referenced​Structure​Set​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(300c,0113)": [
+      {
+        "name": "Reason​For​Omission​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300c,0127)": [
+      {
+        "name": "Beam​Hold​Transition​Date​Time",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300e,0004)": [
+      {
+        "name": "Review​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(300e,0005)": [
+      {
+        "name": "Review​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(300e,0008)": [
+      {
+        "name": "Reviewer​Name",
+        "enabled": true,
+        "action": "REV-@hashname(this,4)"
+      }
+    ],
+    "(3010,0006)": [
+      {
+        "name": "Conceptual​Volume​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,000b)": [
+      {
+        "name": "Referenced​Conceptual​Volume​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,000f)": [
+      {
+        "name": "Conceptual​Volume​Combination​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0013)": [
+      {
+        "name": "Constituent​Conceptual​Volume​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,0015)": [
+      {
+        "name": "Source​Conceptual​Volume​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,0017)": [
+      {
+        "name": "Conceptual​Volume​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,001b)": [
+      {
+        "name": "Device​Alternate​Identifier",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(3010,002d)": [
+      {
+        "name": "Device​Label",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(3010,0031)": [
+      {
+        "name": "Referenced​Fiducials​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,0033)": [
+      {
+        "name": "User​Content​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0034)": [
+      {
+        "name": "User​Content​Long​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0035)": [
+      {
+        "name": "Entity​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0036)": [
+      {
+        "name": "Entity​Name",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0037)": [
+      {
+        "name": "Entity​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0038)": [
+      {
+        "name": "Entity​Long​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,003b)": [
+      {
+        "name": "RTTreatment​Phase​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,0043)": [
+      {
+        "name": "Manufacturer​Device​Identifier",
+        "enabled": true,
+        "action": "@empty()"
+      }
+    ],
+    "(3010,004c)": [
+      {
+        "name": "Intended​Phase​Start​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3010,004d)": [
+      {
+        "name": "Intended​Phase​End​Date",
+        "enabled": true,
+        "action": "@incrementdate(this,@DATEINC)"
+      }
+    ],
+    "(3010,0054)": [
+      {
+        "name": "RTPrescription​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0056)": [
+      {
+        "name": "RTTreatment​Approach​Label",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,005a)": [
+      {
+        "name": "RTPhysician​Intent​Narrative",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,005c)": [
+      {
+        "name": "Reason​For​Superseding",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,0061)": [
+      {
+        "name": "Prior​Treatment​Dose​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3010,006e)": [
+      {
+        "name": "Dosimetric​Objective​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,006f)": [
+      {
+        "name": "Referenced​Dosimetric​Objective​UID",
+        "enabled": true,
+        "action": "@hashuid(@UIDROOT,this)"
+      }
+    ],
+    "(3010,0077)": [
+      {
+        "name": "Treatment​Site",
+        "enabled": true,
+        "action": "removed"
+      }
+    ],
+    "(3010,007a)": [
+      {
+        "name": "Treatment​Technique​Notes",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3010,007b)": [
+      {
+        "name": "Prescription​Notes",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3010,007f)": [
+      {
+        "name": "Fractionation​Notes",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3010,0081)": [
+      {
+        "name": "Prescription​Notes​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3010,0085)": [
+      {
+        "name": "Intended​Fraction​Start​Time",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(3109,\"Applicare/RadWorks/Version 5.0\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3109,\"Applicare/RadWorks/Version 5.0\",08)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3109,\"Applicare/RadWorks/Version 5.0\",0a)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3109,\"Applicare/RadWorks/Version 5.0\",0b)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3109,\"Applicare/RadWorks/Version 6.0/Summary\",12)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3115,\"http://www.gemedicalsystems.com/it_solutions/rad_pacs/\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3241,\"Varian Medical Systems VISION 3241\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3241,\"Varian Medical Systems VISION 3241\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3241,\"Varian Medical Systems VISION 3241\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3241,\"Varian Medical Systems VISION 3241\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3241,\"Varian Medical Systems VISION 3241\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3249,\"Varian Medical Systems VISION 3249\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3249,\"Varian Medical Systems VISION 3249\",10)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3253,\"Varian Medical Systems VISION 3253\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3253,\"Varian Medical Systems VISION 3253\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3253,\"Varian Medical Systems VISION 3253\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3263,\"Unnamed Private Block - 10\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3263,\"Varian Medical Systems VISION 3263\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3267,\"Varian Medical Systems VISION 3267\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3285,\"Varian Medical Systems VISION 3285\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3287,\"Varian Medical Systems VISION 3287\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"MIM Software Inc.\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"MIM Software Inc.\",07)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"MIM Software Inc.\",0c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"MIM Software Inc.\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"Unnamed Private Block - 01\",20)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"Unnamed Private Block - 01\",22)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(3773,\"Unnamed Private Block - 01\",30)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4000,0010)": [
+      {
+        "name": "Arbitrary",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4000,4000)": [
+      {
+        "name": "Text​Comments",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0040)": [
+      {
+        "name": "Results​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0042)": [
+      {
+        "name": "Results​ID​Issuer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0100)": [
+      {
+        "name": "Interpretation​Recorded​Date",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0101)": [
+      {
+        "name": "Interpretation​Recorded​Time",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0102)": [
+      {
+        "name": "Interpretation​Recorder",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0108)": [
+      {
+        "name": "Interpretation​Transcription​Date",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0109)": [
+      {
+        "name": "Interpretation​Transcription​Time",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,010a)": [
+      {
+        "name": "Interpretation​Transcriber",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,010b)": [
+      {
+        "name": "Interpretation​Text",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(4008,010c)": [
+      {
+        "name": "Interpretation​Author",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0111)": [
+      {
+        "name": "Interpretation​Approver​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0112)": [
+      {
+        "name": "Interpretation​Approval​Date",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0113)": [
+      {
+        "name": "Interpretation​Approval​Time",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0114)": [
+      {
+        "name": "Physician​Approving​Interpretation",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0115)": [
+      {
+        "name": "Interpretation​Diagnosis​Description",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(4008,0118)": [
+      {
+        "name": "Results​Distribution​List​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0119)": [
+      {
+        "name": "Distribution​Name",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,011a)": [
+      {
+        "name": "Distribution​Address",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0200)": [
+      {
+        "name": "Interpretation​ID",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0202)": [
+      {
+        "name": "Interpretation​ID​Issuer",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4008,0300)": [
+      {
+        "name": "Impressions",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(4008,4000)": [
+      {
+        "name": "Results​Comments",
+        "enabled": true,
+        "action": "@keep()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",00)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",04)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(4453,\"DR Systems, Inc.\",0c)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(5200,9230)": [
+      {
+        "name": "Per​Frame​Functional​Groups​Sequence",
+        "enabled": true,
+        "action": "@process()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",0d)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",1f)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",41)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",43)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7005,\"TOSHIBA_MEC_CT3\",63)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",01)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",02)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",03)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",05)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",06)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",13)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",14)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",15)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",16)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",17)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",18)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7053,\"Philips PET Private Group\",c2)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7fdf,\"ELSCINT1\",f0)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(7fdf,\"ELSCINT1\",ff)": [
+      {
+        "name": "",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(fffa,fffa)": [
+      {
+        "name": "Digital​Signatures​Sequence",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ],
+    "(fffc,fffc)": [
+      {
+        "name": "Data​Set​Trailing​Padding",
+        "enabled": true,
+        "action": "@remove()"
+      }
+    ]
+  }
+}
