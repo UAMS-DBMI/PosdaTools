@@ -22,3 +22,5 @@ push/*.env
 *.DS_Store
 *.python_history
 inplace/
+/posda/posdatools/phimacro/test
+/.vscode
