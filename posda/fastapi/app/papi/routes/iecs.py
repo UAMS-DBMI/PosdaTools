@@ -65,7 +65,7 @@ async def get_iec_frames(iec: int, include_frames: bool = True, db: Database = D
     """
 
     query = """
-        select
+        select distinct
             file_id,
             image_type,
             coalesce(number_of_frames, 1) as frame_count,
