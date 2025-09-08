@@ -52,10 +52,10 @@ $get_structs->RunQuery(sub {
   my @copied = @$row;
   push @Rows, \@copied;
 }, sub {});
-my @cols =  ("id", "vr","tag_name", "disp", "values", "Operation", "why", "notify");
+my @cols =  ("id", "element_sig_pattern", "vr","tag_name", "disp", "values", "Operation", "why", "notify");
 my %ColHeaders = (
   "id" => "id",
-#  "element_sig_pattern" => "element_sig_pattern",
+  "element_sig_pattern" => "element_sig_pattern",
   "vr" => "vr",
   "tag_name" => "tag_name",
   "disp" => "disp",
@@ -81,9 +81,11 @@ for my $i (0 .. $#Rows){
   my $row = $Rows[$i];
   my %RowInfo;
   $RowInfo{id} = $row->[0];
+  $RowInfo{element_sig_pattern} = $row->[1];
   $RowInfo{vr} = $row->[2];
   $RowInfo{tag_name} = $row->[3];
   $RowInfo{tag_name} =~ s/"/""/g;
+  $RowInfo{element_sig_pattern} =~ s/"/""/g;
   if($i == 0) {
     $RowInfo{Operation} = "BackgroundUpdatePrivateDisposition";
     $RowInfo{notify} = $notify;

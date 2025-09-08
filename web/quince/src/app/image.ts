@@ -12,5 +12,6 @@ export interface Image {
     planar_configuration: number;
     bits_allocated: number;
     bits_stored: number;
+    num_of_frames: number;
     pixel_data?: ArrayBuffer;
 }

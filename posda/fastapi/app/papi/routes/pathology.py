@@ -223,6 +223,20 @@ async def review(vr_id: int, db: Database = Depends()):
       """
     return await db.fetch(query, [vr_id])
 
+@router.put("/copymapping/{oldfile_id}/{newfile_id}")
+async def copymapping(oldfile_id: int, newfile_id: int, db: Database = Depends()):
+    query = """\
+        	insert into pathology_patient_mapping
+            (file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id)
+        select
+           $2, patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id
+        from
+            pathology_patient_mapping a
+        where
+            a.file_id = $1;
+             """
+    return await db.fetch(query, [oldfile_id,newfile_id])
+
 @router.get("/mapping/{file_id}")
 async def get_mapping(file_id: int, db: Database = Depends()):
     query = """\
@@ -234,6 +248,24 @@ async def get_mapping(file_id: int, db: Database = Depends()):
             a.file_id = $1
              """
     return await db.fetch(query, [file_id])
+
+@router.put("/setmapping/{file_id}/{patient_id}/{collection_name}/{site_name}/{study_name}/{image_id}/{clinical_trial_subject_id}")
+async def setmapping(file_id: int, patient_id: str, collection_name: str, site_name: str, study_name: str, image_id: str, clinical_trial_subject_id: str, db: Database = Depends()):
+    query = """\
+        insert into pathology_patient_mapping
+            (file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id)
+        VALUES
+            ($1,$2,$3,$4,$5,$6,$7)
+        ON CONFLICT (file_id) DO UPDATE
+        set
+            patient_id=$2,
+            collection_name=$3,
+            site_name=$4,
+            study_name=$5,
+            image_id=$6,
+            clinical_trial_subject_id=$7
+             """
+    return await db.fetch(query, [file_id,patient_id,collection_name,site_name,study_name,image_id,clinical_trial_subject_id])
 
 @router.get("/image_desc/{file_id}")
 async def get_image_desc(file_id: int, db: Database = Depends()):
@@ -365,3 +397,100 @@ async def add_file_to_path_activity_timepoint(atf_id: int, file_id: int, db: Dat
                     returning file_id;
                     """
          return await db.fetch(query, [atf_id, file_id])
+
+@router.put("/bulkMacro/{pathology_visual_review_instance_id}")
+async def editBulkMacro(pathology_visual_review_instance_id: int, db: Database = Depends()):
+    record = await db.fetch("""\
+   INSERT INTO pathology_edit_queue
+ 			(file_id,edit_type, edit_details, status)
+        	select
+	            file_id,  1, NULL, 'waiting'
+	        from activity_timepoint_file atf
+	        where atf.activity_timepoint_id =
+	               ( select
+	                    max(activity_timepoint_id) as activity_timepoint_id
+	                from
+	                    activity_timepoint att
+	                    join pathology_visual_review_instance pf
+	                	on att.activity_id = pf.activity_creation_id
+	                	where pf.pathology_visual_review_instance_id = $1 );
+        """, [pathology_visual_review_instance_id])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+
+@router.put("/bulkLabel/{pathology_visual_review_instance_id}")
+async def editBulkLabel(pathology_visual_review_instance_id: int, db: Database = Depends()):
+    record = await db.fetch("""\
+   INSERT INTO pathology_edit_queue
+ 			(file_id,edit_type, edit_details, status)
+        	select
+	            file_id,  2, NULL, 'waiting'
+	        from activity_timepoint_file atf
+	        where atf.activity_timepoint_id =
+	               ( select
+	                    max(activity_timepoint_id) as activity_timepoint_id
+	                from
+	                    activity_timepoint att
+	                    join pathology_visual_review_instance pf
+	                	on att.activity_id = pf.activity_creation_id
+	                	where pf.pathology_visual_review_instance_id = $1 );
+        """, [pathology_visual_review_instance_id])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+
+
+@router.put("/bulkMeta/{pathology_visual_review_instance_id}")
+async def editBulkMeta(pathology_visual_review_instance_id: int, db: Database = Depends()):
+    record = await db.fetch("""\
+   INSERT INTO pathology_edit_queue
+ 			(file_id,edit_type, edit_details, status)
+        	select
+	            file_id,  3, NULL, 'waiting'
+	        from activity_timepoint_file atf
+	        where atf.activity_timepoint_id =
+	               ( select
+	                    max(activity_timepoint_id) as activity_timepoint_id
+	                from
+	                    activity_timepoint att
+	                    join pathology_visual_review_instance pf
+	                	on att.activity_id = pf.activity_creation_id
+	                	where pf.pathology_visual_review_instance_id = $1 );
+        """, [pathology_visual_review_instance_id])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }
+
+@router.put("/recordPathDBresponse/{file_id}/{node_id}")
+async def recordPathDBresponse(file_id: int, node_id: str,  db: Database = Depends()):
+    record = await db.fetch("""\
+        INSERT INTO pathology_path_db_linkage
+        (file_id,node_id,upload_time)
+        VALUES($1 , $2, now());
+        """, [file_id,node_id])
+
+    print(record)
+    if len(record) < 1:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {
+        'status': 'success',
+    }

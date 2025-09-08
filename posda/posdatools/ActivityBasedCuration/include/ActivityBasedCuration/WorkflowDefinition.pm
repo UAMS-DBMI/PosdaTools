@@ -162,8 +162,16 @@ This step should not be needed if your data was imported through CTP",
     description => "",
     operations => [
       {
+        caption => "Flag VR for Masking",
+        action =>  "FlagVRForMasking",
+      },
+      {
         caption => "Finalize Masking",
         action =>  "ApplyMasks",
+      },
+      {
+        caption => "New Finalize Masking (experimental)",
+        action =>  "NewApplyMasks",
       },
     ],
     queries => [
@@ -192,30 +200,20 @@ This step should not be needed if your data was imported through CTP",
   },
   {
     id => "10_structlinkcheck",
-    name => "Check Struct Linkage",
-    note => "Radiation Therapy Data only",
-    description => "Verify that the ROIs and Structures are properly " .
-      "linked to the image files and pixel data.
-",
+    name => "Radiation Therapy",
+    note => "RT = Radiation Therapy Data only",
+    description => "Verify that the ROIs are properly " .
+      "linked to the image files and pixel data.",
     operations => [
       {
-        caption => "Check Structure Set Linkage",
+        caption => "Check RT Structure Set Linkage",
         action =>  "CheckStructLinkagesTp",
       },
-    ],
-  },
-  {
-    id => "11_linkrt",
-    name => "Link RT Data",
-    note => "Radiation Therapy Data only
-",
-    description => "Link RT data",
-    operations => [
       {
         caption => "Link RT Data",
         action =>  "LinkRtFromTimepoint",
       },
-    ],
+   ],
     queries => [
        {
         caption => "Series Linked to RtStructs",
@@ -223,6 +221,25 @@ This step should not be needed if your data was imported through CTP",
         query_list_name => "LinkedRtStructs",
       },
     ],
+  },
+  {
+    id => "11_linkrt",
+    name => "Segmentation Objects",
+    description => "Verify that the SEGs are properly " .
+      "linked to the image files.",
+    operations => [
+      {
+        caption => "Segmentation Linkages",
+        action =>  "CheckSegLinkages",
+      },
+    ],
+   queries => [
+      {
+       caption => "Examine Check Results",
+       operation => "SelectQueryGroup",
+       query_list_name => "SegCheckQueries",
+     },
+   ],
   },
   {
     id => "12_send",
@@ -356,10 +373,15 @@ This step should not be needed if your data was imported through CTP",
       #   action => 'setForegroundQuery',
       #   query_name => 'ViewPathologyVisualReviewInstances'
       # },
+      # {
+      #   operation => "InvokeNewOperation",
+      #   caption => "Create Activity from Import",
+      #   action =>  "PathologyCreateActivityAndTP"
+      # },
     {
       operation => "InvokeNewOperation",
-      caption => "Create Activity from Import",
-      action =>  "PathologyCreateActivityAndTP"
+      caption => "Import from Faspex package",
+      action =>  "ImportFromFaspex",
     },
     {
       operation => "InvokeNewOperation",
@@ -384,6 +406,11 @@ This step should not be needed if your data was imported through CTP",
    ],
     queries => [
       {
+         caption => "Create Timepoint from Import",
+         operation => "SelectQueryGroup",
+         query_list_name => "PathImportEvents",
+       },
+      {
          caption => "View PHI Scan",
          operation => "SelectQueryGroup",
          query_list_name => "Display_TiffPHI_Report",
@@ -392,6 +419,11 @@ This step should not be needed if your data was imported through CTP",
         caption => "Visual Review and Status",
         operation => "SelectQueryGroup",
         query_list_name => "PathVisualReviewStatus",
+       },
+      {
+        caption => "Exports",
+        operation => "SelectQueryGroup",
+        query_list_name => "PathologyExportQueries",
        },
     ],
   },
@@ -498,6 +530,18 @@ This step should not be needed if your data was imported through CTP",
         caption => "Shift UIDs for new version",
         action =>  "ProposeUIDchangeEdits",
       },
+      {
+        caption => "Populate Segmentation Bitmaps",
+        action =>  "PopulateSegBitmaps",
+      },
+      {
+        caption => "Import a full collection from Public",
+        action =>  "ImportInPlaceFromPublic",
+      },
+      {
+        caption => "Export Private Tag data",
+        action =>  "ExportPrivateTagData",
+      },
     ],
   },
   # {
@@ -585,6 +629,10 @@ This step should not be needed if your data was imported through CTP",
     {
       caption =>"ImportEventsWithTypeAndPatientId",
       query =>"ImportEventsWithTypeAndPatientId",
+    },
+    {
+      caption =>"PathologyImportEventsByDateRange",
+      query =>"PathologyImportEventsByDateRange",
     }
     ],
   ],
@@ -682,6 +730,14 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "VisualReviewForActivity",
         query => "GetVisualReviewByActivityId",
+      },
+      {
+        caption => "VisualReviewStatusById",
+        query => "VisualReviewStatusById",
+      },
+      {
+        caption => "VisualReviewStatusDetailsByPatient",
+        query => "VisualReviewStatusDetailsByPatient",
       },
     ],
   ],
@@ -804,6 +860,15 @@ This step should not be needed if your data was imported through CTP",
       },
     ],
   ],
+  PathologyExportQueries => [
+    "Suggested Queries for Pathology Export",
+    [
+      {
+        caption => "PathDB Style: 1",
+        query => "PathologyExportQuery1",
+      },
+    ],
+  ],
   PathVisualReviewStatus => [
     "Pathology Suggested Queries for Visual Review",
     [
@@ -830,6 +895,19 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "PathologyViewEdits",
         query => "PathologyViewEdits",
+      },
+      {
+        caption => "FilePathsFromActivity",
+        query => "FilePathsFromActivity",
+      }
+    ],
+  ],
+  PathImportEvents => [
+    "Pathology Suggested Queries for Visual Review",
+    [
+      {
+        caption => "PathologyImportEventsByDateRange",
+        query => "PathologyImportEventsByDateRange",
       },
     ],
   ],
@@ -866,5 +944,14 @@ This step should not be needed if your data was imported through CTP",
         query => "NiftiBadFilesInTPCheck",
       },
     ],
+  ],
+  SegCheckQueries => [
+    "Queries for examining segmentation linkages",
+    [
+      {
+        caption => "Get Linked File FORs by Activity",
+        query => "GetSegsAndLinkedFORsAfterCheck",
+      },
+    ]
   ],
 );

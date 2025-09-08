@@ -417,7 +417,7 @@ for my $file_id (keys %Files){
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
             qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
-            qq{"$upd_nbia" "$sop_instance_uid"};
+            qq{"$upd_nbia" "$sop_instance_uid" ""};
 
   push @cmds, $cmd;
 }
@@ -498,7 +498,7 @@ my $end = time;
 my $duration = $end - $script_start_time;
 $background->WriteToEmail( "finished conversion in $duration seconds\n");
 if($upd_nbia){
-  $background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" " .
+  $background->WriteToEmail("<a target=\"_blank\" " .
   "href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
 }
 $background->Finish("Done");

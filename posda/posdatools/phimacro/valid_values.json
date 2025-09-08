@@ -1,0 +1,5372 @@
+{
+  "(0008,0008)": [
+    "0001",
+    "0002",
+    "0004",
+    "0008",
+    "0010",
+    "0020",
+    "0040",
+    "0100",
+    "0200",
+    "0400",
+    "ABDOMINAL",
+    "AXIAL",
+    "BIPLANE A",
+    "BIPLANE B",
+    "BLANK",
+    "BLUE",
+    "BREAST",
+    "CHEST",
+    "COLOR",
+    "CORNEAL_TOPO",
+    "DENSITY MAP",
+    "DERIVED",
+    "DIFFUSION MAP",
+    "DRR",
+    "DYNAMIC",
+    "EFF_ATOMIC_NUM",
+    "ELECTRON_DENSITY",
+    "EMISSION",
+    "ENDOCAVITARY",
+    "ENDORECTAL",
+    "ENDOVAGINAL",
+    "EPICARDIAL",
+    "FA",
+    "FETAL HEART",
+    "FLUENCE",
+    "GATED",
+    "GATED TOMO",
+    "GYNECOLOGY",
+    "ICG",
+    "IMAGE ADDITION",
+    "INTRACARDIAC",
+    "INTRAOPERATIVE",
+    "INTRAVASCULAR",
+    "LOCALIZER",
+    "MAT_FRACTIONAL",
+    "MAT_MODIFIED",
+    "MAT_REMOVED",
+    "MAT_SPECIFIC",
+    "MAT_VALUE_BASED",
+    "MODULUS SUBTRACT",
+    "MONTAGE",
+    "MPR",
+    "MUSCULOSKELETAL",
+    "NEONATAL HEAD",
+    "OBSTETRICAL",
+    "ONH",
+    "OPHTHALMIC",
+    "ORIGINAL",
+    "OTHER",
+    "PEDIATRIC",
+    "PELVIC",
+    "PHASE MAP",
+    "PHASE SUBTRACT",
+    "PORTAL",
+    "PRIMARY",
+    "PROJECTION IMAGE",
+    "RADIOGRAPH",
+    "RECON GATED TOMO",
+    "RECON TOMO",
+    "RED",
+    "REDFREE",
+    "RETINAL_THICK",
+    "RETROPERITONEAL",
+    "SCROTAL",
+    "SECONDARY",
+    "SIMULATOR",
+    "SINGLE PLANE",
+    "SMALL PARTS",
+    "STATIC",
+    "STEREO L",
+    "STEREO R",
+    "T1 MAP",
+    "T2 MAP",
+    "TEE",
+    "THYROID",
+    "TOMO",
+    "TRANSCRANIAL",
+    "TRANSMISSION",
+    "TTE",
+    "US BIOPSY",
+    "VASCULAR",
+    "VELOCITY MAP",
+    "VMI",
+    "WHOLE BODY"
+  ],
+  "(0008,001c)": [
+    "NO",
+    "YES"
+  ],
+  "(0008,002a)": [
+    "EXTERNAL",
+    "GPS",
+    "IRIG",
+    "N",
+    "NO TRIGGER",
+    "NTP",
+    "PASSTHRU",
+    "PTP",
+    "SNTP",
+    "SOURCE",
+    "Y"
+  ],
+  "(0008,0053)": [
+    "CLASSIC",
+    "ENHANCED"
+  ],
+  "(0008,0060)": [
+    "AF",
+    "AFDL",
+    "AFDR",
+    "AFP",
+    "AFS",
+    "ANN",
+    "AR",
+    "AS",
+    "ASMT",
+    "AU",
+    "BDUS",
+    "BI",
+    "BIPED",
+    "BMD",
+    "CD",
+    "CF",
+    "CFM",
+    "CP",
+    "CR",
+    "CS",
+    "CT",
+    "CTPROTOCOL",
+    "DD",
+    "DF",
+    "DG",
+    "DI",
+    "DL",
+    "DM",
+    "DMS",
+    "DOC",
+    "DR",
+    "DRW",
+    "DS",
+    "DV",
+    "DX",
+    "EC",
+    "ECG",
+    "EEG",
+    "EMG",
+    "EOG",
+    "EPS",
+    "ES",
+    "FA",
+    "FF",
+    "FFDL",
+    "FFDR",
+    "FFI",
+    "FFP",
+    "FFS",
+    "FFV",
+    "FID",
+    "FS",
+    "GM",
+    "HC",
+    "HD",
+    "HF",
+    "HFDL",
+    "HFDR",
+    "HFI",
+    "HFP",
+    "HFS",
+    "HFV",
+    "I",
+    "IO",
+    "IOL",
+    "IVOCT",
+    "IVUS",
+    "KER",
+    "KO",
+    "L",
+    "LEN",
+    "LF",
+    "LFDL",
+    "LFDR",
+    "LFP",
+    "LFS",
+    "LP",
+    "LS",
+    "M3D",
+    "MA",
+    "MG",
+    "MR",
+    "MS",
+    "NM",
+    "OAM",
+    "OCT",
+    "OP",
+    "OPM",
+    "OPR",
+    "OPT",
+    "OPTBSV",
+    "OPTENF",
+    "OPV",
+    "OSS",
+    "OT",
+    "P",
+    "PA",
+    "PF",
+    "PFDL",
+    "PFDR",
+    "PFP",
+    "PFS",
+    "PLAN",
+    "POS",
+    "PR",
+    "PT",
+    "PX",
+    "QUADRUPED",
+    "R",
+    "REG",
+    "RESP",
+    "RF",
+    "RFDL",
+    "RFDR",
+    "RFP",
+    "RFS",
+    "RG",
+    "RTDOSE",
+    "RTIMAGE",
+    "RTINTENT",
+    "RTPLAN",
+    "RTRAD",
+    "RTRECORD",
+    "RTSEGANN",
+    "RTSTRUCT",
+    "RWV",
+    "S",
+    "SD",
+    "SEG",
+    "SI",
+    "SM",
+    "SMR",
+    "SR",
+    "SRF",
+    "ST",
+    "STAIN",
+    "SYN",
+    "TEXTUREMAP",
+    "TG",
+    "US",
+    "V",
+    "VA",
+    "VF",
+    "WSD",
+    "XA",
+    "XAPROTOCOL",
+    "XC"
+  ],
+  "(0008,0064)": [
+    "DF",
+    "DI",
+    "DRW",
+    "DV",
+    "SD",
+    "SI",
+    "SYN",
+    "WSD"
+  ],
+  "(0008,0068)": [
+    "FOR PRESENTATION",
+    "FOR PROCESSING"
+  ],
+  "(0008,0105)": [
+    "DCMR",
+    "SDM"
+  ],
+  "(0008,010a)": [
+    "CSV",
+    "DOC",
+    "FHIR",
+    "OWL"
+  ],
+  "(0008,010b)": [
+    "N",
+    "Y"
+  ],
+  "(0008,0112)": [
+    "HL7"
+  ],
+  "(0008,0122)": [
+    "DCMR",
+    "SDM"
+  ],
+  "(0008,0303)": [
+    "MIXED",
+    "SAFE",
+    "UNSAFE"
+  ],
+  "(0008,0307)": [
+    "D",
+    "U",
+    "X",
+    "Z"
+  ],
+  "(0008,1048)": [
+    "AF",
+    "AFDL",
+    "AFDR",
+    "AFP",
+    "AFS",
+    "ANN",
+    "AR",
+    "AS",
+    "ASMT",
+    "AU",
+    "BDUS",
+    "BI",
+    "BIPED",
+    "BMD",
+    "CD",
+    "CF",
+    "CFM",
+    "CP",
+    "CR",
+    "CS",
+    "CT",
+    "CTPROTOCOL",
+    "DD",
+    "DF",
+    "DG",
+    "DL",
+    "DM",
+    "DMS",
+    "DOC",
+    "DR",
+    "DS",
+    "DX",
+    "EC",
+    "ECG",
+    "EEG",
+    "EMG",
+    "EOG",
+    "EPS",
+    "ES",
+    "FA",
+    "FF",
+    "FFDL",
+    "FFDR",
+    "FFI",
+    "FFP",
+    "FFS",
+    "FFV",
+    "FID",
+    "FS",
+    "GM",
+    "HC",
+    "HD",
+    "HF",
+    "HFDL",
+    "HFDR",
+    "HFI",
+    "HFP",
+    "HFS",
+    "HFV",
+    "I",
+    "IO",
+    "IOL",
+    "IVOCT",
+    "IVUS",
+    "KER",
+    "KO",
+    "L",
+    "LEN",
+    "LF",
+    "LFDL",
+    "LFDR",
+    "LFP",
+    "LFS",
+    "LP",
+    "LS",
+    "M3D",
+    "MA",
+    "MG",
+    "MR",
+    "MS",
+    "NM",
+    "OAM",
+    "OCT",
+    "OP",
+    "OPM",
+    "OPR",
+    "OPT",
+    "OPTBSV",
+    "OPTENF",
+    "OPV",
+    "OSS",
+    "OT",
+    "P",
+    "PA",
+    "PF",
+    "PFDL",
+    "PFDR",
+    "PFP",
+    "PFS",
+    "PLAN",
+    "POS",
+    "PR",
+    "PT",
+    "PX",
+    "QUADRUPED",
+    "R",
+    "REG",
+    "RESP",
+    "RF",
+    "RFDL",
+    "RFDR",
+    "RFP",
+    "RFS",
+    "RG",
+    "RTDOSE",
+    "RTIMAGE",
+    "RTINTENT",
+    "RTPLAN",
+    "RTRAD",
+    "RTRECORD",
+    "RTSEGANN",
+    "RTSTRUCT",
+    "RWV",
+    "S",
+    "SEG",
+    "SM",
+    "SMR",
+    "SR",
+    "SRF",
+    "ST",
+    "STAIN",
+    "TEXTUREMAP",
+    "TG",
+    "US",
+    "V",
+    "VA",
+    "VF",
+    "XA",
+    "XAPROTOCOL",
+    "XC"
+  ],
+  "(0008,1111)": [
+    "SR"
+  ],
+  "(0008,1150)": [
+    "1.2.840.10008.5.1.4.1.1.200.2",
+    "1.2.840.10008.5.1.4.1.1.200.8",
+    "1.2.840.10008.5.1.4.1.1.7.2",
+    "1.2.840.10008.5.1.4.1.1.7.4"
+  ],
+  "(0008,1250)": [
+    "AF",
+    "AFDL",
+    "AFDR",
+    "AFP",
+    "AFS",
+    "ANN",
+    "AR",
+    "AS",
+    "ASMT",
+    "AU",
+    "BDUS",
+    "BI",
+    "BIPED",
+    "BMD",
+    "CD",
+    "CF",
+    "CFM",
+    "CP",
+    "CR",
+    "CS",
+    "CT",
+    "CTPROTOCOL",
+    "DD",
+    "DF",
+    "DG",
+    "DL",
+    "DM",
+    "DMS",
+    "DOC",
+    "DR",
+    "DS",
+    "DX",
+    "EC",
+    "ECG",
+    "EEG",
+    "EMG",
+    "EOG",
+    "EPS",
+    "ES",
+    "FA",
+    "FF",
+    "FFDL",
+    "FFDR",
+    "FFI",
+    "FFP",
+    "FFS",
+    "FFV",
+    "FID",
+    "FS",
+    "GM",
+    "HC",
+    "HD",
+    "HF",
+    "HFDL",
+    "HFDR",
+    "HFI",
+    "HFP",
+    "HFS",
+    "HFV",
+    "I",
+    "IO",
+    "IOL",
+    "IVOCT",
+    "IVUS",
+    "KER",
+    "KO",
+    "L",
+    "LEN",
+    "LF",
+    "LFDL",
+    "LFDR",
+    "LFP",
+    "LFS",
+    "LP",
+    "LS",
+    "M3D",
+    "MA",
+    "MG",
+    "MR",
+    "MS",
+    "NM",
+    "OAM",
+    "OCT",
+    "OP",
+    "OPM",
+    "OPR",
+    "OPT",
+    "OPTBSV",
+    "OPTENF",
+    "OPV",
+    "OSS",
+    "OT",
+    "P",
+    "PA",
+    "PF",
+    "PFDL",
+    "PFDR",
+    "PFP",
+    "PFS",
+    "PLAN",
+    "POS",
+    "PR",
+    "PT",
+    "PX",
+    "QUADRUPED",
+    "R",
+    "REG",
+    "RESP",
+    "RF",
+    "RFDL",
+    "RFDR",
+    "RFP",
+    "RFS",
+    "RG",
+    "RTDOSE",
+    "RTIMAGE",
+    "RTINTENT",
+    "RTPLAN",
+    "RTRAD",
+    "RTRECORD",
+    "RTSEGANN",
+    "RTSTRUCT",
+    "RWV",
+    "S",
+    "SEG",
+    "SM",
+    "SMR",
+    "SR",
+    "SRF",
+    "ST",
+    "STAIN",
+    "TEXTUREMAP",
+    "TG",
+    "US",
+    "V",
+    "VA",
+    "VF",
+    "XA",
+    "XAPROTOCOL",
+    "XC"
+  ],
+  "(0008,2120)": [
+    "BASELINE",
+    "LOW DOSE",
+    "PEAK DOSE",
+    "PEAK-EXERCISE",
+    "POST-EXERCISE",
+    "PRE-EXERCISE",
+    "RECOVERY"
+  ],
+  "(0008,9205)": [
+    "COLOR",
+    "COLOR_RANGE",
+    "COLOR_REF",
+    "MONOCHROME",
+    "TRUE_COLOR"
+  ],
+  "(0008,9206)": [
+    "VOLUME"
+  ],
+  "(0008,9460)": [
+    "DISPLAY",
+    "SKIP"
+  ],
+  "(0010,0022)": [
+    "AC",
+    "AO",
+    "BARCODE",
+    "CLASSIC",
+    "CMS_TSP",
+    "COERCE",
+    "CONVERT",
+    "CORRECT",
+    "CSV",
+    "D",
+    "DOC",
+    "ENHANCED",
+    "FHIR",
+    "HL7",
+    "IMPORTED",
+    "LOCAL",
+    "MIXED",
+    "MODIFIED",
+    "NO",
+    "NS",
+    "OR",
+    "OWL",
+    "PRODUCT",
+    "REMOVED",
+    "RESEARCH",
+    "RFID",
+    "SAFE",
+    "SERVICE",
+    "TEXT",
+    "U",
+    "UNMODIFIED",
+    "UNSAFE",
+    "X",
+    "X509_1993_SIG",
+    "YES",
+    "Z"
+  ],
+  "(0010,0035)": [
+    "EGYPTIAN REGNAL",
+    "HEBREW",
+    "HIJRI",
+    "JULIAN",
+    "PROLEPTIC GREGN",
+    "PROLEPTIC JULIAN"
+  ],
+  "(0010,0040)": [
+    "F",
+    "M",
+    "O"
+  ],
+  "(0010,0200)": [
+    "00",
+    "01",
+    "B",
+    "BOTH",
+    "DERIVED",
+    "IDENTITY",
+    "INVERSE",
+    "ISO_10918_1",
+    "ISO_13818_2",
+    "ISO_14495_1",
+    "ISO_14496_10",
+    "ISO_15444_1",
+    "ISO_15444_15",
+    "ISO_18181_1",
+    "ISO_23008_2",
+    "L",
+    "NO",
+    "ORIGINAL",
+    "PRIMARY",
+    "R",
+    "SECONDARY",
+    "U",
+    "YES"
+  ],
+  "(0010,0212)": [
+    "MGI_2013"
+  ],
+  "(0010,0213)": [
+    "MGI_2013"
+  ],
+  "(0010,0214)": [
+    "MGI_2013"
+  ],
+  "(0010,0215)": [
+    "MGI_2013"
+  ],
+  "(0010,0217)": [
+    "MGI_2013"
+  ],
+  "(0010,0218)": [
+    "MGI_2013"
+  ],
+  "(0010,0219)": [
+    "MGI_2013"
+  ],
+  "(0010,0221)": [
+    "MGI_2013"
+  ],
+  "(0010,21a0)": [
+    "NO",
+    "UNKNOWN",
+    "YES"
+  ],
+  "(0010,21c0)": [
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H"
+  ],
+  "(0010,2203)": [
+    "ALTERED",
+    "UNALTERED"
+  ],
+  "(0010,2210)": [
+    "BIPED",
+    "QUADRUPED"
+  ],
+  "(0010,2298)": [
+    "AGENT",
+    "CHILD",
+    "CUSTODIAN",
+    "GUARDIAN",
+    "INVESTIGATOR",
+    "OWNER",
+    "PARENT",
+    "RELATIVE",
+    "SIBLING",
+    "SPOUSE",
+    "VETERINARIAN"
+  ],
+  "(0012,0053)": [
+    "BASELINE",
+    "ENROLLMENT"
+  ],
+  "(0012,0062)": [
+    "NO",
+    "YES"
+  ],
+  "(0012,0063)": [
+    "AC",
+    "AO",
+    "CLASSIC",
+    "CMS_TSP",
+    "COERCE",
+    "CONVERT",
+    "CORRECT",
+    "CSV",
+    "D",
+    "DOC",
+    "ENHANCED",
+    "FHIR",
+    "HL7",
+    "IMPORTED",
+    "LOCAL",
+    "MIXED",
+    "MODIFIED",
+    "NO",
+    "NS",
+    "OR",
+    "OWL",
+    "PRODUCT",
+    "REMOVED",
+    "RESEARCH",
+    "SAFE",
+    "SERVICE",
+    "U",
+    "UNMODIFIED",
+    "UNSAFE",
+    "X",
+    "X509_1993_SIG",
+    "YES",
+    "Z"
+  ],
+  "(0012,0083)": [
+    "NAMED_PROTOCOL",
+    "PUBLIC_RELEASE",
+    "RESTRICTED_REUSE"
+  ],
+  "(0012,0084)": [
+    "NAMED_PROTOCOL",
+    "PUBLIC_RELEASE",
+    "RESTRICTED_REUSE"
+  ],
+  "(0012,0085)": [
+    "NAMED_PROTOCOL",
+    "NO",
+    "PUBLIC_RELEASE",
+    "RESTRICTED_REUSE",
+    "WITHDRAWN",
+    "YES"
+  ],
+  "(0016,0011)": [
+    "0",
+    "1"
+  ],
+  "(0016,0012)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0016,0013)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0016,0014)": [
+    "0",
+    "1"
+  ],
+  "(0016,0015)": [
+    "0",
+    "1"
+  ],
+  "(0016,0016)": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "(0016,001a)": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "(0016,0027)": [
+    "0",
+    "1",
+    "2",
+    "255",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "(0016,0028)": [
+    "0",
+    "1",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "2",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "255",
+    "3",
+    "4",
+    "9"
+  ],
+  "(0016,0039)": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "7",
+    "8"
+  ],
+  "(0016,003a)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0016,003b)": [
+    "1"
+  ],
+  "(0016,0041)": [
+    "0",
+    "1"
+  ],
+  "(0016,0042)": [
+    "0",
+    "1",
+    "2"
+  ],
+  "(0016,0043)": [
+    "0",
+    "1"
+  ],
+  "(0016,0046)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0016,0047)": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "(0016,0048)": [
+    "0",
+    "1",
+    "2"
+  ],
+  "(0016,0049)": [
+    "0",
+    "1",
+    "2"
+  ],
+  "(0016,004a)": [
+    "0",
+    "1",
+    "2"
+  ],
+  "(0016,004c)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0016,0061)": [
+    "R03",
+    "R98",
+    "THM"
+  ],
+  "(0016,0071)": [
+    "N",
+    "S"
+  ],
+  "(0016,0073)": [
+    "E",
+    "W"
+  ],
+  "(0016,0079)": [
+    "A",
+    "V"
+  ],
+  "(0016,007a)": [
+    "2",
+    "3"
+  ],
+  "(0016,007c)": [
+    "K",
+    "M",
+    "N"
+  ],
+  "(0016,007e)": [
+    "M",
+    "T"
+  ],
+  "(0016,0080)": [
+    "M",
+    "T"
+  ],
+  "(0016,0083)": [
+    "N",
+    "S"
+  ],
+  "(0016,0085)": [
+    "E",
+    "W"
+  ],
+  "(0016,0087)": [
+    "M",
+    "T"
+  ],
+  "(0016,0089)": [
+    "K",
+    "M",
+    "N"
+  ],
+  "(0016,1001)": [
+    "NON_POLARIZED",
+    "POLARIZED"
+  ],
+  "(0016,1003)": [
+    "CONTACT",
+    "NON_CONTACT"
+  ],
+  "(0016,1004)": [
+    "ALCOHOL",
+    "MINERAL_OIL",
+    "PLASTIC_CAP",
+    "ULTRASOUND_GEL",
+    "WATER"
+  ],
+  "(0018,0015)": [
+    "EYE"
+  ],
+  "(0018,0020)": [
+    "EP",
+    "GR",
+    "IR",
+    "RM",
+    "SE"
+  ],
+  "(0018,0021)": [
+    "MP",
+    "MTC",
+    "NONE",
+    "OSP",
+    "SK",
+    "SP",
+    "SS",
+    "TRSS"
+  ],
+  "(0018,0022)": [
+    "CG",
+    "CHASE",
+    "EKG",
+    "FC",
+    "FS",
+    "PER",
+    "PFF",
+    "PFP",
+    "PHY",
+    "PPG",
+    "RG",
+    "ROTA",
+    "SP",
+    "STEP",
+    "TOMO"
+  ],
+  "(0018,0023)": [
+    "1D",
+    "2D",
+    "3D"
+  ],
+  "(0018,0025)": [
+    "N",
+    "Y"
+  ],
+  "(0018,0038)": [
+    "INTERMEDIATE",
+    "NONE",
+    "POST",
+    "PRE"
+  ],
+  "(0018,0042)": [
+    "RUNNING",
+    "STOPPED"
+  ],
+  "(0018,0050)": [
+    "0",
+    "00",
+    "01",
+    "1",
+    "16",
+    "3",
+    "8",
+    "AUTO",
+    "IDENTITY",
+    "MANUAL",
+    "MONOCHROME2",
+    "NO",
+    "RGB",
+    "VOLUME",
+    "YBR_FULL_422",
+    "YBR_ICT",
+    "YBR_RCT",
+    "YES"
+  ],
+  "(0018,0060)": [
+    "BUTTERFLY",
+    "FLAT",
+    "INTEGRATING",
+    "MULTILAYER",
+    "MULTIPLE",
+    "NONE",
+    "PHOTON_COUNTING",
+    "SHAPED",
+    "WEDGE"
+  ],
+  "(0018,0071)": [
+    "CARD_TRIG",
+    "CNTS",
+    "DENS",
+    "MANU",
+    "OVFL",
+    "RDD",
+    "RESP_TRIG",
+    "TIME",
+    "TRIG"
+  ],
+  "(0018,0073)": [
+    "AUTO",
+    "CARD_TRIG",
+    "DENS",
+    "MANU",
+    "RDD",
+    "RESP_TRIG",
+    "TIME",
+    "TRIG"
+  ],
+  "(0018,0088)": [
+    "APEX_TO_BASE",
+    "ASTG",
+    "BASE_TO_APEX",
+    "CONE",
+    "DIVG",
+    "FANB",
+    "HEXAGONAL",
+    "NONE",
+    "PARA",
+    "PINH",
+    "RECTANGLE",
+    "ROUND",
+    "SLNT",
+    "UNKN"
+  ],
+  "(0018,1002)": [
+    "AC",
+    "AO",
+    "CLASSIC",
+    "CMS_TSP",
+    "COERCE",
+    "CONVERT",
+    "CORRECT",
+    "CSV",
+    "D",
+    "DOC",
+    "ENHANCED",
+    "FHIR",
+    "HL7",
+    "IMPORTED",
+    "LOCAL",
+    "MIXED",
+    "MODIFIED",
+    "NO",
+    "NS",
+    "OR",
+    "OWL",
+    "PRODUCT",
+    "REMOVED",
+    "RESEARCH",
+    "SAFE",
+    "SERVICE",
+    "U",
+    "UNMODIFIED",
+    "UNSAFE",
+    "X",
+    "X509_1993_SIG",
+    "YES",
+    "Z"
+  ],
+  "(0018,1048)": [
+    "BARIUM",
+    "CARBON DIOXIDE",
+    "GADOLINIUM",
+    "IODINE"
+  ],
+  "(0018,1061)": [
+    "EKG"
+  ],
+  "(0018,1064)": [
+    "BACK",
+    "FORW",
+    "PCNT"
+  ],
+  "(0018,106a)": [
+    "EXTERNAL",
+    "NO TRIGGER",
+    "PASSTHRU",
+    "SOURCE"
+  ],
+  "(0018,1080)": [
+    "N",
+    "Y"
+  ],
+  "(0018,1110)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,1111)": [
+    "B",
+    "BREAST",
+    "CARM",
+    "CC",
+    "CEPHALOSTAT",
+    "COLUMN",
+    "CW",
+    "FIXED",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "PANORAMIC",
+    "R",
+    "RIGID",
+    "TILTING",
+    "YES"
+  ],
+  "(0018,1134)": [
+    "DYNAMIC",
+    "STATIC"
+  ],
+  "(0018,113a)": [
+    "FIXED",
+    "NONE",
+    "TILTING"
+  ],
+  "(0018,1140)": [
+    "CC",
+    "CW"
+  ],
+  "(0018,1147)": [
+    "CYLINDRICAL RING",
+    "HEXAGONAL",
+    "MULTIPLE PLANAR",
+    "RECTANGLE",
+    "ROUND"
+  ],
+  "(0018,1150)": [
+    "CONSTANT_ANGLE",
+    "FREE",
+    "SEQUENCED",
+    "SPIRAL",
+    "STATIONARY"
+  ],
+  "(0018,1155)": [
+    "GR",
+    "SC"
+  ],
+  "(0018,1156)": [
+    "CONST POTENTIAL",
+    "SINGLE PHASE",
+    "THREE PHASE"
+  ],
+  "(0018,115a)": [
+    "CONTINUOUS",
+    "PULSED"
+  ],
+  "(0018,115e)": [
+    "3D",
+    "3D_TEMPORAL",
+    "TILED_FULL",
+    "TILED_SPARSE"
+  ],
+  "(0018,1160)": [
+    "BOWTIE",
+    "BUTTERFLY",
+    "FLAT",
+    "MULTIPLE",
+    "NONE",
+    "SHAPED",
+    "STRIP",
+    "WEDGE"
+  ],
+  "(0018,1166)": [
+    "CROSSED",
+    "FIXED",
+    "FOCUSED",
+    "IN",
+    "NONE",
+    "PARALLEL",
+    "RECIPROCATING"
+  ],
+  "(0018,1181)": [
+    "ASTG",
+    "CONE",
+    "DIVG",
+    "FANB",
+    "NONE",
+    "PARA",
+    "PINH",
+    "RING",
+    "SLNT",
+    "UNKN"
+  ],
+  "(0018,1191)": [
+    "MOLYBDENUM",
+    "RHODIUM",
+    "TUNGSTEN"
+  ],
+  "(0018,11b2)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,11b3)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,11b4)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,11b6)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,11be)": [
+    "2D",
+    "3D"
+  ],
+  "(0018,11c0)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,1244)": [
+    "0",
+    "1",
+    "2"
+  ],
+  "(0018,1301)": [
+    "1PS",
+    "2PS",
+    "MSP",
+    "PCN"
+  ],
+  "(0018,1312)": [
+    "COL",
+    "ROW"
+  ],
+  "(0018,1315)": [
+    "N",
+    "Y"
+  ],
+  "(0018,1402)": [
+    "LANDSCAPE",
+    "PORTRAIT"
+  ],
+  "(0018,1403)": [
+    "10INX12IN",
+    "11INX14IN",
+    "14INX14IN",
+    "14INX17IN",
+    "18CMX24CM",
+    "24CMX30CM",
+    "30CMX35CM",
+    "30CMX40CM",
+    "35CMX35CM",
+    "35CMX43CM",
+    "8INX10IN"
+  ],
+  "(0018,1490)": [
+    "CIRCULAR",
+    "LINEAR",
+    "POLYCYCLOIDAL",
+    "SPIRAL"
+  ],
+  "(0018,1491)": [
+    "MOTION",
+    "TOMOSYNTHESIS"
+  ],
+  "(0018,1495)": [
+    "00",
+    "01",
+    "B",
+    "BOTH",
+    "DERIVED",
+    "IDENTITY",
+    "INVERSE",
+    "ISO_10918_1",
+    "ISO_13818_2",
+    "ISO_14495_1",
+    "ISO_14496_10",
+    "ISO_15444_1",
+    "ISO_15444_15",
+    "ISO_18181_1",
+    "ISO_23008_2",
+    "L",
+    "NO",
+    "ORIGINAL",
+    "PRIMARY",
+    "R",
+    "SECONDARY",
+    "U",
+    "YES"
+  ],
+  "(0018,1500)": [
+    "DYNAMIC",
+    "STATIC"
+  ],
+  "(0018,1508)": [
+    "CARM",
+    "CEPHALOSTAT",
+    "COLUMN",
+    "MAMMOGRAPHIC",
+    "NONE",
+    "PANORAMIC",
+    "RIGID"
+  ],
+  "(0018,1510)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "DYNAMIC",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "STATIC",
+    "YES"
+  ],
+  "(0018,1511)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "DYNAMIC",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "STATIC",
+    "YES"
+  ],
+  "(0018,1530)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "DYNAMIC",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "STATIC",
+    "YES"
+  ],
+  "(0018,1531)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "DYNAMIC",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "STATIC",
+    "YES"
+  ],
+  "(0018,1600)": [
+    "BITMAP",
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0018,1622)": [
+    "BITMAP",
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0018,1623)": [
+    "ACTIVE IMAGE AREA",
+    "AUTOMATED",
+    "G",
+    "R",
+    "USER"
+  ],
+  "(0018,1624)": [
+    "BITMAP",
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0018,1630)": [
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0018,1700)": [
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0018,1800)": [
+    "N",
+    "Y"
+  ],
+  "(0018,1802)": [
+    "GPS",
+    "IRIG",
+    "NTP",
+    "PTP",
+    "SNTP"
+  ],
+  "(0018,2020)": [
+    "COLUMN",
+    "ROW"
+  ],
+  "(0018,3100)": [
+    "GATED_PULLBACK",
+    "MANUAL",
+    "MANUAL_PULLBACK",
+    "MEASURED",
+    "MOTORIZED",
+    "MOTOR_PULLBACK",
+    "SELECTIVE"
+  ],
+  "(0018,5100)": [
+    "AF",
+    "AFDL",
+    "AFDR",
+    "AFP",
+    "AFS",
+    "ARC",
+    "BELT",
+    "BITEBLOCK",
+    "BODY_FRAME",
+    "BREAST_BOARD",
+    "BREAST_BRIDGE",
+    "BREATH_HOLD",
+    "CAST",
+    "CO2_SENSOR",
+    "CORRECTION",
+    "DISTANCE_METER",
+    "DL",
+    "DR",
+    "ECG",
+    "EXTERNAL_MARKER",
+    "EYE",
+    "FF",
+    "FFDL",
+    "FFDR",
+    "FFI",
+    "FFP",
+    "FFS",
+    "FFV",
+    "FIXED_SSD",
+    "GATING",
+    "GONAD",
+    "GUM",
+    "HEADFRAME",
+    "HEADREST",
+    "HF",
+    "HFDL",
+    "HFDR",
+    "HFI",
+    "HFP",
+    "HFS",
+    "HFV",
+    "I",
+    "IMAGE",
+    "INTERNAL_MARKER",
+    "ISOCENTRIC",
+    "LASER_POINTER",
+    "LF",
+    "LFDL",
+    "LFDR",
+    "LFP",
+    "LFS",
+    "MASK",
+    "MECHANICAL_PTR",
+    "MOLD",
+    "MR_PHASE",
+    "NASAL_PROBE",
+    "NAVIGATOR",
+    "NONE",
+    "P",
+    "PF",
+    "PFDL",
+    "PFDR",
+    "PFP",
+    "PFS",
+    "PHASE_ORDERING",
+    "PHASE_RESCANNING",
+    "REALTIME",
+    "RECTAL_BALLOON",
+    "RETROSPECTIVE",
+    "RF",
+    "RFDL",
+    "RFDR",
+    "RFP",
+    "RFS",
+    "S",
+    "SITTING",
+    "SKIN_APPOSITION",
+    "SPIROMETER",
+    "TABLE_HEIGHT",
+    "TBI",
+    "TRACKING",
+    "UNKNOWN",
+    "V",
+    "VACUUM_MOLD",
+    "WHOLE_BODY_POD"
+  ],
+  "(0018,5101)": [
+    "AP",
+    "LL",
+    "LLD",
+    "LLO",
+    "PA",
+    "RL",
+    "RLD",
+    "RLO"
+  ],
+  "(0018,6012)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H"
+  ],
+  "(0018,6014)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H",
+    "0006H",
+    "0007H",
+    "0008H",
+    "000AH",
+    "000BH",
+    "000CH",
+    "000DH",
+    "000EH",
+    "000FH",
+    "0010H",
+    "0011H",
+    "0012H"
+  ],
+  "(0018,6016)": [
+    "0",
+    "00",
+    "01",
+    "1",
+    "10",
+    "11"
+  ],
+  "(0018,6024)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H",
+    "0006H",
+    "0007H",
+    "0008H",
+    "0009H",
+    "000AH",
+    "000BH",
+    "000CH"
+  ],
+  "(0018,6026)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H",
+    "0006H",
+    "0007H",
+    "0008H",
+    "0009H",
+    "000AH",
+    "000BH",
+    "000CH"
+  ],
+  "(0018,6031)": [
+    "CURVED LINEAR",
+    "ENDOCAV_AA",
+    "ENDOCAV_CLA",
+    "ENDOCAV_LINEAR",
+    "ENDOCAV_MECH",
+    "ENDOCAV_PA",
+    "IV_PHASED",
+    "IV_ROT MIRROR",
+    "IV_ROT XTAL",
+    "LINEAR",
+    "SECTOR_ANNULAR",
+    "SECTOR_MECH",
+    "SECTOR_PHASED",
+    "SINGLE CRYSTAL",
+    "SPLIT XTAL CWD",
+    "VECTOR_PHASED"
+  ],
+  "(0018,6044)": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "(0018,604c)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H",
+    "0006H",
+    "0007H",
+    "0008H",
+    "0009H",
+    "000AH",
+    "000BH",
+    "000CH"
+  ],
+  "(0018,604e)": [
+    "0000H",
+    "0001H",
+    "0002H",
+    "0003H",
+    "0004H",
+    "0005H",
+    "0006H",
+    "0007H",
+    "0008H",
+    "0009H",
+    "000AH"
+  ],
+  "(0018,6070)": [
+    "ACTIVE IMAGE AREA",
+    "AUTOMATED",
+    "G",
+    "R",
+    "USER"
+  ],
+  "(0018,7000)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,7004)": [
+    "CCD",
+    "CMOS",
+    "DIRECT",
+    "FILM",
+    "INT",
+    "PHOTO",
+    "SCINTILLATOR",
+    "STORAGE"
+  ],
+  "(0018,7005)": [
+    "AREA",
+    "SLOT"
+  ],
+  "(0018,7024)": [
+    "HEXAGONAL",
+    "RECTANGLE",
+    "ROUND"
+  ],
+  "(0018,7032)": [
+    "0",
+    "180",
+    "270",
+    "90"
+  ],
+  "(0018,7034)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,7052)": [
+    "BUTTERFLY",
+    "FLAT",
+    "MULTIPLE",
+    "NONE",
+    "STRIP",
+    "WEDGE"
+  ],
+  "(0018,7054)": [
+    "BUTTERFLY",
+    "FLAT",
+    "MULTIPLE",
+    "NONE",
+    "STRIP",
+    "WEDGE"
+  ],
+  "(0018,7056)": [
+    "BUTTERFLY",
+    "FLAT",
+    "MULTIPLE",
+    "NONE",
+    "STRIP",
+    "WEDGE"
+  ],
+  "(0018,7058)": [
+    "BUTTERFLY",
+    "FLAT",
+    "MULTIPLE",
+    "NONE",
+    "STRIP",
+    "WEDGE"
+  ],
+  "(0018,7060)": [
+    "AUTOMATIC",
+    "MANUAL"
+  ],
+  "(0018,7064)": [
+    "ABORTED",
+    "NORMAL"
+  ],
+  "(0018,9004)": [
+    "PRODUCT",
+    "RESEARCH",
+    "SERVICE"
+  ],
+  "(0018,9008)": [
+    "BOTH",
+    "GRADIENT",
+    "SPIN"
+  ],
+  "(0018,9011)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9012)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9014)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9015)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9017)": [
+    "FREE_PRECESSION",
+    "LONGITUDINAL",
+    "NONE",
+    "TIME_REVERSED",
+    "TRANSVERSE"
+  ],
+  "(0018,9018)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9024)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9025)": [
+    "FAT",
+    "FAT_AND_WATER",
+    "NONE",
+    "SILICON_GEL",
+    "WATER"
+  ],
+  "(0018,9029)": [
+    "2D",
+    "2D_3D",
+    "3D",
+    "NONE"
+  ],
+  "(0018,9032)": [
+    "RADIAL",
+    "RECTILINEAR",
+    "SPIRAL"
+  ],
+  "(0018,9033)": [
+    "FULL",
+    "PARTIAL",
+    "SINGLE"
+  ],
+  "(0018,9034)": [
+    "CENTRIC",
+    "LINEAR",
+    "REVERSE_CENTRIC",
+    "REVERSE_LINEAR",
+    "SEGMENTED"
+  ],
+  "(0018,9037)": [
+    "BACK",
+    "ECG",
+    "FORW",
+    "MR",
+    "NONE",
+    "PACED",
+    "PCNT",
+    "PP",
+    "PROSPECTIVE",
+    "PVC",
+    "QRS_LOOP",
+    "REALTIME",
+    "RETROSPECTIVE",
+    "RR_INTERVAL",
+    "VCG"
+  ],
+  "(0018,9054)": [
+    "ILOPS",
+    "ISIS",
+    "NONE",
+    "PRESS",
+    "PRIME",
+    "SLIM",
+    "SLOOP",
+    "STEAM"
+  ],
+  "(0018,9059)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9060)": [
+    "129XE",
+    "13C",
+    "19F",
+    "1H",
+    "23NA",
+    "31P",
+    "3HE",
+    "7LI"
+  ],
+  "(0018,9062)": [
+    "MLEV",
+    "NARROWBAND",
+    "WALTZ"
+  ],
+  "(0018,9064)": [
+    "COSINE",
+    "COSINE_SQUARED",
+    "FERMI",
+    "GAUSSIAN",
+    "HAMMING",
+    "HANNING",
+    "LORENTZIAN",
+    "LRNTZ_GSS_TRNSFM",
+    "NONE",
+    "RIESZ",
+    "TUKEY"
+  ],
+  "(0018,9065)": [
+    "COSINE",
+    "COSINE_SQUARED",
+    "EXPONENTIAL",
+    "GAUSSIAN",
+    "HAMMING",
+    "HANNING",
+    "LORENTZIAN",
+    "LRNTZ_GSS_TRNSFM",
+    "NONE"
+  ],
+  "(0018,9067)": [
+    "LINEAR_TILT",
+    "LOCAL_LINEAR_FIT",
+    "NONE",
+    "POLYNOMIAL_FIT",
+    "SINC_DECONVOLUTN",
+    "SPLINE",
+    "TIME_DOMAIN_FIT"
+  ],
+  "(0018,9085)": [
+    "ECG",
+    "MR",
+    "PP",
+    "VCG"
+  ],
+  "(0018,9094)": [
+    "CYLINDRICAL",
+    "ELLIPSOIDAL",
+    "FULL",
+    "WEIGHTED"
+  ],
+  "(0018,9100)": [
+    "129XE",
+    "13C",
+    "19F",
+    "1H",
+    "23NA",
+    "31P",
+    "3HE",
+    "7LI"
+  ],
+  "(0018,9101)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9151)": [
+    "EXTERNAL",
+    "GPS",
+    "IRIG",
+    "N",
+    "NO TRIGGER",
+    "NTP",
+    "PASSTHRU",
+    "PTP",
+    "SNTP",
+    "SOURCE",
+    "Y"
+  ],
+  "(0018,9169)": [
+    "NONE",
+    "PVC",
+    "QRS_LOOP",
+    "RR_INTERVAL"
+  ],
+  "(0018,9170)": [
+    "AMPLITUDE",
+    "BELT",
+    "BOTH",
+    "BREATH_HOLD",
+    "CO2_SENSOR",
+    "CORRECTION",
+    "ECG",
+    "GATING",
+    "MR_PHASE",
+    "NASAL_PROBE",
+    "NAVIGATOR",
+    "NONE",
+    "PHASE_ORDERING",
+    "PHASE_RESCANNING",
+    "REALTIME",
+    "RETROSPECTIVE",
+    "TIME",
+    "TRACKING",
+    "UNKNOWN"
+  ],
+  "(0018,9171)": [
+    "BELT",
+    "CO2_SENSOR",
+    "ECG",
+    "EXTERNAL_MARKER",
+    "IMAGE",
+    "INTERNAL_MARKER",
+    "MR_PHASE",
+    "NASAL_PROBE",
+    "NAVIGATOR",
+    "NONE",
+    "SPIROMETER",
+    "UNKNOWN"
+  ],
+  "(0018,9172)": [
+    "CORRECTION",
+    "GATING",
+    "NONE",
+    "REALTIME",
+    "RETROSPECTIVE",
+    "TRACKING"
+  ],
+  "(0018,9173)": [
+    "JOINT",
+    "MR_PHASE",
+    "NAVIGATOR"
+  ],
+  "(0018,9174)": [
+    "FDA",
+    "IEC",
+    "MHW"
+  ],
+  "(0018,9198)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9199)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9200)": [
+    "PLANE",
+    "ROW",
+    "SINGLE_VOXEL",
+    "VOLUME"
+  ],
+  "(0018,9214)": [
+    "END_RESPIR",
+    "START _RESPIR",
+    "UNDETERMINED"
+  ],
+  "(0018,9236)": [
+    "END_DIASTOLE",
+    "END_SYSTOLE",
+    "UNDETERMINED"
+  ],
+  "(0018,9250)": [
+    "CONTINUOUS",
+    "PSEUDOCONTINUOUS",
+    "PULSED"
+  ],
+  "(0018,9297)": [
+    "NONE",
+    "REFERENCED",
+    "USED_DISCARDED",
+    "WATER_REFERENCE"
+  ],
+  "(0018,9302)": [
+    "CONSTANT_ANGLE",
+    "FREE",
+    "SEQUENCED",
+    "SPIRAL",
+    "STATIONARY"
+  ],
+  "(0018,9316)": [
+    "BONE",
+    "BRAIN",
+    "CONSTANT_ANGLE",
+    "LUNG",
+    "SOFT_TISSUE"
+  ],
+  "(0018,9323)": [
+    "ANGULAR",
+    "ECG_BASED",
+    "LONGITUDINAL",
+    "NONE",
+    "ORGAN_BASED"
+  ],
+  "(0018,9333)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9334)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9361)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9368)": [
+    "CONSTANT_SOURCE",
+    "SWITCHING_SOURCE"
+  ],
+  "(0018,9372)": [
+    "INTEGRATING",
+    "MULTILAYER",
+    "PHOTON_COUNTING"
+  ],
+  "(0018,9379)": [
+    "AXIAL",
+    "CONSTANT_SOURCE",
+    "EFF_ATOMIC_NUM",
+    "ELECTRON_DENSITY",
+    "INTEGRATING",
+    "LOCALIZER",
+    "MAT_FRACTIONAL",
+    "MAT_MODIFIED",
+    "MAT_REMOVED",
+    "MAT_SPECIFIC",
+    "MAT_VALUE_BASED",
+    "MULTILAYER",
+    "PHOTON_COUNTING",
+    "SWITCHING_SOURCE",
+    "VMI"
+  ],
+  "(0018,937e)": [
+    "HYBRID",
+    "IMAGE_BASED",
+    "PROJECTION_BASED"
+  ],
+  "(0018,9410)": [
+    "BIPLANE",
+    "SINGLE PLANE",
+    "UNDEFINED"
+  ],
+  "(0018,9420)": [
+    "DIGITAL_DETECTOR",
+    "IMG_INTENSIFIER"
+  ],
+  "(0018,9425)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9427)": [
+    "HEXAGONAL",
+    "RECTANGLE",
+    "ROUND"
+  ],
+  "(0018,9457)": [
+    "MONOPLANE",
+    "PLANE A",
+    "PLANE B"
+  ],
+  "(0018,9474)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9510)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9511)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9514)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9515)": [
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9518)": [
+    "+1",
+    "-1",
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9519)": [
+    "+1",
+    "-1",
+    "B",
+    "BREAST",
+    "CC",
+    "CW",
+    "L",
+    "MAMMOGRAPHIC",
+    "NO",
+    "NONE",
+    "R",
+    "YES"
+  ],
+  "(0018,9527)": [
+    "FILTER_BACK_PROJ",
+    "ITERATIVE"
+  ],
+  "(0018,9559)": [
+    "CC",
+    "CW"
+  ],
+  "(0018,9622)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9725)": [
+    "CYLINDRICAL_RING",
+    "CYL_RING_PARTIAL",
+    "MULTIPLE_PLANAR",
+    "MUL_PLAN_PARTIAL"
+  ],
+  "(0018,9738)": [
+    "CALCULATED",
+    "CT",
+    "MR",
+    "POSITRON SOURCE",
+    "SINGLE PHOTON"
+  ],
+  "(0018,9755)": [
+    "FALSE",
+    "TRUE"
+  ],
+  "(0018,9758)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9759)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9760)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9761)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9762)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9763)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9764)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9765)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9766)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9767)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9768)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9770)": [
+    "CONCURRENT",
+    "SEPARATE",
+    "SIMULTANEOUS"
+  ],
+  "(0018,980c)": [
+    "FREEHAND",
+    "RIGID",
+    "TRACKED"
+  ],
+  "(0018,9828)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9829)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9905)": [
+    "ANTERIOR",
+    "DISTAL",
+    "INFERIOR",
+    "LATERAL",
+    "LEFT",
+    "MEDIAL",
+    "POSTERIOR",
+    "PROXIMAL",
+    "RIGHT",
+    "SUPERIOR"
+  ],
+  "(0018,9918)": [
+    "NO",
+    "YES"
+  ],
+  "(0018,9923)": [
+    "1.2.840.10008.5.1.4.1.1.200.2",
+    "1.2.840.10008.5.1.4.1.1.200.8"
+  ],
+  "(0018,9924)": [
+    "1.2.840.10008.5.1.4.1.1.200.2",
+    "1.2.840.10008.5.1.4.1.1.200.8"
+  ],
+  "(0018,9930)": [
+    "NOT_IMPORTANT",
+    "NO_MOTION",
+    "SHUTTLE",
+    "SINGLE"
+  ],
+  "(0018,9944)": [
+    "CNR_BASED",
+    "DIAMETER_BASED",
+    "NONE"
+  ],
+  "(0018,9947)": [
+    "AF",
+    "AFDL",
+    "AFDR",
+    "AFP",
+    "AFS",
+    "DL",
+    "DR",
+    "FF",
+    "FFDL",
+    "FFDR",
+    "FFI",
+    "FFP",
+    "FFS",
+    "FFV",
+    "HF",
+    "HFDL",
+    "HFDR",
+    "HFI",
+    "HFP",
+    "HFS",
+    "HFV",
+    "I",
+    "LF",
+    "LFDL",
+    "LFDR",
+    "LFP",
+    "LFS",
+    "P",
+    "PF",
+    "PFDL",
+    "PFDR",
+    "PFP",
+    "PFS",
+    "RF",
+    "RFDL",
+    "RFDR",
+    "RFP",
+    "RFS",
+    "S",
+    "V"
+  ],
+  "(0020,000e)": [
+    "SUPERIMPOSED",
+    "UNDERLYING"
+  ],
+  "(0020,0060)": [
+    "L",
+    "R"
+  ],
+  "(0020,0062)": [
+    "B",
+    "L",
+    "NO",
+    "R",
+    "U",
+    "YES"
+  ],
+  "(0020,9162)": [
+    "1"
+  ],
+  "(0020,9163)": [
+    "0",
+    "00",
+    "01",
+    "1",
+    "12",
+    "16",
+    "8",
+    "IDENTITY",
+    "MONOCHROME2",
+    "NO",
+    "ORIGINAL",
+    "PRIMARY",
+    "YES"
+  ],
+  "(0020,9228)": [
+    "0"
+  ],
+  "(0020,9250)": [
+    "AMPLITUDE",
+    "BOTH",
+    "TIME"
+  ],
+  "(0020,9307)": [
+    "APEX",
+    "PATIENT"
+  ],
+  "(0020,930a)": [
+    "Pij,Pij,Pij",
+    "Qx,Qy,Qz",
+    "Rij,Rij,Rij",
+    "Sx,Sy,Sz",
+    "X T Y T Z T",
+    "X V Y V Z V",
+    "X X Y X Z X"
+  ],
+  "(0020,930b)": [
+    "FIXED",
+    "ORIENTATION_VAR",
+    "POSITION_VAR",
+    "VARIABLE"
+  ],
+  "(0020,930c)": [
+    "ESTIMATED",
+    "REGISTRATION",
+    "TABLE"
+  ],
+  "(0020,9311)": [
+    "3D",
+    "3D_TEMPORAL",
+    "TILED_FULL",
+    "TILED_SPARSE"
+  ],
+  "(0020,9453)": [
+    "3D",
+    "3D_TEMPORAL",
+    "TILED_FULL",
+    "TILED_SPARSE"
+  ],
+  "(0022,0005)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,000d)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,0028)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,1009)": [
+    "OPTICAL",
+    "ULTRASOUND"
+  ],
+  "(0022,1010)": [
+    "LENGTH SUMMATION",
+    "SEGMENTAL LENGTH",
+    "TOTAL LENGTH"
+  ],
+  "(0022,1039)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,1046)": [
+    "SPHERICAL",
+    "TORIC"
+  ],
+  "(0022,1049)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,112b)": [
+    "INFORMATIVE",
+    "WARNING"
+  ],
+  "(0022,1140)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,1415)": [
+    "INTERFEROMETRY",
+    "OCT",
+    "POLARIMETRY",
+    "REFLECTION",
+    "SLIT_BASED",
+    "SLO_TOMO"
+  ],
+  "(0022,1466)": [
+    "PIXEL"
+  ],
+  "(0022,1515)": [
+    "ESTIMATED",
+    "MEASURED",
+    "POPULATION"
+  ],
+  "(0022,1622)": [
+    "NO",
+    "YES"
+  ],
+  "(0022,1629)": [
+    "ANTERIOR",
+    "ENTIRE",
+    "POSTERIOR"
+  ],
+  "(0022,1633)": [
+    "AUTOMATIC",
+    "MANUAL"
+  ],
+  "(0024,0012)": [
+    "CIRCLE",
+    "ELLIPSE",
+    "RECTANGLE"
+  ],
+  "(0024,0037)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0039)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0040)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0045)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0051)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0052)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0053)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0055)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0057)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0059)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0061)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0062)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0063)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0072)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0074)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0076)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0078)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0080)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0086)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0093)": [
+    "NOT SEEN",
+    "SEEN",
+    "SEEN AT MAX"
+  ],
+  "(0024,0095)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0102)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0106)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0113)": [
+    "B",
+    "L",
+    "R"
+  ],
+  "(0024,0117)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0120)": [
+    "NO",
+    "YES"
+  ],
+  "(0024,0124)": [
+    "CENTRAL",
+    "PERIPHERAL"
+  ],
+  "(0024,0338)": [
+    "NO",
+    "YES"
+  ],
+  "(0028,0002)": [
+    "1",
+    "3",
+    "MONOCHROME2",
+    "RGB",
+    "YBR_FULL_422",
+    "YBR_ICT",
+    "YBR_RCT"
+  ],
+  "(0028,0003)": [
+    "2"
+  ],
+  "(0028,0004)": [
+    "1",
+    "3",
+    "ARGB",
+    "CMYK",
+    "HSV",
+    "MONOCHROME1",
+    "MONOCHROME2",
+    "PALETTE COLOR",
+    "RGB",
+    "XYB",
+    "YBR_FULL",
+    "YBR_FULL_422",
+    "YBR_ICT",
+    "YBR_PARTIAL_420",
+    "YBR_PARTIAL_422",
+    "YBR_RCT"
+  ],
+  "(0028,0006)": [
+    "0",
+    "1"
+  ],
+  "(0028,0008)": [
+    "1"
+  ],
+  "(0028,0009)": [
+    "00181063",
+    "00181063H",
+    "00181065",
+    "00181065H",
+    "NO",
+    "YES"
+  ],
+  "(0028,000a)": [
+    "00181063H",
+    "00181065H",
+    "00181135H",
+    "00181136H",
+    "00181137H",
+    "00181520H",
+    "00181521H",
+    "00182002H"
+  ],
+  "(0028,0014)": [
+    "00",
+    "01"
+  ],
+  "(0028,0051)": [
+    "ATTN",
+    "CLN",
+    "COR",
+    "DCAL",
+    "DECY",
+    "DTIM",
+    "LIN",
+    "MOTN",
+    "NCO",
+    "NORM",
+    "NRGY",
+    "PMOT",
+    "RADL",
+    "RAN",
+    "SCAT",
+    "UNIF"
+  ],
+  "(0028,0100)": [
+    "1",
+    "16",
+    "32",
+    "64",
+    "7",
+    "8"
+  ],
+  "(0028,0101)": [
+    "1",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "(0028,0102)": [
+    "0",
+    "15",
+    "7",
+    "8"
+  ],
+  "(0028,0103)": [
+    "0",
+    "0000H",
+    "0001H"
+  ],
+  "(0028,0300)": [
+    "BOTH",
+    "FR",
+    "GA",
+    "IN",
+    "MM",
+    "NO",
+    "YES"
+  ],
+  "(0028,0301)": [
+    "NO",
+    "YES"
+  ],
+  "(0028,0302)": [
+    "NO",
+    "YES"
+  ],
+  "(0028,0303)": [
+    "MODIFIED",
+    "REMOVED",
+    "UNMODIFIED"
+  ],
+  "(0028,0a02)": [
+    "FIDUCIAL",
+    "GEOMETRY"
+  ],
+  "(0028,0a04)": [
+    "FR",
+    "GA",
+    "IN",
+    "MM"
+  ],
+  "(0028,1040)": [
+    "DISP",
+    "LIN",
+    "LOG",
+    "OTHER"
+  ],
+  "(0028,1041)": [
+    "+1",
+    "-1"
+  ],
+  "(0028,1052)": [
+    "0"
+  ],
+  "(0028,1053)": [
+    "1"
+  ],
+  "(0028,1054)": [
+    "ED",
+    "EDW",
+    "HU",
+    "HU_MOD",
+    "MGML",
+    "OD",
+    "PCT",
+    "US",
+    "Z_EFF"
+  ],
+  "(0028,1056)": [
+    "LINEAR",
+    "LINEAR_EXACT",
+    "SIGMOID",
+    "c",
+    "w",
+    "x",
+    "y",
+    "y max",
+    "y min"
+  ],
+  "(0028,1090)": [
+    "AVG_SUB",
+    "NAT",
+    "NONE",
+    "REV_TID",
+    "SUB",
+    "SYSTEM",
+    "TID",
+    "USER"
+  ],
+  "(0028,1300)": [
+    "NO",
+    "YES"
+  ],
+  "(0028,1350)": [
+    "NO",
+    "YES"
+  ],
+  "(0028,135a)": [
+    "NO",
+    "REORIENTED_ONLY",
+    "YES"
+  ],
+  "(0028,1402)": [
+    "PRIMARY_PVALUES",
+    "PRIMARY_SINGLE",
+    "SECONDARY_HIGH",
+    "SECONDARY_LOW",
+    "SECONDARY_SINGLE"
+  ],
+  "(0028,1405)": [
+    "ALPHA_1",
+    "ALPHA_2",
+    "CONSTANT",
+    "ONE_MINUS",
+    "TABLE"
+  ],
+  "(0028,140d)": [
+    "ALPHA_1",
+    "ALPHA_2",
+    "CONSTANT",
+    "ONE_MINUS",
+    "TABLE"
+  ],
+  "(0028,140e)": [
+    "PRIMARY",
+    "SECONDARY"
+  ],
+  "(0028,140f)": [
+    "EQUAL_RGB",
+    "TABLE"
+  ],
+  "(0028,1410)": [
+    "IDENTITY",
+    "NONE",
+    "TABLE"
+  ],
+  "(0028,2000)": [
+    "0000H",
+    "0001H"
+  ],
+  "(0028,2002)": [
+    "ADOBERGB",
+    "ROMMRGB",
+    "SRGB"
+  ],
+  "(0028,2110)": [
+    "00",
+    "01",
+    "ISO_10918_1",
+    "ISO_13818_2",
+    "ISO_14495_1",
+    "ISO_14496_10",
+    "ISO_15444_1",
+    "ISO_15444_15",
+    "ISO_18181_1",
+    "ISO_23008_2"
+  ],
+  "(0028,2114)": [
+    "ISO_10918_1",
+    "ISO_13818_2",
+    "ISO_14495_1",
+    "ISO_14496_10",
+    "ISO_15444_1",
+    "ISO_15444_15",
+    "ISO_18181_1",
+    "ISO_23008_2"
+  ],
+  "(0028,3002)": [
+    "ED",
+    "EDW",
+    "HU",
+    "HU_MOD",
+    "MGML",
+    "OD",
+    "PCT",
+    "US",
+    "Z_EFF"
+  ],
+  "(0028,3004)": [
+    "ED",
+    "EDW",
+    "HU",
+    "HU_MOD",
+    "MGML",
+    "OD",
+    "PCT",
+    "US",
+    "Z_EFF"
+  ],
+  "(0028,6023)": [
+    "ENDSYSTOLE",
+    "HIGHMI",
+    "RWAVE",
+    "TRIGGER"
+  ],
+  "(0028,6100)": [
+    "AVG_SUB",
+    "NAT",
+    "NONE",
+    "REV_TID",
+    "SUB",
+    "SYSTEM",
+    "TID",
+    "USER"
+  ],
+  "(0028,6101)": [
+    "AVG_SUB",
+    "NAT",
+    "NONE",
+    "REV_TID",
+    "SUB",
+    "SYSTEM",
+    "TID",
+    "USER"
+  ],
+  "(0028,6102)": [
+    "AVG_SUB",
+    "NONE",
+    "REV_TID",
+    "TID"
+  ],
+  "(0028,6112)": [
+    "AVG_SUB",
+    "NAT",
+    "NONE",
+    "REV_TID",
+    "SUB",
+    "SYSTEM",
+    "TID",
+    "USER"
+  ],
+  "(0028,6120)": [
+    "AVG_SUB",
+    "NONE",
+    "REV_TID",
+    "TID"
+  ],
+  "(0028,9003)": [
+    "FREQUENCY",
+    "TIME"
+  ],
+  "(0028,9108)": [
+    "COMPLEX",
+    "IMAGINARY",
+    "MAGNITUDE",
+    "REAL"
+  ],
+  "(0028,9235)": [
+    "FREQUENCY",
+    "TIME"
+  ],
+  "(0028,9454)": [
+    "SYSTEM",
+    "USER"
+  ],
+  "(0028,9474)": [
+    "TO_LOG"
+  ],
+  "(0028,9537)": [
+    "ISOCENTER"
+  ],
+  "(003a,0004)": [
+    "DERIVED",
+    "ORIGINAL"
+  ],
+  "(003a,0205)": [
+    "DISCONNECTED",
+    "INVALID",
+    "OK",
+    "QUESTIONABLE",
+    "TEST DATA",
+    "UNCALIBRATED",
+    "UNZEROED"
+  ],
+  "(003a,0246)": [
+    "ABSOLUTE",
+    "BASELINE",
+    "DIFFERENCE",
+    "NONE"
+  ],
+  "(003a,0302)": [
+    "MONO",
+    "STEREO"
+  ],
+  "(003a,0316)": [
+    "AC",
+    "DC"
+  ],
+  "(003a,0317)": [
+    "AC",
+    "DC"
+  ],
+  "(003a,0322)": [
+    "ANALOG",
+    "DIGITAL"
+  ],
+  "(0040,0033)": [
+    "DNS",
+    "EUI64",
+    "ISO",
+    "URI",
+    "UUID",
+    "X400",
+    "X500"
+  ],
+  "(0040,0261)": [
+    "NON_STAGED",
+    "STAGED"
+  ],
+  "(0040,0303)": [
+    "CIRCULAR",
+    "POLYGONAL",
+    "RECTANGULAR"
+  ],
+  "(0040,0318)": [
+    "BONE MARROW",
+    "BREAST",
+    "FETUS",
+    "GONADS",
+    "LENS"
+  ],
+  "(0040,074a)": [
+    "2D",
+    "3D",
+    "AUTOMATIC",
+    "ELLIPSE",
+    "FRAME",
+    "MANUAL",
+    "NO",
+    "POINT",
+    "POLYGON",
+    "POLYLINE",
+    "RECTANGLE",
+    "SEMIAUTOMATIC",
+    "VOLUME",
+    "YES"
+  ],
+  "(0040,8303)": [
+    "ESAK",
+    "ESDBS",
+    "ESDNOBS",
+    "IAK"
+  ],
+  "(0040,a010)": [
+    "CONTAINS",
+    "HAS ACQ CONTEXT",
+    "HAS CONCEPT MOD",
+    "HAS OBS CONTEXT",
+    "HAS PROPERTIES",
+    "INFERRED FROM",
+    "SELECTED FROM"
+  ],
+  "(0040,a040)": [
+    "CODE",
+    "COMPOSITE",
+    "CONTAINER",
+    "DATE",
+    "DATETIME",
+    "IMAGE",
+    "NUM",
+    "NUMERIC",
+    "PNAME",
+    "SCOORD",
+    "SCOORD3D",
+    "TABLE",
+    "TCOORD",
+    "TEXT",
+    "TIME",
+    "UIDREF",
+    "WAVEFORM"
+  ],
+  "(0040,a050)": [
+    "CONTINUOUS",
+    "SEPARATE"
+  ],
+  "(0040,a080)": [
+    "ATTEST",
+    "ENT",
+    "SOURCE"
+  ],
+  "(0040,a084)": [
+    "DEV",
+    "PSN"
+  ],
+  "(0040,a130)": [
+    "BEGIN",
+    "END",
+    "MULTIPOINT",
+    "MULTISEGMENT",
+    "POINT",
+    "SEGMENT"
+  ],
+  "(0040,a160)": [
+    "AC",
+    "AO",
+    "CLASSIC",
+    "CMS_TSP",
+    "COERCE",
+    "CONVERT",
+    "CORRECT",
+    "CSV",
+    "D",
+    "DOC",
+    "ENHANCED",
+    "FHIR",
+    "HL7",
+    "IMPORTED",
+    "LOCAL",
+    "MIXED",
+    "MODIFIED",
+    "NO",
+    "NS",
+    "OR",
+    "OWL",
+    "PRODUCT",
+    "REMOVED",
+    "RESEARCH",
+    "SAFE",
+    "SERVICE",
+    "U",
+    "UNMODIFIED",
+    "UNSAFE",
+    "X",
+    "X509_1993_SIG",
+    "YES",
+    "Z"
+  ],
+  "(0040,a491)": [
+    "COMPLETE",
+    "PARTIAL"
+  ],
+  "(0040,a493)": [
+    "UNVERIFIED",
+    "VERIFIED"
+  ],
+  "(0040,a496)": [
+    "FINAL",
+    "PRELIMINARY"
+  ],
+  "(0040,db73)": [
+    "CODE",
+    "COMPOSITE",
+    "CONTAINER",
+    "CONTAINS",
+    "DATE",
+    "DATETIME",
+    "HAS ACQ CONTEXT",
+    "HAS CONCEPT MOD",
+    "HAS OBS CONTEXT",
+    "HAS PROPERTIES",
+    "IMAGE",
+    "INFERRED FROM",
+    "NUM",
+    "PNAME",
+    "SCOORD",
+    "SCOORD3D",
+    "SELECTED FROM",
+    "TABLE",
+    "TCOORD",
+    "TEXT",
+    "TIME",
+    "UIDREF",
+    "WAVEFORM"
+  ],
+  "(0040,e020)": [
+    "CDA",
+    "DICOM"
+  ],
+  "(0042,0013)": [
+    "NO",
+    "REORIENTED_ONLY",
+    "YES"
+  ],
+  "(0046,0032)": [
+    "IN",
+    "OUT"
+  ],
+  "(0046,0036)": [
+    "DOWN",
+    "UP"
+  ],
+  "(0046,0038)": [
+    "NONPROGRESSIVE",
+    "PROGRESSIVE"
+  ],
+  "(0046,0092)": [
+    "GREEN",
+    "RED",
+    "REDGREENSPLIT",
+    "WHITE"
+  ],
+  "(0046,0094)": [
+    "LANDOLT C",
+    "LETTERS",
+    "NUMBERS",
+    "PICTURES",
+    "TUMBLING E"
+  ],
+  "(0046,0095)": [
+    "MULTIPLE",
+    "SINGLE"
+  ],
+  "(0046,0125)": [
+    "DISTANCE",
+    "INTERMEDIATE",
+    "NEAR",
+    "OTHER"
+  ],
+  "(0046,0201)": [
+    "A",
+    "P"
+  ],
+  "(0046,0242)": [
+    "ACCEPTABLE",
+    "MARGINAL",
+    "NOT_ACCEPTABLE"
+  ],
+  "(0046,0248)": [
+    "N",
+    "Y"
+  ],
+  "(0048,0010)": [
+    "NO",
+    "YES"
+  ],
+  "(0048,0011)": [
+    "AUTO",
+    "MANUAL"
+  ],
+  "(0048,0012)": [
+    "NO",
+    "YES"
+  ],
+  "(0048,0114)": [
+    "FLUORESCENCE",
+    "REFLECTANCE"
+  ],
+  "(0048,0115)": [
+    "EXVIVO",
+    "INVIVO"
+  ],
+  "(0048,0301)": [
+    "FRAME",
+    "VOLUME"
+  ],
+  "(0048,0304)": [
+    "ALL",
+    "NONE",
+    "SOME",
+    "UNDEFINED"
+  ],
+  "(0050,0004)": [
+    "FR",
+    "GA",
+    "IN",
+    "MM",
+    "NO",
+    "YES"
+  ],
+  "(0050,0017)": [
+    "FR",
+    "GA",
+    "IN",
+    "MM"
+  ],
+  "(0050,001a)": [
+    "GLASS",
+    "METAL",
+    "PLASTIC"
+  ],
+  "(0052,0006)": [
+    "FREQUENCY",
+    "SPECTRAL",
+    "TIME"
+  ],
+  "(0052,0026)": [
+    "NO",
+    "YES"
+  ],
+  "(0052,0031)": [
+    "CC",
+    "CW"
+  ],
+  "(0052,0039)": [
+    "BILINEAR",
+    "CUBIC",
+    "REPLICATE"
+  ],
+  "(0052,003a)": [
+    "LIN",
+    "LOG",
+    "NO",
+    "YES"
+  ],
+  "(0054,0039)": [
+    "EMPTYING",
+    "EXCRETION",
+    "FLOW",
+    "UPTAKE",
+    "WASHOUT"
+  ],
+  "(0054,0202)": [
+    "ACQ DURING STEP",
+    "CLAMSHELL",
+    "CONTINUOUS",
+    "NONE",
+    "STATIONARY",
+    "STEP AND SHOOT",
+    "WOBBLE"
+  ],
+  "(0054,0500)": [
+    "ANT_TO_INF",
+    "APEX_TO_BASE",
+    "BASE_TO_APEX",
+    "INF_TO_ANT",
+    "SEPTUM_TO_WALL",
+    "WALL_TO_SEPTUM"
+  ],
+  "(0054,0501)": [
+    "FEET_TO_HEAD",
+    "HEAD_TO_FEET"
+  ],
+  "(0054,1000)": [
+    "DYNAMIC",
+    "GATED",
+    "IMAGE",
+    "REPROJECTION",
+    "STATIC",
+    "WHOLE BODY"
+  ],
+  "(0054,1001)": [
+    "1CM",
+    "BQML",
+    "CM2",
+    "CM2ML",
+    "CNTS",
+    "CPS",
+    "GML",
+    "MGMINML",
+    "MLG",
+    "MLMING",
+    "MLMINML",
+    "MLML",
+    "NONE",
+    "PCNT",
+    "PROPCNTS",
+    "PROPCPS",
+    "STDDEV",
+    "UMOLMINML",
+    "UMOLML"
+  ],
+  "(0054,1002)": [
+    "EMISSION",
+    "TRANSMISSION"
+  ],
+  "(0054,1004)": [
+    "MAX PIXEL",
+    "SUM"
+  ],
+  "(0054,1006)": [
+    "BSA",
+    "BW",
+    "IBW",
+    "LBM",
+    "LBMJAMES128",
+    "LBMJANMA"
+  ],
+  "(0054,1100)": [
+    "DLYD",
+    "NONE",
+    "PDDL",
+    "SING"
+  ],
+  "(0054,1102)": [
+    "ADMIN",
+    "NONE",
+    "START"
+  ],
+  "(0054,1220)": [
+    "DLYD",
+    "DTIM",
+    "SCAT",
+    "SING"
+  ],
+  "(0062,0001)": [
+    "BINARY",
+    "FRACTIONAL",
+    "HEIGHTMAP",
+    "LABELMAP",
+    "OCCUPANCY",
+    "PROBABILITY"
+  ],
+  "(0062,0008)": [
+    "AUTOMATIC",
+    "MANUAL",
+    "SEMIAUTOMATIC"
+  ],
+  "(0062,0010)": [
+    "OCCUPANCY",
+    "PROBABILITY"
+  ],
+  "(0062,0013)": [
+    "NO",
+    "OCCUPANCY",
+    "PROBABILITY",
+    "UNDEFINED",
+    "YES"
+  ],
+  "(0066,0009)": [
+    "NO",
+    "YES"
+  ],
+  "(0066,000c)": [
+    "POINTS",
+    "SURFACE",
+    "WIREFRAME"
+  ],
+  "(0066,000d)": [
+    "POINTS",
+    "SURFACE",
+    "WIREFRAME"
+  ],
+  "(0066,000e)": [
+    "NO",
+    "UNKNOWN",
+    "YES"
+  ],
+  "(0066,0010)": [
+    "NO",
+    "UNKNOWN",
+    "YES"
+  ],
+  "(0066,0040)": [
+    "Edge",
+    "Facet",
+    "Line",
+    "Triangle",
+    "Triangle Fan",
+    "Triangle Strip",
+    "Vertex"
+  ],
+  "(0066,0041)": [
+    "Edge",
+    "Facet",
+    "Line",
+    "Triangle",
+    "Triangle Fan",
+    "Triangle Strip",
+    "Vertex"
+  ],
+  "(0066,0042)": [
+    "Edge",
+    "Facet",
+    "Line",
+    "Triangle",
+    "Triangle Fan",
+    "Triangle Strip",
+    "Vertex"
+  ],
+  "(0066,0043)": [
+    "Edge",
+    "Facet",
+    "Line",
+    "Triangle",
+    "Triangle Fan",
+    "Triangle Strip",
+    "Vertex"
+  ],
+  "(0068,7001)": [
+    "NO",
+    "YES"
+  ],
+  "(0068,7002)": [
+    "NO",
+    "YES"
+  ],
+  "(006a,0001)": [
+    "2D",
+    "3D"
+  ],
+  "(006a,0007)": [
+    "AUTOMATIC",
+    "MANUAL",
+    "SEMIAUTOMATIC"
+  ],
+  "(006a,000d)": [
+    "NO",
+    "YES"
+  ],
+  "(006a,000f)": [
+    "NO",
+    "YES"
+  ],
+  "(0070,0003)": [
+    "DISPLAY",
+    "MATRIX",
+    "PIXEL"
+  ],
+  "(0070,0006)": [
+    "AC",
+    "AO",
+    "CLASSIC",
+    "CMS_TSP",
+    "COERCE",
+    "CONVERT",
+    "CORRECT",
+    "CSV",
+    "D",
+    "DOC",
+    "ENHANCED",
+    "FHIR",
+    "HL7",
+    "IMPORTED",
+    "LOCAL",
+    "MIXED",
+    "MODIFIED",
+    "NO",
+    "NS",
+    "OR",
+    "OWL",
+    "PRODUCT",
+    "REMOVED",
+    "RESEARCH",
+    "SAFE",
+    "SERVICE",
+    "U",
+    "UNMODIFIED",
+    "UNSAFE",
+    "X",
+    "X509_1993_SIG",
+    "YES",
+    "Z"
+  ],
+  "(0070,0012)": [
+    "CENTER",
+    "LEFT",
+    "RIGHT"
+  ],
+  "(0070,0015)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0020)": [
+    "2"
+  ],
+  "(0070,0022)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0023)": [
+    "CIRCLE",
+    "ELLIPSE",
+    "ELLIPSOID",
+    "INTERPOLATED",
+    "MULTIPOINT",
+    "POINT",
+    "POLYGON",
+    "POLYLINE",
+    "RECTANGLE"
+  ],
+  "(0070,0024)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0041)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0042)": [
+    "0",
+    "180",
+    "270",
+    "90"
+  ],
+  "(0070,0060)": [
+    "2",
+    "ARROW",
+    "AXIS",
+    "BOTTOM",
+    "CENTER",
+    "CIRCLE",
+    "CROSSHAIR",
+    "CUTLINE",
+    "DASHED",
+    "DISPLAY",
+    "ELLIPSE",
+    "INFINITELINE",
+    "INTERPOLATED",
+    "ISO_32000",
+    "LEFT",
+    "MATRIX",
+    "MULTILINE",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "PIXEL",
+    "POINT",
+    "POLYLINE",
+    "RANGELINE",
+    "RECTANGLE",
+    "RIGHT",
+    "RULER",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0100)": [
+    "FRAME",
+    "MAGNIFY",
+    "SCALE TO FIT",
+    "TRUE SIZE",
+    "VOLUME"
+  ],
+  "(0070,0228)": [
+    "ISO_32000"
+  ],
+  "(0070,0230)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0242)": [
+    "CENTER",
+    "LEFT",
+    "RIGHT"
+  ],
+  "(0070,0243)": [
+    "BOTTOM",
+    "CENTER",
+    "TOP"
+  ],
+  "(0070,0244)": [
+    "NORMAL",
+    "OFF",
+    "OUTLINED"
+  ],
+  "(0070,0248)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0249)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0250)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0254)": [
+    "DASHED",
+    "SOLID"
+  ],
+  "(0070,0257)": [
+    "SOLID",
+    "STIPPELED"
+  ],
+  "(0070,0261)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0273)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0274)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0278)": [
+    "N",
+    "Y"
+  ],
+  "(0070,0279)": [
+    "BOTTOM",
+    "CENTER",
+    "DASHED",
+    "ISO_32000",
+    "LEFT",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RIGHT",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0282)": [
+    "DISPLAY",
+    "PIXEL"
+  ],
+  "(0070,0294)": [
+    "ARROW",
+    "AXIS",
+    "BOTTOM",
+    "CENTER",
+    "CROSSHAIR",
+    "CUTLINE",
+    "DASHED",
+    "ELLIPSE",
+    "INFINITELINE",
+    "ISO_32000",
+    "LEFT",
+    "MULTILINE",
+    "N",
+    "NORMAL",
+    "OFF",
+    "OUTLINED",
+    "RANGELINE",
+    "RECTANGLE",
+    "RIGHT",
+    "RULER",
+    "SOLID",
+    "STIPPELED",
+    "TOP",
+    "Y"
+  ],
+  "(0070,0306)": [
+    "LINE",
+    "L_SHAPE",
+    "PLANE",
+    "POINT",
+    "RULER",
+    "SHAPE",
+    "SURFACE",
+    "T_SHAPE"
+  ],
+  "(0070,030c)": [
+    "AFFINE",
+    "RIGID",
+    "RIGID_SCALE"
+  ],
+  "(0070,0405)": [
+    "SUPERIMPOSED",
+    "UNDERLYING"
+  ],
+  "(0070,1202)": [
+    "VOLUME"
+  ],
+  "(0070,1204)": [
+    "NO",
+    "YES"
+  ],
+  "(0070,120b)": [
+    "NO",
+    "YES"
+  ],
+  "(0070,120d)": [
+    "AVERAGE_IP",
+    "MAXIMUM_IP",
+    "MINIMUM_IP",
+    "VOLUME_RENDERED"
+  ],
+  "(0070,1302)": [
+    "BOUNDING_BOX",
+    "EXCLUDE_SEG",
+    "INCLUDE_SEG",
+    "OBLIQUE_PLANES"
+  ],
+  "(0070,1501)": [
+    "PLANAR"
+  ],
+  "(0070,1502)": [
+    "SLAB",
+    "THIN"
+  ],
+  "(0070,150d)": [
+    "CROSSCURVE",
+    "FLYTHROUGH",
+    "INPUT_SEQ",
+    "PRESENTATION_SEQ",
+    "SWIVEL"
+  ],
+  "(0070,1602)": [
+    "ORTHOGRAPHIC",
+    "PERSPECTIVE"
+  ],
+  "(0070,1701)": [
+    "DOUBLESIDED",
+    "SINGLESIDED"
+  ],
+  "(0070,1802)": [
+    "ONE_TO_RGBA",
+    "TWO_TO_RGBA"
+  ],
+  "(0070,1907)": [
+    "NO",
+    "YES"
+  ],
+  "(0070,1a01)": [
+    "CROSSCURVE",
+    "FLYTHROUGH",
+    "INPUT_SEQ",
+    "PRESENTATION_SEQ",
+    "SWIVEL"
+  ],
+  "(0070,1a03)": [
+    "CROSSCURVE",
+    "FLYTHROUGH",
+    "INPUT_SEQ",
+    "PRESENTATION_SEQ",
+    "SWIVEL"
+  ],
+  "(0070,1a06)": [
+    "CROSSCURVE",
+    "FLYTHROUGH",
+    "INPUT_SEQ",
+    "PRESENTATION_SEQ",
+    "SWIVEL"
+  ],
+  "(0070,1a07)": [
+    "CROSSCURVE",
+    "FLYTHROUGH",
+    "INPUT_SEQ",
+    "PRESENTATION_SEQ",
+    "SWIVEL"
+  ],
+  "(0070,1b06)": [
+    "EQUAL",
+    "FOREGROUND"
+  ],
+  "(0070,1b07)": [
+    "FALSE",
+    "TRUE"
+  ],
+  "(0070,1b08)": [
+    "FALSE",
+    "TRUE"
+  ],
+  "(0070,1b13)": [
+    "GREATER_OR_EQUAL",
+    "GREATER_THAN",
+    "LESS_OR_EQUAL",
+    "LESS_THAN",
+    "RANGE_EXCL",
+    "RANGE_INCL"
+  ],
+  "(0070,1b14)": [
+    "GREATER_OR_EQUAL",
+    "GREATER_THAN",
+    "LESS_OR_EQUAL",
+    "LESS_THAN",
+    "RANGE_EXCL",
+    "RANGE_INCL"
+  ],
+  "(0072,0050)": [
+    "DS",
+    "DT",
+    "FD",
+    "FL",
+    "IS",
+    "SL",
+    "SQ",
+    "SS",
+    "SV",
+    "UC",
+    "UL",
+    "US",
+    "UV"
+  ],
+  "(0072,0304)": [
+    "CINE",
+    "SINGLE",
+    "STACK",
+    "TILED",
+    "VOLUME_CINE",
+    "VOLUME_VIEW"
+  ],
+  "(0072,0434)": [
+    "FRAME",
+    "PHASE",
+    "POSITION",
+    "TIME"
+  ],
+  "(0072,0717)": [
+    "CENTER",
+    "LEFT",
+    "RIGHT"
+  ],
+  "(0072,0718)": [
+    "BOTTOM",
+    "CENTER",
+    "TOP"
+  ],
+  "(0074,1022)": [
+    "TREAT",
+    "VERIFY",
+    "VERIFY_AND_TREAT"
+  ],
+  "(0074,1025)": [
+    "NO",
+    "YES"
+  ],
+  "(0074,1032)": [
+    "AFTER_BEAM",
+    "BEFORE_BEAM",
+    "DURING_BEAM"
+  ],
+  "(0074,1034)": [
+    "DOUBLE",
+    "SINGLE"
+  ],
+  "(0074,1036)": [
+    "OPEN_FIRST",
+    "OPEN_SECOND"
+  ],
+  "(0074,140a)": [
+    "ALREADY_TREATED",
+    "OTHER"
+  ],
+  "(0080,0008)": [
+    "NO",
+    "POINTS",
+    "SURFACE",
+    "UNKNOWN",
+    "WIREFRAME",
+    "YES"
+  ],
+  "(0082,0001)": [
+    "FAILED",
+    "INCONCLUSIVE",
+    "PASSED"
+  ],
+  "(0082,0008)": [
+    "CONSISTENT",
+    "MAJOR",
+    "MINOR",
+    "MODERATE"
+  ],
+  "(0082,0032)": [
+    "EQUAL",
+    "GREATER_OR_EQUAL",
+    "GREATER_THAN",
+    "LESS_OR_EQUAL",
+    "LESS_THAN",
+    "MEMBER_OF",
+    "MEMBER_OF_CID",
+    "NOT_MEMBER_OF",
+    "RANGE_EXCL",
+    "RANGE_INCL",
+    "UNCONSTRAINED"
+  ],
+  "(0082,0036)": [
+    "FAILURE",
+    "INFORMATIVE",
+    "WARNING"
+  ],
+  "(0100,0410)": [
+    "AC",
+    "AO",
+    "NS",
+    "OR"
+  ],
+  "(0400,0110)": [
+    "X509_1993_SIG"
+  ],
+  "(0400,0305)": [
+    "CMS_TSP"
+  ],
+  "(0400,0404)": [
+    "CMS_TSP",
+    "X509_1993_SIG"
+  ],
+  "(0400,0561)": [
+    "COERCE",
+    "CONVERT",
+    "CORRECT"
+  ],
+  "(0400,0565)": [
+    "COERCE",
+    "CONVERT",
+    "CORRECT"
+  ],
+  "(0400,0600)": [
+    "IMPORTED",
+    "LOCAL"
+  ],
+  "(2050,0020)": [
+    "IDENTITY",
+    "INVERSE",
+    "LINEAR",
+    "LINEAR_EXACT",
+    "SIGMOID",
+    "c",
+    "w",
+    "x",
+    "y",
+    "y max",
+    "y min"
+  ],
+  "(2200,0005)": [
+    "GLASS",
+    "METAL",
+    "PLASTIC"
+  ],
+  "(3002,000a)": [
+    "ACTUAL",
+    "OPERATOR",
+    "PLAN"
+  ],
+  "(3002,000c)": [
+    "NON_NORMAL",
+    "NORMAL"
+  ],
+  "(3002,0041)": [
+    "CALCULATED",
+    "MEASURED"
+  ],
+  "(3002,0051)": [
+    "NON_STANDARD",
+    "STANDARD"
+  ],
+  "(3002,0105)": [
+    "NO",
+    "YES"
+  ],
+  "(3002,0111)": [
+    "ABSOLUTE_MATRIX",
+    "ABSOLUTE_PARAMS",
+    "RELATIVE_PARAMS"
+  ],
+  "(3002,0115)": [
+    "BEAM",
+    "CUSTOM",
+    "OPEN",
+    "RELATIVE_TO_BEAM"
+  ],
+  "(3002,0129)": [
+    "KV",
+    "MV"
+  ],
+  "(3002,012a)": [
+    "CT",
+    "PROJECTION"
+  ],
+  "(3002,012e)": [
+    "CUSTOM_ARC",
+    "FULL_ARC",
+    "HALF_ARC"
+  ],
+  "(3002,012f)": [
+    "CENTERED",
+    "SHIFTED"
+  ],
+  "(3004,0001)": [
+    "CUMULATIVE",
+    "DIFFERENTIAL",
+    "NATURAL"
+  ],
+  "(3004,0002)": [
+    "GY",
+    "RELATIVE"
+  ],
+  "(3004,0004)": [
+    "EFFECTIVE",
+    "ERROR",
+    "PHYSICAL"
+  ],
+  "(3004,0005)": [
+    "NONE",
+    "NON_RIGID",
+    "RIGID"
+  ],
+  "(3004,000a)": [
+    "BEAM",
+    "BEAM_SESSION",
+    "BRACHY",
+    "BRACHY_SESSION",
+    "CONTROL_POINT",
+    "FRACTION",
+    "FRACTION_SESSION",
+    "MULTI_PLAN",
+    "PLAN",
+    "PLAN_OVERVIEW",
+    "RECORD"
+  ],
+  "(3004,000e)": [
+    "0",
+    "0000H",
+    "0001H",
+    "1",
+    "ARGB",
+    "CMYK",
+    "HSV",
+    "MONOCHROME1",
+    "MONOCHROME2",
+    "PALETTE COLOR",
+    "RGB",
+    "XYB",
+    "YBR_FULL",
+    "YBR_FULL_422",
+    "YBR_ICT",
+    "YBR_PARTIAL_420",
+    "YBR_PARTIAL_422",
+    "YBR_RCT"
+  ],
+  "(3004,0014)": [
+    "IMAGE",
+    "ROI_OVERRIDE",
+    "WATER"
+  ],
+  "(3004,0054)": [
+    "CM3",
+    "PERCENT",
+    "PER_U"
+  ],
+  "(3004,0062)": [
+    "EXCLUDED",
+    "INCLUDED"
+  ],
+  "(3006,0033)": [
+    "ENCLOSED",
+    "ENCLOSING",
+    "SAME"
+  ],
+  "(3006,0036)": [
+    "AUTOMATIC",
+    "MANUAL",
+    "SEMIAUTOMATIC"
+  ],
+  "(3006,0042)": [
+    "CLOSEDPLANAR_XOR",
+    "CLOSED_PLANAR",
+    "OPEN_NONPLANAR",
+    "OPEN_PLANAR",
+    "POINT"
+  ],
+  "(3006,004e)": [
+    "AUTOMATIC",
+    "MANUAL",
+    "SEMIAUTOMATIC"
+  ],
+  "(3006,0080)": [
+    "AUTOMATIC",
+    "MANUAL",
+    "SEMIAUTOMATIC"
+  ],
+  "(3006,0084)": [
+    "0000H",
+    "0001H",
+    "1",
+    "16",
+    "32",
+    "ALTERNATIVE",
+    "AUTOMATIC",
+    "BEAM",
+    "BEAM_SESSION",
+    "BRACHY",
+    "BRACHY_SESSION",
+    "CONCURRENT",
+    "CONTROL_POINT",
+    "CURATIVE",
+    "EFFECTIVE",
+    "ERROR",
+    "FRACTION",
+    "FRACTION_SESSION",
+    "GY",
+    "IMAGE",
+    "MACHINE_QA",
+    "MANUAL",
+    "MONOCHROME2",
+    "MULTI_PLAN",
+    "NONE",
+    "NON_RIGID",
+    "PALLIATIVE",
+    "PATIENT",
+    "PHYSICAL",
+    "PLAN",
+    "PLAN_OVERVIEW",
+    "PREDECESSOR",
+    "PRIOR",
+    "PROPHYLACTIC",
+    "RECORD",
+    "RELATIVE",
+    "RESEARCH",
+    "RIGID",
+    "ROI_OVERRIDE",
+    "SEMIAUTOMATIC",
+    "SERVICE",
+    "TREATMENT_DEVICE",
+    "VERIFICATION",
+    "VERIFIED_PLAN",
+    "WATER"
+  ],
+  "(3006,00a4)": [
+    "AVOIDANCE",
+    "BOLUS",
+    "BRACHY_ACCESSORY",
+    "BRACHY_CHANNEL",
+    "BRACHY_CHNL_SHLD",
+    "BRACHY_SRC_APP",
+    "CAVITY",
+    "CONTRAST_AGENT",
+    "CONTROL",
+    "CTV",
+    "DEVICE",
+    "DOSE_MEASUREMENT",
+    "DOSE_REGION",
+    "EXTERNAL",
+    "FIXATION",
+    "GTV",
+    "IRRAD_VOLUME",
+    "ISOCENTER",
+    "MARKER",
+    "OAR",
+    "ORGAN",
+    "PTV",
+    "REGISTRATION",
+    "SUPPORT",
+    "TREATED_VOLUME"
+  ],
+  "(3006,00b2)": [
+    "EFFECTIVE_Z",
+    "EFF_Z_PER_A",
+    "ELEM_FRACTION",
+    "MEAN_EXCI_ENERGY",
+    "REL_ELEC_DENSITY",
+    "REL_MASS_DENSITY",
+    "REL_STOP_RATIO"
+  ],
+  "(3008,0014)": [
+    "DIODE",
+    "EPID",
+    "FILM",
+    "GEL",
+    "ION_CHAMBER",
+    "TLD"
+  ],
+  "(3008,0016)": [
+    "ACTUAL",
+    "COORDINATES",
+    "NOMINAL",
+    "ORGAN_AT_RISK",
+    "POINT",
+    "QA",
+    "SITE",
+    "TARGET",
+    "TRACKING",
+    "VOLUME"
+  ],
+  "(3008,002a)": [
+    "MACHINE",
+    "NORMAL",
+    "OPERATOR",
+    "UNKNOWN"
+  ],
+  "(3008,002c)": [
+    "NOT_VERIFIED",
+    "VERIFIED",
+    "VERIFIED_OVR"
+  ],
+  "(3008,0042)": [
+    "DelMS[CP n ]",
+    "EndMS",
+    "SpecMS[CP n ]",
+    "StartMS"
+  ],
+  "(3008,0044)": [
+    "DelMS[CP n ]",
+    "EndMS",
+    "SpecMS[CP n ]",
+    "StartMS"
+  ],
+  "(3008,00a3)": [
+    "NO",
+    "YES"
+  ],
+  "(3008,0116)": [
+    "FAILED",
+    "PASSED",
+    "UNKNOWN"
+  ],
+  "(3008,0200)": [
+    "COMPLETED",
+    "NOT_STARTED",
+    "ON_BREAK",
+    "ON_TREATMENT",
+    "STOPPED",
+    "SUSPENDED"
+  ],
+  "(3008,0224)": [
+    "BRACHY",
+    "EXTERNAL_BEAM"
+  ],
+  "(3008,0230)": [
+    "EXTENDED",
+    "RETRACTED",
+    "UNKNOWN"
+  ],
+  "(300a,000a)": [
+    "CURATIVE",
+    "MACHINE_QA",
+    "PALLIATIVE",
+    "PROPHYLACTIC",
+    "RESEARCH",
+    "SERVICE",
+    "VERIFICATION"
+  ],
+  "(300a,000c)": [
+    "PATIENT",
+    "TREATMENT_DEVICE"
+  ],
+  "(300a,0014)": [
+    "COORDINATES",
+    "POINT",
+    "SITE",
+    "VOLUME"
+  ],
+  "(300a,0015)": [
+    "MEV",
+    "MV"
+  ],
+  "(300a,0020)": [
+    "ORGAN_AT_RISK",
+    "TARGET"
+  ],
+  "(300a,0055)": [
+    "ALTERNATIVE",
+    "CONCURRENT",
+    "PREDECESSOR",
+    "PRIOR",
+    "VERIFIED_PLAN"
+  ],
+  "(300a,0083)": [
+    "ACTUAL",
+    "COORDINATES",
+    "NOMINAL",
+    "ORGAN_AT_RISK",
+    "POINT",
+    "QA",
+    "SITE",
+    "TARGET",
+    "TRACKING",
+    "VOLUME"
+  ],
+  "(300a,0086)": [
+    "ABSENT",
+    "APERTURE",
+    "ASYMX",
+    "ASYMY",
+    "CC",
+    "CONTINUATION",
+    "CW",
+    "DOUBLE_SIDED",
+    "DYNAMIC",
+    "ELECTRON",
+    "ELECTRON_CIRC",
+    "ELECTRON_OPEN",
+    "ELECTRON_RECT",
+    "ELECTRON_SHORT",
+    "ELECTRON_SQUARE",
+    "GRATICULE",
+    "HDR",
+    "IMAGE_DETECTOR",
+    "IN",
+    "INTRAOPERATIVE",
+    "MINUTE",
+    "MLCX",
+    "MLCY",
+    "MOTORIZED",
+    "MU",
+    "NEUTRON",
+    "NO",
+    "NONE",
+    "NON_NORMAL",
+    "NON_STANDARD",
+    "NORMAL",
+    "OPEN_PORTFILM",
+    "OUT",
+    "PATIENT_SIDE",
+    "PHOTON",
+    "PHOTON_CIRC",
+    "PHOTON_RECT",
+    "PHOTON_SQUARE",
+    "PRESENT",
+    "PROTON",
+    "RETICLE",
+    "SETUP",
+    "SHIELDING",
+    "SOURCE_SIDE",
+    "STANDARD",
+    "STATIC",
+    "STEREOTACTIC",
+    "SYM_CIRCULAR",
+    "SYM_RECTANGLE",
+    "SYM_SQUARE",
+    "TBI",
+    "TREATMENT",
+    "TRMT_PORTFILM",
+    "X",
+    "Y",
+    "YES"
+  ],
+  "(300a,008b)": [
+    "BEAM_LEVEL",
+    "FRACTION_LEVEL"
+  ],
+  "(300a,0090)": [
+    "EFFECTIVE",
+    "PHYSICAL"
+  ],
+  "(300a,0092)": [
+    "EFFECTIVE",
+    "PHYSICAL"
+  ],
+  "(300a,0093)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,00b3)": [
+    "MINUTE",
+    "MU",
+    "NP"
+  ],
+  "(300a,00b8)": [
+    "ASYMX",
+    "ASYMY",
+    "MLCX",
+    "MLCY",
+    "X",
+    "Y"
+  ],
+  "(300a,00c4)": [
+    "DYNAMIC",
+    "STATIC"
+  ],
+  "(300a,00c6)": [
+    "ELECTRON",
+    "ION",
+    "MIXED_ION",
+    "NEUTRON",
+    "PHOTON",
+    "PROTON"
+  ],
+  "(300a,00c7)": [
+    "HDR",
+    "TBI"
+  ],
+  "(300a,00ce)": [
+    "CONTINUATION",
+    "OPEN_PORTFILM",
+    "SETUP",
+    "TREATMENT",
+    "TRMT_PORTFILM",
+    "VERIFICATION"
+  ],
+  "(300a,00d3)": [
+    "DYNAMIC",
+    "MOTORIZED",
+    "PARTIAL_MOTORIZ",
+    "PARTIAL_STANDARD",
+    "STANDARD"
+  ],
+  "(300a,00ee)": [
+    "DYNAMIC",
+    "STANDARD"
+  ],
+  "(300a,00f8)": [
+    "APERTURE",
+    "SHIELDING"
+  ],
+  "(300a,00fa)": [
+    "ABSENT",
+    "PRESENT"
+  ],
+  "(300a,00fb)": [
+    "PATIENT_SIDE",
+    "SOURCE_SIDE"
+  ],
+  "(300a,0109)": [
+    "ELECTRON_CIRC",
+    "ELECTRON_OPEN",
+    "ELECTRON_RECT",
+    "ELECTRON_SHORT",
+    "ELECTRON_SQUARE",
+    "INTRAOPERATIVE",
+    "ION_CIRC",
+    "ION_OPEN",
+    "ION_RECT",
+    "ION_SHORT",
+    "ION_SQUARE",
+    "PHOTON_CIRC",
+    "PHOTON_RECT",
+    "PHOTON_SQUARE",
+    "STEREOTACTIC"
+  ],
+  "(300a,0118)": [
+    "IN",
+    "OUT",
+    "PARTIAL"
+  ],
+  "(300a,011f)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0121)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0123)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0126)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0142)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0146)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,014c)": [
+    "CC",
+    "CW",
+    "NONE"
+  ],
+  "(300a,0150)": [
+    "L",
+    "R"
+  ],
+  "(300a,0192)": [
+    "BITEBLOCK",
+    "BODY_FRAME",
+    "BREAST_BOARD",
+    "CAST",
+    "HEADFRAME",
+    "HEADREST",
+    "MASK",
+    "MOLD",
+    "RECTAL_BALLOON",
+    "VACUUM_MOLD",
+    "WHOLE_BODY_POD"
+  ],
+  "(300a,01a2)": [
+    "EYE",
+    "GONAD",
+    "GUM"
+  ],
+  "(300a,01b0)": [
+    "BREAST_BRIDGE",
+    "FIXED_SSD",
+    "ISOCENTRIC",
+    "SKIN_APPOSITION",
+    "TBI"
+  ],
+  "(300a,01b6)": [
+    "ARC",
+    "DISTANCE_METER",
+    "LASER_POINTER",
+    "MECHANICAL_PTR",
+    "TABLE_HEIGHT"
+  ],
+  "(300a,0200)": [
+    "CONTACT",
+    "INTERSTITIAL",
+    "INTRACAVITARY",
+    "INTRALUMENARY",
+    "INTRAVASCULAR",
+    "PERMANENT"
+  ],
+  "(300a,0202)": [
+    "HDR",
+    "LDR",
+    "MANUAL",
+    "MDR",
+    "PDR"
+  ],
+  "(300a,0214)": [
+    "CYLINDER",
+    "LINE",
+    "POINT",
+    "SPHERE"
+  ],
+  "(300a,0229)": [
+    "AIR_KERMA_RATE",
+    "DOSE_RATE_WATER"
+  ],
+  "(300a,0232)": [
+    "BLOEDORN",
+    "CHANDIGARH",
+    "DELCLOS",
+    "ENDOBRONCHIAL",
+    "ENDORECTAL",
+    "FLETCHER_SUIT",
+    "HENSCHKE",
+    "JOSLIN_FLYNN",
+    "MANCHESTER",
+    "NASOPHARYNGEAL",
+    "OESOPHAGEAL",
+    "PERINEAL",
+    "SYED_NEBLETT"
+  ],
+  "(300a,0264)": [
+    "DILATATION",
+    "FLAB",
+    "MOLD",
+    "PLAQUE",
+    "SHIELD"
+  ],
+  "(300a,0288)": [
+    "FIXED",
+    "OSCILLATING",
+    "STEPWISE",
+    "UNIDIRECTIONAL"
+  ],
+  "(300a,0292)": [
+    "FLEXIBLE",
+    "RIGID"
+  ],
+  "(300a,02e0)": [
+    "ABSENT",
+    "PRESENT"
+  ],
+  "(300a,02e1)": [
+    "DOUBLE_SIDED",
+    "PATIENT_SIDE",
+    "SOURCE_SIDE"
+  ],
+  "(300a,02ec)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,0308)": [
+    "MODULATED",
+    "MODULATED_SPEC",
+    "NONE",
+    "UNIFORM"
+  ],
+  "(300a,0309)": [
+    "LEAPING",
+    "LINEAR",
+    "STATIONARY"
+  ],
+  "(300a,0320)": [
+    "ANALOG",
+    "BINARY"
+  ],
+  "(300a,0338)": [
+    "MAGNET",
+    "SCATTERER"
+  ],
+  "(300a,0348)": [
+    "FIXED",
+    "WHL_FIXEDWEIGHTS",
+    "WHL_MODWEIGHTS"
+  ],
+  "(300a,0350)": [
+    "CHAIR",
+    "TABLE"
+  ],
+  "(300a,0393)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,0395)": [
+    "ALLOWED",
+    "NOT ALLOWED"
+  ],
+  "(300a,0423)": [
+    "GRATICULE",
+    "IMAGE_DETECTOR",
+    "RETICLE"
+  ],
+  "(300a,0432)": [
+    "SYM_CIRCULAR",
+    "SYM_RECTANGLE",
+    "SYM_SQUARE"
+  ],
+  "(300a,0451)": [
+    "AUTOMATIC",
+    "CONTINUOUS",
+    "TRIGGERED"
+  ],
+  "(300a,0452)": [
+    "INROOM",
+    "REMOTE"
+  ],
+  "(300a,0501)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0502)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0503)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0504)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0507)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0508)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0509)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0510)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0511)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,0512)": [
+    "CENTER",
+    "HIGHEST",
+    "MAXIMUM"
+  ],
+  "(300a,060f)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,061a)": [
+    "NOMINAL",
+    "PER_RADIATION"
+  ],
+  "(300a,061b)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,061d)": [
+    "QA",
+    "TRACKING"
+  ],
+  "(300a,0637)": [
+    "MACHINE_QA",
+    "PLAN_QA",
+    "RESEARCH",
+    "SERVICE",
+    "TREATMENT"
+  ],
+  "(300a,0638)": [
+    "FULL",
+    "GEOMETRY_ONLY",
+    "IDENT_ONLY"
+  ],
+  "(300a,0639)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,064e)": [
+    "BINARY",
+    "VARIABLE"
+  ],
+  "(300a,064f)": [
+    "M",
+    "N",
+    "P"
+  ],
+  "(300a,065c)": [
+    "ABSENT",
+    "DEVICE_SPECIFIC",
+    "GLOBAL"
+  ],
+  "(300a,0663)": [
+    "DOUBLE_SIDED",
+    "PATIENT_SIDE",
+    "SOURCE_SIDE"
+  ],
+  "(300a,066c)": [
+    "PATIENT_SIDE",
+    "SOURCE_SIDE"
+  ],
+  "(300a,068b)": [
+    "ACTUAL",
+    "NOMINAL"
+  ],
+  "(300a,0701)": [
+    "MACHINE_QA",
+    "PLAN_QA",
+    "RESEARCH",
+    "SERVICE",
+    "TREATMENT"
+  ],
+  "(300a,0706)": [
+    "COMPLETE",
+    "PARTIAL"
+  ],
+  "(300a,0707)": [
+    "MACHINE_QA",
+    "PLAN_QA",
+    "RESEARCH",
+    "SERVICE",
+    "TREATMENT"
+  ],
+  "(300a,0708)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,0709)": [
+    "DEVICE",
+    "USER"
+  ],
+  "(300a,0714)": [
+    "ABNORMAL",
+    "NORMAL"
+  ],
+  "(300a,0723)": [
+    "NO",
+    "YES"
+  ],
+  "(300a,0732)": [
+    "CLINICAL",
+    "MACHINE"
+  ],
+  "(300a,079e)": [
+    "MACHINE_QA",
+    "PLAN_QA",
+    "RESEARCH",
+    "SERVICE",
+    "TREATMENT"
+  ],
+  "(300c,0006)": [
+    "ABSENT",
+    "ALLOWED",
+    "ANALOG",
+    "APERTURE",
+    "ASYMX",
+    "ASYMY",
+    "BINARY",
+    "CC",
+    "CENTER",
+    "CONTINUATION",
+    "CW",
+    "DEVICE",
+    "DOUBLE_SIDED",
+    "DYNAMIC",
+    "DelMS[CP n ]",
+    "ELECTRON",
+    "ELECTRON_CIRC",
+    "ELECTRON_OPEN",
+    "ELECTRON_RECT",
+    "ELECTRON_SHORT",
+    "ELECTRON_SQUARE",
+    "EXTENDED",
+    "EndMS",
+    "FIXED",
+    "GRATICULE",
+    "HDR",
+    "HIGHEST",
+    "HOLD",
+    "IMAGE_DETECTOR",
+    "IN",
+    "INTRAOPERATIVE",
+    "ION",
+    "ION_CIRC",
+    "ION_OPEN",
+    "ION_RECT",
+    "ION_SHORT",
+    "ION_SQUARE",
+    "L",
+    "LEAPING",
+    "LINEAR",
+    "MACHINE",
+    "MAGNET",
+    "MAXIMUM",
+    "MEV",
+    "MINUTE",
+    "MIXED_ION",
+    "MLCX",
+    "MLCY",
+    "MODULATED",
+    "MODULATED_SPEC",
+    "MOTORIZED",
+    "MU",
+    "MV",
+    "NEUTRON",
+    "NO",
+    "NONE",
+    "NON_NORMAL",
+    "NON_STANDARD",
+    "NORMAL",
+    "NOT ALLOWED",
+    "NOT_VERIFIED",
+    "NP",
+    "OPEN_PORTFILM",
+    "OPERATOR",
+    "OUT",
+    "PARTIAL_MOTORIZ",
+    "PARTIAL_STANDARD",
+    "PATIENT_SIDE",
+    "PHOTON",
+    "PHOTON_CIRC",
+    "PHOTON_RECT",
+    "PHOTON_SQUARE",
+    "PRESENT",
+    "PROTON",
+    "R",
+    "RESTART",
+    "RETICLE",
+    "RETRACTED",
+    "SCATTERER",
+    "SETUP",
+    "SHIELDING",
+    "SOURCE_SIDE",
+    "STANDARD",
+    "STATIC",
+    "STATIONARY",
+    "STEREOTACTIC",
+    "SYM_CIRCULAR",
+    "SYM_RECTANGLE",
+    "SYM_SQUARE",
+    "SpecMS[CP n ]",
+    "StartMS",
+    "TBI",
+    "TREATMENT",
+    "TRMT_PORTFILM",
+    "UNIFORM",
+    "UNKNOWN",
+    "USER",
+    "VERIFICATION",
+    "VERIFIED",
+    "VERIFIED_OVR",
+    "WHL_FIXEDWEIGHTS",
+    "WHL_MODWEIGHTS",
+    "X",
+    "Y",
+    "YES"
+  ],
+  "(300c,000c)": [
+    "AIR_KERMA_RATE",
+    "BLOEDORN",
+    "CHANDIGARH",
+    "CONTACT",
+    "CYLINDER",
+    "DELCLOS",
+    "DILATATION",
+    "DOSE_RATE_WATER",
+    "ENDOBRONCHIAL",
+    "ENDORECTAL",
+    "FIXED",
+    "FLAB",
+    "FLETCHER_SUIT",
+    "FLEXIBLE",
+    "HDR",
+    "HENSCHKE",
+    "INTERSTITIAL",
+    "INTRACAVITARY",
+    "INTRALUMENARY",
+    "INTRAVASCULAR",
+    "JOSLIN_FLYNN",
+    "LDR",
+    "LINE",
+    "MANCHESTER",
+    "MANUAL",
+    "MDR",
+    "MOLD",
+    "NASOPHARYNGEAL",
+    "OESOPHAGEAL",
+    "OSCILLATING",
+    "PDR",
+    "PERINEAL",
+    "PERMANENT",
+    "PLAQUE",
+    "POINT",
+    "RIGID",
+    "SHIELD",
+    "SPHERE",
+    "STEPWISE",
+    "SYED_NEBLETT",
+    "UNIDIRECTIONAL"
+  ],
+  "(300c,0022)": [
+    "BEAM_LEVEL",
+    "EFFECTIVE",
+    "FRACTION_LEVEL",
+    "NO",
+    "PHYSICAL",
+    "YES"
+  ],
+  "(300c,0051)": [
+    "ACTUAL",
+    "COORDINATES",
+    "NOMINAL",
+    "ORGAN_AT_RISK",
+    "POINT",
+    "QA",
+    "SITE",
+    "TARGET",
+    "TRACKING",
+    "VOLUME"
+  ],
+  "(300c,006a)": [
+    "ARC",
+    "BELT",
+    "BITEBLOCK",
+    "BODY_FRAME",
+    "BREAST_BOARD",
+    "BREAST_BRIDGE",
+    "BREATH_HOLD",
+    "CAST",
+    "CO2_SENSOR",
+    "CORRECTION",
+    "DISTANCE_METER",
+    "ECG",
+    "EXTERNAL_MARKER",
+    "EYE",
+    "FIXED_SSD",
+    "GATING",
+    "GONAD",
+    "GUM",
+    "HEADFRAME",
+    "HEADREST",
+    "IMAGE",
+    "INTERNAL_MARKER",
+    "ISOCENTRIC",
+    "LASER_POINTER",
+    "MASK",
+    "MECHANICAL_PTR",
+    "MOLD",
+    "MR_PHASE",
+    "NASAL_PROBE",
+    "NAVIGATOR",
+    "NONE",
+    "PHASE_ORDERING",
+    "PHASE_RESCANNING",
+    "REALTIME",
+    "RECTAL_BALLOON",
+    "RETROSPECTIVE",
+    "SITTING",
+    "SKIN_APPOSITION",
+    "SPIROMETER",
+    "TABLE_HEIGHT",
+    "TBI",
+    "TRACKING",
+    "UNKNOWN",
+    "VACUUM_MOLD",
+    "WHOLE_BODY_POD"
+  ],
+  "(300c,00a0)": [
+    "ASYMX",
+    "ASYMY",
+    "MLCX",
+    "MLCY",
+    "X",
+    "Y"
+  ],
+  "(300c,0112)": [
+    "ALREADY_TREATED"
+  ],
+  "(300c,0123)": [
+    "NO",
+    "YES"
+  ],
+  "(300c,0126)": [
+    "HOLD",
+    "RESTART"
+  ],
+  "(300c,0129)": [
+    "DEVICE",
+    "USER"
+  ],
+  "(300e,0002)": [
+    "APPROVED",
+    "REJECTED",
+    "UNAPPROVED"
+  ],
+  "(3010,0002)": [
+    "NO",
+    "YES"
+  ],
+  "(3010,0008)": [
+    "INTERSECTION",
+    "NEGATION",
+    "SUBTRACTION",
+    "UNION",
+    "XOR"
+  ],
+  "(3010,000c)": [
+    "INTERSECTION",
+    "NEGATION",
+    "SUBTRACTION",
+    "UNION",
+    "XOR"
+  ],
+  "(3010,000e)": [
+    "NO",
+    "YES"
+  ],
+  "(3010,0010)": [
+    "NO",
+    "YES"
+  ],
+  "(3010,001c)": [
+    "BARCODE",
+    "RFID"
+  ],
+  "(3010,0045)": [
+    "NO",
+    "YES"
+  ],
+  "(3010,0046)": [
+    "BRACHYTHERAPY",
+    "TELETHERAPY"
+  ],
+  "(3010,0047)": [
+    "ELECTRON",
+    "ION",
+    "NEUTRON",
+    "PHOTON"
+  ],
+  "(3010,0048)": [
+    "ELECTRONIC",
+    "ISOTOPIC"
+  ],
+  "(3010,004f)": [
+    "END",
+    "START"
+  ],
+  "(3010,0059)": [
+    "CURATIVE",
+    "PALLIATIVE",
+    "PROPHYLACTIC"
+  ],
+  "(3010,0063)": [
+    "CURRENT",
+    "LIFETIME"
+  ],
+  "(3010,0068)": [
+    "DOWNSTREAM",
+    "NONE",
+    "TOTAL",
+    "UPSTREAM"
+  ],
+  "(3010,0073)": [
+    "NO",
+    "YES"
+  ],
+  "(3010,0075)": [
+    "BOTH",
+    "EVALUATION",
+    "OPTIMIZATION"
+  ],
+  "(3010,0083)": [
+    "END",
+    "START"
+  ],
+  "(60xx,0040)": [
+    "G",
+    "R"
+  ],
+  "(60xx,0045)": [
+    "ACTIVE 2D/BMODE IMAGE AREA",
+    "ACTIVE IMAGE AREA",
+    "ACTIVE VOLUME FLOW IMAGE AREA",
+    "AUTOMATED",
+    "USER"
+  ]
+}

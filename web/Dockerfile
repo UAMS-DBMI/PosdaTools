@@ -24,12 +24,17 @@ RUN cd /kohlrabi && \
 
 FROM node:16-alpine as mirabelle-builder
 RUN apk --update add make
+# receive commit from env and re-export to container
+ARG MIRABELLE_COMMIT=unknown
+ENV MIRABELLE_COMMIT=$MIRABELLE_COMMIT
 COPY mirabelle /mirabelle
 RUN cd /mirabelle && \
   make build
 
 #FROM nginx:1.13.10-alpine
-FROM bitnami/nginx:1.21
+FROM bitnamilegacy/nginx:1.21
+ARG MIRABELLE_COMMIT=unknown
+LABEL org.opencontainers.image.revision=$MIRABELLE_COMMIT
 
 COPY default.conf /opt/bitnami/nginx/conf/server_blocks/
 COPY www /www

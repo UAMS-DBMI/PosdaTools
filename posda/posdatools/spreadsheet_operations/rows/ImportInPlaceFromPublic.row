@@ -1,0 +1,6 @@
+:operation_name: ImportInPlaceFromPublic
+:command_line: ImportInPlaceFromPublic.py <?bkgrnd_id?> <activity_id> <notify> "<collection_name>" "<visibility>" "<site_name>"
+:operation_type: background_process
+:input_line_format: 
+:tags: ['import']
+:can_chain: 

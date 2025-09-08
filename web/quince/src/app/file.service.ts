@@ -108,6 +108,7 @@ export class FileService {
       planar_configuration: headers.get('q-dicom-planar-config'),
       bits_stored: headers.get('q-dicom-bits-stored'),
       bits_allocated: headers.get('q-dicom-bits-allocated'),
+      num_of_frames: Number(headers.get('q-dicom-num-of-frames')),
     };
 
     return img;

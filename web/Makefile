@@ -1,8 +1,10 @@
-ifndef POSDA_IMG_VERSION
-	override POSDA_IMG_VERSION=0
-endif
+include ../VERSION
+
 TAG=$(shell git rev-parse --short HEAD)
+MIRABELLE_COMMIT=$(shell git --git-dir=mirabelle/.git rev-parse HEAD)
+
 IMAGE_NAME=tcia/posda_web
+
 .PHONY: push clean
 
 default: build
@@ -13,7 +15,8 @@ last_built: Dockerfile default.conf
 	docker build .  \
 		-t ${IMAGE_NAME}:latest \
 		-t ${IMAGE_NAME}:${TAG} \
-		-t ${IMAGE_NAME}:${POSDA_IMG_VERSION} 
+		-t ${IMAGE_NAME}:${POSDA_IMG_VERSION} \
+		--build-arg MIRABELLE_COMMIT="${MIRABELLE_COMMIT}"
 	date > last_built
 
 push: last_built

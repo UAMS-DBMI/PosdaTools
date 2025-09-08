@@ -6,7 +6,9 @@ from starlette.responses import Response, FileResponse
 import asyncpg.exceptions
 
 from .auth import logged_in_user, User
-from ..util import Database
+from ..util import Database, asynczip
+
+from ..util.models import File, FrameResponse, consistent
 
 router = APIRouter(
     tags=["Functions for masking series"],
@@ -20,6 +22,8 @@ class MaskerParameters(BaseModel):
     width: int
     height: int
     depth: int
+    fill: Optional[int] = None
+    noise: Optional[int] = None
     form: Optional[str] = 'cylinder'
     function: Optional[str] = 'mask'
 
@@ -170,11 +174,13 @@ async def update_masking_parameters(
 
     try:
         await db.fetch("""\
-            update masking
-            set masking_parameters = $1,
-                masking_status = $2
-            where image_equivalence_class_id = $3
-        """, [json_str, new_status, iec])
+            INSERT INTO masking (image_equivalence_class_id, masking_status, masking_parameters)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (image_equivalence_class_id)
+            DO UPDATE SET 
+                masking_status = EXCLUDED.masking_status,
+                masking_parameters = EXCLUDED.masking_parameters
+        """, [iec, new_status, json_str])
 
         await db.fetch("""\
             insert into masking_history
@@ -339,17 +345,68 @@ async def mark_accept(
     except asyncpg.exceptions.ForeignKeyViolationError as e:
         raise HTTPException(detail="Invalid IEC supplied", status_code=422)
 
-@router.get("/visualreview/{visual_review_instance_id}")
-async def get_for_visualreview(
+@router.get("/visualreview/{visual_review_instance_id}/next-for-review")
+async def get_next_to_review_for_review(
     visual_review_instance_id: int,
     db: Database = Depends(),
     current_user: User = logged_in_user
 ):
-    """Return list of all IECs in this VR that are flagged for Masking
+    """Return the "next" IEC in this VR that is waiting to be Reviewed
+
+    The IEC is chosen from the set of all IECs in this VR that are 
+    waiting to be reviewed (masking_status of 'process-complete').
+    It then chooses one from this set randomly.
+
+    This can be used to select an IEC for a curator to work on. The 
+    exact one is chosen randomly as a cheap way to ensure multiple
+    people working on th same VR don't end up working on the same IEC.
     """
 
-    try:
-        records = await db.fetch("""\
+    record = await db.fetch_one("""\
+        with all_ready_for_review as (
+            select
+                image_equivalence_class_id
+            from
+                image_equivalence_class
+                natural join masking
+                natural join file_import
+            where
+                visual_review_instance_id = $1
+                and masking_status = 'process-complete'
+        )
+
+        select *
+        from all_ready_for_review
+        order by random()
+        limit 1
+    """, [visual_review_instance_id])
+
+    if len(record) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    return record[0]
+
+
+@router.get("/visualreview/{visual_review_instance_id}/next")
+async def get_next_to_review(
+    visual_review_instance_id: int,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Return the "next" IEC in this VR that is waiting to be Masked
+
+    The IEC is chosen from the set of all IECs in this VR that are 
+    flagged for Masking, minus those that are in a status that indicates
+    they have already had masking coordiantes assigned. It then chooses
+    one from this set randomly.
+
+    This can be used to select an IEC for a curator to work on. The 
+    exact one is chosen randomly as a cheap way to ensure multiple
+    people working on th same VR don't end up working on the same IEC.
+    """
+
+    record = await db.fetch_one("""\
+        with all_ready_iecs as (
             select
                 image_equivalence_class_id
             from
@@ -357,12 +414,54 @@ async def get_for_visualreview(
                 natural join masking
             where
                 visual_review_instance_id = $1
-        """, [visual_review_instance_id])
+                /*
+                NOTE:
+                This will only select those records that have been
+                freshly created. It may be necessary in the future
+                to also select others, for example those in "rejected" 
+                or "errored" status might also need to show up here.
+                */
+                and masking_status = 'created'
+        )
 
-        return [x[0] for x in records]
+        select *
+        from all_ready_iecs
+        order by random()
+        limit 1
+    """, [visual_review_instance_id])
 
-    except:
-        pass
+    if len(record) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    return record[0]
+
+
+@router.get("/visualreview/{visual_review_instance_id}")
+async def get_for_visualreview(
+    visual_review_instance_id: int,
+    awaiting_review: bool = False,
+    db: Database = Depends(),
+    current_user: User = logged_in_user
+):
+    """Return list of all IECs in this VR that are flagged for Masking
+
+    If awaiting_review is true, it only returns those which are currently
+    awaiting review (that is, masking_status is 'process-complete').
+    """
+
+    records = await db.fetch("""\
+        select
+            image_equivalence_class_id
+        from
+            image_equivalence_class
+            natural join masking
+        where
+            visual_review_instance_id = $1
+            and ($2 = false or masking_status = 'process-complete')
+    """, [visual_review_instance_id, awaiting_review])
+
+    return [x[0] for x in records]
+
 
 @router.get("/{iec}/reviewfiles")
 async def get_iec_review_files(
@@ -372,22 +471,63 @@ async def get_iec_review_files(
 ):
     """Get list of completed files for review"""
 
-    records = await db.fetch("""\
+    query = """
         select
-            file_id
+            file_id,
+            image_type,
+            coalesce(number_of_frames, 1) as frame_count,
+            iop,
+            ipp
         from
             masking
             natural join file_import
-            natural join file_sop_common
+            natural join dicom_file
+            natural left join file_image
+            natural left join image
+            natural left join image_geometry
         where
             image_equivalence_class_id = $1
-        order by
-            -- sometimes instance_number is empty string or null
-            case instance_number
-                when '' then '0'
-                when null then '0'
-                else instance_number
-            end::int
-    """, [iec])
+    """
 
-    return [x[0] for x in records]
+    def raw_to_obj(rows):
+        return [File.from_raw(*i) for i in rows]
+
+    framelist = raw_to_obj([list(x) for x in await db.fetch(query, [iec])])
+    if len(framelist) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    sorted_framelist, consistent_frames = consistent(framelist)
+
+    simplified = [
+        { 
+            "file_id": x.file_id,
+            "num_of_frames": x.frame_count,
+        }
+        for x in sorted_framelist
+    ]
+
+    # TODO: consistent_frames is not very accurate and is causing issues
+    #       with the UI. For now it is being ignored and all responoses
+    #       are True. This should be fixed ASAP!
+    return {
+        # "volumetric": consistent_frames,
+        "volumetric": True,
+        "frames": simplified,
+    }
+
+@router.get("/{iec}/reviewfiles/download")
+async def get_iec_files(iec: int, db: Database = Depends()):
+    query = """
+        select
+            root_path || '/' || file_location.rel_path as file
+        from
+            masking
+            natural join file_import
+            join file_location using(file_id)
+            natural join file_storage_root
+        where
+            image_equivalence_class_id = $1
+    """
+    records = await db.fetch(query, [iec])
+
+    return await asynczip.stream_files([r['file'] for r in records], f"{iec}.zip")

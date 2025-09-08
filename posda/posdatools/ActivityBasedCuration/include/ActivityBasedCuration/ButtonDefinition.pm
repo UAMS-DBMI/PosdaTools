@@ -469,8 +469,29 @@ EOF
     col_name => "image_equivalence_class_id",
     caption => "Review Mask",
   },
+  qc_cc_85 => {
+    query => "VisualReviewStatusDetails",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewDICOMIEC",
+    col_name => "processing_status",
+    caption => "Mirabelle",
+  },
+  qc_cc_87 => {
+    query => "VisualReviewStatusDetailsByPatient",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewDICOMIEC",
+    col_name => "processing_status",
+    caption => "Mirabelle",
+  },
   qc_ImagesInEquivClass => {
     query => "VisualReviewStatusDetails",
+    type => "ChainColumnToPopup",
+    obj => "Posda::ImageDisplayer::KaleidoscopeSub",
+    col_name => "image_equivalence_class_id",
+    caption => "view",
+  },
+  qc_ImagesInEquivClass_2 => {
+    query => "VisualReviewStatusDetailsByPatient",
     type => "ChainColumnToPopup",
     obj => "Posda::ImageDisplayer::KaleidoscopeSub",
     col_name => "image_equivalence_class_id",
@@ -512,6 +533,7 @@ EOF
       ImportEventsByMatchingName => 1,
       ImportEventsByMatchingNameAndType => 1,
       ImportEventsWithTypeAndPatientId => 1,
+      PathologyImportEventsByDateRange => 1,
     },
   },
   qpb_BogusQueryHandlingButton => {
@@ -621,6 +643,18 @@ EOF
     obj_class => "Posda::NewerProcessPopup",
     queries => {
       ImageDefacingResultsByActivity => 1,
+    },
+    params => {
+      subprocess_invocation_id => 0,
+    }
+  },
+  qbp_Pathology_Export => {
+    caption => "Export to PathDB",
+    spreadsheet_operation => "Path_Export_parse",
+    operation => "OpenNewTableLevelPopup",
+    obj_class => "Posda::NewerProcessPopup",
+    queries => {
+      PathologyExportQuery1 => 1,
     },
     params => {
       subprocess_invocation_id => 0,

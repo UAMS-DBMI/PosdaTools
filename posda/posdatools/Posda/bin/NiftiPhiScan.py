@@ -49,8 +49,9 @@ def create_nifti_phi_scan(args):
                 #     report_files[file_id][tag] = value
                 #     print(f'{tag} : {value}')
             #elif tag in report_vars:
-            if tag in report_vars and tag != 'extensions':    
-                report_files[file_id][tag] = value
+            #if tag in report_vars and tag != 'extensions':
+            if tag != 'extensions':
+                report_files[file_id][tag] = f'<{value}>'
                 #print(f'{tag} : {value}')            
                 
         # header = nifti.file_nib.header
@@ -61,7 +62,7 @@ def create_nifti_phi_scan(args):
         extensions = nifti.file_nib.header.extensions
         for i, extension in enumerate(extensions):
             ext_name = f'ext_{i}'
-            report_files[file_id][ext_name] = extension
+            report_files[file_id][ext_name] = f'<{extension}>'
             #print(f'{ext_name} : {extension}')
               
     #print(report_files)
@@ -93,7 +94,7 @@ def saveNiftiMetaData(nifti, report_files, activity_id, phi_scan_id):
 
 def createCSVReports(report_files, phi_scan_id, background):
 
-    batch_size = 500
+    batch_size = 2500
     file_ids = list(report_files.keys())    
     batches = [{file_id: report_files[file_id] for file_id in file_ids[i:i + batch_size]} for i in range(0, len(file_ids), batch_size)]
 

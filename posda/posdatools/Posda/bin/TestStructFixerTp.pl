@@ -38,7 +38,7 @@ Query("SeriesReportForStructLinkageTestTp")->RunQuery(sub {
      file_id => $file_id,
      file => $file_name
   };
-}, sub{}, $series_instance_uid);
+}, sub{}, $series_instance_uid, $act_id);
 my $fixer = Posda::StructFixer->new(\%Info);
 my $try = Posda::Try->new($StructSetFile);
 unless(exists $try->{dataset}){

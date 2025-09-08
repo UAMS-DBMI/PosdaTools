@@ -147,8 +147,7 @@ for my $pat (keys %Patients){
     #Use the baseline shift if it exists, otherwise use the dateshift
     unless($computed_shift){$computed_shift = $date_shift;}
     unless($computed_shift =~ /^([^\s]+)\s*days$/){
-      print "$pat: No computed shift for patient_id, trying date shift\n";
-      $num_reports += 1;
+       print "$pat: No computed shift for patient_id, date will not shift!!!\n";
     }
     my $offset = $1;
     $PatientMapping{$pat}->{uid_root} = $uid_root;
@@ -420,7 +419,7 @@ for my $file_id (keys %Files){
 
   my $cmd = qq{ApplyPrivateDispositionUnconditionalDate2.pl $invoc_id } .
             qq{$file_id $path "$full_filename" $uid_root "$offset" "$tp_id" "$skip_dispositions" } .
-            qq{"$upd_nbia" "$sop_instance_uid"};
+            qq{"$upd_nbia" "$sop_instance_uid" ""};
 
   push @cmds, $cmd;
 }
@@ -501,7 +500,7 @@ my $end = time;
 my $duration = $end - $script_start_time;
 $background->WriteToEmail( "finished conversion in $duration seconds\n");
 if($upd_nbia){
-  $background->WriteToEmail("<a target=\"_blank\" onclick=\"javascript:event.target.port=80\" " .
+  $background->WriteToEmail("<a target=\"_blank\" " .
   "href=\"/papi/v1/send_to_public_status/report/$invoc_id?pretty=1\">Public Copy Status Report</a>\n");
 }
 $background->Finish("Done");

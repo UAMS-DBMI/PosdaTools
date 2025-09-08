@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import datetime
 from starlette.responses import Response, FileResponse
+import asyncpg.exceptions
 from .auth import logged_in_user, User
 from ..util import Database, asynctar
 
@@ -97,3 +98,32 @@ async def finish_activity_status(visual_review_instance_id: int, db: Database = 
             and b.subprocess_invocation_id = activity_task_status.subprocess_invocation_id;
     """
     return await db.fetch(query, [visual_review_instance_id])
+
+@router.post("/{iec}/set_status/{review_status}")
+async def set_status(
+    iec: int, 
+    review_status: str,
+    db: Database = Depends(),
+    current_user: User = logged_in_user):    
+
+    print(f"Setting {iec} to {review_status}, by {current_user}")
+
+    try:
+        query = """\
+            update image_equivalence_class
+            set processing_status = 'Reviewed',
+                review_status = $1,
+                update_user = $2,
+                update_date = now()
+            where image_equivalence_class_id = $3                
+        """
+        await db.execute(query, [review_status, current_user.username, iec])
+
+        return {"message": "IEC review status updated successfully"}
+
+    except asyncpg.exceptions.ForeignKeyViolationError as e:
+        raise HTTPException(detail="Invalid IEC supplied", status_code=422)
+    except Exception as e:
+        # Catch any other exceptions and log them if necessary
+        print(f"An error occurred: {e}")
+        raise HTTPException(detail="An unexpected error occurred", status_code=500)

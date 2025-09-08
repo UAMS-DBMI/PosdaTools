@@ -34,6 +34,10 @@ def termhandler(a, b):
     raise SigTerm(1)
 signal.signal(signal.SIGTERM, termhandler)
 
+def get_masker_version():
+    version = subprocess.check_output(["masker", "-v"])
+    return version.decode().strip()
+
 def main(debug: bool=False,
          token: str='xxxx',
          hostname: str='localhost',
@@ -60,8 +64,10 @@ def main(debug: bool=False,
         'Authorization': f'Bearer {TOKEN}',
     }
 
+    masker_version = get_masker_version()
+
     # print some startup messages
-    logger.info(f"starting up {HOSTNAME=} {TOKEN=}")
+    logger.info(f"starting up {HOSTNAME=} {TOKEN=} {masker_version=}")
 
     # enter infinite loop
     while True:
@@ -180,12 +186,12 @@ def upload_file(import_event_id, filename):
             print(r.content)
             raise
 
-def upload_output_files(iec):
+def upload_output_files(iec, output_path):
     # create an import event
     import_event_id = create_import_event(iec)
 
     # upload the files
-    for root, dirs, files in os.walk('/output'):
+    for root, dirs, files in os.walk(output_path):
         for file in files:
             path = os.path.join(root, file)
             upload_file(import_event_id, path)
@@ -206,14 +212,11 @@ def do_work(iec):
     if uid_root is None:
         uid_root = '1.3.6.1.4.1.14519.5.2.1'
 
-    form = 'cylinder'
-    function = 'mask'
 
-    if 'form' in details:
-        form = details.pop('form')
-
-    if 'function' in details:
-        function = details.pop('function')
+    form = details.pop('form', 'cylinder')
+    function = details.pop('function', 'mask')
+    fill = details.pop('fill', None)
+    noise = details.pop('noise', None)
 
     # get list of files in IEC
     logger.debug("Getting file list for iec")
@@ -223,8 +226,9 @@ def do_work(iec):
     # create dir for iec
     logger.debug("Creating temporary directory to store files")
     path = os.path.join(TEMP, str(iec))
+    output_path = os.path.join(path, 'output')
     os.makedirs(path, exist_ok=True)
-    os.makedirs('/output', exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
 
     # download each file to a temporary location
     logger.info(f"Downloading {len(files)} files for iec...")
@@ -236,19 +240,23 @@ def do_work(iec):
     details_order = ['LR', 'PA', 'IS', 'width', 'height', 'depth']
 
     logger.debug("Running Masker...")
-    proc = subprocess.run(
-        [
+    command = [
             'masker',
             '--norender',
             '--multiprocessing',
             '-i', path,
-            '-o', '/output',
-            '-c', *[str(details[x]) for x in details_order],
+            '-o', output_path,
+            '-cs', *[str(details[x]) for x in details_order],
             '--form', form,
             '--function', function,
             '--hashuids',
             '--uidroot', uid_root,
-        ],
+            *(['--fill', str(fill)] if fill is not None else []),
+            *(['--noise', str(noise)] if noise is not None else []),
+        ]
+    logger.debug(command)
+    proc = subprocess.run(
+        command,
         capture_output=True,
         text=True
     )
@@ -260,7 +268,7 @@ def do_work(iec):
 
         # if successful, upload the resulting dicom files to posda
         logger.debug("Uploading output files")
-        import_event_id = upload_output_files(iec)
+        import_event_id = upload_output_files(iec, output_path)
     else:
         logger.info(f"Masker failed with exit code {result}")
         logger.info(proc.stderr)
@@ -274,7 +282,6 @@ def do_work(iec):
     # delete the temp path
     logger.debug("Cleaning up temp files")
     shutil.rmtree(path)
-    shutil.rmtree("/output")
 
     total_eapsed_time = timedelta(seconds=(time.time() - start_time))
     logger.info(f"Completed IEC {iec}, took {total_eapsed_time} seconds")

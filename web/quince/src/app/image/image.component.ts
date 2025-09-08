@@ -154,7 +154,10 @@ export class ImageComponent implements OnInit {
       c.fillText('Image too large', 90, 270);
       c.fillText('Check Details', 100, 370);
     }
-
+    if (type == 3) {
+      c.fillText('Multiframe Image', 90, 270);
+      c.fillText('Use other viewer', 100, 370);
+    }
   }
 
 
@@ -227,6 +230,13 @@ export class ImageComponent implements OnInit {
       return;
     }
     */
+    
+    // Multiframe support is not yet present
+    if (this.current_image.num_of_frames > 1) {
+      this.drawError(3);
+      return;
+    }
+
     if ((this.roi_display && !this.roi_loaded) || !this.image_loaded){
       return;
     }

@@ -64,7 +64,7 @@ async def close_import_event(import_event_id: int, db: Database = Depends()):
 @router.post("/file")
 async def import_file(request: Request, digest: str, import_event_id: int = None, localpath: str = None, db: Database = Depends()):
     fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
-    m = hashlib.md5()
+    m = hashlib.md5(usedforsecurity=False)
     bytes_read = 0
     async for chunk in request.stream():
         m.update(chunk)
@@ -115,6 +115,7 @@ async def get_root_map(db: Database):
     if ROOT_MAP_CACHE is None:
         roots = await db.fetch("""\
             select * from file_storage_root
+            order by file_storage_root_id
         """)
 
         root_map = {}
@@ -125,27 +126,49 @@ async def get_root_map(db: Database):
 
     return ROOT_MAP_CACHE
 
+def find_best_root(root_map, path):
+    """Find the best possible storage root for the path
+
+    Collects all possible roots, and then returns the longest one. 
+    """
+
+    possible_roots = []
+
+    for r in root_map:
+        if path.startswith(r):
+            root = root_map[r]
+            rel_path = path[len(r)+1:]
+            root_len = len(path) - len(rel_path)
+            possible_roots.append((root_len, root, rel_path))
+
+    if len(possible_roots) < 1:
+        raise HTTPException(detail="no matching file_storage_root", status_code=422)
+
+    best_root = sorted(possible_roots, reverse=True, key=lambda x: x[0])[0]
+
+    _, root_id, rel_path = best_root
+    return (root_id, rel_path)
+
 @router.post("/file_in_place")
 async def import_file_in_place(request: Request,
                                localpath: str,
                                import_event_id: int = None,
                                skip_processing: bool = False,
+                               digest: str = None,
                                db: Database = Depends()):
 
     root_map = await get_root_map(db)
 
-    match_root = None
-    rel_path = None
-    for r in root_map:
-        if localpath.startswith(r):
-            match_root = root_map[r]
-            rel_path = localpath[len(r)+1:]
-    if match_root is None:
-        raise HTTPException(detail="no matching file_storage_root", status_code=422)
-
+    match_root, rel_path = find_best_root(root_map, localpath)
 
     try:
-        size, digest = md5sum_file(localpath)
+        # If digest was supplied, skip calcaulting it, but we still
+        # need to get the size
+        if digest is not None:
+            stat = os.stat(localpath)
+            size = stat.st_size
+        else:
+            size, digest = md5sum_file(localpath)
     except FileNotFoundError:
         raise HTTPException(detail="no such file", status_code=422)
 

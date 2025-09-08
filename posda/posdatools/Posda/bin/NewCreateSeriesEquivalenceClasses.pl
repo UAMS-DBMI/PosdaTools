@@ -6,11 +6,11 @@ use VectorMath;
 use experimental 'smartmatch';
 my $dbg = sub {print STDERR @_};
 my $usage = <<EOF;
-NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_timepoint_id> <visual_review_inst_id>
+NewCreateSeriesEquivalenceClasses.pl <series_instance_uid> <activity_timepoint_id> <visual_review_inst_id> <skip_rendering>
 EOF
 
 if($ARGV[0] eq "-h"){ print STDERR "$usage\n"; exit }
-unless($#ARGV == 2){ die $usage }
+unless($#ARGV == 3){ die $usage }
 
 my $q_inst = PosdaDB::Queries->GetQueryInstance(
   "ForConstructingSeriesEquivalenceClasses");
@@ -46,6 +46,7 @@ my @col_headers = (
 my $Separator= {};
 
 my $myArgs = [$ARGV[0], $ARGV[1]];
+my $skip_rendering = $ARGV[3];
 
 $q_inst->RunQuery(
   # Do this sub for every row returned by q_inst(ForConstructingSeriesEquivalenceClasses)
@@ -180,8 +181,13 @@ for my $i (0 .. $#equiv_classes){
     #insert into the Image_Equivalence_Class_Input_Image table the corresponding IEC table record id and the file id
     $ins_equiv_file->RunQuery(sub {}, sub {}, $id, $file_id);
   }
+
   #when complete, change status of the IEC table record from 'Preparing' to 'ReadytoProcess'
-  $upd_proc_stat->RunQuery(sub{}, sub{}, "ReadyToProcess", $id);
+  my $new_status = "ReadyToProcess";
+  if ($skip_rendering) {
+    $new_status = "Skipped";
+  }
+  $upd_proc_stat->RunQuery(sub{}, sub{}, $new_status, $id);
 }
 
 #Compare the string values of matching keys (ignoring geometric data)

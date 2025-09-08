@@ -2,6 +2,8 @@ include ../VERSION
 
 .PHONY: build clean
 
+SETUPTOOLS_SCM_PRETEND_VERSION_FOR_MASKER := $(shell git rev-parse HEAD)
+
 default: build
 
 # Build masker itself
@@ -14,8 +16,10 @@ dist/nopperabo-0.1.0-py3-none-any.whl: masker/dist/masker-1.0.3-py3-none-any.whl
 	docker run -t --rm -v ${PWD}:/workdir python:3 /bin/bash -c "cd /workdir; pip install build; python -m build"
 
 # Build actual docker image
+# carefully get the git commit from the masker submodule
+.ONESHELL:
 build: Dockerfile # masker/dist/masker-1.0.3-py3-none-any.whl dist/nopperabo-0.1.0-py3-none-any.whl
-	docker build . -t tcia/nopperabo:${POSDA_IMG_VERSION}
+	docker build --build-arg GIT_COMMIT=$(shell git --git-dir=masker/.git rev-parse --short HEAD) -t tcia/nopperabo:${POSDA_IMG_VERSION} .
 
 run: 
 	docker run \

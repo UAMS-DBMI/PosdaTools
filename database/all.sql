@@ -56,7 +56,6 @@ SET row_security = off;
 CREATE SCHEMA db_version;
 
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -256,7 +255,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -365,7 +363,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -396,7 +393,6 @@ CREATE TABLE public.control_status (
 );
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: request; Type: TABLE; Schema: public; Owner: -; Tablespace: archive
@@ -421,7 +417,6 @@ CREATE TABLE public.request (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: request_error; Type: TABLE; Schema: public; Owner: -
@@ -453,7 +448,6 @@ CREATE SEQUENCE public.request_request_id_seq
 ALTER SEQUENCE public.request_request_id_seq OWNED BY public.request.request_id;
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: round; Type: TABLE; Schema: public; Owner: -; Tablespace: archive
@@ -514,7 +508,6 @@ CREATE SEQUENCE public.round_round_id_seq
 ALTER SEQUENCE public.round_round_id_seq OWNED BY public.round.round_id;
 
 
-SET default_tablespace = '';
 
 --
 -- Name: submitter; Type: TABLE; Schema: public; Owner: -
@@ -577,7 +570,6 @@ ALTER TABLE ONLY public.collection_count_per_round
     ADD CONSTRAINT collection_count_per_round_collection_key UNIQUE (collection);
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: posda_file_id_index; Type: INDEX; Schema: public; Owner: -; Tablespace: archive
@@ -593,7 +585,6 @@ CREATE INDEX posda_file_id_index ON public.request USING btree (posda_file_id);
 CREATE INDEX request_lookup ON public.request USING btree (submitter_id, file_in_posda, file_copied, copy_error, import_error);
 
 
-SET default_tablespace = '';
 
 --
 -- Name: submitter_lookup; Type: INDEX; Schema: public; Owner: -
@@ -644,7 +635,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -1018,7 +1008,6 @@ end;
 $$;
 
 
-SET default_tablespace = '';
 
 --
 -- Name: dicom_file; Type: TABLE; Schema: public; Owner: -
@@ -1041,7 +1030,6 @@ CREATE TABLE public.dicom_file (
 PARTITION BY RANGE (file_id);
 
 
-SET default_tablespace = archive;
 
 SET default_table_access_method = heap;
 
@@ -1065,7 +1053,6 @@ CREATE TABLE archive.dicom_file_archive (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: dicom_file_current; Type: TABLE; Schema: archive; Owner: -
@@ -1098,7 +1085,6 @@ CREATE TABLE public.dicom_process_errors (
 PARTITION BY RANGE (file_id);
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: dicom_process_errors_archive; Type: TABLE; Schema: archive; Owner: -; Tablespace: archive
@@ -1110,7 +1096,6 @@ CREATE TABLE archive.dicom_process_errors_archive (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: dicom_process_errors_current; Type: TABLE; Schema: archive; Owner: -
@@ -1151,7 +1136,6 @@ CREATE TABLE archive.file_import_current (
 );
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: file_import_old; Type: TABLE; Schema: archive; Owner: -; Tablespace: archive
@@ -1167,7 +1151,6 @@ CREATE TABLE archive.file_import_old (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: file_meta; Type: TABLE; Schema: public; Owner: -
@@ -1190,7 +1173,6 @@ CREATE TABLE public.file_meta (
 PARTITION BY RANGE (file_id);
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: file_meta_archive; Type: TABLE; Schema: archive; Owner: -; Tablespace: archive
@@ -1212,7 +1194,6 @@ CREATE TABLE archive.file_meta_archive (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: file_meta_current; Type: TABLE; Schema: archive; Owner: -
@@ -1254,7 +1235,6 @@ CREATE TABLE public.file_study (
 PARTITION BY RANGE (file_id);
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: file_study_archive; Type: TABLE; Schema: archive; Owner: -; Tablespace: archive
@@ -1275,7 +1255,6 @@ CREATE TABLE archive.file_study_archive (
 );
 
 
-SET default_tablespace = '';
 
 --
 -- Name: file_study_current; Type: TABLE; Schema: archive; Owner: -
@@ -5430,7 +5409,6 @@ CREATE SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq
 ALTER SEQUENCE public.query_invoked_by_dbif_query_invoked_by_dbif_id_seq OWNED BY public.query_invoked_by_dbif.query_invoked_by_dbif_id;
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: query_log; Type: TABLE; Schema: public; Owner: -; Tablespace: archive
@@ -5449,7 +5427,6 @@ CREATE TABLE public.query_log (
 COMMENT ON TABLE public.query_log IS 'A table to track Posda::DB Query usage';
 
 
-SET default_tablespace = '';
 
 --
 -- Name: query_query; Type: TABLE; Schema: public; Owner: -
@@ -7189,7 +7166,6 @@ CREATE MATERIALIZED VIEW quasar.mvtest AS
   WITH NO DATA;
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: test; Type: TABLE; Schema: quasar; Owner: -; Tablespace: archive
@@ -7730,7 +7706,6 @@ ALTER TABLE ONLY public.window_level ALTER COLUMN window_level_id SET DEFAULT ne
 ALTER TABLE ONLY public.work ALTER COLUMN work_id SET DEFAULT nextval('public.work_work_id_seq'::regclass);
 
 
-SET default_tablespace = '';
 
 --
 -- Name: file_meta new_file_meta_pkey; Type: CONSTRAINT; Schema: public; Owner: -
@@ -8584,7 +8559,6 @@ CREATE INDEX dicom_file_current_file_id_idx ON archive.dicom_file_current USING 
 CREATE INDEX new_dicom_process_errors_file_id_idx ON ONLY public.dicom_process_errors USING btree (file_id);
 
 
-SET default_tablespace = archive;
 
 --
 -- Name: dicom_process_errors_archive_file_id_idx; Type: INDEX; Schema: archive; Owner: -; Tablespace: archive
@@ -8593,7 +8567,6 @@ SET default_tablespace = archive;
 CREATE INDEX dicom_process_errors_archive_file_id_idx ON archive.dicom_process_errors_archive USING btree (file_id);
 
 
-SET default_tablespace = '';
 
 --
 -- Name: dicom_process_errors_current_file_id_idx; Type: INDEX; Schema: archive; Owner: -
@@ -10523,7 +10496,6 @@ SET row_security = off;
 CREATE SCHEMA db_version;
 
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -10731,7 +10703,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -11132,7 +11103,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -12142,7 +12112,6 @@ SET row_security = off;
 CREATE SCHEMA db_version;
 
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -12405,7 +12374,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
@@ -43167,6 +43135,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 1298	(0008,9121)	SQ	f	Referenced Raw Data Sequence	\N
 4830	(0045,"GEMS_HELIOS_01",16)	OB	t	Number Views 2B	k
 6544	(0019,"SPI-P-PCR Release 2",40)	UN	t	Unknown	d
+207781	(0043,"GEMS_PARM_01",ca)	LO	\N	\N	\N
 91	(0032,000a)	CS	f	Study Status ID	\N
 203621	(0043,"GEMS_PARM_01",95)	UN	t	Prescan Reuse String	k
 4804	(0053,"GEHC_CT_ADVAPP_001",40)	OB	t	Iterative Recon Annotation	k
@@ -43379,6 +43348,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 203792	(0054,0501)	UN	f	Scan Progression Direction	\N
 203793	(0009,"GEMS_PETD_01",97)	UN	t	Trans Scan ID	d
 203796	(0029,"SIEMENS CT EXAM IMAGE",53)	UN	t	Unknown	d
+207782	(0043,"GEMS_PARM_01",cc)	DS	\N	\N	\N
 203974	(0400,0562)	DT	f	Attribute Modification DateTime	\N
 5998	(0057,"GEMS_VXTLSTATE_001",05)[<0>](0057,"GEMS_VXTLSTATE_001",15)[<1>](0057,"GEMS_VXTLSTATE_001",94)	FL	t	Unknown:Unknown:Unknown	d
 5598	(0029,"SIEMENS SYNGO ADVANCED PRESENTATION",02)[<0>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",03)[<1>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",04)[<2>](0029,"SIEMENS SYNGO ADVANCED PRESENTATION",cf)	SQ	t	Advanced Presentation Sequence:Time Point Sequence:Base Image Sequence:Image Sequence	k
@@ -43529,6 +43499,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 203810	(300a,0010)[<0>](0009,"ELEKTA GAMMAPLAN",25)	UN	t	Dose Reference Sequence:Unknown	k
 203808	(300a,0010)[<0>](0009,"ELEKTA GAMMAPLAN",24)	UN	t	Dose Reference Sequence:Unknown	k
 203809	(300a,0010)[<0>](0009,"ELEKTA GAMMAPLAN",20)	UN	t	Dose Reference Sequence:Unknown	k
+207783	(0043,"GEMS_PARM_01",cd)	FL	\N	\N	\N
 8014	(5001,"ELSCINT1",9a)	UN	t	Unknown	d
 3315	(0040,a730)[<0>](0040,a168)[<1>](0008,0102)	SH	f	Content Sequence:Concept Code Sequence:Coding Scheme Designator	\N
 3319	(0040,a043)[<0>](0008,0102)	SH	f	Concept Name Code Sequence:Coding Scheme Designator	\N
@@ -43681,6 +43652,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 2559	(0040,0251)	TM	f	Performed Procedure Step End Time	\N
 2556	(0008,1111)[<0>](0008,0013)	TM	f	Referenced Performed Procedure Step Sequence:Instance Creation Time	\N
 205072	(0040,0020)	CS	f	Scheduled Procedure Step Status	\N
+207784	(0009,"MERGE_STUDY_TYPE",00)	UN	\N	\N	\N
 3590	(0019,"SIEMENS CT VA0  COAD",b1)	UN	t	Unknown	d
 938	(3006,0039)[<0>](3006,0040)[<1>](3006,0016)[<2>](0008,1150)	UI	f	ROI Contour Sequence:Contour Sequence:Contour Image Sequence:Referenced SOP Class UID	\N
 96	(0008,0013)	TM	f	Instance Creation Time	\N
@@ -43832,6 +43804,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 3611	(0019,"SIEMENS MR HEADER",12)	UN	t	Table Position Origin	k
 3612	(0019,"SIEMENS MR HEADER",13)	UN	t	Ima Abs Table Position	k
 1813	(7005,"TOSHIBA_MEC_CT3",1f)	LO	t	Volume Number	k
+207785	(0009,"MERGE_STUDY_TYPE",01)	UN	\N	\N	\N
 7101	(5200,9230)[<0>](0040,9096)	SQ	f	Per-frame Functional Groups Sequence:Real World Value Mapping Sequence	\N
 3335	(0040,a730)[<0>](0040,a040)	CS	f	Content Sequence:Value Type	\N
 3338	(0040,a040)	CS	f	Value Type	\N
@@ -57167,7 +57140,7 @@ COPY public.element_seen (element_seen_id, element_sig_pattern, vr, is_private, 
 -- Name: element_seen_element_seen_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.element_seen_element_seen_id_seq', 207780, true);
+SELECT pg_catalog.setval('public.element_seen_element_seen_id_seq', 207785, true);
 
 
 --
@@ -57186,7 +57159,7 @@ insert into public.import_control values (
 
 alter database posda_files set search_path = public, dbif_config, dicom_conv;
 
-refresh materialized view public.file_imports_over_time;
+/* refresh materialized view public.file_imports_over_time; */
 refresh materialized view public.files_without_type;
 \connect posda_files
 --
@@ -58230,8 +58203,7 @@ SELECT pg_catalog.setval('dbif_config.popup_buttons_popup_button_id_seq1', 75, t
 
 set search_path to public, dbif_config;
 truncate table queries;
-WARNING: PGHOST is set to tcia-posdadb-rh! This operation WILL NOT BE LOCAL!
-Type YES to continue: 
+
             insert into queries
             values ('GatherSegmentationSliceInfo', 'select
   seg_bitmap_slice_no, iop, ipp, total_one_bits, num_bare_points,

@@ -6,6 +6,7 @@ import pandas as pd
 import re
 import argparse
 import sys
+import json
 
 data = None
 flag = None
@@ -231,25 +232,79 @@ def apply_sop_class_check():
     uid_rows = data[data['vr'] == 'UI']
     
     # apply mask to get just sop rows
-    sop_rows = uid_rows[uid_rows['element'].apply(is_sop_class_element)]
+    sop_rows = uid_rows.loc[uid_rows['element'].apply(is_sop_class_element)]
 
     # split sc and non sc rows
-    sc_rows = sop_rows[sop_rows['q_value'].apply(is_sec_capture)]
-    non_sc_rows = sop_rows[~sop_rows['q_value'].apply(is_sec_capture)]
+    sc_rows = sop_rows.loc[sop_rows['q_value'].apply(is_sec_capture)]
+    non_sc_rows = sop_rows.loc[~sop_rows['q_value'].apply(is_sec_capture)]
     
     # get valid and invalid rows   
-    good_rows = non_sc_rows[non_sc_rows['q_value'].isin(sop_classes.index)]
-    bad_rows = non_sc_rows[~non_sc_rows['q_value'].isin(sop_classes.index)]
+    good_rows = non_sc_rows.loc[non_sc_rows['q_value'].isin(sop_classes.index)]
+    bad_rows = non_sc_rows.loc[~non_sc_rows['q_value'].isin(sop_classes.index)]
 
     # output messages
     data.loc[data.index.isin(good_rows.index), 'review'] = "Valid"
-    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is not valid"
+    data.loc[data.index.isin(bad_rows.index), 'review'] = "This SOP Class UID is potentially invalid"                
     data.loc[data.index.isin(sc_rows.index), 'review'] = "This SOP Class UID is not supported or flagged for removal. Remove series if possible"
 
+def apply_valid_value_check():
+    """Check all values against the valid values list"""
 
+    # Only check rows where the last tag is present in the valid_values dict
+    keys = set(valid_values.keys())
+    mask = data['last_value'].isin(keys)
+
+    def is_value_allowed(row):
+        tag = row['last_value']
+        if pd.isna(tag) or tag not in valid_values:
+            return pd.NA
+        allowed = valid_values.get(tag, [])
+        qv = row['q_value']
+        if not isinstance(qv, str):
+            qv = str(qv)
+        # Ignore explicitly empty placeholder
+        if qv == '<<empty>>':
+            return pd.NA
+        # Consider both raw and angle-bracket stripped forms
+        candidates = [qv]
+        if qv.startswith('<') and qv.endswith('>'):
+            candidates.append(qv[1:-1])
+        return any(c in allowed for c in candidates)
+
+    data.loc[mask, 'values'] = data.loc[mask].apply(is_value_allowed, axis=1)
+
+def apply_ctp_check():
+    """Check all values against the CTP rules"""
+
+    def actions_for_tag(tag):
+        def wrap_angle(s: str):
+            s = str(s)
+            return s if (s.startswith('<') and s.endswith('>')) else f'<{s}>'
+        if pd.isna(tag) or tag not in ctp_rules:
+            return pd.NA
+        rules = ctp_rules[tag]
+        if isinstance(rules, dict):
+            rules = [rules]
+        actions = []
+        for r in rules:
+            if isinstance(r, dict):
+                act = r.get('action')
+                if act:
+                    actions.append(wrap_angle(act))
+        if not actions:
+            return pd.NA
+        seen = set()
+        uniq = []
+        for a in actions:
+            if a not in seen:
+                seen.add(a)
+                uniq.append(a)
+        return '; '.join(uniq)
+
+    data['ctp'] = data['last_value'].apply(actions_for_tag)
 
 def main(args):
-    global data, flag, body_parts, sop_classes
+    global data, flag, body_parts, sop_classes, valid_values, ctp_rules
 
     data = pd.read_csv(args.input)
     # data = pd.read_csv("small.csv")
@@ -260,8 +315,34 @@ def main(args):
     body_parts = pd.read_csv("body_parts.csv").set_index('Body Part Examined')
     sop_classes = pd.read_csv("sop_classes.csv").set_index('sop_class_uid')
 
+    # Load lookup dicts: tag -> list[...] / entries
+    with open("valid_values.json", "r", encoding="utf-8") as f:
+        valid_values = json.load(f)
+
+    with open("ctp_rules.json", "r", encoding="utf-8") as f:
+        _ctp = json.load(f)
+        # Accept either direct mapping or wrapped object with rules_by_tag
+        ctp_rules = _ctp.get("rules_by_tag", _ctp)
+
     # add the review column, set it to empty by default
     data['review'] = pd.NA
+    # data['values'] = pd.NA
+    data['ctp'] = pd.NA
+
+    # Extract last tag from element path, e.g. <(0012,0064)[<0>](0008,0104)> -> (0008,0104)
+    def extract_last_tag(elem: str):
+        if not isinstance(elem, str):
+            return pd.NA
+        s = elem.strip()
+        if s.startswith('<') and s.endswith('>'):
+            s = s[1:-1]
+        # Match any parenthesized tag, e.g. (0008,0104) or (0013,"CTP",50)
+        matches = re.findall(r'\([^)]*\)', s)
+        if matches:
+            return matches[-1]
+        return pd.NA
+
+    data['last_value'] = data['element'].apply(extract_last_tag)
 
     apply_flag_table()
     apply_bpe()
@@ -274,8 +355,12 @@ def main(args):
     apply_no_text_value_found()
     apply_study_year_check()
     apply_sop_class_check()
+    #apply_valid_value_check()
+    apply_ctp_check()
 
+    data = data.drop(columns=['last_value'])
     data.to_csv(sys.stdout)
+    #data.to_csv(args.out, index=False)
 
 if __name__ == '__main__':
     args = parse_args()

@@ -151,6 +151,8 @@ $get_patient_mapping->RunQuery(sub{
   if(defined $hash->{date_shift}){
     if($hash->{date_shift} =~ /^(.*) days$/){
        $hash->{date_shift} = $1;
+    } elsif ($hash->{date_shift} eq "00:00:00"){
+      $hash->{date_shift} = 0;
     } else {
       print "Error: $date_shift for $from_patient_id is bad format: " .
       "\"$hash->{date_shift}\"\n";

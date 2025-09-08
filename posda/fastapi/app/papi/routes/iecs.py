@@ -7,6 +7,15 @@ from starlette.responses import Response, FileResponse
 from .auth import logged_in_user, User
 from ..util import Database
 
+from ..util.models import File, FrameResponse, consistent
+
+import numpy as np
+from dataclasses import dataclass, asdict
+from collections import defaultdict
+from typing import Optional
+
+
+
 router = APIRouter(
     tags=["Image Equivalence Classes (IEC)"],
     dependencies=[logged_in_user]
@@ -46,3 +55,165 @@ async def get_iec_files(iec: int, db: Database = Depends()):
     """
 
     return {"file_ids": [x[0] for x in await db.fetch(query, [iec])]}
+
+
+@router.get("/{iec}/frames")
+async def get_iec_frames(iec: int, include_frames: bool = True, db: Database = Depends()) -> FrameResponse:
+    """Get a list of frames (files and frame counts) from this IEC.
+
+    Also returns a guess for if the data is intended to be volumetric.
+    """
+
+    query = """
+        select distinct
+            file_id,
+            image_type,
+            coalesce(number_of_frames, 1) as frame_count,
+            iop,
+            ipp
+        from
+            image_equivalence_class_input_image
+            natural left join file_image
+            natural left join image
+            natural left join image_geometry
+        where
+            image_equivalence_class_id = $1
+    """
+
+    def raw_to_obj(rows):
+        return [File.from_raw(*i) for i in rows]
+
+    framelist = raw_to_obj([list(x) for x in await db.fetch(query, [iec])])
+    if len(framelist) < 1:
+        raise HTTPException(detail="no records returned", status_code=404)
+
+    sorted_framelist, consistent_frames = consistent(framelist)
+
+    if include_frames:
+
+        simplified = [
+            { 
+                "file_id": x.file_id,
+                "num_of_frames": x.frame_count,
+            }
+            for x in sorted_framelist
+        ]
+
+        return {
+            "volumetric": consistent_frames,
+            "frames": simplified,
+        }
+
+    else:
+        return {
+            "volumetric": consistent_frames,
+        }
+
+
+@router.get("/{iec}/info")
+async def get_iec_info(iec: int, db: Database = Depends()):
+    """Get details for an IEC.
+    """
+
+    frames = await get_iec_frames(iec=iec, include_frames=False, db=db)
+
+    query = """
+        select
+            visual_review_instance_id,
+            image_equivalence_class_id,
+            series_instance_uid,
+            equivalence_class_number,
+            processing_status,
+            review_status,
+            update_user,
+            to_char(update_date, 'YYYY-MM-DD HH:MI:SS AM') as update_date,
+            (select count(file_id)
+             from image_equivalence_class_input_image i
+             where i.image_equivalence_class_id =
+                   image_equivalence_class.image_equivalence_class_id) as file_count,
+            (select body_part_examined
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as body_part_examined,
+            (select modality
+             from file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as modality,        
+            (select patient_id
+             from file_patient
+             natural join file_series
+             where file_series.series_instance_uid = image_equivalence_class.series_instance_uid limit 1) as patient_id,
+            (select series_description
+             from image_equivalence_class_input_image
+             natural join file_series
+             where image_equivalence_class_input_image.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id
+             limit 1
+            ) as series_description,
+            (select for_uid
+             from image_equivalence_class_input_image
+             natural join file_for
+             where image_equivalence_class_input_image.image_equivalence_class_id = image_equivalence_class.image_equivalence_class_id
+             limit 1
+            ) as frame_of_reference_uid    
+        from image_equivalence_class
+        where image_equivalence_class_id = $1
+    """
+
+    item = dict(await db.fetch_one(query, [iec]))
+
+    if item:
+        item['download_path'] = f"/papi/v1/files/iec/{iec}"
+        item['download_name'] = f"iec_{iec}.zip"
+        item['volumetric'] = frames['volumetric']
+
+    return item
+
+class IECSeries(BaseModel):
+    file_count: int
+    image_equivalence_class_id: int
+    series_description: Optional[str]
+    series_instance_uid: Optional[str]
+    modality: Optional[str]
+
+# For a list of series
+IECSeriesList = List[IECSeries]
+
+@router.get("/{iec}/other_iecs_in_for", response_model=IECSeriesList)
+async def iecs_for_for(
+    iec: int,
+    db: Database = Depends(),
+):
+    """
+    Get all other IECs that share this IEC's Frame of Reference
+
+    For the given IEC, this returns a list of all IECs (other than
+    the original one) inside the same visual review that share a
+    Frame of Reference.
+    """
+    query = """\
+        with input_for as (
+            select distinct for_uid, visual_review_instance_id
+            from image_equivalence_class_input_image
+            natural join image_equivalence_class
+            natural join file_for
+            where image_equivalence_class_id = $1
+            limit 1
+        ), candidate_files as (
+            select file_id, image_equivalence_class_id
+            from image_equivalence_class
+            natural join image_equivalence_class_input_image
+            where visual_review_instance_id = (select visual_review_instance_id from input_for)
+        )
+        select image_equivalence_class_id, 
+               series_instance_uid,
+               series_description, 
+               modality,
+               count(file_id) as file_count
+        from candidate_files
+        natural join file_for
+        natural join file_series
+        where for_uid = (select for_uid from input_for)
+        and image_equivalence_class_id != $1
+        group by 1, 2, 3, 4
+        order by file_count desc
+    """
+
+    return [dict(i) for i in await db.fetch(query, [iec])]

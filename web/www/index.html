@@ -1,52 +1,110 @@
-<DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-	<title>POSDA</title>
-	<link rel="stylesheet" href="bootstrap4/css/bootstrap.min.css"
-		integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ">
-	<script src="bootstrap4/js/bootstrap.min.js"
-		integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Posda</title>
+  <meta name="description" content="Landing page for the Posda web app and tools" />
+  <meta name="theme-color" content="#0284c7" />
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --bg-2: #f3f4f6;
+      --text: #111827;
+      --accent: #0284c7;
+      --accent-2: #7c3aed;
+      --shadow: 0 6px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06);
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, var(--bg), var(--bg-2));
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: clamp(42px, 6vw, 84px);
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .subtitle { text-align: center; color: #374151; margin-bottom: 32px; }
+
+    .featured {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 20px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card .title { font-weight: 700; font-size: 20px; margin-bottom: 6px; }
+    .card .desc { font-size: 14px; color: #4b5563; }
+
+    .other {
+      border-top: 1px solid #d1d5db;
+      padding-top: 16px;
+    }
+    .other h2 { font-size: 16px; margin-bottom: 8px; color: #6b7280; }
+    .other ul { list-style: none; padding: 0; margin: 0; }
+    .other li { margin: 6px 0; }
+    .other a { color: var(--accent); text-decoration: none; }
+    .other a:hover { text-decoration: underline; }
+
+    footer { margin-top: 36px; font-size: 12px; color: #6b7280; text-align: center; }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <div class="logo">Posda</div>
+    <p class="subtitle">A system for deidentifying medical image collections</p>
 
-<div class="container">
+    <div class="featured">
+      <a class="card" href="/posda/">
+        <div class="title">Posda Login</div>
+        <p class="desc">Curate DICOM and other formats</p>
+      </a>
+      <a class="card" href="/viewer/">
+        <div class="title">Quince DICOM Viewer</div>
+        <p class="desc">View and dump DICOM files by file_id, series, or iec</p>
+      </a>
+    </div>
 
-	<div class="jumbotron">
-		<h1 class="display-3">POSDA (Docker)</h1>
-	</div>
+    <div class="other">
+      <h2>Other Tools</h2>
+      <ul>
+        <li><a href="/roots/">DICOM Roots Table Editor</a></li>
+        <li><a href="/dashboard/">Posda Dashboard</a></li>
+        <li><a href="/papi/docs">Posda API</a></li>
+        <li><a href="/docs/">Posda Documentation</a></li>
+        <li><a href="/upload.html">Web-Based Uploader</a></li>
+        <li><a href="/import.html">In-place Importer</a></li>
+      </ul>
+    </div>
 
-	<p>
-		Welcome to Posda! You may select from the options below:
-	</p>
-
-	<p>
-		<a class="btn btn-primary"
-			href="/posda/">
-			Posda Login
-		</a>
-	</p>
-	<p>
-		<a class="btn btn-secondary"
-			href="/viewer/">Quince DICOM Viewer</a>
-	</p>
-	<p>
-		<a class="btn btn-secondary"
-			href="/dashboard/">Posda Dashboard</a>
-	</p>
-	<p>
-		<a class="btn btn-secondary"
-			href="/roots/">DICOM Roots Table Editor</a>
-	</p>
-	<p>
-		<a class="btn btn-secondary"
-			href="/papi/docs">Posda API</a>
-	</p>
-	<p>
-		<a class="btn btn-secondary"
-			href="/docs/">Posda Documentation</a>
-	</p>
-
-</div>
+    <footer>
+      © <span id="y"></span> UAMS
+    </footer>
+  </div>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

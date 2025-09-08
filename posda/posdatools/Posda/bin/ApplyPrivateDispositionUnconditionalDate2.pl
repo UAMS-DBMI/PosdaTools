@@ -9,25 +9,26 @@ use Time::Piece;
 use Posda::NBIASubmit;
 
 my $usage = <<EOF;
-ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions> <upd_nbia> <sop_instance_uid>
+ApplyPrivateDispositionUnconditionalDate2.pl <backgrnd_id> <file_id> <from_file> <to_file> <uid_root> <offset> <batch> <skip_dispositions> <upd_nbia> <sop_instance_uid> <override_site_name>
   Applies private tag disposition from knowledge base to <from_file>
   writes result into <to_file>
   UID's not hashed if they begin with <uid_root>
   date's always offset
-  Collection and Site are read from the file
+  Collection and Site are read from the file, UNLESS <override_site_name> is set, 
+  then the site_name is taken from there
   Site Code must be defined in site_codes
   Collection Code must be defined in collection_codes
   Once written, the NBIA Submissions API is called with the filename
   skip private dispositions if <skip_dispositions> is set to 1
 EOF
 
-unless($#ARGV == 9) {
+unless($#ARGV == 10) {
  my $num_parms = @ARGV;
- print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 10\n";
+ print STDERR "ApplyPrivateDispositionUnconditionalDate2.pl - Wrong # args: $num_parms vs 11\n";
  die $usage;
 }
 my ($subprocess_invocation_id, $file_id, $from_file, $to_file, $uid_root,
-    $offset, $batch, $skip_dispositions, $upd_nbia, $sop_instance_uid) = @ARGV;
+  $offset, $batch, $skip_dispositions, $upd_nbia, $sop_instance_uid, $override_site_name) = @ARGV;
 
 sub HashUID{
   my($uid) = @_;
@@ -101,34 +102,34 @@ $DeleteByElement{'(0013,"CTP",12)'} = 1;
 
 unless($skip_dispositions){
   $get_disp->RunQuery(sub {
-    my($row) = @_;
-    if($row->[0] =~ /\[/){
-      $DeleteByPattern{$row->[0]} = 1;
-    } else {
-      $DeleteByElement{$row->[0]} = 1;
-    }
-  }, sub {}, 'd');
+      my($row) = @_;
+      if($row->[0] =~ /\[/){
+        $DeleteByPattern{$row->[0]} = 1;
+      } else {
+        $DeleteByElement{$row->[0]} = 1;
+      }
+    }, sub {}, 'd');
   $get_disp->RunQuery(sub {
-    my($row) = @_;
-    my $tag = $row->[0];
-    if($tag =~ /</){
-      $OffsetDateByPattern{$tag} = 1;
-    }else {
-      $OffsetDate{$tag} = 1;
-    }
-  }, sub {}, 'o');
+      my($row) = @_;
+      my $tag = $row->[0];
+      if($tag =~ /</){
+        $OffsetDateByPattern{$tag} = 1;
+      }else {
+        $OffsetDate{$tag} = 1;
+      }
+    }, sub {}, 'o');
   $get_disp->RunQuery(sub {
-    my($row) = @_;
-    $OffsetInteger{$row->[0]} = 1;
-  }, sub {}, 'oi');
+      my($row) = @_;
+      $OffsetInteger{$row->[0]} = 1;
+    }, sub {}, 'oi');
   $get_disp->RunQuery(sub {
-    my($row) = @_;
-    if($row->[0] =~ /\[/){
-      $HashByPattern{$row->[0]} = 1;
-    } else {
-      $HashByElement{$row->[0]} = 1;
-    }
-  }, sub {}, 'h');
+      my($row) = @_;
+      if($row->[0] =~ /\[/){
+        $HashByPattern{$row->[0]} = 1;
+      } else {
+        $HashByElement{$row->[0]} = 1;
+      }
+    }, sub {}, 'h');
 }
 
 my $try = Posda::Try->new($from_file);
@@ -137,7 +138,14 @@ my $ds = $try->{dataset};
 
 # Get the Collection and Site from the file, for use in NBIASubmit later
 my $collection_name = $ds->Get('(0013,"CTP",10)');
-my $site_name = $ds->Get('(0013,"CTP",12)');
+my $site_name;
+
+if (length $override_site_name) { # if a value was given
+  $site_name = $override_site_name;
+} else {
+  # read from the file, as before
+  $site_name = $ds->Get('(0013,"CTP",12)');
+}
 
 my $temp_results = Query('GetSiteCodeBySite')->FetchOneHash($site_name);
 my $site_code = $temp_results->{site_code};
@@ -244,6 +252,9 @@ for my $e (keys %OffsetDate){
       #print "\tElement: $e\n";
       #print "\t$date => $new_date\n";
       $ds->Insert($e, $new_date);
+    }else{
+      print "\tWARNING Dates not shifted, verify this is purposeful\n";
+      $ds->Insert($e, $new_date);
     }
   }
 }
@@ -256,7 +267,6 @@ for my $e (keys %OffsetDateByPattern){
 #      print STDERR "tag: $tag\n";
       my $date = $ds->Get($tag);
       if(defined($date) && $date ne ""){
-
         my $new_date;
         eval {
           $new_date = ShiftDate($date);

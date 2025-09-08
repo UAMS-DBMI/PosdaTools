@@ -12,6 +12,7 @@ _this is some italics_
 import os
 import sys
 from fastapi import FastAPI, APIRouter
+from fastapi.middleware.gzip import GZipMiddleware
 import asyncio
 import signal
 
@@ -40,6 +41,9 @@ from papi.routes import edits
 from papi.routes import nifti
 from papi.routes import sysstatus
 from papi.routes import masking
+from papi.routes import wadors
+from papi.routes import segs
+from papi.routes import activities
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -90,6 +94,8 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 
+app.add_middleware(GZipMiddleware, minimum_size=500, compresslevel=9)
+
 
 def handle_sigterm(*_):
     print("SIGTERM received, shutting down...")
@@ -108,6 +114,7 @@ async def startup_event():
     loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
 
 router_v1 = APIRouter()
+router_v1.include_router(wadors.router, prefix="/wadors")
 router_v1.include_router(other.router, prefix="/other")
 router_v1.include_router(collections.router, prefix="/collections")
 router_v1.include_router(studies.router, prefix="/studies")
@@ -130,6 +137,8 @@ router_v1.include_router(edits.router, prefix="/edits")
 router_v1.include_router(nifti.router, prefix="/nifti")
 router_v1.include_router(sysstatus.router, prefix="/sysstatus")
 router_v1.include_router(masking.router, prefix="/masking")
+router_v1.include_router(segs.router, prefix="/segs")
+router_v1.include_router(activities.router, prefix="/activities")
 
 app.include_router(auth.router, prefix="/auth")
 app.include_router(router_v1, prefix="/v1")
