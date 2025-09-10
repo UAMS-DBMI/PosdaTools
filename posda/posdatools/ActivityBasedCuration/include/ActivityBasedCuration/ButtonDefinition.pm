@@ -451,22 +451,23 @@ EOF
   qc_cc_81 => {
     query => "MaskingStatus",
     type => "ChainColumnToPopup",
-    obj => "MirabelleMaskIEC",
+    obj => "MirabelleMaskVR",
     col_name => "image_equivalence_class_id",
+    col_to_param => {
+      image_equivalence_class_id => "image_equivalence_class_id",
+      visual_review_instance_id => "visual_review_instance_id",
+    },
     caption => "Mask",
   },
-  # qc_cc_82 => {
-  #   query => "MaskingStatus",
-  #   type => "ChainColumnToPopup",
-  #   obj => "MirabelleMaskVR",
-  #   col_name => "visual_review_instance_id",
-  #   caption => "Mirabelle",
-  # },
   qc_cc_83 => {
     query => "MaskingReview",
     type => "ChainColumnToPopup",
-    obj => "MirabelleReviewIEC",
+    obj => "MirabelleMaskReviewVR",
     col_name => "image_equivalence_class_id",
+    col_to_param => {
+      image_equivalence_class_id => "image_equivalence_class_id",
+      visual_review_instance_id => "visual_review_instance_id",
+    },
     caption => "Review Mask",
   },
   qc_cc_85 => {
@@ -476,6 +477,13 @@ EOF
     col_name => "processing_status",
     caption => "Mirabelle",
   },
+  qc_cc_85_1 => {
+    query => "VisualReviewStatusById",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewDICOMVR",
+    col_name => "processing_status",  
+    caption => "Mirabelle",
+  },  
   qc_cc_87 => {
     query => "VisualReviewStatusDetailsByPatient",
     type => "ChainColumnToPopup",
@@ -500,10 +508,24 @@ EOF
   qc_cc_84 => {
     query => "ViewNiftiVisualReviewFiles",
     type => "ChainColumnToPopup",
-    obj => "MirabelleNiftiVR",
+    obj => "MirabelleReviewNiftiVR",
     col_name => "nifti_review_file_id",
+    col_to_param => {
+      nifti_review_file_id => "nifti_review_file_id",
+      nifti_visual_review_instance_id => "nifti_visual_review_instance_id",
+    },    
     caption => "review",
   },
+  qc_cc_88 => {
+    query => "ViewNiftiVisualReviewInstances",
+    type => "ChainColumnToPopup",
+    obj => "MirabelleReviewNiftiVR",
+    col_name => "nifti_visual_review_instance_id",
+    col_to_param => {
+      nifti_visual_review_instance_id => "nifti_visual_review_instance_id",
+    },       
+    caption => "review",
+  },  
 );
 
 %QueryProcessingButtons = (

@@ -3728,21 +3728,67 @@ sub openMirabelle{
     my $base_url = "$prot//$external_hostname/mira";
 
     my $extra_url;
+    # if ($class eq 'MirabelleMaskIEC') {
+    #   $extra_url = 'mask/iec/' . $params->{image_equivalence_class_id};
+    # }
+    # if ($class eq 'MirabelleReviewIEC') {
+    #   $extra_url = 'mask/review/iec/' . $params->{image_equivalence_class_id};
+    # }
+    # if ($class eq 'MirabelleReviewDICOMIEC') {
+    #   $extra_url = 'review/dicom/iec/' . $params->{image_equivalence_class_id};
+    # }
+    # if ($class eq 'MirabelleMaskVR') {
+    #   $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
+    # }
+    # if ($class eq 'MirabelleNiftiVR') {
+    #   $extra_url = 'review/nifti/file/' . $params->{nifti_review_file_id};
+    # }
+
+
     if ($class eq 'MirabelleMaskIEC') {
       $extra_url = 'mask/iec/' . $params->{image_equivalence_class_id};
     }
-    if ($class eq 'MirabelleReviewIEC') {
+    if ($class eq 'MirabelleMaskVR') {
+      if (defined $params->{image_equivalence_class_id} && $params->{image_equivalence_class_id} ne '') {
+        $extra_url = 'mask/vr/' . $params->{visual_review_instance_id} . '/' . $params->{image_equivalence_class_id};
+      } else {
+        $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
+      }
+    }    
+
+    if ($class eq 'MirabelleMaskReviewIEC') {
       $extra_url = 'mask/review/iec/' . $params->{image_equivalence_class_id};
     }
+    if ($class eq 'MirabelleMaskReviewVR') {
+      if (defined $params->{image_equivalence_class_id} && $params->{image_equivalence_class_id} ne '') {
+        $extra_url = 'mask/review/vr/' . $params->{visual_review_instance_id} . '/' . $params->{image_equivalence_class_id};
+      } else {
+        $extra_url = 'mask/review/vr/' . $params->{visual_review_instance_id};
+      }
+    }        
+
     if ($class eq 'MirabelleReviewDICOMIEC') {
       $extra_url = 'review/dicom/iec/' . $params->{image_equivalence_class_id};
     }
-    if ($class eq 'MirabelleMaskVR') {
-      $extra_url = 'mask/vr/' . $params->{visual_review_instance_id};
-    }
-    if ($class eq 'MirabelleNiftiVR') {
+    if ($class eq 'MirabelleReviewDICOMVR') {
+      if (defined $params->{image_equivalence_class_id} && $params->{image_equivalence_class_id} ne '') {
+        $extra_url = 'review/dicom/vr/' . $params->{id} . '/' . $params->{image_equivalence_class_id};
+      } else {
+        $extra_url = 'review/dicom/vr/' . $params->{id};
+      }
+    }     
+
+    if ($class eq 'MirabelleReviewNiftiFile') {
       $extra_url = 'review/nifti/file/' . $params->{nifti_review_file_id};
     }
+    if ($class eq 'MirabelleReviewNiftiVR') {
+      if (defined $params->{nifti_review_file_id} && $params->{nifti_review_file_id} ne '') {
+        $extra_url = 'review/nifti/vr/' . $params->{nifti_visual_review_instance_id} . '/' . $params->{nifti_review_file_id};
+      } else {
+        $extra_url = 'review/nifti/vr/' . $params->{nifti_visual_review_instance_id};
+      }
+    }      
+
 
     $self->QueueJsCmd(
       "rt('Mirabelle', '$base_url/$extra_url', 0, 0, 0);"
