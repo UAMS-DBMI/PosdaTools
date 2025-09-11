@@ -11,7 +11,7 @@ select
     masking_status,
     visual_review_instance_id,
     dicom_file_type,
-    count(file_id) as num_files
+    count(distinct file_id) as num_files
 from
     masking
     natural join image_equivalence_class
