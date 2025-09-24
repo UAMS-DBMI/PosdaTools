@@ -44,6 +44,7 @@ from papi.routes import masking
 from papi.routes import wadors
 from papi.routes import segs
 from papi.routes import activities
+from papi.routes import visualreviews
 
 # configure importer
 importer.FILE_STORAGE_PATH = os.environ.get(
@@ -139,6 +140,7 @@ router_v1.include_router(sysstatus.router, prefix="/sysstatus")
 router_v1.include_router(masking.router, prefix="/masking")
 router_v1.include_router(segs.router, prefix="/segs")
 router_v1.include_router(activities.router, prefix="/activities")
+router_v1.include_router(visualreviews.router, prefix="/visualreviews")
 
 app.include_router(auth.router, prefix="/auth")
 app.include_router(router_v1, prefix="/v1")
