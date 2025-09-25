@@ -403,6 +403,11 @@ This step should not be needed if your data was imported through CTP",
       caption => "Commit Queued Edits",
       action =>  "Path_Commit_Edits",
     },
+    {
+      operation => "Placeholder",
+      caption => "Placeholder for New VR Launcher",
+      action =>  "",
+    },
    ],
     queries => [
       {
