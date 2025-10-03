@@ -86,29 +86,36 @@ def create_activity_timepoint(activity_id, notify, db) -> int:
         return -1
 
 
-def get_output_images_to_masked_iecs(db, visual_review_instance_id: int):
+def get_output_images_to_masked_iecs(db, visual_review_instance_id: int, function_list: List[str]) -> List:
     """
-    Get the file_ids of the post-masked images, but only DICOM files
+    Get the files of the post-masked images, but only DICOM files
+    Returns a list of tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
     """
     query = """\
         select
-            file_id
+            file_id,
+            storage_path(file_id),
+            media_storage_sop_class,
+            sop_instance_uid
         from
             image_equivalence_class
             natural join masking
             natural join file_import
             natural join file
+            natural join file_meta
+            natural join file_sop_common
         where
             visual_review_instance_id = %s
             and is_dicom_file = true
             and masking_status = 'accepted'
+            and masking_parameters ->> 'function' = ANY(%s)
     """
 
     with db.cursor() as cur:
-        cur.execute(query, [visual_review_instance_id])
+        cur.execute(query, [visual_review_instance_id, function_list])
         results = cur.fetchall()
 
-        return [r.file_id for r in results]
+        return results
 
 
 def hash_uid(uid, uid_root):
@@ -136,6 +143,24 @@ def insert_files_into_timepoint(
         # [(42, 1), (42, 2), (42, 3)]
         execute_values(cur, query, value_list)
 
+def insert_files_into_check_table(
+    db: Database, timepoint_id: int, file_ids: List[int]
+) -> None:
+
+    # populate it with the files from above
+    with db.cursor() as cur:
+        query = """\
+            insert into quasar.timepoint_check
+            values %s
+        """
+        value_list = [(timepoint_id, file_id) for file_id in file_ids]
+        # execute_values is a new method in psycopg2 2.7+
+        # which can be used to map an object onto a values
+        # clause and insert bulk values very fast.
+        #
+        # In thise case, value_list looks like:
+        # [(42, 1), (42, 2), (42, 3)]
+        execute_values(cur, query, value_list)
 
 def get_files_in_activity(db, activity_id: int) -> Set[int]:
     """
@@ -653,10 +678,11 @@ def get_edited_files(visual_review_instance_id, function_list, conn):
     return {row.file_id for row in cur}
 
 
-def get_edited_sops(visual_review_instance_id, function_list, conn):
+def get_edited_sops(visual_review_instance_id, function_list: List[str], conn):
     """
     Get all SOP Instance UIDs of files that were edited in the given Visual Review
-    with the specified function.
+    with the specified function. These are the UIDs BEFORE being processed
+    by Masker (which modifies them)
     """
     cur = conn.cursor()
     cur.execute(
@@ -707,6 +733,34 @@ def get_edited_sops(visual_review_instance_id, function_list, conn):
 
     return {row.sop_instance_uid for row in cur}
 
+def get_all_files_in_timepoint(timepoint_id, conn):
+    """
+    Returns tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
+    """
+    cur = conn.cursor()
+    cur.execute(
+        """
+        with files_in_activity as (
+            select
+                file_id
+            from
+                activity_timepoint_file
+            where
+                activity_timepoint_id = %s
+        )
+        select 
+            file_id,
+            storage_path(file_id),
+            media_storage_sop_class,
+            sop_instance_uid
+        from files_in_activity
+        natural join file_meta
+        natural join file_sop_common
+    """,
+        (timepoint_id,),
+    )
+
+    return cur.fetchall()
 
 def get_all_files_in_activity(activity_id, conn):
     """
@@ -739,8 +793,7 @@ def get_all_files_in_activity(activity_id, conn):
         (activity_id,),
     )
 
-    for row in cur:
-        yield (row)
+    return cur.fetchall()
 
 
 def create_report_from_files(report, files, notify, comment):
@@ -825,6 +878,13 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
     files_to_insert = original_files.union(set(files_to_add)).difference(
         set(files_to_remove)
     )
+
+    if len(files_to_insert) != len(original_files):
+        raise ValueError(
+            "The number of files in the new timepoint should be the same as the original. "
+            "Something is very wrong."
+        )
+
     insert_files_into_timepoint(conn, new_timepoint, list(files_to_insert))
 
     # return the list of files that were not edited or changed
@@ -852,6 +912,17 @@ def main(args, temp_dir):
 
 
 def main2(args, temp_dir, background):
+
+    
+    # TODO: (from email)
+    # replace pre-masked with masked (that is, after getting the files form 
+    # the current timepoint, replace the pre-masked files (by sop) with
+    # the masked ones (output from masker)
+    #
+    # if masked don't rehash (during the loop, if a file is edited, check
+    # if it's in the masked set before deciding to hash UIDs. If it is, skip 
+    # the hashing step)
+
     generate_arg_report(args)
 
     conn = Database("posda_files")
@@ -869,38 +940,62 @@ def main2(args, temp_dir, background):
         *(["sliceremove"] if args.process_sliceremove else []),
         *(["blackout"] if args.process_blackout else []),
     ]
-    masked_sops = get_edited_sops(args.visual_review_instance_id, function_list, conn)
+    premasked_sops = get_edited_sops(args.visual_review_instance_id, function_list, conn)
     premasked_files = get_edited_files(
         args.visual_review_instance_id, function_list, conn
     )
 
-    print(len(masked_sops), "SOPs to be processed")
+    print(len(premasked_sops), "SOPs to be processed")
 
     ## Sanity check, these two sets should not overlap
-    if len(orphan_sops.intersection(masked_sops)) > 0:
+    if len(orphan_sops.intersection(premasked_sops)) > 0:
         # count of orphaned sops
         print("Orphaned SOPs:", len(orphan_sops))
-        print("Masked SOPs:", len(masked_sops))
-        print(orphan_sops.intersection(masked_sops))
+        print("Masked SOPs:", len(premasked_sops))
+        print(orphan_sops.intersection(premasked_sops))
         raise ValueError(
             "Orphaned SOPs and masked SOPs should not overlap, something is very wrong."
         )
 
     # the list of file_ids that need to be deleted from this activity
     # and added to the new one (if given)
-    move_list = []
+    move_list = list(premasked_files) # start with the premasked files
     # The list of sop_instance_uids that have been edited and need to be
     # added to the current activity. TODO: don't forget to update dicom_edit_compare!
     edit_list = []
 
-    for i, file in enumerate(get_all_files_in_activity(args.activity_id, conn)):
-        if "posda-archive" in file.storage_path:
-            print("## skipping this posda-archive file!", file.storage_path)
-            continue
+    # TODO switch this back to files_in_activity!
+    # for i, file in enumerate(get_all_files_in_activity(args.activity_id, conn)):
+    # all_files_in_current_timepoint = get_all_files_in_timepoint(8430, conn)
+    all_files_in_current_timepoint = get_all_files_in_activity(args.activity_id, conn)
+
+    # these files have the post-hashed SOP UIDs
+    postmasked_files = get_output_images_to_masked_iecs(conn, args.visual_review_instance_id, function_list)
+
+    # build a map of sop_instance_uid to file tuple for postmasked_files
+    postmasked_map = {file.sop_instance_uid: file for file in postmasked_files}
+
+    # remove from all_files_in_current_timepoint any entries that are in
+    # premasked_sops (these are pre-hashed UIDs).
+
+    files_to_process = []
+    for file in all_files_in_current_timepoint:
+        if file.sop_instance_uid not in premasked_sops:
+            files_to_process.append(file)
+        else:
+            # instead of adding it, we want to add the corresponding file from the postmasked_files list
+            # the post-masked map is keyed by the hashed SOP Instance UID, not the original one
+            hashed_sop_instance_uid = hash_uid(file.sop_instance_uid, TCIA_UID_ROOT)
+            if hashed_sop_instance_uid in postmasked_map:
+                postmasked_file = postmasked_map[hashed_sop_instance_uid]
+                files_to_process.append(postmasked_file)
+
+
+    for i, file in enumerate(files_to_process):
         ds = None
         edited = False
 
-        if file.sop_instance_uid in masked_sops:
+        if file.sop_instance_uid in premasked_sops:
             # print("This file is in masked sops", file)
             # currently doing nothing, this might change later
             pass
@@ -915,7 +1010,7 @@ def main2(args, temp_dir, background):
         
         for depth, ele in walk_dataset_for_referencing(ds):
             if (
-                ele.value in masked_sops or ele.value in orphan_sops
+                ele.value in premasked_sops or ele.value in orphan_sops
             ):  # only needs changed if we edited it!
                 edited = True
                 ele.value = hash_uid(ele.value, TCIA_UID_ROOT)
@@ -930,11 +1025,18 @@ def main2(args, temp_dir, background):
             new_filename = temp_dir + "/" + ds.SOPInstanceUID + ".dcm"
 
             # Hash series and sop uids
-            ds.SeriesInstanceUID = hash_uid(ds.SeriesInstanceUID, TCIA_UID_ROOT)
-            ds.SOPInstanceUID = hash_uid(ds.SOPInstanceUID, TCIA_UID_ROOT)
+            # If this SOP is in the premasked set, it has already been hashed by Masker, so skip it
+            if file.sop_instance_uid not in postmasked_map:
+                ds.SeriesInstanceUID = hash_uid(ds.SeriesInstanceUID, TCIA_UID_ROOT)
+                ds.SOPInstanceUID = hash_uid(ds.SOPInstanceUID, TCIA_UID_ROOT)
 
-            # Add pre-edit file to move list
-            move_list.append(file.file_id)
+                # Add pre-edit file to move list
+                move_list.append(file.file_id)
+            else:
+                # file has already been edited by Masker, and we don't want
+                # to add it twice, so delete it from the postmasked map
+                del postmasked_map[file.sop_instance_uid]
+
             # Add post-edit file to edit list
             edit_list.append(
                 (file.file_id, file.sop_instance_uid, ds.SOPInstanceUID, new_filename)
@@ -946,10 +1048,9 @@ def main2(args, temp_dir, background):
         if i % 100 == 0:
             print(f"Processed {i} files...")
 
-    move_list += list(premasked_files)
     print("Move list:", len(move_list))
     print("Edit list (files edited by this script):", len(edit_list))
-    print("Masked list (files edited by Masker):", len(masked_sops))
+    print("Masked list (files edited by Masker):", len(premasked_sops))
 
     premasked_report = background.create_report(f"Premasked files import skeleton")
     create_report_from_files(
@@ -961,9 +1062,7 @@ def main2(args, temp_dir, background):
 
     ## New files that need to be added to the current timepoint
     ## This is all files we just edited, plus the post-mask files
-    files_to_add = import_edits(edit_list) + get_output_images_to_masked_iecs(
-        conn, args.visual_review_instance_id
-    )
+    files_to_add = import_edits(edit_list) + [postmasked_map[f].file_id for f in postmasked_map]
 
     files_to_remove = move_list
 
