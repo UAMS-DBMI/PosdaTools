@@ -443,13 +443,18 @@ async def get_for_visualreview(
     db: Database = Depends(),
     current_user: User = logged_in_user
 ):
-    """Return list of all IECs in this VR that are flagged for Masking
+    """Return list of all IECs in this VR that are flagged for Masking, and
+    are waiting to be masked (or those that are awaiting review).
 
     If awaiting_review is true, it only returns those which are currently
     awaiting review (that is, masking_status is 'process-complete').
+
+    If awaiting_review is false, it only returns those IECs which are
+    waiting to be masked, or are rejected (that is, masking_status is
+    'created' or 'rejected').
     """
 
-    records = await db.fetch("""\
+    main_query = """\
         select
             image_equivalence_class_id
         from
@@ -457,8 +462,25 @@ async def get_for_visualreview(
             natural join masking
         where
             visual_review_instance_id = $1
-            and ($2 = false or masking_status = 'process-complete')
-    """, [visual_review_instance_id, awaiting_review])
+            and masking_status in ('created', 'rejected')
+    """
+
+    awaiting_review_query = """\
+        select
+            image_equivalence_class_id
+        from
+            image_equivalence_class
+            natural join masking
+        where
+            visual_review_instance_id = $1
+            and masking_status = 'process-complete'
+    """
+
+    query = main_query
+    if awaiting_review:
+        query = awaiting_review_query
+
+    records = await db.fetch(query, [visual_review_instance_id])
 
     return [x[0] for x in records]
 
