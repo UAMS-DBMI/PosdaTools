@@ -42,7 +42,12 @@ async def get_vr_details(vr: int, db: Database = Depends()):
     return await db.fetch(query, [vr])
 
 @router.get("/{vr}/iecs")
-async def get_vr_iecs(vr: int, db: Database = Depends()):
+async def get_vr_iecs(vr: int, db: Database = Depends()) -> List[int]:
+    """
+    Get the list of IECs contained in this VR
+
+    Results are always in ascending order.
+    """
     query = """
         select
             image_equivalence_class_id
@@ -50,13 +55,32 @@ async def get_vr_iecs(vr: int, db: Database = Depends()):
             image_equivalence_class
         where
             visual_review_instance_id = $1
+        order by 1
     """
 
     return [x[0] for x in await db.fetch(query, [vr])]
 
+class ProcessingStatusEntry(BaseModel):
+    count: int
+    processing_status: Optional[str]
+class ReviewStatusEntry(BaseModel):
+    count: int
+    review_status: Optional[str]
+class DicomFileTypeEntry(BaseModel):
+    count: int
+    dicom_file_type: Optional[str]
 
-@router.get("/{vr}/values")
-async def get_vr_extra_details(vr: int, db: Database = Depends()):
+class ValuesResponse(BaseModel):
+    dicom_file_types: List[DicomFileTypeEntry] 
+    review_statuses: List[ReviewStatusEntry]
+    processing_statuses: List[ProcessingStatusEntry]
+
+@router.get(
+    "/{vr}/values",
+    responses={
+        404: { 'description': "invalid visual review id" },
+    })
+async def get_vr_extra_details(vr: int, db: Database = Depends()) -> ValuesResponse:
     """
     Get list of valid values for use in filtering, for the given VR.
 
@@ -110,9 +134,19 @@ async def get_vr_extra_details(vr: int, db: Database = Depends()):
     """
 
 
-    dicom_file_types = await db.fetch(dicom_file_type_query, [vr])
-    review_statuses = await db.fetch(review_status_query, [vr])
-    processing_statuses = await db.fetch(processing_status_query, [vr])
+    dicom_file_types = [dict(x) for x in await db.fetch(dicom_file_type_query, [vr])]
+    review_statuses = [dict(x) for x in await db.fetch(review_status_query, [vr])]
+    processing_statuses = [dict(x) for x in await db.fetch(processing_status_query, [vr])]
+
+    if len(dicom_file_types) == 0 and len(review_statuses) == 0 and len(processing_statuses) == 0:
+        test_results = await db.fetch("""\
+            select visual_review_instance_id
+            from visual_review_instance
+            where visual_review_instance_id = $1
+        """, (vr,))
+
+        if len(test_results) == 0:
+            raise HTTPException(detail="invalid visual review id", status_code=404)
 
     return {
         'dicom_file_types': dicom_file_types,
@@ -126,10 +160,17 @@ class VRFilterParameters(BaseModel):
     processing_status: Optional[str] = '*'
     review_status: Optional[str] = '*'
 
-@router.post("/{vr}/filter")
-async def get_vr_filtered(vr: int, params: VRFilterParameters, db: Database = Depends()):
+@router.post(
+    "/{vr}/filter",
+    responses={
+        404: { 'description': "invalid visual review id" },
+    })
+async def get_vr_filtered(vr: int, params: Optional[VRFilterParameters] = None, db: Database = Depends()) -> List[int]:
     """
     Return a filtered list of IECs in this VR. Use * for wildcard.
+    The body is completely optional. If omitted, all IECs are returned.
+
+    Results are always in ascending order.
     """
     query = """\
         with iecs as (
@@ -162,20 +203,23 @@ async def get_vr_filtered(vr: int, params: VRFilterParameters, db: Database = De
     bind_vars = [vr]
     bind_count = 1
 
-    if params.dicom_file_type != '*':
-        bind_count += 1
-        query += f"and dicom_file_type = ${bind_count}\n"
-        bind_vars.append(params.dicom_file_type)
+    if params is not None:
+        if params.dicom_file_type != '*':
+            bind_count += 1
+            query += f"and dicom_file_type = ${bind_count}\n"
+            bind_vars.append(params.dicom_file_type)
 
-    if params.processing_status != '*':
-        bind_count += 1
-        query += f"and processing_status = ${bind_count}\n"
-        bind_vars.append(params.processing_status)
+        if params.processing_status != '*':
+            bind_count += 1
+            query += f"and processing_status = ${bind_count}\n"
+            bind_vars.append(params.processing_status)
 
-    if params.review_status != '*':
-        bind_count += 1
-        query += f"and review_status = ${bind_count}\n"
-        bind_vars.append(params.review_status)
+        if params.review_status != '*':
+            bind_count += 1
+            query += f"and review_status = ${bind_count}\n"
+            bind_vars.append(params.review_status)
+
+    query += "order by 1"
 
     results = await db.fetch(query, bind_vars)
 
