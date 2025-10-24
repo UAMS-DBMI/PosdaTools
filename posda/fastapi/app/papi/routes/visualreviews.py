@@ -165,10 +165,9 @@ class VRFilterParameters(BaseModel):
     responses={
         404: { 'description': "invalid visual review id" },
     })
-async def get_vr_filtered(vr: int, params: Optional[VRFilterParameters] = None, db: Database = Depends()) -> List[int]:
+async def get_vr_filtered(vr: int, params: VRFilterParameters = None, db: Database = Depends()) -> List[int]:
     """
     Return a filtered list of IECs in this VR. Use * for wildcard.
-    The body is completely optional. If omitted, all IECs are returned.
 
     Results are always in ascending order.
     """
@@ -203,18 +202,26 @@ async def get_vr_filtered(vr: int, params: Optional[VRFilterParameters] = None, 
     bind_vars = [vr]
     bind_count = 1
 
-    if params is not None:
-        if params.dicom_file_type != '*':
+    if params.dicom_file_type != '*':
+        if params.dicom_file_type is None:
+            query += "and dicom_file_type is null\n"
+        else:
             bind_count += 1
             query += f"and dicom_file_type = ${bind_count}\n"
             bind_vars.append(params.dicom_file_type)
 
-        if params.processing_status != '*':
+    if params.processing_status != '*':
+        if params.processing_status is None:
+            query += "and processing_status is null\n"
+        else:
             bind_count += 1
             query += f"and processing_status = ${bind_count}\n"
             bind_vars.append(params.processing_status)
 
-        if params.review_status != '*':
+    if params.review_status != '*':
+        if params.review_status is None:
+            query += "and review_status is null\n"
+        else:
             bind_count += 1
             query += f"and review_status = ${bind_count}\n"
             bind_vars.append(params.review_status)
