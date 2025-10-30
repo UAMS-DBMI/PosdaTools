@@ -73,7 +73,7 @@ sub new_with_digest_and_length{
     my $file_resp = $lines[0];
     my $file_type;
     my $act_file;
-    if($file_resp =~ /^(.*): (.*)$/){
+    if($file_resp =~ /^(.*?): (.*)$/){
       $act_file = $1;
       $file_type = $2;
     }
