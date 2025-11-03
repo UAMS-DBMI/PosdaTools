@@ -494,7 +494,7 @@ async def get_iec_review_files(
     """Get list of completed files for review"""
 
     query = """
-        select
+        select distinct
             file_id,
             image_type,
             coalesce(number_of_frames, 1) as frame_count,
