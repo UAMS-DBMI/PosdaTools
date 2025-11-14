@@ -1,0 +1,6 @@
+:operation_name: CheckLinkages
+:command_line: CheckLinkages.py <?bkgrnd_id?> <activity_id> <notify>
+:operation_type: background_process
+:input_line_format:
+:tags: ['linkage']
+:can_chain:

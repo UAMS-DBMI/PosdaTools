@@ -1,0 +1,464 @@
+#!/usr/bin/env python3
+"""
+A new version of the ApplyMasks script
+"""
+import argparse
+import hashlib
+# import tempfile
+import pydicom
+import sys
+# import os
+import csv
+import requests
+from collections import defaultdict
+from posda.database import Database
+from posda.config import Config
+from posda.background.process import BackgroundProcess
+from typing import List, Set, Iterator, Tuple
+from pydicom.sequence import Sequence
+from pydicom.dataset import Dataset
+from pydicom import uid
+from psycopg2.extras import execute_values
+from pprint import pprint
+from io import BytesIO
+
+# the real one
+TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
+# for testing only, use an easily identifable root
+# TCIA_UID_ROOT = "1207885"
+
+TAGS_TO_SCAN = [
+    "StudyInstanceUID",
+    "SeriesInstanceUID",
+    "SOPInstanceUID",
+    "ReferencedSOPInstanceUID",
+    "MultiFrameSourceSOPInstanceUID",
+    "SOPInstanceUIDOfConcatenationSource",
+]
+
+# Tags which are considered to contain a UID value we want to test for
+UID_KEYWORDS = set(TAGS_TO_SCAN)
+
+def call_api(endpoint, call_type):
+    API_URL = f'{Config.get("internal-api-url")}/v1{endpoint}'
+    HEADERS = {'Authorization': f'Bearer {Config.get("api_system_token")}'}
+    try:
+        if call_type == 0:
+            response = requests.get(API_URL,headers=HEADERS)
+        elif call_type == 1:
+            response = requests.patch(API_URL,headers=HEADERS)
+        elif call_type == 2:
+            response = requests.put(API_URL,headers=HEADERS)
+        if response.status_code == 200:
+            return response, API_URL, True
+        print(f'Bad response: {response.status_code} - {response.text}')
+    except Exception as e:
+        print(f'Error processing request: {e}')
+    return None, API_URL, False
+
+
+def get_file_data(file_id):
+    resp, _, success = call_api(f'/files/{file_id}/data', 0)
+    return resp.content if success else None
+
+
+def walk_dataset(ds: Dataset, depth: int = 0, path: List[str] | None = None) -> Iterator[Tuple[int, object, List[str]]]:
+    """Traverse a pydicom Dataset recursively, yielding (depth, elem, path).
+
+    path is a list of keywords (or tag hex if keyword missing); sequence
+    items append an index like "[0]" to distinguish branches.
+    """
+    if path is None:
+        path = []
+    for elem in ds:
+        # Represent this element
+        tag_hex = f"({elem.tag.group:04X},{elem.tag.element:04X})"
+        current_path = path + [tag_hex]
+        if isinstance(elem.value, Sequence):
+            for i, item in enumerate(elem.value):
+                # Add index component for sequence item
+                seq_path = current_path + [f"[{i}]"]
+                yield from walk_dataset(item, depth + 1, seq_path)
+        elif isinstance(elem.value, Dataset):
+            yield from walk_dataset(elem.value, depth + 1, current_path)
+        elif elem.tag == (0x7FE0, 0x0010):  # skip PixelData
+            continue
+        else:
+            yield depth, elem, current_path
+
+
+def walk_dataset_for_referencing(ds: Dataset) -> Iterator[Tuple[int, object, List[str]]]:
+    """
+    Walk the dataset and yield only those tags we care about.
+
+    We care about tags that are in UID_KEYWORDS and are NOT at the root
+    level (that is, have a depth over 0).
+    """
+    for depth, elem, path in walk_dataset(ds):
+        if elem.keyword in UID_KEYWORDS and depth > 0:
+            yield depth, elem, path
+
+
+def hash_uid(uid, uid_root):
+    md5 = hashlib.md5(uid.encode())
+    new_uid = f"{uid_root}.{int(md5.hexdigest(), 16)}"[:64]
+    return new_uid
+
+
+def create_report_from_files(report, files, notify, comment):
+    writer = csv.writer(report, lineterminator='\n')
+    writer.writerow(
+        [
+            "file_id",
+            "op",
+            "tag",
+            "val1",
+            "val2",
+            "Operation",
+            "activity_id",
+            "comment",
+            "notify",
+        ]
+    )
+
+    # write the operation row
+    writer.writerow(
+        [
+            None,
+            None,
+            None,
+            None,
+            None,
+            "AddFilesToTimepoint",  # Operation
+            None,
+            comment,
+            notify,
+        ]
+    )
+    # write a second operation row, curators will choose one
+    writer.writerow(
+        [
+            None,
+            None,
+            None,
+            None,
+            None,
+            "CreateActivityTimepointFromFileList",  # Operation
+            None,
+            comment,
+            notify,
+        ]
+    )
+
+    for file_id in files:
+        writer.writerow([file_id])
+
+
+def load_map():
+    """
+    Load the mapping of SOP Class UIDs to sequence keys and element keys,
+    used to identify which elements need to have their UIDs hashed.
+    """
+
+    # eventual structure:
+    # sop_map = {
+    #     'sop_class_uid': {
+    #         'seq_key': [ ele_key1, ele_key2, ... ],
+    #     }
+    # }
+    sop_map = defaultdict(lambda: defaultdict(set))
+
+    ## The DICOM standard is stored in the dicom_dd database.
+    with Database("dicom_dd") as conn:
+        cur = conn.cursor()
+        cur.execute(
+            """
+            with sequences as
+            (
+                select tag as seq_tag, 
+                    name as seq_name, 
+                    keyword as seq_key 
+                from dicom_element
+                where lower(name) like '%sequence%'
+                and (
+                    lower(name) like '%reference%'
+                    or lower(name) like '%source%'
+                    or lower(name) like '%derivation%'
+                    or lower(name) like '%evidence%'
+                    or lower(name) like '%procedure%'
+                    or lower(name) like '%instance%'
+                    or lower(name) like '%matrix%'
+                    or lower(name) like '%fiducial%'
+                    or lower(name) like '%contour%'
+                    or lower(name) like '%functional%'
+                )
+            ),
+            elements as
+            (
+                select tag as ele_tag, 
+                    name as ele_name, 
+                    keyword as ele_key
+                from dicom_element
+                where lower(name) like '%instance%uid%'
+                and (
+                    lower(name) like '%series%'
+                    or lower(name) like '%sop%'
+                )
+            )
+            select
+            req.sop_class_uid,
+            dsc.sop_class_name,
+            req.tag_full,
+            seq.seq_tag,
+            seq.seq_key,
+            ele.ele_tag,
+            ele.ele_key
+            from dicom_class_iod_requirement req
+            join dicom_sop_class dsc 
+            on dsc.sop_class_uid = req.sop_class_uid 
+            join dicom_class_iod_requirement_tag rt_seq
+            on req.tag_full = rt_seq.tag_full
+            join sequences seq
+            on rt_seq.tag = seq.seq_tag
+            join dicom_class_iod_requirement_tag rt_ele
+            on req.tag_full = rt_ele.tag_full
+            join elements ele
+            on rt_ele.tag = ele.ele_tag
+            order by req.sop_class_uid, req.tag_full
+        """
+        )
+
+        for row in cur:
+            sop_map[row.sop_class_uid][row.seq_key].add(row.ele_key)
+
+    return sop_map
+
+
+def get_all_files_in_activity(activity_id, conn):
+    """
+    Returns a generator that yields tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
+    """
+    cur = conn.cursor()
+    cur.execute(
+        """
+            with files_in_activity as 
+            (
+                select file_id
+                from activity_timepoint_file
+                where activity_timepoint_id = (
+                    select max(activity_timepoint_id)
+                    from activity_timepoint
+                    where activity_id = %s
+                )
+            )
+            select file_id,
+                   storage_path(file_id),
+                   media_storage_sop_class,
+                   sop_instance_uid,
+                   series_instance_uid,
+                   study_instance_uid,
+                   patient_id,
+                   for_uid
+            from files_in_activity
+            natural left join file_meta
+            natural left join file_sop_common
+            natural left join file_series
+            natural left join file_study
+            natural left join file_patient
+            natural left join file_for
+        """,
+        (activity_id,),
+    )
+
+    for row in cur:
+        yield (row)
+
+
+def get_files_in_activity(db, activity_id: int) -> Set[int]:
+    """
+    Get all files in the current timepoint for the activity
+    """
+    query = """
+        select file_id
+        from activity_timepoint_file
+        where activity_timepoint_id = (
+            select max(activity_timepoint_id)
+            from activity_timepoint
+            where activity_id = %s
+        );
+    """
+
+    with db.cursor() as cur:
+        cur.execute(query, [activity_id])
+        results = cur.fetchall()
+        return {r[0] for r in results}
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("background_id", help="the background_subprocess_id")
+    parser.add_argument("activity_id", help="the primary activity to run against")
+    parser.add_argument("notify", help="user to notify when complete")
+    return parser.parse_args()
+
+
+def generate_arg_report(args):
+
+    print("CheckLinkages.py running with the following arguments:")
+    print(f"Activity ID: {args.activity_id}")
+
+    # print("Will generate edit skeleton for moving pre-masked files")
+
+    print("------------------------------------------")
+
+
+def main2(args, background):
+    generate_arg_report(args)
+
+    conn = Database("posda_files")
+
+    # Map of SOP Class UIDs to sequences that need hashed
+    # sop_map = load_map()
+
+    # Materialize all file rows so we can build UID membership sets
+    file_rows = list(get_all_files_in_activity(args.activity_id, conn))
+
+    sop_counts = defaultdict(list)
+    file_id_by_sop = {}
+    series_uids = set()
+    study_uids = set()
+    for_uids = set()
+    for row in file_rows:
+        file_id = row.file_id
+        sop = row.sop_instance_uid
+        series = row.series_instance_uid
+        study = row.study_instance_uid
+        for_uid = row.for_uid
+        if sop:
+            if sop not in file_id_by_sop:
+                file_id_by_sop[sop] = file_id  # preserve first occurrence
+            sop_counts[sop].append(file_id)
+        if series:
+            series_uids.add(series)
+        if study:
+            study_uids.add(study)
+        if for_uid:
+            for_uids.add(for_uid)
+
+    # SOP duplicate detection only
+    dup_sop = {k: v for k, v in sop_counts.items() if len(v) > 1}
+
+    # Derive SOP UID set (others already sets)
+    sop_uids = set(sop_counts.keys())
+
+    # Cross-category overlaps (require sets)
+    sop_series_overlap = sop_uids & series_uids
+    sop_study_overlap = sop_uids & study_uids
+    sop_for_overlap = sop_uids & for_uids
+    series_study_overlap = series_uids & study_uids
+    series_for_overlap = series_uids & for_uids
+    study_for_overlap = study_uids & for_uids
+
+    # Prepare anomalies report rows: only duplicate_sop plus overlaps
+    uid_anomalies = []
+    for uid_val, fids in dup_sop.items():
+        uid_anomalies.append(("duplicate_sop", uid_val, len(fids), ';'.join(map(str, fids))))
+
+    def add_overlap(label, values):
+        for u in values:
+            uid_anomalies.append((label, u, 1, ''))
+
+    add_overlap("overlap_sop_series", sop_series_overlap)
+    add_overlap("overlap_sop_study", sop_study_overlap)
+    add_overlap("overlap_sop_for", sop_for_overlap)
+    add_overlap("overlap_series_study", series_study_overlap)
+    add_overlap("overlap_series_for", series_for_overlap)
+    add_overlap("overlap_study_for", study_for_overlap)
+
+    # Emit summary to stdout
+    print(f"Duplicate SOP UIDs: {len(dup_sop)}")
+    print(f"Overlaps - sop/series:{len(sop_series_overlap)} sop/study:{len(sop_study_overlap)} sop/for:{len(sop_for_overlap)} series/study:{len(series_study_overlap)} series/for:{len(series_for_overlap)} study/for:{len(study_for_overlap)}")
+
+    if uid_anomalies:
+        rep_anom = background.create_report("UidAnomalies")
+        w_anom = csv.writer(rep_anom, lineterminator='\n')
+        w_anom.writerow(["type", "uid", "count", "file_ids"])
+        for row_a in uid_anomalies:
+            w_anom.writerow(row_a)
+
+    print(f"Found {len(file_rows)} files: {len(sop_uids)} SOP UIDs, {len(series_uids)} series, {len(study_uids)} studies, {len(for_uids)} frame of reference UIDs")
+
+    missing_references = []  # (file_id, tag_keyword, ref_uid)
+
+    for i, file in enumerate(file_rows):
+        # if "posda-archive" in file.storage_path:
+        #     print("## skipping this posda-archive file!", file.storage_path)
+        #     continue
+        ds = None
+
+        # Scan for referencing sequences
+        if ds is None:
+            # For production
+            # ds = pydicom.dcmread(file.storage_path, stop_before_pixels=True, force=True)
+            # For testing only, for local testing
+            file_id = file.file_id
+            file_content = get_file_data(file_id)
+            if file_content:
+                ds = pydicom.dcmread(BytesIO(file_content), stop_before_pixels=True, force=True)
+        
+        for depth, elem, path in walk_dataset_for_referencing(ds):
+            # Only process elements with a string-like UID value
+            val = getattr(elem, 'value', None)
+            if not isinstance(val, str):
+                continue
+            # Determine if this referenced UID exists in activity
+            exists = False
+            if elem.keyword in ("ReferencedSOPInstanceUID", "SOPInstanceUID", "MultiFrameSourceSOPInstanceUID", "SOPInstanceUIDOfConcatenationSource"):
+                exists = val in sop_uids
+            elif elem.keyword == "SeriesInstanceUID":
+                exists = val in series_uids
+            elif elem.keyword == "StudyInstanceUID":
+                exists = val in study_uids
+            # Record missing references (exclude root-level original SOP inside its own file)
+            if not exists:
+                missing_references.append((file.file_id, elem.keyword, val, f"<{''.join(path)}>") )
+        if i and i % 100 == 0:
+            print(f"Scanned {i} files; missing refs so far: {len(missing_references)}")
+
+     
+    # Output a report of missing references
+    if missing_references:
+        rep = background.create_report("MissingReferences")
+        writer = csv.writer(rep, lineterminator='\n')
+        writer.writerow(["file_id", "tag", "referenced_uid", "path", "note"])
+        for file_id, tag_kw, ref_uid, path in missing_references:
+            writer.writerow([file_id, tag_kw, ref_uid, path, "UID not present in activity timepoint scope"])
+        print(f"Missing references: {len(missing_references)} (see report)")
+    else:
+        print("No missing references detected")
+
+    background.finish("Complete")
+
+
+def main(args):
+    """
+    Main entry point, just wraps the other main and catches
+    exceptions, so that the script always finishes. It still
+    exits with a nonzero exit code so the script will be flagged
+    as failed.
+    """
+    background = BackgroundProcess(args.background_id, args.notify, args.activity_id)
+    background.daemonize()
+
+    try:
+        main2(args, background)
+    except Exception as e:
+        print("FATAL ERROR:", e)
+        background.finish("Failed")
+        raise e
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(parse_args()))
