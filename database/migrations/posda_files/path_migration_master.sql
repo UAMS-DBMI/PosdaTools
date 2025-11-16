@@ -42,6 +42,26 @@ CREATE table if not exists public.pathology_edit_queue (
 	status text null
 );
 
+CREATE table if not exists public.pathology_image_meta(
+	pathology_image_meta_id serial4 NOT NULL,
+	file_id int not null,
+	format text null,
+	modality text null,
+	protocol text null,
+	manufacturer text null,
+	model text null,
+	xResolution text null,
+	yResolution text null,
+	resolutionUnit text null,
+	magnification text null,
+	mppx real null,
+	mppy real null,
+	image_volume_width real null,
+	image_volume_height real null,
+	reference_pixel_physical_value_x real null,
+	reference_pixel_physical_value_y real null
+);
+
 ---is this used?
 CREATE TABLE public.pathology_image_description (
 	file_id int4 NOT NULL,
