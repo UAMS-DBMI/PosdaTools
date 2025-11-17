@@ -14,6 +14,9 @@
   <button class="btn btn-warning"
           (click)="mark('other')"
           >Other</button>
+  <button class="btn btn-primary"
+          (click)="mark('flagged')"
+          >Flag for Masking</button>          
 </p>
 <p *ngIf="mode != 'unreviewed'">
 <span class="test">
@@ -46,6 +49,12 @@
       [what]=""
       [message]="'Other'"
       (onConfirm)="mark('other')"
-    ></app-hide-button>
+    ></app-hide-button>   
+    <app-hide-button
+      [type]="'btn-primary'"
+      [what]=""
+      [message]="'Flag for Masking'"
+      (onConfirm)="mark('flagged')"
+    ></app-hide-button>    
 </span>
 </p>

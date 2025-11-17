@@ -34,13 +34,29 @@ export class MarkControlComponent implements OnInit {
     this.modeSubscription.unsubscribe();
   }
 
+  // mark(state: string) {
+  //   this.service.mark(this.iec, state).subscribe(
+  //     resp => console.log("marked " + state + " confirmed"),
+  //     error => this.handleError(error)
+  //   );
+  //   this.onMark.emit();
+  // }
+
   mark(state: string) {
     this.service.mark(this.iec, state).subscribe(
-      resp => console.log("marked " + state + " confirmed"),
-      error => this.handleError(error)
+      () => {
+        console.log(`marked ${state} confirmed`);
+        if (state === 'flagged') {
+          this.service.flagForMasking(this.iec).subscribe(
+            resp => console.log('flagged for masking', resp),
+            err => this.handleError(err)
+          );
+        }
+        this.onMark.emit();
+      },
+      err => this.handleError(err)
     );
-    this.onMark.emit();
-  }
+  }   
 
   handleError(error: any) {
     console.log(error);
@@ -60,8 +76,11 @@ export class MarkControlComponent implements OnInit {
     if (event.key == '4' || event.key == 's') {
       this.mark('scout');
     }
-    if (event.key == '3' || event.key == 'o') {
+    if (event.key == '5' || event.key == 'o') {
       this.mark('other');
-    }
+    }   
+    if (event.key == '6' || event.key == 'f') {
+      this.mark('flagged');
+    }    
   }
 }
