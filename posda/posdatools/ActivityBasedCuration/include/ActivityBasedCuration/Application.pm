@@ -3771,11 +3771,33 @@ sub openMirabelle{
       $extra_url = 'review/dicom/iec/' . $params->{image_equivalence_class_id};
     }
     if ($class eq 'MirabelleReviewDICOMVR') {
-      if (defined $params->{image_equivalence_class_id} && $params->{image_equivalence_class_id} ne '') {
-        $extra_url = 'review/dicom/vr/' . $params->{id} . '/' . $params->{image_equivalence_class_id};
+      # if (defined $params->{image_equivalence_class_id} && $params->{image_equivalence_class_id} ne '') {
+      #   $extra_url = 'review/dicom/vr/' . $params->{id} . '/' . $params->{image_equivalence_class_id};
+      # } else {
+      #   $extra_url = 'review/dicom/vr/' . $params->{id};
+      # }
+      $extra_url = 'review/dicom/vr/' . $params->{id};
+      my $iec = $params->{image_equivalence_class_id};
+      # IEC
+      if (defined $iec && $iec ne ''  && lc($iec) ne 'null') {
+        $extra_url = $extra_url . '/' . $iec;
       } else {
-        $extra_url = 'review/dicom/vr/' . $params->{id};
+        $extra_url = $extra_url . '/*';
       }
+      # Review Status
+      my $rs = $params->{review_status};
+      if (defined $rs && $rs ne '' && lc($rs) ne 'null') {
+        $extra_url = $extra_url . '/' . $rs;
+      } else {
+        $extra_url = $extra_url . '/Unreviewed';
+      }
+      # Dicom File Type
+      my $dft = $params->{dicom_file_type};
+      if (defined $dft && $dft ne '' && lc($dft) ne 'null') {
+        $extra_url = $extra_url . '/' . $dft;
+      } else {
+        $extra_url = $extra_url . '/All';
+      }      
     }     
 
     if ($class eq 'MirabelleReviewNiftiFile') {
