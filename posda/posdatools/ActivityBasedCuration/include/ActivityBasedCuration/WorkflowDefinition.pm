@@ -113,6 +113,11 @@ This step should not be needed if your data was imported through CTP",
         caption => "Check Consistency",
         action =>  "ConsistencyFromTimePoint",
       },
+      {
+        operation => "InvokeNewOperation",
+        caption => "Check Linkages",
+        action =>  "CheckLinkages",
+      },      
     ],
   },
   {

@@ -23,7 +23,7 @@ from pprint import pprint
 from io import BytesIO
 
 # the real one
-TCIA_UID_ROOT = "1.3.6.1.4.1.14519.5.2.1"
+TCIA_UID_ROOT = "<!1.3.6.1.4.1.14519.5.2.1>"
 # for testing only, use an easily identifable root
 # TCIA_UID_ROOT = "1207885"
 
@@ -38,6 +38,7 @@ TAGS_TO_SCAN = [
 
 # Tags which are considered to contain a UID value we want to test for
 UID_KEYWORDS = set(TAGS_TO_SCAN)
+
 
 def call_api(endpoint, call_type):
     API_URL = f'{Config.get("internal-api-url")}/v1{endpoint}'
@@ -62,96 +63,53 @@ def get_file_data(file_id):
     return resp.content if success else None
 
 
-def walk_dataset(ds: Dataset, depth: int = 0, path: List[str] | None = None) -> Iterator[Tuple[int, object, List[str]]]:
-    """Traverse a pydicom Dataset recursively, yielding (depth, elem, path).
+def walk_dataset(ds: Dataset, depth: int = 0, path: List[str] | None = None, key_path: List[str] | None = None) -> Iterator[Tuple[int, object, List[str], List[str]]]:
+    """Traverse a pydicom Dataset recursively, yielding (depth, elem, path, key_path).
 
-    path is a list of keywords (or tag hex if keyword missing); sequence
+    path is a list of tag hex strings like "(0008,0060)"; sequence
     items append an index like "[0]" to distinguish branches.
+    key_path is a parallel list of keywords (or tag hex if keyword missing).
     """
     if path is None:
         path = []
+    if key_path is None:
+        key_path = []
     for elem in ds:
         # Represent this element
         tag_hex = f"({elem.tag.group:04X},{elem.tag.element:04X})"
+        keyword = elem.keyword if elem.keyword else tag_hex
         current_path = path + [tag_hex]
+        current_key_path = key_path + [keyword]
         if isinstance(elem.value, Sequence):
             for i, item in enumerate(elem.value):
                 # Add index component for sequence item
                 seq_path = current_path + [f"[{i}]"]
-                yield from walk_dataset(item, depth + 1, seq_path)
+                seq_key_path = current_key_path + ["|"]
+                yield from walk_dataset(item, depth + 1, seq_path, seq_key_path)
         elif isinstance(elem.value, Dataset):
-            yield from walk_dataset(elem.value, depth + 1, current_path)
+            yield from walk_dataset(elem.value, depth + 1, current_path, current_key_path)
         elif elem.tag == (0x7FE0, 0x0010):  # skip PixelData
             continue
         else:
-            yield depth, elem, current_path
+            yield depth, elem, current_path, current_key_path
 
 
-def walk_dataset_for_referencing(ds: Dataset) -> Iterator[Tuple[int, object, List[str]]]:
+def walk_dataset_for_referencing(ds: Dataset) -> Iterator[Tuple[int, object, List[str], List[str]]]:
     """
     Walk the dataset and yield only those tags we care about.
 
     We care about tags that are in UID_KEYWORDS and are NOT at the root
     level (that is, have a depth over 0).
     """
-    for depth, elem, path in walk_dataset(ds):
+    for depth, elem, path, key_path in walk_dataset(ds):
         if elem.keyword in UID_KEYWORDS and depth > 0:
-            yield depth, elem, path
+            yield depth, elem, path, key_path
 
 
 def hash_uid(uid, uid_root):
     md5 = hashlib.md5(uid.encode())
     new_uid = f"{uid_root}.{int(md5.hexdigest(), 16)}"[:64]
     return new_uid
-
-
-def create_report_from_files(report, files, notify, comment):
-    writer = csv.writer(report, lineterminator='\n')
-    writer.writerow(
-        [
-            "file_id",
-            "op",
-            "tag",
-            "val1",
-            "val2",
-            "Operation",
-            "activity_id",
-            "comment",
-            "notify",
-        ]
-    )
-
-    # write the operation row
-    writer.writerow(
-        [
-            None,
-            None,
-            None,
-            None,
-            None,
-            "AddFilesToTimepoint",  # Operation
-            None,
-            comment,
-            notify,
-        ]
-    )
-    # write a second operation row, curators will choose one
-    writer.writerow(
-        [
-            None,
-            None,
-            None,
-            None,
-            None,
-            "CreateActivityTimepointFromFileList",  # Operation
-            None,
-            comment,
-            notify,
-        ]
-    )
-
-    for file_id in files:
-        writer.writerow([file_id])
 
 
 def load_map():
@@ -234,26 +192,31 @@ def load_map():
     return sop_map
 
 
-def get_all_files_in_activity(activity_id, conn):
+def get_all_files(args, conn):
     """
-    Returns a generator that yields tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
+    Returns tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
     """
-    cur = conn.cursor()
-    cur.execute(
-        """
+
+    activity_id = args.activity_id
+    ref_activity_id = args.ref_activity_id
+
+    file_query = """
             with files_in_activity as 
             (
                 select file_id
                 from activity_timepoint_file
+                natural join file
                 where activity_timepoint_id = (
                     select max(activity_timepoint_id)
                     from activity_timepoint
                     where activity_id = %s
                 )
+                and file.is_dicom_file = true                
             )
             select file_id,
                    storage_path(file_id),
                    media_storage_sop_class,
+                   modality,
                    sop_instance_uid,
                    series_instance_uid,
                    study_instance_uid,
@@ -266,38 +229,29 @@ def get_all_files_in_activity(activity_id, conn):
             natural left join file_study
             natural left join file_patient
             natural left join file_for
-        """,
-        (activity_id,),
-    )
+        """    
 
-    for row in cur:
-        yield (row)
+    file_rows = []
+    cur = conn.cursor()
+    cur.execute(file_query, (activity_id,))
+    file_rows = cur.fetchall()
 
+    ref_file_rows = []
+    if ref_activity_id and ref_activity_id != activity_id:
+        # Load reference activity files
+        cur.execute(file_query, (ref_activity_id,))
+        ref_file_rows = cur.fetchall()
 
-def get_files_in_activity(db, activity_id: int) -> Set[int]:
-    """
-    Get all files in the current timepoint for the activity
-    """
-    query = """
-        select file_id
-        from activity_timepoint_file
-        where activity_timepoint_id = (
-            select max(activity_timepoint_id)
-            from activity_timepoint
-            where activity_id = %s
-        );
-    """
-
-    with db.cursor() as cur:
-        cur.execute(query, [activity_id])
-        results = cur.fetchall()
-        return {r[0] for r in results}
+    return file_rows, ref_file_rows
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("background_id", help="the background_subprocess_id")
     parser.add_argument("activity_id", help="the primary activity to run against")
+    # parser.add_argument("timepoint_id", help="the primary timepoint to run against")
+    parser.add_argument("ref_activity_id", help="the primary activity to find reference files (leave blank if in same activity)")
+    # parser.add_argument("ref_timepoint_id", help="the primary timepoint to find reference files")
     parser.add_argument("notify", help="user to notify when complete")
     return parser.parse_args()
 
@@ -312,6 +266,69 @@ def generate_arg_report(args):
     print("------------------------------------------")
 
 
+def create_edit_skeleton(report, notify, activity_id):
+    writer = csv.writer(report, lineterminator='\n')
+    writer.writerow(
+        [
+            "series_instance_uid",
+            "num_files",
+            "op",
+            "tag",
+            "val1",
+            "val2",
+            "Operation",
+            "edit_description",
+            "notify",            
+            "activity_id"
+        ]
+    )
+
+    # write the operation row
+    writer.writerow(
+        [
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            "BackgroundEditTp",  # Operation
+            "Edits from Linkage Check",
+            notify,
+            activity_id
+        ]
+    )
+    # write the detail row
+    writer.writerow(
+        [
+            None,
+            None,
+            "hash_unhashed_uid",
+            None,
+            TCIA_UID_ROOT,
+            "<>",
+            None,
+            None,
+            None,
+            None
+        ]
+    )    
+
+
+def create_anomaly_report(report, uid_anomalies):
+    writer = csv.writer(report, lineterminator='\n')
+    writer.writerow(["type", "uid", "count", "file_ids"])
+    for row_a in uid_anomalies:
+        writer.writerow(row_a)        
+
+
+def create_reference_report(report, missing_references):    
+    writer = csv.writer(report, lineterminator='\n')
+    writer.writerow(["file_id", "modality", "series_instance_uid", "path", "key_path", "referenced_uid", "note"])
+    for file_id, modality, series_instance_uid, path, key_path, ref_uid in missing_references:
+        writer.writerow([file_id, modality, series_instance_uid, path, key_path, ref_uid, "UID not present in activity timepoint scope"])  
+
+
 def main2(args, background):
     generate_arg_report(args)
 
@@ -320,8 +337,7 @@ def main2(args, background):
     # Map of SOP Class UIDs to sequences that need hashed
     # sop_map = load_map()
 
-    # Materialize all file rows so we can build UID membership sets
-    file_rows = list(get_all_files_in_activity(args.activity_id, conn))
+    file_rows, ref_file_rows = get_all_files(args, conn)
 
     sop_counts = defaultdict(list)
     file_id_by_sop = {}
@@ -376,20 +392,13 @@ def main2(args, background):
     add_overlap("overlap_study_for", study_for_overlap)
 
     # Emit summary to stdout
-    print(f"Duplicate SOP UIDs: {len(dup_sop)}")
-    print(f"Overlaps - sop/series:{len(sop_series_overlap)} sop/study:{len(sop_study_overlap)} sop/for:{len(sop_for_overlap)} series/study:{len(series_study_overlap)} series/for:{len(series_for_overlap)} study/for:{len(study_for_overlap)}")
-
-    if uid_anomalies:
-        rep_anom = background.create_report("UidAnomalies")
-        w_anom = csv.writer(rep_anom, lineterminator='\n')
-        w_anom.writerow(["type", "uid", "count", "file_ids"])
-        for row_a in uid_anomalies:
-            w_anom.writerow(row_a)
-
-    print(f"Found {len(file_rows)} files: {len(sop_uids)} SOP UIDs, {len(series_uids)} series, {len(study_uids)} studies, {len(for_uids)} frame of reference UIDs")
+    print(f"Duplicate SOP UID(s): {len(dup_sop)}")
+    print(f"Overlaps - SOP/Series: {len(sop_series_overlap)} - SOP/Study: {len(sop_study_overlap)} - SOP/FOR: {len(sop_for_overlap)} - Series/Study: {len(series_study_overlap)} - Series/FOR: {len(series_for_overlap)} - Study/For: {len(study_for_overlap)}")
+    print(f"Found {len(file_rows)} File(s), {len(sop_uids)} SOP UID(s), {len(series_uids)} Series UID(s), {len(study_uids)} Study UID(s), {len(for_uids)} Frame of Reference UID(s)")
+    anomaly_report = background.create_report("UID_Anomalies")
+    create_anomaly_report(anomaly_report, uid_anomalies)
 
     missing_references = []  # (file_id, tag_keyword, ref_uid)
-
     for i, file in enumerate(file_rows):
         # if "posda-archive" in file.storage_path:
         #     print("## skipping this posda-archive file!", file.storage_path)
@@ -405,15 +414,17 @@ def main2(args, background):
             file_content = get_file_data(file_id)
             if file_content:
                 ds = pydicom.dcmread(BytesIO(file_content), stop_before_pixels=True, force=True)
-        
-        for depth, elem, path in walk_dataset_for_referencing(ds):
+
+        for depth, elem, path, key_path in walk_dataset_for_referencing(ds):
             # Only process elements with a string-like UID value
             val = getattr(elem, 'value', None)
             if not isinstance(val, str):
                 continue
             # Determine if this referenced UID exists in activity
             exists = False
-            if elem.keyword in ("ReferencedSOPInstanceUID", "SOPInstanceUID", "MultiFrameSourceSOPInstanceUID", "SOPInstanceUIDOfConcatenationSource"):
+            if ((key_path[0] == "ReferencedStudySequence" or key_path[1] == "RTReferencedStudySequence") and elem.keyword == "ReferencedSOPInstanceUID") :
+                exists = val in study_uids            
+            elif elem.keyword in ("ReferencedSOPInstanceUID", "SOPInstanceUID", "MultiFrameSourceSOPInstanceUID", "SOPInstanceUIDOfConcatenationSource"):
                 exists = val in sop_uids
             elif elem.keyword == "SeriesInstanceUID":
                 exists = val in series_uids
@@ -421,21 +432,16 @@ def main2(args, background):
                 exists = val in study_uids
             # Record missing references (exclude root-level original SOP inside its own file)
             if not exists:
-                missing_references.append((file.file_id, elem.keyword, val, f"<{''.join(path)}>") )
+                missing_references.append((file.file_id, file.modality, file.series_instance_uid, f"<{''.join(path)}>", f"<{''.join(key_path)}>", val))
         if i and i % 100 == 0:
             print(f"Scanned {i} files; missing refs so far: {len(missing_references)}")
 
-     
-    # Output a report of missing references
-    if missing_references:
-        rep = background.create_report("MissingReferences")
-        writer = csv.writer(rep, lineterminator='\n')
-        writer.writerow(["file_id", "tag", "referenced_uid", "path", "note"])
-        for file_id, tag_kw, ref_uid, path in missing_references:
-            writer.writerow([file_id, tag_kw, ref_uid, path, "UID not present in activity timepoint scope"])
-        print(f"Missing references: {len(missing_references)} (see report)")
-    else:
-        print("No missing references detected")
+    print(f"Found {len(missing_references)} Missing References")   
+    reference_report = background.create_report("Missing_References")
+    create_reference_report(reference_report, missing_references)
+
+    edit_skeleton = background.create_report("Edit_Skeleton")
+    create_edit_skeleton(edit_skeleton, args.notify, args.activity_id)
 
     background.finish("Complete")
 
