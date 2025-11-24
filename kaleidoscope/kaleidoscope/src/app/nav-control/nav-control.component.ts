@@ -77,6 +77,7 @@ export class NavControlComponent implements OnInit, OnDestroy {
         || this.review_status.toLowerCase() == "blank"
         || this.review_status.toLowerCase() == "scout"
         || this.review_status.toLowerCase() == "other"
+        || this.review_status.toLowerCase() == "flagged"
       ) )
       this.service.setMode(this.review_status.toLowerCase());
 
