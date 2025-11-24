@@ -628,15 +628,27 @@ sub JsController{
   $dyn->{path} = $this->{path};
 
   my $js_controller_hdr = qq{
+  /* Source: JsController.pm */
   var server_timer;
+
+  /*
+    Function to open a new window.
+
+    This used to open a "popup window" but has since been changed
+    to just open a normal window/tab.
+
+    Because of this, the parameters `w` and `h` are no longer used.
+
+    Parameters:
+      n: the name of the new window
+      u: the URL (relative to the current page)
+      x: if 1, a reference to the window is returned.
+  */
   function rt(n,u,w,h,x) {
-    args="width="+w+",height="+h+",resizable=yes,scrollbars=yes," +
-      "status=0,left=100,top=100,location=yes";
-    remote=window.open(u,n,args);
+    remote=window.open(u,n);
     if (remote != null) {
       remote.opener = self;
-      remote.location.href = u;
-  //    remote.location.reload(true);
+      // remote.location.href = u;
       remote.focus();
     }
     if (x == 1) { return remote; }
