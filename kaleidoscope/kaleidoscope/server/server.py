@@ -278,6 +278,10 @@ async def get_projects(request, state):
                        "and processing_status = 'Reviewed' "
                        "and review_status='Other'"),
 
+        'flagged':     ("not hidden "
+                       "and processing_status = 'Reviewed' "
+                       "and review_status='Flagged'"),                       
+
         'hidden':       ("hidden"),
         'unhidden':       ("not hidden"),
 
@@ -351,6 +355,7 @@ async def get_set(request, state):
         'blank': get_blank_data,
         'scout': get_scout_data,
         'other': get_other_data,
+        'flagged': get_flagged_data,
     }[state.lower()]
 
     logging.debug(f"handler chosen: {handler}")
@@ -656,16 +661,16 @@ limit 1
 
 async def get_good_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     return await get_reviewed_data('Good', after, collection, site, dicom_file_type, visual_review_instance_id)
-
 async def get_bad_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     return await get_reviewed_data('Bad', after, collection, site, dicom_file_type, visual_review_instance_id)
-
 async def get_blank_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     return await get_reviewed_data('Blank', after, collection, site, dicom_file_type, visual_review_instance_id)
 async def get_scout_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     return await get_reviewed_data('Scout', after, collection, site, dicom_file_type, visual_review_instance_id)
 async def get_other_data(after, collection, site, dicom_file_type, visual_review_instance_id):
     return await get_reviewed_data('Other', after, collection, site, dicom_file_type, visual_review_instance_id)
+async def get_flagged_data(after, collection, site, dicom_file_type, visual_review_instance_id):
+    return await get_reviewed_data('Flagged', after, collection, site, dicom_file_type, visual_review_instance_id)
 
 async def get_reviewed_data(state, after, collection, site, dicom_file_type, visual_review_instance_id):
     if visual_review_instance_id is not None:

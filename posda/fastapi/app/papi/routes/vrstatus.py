@@ -77,7 +77,7 @@ async def get_visible_bads_for_vr(visual_review_instance_id: int, db: Database =
         where
             visual_review_instance_id = $1
         	and a.review_status <> 'Good'
-    	    and ( (a.review_status = 'Bad') or a.review_status = 'Blank' or a.review_status = 'Other' or a.review_status = 'Scout')
+    	    and ( (a.review_status = 'Bad') or a.review_status = 'Blank' or a.review_status = 'Other' or a.review_status = 'Scout' or a.review_status = 'Flagged')
     """
     return await db.fetch(query, [visual_review_instance_id])
 
