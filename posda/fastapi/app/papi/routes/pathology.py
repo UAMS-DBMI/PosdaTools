@@ -23,6 +23,7 @@ async def get_files_for_review(vr_id: int, db: Database = Depends()):
           pathology_visual_review_files
         where
           pathology_visual_review_instance_id = $1
+        order by path_file_id;
     """
     return await db.fetch(query, [vr_id])
 

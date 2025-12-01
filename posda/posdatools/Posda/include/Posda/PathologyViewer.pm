@@ -67,6 +67,13 @@ sub ContentResponse {
       caption => "Begin",
       sync => "Update();",
     });
+    $http->queue('</br></br></br><label>Skip to specific Index</label><input class="form-control w-auto" id="newIndexV" style="width: 60px;" value="0">');
+    $self->SubmitValueButton($http, {
+        caption => 'Skip to Index',
+        element_id => 'newIndexV',
+        op => 'skip',
+        sync => "Update();",
+    });
     $http->queue("<h2>Bulk edits for Activity:</h2>");
     $self->NotSoSimpleButton($http, {
       op => "BulkEditMacro",
@@ -379,6 +386,17 @@ sub ContentResponse {
 
 sub Begin() {
   my ($self, $http, $dyn) = @_;
+  $self->{startup} = 0;
+}
+
+sub skip() {
+  my ($self, $http, $dyn) = @_;
+  my $x = int($dyn->{value} - 1);
+  if( $x >= 0){
+    $self->{index} = $x;
+  }else{
+    $self->{index} = 0;
+  }
   $self->{startup} = 0;
 }
 
