@@ -395,6 +395,11 @@ This step should not be needed if your data was imported through CTP",
     },
     {
       operation => "InvokeNewOperation",
+      caption => "Save Image MetaData",
+      action =>  "PathologyImageAnalysis"
+    },
+    {
+      operation => "InvokeNewOperation",
       caption => "Create Visual Review",
       action =>  "Path_SVS_VisualReview",
     },
@@ -871,6 +876,10 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "PathDB Style: 1",
         query => "PathologyExportQuery1",
+      },
+      {
+        caption => "MetadataDigest",
+        query => "PathologyMetaExport",
       },
     ],
   ],

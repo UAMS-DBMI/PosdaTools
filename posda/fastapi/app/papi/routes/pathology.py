@@ -494,3 +494,32 @@ async def recordPathDBresponse(file_id: int, node_id: str,  db: Database = Depen
     return {
         'status': 'success',
     }
+
+@router.put("/insert_image_meta/{file_id}/{format}/{modality}/{protocol}/{manufacturer}/{model}/{xResolution}/{yResolution}/{resolutionUnit}/{magnification}/{mppx}/{mppy}/{image_volume_width}/{image_volume_height}/{reference_pixel_physical_value_x}/{reference_pixel_physical_value_y}")
+async def insert_image_meta(file_id: int,format: str,modality: str,protocol: str,manufacturer: str,model: str,xResolution: str,yResolution: str,resolutionUnit: str,magnification: str,mppx: float,mppy: float,image_volume_width: float,image_volume_height: float,reference_pixel_physical_value_x: float,reference_pixel_physical_value_y: float,  db: Database = Depends()):
+    return await db.fetch_one("""\
+        INSERT INTO public.pathology_image_meta
+        (file_id,
+        format,
+        modality,
+        protocol,
+        manufacturer,
+        model,
+        xresolution,
+        yresolution,
+        resolutionunit,
+        magnification,
+        mppx,
+        mppy,
+        image_volume_width,
+        image_volume_height,
+        reference_pixel_physical_value_x,
+        reference_pixel_physical_value_y)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+        RETURNING file_id;
+        """,[file_id,format,modality,protocol,manufacturer,model,xResolution,yResolution,resolutionUnit,magnification,mppx,mppy,image_volume_width,image_volume_height,reference_pixel_physical_value_x,reference_pixel_physical_value_y])
+
+    if record is None:
+        raise HTTPException(detail="Error inserting image meta", status_code=422)
+
+    return {"status": "success"}
