@@ -24,8 +24,6 @@ from io import BytesIO
 
 # the real one
 TCIA_UID_ROOT = "<!1.3.6.1.4.1.14519.5.2.1>"
-# for testing only, use an easily identifable root
-# TCIA_UID_ROOT = "1207885"
 
 TAGS_TO_SCAN = [
     "StudyInstanceUID",
@@ -192,13 +190,12 @@ def load_map():
     return sop_map
 
 
-def get_all_files(args, conn):
+def get_activity_files(args, conn):
     """
     Returns tuples of (file_id, storage_path, media_storage_sop_class, sop_instance_uid)
     """
 
     activity_id = args.activity_id
-    ref_activity_id = args.ref_activity_id
 
     file_query = """
             with files_in_activity as 
@@ -229,29 +226,20 @@ def get_all_files(args, conn):
             natural left join file_study
             natural left join file_patient
             natural left join file_for
+            where file_id in (200469232,200468975,200169686,200169859,200468973,200170247,200170245)            
         """    
-
     file_rows = []
     cur = conn.cursor()
     cur.execute(file_query, (activity_id,))
     file_rows = cur.fetchall()
 
-    ref_file_rows = []
-    if ref_activity_id and ref_activity_id != activity_id:
-        # Load reference activity files
-        cur.execute(file_query, (ref_activity_id,))
-        ref_file_rows = cur.fetchall()
-
-    return file_rows, ref_file_rows
+    return file_rows
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("background_id", help="the background_subprocess_id")
     parser.add_argument("activity_id", help="the primary activity to run against")
-    # parser.add_argument("timepoint_id", help="the primary timepoint to run against")
-    parser.add_argument("ref_activity_id", help="the primary activity to find reference files (leave blank if in same activity)")
-    # parser.add_argument("ref_timepoint_id", help="the primary timepoint to find reference files")
     parser.add_argument("notify", help="user to notify when complete")
     return parser.parse_args()
 
@@ -324,21 +312,13 @@ def create_anomaly_report(report, uid_anomalies):
 
 def create_reference_report(report, missing_references):    
     writer = csv.writer(report, lineterminator='\n')
-    writer.writerow(["file_id", "modality", "series_instance_uid", "path", "key_path", "referenced_uid", "note"])
-    for file_id, modality, series_instance_uid, path, key_path, ref_uid in missing_references:
-        writer.writerow([file_id, modality, series_instance_uid, path, key_path, ref_uid, "UID not present in activity timepoint scope"])  
+    writer.writerow(["file_id", "modality", "series_instance_uid", "path", "key_path", "category", "referenced_uid", "missing", "note"])
+    for file_id, modality, series_instance_uid, path, key_path, category, ref_uid, missing_flag, note in missing_references:
+        writer.writerow([file_id, modality, series_instance_uid, path, key_path, category, ref_uid, missing_flag, note])  
 
 
-def main2(args, background):
-    generate_arg_report(args)
-
-    conn = Database("posda_files")
-
-    # Map of SOP Class UIDs to sequences that need hashed
-    # sop_map = load_map()
-
-    file_rows, ref_file_rows = get_all_files(args, conn)
-
+def detect_uid_anomalies(file_rows):
+    """Analyze UID collections and return anomaly rows plus UID sets."""
     sop_counts = defaultdict(list)
     file_id_by_sop = {}
     series_uids = set()
@@ -395,9 +375,12 @@ def main2(args, background):
     print(f"Duplicate SOP UID(s): {len(dup_sop)}")
     print(f"Overlaps - SOP/Series: {len(sop_series_overlap)} - SOP/Study: {len(sop_study_overlap)} - SOP/FOR: {len(sop_for_overlap)} - Series/Study: {len(series_study_overlap)} - Series/FOR: {len(series_for_overlap)} - Study/For: {len(study_for_overlap)}")
     print(f"Found {len(file_rows)} File(s), {len(sop_uids)} SOP UID(s), {len(series_uids)} Series UID(s), {len(study_uids)} Study UID(s), {len(for_uids)} Frame of Reference UID(s)")
-    anomaly_report = background.create_report("UID_Anomalies")
-    create_anomaly_report(anomaly_report, uid_anomalies)
 
+    return uid_anomalies, sop_uids, series_uids, study_uids, for_uids
+
+
+def find_missing_references(file_rows, sop_uids, series_uids, study_uids, for_uids):
+    """Scan files for referenced UIDs that are absent from collected sets."""
     missing_references = []  # (file_id, tag_keyword, ref_uid)
     for i, file in enumerate(file_rows):
         # if "posda-archive" in file.storage_path:
@@ -415,6 +398,9 @@ def main2(args, background):
             if file_content:
                 ds = pydicom.dcmread(BytesIO(file_content), stop_before_pixels=True, force=True)
 
+        if ds is None:
+            continue
+
         for depth, elem, path, key_path in walk_dataset_for_referencing(ds):
             # Only process elements with a string-like UID value
             val = getattr(elem, 'value', None)
@@ -422,23 +408,177 @@ def main2(args, background):
                 continue
             # Determine if this referenced UID exists in activity
             exists = False
-            if ((key_path[0] == "ReferencedStudySequence" or key_path[1] == "RTReferencedStudySequence") and elem.keyword == "ReferencedSOPInstanceUID") :
+            category = None
+            # For SEG, this tag tends to be a study reference
+            if (key_path[0] == "ReferencedStudySequence" and key_path[2] == "ReferencedSOPInstanceUID"):
+                category = "study"
+                exists = val in study_uids
+            # For RT, this tag tends to be a study reference
+            if (key_path[2] == "RTReferencedStudySequence" and key_path[4] == "ReferencedSOPInstanceUID"):                
+                category = "study"
                 exists = val in study_uids            
             elif elem.keyword in ("ReferencedSOPInstanceUID", "SOPInstanceUID", "MultiFrameSourceSOPInstanceUID", "SOPInstanceUIDOfConcatenationSource"):
+                category = "sop"
                 exists = val in sop_uids
             elif elem.keyword == "SeriesInstanceUID":
+                category = "series"
                 exists = val in series_uids
             elif elem.keyword == "StudyInstanceUID":
+                category = "study"
                 exists = val in study_uids
             # Record missing references (exclude root-level original SOP inside its own file)
-            if not exists:
-                missing_references.append((file.file_id, file.modality, file.series_instance_uid, f"<{''.join(path)}>", f"<{''.join(key_path)}>", val))
+            if not exists and category:
+                missing_references.append(
+                    {
+                        "file_id": file.file_id,
+                        "modality": file.modality,
+                        "series_instance_uid": file.series_instance_uid,
+                        "path": f"<{''.join(path)}>",
+                        "key_path": f"<{''.join(key_path)}>",
+                        "uid": val,
+                        "category": category,
+                        "note": "UID not present in activity timepoint scope",
+                        "missing": True,
+                    }
+                )
         if i and i % 100 == 0:
             print(f"Scanned {i} files; missing refs so far: {len(missing_references)}")
 
-    print(f"Found {len(missing_references)} Missing References")   
+    return missing_references
+
+
+def lookup_uids(conn, category, uid_values):
+    """Return newest activity/timepoint details for the supplied UIDs of a category."""
+    if not uid_values:
+        return {}
+
+    queries = {
+        "sop": (
+            """
+            select distinct on (fsc.sop_instance_uid)
+                fsc.sop_instance_uid as uid_value,
+                at.activity_id,
+                at.activity_timepoint_id,
+                atf.file_id
+            from file_sop_common fsc
+            join activity_timepoint_file atf on atf.file_id = fsc.file_id
+            join activity_timepoint at on at.activity_timepoint_id = atf.activity_timepoint_id
+            where fsc.sop_instance_uid = any(%s)
+            order by fsc.sop_instance_uid, at.activity_id desc, at.activity_timepoint_id desc
+            """,
+        ),
+        "series": (
+            """
+            select distinct on (fs.series_instance_uid)
+                fs.series_instance_uid as uid_value,
+                at.activity_id,
+                at.activity_timepoint_id,
+                atf.file_id
+            from file_series fs
+            join activity_timepoint_file atf on atf.file_id = fs.file_id
+            join activity_timepoint at on at.activity_timepoint_id = atf.activity_timepoint_id
+            where fs.series_instance_uid = any(%s)
+            order by fs.series_instance_uid, at.activity_id desc, at.activity_timepoint_id desc
+            """,
+        ),
+        "study": (
+            """
+            select distinct on (fst.study_instance_uid)
+                fst.study_instance_uid as uid_value,
+                at.activity_id,
+                at.activity_timepoint_id,
+                atf.file_id
+            from file_study fst
+            join activity_timepoint_file atf on atf.file_id = fst.file_id
+            join activity_timepoint at on at.activity_timepoint_id = atf.activity_timepoint_id
+            where fst.study_instance_uid = any(%s)
+            order by fst.study_instance_uid, at.activity_id desc, at.activity_timepoint_id desc
+            """,
+        ),
+    }
+
+    query = queries.get(category)
+    if not query:
+        return {}
+
+    cursor = conn.cursor()
+    cursor.execute(query[0], (list(uid_values),))
+    results = {}
+    for row in cursor.fetchall():
+        uid_value, activity_id, activity_timepoint_id, file_id = row
+        results[(category, uid_value)] = {
+            "activity_id": activity_id,
+            "activity_timepoint_id": activity_timepoint_id,
+            "file_id": file_id,
+        }
+    cursor.close()
+    return results
+
+
+def annotate_missing_references(conn, missing_references):
+    """Augment missing references with latest known locations outside the current scope."""
+    if not missing_references:
+        return missing_references
+
+    category_to_uids = defaultdict(set)
+    for entry in missing_references:
+        category = entry.get("category")
+        uid_value = entry.get("uid")
+        if category and uid_value:
+            category_to_uids[category].add(uid_value)
+
+    location_map = {}
+    for category, uid_values in category_to_uids.items():
+        location_map.update(lookup_uids(conn, category, uid_values))
+
+    for entry in missing_references:
+        key = (entry.get("category"), entry.get("uid"))
+        location = location_map.get(key)
+        if location:
+            entry["note"] = (
+                f"Found in activity {location['activity_id']} "
+                f"timepoint {location['activity_timepoint_id']} "
+                f"file {location['file_id']}"
+            )
+            entry["missing"] = False
+        else:
+            entry.setdefault("missing", True)
+
+    return missing_references
+
+
+def main2(args, background):
+    generate_arg_report(args)
+
+    conn = Database("posda_files")
+
+    # Map of SOP Class UIDs to sequences that need hashed
+    # sop_map = load_map()
+
+    file_rows = get_activity_files(args, conn)
+    uid_anomalies, sop_uids, series_uids, study_uids, for_uids = detect_uid_anomalies(file_rows)
+    anomaly_report = background.create_report("UID_Anomalies")
+    create_anomaly_report(anomaly_report, uid_anomalies)
+
+    missing_references = find_missing_references(file_rows, sop_uids, series_uids, study_uids, for_uids)
+    missing_references = annotate_missing_references(conn, missing_references)
+    reference_rows = [
+        (
+            entry["file_id"],
+            entry["modality"],
+            entry["series_instance_uid"],
+            entry["path"],
+            entry["key_path"],
+            entry["category"],
+            entry["uid"],
+            "X" if entry.get("missing") else "",
+            entry["note"],
+        )
+        for entry in missing_references
+    ]
+    print(f"Found {len(reference_rows)} Missing References")   
     reference_report = background.create_report("Missing_References")
-    create_reference_report(reference_report, missing_references)
+    create_reference_report(reference_report, reference_rows)
 
     edit_skeleton = background.create_report("Edit_Skeleton")
     create_edit_skeleton(edit_skeleton, args.notify, args.activity_id)
