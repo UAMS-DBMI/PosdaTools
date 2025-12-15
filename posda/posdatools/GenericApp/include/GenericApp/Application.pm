@@ -119,6 +119,33 @@ sub user{
   $http->queue($this->get_user);
 }
 my $content = qq{
+
+<style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Fixed-width sidebar */
+    .sidebar {
+      width: 200px;
+      background: #f5f5f5;
+      border-right: 1px solid #ddd;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Push main content to the right of sidebar */
+    .main-content {
+      margin-left: 220px; /* same as sidebar width */
+      padding: 20px;
+    }
+</style>
+
 <nav class="navbar navbar-default">
   <div class="container-fluid" id="div-navbar">
     <div class="navbar-header" id="div-logo">
@@ -137,10 +164,10 @@ my $content = qq{
       <?dyn="BigTitle"?>
     </div>
     <div class="row" id="div-menu-content">
-      <div id="menu" class="col-md-3">
+      <div id="menu" class="sidebar">
       Menu
       </div>
-      <div id="content" class="col-md-9">
+      <div id="content" class="main-content">
       </div>
     </div>
   </div>
