@@ -1,4 +1,15 @@
 ###############################################################################
+# Build pydicom-background-editor
+###############################################################################
+FROM astral/uv:python3.14-trixie as pydicom-bg-builder
+
+RUN mkdir /build && \
+        cd /build && \
+        git clone https://github.com/quasarj/pydicom-background-editor.git && \
+        cd pydicom-background-editor && \
+        uv build
+
+###############################################################################
 # Build Dicom 3 tools
 ###############################################################################
 FROM buildpack-deps:bullseye as d3tbuild
@@ -44,7 +55,7 @@ RUN cd dcm2niix && \
 ################################################################################
 ################################################################################
 ################################################################################
-FROM debian:bullseye
+FROM python:3.14-trixie
 
 RUN apt-get update && apt-get install -y \
 	libgdcm-tools
@@ -121,8 +132,11 @@ RUN pip3 install \
 	pandas \
 	numpy \
 	nibabel \
-	pyarrow
+	pyarrow \
+	storable
 
+COPY --from=pydicom-bg-builder /build/pydicom-background-editor/dist/*.whl /
+RUN pip install /*.whl
 
 RUN addgroup --gid 2123 fakeposda
 RUN adduser --system --ingroup fakeposda --uid 1000 posda
@@ -132,7 +146,7 @@ COPY --chown=posda:fakeposda fastapi/start_api.sh /
 RUN pip3 install -r /fastapi/requirements.txt
 
 # Work around issue with volume persmissions
-RUN mkdir /home/posda/cache
+RUN mkdir -p /home/posda/cache
 RUN chown posda:fakeposda /home/posda/cache
 VOLUME ["/home/posda/cache"]
 
