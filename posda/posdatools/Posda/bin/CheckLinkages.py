@@ -226,7 +226,6 @@ def get_activity_files(args, conn):
             natural left join file_study
             natural left join file_patient
             natural left join file_for
-            where file_id in (200469232,200468975,200169686,200169859,200468973,200170247,200170245)            
         """    
     file_rows = []
     cur = conn.cursor()
