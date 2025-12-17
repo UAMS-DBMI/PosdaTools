@@ -9,7 +9,6 @@ import pydicom
 import sys
 # import os
 import csv
-import requests
 from collections import defaultdict
 from posda.database import Database
 from posda.config import Config
@@ -20,7 +19,6 @@ from pydicom.dataset import Dataset
 from pydicom import uid
 from psycopg2.extras import execute_values
 from pprint import pprint
-from io import BytesIO
 
 # the real one
 TCIA_UID_ROOT = "<!1.3.6.1.4.1.14519.5.2.1>"
@@ -37,29 +35,34 @@ TAGS_TO_SCAN = [
 # Tags which are considered to contain a UID value we want to test for
 UID_KEYWORDS = set(TAGS_TO_SCAN)
 
+# #--------------------------------------------------
+# # FOR LOCAL TESTING
+# #--------------------------------------------------
+# import requests
+# from io import BytesIO
 
-def call_api(endpoint, call_type):
-    API_URL = f'{Config.get("internal-api-url")}/v1{endpoint}'
-    HEADERS = {'Authorization': f'Bearer {Config.get("api_system_token")}'}
-    try:
-        if call_type == 0:
-            response = requests.get(API_URL,headers=HEADERS)
-        elif call_type == 1:
-            response = requests.patch(API_URL,headers=HEADERS)
-        elif call_type == 2:
-            response = requests.put(API_URL,headers=HEADERS)
-        if response.status_code == 200:
-            return response, API_URL, True
-        print(f'Bad response: {response.status_code} - {response.text}')
-    except Exception as e:
-        print(f'Error processing request: {e}')
-    return None, API_URL, False
+# def call_api(endpoint, call_type):
+#     API_URL = f'{Config.get("internal-api-url")}/v1{endpoint}'
+#     HEADERS = {'Authorization': f'Bearer {Config.get("api_system_token")}'}
+#     try:
+#         if call_type == 0:
+#             response = requests.get(API_URL,headers=HEADERS)
+#         elif call_type == 1:
+#             response = requests.patch(API_URL,headers=HEADERS)
+#         elif call_type == 2:
+#             response = requests.put(API_URL,headers=HEADERS)
+#         if response.status_code == 200:
+#             return response, API_URL, True
+#         print(f'Bad response: {response.status_code} - {response.text}')
+#     except Exception as e:
+#         print(f'Error processing request: {e}')
+#     return None, API_URL, False
 
 
-def get_file_data(file_id):
-    resp, _, success = call_api(f'/files/{file_id}/data', 0)
-    return resp.content if success else None
-
+# def get_file_data(file_id):
+#     resp, _, success = call_api(f'/files/{file_id}/data', 0)
+#     return resp.content if success else None
+# #--------------------------------------------------
 
 def walk_dataset(ds: Dataset, depth: int = 0, path: List[str] | None = None, key_path: List[str] | None = None) -> Iterator[Tuple[int, object, List[str], List[str]]]:
     """Traverse a pydicom Dataset recursively, yielding (depth, elem, path, key_path).
@@ -390,12 +393,12 @@ def find_missing_references(file_rows, sop_uids, series_uids, study_uids, for_ui
         # Scan for referencing sequences
         if ds is None:
             # For production
-            # ds = pydicom.dcmread(file.storage_path, stop_before_pixels=True, force=True)
-            # For testing only, for local testing
-            file_id = file.file_id
-            file_content = get_file_data(file_id)
-            if file_content:
-                ds = pydicom.dcmread(BytesIO(file_content), stop_before_pixels=True, force=True)
+            ds = pydicom.dcmread(file.storage_path, stop_before_pixels=True, force=True)
+            # # For local testing only
+            # file_id = file.file_id
+            # file_content = get_file_data(file_id)
+            # if file_content:
+            #     ds = pydicom.dcmread(BytesIO(file_content), stop_before_pixels=True, force=True)
 
         if ds is None:
             continue
@@ -413,7 +416,7 @@ def find_missing_references(file_rows, sop_uids, series_uids, study_uids, for_ui
                 category = "study"
                 exists = val in study_uids
             # For RT, this tag tends to be a study reference
-            if (key_path[2] == "RTReferencedStudySequence" and key_path[4] == "ReferencedSOPInstanceUID"):                
+            elif (key_path[2] == "RTReferencedStudySequence" and key_path[4] == "ReferencedSOPInstanceUID"):                
                 category = "study"
                 exists = val in study_uids            
             elif elem.keyword in ("ReferencedSOPInstanceUID", "SOPInstanceUID", "MultiFrameSourceSOPInstanceUID", "SOPInstanceUIDOfConcatenationSource"):
