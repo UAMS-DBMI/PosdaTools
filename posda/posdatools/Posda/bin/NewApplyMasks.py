@@ -680,7 +680,7 @@ def get_edited_files(visual_review_instance_id, function_list, conn):
 
 def get_edited_sops(visual_review_instance_id, function_list: List[str], conn):
     """
-    Get all SOP Instance UIDs of files that were edited in the given Visual Review
+    Get all SOP and Series Instance UIDs of files that were edited in the given Visual Review
     with the specified function. These are the UIDs BEFORE being processed
     by Masker (which modifies them)
     """
@@ -704,8 +704,7 @@ def get_edited_sops(visual_review_instance_id, function_list: List[str], conn):
                         natural join file_series
                 where
                         visual_review_instance_id = %s
-                order by
-                        1
+                order by 1
         ), iecs_to_work_on as (
                 /*
                 Gets the IECs in the VR we plan to work on (along with their series)
@@ -719,19 +718,21 @@ def get_edited_sops(visual_review_instance_id, function_list: List[str], conn):
                         masking_status = 'accepted'
                         and function = ANY(%s)
         ), files_to_work_on as (
-                        select file_id
-                        from image_equivalence_class_input_image
-                        natural join iecs_to_work_on
+                select file_id
+                from image_equivalence_class_input_image
+                natural join iecs_to_work_on
         )
 
-        select distinct sop_instance_uid
+        select distinct sop_instance_uid, series_instance_uid
         from files_to_work_on
         natural join file_sop_common
-    """,
+        natural join file_series
+        """,
         (visual_review_instance_id, function_list),
     )
 
-    return {row.sop_instance_uid for row in cur}
+    rows = cur.fetchall()
+    return {row.sop_instance_uid for row in rows}, {row.series_instance_uid for row in rows}
 
 def get_all_files_in_timepoint(timepoint_id, conn):
     """
@@ -891,6 +892,37 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
     return original_files.difference(files_to_remove)
 
 
+# #--------------------------------------------------
+# # FOR LOCAL TESTING
+# #--------------------------------------------------
+# import requests
+# from io import BytesIO
+
+# def call_api(endpoint, call_type):
+#     API_URL = f'{Config.get("internal-api-url")}/v1{endpoint}'
+#     HEADERS = {'Authorization': f'Bearer {Config.get("api_system_token")}'}
+#     try:
+#         if call_type == 0:
+#             response = requests.get(API_URL,headers=HEADERS)
+#         elif call_type == 1:
+#             response = requests.patch(API_URL,headers=HEADERS)
+#         elif call_type == 2:
+#             response = requests.put(API_URL,headers=HEADERS)
+#         if response.status_code == 200:
+#             return response, API_URL, True
+#         print(f'Bad response: {response.status_code} - {response.text}')
+#     except Exception as e:
+#         print(f'Error processing request: {e}')
+#     return None, API_URL, False
+
+
+# def get_file_data(file_id):
+#     resp, _, success = call_api(f'/files/{file_id}/data', 0)
+#     return resp.content if success else None
+
+# #--------------------------------------------------
+
+
 def main(args, temp_dir):
     """
     Main entry point, just wraps the other main and catches
@@ -940,7 +972,8 @@ def main2(args, temp_dir, background):
         *(["sliceremove"] if args.process_sliceremove else []),
         *(["blackout"] if args.process_blackout else []),
     ]
-    premasked_sops = get_edited_sops(args.visual_review_instance_id, function_list, conn)
+    premasked_sops, premasked_series = get_edited_sops(
+        args.visual_review_instance_id, function_list, conn)
     premasked_files = get_edited_files(
         args.visual_review_instance_id, function_list, conn
     )
@@ -1007,10 +1040,17 @@ def main2(args, temp_dir, background):
         # Scan for referencing sequences
         if ds is None:
             ds = pydicom.dcmread(file.storage_path)
+            # # For local testing only
+            # file_id = file.file_id
+            # file_content = get_file_data(file_id)
+            # if file_content:
+            #     ds = pydicom.dcmread(BytesIO(file_content))
         
         for depth, ele in walk_dataset_for_referencing(ds):
             if (
-                ele.value in premasked_sops or ele.value in orphan_sops
+                ele.value in premasked_sops 
+                or ele.value in premasked_series
+                or ele.value in orphan_sops
             ):  # only needs changed if we edited it!
                 edited = True
                 ele.value = hash_uid(ele.value, TCIA_UID_ROOT)
@@ -1083,5 +1123,7 @@ def main2(args, temp_dir, background):
 
 if __name__ == "__main__":
     temp_dir_base = os.path.join(Config.get("cache_root"), "edits")
+    # # FOR LOCAL TESTING ONLY    
+    # temp_dir_base = os.path.join("C:\\data\\cache", "edits")
     with tempfile.TemporaryDirectory(dir=temp_dir_base) as temp_dir:
         sys.exit(main(parse_args(), temp_dir))
