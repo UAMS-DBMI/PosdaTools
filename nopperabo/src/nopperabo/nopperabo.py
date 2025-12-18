@@ -77,6 +77,7 @@ def main(debug: bool=False,
 
             logger.debug(f"get_work() said {iec=}")
             if iec is not None:
+                logger.info(f"{masker_version=}")
                 do_work(iec)
             else:
                 # wait a bit so we don't spam the server
@@ -88,8 +89,8 @@ def main(debug: bool=False,
                 abort_work(iec)
             raise
         except Exception as e:
-            print(repr(e))
-            print("Waiting a bit and then trying to continue...")
+            logger.critical(repr(e))
+            logger.critical("Waiting a bit and then trying to continue...")
             time.sleep(delay)
 
 
@@ -239,6 +240,10 @@ def do_work(iec):
     # call masker on the downlaoded files
     details_order = ['LR', 'PA', 'IS', 'width', 'height', 'depth']
 
+    coordinate_flag = '-cs' # the default flag
+    if details.get('oldcoordinates', False):
+        coordinate_flag = '-c'
+
     logger.debug("Running Masker...")
     command = [
             'masker',
@@ -246,7 +251,7 @@ def do_work(iec):
             '--multiprocessing',
             '-i', path,
             '-o', output_path,
-            '-cs', *[str(details[x]) for x in details_order],
+            coordinate_flag, *[str(details[x]) for x in details_order],
             '--form', form,
             '--function', function,
             '--hashuids',
