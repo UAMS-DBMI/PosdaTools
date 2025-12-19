@@ -13,7 +13,7 @@ from collections import defaultdict
 from posda.database import Database
 from posda.config import Config
 from posda.background.process import BackgroundProcess
-from typing import List, Set, Iterator, Tuple
+from typing import List, Set, Iterator, Tuple, Optional
 from pydicom.sequence import Sequence
 from pydicom.dataset import Dataset
 from pydicom import uid
@@ -64,7 +64,7 @@ UID_KEYWORDS = set(TAGS_TO_SCAN)
 #     return resp.content if success else None
 # #--------------------------------------------------
 
-def walk_dataset(ds: Dataset, depth: int = 0, path: List[str] | None = None, key_path: List[str] | None = None) -> Iterator[Tuple[int, object, List[str], List[str]]]:
+def walk_dataset(ds: Dataset, depth: int = 0, path: Optional[List[str]] = None, key_path: Optional[List[str]] = None) -> Iterator[Tuple[int, object, List[str], List[str]]]:
     """Traverse a pydicom Dataset recursively, yielding (depth, elem, path, key_path).
 
     path is a list of tag hex strings like "(0008,0060)"; sequence
