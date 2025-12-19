@@ -24,3 +24,6 @@ push/*.env
 inplace/
 /posda/posdatools/phimacro/test
 /.vscode
+/posda/posdatools/Posda/doc/doc/PosdaInstallation.doc
+/posda/posdatools/Posda/doc/doc/PosdaOverview.doc
+/posda/posdatools/Posda/doc/doc/PosdaPseudoPhantoms.doc
