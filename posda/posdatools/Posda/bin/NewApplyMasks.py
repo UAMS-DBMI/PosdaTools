@@ -1055,7 +1055,7 @@ def main2(args, temp_dir, background):
                 edited = True
                 ele.value = hash_uid(ele.value, TCIA_UID_ROOT)
                 # class_name = uid.UID(file.media_storage_sop_class).keyword
-                print(file.file_id, ele.keyword, ele.value)
+                #print(file.file_id, ele.keyword, ele.value)
 
         if edited:  # if the file was already edited (or needs to be now)
             # Load the file if we haven't yet
