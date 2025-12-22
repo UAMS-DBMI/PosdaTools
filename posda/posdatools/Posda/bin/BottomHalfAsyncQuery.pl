@@ -72,7 +72,8 @@ unless($q_result){
   my $err = $q->errstr;
   Error("Can't execute query\n\t$err\nquery:\n$query_spec->{query}");
 }
-if($query_spec->{query} =~ /^\s*select/){
+## Test adjusted to allow '-- select' to force select mode
+if($query_spec->{query} =~ /^\s*-*\s*select/){
   my $num_rows = 0;
   while(my $h = $q->fetchrow_hashref){
     $num_rows += 1;

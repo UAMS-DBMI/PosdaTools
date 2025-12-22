@@ -58,7 +58,8 @@ sub new {
   my ($class, $name, $async) = @_;
   my $self = {
     dbh => undef,
-    async => $async
+    async => $async,
+    name => $name
   };
 
   bless $self, $class;
@@ -261,7 +262,8 @@ sub _RunQueryBlocking {
     $self->Prepare($dbh);
   }
 
-  my $select = ($self->{query} =~ /^\s*select/i)? 1:0;
+  ## Test adjusted to allow "-- select" to force select mode
+  my $select = ($self->{query} =~ /^\s*-*\s*select/i)? 1:0;
 
   my $rows_affected = $self->Execute(@_);
 

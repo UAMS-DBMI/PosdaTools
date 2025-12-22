@@ -4612,7 +4612,7 @@ sub MakeNewQuery {
     else {$msg .= "$arg, "}
   }
   $msg .= ")";
-  print STDERR"################\n$msg\n###############\n";
+  print STDERR"################\nQUERY RUNNING\n$msg\n###############\n";
   my $guid = Posda::UUID::GetGuid;
   my $invoked_id = Posda::QueryLog::query_invoked($query, $self->get_user);
   my $when = $self->now;;
