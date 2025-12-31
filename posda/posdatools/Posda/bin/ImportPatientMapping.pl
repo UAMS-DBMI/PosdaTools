@@ -4,9 +4,9 @@ use Posda::DB 'Query';
 use Posda::BackgroundProcess;
 
 my $usage = <<EOF;
-ImportPatientMapping.pl <invoc_id> <notify>
+ImportPatientMappingWithIds.pl <invoc_id> <notify>
 or
-ImportPatientMapping.pl -h
+ImportPatientMappingWithIds.pl -h
 
 This script, although a "background script" merely executes in the
 foreground and returns its results via STDOUT
@@ -40,8 +40,16 @@ print "Going straight to background to process $num_lines lines\n";
 
 my $back = Posda::BackgroundProcess->new($invoc_id, $notify);
 
+
 $back->Daemonize;
-my $q = Query("InsertIntoPatientMappingNew");
+my $upload_id;
+Query('GetLatestPMUploadID')->RunQuery(sub{
+  my($row) = @_;
+    $upload_id = $row->[0];
+  }, sub {});
+  if($upload_id eq "<undef>"){die "Error fetching upload id";}
+$upload_id = $upload_id + 1
+$q = Query("InsertIntoPatientMappingWithIDs");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
@@ -59,7 +67,7 @@ for my $line (@lines){
   $from =~ s/\s*$//;
   $q->RunQuery(sub {}, sub{},
     $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
-    $diagnosis_date, $baseline_date, $uid_root);
+    $diagnosis_date, $baseline_date, $uid_root,$upload_id);
 }
 $back->WriteToEmail("$num_lines Insertions done\n");
 $back->Finish;
