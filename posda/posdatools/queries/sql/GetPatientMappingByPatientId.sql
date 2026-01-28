@@ -22,5 +22,4 @@ from
   patient_mapping
 where
   to_patient_id = ?
-
-  
+  and active = true

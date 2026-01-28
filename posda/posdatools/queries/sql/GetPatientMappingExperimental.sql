@@ -19,4 +19,6 @@ select
   baseline_date - diagnosis_date as computed_shift
 from
   patient_mapping
+where
+  active = true
   

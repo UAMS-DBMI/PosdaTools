@@ -27,11 +27,11 @@ where:
   to_patient_id is the patient_id to which from patient_id will be mapped
   to_patient_name is the patient_name to be mapped
   diagnosis_date defines the "diagnosis_date" for baseling date mapping.  It needs to be in a form acceptable as a date to postgres (e.g 'yyyy-mm-dd')
-  min_study_date is the minimum study date in the DICOM data.  It may be used as a proxy for diagnosis date and is coming along for the ride. 
+  min_study_date is the minimum study date in the DICOM data.  It may be used as a proxy for diagnosis date and is coming along for the ride.
   uid_root is the root for hashing UID's
   baseline_date is the date around which dates will be baselined (if present)
   date_shift is an interval (in postgres "interval" format, e.g. "-4200 days") by which dates (if not baselined) will be shifted.
-  
+
 EOF
 $| = 1;
 if($#ARGV == 0 && $ARGV[0] eq "-h"){
@@ -53,7 +53,7 @@ my @LineParams = ("in_patient_mapping", "from_patient_id",
 );
 while (my $line = <STDIN>){
   chomp $line;
-  my($in_patient_mapping, $from_patient_id, $collection, $site, 
+  my($in_patient_mapping, $from_patient_id, $collection, $site,
     $to_patient_id, $to_patient_name, $diagnosis_date, $min_study_date,
     $uid_root, $batch_number, $site_code, $baseline_date, $date_shift) =
     split(/&/, $line);
@@ -194,7 +194,13 @@ if($num_conflicting_existing > 0 || $num_conflicting_to_add > 0){
   exit;
 }
 $back->SetActivityStatus("Adding $num_good_to_add rows to patient_mapping");
-$q = Query("InsertIntoPatientMapping");
+Query('GetLatestPMUploadID')->RunQuery(sub{
+  my($row) = @_;
+    $upload_id = $row->[0];
+  }, sub {});
+  if($upload_id eq "<undef>"){die "Error fetching upload id";}
+$upload_id = $upload_id + 1
+$q = Query("InsertIntoPatientMappingWithIDs");
 for my $inp (@good_to_add){
   $q->RunQuery(sub{}, sub {},
     $inp->{from_patient_id},
@@ -208,6 +214,7 @@ for my $inp (@good_to_add){
     $inp->{date_shift},
     $inp->{uid_root},
     $inp->{site_code},
+    $upload_id
   );
 }
 $back->Finish("Done: added $num_good_to_add rows");

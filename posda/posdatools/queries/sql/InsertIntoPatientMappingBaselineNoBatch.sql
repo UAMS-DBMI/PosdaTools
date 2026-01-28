@@ -12,5 +12,5 @@ insert into patient_mapping(
   collection_name,
   site_name,
   diagnosis_date,
-  baseline_date) values (
-  ?, ?, ?, ?, ?, ?, ?)
+  baseline_date,upload_id,active) values (
+  ?, ?, ?, ?, ?, ?, ?,0,true)

@@ -31,5 +31,4 @@ where from_patient_id in (
       where activity_id = ?
     )
   )
-)
-  
+) and active = true;

@@ -13,10 +13,11 @@ foreground and returns its results via STDOUT
 
 It expects lines in the following format on STDIN:
 <from_patient_id>&<to_patient_id>&<to_patient_name>&<collection_name>&<site_name>&
-  <batch_number>&<date_shift>&<diagnosis_date>&<baseline_date>&<uid_root>
+  <batch_number>&<date_shift>&<diagnosis_date>&<baseline_date>&<uid_root>&<upload_id>
 
 It uses the following queries:
-  InsertIntoPatientMappingNew
+  GetLatestPMUploadID
+  InsertIntoPatientMappingWithIDs
 
 Note: This script does very limited error checking.
 EOF

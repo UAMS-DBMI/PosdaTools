@@ -12,5 +12,5 @@ insert into patient_mapping(
   collection_name,
   site_name,
   batch_number,
-  date_shift) values (
-  ?, ?, ?, ?, ?, ?, interval ?)
+  date_shift,upload_id,active) values (
+  ?, ?, ?, ?, ?, ?, interval ?,0,true)
