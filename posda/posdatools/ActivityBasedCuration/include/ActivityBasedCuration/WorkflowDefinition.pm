@@ -85,7 +85,7 @@ This step should not be needed if your data was imported through CTP",
   },
     {
       id => "5_dupes",
-      name => "Check for Duplicate SOPs",
+      name => "Check for Duplicates",
       description => "This process builds a report to alert you to " .
         "duplicated data or data where multiple entities are using the same identifiers.",
         operations => [
@@ -94,6 +94,11 @@ This step should not be needed if your data was imported through CTP",
             caption => "Compare Duplicate Sops in Timepoint",
             action =>  "CompareDupSopsInTimepoint",
           },
+          {
+            operation => "InvokeNewOperation",
+            caption => "Compare Duplicate Series in System",
+            action =>  "CompareDupSeries",
+          },          
         ],
         queries => [
           {
