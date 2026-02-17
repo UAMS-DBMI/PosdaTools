@@ -157,11 +157,13 @@ def main(pargs):
 
     myFiles = get_files_for_activity(pargs.activity_id)
     myNewFiles = []
-    totalEdits = 0
+
 
     #for edit_type 4 drop the files now before moving on
     removes = {r['file_id'] for r in get_removals() or []}
+    before = len(myFiles)
     myFiles = [f for f in myFiles if f['file_id'] not in removes]
+    totalEdits = (before - len(myFiles))
 
     for f in myFiles:
         #do all of its edits
