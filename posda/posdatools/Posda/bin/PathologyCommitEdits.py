@@ -68,6 +68,11 @@ def  get_edits_for_file_id(file_id):
         str = "/find_edits/{}".format(file_id)
         return call_api(str, 0)
 
+def  get_removals():
+        str = "/get_queued_removals/"
+        return call_api(str, 0)
+
+
 def completeEdit(edit_id):
         str = "/completeEdit/{}".format(edit_id)
         return call_api(str, 1)
@@ -154,7 +159,9 @@ def main(pargs):
     myNewFiles = []
     totalEdits = 0
 
-
+    #for edit_type 4 drop the files now before moving on
+    removes = {r['file_id'] for r in get_removals() or []}
+    myFiles = [f for f in myFiles if f['file_id'] not in removes]
 
     for f in myFiles:
         #do all of its edits
@@ -162,12 +169,13 @@ def main(pargs):
         remove = False
         current_file_id = f['file_id']
         rpath = get_root_and_rel_path(current_file_id)
+        #add new check for edit_type 4 outside of main loop
 
         if (edits and len(edits) > 0):
             new_destination_path = copy_path_file_for_editing(f['file_id'], destination_root_path)
             totalEdits = totalEdits + 1
             for e in edits:
-                if e['edit_type'] == '5':
+                if e['edit_type'] == '5': #pixel edits
                     # Get the root_path and rel_path separately
                     rpath = get_root_and_rel_path(current_file_id)
                     root_path = rpath[0]
@@ -176,25 +184,21 @@ def main(pargs):
                     new_file = anonymizeslide.redactPixels(new_destination_path,og_file_path, e['edit_details'])
                     completeEdit(e['pathology_edit_queue_id'])
                     background.print_to_email("Completed {} edit on file {}".format(len(edits), current_file_id))
-                    new_file_id = process(new_destination_path)
-                    if current_file_id != new_file_id:
-                        updateMapping(current_file_id, new_file_id)
-                    myNewFiles.append(new_file_id) #should only add the final id to the TP
-                    background.print_to_email("Completed {} edit on file.".format(len(edits)))
-                    background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
+                    # new_file_id = process(new_destination_path)
+                    # if current_file_id != new_file_id:
+                    #     updateMapping(current_file_id, new_file_id)
+                    # myNewFiles.append(new_file_id) #should only add the final id to the TP
+                    # background.print_to_email("Completed {} edit on file.".format(len(edits)))
+                    # background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
                 elif e['edit_type'] != '4': #4 is remove file, just dont add to new activity
                     editSlide(new_destination_path, e['edit_type'])
                     completeEdit(e['pathology_edit_queue_id'])
-                    new_file_id = process(new_destination_path)
-                    if current_file_id != new_file_id:
-                        updateMapping(current_file_id, new_file_id)
-                    myNewFiles.append(new_file_id) #should only add the final id to the TP
-                    background.print_to_email("Completed {} edit on file.".format(len(edits)))
-                    background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
-                else:
-                    completeEdit(e['pathology_edit_queue_id'])
-                    background.print_to_email("File {} removed".format(current_file_id))
-                    break
+            new_file_id = process(new_destination_path)
+            if current_file_id != new_file_id:
+                updateMapping(current_file_id, new_file_id)
+            myNewFiles.append(new_file_id) #should only add the final id to the TP
+            background.print_to_email("Completed {} edits on file.".format(len(edits)))
+            background.print_to_email("File {} should  now be file {}.".format(current_file_id, new_file_id))
         else:
             background.print_to_email("No edits found for file {}".format(f['file_id']))
             myNewFiles.append(f['file_id'])
