@@ -50,7 +50,7 @@ Query('GetLatestPMUploadID')->RunQuery(sub{
   }, sub {});
   if($upload_id eq "<undef>"){die "Error fetching upload id";}
 $upload_id = $upload_id + 1
-$q = Query("InsertIntoPatientMappingWithIDs");
+my $q = Query("InsertIntoPatientMappingWithIDs");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
