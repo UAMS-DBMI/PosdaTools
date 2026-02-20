@@ -20,4 +20,4 @@ select
 from
   patient_mapping
 where collection_name = ?
-  
+and active = true

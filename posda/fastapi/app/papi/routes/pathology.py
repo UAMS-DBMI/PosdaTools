@@ -55,6 +55,16 @@ async def get_previews(pathid: int, gammaIndex: int, db: Database = Depends()):
         """
     return await db.fetch(query, [pathid,gammaIndex])
 
+@router.get("/get_queued_removals/")
+async def get_queued_removals(db: Database = Depends()):
+    query = """\
+         select
+ 		file_id
+        from pathology_edit_queue p
+        where p.status = 'waiting' and p.edit_type = '4';
+        """
+    return await db.fetch(query)
+
 @router.get("/getActEdits/{act_id}")
 async def get_path_edits_on_act(act_id: int, db: Database = Depends()):
     query = """\

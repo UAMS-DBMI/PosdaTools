@@ -11,7 +11,8 @@ select
 from
   activity_timepoint_file natural join file_patient p
   where exists (
-    select from_patient_id 
+    select from_patient_id
     from patient_mapping pm where pm.from_patient_id = p.patient_id
-  ) and 
+    and pm.active = true
+  ) and
   activity_timepoint_id = ?

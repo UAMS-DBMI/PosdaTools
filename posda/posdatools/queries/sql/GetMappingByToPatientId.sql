@@ -9,3 +9,4 @@
 select from_patient_id, to_patient_id
 from patient_mapping
 where to_patient_id = ?
+and active = true
