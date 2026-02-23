@@ -1,4 +1,4 @@
--- Name: FindPMbyPatient
+-- Name: FindPatientMappingByPatient
 -- Schema: posda_files
 -- Columns: ['active', 'patient_mapping_id', 'upload_id','from_patient_id', 'to_patient_id', 'to_patient_name', 'collection_name', 'site_name']
 -- Args: ['to_patient_id']

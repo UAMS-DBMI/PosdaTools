@@ -48,24 +48,26 @@ Query('GetLatestPMUploadID')->RunQuery(sub{
   my($row) = @_;
     $upload_id = $row->[0];
   }, sub {});
-  if($upload_id eq "<undef>"){die "Error fetching upload id";}
-$upload_id = $upload_id + 1
-$q = Query("InsertIntoPatientMappingWithIDs");
+if($upload_id eq "<undef>"){die "Error fetching upload id";}
+$upload_id = $upload_id + 1;
+my $q = Query("InsertIntoPatientMappingWithIDs");
 $back->WriteToEmail("Processing input to Patient Mapping\n");
 for my $line (@lines){
   my($from, $to_id, $to_name, $coll, $site, $batch,
     $date_shift, $diagnosis_date, $baseline_date, $uid_root) =
     split(/&/, $line);
-  if($date_shift eq "<undef>"){ $date_shift = undef }
-  if($batch eq "<undef>"){ $batch = undef }
-  if($diagnosis_date eq "<undef>"){ $diagnosis_date = undef }
+  if($date_shift eq "<undef>" or $date_shift eq ""){ $date_shift = undef }
+  if($batch eq "<undef>" or $batch eq ""){ $batch = undef }
+  if($diagnosis_date eq "<undef>" or $diagnosis_date eq ""){ $diagnosis_date = undef }
     elsif($diagnosis_date =~ /^<(.*)>$/) { $diagnosis_date = $1 }
-  if($baseline_date eq "<undef>"){ $baseline_date = undef }
+  if($baseline_date eq "<undef>" or $baseline_date eq ""){ $baseline_date = undef }
     elsif($baseline_date =~ /^<(.*)>$/) { $baseline_date = $1 }
   if($date_shift =~ /^<(.*)>$/) { $date_shift = $1 }
   if($from =~ /^<(.*)>$/) { $from = $1 }
   $from =~ s/^\s*//;
   $from =~ s/\s*$//;
+  print("Trying to insert:From:  $from,To: $to_id,Name: $to_name,Collection: $coll,Site: $site,Batch: $batch,DateShift: $date_shift,
+      DiaDate: $diagnosis_date,BaseDate: $baseline_date,UID: $uid_root,Upload ID: $upload_id)");
   $q->RunQuery(sub {}, sub{},
     $from, $to_id, $to_name, $coll, $site, $batch, $date_shift,
     $diagnosis_date, $baseline_date, $uid_root,$upload_id);
