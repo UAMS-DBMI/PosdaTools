@@ -120,7 +120,7 @@ async def get_for_visualreview(
                     natural left join nifti_visual_review_status
             where
                 nifti_visual_review_instance_id = $1
-                and nifti_visual_review_status.nifti_file_id is not null
+                and nifti_visual_review_status.nifti_file_id is null
         """, [nifti_visual_review_instance_id])
 
         return [x[0] for x in records]
