@@ -113,9 +113,14 @@ async def get_for_visualreview(
 
     try:
         records = await db.fetch("""\
-            select nifti_file_id 
-            from nifti_visual_review_files
-            where nifti_visual_review_instance_id = $1
+            select
+                nifti_file_id
+            from
+                nifti_visual_review_files
+                    natural left join nifti_visual_review_status
+            where
+                nifti_visual_review_instance_id = $1
+                and nifti_visual_review_status.nifti_file_id is not null
         """, [nifti_visual_review_instance_id])
 
         return [x[0] for x in records]
