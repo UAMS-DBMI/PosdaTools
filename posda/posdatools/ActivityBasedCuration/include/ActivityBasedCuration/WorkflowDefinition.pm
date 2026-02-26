@@ -52,6 +52,13 @@ This step should not be needed if your data was imported through CTP",
        special => "spreadsheetRequest"
      },
     ],
+    queries => [
+      {
+        caption => "Suggested Queries for DICOM Patient Mapping",
+        operation => "SelectQueryGroup",
+        query_list_name => "patient_mapping",
+      },
+    ],
   },
   {
     id => "3_ianon",
@@ -117,7 +124,7 @@ This step should not be needed if your data was imported through CTP",
         operation => "InvokeNewOperation",
         caption => "Check Linkages",
         action =>  "CheckLinkages",
-      },      
+      },
     ],
   },
   {
@@ -732,6 +739,31 @@ This step should not be needed if your data was imported through CTP",
       {
         caption => "CountsByCollectionLike",
         query => "CountsByCollectionLike",
+      },
+    ],
+  ],
+  patient_mapping => [
+    "Suggested Queries for DICOM Patient Mapping",
+    [
+      {
+	      caption => "GetMappingByToPatientId",
+        query => "GetMappingByToPatientId",
+      },
+      {
+        caption => "GetPatientMapping",
+        query => "GetPatientMapping",
+      },
+      {
+	      caption => "GetPatientMappingByCollectionSite",
+        query => "GetPatientMappingByCollectionSite",
+      },
+      {
+        caption => "GetPatientMappingForFilesInTimepoint",
+        query => "GetPatientMappingForFilesInTimepoint",
+      },
+      {
+        caption => "SetPatientMappingToInactive",
+        query => "SetPatientMappingToInactive",
       },
     ],
   ],
