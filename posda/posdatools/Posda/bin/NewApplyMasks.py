@@ -922,6 +922,45 @@ def update_timepoint(activity_id, notify, files_to_remove, files_to_add, conn):
 
 # #--------------------------------------------------
 
+def verify_iec_counts(visual_review_instance_id, conn) -> None:
+    """
+    Check if any of the IECs in the VR have an output file
+    count that doesn't match the input file count.
+
+    This check is meant to catch a fatal error early, before
+    doing all of the work. This problem is being caused somehow
+    by Masker, but we don't know why... yet.
+    """
+
+    cur = conn.cursor()
+    cur.execute("""\
+        select * from (
+        select image_equivalence_class_id,
+                (select count(*) from image_equivalence_class_input_image iecii
+                where iecii.image_equivalence_class_id = iec.image_equivalence_class_id) as pre_count,
+                (select count(*) from file_import fi
+                natural join file f
+                where fi.import_event_id = masking.import_event_id
+                and f.is_dicom_file = true) as post_count
+        from
+                image_equivalence_class iec
+                natural join masking
+        where
+                visual_review_instance_id = %s
+        and   masking_status = 'accepted'
+        ) a
+        where a.pre_count != a.post_count
+    """, [visual_review_instance_id])
+
+    results = cur.fetchall()
+
+    if len(results) > 0:
+        print(f"FATAL ERROR: {len(results)} IECs have extra output files:")
+        for row in results:
+            print(row)
+
+        raise ValueError("IECs have extra output files")
+
 
 def main(args, temp_dir):
     """
@@ -959,10 +998,17 @@ def main2(args, temp_dir, background):
 
     conn = Database("posda_files")
     ## Verify all IECs in the VR are set to "accepted" or "skipped"
+    background.set_activity_status("Verifying all IECs accepted...")
     verify_iec_status(args.visual_review_instance_id, conn)
 
+    ## Verify that all IEC's output file counts match their inputs
+    background.set_activity_status("Verifying all IECs output counts are correct...")
+    verify_iec_counts(args.visual_review_instance_id, conn)
+
     ## Identify orphaned files from masked series that didn’t get masked (scouts, etc.)
+    background.set_activity_status("Idnetifying orphaned sops...")
     orphan_sops = get_orphaned_sops(args.visual_review_instance_id, conn)
+
 
     # Map of SOP Class UIDs to sequences that need hashed
     # sop_map = load_map()
@@ -978,6 +1024,8 @@ def main2(args, temp_dir, background):
         args.visual_review_instance_id, function_list, conn
     )
 
+
+    background.set_activity_status(f"{len(premasked_sops)} SOPs being processed...")
     print(len(premasked_sops), "SOPs to be processed")
 
     ## Sanity check, these two sets should not overlap
@@ -1024,6 +1072,7 @@ def main2(args, temp_dir, background):
                 files_to_process.append(postmasked_file)
 
 
+    background.set_activity_status(f"Processing {len(files_to_process)} files...")
     for i, file in enumerate(files_to_process):
         ds = None
         edited = False
