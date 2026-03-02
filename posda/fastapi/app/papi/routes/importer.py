@@ -1,12 +1,11 @@
+"""
+This module handles importing files into Posda.
+Import operations do not require a logged in user
+"""
 from fastapi import Depends, APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List
-import datetime
-from starlette.responses import Response, FileResponse
 from starlette.requests import Request
-from .auth import logged_in_user, User
 
-from ..util import Database, asynctar, roi
+from ..util import Database
 from ..util.digest import md5sum_file
 
 import hashlib
@@ -17,11 +16,6 @@ router = APIRouter(
     tags=["Import"],
 )
 
-# TODO delete this
-class HTTPMethodView: pass
-
-
-
 # These are default values; they should be configured
 # from whatever code imports this module!
 FILE_STORAGE_PATH = "/home/posda/cache/created"
@@ -30,8 +24,14 @@ FILE_STORAGE_ROOT = 3
 
 ROOT_MAP_CACHE = None
 
+
 @router.put("/event")
-async def import_event(source: str, origin: str = None, expected_count: int = None, db: Database = Depends()):
+async def import_event(
+    source: str,
+    origin: str = None,
+    expected_count: int = None,
+    db: Database = Depends(),
+):
     # NOTE: source was mistakenly named but is kept for backwards
     #       compatibility.
     # In reality, source = import_comment
@@ -39,30 +39,40 @@ async def import_event(source: str, origin: str = None, expected_count: int = No
     import_event_id = await create_import_event(db, source, origin, expected_count)
 
     return {
-        'status': 'success',
-        'import_event_id': import_event_id,
+        "status": "success",
+        "import_event_id": import_event_id,
     }
+
 
 @router.post("/event/{import_event_id}/close")
 async def close_import_event(import_event_id: int, db: Database = Depends()):
-    record = await db.fetch_one("""\
+    record = await db.fetch_one(
+        """\
         update import_event
         set import_close_time = now()
         where import_event_id = $1
         returning import_event_id
-    """, [import_event_id])
+    """,
+        [import_event_id],
+    )
 
     if len(record) < 1:
         raise HTTPException(detail="invalid import_event_id", status_code=422)
 
     return {
-        'status': 'success',
+        "status": "success",
     }
 
 
 @router.put("/file")
 @router.post("/file")
-async def import_file(request: Request, digest: str, import_event_id: int = None, localpath: str = None, db: Database = Depends()):
+async def import_file(
+    request: Request,
+    digest: str,
+    import_event_id: int = None,
+    localpath: str = None,
+    db: Database = Depends(),
+):
     fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
     m = hashlib.md5(usedforsecurity=False)
     bytes_read = 0
@@ -76,16 +86,15 @@ async def import_file(request: Request, digest: str, import_event_id: int = None
     computed_digest = m.hexdigest()
     if computed_digest != digest:
         os.unlink(fp.name)
-        raise HTTPException(detail="digest of received bytes does not match "
-                           "supplied digest", status_code=422)
+        raise HTTPException(
+            detail="digest of received bytes does not match " "supplied digest",
+            status_code=422,
+        )
 
-
-    created, file_id = \
-        await create_or_get_file_id(computed_digest, bytes_read, db)
+    created, file_id = await create_or_get_file_id(computed_digest, bytes_read, db)
 
     if created:
-        root_id, root, rel_path = \
-            await copy_file_into_place(fp.name, computed_digest)
+        root_id, root, rel_path = await copy_file_into_place(fp.name, computed_digest)
 
         await create_file_location(file_id, root_id, rel_path, db)
 
@@ -94,9 +103,8 @@ async def import_file(request: Request, digest: str, import_event_id: int = None
     else:
         os.unlink(fp.name)
 
-
     if import_event_id is None:
-        import_event_id = await create_import_event(db, 'single-file api import')
+        import_event_id = await create_import_event(db, "single-file api import")
 
     await create_file_import(file_id, int(import_event_id), localpath, db)
 
@@ -108,28 +116,32 @@ async def import_file(request: Request, digest: str, import_event_id: int = None
         "created": created,
     }
 
+
 async def get_root_map(db: Database):
     """Return the map of File Storage Roots. Cache when possible"""
     global ROOT_MAP_CACHE
 
     if ROOT_MAP_CACHE is None:
-        roots = await db.fetch("""\
+        roots = await db.fetch(
+            """\
             select * from file_storage_root
             order by file_storage_root_id
-        """)
+        """
+        )
 
         root_map = {}
         for root in roots:
-            root_map[root['root_path']] = root['file_storage_root_id']
+            root_map[root["root_path"]] = root["file_storage_root_id"]
 
         ROOT_MAP_CACHE = root_map
 
     return ROOT_MAP_CACHE
 
+
 def find_best_root(root_map, path):
     """Find the best possible storage root for the path
 
-    Collects all possible roots, and then returns the longest one. 
+    Collects all possible roots, and then returns the longest one.
     """
 
     possible_roots = []
@@ -137,7 +149,7 @@ def find_best_root(root_map, path):
     for r in root_map:
         if path.startswith(r):
             root = root_map[r]
-            rel_path = path[len(r)+1:]
+            rel_path = path[len(r) + 1 :]
             root_len = len(path) - len(rel_path)
             possible_roots.append((root_len, root, rel_path))
 
@@ -149,14 +161,16 @@ def find_best_root(root_map, path):
     _, root_id, rel_path = best_root
     return (root_id, rel_path)
 
-@router.post("/file_in_place")
-async def import_file_in_place(request: Request,
-                               localpath: str,
-                               import_event_id: int = None,
-                               skip_processing: bool = False,
-                               digest: str = None,
-                               db: Database = Depends()):
 
+@router.post("/file_in_place")
+async def import_file_in_place(
+    request: Request,
+    localpath: str,
+    import_event_id: int = None,
+    skip_processing: bool = False,
+    digest: str = None,
+    db: Database = Depends(),
+):
     root_map = await get_root_map(db)
 
     match_root, rel_path = find_best_root(root_map, localpath)
@@ -172,8 +186,7 @@ async def import_file_in_place(request: Request,
     except FileNotFoundError:
         raise HTTPException(detail="no such file", status_code=422)
 
-    created, file_id = \
-        await create_or_get_file_id(digest, size, db)
+    created, file_id = await create_or_get_file_id(digest, size, db)
 
     if created:
         await create_file_location(file_id, match_root, rel_path, db)
@@ -184,8 +197,7 @@ async def import_file_in_place(request: Request,
 
     if import_event_id is None:
         import_event_id = await create_import_event(
-            db,
-            'single-file in-place api import'
+            db, "single-file in-place api import"
         )
 
     await create_file_import(file_id, int(import_event_id), localpath, db)
@@ -198,25 +210,27 @@ async def import_file_in_place(request: Request,
         "created": created,
     }
 
-async def create_import_event(db, comment, origin = None, expected_count = None):
-    record = await db.fetch_one("""\
+
+async def create_import_event(db, comment, origin=None, expected_count=None):
+    record = await db.fetch_one(
+        """\
         insert into import_event
         (import_type, import_comment, import_time, import_origin, import_expected_count)
         values
         ($1, $2, now(), $3, $4)
         returning import_event_id
-    """, ['posda-api import', comment, origin, expected_count])
+    """,
+        ["posda-api import", comment, origin, expected_count],
+    )
 
-    return record['import_event_id']
+    return record["import_event_id"]
 
 
 async def copy_file_into_place(filename: str, digest: str):
     # figure out what file_storage_root_id is
     root_id = FILE_STORAGE_ROOT
     root = FILE_STORAGE_PATH
-    path = os.path.join(digest[:2],
-                        digest[2:4],
-                        digest[4:6])
+    path = os.path.join(digest[:2], digest[2:4], digest[4:6])
 
     rel_path = os.path.join(path, digest)
 
@@ -228,55 +242,80 @@ async def copy_file_into_place(filename: str, digest: str):
     os.rename(filename, os.path.join(root, rel_path))
     return root_id, root, rel_path
 
+
 async def make_ready_to_process(file_id: int, db: Database):
-    await db.fetch("""\
+    await db.fetch(
+        """\
         update file
         set ready_to_process = true
         where file_id = $1
-    """, [file_id])
+    """,
+        [file_id],
+    )
+
 
 async def make_not_ready_to_process(file_id: int, db: Database):
-    await db.fetch("""\
+    await db.fetch(
+        """\
         update file
         set ready_to_process = false
         where file_id = $1
-    """, [file_id])
+    """,
+        [file_id],
+    )
+
 
 async def create_file_location(file_id, root_id, rel_path, db: Database):
-    await db.fetch("""\
+    await db.fetch(
+        """\
         insert into file_location
         (file_id, file_storage_root_id, rel_path)
         values
         ($1, $2, $3)
-    """, [file_id, root_id, rel_path])
+    """,
+        [file_id, root_id, rel_path],
+    )
 
-async def create_file_import(file_id: int, import_event_id: int, localpath: str, db: Database):
-    await db.fetch("""\
+
+async def create_file_import(
+    file_id: int, import_event_id: int, localpath: str, db: Database
+):
+    await db.fetch(
+        """\
         insert into file_import
         values
         ($1, $2, $3, $4, $5, now())
-    """, [import_event_id, file_id, None, None, localpath])
+    """,
+        [import_event_id, file_id, None, None, localpath],
+    )
+
 
 async def create_or_get_file_id(digest: str, size: int, db: Database):
     created = True
-    record = await db.fetch_one("""\
+    record = await db.fetch_one(
+        """\
         insert into file
         (digest, size, processing_priority)
         values
         ($1, $2, 1)
         on conflict do nothing
         returning file_id
-    """, [digest, size])
+    """,
+        [digest, size],
+    )
 
     if len(record) < 1:
         # the file already exists, so get the file_id
-        record = await db.fetch_one("""\
+        record = await db.fetch_one(
+            """\
             select file_id
             from file
             where digest = $1
-        """, [digest])
+        """,
+            [digest],
+        )
         created = False
 
-    file_id = record['file_id']
+    file_id = record["file_id"]
 
     return (created, file_id)
