@@ -46,12 +46,15 @@ async def import_event(
     #       compatibility.
     # In reality, source = import_comment
     #             origin = actual source of the import
-    import_event_id = await create_import_event(db, source, origin, expected_count)
+    pool = db.get_pool()
 
-    return {
-        "status": "success",
-        "import_event_id": import_event_id,
-    }
+    async with pool.acquire() as conn:
+        import_event_id = await create_import_event(conn, source, origin, expected_count)
+
+        return {
+            "status": "success",
+            "import_event_id": import_event_id,
+        }
 
 
 @router.post("/event/{import_event_id}/close")
