@@ -32,6 +32,16 @@ async def import_event(
     expected_count: int = None,
     db: Database = Depends(),
 ):
+    """Create a new import event.
+
+    Import events are a way to group individual file imports together.
+
+    Args:
+        source (str): A human-readable comment.
+        origin (str, optional): The source or origin of the files.
+        expected_count (int, optional): How many files you have to import,
+                                        if known.
+    """
     # NOTE: source was mistakenly named but is kept for backwards
     #       compatibility.
     # In reality, source = import_comment
@@ -46,6 +56,8 @@ async def import_event(
 
 @router.post("/event/{import_event_id}/close")
 async def close_import_event(import_event_id: int, db: Database = Depends()):
+    """Close an import event, by setting it's import_close_time to now.
+    """
     record = await db.fetch_one(
         """\
         update import_event
@@ -63,6 +75,28 @@ async def close_import_event(import_event_id: int, db: Database = Depends()):
         "status": "success",
     }
 
+@router.post("/test")
+async def import_test(db: Database = Depends()):
+    pool = db.get_pool()
+
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            computed_digest = 'bogus1'
+            bytes_read = 37
+
+            created, file_id = await create_or_get_file_id(computed_digest, bytes_read, conn)
+            print(created, file_id)
+
+            # await conn.execute("""\
+            #     insert into file (digest) values ('bob')
+            # """)
+            # # this one should fail due to duplicate digest
+            # await conn.execute("""\
+            #     insert into file (digest) values ('bob')
+            # """)
+
+
+    return "Success"
 
 @router.put("/file")
 @router.post("/file")
@@ -71,8 +105,22 @@ async def import_file(
     digest: str,
     import_event_id: int = None,
     localpath: str = None,
+    subprocess_invocation_id: int = None,
+    from_file_digest: str = None,
     db: Database = Depends(),
 ):
+    """Import a single file.
+
+    Both POST and PUT are accepted for legacy reasons.
+
+    The request body must be the bytes of the file to submit.
+
+    If subprocess_invocation_id AND from_file_digest are given,
+    a link will be made (via dicom_edit_compare) to indicate the
+    origin of this file.
+    """
+    # Read the submitted bytes from the request, to a temp file,
+    # calculating the md5sum as we go.
     fp = tempfile.NamedTemporaryFile(dir=TEMP_STORAGE_PATH, delete=False)
     m = hashlib.md5(usedforsecurity=False)
     bytes_read = 0
@@ -87,34 +135,49 @@ async def import_file(
     if computed_digest != digest:
         os.unlink(fp.name)
         raise HTTPException(
-            detail="digest of received bytes does not match " "supplied digest",
+            detail="digest of received bytes does not match supplied digest",
             status_code=422,
         )
 
-    created, file_id = await create_or_get_file_id(computed_digest, bytes_read, db)
+    # Using pool directly here, so we can use a single transaction
+    # for all of the following queries. This is an attempt to prevent
+    # an issue where a file_id gets created, but the file doesn't actually
+    # get saved, or the file_location record does not get created
+    pool = db.get_pool()
 
-    if created:
-        root_id, root, rel_path = await copy_file_into_place(fp.name, computed_digest)
+    async with pool.acquire() as conn:
+        async with conn.transaction():
 
-        await create_file_location(file_id, root_id, rel_path, db)
+            created, file_id = await create_or_get_file_id(computed_digest, bytes_read, conn)
 
-        await make_ready_to_process(file_id, db)
+            if created:
+                root_id, root, rel_path = await copy_file_into_place(fp.name, computed_digest)
 
-    else:
-        os.unlink(fp.name)
+                await create_file_location(file_id, root_id, rel_path, conn)
 
-    if import_event_id is None:
-        import_event_id = await create_import_event(db, "single-file api import")
+                await make_ready_to_process(file_id, conn)
 
-    await create_file_import(file_id, int(import_event_id), localpath, db)
+            else:
+                os.unlink(fp.name)
 
-    return {
-        "status": "success",
-        "size": bytes_read,
-        "digest": computed_digest,
-        "file_id": file_id,
-        "created": created,
-    }
+            if import_event_id is None:
+                import_event_id = await create_import_event(conn, "single-file api import")
+
+            await create_file_import(file_id, int(import_event_id), localpath, conn)
+
+            if subprocess_invocation_id is not None and from_file_digest is not None:
+                await conn.execute("""\
+                    insert into dicom_edit_compare
+                    values ($1, $2, 0, 0, null, $3)
+                """, from_file_digest, digest, subprocess_invocation_id)
+
+            return {
+                "status": "success",
+                "size": bytes_read,
+                "digest": computed_digest,
+                "file_id": file_id,
+                "created": created,
+            }
 
 
 async def get_root_map(db: Database):
@@ -186,33 +249,38 @@ async def import_file_in_place(
     except FileNotFoundError:
         raise HTTPException(detail="no such file", status_code=422)
 
-    created, file_id = await create_or_get_file_id(digest, size, db)
+    pool = db.get_pool()
 
-    if created:
-        await create_file_location(file_id, match_root, rel_path, db)
-        if not skip_processing:
-            await make_ready_to_process(file_id, db)
-        else:
-            await make_not_ready_to_process(file_id, db)
+    async with pool.acquire() as conn:
+        async with conn.transaction():
 
-    if import_event_id is None:
-        import_event_id = await create_import_event(
-            db, "single-file in-place api import"
-        )
+            created, file_id = await create_or_get_file_id(digest, size, conn)
 
-    await create_file_import(file_id, int(import_event_id), localpath, db)
+            if created:
+                await create_file_location(file_id, match_root, rel_path, conn)
+                if not skip_processing:
+                    await make_ready_to_process(file_id, conn)
+                else:
+                    await make_not_ready_to_process(file_id, conn)
 
-    return {
-        "status": "success",
-        "size": size,
-        "digest": digest,
-        "file_id": file_id,
-        "created": created,
-    }
+            if import_event_id is None:
+                import_event_id = await create_import_event(
+                    conn, "single-file in-place api import"
+                )
+
+            await create_file_import(file_id, int(import_event_id), localpath, conn)
+
+            return {
+                "status": "success",
+                "size": size,
+                "digest": digest,
+                "file_id": file_id,
+                "created": created,
+            }
 
 
-async def create_import_event(db, comment, origin=None, expected_count=None):
-    record = await db.fetch_one(
+async def create_import_event(conn, comment, origin=None, expected_count=None):
+    record = await conn.fetchrow(
         """\
         insert into import_event
         (import_type, import_comment, import_time, import_origin, import_expected_count)
@@ -220,7 +288,7 @@ async def create_import_event(db, comment, origin=None, expected_count=None):
         ($1, $2, now(), $3, $4)
         returning import_event_id
     """,
-        ["posda-api import", comment, origin, expected_count],
+        *["posda-api import", comment, origin, expected_count],
     )
 
     return record["import_event_id"]
@@ -243,56 +311,56 @@ async def copy_file_into_place(filename: str, digest: str):
     return root_id, root, rel_path
 
 
-async def make_ready_to_process(file_id: int, db: Database):
-    await db.fetch(
+async def make_ready_to_process(file_id: int, conn):
+    await conn.fetch(
         """\
         update file
         set ready_to_process = true
         where file_id = $1
     """,
-        [file_id],
+        *[file_id],
     )
 
 
-async def make_not_ready_to_process(file_id: int, db: Database):
-    await db.fetch(
+async def make_not_ready_to_process(file_id: int, conn):
+    await conn.fetch(
         """\
         update file
         set ready_to_process = false
         where file_id = $1
     """,
-        [file_id],
+        *[file_id],
     )
 
 
-async def create_file_location(file_id, root_id, rel_path, db: Database):
-    await db.fetch(
+async def create_file_location(file_id, root_id, rel_path, conn):
+    await conn.fetch(
         """\
         insert into file_location
         (file_id, file_storage_root_id, rel_path)
         values
         ($1, $2, $3)
     """,
-        [file_id, root_id, rel_path],
+        *[file_id, root_id, rel_path],
     )
 
 
 async def create_file_import(
-    file_id: int, import_event_id: int, localpath: str, db: Database
+    file_id: int, import_event_id: int, localpath: str, conn
 ):
-    await db.fetch(
+    await conn.fetch(
         """\
         insert into file_import
         values
         ($1, $2, $3, $4, $5, now())
     """,
-        [import_event_id, file_id, None, None, localpath],
+        *[import_event_id, file_id, None, None, localpath],
     )
 
 
-async def create_or_get_file_id(digest: str, size: int, db: Database):
+async def create_or_get_file_id(digest: str, size: int, conn):
     created = True
-    record = await db.fetch_one(
+    record = await conn.fetchrow(
         """\
         insert into file
         (digest, size, processing_priority)
@@ -301,18 +369,18 @@ async def create_or_get_file_id(digest: str, size: int, db: Database):
         on conflict do nothing
         returning file_id
     """,
-        [digest, size],
+        *[digest, size],
     )
 
-    if len(record) < 1:
+    if record is None:
         # the file already exists, so get the file_id
-        record = await db.fetch_one(
+        record = await conn.fetchrow(
             """\
             select file_id
             from file
             where digest = $1
         """,
-            [digest],
+            *[digest],
         )
         created = False
 

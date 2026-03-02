@@ -42,7 +42,9 @@ class Database:
                 # raise NotFound("no matching records found")
             return records[0]
 
-
+    def get_pool(self):
+        global pool
+        return pool
     
 
 async def setup(*args, **kwargs):
