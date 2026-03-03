@@ -68,6 +68,16 @@ This step should not be needed if your data was imported through CTP",
         caption => "Produce Initial Anonymizer for Timepoint",
         action =>  "InitialAnonymizerCommandsTp",
       },
+    #  {
+    #     operation => "InvokeNewOperation",
+    #     caption => "Convert CTP Script into DEID Recipe",
+    #     action =>  "ConvertCtpScriptToDeidRecipe",
+    #   },        
+     {
+        operation => "InvokeNewOperation",
+        caption => "Produce Initial Anonymizer from DEID Recipe",
+        action =>  "ProduceInitialAnonCmdsFromDeidRecipeTP",
+      },      
     ],
   },
   {
