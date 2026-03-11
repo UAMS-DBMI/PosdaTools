@@ -19,8 +19,8 @@ Posda::Dataset::InitDD();
 #  file => <file_name>,
 #  iop => <iop>, # actual iop
 #  ipp => <ipp>, # actual ipp
-#  series_uid => <series_instance_uid>, 
-#  study_uid => <study_instance_uid>, 
+#  series_uid => <series_instance_uid>,
+#  study_uid => <study_instance_uid>,
 #  sop_class_uid => <sop_class_uid>,
 #  for_uid => <frame_of_reference_uid>
 #};
@@ -48,7 +48,7 @@ sub CheckImagFor{
     }
   }
   $this->{ImgFor} = $For;
-} 
+}
 sub GetImagSop{
   my($this) = @_;
   my $Sop;
@@ -62,7 +62,7 @@ sub GetImagSop{
     }
   }
   $this->{ImgSopClass} = $Sop;
-} 
+}
 sub CheckImagGeo{
   my($this) = @_;
   for my $i (keys %{$this->{ImgsByUid}}){
@@ -148,15 +148,15 @@ sub LinkStructSet{
   my $tot_images = 0;
   my $study_index = 0;
   for my $st (keys %Studies){
-    $ds->InsertElementBySig("(3006,0010)[0](3006,0012)[$study_index](0008,1150)", 
-      "1.2.840.10008.3.1.2.3.1");
-    $ds->InsertElementBySig("(3006,0010)[0](3006,0012)[$study_index](0008,1155)", 
+    $ds->InsertElementBySig("(3006,0010)[0](3006,0012)[$study_index](0008,1150)",
+      $this->{ImgSopClass});
+    $ds->InsertElementBySig("(3006,0010)[0](3006,0012)[$study_index](0008,1155)",
       $st);
     my $series_index = 0;
     for my $ser (keys %{$Studies{$st}}){
       $ds->InsertElementBySig(
-        "(3006,0010)[0](3006,0012)[$study_index]" . 
-        "(3006,0014)[$series_index](0020,000e)", 
+        "(3006,0010)[0](3006,0012)[$study_index]" .
+        "(3006,0014)[$series_index](0020,000e)",
         $ser);
       my $image_index = 0;
       for my $i (
@@ -166,11 +166,11 @@ sub LinkStructSet{
       ){
         $ds->InsertElementBySig(
           "(3006,0010)[0](3006,0012)[$study_index]" .
-          "(3006,0014)[$series_index](3006,0016)[$image_index](0008,1150)", 
-          "1.2.840.10008.5.1.4.1.1.2");
+          "(3006,0014)[$series_index](3006,0016)[$image_index](0008,1150)",
+          $this->{ImgSopClass});
         $ds->InsertElementBySig(
           "(3006,0010)[0](3006,0012)[$study_index]" .
-          "(3006,0014)[$series_index](3006,0016)[$image_index](0008,1155)", 
+          "(3006,0014)[$series_index](3006,0016)[$image_index](0008,1155)",
           $i);
         $image_index += 1;
       }
