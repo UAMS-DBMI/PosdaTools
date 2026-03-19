@@ -1,33 +1,33 @@
-CREATE  TABLE "public".collection ( 
-	collection_id        integer  NOT NULL  ,
-	collection_doi       text    ,
-	collection_type      integer    ,
-	collection_short_title text    ,
-	collection_title     text    ,
-	collection_name      text    ,
+CREATE  TABLE "public".dataset ( 
+	dataset_id           integer  NOT NULL  ,
+	dataset_doi          text    ,
+	dataset_type         text    ,
+	dataset_short_title  text    ,
+	dataset_title        text    ,
+	dataset_name         text    ,
 	active               boolean    ,
 	when_created         timestamptz    ,
 	who_updated          text    ,
 	when_updated         timestamptz    ,
 	who_created          text    ,
-	CONSTRAINT pk_collection PRIMARY KEY ( collection_id ),
-	CONSTRAINT unq_collection_doi UNIQUE ( collection_doi ) 
+	CONSTRAINT pk_dataset PRIMARY KEY ( dataset_id ),
+	CONSTRAINT unq_dataset_doi UNIQUE ( dataset_doi ) 
  ) ;
 
-CREATE  TABLE "public".collection_related ( 
-	collection_id        integer  NOT NULL  ,
-	related_collection_id integer  NOT NULL  ,
+CREATE  TABLE "public".dataset_relation ( 
+	dataset_id           integer  NOT NULL  ,
+	related_dataset_id   integer  NOT NULL  ,
 	relation_type        text    ,
-	CONSTRAINT pk_related_collection PRIMARY KEY ( collection_id, related_collection_id )
+	CONSTRAINT pk_dataset_relation PRIMARY KEY ( dataset_id, related_dataset_id )
  ) ;
 
-ALTER TABLE "public".collection_related ADD CONSTRAINT fk_related_collection_collection FOREIGN KEY ( collection_id ) REFERENCES "public".collection( collection_id )   ;
+ALTER TABLE "public".dataset_relation ADD CONSTRAINT fk_dataset_relation_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id )   ;
 
-ALTER TABLE "public".collection_related ADD CONSTRAINT fk_related_collection_related_collection FOREIGN KEY ( related_collection_id ) REFERENCES "public".collection( collection_id )   ;
+ALTER TABLE "public".dataset_relation ADD CONSTRAINT fk_dataset_relation_related_dataset FOREIGN KEY ( related_dataset_id ) REFERENCES "public".dataset( dataset_id )   ;
 
-CREATE  TABLE "public".collection_release ( 
-	collection_release_id integer  NOT NULL  ,
-	collection_id        integer  NOT NULL  ,
+CREATE  TABLE "public".dataset_release ( 
+	dataset_release_id   integer  NOT NULL  ,
+	dataset_id           integer  NOT NULL  ,
 	release_number       integer    ,
 	release_date         timestamptz    ,
 	release_notes        text    ,
@@ -35,20 +35,21 @@ CREATE  TABLE "public".collection_release (
 	who_created          text    ,
 	when_updated         timestamptz    ,
 	who_updated          text    ,
-	CONSTRAINT pk_collection_release PRIMARY KEY ( collection_release_id )
+	CONSTRAINT pk_dataset_release PRIMARY KEY ( dataset_release_id )
  ) ;
 
-CREATE UNIQUE INDEX unq_collection_release_collection_release_num ON "public".collection_release ( collection_id, release_number ) ;
+CREATE UNIQUE INDEX unq_dataset_release_release_number ON "public".dataset_release ( dataset_id, release_number ) ;
 
-CREATE INDEX idx_collection_release_collection_id ON "public".collection_release  ( collection_id ) ;
+CREATE INDEX idx_dataset_release_dataset_id ON "public".dataset_release  ( dataset_id ) ;
 
-ALTER TABLE "public".collection_release ADD CONSTRAINT fk_collection_release_collection FOREIGN KEY ( collection_id ) REFERENCES "public".collection( collection_id )   ;
+ALTER TABLE "public".dataset_release ADD CONSTRAINT fk_dataset_release_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id )   ;
 
-CREATE  TABLE "public".dataset_license ( 
+CREATE  TABLE "public".recordset_license ( 
 	license_id           integer  NOT NULL  ,
+	license_name         text    ,
 	license_label        text    ,
 	license_url          text    ,
-	CONSTRAINT pk_dataset_license PRIMARY KEY ( license_id )
+	CONSTRAINT pk_recordset_license PRIMARY KEY ( license_id )
  ) ;
 
 CREATE  TABLE "public".transfer_destination ( 
@@ -72,13 +73,13 @@ CREATE  TABLE "public".wp_object_map (
 	CONSTRAINT idx_wp_object_map_wp_object UNIQUE ( wp_object_type, wp_object_id ) 
  ) ;
 
-COMMENT ON COLUMN "public".wp_object_map.posda_object_type IS 'collection, dataset, collection_release, dataset_release';
+COMMENT ON COLUMN "public".wp_object_map.posda_object_type IS 'dataset, dataset_release, recordset, recordset_release';
 
 COMMENT ON COLUMN "public".wp_object_map.wp_object_type IS 'collection, analysis_result, download, version, version_download';
 
-CREATE  TABLE "public".collection_release_transfer ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	collection_release_id integer  NOT NULL  ,
+CREATE  TABLE "public".dataset_release_transfer ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	dataset_release_id   integer  NOT NULL  ,
 	destination_id       integer  NOT NULL  ,
 	transfer_name        text    ,
 	transfer_mode        text    ,
@@ -88,56 +89,56 @@ CREATE  TABLE "public".collection_release_transfer (
 	who_created          text    ,
 	when_updated         timestamptz    ,
 	who_updated          text    ,
-	CONSTRAINT pk_collection_release_transfer PRIMARY KEY ( collection_release_transfer_id )
+	CONSTRAINT pk_dataset_release_transfer PRIMARY KEY ( dataset_release_transfer_id )
  ) ;
 
-CREATE INDEX idx_collection_release_transfer_collection_release_id ON "public".collection_release_transfer  ( collection_release_id ) ;
+CREATE INDEX idx_dataset_release_transfer_dataset_release_id ON "public".dataset_release_transfer  ( dataset_release_id ) ;
 
-COMMENT ON COLUMN "public".collection_release_transfer.transfer_mode IS 'optional, such as single_dataset, grouped_dicom, clinical_bundle';
+COMMENT ON COLUMN "public".dataset_release_transfer.transfer_mode IS 'optional, such as single_dataset, grouped_dicom, clinical_bundle';
 
-COMMENT ON COLUMN "public".collection_release_transfer.transfer_status IS 'draft, queued, submitted, failed';
+COMMENT ON COLUMN "public".dataset_release_transfer.transfer_status IS 'draft, queued, submitted, failed';
 
-ALTER TABLE "public".collection_release_transfer ADD CONSTRAINT fk_collection_release_transfer_destination FOREIGN KEY ( destination_id ) REFERENCES "public".transfer_destination( destination_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".dataset_release_transfer ADD CONSTRAINT fk_dataset_release_transfer_destination FOREIGN KEY ( destination_id ) REFERENCES "public".transfer_destination( destination_id ) ON DELETE RESTRICT  ;
 
-ALTER TABLE "public".collection_release_transfer ADD CONSTRAINT fk_collection_release_transfer_collection_release FOREIGN KEY ( collection_release_id ) REFERENCES "public".collection_release( collection_release_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".dataset_release_transfer ADD CONSTRAINT fk_dataset_release_transfer_dataset_release FOREIGN KEY ( dataset_release_id ) REFERENCES "public".dataset_release( dataset_release_id ) ON DELETE RESTRICT  ;
 
-CREATE  TABLE "public".dataset ( 
+CREATE  TABLE "public".recordset ( 
+	recordset_id         integer  NOT NULL  ,
+	recordset_doi        text    ,
 	dataset_id           integer  NOT NULL  ,
-	dataset_doi          text    ,
-	collection_id        integer  NOT NULL  ,
 	license_id           integer  NOT NULL  ,
-	dataset_type         text    ,
-	dataset_title        text    ,
+	recordset_type       text    ,
+	recordset_title      text    ,
 	active               boolean    ,
 	when_created         timestamptz    ,
 	who_created          text    ,
 	when_updated         timestamptz    ,
 	who_updated          text    ,
-	CONSTRAINT pk_dataset PRIMARY KEY ( dataset_id ),
-	CONSTRAINT unq_dataset_doi UNIQUE ( dataset_doi ) 
+	CONSTRAINT pk_recordset PRIMARY KEY ( recordset_id ),
+	CONSTRAINT unq_recordset_doi UNIQUE ( recordset_doi ) 
  ) ;
 
-ALTER TABLE "public".dataset ADD CONSTRAINT fk_dataset_collection FOREIGN KEY ( collection_id ) REFERENCES "public".collection( collection_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".recordset ADD CONSTRAINT fk_recordset_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id ) ON DELETE RESTRICT  ;
 
-ALTER TABLE "public".dataset ADD CONSTRAINT fk_dataset_dataset_license FOREIGN KEY ( license_id ) REFERENCES "public".dataset_license( license_id )   ;
+ALTER TABLE "public".recordset ADD CONSTRAINT fk_recordset_license FOREIGN KEY ( license_id ) REFERENCES "public".recordset_license( license_id )   ;
 
-CREATE  TABLE "public".dataset_destination ( 
-	dataset_id           integer  NOT NULL  ,
+CREATE  TABLE "public".recordset_destination ( 
+	recordset_id         integer  NOT NULL  ,
 	destination_id       integer  NOT NULL  ,
 	default_display      boolean  NOT NULL  ,
 	default_transfer_mode text    ,
-	CONSTRAINT pk_dataset_destination PRIMARY KEY ( dataset_id, destination_id )
+	CONSTRAINT pk_recordset_destination PRIMARY KEY ( recordset_id, destination_id )
  ) ;
 
-CREATE UNIQUE INDEX unq_dataset_destination_one_default_display ON "public".dataset_destination ( dataset_id ) WHERE default_display = true;
+CREATE UNIQUE INDEX unq_recordset_destination_single_default_display ON "public".recordset_destination ( recordset_id ) WHERE default_display = true;
 
-ALTER TABLE "public".dataset_destination ADD CONSTRAINT fk_dataset_destination_destination FOREIGN KEY ( destination_id ) REFERENCES "public".transfer_destination( destination_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".recordset_destination ADD CONSTRAINT fk_dataset_destination_destination FOREIGN KEY ( destination_id ) REFERENCES "public".transfer_destination( destination_id ) ON DELETE RESTRICT  ;
 
-ALTER TABLE "public".dataset_destination ADD CONSTRAINT fk_dataset_destination_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id ) ON DELETE CASCADE  ;
+ALTER TABLE "public".recordset_destination ADD CONSTRAINT fk_dataset_destination_dataset FOREIGN KEY ( recordset_id ) REFERENCES "public".recordset( recordset_id ) ON DELETE CASCADE  ;
 
-CREATE  TABLE "public".dataset_release ( 
-	dataset_release_id   integer  NOT NULL  ,
-	dataset_id           integer  NOT NULL  ,
+CREATE  TABLE "public".recordset_release ( 
+	recordset_release_id integer  NOT NULL  ,
+	recordset_id         integer  NOT NULL  ,
 	release_number       integer  NOT NULL  ,
 	release_date         timestamptz  NOT NULL  ,
 	release_notes        text    ,
@@ -145,18 +146,116 @@ CREATE  TABLE "public".dataset_release (
 	who_created          text    ,
 	when_updated         timestamptz    ,
 	who_updated          text    ,
-	CONSTRAINT pk_dataset_release PRIMARY KEY ( dataset_release_id )
+	CONSTRAINT pk_recordset_release PRIMARY KEY ( recordset_release_id )
  ) ;
 
-CREATE UNIQUE INDEX unq_dataset_release_dataset_release_num ON "public".dataset_release ( dataset_id, release_number ) ;
+CREATE UNIQUE INDEX unq_recordset_release_release_number ON "public".recordset_release ( recordset_id, release_number ) ;
 
-CREATE INDEX idx_dataset_release_dataset_id ON "public".dataset_release  ( dataset_id ) ;
+CREATE INDEX idx_recordset_release_recordset_id ON "public".recordset_release  ( recordset_id ) ;
 
-ALTER TABLE "public".dataset_release ADD CONSTRAINT fk_dataset_release_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".recordset_release ADD CONSTRAINT fk_recordset_release_recordset FOREIGN KEY ( recordset_id ) REFERENCES "public".recordset( recordset_id ) ON DELETE RESTRICT  ;
 
-CREATE  TABLE "public".dataset_release_draft ( 
-	dataset_release_draft_id integer  NOT NULL  ,
-	dataset_id           integer  NOT NULL  ,
+CREATE  TABLE "public".recordset_release_file ( 
+	recordset_release_id integer  NOT NULL  ,
+	file_id              integer  NOT NULL  ,
+	CONSTRAINT pk_recordset_release_file PRIMARY KEY ( recordset_release_id, file_id )
+ ) ;
+
+CREATE INDEX idx_recordset_release_file_file_id ON "public".recordset_release_file  ( file_id ) ;
+
+ALTER TABLE "public".recordset_release_file ADD CONSTRAINT fk_recordset_release_file_recordset_release FOREIGN KEY ( recordset_release_id ) REFERENCES "public".recordset_release( recordset_release_id ) ON DELETE CASCADE  ;
+
+ALTER TABLE "public".recordset_release_file ADD CONSTRAINT fk_recordset_release_file_file FOREIGN KEY ( file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+CREATE  TABLE "public".transfer_aspera ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	published            boolean    ,
+	"public"             boolean    ,
+	faspex_url           text    ,
+	CONSTRAINT pk_transfer_aspera PRIMARY KEY ( dataset_release_transfer_id )
+ ) ;
+
+ALTER TABLE "public".transfer_aspera ADD CONSTRAINT fk_transfer_aspera_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+CREATE  TABLE "public".transfer_gc ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	published            boolean    ,
+	"public"             boolean    ,
+	CONSTRAINT pk_transfer_gc PRIMARY KEY ( dataset_release_transfer_id )
+ ) ;
+
+ALTER TABLE "public".transfer_gc ADD CONSTRAINT fk_transfer_gc_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+CREATE  TABLE "public".transfer_idc ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	gcs_url              text    ,
+	dataset_manifest_file_id integer    ,
+	recordset_manifest_file_id integer    ,
+	clinical_manifest_file_id integer    ,
+	published            boolean    ,
+	"public"             boolean    ,
+	CONSTRAINT pk_transfer_idc PRIMARY KEY ( dataset_release_transfer_id )
+ ) ;
+
+ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_file_dataset_manifest FOREIGN KEY ( dataset_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_file_recordset_manifest FOREIGN KEY ( recordset_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_file_clinical_manifest FOREIGN KEY ( clinical_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+CREATE  TABLE "public".transfer_nbia ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	collection           text    ,
+	site                 text    ,
+	published            boolean    ,
+	"public"             boolean    ,
+	CONSTRAINT pk_transfer_nbia PRIMARY KEY ( dataset_release_transfer_id )
+ ) ;
+
+ALTER TABLE "public".transfer_nbia ADD CONSTRAINT fk_transfer_nbia_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+CREATE  TABLE "public".transfer_recordset ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	recordset_release_id integer  NOT NULL  ,
+	retriever_manifest_file_id integer    ,
+	CONSTRAINT pk_transfer_recordset PRIMARY KEY ( dataset_release_transfer_id, recordset_release_id )
+ ) ;
+
+CREATE INDEX idx_transfer_recordset_recordset_release_id ON "public".transfer_recordset  ( recordset_release_id ) ;
+
+ALTER TABLE "public".transfer_recordset ADD CONSTRAINT fk_transfer_dataset_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+ALTER TABLE "public".transfer_recordset ADD CONSTRAINT fk_transfer_dataset_dataset_release FOREIGN KEY ( recordset_release_id ) REFERENCES "public".recordset_release( recordset_release_id ) ON DELETE RESTRICT  ;
+
+ALTER TABLE "public".transfer_recordset ADD CONSTRAINT fk_transfer_dataset_retriever_manifest_file FOREIGN KEY ( retriever_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+CREATE  TABLE "public".transfer_wp ( 
+	dataset_release_transfer_id integer  NOT NULL  ,
+	wp_media_file_id     integer    ,
+	published            boolean    ,
+	"public"             boolean    ,
+	CONSTRAINT pk_transfer_wp PRIMARY KEY ( dataset_release_transfer_id )
+ ) ;
+
+ALTER TABLE "public".transfer_wp ADD CONSTRAINT fk_transfer_wp_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
+
+CREATE  TABLE "public".dataset_release_recordset ( 
+	dataset_release_id   integer  NOT NULL  ,
+	recordset_release_id integer  NOT NULL  ,
+	CONSTRAINT pk_dataset_release_recordset PRIMARY KEY ( dataset_release_id, recordset_release_id )
+ ) ;
+
+CREATE INDEX idx_dataset_release_recordset_recordset_release_id ON "public".dataset_release_recordset  ( recordset_release_id ) ;
+
+ALTER TABLE "public".dataset_release_recordset ADD CONSTRAINT fk_dataset_release_recordset_dataset_release FOREIGN KEY ( dataset_release_id ) REFERENCES "public".dataset_release( dataset_release_id ) ON DELETE CASCADE  ;
+
+ALTER TABLE "public".dataset_release_recordset ADD CONSTRAINT fk_dataset_release_recordset_recordset_release FOREIGN KEY ( recordset_release_id ) REFERENCES "public".recordset_release( recordset_release_id ) ON DELETE RESTRICT  ;
+
+CREATE  TABLE "public".recordset_draft ( 
+	recordset_draft_id   integer  NOT NULL  ,
+	recordset_id         integer  NOT NULL  ,
 	cloned_from_release_id integer    ,
 	draft_name           text    ,
 	draft_status         text    ,
@@ -165,113 +264,24 @@ CREATE  TABLE "public".dataset_release_draft (
 	who_created          text    ,
 	when_updated         timestamptz    ,
 	who_updated          text    ,
-	CONSTRAINT pk_dataset_release_draft PRIMARY KEY ( dataset_release_draft_id )
+	CONSTRAINT pk_recordset_draft PRIMARY KEY ( recordset_draft_id )
  ) ;
 
-CREATE INDEX idx_dataset_release_draft_dataset_id ON "public".dataset_release_draft  ( dataset_id ) ;
+CREATE INDEX idx_recordset_draft_recordset_id ON "public".recordset_draft  ( recordset_id ) ;
 
-CREATE INDEX idx_dataset_release_draft_dataset_when_created ON "public".dataset_release_draft  ( dataset_id, when_created  DESC   ) ;
+ALTER TABLE "public".recordset_draft ADD CONSTRAINT fk_recordset_draft_recordset FOREIGN KEY ( recordset_id ) REFERENCES "public".recordset( recordset_id ) ON DELETE CASCADE  ;
 
-ALTER TABLE "public".dataset_release_draft ADD CONSTRAINT fk_dataset_release_draft_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id ) ON DELETE CASCADE  ;
+ALTER TABLE "public".recordset_draft ADD CONSTRAINT fk_recordset_draft_recordset_release FOREIGN KEY ( cloned_from_release_id ) REFERENCES "public".recordset_release( recordset_release_id )   ;
 
-ALTER TABLE "public".dataset_release_draft ADD CONSTRAINT fk_dataset_release_draft_dataset_release FOREIGN KEY ( cloned_from_release_id ) REFERENCES "public".dataset_release( dataset_release_id )   ;
-
-CREATE  TABLE "public".dataset_release_draft_file ( 
-	dataset_release_draft_id integer  NOT NULL  ,
+CREATE  TABLE "public".recordset_draft_file ( 
+	recordset_draft_id   integer  NOT NULL  ,
 	file_id              integer  NOT NULL  ,
-	CONSTRAINT pk_dataset_release_draft_file PRIMARY KEY ( dataset_release_draft_id, file_id )
+	CONSTRAINT pk_recordset_draft_file PRIMARY KEY ( recordset_draft_id, file_id )
  ) ;
 
-CREATE INDEX idx_dataset_release_draft_file_file_id ON "public".dataset_release_draft_file  ( file_id ) ;
+CREATE INDEX idx_recordset_draft_file_file_id ON "public".recordset_draft_file  ( file_id ) ;
 
-ALTER TABLE "public".dataset_release_draft_file ADD CONSTRAINT fk_dataset_release_draft_file_dataset_release_draft FOREIGN KEY ( dataset_release_draft_id ) REFERENCES "public".dataset_release_draft( dataset_release_draft_id ) ON DELETE CASCADE  ;
+ALTER TABLE "public".recordset_draft_file ADD CONSTRAINT fk_recordset_draft_file_recordset_draft FOREIGN KEY ( recordset_draft_id ) REFERENCES "public".recordset_draft( recordset_draft_id ) ON DELETE CASCADE  ;
 
-ALTER TABLE "public".dataset_release_draft_file ADD CONSTRAINT fk_dataset_release_draft_file_file FOREIGN KEY ( file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-CREATE  TABLE "public".dataset_release_file ( 
-	dataset_release_id   integer  NOT NULL  ,
-	file_id              integer  NOT NULL  ,
-	CONSTRAINT pk_dataset_release_file PRIMARY KEY ( dataset_release_id, file_id )
- ) ;
-
-CREATE INDEX idx_dataset_release_file_file_id ON "public".dataset_release_file  ( file_id ) ;
-
-ALTER TABLE "public".dataset_release_file ADD CONSTRAINT fk_dataset_release_file_dataset_release FOREIGN KEY ( dataset_release_id ) REFERENCES "public".dataset_release( dataset_release_id ) ON DELETE CASCADE  ;
-
-ALTER TABLE "public".dataset_release_file ADD CONSTRAINT fk_dataset_release_file_file FOREIGN KEY ( file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-CREATE  TABLE "public".transfer_aspera ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	published            boolean    ,
-	"public"             boolean    ,
-	faspex_url           text    ,
-	CONSTRAINT pk_release_aspera PRIMARY KEY ( collection_release_transfer_id )
- ) ;
-
-ALTER TABLE "public".transfer_aspera ADD CONSTRAINT fk_transfer_aspera_collection_release_transfer FOREIGN KEY ( collection_release_transfer_id ) REFERENCES "public".collection_release_transfer( collection_release_transfer_id ) ON DELETE CASCADE  ;
-
-CREATE  TABLE "public".transfer_dataset ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	dataset_release_id   integer  NOT NULL  ,
-	retriever_manifest_file_id integer    ,
-	CONSTRAINT pk_collection_release_transfer_dataset_release PRIMARY KEY ( collection_release_transfer_id, dataset_release_id )
- ) ;
-
-CREATE INDEX idx_transfer_dataset_dataset_release_id ON "public".transfer_dataset  ( dataset_release_id ) ;
-
-ALTER TABLE "public".transfer_dataset ADD CONSTRAINT fk_collection_release_transfer_dataset_release_collection_release_transfer FOREIGN KEY ( collection_release_transfer_id ) REFERENCES "public".collection_release_transfer( collection_release_transfer_id ) ON DELETE CASCADE  ;
-
-ALTER TABLE "public".transfer_dataset ADD CONSTRAINT fk_collection_release_transfer_dataset_release_dataset_release FOREIGN KEY ( dataset_release_id ) REFERENCES "public".dataset_release( dataset_release_id ) ON DELETE RESTRICT  ;
-
-ALTER TABLE "public".transfer_dataset ADD CONSTRAINT fk_collection_release_transfer_dataset_release_file FOREIGN KEY ( retriever_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-CREATE  TABLE "public".transfer_gc ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	published            boolean    ,
-	"public"             boolean    ,
-	CONSTRAINT pk_release_gc PRIMARY KEY ( collection_release_transfer_id )
- ) ;
-
-ALTER TABLE "public".transfer_gc ADD CONSTRAINT fk_transfer_gc_collection_release_transfer FOREIGN KEY ( collection_release_transfer_id ) REFERENCES "public".collection_release_transfer( collection_release_transfer_id ) ON DELETE CASCADE  ;
-
-CREATE  TABLE "public".transfer_idc ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	gcs_url              text    ,
-	dataset_manifest_file_id integer    ,
-	collection_manifest_file_id integer    ,
-	clinical_manifest_file_id integer    ,
-	published            boolean    ,
-	"public"             boolean    ,
-	CONSTRAINT pk_release_idc PRIMARY KEY ( collection_release_transfer_id )
- ) ;
-
-ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_release_idc_file_dataset_manifest FOREIGN KEY ( dataset_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_release_idc_file_collection_manifest FOREIGN KEY ( collection_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_release_idc_file_download_manifest FOREIGN KEY ( clinical_manifest_file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
-
-ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_collection_release_transfer FOREIGN KEY ( collection_release_transfer_id ) REFERENCES "public".collection_release_transfer( collection_release_transfer_id ) ON DELETE CASCADE  ;
-
-CREATE  TABLE "public".transfer_wp ( 
-	collection_release_transfer_id integer  NOT NULL  ,
-	wp_media_file_id     integer    ,
-	published            boolean    ,
-	"public"             boolean    ,
-	CONSTRAINT pk_release_wp PRIMARY KEY ( collection_release_transfer_id )
- ) ;
-
-ALTER TABLE "public".transfer_wp ADD CONSTRAINT fk_transfer_wp_collection_release_transfer FOREIGN KEY ( collection_release_transfer_id ) REFERENCES "public".collection_release_transfer( collection_release_transfer_id ) ON DELETE CASCADE  ;
-
-CREATE  TABLE "public".collection_release_dataset ( 
-	collection_release_id integer  NOT NULL  ,
-	dataset_release_id   integer  NOT NULL  ,
-	CONSTRAINT pk_collection_release_dataset PRIMARY KEY ( collection_release_id, dataset_release_id )
- ) ;
-
-CREATE INDEX idx_collection_release_dataset_dataset_release_id ON "public".collection_release_dataset  ( dataset_release_id ) ;
-
-ALTER TABLE "public".collection_release_dataset ADD CONSTRAINT fk_collection_release_dataset_collection_release FOREIGN KEY ( collection_release_id ) REFERENCES "public".collection_release( collection_release_id ) ON DELETE CASCADE  ;
-
-ALTER TABLE "public".collection_release_dataset ADD CONSTRAINT fk_collection_release_dataset_dataset_release FOREIGN KEY ( dataset_release_id ) REFERENCES "public".dataset_release( dataset_release_id ) ON DELETE RESTRICT  ;
+ALTER TABLE "public".recordset_draft_file ADD CONSTRAINT fk_recordset_draft_file_file FOREIGN KEY ( file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
 
