@@ -1,24 +1,3 @@
-DROP TABLE IF EXISTS "public".collection_release_dataset;
-DROP TABLE IF EXISTS "public".transfer_wp;
-DROP TABLE IF EXISTS "public".transfer_idc;
-DROP TABLE IF EXISTS "public".transfer_gc;
-DROP TABLE IF EXISTS "public".transfer_dataset;
-DROP TABLE IF EXISTS "public".transfer_aspera;
-DROP TABLE IF EXISTS "public".dataset_release_file;
-DROP TABLE IF EXISTS "public".dataset_release_draft_file;
-DROP TABLE IF EXISTS "public".dataset_release_draft;
-DROP TABLE IF EXISTS "public".dataset_release;
-DROP TABLE IF EXISTS "public".dataset_destination;
-DROP TABLE IF EXISTS "public".dataset;
-DROP TABLE IF EXISTS "public".collection_release_transfer;
-DROP TABLE IF EXISTS "public".wp_object_map;
-DROP TABLE IF EXISTS "public".transfer_destination;
-DROP TABLE IF EXISTS "public".dataset_license;
-DROP TABLE IF EXISTS "public".collection_release;
-DROP TABLE IF EXISTS "public".collection_related;
-DROP TABLE IF EXISTS "public".collection;
-
-
 CREATE  TABLE "public".collection ( 
 	collection_id        integer  NOT NULL  ,
 	collection_doi       text    ,
