@@ -42,4 +42,4 @@ add_masking_tables.sql
 add_values_to_masking_status_type.sql
 add_uid_root_to_submissions.sql
 path_migration_master.sql
-add_collection_modules_tables.sql
+add_dataset_module_tables.sql
