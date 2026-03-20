@@ -21,6 +21,8 @@ CREATE  TABLE "public".dataset_relation (
 	CONSTRAINT pk_dataset_relation PRIMARY KEY ( dataset_id, related_dataset_id )
  ) ;
 
+CREATE UNIQUE INDEX unq_dataset_relation_triplet ON "public".dataset_relation ( dataset_id, related_dataset_id, relation_type ) ;
+
 ALTER TABLE "public".dataset_relation ADD CONSTRAINT fk_dataset_relation_dataset FOREIGN KEY ( dataset_id ) REFERENCES "public".dataset( dataset_id )   ;
 
 ALTER TABLE "public".dataset_relation ADD CONSTRAINT fk_dataset_relation_related_dataset FOREIGN KEY ( related_dataset_id ) REFERENCES "public".dataset( dataset_id )   ;
@@ -49,12 +51,14 @@ CREATE  TABLE "public".recordset_license (
 	license_name         text    ,
 	license_label        text    ,
 	license_url          text    ,
+	is_public_access     boolean    ,
 	CONSTRAINT pk_recordset_license PRIMARY KEY ( license_id )
  ) ;
 
 CREATE  TABLE "public".transfer_destination ( 
 	destination_id       integer  NOT NULL  ,
 	name                 text    ,
+	abbr                 text    ,
 	CONSTRAINT pk_destination PRIMARY KEY ( destination_id )
  ) ;
 
@@ -109,6 +113,7 @@ CREATE  TABLE "public".recordset (
 	license_id           integer  NOT NULL  ,
 	recordset_type       text    ,
 	recordset_title      text    ,
+	recordset_name       text    ,
 	active               boolean    ,
 	when_created         timestamptz    ,
 	who_created          text    ,
@@ -205,17 +210,6 @@ ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_file_clinical_m
 
 ALTER TABLE "public".transfer_idc ADD CONSTRAINT fk_transfer_idc_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
 
-CREATE  TABLE "public".transfer_nbia ( 
-	dataset_release_transfer_id integer  NOT NULL  ,
-	collection           text    ,
-	site                 text    ,
-	published            boolean    ,
-	"public"             boolean    ,
-	CONSTRAINT pk_transfer_nbia PRIMARY KEY ( dataset_release_transfer_id )
- ) ;
-
-ALTER TABLE "public".transfer_nbia ADD CONSTRAINT fk_transfer_nbia_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
-
 CREATE  TABLE "public".transfer_recordset ( 
 	dataset_release_transfer_id integer  NOT NULL  ,
 	recordset_release_id integer  NOT NULL  ,
@@ -269,6 +263,8 @@ CREATE  TABLE "public".recordset_draft (
 
 CREATE INDEX idx_recordset_draft_recordset_id ON "public".recordset_draft  ( recordset_id ) ;
 
+COMMENT ON COLUMN "public".recordset_draft.draft_status IS 'open, ready, invalid, published, deleted';
+
 ALTER TABLE "public".recordset_draft ADD CONSTRAINT fk_recordset_draft_recordset FOREIGN KEY ( recordset_id ) REFERENCES "public".recordset( recordset_id ) ON DELETE CASCADE  ;
 
 ALTER TABLE "public".recordset_draft ADD CONSTRAINT fk_recordset_draft_recordset_release FOREIGN KEY ( cloned_from_release_id ) REFERENCES "public".recordset_release( recordset_release_id )   ;
@@ -284,4 +280,6 @@ CREATE INDEX idx_recordset_draft_file_file_id ON "public".recordset_draft_file  
 ALTER TABLE "public".recordset_draft_file ADD CONSTRAINT fk_recordset_draft_file_recordset_draft FOREIGN KEY ( recordset_draft_id ) REFERENCES "public".recordset_draft( recordset_draft_id ) ON DELETE CASCADE  ;
 
 ALTER TABLE "public".recordset_draft_file ADD CONSTRAINT fk_recordset_draft_file_file FOREIGN KEY ( file_id ) REFERENCES "public"."file"( file_id ) ON DELETE RESTRICT  ;
+
+ALTER TABLE "public".transfer_nbia ADD CONSTRAINT fk_transfer_nbia_dataset_release_transfer FOREIGN KEY ( dataset_release_transfer_id ) REFERENCES "public".dataset_release_transfer( dataset_release_transfer_id ) ON DELETE CASCADE  ;
 
