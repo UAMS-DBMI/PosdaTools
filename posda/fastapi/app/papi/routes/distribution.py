@@ -119,3 +119,183 @@ async def get_dataset_release_details_by_id(dataset_release_id: int, db: Databas
             cr.dataset_release_id = $1;
         """
     return await db.fetch(query, [dataset_release_id])
+
+
+#Purpose: List recordsets
+@router.get("/recordsets")
+async def get_dataset_recordsets( db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_id,
+            r.recordset_doi,
+            r.dataset_id,
+            r.recordset_type,
+            r.recordset_title,
+            r.recordset_name
+        from
+            recordset r;
+        """
+    return await db.fetch(query)
+
+#Purpose: Get recordset detail
+@router.get("/recordsets/{recordset_id}")
+async def get_recordset_release_details_by_id(recordset_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_id,
+            r.recordset_doi,
+            r.dataset_id,
+            r.recordset_type,
+            r.recordset_title,
+            r.recordset_name,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated,
+            rl.license_id,
+            rl.license_label,
+            rl.license_url,
+            rl.is_public_access
+        from
+            recordset r
+            natural join recordset_license rl
+        where
+            r.recordset_id = $1;
+        """
+    return await db.fetch(query,[recordset_id])
+
+
+#Purpose: Create recordset
+@router.post("/recordsets/{dataset_id}/")
+async def create_recordset(dataset_id: int, db: Database = Depends()):
+    record = await db.fetch("""\
+            insert into recordset (dataset_id, when_created)
+            values ($1, now())
+            returning recordset_id
+    """, [dataset_id])
+    print(record)
+    if not record:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+    return {
+        'status': 'success',
+    }
+
+#Purpose: Update recordset metadata
+@router.put("/recordsets/{dataset_id}/OPTIONALDATA")
+async def create_recordset(dataset_id: int, db: Database = Depends()):
+    record = await db.fetch("""\
+            update
+                recordset
+            set x= y
+            where dataset_id = $1
+    """, [dataset_id])
+    print(record)
+    if not record:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+    return {
+        'status': 'success',
+    }
+# Purpose: List immutable releases for a recordset
+@router.get("/recordsets/{recordset_id}/releases")
+async def get_recordset_releases_by_id(recordset_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_release_id,
+            r.recordset_id,
+            r.release_number,
+            r.release_date,
+            r.release_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
+        from
+            recordset_release r
+        where
+            r.recordset_id = $1;
+        """
+    return await db.fetch(query,[recordset_id])
+
+# Purpose: List draft releases for a recordset
+@router.get("/recordsets/{recordset_id}/drafts")
+async def get_recordset_drafts_by_id(recordset_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_draft_id,
+            r.recordset_id,
+            r.cloned_from_release_id,
+            r.draft_name,
+            r.draft_status,
+            r.draft_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
+        from
+            recordset_draft r
+        where
+            r.recordset_id = $1;
+        """
+
+# Purpose: Get latest immutable release
+@router.get("/recordsets/{recordset_id}/latest-release")
+async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_release_id,
+            r.recordset_id,
+            r.release_number,
+            r.release_date,
+            r.release_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
+        from
+            recordset_release r
+            join
+                (select
+                        recordset_release_id,
+                        max(release_number) as max_r
+                    from
+                        recordset_release r
+                    where
+                        r.recordset_id = $1
+                    group by
+                    	recordset_release_id,release_number) l
+        on r.recordset_release_id = l.recordset_release_id
+        and r.release_number = l.max_r;
+        """
+    return await db.fetch(query,[recordset_id])
+
+
+#Unclear on the use of available files, so starting with a draft and release version
+
+
+# Purpose: List candidate files available for inclusion (draft)
+@router.get("/recordsets/{recordset_draft_id}/available-draft-files")
+async def get_recordset_available_draft_files(recordset_draft_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_draft_id,
+            r.file_id
+        from
+            recordset_draft_file r
+        where
+            r.recordset_draft_id = $1;
+        """
+return await db.fetch(query,[recordset_draft_id])
+
+# Purpose: List candidate files available for inclusion (release)
+@router.get("/recordsets/{recordset_release_id}/available-release-files")
+async def get_recordset_available_release_files(recordset_release_id: int, db: Database = Depends()):
+    query = """\
+        select
+            r.recordset_release_id,
+            r.file_id
+        from
+            recordset_release_file r
+        where
+            r.recordset_release_id = $1;
+        """
+return await db.fetch(query,[recordset_release_id])
