@@ -9,6 +9,12 @@ router = APIRouter(
     dependencies=[logged_in_user]
 )
 
+# --- Models ---
+class RecordsetUpdate(BaseModel):
+    recordset_title: str | None = None
+    recordset_name: str | None = None
+    recordset_type: str | None = None
+
 # datasets
 @router.get("/datasets/{dataset_id}")
 async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
@@ -173,28 +179,52 @@ async def create_recordset(dataset_id: int, db: Database = Depends()):
             values ($1, now())
             returning recordset_id
     """, [dataset_id])
-    print(record)
+
     if not record:
         raise HTTPException(detail="Error updating edit status", status_code=422)
-    return {
-        'status': 'success',
-    }
+    return {'status': 'success'}
 
 #Purpose: Update recordset metadata
-@router.put("/recordsets/{dataset_id}/OPTIONALDATA")
-async def create_recordset(dataset_id: int, db: Database = Depends()):
-    record = await db.fetch("""\
-            update
-                recordset
-            set x= y
-            where dataset_id = $1
-    """, [dataset_id])
-    print(record)
+@router.put("/recordsets/{recordset_id}")
+async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Database = Depends()):
+    updates = []
+    values = []
+    idx = 1
+
+    if payload.recordset_title is not None:
+        updates.append(f"recordset_title = ${idx}")
+        values.append(payload.recordset_title)
+        idx += 1
+
+    if payload.recordset_name is not None:
+        updates.append(f"recordset_name = ${idx}")
+        values.append(payload.recordset_name)
+        idx += 1
+
+    if payload.recordset_type is not None:
+        updates.append(f"recordset_type = ${idx}")
+        values.append(payload.recordset_type)
+        idx += 1
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
+    query = f"""
+        update recordset
+        set {", ".join(updates)}
+        where recordset_id = ${idx}
+        returning *
+    """
+
+    values.append(recordset_id)
+
+    record = await db.fetch(query, values)
+
     if not record:
         raise HTTPException(detail="Error updating edit status", status_code=422)
-    return {
-        'status': 'success',
-    }
+
+    return {'status': 'success'}
+
 # Purpose: List immutable releases for a recordset
 @router.get("/recordsets/{recordset_id}/releases")
 async def get_recordset_releases_by_id(recordset_id: int, db: Database = Depends()):
@@ -236,6 +266,7 @@ async def get_recordset_drafts_by_id(recordset_id: int, db: Database = Depends()
         where
             r.recordset_id = $1;
         """
+    return await db.fetch(query, [recordset_id])
 
 # Purpose: Get latest immutable release
 @router.get("/recordsets/{recordset_id}/latest-release")
@@ -253,20 +284,12 @@ async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = D
             r.who_updated
         from
             recordset_release r
-            join
-                (select
-                        recordset_release_id,
-                        max(release_number) as max_r
-                    from
-                        recordset_release r
-                    where
-                        r.recordset_id = $1
-                    group by
-                    	recordset_release_id,release_number) l
-        on r.recordset_release_id = l.recordset_release_id
-        and r.release_number = l.max_r;
+        where
+            r.recordset_id = $1
+        order by r.release_number desc
+        limit 1;
         """
-    return await db.fetch(query,[recordset_id])
+    return await db.fetch(query, [recordset_id])
 
 
 #Unclear on the use of available files, so starting with a draft and release version
@@ -284,7 +307,7 @@ async def get_recordset_available_draft_files(recordset_draft_id: int, db: Datab
         where
             r.recordset_draft_id = $1;
         """
-return await db.fetch(query,[recordset_draft_id])
+    return await db.fetch(query,[recordset_draft_id])
 
 # Purpose: List candidate files available for inclusion (release)
 @router.get("/recordsets/{recordset_release_id}/available-release-files")
@@ -298,4 +321,4 @@ async def get_recordset_available_release_files(recordset_release_id: int, db: D
         where
             r.recordset_release_id = $1;
         """
-return await db.fetch(query,[recordset_release_id])
+    return await db.fetch(query,[recordset_release_id])
