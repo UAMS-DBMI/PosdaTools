@@ -15,7 +15,7 @@ router = APIRouter(
 #     recordset_name: str | None = None
 #     recordset_type: str | None = None
 
-# datasets
+# -----------------------------------------DATASETS------------------------------------------------
 @router.get("/datasets/{dataset_id}")
 async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
     query = """\
@@ -126,6 +126,8 @@ async def get_dataset_release_details_by_id(dataset_release_id: int, db: Databas
         """
     return await db.fetch(query, [dataset_release_id])
 
+
+# -----------------------------------------RECORDSETS------------------------------------------------
 
 #Purpose: List recordsets
 @router.get("/recordsets")
@@ -322,3 +324,91 @@ async def get_recordset_available_release_files(recordset_release_id: int, db: D
             r.recordset_release_id = $1;
         """
     return await db.fetch(query,[recordset_release_id])
+
+# -----------------------------------------DATASET RELEASES------------------------------------------------
+
+# Purpose: Get dataset release detail
+@router.get("/datasets/releases/{release_id}")
+async def get_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        select
+            dr.dataset_release_id,
+            dr.dataset_id,
+            dr.release_number,
+            dr.release_date,
+            dr.release_notes,
+            dr.when_created,
+            dr.when_updated
+        from dataset_release dr
+        where dr.dataset_release_id = $1
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: Update dataset release metadata
+@router.put("/datasets/releases/{release_id}")
+async def update_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: List recordset releases included in a dataset release
+@router.get("/datasets/releases/{release_id}/recordsets")
+async def get_recordsets_for_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        select
+            rr.recordset_id,
+            rr.recordset_release_id,
+            rs.recordset_title,
+            rr.release_number
+        from dataset_release dr
+        natural join recordset_release rr
+        natural join recordset rs
+        where dr.dataset_release_id = $1
+        and rs.active ;
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: Add recordset releases to a dataset release
+@router.post("/datasets/releases/{release_id}/recordsets:add")
+async def add_recordset_release_to_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: Remove recordset releases from a dataset release
+@router.post("/datasets/releases/{release_id}/recordsets:remove")
+async def remove_recordset_release_from_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: List transfers for a dataset release
+@router.get("/datasets/releases/{release_id}/transfers")
+async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        select
+            drt.dataset_release_transfer_id,
+            drt.destination_id,
+            td."name",
+            drt.transfer_name,
+            drt.transfer_mode,
+            drt.transfer_status
+        from dataset_release_transfer drt
+        natural join transfer_destination td
+        where drt.dataset_release_id = $1;
+        """
+    return await db.fetch(query,[release_id])
+
+# Purpose: Create transfer for a dataset release
+@router.post("/datasets/releases/{release_id}/transfers")
+async def create_transferfor__dataset_release_by_id(release_id: int, db: Database = Depends()):
+    query = """\
+        """
+    return await db.fetch(query,[release_id])
+
+
+
+
+
+
+# -----------------------------------------RECORDSET RELEASES------------------------------------------------
