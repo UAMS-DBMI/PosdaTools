@@ -16,6 +16,17 @@ class RecordsetUpdate(BaseModel):
     recordset_name: Optional[str] = None
     recordset_type: Optional[str] = None
 
+class DatasetReleaseUpdate(BaseModel):
+    release_notes: Optional[str] = "New release"
+
+class DatasetReleaseTransferInsert(BaseModel):
+    destination_id: int
+    transfer_name: str
+    transfer_mode: str
+    transfer_notes:  Optional[str] = None
+    transfer_status: Optional[str] = "draft"
+
+
 # -----------------------------------------DATASETS------------------------------------------------
 @router.get("/datasets/{dataset_id}")
 async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
@@ -347,10 +358,19 @@ async def get_dataset_release_by_id(release_id: int, db: Database = Depends()):
 
 # Purpose: Update dataset release metadata
 @router.put("/datasets/releases/{release_id}")
-async def update_dataset_release_by_id(release_id: int, db: Database = Depends()):
-    query = """\
-        """
-    return await db.fetch(query,[release_id])
+async def update_dataset_release_by_id(release_id: int,  payload: DatasetReleaseUpdate, db: Database = Depends()):
+    query = """
+        update dataset_release
+        set release_date = now(),
+            release_notes = $2
+        where dataset_release_id = $1
+        returning *
+    """
+    values = [release_id, payload.release_notes or "New release"]
+    record = await db.fetch(query, values)
+    if not record:
+        raise HTTPException(status_code=422, detail="Error updating release")
+    return {"status": "success"}
 
 # Purpose: List recordset releases included in a dataset release
 @router.get("/datasets/releases/{release_id}/recordsets")
@@ -371,17 +391,45 @@ async def get_recordsets_for_dataset_release_by_id(release_id: int, db: Database
 
 # Purpose: Add recordset releases to a dataset release
 @router.post("/datasets/releases/{release_id}/recordsets:add")
-async def add_recordset_release_to_dataset_release_by_id(release_id: int, db: Database = Depends()):
-    query = """\
+async def add_recordset_release_to_dataset_release_by_id(release_id: int, recordset_release_ids: list[str], db: Database = Depends()):
+    query = """
+            insert into dataset_release_recordset
+            (dataset_release_id, recordset_release_id)
+            values ($1, $2)
         """
-    return await db.fetch(query,[release_id])
+    if recordset_release_ids is None:
+        raise HTTPException(status_code=400, detail="No records to insert")
+
+    for recordset_release_id in recordset_release_ids:
+        record = await db.fetch(query, [release_id, recordset_release_id])
+
+        if not record:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Failed to insert recordset_release {recordset_release_id}"
+            )
+    return {"status": "success"}
+
 
 # Purpose: Remove recordset releases from a dataset release
 @router.post("/datasets/releases/{release_id}/recordsets:remove")
-async def remove_recordset_release_from_dataset_release_by_id(release_id: int, db: Database = Depends()):
-    query = """\
+async def remove_recordset_release_from_dataset_release_by_id(release_id: int, recordset_release_ids: list[int], db: Database = Depends()):
+    query = """
+            delete from dataset_release_recordset
+            where dataset_release_id = $1 and recordset_release_id = $2
         """
-    return await db.fetch(query,[release_id])
+    if recordset_ids is None:
+        raise HTTPException(status_code=400, detail="No records to remove")
+
+    for recordset_release_id in recordset_release_ids:
+        record = await db.fetch(query, [release_id, recordset_release_id])
+
+        if not record:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Failed to remove recordset_release {recordset_release_id}"
+            )
+    return {"status": "success"}
 
 # Purpose: List transfers for a dataset release
 @router.get("/datasets/releases/{release_id}/transfers")
@@ -402,14 +450,33 @@ async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database 
 
 # Purpose: Create transfer for a dataset release
 @router.post("/datasets/releases/{release_id}/transfers")
-async def create_transferfor__dataset_release_by_id(release_id: int, db: Database = Depends()):
-    query = """\
+async def create_transfer_for__dataset_release_by_id(release_id: int,payload: DatasetReleaseTransferInsert,  db: Database = Depends()):
+    if payload.transfer_notes is not None:
+        query = """
+            insert into dataset_release_transfer
+            (dataset_release_id, destination_id, transfer_name, transfer_mode, transfer_status, transfer_notes)
+            values ($1,$2,$3,$4,$5,$6)
         """
-    return await db.fetch(query,[release_id])
+        values = [
+            release_id,
+            payload.destination_id,
+            payload.transfer_name,
+            payload.transfer_mode,
+            payload.transfer_status,
+            payload.transfer_notes
+        ]
+    else:
+        query = """
+            insert into dataset_release_transfer
+            (dataset_release_id, destination_id, transfer_name, transfer_mode, transfer_status)
+            values ($1,$2,$3,$4,$5)
+        """
+        values = [
+            release_id,
+            payload.destination_id,
+            payload.transfer_name,
+            payload.transfer_mode,
+            payload.transfer_status
+        ]
 
-
-
-
-
-
-# -----------------------------------------RECORDSET RELEASES------------------------------------------------
+    return await db.fetch(query, values)
