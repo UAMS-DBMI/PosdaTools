@@ -1,4 +1,5 @@
 from fastapi import Depends, APIRouter, HTTPException
+from typing import Optional
 from pydantic import BaseModel
 from .auth import logged_in_user, User
 
@@ -10,10 +11,10 @@ router = APIRouter(
 )
 #
 # # --- Models ---
-# class RecordsetUpdate(BaseModel):
-#     recordset_title: str | None = None
-#     recordset_name: str | None = None
-#     recordset_type: str | None = None
+class RecordsetUpdate(BaseModel):
+    recordset_title: Optional[str] = None
+    recordset_name: Optional[str] = None
+    recordset_type: Optional[str] = None
 
 # -----------------------------------------DATASETS------------------------------------------------
 @router.get("/datasets/{dataset_id}")
@@ -187,45 +188,45 @@ async def create_recordset(dataset_id: int, db: Database = Depends()):
     return {'status': 'success'}
 
 # #Purpose: Update recordset metadata
-# @router.put("/recordsets/{recordset_id}")
-# async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Database = Depends()):
-#     updates = []
-#     values = []
-#     idx = 1
-#
-#     if payload.recordset_title is not None:
-#         updates.append(f"recordset_title = ${idx}")
-#         values.append(payload.recordset_title)
-#         idx += 1
-#
-#     if payload.recordset_name is not None:
-#         updates.append(f"recordset_name = ${idx}")
-#         values.append(payload.recordset_name)
-#         idx += 1
-#
-#     if payload.recordset_type is not None:
-#         updates.append(f"recordset_type = ${idx}")
-#         values.append(payload.recordset_type)
-#         idx += 1
-#
-#     if not updates:
-#         raise HTTPException(status_code=400, detail="No fields to update")
-#
-#     query = f"""
-#         update recordset
-#         set {", ".join(updates)}
-#         where recordset_id = ${idx}
-#         returning *
-#     """
-#
-#     values.append(recordset_id)
-#
-#     record = await db.fetch(query, values)
-#
-#     if not record:
-#         raise HTTPException(detail="Error updating edit status", status_code=422)
-#
-#     return {'status': 'success'}
+@router.put("/recordsets/{recordset_id}")
+async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Database = Depends()):
+    updates = []
+    values = []
+    idx = 1
+
+    if payload.recordset_title is not None:
+        updates.append(f"recordset_title = ${idx}")
+        values.append(payload.recordset_title)
+        idx += 1
+
+    if payload.recordset_name is not None:
+        updates.append(f"recordset_name = ${idx}")
+        values.append(payload.recordset_name)
+        idx += 1
+
+    if payload.recordset_type is not None:
+        updates.append(f"recordset_type = ${idx}")
+        values.append(payload.recordset_type)
+        idx += 1
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
+    query = f"""
+        update recordset
+        set {", ".join(updates)}
+        where recordset_id = ${idx}
+        returning *
+    """
+
+    values.append(recordset_id)
+
+    record = await db.fetch(query, values)
+
+    if not record:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+
+    return {'status': 'success'}
 
 # Purpose: List immutable releases for a recordset
 @router.get("/recordsets/{recordset_id}/releases")
