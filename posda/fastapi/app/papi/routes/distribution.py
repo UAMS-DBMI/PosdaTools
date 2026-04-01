@@ -1264,3 +1264,55 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
 
 
 
+<<<<<<< HEAD
+=======
+    return await db.fetch(query, values)
+
+# -----------------------------------------RECORDSET DESTINATION CONFIGURATION------------------------------------------------
+
+# Purpose: List destination configuration rows for a recordset
+@router.get("/recordsets/{recordset_id}/destinations")
+async def get_recordset_destination_list(recordset_id: int, db: Database = Depends()):
+    query = """\
+        select
+            rd.destination_id,
+            td.name,
+            rd.default_display,
+            rd.default_transfer_mode
+            from recordset_destination rd
+            natural join transfer_destination td
+            where rd.recordset_id = $1;
+        """
+    return await db.fetch(query,[recordset_id])
+
+# Purpose: Get one destination configuration row for a recordset
+@router.get("/recordsets/{recordset_id}/destinations/{destination_id}")
+async def get_recordset_destination_by_id(recordset_id: int, destination_id: int, db: Database = Depends()):
+    query = """\
+        select
+            rd.destination_id,
+            td.name,
+            rd.default_display,
+            rd.default_transfer_mode
+            from recordset_destination rd
+            natural join transfer_destination td
+            where rd.recordset_id = $1 and rd.destination_id = $2;
+        """
+    return await db.fetch(query,[recordset_id,destination_id])
+
+# Purpose: Create or replace destination configuration for a recordset
+@router.put("/recordsets/{recordset_id}/destinations/{destination_id}")
+async def upsert_recordset_destination(recordset_id: int, destination_id: int, db: Database = Depends()):
+    query = """\
+        insert into recordset_destination
+            (recordset_id, destination_id)
+        values ($1, $2)
+        ON CONFLICT (recordset_id) DO UPDATE
+        set destination_id = $2
+        returning *;
+    """
+    record = await db.fetch(query, [recordset_id, destination_id])
+    if not record:
+        raise HTTPException(detail="Error updating edit status", status_code=422)
+    return {'status': 'success'}
+>>>>>>> 7c1ab9cd (recordset_destination endpoints)
