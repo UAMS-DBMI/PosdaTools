@@ -9,7 +9,7 @@ INSERT INTO "public".transfer_destination ( destination_id, name, abbr ) VALUES 
 INSERT INTO "public".transfer_destination ( destination_id, name, abbr ) VALUES ( 3, 'Aspera Faspex', 'asp' );
 INSERT INTO "public".transfer_destination ( destination_id, name, abbr ) VALUES ( 4, 'NBIA', 'nbia' );
 
-INSERT INTO "public".dataset ( dataset_id, dataset_doi, dataset_type, dataset_short_title, dataset_title, dataset_name, active, when_created, who_updated, when_updated, who_created ) VALUES ( 0, '10.7937/k9/tcia.2015.u1x8a5nr', 'dataset', 'RIDER Lung CT', 'Coffee-break lung CT dataset with scan images reconstructed at multiple imaging parameters', 'RIDER-LUNG-CT', true, NOW(), 'admin', NOW(), 'admin' );
+INSERT INTO "public".dataset ( dataset_id, dataset_doi, dataset_type, dataset_short_title, dataset_title, dataset_name, active, when_created, who_updated, when_updated, who_created ) VALUES ( 0, '10.7937/k9/tcia.2015.u1x8a5nr', 'collection', 'RIDER Lung CT', 'Coffee-break lung CT dataset with scan images reconstructed at multiple imaging parameters', 'RIDER-LUNG-CT', true, NOW(), 'admin', NOW(), 'admin' );
 INSERT INTO "public".dataset ( dataset_id, dataset_doi, dataset_type, dataset_short_title, dataset_title, dataset_name, active, when_created, who_updated, when_updated, who_created ) VALUES ( 1, '10.7937/tcia.2020.jit9grk8', 'analysis_result', 'RIDER-LungCT-Seg', 'RIDER Lung CT Segmentation Labels from: Decoding tumour phenotype by noninvasive imaging using a quantitative radiomics approach', 'RIDER-LUNGCT-SEG', true, NOW(), 'admin', NOW(), 'admin' );
 INSERT INTO "public".dataset_relation ( dataset_id, related_dataset_id, relation_type ) VALUES ( 1, 0, 'isDerivedFrom' );
 
