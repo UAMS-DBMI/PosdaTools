@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, Query
 from typing import Optional
 from pydantic import BaseModel
 from .auth import logged_in_user, User
@@ -28,6 +28,77 @@ class DatasetReleaseTransferInsert(BaseModel):
 
 
 # -----------------------------------------DATASETS------------------------------------------------
+@router.get("/datasets")
+async def get_datasets(
+    search: Optional[str] = Query(default=None),
+    active_only: Optional[bool] = Query(default=None),
+    type: Optional[str] = Query(default=None),
+    db: Database = Depends()
+):
+    where_clauses = []
+    values = []
+    idx = 1
+
+    if search:
+        where_clauses.append(
+            f"""(
+                c.dataset_title ilike ${idx}
+                or c.dataset_name ilike ${idx}
+                or c.dataset_short_title ilike ${idx}
+                or c.dataset_doi ilike ${idx}
+            )"""
+        )
+        values.append(f"%{search}%")
+        idx += 1
+
+    if active_only is True:
+        where_clauses.append("c.active = true")
+
+    if type:
+        where_clauses.append(f"c.dataset_type = ${idx}")
+        values.append(type)
+        idx += 1
+
+    where_sql = f"where {' and '.join(where_clauses)}" if where_clauses else ""
+
+    query = f"""\
+        select
+            c.dataset_id,
+            c.dataset_type as type,
+            c.dataset_title as title,
+            c.dataset_name as name,
+            c.dataset_short_title as short_title,
+            c.dataset_doi as doi,
+            c.active,
+            latest_release.latest_dataset_release_id,
+            c.when_created as created_at,
+            c.when_updated as updated_at
+        from
+            dataset c
+        left join (
+            select
+                dataset_id,
+                max(dataset_release_id) as latest_dataset_release_id
+            from
+                dataset_release
+            group by
+                dataset_id
+        ) latest_release on latest_release.dataset_id = c.dataset_id
+        {where_sql}
+        order by c.dataset_id
+        """
+
+    rows = await db.fetch(query, values)
+
+    return {
+        "data": rows,
+        "meta": {
+            "count": len(rows)
+        }
+    }
+
+
+
 @router.get("/datasets/{dataset_id}")
 async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
     query = """\
@@ -418,7 +489,7 @@ async def remove_recordset_release_from_dataset_release_by_id(release_id: int, r
             delete from dataset_release_recordset
             where dataset_release_id = $1 and recordset_release_id = $2
         """
-    if recordset_ids is None:
+    if recordset_release_ids is None:
         raise HTTPException(status_code=400, detail="No records to remove")
 
     for recordset_release_id in recordset_release_ids:
