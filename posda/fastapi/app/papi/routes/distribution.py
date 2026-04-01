@@ -9,8 +9,8 @@ router = APIRouter(
     tags=["distribution"],
     dependencies=[logged_in_user]
 )
-#
-# # --- Models ---
+
+# --- Models ---
 class RecordsetUpdate(BaseModel):
     recordset_title: Optional[str] = None
     recordset_name: Optional[str] = None
@@ -26,6 +26,14 @@ class DatasetReleaseTransferInsert(BaseModel):
     transfer_notes:  Optional[str] = None
     transfer_status: Optional[str] = "draft"
 
+class DatasetInsert(BaseModel):
+    type: str
+    title: str
+    name: str
+    short_title: str
+    doi: str
+    active: bool = True
+
 
 # -----------------------------------------DATASETS------------------------------------------------
 @router.get("/datasets")
@@ -33,8 +41,8 @@ async def get_datasets(
     search: Optional[str] = Query(default=None),
     active_only: Optional[bool] = Query(default=None),
     type: Optional[str] = Query(default=None),
-    db: Database = Depends()
-):
+    db: Database = Depends()):
+    
     where_clauses = []
     values = []
     idx = 1
@@ -97,6 +105,55 @@ async def get_datasets(
         }
     }
 
+
+@router.post("/datasets")
+async def create_dataset(
+    payload: DatasetInsert,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
+    query = """\
+        insert into dataset (
+            dataset_type,
+            dataset_title,
+            dataset_name,
+            dataset_short_title,
+            dataset_doi,
+            active,
+            when_created,
+            when_updated,
+            who_created,
+            who_updated
+        )
+        values ($1, $2, $3, $4, $5, $6, now(), now(), $7, $7)
+        returning
+            dataset_id,
+            dataset_type as type,
+            dataset_title as title,
+            dataset_name as name,
+            dataset_short_title as short_title,
+            dataset_doi as doi,
+            active
+        """
+
+    values = [
+        payload.type,
+        payload.title,
+        payload.name,
+        payload.short_title,
+        payload.doi,
+        payload.active,
+        current_user.username,
+    ]
+
+    try:
+        record = await db.fetch(query, values)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Error creating dataset: {type(e).__name__}: {str(e)}")
+
+    return {
+        "data": record[0]
+    }
 
 
 @router.get("/datasets/{dataset_id}")
