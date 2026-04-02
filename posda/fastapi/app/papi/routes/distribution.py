@@ -35,6 +35,14 @@ class DatasetInsert(BaseModel):
     dataset_doi: str
     active: bool = True
 
+class DatasetUpdate(BaseModel):
+    dataset_type: Optional[str] = None
+    dataset_title: Optional[str] = None
+    dataset_name: Optional[str] = None
+    dataset_short_title: Optional[str] = None
+    dataset_doi: Optional[str] = None
+    active: Optional[bool] = None
+
 
 def item_response(data):
     return {"data": data}
@@ -58,6 +66,7 @@ def api_error(code: str, message: str, details: Optional[dict] = None, status_co
 
 
 # -----------------------------------------DATASETS------------------------------------------------
+
 @router.get("/datasets")
 # List datasets
 async def get_datasets(
@@ -226,6 +235,87 @@ async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
     if not record:
         api_error("NOT_FOUND", "Dataset not found", {"dataset_id": dataset_id}, 404)
     return item_response(record[0])
+
+
+@router.put("/datasets/{dataset_id}")
+# Update dataset metadata
+async def update_dataset(
+    dataset_id: int,
+    payload: DatasetUpdate,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
+    field_values = []
+
+    def add_text_field(column_name: str, value: Optional[str]):
+        if value is None:
+            return
+
+        if not value.strip():
+            api_error("VALIDATION_ERROR", f"{column_name} must be non-empty", {"field": column_name}, 422)
+
+        field_values.append((column_name, value))
+
+    add_text_field("dataset_type", payload.dataset_type)
+    add_text_field("dataset_title", payload.dataset_title)
+    add_text_field("dataset_name", payload.dataset_name)
+    add_text_field("dataset_short_title", payload.dataset_short_title)
+    add_text_field("dataset_doi", payload.dataset_doi)
+
+    if payload.active is not None:
+        field_values.append(("active", payload.active))
+
+    if not field_values:
+        api_error("VALIDATION_ERROR", "No dataset fields were provided", {}, 422)
+
+    values = [value for _, value in field_values]
+    updates = [f"{column_name} = ${index}" for index, (column_name, _) in enumerate(field_values, start=1)]
+    updates.append("when_updated = now()")
+    updates.append(f"who_updated = ${len(values) + 1}")
+    values.append(current_user.username)
+
+    dataset_id_placeholder = len(values) + 1
+
+    query = f"""\
+        update dataset
+        set {', '.join(updates)}
+        where dataset_id = ${dataset_id_placeholder}
+        returning
+            dataset_id,
+            dataset_type,
+            dataset_title,
+            dataset_name,
+            dataset_short_title,
+            dataset_doi,
+            active,
+            when_created,
+            when_updated
+        """
+
+    values.append(dataset_id)
+
+    try:
+        record = await db.fetch(query, values)
+    except asyncpg.exceptions.UniqueViolationError as e:
+        api_error(
+            "CONFLICT",
+            "Dataset DOI already exists",
+            {"exception": type(e).__name__, "message": str(e)},
+            409,
+        )
+    except Exception as e:
+        api_error(
+            "INTERNAL_ERROR",
+            "Unexpected server failure",
+            {"exception": type(e).__name__, "message": str(e)},
+            500,
+        )
+
+    if not record:
+        api_error("NOT_FOUND", "Dataset not found", {"dataset_id": dataset_id}, 404)
+
+    return item_response(record[0])
+
 
 
 @router.get("/datasets/{dataset_id}/recordsets")
