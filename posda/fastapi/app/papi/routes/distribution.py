@@ -1,6 +1,7 @@
 from fastapi import Depends, APIRouter, HTTPException, Query
 from typing import Optional
 from pydantic import BaseModel
+import asyncpg
 from .auth import logged_in_user, User
 
 from ..util import Database
@@ -27,16 +28,38 @@ class DatasetReleaseTransferInsert(BaseModel):
     transfer_status: Optional[str] = "draft"
 
 class DatasetInsert(BaseModel):
-    type: str
-    title: str
-    name: str
-    short_title: str
-    doi: str
+    dataset_type: str
+    dataset_title: str
+    dataset_name: str
+    dataset_short_title: str
+    dataset_doi: str
     active: bool = True
+
+
+def item_response(data):
+    return {"data": data}
+
+
+def list_response(rows):
+    return {"data": rows, "meta": {"count": len(rows)}}
+
+
+def api_error(code: str, message: str, details: Optional[dict] = None, status_code: int = 400):
+    raise HTTPException(
+        status_code=status_code,
+        detail={
+            "error": {
+                "code": code,
+                "message": message,
+                "details": details or {},
+            }
+        },
+    )
 
 
 # -----------------------------------------DATASETS------------------------------------------------
 @router.get("/datasets")
+# List datasets
 async def get_datasets(
     search: Optional[str] = Query(default=None),
     active_only: Optional[bool] = Query(default=None),
@@ -50,20 +73,20 @@ async def get_datasets(
     if search:
         where_clauses.append(
             f"""(
-                c.dataset_title ilike ${idx}
-                or c.dataset_name ilike ${idx}
-                or c.dataset_short_title ilike ${idx}
-                or c.dataset_doi ilike ${idx}
+                dataset_title ilike ${idx}
+                or dataset_name ilike ${idx}
+                or dataset_short_title ilike ${idx}
+                or dataset_doi ilike ${idx}
             )"""
         )
         values.append(f"%{search}%")
         idx += 1
 
     if active_only is True:
-        where_clauses.append("c.active = true")
+        where_clauses.append("active = true")
 
     if type:
-        where_clauses.append(f"c.dataset_type = ${idx}")
+        where_clauses.append(f"dataset_type = ${idx}")
         values.append(type)
         idx += 1
 
@@ -71,46 +94,48 @@ async def get_datasets(
 
     query = f"""\
         select
-            c.dataset_id,
-            c.dataset_type as type,
-            c.dataset_title as title,
-            c.dataset_name as name,
-            c.dataset_short_title as short_title,
-            c.dataset_doi as doi,
-            c.active,
-            latest_release.latest_dataset_release_id,
-            c.when_created as created_at,
-            c.when_updated as updated_at
+            dataset_id,
+            dataset_type,
+            dataset_title,
+            dataset_name,
+            dataset_short_title,
+            dataset_doi,
+            active,
+            when_created,
+            when_updated
         from
-            dataset c
-        left join (
-            select
-                dataset_id,
-                max(dataset_release_id) as latest_dataset_release_id
-            from
-                dataset_release
-            group by
-                dataset_id
-        ) latest_release on latest_release.dataset_id = c.dataset_id
+            dataset
         {where_sql}
-        order by c.dataset_id
+        order by dataset_id
         """
 
     rows = await db.fetch(query, values)
 
-    return {
-        "data": rows,
-        "meta": {
-            "count": len(rows)
-        }
-    }
+    return list_response(rows)
 
 
 @router.post("/datasets")
+# Create dataset
 async def create_dataset(
     payload: DatasetInsert,
     current_user: User = logged_in_user,
     db: Database = Depends()):
+
+    if not payload.dataset_type.strip() or not payload.dataset_title.strip() or not payload.dataset_name.strip() or not payload.dataset_short_title.strip() or not payload.dataset_doi.strip():
+        api_error(
+            "VALIDATION_ERROR",
+            "Required dataset fields must be non-empty",
+            {
+                "required": [
+                    "dataset_type",
+                    "dataset_title",
+                    "dataset_name",
+                    "dataset_short_title",
+                    "dataset_doi",
+                ]
+            },
+            422,
+        )
 
     query = """\
         insert into dataset (
@@ -128,70 +153,80 @@ async def create_dataset(
         values ($1, $2, $3, $4, $5, $6, now(), now(), $7, $7)
         returning
             dataset_id,
-            dataset_type as type,
-            dataset_title as title,
-            dataset_name as name,
-            dataset_short_title as short_title,
-            dataset_doi as doi,
-            active
+            dataset_type,
+            dataset_title,
+            dataset_name,
+            dataset_short_title,
+            dataset_doi,
+            active,
+            when_created,
+            when_updated
         """
 
     values = [
-        payload.type,
-        payload.title,
-        payload.name,
-        payload.short_title,
-        payload.doi,
+        payload.dataset_type,
+        payload.dataset_title,
+        payload.dataset_name,
+        payload.dataset_short_title,
+        payload.dataset_doi,
         payload.active,
         current_user.username,
     ]
 
     try:
         record = await db.fetch(query, values)
+    except asyncpg.exceptions.UniqueViolationError as e:
+        api_error(
+            "CONFLICT",
+            "Dataset DOI already exists",
+            {"exception": type(e).__name__, "message": str(e)},
+            409,
+        )
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Error creating dataset: {type(e).__name__}: {str(e)}")
+        api_error(
+            "INTERNAL_ERROR",
+            "Unexpected server failure",
+            {"exception": type(e).__name__, "message": str(e)},
+            500,
+        )
 
-    return {
-        "data": record[0]
-    }
+    return item_response(record[0])
 
 
 @router.get("/datasets/{dataset_id}")
+# Get dataset detail
 async def get_datasets_by_id(dataset_id: int, db: Database = Depends()):
     query = """\
         select
-            c.dataset_id,
-            c.dataset_doi,
-            c.dataset_title,
-            c.dataset_short_title,
-            c.dataset_name,
-            c.when_created,
-            latest_release.latest_release_id,
-            my_recordsets.recordset_count
+            dataset_id,
+            dataset_type,
+            dataset_title,
+            dataset_name,
+            dataset_short_title,
+            dataset_doi,
+            active,
+            when_created,
+            when_updated
         from
-            dataset c
-            natural join
-                (select
-                    dataset_id,
-                    max(dataset_release_id) as latest_release_id
-                    from
-                        dataset_release
-                    where
-                        dataset_id = $1
-                    group by
-                        dataset_id
-                ) latest_release
-            natural join
-                (select
-                    count(recordset_id) as recordset_count
-                 from
-                    dataset natural join recordset
-                 where
-                    dataset_id = $1) as my_recordsets
+            dataset
         where
-            c.dataset_id = $1
+            dataset_id = $1
         """
-    return await db.fetch(query, [dataset_id])
+
+    try:
+        record = await db.fetch(query, [dataset_id])
+    except Exception as e:
+        api_error(
+            "INTERNAL_ERROR",
+            "Error fetching dataset",
+            {"exception": type(e).__name__, "message": str(e)},
+            500,
+        )
+
+    if not record:
+        api_error("NOT_FOUND", "Dataset not found", {"dataset_id": dataset_id}, 404)
+    return item_response(record[0])
+
 
 @router.get("/datasets/{dataset_id}/recordsets")
 async def get_recordsets_by_dataset(dataset_id: int, db: Database = Depends()):
@@ -212,6 +247,7 @@ async def get_recordsets_by_dataset(dataset_id: int, db: Database = Depends()):
         """
     return await db.fetch(query, [dataset_id])
 
+
 @router.get("/datasets/{dataset_id}/releases")
 async def get_releases_by_dataset(dataset_id: int, db: Database = Depends()):
     query = """\
@@ -228,6 +264,7 @@ async def get_releases_by_dataset(dataset_id: int, db: Database = Depends()):
             c.dataset_id = $1;
         """
     return await db.fetch(query, [dataset_id])
+
 
 #Note added recordset_release_id as input
 #This structure implies the recordset_release record was inserted prior to this call
@@ -249,6 +286,7 @@ async def add_release_to_dataset(dataset_id: int, recordset_release_id: int, db:
     return {
         'status': 'success',
     }
+
 
 @router.get("/dataset-releases/{dataset_release_id}")
 async def get_dataset_release_details_by_id(dataset_release_id: int, db: Database = Depends()):
@@ -284,6 +322,7 @@ async def get_dataset_recordsets( db: Database = Depends()):
             recordset r;
         """
     return await db.fetch(query)
+
 
 #Purpose: Get recordset detail
 @router.get("/recordsets/{recordset_id}")
@@ -326,6 +365,7 @@ async def create_recordset(dataset_id: int, db: Database = Depends()):
         raise HTTPException(detail="Error updating edit status", status_code=422)
     return {'status': 'success'}
 
+
 # #Purpose: Update recordset metadata
 @router.put("/recordsets/{recordset_id}")
 async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Database = Depends()):
@@ -367,6 +407,7 @@ async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Data
 
     return {'status': 'success'}
 
+
 # Purpose: List immutable releases for a recordset
 @router.get("/recordsets/{recordset_id}/releases")
 async def get_recordset_releases_by_id(recordset_id: int, db: Database = Depends()):
@@ -387,6 +428,7 @@ async def get_recordset_releases_by_id(recordset_id: int, db: Database = Depends
             r.recordset_id = $1;
         """
     return await db.fetch(query,[recordset_id])
+
 
 # Purpose: List draft releases for a recordset
 @router.get("/recordsets/{recordset_id}/drafts")
@@ -409,6 +451,7 @@ async def get_recordset_drafts_by_id(recordset_id: int, db: Database = Depends()
             r.recordset_id = $1;
         """
     return await db.fetch(query, [recordset_id])
+
 
 # Purpose: Get latest immutable release
 @router.get("/recordsets/{recordset_id}/latest-release")
@@ -451,6 +494,7 @@ async def get_recordset_available_draft_files(recordset_draft_id: int, db: Datab
         """
     return await db.fetch(query,[recordset_draft_id])
 
+
 # Purpose: List candidate files available for inclusion (release)
 @router.get("/recordsets/{recordset_release_id}/available-release-files")
 async def get_recordset_available_release_files(recordset_release_id: int, db: Database = Depends()):
@@ -484,6 +528,7 @@ async def get_dataset_release_by_id(release_id: int, db: Database = Depends()):
         """
     return await db.fetch(query,[release_id])
 
+
 # Purpose: Update dataset release metadata
 @router.put("/datasets/releases/{release_id}")
 async def update_dataset_release_by_id(release_id: int,  payload: DatasetReleaseUpdate, db: Database = Depends()):
@@ -499,6 +544,7 @@ async def update_dataset_release_by_id(release_id: int,  payload: DatasetRelease
     if not record:
         raise HTTPException(status_code=422, detail="Error updating release")
     return {"status": "success"}
+
 
 # Purpose: List recordset releases included in a dataset release
 @router.get("/datasets/releases/{release_id}/recordsets")
@@ -516,6 +562,7 @@ async def get_recordsets_for_dataset_release_by_id(release_id: int, db: Database
         and rs.active ;
         """
     return await db.fetch(query,[release_id])
+
 
 # Purpose: Add recordset releases to a dataset release
 @router.post("/datasets/releases/{release_id}/recordsets:add")
@@ -559,6 +606,7 @@ async def remove_recordset_release_from_dataset_release_by_id(release_id: int, r
             )
     return {"status": "success"}
 
+
 # Purpose: List transfers for a dataset release
 @router.get("/datasets/releases/{release_id}/transfers")
 async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database = Depends()):
@@ -575,6 +623,7 @@ async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database 
         where drt.dataset_release_id = $1;
         """
     return await db.fetch(query,[release_id])
+
 
 # Purpose: Create transfer for a dataset release
 @router.post("/datasets/releases/{release_id}/transfers")
