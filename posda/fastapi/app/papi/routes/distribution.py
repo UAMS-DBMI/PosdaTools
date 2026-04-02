@@ -18,6 +18,16 @@ class RecordsetUpdate(BaseModel):
     recordset_name: Optional[str] = None
     recordset_type: Optional[str] = None
 
+
+class RecordsetCreate(BaseModel):
+    recordset_doi: str
+    dataset_id: int
+    license_id: int
+    recordset_type: str
+    recordset_title: str
+    recordset_name: str
+    active: bool = True
+
 class DatasetReleaseUpdate(BaseModel):
     release_notes: Optional[str] = "New release"
 
@@ -486,19 +496,157 @@ async def create_dataset_release(
 
 @router.get("/recordsets")
 # List recordsets
-async def get_recordsets( db: Database = Depends()):
-    query = """\
+async def get_recordsets(
+    dataset_id: Optional[int] = Query(default=None),
+    search: Optional[str] = Query(default=None),
+    active_only: Optional[bool] = Query(default=None),
+    db: Database = Depends()):
+
+    where_clauses = []
+    values = []
+    idx = 1
+
+    if dataset_id is not None:
+        where_clauses.append(f"r.dataset_id = ${idx}")
+        values.append(dataset_id)
+        idx += 1
+
+    if search:
+        where_clauses.append(
+            f"""(
+                r.recordset_title ilike ${idx}
+                or r.recordset_name ilike ${idx}
+                or r.recordset_doi ilike ${idx}
+            )"""
+        )
+        values.append(f"%{search}%")
+        idx += 1
+
+    if active_only is True:
+        where_clauses.append("r.active = true")
+
+    where_sql = f"where {' and '.join(where_clauses)}" if where_clauses else ""
+
+    query = f"""\
         select
             r.recordset_id,
             r.recordset_doi,
             r.dataset_id,
+            r.license_id,            
             r.recordset_type,
             r.recordset_title,
-            r.recordset_name
+            r.recordset_name,
+            r.active
         from
-            recordset r;
+            recordset r
+        {where_sql}
+        order by r.recordset_id
         """
-    return await db.fetch(query)
+
+    try:
+        records = await db.fetch(query, values)
+    except Exception as e:
+        api_error(
+            "INTERNAL_ERROR",
+            "Error fetching recordsets",
+            {"exception": type(e).__name__, "message": str(e)},
+            500,
+        )
+
+    return list_response(records)
+
+
+
+@router.post("/recordsets")
+# Create recordset
+async def create_recordset(
+    payload: RecordsetCreate,
+    current_user: User = logged_in_user,
+    db: Database = Depends(),
+):
+    if (
+        not payload.recordset_doi.strip()
+        or not payload.recordset_type.strip()
+        or not payload.recordset_title.strip()
+        or not payload.recordset_name.strip()
+    ):
+        api_error(
+            "VALIDATION_ERROR",
+            "Required recordset fields must be non-empty",
+            {
+                "required": [
+                    "recordset_doi",
+                    "recordset_type",
+                    "recordset_title",
+                    "recordset_name",
+                ]
+            },
+            422,
+        )
+
+    query = """\
+        insert into recordset (
+            recordset_doi,
+            dataset_id,
+            license_id,
+            recordset_type,
+            recordset_title,
+            recordset_name,
+            active,
+            when_created,
+            when_updated,
+            who_created,
+            who_updated
+        )
+        values ($1, $2, $3, $4, $5, $6, $7, now(), now(), $8, $8)
+        returning
+            recordset_id,
+            dataset_id,
+            license_id,
+            recordset_type,
+            recordset_title,
+            recordset_name,
+            active,
+            when_created,
+            when_updated
+        """
+
+    values = [
+        payload.recordset_doi,
+        payload.dataset_id,
+        payload.license_id,
+        payload.recordset_type,
+        payload.recordset_title,
+        payload.recordset_name,
+        payload.active,
+        current_user.username,
+    ]
+
+    try:
+        record = await db.fetch(query, values)
+    except asyncpg.exceptions.UniqueViolationError as e:
+        api_error(
+            "CONFLICT",
+            "Recordset DOI already exists",
+            {"exception": type(e).__name__, "message": str(e)},
+            409,
+        )
+    except asyncpg.exceptions.ForeignKeyViolationError as e:
+        api_error(
+            "VALIDATION_ERROR",
+            "Invalid dataset_id or license_id",
+            {"exception": type(e).__name__, "message": str(e)},
+            422,
+        )
+    except Exception as e:
+        api_error(
+            "INTERNAL_ERROR",
+            "Error creating recordset",
+            {"exception": type(e).__name__, "message": str(e)},
+            500,
+        )
+
+    return item_response(record[0])
 
 
 #Purpose: Get recordset detail
