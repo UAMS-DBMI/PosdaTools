@@ -69,6 +69,9 @@ class RecordsetCreate(BaseModel):
     recordset_name: str
     active: bool = True
 
+class DestinationUpdate(BaseModel):
+    default_display: Optional[str] = None
+    default_transfer_mode: Optional[str] = None
 
 def item_response(data):
     return {"data": data}
@@ -446,46 +449,6 @@ async def create_dataset_release(
         api_error("NOT_FOUND", "Dataset not found", {"dataset_id": dataset_id}, 404)
 
     return item_response(record[0])
-
-
-
-# #Note added recordset_release_id as input
-# #This structure implies the recordset_release record was inserted prior to this call
-# #It also assumes that the PK and release number are auto-incrementing
-# @router.post("/datasets/{dataset_id}/releases/{recordset_release_id}")
-# async def add_release_to_dataset(dataset_id: int, recordset_release_id: int, db: Database = Depends()):
-#     record = await db.fetch("""\
-#         with new_release as (
-#             insert into dataset_release (dataset_id, release_date)
-#             values ($1, now())
-#             returning dataset_release_id
-#         )
-#         insert into dataset_release_recordset (dataset_release_id, recordset_release_id)
-#         select dataset_release_id, $2 from new_release
-#     """, [dataset_id,recordset_release_id])
-#     print(record)
-#     if not record:
-#         raise HTTPException(detail="Error updating edit status", status_code=422)
-#     return {
-#         'status': 'success',
-#     }
-
-
-# @router.get("/dataset-releases/{dataset_release_id}")
-# async def get_dataset_release_details_by_id(dataset_release_id: int, db: Database = Depends()):
-#     query = """\
-#         select
-#             cr.dataset_release_id,
-#             cr.release_number,
-#             cr.release_date,
-#             crds.recordset_release_id
-#         from
-#             dataset_release cr
-#             natural join dataset_release_recordset crds
-#         where
-#             cr.dataset_release_id = $1;
-#         """
-#     return await db.fetch(query, [dataset_release_id])
 
 # -----------------------------------------DATASET RELEASES------------------------------------------------
 
@@ -985,22 +948,6 @@ async def get_recordset(recordset_id: int, db: Database = Depends()):
 
     return item_response(record[0])
 
-
-
-# @router.post("/recordsets/{dataset_id}/")
-# # Create recordset
-# async def create_recordset(dataset_id: int, db: Database = Depends()):
-#     record = await db.fetch("""\
-#             insert into recordset (dataset_id, when_created)
-#             values ($1, now())
-#             returning recordset_id
-#     """, [dataset_id])
-
-#     if not record:
-#         raise HTTPException(detail="Error updating edit status", status_code=422)
-#     return {'status': 'success'}
-
-
 @router.put("/recordsets/{recordset_id}")
 # Update recordset
 async def update_recordset(
@@ -1202,72 +1149,10 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
     return list_response(records)
 
 
-
-
-
-
-# # Purpose: Get latest immutable release
-# @router.get("/recordsets/{recordset_id}/latest-release")
-# async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = Depends()):
-#     query = """\
-#         select
-#             r.recordset_release_id,
-#             r.recordset_id,
-#             r.release_number,
-#             r.release_date,
-#             r.release_notes,
-#             r.when_created,
-#             r.who_created,
-#             r.when_updated,
-#             r.who_updated
-#         from
-#             recordset_release r
-#         where
-#             r.recordset_id = $1
-#         order by r.release_number desc
-#         limit 1;
-#         """
-#     return await db.fetch(query, [recordset_id])
-
-
-# #Unclear on the use of available files, so starting with a draft and release version
-
-
-# # Purpose: List candidate files available for inclusion (draft)
-# @router.get("/recordsets/{recordset_draft_id}/available-draft-files")
-# async def get_recordset_available_draft_files(recordset_draft_id: int, db: Database = Depends()):
-#     query = """\
-#         select
-#             r.recordset_draft_id,
-#             r.file_id
-#         from
-#             recordset_draft_file r
-#         where
-#             r.recordset_draft_id = $1;
-#         """
-#     return await db.fetch(query,[recordset_draft_id])
-
-
-# # Purpose: List candidate files available for inclusion (release)
-# @router.get("/recordsets/{recordset_release_id}/available-release-files")
-# async def get_recordset_available_release_files(recordset_release_id: int, db: Database = Depends()):
-#     query = """\
-#         select
-#             r.recordset_release_id,
-#             r.file_id
-#         from
-#             recordset_release_file r
-#         where
-#             r.recordset_release_id = $1;
-#         """
-#     return await db.fetch(query,[recordset_release_id])
-
-
-
 # -----------------------------------------RECORDSET DESTINATION CONFIGURATION------------------------------------------------
 
-# Purpose: List destination configuration rows for a recordset
 @router.get("/recordsets/{recordset_id}/destinations")
+# List destination configuration rows for a recordset
 async def get_recordset_destination_list(recordset_id: int, db: Database = Depends()):
     query = """\
         select
@@ -1275,11 +1160,20 @@ async def get_recordset_destination_list(recordset_id: int, db: Database = Depen
             td.name,
             rd.default_display,
             rd.default_transfer_mode
-            from recordset_destination rd
-            natural join transfer_destination td
-            where rd.recordset_id = $1;
+        from recordset_destination rd
+            join transfer_destination td using (destination_id)
+        where
+            rd.recordset_id = $1;
         """
-    return await db.fetch(query,[recordset_id])
+    try:
+        records = await db.fetch(query, [recordset_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset releases",
+            context={"recordset_id": recordset_id},
+        )
+    return list_response(records)
 
 # Purpose: Get one destination configuration row for a recordset
 @router.get("/recordsets/{recordset_id}/destinations/{destination_id}")
@@ -1290,24 +1184,64 @@ async def get_recordset_destination_by_id(recordset_id: int, destination_id: int
             td.name,
             rd.default_display,
             rd.default_transfer_mode
-            from recordset_destination rd
-            natural join transfer_destination td
-            where rd.recordset_id = $1 and rd.destination_id = $2;
+        from recordset_destination rd
+            join transfer_destination td using (destination_id)
+        where
+            rd.recordset_id = $1 and rd.destination_id = $2;
         """
-    return await db.fetch(query,[recordset_id,destination_id])
+    try:
+        records = await db.fetch(query, [recordset_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset releases",
+            context={"recordset_id": recordset_id, "destination_id": destination_id},
+        )
+    return list_response(records)
 
-# Purpose: Create or replace destination configuration for a recordset
 @router.put("/recordsets/{recordset_id}/destinations/{destination_id}")
-async def upsert_recordset_destination(recordset_id: int, destination_id: int, db: Database = Depends()):
-    query = """\
-        insert into recordset_destination
-            (recordset_id, destination_id)
-        values ($1, $2)
-        ON CONFLICT (recordset_id) DO UPDATE
-        set destination_id = $2
-        returning *;
+# Create or replace destination configuration for a recordset
+async def update_recordset_destination(
+    recordset_id: int,
+    destination_id: int,
+    payload: DestinationUpdate,
+    db: Database = Depends()
+):
+    insert_columns = ["recordset_id", "destination_id"]
+    insert_values = ["$1", "$2"]
+    update_clauses = []
+
+    values = [recordset_id, destination_id]
+    idx = 3  # next placeholder index
+
+    if payload.default_display is not None:
+        insert_columns.append("default_display")
+        insert_values.append(f"${idx}")
+        update_clauses.append(f"default_display = EXCLUDED.default_display")
+        values.append(payload.default_display)
+        idx += 1
+
+    if payload.default_transfer_mode is not None:
+        insert_columns.append("default_transfer_mode")
+        insert_values.append(f"${idx}")
+        update_clauses.append(f"default_transfer_mode = EXCLUDED.default_transfer_mode")
+        values.append(payload.default_transfer_mode)
+        idx += 1
+
+    if not update_clauses:
+        raise HTTPException(status_code=422, detail="No fields provided")
+
+    query = f"""
+        insert into recordset_destination ({', '.join(insert_columns)})
+        values ({', '.join(insert_values)})
+        on conflict (recordset_id, destination_id)
+        do update set {', '.join(update_clauses)}
+        returning *
     """
-    record = await db.fetch(query, [recordset_id, destination_id])
+
+    record = await db.fetch(query, values)
+
     if not record:
-        raise HTTPException(detail="Error updating edit status", status_code=422)
-    return {'status': 'success'}
+        raise HTTPException(status_code=422, detail="Upsert failed")
+
+    return record[0]
