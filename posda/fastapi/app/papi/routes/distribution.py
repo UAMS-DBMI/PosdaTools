@@ -52,9 +52,13 @@ class DatasetReleaseTransferInsert(BaseModel):
     transfer_status: Optional[str] = "draft"
 
 class RecordsetUpdate(BaseModel):
+    recordset_doi: Optional[str] = None
+    dataset_id: Optional[int] = None
+    license_id: Optional[int] = None
     recordset_title: Optional[str] = None
     recordset_name: Optional[str] = None
     recordset_type: Optional[str] = None
+    active: Optional[bool] = None
 
 class RecordsetCreate(BaseModel):
     recordset_doi: str
@@ -239,7 +243,7 @@ async def create_dataset(
 
 @router.get("/datasets/{dataset_id}")
 # Get dataset detail
-async def get_dataset_by_id(dataset_id: int, db: Database = Depends()):
+async def get_dataset(dataset_id: int, db: Database = Depends()):
     query = """\
         select
             dataset_id,
@@ -275,16 +279,21 @@ async def update_dataset(
     current_user: User = logged_in_user,
     db: Database = Depends()):
 
-    field_values = []
+    updates = []
+    values = []
+    idx = 1
 
     def add_text_field(column_name: str, value: Optional[str]):
+        nonlocal idx
         if value is None:
             return
 
         if not value.strip():
             api_error("VALIDATION_ERROR", f"{column_name} must be non-empty", {"field": column_name}, 422)
 
-        field_values.append((column_name, value))
+        updates.append(f"{column_name} = ${idx}")
+        values.append(value)
+        idx += 1
 
     add_text_field("dataset_type", payload.dataset_type)
     add_text_field("dataset_title", payload.dataset_title)
@@ -293,18 +302,19 @@ async def update_dataset(
     add_text_field("dataset_doi", payload.dataset_doi)
 
     if payload.active is not None:
-        field_values.append(("active", payload.active))
+        updates.append(f"active = ${idx}")
+        values.append(payload.active)
+        idx += 1
 
-    if not field_values:
+    if not updates:
         api_error("VALIDATION_ERROR", "No dataset fields were provided", {}, 422)
 
-    values = [value for _, value in field_values]
-    updates = [f"{column_name} = ${index}" for index, (column_name, _) in enumerate(field_values, start=1)]
     updates.append("when_updated = now()")
-    updates.append(f"who_updated = ${len(values) + 1}")
+    updates.append(f"who_updated = ${idx}")
     values.append(current_user.username)
+    idx += 1
 
-    dataset_id_placeholder = len(values) + 1
+    dataset_id_placeholder = idx
 
     query = f"""\
         update dataset
@@ -337,7 +347,7 @@ async def update_dataset(
 
 @router.get("/datasets/{dataset_id}/recordsets")
 # List recordsets by dataset
-async def get_recordsets_by_dataset(
+async def get_recordsets_for_dataset(
     dataset_id: int,
     active_only: Optional[bool] = Query(default=None),
     db: Database = Depends()):
@@ -374,7 +384,7 @@ async def get_recordsets_by_dataset(
 
 @router.get("/datasets/{dataset_id}/releases")
 # List dataset releases by dataset
-async def get_releases_by_dataset(
+async def get_releases_for_dataset(
     dataset_id: int,
     latest_only: Optional[bool] = Query(default=None),
     db: Database = Depends()):
@@ -481,7 +491,7 @@ async def create_dataset_release(
 
 @router.get("/datasets/releases/{release_id}")
 # Get dataset release detail
-async def get_dataset_release_by_id(release_id: int, db: Database = Depends()):
+async def get_dataset_release(release_id: int, db: Database = Depends()):
     query = """\
         select
             dr.dataset_release_id,
@@ -509,36 +519,45 @@ async def get_dataset_release_by_id(release_id: int, db: Database = Depends()):
 
 @router.put("/datasets/releases/{release_id}")
 # Update dataset release
-async def update_dataset_release_by_id(
+async def update_dataset_release(
     release_id: int,
     payload: DatasetReleaseUpdate,
     current_user: User = logged_in_user,
     db: Database = Depends()):
 
-    field_values = []
+    updates = []
+    values = []
+    idx = 1
 
     if payload.dataset_id is not None:
-        field_values.append(("dataset_id", payload.dataset_id))
+        updates.append(f"dataset_id = ${idx}")
+        values.append(payload.dataset_id)
+        idx += 1
 
     if payload.release_number is not None:
-        field_values.append(("release_number", payload.release_number))
+        updates.append(f"release_number = ${idx}")
+        values.append(payload.release_number)
+        idx += 1
 
     if payload.release_date is not None:
-        field_values.append(("release_date", payload.release_date))
+        updates.append(f"release_date = ${idx}")
+        values.append(payload.release_date)
+        idx += 1
 
     if payload.release_notes is not None:
-        field_values.append(("release_notes", payload.release_notes))
+        updates.append(f"release_notes = ${idx}")
+        values.append(payload.release_notes)
+        idx += 1
 
-    if not field_values:
+    if not updates:
         api_error("VALIDATION_ERROR", "No dataset release fields were provided", {}, 422)
 
-    values = [value for _, value in field_values]
-    updates = [f"{column_name} = ${index}" for index, (column_name, _) in enumerate(field_values, start=1)]
     updates.append("when_updated = now()")
-    updates.append(f"who_updated = ${len(values) + 1}")
+    updates.append(f"who_updated = ${idx}")
     values.append(current_user.username)
+    idx += 1
 
-    release_id_placeholder = len(values) + 1
+    release_id_placeholder = idx
 
     query = f"""
         update dataset_release
@@ -571,7 +590,7 @@ async def update_dataset_release_by_id(
 
 @router.get("/datasets/releases/{release_id}/recordsets")
 # List recordset releases in a dataset release
-async def get_recordsets_for_dataset_release_by_id(release_id: int, db: Database = Depends()):
+async def get_recordsets_for_dataset_release(release_id: int, db: Database = Depends()):
     query = """\
         select
 			rr.recordset_id,
@@ -594,7 +613,7 @@ async def get_recordsets_for_dataset_release_by_id(release_id: int, db: Database
 
 @router.post("/datasets/releases/{release_id}/recordsets:add")
 # Add recordset releases to a dataset release
-async def add_recordset_release_to_dataset_release_by_id(
+async def add_recordset_release_to_dataset_release(
     release_id: int,
     payload: DatasetReleaseRecordsetRequest,
     db: Database = Depends()):
@@ -648,7 +667,7 @@ async def add_recordset_release_to_dataset_release_by_id(
 
 @router.post("/datasets/releases/{release_id}/recordsets:remove")
 # Remove recordset releases from a dataset release
-async def remove_recordset_release_from_dataset_release_by_id(
+async def remove_recordset_release_from_dataset_release(
     release_id: int,
     payload: DatasetReleaseRecordsetRequest,
     db: Database = Depends()):
@@ -701,7 +720,7 @@ async def remove_recordset_release_from_dataset_release_by_id(
 
 @router.get("/datasets/releases/{release_id}/transfers")
 # List transfers for a dataset release
-async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database = Depends()):
+async def get_transfers_for_dataset_release(release_id: int, db: Database = Depends()):
     query = """\
         select
             drt.dataset_release_transfer_id,
@@ -730,7 +749,7 @@ async def get_transfers_for_dataset_release_by_id(release_id: int, db: Database 
 
 @router.post("/datasets/releases/{release_id}/transfers")
 # Create transfer for a dataset release
-async def create_transfer_for__dataset_release_by_id(release_id: int,payload: DatasetReleaseTransferInsert,  db: Database = Depends()):
+async def create_transfer_for_dataset_release(release_id: int,payload: DatasetReleaseTransferInsert,  db: Database = Depends()):
     if payload.destination_id <= 0 or not payload.transfer_name.strip() or not payload.transfer_mode.strip():
         api_error(
             "VALIDATION_ERROR",
@@ -858,8 +877,8 @@ async def get_recordsets(
 async def create_recordset(
     payload: RecordsetCreate,
     current_user: User = logged_in_user,
-    db: Database = Depends(),
-):
+    db: Database = Depends()):
+
     if (
         not payload.recordset_doi.strip()
         or not payload.recordset_type.strip()
@@ -932,7 +951,7 @@ async def create_recordset(
 
 @router.get("/recordsets/{recordset_id}")
 # Get recordset detail
-async def get_recordset_by_id(recordset_id: int, db: Database = Depends()):
+async def get_recordset(recordset_id: int, db: Database = Depends()):
     query = """\
         select
             r.recordset_id,
@@ -968,92 +987,132 @@ async def get_recordset_by_id(recordset_id: int, db: Database = Depends()):
 
 
 
+# @router.post("/recordsets/{dataset_id}/")
+# # Create recordset
+# async def create_recordset(dataset_id: int, db: Database = Depends()):
+#     record = await db.fetch("""\
+#             insert into recordset (dataset_id, when_created)
+#             values ($1, now())
+#             returning recordset_id
+#     """, [dataset_id])
+
+#     if not record:
+#         raise HTTPException(detail="Error updating edit status", status_code=422)
+#     return {'status': 'success'}
 
 
-
-
-
-#Purpose: Create recordset
-@router.post("/recordsets/{dataset_id}/")
-async def create_recordset(dataset_id: int, db: Database = Depends()):
-    record = await db.fetch("""\
-            insert into recordset (dataset_id, when_created)
-            values ($1, now())
-            returning recordset_id
-    """, [dataset_id])
-
-    if not record:
-        raise HTTPException(detail="Error updating edit status", status_code=422)
-    return {'status': 'success'}
-
-
-# #Purpose: Update recordset metadata
 @router.put("/recordsets/{recordset_id}")
-async def update_recordset(recordset_id: int, payload: RecordsetUpdate, db: Database = Depends()):
+# Update recordset
+async def update_recordset(
+    recordset_id: int,
+    payload: RecordsetUpdate,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
     updates = []
     values = []
     idx = 1
 
-    if payload.recordset_title is not None:
-        updates.append(f"recordset_title = ${idx}")
-        values.append(payload.recordset_title)
+    def add_text_field(column_name: str, value: Optional[str]):
+        nonlocal idx
+        if value is None:
+            return
+
+        if not value.strip():
+            api_error("VALIDATION_ERROR", f"{column_name} must be non-empty", {"field": column_name}, 422)
+
+        updates.append(f"{column_name} = ${idx}")
+        values.append(value)
         idx += 1
 
-    if payload.recordset_name is not None:
-        updates.append(f"recordset_name = ${idx}")
-        values.append(payload.recordset_name)
+    add_text_field("recordset_doi", payload.recordset_doi)
+    add_text_field("recordset_type", payload.recordset_type)
+    add_text_field("recordset_title", payload.recordset_title)
+    add_text_field("recordset_name", payload.recordset_name)
+
+    if payload.dataset_id is not None:
+        updates.append(f"dataset_id = ${idx}")
+        values.append(payload.dataset_id)
         idx += 1
 
-    if payload.recordset_type is not None:
-        updates.append(f"recordset_type = ${idx}")
-        values.append(payload.recordset_type)
+    if payload.license_id is not None:
+        updates.append(f"license_id = ${idx}")
+        values.append(payload.license_id)
+        idx += 1
+
+    if payload.active is not None:
+        updates.append(f"active = ${idx}")
+        values.append(payload.active)
         idx += 1
 
     if not updates:
-        raise HTTPException(status_code=400, detail="No fields to update")
+        api_error("VALIDATION_ERROR", "No recordset fields were provided", {}, 422)
 
-    query = f"""
-        update recordset
-        set {", ".join(updates)}
-        where recordset_id = ${idx}
-        returning *
-    """
+    updates.append("when_updated = now()")
+    updates.append(f"who_updated = ${idx}")
+    values.append(current_user.username)
+    idx += 1
 
+    recordset_id_placeholder = idx
     values.append(recordset_id)
 
-    record = await db.fetch(query, values)
+    query = f"""\
+        with updated as (
+            update recordset
+            set {', '.join(updates)}
+            where recordset_id = ${recordset_id_placeholder}
+            returning
+                recordset_id,
+                recordset_doi,
+                dataset_id,
+                license_id,
+                recordset_type,
+                recordset_title,
+                recordset_name,
+                active,
+                when_created,
+                who_created,
+                when_updated,
+                who_updated
+        )
+        select
+            u.recordset_id,
+            u.recordset_doi,
+            u.dataset_id,
+            u.recordset_type,
+            u.recordset_title,
+            u.recordset_name,
+            u.active,
+            u.when_created,
+            u.who_created,
+            u.when_updated,
+            u.who_updated,
+            rl.license_id,
+            rl.license_label,
+            rl.license_url,
+            rl.is_public_access
+        from updated u
+        join recordset_license rl using (license_id)
+        """
+
+    try:
+        record = await db.fetch(query, values)
+    except Exception as e:
+        db_error(
+            e,
+            operation="updating recordset",
+            context={"recordset_id": recordset_id},
+        )
 
     if not record:
-        raise HTTPException(detail="Error updating edit status", status_code=422)
+        api_error("NOT_FOUND", "Recordset not found", {"recordset_id": recordset_id}, 404)
 
-    return {'status': 'success'}
-
-
-# Purpose: List immutable releases for a recordset
-@router.get("/recordsets/{recordset_id}/releases")
-async def get_recordset_releases_by_id(recordset_id: int, db: Database = Depends()):
-    query = """\
-        select
-            r.recordset_release_id,
-            r.recordset_id,
-            r.release_number,
-            r.release_date,
-            r.release_notes,
-            r.when_created,
-            r.who_created,
-            r.when_updated,
-            r.who_updated
-        from
-            recordset_release r
-        where
-            r.recordset_id = $1;
-        """
-    return await db.fetch(query,[recordset_id])
+    return item_response(record[0])
 
 
-# Purpose: List draft releases for a recordset
 @router.get("/recordsets/{recordset_id}/drafts")
-async def get_recordset_drafts_by_id(recordset_id: int, db: Database = Depends()):
+# List draft releases for a recordset
+async def get_recordset_drafts(recordset_id: int, db: Database = Depends()):
     query = """\
         select
             r.recordset_draft_id,
@@ -1065,18 +1124,42 @@ async def get_recordset_drafts_by_id(recordset_id: int, db: Database = Depends()
             r.when_created,
             r.who_created,
             r.when_updated,
-            r.who_updated
+            r.who_updated,
+            count(rdf.file_id)::int as file_count
         from
             recordset_draft r
+            left join recordset_draft_file rdf using (recordset_draft_id)
         where
-            r.recordset_id = $1;
+            r.recordset_id = $1
+        group by
+            r.recordset_draft_id,
+            r.recordset_id,
+            r.cloned_from_release_id,
+            r.draft_name,
+            r.draft_status,
+            r.draft_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
+        order by
+            r.recordset_draft_id;
         """
-    return await db.fetch(query, [recordset_id])
+    try:
+        records = await db.fetch(query, [recordset_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset drafts",
+            context={"recordset_id": recordset_id},
+        )
+
+    return list_response(records)
 
 
-# Purpose: Get latest immutable release
-@router.get("/recordsets/{recordset_id}/latest-release")
-async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = Depends()):
+@router.get("/recordsets/{recordset_id}/releases")
+# List immutable releases for a recordset
+async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
     query = """\
         select
             r.recordset_release_id,
@@ -1087,48 +1170,97 @@ async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = D
             r.when_created,
             r.who_created,
             r.when_updated,
-            r.who_updated
+            r.who_updated,
+            count(rrf.file_id)::int as file_count
         from
             recordset_release r
+            left join recordset_release_file rrf using (recordset_release_id)
         where
             r.recordset_id = $1
-        order by r.release_number desc
-        limit 1;
-        """
-    return await db.fetch(query, [recordset_id])
-
-
-#Unclear on the use of available files, so starting with a draft and release version
-
-
-# Purpose: List candidate files available for inclusion (draft)
-@router.get("/recordsets/{recordset_draft_id}/available-draft-files")
-async def get_recordset_available_draft_files(recordset_draft_id: int, db: Database = Depends()):
-    query = """\
-        select
-            r.recordset_draft_id,
-            r.file_id
-        from
-            recordset_draft_file r
-        where
-            r.recordset_draft_id = $1;
-        """
-    return await db.fetch(query,[recordset_draft_id])
-
-
-# Purpose: List candidate files available for inclusion (release)
-@router.get("/recordsets/{recordset_release_id}/available-release-files")
-async def get_recordset_available_release_files(recordset_release_id: int, db: Database = Depends()):
-    query = """\
-        select
+        group by
             r.recordset_release_id,
-            r.file_id
-        from
-            recordset_release_file r
-        where
-            r.recordset_release_id = $1;
+            r.recordset_id,
+            r.release_number,
+            r.release_date,
+            r.release_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
+        order by
+            r.release_number;
         """
-    return await db.fetch(query,[recordset_release_id])
+    try:
+        records = await db.fetch(query, [recordset_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset releases",
+            context={"recordset_id": recordset_id},
+        )
+
+    return list_response(records)
+
+
+
+
+
+
+# # Purpose: Get latest immutable release
+# @router.get("/recordsets/{recordset_id}/latest-release")
+# async def get_recordset_latest_release_by_id(recordset_id: int, db: Database = Depends()):
+#     query = """\
+#         select
+#             r.recordset_release_id,
+#             r.recordset_id,
+#             r.release_number,
+#             r.release_date,
+#             r.release_notes,
+#             r.when_created,
+#             r.who_created,
+#             r.when_updated,
+#             r.who_updated
+#         from
+#             recordset_release r
+#         where
+#             r.recordset_id = $1
+#         order by r.release_number desc
+#         limit 1;
+#         """
+#     return await db.fetch(query, [recordset_id])
+
+
+# #Unclear on the use of available files, so starting with a draft and release version
+
+
+# # Purpose: List candidate files available for inclusion (draft)
+# @router.get("/recordsets/{recordset_draft_id}/available-draft-files")
+# async def get_recordset_available_draft_files(recordset_draft_id: int, db: Database = Depends()):
+#     query = """\
+#         select
+#             r.recordset_draft_id,
+#             r.file_id
+#         from
+#             recordset_draft_file r
+#         where
+#             r.recordset_draft_id = $1;
+#         """
+#     return await db.fetch(query,[recordset_draft_id])
+
+
+# # Purpose: List candidate files available for inclusion (release)
+# @router.get("/recordsets/{recordset_release_id}/available-release-files")
+# async def get_recordset_available_release_files(recordset_release_id: int, db: Database = Depends()):
+#     query = """\
+#         select
+#             r.recordset_release_id,
+#             r.file_id
+#         from
+#             recordset_release_file r
+#         where
+#             r.recordset_release_id = $1;
+#         """
+#     return await db.fetch(query,[recordset_release_id])
 
 
 
