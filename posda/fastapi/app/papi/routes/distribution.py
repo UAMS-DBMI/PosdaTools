@@ -79,11 +79,11 @@ def list_response(rows):
 
 
 def api_error(
-        code: str, 
-        message: str, 
-        details: Optional[dict] = None, 
+        code: str,
+        message: str,
+        details: Optional[dict] = None,
         status_code: int = 400):
-    
+
     raise HTTPException(
         status_code=status_code,
         detail={
@@ -101,7 +101,7 @@ def db_error(
     *,
     operation: str,
     context: Optional[dict] = None):
-    
+
     details = {"exception": type(e).__name__, "message": str(e), **(context or {})}
 
     if isinstance(e, asyncpg.exceptions.UniqueViolationError):
@@ -122,7 +122,7 @@ async def get_datasets(
     active_only: Optional[bool] = Query(default=None),
     type: Optional[str] = Query(default=None),
     db: Database = Depends()):
-    
+
     where_clauses = []
     values = []
     idx = 1
@@ -364,7 +364,7 @@ async def get_recordsets_for_dataset(
             rsl.is_public_access,
             rs.active
         from
-            dataset 
+            dataset
             join recordset rs using (dataset_id)
             join recordset_license rsl using (license_id)
         where
@@ -596,12 +596,12 @@ async def get_recordsets_for_dataset_release(release_id: int, db: Database = Dep
 			rr.recordset_id,
             rr.recordset_release_id,
             rs.recordset_title,
-            rr.release_number        
+            rr.release_number
         from dataset_release dr
         join dataset_release_recordset drr using (dataset_release_id)
         join recordset_release rr using (recordset_release_id)
         join recordset rs using (recordset_id)
-        where dr.dataset_release_id = $1        
+        where dr.dataset_release_id = $1
         """
     try:
         records = await db.fetch(query, [release_id])
@@ -617,7 +617,7 @@ async def add_recordset_release_to_dataset_release(
     release_id: int,
     payload: DatasetReleaseRecordsetRequest,
     db: Database = Depends()):
-    
+
     insert_query = """
             insert into dataset_release_recordset
             (dataset_release_id, recordset_release_id)
@@ -853,7 +853,7 @@ async def get_recordsets(
             r.recordset_id,
             r.recordset_doi,
             r.dataset_id,
-            r.license_id,            
+            r.license_id,
             r.recordset_type,
             r.recordset_title,
             r.recordset_name,
@@ -1264,10 +1264,6 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
 
 
 
-<<<<<<< HEAD
-=======
-    return await db.fetch(query, values)
-
 # -----------------------------------------RECORDSET DESTINATION CONFIGURATION------------------------------------------------
 
 # Purpose: List destination configuration rows for a recordset
@@ -1315,4 +1311,3 @@ async def upsert_recordset_destination(recordset_id: int, destination_id: int, d
     if not record:
         raise HTTPException(detail="Error updating edit status", status_code=422)
     return {'status': 'success'}
->>>>>>> 7c1ab9cd (recordset_destination endpoints)
