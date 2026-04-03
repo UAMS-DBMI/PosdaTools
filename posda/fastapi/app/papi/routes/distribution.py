@@ -73,6 +73,24 @@ class DestinationUpdate(BaseModel):
     default_display: Optional[str] = None
     default_transfer_mode: Optional[str] = None
 
+class RecordsetDraftInsert(BaseModel):
+    recordset_id: int
+    draft_name: str
+    draft_notes:  Optional[str] = None
+    draft_status: Optional[str] = "draft"
+
+class RecordsetDraftUpdate(BaseModel):
+    recordset_id: int
+    draft_name: Optional[str] = None
+    draft_notes:  Optional[str] = None
+    draft_status: Optional[str] = "draft"
+
+class DraftFileCreate(BaseModel):
+    file_ids: list[int]
+
+class DraftFileRemove(BaseModel):
+    file_ids: list[int]
+
 def item_response(data):
     return {"data": data}
 
@@ -1175,8 +1193,8 @@ async def get_recordset_destination_list(recordset_id: int, db: Database = Depen
         )
     return list_response(records)
 
-# Purpose: Get one destination configuration row for a recordset
 @router.get("/recordsets/{recordset_id}/destinations/{destination_id}")
+# Get one destination configuration row for a recordset
 async def get_recordset_destination_by_id(recordset_id: int, destination_id: int, db: Database = Depends()):
     query = """\
         select
@@ -1245,3 +1263,324 @@ async def update_recordset_destination(
         raise HTTPException(status_code=422, detail="Upsert failed")
 
     return record[0]
+
+# -----------------------------------------DRAFT-RECORDSETS-RELEASES-----------------------------------------------
+
+@router.post("/recordsets/{recordset_id}/drafts")
+# Create draft release
+async def create_recordset_draft_by_id(recordset_id: int,
+    payload: RecordsetDraftInsert,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
+    insert_columns = []
+    insert_values = []
+    idx = 1
+
+    if payload.recordset_id is not None:
+        insert_columns.append(f"recordset_id")
+        insert_values.append(payload.recordset_id)
+        idx += 1
+
+    if payload.draft_name is not None:
+        insert_columns.append(f"draft_name")
+        insert_values.append(payload.draft_name)
+        idx += 1
+
+    if payload.draft_notes is not None:
+        insert_columns.append(f"draft_notes")
+        insert_values.append(payload.draft_notes)
+        idx += 1
+
+    if payload.draft_status is not None:
+        insert_columns.append(f"draft_status")
+        insert_values.append(payload.draft_status)
+        idx += 1
+
+    if not insert_columns:
+        api_error("VALIDATION_ERROR", "No recordset draft fields were provided", {}, 422)
+
+    insert_columns.append("when_created")
+    insert_columns.append(f"who_created")
+    insert_values.append("now()")
+    insert_values.append(current_user.username)
+    idx += 1
+
+    draft_id_placeholder = idx
+
+    query = """\
+        insert into recordset_draft({', '.join(insert_columns)})
+        values ({', '.join(insert_values)})
+        returning *;
+    """
+    values.append(draft_id)
+
+    try:
+        record = await db.fetch(query, values)
+    except Exception as e:
+        db_error(e, operation="updating dataset release", context={"draft_id": draft_id})
+
+    if not record:
+        api_error("NOT_FOUND", "Draft recordset release not found", {"draft_id": draft_id}, 404)
+
+    return item_response(record[0])
+
+
+@router.get("/recordsets/drafts/{draft_id}")
+# Get draft detail
+async def get_recordset_draft_by_id(draft_id: int,  db: Database = Depends()):
+    query = """\
+        select
+            rd.recordset_draft_id,
+            rd.recordset_id,
+            rd.draft_name,
+            rd.draft_status,
+            rd.draft_notes,
+            rd.cloned_from_release_id,
+            rd.when_created
+        from
+            recordset_draft rd
+        where
+            rd.recordset_draft_id = $1;
+        """
+    try:
+        records = await db.fetch(query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset drafts",
+            context={"draft_id": draft_id},
+        )
+    return list_response(records)
+
+@router.put("/recordsets/drafts/{draft_id}")
+# Update draft metadata
+async def update_recordset_draft_by_id(draft_id: int,
+    payload: RecordsetDraftUpdate,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
+    updates = []
+    values = []
+    idx = 1
+
+    if payload.recordset_id is not None:
+        updates.append(f"recordset_id = ${idx}")
+        values.append(payload.recordset_id)
+        idx += 1
+
+    if payload.draft_name is not None:
+        updates.append(f"draft_name = ${idx}")
+        values.append(payload.draft_name)
+        idx += 1
+
+    if payload.draft_notes is not None:
+        updates.append(f"draft_notes = ${idx}")
+        values.append(payload.draft_notes)
+        idx += 1
+
+    if payload.draft_status is not None:
+        updates.append(f"draft_status = ${idx}")
+        values.append(payload.draft_status)
+        idx += 1
+
+    if not updates:
+        api_error("VALIDATION_ERROR", "No dataset release fields were provided", {}, 422)
+
+    updates.append("when_updated = now()")
+    updates.append(f"who_updated = ${idx}")
+    values.append(current_user.username)
+    idx += 1
+
+    draft_id_placeholder = idx
+
+    query = f"""\
+        update
+            recordset_draft
+            set {', '.join(updates)}
+            where recordset_draft_id = ${draft_id_placeholder}
+        returning *;
+    """
+    values.append(draft_id)
+
+    try:
+        record = await db.fetch(query, values)
+    except Exception as e:
+        db_error(e, operation="updating recordset draft", context={"draft_id": draft_id})
+
+    if not record:
+        api_error("NOT_FOUND", "Draft recordset not found", {"draft_id": draft_id}, 404)
+
+    return item_response(record[0])
+
+@router.delete("/recordsets/drafts/{draft_id}")
+# Delete draft
+@router.delete("/recordsets/drafts/{draft_id}")
+# Delete draft (only if no files are associated)
+async def delete_recordset_draft_by_id(draft_id: int, db: Database = Depends()):
+    # Check for existing file associations
+    check_query = """\
+        select 1
+        from recordset_draft_file
+        where recordset_draft_id = $1
+        limit 1;
+    """
+
+    try:
+        existing = await db.fetch(check_query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="checking draft file associations",
+            context={"draft_id": draft_id},
+        )
+
+    if existing:
+        api_error(
+            "VALIDATION_ERROR",
+            "Cannot delete draft with associated files",
+            {"draft_id": draft_id},
+            422,
+        )
+
+    # Proceed with delete
+    delete_query = """\
+        delete from recordset_draft
+        where recordset_draft_id = $1
+        returning *;
+    """
+
+    try:
+        record = await db.fetch(delete_query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="deleting recordset draft",
+            context={"draft_id": draft_id},
+        )
+
+    if not record:
+        api_error("NOT_FOUND", "Draft not found", {"draft_id": draft_id}, 404)
+
+@router.get("/recordsets/drafts/{draft_id}/files")
+# List files in a draft
+async def get_draft_files_by_id(draft_id: int,  db: Database = Depends()):
+    query = """\
+        select
+            rf.file_id
+        from
+            recordset_draft_file rf
+        where
+            rf.recordset_draft_id = $1;
+        """
+    try:
+        records = await db.fetch(query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset draft files",
+            context={"draft_id": draft_id},
+        )
+    return list_response(records)
+
+@router.post("/recordsets/drafts/{draft_id}/files:add")
+# Add files to a draft
+async def add_draft_files(draft_id: int, payload: DraftFileCreate,db: Database = Depends()):
+    insert_query = """
+            insert into recordset_draft_file (recordset_draft_id, file_id)
+            values ($1, $2)
+            returning file_id;
+        """
+    count_query = """
+            select count(*) as current_count
+            from recordset_draft_file
+            where recordset_draft_id = $1
+        """
+
+    file_ids = payload.file_ids
+
+    if not file_ids:
+        api_error(
+            "VALIDATION_ERROR",
+            "No records to insert",
+            {"file_ids": []},
+            422,
+        )
+
+    added_file_ids = []
+
+    try:
+        for file_id in file_ids:
+            record = await db.fetch(insert_query, [draft_id, file_ids])
+            if record:
+                added_file_ids.append(record[0]["file_id"])
+
+        count_record = await db.fetch(count_query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="adding files to recordset draft",
+            context={"draft_id": draft_id},
+        )
+
+    return item_response(
+        {
+            "draft_id": draft_id,
+            "added_file_ids": added_file_ids,
+            "current_count": count_record[0]["current_count"] if count_record else 0,
+        }
+    )
+
+@router.post("/recordsets/drafts/{draft_id}/files:remove")
+# Remove files from a draft
+async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Database = Depends()):
+    delete_query = """
+            delete from recordset_draft_file
+            where file_id = $1;
+        """
+    count_query = """
+            select count(*) as current_count
+            from recordset_draft_file
+            where recordset_draft_id = $1
+        """
+
+    file_ids = payload.file_ids
+
+    if not file_ids:
+        api_error(
+            "VALIDATION_ERROR",
+            "No records to remove",
+            {"file_ids": []},
+            422,
+        )
+
+    removed_file_count = 0
+
+    try:
+        for file_id in file_ids:
+            record = await db.fetch(remove_query, [file_id])
+            if record:
+                removed_file_count = removed_file_count + 1
+
+        count_record = await db.fetch(count_query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="removing files from recordset draft",
+            context={"draft_id": draft_id},
+        )
+
+    return item_response(
+        {
+            "draft_id": draft_id,
+            "removed_file_count": removed_file_count,
+            "current_count": count_record[0]["current_count"] if count_record else 0,
+        }
+    )
+
+# @router.get("/recordsets/drafts/{draft_id}/diff")
+# # Compare draft against its base immutable release
+# @router.post("/recordsets/drafts/{draft_id}/validate")
+# # Validate draft before publish
+# @router.post("/recordsets/drafts/{draft_id}/publish")
+# # Publish a draft to an immutable recordset release
