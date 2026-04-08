@@ -1593,3 +1593,4 @@ async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Databas
 # # Validate draft before publish
 # @router.post("/recordsets/drafts/{draft_id}/publish")
 # # Publish a draft to an immutable recordset release
+# Note to self 4-6: finish 7 and 8, stop at 9.
