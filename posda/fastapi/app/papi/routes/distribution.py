@@ -91,6 +91,10 @@ class DraftFileCreate(BaseModel):
 class DraftFileRemove(BaseModel):
     file_ids: list[int]
 
+class RecordsetReleaseInsert(BaseModel):
+    release_number: int
+    release_date: datetime
+    release_notes: str
 def item_response(data):
     return {"data": data}
 
@@ -838,7 +842,7 @@ async def get_recordsets(
             rsl.license_id,
             rsl.license_label,
             rsl.license_url,
-            rsl.is_public_access,            
+            rsl.is_public_access,
             r.recordset_type,
             r.recordset_title,
             r.recordset_name,
@@ -1423,8 +1427,6 @@ async def update_recordset_draft_by_id(draft_id: int,
     return item_response(record[0])
 
 @router.delete("/recordsets/drafts/{draft_id}")
-# Delete draft
-@router.delete("/recordsets/drafts/{draft_id}")
 # Delete draft (only if no files are associated)
 async def delete_recordset_draft_by_id(draft_id: int, db: Database = Depends()):
     # Check for existing file associations
@@ -1587,10 +1589,287 @@ async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Databas
         }
     )
 
-# @router.get("/recordsets/drafts/{draft_id}/diff")
-# # Compare draft against its base immutable release
-# @router.post("/recordsets/drafts/{draft_id}/validate")
-# # Validate draft before publish
-# @router.post("/recordsets/drafts/{draft_id}/publish")
-# # Publish a draft to an immutable recordset release
-# Note to self 4-6: finish 7 and 8, stop at 9.
+@router.get("/recordsets/drafts/{draft_id}/diff")
+# Compare draft against its base immutable release
+async def get_draft_diff(draft_id: int, db: Database = Depends()):
+    q_draft_files = """
+        select rf.file_id
+        from recordset_draft_file rf
+        where rf.recordset_draft_id = $1;
+    """
+
+    q_related_release = """
+        select rr.recordset_release_id
+        from recordset_release rr
+        join recordset_draft rd using (recordset_id)
+        where rd.recordset_draft_id = $1
+        order by rr.release_number desc
+        limit 1;
+    """
+
+    q_release_files = """
+        select rf.file_id
+        from recordset_release_file rf
+        where rf.recordset_release_id = $1;
+    """
+
+    try:
+        draft_rows = await db.fetch(q_draft_files, [draft_id])
+        release_row = await db.fetchrow(q_related_release, [draft_id])
+
+        if not release_row:
+            raise HTTPException(status_code=404, detail="Base release not found")
+
+        rel_id = release_row["recordset_release_id"]
+
+        release_rows = await db.fetch(q_release_files, [rel_id])
+
+        # Convert to sets
+        draft_file_ids = {r["file_id"] for r in draft_rows}
+        release_file_ids = {r["file_id"] for r in release_rows}
+
+        # Diff
+        added_file_ids = list(draft_file_ids - release_file_ids)
+        removed_file_ids = list(release_file_ids - draft_file_ids)
+        unchanged_count = len(draft_file_ids & release_file_ids)
+
+        records = {
+            "draft_id": draft_id,
+            "base_release_id": rel_id,
+            "added_file_ids": added_file_ids,
+            "removed_file_ids": removed_file_ids,
+            "summary": {
+                "added_count": len(added_file_ids),
+                "removed_count": len(removed_file_ids),
+                "unchanged_count": unchanged_count,
+            },
+        }
+
+    except Exception as e:
+        db_error(
+            e,
+            operation="comparing release and draft files",
+            context={"draft_id": draft_id},
+        )
+        raise
+
+    return list_response(records)
+
+@router.post("/recordsets/drafts/{draft_id}/validate")
+# Validate draft before publish
+#   1.  Files exist in this draft
+async def validate_draft(draft_id: int, db: Database = Depends()):
+    query = """
+        select 1
+        from recordset_draft_file
+        where recordset_draft_id = $1
+        limit 1;
+    """
+
+    try:
+        row = await db.fetchrow(query, [draft_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="validating draft",
+            context={"draft_id": draft_id},
+        )
+        raise
+
+    if not row:
+        return {
+            "data": {
+                "recordset_draft_id": draft_id,
+                "valid": False,
+                "errors": ["Draft has no files"],
+            }
+        }
+
+    return {
+        "data": {
+            "recordset_draft_id": draft_id,
+            "valid": True,
+            "errors": [],
+        }
+    }
+
+@router.post("/recordsets/drafts/{draft_id}/publish")
+#Publish an immutable release
+async def create_recordset_release(
+    draft_id: int,
+    payload: RecordsetReleaseInsert,
+    current_user: User = logged_in_user,
+    db: Database = Depends(),
+):
+    q_get_recordset = """
+        select recordset_id
+        from recordset_draft
+        where recordset_draft_id = $1;
+    """
+
+    q_insert_release = """
+        insert into recordset_release (
+            recordset_id,
+            release_number,
+            release_date,
+            release_notes,
+            when_created,
+            who_created,
+            when_updated,
+            who_updated
+        )
+        values ($1, $2, $3, $4, now(), $5, now(), $5)
+        returning recordset_release_id;
+    """
+
+    q_copy_files = """
+        insert into recordset_release_file (recordset_release_id, file_id)
+        select $1, file_id
+        from recordset_draft_file
+        where recordset_draft_id = $2;
+    """
+
+    try:
+        async with db.transaction():
+            # 1. Get recordset_id from draft
+            draft_row = await db.fetchrow(q_get_recordset, [draft_id])
+            if not draft_row:
+                raise HTTPException(status_code=404, detail="Draft not found")
+
+            recordset_id = draft_row["recordset_id"]
+
+            # 2. Create release
+            release_row = await db.fetchrow(
+                q_insert_release,
+                [
+                    recordset_id,
+                    payload.release_number,
+                    payload.release_date,
+                    payload.release_notes,
+                    current_user.username,
+                ],
+            )
+
+            if not release_row:
+                raise HTTPException(status_code=500, detail="Failed to create release")
+
+            release_id = release_row["recordset_release_id"]
+
+            # 3. Copy files from draft → release
+            await db.execute(q_copy_files, [release_id, draft_id])
+
+    except Exception as e:
+        db_error(
+            e,
+            operation="publishing recordset draft",
+            context={"draft_id": draft_id},
+        )
+        raise
+
+    return {
+        "data": {
+            "recordset_release_id": release_id,
+            "recordset_id": recordset_id,
+        }
+    }
+
+@router.get("/recordsets/releases/{release_id}")
+#Get release details
+async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
+    query = """
+        select
+            r.recordset_release_id,
+            r.recordset_id,
+            r.release_number,
+            r.release_date,
+            r.release_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated,
+            count(rrf.file_id)::int as file_count
+        from recordset_release r
+        left join recordset_release_file rrf using (recordset_release_id)
+        where r.recordset_release_id = $1
+        group by r.recordset_release_id;
+    """
+
+    try:
+        row = await db.fetchrow(query, [release_id])
+        if not row:
+            raise HTTPException(status_code=404, detail="Release not found")
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset release",
+            context={"release_id": release_id},
+        )
+        raise
+
+    return item_response(row)
+
+@router.get("/recordsets/releases/{release_id}/files")
+# List files in a release
+async def get_release_files_by_id(release_id: int,  db: Database = Depends()):
+    query = """\
+        select
+            rf.file_id
+        from
+            recordset_release_file rf
+        where
+            rf.recordset_release_id = $1;
+        """
+    try:
+        records = await db.fetch(query, [release_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset release files",
+            context={"release_id": release_id},
+        )
+    return list_response(records)
+
+#/papi/v1/distribution/recordsets/releases/{release_id}/diff/{other_release_id}
+@router.get("/recordsets/releases/{release_id}/diff/{other_release_id}")
+# Compare two immutable releases
+async def get_release_diff(release_id: int, other_release_id: int, db: Database = Depends()):
+    q_rel1_files = """
+        select rf.file_id
+        from recordset_release_file rf
+        where rf.recordset_release_id = $1;
+    """
+
+    q_rel2_files = """
+        select rf.file_id
+        from recordset_release_file rf
+        where rf.recordset_release_id = $1;
+    """
+
+    rel1_rows = await db.fetch(q_rel1_files, [release_id])
+    rel2_rows = await db.fetch(q_rel2_files, [other_release_id])
+
+    if not rel1_rows or not rel2_rows:
+        raise HTTPException(status_code=404, detail="Base release not found")
+
+    # Convert to sets
+    rel1_file_ids = {r["file_id"] for r in rel1_rows}
+    rel2_file_ids = {r["file_id"] for r in rel2_rows}
+
+    # Diff
+    added_file_ids = list(rel1_file_ids - rel2_file_ids)
+    removed_file_ids = list(rel2_file_ids - rel1_file_ids)
+    unchanged_count = len(rel1_file_ids & rel2_file_ids)
+
+    records = {
+        "left_release_id": release_id,
+        "right_release_id": other_release_id,
+        "added_file_ids": added_file_ids,
+        "removed_file_ids": removed_file_ids,
+        "summary": {
+            "added_count": len(added_file_ids),
+            "removed_count": len(removed_file_ids),
+            "unchanged_count": unchanged_count,
+        },
+    }
+
+    return {"data": records}
