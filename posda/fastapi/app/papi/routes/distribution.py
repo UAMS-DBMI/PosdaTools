@@ -70,7 +70,7 @@ class RecordsetCreate(BaseModel):
     active: bool = True
 
 class DestinationUpdate(BaseModel):
-    default_display: Optional[str] = None
+    default_display: Optional[bool] = None
     default_transfer_mode: Optional[str] = None
 
 class RecordsetDraftInsert(BaseModel):
@@ -1185,15 +1185,14 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
     return list_response(records)
 
 
-# -----------------------------------------RECORDSET DESTINATIONS------------------------------------------------
-
 @router.get("/recordsets/{recordset_id}/destinations")
-# List destination configuration rows for a recordset
-async def get_recordset_destination_list(recordset_id: int, db: Database = Depends()):
+# List destinations for a recordset
+async def get_recordset_destinations(recordset_id: int, db: Database = Depends()):
     query = """\
         select
             rd.destination_id,
-            td.name,
+            td.destination_name,
+            td.destination_abbr,            
             rd.default_display,
             rd.default_transfer_mode
         from recordset_destination rd
@@ -1206,19 +1205,22 @@ async def get_recordset_destination_list(recordset_id: int, db: Database = Depen
     except Exception as e:
         db_error(
             e,
-            operation="fetching recordset releases",
+            operation="fetching recordset destinations",
             context={"recordset_id": recordset_id},
         )
     return list_response(records)
 
 
+# -----------------------------------------RECORDSET DESTINATIONS------------------------------------------------
+
 @router.get("/recordsets/{recordset_id}/destinations/{destination_id}")
-# Get one destination configuration row for a recordset
-async def get_recordset_destination_by_id(recordset_id: int, destination_id: int, db: Database = Depends()):
+# Get a destination specific configuration for a recordset
+async def get_recordset_destination(recordset_id: int, destination_id: int, db: Database = Depends()):
     query = """\
         select
             rd.destination_id,
-            td.name,
+            td.destination_name,
+            td.destination_abbr,  
             rd.default_display,
             rd.default_transfer_mode
         from recordset_destination rd
@@ -1227,62 +1229,137 @@ async def get_recordset_destination_by_id(recordset_id: int, destination_id: int
             rd.recordset_id = $1 and rd.destination_id = $2;
         """
     try:
-        records = await db.fetch(query, [recordset_id])
+        records = await db.fetch(query, [recordset_id, destination_id])
     except Exception as e:
         db_error(
             e,
-            operation="fetching recordset releases",
+            operation="fetching a recordset destination",
             context={"recordset_id": recordset_id, "destination_id": destination_id},
         )
     return list_response(records)
 
 
 @router.put("/recordsets/{recordset_id}/destinations/{destination_id}")
-# Create or replace destination configuration for a recordset
+# Create or update a destination configuration for a recordset
 async def update_recordset_destination(
     recordset_id: int,
     destination_id: int,
     payload: DestinationUpdate,
     db: Database = Depends()
 ):
-    insert_columns = ["recordset_id", "destination_id"]
-    insert_values = ["$1", "$2"]
-    update_clauses = []
+    if payload.default_transfer_mode is not None and not payload.default_transfer_mode.strip():
+        api_error(
+            "VALIDATION_ERROR",
+            "some values must be non-empty",
+            {"field": "default_transfer_mode"},
+            422,
+        )
 
-    values = [recordset_id, destination_id]
-    idx = 3  # next placeholder index
+    updates = []
+    update_values = []
+    idx = 3
 
     if payload.default_display is not None:
-        insert_columns.append("default_display")
-        insert_values.append(f"${idx}")
-        update_clauses.append(f"default_display = EXCLUDED.default_display")
-        values.append(payload.default_display)
+        updates.append(f"default_display = ${idx}")
+        update_values.append(payload.default_display)
         idx += 1
 
     if payload.default_transfer_mode is not None:
-        insert_columns.append("default_transfer_mode")
-        insert_values.append(f"${idx}")
-        update_clauses.append(f"default_transfer_mode = EXCLUDED.default_transfer_mode")
-        values.append(payload.default_transfer_mode)
+        updates.append(f"default_transfer_mode = ${idx}")
+        update_values.append(payload.default_transfer_mode)
         idx += 1
 
-    if not update_clauses:
-        raise HTTPException(status_code=422, detail="No fields provided")
+    if not updates:
+        api_error("VALIDATION_ERROR", "No destination fields were provided", {}, 422)
 
-    query = f"""
-        insert into recordset_destination ({', '.join(insert_columns)})
-        values ({', '.join(insert_values)})
-        on conflict (recordset_id, destination_id)
-        do update set {', '.join(update_clauses)}
+    exists_query = """\
+        select 1
+        from recordset_destination
+        where recordset_id = $1 and destination_id = $2
+        limit 1
+    """
+
+    clear_default_query = """\
+        update recordset_destination
+        set default_display = false
+        where recordset_id = $1
+          and destination_id <> $2
+          and default_display = true
+    """
+
+    insert_query = """\
+        insert into recordset_destination (
+            recordset_id,
+            destination_id,
+            default_display,
+            default_transfer_mode
+        )
+        values ($1, $2, $3, $4)
         returning *
     """
 
-    record = await db.fetch(query, values)
+    record = []
+
+    try:
+        async with db.transaction() as conn:
+            existing = await conn.fetch(exists_query, recordset_id, destination_id)
+
+            if existing:
+                if payload.default_display is True:
+                    await conn.execute(clear_default_query, recordset_id, destination_id)
+
+                update_query = f"""\
+                    update recordset_destination
+                    set {', '.join(updates)}
+                    where recordset_id = $1 and destination_id = $2
+                    returning *
+                """
+
+                record = await conn.fetch(
+                    update_query,
+                    recordset_id,
+                    destination_id,
+                    *update_values,
+                )
+            else:
+                if payload.default_display is None or payload.default_transfer_mode is None:
+                    api_error(
+                        "VALIDATION_ERROR",
+                        "default_display and default_transfer_mode are required for insert",
+                        {
+                            "required": ["default_display", "default_transfer_mode"],
+                            "recordset_id": recordset_id,
+                            "destination_id": destination_id,
+                        },
+                        422,
+                    )
+
+                if payload.default_display is True:
+                    await conn.execute(clear_default_query, recordset_id, destination_id)
+
+                record = await conn.fetch(
+                    insert_query,
+                    recordset_id,
+                    destination_id,
+                    payload.default_display,
+                    payload.default_transfer_mode,
+                )
+    except Exception as e:
+        db_error(
+            e,
+            operation="upserting recordset destination",
+            context={"recordset_id": recordset_id, "destination_id": destination_id},
+        )
 
     if not record:
-        raise HTTPException(status_code=422, detail="Upsert failed")
+        api_error(
+            "INTERNAL_ERROR",
+            "Upsert failed",
+            {"recordset_id": recordset_id, "destination_id": destination_id},
+            500,
+        )
 
-    return record[0]
+    return item_response(record[0])
 
 # -----------------------------------------RECORDSET DRAFTS-----------------------------------------------
 
