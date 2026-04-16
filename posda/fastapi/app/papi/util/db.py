@@ -1,4 +1,5 @@
 import asyncpg
+from contextlib import asynccontextmanager
 from asyncpg.exceptions import UniqueViolationError
 
 pool = None
@@ -41,6 +42,14 @@ class Database:
                 return []
                 # raise NotFound("no matching records found")
             return records[0]
+
+    @asynccontextmanager
+    async def transaction(self):
+        global pool
+
+        async with pool.acquire() as conn:
+            async with conn.transaction():
+                yield conn
 
     def get_pool(self):
         global pool
