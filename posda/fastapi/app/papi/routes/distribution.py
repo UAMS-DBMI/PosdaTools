@@ -95,6 +95,10 @@ class RecordsetReleaseInsert(BaseModel):
     release_number: int
     release_date: datetime
     release_notes: str
+
+
+# --- Responses ---
+
 def item_response(data):
     return {"data": data}
 
@@ -979,6 +983,7 @@ async def get_recordset(recordset_id: int, db: Database = Depends()):
 
     return item_response(record[0])
 
+
 @router.put("/recordsets/{recordset_id}")
 # Update recordset
 async def update_recordset(
@@ -1180,7 +1185,7 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
     return list_response(records)
 
 
-# -----------------------------------------RECORDSET DESTINATION CONFIGURATION------------------------------------------------
+# -----------------------------------------RECORDSET DESTINATIONS------------------------------------------------
 
 @router.get("/recordsets/{recordset_id}/destinations")
 # List destination configuration rows for a recordset
@@ -1206,6 +1211,7 @@ async def get_recordset_destination_list(recordset_id: int, db: Database = Depen
         )
     return list_response(records)
 
+
 @router.get("/recordsets/{recordset_id}/destinations/{destination_id}")
 # Get one destination configuration row for a recordset
 async def get_recordset_destination_by_id(recordset_id: int, destination_id: int, db: Database = Depends()):
@@ -1229,6 +1235,7 @@ async def get_recordset_destination_by_id(recordset_id: int, destination_id: int
             context={"recordset_id": recordset_id, "destination_id": destination_id},
         )
     return list_response(records)
+
 
 @router.put("/recordsets/{recordset_id}/destinations/{destination_id}")
 # Create or replace destination configuration for a recordset
@@ -1277,7 +1284,7 @@ async def update_recordset_destination(
 
     return record[0]
 
-# -----------------------------------------DRAFT-RECORDSETS-RELEASES-----------------------------------------------
+# -----------------------------------------RECORDSET DRAFTS-----------------------------------------------
 
 @router.post("/recordsets/{recordset_id}/drafts")
 # Create draft release
@@ -1366,6 +1373,7 @@ async def get_recordset_draft_by_id(draft_id: int,  db: Database = Depends()):
         )
     return list_response(records)
 
+
 @router.put("/recordsets/drafts/{draft_id}")
 # Update draft metadata
 async def update_recordset_draft_by_id(draft_id: int,
@@ -1426,6 +1434,7 @@ async def update_recordset_draft_by_id(draft_id: int,
 
     return item_response(record[0])
 
+
 @router.delete("/recordsets/drafts/{draft_id}")
 # Delete draft (only if no files are associated)
 async def delete_recordset_draft_by_id(draft_id: int, db: Database = Depends()):
@@ -1473,6 +1482,7 @@ async def delete_recordset_draft_by_id(draft_id: int, db: Database = Depends()):
     if not record:
         api_error("NOT_FOUND", "Draft not found", {"draft_id": draft_id}, 404)
 
+
 @router.get("/recordsets/drafts/{draft_id}/files")
 # List files in a draft
 async def get_draft_files_by_id(draft_id: int,  db: Database = Depends()):
@@ -1493,6 +1503,7 @@ async def get_draft_files_by_id(draft_id: int,  db: Database = Depends()):
             context={"draft_id": draft_id},
         )
     return list_response(records)
+
 
 @router.post("/recordsets/drafts/{draft_id}/files:add")
 # Add files to a draft
@@ -1542,6 +1553,7 @@ async def add_draft_files(draft_id: int, payload: DraftFileCreate,db: Database =
         }
     )
 
+
 @router.post("/recordsets/drafts/{draft_id}/files:remove")
 # Remove files from a draft
 async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Database = Depends()):
@@ -1588,6 +1600,7 @@ async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Databas
             "current_count": count_record[0]["current_count"] if count_record else 0,
         }
     )
+
 
 @router.get("/recordsets/drafts/{draft_id}/diff")
 # Compare draft against its base immutable release
@@ -1655,6 +1668,7 @@ async def get_draft_diff(draft_id: int, db: Database = Depends()):
 
     return list_response(records)
 
+
 @router.post("/recordsets/drafts/{draft_id}/validate")
 # Validate draft before publish
 #   1.  Files exist in this draft
@@ -1692,6 +1706,9 @@ async def validate_draft(draft_id: int, db: Database = Depends()):
             "errors": [],
         }
     }
+
+
+# -----------------------------------------RECORDSET RELEASES-----------------------------------------------
 
 @router.post("/recordsets/drafts/{draft_id}/publish")
 #Publish an immutable release
@@ -1773,6 +1790,7 @@ async def create_recordset_release(
         }
     }
 
+
 @router.get("/recordsets/releases/{release_id}")
 #Get release details
 async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
@@ -1808,6 +1826,7 @@ async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
 
     return item_response(row)
 
+
 @router.get("/recordsets/releases/{release_id}/files")
 # List files in a release
 async def get_release_files_by_id(release_id: int,  db: Database = Depends()):
@@ -1828,6 +1847,7 @@ async def get_release_files_by_id(release_id: int,  db: Database = Depends()):
             context={"release_id": release_id},
         )
     return list_response(records)
+
 
 #/papi/v1/distribution/recordsets/releases/{release_id}/diff/{other_release_id}
 @router.get("/recordsets/releases/{release_id}/diff/{other_release_id}")
