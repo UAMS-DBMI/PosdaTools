@@ -842,6 +842,7 @@ async def get_recordsets(
             r.recordset_id,
             r.recordset_doi,
             r.dataset_id,
+            d.dataset_name,
             r.license_id,
             rsl.license_id,
             rsl.license_label,
@@ -851,13 +852,14 @@ async def get_recordsets(
             r.recordset_title,
             r.recordset_name,
             r.active,
-            when_created,
-            who_created,
-            when_updated,
-            who_updated
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated
         from
             recordset r
             join recordset_license rsl using (license_id)
+            join dataset d using (dataset_id)
         {where_sql}
         order by r.recordset_id
         """
