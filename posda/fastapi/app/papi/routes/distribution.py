@@ -600,7 +600,7 @@ async def get_recordsets_for_dataset_release(release_id: int, db: Database = Dep
     return list_response(records)
 
 
-@router.post("/datasets/releases/{release_id}/recordsets:add")
+@router.post("/datasets/releases/{release_id}/recordsets/add")
 # Add recordset releases to a dataset release
 async def add_recordset_release_to_dataset_release(
     release_id: int,
@@ -654,7 +654,7 @@ async def add_recordset_release_to_dataset_release(
     )
 
 
-@router.post("/datasets/releases/{release_id}/recordsets:remove")
+@router.post("/datasets/releases/{release_id}/recordsets/remove")
 # Remove recordset releases from a dataset release
 async def remove_recordset_release_from_dataset_release(
     release_id: int,
@@ -1582,7 +1582,7 @@ async def get_draft_files_by_id(draft_id: int,  db: Database = Depends()):
     return list_response(records)
 
 
-@router.post("/recordsets/drafts/{draft_id}/files:add")
+@router.post("/recordsets/drafts/{draft_id}/files/add")
 # Add files to a draft
 async def add_draft_files(draft_id: int, payload: DraftFileCreate,db: Database = Depends()):
     insert_query = """
@@ -1631,7 +1631,7 @@ async def add_draft_files(draft_id: int, payload: DraftFileCreate,db: Database =
     )
 
 
-@router.post("/recordsets/drafts/{draft_id}/files:remove")
+@router.post("/recordsets/drafts/{draft_id}/files/remove")
 # Remove files from a draft
 async def remove_draft_files(draft_id: int, payload: DraftFileRemove,db: Database = Depends()):
     delete_query = """
