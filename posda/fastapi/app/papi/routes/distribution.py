@@ -427,7 +427,7 @@ async def get_releases_for_dataset(
             dr.release_notes
         from
             dataset d
-            natural join dataset_release dr
+            join dataset_release dr using (dataset_id)
         where
             d.dataset_id = $1
         order by
