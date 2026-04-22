@@ -28,7 +28,7 @@ async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
           file_storage_root natural join file_location
         where file_id in (
           select distinct file_id
-          from dicom_file df natural join ctp_file natural join activity_timepoint_file
+          from dicom_file df natural join activity_timepoint_file
           where
           dicom_file_type = 'Segmentation Storage'
           and has_no_roi_linkages is null
@@ -64,7 +64,7 @@ async def getFORfromfile(file_id: int, db: Database = Depends()):
 async def getSeries(file_id: int, db: Database = Depends()):
     query = """\
             select series_instance_uid
-            from file_series 
+            from file_series
             natural join file
             where file_id = $1;
         """
