@@ -96,6 +96,11 @@ class RecordsetReleaseInsert(BaseModel):
     release_date: datetime
     release_notes: str
 
+class DatasetReleaseTransferUpdate(BaseModel):
+    transfer_name: str
+    transfer_mode: str
+    transfer_status: str
+    transfer_notes: str
 
 # --- Responses ---
 
@@ -1986,11 +1991,8 @@ async def get_destinations_list(db: Database = Depends()):
     try:
         records = await db.fetch(query)
     except Exception as e:
-        db_error(
-            e,
-            operation="Get destination list"
-        )
-    return list_response(records)
+        db_error(e, operation="Get destination list")
+        return list_response([])
 
 # ----------------------------------------Dataset release transfers-----------------------------------------------
 @router.get("/transfers/{transfer_id}")
@@ -2006,18 +2008,82 @@ async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = D
             transfer_status,
             transfer_notes,
             when_created,
-        when_updated
+            when_updated
             from
                 dataset_release_transfer drt
             where
                 drt.dataset_release_transfer_id = $1;
         """
     try:
-        records = await db.fetch(query, [transfer_id])
+        record = await db.fetchrow(query, [transfer_id])
     except Exception as e:
         db_error(
             e,
-            operation="fetching recordset release files",
+            operation="fetching dataset release transfer",
             context={"transfer_id": transfer_id},
         )
-    return list_response(records)
+        api_error("DB_ERROR", "Failed to fetch transfer", {}, 500)
+
+    if not record:
+        api_error("NOT_FOUND", "Dataset release transfer not found", {"transfer_id": transfer_id}, 404)
+
+    return item_response(record)
+
+@router.put("/transfers/{transfer_id}")
+# Update details for a dataset release transfer
+async def update_dataset_release_transfer(
+    transfer_id: int, payload: DatasetReleaseTransferUpdate, current_user: User = logged_in_user, db: Database = Depends()):
+
+    updates = []
+    values = []
+    idx = 1
+
+    if payload.transfer_name is not None:
+        updates.append(f"transfer_name = ${idx}")
+        values.append(payload.transfer_name)
+        idx += 1
+
+    if payload.transfer_mode is not None:
+        updates.append(f"transfer_mode = ${idx}")
+        values.append(payload.transfer_mode)
+        idx += 1
+
+    if payload.transfer_status is not None:
+        updates.append(f"transfer_status = ${idx}")
+        values.append(payload.transfer_status)
+        idx += 1
+
+    if payload.transfer_notes is not None:
+        updates.append(f"transfer_notes = ${idx}")
+        values.append(payload.transfer_notes)
+        idx += 1
+
+    if not updates:
+        api_error("VALIDATION_ERROR", "No dataset release transfer fields were provided", {}, 422)
+
+    updates.append("when_updated = now()")
+    updates.append(f"who_updated = ${idx}")
+    values.append(current_user.username)
+    idx += 1
+
+    transfer_id_placeholder = idx
+    values.append(transfer_id)
+
+    query = f"""\
+        update
+            dataset_release_transfer
+            set {', '.join(updates)}
+            where dataset_release_transfer_id = ${transfer_id_placeholder}
+        returning *;
+    """
+
+    try:
+        record = await db.fetchrow(query, values)
+    except Exception as e:
+        db_error(e, operation="updating dataset release transfer", context={"transfer_id": transfer_id})
+        api_error("DB_ERROR", "Failed to update transfer", {}, 500)
+
+    if not record:
+        api_error("NOT_FOUND", "Dataset release transfer not found", {"transfer_id": transfer_id}, 404)
+
+    return item_response(record)
