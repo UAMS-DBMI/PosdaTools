@@ -1194,7 +1194,7 @@ async def get_recordset_destinations(recordset_id: int, db: Database = Depends()
         select
             rd.destination_id,
             td.destination_name,
-            td.destination_abbr,            
+            td.destination_abbr,
             rd.default_display,
             rd.default_transfer_mode
         from recordset_destination rd
@@ -1222,7 +1222,7 @@ async def get_recordset_destination(recordset_id: int, destination_id: int, db: 
         select
             rd.destination_id,
             td.destination_name,
-            td.destination_abbr,  
+            td.destination_abbr,
             rd.default_display,
             rd.default_transfer_mode
         from recordset_destination rd
@@ -1972,3 +1972,52 @@ async def get_release_diff(release_id: int, other_release_id: int, db: Database 
     }
 
     return {"data": records}
+
+# -----------------------------------------Transfer destination-----------------------------------------------
+@router.get("/transfers/destinations")
+# List supported transfer destinations
+async def get_destinations_list(db: Database = Depends()):
+    query = """\
+        select
+            destination_id, name
+        from
+            transfer_destination td;
+        """
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(
+            e,
+            operation="Get destination list"
+        )
+    return list_response(records)
+
+# ----------------------------------------Dataset release transfers-----------------------------------------------
+@router.get("/transfers/{transfer_id}")
+# Get details for a dataset release transfer
+async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = Depends()):
+    query = """\
+        select
+            dataset_release_transfer_id,
+            dataset_release_id,
+            destination_id,
+            transfer_name,
+            transfer_mode,
+            transfer_status,
+            transfer_notes,
+            when_created,
+        when_updated
+            from
+                dataset_release_transfer drt
+            where
+                drt.dataset_release_transfer_id = $1;
+        """
+    try:
+        records = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset release files",
+            context={"transfer_id": transfer_id},
+        )
+    return list_response(records)
