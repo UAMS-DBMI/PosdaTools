@@ -31,10 +31,6 @@ async def find_segs_in_activity(activity_id: int, db: Database = Depends()):
           from dicom_file df natural join activity_timepoint_file
           where
           dicom_file_type = 'Segmentation Storage'
-          and has_no_roi_linkages is null
-          and not exists (
-            select file_id from file_roi_image_linkage r where r.file_id = df.file_id
-          )
           and activity_timepoint_id = (
             select max(activity_timepoint_id) as activity_timepoint_id
             from activity_timepoint
