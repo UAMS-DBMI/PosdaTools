@@ -121,7 +121,7 @@ D.  If there is a Source Image Sequence (0008,2112), and for every elements (000
 E.  Otherwise, Ask Bill or Quasar to help determine best action  %%%"
 "Tag: (0008,1155) UI 1 Referenced SOP Instance UID : Missing Tag ","Tag: (0008,1155) UI 1 Referenced SOP Instance UID : Missing Tag  %%%  FIX IS - to look at DICOM dump and search for ""sequence"". If sequence is empty and type 3 or empty and sequence is optional, delete sequence. Otherwise, ignore error %%%"
 "Tag: (0008,1160) IS 1-n Referenced Frame Number : May not be present for Referenced SOP Class that is not multi-frame",
-"Tag: (0008,2124) IS 1 Number of Stages : Missing Tag : Type 2C Conditional Element : USImage","Tag: (0008,2124) IS 1 Number of Stages : Missing Tag : Type 2C Conditional Element : USImage %%% FIX IS - set_tag <(0008,212a)> <> %%%"
+"Tag: (0008,2124) IS 1 Number of Stages : Missing Tag : Type 2C Conditional Element : USImage","Tag: (0008,2124) IS 1 Number of Stages : Missing Tag : Type 2C Conditional Element : USImage %%% FIX IS - set_tag <(0008,2124)> <> %%%"
 "Tag: (0008,2218) SQ 1 Anatomic Region Sequence : AnatomicRegionSequence is only permitted to be empty when actually unknown, but BodyPartExamined has a value, therefore it is known","Tag: (0008,2218) SQ 1 Anatomic Region Sequence : AnatomicRegionSequence is only permitted to be empty when actually unknown, but BodyPartExamined has a value, therefore it is known %%% FIX IS - delete anatomic Region Sequence (0008,2218) if the tag is empty %%%]"
 "Tag: (0008,2218) SQ 1 Anatomic Region Sequence : Missing Tag : Type 2 Required Element : GeneralAnatomyRequiredMacro",
 "Tag: (0008,2218) SQ 1 Anatomic Region Sequence : Missing Tag : Type 2C Conditional Element : GeneralImage",

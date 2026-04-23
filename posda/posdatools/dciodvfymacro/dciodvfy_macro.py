@@ -32,6 +32,7 @@ def apply_dciodvfy_macro(rules, reader, writer):
         for line in errors.split("\n"):
             line = line.strip()
             if len(line) > 0:
+                found_fix = False
                 # see if there is a rule that matches
                 for rule in rules:
                     # rules are all substrings that just need
@@ -46,6 +47,10 @@ def apply_dciodvfy_macro(rules, reader, writer):
                             # that any extra values in the message are
                             # preserved
                             messages.append(line.replace(rule, rules[rule]))
+                            found_fix = True
+
+                if not found_fix:
+                    messages.append(line)
 
         # reassemble cell
         writer.writerow([series, errors, "\n".join(messages)])
