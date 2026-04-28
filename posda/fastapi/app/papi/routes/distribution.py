@@ -103,6 +103,9 @@ class DatasetReleaseTransferUpdate(BaseModel):
     transfer_status: str
     transfer_notes: str
 
+class TransferReleaseRecordsetRequest(BaseModel):
+    recordset_release_ids: list[int]
+
 # --- Responses ---
 
 def item_response(data):
@@ -1470,14 +1473,14 @@ async def create_recordset_draft(
 @router.get("/recordsets/drafts/{draft_id}")
 # Get draft detail
 async def get_recordset_draft(
-    draft_id: int,  
+    draft_id: int,
     db: Database = Depends()):
 
     query = """\
         select
             rd.recordset_draft_id,
             rd.recordset_id,
-            rd.cloned_from_release_id,            
+            rd.cloned_from_release_id,
             rd.draft_name,
             rd.draft_status,
             rd.draft_notes,
@@ -1575,7 +1578,7 @@ async def update_recordset_draft(
 @router.delete("/recordsets/drafts/{draft_id}")
 # Delete draft
 async def delete_recordset_draft(
-    draft_id: int, 
+    draft_id: int,
     current_user: User = logged_in_user,
     db: Database = Depends()):
 
@@ -1643,7 +1646,7 @@ async def add_recordset_draft_files(
             on conflict do nothing
             returning file_id;
         """
-    
+
     count_query = """
             select count(*) as current_count
             from recordset_draft_file
@@ -1696,7 +1699,7 @@ async def remove_recordset_draft_files(
     draft_id: int,
     payload: RecordsetDraftFileRemove,
     db: Database = Depends()):
-    
+
     remove_query = """
             delete from recordset_draft_file
             where recordset_draft_id = $1 and file_id = $2
@@ -1892,9 +1895,9 @@ async def get_recordset_draft_diff(
 
     return item_response(records)
 
-# TODO: This needs more thought. 
-# What validations do we want to perform before allowing a draft to be published? 
-# Do we want to block publish if there are warnings (e.g. files that are in the draft but not in the base release)? 
+# TODO: This needs more thought.
+# What validations do we want to perform before allowing a draft to be published?
+# Do we want to block publish if there are warnings (e.g. files that are in the draft but not in the base release)?
 # Do we want to allow users to override warnings and publish anyway?
 
 # @router.post("/recordsets/drafts/{draft_id}/validate")
@@ -2243,3 +2246,146 @@ async def update_dataset_release_transfer(
         api_error("NOT_FOUND", "Dataset release transfer not found", {"transfer_id": transfer_id}, 404)
 
     return item_response(record)
+
+# ---------------------------------------- Transfer recordset membership-----------------------------------------------
+
+@router.get("/transfers/{transfer_id}/recordsets")
+# List recordset releases included in a transfer
+async def get_recordset_releases_by_transfer(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select
+          rr.recordset_release_id,
+          r.recordset_id,
+          r.recordset_title,
+          tr.retriever_manifest_file_id
+        from
+            transfer_recordset tr
+            join recordset_release rr on tr.recordset_release_id = rr.recordset_release_id
+            join recordset r on rr.recordset_id = r.recordset_id
+        where
+            tr.dataset_release_transfer_id = $1;
+        """
+    try:
+        records = await db.fetch(query, [transfer_id])
+        return list_response(records)
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching recordset releases",
+            context={"transfer_id": transfer_id},
+        )
+        return list_response([])
+
+# NOTE:
+# AI tools suggest that this is not optimal
+# it mentions something about using a batched option
+# which would look something like "insert into ... select unnest($2::int[])"
+# I have left this out for consistentcy and readability, our other endpoints aren't using it
+# If we expect a very large number of adds and removes it may be worth considering such optimizations
+@router.post("/transfers/{transfer_id}/recordsets/add")
+# Add recordset releases to a transfer
+async def add_recordset_release_to_transfer(
+    transfer_id: int,
+    payload: TransferReleaseRecordsetRequest,
+    db: Database = Depends()):
+
+    insert_query = """
+            insert into transfer_recordset
+            (dataset_release_transfer_id, recordset_release_id)
+            values ($1, $2)
+            returning recordset_release_id
+        """
+    count_query = """
+            select count(*) as current_count
+            from transfer_recordset
+            where dataset_release_transfer_id = $1
+        """
+
+    recordset_release_ids = payload.recordset_release_ids
+
+    if not recordset_release_ids:
+        return api_error(
+            "VALIDATION_ERROR",
+            "No records to insert",
+            {"recordset_release_ids": []},
+            422,
+        )
+
+    added_recordset_release_ids = []
+    count_record = []
+
+    try:
+        for recordset_release_id in recordset_release_ids:
+            record = await db.fetchrow(insert_query, [transfer_id, recordset_release_id])
+            if record:
+                added_recordset_release_ids.append(record[0]["recordset_release_id"])
+
+        count_record = await db.fetch(count_query, [transfer_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="adding recordset releases to transfer",
+            context={"transfer_id": transfer_id},
+        )
+
+    return item_response(
+        {
+            "dataset_transfer_id": transfer_id,
+            "added_recordset_release_ids": added_recordset_release_ids,
+            "current_count": count_record[0]["current_count"] if count_record else 0,
+        }
+    )
+
+
+@router.post("/transfers/{transfer_id}/recordsets/remove")
+# Remove recordset releases from a transfer
+async def remove_recordset_release_from_transfer(
+    transfer_id: int,
+    payload: TransferReleaseRecordsetRequest,
+    db: Database = Depends()):
+
+    delete_query = """
+            delete from transfer_recordset
+            where dataset_release_transfer_id = $1 and recordset_release_id = $2
+            returning recordset_release_id
+        """
+    count_query = """
+            select count(*) as current_count
+            from transfer_recordset
+            where dataset_release_transfer_id = $1
+        """
+
+    recordset_release_ids = payload.recordset_release_ids
+
+    if not recordset_release_ids:
+        return api_error(
+            "VALIDATION_ERROR",
+            "No records to remove",
+            {"recordset_release_ids": []},
+            422,
+        )
+
+    removed_recordset_release_ids = []
+    count_record = []
+
+    try:
+        for recordset_release_id in recordset_release_ids:
+            record = await db.fetchrow(delete_query, [transfer_id, recordset_release_id])
+            if record:
+                removed_recordset_release_ids.append(record[0]["recordset_release_id"])
+
+        count_record = await db.fetch(count_query, [transfer_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="removing recordset releases from dataset release",
+            context={"transfer_id": transfer_id},
+        )
+
+    return item_response(
+        {
+            "dataset_transfer_id": transfer_id,
+            "removed_recordset_release_ids": removed_recordset_release_ids,
+            "current_count": count_record[0]["current_count"] if count_record else 0,
+        }
+    )
