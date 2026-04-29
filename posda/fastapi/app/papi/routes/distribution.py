@@ -196,7 +196,9 @@ async def get_datasets(
             dataset_short_title,
             dataset_doi,
             active,
+            who_created,
             when_created,
+            who_updated,
             when_updated
         from
             dataset
@@ -257,7 +259,9 @@ async def create_dataset(
             dataset_short_title,
             dataset_doi,
             active,
+            who_created,
             when_created,
+            who_updated,
             when_updated
         """
 
@@ -291,7 +295,9 @@ async def get_dataset(dataset_id: int, db: Database = Depends()):
             dataset_short_title,
             dataset_doi,
             active,
+            who_created,
             when_created,
+            who_updated,
             when_updated
         from
             dataset
@@ -366,7 +372,9 @@ async def update_dataset(
             dataset_short_title,
             dataset_doi,
             active,
+            who_created,
             when_created,
+            who_updated,
             when_updated
         """
 
