@@ -817,7 +817,23 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
 
     return item_response(record[0])
 
+# -----------------------------------------LICENSES------------------------------------------------
 
+@router.get("/licenses")
+# List licenses
+async def get_licenses(db: Database = Depends()):
+
+    query = """
+        select license_id, license_label 
+        from recordset_license
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching licenses")
+
+    return list_response(records)
 
 # -----------------------------------------RECORDSETS------------------------------------------------
 
