@@ -2176,7 +2176,7 @@ async def create_recordset_release(
 
 @router.get("/recordsets/releases/{release_id}")
 #Get release details
-async def get_recordset_releases(release_id: int, db: Database = Depends()):
+async def get_recordset_release(release_id: int, db: Database = Depends()):
     query = """
         select
             r.recordset_release_id,
@@ -2192,27 +2192,36 @@ async def get_recordset_releases(release_id: int, db: Database = Depends()):
         from recordset_release r
         left join recordset_release_file rrf using (recordset_release_id)
         where r.recordset_release_id = $1
-        group by r.recordset_release_id;
+        group by
+            r.recordset_release_id,
+            r.recordset_id,
+            r.release_number,
+            r.release_date,
+            r.release_notes,
+            r.when_created,
+            r.who_created,
+            r.when_updated,
+            r.who_updated;
     """
 
     try:
-        row = await db.fetchrow(query, [release_id])
-        if not row:
-            raise HTTPException(status_code=404, detail="Release not found")
+        record = await db.fetch(query, [release_id])
     except Exception as e:
         db_error(
             e,
             operation="fetching recordset release",
             context={"release_id": release_id},
         )
-        raise
 
-    return item_response(row)
+    if not record:
+        api_error("NOT_FOUND", "Recordset release not found", {"release_id": release_id}, 404)
+
+    return item_response(record[0])
 
 
 @router.get("/recordsets/releases/{release_id}/files")
 # List files in a release
-async def get_release_files_by_id(release_id: int,  db: Database = Depends()):
+async def get_recordset_release_files(release_id: int, db: Database = Depends()):
     query = """\
         select
             rf.file_id
