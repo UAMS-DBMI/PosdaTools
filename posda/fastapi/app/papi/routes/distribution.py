@@ -15,18 +15,14 @@ router = APIRouter(
 # --- Models ---
 
 class DatasetInsert(BaseModel):
-    dataset_type: str
-    dataset_title: str
+    dataset_type_id: int
     dataset_name: str
-    dataset_short_title: str
     dataset_doi: str
     active: bool = True
 
 class DatasetUpdate(BaseModel):
-    dataset_type: Optional[str] = None
-    dataset_title: Optional[str] = None
+    dataset_type_id: Optional[int] = None
     dataset_name: Optional[str] = None
-    dataset_short_title: Optional[str] = None
     dataset_doi: Optional[str] = None
     active: Optional[bool] = None
 
@@ -47,7 +43,7 @@ class DatasetReleaseRecordsetRequest(BaseModel):
 class DatasetReleaseTransferInsert(BaseModel):
     destination_id: int
     transfer_name: str
-    transfer_mode: str
+    transfer_mode_id: int
     transfer_notes:  Optional[str] = None
     transfer_status: Optional[str] = "draft"
 
@@ -55,23 +51,21 @@ class RecordsetUpdate(BaseModel):
     recordset_doi: Optional[str] = None
     dataset_id: Optional[int] = None
     license_id: Optional[int] = None
-    recordset_title: Optional[str] = None
     recordset_name: Optional[str] = None
-    recordset_type: Optional[str] = None
+    recordset_type_id: Optional[int] = None
     active: Optional[bool] = None
 
 class RecordsetCreate(BaseModel):
     recordset_doi: str
     dataset_id: int
     license_id: int
-    recordset_type: str
-    recordset_title: str
+    recordset_type_id: int
     recordset_name: str
     active: bool = True
 
 class DestinationUpdate(BaseModel):
     default_display: Optional[bool] = None
-    default_transfer_mode: Optional[str] = None
+    default_transfer_mode_id: Optional[int] = None
 
 class RecordsetDraftInsert(BaseModel):
     draft_name: str
@@ -98,10 +92,10 @@ class RecordsetReleaseInsert(BaseModel):
     release_notes: str
 
 class DatasetReleaseTransferUpdate(BaseModel):
-    transfer_name: str
-    transfer_mode: str
-    transfer_status: str
-    transfer_notes: str
+    transfer_name: Optional[str] = None
+    transfer_mode_id: Optional[int] = None
+    transfer_status: Optional[str] = None
+    transfer_notes: Optional[str] = None
 
 class TransferReleaseRecordsetRequest(BaseModel):
     recordset_release_ids: list[int]
@@ -150,6 +144,102 @@ def db_error(
 
     api_error("INTERNAL_ERROR", f"Error {operation}", details, 500)
 
+# -----------------------------------------LOOKUP TABLES------------------------------------------------
+
+@router.get("/lookups/dataset-types")
+# List dataset types
+async def get_dataset_types(db: Database = Depends()):
+
+    query = """
+        select dataset_type_id, dataset_type_name 
+        from dataset_type
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching dataset types")
+
+    return list_response(records)
+
+@router.get("/lookups/dataset-relation-types")
+# List dataset relation types
+async def get_dataset_relation_types(db: Database = Depends()):
+
+    query = """
+        select relation_type_id,
+            forward_label || ' --> <-- ' || reverse_label as relation_type_label
+        from dataset_relation_type;
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching dataset relation types")
+
+    return list_response(records)
+
+@router.get("/lookups/recordset-types")
+# List recordset types
+async def get_recordset_types(db: Database = Depends()):
+
+    query = """
+        select recordset_type_id, recordset_type_name 
+        from recordset_type
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching recordset types")
+
+    return list_response(records)
+
+@router.get("/lookups/transfer-modes")
+# List transfer modes
+async def get_transfer_modes(db: Database = Depends()):
+
+    query = """
+        select transfer_mode_id, transfer_mode_name 
+        from transfer_mode
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching transfer modes")
+
+    return list_response(records)
+
+@router.get("/lookups/licenses")
+# List licenses
+async def get_licenses(db: Database = Depends()):
+
+    query = """
+        select license_id, license_name, license_label, license_url, is_public_access
+        from recordset_license
+    """
+
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching licenses")
+
+    return list_response(records)
+
+@router.get("/lookups/destinations")
+# List destinations
+async def get_destinations(db: Database = Depends()):
+    query = """\
+        select destination_id, destination_name, destination_abbr
+        from transfer_destination;
+        """
+    try:
+        records = await db.fetch(query)
+    except Exception as e:
+        db_error(e, operation="fetching destinations")
+
+    return list_response(records)
 
 # -----------------------------------------DATASETS------------------------------------------------
 
@@ -158,7 +248,7 @@ def db_error(
 async def get_datasets(
     search: Optional[str] = Query(default=None),
     active_only: Optional[bool] = Query(default=None),
-    type: Optional[str] = Query(default=None),
+    dataset_type_id: Optional[int] = Query(default=None),
     db: Database = Depends()):
 
     where_clauses = []
@@ -168,42 +258,41 @@ async def get_datasets(
     if search:
         where_clauses.append(
             f"""(
-                dataset_title ilike ${idx}
-                or dataset_name ilike ${idx}
-                or dataset_short_title ilike ${idx}
-                or dataset_doi ilike ${idx}
+                d.dataset_name ilike ${idx}
+                or d.dataset_doi ilike ${idx}
+                or dt.dataset_type_name ilike ${idx}
             )"""
         )
         values.append(f"%{search}%")
         idx += 1
 
     if active_only is True:
-        where_clauses.append("active = true")
+        where_clauses.append("d.active = true")
 
-    if type:
-        where_clauses.append(f"dataset_type = ${idx}")
-        values.append(type)
+    if dataset_type_id is not None:
+        where_clauses.append(f"d.dataset_type_id = ${idx}")
+        values.append(dataset_type_id)
         idx += 1
 
     where_sql = f"where {' and '.join(where_clauses)}" if where_clauses else ""
 
     query = f"""\
         select
-            dataset_id,
-            dataset_type,
-            dataset_title,
-            dataset_name,
-            dataset_short_title,
-            dataset_doi,
-            active,
-            who_created,
-            when_created,
-            who_updated,
-            when_updated
+            d.dataset_id,
+            d.dataset_type_id,
+            dt.dataset_type_name,
+            d.dataset_name,
+            d.dataset_doi,
+            d.active,
+            d.who_created,
+            d.when_created,
+            d.who_updated,
+            d.when_updated
         from
-            dataset
+            dataset d
+            join dataset_type dt using (dataset_type_id)
         {where_sql}
-        order by dataset_id
+        order by d.dataset_id
         """
 
     try:
@@ -221,16 +310,14 @@ async def create_dataset(
     current_user: User = logged_in_user,
     db: Database = Depends()):
 
-    if not payload.dataset_type.strip() or not payload.dataset_title.strip() or not payload.dataset_name.strip() or not payload.dataset_short_title.strip() or not payload.dataset_doi.strip():
+    if payload.dataset_type_id <= 0 or not payload.dataset_name.strip() or not payload.dataset_doi.strip():
         api_error(
             "VALIDATION_ERROR",
             "Required dataset fields must be non-empty",
             {
                 "required": [
-                    "dataset_type",
-                    "dataset_title",
+                    "dataset_type_id",
                     "dataset_name",
-                    "dataset_short_title",
                     "dataset_doi",
                 ]
             },
@@ -238,38 +325,47 @@ async def create_dataset(
         )
 
     query = """\
-        insert into dataset (
-            dataset_type,
-            dataset_title,
-            dataset_name,
-            dataset_short_title,
-            dataset_doi,
-            active,
-            when_created,
-            when_updated,
-            who_created,
-            who_updated
+        with inserted as (
+            insert into dataset (
+                dataset_type_id,
+                dataset_name,
+                dataset_doi,
+                active,
+                when_created,
+                when_updated,
+                who_created,
+                who_updated
+            )
+            values ($1, $2, $3, $4, now(), now(), $5, $5)
+            returning
+                dataset_id,
+                dataset_type_id,
+                dataset_name,
+                dataset_doi,
+                active,
+                who_created,
+                when_created,
+                who_updated,
+                when_updated
         )
-        values ($1, $2, $3, $4, $5, $6, now(), now(), $7, $7)
-        returning
-            dataset_id,
-            dataset_type,
-            dataset_title,
-            dataset_name,
-            dataset_short_title,
-            dataset_doi,
-            active,
-            who_created,
-            when_created,
-            who_updated,
-            when_updated
+        select
+            i.dataset_id,
+            i.dataset_type_id,
+            dt.dataset_type_name,
+            i.dataset_name,
+            i.dataset_doi,
+            i.active,
+            i.who_created,
+            i.when_created,
+            i.who_updated,
+            i.when_updated
+        from inserted i
+        join dataset_type dt using (dataset_type_id)
         """
 
     values = [
-        payload.dataset_type,
-        payload.dataset_title,
+        payload.dataset_type_id,
         payload.dataset_name,
-        payload.dataset_short_title,
         payload.dataset_doi,
         payload.active,
         current_user.username,
@@ -288,21 +384,21 @@ async def create_dataset(
 async def get_dataset(dataset_id: int, db: Database = Depends()):
     query = """\
         select
-            dataset_id,
-            dataset_type,
-            dataset_title,
-            dataset_name,
-            dataset_short_title,
-            dataset_doi,
-            active,
-            who_created,
-            when_created,
-            who_updated,
-            when_updated
+            d.dataset_id,
+            d.dataset_type_id,
+            dt.dataset_type_name,
+            d.dataset_name,
+            d.dataset_doi,
+            d.active,
+            d.who_created,
+            d.when_created,
+            d.who_updated,
+            d.when_updated
         from
-            dataset
+            dataset d
+            join dataset_type dt using (dataset_type_id)
         where
-            dataset_id = $1
+            d.dataset_id = $1
         """
 
     try:
@@ -339,10 +435,12 @@ async def update_dataset(
         values.append(value)
         idx += 1
 
-    add_text_field("dataset_type", payload.dataset_type)
-    add_text_field("dataset_title", payload.dataset_title)
+    if payload.dataset_type_id is not None:
+        updates.append(f"dataset_type_id = ${idx}")
+        values.append(payload.dataset_type_id)
+        idx += 1
+
     add_text_field("dataset_name", payload.dataset_name)
-    add_text_field("dataset_short_title", payload.dataset_short_title)
     add_text_field("dataset_doi", payload.dataset_doi)
 
     if payload.active is not None:
@@ -361,21 +459,34 @@ async def update_dataset(
     dataset_id_placeholder = idx
 
     query = f"""\
-        update dataset
-        set {', '.join(updates)}
-        where dataset_id = ${dataset_id_placeholder}
-        returning
-            dataset_id,
-            dataset_type,
-            dataset_title,
-            dataset_name,
-            dataset_short_title,
-            dataset_doi,
-            active,
-            who_created,
-            when_created,
-            who_updated,
-            when_updated
+        with updated as (
+            update dataset
+            set {', '.join(updates)}
+            where dataset_id = ${dataset_id_placeholder}
+            returning
+                dataset_id,
+                dataset_type_id,
+                dataset_name,
+                dataset_doi,
+                active,
+                who_created,
+                when_created,
+                who_updated,
+                when_updated
+        )
+        select
+            u.dataset_id,
+            u.dataset_type_id,
+            dt.dataset_type_name,
+            u.dataset_name,
+            u.dataset_doi,
+            u.active,
+            u.who_created,
+            u.when_created,
+            u.who_updated,
+            u.when_updated
+        from updated u
+        join dataset_type dt using (dataset_type_id)
         """
 
     values.append(dataset_id)
@@ -402,9 +513,11 @@ async def get_recordsets_for_dataset(
         select
             rs.recordset_id,
             rs.recordset_doi,
-            rs.recordset_title,
-            rs.recordset_type,
+            rs.recordset_type_id,
+            rt.recordset_type_name,
+            rs.recordset_name,
             rsl.license_id,
+            rsl.license_name,
             rsl.license_label,
             rsl.license_url,
             rsl.is_public_access,
@@ -412,6 +525,7 @@ async def get_recordsets_for_dataset(
         from
             dataset
             join recordset rs using (dataset_id)
+            join recordset_type rt using (recordset_type_id)
             join recordset_license rsl using (license_id)
         where
             dataset_id = $1
@@ -601,7 +715,7 @@ async def get_recordsets_for_dataset_release(release_id: int, db: Database = Dep
         select
 			rr.recordset_id,
             rr.recordset_release_id,
-            rs.recordset_title,
+            rs.recordset_name,
             rr.release_number
         from dataset_release dr
         join dataset_release_recordset drr using (dataset_release_id)
@@ -734,11 +848,13 @@ async def get_transfers_for_dataset_release(release_id: int, db: Database = Depe
             td.destination_name,
             td.destination_abbr,
             drt.transfer_name,
-            drt.transfer_mode,
+            drt.transfer_mode_id,
+            tm.transfer_mode_name,
             drt.transfer_status,
             drt.transfer_notes
         from dataset_release_transfer drt
         join transfer_destination td using (destination_id)
+        join transfer_mode tm using (transfer_mode_id)
         where drt.dataset_release_id = $1;
         """
     try:
@@ -756,11 +872,11 @@ async def get_transfers_for_dataset_release(release_id: int, db: Database = Depe
 @router.post("/datasets/releases/{release_id}/transfers")
 # Create transfer for a dataset release
 async def create_transfer_for_dataset_release(release_id: int,payload: DatasetReleaseTransferInsert,  db: Database = Depends()):
-    if payload.destination_id <= 0 or not payload.transfer_name.strip() or not payload.transfer_mode.strip():
+    if payload.destination_id <= 0 or payload.transfer_mode_id <= 0 or not payload.transfer_name.strip():
         api_error(
             "VALIDATION_ERROR",
             "Required transfer fields must be non-empty",
-            {"required": ["destination_id", "transfer_name", "transfer_mode"]},
+            {"required": ["destination_id", "transfer_name", "transfer_mode_id"]},
             422,
         )
 
@@ -771,7 +887,7 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
                 dataset_release_id,
                 destination_id,
                 transfer_name,
-                transfer_mode,
+                transfer_mode_id,
                 transfer_status,
                 transfer_notes
             )
@@ -780,7 +896,7 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
                 dataset_release_transfer_id,
                 destination_id,
                 transfer_name,
-                transfer_mode,
+                transfer_mode_id,
                 transfer_status,
                 transfer_notes
         )
@@ -790,18 +906,20 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
             td.destination_name,
             td.destination_abbr,
             i.transfer_name,
-            i.transfer_mode,
+            i.transfer_mode_id,
+            tm.transfer_mode_name,
             i.transfer_status,
             i.transfer_notes
         from inserted i
         join transfer_destination td using (destination_id)
+        join transfer_mode tm using (transfer_mode_id)
         """
 
     values = [
         release_id,
         payload.destination_id,
         payload.transfer_name,
-        payload.transfer_mode,
+        payload.transfer_mode_id,
         payload.transfer_status,
         payload.transfer_notes,
     ]
@@ -817,23 +935,6 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
 
     return item_response(record[0])
 
-# -----------------------------------------LICENSES------------------------------------------------
-
-@router.get("/licenses")
-# List licenses
-async def get_licenses(db: Database = Depends()):
-
-    query = """
-        select license_id, license_label 
-        from recordset_license
-    """
-
-    try:
-        records = await db.fetch(query)
-    except Exception as e:
-        db_error(e, operation="fetching licenses")
-
-    return list_response(records)
 
 # -----------------------------------------RECORDSETS------------------------------------------------
 
@@ -857,9 +958,9 @@ async def get_recordsets(
     if search:
         where_clauses.append(
             f"""(
-                r.recordset_title ilike ${idx}
-                or r.recordset_name ilike ${idx}
+                r.recordset_name ilike ${idx}
                 or r.recordset_doi ilike ${idx}
+                or rt.recordset_type_name ilike ${idx}
             )"""
         )
         values.append(f"%{search}%")
@@ -876,13 +977,15 @@ async def get_recordsets(
             r.recordset_doi,
             r.dataset_id,
             d.dataset_name,
+            d.dataset_type_id,
+            dt.dataset_type_name,
             r.license_id,
-            rsl.license_id,
+            rsl.license_name,
             rsl.license_label,
             rsl.license_url,
             rsl.is_public_access,
-            r.recordset_type,
-            r.recordset_title,
+            r.recordset_type_id,
+            rt.recordset_type_name,
             r.recordset_name,
             r.active,
             r.when_created,
@@ -891,8 +994,10 @@ async def get_recordsets(
             r.who_updated
         from
             recordset r
+            join recordset_type rt using (recordset_type_id)
             join recordset_license rsl using (license_id)
             join dataset d using (dataset_id)
+            join dataset_type dt using (dataset_type_id)
         {where_sql}
         order by r.recordset_id
         """
@@ -914,9 +1019,10 @@ async def create_recordset(
 
     if (
         not payload.recordset_doi.strip()
-        or not payload.recordset_type.strip()
-        or not payload.recordset_title.strip()
         or not payload.recordset_name.strip()
+        or payload.recordset_type_id <= 0
+        or payload.dataset_id <= 0
+        or payload.license_id <= 0
     ):
         api_error(
             "VALIDATION_ERROR",
@@ -924,9 +1030,10 @@ async def create_recordset(
             {
                 "required": [
                     "recordset_doi",
-                    "recordset_type",
-                    "recordset_title",
+                    "recordset_type_id",
                     "recordset_name",
+                    "dataset_id",
+                    "license_id",
                 ]
             },
             422,
@@ -937,8 +1044,7 @@ async def create_recordset(
             recordset_doi,
             dataset_id,
             license_id,
-            recordset_type,
-            recordset_title,
+            recordset_type_id,
             recordset_name,
             active,
             when_created,
@@ -946,14 +1052,13 @@ async def create_recordset(
             who_created,
             who_updated
         )
-        values ($1, $2, $3, $4, $5, $6, $7, now(), now(), $8, $8)
+        values ($1, $2, $3, $4, $5, $6, now(), now(), $7, $7)
         returning
             recordset_id,
             recordset_doi,
             dataset_id,
             license_id,
-            recordset_type,
-            recordset_title,
+            recordset_type_id,
             recordset_name,
             active,
             when_created,
@@ -964,8 +1069,7 @@ async def create_recordset(
         payload.recordset_doi,
         payload.dataset_id,
         payload.license_id,
-        payload.recordset_type,
-        payload.recordset_title,
+        payload.recordset_type_id,
         payload.recordset_name,
         payload.active,
         current_user.username,
@@ -990,8 +1094,11 @@ async def get_recordset(recordset_id: int, db: Database = Depends()):
             r.recordset_id,
             r.recordset_doi,
             r.dataset_id,
-            r.recordset_type,
-            r.recordset_title,
+            d.dataset_name,
+            d.dataset_type_id,
+            dt.dataset_type_name,
+            r.recordset_type_id,
+            rt.recordset_type_name,
             r.recordset_name,
             r.active,
             r.when_created,
@@ -999,12 +1106,16 @@ async def get_recordset(recordset_id: int, db: Database = Depends()):
             r.when_updated,
             r.who_updated,
             rl.license_id,
+            rl.license_name,
             rl.license_label,
             rl.license_url,
             rl.is_public_access
         from
             recordset r
+            join recordset_type rt using (recordset_type_id)
             join recordset_license rl using (license_id)
+            join dataset d using (dataset_id)
+            join dataset_type dt using (dataset_type_id)
         where
             r.recordset_id = $1;
         """
@@ -1044,9 +1155,12 @@ async def update_recordset(
         idx += 1
 
     add_text_field("recordset_doi", payload.recordset_doi)
-    add_text_field("recordset_type", payload.recordset_type)
-    add_text_field("recordset_title", payload.recordset_title)
     add_text_field("recordset_name", payload.recordset_name)
+
+    if payload.recordset_type_id is not None:
+        updates.append(f"recordset_type_id = ${idx}")
+        values.append(payload.recordset_type_id)
+        idx += 1
 
     if payload.dataset_id is not None:
         updates.append(f"dataset_id = ${idx}")
@@ -1084,8 +1198,7 @@ async def update_recordset(
                 recordset_doi,
                 dataset_id,
                 license_id,
-                recordset_type,
-                recordset_title,
+                recordset_type_id,
                 recordset_name,
                 active,
                 when_created,
@@ -1097,20 +1210,27 @@ async def update_recordset(
             u.recordset_id,
             u.recordset_doi,
             u.dataset_id,
-            u.recordset_type,
-            u.recordset_title,
+            d.dataset_name,
+            d.dataset_type_id,
+            dt.dataset_type_name,
+            u.recordset_type_id,
+            rt.recordset_type_name,
             u.recordset_name,
             u.active,
             u.when_created,
             u.who_created,
             u.when_updated,
             u.who_updated,
+            rl.license_name,
             rl.license_id,
             rl.license_label,
             rl.license_url,
             rl.is_public_access
         from updated u
+        join recordset_type rt using (recordset_type_id)
         join recordset_license rl using (license_id)
+        join dataset d using (dataset_id)
+        join dataset_type dt using (dataset_type_id)
         """
 
     try:
@@ -1231,9 +1351,11 @@ async def get_recordset_destinations(recordset_id: int, db: Database = Depends()
             td.destination_name,
             td.destination_abbr,
             rd.default_display,
-            rd.default_transfer_mode
+            rd.transfer_mode_id,
+            tm.transfer_mode_name
         from recordset_destination rd
             join transfer_destination td using (destination_id)
+            join transfer_mode tm using (transfer_mode_id)
         where
             rd.recordset_id = $1;
         """
@@ -1259,9 +1381,11 @@ async def get_recordset_destination(recordset_id: int, destination_id: int, db: 
             td.destination_name,
             td.destination_abbr,
             rd.default_display,
-            rd.default_transfer_mode
+            rd.transfer_mode_id,
+            tm.transfer_mode_name
         from recordset_destination rd
             join transfer_destination td using (destination_id)
+            join transfer_mode tm using (transfer_mode_id)
         where
             rd.recordset_id = $1 and rd.destination_id = $2;
         """
@@ -1284,14 +1408,6 @@ async def update_recordset_destination(
     payload: DestinationUpdate,
     db: Database = Depends()
 ):
-    if payload.default_transfer_mode is not None and not payload.default_transfer_mode.strip():
-        api_error(
-            "VALIDATION_ERROR",
-            "some values must be non-empty",
-            {"field": "default_transfer_mode"},
-            422,
-        )
-
     updates = []
     update_values = []
     idx = 3
@@ -1301,9 +1417,9 @@ async def update_recordset_destination(
         update_values.append(payload.default_display)
         idx += 1
 
-    if payload.default_transfer_mode is not None:
-        updates.append(f"default_transfer_mode = ${idx}")
-        update_values.append(payload.default_transfer_mode)
+    if payload.default_transfer_mode_id is not None:
+        updates.append(f"transfer_mode_id = ${idx}")
+        update_values.append(payload.default_transfer_mode_id)
         idx += 1
 
     if not updates:
@@ -1329,7 +1445,7 @@ async def update_recordset_destination(
             recordset_id,
             destination_id,
             default_display,
-            default_transfer_mode
+            transfer_mode_id
         )
         values ($1, $2, $3, $4)
         returning *
@@ -1359,12 +1475,12 @@ async def update_recordset_destination(
                     *update_values,
                 )
             else:
-                if payload.default_display is None or payload.default_transfer_mode is None:
+                if payload.default_display is None or payload.default_transfer_mode_id is None:
                     api_error(
                         "VALIDATION_ERROR",
-                        "default_display and default_transfer_mode are required for insert",
+                        "default_display and default_transfer_mode_id are required for insert",
                         {
-                            "required": ["default_display", "default_transfer_mode"],
+                            "required": ["default_display", "default_transfer_mode_id"],
                             "recordset_id": recordset_id,
                             "destination_id": destination_id,
                         },
@@ -1379,7 +1495,7 @@ async def update_recordset_destination(
                     recordset_id,
                     destination_id,
                     payload.default_display,
-                    payload.default_transfer_mode,
+                    payload.default_transfer_mode_id,
                 )
     except Exception as e:
         db_error(
@@ -2060,7 +2176,7 @@ async def create_recordset_release(
 
 @router.get("/recordsets/releases/{release_id}")
 #Get release details
-async def get_recordset_releases(recordset_id: int, db: Database = Depends()):
+async def get_recordset_releases(release_id: int, db: Database = Depends()):
     query = """
         select
             r.recordset_release_id,
@@ -2161,23 +2277,9 @@ async def get_release_diff(release_id: int, other_release_id: int, db: Database 
 
     return {"data": records}
 
-# -----------------------------------------Transfer destination-----------------------------------------------
-@router.get("/transfers/destinations")
-# List supported transfer destinations
-async def get_destinations_list(db: Database = Depends()):
-    query = """\
-        select
-            destination_id, name
-        from
-            transfer_destination td;
-        """
-    try:
-        records = await db.fetch(query)
-    except Exception as e:
-        db_error(e, operation="Get destination list")
-        return list_response([])
 
 # ----------------------------------------Dataset release transfers-----------------------------------------------
+
 @router.get("/transfers/{transfer_id}")
 # Get details for a dataset release transfer
 async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = Depends()):
@@ -2187,13 +2289,15 @@ async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = D
             dataset_release_id,
             destination_id,
             transfer_name,
-            transfer_mode,
+            transfer_mode_id,
+            tm.transfer_mode_name,
             transfer_status,
             transfer_notes,
             when_created,
             when_updated
             from
                 dataset_release_transfer drt
+                join transfer_mode tm using (transfer_mode_id)
             where
                 drt.dataset_release_transfer_id = $1;
         """
@@ -2226,9 +2330,9 @@ async def update_dataset_release_transfer(
         values.append(payload.transfer_name)
         idx += 1
 
-    if payload.transfer_mode is not None:
-        updates.append(f"transfer_mode = ${idx}")
-        values.append(payload.transfer_mode)
+    if payload.transfer_mode_id is not None:
+        updates.append(f"transfer_mode_id = ${idx}")
+        values.append(payload.transfer_mode_id)
         idx += 1
 
     if payload.transfer_status is not None:
@@ -2280,7 +2384,7 @@ async def get_recordset_releases_by_transfer(transfer_id: int, db: Database = De
         select
           rr.recordset_release_id,
           r.recordset_id,
-          r.recordset_title,
+          r.recordset_name,
           tr.retriever_manifest_file_id
         from
             transfer_recordset tr

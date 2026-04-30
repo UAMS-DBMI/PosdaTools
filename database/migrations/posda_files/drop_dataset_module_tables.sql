@@ -18,6 +18,11 @@ DROP TABLE IF EXISTS public.recordset_license CASCADE;
 DROP TABLE IF EXISTS public.dataset_release CASCADE;
 DROP TABLE IF EXISTS public.dataset_relation CASCADE;
 DROP TABLE IF EXISTS public.dataset CASCADE;
+DROP TABLE IF EXISTS public.transfer_mode CASCADE;
+DROP TABLE IF EXISTS public.recordset_type CASCADE;
+DROP TABLE IF EXISTS public.dataset_type CASCADE;
+DROP TABLE IF EXISTS public.dataset_relation_type CASCADE;
+
 
 -- For pre-name change tables
 --DROP TABLE IF EXISTS "public".collection_release_dataset;
