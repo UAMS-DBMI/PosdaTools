@@ -142,6 +142,162 @@ class TimelineEntry(BaseModel):
     reports: List[ReportEntry]
 
 
+class TimepointListEntry(BaseModel):
+    activity_timepoint_id: int
+    when_created: datetime.datetime
+    comment: Optional[str] = None
+    creating_user: Optional[str] = None
+    file_count: int
+
+
+class TimepointFilesResponse(BaseModel):
+    activity_id: int
+    activity_timepoint_id: int
+    file_ids: List[int]
+    count: int
+
+
+async def _resolve_timepoint(
+    db: Database,
+    activity_id: Optional[int],
+    timepoint_id: Optional[int],
+) -> tuple[int, int]:
+    """Returns (activity_id, timepoint_id), resolving from the other if one is missing."""
+    if activity_id is not None and timepoint_id is not None:
+        tp = await db.fetch_one(
+            """
+            select activity_timepoint_id, activity_id
+            from activity_timepoint
+            where activity_timepoint_id = $1 and activity_id = $2
+            """,
+            [timepoint_id, activity_id],
+        )
+        if tp is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Timepoint {timepoint_id} not found for activity {activity_id}",
+            )
+        return activity_id, timepoint_id
+
+    elif activity_id is not None:
+        tp = await db.fetch_one(
+            """
+            select activity_timepoint_id
+            from activity_timepoint
+            where activity_id = $1
+            order by when_created desc
+            limit 1
+            """,
+            [activity_id],
+        )
+        if tp is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No timepoints found for activity {activity_id}",
+            )
+        return activity_id, tp["activity_timepoint_id"]
+
+    else:
+        tp = await db.fetch_one(
+            """
+            select activity_timepoint_id, activity_id
+            from activity_timepoint
+            where activity_timepoint_id = $1
+            """,
+            [timepoint_id],
+        )
+        if tp is None:
+            raise HTTPException(status_code=404, detail=f"Timepoint {timepoint_id} not found")
+        return tp["activity_id"], timepoint_id
+
+
+async def _fetch_timepoint_files(
+    db: Database,
+    activity_id: int,
+    timepoint_id: int,
+) -> TimepointFilesResponse:
+    records = await db.fetch(
+        """
+        select file_id
+        from activity_timepoint_file
+        where activity_timepoint_id = $1
+        order by file_id
+        """,
+        [timepoint_id],
+    )
+    file_ids = [r["file_id"] for r in records]
+    return TimepointFilesResponse(
+        activity_id=activity_id,
+        activity_timepoint_id=timepoint_id,
+        file_ids=file_ids,
+        count=len(file_ids),
+    )
+
+
+@router.get("/timepoints/{timepoint_id}/files")
+async def get_timepoint_files(
+    timepoint_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> TimepointFilesResponse:
+    """Return files for a timepoint; looks up the activity automatically."""
+    act_id, tp_id = await _resolve_timepoint(db, None, timepoint_id)
+    return await _fetch_timepoint_files(db, act_id, tp_id)
+
+
+@router.get("/{activity_id}/timepoints")
+async def get_activity_timepoints(
+    activity_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> List[TimepointListEntry]:
+    """Return all timepoints for an activity, newest first."""
+    records = await db.fetch(
+        """
+        select
+            at.activity_timepoint_id,
+            at.when_created,
+            at.comment,
+            at.creating_user,
+            count(atf.file_id)::int as file_count
+        from activity_timepoint at
+        left join activity_timepoint_file atf using (activity_timepoint_id)
+        where at.activity_id = $1
+        group by
+            at.activity_timepoint_id,
+            at.when_created,
+            at.comment,
+            at.creating_user
+        order by at.when_created desc
+        """,
+        [activity_id],
+    )
+    return [TimepointListEntry(**dict(r)) for r in records]
+
+
+@router.get("/{activity_id}/timepoints/files")
+async def get_activity_latest_timepoint_files(
+    activity_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> TimepointFilesResponse:
+    """Return files for the latest timepoint of an activity."""
+    act_id, tp_id = await _resolve_timepoint(db, activity_id, None)
+    return await _fetch_timepoint_files(db, act_id, tp_id)
+
+
+@router.get("/{activity_id}/timepoints/{timepoint_id}/files")
+async def get_activity_timepoint_files(
+    activity_id: int,
+    timepoint_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> TimepointFilesResponse:
+    """Return files for a specific timepoint of an activity."""
+    act_id, tp_id = await _resolve_timepoint(db, activity_id, timepoint_id)
+    return await _fetch_timepoint_files(db, act_id, tp_id)
+
+
 @router.get("/{activity_id}/{timeline_id}")
 async def get_timeline_entry(
     activity_id: int,
@@ -270,79 +426,3 @@ async def get_timeline_entry_errors(
     return response
 
 
-class TimepointListEntry(BaseModel):
-    activity_timepoint_id: int
-    when_created: datetime.datetime
-    comment: Optional[str] = None
-    creating_user: Optional[str] = None
-    file_count: int
-
-
-class TimepointFilesResponse(BaseModel):
-    activity_timepoint_id: int
-    file_ids: List[int]
-    count: int
-
-
-@router.get("/{activity_id}/timepoints")
-async def get_activity_timepoints(
-    activity_id: int,
-    db: Database = Depends(),
-    user: User = logged_in_user,
-) -> List[TimepointListEntry]:
-    """Return all timepoints for an activity, newest first."""
-    query = """
-        select
-            at.activity_timepoint_id,
-            at.when_created,
-            at.comment,
-            at.creating_user,
-            count(atf.file_id)::int as file_count
-        from activity_timepoint at
-        left join activity_timepoint_file atf using (activity_timepoint_id)
-        where at.activity_id = $1
-        group by
-            at.activity_timepoint_id,
-            at.when_created,
-            at.comment,
-            at.creating_user
-        order by at.when_created desc
-    """
-    records = await db.fetch(query, [activity_id])
-    return [TimepointListEntry(**dict(r)) for r in records]
-
-
-@router.get("/{activity_id}/timepoints/{timepoint_id}/files")
-async def get_activity_timepoint_files(
-    activity_id: int,
-    timepoint_id: int,
-    db: Database = Depends(),
-    user: User = logged_in_user,
-) -> TimepointFilesResponse:
-    """Return all file_ids for a specific activity timepoint."""
-    check = await db.fetch_one(
-        """
-        select activity_timepoint_id
-        from activity_timepoint
-        where activity_timepoint_id = $1 and activity_id = $2
-        """,
-        [timepoint_id, activity_id],
-    )
-    if check is None:
-        raise HTTPException(status_code=404, detail="Timepoint not found for this activity")
-
-    records = await db.fetch(
-        """
-        select file_id
-        from activity_timepoint_file
-        where activity_timepoint_id = $1
-        order by file_id
-        """,
-        [timepoint_id],
-    )
-    file_ids = [r["file_id"] for r in records]
-    return TimepointFilesResponse(
-        activity_timepoint_id=timepoint_id,
-        file_ids=file_ids,
-        count=len(file_ids),
-    )
