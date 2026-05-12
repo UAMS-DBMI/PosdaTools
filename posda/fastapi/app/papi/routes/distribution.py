@@ -1773,6 +1773,85 @@ async def get_recordset_draft_files(
     return list_response(records)
 
 
+@router.get("/recordsets/drafts/{draft_id}/summary")
+async def get_recordset_draft_summary(
+    draft_id: int,
+    db: Database = Depends()):
+
+    q_check = """
+        select recordset_draft_id
+        from recordset_draft
+        where recordset_draft_id = $1
+    """
+
+    q_by_type = """
+        select
+            coalesce(f.file_type, 'unknown') as file_type,
+            count(*)::int                     as file_count,
+            coalesce(sum(f.size), 0)::bigint  as total_size_bytes
+        from recordset_draft_file rdf
+        join file f using (file_id)
+        where rdf.recordset_draft_id = $1
+        group by f.file_type
+        order by file_count desc
+    """
+
+    q_dicom = """
+        select
+            count(distinct fp.patient_id)::int          as patient_count,
+            count(distinct fs.study_instance_uid)::int  as study_count,
+            count(distinct fse.series_instance_uid)::int as series_count
+        from recordset_draft_file rdf
+        join file f using (file_id)
+        left join file_patient  fp  using (file_id)
+        left join file_study    fs  using (file_id)
+        left join file_series   fse using (file_id)
+        where rdf.recordset_draft_id = $1
+          and f.is_dicom_file = true
+    """
+
+    q_modality = """
+        select
+            coalesce(fse.modality, 'unknown')            as modality,
+            count(distinct fse.series_instance_uid)::int as series_count,
+            count(*)::int                                as file_count
+        from recordset_draft_file rdf
+        join file f using (file_id)
+        join file_series fse using (file_id)
+        where rdf.recordset_draft_id = $1
+          and f.is_dicom_file = true
+        group by fse.modality
+        order by series_count desc
+    """
+
+    try:
+        draft = await db.fetch_one(q_check, [draft_id])
+        if not draft:
+            api_error("NOT_FOUND", "Recordset draft not found", {"draft_id": draft_id}, 404)
+
+        by_type   = await db.fetch(q_by_type,  [draft_id])
+        dicom     = await db.fetch_one(q_dicom, [draft_id])
+        modalities = await db.fetch(q_modality, [draft_id])
+    except HTTPException:
+        raise
+    except Exception as e:
+        db_error(e, operation="fetching draft summary", context={"draft_id": draft_id})
+
+    return item_response({
+        "draft_id":         draft_id,
+        "total_files":      sum(r["file_count"] for r in by_type),
+        "total_size_bytes": sum(r["total_size_bytes"] for r in by_type),
+        "by_file_type":     [dict(r) for r in by_type],
+        "dicom": {
+            "patient_count":  dicom["patient_count"],
+            "study_count":    dicom["study_count"],
+            "series_count":   dicom["series_count"],
+            "by_modality":    [dict(r) for r in modalities],
+        },
+    })
+
+
+
 @router.post("/recordsets/drafts/{draft_id}/files/add")
 # Add files to a draft
 async def add_recordset_draft_files(
