@@ -1970,149 +1970,244 @@ async def remove_recordset_draft_files(
     )
 
 
+
+class DraftDiffResponse(BaseModel):
+    draft_id: int
+    compare_type: str  # "release" | "draft" | "activity"
+    compare_id: int
+    compare_timepoint_id: Optional[int] = None
+    added_file_ids: list[int]
+    removed_file_ids: list[int]
+    added_count: int
+    removed_count: int
+    unchanged_count: int
+
+
 @router.get("/recordsets/drafts/{draft_id}/diff")
-# Diff draft against the current immutable release or particular release or another draft
 async def get_recordset_draft_diff(
     draft_id: int,
-    compare_release_id: Optional[int] = Query(default=None),
-    compare_draft_id: Optional[int] = Query(default=None),
+    compare_release_id: Optional[int] = None,
+    compare_draft_id: Optional[int] = None,
+    compare_activity_id: Optional[int] = None,
+    compare_timepoint_id: Optional[int] = None,
     db: Database = Depends(),
-):
-    q_draft_info = """
-        select rd.recordset_id
-        from recordset_draft rd
-        where rd.recordset_draft_id = $1;
+    user: User = logged_in_user,
+) -> DraftDiffResponse:
     """
-
-    q_draft_files = """
-        select rf.file_id
-        from recordset_draft_file rf
-        where rf.recordset_draft_id = $1;
+    Compare a draft against a release, another draft, or an activity timepoint.
+    Exactly one of compare_release_id, compare_draft_id, or compare_activity_id
+    must be provided. If none are provided, defaults to the latest release for
+    the same recordset. compare_timepoint_id is only valid with compare_activity_id
+    and defaults to the latest timepoint for that activity.
     """
+    draft = await db.fetch_one(
+        """
+        select recordset_draft_id, recordset_id
+        from recordset_draft
+        where recordset_draft_id = $1
+        """,
+        [draft_id],
+    )
+    if draft is None:
+        raise HTTPException(status_code=404, detail=f"Draft {draft_id} not found")
 
-    q_latest_release = """
-        select rr.recordset_release_id
-        from recordset_release rr
-        where rr.recordset_id = $1
-        order by rr.release_number desc
-        limit 1;
-    """
-
-    q_release_info = """
-        select rr.recordset_id
-        from recordset_release rr
-        where rr.recordset_release_id = $1;
-    """
-
-    q_release_files = """
-        select rf.file_id
-        from recordset_release_file rf
-        where rf.recordset_release_id = $1;
-    """
-
-    if compare_release_id is not None and compare_draft_id is not None:
-        api_error(
-            "VALIDATION_ERROR",
-            "Provide only one comparator: compare_release_id or compare_draft_id",
-            {
-                "compare_release_id": compare_release_id,
-                "compare_draft_id": compare_draft_id,
-            },
-            422,
+    provided = sum([
+        compare_release_id is not None,
+        compare_draft_id is not None,
+        compare_activity_id is not None,
+    ])
+    if provided > 1:
+        raise HTTPException(
+            status_code=422,
+            detail="Only one of compare_release_id, compare_draft_id, or compare_activity_id may be provided",
+        )
+    if compare_timepoint_id is not None and compare_activity_id is None:
+        raise HTTPException(
+            status_code=422,
+            detail="compare_timepoint_id requires compare_activity_id",
         )
 
-    try:
-        draft_info = await db.fetch_one(q_draft_info, [draft_id])
-        if not draft_info:
-            api_error("NOT_FOUND", "Recordset draft not found", {"draft_id": draft_id}, 404)
+    added_file_ids: list[int] = []
+    removed_file_ids: list[int] = []
+    compare_type: str
+    compare_id: int
+    resolved_timepoint_id: Optional[int] = None
 
-        recordset_id = draft_info["recordset_id"]
-        draft_rows = await db.fetch(q_draft_files, [draft_id])
+    if compare_activity_id is not None:
+        compare_type = "activity"
+        compare_id = compare_activity_id
 
-        compare_label = None
-        compare_rows = []
-
-        if compare_draft_id is not None:
-            compare_draft_info = await db.fetch_one(q_draft_info, [compare_draft_id])
-            if not compare_draft_info:
-                api_error("NOT_FOUND", "Comparison draft not found", {"compare_draft_id": compare_draft_id}, 404)
-
-            if compare_draft_info["recordset_id"] != recordset_id:
-                api_error(
-                    "VALIDATION_ERROR",
-                    "Comparison draft does not belong to the same recordset",
-                    {
-                        "draft_id": draft_id,
-                        "compare_draft_id": compare_draft_id,
-                    },
-                    422,
+        if compare_timepoint_id is not None:
+            tp = await db.fetch_one(
+                """
+                select activity_timepoint_id
+                from activity_timepoint
+                where activity_timepoint_id = $1 and activity_id = $2
+                """,
+                [compare_timepoint_id, compare_activity_id],
+            )
+            if tp is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Timepoint {compare_timepoint_id} not found for activity {compare_activity_id}",
                 )
-
-            compare_rows = await db.fetch(q_draft_files, [compare_draft_id])
-            compare_label = {
-                "compare_type": "draft",
-                "compare_draft_id": compare_draft_id,
-            }
+            resolved_timepoint_id = compare_timepoint_id
         else:
-            target_release_id = compare_release_id
-
-            if target_release_id is None:
-                latest_release = await db.fetch_one(q_latest_release, [recordset_id])
-                if not latest_release:
-                    api_error("NOT_FOUND", "Base release not found", {"draft_id": draft_id}, 404)
-                target_release_id = latest_release["recordset_release_id"]
-
-            release_info = await db.fetch_one(q_release_info, [target_release_id])
-            if not release_info:
-                api_error("NOT_FOUND", "Comparison release not found", {"compare_release_id": target_release_id}, 404)
-
-            if release_info["recordset_id"] != recordset_id:
-                api_error(
-                    "VALIDATION_ERROR",
-                    "Comparison release does not belong to the same recordset",
-                    {
-                        "draft_id": draft_id,
-                        "compare_release_id": target_release_id,
-                    },
-                    422,
+            latest_tp = await db.fetch_one(
+                """
+                select activity_timepoint_id
+                from activity_timepoint
+                where activity_id = $1
+                order by when_created desc
+                limit 1
+                """,
+                [compare_activity_id],
+            )
+            if latest_tp is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"No timepoints found for activity {compare_activity_id}",
                 )
+            resolved_timepoint_id = latest_tp["activity_timepoint_id"]
 
-            compare_rows = await db.fetch(q_release_files, [target_release_id])
-            compare_label = {
-                "compare_type": "release",
-                "compare_release_id": target_release_id,
-            }
-
-        draft_file_ids = {r["file_id"] for r in draft_rows}
-        compare_file_ids = {r["file_id"] for r in compare_rows}
-
-        added_file_ids = list(draft_file_ids - compare_file_ids)
-        removed_file_ids = list(compare_file_ids - draft_file_ids)
-        unchanged_count = len(draft_file_ids & compare_file_ids)
-
-        records = {
-            "draft_id": draft_id,
-            **compare_label,
-            "added_file_ids": added_file_ids,
-            "removed_file_ids": removed_file_ids,
-            "summary": {
-                "added_count": len(added_file_ids),
-                "removed_count": len(removed_file_ids),
-                "unchanged_count": unchanged_count,
-            },
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        db_error(
-            e,
-            operation="comparing release and draft files",
-            context={"draft_id": draft_id},
+        added = await db.fetch(
+            """
+            select file_id from recordset_draft_file where recordset_draft_id = $1
+            except
+            select file_id from activity_timepoint_file where activity_timepoint_id = $2
+            """,
+            [draft_id, resolved_timepoint_id],
         )
-        raise
+        removed = await db.fetch(
+            """
+            select file_id from activity_timepoint_file where activity_timepoint_id = $1
+            except
+            select file_id from recordset_draft_file where recordset_draft_id = $2
+            """,
+            [resolved_timepoint_id, draft_id],
+        )
 
-    return item_response(records)
+    elif compare_draft_id is not None:
+        compare_type = "draft"
+        compare_id = compare_draft_id
+
+        other = await db.fetch_one(
+            "select recordset_draft_id from recordset_draft where recordset_draft_id = $1",
+            [compare_draft_id],
+        )
+        if other is None:
+            raise HTTPException(status_code=404, detail=f"Draft {compare_draft_id} not found")
+
+        added = await db.fetch(
+            """
+            select file_id from recordset_draft_file where recordset_draft_id = $1
+            except
+            select file_id from recordset_draft_file where recordset_draft_id = $2
+            """,
+            [draft_id, compare_draft_id],
+        )
+        removed = await db.fetch(
+            """
+            select file_id from recordset_draft_file where recordset_draft_id = $1
+            except
+            select file_id from recordset_draft_file where recordset_draft_id = $2
+            """,
+            [compare_draft_id, draft_id],
+        )
+
+    else:
+        compare_type = "release"
+
+        if compare_release_id is None:
+            latest_release = await db.fetch_one(
+                """
+                select recordset_release_id
+                from recordset_release
+                where recordset_id = $1
+                order by release_number desc
+                limit 1
+                """,
+                [draft["recordset_id"]],
+            )
+            if latest_release is None:
+                # No prior release — everything in the draft is new
+                all_files = await db.fetch(
+                    "select file_id from recordset_draft_file where recordset_draft_id = $1",
+                    [draft_id],
+                )
+                added_file_ids = [r["file_id"] for r in all_files]
+                return DraftDiffResponse(
+                    draft_id=draft_id,
+                    compare_type="release",
+                    compare_id=0,
+                    added_file_ids=added_file_ids,
+                    removed_file_ids=[],
+                    added_count=len(added_file_ids),
+                    removed_count=0,
+                    unchanged_count=0,
+                )
+            compare_release_id = latest_release["recordset_release_id"]
+
+        release = await db.fetch_one(
+            "select recordset_release_id from recordset_release where recordset_release_id = $1",
+            [compare_release_id],
+        )
+        if release is None:
+            raise HTTPException(status_code=404, detail=f"Release {compare_release_id} not found")
+
+        compare_id = compare_release_id
+
+        added = await db.fetch(
+            """
+            select file_id from recordset_draft_file where recordset_draft_id = $1
+            except
+            select file_id from recordset_release_file where recordset_release_id = $2
+            """,
+            [draft_id, compare_release_id],
+        )
+        removed = await db.fetch(
+            """
+            select file_id from recordset_release_file where recordset_release_id = $1
+            except
+            select file_id from recordset_draft_file where recordset_draft_id = $2
+            """,
+            [compare_release_id, draft_id],
+        )
+
+    added_file_ids = [r["file_id"] for r in added]
+    removed_file_ids = [r["file_id"] for r in removed]
+
+    # unchanged_count_row = await db.fetch_one(
+    #     """
+    #     select count(*)::int as unchanged_count
+    #     from recordset_draft_file
+    #     where recordset_draft_id = $1
+    #       and file_id = any($2::int[])
+    #     """,
+    #     [draft_id, [r["file_id"] for r in (await db.fetch(
+    #         "select file_id from recordset_draft_file where recordset_draft_id = $1",
+    #         [draft_id],
+    #     ))]],
+    # )
+
+    total_draft = await db.fetch_one(
+        "select count(*)::int as n from recordset_draft_file where recordset_draft_id = $1",
+        [draft_id],
+    )
+    unchanged_count = (total_draft["n"] if total_draft else 0) - len(added_file_ids)
+
+    return DraftDiffResponse(
+        draft_id=draft_id,
+        compare_type=compare_type,
+        compare_id=compare_id,
+        compare_timepoint_id=resolved_timepoint_id,
+        added_file_ids=added_file_ids,
+        removed_file_ids=removed_file_ids,
+        added_count=len(added_file_ids),
+        removed_count=len(removed_file_ids),
+        unchanged_count=max(unchanged_count, 0),
+    )
+
 
 # TODO: This needs more thought.
 # What validations do we want to perform before allowing a draft to be published?
