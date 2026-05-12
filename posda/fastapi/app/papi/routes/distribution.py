@@ -1995,10 +1995,13 @@ async def get_recordset_draft_diff(
 ) -> DraftDiffResponse:
     """
     Compare a draft against a release, another draft, or an activity timepoint.
-    Exactly one of compare_release_id, compare_draft_id, or compare_activity_id
-    must be provided. If none are provided, defaults to the latest release for
-    the same recordset. compare_timepoint_id is only valid with compare_activity_id
-    and defaults to the latest timepoint for that activity.
+
+    - compare_release_id: compare against a specific release
+    - compare_draft_id: compare against another draft
+    - compare_activity_id: compare against an activity (uses latest timepoint if compare_timepoint_id omitted)
+    - compare_timepoint_id: compare against a specific timepoint (activity_id looked up automatically if compare_activity_id omitted)
+
+    If none are provided, defaults to the latest release for the same recordset.
     """
     draft = await db.fetch_one(
         """
@@ -2011,20 +2014,16 @@ async def get_recordset_draft_diff(
     if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft {draft_id} not found")
 
+    using_activity = compare_activity_id is not None or compare_timepoint_id is not None
     provided = sum([
         compare_release_id is not None,
         compare_draft_id is not None,
-        compare_activity_id is not None,
+        using_activity,
     ])
     if provided > 1:
         raise HTTPException(
             status_code=422,
-            detail="Only one of compare_release_id, compare_draft_id, or compare_activity_id may be provided",
-        )
-    if compare_timepoint_id is not None and compare_activity_id is None:
-        raise HTTPException(
-            status_code=422,
-            detail="compare_timepoint_id requires compare_activity_id",
+            detail="Only one of compare_release_id, compare_draft_id, or compare_activity_id/compare_timepoint_id may be provided",
         )
 
     added_file_ids: list[int] = []
@@ -2033,11 +2032,11 @@ async def get_recordset_draft_diff(
     compare_id: int
     resolved_timepoint_id: Optional[int] = None
 
-    if compare_activity_id is not None:
+    if using_activity:
         compare_type = "activity"
-        compare_id = compare_activity_id
 
-        if compare_timepoint_id is not None:
+        if compare_activity_id is not None and compare_timepoint_id is not None:
+            # Both provided — validate the timepoint belongs to the activity
             tp = await db.fetch_one(
                 """
                 select activity_timepoint_id
@@ -2052,7 +2051,10 @@ async def get_recordset_draft_diff(
                     detail=f"Timepoint {compare_timepoint_id} not found for activity {compare_activity_id}",
                 )
             resolved_timepoint_id = compare_timepoint_id
-        else:
+            compare_id = compare_activity_id
+
+        elif compare_activity_id is not None:
+            # Activity only — use latest timepoint
             latest_tp = await db.fetch_one(
                 """
                 select activity_timepoint_id
@@ -2069,6 +2071,25 @@ async def get_recordset_draft_diff(
                     detail=f"No timepoints found for activity {compare_activity_id}",
                 )
             resolved_timepoint_id = latest_tp["activity_timepoint_id"]
+            compare_id = compare_activity_id
+
+        else:
+            # Timepoint only — look up the activity
+            tp = await db.fetch_one(
+                """
+                select activity_timepoint_id, activity_id
+                from activity_timepoint
+                where activity_timepoint_id = $1
+                """,
+                [compare_timepoint_id],
+            )
+            if tp is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Timepoint {compare_timepoint_id} not found",
+                )
+            resolved_timepoint_id = compare_timepoint_id
+            compare_id = tp["activity_id"]
 
         added = await db.fetch(
             """
