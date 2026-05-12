@@ -268,3 +268,81 @@ async def get_timeline_entry_errors(
     response.headers["P-file_id"] = str(record["stderr_file_id"])
 
     return response
+
+
+class TimepointListEntry(BaseModel):
+    activity_timepoint_id: int
+    when_created: datetime.datetime
+    comment: Optional[str] = None
+    creating_user: Optional[str] = None
+    file_count: int
+
+
+class TimepointFilesResponse(BaseModel):
+    activity_timepoint_id: int
+    file_ids: List[int]
+    count: int
+
+
+@router.get("/{activity_id}/timepoints")
+async def get_activity_timepoints(
+    activity_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> List[TimepointListEntry]:
+    """Return all timepoints for an activity, newest first."""
+    query = """
+        select
+            at.activity_timepoint_id,
+            at.when_created,
+            at.comment,
+            at.creating_user,
+            count(atf.file_id)::int as file_count
+        from activity_timepoint at
+        left join activity_timepoint_file atf using (activity_timepoint_id)
+        where at.activity_id = $1
+        group by
+            at.activity_timepoint_id,
+            at.when_created,
+            at.comment,
+            at.creating_user
+        order by at.when_created desc
+    """
+    records = await db.fetch(query, [activity_id])
+    return [TimepointListEntry(**dict(r)) for r in records]
+
+
+@router.get("/{activity_id}/timepoints/{timepoint_id}/files")
+async def get_activity_timepoint_files(
+    activity_id: int,
+    timepoint_id: int,
+    db: Database = Depends(),
+    user: User = logged_in_user,
+) -> TimepointFilesResponse:
+    """Return all file_ids for a specific activity timepoint."""
+    check = await db.fetch_one(
+        """
+        select activity_timepoint_id
+        from activity_timepoint
+        where activity_timepoint_id = $1 and activity_id = $2
+        """,
+        [timepoint_id, activity_id],
+    )
+    if check is None:
+        raise HTTPException(status_code=404, detail="Timepoint not found for this activity")
+
+    records = await db.fetch(
+        """
+        select file_id
+        from activity_timepoint_file
+        where activity_timepoint_id = $1
+        order by file_id
+        """,
+        [timepoint_id],
+    )
+    file_ids = [r["file_id"] for r in records]
+    return TimepointFilesResponse(
+        activity_timepoint_id=timepoint_id,
+        file_ids=file_ids,
+        count=len(file_ids),
+    )
