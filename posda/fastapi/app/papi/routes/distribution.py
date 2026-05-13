@@ -2436,6 +2436,81 @@ async def get_recordset_release_files(release_id: int, db: Database = Depends())
     return list_response(records)
 
 
+@router.get("/recordsets/releases/{release_id}/summary")
+async def get_recordset_release_summary(release_id: int, db: Database = Depends()):
+    q_check = """
+        select recordset_release_id
+        from recordset_release
+        where recordset_release_id = $1
+    """
+
+    q_by_type = """
+        select
+            coalesce(f.file_type, 'unknown') as file_type,
+            count(*)::int                     as file_count,
+            coalesce(sum(f.size), 0)::bigint  as total_size_bytes
+        from recordset_release_file rrf
+        join file f using (file_id)
+        where rrf.recordset_release_id = $1
+        group by f.file_type
+        order by file_count desc
+    """
+
+    q_dicom = """
+        select
+            count(distinct fp.patient_id)::int           as patient_count,
+            count(distinct fs.study_instance_uid)::int   as study_count,
+            count(distinct fse.series_instance_uid)::int as series_count
+        from recordset_release_file rrf
+        join file f using (file_id)
+        left join file_patient  fp  using (file_id)
+        left join file_study    fs  using (file_id)
+        left join file_series   fse using (file_id)
+        where rrf.recordset_release_id = $1
+          and f.is_dicom_file = true
+    """
+
+    q_modality = """
+        select
+            coalesce(fse.modality, 'unknown')            as modality,
+            count(distinct fse.series_instance_uid)::int as series_count,
+            count(*)::int                                as file_count
+        from recordset_release_file rrf
+        join file f using (file_id)
+        join file_series fse using (file_id)
+        where rrf.recordset_release_id = $1
+          and f.is_dicom_file = true
+        group by fse.modality
+        order by series_count desc
+    """
+
+    try:
+        release = await db.fetch_one(q_check, [release_id])
+        if not release:
+            api_error("NOT_FOUND", "Recordset release not found", {"release_id": release_id}, 404)
+
+        by_type    = await db.fetch(q_by_type,   [release_id])
+        dicom      = await db.fetch_one(q_dicom,  [release_id])
+        modalities = await db.fetch(q_modality,   [release_id])
+    except HTTPException:
+        raise
+    except Exception as e:
+        db_error(e, operation="fetching release summary", context={"release_id": release_id})
+
+    return item_response({
+        "release_id":       release_id,
+        "total_files":      sum(r["file_count"] for r in by_type),
+        "total_size_bytes": sum(r["total_size_bytes"] for r in by_type),
+        "by_file_type":     [dict(r) for r in by_type],
+        "dicom": {
+            "patient_count": dicom["patient_count"],
+            "study_count":   dicom["study_count"],
+            "series_count":  dicom["series_count"],
+            "by_modality":   [dict(r) for r in modalities],
+        },
+    })
+
+
 #/papi/v1/distribution/recordsets/releases/{release_id}/diff/{other_release_id}
 @router.get("/recordsets/releases/{release_id}/diff/{other_release_id}")
 # Compare two immutable releases
