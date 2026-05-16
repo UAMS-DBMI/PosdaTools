@@ -3,9 +3,15 @@ from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 import asyncpg
+import hashlib
+import os
+import secrets
 from .auth import logged_in_user, User
 
 from ..util import Database
+
+FILE_STORAGE_PATH = os.getenv("FILE_STORAGE_PATH", "/home/posda/cache/created")
+FILE_STORAGE_ROOT = int(os.getenv("FILE_STORAGE_ROOT_ID", "3"))
 
 router = APIRouter(
     tags=["distribution"],
@@ -44,8 +50,9 @@ class DatasetReleaseTransferInsert(BaseModel):
     destination_id: int
     transfer_name: str
     transfer_mode_id: int
-    transfer_notes:  Optional[str] = None
+    transfer_notes: Optional[str] = None
     transfer_status: Optional[str] = "draft"
+    recordset_release_ids: Optional[list[int]] = None
 
 class RecordsetUpdate(BaseModel):
     recordset_doi: Optional[str] = None
@@ -96,6 +103,31 @@ class DatasetReleaseTransferUpdate(BaseModel):
     transfer_mode_id: Optional[int] = None
     transfer_status: Optional[str] = None
     transfer_notes: Optional[str] = None
+
+class TransferIdcUpdate(BaseModel):
+    gcs_url: Optional[str] = None
+    published: Optional[bool] = None
+    public: Optional[bool] = None
+
+class TransferGcUpdate(BaseModel):
+    published: Optional[bool] = None
+    public: Optional[bool] = None
+
+class TransferAsperaUpdate(BaseModel):
+    published: Optional[bool] = None
+    public: Optional[bool] = None
+    faspex_url: Optional[str] = None
+
+class TransferNbiaUpdate(BaseModel):
+    collection: Optional[str] = None
+    site: Optional[str] = None
+    published: Optional[bool] = None
+    public: Optional[bool] = None
+
+class TransferWpUpdate(BaseModel):
+    wp_media_file_id: Optional[int] = None
+    published: Optional[bool] = None
+    public: Optional[bool] = None
 
 class TransferReleaseRecordsetRequest(BaseModel):
     recordset_release_ids: list[int]
@@ -709,22 +741,47 @@ async def update_dataset_release(
 
 
 @router.get("/datasets/releases/{release_id}/recordsets")
-# List recordset releases in a dataset release
-async def get_recordsets_for_dataset_release(release_id: int, db: Database = Depends()):
-    query = """\
-        select
-			rr.recordset_id,
-            rr.recordset_release_id,
-            rs.recordset_name,
-            rr.release_number
-        from dataset_release dr
-        join dataset_release_recordset drr using (dataset_release_id)
-        join recordset_release rr using (recordset_release_id)
-        join recordset rs using (recordset_id)
-        where dr.dataset_release_id = $1
-        """
+# List recordset releases in a dataset release, optionally filtered to those configured for a destination
+async def get_recordsets_for_dataset_release(
+    release_id: int,
+    destination_id: Optional[int] = Query(default=None),
+    db: Database = Depends()):
+
+    if destination_id is not None:
+        query = """\
+            select
+                rr.recordset_id,
+                rr.recordset_release_id,
+                rs.recordset_name,
+                rr.release_number,
+                rr.release_date
+            from dataset_release dr
+            join dataset_release_recordset drr using (dataset_release_id)
+            join recordset_release rr using (recordset_release_id)
+            join recordset rs using (recordset_id)
+            join recordset_destination rd
+                on rs.recordset_id = rd.recordset_id and rd.destination_id = $2
+            where dr.dataset_release_id = $1
+            """
+        args = [release_id, destination_id]
+    else:
+        query = """\
+            select
+                rr.recordset_id,
+                rr.recordset_release_id,
+                rs.recordset_name,
+                rr.release_number,
+                rr.release_date
+            from dataset_release dr
+            join dataset_release_recordset drr using (dataset_release_id)
+            join recordset_release rr using (recordset_release_id)
+            join recordset rs using (recordset_id)
+            where dr.dataset_release_id = $1
+            """
+        args = [release_id]
+
     try:
-        records = await db.fetch(query, [release_id])
+        records = await db.fetch(query, args)
     except Exception as e:
         db_error(e, operation="fetching recordset releases for dataset release", context={"release_id": release_id})
 
@@ -869,9 +926,45 @@ async def get_transfers_for_dataset_release(release_id: int, db: Database = Depe
     return list_response(records)
 
 
+@router.get("/datasets/releases/{release_id}/destinations")
+# List suggested destinations for a dataset release (aggregated from recordset_destination configs)
+async def get_destinations_for_dataset_release(release_id: int, db: Database = Depends()):
+    query = """\
+        select distinct on (td.destination_id)
+            td.destination_id,
+            td.destination_name,
+            td.destination_abbr,
+            rd.transfer_mode_id,
+            tm.transfer_mode_name
+        from dataset_release_recordset drr
+        join recordset_release rr using (recordset_release_id)
+        join recordset r using (recordset_id)
+        join recordset_destination rd using (recordset_id)
+        join transfer_destination td using (destination_id)
+        join transfer_mode tm using (transfer_mode_id)
+        where drr.dataset_release_id = $1
+        order by td.destination_id, rd.default_display desc
+        """
+    try:
+        records = await db.fetch(query, [release_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching destinations for dataset release",
+            context={"release_id": release_id},
+        )
+
+    return list_response(records)
+
+
 @router.post("/datasets/releases/{release_id}/transfers")
-# Create transfer for a dataset release
-async def create_transfer_for_dataset_release(release_id: int,payload: DatasetReleaseTransferInsert,  db: Database = Depends()):
+# Create transfer for a dataset release — atomically links all recordset releases in one transaction
+async def create_transfer_for_dataset_release(
+    release_id: int,
+    payload: DatasetReleaseTransferInsert,
+    current_user: User = logged_in_user,
+    db: Database = Depends()):
+
     if payload.destination_id <= 0 or payload.transfer_mode_id <= 0 or not payload.transfer_name.strip():
         api_error(
             "VALIDATION_ERROR",
@@ -880,18 +973,21 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
             422,
         )
 
-    query = """\
+    insert_transfer_query = """\
         with inserted as (
-            insert into dataset_release_transfer
-            (
+            insert into dataset_release_transfer (
                 dataset_release_id,
                 destination_id,
                 transfer_name,
                 transfer_mode_id,
                 transfer_status,
-                transfer_notes
+                transfer_notes,
+                when_created,
+                when_updated,
+                who_created,
+                who_updated
             )
-            values ($1, $2, $3, $4, $5, $6)
+            values ($1, $2, $3, $4, $5, $6, now(), now(), $7, $7)
             returning
                 dataset_release_transfer_id,
                 destination_id,
@@ -915,17 +1011,45 @@ async def create_transfer_for_dataset_release(release_id: int,payload: DatasetRe
         join transfer_mode tm using (transfer_mode_id)
         """
 
-    values = [
+    get_release_recordsets_query = """\
+        select recordset_release_id
+        from dataset_release_recordset
+        where dataset_release_id = $1
+        """
+
+    insert_transfer_recordset_query = """\
+        insert into transfer_recordset (dataset_release_transfer_id, recordset_release_id)
+        values ($1, $2)
+        on conflict do nothing
+        """
+
+    transfer_values = [
         release_id,
         payload.destination_id,
         payload.transfer_name,
         payload.transfer_mode_id,
         payload.transfer_status,
         payload.transfer_notes,
+        current_user.username,
     ]
 
+    record = []
     try:
-        record = await db.fetch(query, values)
+        async with db.transaction() as conn:
+            rows = await conn.fetch(insert_transfer_query, *transfer_values)
+            record = rows
+            transfer_id = rows[0]["dataset_release_transfer_id"]
+
+            recordset_ids = payload.recordset_release_ids
+            if not recordset_ids:
+                rs_rows = await conn.fetch(get_release_recordsets_query, release_id)
+                recordset_ids = [r["recordset_release_id"] for r in rs_rows]
+
+            for rs_id in recordset_ids:
+                await conn.execute(insert_transfer_recordset_query, transfer_id, rs_id)
+
+    except HTTPException:
+        raise
     except Exception as e:
         db_error(
             e,
@@ -2570,6 +2694,9 @@ async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = D
             transfer_name,
             transfer_mode_id,
             tm.transfer_mode_name,
+            drt.destination_id,
+            td.destination_name,
+            td.destination_abbr,
             transfer_status,
             transfer_notes,
             when_created,
@@ -2577,11 +2704,12 @@ async def get_dataset_release_transfer_by_id(transfer_id: int,  db: Database = D
             from
                 dataset_release_transfer drt
                 join transfer_mode tm using (transfer_mode_id)
+                left join transfer_destination td using (destination_id)
             where
                 drt.dataset_release_transfer_id = $1;
         """
     try:
-        record = await db.fetchrow(query, [transfer_id])
+        record = await db.fetch_one(query, [transfer_id])
     except Exception as e:
         db_error(
             e,
@@ -2644,7 +2772,7 @@ async def update_dataset_release_transfer(
     """
 
     try:
-        record = await db.fetchrow(query, values)
+        record = await db.fetch_one(query, values)
     except Exception as e:
         db_error(e, operation="updating dataset release transfer", context={"transfer_id": transfer_id})
         api_error("DB_ERROR", "Failed to update transfer", {}, 500)
@@ -2653,6 +2781,249 @@ async def update_dataset_release_transfer(
         api_error("NOT_FOUND", "Dataset release transfer not found", {"transfer_id": transfer_id}, 404)
 
     return item_response(record)
+
+@router.delete("/transfers/{transfer_id}")
+# Delete a dataset release transfer and all its child records
+async def delete_dataset_release_transfer(transfer_id: int, db: Database = Depends()):
+    async with db.transaction() as conn:
+        existing = await conn.fetchrow(
+            "select dataset_release_transfer_id from dataset_release_transfer where dataset_release_transfer_id = $1",
+            transfer_id,
+        )
+        if not existing:
+            api_error("NOT_FOUND", "Dataset release transfer not found", {"transfer_id": transfer_id}, 404)
+
+        await conn.execute("delete from dataset_release_transfer where dataset_release_transfer_id = $1", transfer_id)
+
+    return {"data": {"deleted": True, "dataset_release_transfer_id": transfer_id}}
+
+# ---------------------------------------- Transfer type-specific fields -----------------------------------------------
+
+@router.get("/transfers/{transfer_id}/idc")
+# Get IDC-specific fields for a transfer
+async def get_transfer_idc(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select
+            dataset_release_transfer_id,
+            gcs_url,
+            dataset_manifest_file_id,
+            recordset_manifest_file_id,
+            clinical_manifest_file_id,
+            published,
+            public
+        from transfer_idc
+        where dataset_release_transfer_id = $1
+        """
+    try:
+        record = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(
+            e,
+            operation="fetching IDC transfer fields",
+            context={"transfer_id": transfer_id},
+        )
+
+    return item_response(record[0] if record else None)
+
+
+@router.put("/transfers/{transfer_id}/idc")
+# Upsert IDC-specific fields for a transfer
+async def upsert_transfer_idc(
+    transfer_id: int,
+    payload: TransferIdcUpdate,
+    db: Database = Depends()):
+
+    if payload.gcs_url is None and payload.published is None and payload.public is None:
+        api_error("VALIDATION_ERROR", "No IDC fields were provided", {}, 422)
+
+    query = """\
+        insert into transfer_idc (dataset_release_transfer_id, gcs_url, published, public)
+        values ($1, $2, $3, $4)
+        on conflict (dataset_release_transfer_id) do update set
+            gcs_url    = coalesce(excluded.gcs_url,    transfer_idc.gcs_url),
+            published  = coalesce(excluded.published,  transfer_idc.published),
+            public     = coalesce(excluded.public,     transfer_idc.public)
+        returning *
+        """
+    try:
+        record = await db.fetch(query, [transfer_id, payload.gcs_url, payload.published, payload.public])
+    except Exception as e:
+        db_error(
+            e,
+            operation="upserting IDC transfer fields",
+            context={"transfer_id": transfer_id},
+        )
+
+    if not record:
+        api_error("NOT_FOUND", "Transfer not found", {"transfer_id": transfer_id}, 404)
+
+    return item_response(record[0])
+
+
+@router.post("/transfers/{transfer_id}/idc/dataset-manifest/generate")
+async def generate_idc_dataset_manifest(transfer_id: int, db: Database = Depends()):
+    # TODO: build dataset-level IDC manifest (JSON format TBD)
+    # Should populate transfer_idc.dataset_manifest_file_id
+    api_error("NOT_IMPLEMENTED", "IDC dataset manifest generation is not yet implemented", {}, 501)
+
+
+@router.post("/transfers/{transfer_id}/idc/recordset-manifest/generate")
+async def generate_idc_recordset_manifest(transfer_id: int, db: Database = Depends()):
+    # TODO: build recordset-level IDC manifest (JSON format TBD)
+    # Should populate transfer_idc.recordset_manifest_file_id
+    api_error("NOT_IMPLEMENTED", "IDC recordset manifest generation is not yet implemented", {}, 501)
+
+
+@router.post("/transfers/{transfer_id}/idc/clinical-manifest/generate")
+async def generate_idc_clinical_manifest(transfer_id: int, db: Database = Depends()):
+    # TODO: build clinical IDC manifest (JSON format TBD)
+    # Should populate transfer_idc.clinical_manifest_file_id
+    api_error("NOT_IMPLEMENTED", "IDC clinical manifest generation is not yet implemented", {}, 501)
+
+
+@router.get("/transfers/{transfer_id}/gc")
+async def get_transfer_gc(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select dataset_release_transfer_id, published, public
+        from transfer_gc
+        where dataset_release_transfer_id = $1
+        """
+    try:
+        record = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(e, operation="fetching GC transfer fields", context={"transfer_id": transfer_id})
+    return item_response(record[0] if record else None)
+
+
+@router.put("/transfers/{transfer_id}/gc")
+async def upsert_transfer_gc(transfer_id: int, payload: TransferGcUpdate, db: Database = Depends()):
+    if payload.published is None and payload.public is None:
+        api_error("VALIDATION_ERROR", "No GC fields were provided", {}, 422)
+    query = """\
+        insert into transfer_gc (dataset_release_transfer_id, published, public)
+        values ($1, $2, $3)
+        on conflict (dataset_release_transfer_id) do update set
+            published = coalesce(excluded.published, transfer_gc.published),
+            public    = coalesce(excluded.public,    transfer_gc.public)
+        returning *
+        """
+    try:
+        record = await db.fetch(query, [transfer_id, payload.published, payload.public])
+    except Exception as e:
+        db_error(e, operation="upserting GC transfer fields", context={"transfer_id": transfer_id})
+    if not record:
+        api_error("NOT_FOUND", "Transfer not found", {"transfer_id": transfer_id}, 404)
+    return item_response(record[0])
+
+
+@router.get("/transfers/{transfer_id}/aspera")
+async def get_transfer_aspera(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select dataset_release_transfer_id, published, public, faspex_url
+        from transfer_aspera
+        where dataset_release_transfer_id = $1
+        """
+    try:
+        record = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(e, operation="fetching Aspera transfer fields", context={"transfer_id": transfer_id})
+    return item_response(record[0] if record else None)
+
+
+@router.put("/transfers/{transfer_id}/aspera")
+async def upsert_transfer_aspera(transfer_id: int, payload: TransferAsperaUpdate, db: Database = Depends()):
+    if payload.published is None and payload.public is None and payload.faspex_url is None:
+        api_error("VALIDATION_ERROR", "No Aspera fields were provided", {}, 422)
+    query = """\
+        insert into transfer_aspera (dataset_release_transfer_id, published, public, faspex_url)
+        values ($1, $2, $3, $4)
+        on conflict (dataset_release_transfer_id) do update set
+            published  = coalesce(excluded.published,  transfer_aspera.published),
+            public     = coalesce(excluded.public,     transfer_aspera.public),
+            faspex_url = coalesce(excluded.faspex_url, transfer_aspera.faspex_url)
+        returning *
+        """
+    try:
+        record = await db.fetch(query, [transfer_id, payload.published, payload.public, payload.faspex_url])
+    except Exception as e:
+        db_error(e, operation="upserting Aspera transfer fields", context={"transfer_id": transfer_id})
+    if not record:
+        api_error("NOT_FOUND", "Transfer not found", {"transfer_id": transfer_id}, 404)
+    return item_response(record[0])
+
+
+@router.get("/transfers/{transfer_id}/nbia")
+async def get_transfer_nbia(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select dataset_release_transfer_id, collection, site, published, public
+        from transfer_nbia
+        where dataset_release_transfer_id = $1
+        """
+    try:
+        record = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(e, operation="fetching NBIA transfer fields", context={"transfer_id": transfer_id})
+    return item_response(record[0] if record else None)
+
+
+@router.put("/transfers/{transfer_id}/nbia")
+async def upsert_transfer_nbia(transfer_id: int, payload: TransferNbiaUpdate, db: Database = Depends()):
+    if payload.collection is None and payload.site is None and payload.published is None and payload.public is None:
+        api_error("VALIDATION_ERROR", "No NBIA fields were provided", {}, 422)
+    query = """\
+        insert into transfer_nbia (dataset_release_transfer_id, collection, site, published, public)
+        values ($1, $2, $3, $4, $5)
+        on conflict (dataset_release_transfer_id) do update set
+            collection = coalesce(excluded.collection, transfer_nbia.collection),
+            site       = coalesce(excluded.site,       transfer_nbia.site),
+            published  = coalesce(excluded.published,  transfer_nbia.published),
+            public     = coalesce(excluded.public,     transfer_nbia.public)
+        returning *
+        """
+    try:
+        record = await db.fetch(query, [transfer_id, payload.collection, payload.site, payload.published, payload.public])
+    except Exception as e:
+        db_error(e, operation="upserting NBIA transfer fields", context={"transfer_id": transfer_id})
+    if not record:
+        api_error("NOT_FOUND", "Transfer not found", {"transfer_id": transfer_id}, 404)
+    return item_response(record[0])
+
+
+@router.get("/transfers/{transfer_id}/wp")
+async def get_transfer_wp(transfer_id: int, db: Database = Depends()):
+    query = """\
+        select dataset_release_transfer_id, wp_media_file_id, published, public
+        from transfer_wp
+        where dataset_release_transfer_id = $1
+        """
+    try:
+        record = await db.fetch(query, [transfer_id])
+    except Exception as e:
+        db_error(e, operation="fetching WordPress transfer fields", context={"transfer_id": transfer_id})
+    return item_response(record[0] if record else None)
+
+
+@router.put("/transfers/{transfer_id}/wp")
+async def upsert_transfer_wp(transfer_id: int, payload: TransferWpUpdate, db: Database = Depends()):
+    if payload.wp_media_file_id is None and payload.published is None and payload.public is None:
+        api_error("VALIDATION_ERROR", "No WordPress fields were provided", {}, 422)
+    query = """\
+        insert into transfer_wp (dataset_release_transfer_id, wp_media_file_id, published, public)
+        values ($1, $2, $3, $4)
+        on conflict (dataset_release_transfer_id) do update set
+            wp_media_file_id = coalesce(excluded.wp_media_file_id, transfer_wp.wp_media_file_id),
+            published        = coalesce(excluded.published,        transfer_wp.published),
+            public           = coalesce(excluded.public,           transfer_wp.public)
+        returning *
+        """
+    try:
+        record = await db.fetch(query, [transfer_id, payload.wp_media_file_id, payload.published, payload.public])
+    except Exception as e:
+        db_error(e, operation="upserting WordPress transfer fields", context={"transfer_id": transfer_id})
+    if not record:
+        api_error("NOT_FOUND", "Transfer not found", {"transfer_id": transfer_id}, 404)
+    return item_response(record[0])
+
 
 # ---------------------------------------- Transfer recordset membership-----------------------------------------------
 
@@ -2664,13 +3035,18 @@ async def get_recordset_releases_by_transfer(transfer_id: int, db: Database = De
           rr.recordset_release_id,
           r.recordset_id,
           r.recordset_name,
-          tr.retriever_manifest_file_id
+          rr.release_number,
+          tr.retriever_manifest_file_id,
+          df.downloadable_file_id,
+          df.security_hash
         from
             transfer_recordset tr
             join recordset_release rr on tr.recordset_release_id = rr.recordset_release_id
             join recordset r on rr.recordset_id = r.recordset_id
+            left join downloadable_file df on df.file_id = tr.retriever_manifest_file_id
         where
-            tr.dataset_release_transfer_id = $1;
+            tr.dataset_release_transfer_id = $1
+        order by r.recordset_name, rr.release_number;
         """
     try:
         records = await db.fetch(query, [transfer_id])
@@ -2682,6 +3058,109 @@ async def get_recordset_releases_by_transfer(transfer_id: int, db: Database = De
             context={"transfer_id": transfer_id},
         )
         return list_response([])
+
+@router.post("/transfers/{transfer_id}/recordsets/{recordset_release_id}/manifest/generate")
+# Generate (or replace) an IDC download manifest CSV for a transfer recordset
+async def generate_transfer_recordset_manifest(
+    transfer_id: int,
+    recordset_release_id: int,
+    db: Database = Depends(),
+):
+    # Verify the transfer_recordset row exists
+    tr_row = await db.fetch(
+        "select 1 from transfer_recordset "
+        "where dataset_release_transfer_id = $1 and recordset_release_id = $2",
+        [transfer_id, recordset_release_id],
+    )
+    if not tr_row:
+        api_error("NOT_FOUND", "Transfer recordset not found", {"transfer_id": transfer_id, "recordset_release_id": recordset_release_id}, 404)
+
+    # Get series_instance_uids for this recordset release
+    series_rows = await db.fetch(
+        """
+        select distinct fse.series_instance_uid
+        from recordset_release_file rrf
+        join file_series fse using (file_id)
+        where rrf.recordset_release_id = $1
+        order by fse.series_instance_uid
+        """,
+        [recordset_release_id],
+    )
+
+    # Build CSV: header + one UID per line
+    lines = ["series_instance_uid"] + [r["series_instance_uid"] for r in series_rows]
+    csv_bytes = ("\n".join(lines) + "\n").encode("utf-8")
+
+    # Content-addressed storage: md5 hex digest as filename
+    digest = hashlib.md5(csv_bytes).hexdigest()
+    size = len(csv_bytes)
+    rel_path = os.path.join(digest[:2], digest[2:4], digest[4:6], digest)
+    full_dir = os.path.join(FILE_STORAGE_PATH, digest[:2], digest[2:4], digest[4:6])
+    os.makedirs(full_dir, exist_ok=True)
+    with open(os.path.join(FILE_STORAGE_PATH, rel_path), "wb") as fh:
+        fh.write(csv_bytes)
+
+    security_hash = secrets.token_hex(16)
+
+    try:
+        async with db.transaction() as conn:
+            # Upsert file record
+            file_rows = await conn.fetch(
+                """
+                insert into file (digest, size, processing_priority)
+                values ($1, $2, 1)
+                on conflict (digest) do update set digest = excluded.digest
+                returning file_id
+                """,
+                digest, size,
+            )
+            file_id = file_rows[0]["file_id"]
+
+            # Register file location (no-op if already exists)
+            await conn.execute(
+                """
+                insert into file_location (file_id, file_storage_root_id, rel_path)
+                values ($1, $2, $3)
+                on conflict do nothing
+                """,
+                file_id, FILE_STORAGE_ROOT, rel_path,
+            )
+
+            # Reuse existing downloadable_file if one already exists for this file_id,
+            # otherwise create a new one (handles content-identical regenerations)
+            df_rows = await conn.fetch(
+                "select downloadable_file_id, security_hash from downloadable_file where file_id = $1 limit 1",
+                file_id,
+            )
+            if not df_rows:
+                df_rows = await conn.fetch(
+                    """
+                    insert into downloadable_file (file_id, security_hash, mime_type)
+                    values ($1, $2, 'text/csv')
+                    returning downloadable_file_id, security_hash
+                    """,
+                    file_id, security_hash,
+                )
+
+            # Link manifest back to transfer_recordset
+            await conn.execute(
+                """
+                update transfer_recordset
+                set retriever_manifest_file_id = $1
+                where dataset_release_transfer_id = $2 and recordset_release_id = $3
+                """,
+                file_id, transfer_id, recordset_release_id,
+            )
+    except Exception as e:
+        db_error(e, operation="generating transfer recordset manifest", context={"transfer_id": transfer_id, "recordset_release_id": recordset_release_id})
+        api_error("DB_ERROR", "Failed to store manifest", {}, 500)
+
+    return item_response({
+        "file_id": file_id,
+        "downloadable_file_id": df_rows[0]["downloadable_file_id"],
+        "security_hash": df_rows[0]["security_hash"],
+        "series_count": len(series_rows),
+    })
 
 # NOTE:
 # AI tools suggest that this is not optimal
@@ -2723,7 +3202,7 @@ async def add_recordset_release_to_transfer(
 
     try:
         for recordset_release_id in recordset_release_ids:
-            record = await db.fetchrow(insert_query, [transfer_id, recordset_release_id])
+            record = await db.fetch(insert_query, [transfer_id, recordset_release_id])
             if record:
                 added_recordset_release_ids.append(record[0]["recordset_release_id"])
 
@@ -2777,7 +3256,7 @@ async def remove_recordset_release_from_transfer(
 
     try:
         for recordset_release_id in recordset_release_ids:
-            record = await db.fetchrow(delete_query, [transfer_id, recordset_release_id])
+            record = await db.fetch(delete_query, [transfer_id, recordset_release_id])
             if record:
                 removed_recordset_release_ids.append(record[0]["recordset_release_id"])
 
