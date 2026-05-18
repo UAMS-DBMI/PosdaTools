@@ -1,9 +1,12 @@
 import os
 import httpx
 from contextlib import asynccontextmanager
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from typing import Optional
+from pydantic import BaseModel
 
 from .auth import logged_in_user
+from ..util import Database
 
 router = APIRouter(
     tags=["Manager"],
@@ -740,3 +743,180 @@ async def get_program(post_id: int):
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
+
+
+# ----------------------------
+# WP object type → (endpoint key, formatter)
+# posda_object_type: dataset, dataset_release, recordset, recordset_release
+# wp_object_type:    collection, analysis_result, download, version, version_download
+# ----------------------------
+
+WP_TYPE_MAP: dict[str, tuple[str, callable]] = {
+    "collection":       ("Collection",       format_collection),
+    "analysis_result":  ("Analysis Result",  format_analysis_result),
+    "download":         ("Download",         format_download),
+    "version":          ("Version",          format_version),
+    "version_download": ("Version Download", format_version_download),
+}
+
+
+# ----------------------------
+# wp_object_map models
+# ----------------------------
+
+class WpObjectMapInsert(BaseModel):
+    posda_object_type: str
+    posda_object_id: int
+    wp_object_type: str
+    wp_object_id: int
+    wp_edit_url: Optional[str] = None
+    wp_view_url: Optional[str] = None
+    parent_wp_object_id: Optional[int] = None
+
+class WpObjectMapUpdate(BaseModel):
+    wp_object_type: Optional[str] = None
+    wp_object_id: Optional[int] = None
+    wp_edit_url: Optional[str] = None
+    wp_view_url: Optional[str] = None
+    parent_wp_object_id: Optional[int] = None
+
+
+# ----------------------------
+# wp_object_map CRUD
+# ----------------------------
+
+@router.get("/wp-object-map")
+async def list_wp_object_map(
+    posda_object_type: Optional[str] = Query(default=None),
+    posda_object_id: Optional[int] = Query(default=None),
+    wp_object_type: Optional[str] = Query(default=None),
+    db: Database = Depends(),
+):
+    where, vals, idx = [], [], 1
+    if posda_object_type:
+        where.append(f"posda_object_type = ${idx}"); vals.append(posda_object_type); idx += 1
+    if posda_object_id is not None:
+        where.append(f"posda_object_id = ${idx}"); vals.append(posda_object_id); idx += 1
+    if wp_object_type:
+        where.append(f"wp_object_type = ${idx}"); vals.append(wp_object_type); idx += 1
+    clause = f"WHERE {' AND '.join(where)}" if where else ""
+    rows = await db.fetch(f"SELECT * FROM wp_object_map {clause} ORDER BY map_id", vals)
+    return {"data": [dict(r) for r in rows]}
+
+
+@router.get("/wp-object-map/{map_id}")
+async def get_wp_object_map(map_id: int, db: Database = Depends()):
+    rows = await db.fetch("SELECT * FROM wp_object_map WHERE map_id = $1", [map_id])
+    if not rows:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return {"data": dict(rows[0])}
+
+
+@router.post("/wp-object-map")
+async def create_wp_object_map(payload: WpObjectMapInsert, db: Database = Depends()):
+    try:
+        rows = await db.fetch(
+            """
+            INSERT INTO wp_object_map
+                (posda_object_type, posda_object_id, wp_object_type, wp_object_id,
+                 wp_edit_url, wp_view_url, parent_wp_object_id, when_synced)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+            RETURNING *
+            """,
+            [payload.posda_object_type, payload.posda_object_id,
+             payload.wp_object_type, payload.wp_object_id,
+             payload.wp_edit_url, payload.wp_view_url, payload.parent_wp_object_id],
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
+    return {"data": dict(rows[0])}
+
+
+@router.put("/wp-object-map/{map_id}")
+async def update_wp_object_map(map_id: int, payload: WpObjectMapUpdate, db: Database = Depends()):
+    rows = await db.fetch("SELECT * FROM wp_object_map WHERE map_id = $1", [map_id])
+    if not rows:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    current = dict(rows[0])
+    updated = await db.fetch(
+        """
+        UPDATE wp_object_map SET
+            wp_object_type      = $2,
+            wp_object_id        = $3,
+            wp_edit_url         = $4,
+            wp_view_url         = $5,
+            parent_wp_object_id = $6,
+            when_synced         = now()
+        WHERE map_id = $1
+        RETURNING *
+        """,
+        [map_id,
+         payload.wp_object_type      if payload.wp_object_type      is not None else current["wp_object_type"],
+         payload.wp_object_id        if payload.wp_object_id        is not None else current["wp_object_id"],
+         payload.wp_edit_url         if payload.wp_edit_url         is not None else current["wp_edit_url"],
+         payload.wp_view_url         if payload.wp_view_url         is not None else current["wp_view_url"],
+         payload.parent_wp_object_id if payload.parent_wp_object_id is not None else current["parent_wp_object_id"]],
+    )
+    return {"data": dict(updated[0])}
+
+
+@router.delete("/wp-object-map/{map_id}")
+async def delete_wp_object_map(map_id: int, db: Database = Depends()):
+    rows = await db.fetch(
+        "DELETE FROM wp_object_map WHERE map_id = $1 RETURNING map_id", [map_id]
+    )
+    if not rows:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return {"data": {"deleted": True, "map_id": map_id}}
+
+
+# ----------------------------
+# Fetch live WP metadata via map
+# ----------------------------
+
+async def _fetch_wp_object(wp_object_type: str, wp_object_id: int) -> dict:
+    entry = WP_TYPE_MAP.get(wp_object_type)
+    if not entry:
+        raise HTTPException(status_code=400, detail=f"Unsupported wp_object_type: {wp_object_type}")
+    endpoint_key, formatter = entry
+    try:
+        item = await wp_get(f"{wp_url(endpoint_key)}/{wp_object_id}")
+        if item is None:
+            raise HTTPException(status_code=404, detail=f"WP {wp_object_type} {wp_object_id} not found")
+        return formatter(item)
+    except HTTPException:
+        raise
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
+
+
+@router.get("/wp-object-map/{map_id}/wp-object")
+async def get_wp_object_for_map(map_id: int, db: Database = Depends()):
+    rows = await db.fetch("SELECT wp_object_type, wp_object_id FROM wp_object_map WHERE map_id = $1", [map_id])
+    if not rows:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return {"data": await _fetch_wp_object(rows[0]["wp_object_type"], rows[0]["wp_object_id"])}
+
+
+@router.get("/posda/{posda_object_type}/{posda_object_id}/wp-map")
+async def get_wp_map_for_posda_object(posda_object_type: str, posda_object_id: int, db: Database = Depends()):
+    rows = await db.fetch(
+        "SELECT * FROM wp_object_map WHERE posda_object_type = $1 AND posda_object_id = $2",
+        [posda_object_type, posda_object_id],
+    )
+    if not rows:
+        raise HTTPException(status_code=404, detail=f"No WP mapping for {posda_object_type} {posda_object_id}")
+    return {"data": dict(rows[0])}
+
+
+@router.get("/posda/{posda_object_type}/{posda_object_id}/wp-object")
+async def get_wp_object_for_posda_object(posda_object_type: str, posda_object_id: int, db: Database = Depends()):
+    rows = await db.fetch(
+        "SELECT wp_object_type, wp_object_id FROM wp_object_map WHERE posda_object_type = $1 AND posda_object_id = $2",
+        [posda_object_type, posda_object_id],
+    )
+    if not rows:
+        raise HTTPException(status_code=404, detail=f"No WP mapping for {posda_object_type} {posda_object_id}")
+    return {"data": await _fetch_wp_object(rows[0]["wp_object_type"], rows[0]["wp_object_id"])}
