@@ -132,6 +132,19 @@ class TransferWpUpdate(BaseModel):
 class TransferReleaseRecordsetRequest(BaseModel):
     recordset_release_ids: list[int]
 
+# --- Response Models ---
+
+class Meta(BaseModel):
+    count: int
+
+class DatasetType(BaseModel):
+    dataset_type_id: int
+    dataset_type_name: str
+
+class DatasetTypeListResponse(BaseModel):
+    data: list[DatasetType]
+    meta: Meta
+
 # --- Responses ---
 
 def item_response(data):
@@ -176,14 +189,22 @@ def db_error(
 
     api_error("INTERNAL_ERROR", f"Error {operation}", details, 500)
 
+
+
+
+
+
 # -----------------------------------------LOOKUP TABLES------------------------------------------------
 
-@router.get("/lookups/dataset-types")
+
+
+
+@router.get("/lookups/dataset-types", response_model=DatasetTypeListResponse)
 # List dataset types
 async def get_dataset_types(db: Database = Depends()):
 
     query = """
-        select dataset_type_id, dataset_type_name 
+        select dataset_type_id, dataset_type_name
         from dataset_type
     """
 
@@ -216,7 +237,7 @@ async def get_dataset_relation_types(db: Database = Depends()):
 async def get_recordset_types(db: Database = Depends()):
 
     query = """
-        select recordset_type_id, recordset_type_name 
+        select recordset_type_id, recordset_type_name
         from recordset_type
     """
 
@@ -232,7 +253,7 @@ async def get_recordset_types(db: Database = Depends()):
 async def get_transfer_modes(db: Database = Depends()):
 
     query = """
-        select transfer_mode_id, transfer_mode_name 
+        select transfer_mode_id, transfer_mode_name
         from transfer_mode
     """
 
