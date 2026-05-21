@@ -3059,11 +3059,13 @@ async def get_recordset_releases_by_transfer(transfer_id: int, db: Database = De
           rr.release_number,
           tr.retriever_manifest_file_id,
           df.downloadable_file_id,
-          df.security_hash
+          df.security_hash,
+          rt.recordset_type_name
         from
             transfer_recordset tr
             join recordset_release rr on tr.recordset_release_id = rr.recordset_release_id
             join recordset r on rr.recordset_id = r.recordset_id
+            join recordset_type rt on r.recordset_type_id = rt.recordset_type_id
             left join downloadable_file df on df.file_id = tr.retriever_manifest_file_id
         where
             tr.dataset_release_transfer_id = $1
